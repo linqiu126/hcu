@@ -1,0 +1,272 @@
+src/hcu.o: ../src/hcu.c ../src/hcu.h ../src/./comvm/vmlayer.h \
+ ../src/./comvm/sysconfig.h ../src/./comvm/commsg.h \
+ /usr/include/libxml2/libxml/xmlmemory.h \
+ /usr/include/libxml2/libxml/xmlversion.h \
+ /usr/include/libxml2/libxml/xmlexports.h \
+ /usr/include/libxml2/libxml/threads.h \
+ /usr/include/libxml2/libxml/globals.h \
+ /usr/include/libxml2/libxml/parser.h /usr/include/libxml2/libxml/tree.h \
+ /usr/include/libxml2/libxml/xmlstring.h \
+ /usr/include/libxml2/libxml/xmlregexp.h \
+ /usr/include/libxml2/libxml/dict.h /usr/include/libxml2/libxml/hash.h \
+ /usr/include/libxml2/libxml/valid.h \
+ /usr/include/libxml2/libxml/xmlerror.h \
+ /usr/include/libxml2/libxml/list.h \
+ /usr/include/libxml2/libxml/xmlautomata.h \
+ /usr/include/libxml2/libxml/entities.h \
+ /usr/include/libxml2/libxml/encoding.h \
+ /usr/include/libxml2/libxml/xmlIO.h /usr/include/libxml2/libxml/SAX.h \
+ /usr/include/libxml2/libxml/xlink.h /usr/include/libxml2/libxml/SAX2.h \
+ /usr/ffmpeg/libavformat/avformat.h /usr/ffmpeg/libavcodec/avcodec.h \
+ /usr/ffmpeg/libavutil/samplefmt.h /usr/ffmpeg/libavutil/avutil.h \
+ /usr/ffmpeg/libavutil/common.h /usr/ffmpeg/libavutil/attributes.h \
+ /usr/ffmpeg/libavutil/version.h /usr/ffmpeg/libavutil/macros.h \
+ /usr/ffmpeg/libavutil/avconfig.h /usr/ffmpeg/libavutil/mem.h \
+ /usr/ffmpeg/libavutil/error.h /usr/ffmpeg/libavutil/rational.h \
+ /usr/ffmpeg/libavutil/mathematics.h /usr/ffmpeg/libavutil/intfloat.h \
+ /usr/ffmpeg/libavutil/log.h /usr/ffmpeg/libavutil/pixfmt.h \
+ /usr/ffmpeg/libavutil/old_pix_fmts.h /usr/ffmpeg/libavutil/attributes.h \
+ /usr/ffmpeg/libavutil/avutil.h /usr/ffmpeg/libavutil/buffer.h \
+ /usr/ffmpeg/libavutil/cpu.h /usr/ffmpeg/libavutil/channel_layout.h \
+ /usr/ffmpeg/libavutil/dict.h /usr/ffmpeg/libavutil/frame.h \
+ /usr/ffmpeg/libavutil/buffer.h /usr/ffmpeg/libavutil/dict.h \
+ /usr/ffmpeg/libavutil/samplefmt.h /usr/ffmpeg/libavutil/log.h \
+ /usr/ffmpeg/libavutil/pixfmt.h /usr/ffmpeg/libavutil/rational.h \
+ /usr/ffmpeg/libavcodec/version.h /usr/ffmpeg/libavutil/version.h \
+ /usr/ffmpeg/libavcodec/old_codec_ids.h /usr/ffmpeg/libavformat/avio.h \
+ /usr/ffmpeg/libavutil/common.h /usr/ffmpeg/libavformat/version.h \
+ /usr/ffmpeg/libswscale/swscale.h /usr/ffmpeg/libswscale/version.h \
+ ../src/./comvm/trace.h ../src/./comvm/vmlayer.h ../src/./comvm/sysinfo.h \
+ ../src/./comvm/configxml.h ../src/./comvm/../l2frame/sps485.h \
+ ../src/./comvm/../l2frame/../comvm/commsg.h \
+ ../src/./comvm/../l2frame/../comvm/vmlayer.h ../src/./comvm/timer.h \
+ ../src/./comvm/mmc.h ../src/./l2frame/apigprs.h \
+ ../src/./l2frame/../comvm/vmlayer.h ../src/./l2frame/sps485.h \
+ ../src/./l2frame/hwinv.h ../src/./l2frame/../comvm/commsg.h \
+ ../src/./l2frame/../hcu.h ../src/./l2frame/cloudcont.h \
+ ../src/./l2frame/../l2frame/l2comdef.h \
+ ../src/./l2frame/../l2frame/../comvm/vmlayer.h ../src/./l2frame/modbus.h \
+ ../src/./l2frame/../l2frame/sps485.h ../src/./l2frame/sps232.h \
+ ../src/./l2frame/sps485.h ../src/./l2frame/ble.h \
+ ../src/./l2frame/ethernet.h ../src/./l2frame/usbnet.h \
+ ../src/./l2frame/wifi.h ../src/./l2frame/audio.h \
+ ../src/./l2frame/camera.h ../src/./l2frame/con3g4g.h \
+ ../src/./l2frame/gps.h ../src/./l2frame/lcd.h ../src/./l3app/svrcon.h \
+ ../src/./l3app/../comvm/vmlayer.h ../src/./l3app/../hcu.h \
+ ../src/./l3app/sensoremc.h ../src/./l3app/../l2frame/l2comdef.h \
+ ../src/./l3app/sensorhumid.h ../src/./l3app/sensorpm25.h \
+ ../src/./l3app/sensortemp.h ../src/./l3app/sensorwinddir.h \
+ ../src/./l3app/sensorwindspd.h ../src/./l3app/hsmmp.h \
+ ../src/./l3app/../comvm/commsg.h
+
+../src/hcu.h:
+
+../src/./comvm/vmlayer.h:
+
+../src/./comvm/sysconfig.h:
+
+../src/./comvm/commsg.h:
+
+/usr/include/libxml2/libxml/xmlmemory.h:
+
+/usr/include/libxml2/libxml/xmlversion.h:
+
+/usr/include/libxml2/libxml/xmlexports.h:
+
+/usr/include/libxml2/libxml/threads.h:
+
+/usr/include/libxml2/libxml/globals.h:
+
+/usr/include/libxml2/libxml/parser.h:
+
+/usr/include/libxml2/libxml/tree.h:
+
+/usr/include/libxml2/libxml/xmlstring.h:
+
+/usr/include/libxml2/libxml/xmlregexp.h:
+
+/usr/include/libxml2/libxml/dict.h:
+
+/usr/include/libxml2/libxml/hash.h:
+
+/usr/include/libxml2/libxml/valid.h:
+
+/usr/include/libxml2/libxml/xmlerror.h:
+
+/usr/include/libxml2/libxml/list.h:
+
+/usr/include/libxml2/libxml/xmlautomata.h:
+
+/usr/include/libxml2/libxml/entities.h:
+
+/usr/include/libxml2/libxml/encoding.h:
+
+/usr/include/libxml2/libxml/xmlIO.h:
+
+/usr/include/libxml2/libxml/SAX.h:
+
+/usr/include/libxml2/libxml/xlink.h:
+
+/usr/include/libxml2/libxml/SAX2.h:
+
+/usr/ffmpeg/libavformat/avformat.h:
+
+/usr/ffmpeg/libavcodec/avcodec.h:
+
+/usr/ffmpeg/libavutil/samplefmt.h:
+
+/usr/ffmpeg/libavutil/avutil.h:
+
+/usr/ffmpeg/libavutil/common.h:
+
+/usr/ffmpeg/libavutil/attributes.h:
+
+/usr/ffmpeg/libavutil/version.h:
+
+/usr/ffmpeg/libavutil/macros.h:
+
+/usr/ffmpeg/libavutil/avconfig.h:
+
+/usr/ffmpeg/libavutil/mem.h:
+
+/usr/ffmpeg/libavutil/error.h:
+
+/usr/ffmpeg/libavutil/rational.h:
+
+/usr/ffmpeg/libavutil/mathematics.h:
+
+/usr/ffmpeg/libavutil/intfloat.h:
+
+/usr/ffmpeg/libavutil/log.h:
+
+/usr/ffmpeg/libavutil/pixfmt.h:
+
+/usr/ffmpeg/libavutil/old_pix_fmts.h:
+
+/usr/ffmpeg/libavutil/attributes.h:
+
+/usr/ffmpeg/libavutil/avutil.h:
+
+/usr/ffmpeg/libavutil/buffer.h:
+
+/usr/ffmpeg/libavutil/cpu.h:
+
+/usr/ffmpeg/libavutil/channel_layout.h:
+
+/usr/ffmpeg/libavutil/dict.h:
+
+/usr/ffmpeg/libavutil/frame.h:
+
+/usr/ffmpeg/libavutil/buffer.h:
+
+/usr/ffmpeg/libavutil/dict.h:
+
+/usr/ffmpeg/libavutil/samplefmt.h:
+
+/usr/ffmpeg/libavutil/log.h:
+
+/usr/ffmpeg/libavutil/pixfmt.h:
+
+/usr/ffmpeg/libavutil/rational.h:
+
+/usr/ffmpeg/libavcodec/version.h:
+
+/usr/ffmpeg/libavutil/version.h:
+
+/usr/ffmpeg/libavcodec/old_codec_ids.h:
+
+/usr/ffmpeg/libavformat/avio.h:
+
+/usr/ffmpeg/libavutil/common.h:
+
+/usr/ffmpeg/libavformat/version.h:
+
+/usr/ffmpeg/libswscale/swscale.h:
+
+/usr/ffmpeg/libswscale/version.h:
+
+../src/./comvm/trace.h:
+
+../src/./comvm/vmlayer.h:
+
+../src/./comvm/sysinfo.h:
+
+../src/./comvm/configxml.h:
+
+../src/./comvm/../l2frame/sps485.h:
+
+../src/./comvm/../l2frame/../comvm/commsg.h:
+
+../src/./comvm/../l2frame/../comvm/vmlayer.h:
+
+../src/./comvm/timer.h:
+
+../src/./comvm/mmc.h:
+
+../src/./l2frame/apigprs.h:
+
+../src/./l2frame/../comvm/vmlayer.h:
+
+../src/./l2frame/sps485.h:
+
+../src/./l2frame/hwinv.h:
+
+../src/./l2frame/../comvm/commsg.h:
+
+../src/./l2frame/../hcu.h:
+
+../src/./l2frame/cloudcont.h:
+
+../src/./l2frame/../l2frame/l2comdef.h:
+
+../src/./l2frame/../l2frame/../comvm/vmlayer.h:
+
+../src/./l2frame/modbus.h:
+
+../src/./l2frame/../l2frame/sps485.h:
+
+../src/./l2frame/sps232.h:
+
+../src/./l2frame/sps485.h:
+
+../src/./l2frame/ble.h:
+
+../src/./l2frame/ethernet.h:
+
+../src/./l2frame/usbnet.h:
+
+../src/./l2frame/wifi.h:
+
+../src/./l2frame/audio.h:
+
+../src/./l2frame/camera.h:
+
+../src/./l2frame/con3g4g.h:
+
+../src/./l2frame/gps.h:
+
+../src/./l2frame/lcd.h:
+
+../src/./l3app/svrcon.h:
+
+../src/./l3app/../comvm/vmlayer.h:
+
+../src/./l3app/../hcu.h:
+
+../src/./l3app/sensoremc.h:
+
+../src/./l3app/../l2frame/l2comdef.h:
+
+../src/./l3app/sensorhumid.h:
+
+../src/./l3app/sensorpm25.h:
+
+../src/./l3app/sensortemp.h:
+
+../src/./l3app/sensorwinddir.h:
+
+../src/./l3app/sensorwindspd.h:
+
+../src/./l3app/hsmmp.h:
+
+../src/./l3app/../comvm/commsg.h:
