@@ -1,0 +1,20 @@
+14:35:24 **** Build of configuration Linux_Arm_A8 for project hcu ****
+make all 
+Building file: ../src/l3app/hsmmp.c
+Invoking: Cross GCC Compiler
+/usr/local/arm/arm-2009q3/bin/arm-none-linux-gnueabi-gcc -DTARGET_LINUX_ARM -I/usr/local/arm/linux_arm_a8/include/libxml2 -I/usr/local/arm/linux_arm_a8_curl/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/hsmmp.d" -MT"src/l3app/hsmmp.o" -o "src/l3app/hsmmp.o" "../src/l3app/hsmmp.c"
+In file included from ../src/l3app/hsmmp.h:11,
+                 from ../src/l3app/hsmmp.c:9:
+../src/l3app/../comvm/commsg.h:60: fatal error: libavformat/avformat.h: No such file or directory
+compilation terminated.
+make: *** [src/l3app/hsmmp.o] Error 1
+14:37:06 **** Incremental Build of configuration Linux_Arm_A8 for project hcu ****
+make all 
+Building file: ../src/l3app/hsmmp.c
+Invoking: Cross GCC Compiler
+/usr/local/arm/arm-2009q3/bin/arm-none-linux-gnueabi-gcc -DTARGET_LINUX_ARM -I/usr/local/arm/linux_arm_a8/include/libxml2 -I/usr/local/arm/linux_arm_a8_curl/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/hsmmp.d" -MT"src/l3app/hsmmp.o" -o "src/l3app/hsmmp.o" "../src/l3app/hsmmp.c"
+In file included from ../src/l3app/hsmmp.h:11,
+                 from ../src/l3app/hsmmp.c:9:
+../src/l3app/../comvm/commsg.h:60: fatal error: libavformat/avformat.h: No such file or directory
+compilation terminated.
+make: *** [src/l3app/hsmmp.o] Error 1
