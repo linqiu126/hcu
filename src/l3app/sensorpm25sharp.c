@@ -1,0 +1,283 @@
+/*
+ * sensorpm25sharp.cpp
+ *
+ *  Created on: 12 May 2016
+ *      Author: pi
+ */
+
+
+#include "sensorpm25sharp.h"
+
+
+#include "../l0service/timer.h"
+#include "../l0service/trace.h"
+#include "../l2frame/cloudvela.h"
+
+
+/*
+** FSM of the FsmPm25Sharp
+*/
+FsmStateItem_t FsmPm25Sharp[] =
+{
+    //MessageId                 //State                   		 		//Function
+	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
+	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
+	//如果没有必要进行初始化，可以设置为NULL
+	{MSG_ID_ENTRY,       		FSM_STATE_ENTRY,            			fsm_pm25sharp_task_entry}, //Starting
+
+	//System level initialization, only controlled by HCU-MAIN
+    {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_pm25sharp_init},
+    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_pm25sharp_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
+
+    //Task level initialization
+    {MSG_ID_COM_RESTART,        FSM_STATE_PM25SHARP_RECEIVED,            		fsm_pm25sharp_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_PM25SHARP_RECEIVED,            		fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_PM25SHARP_RECEIVED,       			fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_PM25SHARP_RECEIVED,       			fsm_com_do_nothing},
+
+    //结束点，固定定义，不要改动
+    {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
+};
+
+//Global variables
+//GpsPosInfo_t zHcuGpsPosInfo;
+extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+
+//For Serial Port Init
+SerialPort_t gSerialPortForPm25Sharp;
+
+
+//Main Entry
+//Input parameter would be useless, but just for similar structure purpose
+OPSTAT fsm_pm25sharp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
+	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
+	if (FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_IDLE) == FAILURE){
+		HcuErrorPrint("PM25SHARP: Error Set FSM State at fsm_pm25sharp_task_entry\n");}
+	return SUCCESS;
+}
+
+OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0;
+
+	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
+		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
+		msg_struct_com_init_feedback_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_init_feedback_t));
+		snd0.length = sizeof(msg_struct_com_init_feedback_t);
+
+		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
+		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+
+		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_PM25SHARP, &snd0, snd0.length);
+		if (ret == FAILURE){
+			HcuErrorPrint("PM25SHARP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25SHARP], zHcuTaskNameList[src_id]);
+			return FAILURE;
+		}
+	}
+
+	//收到初始化消息后，进入初始化状态
+	if (FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_PM25SHARP_INITED) == FAILURE){
+		HcuErrorPrint("PM25SHARP: Error Set FSM State!\n");
+		return FAILURE;
+	}
+
+
+	gSerialPortForPm25Sharp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
+	gSerialPortForPm25Sharp.nSpeed = 2400;
+	gSerialPortForPm25Sharp.nBits = 8;
+	gSerialPortForPm25Sharp.nEvent = 'N';
+	gSerialPortForPm25Sharp.nStop = 1;
+	gSerialPortForPm25Sharp.fd = HCU_INVALID_U16;
+	gSerialPortForPm25Sharp.vTime = HCU_INVALID_U8;
+	gSerialPortForPm25Sharp.vMin = HCU_INVALID_U8;
+	gSerialPortForPm25Sharp.c_lflag = 0;
+
+	ret = hcu_sps485_serial_init(&gSerialPortForPm25Sharp);
+	if (FAILURE == ret)
+	{
+		HcuErrorPrint("PM25SHARP: Init Serial Port Failure, Exit.\n");
+		return ret;
+	}
+	else
+	{
+		HcuDebugPrint("PM25SHARP: Init Serial Port Success ...\n\n\n");
+	}
+
+	SerialPortSetVtimeVmin(&gSerialPortForPm25Sharp, 10, 5);
+	HcuDebugPrint("PM25SHARP: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForPm25Sharp.vTime, gSerialPortForPm25Sharp.vMin);
+
+
+	zHcuRunErrCnt[TASK_ID_PM25SHARP] = 0;
+
+	//设置状态机到目标状态
+	if (FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_PM25SHARP_RECEIVED) == FAILURE){
+		zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
+		HcuErrorPrint("PM25SHARP: Error Set FSM State!\n");
+		return FAILURE;
+	}
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+		HcuDebugPrint("PM25SHARP: Enter FSM_STATE_PM25SHARP_RECEIVED status, Keeping refresh here!\n\n\n\n");
+	}
+
+	UINT32 pm25sharpfd = gSerialPortForPm25Sharp.fd;
+
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+		HcuDebugPrint("PM25SHARP: fd = %d !\n", pm25sharpfd);
+	}
+
+
+	func_pm25_sharp_receive(pm25sharpfd);
+
+	close(pm25sharpfd);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_pm25sharp_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	HcuErrorPrint("PM25SHARP: Internal error counter reach DEAD level, SW-RESTART soon!\n");
+	fsm_pm25sharp_init(0, 0, NULL, 0);
+	return SUCCESS;
+}
+
+OPSTAT func_pm25sharp_int_init(void)
+{
+	return SUCCESS;
+}
+
+
+void func_pm25_sharp_receive(UINT32 fd)
+{
+
+	int ret = 0;
+	int nread;
+	int i=0,j=0,sum=0,counter=0;
+	int counter_good_frame = 0;
+	int counter_bad_frame = 0;
+	int counter_total_frame = 0;
+	float vo;
+	float pm25value;
+	//unsigned char buff[21];
+	unsigned char received_single_byte;
+	unsigned char pm25_frame_received_buff[7];
+	//unsigned char pm25_frame_temp_buff[7];
+	//unsigned char pm25_frame_correct_buff[7];
+	//unsigned char pm25_frame;
+
+	int start_time, end_time;
+	float average_pm25,sum_2s;
+
+	int final_pm25value;
+
+	//log_st *logfile = log_init("./sharp_logfile",1024,2,0);
+	/*
+	fd = OpenDev(dev);
+	if (fd>0)
+		{
+		set_speed(fd,2400);
+		log_debug(logfile,"fd is %d. Set_speed(fd,2400) done!\n",fd);
+		}
+	else
+		{
+		log_debug(logfile,"Can't Open Serial Port!\n");
+		exit(0);
+		}
+	if (set_Parity(fd,8,1,'N')== FALSE)
+	{
+		log_debug(logfile,"Set Parity Error\n");
+		exit(1);
+	}
+
+	log_debug(logfile,"set_Parity(fd,8,1,'N') done!\n");
+
+     */
+
+
+	start_time = time((time_t*)NULL);
+	//log_debug(logfile,"start_time is %d", start_time);
+
+	while(1)
+	{
+		if ((nread = read(fd,&received_single_byte,1))>0)
+		{
+			//起始位是0xAA
+		    if(received_single_byte == 0xaa){
+		      j=0;
+		      pm25_frame_received_buff[j] = received_single_byte;
+		    }
+		    else{
+		      j++;
+		      pm25_frame_received_buff[j] = received_single_byte;
+		    }
+
+		    if(j==6)
+		    {
+		      sum = pm25_frame_received_buff[1]+ pm25_frame_received_buff[2]+ pm25_frame_received_buff[3] + pm25_frame_received_buff[4];
+		      //log_debug(logfile,"Bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+		      if(pm25_frame_received_buff[5]==sum && pm25_frame_received_buff[6]== 0xff ) //终止位是0xFF
+			  {
+				  vo=(pm25_frame_received_buff[1]*256.0+pm25_frame_received_buff[2])/1024.00*5.000;
+				  pm25value = vo*700;
+				  //log_debug(logfile,"pm25 value is:%f",pm25value);
+				  //2秒内的平均值求取
+				  counter++;
+				  sum_2s = sum_2s + pm25value;
+				  end_time = time((time_t*)NULL);
+				  if((end_time - start_time) > 2)
+				  {
+					  //log_debug(logfile,"Last bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+					  HcuDebugPrint("PM25SHARP: Last bytes received: %02x %02x %02x %02x %02x %02x %02x \n\n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+
+					  average_pm25 = sum_2s / counter;
+
+					  final_pm25value = (int)average_pm25;
+
+					  ret = dbi_HcuPM25SharpDataInfo_save(final_pm25value);
+
+					  if (ret == FAILURE){
+							zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
+							HcuErrorPrint("PM25SHARP: Can not save data into database!\n");
+					}
+
+					  HcuDebugPrint("PM25SHARP: start_time is %d, end_time is %d, counter in 2 seconds is %d, sum_2s is %f, average_pm25 value is:%f \n", start_time, end_time, counter, sum_2s, average_pm25);
+					  counter = 0;
+					  sum_2s = 0;
+					  start_time = time((time_t*)NULL);
+					  HcuDebugPrint("PM25SHARP: counter_good_frame is: %d, counter_total_frame is: %d.\n\n\n\n\n",counter_good_frame, counter_total_frame);
+				  }
+				  counter_good_frame++;
+				  //log_debug(logfile,"counter_good_frame is: %d.",counter_good_frame);
+			  }
+		      else
+		      {
+		    	  counter_bad_frame++;
+		    	  HcuDebugPrint("PM25SHARP: counter_bad_frame is: %d.",counter_bad_frame);
+		      }
+		      counter_total_frame++;
+		      //log_debug(logfile,"counter_total_frame is: %d.\n",counter_total_frame);
+		      //PM25计算和输出完成之后相关变量清零
+		      j=0;
+		      received_single_byte='/0';
+		      for(i=0;i<7;i++){
+		    	  pm25_frame_received_buff[i]=0;
+		      }
+
+		    }
+		    else
+		    {
+
+		    }
+		}
+		else
+		{
+			HcuDebugPrint("PM25SHARP: \n Read(fd,&received_single_byte,1) error!\n");
+		}
+	}
+
+}
+
+

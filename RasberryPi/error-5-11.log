@@ -1,0 +1,609 @@
+root@raspberrypi:/home/pi/workspace/hcu/RasberryPi# ./hcu
+DBG : T: 05/12/16 06:46:33:968: /l0comvm/vmlayer.c: 287 : HCU-VM: Application Layer start and initialized! Build: May 12 2016, 06:36:57
+DBG : T: 05/12/16 06:46:33:969: /l0comvm/vmlayer.c: 288 : HCU-VM: Current Hardware Type = 2, Hardware Module = 3
+DBG : T: 05/12/16 06:46:33:969: /l0comvm/vmlayer.c: 289 : HCU-VM: Current Software Release = 1, Software Delivery = 83
+DBG : T: 05/12/16 06:46:33:969: /l0comvm/vmlayer.c: 1312: HCU-VM: >>Start init FSM.
+DBG : T: 05/12/16 06:46:33:991: /src/l1com/hwinv.c: 349 : HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = HCU_SH_0304
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 350 : HWINV: zHcuSysEngPar.timer.emcReqTimer = 60
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 351 : HWINV: zHcuSysEngPar.timer.humidReqTimer = 600
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 352 : HWINV: zHcuSysEngPar.timer.pm25ReqTimer = 600
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 353 : HWINV: zHcuSysEngPar.timer.tempreqtimer = 600
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 354 : HWINV: zHcuSysEngPar.timer.winddirreqtimer = 600
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 355 : HWINV: zHcuSysEngPar.timer.windspdreqtimer = 600
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 356 : HWINV: zHcuSysEngPar.timer.noisereqtimer = 600
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 357 : HWINV: zHcuSysEngPar.timer.cmdcontrollongtimer = 70
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 358 : HWINV: zHcuSysEngPar.timer.heartbeattimer = 600
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 359 : HWINV: zHcuSysEngPar.timer.hsmmpReqTimer = 300
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 360 : HWINV: zHcuSysEngPar.timer.hsmmpCapDuration = 2
+DBG : T: 05/12/16 06:46:33:992: /src/l1com/hwinv.c: 361 : HWINV: zHcuSysEngPar.timer.hsmmpCapDurationFB = 12
+DBG : T: 05/12/16 06:46:33:993: /src/l1com/hwinv.c: 362 : HWINV: zHcuSysEngPar.timer.hsmmpRefRate = 20
+DBG : T: 05/12/16 06:46:33:993: /src/l1com/hwinv.c: 363 : HWINV: zHcuSysEngPar.videoSev.hcuVideoServerDir = /usr/local/apache_arm/htdocs/avorion/
+DBG : T: 05/12/16 06:46:33:993: /src/l1com/hwinv.c: 365 : HWINV: SeriesPortForGPS = 1, SeriesPortForModbus = 3, Serialport.SeriesPortForPm25Sharp = 0
+DBG : T: 05/12/16 06:46:33:993: /src/l1com/hwinv.c: 368 : HWINV: Set basic engineering data correctly from DATABASE parameters!
+DBG : T: 05/12/16 06:46:33:994: /src/l1com/hwinv.c: 478 : HWINV: Set Trace Moduble based engineering data correctly from DATABASE parameters!
+DBG : T: 05/12/16 06:46:33:996: /src/l1com/hwinv.c: 489 : HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!
+DBG : T: 05/12/16 06:46:33:996: /src/l1com/hwinv.c: 515 : HWINV: Create video server directory successfully.
+
+
+
+DBG : T: 05/12/16 06:46:33:997: ../src/hcu.c      : 83  : HCU-MAIN: System level initialization starting...
+DBG : T: 05/12/16 06:46:33:997: ../src/hcu.c      : 940 : HCU-MAIN: Staring to create task [HCUMAIN] related environments...
+DBG : T: 05/12/16 06:46:33:997: ../src/hcu.c      : 946 : HCU-MAIN: create queue zHcuTaskNameList[HCUMAIN] successfully.
+DBG : T: 05/12/16 06:46:33:997: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [TIMER] related environments...
+DBG : T: 05/12/16 06:46:33:997: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(5), pFsm(0xa0c1c)
+DBG : T: 05/12/16 06:46:33:997: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x5 [TIMER], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:33:997: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (1) FSM in the table.
+DBG : T: 05/12/16 06:46:33:997: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x5 [TIMER].
+DBG : T: 05/12/16 06:46:33:997: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x5 [TIMER].
+DBG : T: 05/12/16 06:46:33:998: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:33:998: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x5 [TIMER].
+DBG : T: 05/12/16 06:46:33:998: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x5 [TIMER].
+DBG : T: 05/12/16 06:46:33:998: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [MMC] related environments...
+DBG : T: 05/12/16 06:46:33:998: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(6), pFsm(0xa0bb0)
+DBG : T: 05/12/16 06:46:33:998: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x6 [MMC], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:33:998: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (2) FSM in the table.
+DBG : T: 05/12/16 06:46:33:998: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x6 [MMC].
+DBG : T: 05/12/16 06:46:33:998: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x6 [MMC].
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x6 [MMC].
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x6 [MMC].
+DBG : T: 05/12/16 06:46:33:999: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [HWINV] related environments...
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(30), pFsm(0xa0b44)
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x1e [HWINV], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (3) FSM in the table.
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x1e [HWINV].
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x1e [HWINV].
+DBG : T: 05/12/16 06:46:33:999: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:33:1000: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x1e [HWINV].
+DBG : T: 05/12/16 06:46:33:1000: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x1e [HWINV].
+DBG : T: 05/12/16 06:46:33:1000: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [SVRCON] related environments...
+DBG : T: 05/12/16 06:46:33:1000: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(48), pFsm(0x9e17c)
+DBG : T: 05/12/16 06:46:33:1000: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x30 [SVRCON], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:33:1000: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (4) FSM in the table.
+DBG : T: 05/12/16 06:46:34:000: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x30 [SVRCON].
+DBG : T: 05/12/16 06:46:34:000: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x30 [SVRCON].
+DBG : T: 05/12/16 06:46:34:000: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x30 [SVRCON].
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x30 [SVRCON].
+DBG : T: 05/12/16 06:46:34:001: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [CLOUDVELA] related environments...
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(31), pFsm(0x9e3bc)
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x1f [CLOUDVELA], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (5) FSM in the table.
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x1f [CLOUDVELA].
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x1f [CLOUDVELA].
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x1f [CLOUDVELA].
+DBG : T: 05/12/16 06:46:34:001: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x1f [CLOUDVELA].
+DBG : T: 05/12/16 06:46:34:002: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [MODBUS] related environments...
+DBG : T: 05/12/16 06:46:34:002: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(32), pFsm(0x9e5a8)
+DBG : T: 05/12/16 06:46:34:002: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x20 [MODBUS], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:002: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (6) FSM in the table.
+DBG : T: 05/12/16 06:46:34:002: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x20 [MODBUS].
+DBG : T: 05/12/16 06:46:34:002: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x20 [MODBUS].
+DBG : T: 05/12/16 06:46:34:002: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:002: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x20 [MODBUS].
+DBG : T: 05/12/16 06:46:34:002: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x20 [MODBUS].
+DBG : T: 05/12/16 06:46:34:002: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [EMC] related environments...
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(35), pFsm(0x9d7a4)
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x23 [EMC], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (7) FSM in the table.
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x23 [EMC].
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x23 [EMC].
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x23 [EMC].
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x23 [EMC].
+DBG : T: 05/12/16 06:46:34:003: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [PM25] related environments...
+DBG : T: 05/12/16 06:46:34:003: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(37), pFsm(0x9dc48)
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x25 [PM25], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (8) FSM in the table.
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x25 [PM25].
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x25 [PM25].
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x25 [PM25].
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x25 [PM25].
+DBG : T: 05/12/16 06:46:34:004: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [WINDDIR] related environments...
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(39), pFsm(0x9df6c)
+DBG : T: 05/12/16 06:46:34:004: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x27 [WINDDIR], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (9) FSM in the table.
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x27 [WINDDIR].
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x27 [WINDDIR].
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x27 [WINDDIR].
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x27 [WINDDIR].
+DBG : T: 05/12/16 06:46:34:005: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [WINDSPD] related environments...
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(40), pFsm(0x9e074)
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x28 [WINDSPD], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:005: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (10) FSM in the table.
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x28 [WINDSPD].
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x28 [WINDSPD].
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x28 [WINDSPD].
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x28 [WINDSPD].
+DBG : T: 05/12/16 06:46:34:006: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [TEMP] related environments...
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(38), pFsm(0x9ddc8)
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x26 [TEMP], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (11) FSM in the table.
+DBG : T: 05/12/16 06:46:34:006: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x26 [TEMP].
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x26 [TEMP].
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x26 [TEMP].
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x26 [TEMP].
+DBG : T: 05/12/16 06:46:34:007: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [HUMID] related environments...
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(36), pFsm(0x9d948)
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x24 [HUMID], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (12) FSM in the table.
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x24 [HUMID].
+DBG : T: 05/12/16 06:46:34:007: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x24 [HUMID].
+DBG : T: 05/12/16 06:46:34:008: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:008: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x24 [HUMID].
+DBG : T: 05/12/16 06:46:34:008: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x24 [HUMID].
+DBG : T: 05/12/16 06:46:34:008: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [HSMMP] related environments...
+DBG : T: 05/12/16 06:46:34:008: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(34), pFsm(0x9d4a4)
+DBG : T: 05/12/16 06:46:34:008: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x22 [HSMMP], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:008: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (13) FSM in the table.
+DBG : T: 05/12/16 06:46:34:008: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x22 [HSMMP].
+DBG : T: 05/12/16 06:46:34:008: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x22 [HSMMP].
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x22 [HSMMP].
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x22 [HSMMP].
+DBG : T: 05/12/16 06:46:34:009: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [NOISE] related environments...
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(41), pFsm(0x9daec)
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x29 [NOISE], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (14) FSM in the table.
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x29 [NOISE].
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x29 [NOISE].
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:009: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x29 [NOISE].
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x29 [NOISE].
+DBG : T: 05/12/16 06:46:34:010: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [ETHERNET] related environments...
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(19), pFsm(0xa0384)
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x13 [ETHERNET], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (15) FSM in the table.
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x13 [ETHERNET].
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x13 [ETHERNET].
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x13 [ETHERNET].
+DBG : T: 05/12/16 06:46:34:010: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x13 [ETHERNET].
+DBG : T: 05/12/16 06:46:34:010: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [WIFI] related environments...
+DBG : T: 05/12/16 06:46:34:011: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(20), pFsm(0xa0ad8)
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x14 [WIFI], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (16) FSM in the table.
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x14 [WIFI].
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x14 [WIFI].
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x14 [WIFI].
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x14 [WIFI].
+DBG : T: 05/12/16 06:46:34:022: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [USBNET] related environments...
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(21), pFsm(0xa0a6c)
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x15 [USBNET], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (17) FSM in the table.
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x15 [USBNET].
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x15 [USBNET].
+DBG : T: 05/12/16 06:46:34:022: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x15 [USBNET].
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x15 [USBNET].
+DBG : T: 05/12/16 06:46:34:023: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [3G4G] related environments...
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(22), pFsm(0x9eb14)
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x16 [3G4G], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (18) FSM in the table.
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x16 [3G4G].
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x16 [3G4G].
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x16 [3G4G].
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x16 [3G4G].
+DBG : T: 05/12/16 06:46:34:023: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [SPS232] related environments...
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(16), pFsm(0xa08dc)
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x10 [SPS232], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (19) FSM in the table.
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x10 [SPS232].
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x10 [SPS232].
+DBG : T: 05/12/16 06:46:34:023: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:052: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x10 [SPS232].
+DBG : T: 05/12/16 06:46:34:052: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x10 [SPS232].
+DBG : T: 05/12/16 06:46:34:052: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [SPS485] related environments...
+DBG : T: 05/12/16 06:46:34:052: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(17), pFsm(0xa0948)
+DBG : T: 05/12/16 06:46:34:052: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x11 [SPS485], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:052: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (20) FSM in the table.
+DBG : T: 05/12/16 06:46:34:052: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x11 [SPS485].
+DBG : T: 05/12/16 06:46:34:052: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x11 [SPS485].
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x11 [SPS485].
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x11 [SPS485].
+DBG : T: 05/12/16 06:46:34:053: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [BLE] related environments...
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(18), pFsm(0x9ea3c)
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x12 [BLE], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (21) FSM in the table.
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x12 [BLE].
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x12 [BLE].
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x12 [BLE].
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x12 [BLE].
+DBG : T: 05/12/16 06:46:34:053: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [SPSVIRGO] related environments...
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(26), pFsm(0x9e940)
+DBG : T: 05/12/16 06:46:34:053: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x1a [SPSVIRGO], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (22) FSM in the table.
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x1a [SPSVIRGO].
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x1a [SPSVIRGO].
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x1a [SPSVIRGO].
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x1a [SPSVIRGO].
+DBG : T: 05/12/16 06:46:34:054: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [AVORION] related environments...
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(33), pFsm(0x9e2e4)
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x21 [AVORION], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (23) FSM in the table.
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x21 [AVORION].
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x21 [AVORION].
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x21 [AVORION].
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x21 [AVORION].
+DBG : T: 05/12/16 06:46:34:054: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [GPS] related environments...
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(28), pFsm(0xa057c)
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x1c [GPS], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:054: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (24) FSM in the table.
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x1c [GPS].
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x1c [GPS].
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x1c [GPS].
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x1c [GPS].
+DBG : T: 05/12/16 06:46:34:055: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [LCD] related environments...
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(29), pFsm(0xa0654)
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x1d [LCD], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (25) FSM in the table.
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x1d [LCD].
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x1d [LCD].
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x1d [LCD].
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x1d [LCD].
+DBG : T: 05/12/16 06:46:34:055: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [CAMERA] related environments...
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(24), pFsm(0x9eaa8)
+DBG : T: 05/12/16 06:46:34:055: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x18 [CAMERA], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (26) FSM in the table.
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x18 [CAMERA].
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x18 [CAMERA].
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x18 [CAMERA].
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x18 [CAMERA].
+DBG : T: 05/12/16 06:46:34:056: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [MICROPHONE] related environments...
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(25), pFsm(0xa06c0)
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x19 [MICROPHONE], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (27) FSM in the table.
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x19 [MICROPHONE].
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x19 [MICROPHONE].
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x19 [MICROPHONE].
+DBG : T: 05/12/16 06:46:34:056: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x19 [MICROPHONE].
+DBG : T: 05/12/16 06:46:34:056: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [GPIO] related environments...
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(7), pFsm(0xa03f0)
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x7 [GPIO], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (28) FSM in the table.
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x7 [GPIO].
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x7 [GPIO].
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x7 [GPIO].
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x7 [GPIO].
+DBG : T: 05/12/16 06:46:34:057: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [I2C] related environments...
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(8), pFsm(0xa05e8)
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x8 [I2C], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (29) FSM in the table.
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x8 [I2C].
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x8 [I2C].
+DBG : T: 05/12/16 06:46:34:057: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x8 [I2C].
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x8 [I2C].
+DBG : T: 05/12/16 06:46:34:058: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [SPI] related environments...
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(9), pFsm(0xa0870)
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x9 [SPI], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (30) FSM in the table.
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x9 [SPI].
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x9 [SPI].
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x9 [SPI].
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x9 [SPI].
+DBG : T: 05/12/16 06:46:34:058: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [PWM] related environments...
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(10), pFsm(0xa0798)
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0xa [PWM], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (31) FSM in the table.
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0xa [PWM].
+DBG : T: 05/12/16 06:46:34:058: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0xa [PWM].
+DBG : T: 05/12/16 06:46:34:059: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:103: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0xa [PWM].
+DBG : T: 05/12/16 06:46:34:103: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0xa [PWM].
+DBG : T: 05/12/16 06:46:34:103: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [ADC] related environments...
+DBG : T: 05/12/16 06:46:34:103: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(11), pFsm(0x9e9d0)
+DBG : T: 05/12/16 06:46:34:103: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0xb [ADC], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:103: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (32) FSM in the table.
+DBG : T: 05/12/16 06:46:34:103: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0xb [ADC].
+DBG : T: 05/12/16 06:46:34:103: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0xb [ADC].
+DBG : T: 05/12/16 06:46:34:103: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0xb [ADC].
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0xb [ADC].
+DBG : T: 05/12/16 06:46:34:104: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [SWITCH] related environments...
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(12), pFsm(0xa0a00)
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0xc [SWITCH], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (33) FSM in the table.
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0xc [SWITCH].
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0xc [SWITCH].
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0xc [SWITCH].
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0xc [SWITCH].
+DBG : T: 05/12/16 06:46:34:104: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [RELAY] related environments...
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(13), pFsm(0xa0804)
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0xd [RELAY], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (34) FSM in the table.
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0xd [RELAY].
+DBG : T: 05/12/16 06:46:34:104: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0xd [RELAY].
+DBG : T: 05/12/16 06:46:34:105: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:105: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0xd [RELAY].
+DBG : T: 05/12/16 06:46:34:105: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0xd [RELAY].
+DBG : T: 05/12/16 06:46:34:105: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [MOTOR] related environments...
+DBG : T: 05/12/16 06:46:34:105: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(14), pFsm(0xa072c)
+DBG : T: 05/12/16 06:46:34:105: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0xe [MOTOR], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:157: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (35) FSM in the table.
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0xe [MOTOR].
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0xe [MOTOR].
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0xe [MOTOR].
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0xe [MOTOR].
+DBG : T: 05/12/16 06:46:34:158: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [SYSPM] related environments...
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(49), pFsm(0x9e248)
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x31 [SYSPM], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (36) FSM in the table.
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x31 [SYSPM].
+DBG : T: 05/12/16 06:46:34:158: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x31 [SYSPM].
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x31 [SYSPM].
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x31 [SYSPM].
+DBG : T: 05/12/16 06:46:34:159: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [AIRPRS] related environments...
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(42), pFsm(0x9d5d0)
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x2a [AIRPRS], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (37) FSM in the table.
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x2a [AIRPRS].
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x2a [AIRPRS].
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x2a [AIRPRS].
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x2a [AIRPRS].
+DBG : T: 05/12/16 06:46:34:159: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [CO1] related environments...
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(43), pFsm(0x9d708)
+DBG : T: 05/12/16 06:46:34:159: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x2b [CO1], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (38) FSM in the table.
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x2b [CO1].
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x2b [CO1].
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x2b [CO1].
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x2b [CO1].
+DBG : T: 05/12/16 06:46:34:160: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [LIGHTSTR] related environments...
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(44), pFsm(0x9da50)
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x2c [LIGHTSTR], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (39) FSM in the table.
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x2c [LIGHTSTR].
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x2c [LIGHTSTR].
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x2c [LIGHTSTR].
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x2c [LIGHTSTR].
+DBG : T: 05/12/16 06:46:34:160: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [ALCOHOL] related environments...
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(45), pFsm(0x9d66c)
+DBG : T: 05/12/16 06:46:34:160: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x2d [ALCOHOL], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (40) FSM in the table.
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x2d [ALCOHOL].
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x2d [ALCOHOL].
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x2d [ALCOHOL].
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x2d [ALCOHOL].
+DBG : T: 05/12/16 06:46:34:161: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [HCHO] related environments...
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(46), pFsm(0x9d8ac)
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x2e [HCHO], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (41) FSM in the table.
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x2e [HCHO].
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x2e [HCHO].
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x2e [HCHO].
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x2e [HCHO].
+DBG : T: 05/12/16 06:46:34:161: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [PM25SHARP] related environments...
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(50), pFsm(0x9dd5c)
+DBG : T: 05/12/16 06:46:34:161: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x32 [PM25SHARP], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:162: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (42) FSM in the table.
+DBG : T: 05/12/16 06:46:34:162: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x32 [PM25SHARP].
+DBG : T: 05/12/16 06:46:34:162: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x32 [PM25SHARP].
+DBG : T: 05/12/16 06:46:34:162: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:162: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x32 [PM25SHARP].
+DBG : T: 05/12/16 06:46:34:162: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x32 [PM25SHARP].
+DBG : T: 05/12/16 06:46:34:162: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [TOXICGAS] related environments...
+DBG : T: 05/12/16 06:46:34:162: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(47), pFsm(0x9ded0)
+DBG : T: 05/12/16 06:46:34:162: /l0comvm/vmlayer.c: 1421: HCU-VM: FsmAddNew: task_id = 0x2f [TOXICGAS], src_id= 0, dest_id= 0
+DBG : T: 05/12/16 06:46:34:213: /l0comvm/vmlayer.c: 1422: HCU-VM: After add this one, Total (43) FSM in the table.
+DBG : T: 05/12/16 06:46:34:214: /l0comvm/vmlayer.c: 558 : HCU-VM: FsmAddNew Successful, taskId = 0x2f [TOXICGAS].
+DBG : T: 05/12/16 06:46:34:214: /l0comvm/vmlayer.c: 569 : HCU-VM: hcu_msgque_create Successful, taskId = 0x2f [TOXICGAS].
+DBG : T: 05/12/16 06:46:34:214: /l0comvm/vmlayer.c: 397 : HCU-VM: pthread_create() OK ...
+DBG : T: 05/12/16 06:46:34:214: /l0comvm/vmlayer.c: 580 : HCU-VM: hcu_task_create Successful, taskId = 0x2f [TOXICGAS].
+DBG : T: 05/12/16 06:46:34:214: /l0comvm/vmlayer.c: 584 : HCU-VM: Whole task environment setup successful, taskId = 0x2f [TOXICGAS].
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=05[TIMER],SID=01[HCUMAIN],LEN=4
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=01[HCUMAIN],SID=05[TIMER],LEN=4
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x22bec) in state(1) of task(0x30) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=01[HCUMAIN],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:215: src/l3app/svrcon.c: 114 : SVRCON: Staring to init all task by distribute MSG_ID_COM_INIT message!
+DBG : T: 05/12/16 06:46:34:215: /l0service/timer.c: 202 : TIMER: Enter FSM_STATE_TIMER_ACTIVED status, Keeping loop of signal sending here!
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x575b0) in state(1) of task(0x6) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=06[MMC],LEN=4
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=1E[HWINV],SID=30[SVRCON],LEN=4
+MMC: Enter FSM_STATE_MMC_ACTIVED status, Keeping loop of signal sending here!
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=30[SVRCON],SID=01[HCUMAIN],LEN=4
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4fc38) in state(1) of task(0x1e) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:215: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x37308) in state(1) of task(0x20) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x27848) in state(1) of task(0x1f) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=1E[HWINV],LEN=4
+DBG : T: 05/12/16 06:46:34:216: 2frame/cloudvela.c: 135 : CLOUDVELA: Enter FSM_STATE_CLOUDVELA_INITED status, everything goes well!
+,LEN=4
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=23[EMC],SID=30[SVRCON],LEN=4
+HCU-VM: Call state function(0x16168) in state(1) of task(0x23) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=25[PM25],SID=30[SVRCON],LEN=4
+MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=23[EMC],LEN=4
+MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=26[TEMP],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=24[HUMID],SID=30[SVRCON],LEN=4
+********************************************************************
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=27[WINDDIR],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x1b950) in state(1) of task(0x25) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=25[PM25],LEN=4
+DBG : T: 05/12/16 06:46:34:216: c/l1hwopt/sps485.c: 281 : Series Port: COM 3 has been openned
+DBG : T: 05/12/16 06:46:34:216: c/l1hwopt/sps485.c: 494 : DBG : T: 05/12/16 06:46:34:216: l3app/sensorpm25.c: 107 : PM25: Enter FSM_STATE_PM25_INITED status, everything goes well!
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=24[HUMID],LEN=4
+DBG : T: 05/12/16 06:46:34:216: c/l1hwopt/sps485.c: 421 : Series Port: COM port flags: c_cflag = 0x8BD, c_iflag = 0x0, c_oflag = 0x0, c_lflag = 0x0, VTIME = 0x0, TMIN = 0x1
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x1e520) in state(1) of task(0x26) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 1604: DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : DBG : T: 05/12/16 06:46:34:216: pp/sensorwindspd.c: 100 : WINDSPD: Enter FSM_STATE_WINDSPD_INITED status, everything goes well!
+DBG : T: 05/12/16 06:46:34:216: /l3app/sensoremc.c: 101 : EMC: Enter FSM_STATE_EMC_INITED status, everything goes well!
+DBG : T: 05/12/16 06:46:34:216: c/l1hwopt/sps485.c: 503 : Series Port: InitSerialPort serial port COM3 properties has been set successfully.
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x13ae4) in state(1) of task(0x22) for msg(0x1)
+NOISE: Enter FSM_STATE_NOISE_INITED status, everything goes well!
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=26[TEMP],LEN=4
+DBG : T: 05/12/16 06:46:34:217: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=26[TEMP],LEN=4
+DBG : T: 05/12/16 06:46:34:216: /src/l1com/hwinv.c: 311 : ********************************************************************
+DBG : T: 05/12/16 06:46:34:216: 3app/sensorhumid.c: 101 : HUMID: Enter FSM_STATE_HUMID_INITED status, everything goes well!
+BG : T: 05/12/16 06:46:34:217: /src/l3app/hsmmp.c: 103 : HSMMP: Enter FSM_STATE_HSMMP_INITED status, Keeping refresh here!
+DBG : T: 05/12/16 06:46:34:217: c/l1hwopt/sps485.c: 506 : Series Port: InitSerialPort completed.
+DBG : T: 05/12/16 06:46:34:216: pp/sensorwinddir.c: 101 : WINDDIR: Enter FSM_STATE_WINDDIR_INITED status, everything goes well!
+MODBUS: Init Serial Port Success ...
+DBG : T: 05/12/16 06:46:34:216: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=22[HSMMP],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:217: c/l2frame/modbus.c: 312 : **                                                                **
+DBG : T: 05/12/16 06:46:34:217: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=13[ETHERNET],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:217: /src/l1com/hwinv.c: 313 : **              Home and Car Unisystem (HCU)                      **
+HCU-VM: Call state function(0x4706c) in state(1) of task(0x13) for msg(0x1)
+BG : T: 05/12/16 06:46:34:217: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=14[WIFI],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:217: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=13[ETHERNET],LEN=4
+DBG : T: 05/12/16 06:46:34:217: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4f728) in state(1) of task(0x14) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:217: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=15[USBNET],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:217: /src/l1com/hwinv.c: 315 : **                          Version 1.0                           **
+DBG : T: 05/12/16 06:46:34:217: src/l1hwopt/wifi.c: 94  : WIFI: Enter FSM_STATE_WIFI_ACTIVED status, Keeping refresh here!
+MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=16[3G4G],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:217: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4f218) in state(1) of task(0x15) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:277: /src/l1com/hwinv.c: 317 : MSGTRC: MSGID=02[Mind ok!
+DBG : T: 05/12/16 06:46:34:277: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4c76c) in state(1) of task(0x11) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:277: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=10[SPS232],LEN=4
+DBG : T: 05/12/16 06:46:34:277: c/l1hwopt/sps232.c: 318 : ********************************************************************
+DBG : T: 05/12/16 06:46:34:277: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x3fe48) in state(1) of task(0x1a) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:277: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=ing refresh here!
+DBG : T: 05/12/16 06:46:34:277: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=1A[SPSVIRGO],LEN=4
+DBG : T: 05/12/16 06:46:34:277: /src/l1com/hwinv.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=1A[SPSVIRGO],LEN=4
+DBG : T: 05/12/16 06:46:34:277: l2frame/spsvirgo.c: 96  : SPSVIRGO: Enter FSM_STATE_SPSVIRGO_ACTIVED status, Keeping refresh here!
+DBG : T: 05/12/16 06:46:34:277: c/l1hwopt/sps485.c: 90  : SPS485: Enter FSM_STATE_SPS485_ACTIVED status, Keeping refresh here!
+DBG : T: 05/12/16 06:46:34:277: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=1A[SPSVIRGO],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:277: /src/l1com/hwinv.c: 321 : HW Build: P01
+DBG : T: 05/12/16 06:46:34:277: /src/l1com/hwinv.c: 1604: HCU-VM: Call state function(0x25b1c) in state(1) of task(0x21) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:277: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=12[BLE],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:277: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=21[AVORION],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l2frame/avorion.c: 127 : AVORION: Enter FSM_STATE_AVORION_ACTIVED status, Keeping refresh here!
+DBG : T: 05/12/16 06:46:34:278: /src/l1hwopt/ble.c: 89  : BLE: Enter FSM_STATE_BLE_ACTIVED status, Keeping refresh here!
+MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=1C[GPS],SID=30[SVRCON],LEN=4
+HCU-VM: Call state function(0x490b8) in state(1) of task(0x1c) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=1D[LCD],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4a6d4) in state(1) of task(0x1d) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=18[CAMERA],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x427c0) in state(1) of task(0x18) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=19[MICROPHON],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=18[CAMERA],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=31[SYSPM],SID=30[SVRCON],LEN=4
+BG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=19[MICROPHON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: hwopt/microphone.c: 91  : MICROPHONE: Enter FSM_STATE_MICROPHONE_ACTIVED status, Keeping refresh here!
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=07[GPIO],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: c/l1hwopt/camera.c: 96  : CAMERA: Enter FSM_STATE_CAMERA_ACTIVED status, Keeping refresh here!
+Series Port: Can't Open Serial Port COM1
+DBG : T: 05/12/16 06:46:34:278: /src/l1hwopt/lcd.c: 91  : LCD: Enter FSM_STATE_LCD_ACTIVED status, Keeping refresh here!
+MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=07[GPIO],LEN=4
+MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=08[I2C],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=1B[MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG],DID=1F[CLOUDVELA],SID=1E[HWINV],LEN=8
+GPIO: Enter FSM_STATE_GPIO_ACTIV/l0comvm/vmlayer.c: 702 : here!
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=09[SPI],SID=30[SVRCON],LEN=4
+BG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=31[SYSPM],LEN=4
+BG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=1B[MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG],DID=1F[CLOUDVELA],SID=1E[HWINV],LEN=8
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4be34) in state(1) of task(0x9) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=1B[MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG],DID=1F[CLOUDVELA],SID=1E[HWINV],LEN=8
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x36180) in state(3) of task(0x1f) for msg(0x1b)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=0A[PWM],LEN=4
+GPS: Init Serial Port Failure, Exit.
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x36180) in state(3) of task(0x1f) for msg(0x1b)
+DBG : T: 05/12/16 06:46:34:278: /src/l1hwopt/pwm.c: 89  : PWM: Enter FSM_STATE_PWM_ACTIVED status, Keeping refresh here!
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x36180) in state(3) of task(0x1f) for msg(0x1b)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=0B[ADC],SID=30[SVRCON],LEN=4
+SYSPM: Enter FSM_STATE_SYSPM_ACTIVED status, Keeping refresh here!
+MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=09[SPI],LEN=4
+DBG : T: 05/12/16 06:46:34:278: _FEEDBACK],DID=30[SVRCON],SID=09[SPI],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=0C[SWITCH],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4a238) in state(1) of task(0x8) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x406e8) in state(1) of task(0xb) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x406e8) in state(1) of task(0xb) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=0B[ADC],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4b998) in state(1) of task(0xd) for msg(0x1)
+MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=0D[RELAY],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=0D[RELAY],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : I2C: Enter FSM_STATE_I2C_ACTIVED status, Keeping refresh here!
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=0E[MOTOR],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:34:278: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x4b060) in state(1) of task(0xe) for msg(0x1)
+DBG : T: all state function(0x151b0) in state(1) of task(0x2a) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:278: c/l1hwopt/switch.c: 89  : SWITCH: Enter FSM_STATE_SWITCH_ACTIVED status, Keeping refresh here!
+MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=2A[AIRPRS],LEN=4
+DBG : T: 05/12/16 06:46:34:336: app/sensorairprs.c: 105 : DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x192b4) in state(1) of task(0x2c) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=2C[LIGHTSTR],LEN=4
+DBG : T: 05/12/16 06:46:34:336: p/sensorlightstr.c: 105 : LIGHTSTR: Enter FSM_STATE_LIGHTSTR_ACTIVED status, Keeping refresh here!
+MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=2D[ALCOHOL],LEN=4
+DBG : T: 05/12/16 06:46:34:336: pp/sensoralcohol.c: 105 : ALCOHOL: Enter FSM_STATE_ALCOHOL_ACTIVED status, Keeping refresh here!
+MSGTRC: MSGID=02[MSG_ID_COM_INIT_FEEDBACK],DID=30[SVRCON],SID=2E[HCHO],LEN=4
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x1faf0) in state(1) of task(0x2f) for msg(0x1)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: DBG : T: 05/12/16 06:46:34:336: src/l3app/svrcon.c: 553 : SVRCON: Enter FSM_STATE_SVRCON_WAIT_FOR_FB status, everything goes well!
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: msgsnd() write msg failed, errno=11[e(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: p/sensortoxicgas.c: 70  : TOXICGAS: Send message error, TASK [TOXICGAS] to TASK[SVRCON]!
+DBG : T: 05/12/16 06:46:34:336: /sensorpm25sharp.c: 73  : PM25SHARP: Send message error, TASK [PM25SHARP] to TASK[SVRCON]!
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+HCU-VM: Error execute FsmRun state machine!
+HCU-VM: Error execute FsmRun state machine!
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:336: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:34:337: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x2483c) in state(3) of task(0x30) for msg(0x2)
+DBG : T: 05/12/16 06:46:39:215: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x24b3c) in state(3) of task(0x30) for msg(0x6)
+DBG : T: 05/12/16 06:46:39:215: src/l3app/svrcon.c: 635 : SVRCON: Error! Time out before receve all tasks feedback, fatal error!
+DBG : T: 05/12/16 06:46:49:215: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=30[SVRCON],SID=30[SVRCON],LEN=4
+DBG : T: 05/12/16 06:46:49:216: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x22bec) in state(5) of task(0x30) for msg(0x1)
+DBG : T: 05/12/16 06:46:49:216: src/l3app/svrcon.c: 86  : SVRCON: Error Init message get from task_id [SVRCON]!
+DBG : T: 05/12/16 06:46:49:216: /l0comvm/vmlayer.c: 1617: HCU-VM: Internal error is found in the state function.
+DBG : T: 05/12/16 06:46:49:216: /l0comvm/vmlayer.c: 1530: HCU-VM: Error execute FsmRun state machine!
+DBG : T: 05/12/16 06:46:49:341: /src/l1com/hwinv.c: 929 : HWINV: Retrieve all engineering data correctly from DATABASE parameters!
+DBG : T: 05/12/16 06:46:49:341: ../src/hcu.c      : 919 : HCU-MAIN: Staring to create task [TIMER] related environments...
+DBG : T: 05/12/16 06:46:49:341: /l0comvm/vmlayer.c: 1350: HCU-VM: >>Register new FSM. TaskId:(5), pFsm(0x9e17c)
+DBG : T: 05/12/16 06:46:49:341: /l0comvm/vmlayer.c: 1367: HCU-VM: This task_id has been already inited.
+DBG : T: 05/12/16 06:46:49:341: /l0comvm/vmlayer.c: 554 : HCU-VM: Init state machine FsmAddNew error, taskid = 5
+DBG : T: 05/12/16 06:46:49:341: ../src/hcu.c      : 922 : HCU-MAIN: create task env [TIMER] un-successfully, program exit.
+DBG : T: 05/12/16 06:46:49:341: /l0comvm/vmlayer.c: 702 : MSGTRC: MSGID=01[MSG_ID_COM_INIT],DID=30[SVRCON],SID=1E[HWINV],LEN=4
+DBG : T: 05/12/16 06:46:49:342: /l0comvm/vmlayer.c: 1604: HCU-VM: Call state function(0x22bec) in state(5) of task(0x30) for msg(0x1)
+DBG : T: 05/12/16 06:46:49:342: src/l3app/svrcon.c: 86  : SVRCON: Error Init message get from task_id [HWINV]!
+DBG : T: 05/12/16 06:46:49:342: /l0comvm/vmlayer.c: 1617: HCU-VM: Internal error is found in the state function.
+DBG : T: 05/12/16 06:46:49:342: /l0comvm/vmlayer.c: 1530: HCU-VM: Error execute FsmRun state machine!
