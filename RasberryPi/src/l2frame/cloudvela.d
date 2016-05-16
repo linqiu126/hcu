@@ -33,7 +33,7 @@ src/l2frame/cloudvela.d: ../src/l2frame/cloudvela.c \
  ../src/l2frame/../l1com/../l0service/sysinfo.h \
  ../src/l2frame/../l1com/../l0service/../l0comvm/vmlayer.h \
  ../src/l2frame/../l1com/l1comdef.h ../src/l2frame/cloudvela.h \
- ../src/l2frame/../l0comvm/vmlayer.h
+ ../src/l2frame/../l0comvm/vmlayer.h ../src/l2frame/../l0webser/ftp.h
 
 ../src/l2frame/../l0service/timer.h:
 
@@ -116,3 +116,5 @@ src/l2frame/cloudvela.d: ../src/l2frame/cloudvela.c \
 ../src/l2frame/cloudvela.h:
 
 ../src/l2frame/../l0comvm/vmlayer.h:
+
+../src/l2frame/../l0webser/ftp.h:
