@@ -11,6 +11,8 @@
 #include "../l1com/l1comdef.h"
 #include "cloudvela.h"
 
+#include "../l0webser/ftp.h"
+
 /*
 ** FSM of the CLOUDVELA
 */
@@ -113,6 +115,36 @@ OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 
 OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+
+
+	//FTP test start by zsc!
+
+	FTP_OPT ftp_opt;
+
+	ftp_opt.user_key = "anonymous:anonymous";
+/*
+	ftp_opt.url = "ftp://121.40.185.177/upload.txt";
+	ftp_opt.file = "/home/pi/ftp/upload.txt";
+
+	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt))
+		HcuDebugPrint("Upload success.\n\n\n\n\n\n\n\n\n\n");
+	else
+		HcuErrorPrint("Upload failed.\n\n\n\n\n\n\n\n\n\n");
+*/
+
+
+	ftp_opt.url = "ftp://121.40.185.177/test.txt";
+	ftp_opt.file = "/home/pi/ftp/test.txt";
+
+	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt))
+		HcuDebugPrint("Download success.\n\n\n\n\n\n\n\n\n\n");
+	else
+		HcuErrorPrint("Download failed.\n\n\n\n\n\n\n\n\n\n");
+
+
+	//FTP test end by zsc!
+
+
 	int ret=0;
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -129,6 +161,8 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			return FAILURE;
 		}
 	}
+
+
 
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_INITED);
 	if (ret == FAILURE){
@@ -2675,6 +2709,13 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 
 	}
 
+	else if (rcv.buf[0] == 10 && rcv.buf[1] == 13)
+	{
+		rcv.length = param_len - 2;
+		memcpy(rcv.buf, &rcv.buf[2], rcv.length);
+
+	}
+
 	else if (rcv.buf[0] == 13 || rcv.buf[1] == 10)
 	{
 		rcv.length = param_len - 1;
@@ -2682,16 +2723,22 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 
 	}
 
+	else if (rcv.buf[0] == 10 || rcv.buf[1] == 13)
+	{
+		rcv.length = param_len - 1;
+		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
+
+	}
 
 
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
-		//HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
+		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
 		int i;
 		for(i =0; i<rcv.length; i++)
 			HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
-		//for(i =0; i<rcv.length; i++)
-			//HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
+		for(i =0; i<rcv.length; i++)
+			HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
 
 	}
 
