@@ -14,6 +14,7 @@ C_SRCS += \
 ../src/l3app/sensorlightstr.c \
 ../src/l3app/sensornoise.c \
 ../src/l3app/sensorpm25.c \
+../src/l3app/sensorpm25sharp.c \
 ../src/l3app/sensortemp.c \
 ../src/l3app/sensortoxicgas.c \
 ../src/l3app/sensorwinddir.c \
@@ -32,6 +33,7 @@ OBJS += \
 ./src/l3app/sensorlightstr.o \
 ./src/l3app/sensornoise.o \
 ./src/l3app/sensorpm25.o \
+./src/l3app/sensorpm25sharp.o \
 ./src/l3app/sensortemp.o \
 ./src/l3app/sensortoxicgas.o \
 ./src/l3app/sensorwinddir.o \
@@ -50,6 +52,7 @@ C_DEPS += \
 ./src/l3app/sensorlightstr.d \
 ./src/l3app/sensornoise.d \
 ./src/l3app/sensorpm25.d \
+./src/l3app/sensorpm25sharp.d \
 ./src/l3app/sensortemp.d \
 ./src/l3app/sensortoxicgas.d \
 ./src/l3app/sensorwinddir.d \

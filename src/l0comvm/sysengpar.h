@@ -27,6 +27,8 @@ typedef struct SysEngParElementComm
 	UINT8  commFrameSpsvirgo;
 	UINT8  commFrameAvorion;
 	UINT8  commFrameCloudvela;
+	UINT8  commFrameI2cbuslibra;
+	UINT8  commFrameSpibusaries;
 	UINT8  commFrontSps485;
 	UINT8  commFrontSps232;
 	UINT8  commFrontMicrophone;

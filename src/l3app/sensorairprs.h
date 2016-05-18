@@ -23,6 +23,10 @@ enum FSM_STATE_AIRPRS
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+#define SENSOR_AIRPRS_RPI_PRESENT_TRUE 1
+#define SENSOR_AIRPRS_RPI_PRESENT_FALSE 0
+#define SENSOR_AIRPRS_RPI_BMP180_PRESENT SENSOR_AIRPRS_RPI_PRESENT_TRUE
+
 //Global variables
 extern FsmStateItem_t FsmAirprs[];
 
@@ -31,8 +35,14 @@ extern OPSTAT fsm_airprs_task_entry(UINT32 dest_id, UINT32 src_id, void * param_
 extern OPSTAT fsm_airprs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_airprs_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_airprs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT func_airprs_time_out_read_data_from_bmp180(void);
 
 //Local API
 OPSTAT func_airprs_int_init(void);
+
+//引用外部API
+extern OPSTAT dbi_HcuAirprsDataInfo_save(sensor_airprs_data_element_t *airprsData);
+extern OPSTAT dbi_HcuAirprsBmp180DataInfo_save(sensor_airprs_bmp180_data_element_t *airprsData);
+
 
 #endif /* L3APP_SENSORAIRPRS_H_ */

@@ -19,6 +19,9 @@ extern OPSTAT dbi_HcuLightstrDataInfo_save(sensor_lightstr_data_element_t *light
 extern OPSTAT dbi_HcuLightstrDataInfo_inqury_1st_record(UINT32 deviceid, sensor_lightstr_data_element_t *lightstrData);
 extern OPSTAT dbi_HcuLightstrDataInfo_delete_3monold(UINT32 days);
 
+extern OPSTAT dbi_HcuLightstrBh1750DataInfo_save(sensor_lightstr_bh1750_data_element_t *lightstrData);
+extern OPSTAT dbi_HcuLightstrBh1750DataInfo_delete_3monold(UINT32 days);
+
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

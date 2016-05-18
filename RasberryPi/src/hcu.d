@@ -42,21 +42,21 @@ src/hcu.d: ../src/hcu.c ../src/hcu.h ../src/./l0comvm/vmlayer.h \
  ../src/./l1hwopt/i2c.h ../src/./l1hwopt/spi.h ../src/./l1hwopt/pwm.h \
  ../src/./l1hwopt/adc.h ../src/./l1hwopt/switch.h \
  ../src/./l1hwopt/relay.h ../src/./l1hwopt/motor.h \
- ../src/./l2frame/modbus.h ../src/./l2frame/../l0comvm/vmlayer.h \
- ../src/./l2frame/../l1hwopt/sps485.h \
+ ../src/./l2frame/spsvirgo.h ../src/./l2frame/../l0comvm/vmlayer.h \
+ ../src/./l2frame/modbus.h ../src/./l2frame/../l1hwopt/sps485.h \
  ../src/./l2frame/../l1com/l1comdef.h ../src/./l2frame/avorion.h \
- ../src/./l2frame/cloudvela.h ../src/./l2frame/spsvirgo.h \
- ../src/./l3app/svrcon.h ../src/./l3app/../l0comvm/vmlayer.h \
- ../src/./l3app/../hcu.h ../src/./l3app/sensoremc.h \
- ../src/./l3app/../l1com/l1comdef.h ../src/./l3app/sensorpm25.h \
- ../src/./l3app/sensorwinddir.h ../src/./l3app/sensorwindspd.h \
- ../src/./l3app/sensortemp.h ../src/./l3app/sensorhumid.h \
- ../src/./l3app/sensornoise.h ../src/./l3app/hsmmp.h \
- ../src/./l3app/sensorairprs.h ../src/./l3app/sensorco1.h \
- ../src/./l3app/sensorlightstr.h ../src/./l3app/sensoralcohol.h \
- ../src/./l3app/sensorhcho.h ../src/./l3app/sensortoxicgas.h \
- ../src/./l3app/syspm.h ../src/./l3app/sensorpm25sharp.h \
- ../src/./l3app/../l1hwopt/sps485.h
+ ../src/./l2frame/cloudvela.h ../src/./l2frame/i2cbuslibra.h \
+ ../src/./l2frame/spibusaries.h ../src/./l3app/svrcon.h \
+ ../src/./l3app/../l0comvm/vmlayer.h ../src/./l3app/../hcu.h \
+ ../src/./l3app/sensoremc.h ../src/./l3app/../l1com/l1comdef.h \
+ ../src/./l3app/sensorpm25.h ../src/./l3app/sensorwinddir.h \
+ ../src/./l3app/sensorwindspd.h ../src/./l3app/sensortemp.h \
+ ../src/./l3app/sensorhumid.h ../src/./l3app/sensornoise.h \
+ ../src/./l3app/hsmmp.h ../src/./l3app/sensorairprs.h \
+ ../src/./l3app/sensorco1.h ../src/./l3app/sensorlightstr.h \
+ ../src/./l3app/sensoralcohol.h ../src/./l3app/sensorhcho.h \
+ ../src/./l3app/sensortoxicgas.h ../src/./l3app/syspm.h \
+ ../src/./l3app/sensorpm25sharp.h ../src/./l3app/../l1hwopt/sps485.h
 
 ../src/hcu.h:
 
@@ -192,9 +192,11 @@ src/hcu.d: ../src/hcu.c ../src/hcu.h ../src/./l0comvm/vmlayer.h \
 
 ../src/./l1hwopt/motor.h:
 
-../src/./l2frame/modbus.h:
+../src/./l2frame/spsvirgo.h:
 
 ../src/./l2frame/../l0comvm/vmlayer.h:
+
+../src/./l2frame/modbus.h:
 
 ../src/./l2frame/../l1hwopt/sps485.h:
 
@@ -204,7 +206,9 @@ src/hcu.d: ../src/hcu.c ../src/hcu.h ../src/./l0comvm/vmlayer.h \
 
 ../src/./l2frame/cloudvela.h:
 
-../src/./l2frame/spsvirgo.h:
+../src/./l2frame/i2cbuslibra.h:
+
+../src/./l2frame/spibusaries.h:
 
 ../src/./l3app/svrcon.h:
 

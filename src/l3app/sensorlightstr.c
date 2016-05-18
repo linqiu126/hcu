@@ -9,6 +9,7 @@
 
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
+#include "../l1com/l1comdef.h"
 
 /*
 ** FSM of the LIGHTSTR
@@ -36,7 +37,7 @@ FsmStateItem_t FsmLightstr[] =
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_LIGHTSTR_ACTIVED,            	fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_LIGHTSTR_ACTIVED,       		fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_LIGHTSTR_ACTIVED,       		fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       FSM_STATE_LIGHTSTR_ACTIVED,          		fsm_lightstr_time_out},
+	{MSG_ID_COM_TIME_OUT,       FSM_STATE_LIGHTSTR_ACTIVED,          	fsm_lightstr_time_out},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -44,6 +45,7 @@ FsmStateItem_t FsmLightstr[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern float zHcuI2cLightstrBh1750;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -67,7 +69,7 @@ OPSTAT fsm_lightstr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_LIGHTSTR, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -149,8 +151,79 @@ OPSTAT func_lightstr_int_init(void)
 
 OPSTAT fsm_lightstr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret;
+
+	//Receive message and copy to local variable
+	msg_struct_com_time_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
+		HcuErrorPrint("LIGHTSTR: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_LIGHTSTR]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_LIGHTSTR]是否超限
+	if (zHcuRunErrCnt[TASK_ID_LIGHTSTR] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+		//减少重复RESTART的概率
+		zHcuRunErrCnt[TASK_ID_LIGHTSTR] = zHcuRunErrCnt[TASK_ID_LIGHTSTR] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		msg_struct_com_restart_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
+		snd0.length = sizeof(msg_struct_com_restart_t);
+		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_LIGHTSTR, TASK_ID_LIGHTSTR, &snd0, snd0.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_LIGHTSTR]++;
+			HcuErrorPrint("LIGHTSTR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_LIGHTSTR], zHcuTaskNameList[TASK_ID_LIGHTSTR]);
+			return FAILURE;
+		}
+	}
+
+	//Period time out received
+	if ((rcv.timeId == TIMER_ID_1S_LIGHTSTR_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//保护周期读数的优先级，强制抢占状态，并简化问题
+		if (FsmGetState(TASK_ID_LIGHTSTR) != FSM_STATE_LIGHTSTR_ACTIVED){
+			ret = FsmSetState(TASK_ID_LIGHTSTR, FSM_STATE_LIGHTSTR_ACTIVED);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_LIGHTSTR]++;
+				HcuErrorPrint("LIGHTSTR: Error Set FSM State!\n");
+				return FAILURE;
+			}//FsmSetState
+		}
+
+#ifdef TARGET_RASPBERRY_PI3B
+		if (SENSOR_LIGHTSTR_RPI_BH1750_PRESENT == SENSOR_LIGHTSTR_RPI_PRESENT_TRUE) func_lightstr_time_out_read_data_from_bh1750();
+#endif
+
+		//目前在非树莓派条件下，DO NOTHING
+
+	}
+
 	return SUCCESS;
 }
 
+//暂时没考虑发送给后台云平台
+OPSTAT func_lightstr_time_out_read_data_from_bh1750(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_lightstr_bh1750_data_element_t lightstrData;
+		memset(&lightstrData, 0, sizeof(sensor_lightstr_bh1750_data_element_t));
+		lightstrData.equipid = 0;
+		lightstrData.timeStamp = time(0);
+		lightstrData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		lightstrData.lightstrValue = (int)(zHcuI2cLightstrBh1750*100);
+
+		ret = dbi_HcuLightstrBh1750DataInfo_save(&lightstrData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_LIGHTSTR]++;
+			HcuErrorPrint("LIGHTSTR: Can not save LightstrBh1750 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
 
 

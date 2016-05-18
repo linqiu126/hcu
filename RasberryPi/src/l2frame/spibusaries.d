@@ -1,9 +1,8 @@
-src/l0webser/ftp.d: ../src/l0webser/ftp.c \
- ../src/l0webser/../l0service/trace.h \
- ../src/l0webser/../l0service/../l0comvm/vmlayer.h \
- ../src/l0webser/../l0service/../l0comvm/../l0comvm/commsg.h \
- ../src/l0webser/../l0service/../l0comvm/../l0comvm/../l0comvm/comtype.h \
- ../src/l0webser/../l0service/../l0comvm/../l0comvm/../l0comvm/sysdim.h \
+src/l2frame/spibusaries.d: ../src/l2frame/spibusaries.c \
+ ../src/l2frame/spibusaries.h ../src/l2frame/../l0comvm/vmlayer.h \
+ ../src/l2frame/../l0comvm/../l0comvm/commsg.h \
+ ../src/l2frame/../l0comvm/../l0comvm/../l0comvm/comtype.h \
+ ../src/l2frame/../l0comvm/../l0comvm/../l0comvm/sysdim.h \
  /usr/include/libxml2/libxml/xmlmemory.h \
  /usr/include/libxml2/libxml/xmlversion.h \
  /usr/include/libxml2/libxml/xmlexports.h \
@@ -21,22 +20,25 @@ src/l0webser/ftp.d: ../src/l0webser/ftp.c \
  /usr/include/libxml2/libxml/encoding.h \
  /usr/include/libxml2/libxml/xmlIO.h /usr/include/libxml2/libxml/SAX.h \
  /usr/include/libxml2/libxml/xlink.h /usr/include/libxml2/libxml/SAX2.h \
- ../src/l0webser/../l0service/../l0comvm/../l0comvm/sysdim.h \
- ../src/l0webser/../l0service/../l0comvm/../l0comvm/sysconfig.h \
- ../src/l0webser/../l0service/../l0comvm/../l0comvm/sysversion.h \
- ../src/l0webser/../l0service/../l0comvm/../l0comvm/sysengpar.h \
- ../src/l0webser/../l0service/../l0comvm/../l0comvm/sysengpar.h \
- ../src/l0webser/ftp.h
+ ../src/l2frame/../l0comvm/../l0comvm/sysdim.h \
+ ../src/l2frame/../l0comvm/../l0comvm/sysconfig.h \
+ ../src/l2frame/../l0comvm/../l0comvm/sysversion.h \
+ ../src/l2frame/../l0comvm/../l0comvm/sysengpar.h \
+ ../src/l2frame/../l0comvm/../l0comvm/sysengpar.h \
+ ../src/l2frame/../l0service/timer.h \
+ ../src/l2frame/../l0service/../l0comvm/vmlayer.h \
+ ../src/l2frame/../l0service/trace.h ../src/l2frame/../l1com/l1comdef.h \
+ ../src/l2frame/../l1com/../l0comvm/vmlayer.h
 
-../src/l0webser/../l0service/trace.h:
+../src/l2frame/spibusaries.h:
 
-../src/l0webser/../l0service/../l0comvm/vmlayer.h:
+../src/l2frame/../l0comvm/vmlayer.h:
 
-../src/l0webser/../l0service/../l0comvm/../l0comvm/commsg.h:
+../src/l2frame/../l0comvm/../l0comvm/commsg.h:
 
-../src/l0webser/../l0service/../l0comvm/../l0comvm/../l0comvm/comtype.h:
+../src/l2frame/../l0comvm/../l0comvm/../l0comvm/comtype.h:
 
-../src/l0webser/../l0service/../l0comvm/../l0comvm/../l0comvm/sysdim.h:
+../src/l2frame/../l0comvm/../l0comvm/../l0comvm/sysdim.h:
 
 /usr/include/libxml2/libxml/xmlmemory.h:
 
@@ -80,14 +82,22 @@ src/l0webser/ftp.d: ../src/l0webser/ftp.c \
 
 /usr/include/libxml2/libxml/SAX2.h:
 
-../src/l0webser/../l0service/../l0comvm/../l0comvm/sysdim.h:
+../src/l2frame/../l0comvm/../l0comvm/sysdim.h:
 
-../src/l0webser/../l0service/../l0comvm/../l0comvm/sysconfig.h:
+../src/l2frame/../l0comvm/../l0comvm/sysconfig.h:
 
-../src/l0webser/../l0service/../l0comvm/../l0comvm/sysversion.h:
+../src/l2frame/../l0comvm/../l0comvm/sysversion.h:
 
-../src/l0webser/../l0service/../l0comvm/../l0comvm/sysengpar.h:
+../src/l2frame/../l0comvm/../l0comvm/sysengpar.h:
 
-../src/l0webser/../l0service/../l0comvm/../l0comvm/sysengpar.h:
+../src/l2frame/../l0comvm/../l0comvm/sysengpar.h:
 
-../src/l0webser/ftp.h:
+../src/l2frame/../l0service/timer.h:
+
+../src/l2frame/../l0service/../l0comvm/vmlayer.h:
+
+../src/l2frame/../l0service/trace.h:
+
+../src/l2frame/../l1com/l1comdef.h:
+
+../src/l2frame/../l1com/../l0comvm/vmlayer.h:

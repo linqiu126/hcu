@@ -70,7 +70,7 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_PM25SHARP, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -84,7 +84,6 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("PM25SHARP: Error Set FSM State!\n");
 		return FAILURE;
 	}
-
 
 	gSerialPortForPm25Sharp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
 	gSerialPortForPm25Sharp.nSpeed = 2400;
@@ -140,6 +139,7 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 OPSTAT fsm_pm25sharp_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("PM25SHARP: Internal error counter reach DEAD level, SW-RESTART soon!\n");
+	zHcuGlobalCounter.restartCnt++;
 	fsm_pm25sharp_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -171,7 +171,7 @@ void func_pm25_sharp_receive(UINT32 fd)
 	int start_time, end_time;
 	float average_pm25,sum_2s;
 
-	int final_pm25value;
+	sensor_pm25_sharp_data_element_t pm25Data;
 
 	//log_st *logfile = log_init("./sharp_logfile",1024,2,0);
 	/*
@@ -231,12 +231,15 @@ void func_pm25_sharp_receive(UINT32 fd)
 				  {
 					  //log_debug(logfile,"Last bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
 					  HcuDebugPrint("PM25SHARP: Last bytes received: %02x %02x %02x %02x %02x %02x %02x \n\n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-
 					  average_pm25 = sum_2s / counter;
 
-					  final_pm25value = (int)average_pm25;
+					  memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
+					  pm25Data.equipid = 0;
+					  pm25Data.timeStamp = time(0);
+					  pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+					  pm25Data.pm2d5Value = (int)average_pm25;
 
-					  ret = dbi_HcuPM25SharpDataInfo_save(final_pm25value);
+					  ret = dbi_HcuPM25SharpDataInfo_save(&pm25Data);
 
 					  if (ret == FAILURE){
 							zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
@@ -274,7 +277,7 @@ void func_pm25_sharp_receive(UINT32 fd)
 		}
 		else
 		{
-			HcuDebugPrint("PM25SHARP: \n Read(fd,&received_single_byte,1) error!\n");
+			HcuDebugPrint("PM25SHARP: Read(fd, &received_single_byte,1) error!\n");
 		}
 	}
 

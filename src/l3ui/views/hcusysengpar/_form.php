@@ -40,6 +40,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'commframecloudvela')->textInput() ?>
 
+    <?= $form->field($model, 'commframei2cbuslibra')->textInput() ?>
+
+    <?= $form->field($model, 'commframespibusaries')->textInput() ?>
+
     <?= $form->field($model, 'commfrontsps485')->textInput() ?>
 
     <?= $form->field($model, 'commfrontsps232')->textInput() ?>
@@ -93,6 +97,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'commfrontsensorhcho')->textInput() ?>
 
     <?= $form->field($model, 'commfrontsensortoxicgas')->textInput() ?>
+
+    <?= $form->field($model, 'commfrontsensorpm25sharp')->textInput() ?>
 
     <?= $form->field($model, 'hcudbhost')->textInput(['maxlength' => true]) ?>
 
@@ -165,6 +171,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'seriesportformodbus')->textInput() ?>
 
     <?= $form->field($model, 'seriesportforgps')->textInput() ?>
+
+    <?= $form->field($model, 'seriesportforpm25sharp')->textInput() ?>
 
     <?= $form->field($model, 'cloudhttpaddlocal')->textInput(['maxlength' => true]) ?>
 

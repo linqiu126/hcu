@@ -27,7 +27,8 @@ src/l3app/sensorco1.d: ../src/l3app/sensorco1.c ../src/l3app/sensorco1.h \
  ../src/l3app/../l0comvm/../l0comvm/sysengpar.h \
  ../src/l3app/../l0service/timer.h \
  ../src/l3app/../l0service/../l0comvm/vmlayer.h \
- ../src/l3app/../l0service/trace.h
+ ../src/l3app/../l0service/trace.h ../src/l3app/../l1com/l1comdef.h \
+ ../src/l3app/../l1com/../l0comvm/vmlayer.h
 
 ../src/l3app/sensorco1.h:
 
@@ -96,3 +97,7 @@ src/l3app/sensorco1.d: ../src/l3app/sensorco1.c ../src/l3app/sensorco1.h \
 ../src/l3app/../l0service/../l0comvm/vmlayer.h:
 
 ../src/l3app/../l0service/trace.h:
+
+../src/l3app/../l1com/l1comdef.h:
+
+../src/l3app/../l1com/../l0comvm/vmlayer.h:

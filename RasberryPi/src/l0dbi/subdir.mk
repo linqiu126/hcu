@@ -15,7 +15,6 @@ C_SRCS += \
 ../src/l0dbi/dbilightstr.c \
 ../src/l0dbi/dbinoise.c \
 ../src/l0dbi/dbipm25.c \
-../src/l0dbi/dbipm25sharp.c \
 ../src/l0dbi/dbisysperfm.c \
 ../src/l0dbi/dbitemp.c \
 ../src/l0dbi/dbitoxicgas.c \
@@ -34,7 +33,6 @@ OBJS += \
 ./src/l0dbi/dbilightstr.o \
 ./src/l0dbi/dbinoise.o \
 ./src/l0dbi/dbipm25.o \
-./src/l0dbi/dbipm25sharp.o \
 ./src/l0dbi/dbisysperfm.o \
 ./src/l0dbi/dbitemp.o \
 ./src/l0dbi/dbitoxicgas.o \
@@ -53,7 +51,6 @@ C_DEPS += \
 ./src/l0dbi/dbilightstr.d \
 ./src/l0dbi/dbinoise.d \
 ./src/l0dbi/dbipm25.d \
-./src/l0dbi/dbipm25sharp.d \
 ./src/l0dbi/dbisysperfm.d \
 ./src/l0dbi/dbitemp.d \
 ./src/l0dbi/dbitoxicgas.d \

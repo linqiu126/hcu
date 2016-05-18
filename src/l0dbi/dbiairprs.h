@@ -18,6 +18,8 @@ extern OPSTAT dbi_HcuAirprsDataInfo_save(sensor_airprs_data_element_t *airprsDat
 extern OPSTAT dbi_HcuAirprsDataInfo_inqury_1st_record(UINT32 deviceid, sensor_airprs_data_element_t *airprsData);
 extern OPSTAT dbi_HcuAirprsDataInfo_delete_3monold(UINT32 days);
 
+extern OPSTAT dbi_HcuAirprsBmp180DataInfo_save(sensor_airprs_bmp180_data_element_t *airprsData);
+extern OPSTAT dbi_HcuAirprsBmp180DataInfo_delete_3monold(UINT32 days);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

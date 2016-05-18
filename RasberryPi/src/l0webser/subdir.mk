@@ -4,21 +4,18 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/l0webser/ftp.c \
 ../src/l0webser/get_time.c \
 ../src/l0webser/http_session.c \
 ../src/l0webser/init_socket.c \
 ../src/l0webser/webserver.c 
 
 OBJS += \
-./src/l0webser/ftp.o \
 ./src/l0webser/get_time.o \
 ./src/l0webser/http_session.o \
 ./src/l0webser/init_socket.o \
 ./src/l0webser/webserver.o 
 
 C_DEPS += \
-./src/l0webser/ftp.d \
 ./src/l0webser/get_time.d \
 ./src/l0webser/http_session.d \
 ./src/l0webser/init_socket.d \

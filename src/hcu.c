@@ -42,10 +42,12 @@
 #include "./l1hwopt/relay.h"
 #include "./l1hwopt/motor.h"
 
+#include "./l2frame/spsvirgo.h"
 #include "./l2frame/modbus.h"
 #include "./l2frame/avorion.h"
 #include "./l2frame/cloudvela.h"
-#include "./l2frame/spsvirgo.h"
+#include "./l2frame/i2cbuslibra.h"
+#include "./l2frame/spibusaries.h"
 
 #include "./l3app/svrcon.h"
 #include "./l3app/sensoremc.h"
@@ -358,7 +360,6 @@ void hcu_app_system_init()
 		zHcuTaskInfo[TASK_ID_AVORION].hwPlugin = HCU_TASK_PNP_INVALID;
 		zHcuTaskInfo[TASK_ID_AVORION].hwActive = HCU_TASK_PNP_INVALID;
 	}
-
 	if (zHcuSysEngPar.comm.commFrameSpsvirgo == COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_SPSVIRGO].swTaskActive = HCU_TASK_PNP_ON;
 		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwPlugin = HCU_TASK_PNP_INVALID;
@@ -367,6 +368,24 @@ void hcu_app_system_init()
 		zHcuTaskInfo[TASK_ID_SPSVIRGO].swTaskActive = HCU_TASK_PNP_OFF;
 		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwPlugin = HCU_TASK_PNP_INVALID;
 		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwActive = HCU_TASK_PNP_INVALID;
+	}
+	if (zHcuSysEngPar.comm.commFrameI2cbuslibra == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwActive = HCU_TASK_PNP_INVALID;
+	}else{
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwActive = HCU_TASK_PNP_INVALID;
+	}
+	if (zHcuSysEngPar.comm.commFrameSpibusaries == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_INVALID;
+	}else{
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_INVALID;
 	}
 
 	if (zHcuSysEngPar.comm.commHwBoardGps == COMM_HW_BOARD_ON){
@@ -804,16 +823,17 @@ void hcu_task_create_all(void)
 	//Create task HCHO environments/42
 	hcu_system_task_init_call(TASK_ID_HCHO, FsmHcho);
 
-	//Create task Pm25Sharp environments/44
-	//hcu_system_task_init_call(TASK_ID_PM25SHARP, FsmPm25Sharp);
-	hcu_system_task_init_call(TASK_ID_PM25SHARP, FsmPm25Sharp);
-
 	//Create task ToxicGas environments/43
 	hcu_system_task_init_call(TASK_ID_TOXICGAS, FsmToxicgas);
 
+	//Create task Pm25Sharp environments/44
+	hcu_system_task_init_call(TASK_ID_PM25SHARP, FsmPm25Sharp);
 
+	//Create task Pm25Sharp environments/45
+	hcu_system_task_init_call(TASK_ID_I2CBUSLIBRA, FsmI2cbuslibra);
 
-
+	//Create task Pm25Sharp environments/46
+	hcu_system_task_init_call(TASK_ID_SPIBUSARIES, FsmSpibusaries);
 }
 
 void hcu_task_create_all_but_avorion(void)

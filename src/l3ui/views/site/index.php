@@ -27,7 +27,7 @@ $this->title = 'BXXH-HCU本地主页界面';
 	<p><a class="btn btn-lg btn-success" href="/yii2basic/web/index.php?r=hcuemcdatainfo/index">本地数据记录：HcuEmcDataInfo电磁辐射</a></p>
 	<p><a class="btn btn-lg btn-success" href="/yii2basic/web/index.php?r=hcuhumiddatainfo/index">本地数据记录：HcuHumidDataInfo湿度</a></p>
 	<p><a class="btn btn-lg btn-success" href="/yii2basic/web/index.php?r=hcupm25datainfo/index">本地数据记录：HcuPm25DataInfo颗粒物</a></p>
-	<p><a class="btn btn-lg btn-success" href="/yii2basic/web/index.php?r=hcupm25sharp/index">本地数据记录：HcuPm25Sharp颗粒物</a></p>
+	<p><a class="btn btn-lg btn-success" href="/yii2basic/web/index.php?r=hcupm25sharpdatainfo/index">本地数据记录：HcuPm25Sharp颗粒物</a></p>
 	<p><a class="btn btn-lg btn-success" href="/yii2basic/web/index.php?r=hcuwinddirdatainfo/index">本地数据记录：HcuWinddirDataInfo风向</a></p>
 	<p><a class="btn btn-lg btn-success" href="/yii2basic/web/index.php?r=hcuwindspddatainfo/index">本地数据记录：HcuWindspdDataInfo风速</a></p>
 	<p><a class="btn btn-lg btn-success" href="/yii2basic/web/index.php?r=hcutempdatainfo/index">本地数据记录：HcuTempDataInfo温度</a></p>

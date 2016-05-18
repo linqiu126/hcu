@@ -23,6 +23,11 @@ enum FSM_STATE_TOXICGAS
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+#define SENSOR_TOXICGAS_RPI_PRESENT_TRUE 1
+#define SENSOR_TOXICGAS_RPI_PRESENT_FALSE 0
+#define SENSOR_TOXICGAS_RPI_MQ135_PRESENT SENSOR_TOXICGAS_RPI_PRESENT_TRUE
+extern OPSTAT func_toxicgas_time_out_read_data_from_mq135(void);
+
 //Global variables
 extern FsmStateItem_t FsmToxicgas[];
 
@@ -34,5 +39,9 @@ extern OPSTAT fsm_toxicgas_time_out(UINT32 dest_id, UINT32 src_id, void * param_
 
 //Local API
 OPSTAT func_toxicgas_int_init(void);
+
+//引用外部API
+extern OPSTAT dbi_HcuToxicgasDataInfo_save(sensor_toxicgas_data_element_t *toxicgasData);
+extern OPSTAT dbi_HcuToxicgasMq135DataInfo_save(sensor_toxicgas_mq135_data_element_t *toxicgasData);
 
 #endif /* L3APP_SENSORTOXICGAS_H_ */

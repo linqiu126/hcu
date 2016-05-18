@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lrt -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lsqlite3
+LIBS := -lrt -lwiringPi -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lsqlite3
 

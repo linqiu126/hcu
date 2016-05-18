@@ -9,6 +9,7 @@
 
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
+#include "../l1com/l1comdef.h"
 
 /*
 ** FSM of the TOXICGAS
@@ -44,6 +45,7 @@ FsmStateItem_t FsmToxicgas[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern float zHcuGpioToxicgasMq135;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -67,7 +69,7 @@ OPSTAT fsm_toxicgas_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_TOXICGAS, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -149,6 +151,78 @@ OPSTAT func_toxicgas_int_init(void)
 
 OPSTAT fsm_toxicgas_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret;
+
+	//Receive message and copy to local variable
+	msg_struct_com_time_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
+		HcuErrorPrint("TOXICGAS: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_TOXICGAS]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_TOXICGAS]是否超限
+	if (zHcuRunErrCnt[TASK_ID_TOXICGAS] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+		//减少重复RESTART的概率
+		zHcuRunErrCnt[TASK_ID_TOXICGAS] = zHcuRunErrCnt[TASK_ID_TOXICGAS] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		msg_struct_com_restart_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
+		snd0.length = sizeof(msg_struct_com_restart_t);
+		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_TOXICGAS, TASK_ID_TOXICGAS, &snd0, snd0.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TOXICGAS]++;
+			HcuErrorPrint("TOXICGAS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TOXICGAS], zHcuTaskNameList[TASK_ID_TOXICGAS]);
+			return FAILURE;
+		}
+	}
+
+	//Period time out received
+	if ((rcv.timeId == TIMER_ID_1S_TOXICGAS_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//保护周期读数的优先级，强制抢占状态，并简化问题
+		if (FsmGetState(TASK_ID_TOXICGAS) != FSM_STATE_TOXICGAS_ACTIVED){
+			ret = FsmSetState(TASK_ID_TOXICGAS, FSM_STATE_TOXICGAS_ACTIVED);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_TOXICGAS]++;
+				HcuErrorPrint("TOXICGAS: Error Set FSM State!\n");
+				return FAILURE;
+			}//FsmSetState
+		}
+
+#ifdef TARGET_RASPBERRY_PI3B
+		if (SENSOR_TOXICGAS_RPI_MQ135_PRESENT == SENSOR_TOXICGAS_RPI_PRESENT_TRUE) func_toxicgas_time_out_read_data_from_mq135();
+#endif
+
+		//目前在非树莓派条件下，DO NOTHING
+
+	}
+
+	return SUCCESS;
+}
+
+//暂时没考虑发送给后台云平台
+OPSTAT func_toxicgas_time_out_read_data_from_mq135(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_toxicgas_mq135_data_element_t toxicgasData;
+		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_mq135_data_element_t));
+		toxicgasData.equipid = 0;
+		toxicgasData.timeStamp = time(0);
+		toxicgasData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		toxicgasData.toxicgasValue = (int)(zHcuGpioToxicgasMq135*100);
+
+		ret = dbi_HcuToxicgasMq135DataInfo_save(&toxicgasData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TOXICGAS]++;
+			HcuErrorPrint("TOXICGAS: Can not save ToxicgasMq135 data into database!\n");
+		}
+	}
+
 	return SUCCESS;
 }
 

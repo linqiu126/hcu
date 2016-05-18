@@ -158,6 +158,26 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSvrConTaskInitInfo[TASK_ID_CLOUDVELA].active = SVRCON_TASK_ACTIVE;
 	zHcuSvrConTaskInitInfo[TASK_ID_CLOUDVELA].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 
+	if (zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_I2CBUSLIBRA, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_I2CBUSLIBRA]);
+		}
+	}
+	zHcuSvrConTaskInitInfo[TASK_ID_I2CBUSLIBRA].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_I2CBUSLIBRA].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
+	if (zHcuTaskInfo[TASK_ID_SPIBUSARIES].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_SPIBUSARIES, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_SPIBUSARIES]);
+		}
+	}
+	zHcuSvrConTaskInitInfo[TASK_ID_SPIBUSARIES].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_SPIBUSARIES].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
 	if (zHcuTaskInfo[TASK_ID_EMC].swTaskActive == HCU_TASK_PNP_ON){
 		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_EMC, TASK_ID_SVRCON, &snd, snd.length);
 		if (ret == FAILURE){
@@ -529,7 +549,15 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSvrConTaskInitInfo[TASK_ID_PM25SHARP].active = SVRCON_TASK_ACTIVE;
 	zHcuSvrConTaskInitInfo[TASK_ID_PM25SHARP].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 
-
+	//wiringPi only could be initialised once, so put here, i.s.o. setup once per task and then render errors.
+#ifdef TARGET_RASPBERRY_PI3B
+	if ((zHcuTaskInfo[TASK_ID_GPIO].swTaskActive == HCU_TASK_PNP_ON) || (zHcuTaskInfo[TASK_ID_I2C].swTaskActive == HCU_TASK_PNP_ON) || (zHcuTaskInfo[TASK_ID_SPI].swTaskActive == HCU_TASK_PNP_ON))
+	if (wiringPiSetup() == -1) {
+		zHcuRunErrCnt[TASK_ID_SVRCON]++;
+		HcuErrorPrint("SVRCON: Setup wiringPi failed!");
+		return FAILURE;
+	}
+#endif
 
 	//设置定时器，如果定时器超时，所有任务都没有反馈，意味着失败，停止定时器，不然就是成功
 	//采用静态表格控制Timer，避免了泄露的可能性

@@ -69,6 +69,10 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		msg_struct_com_init_feedback_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_init_feedback_t));
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
+
+		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HWINV, &snd0, snd0.length);
 		if (ret == FAILURE){
 			HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[src_id]);
@@ -388,6 +392,8 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.comm.commFrameSpsvirgo = COMM_FRONT_SPSVIRGO;
 		zHcuSysEngPar.comm.commFrameAvorion = COMM_FRONT_AVORION;
 		zHcuSysEngPar.comm.commFrameCloudvela = COMM_FRONT_CLOUDVELA;
+		zHcuSysEngPar.comm.commFrameI2cbuslibra = COMM_FRONT_I2CBUSLIBRA;
+		zHcuSysEngPar.comm.commFrameSpibusaries = COMM_FRONT_SPIBUSARIES;
 		zHcuSysEngPar.comm.commFrontSps485 = COMM_FRONT_SPS485;
 		zHcuSysEngPar.comm.commFrontSps232 = COMM_FRONT_SPS232;
 		zHcuSysEngPar.comm.commFrontMicrophone = COMM_FRONT_MICROPHONE;
@@ -1011,18 +1017,28 @@ void func_hwinv_scan_db(void)
 	if (zCurTimeDate.dayChange == TRUE){
 		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidDht11DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuTempDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempDht11DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuCo1DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 	}
 }

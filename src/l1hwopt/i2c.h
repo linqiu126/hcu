@@ -24,11 +24,31 @@ enum FSM_STATE_I2C
 
 //Global variables
 extern FsmStateItem_t FsmI2c[];
+extern float zHcuI2cTempSht20;
+extern float zHcuI2cHumidSht20;
+extern float zHcuI2cLightstrBh1750;
+extern float zHcuI2cAirprsBmp180;
+
+//Local definition
+#define RPI_I2C_PIN_SHT20_VCC 17
+#define RPI_I2C_PIN_SHT20_GND 25
+#define RPI_I2C_PIN_SHT20_SDA 3
+#define RPI_I2C_PIN_SHT20_SCL 5
+
+#define RPI_I2C_ADDR_SHT20 0x40
+#define RPI_I2C_ADDR_BH1750 0x23
+#define RPI_I2C_ADDR_BMP180 0x77
+#define RPI_I2C_READ_REPEAT_TIMES 10
+
+#define RPI_I2C_SENSOR_READ_GAP 20 //in second
 
 //API
 extern OPSTAT fsm_i2c_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_i2c_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+OPSTAT func_i2c_read_data_sht20(void);  //温湿度
+OPSTAT func_i2c_read_data_bh1750(void); //光强GY30
+OPSTAT func_i2c_read_data_bmp180(void); //气压GY68
 
 //Local API
 OPSTAT func_i2c_int_init(void);

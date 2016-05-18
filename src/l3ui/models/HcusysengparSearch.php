@@ -19,7 +19,7 @@ class HcusysengparSearch extends Hcusysengpar
     {
         return [
             [['prjname', 'hcudbhost', 'hcudbuser', 'hcudbpsw', 'hcudbname', 'cloudhttpaddlocal', 'cloudhttpaddtest', 'cloudhttpaddsae', 'cloudhttpaddjd', 'cloudhttpaddwechat', 'cloudbhservername', 'cloudbhhcuname', 'hcuvideoserverdir', 'hcuvideoserverhttp', 'browselprog', 'browselstartupaddress', 'browselworkingoption'], 'safe'],
-            [['commbackhawlcon', 'commhwboardethernet', 'commhwboardusbnet', 'commhwboardwifi', 'commhwboard3g4g', 'commhwboardgps', 'commhwboardlcd', 'commhwboardzeegbe', 'commhwboardflash', 'commframemodbus', 'commframespsvirgo', 'commframeavorion', 'commframecloudvela', 'commfrontsps485', 'commfrontsps232', 'commfrontmicrophone', 'commfrontcamera', 'commfrontble', 'commfrontgpio', 'commfronti2c', 'commfrontspi', 'commfrontpwm', 'commfrontadc', 'commfrontswitch', 'commfrontrelay', 'commfrontmotor', 'commfrontsensoremc', 'commfrontsensorpm25', 'commfrontsensortemp', 'commfrontsensorhumid', 'commfrontsensorwinddir', 'commfrontsensorwindspd', 'commfrontsensornoise', 'commfrontsensorhsmmp', 'commfrontsensorairprs', 'commfrontsensorco1', 'commfrontsensorlightstr', 'commfrontsensoralcohol', 'commfrontsensorhcho', 'commfrontsensortoxicgas', 'hcudbport', 'emcreqtimer', 'emcreqtimerfb', 'humidreqtimer', 'humidreqtimerfb', 'noisereqtimer', 'noisereqtimerfb', 'pm25reqtimer', 'pm25reqtimerfb', 'tempreqtimer', 'tempreqtimerfb', 'winddirreqtimer', 'winddirreqtimerfb', 'windspdreqtimer', 'windspdreqtimerfb', 'heartbeattimer', 'heartbeartbacktimer', 'cmdcontrollongtimer', 'cmdcontrolshorttimer', 'hsmmpreqtimer', 'hsmmpcapduration', 'hsmmpcapdurationfb', 'hsmmprefrate', 'airprsreqtimer', 'co1reqtimer', 'lightstrreqtimer', 'alcoholreqtimer', 'hchoreqtimer', 'toxicgasreqtimer', 'syspmworkingtimer', 'seriesportformodbus', 'seriesportforgps', 'cloudbhitfframestd', 'debugmode', 'tracemode', 'browselautostartupflag'], 'integer'],
+            [['commbackhawlcon', 'commhwboardethernet', 'commhwboardusbnet', 'commhwboardwifi', 'commhwboard3g4g', 'commhwboardgps', 'commhwboardlcd', 'commhwboardzeegbe', 'commhwboardflash', 'commframemodbus', 'commframespsvirgo', 'commframeavorion', 'commframecloudvela', 'commframei2cbuslibra', 'commframespibusaries', 'commfrontsps485', 'commfrontsps232', 'commfrontmicrophone', 'commfrontcamera', 'commfrontble', 'commfrontgpio', 'commfronti2c', 'commfrontspi', 'commfrontpwm', 'commfrontadc', 'commfrontswitch', 'commfrontrelay', 'commfrontmotor', 'commfrontsensoremc', 'commfrontsensorpm25', 'commfrontsensortemp', 'commfrontsensorhumid', 'commfrontsensorwinddir', 'commfrontsensorwindspd', 'commfrontsensornoise', 'commfrontsensorhsmmp', 'commfrontsensorairprs', 'commfrontsensorco1', 'commfrontsensorlightstr', 'commfrontsensoralcohol', 'commfrontsensorhcho', 'commfrontsensortoxicgas', 'commfrontsensorpm25sharp', 'hcudbport', 'emcreqtimer', 'emcreqtimerfb', 'humidreqtimer', 'humidreqtimerfb', 'noisereqtimer', 'noisereqtimerfb', 'pm25reqtimer', 'pm25reqtimerfb', 'tempreqtimer', 'tempreqtimerfb', 'winddirreqtimer', 'winddirreqtimerfb', 'windspdreqtimer', 'windspdreqtimerfb', 'heartbeattimer', 'heartbeartbacktimer', 'cmdcontrollongtimer', 'cmdcontrolshorttimer', 'hsmmpreqtimer', 'hsmmpcapduration', 'hsmmpcapdurationfb', 'hsmmprefrate', 'airprsreqtimer', 'co1reqtimer', 'lightstrreqtimer', 'alcoholreqtimer', 'hchoreqtimer', 'toxicgasreqtimer', 'syspmworkingtimer', 'seriesportformodbus', 'seriesportforgps', 'seriesportforpm25sharp', 'cloudbhitfframestd', 'debugmode', 'tracemode', 'browselautostartupflag'], 'integer'],
         ];
     }
 
@@ -72,6 +72,8 @@ class HcusysengparSearch extends Hcusysengpar
             'commframespsvirgo' => $this->commframespsvirgo,
             'commframeavorion' => $this->commframeavorion,
             'commframecloudvela' => $this->commframecloudvela,
+            'commframei2cbuslibra' => $this->commframei2cbuslibra,
+            'commframespibusaries' => $this->commframespibusaries,
             'commfrontsps485' => $this->commfrontsps485,
             'commfrontsps232' => $this->commfrontsps232,
             'commfrontmicrophone' => $this->commfrontmicrophone,
@@ -99,6 +101,7 @@ class HcusysengparSearch extends Hcusysengpar
             'commfrontsensoralcohol' => $this->commfrontsensoralcohol,
             'commfrontsensorhcho' => $this->commfrontsensorhcho,
             'commfrontsensortoxicgas' => $this->commfrontsensortoxicgas,
+            'commfrontsensorpm25sharp' => $this->commfrontsensorpm25sharp,
             'hcudbport' => $this->hcudbport,
             'emcreqtimer' => $this->emcreqtimer,
             'emcreqtimerfb' => $this->emcreqtimerfb,
@@ -131,6 +134,7 @@ class HcusysengparSearch extends Hcusysengpar
             'syspmworkingtimer' => $this->syspmworkingtimer,
             'seriesportformodbus' => $this->seriesportformodbus,
             'seriesportforgps' => $this->seriesportforgps,
+            'seriesportforpm25sharp' => $this->seriesportforpm25sharp,
             'cloudbhitfframestd' => $this->cloudbhitfframestd,
             'debugmode' => $this->debugmode,
             'tracemode' => $this->tracemode,

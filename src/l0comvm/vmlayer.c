@@ -47,14 +47,16 @@ char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU] ={
 	"HARDDISK",
 	"CAMERA",
 	"MICROPHONE",
-	"SPSVIRGO",
 	"FLASH",
 	"GPS",
 	"LCD",
 	"HWINV",
+	"SPSVIRGO",
 	"CLOUDVELA",
 	"MODBUS",
 	"AVORION",
+	"I2CBUSLIBRA",
+	"SPIBUSARIES",
 	"HSMMP",
 	"EMC",
 	"HUMID",
@@ -290,7 +292,7 @@ void hcu_vm_system_init(void)
 
     //Print MAC address, to show the hardware physical identity
     //需要进一步确定MAC地址和相应硬件标识的来源
-	UINT8 MacAddress[]={0,0,0,0,0,0};
+	//UINT8 MacAddress[]={0,0,0,0,0,0};
 	//HcuDebugPrint("HCU-VM: HCU HW MAC Address = [%02X %02X %02X %02X %02X %02X], DEFAULT HCU Name = [%s]\n", MacAddress[5], MacAddress[4], MacAddress[3], MacAddress[2], MacAddress[1], MacAddress[0], CLOUDVELA_BH_HCU_NAME);
 
 	//初始化全局变量TASK_ID/QUE_ID/TASK_STAT
@@ -1601,8 +1603,8 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 	}
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_IPT_ON) != FALSE)
 	{
-		HcuDebugPrint("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x) for msg(0x%x)\n",
-				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, mid);
+		HcuDebugPrint("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
+				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskNameList[dest_id], mid, zHcuMsgNameList[mid], src_id, zHcuTaskNameList[src_id]);
 	}
 
 	/*

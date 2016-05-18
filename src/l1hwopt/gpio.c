@@ -36,6 +36,9 @@ FsmStateItem_t FsmGpio[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+float zHcuGpioTempDht11;
+float zHcuGpioHumidDht11;
+float zHcuGpioToxicgasMq135;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -59,7 +62,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_GPIO, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -82,6 +85,8 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_GPIO] = 0;
+	zHcuGpioTempDht11 = 0;
+	zHcuGpioHumidDht11 = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_GPIO, FSM_STATE_GPIO_RECEIVED) == FAILURE){
@@ -92,28 +97,14 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("GPIO: Enter FSM_STATE_GPIO_ACTIVED status, Keeping refresh here!\n");
 	}
-	/*
 
-	//进入阻塞式接收数据状态，然后继续发送
+	//进入循环工作模式
 	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给HSMMP
-			msg_struct_gpio_hsmmp_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_gpio_hsmmp_data_rx_t));
-			snd.length = sizeof(msg_struct_gpio_hsmmp_data_rx_t);
-			ret = hcu_message_send(MSG_ID_GPIO_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_GPIO, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_GPIO]++;
-				HcuErrorPrint("GPIO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_GPIO], zHcuTaskNameList[TASK_ID_HSMMP]);
-				return FAILURE;
-			}
-		}
-
-		hcu_sleep(5);
+		func_gpio_read_data_dht11();
+		hcu_sleep(RPI_GPIO_SENSOR_READ_GAP/2);
+		func_gpio_read_data_mq135();
+		hcu_sleep(RPI_GPIO_SENSOR_READ_GAP/2);
 	}
-	*/
 
 	return SUCCESS;
 }
@@ -131,7 +122,138 @@ OPSTAT func_gpio_int_init(void)
 	return SUCCESS;
 }
 
-//Inhert from old APIGPIO.C
+//Starting point for Raspberry-Pi function definition
+//目前传感器读取有个问题：
+//1.如果传感器没有连接，要么该线程死锁，要么读取错误的数据，需要搞定如何判定
+//2.传感器中途拔掉，如何检测出来
+//3.如何确定最优读取间隔时间，以便既能降低读取频度，又能及时反应其变化
+
+UINT32 databuf;
+OPSTAT func_gpio_read_data_dht11(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+	float tmp1, tmp2;
+    pinMode(RPI_GPIO_PIN_DHT11_DATA, OUTPUT);
+    digitalWrite(RPI_GPIO_PIN_DHT11_DATA, 1);
+
+    while(1) {
+        pinMode(RPI_GPIO_PIN_DHT11_DATA, OUTPUT);
+        digitalWrite(RPI_GPIO_PIN_DHT11_DATA, 1);
+        delay(1000); //wiringPi functions
+        if(func_gpio_readSensorDht11Data(RPI_GPIO_PIN_DHT11_DATA))
+        {
+        	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+            	HcuDebugPrint("GPIO: Sensor DHT11 Original read result Temp=%d.%dC, Humid=%d.%d\%, DATA_GPIO#=%d\n", (databuf>>8)&0xFF, databuf&0xFF, (databuf>>24)&0xFF, (databuf>>16)&0xFF, RPI_GPIO_PIN_DHT11_DATA);
+        	}
+        	tmp1 =  (databuf>>8)&0xFF;
+        	tmp2 = databuf&0xFF;
+        	zHcuGpioTempDht11 = tmp1 + tmp2/256;
+        	tmp1 =  (databuf>>24)&0xFF;
+        	tmp2 = (databuf>>16)&0xFF;
+        	zHcuGpioHumidDht11 = tmp1 + tmp2/256;
+        	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+            	HcuDebugPrint("GPIO: Sensor DHT11 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_GPIO#=%d\n", zHcuGpioTempDht11, zHcuGpioHumidDht11, RPI_GPIO_PIN_DHT11_DATA);
+        	}
+            databuf=0;
+            break;
+        }
+        else
+        {
+            databuf=0;
+        }
+    }
+    return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
+//读取MQ135气体传感器的数据
+OPSTAT func_gpio_read_data_mq135(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+	int result;
+	delay(200);
+    pinMode(RPI_GPIO_PIN_MQ135_DATA, INPUT);
+    delay(200);
+    //目前还有较多的问题，读取的数据总是HIGH，待完善
+	result = digitalRead(RPI_GPIO_PIN_MQ135_DATA);
+	if ((result == 1) && (zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE)
+		HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [HIGH], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
+	else if ((result == 0) && (zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE)
+		HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [LOW], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
+	else
+	{
+		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+			HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [NULL-%d], DATA_GPIO#=%d\n", result, RPI_GPIO_PIN_MQ135_DATA);
+		}
+	}
+
+	//先准备好如此的数据存储框架，未来再改进该数据的正确性
+	zHcuGpioToxicgasMq135 = result;
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
+#ifdef TARGET_RASPBERRY_PI3B
+UINT8 func_gpio_readSensorDht11Data(UINT32 pin)
+{
+	UINT8 crc;
+	UINT8 i;
+
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, 0);
+    delay(25);
+    digitalWrite(pin, 1);
+    pinMode(pin, INPUT);
+    pullUpDnControl(pin, PUD_UP);
+
+    delayMicroseconds(27);
+    if(digitalRead(pin)==0)
+    {
+        while(!digitalRead(pin));
+
+        for(i=0;i<32;i++)
+        {
+            while(digitalRead(pin));
+            while(!digitalRead(pin));
+            delayMicroseconds(RPI_GPIO_HIGH_TIME);
+            databuf*=2;
+            if(digitalRead(pin)==1)
+            {
+                databuf++;
+            }
+        }
+
+        for(i=0;i<8;i++)
+        {
+            while(digitalRead(pin));
+            while(!digitalRead(pin));
+            delayMicroseconds(RPI_GPIO_HIGH_TIME);
+            crc*=2;
+            if(digitalRead(pin)==1)
+            {
+                crc++;
+            }
+        }
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+#endif
+
+
+
+
+//Inherit from old APIGPIO.C
 /*
 ** Local static variables
 */

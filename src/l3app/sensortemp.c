@@ -59,6 +59,9 @@ SensorTempInfo_t zSensorTempInfo[MAX_NUM_OF_SENSOR_TEMP_INSTALLED];
 UINT8 currentSensorTempId;
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
 //extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
+extern float zHcuGpioTempDht11;
+extern float zHcuI2cTempSht20;
+extern float zHcuSpiTempRht03;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -86,7 +89,7 @@ OPSTAT fsm_temp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_TEMP, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -188,6 +191,12 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 				return FAILURE;
 			}//FsmSetState
 		}
+
+#ifdef TARGET_RASPBERRY_PI3B
+		if (SENSOR_TEMP_RPI_DHT11_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_dht11();
+		if (SENSOR_TEMP_RPI_SHT20_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_sht20();
+		if (SENSOR_TEMP_RPI_RHT03_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_rht03();
+#endif
 		func_temp_time_out_read_data_from_modbus();
 	}
 
@@ -549,3 +558,79 @@ OPSTAT fsm_temp_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 {
 	return SUCCESS;
 }
+
+//暂时没考虑发送给后台云平台
+OPSTAT func_temp_time_out_read_data_from_dht11(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_temp_dht11_data_element_t tempData;
+		memset(&tempData, 0, sizeof(sensor_temp_dht11_data_element_t));
+		tempData.equipid = 0;
+		tempData.timeStamp = time(0);
+		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		tempData.tempValue = (int)(zHcuGpioTempDht11*100);
+
+		ret = dbi_HcuTempDht11DataInfo_save(&tempData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Can not save TempDht11 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_temp_time_out_read_data_from_sht20(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_temp_sht20_data_element_t tempData;
+		memset(&tempData, 0, sizeof(sensor_temp_sht20_data_element_t));
+		tempData.equipid = 0;
+		tempData.timeStamp = time(0);
+		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		tempData.tempValue = (int)(zHcuI2cTempSht20*100);
+
+		ret = dbi_HcuTempSht20DataInfo_save(&tempData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Can not save TempSht20 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_temp_time_out_read_data_from_rht03(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_temp_rht03_data_element_t tempData;
+		memset(&tempData, 0, sizeof(sensor_temp_rht03_data_element_t));
+		tempData.equipid = 0;
+		tempData.timeStamp = time(0);
+		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		tempData.tempValue = (int)(zHcuSpiTempRht03*100);
+
+		ret = dbi_HcuTempRht03DataInfo_save(&tempData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Can not save TempRht03 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
+
+
