@@ -609,6 +609,12 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 增加MQ135/有毒气体完整工作的模块，包括数据库，DBIAPI以及L3处理
 
 
+== Update log: 2016 May 18 SW Version: XQ.HCU.SW.R01.087 //ZSC
+> add curl FTP modle 
+> add the modules for HCU SW inventory and HCU SW download
+
+
+
 
 
 

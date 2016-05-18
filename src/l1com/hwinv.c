@@ -350,25 +350,33 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
 
 	if (ret == SUCCESS){
-		HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.cloud.cloudBhHcuName);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.emcReqTimer = %d\n", zHcuSysEngPar.timer.emcReqTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.humidReqTimer = %d\n", zHcuSysEngPar.timer.humidReqTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.pm25ReqTimer = %d\n", zHcuSysEngPar.timer.pm25ReqTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.tempreqtimer = %d\n", zHcuSysEngPar.timer.tempReqTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.winddirreqtimer = %d\n", zHcuSysEngPar.timer.winddirReqTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.windspdreqtimer = %d\n", zHcuSysEngPar.timer.windspdReqTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.noisereqtimer = %d\n", zHcuSysEngPar.timer.noiseReqTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cmdcontrollongtimer = %d\n", zHcuSysEngPar.timer.cmdcontrolLongTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.heartbeattimer = %d\n", zHcuSysEngPar.timer.heartbeatTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpReqTimer = %d\n", zHcuSysEngPar.timer.hsmmpReqTimer);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDuration = %d\n", zHcuSysEngPar.timer.hsmmpCapDuration);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDurationFB = %d\n", zHcuSysEngPar.timer.hsmmpCapDurationFB);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpRefRate = %d\n", zHcuSysEngPar.timer.hsmmpRefRate);
-		HcuDebugPrint("HWINV: zHcuSysEngPar.videoSev.hcuVideoServerDir = %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
-
-		HcuDebugPrint("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
 
 		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.emcReqTimer = %d\n", zHcuSysEngPar.timer.emcReqTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.humidReqTimer = %d\n", zHcuSysEngPar.timer.humidReqTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.pm25ReqTimer = %d\n", zHcuSysEngPar.timer.pm25ReqTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.tempreqtimer = %d\n", zHcuSysEngPar.timer.tempReqTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.winddirreqtimer = %d\n", zHcuSysEngPar.timer.winddirReqTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.windspdreqtimer = %d\n", zHcuSysEngPar.timer.windspdReqTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.noisereqtimer = %d\n", zHcuSysEngPar.timer.noiseReqTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cmdcontrollongtimer = %d\n", zHcuSysEngPar.timer.cmdcontrolLongTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.heartbeattimer = %d\n", zHcuSysEngPar.timer.heartbeatTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpReqTimer = %d\n", zHcuSysEngPar.timer.hsmmpReqTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDuration = %d\n", zHcuSysEngPar.timer.hsmmpCapDuration);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDurationFB = %d\n", zHcuSysEngPar.timer.hsmmpCapDurationFB);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpRefRate = %d\n", zHcuSysEngPar.timer.hsmmpRefRate);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.videoSev.hcuVideoServerDir = %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
+
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpAdd = %s\n", zHcuSysEngPar.cloud.cloudFtpAdd);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUser = %s\n", zHcuSysEngPar.cloud.cloudFtpUser);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwd = %s\n", zHcuSysEngPar.cloud.cloudFtpPwd);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.swDownload.hcuSwDownloadDir = %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
+
+			HcuDebugPrint("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
+
+
 			HcuDebugPrint("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 		}
 	}
@@ -461,6 +469,15 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		strcpy(zHcuSysEngPar.cloud.cloudBhServerName, CLOUDVELA_BH_SERVER_NAME);
 		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, CLOUDVELA_BH_HCU_NAME);
 		zHcuSysEngPar.cloud.cloudBhItfFrameStd = CLOUDVELA_BH_INTERFACE_STANDARD;
+
+		//for HCU SW FTP by shanchun
+		strcpy(zHcuSysEngPar.cloud.cloudFtpAdd, CLOUDVELA_FTP_ADDRESS);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpUser, CLOUDVELA_FTP_USER);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpPwd, CLOUDVELA_FTP_PWD);
+
+		//local SW storage address
+		strcpy(zHcuSysEngPar.swDownload.hcuSwDownloadDir, HCU_SW_DOWNLOAD_DIR_DEFAULT);
+
 		//视频服务器部分
 		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT);
 		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT);
@@ -520,6 +537,17 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	else
 	{
 		HcuDebugPrint("HWINV: Create successfully for video server directory: %s\n\n\n\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
+
+	}
+
+    //create HCU SW download local directory by Shanchun
+	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwDownloadDir);
+    if (ret == FAILURE){
+    	HcuErrorPrint("HWINV: Can't create HCU SW download local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
+	}
+	else
+	{
+		HcuDebugPrint("HWINV: Create successfully for HCU SW download local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
 
 	}
 

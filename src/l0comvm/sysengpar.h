@@ -148,7 +148,18 @@ typedef struct SysEngParElementCloudvela
 	char  cloudBhServerName[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
 	char  cloudBhHcuName[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
 	UINT8 cloudBhItfFrameStd;
+	char  cloudFtpAdd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];//for HCU SW FTP by shanchun
+	char  cloudFtpUser[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
+	char  cloudFtpPwd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
 }SysEngParElementCloudvela_t;
+
+//local SW storage address for HCU SW upgrade by shanchun
+#define SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN 64
+typedef struct SysEngParElementHcuSwDownload
+{
+	char  hcuSwDownloadDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
+
+}SysEngParElementHcuSwDownload_t;
 
 //本地视频服务器的地址
 #define SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN 64
@@ -218,6 +229,7 @@ typedef struct HcuSysEngParTable
 	SysEngParElementSensorTimer_t timer;//by Shanchun
 	SysEngParElementSeriesPort_t serialport;//by Shanchun
 	SysEngParElementCloudvela_t cloud;
+	SysEngParElementHcuSwDownload_t swDownload;//by Shanchun
 	SysEngParElementVideoServer_t videoSev;
 	UINT8 debugMode;
 	UINT8 traceMode;

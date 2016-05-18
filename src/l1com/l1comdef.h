@@ -252,6 +252,24 @@ typedef enum
 	L3PO_noise_max,
 }L3NoiseOptIdDef;
 
+typedef enum
+{
+	L3PO_swdownload_min = 0,
+	L3PO_swdownload_none = 0,
+	L3PO_swdownload_req = 0x01, //Sw download Request
+	L3PO_swdownload_report = 0x81, //Sw download Response
+	L3PO_swdownload_max,
+}L3SwDownloadOptIdDef;
+
+typedef enum
+{
+	L3PO_swinventory_min = 0,
+	L3PO_swinventory_none = 0,
+	L3PO_swinventory_req = 0x01, //Sw download Request
+	L3PO_swinventory_report = 0x81, //Sw download Response
+	L3PO_swinventory_max,
+}L3SwInventoryOptIdDef;
+
 
 //UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数，针对读数到底是周期性的还是一次性的
 //内部定义，内部使用

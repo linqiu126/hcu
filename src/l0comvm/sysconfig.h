@@ -182,6 +182,13 @@
 #define CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 #define CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
 
+//定义后台CLOUD  FTP 的地址
+#define  CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
+#define  CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
+#define  CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
+
+//local SW storage address for HCU SW upgrade by shanchun
+#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcusw/"
 
 //系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 #define CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
