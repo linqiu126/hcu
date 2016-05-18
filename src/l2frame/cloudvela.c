@@ -11,8 +11,6 @@
 #include "../l1com/l1comdef.h"
 #include "cloudvela.h"
 
-#include "../l0webser/ftp.h"
-
 /*
 ** FSM of the CLOUDVELA
 */
@@ -115,36 +113,6 @@ OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 
 OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-
-
-	//FTP test start by zsc!
-
-	FTP_OPT ftp_opt;
-
-	ftp_opt.user_key = "anonymous:anonymous";
-/*
-	ftp_opt.url = "ftp://121.40.185.177/upload.txt";
-	ftp_opt.file = "/home/pi/ftp/upload.txt";
-
-	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt))
-		HcuDebugPrint("Upload success.\n\n\n\n\n\n\n\n\n\n");
-	else
-		HcuErrorPrint("Upload failed.\n\n\n\n\n\n\n\n\n\n");
-*/
-
-
-	ftp_opt.url = "ftp://121.40.185.177/test.txt";
-	ftp_opt.file = "/home/pi/ftp/test.txt";
-
-	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt))
-		HcuDebugPrint("Download success.\n\n\n\n\n\n\n\n\n\n");
-	else
-		HcuErrorPrint("Download failed.\n\n\n\n\n\n\n\n\n\n");
-
-
-	//FTP test end by zsc!
-
-
 	int ret=0;
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -153,7 +121,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CLOUDVELA, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -161,8 +129,6 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			return FAILURE;
 		}
 	}
-
-
 
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_INITED);
 	if (ret == FAILURE){
@@ -1267,14 +1233,9 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 
 		//for GPS test
 		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
-			HcuDebugPrint("GPS: NS is %c.\n", zHcuGpsPosInfo.NS);
-			HcuDebugPrint("GPS: latitude is %d.\n", zHcuGpsPosInfo.gpsY);
-			HcuDebugPrint("GPS: EW is %c.\n", zHcuGpsPosInfo.EW);
-			HcuDebugPrint("GPS: longitude is %d.\n", zHcuGpsPosInfo.gpsX);
-			HcuDebugPrint("GPS: Status is %c.\n", zHcuGpsPosInfo.status);
-			HcuDebugPrint("GPS: speed is %d.\n", zHcuGpsPosInfo.speed);
-			HcuDebugPrint("GPS: high is %d.\n", zHcuGpsPosInfo.gpsZ);
-			HcuDebugPrint("GPS: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuGpsPosInfo.D.year, zHcuGpsPosInfo.D.month, zHcuGpsPosInfo.D.day, zHcuGpsPosInfo.D.hour, zHcuGpsPosInfo.D.minute, zHcuGpsPosInfo.D.second);
+			HcuDebugPrint("CLOUDVELA: NS is %c, latitude is %d, EW is %c, longitude is %d, Status is %c, speed is %d, high is %d.\n",
+					zHcuGpsPosInfo.NS, zHcuGpsPosInfo.gpsY, zHcuGpsPosInfo.EW, zHcuGpsPosInfo.gpsX, zHcuGpsPosInfo.status, zHcuGpsPosInfo.speed, zHcuGpsPosInfo.gpsZ);
+			HcuDebugPrint("CLOUDVELA: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuGpsPosInfo.D.year, zHcuGpsPosInfo.D.month, zHcuGpsPosInfo.D.day, zHcuGpsPosInfo.D.hour, zHcuGpsPosInfo.D.minute, zHcuGpsPosInfo.D.second);
 		}
 
 		//Send out
@@ -2709,13 +2670,6 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 
 	}
 
-	else if (rcv.buf[0] == 10 && rcv.buf[1] == 13)
-	{
-		rcv.length = param_len - 2;
-		memcpy(rcv.buf, &rcv.buf[2], rcv.length);
-
-	}
-
 	else if (rcv.buf[0] == 13 || rcv.buf[1] == 10)
 	{
 		rcv.length = param_len - 1;
@@ -2723,22 +2677,16 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 
 	}
 
-	else if (rcv.buf[0] == 10 || rcv.buf[1] == 13)
-	{
-		rcv.length = param_len - 1;
-		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
-
-	}
 
 
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
-		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
+		//HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
 		int i;
 		for(i =0; i<rcv.length; i++)
 			HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
-		for(i =0; i<rcv.length; i++)
-			HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
+		//for(i =0; i<rcv.length; i++)
+			//HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
 
 	}
 

@@ -19,6 +19,9 @@ extern OPSTAT dbi_HcuToxicgasDataInfo_save(sensor_toxicgas_data_element_t *toxic
 extern OPSTAT dbi_HcuToxicgasDataInfo_inqury_1st_record(UINT32 deviceid, sensor_toxicgas_data_element_t *toxicgasData);
 extern OPSTAT dbi_HcuToxicgasDataInfo_delete_3monold(UINT32 days);
 
+extern OPSTAT dbi_HcuToxicgasMq135DataInfo_save(sensor_toxicgas_mq135_data_element_t *toxicgasData);
+extern OPSTAT dbi_HcuToxicgasMq135DataInfo_delete_3monold(UINT32 days);
+
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

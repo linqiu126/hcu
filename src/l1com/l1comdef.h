@@ -650,7 +650,9 @@ typedef struct GpsPosInfo
 #define CMD_POLLING_LONG_TIMER_START_OFF 2
 #define CMD_POLLING_SHORT_TIMER_START_ON 1
 #define CMD_POLLING_SHORT_TIMER_START_OFF 2
-
 #define CMD_POLLING_NO_COMMAND_MAX 10
+
+//定义本地I2C设备
+#define RPI_DEV_I2C_ADDRESS "/dev/i2c-1"
 
 #endif /* L1COM_L1COMDEF_H_ */

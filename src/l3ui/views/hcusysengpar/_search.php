@@ -43,6 +43,10 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'commframecloudvela') ?>
 
+    <?php // echo $form->field($model, 'commframei2cbuslibra') ?>
+
+    <?php // echo $form->field($model, 'commframespibusaries') ?>
+
     <?php // echo $form->field($model, 'commfrontsps485') ?>
 
     <?php // echo $form->field($model, 'commfrontsps232') ?>
@@ -96,6 +100,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'commfrontsensorhcho') ?>
 
     <?php // echo $form->field($model, 'commfrontsensortoxicgas') ?>
+
+    <?php // echo $form->field($model, 'commfrontsensorpm25sharp') ?>
 
     <?php // echo $form->field($model, 'hcudbhost') ?>
 
@@ -168,6 +174,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'seriesportformodbus') ?>
 
     <?php // echo $form->field($model, 'seriesportforgps') ?>
+
+    <?php // echo $form->field($model, 'seriesportforpm25sharp') ?>
 
     <?php // echo $form->field($model, 'cloudhttpaddlocal') ?>
 

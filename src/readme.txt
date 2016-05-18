@@ -581,10 +581,32 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > CLOUDVELA中增加CONN/DISC的计数器 zHcuGlobalCounter.cloudVelaConnCnt++, zHcuGlobalCounter.cloudVelaDiscCnt++
 > ETHERNET增加发送数据超时计数器，zHcuGlobalCounter.CloudDataTimeOutCnt++
 
-== Update log: 2016 May 14  SW Version: XQ.HCU.SW.R01.083 //ZSC
+== Update log: 2016 May 13  SW Version: XQ.HCU.SW.R01.083 //ZSC
 > L3新增PM25SHARP
 > DB update for PM25SHARP
 > AV file storage directory(config in syspar) creat as soon as system startup 
+
+== Update log: 2016 May 14 SW Version: XQ.HCU.SW.R01.084 //ZJL
+> 为了测试目的，增加I2CBUS及SPIBUS L2FRAME模块，但暂时没有起到作用
+> 将DURATION_OF_INIT_FB_WAIT_MAX change to 20000(us), hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX), to avoid conflict systematically.
+> hcu_usleep() is in us iso ms!!!
+> Add GPIO function modules
+> Add I2C function modules
+> Add SPI function modules
+> Add DBI TEMP DHT11/SHT20/RHT03 operation API and database
+> Add DBI HUMID DHT11/SHT20/RHT03 operation API and database
+> Combine PM25Sharp to PM25 files, and format PM25SHARP as data structure, within commsg.h
+> Hwinv add scan of PM25Shart/TEMP/HUMID (DHT11/SHT20/RHT03) and delete old data.
+> PM25SHARP的数据结构定标? 待解决.
+
+== Update log: 2016 May 15 SW Version: XQ.HCU.SW.R01.085 //ZJL
+> Add test mode for MQ135/GPIO, test result is always HIGH, somhow not so reasonable, to be study
+
+== Update log: 2016 May 17 SW Version: XQ.HCU.SW.R01.086 //ZJL
+> 初始化INIT_WAIT_FOR_FB的基础延时时间，335D和树莓派相差比较大，使用编译开关分别定义。
+> 增加BH1750/GY30光强完整工作的模块，包括数据库，DBIAPI以及L3处理
+> 增加BMP180/GY68气压完整工作的模块，包括数据库，DBIAPI以及L3处理
+> 增加MQ135/有毒气体完整工作的模块，包括数据库，DBIAPI以及L3处理
 
 
 

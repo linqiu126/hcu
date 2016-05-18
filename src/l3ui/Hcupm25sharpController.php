@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace app;
 
 class Hcupm25sharpController extends \yii\web\Controller
 {

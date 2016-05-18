@@ -24,11 +24,24 @@ enum FSM_STATE_SPI
 
 //Global variables
 extern FsmStateItem_t FsmSpi[];
+extern float zHcuSpiTempRht03;
+extern float zHcuSpiHumidRht03;
+
+//Local definition
+#define RPI_SPI_PIN_RHT03_VCC 19
+#define RPI_SPI_PIN_RHT03_GND 25
+#define RPI_SPI_PIN_RHT03_MOSI 19
+#define RPI_SPI_PIN_RHT03_MISO 21
+#define RPI_SPI_ADDR_RHT03 1
+#define RPI_SPI_SPEED 4000000
+
+#define RPI_SPI_SENSOR_READ_GAP 20 //in second
 
 //API
 extern OPSTAT fsm_spi_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_spi_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+OPSTAT func_spi_read_data_rht03(void);
 
 //Local API
 OPSTAT func_spi_int_init(void);

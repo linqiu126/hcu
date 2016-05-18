@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Hcupm25sharp */
+/* @var $model app\models\Hcupm25sharpdatainfo */
 
-$this->title = 'Create Hcupm25sharp';
-$this->params['breadcrumbs'][] = ['label' => 'Hcupm25sharps', 'url' => ['index']];
+$this->title = 'Create Hcupm25sharpdatainfo';
+$this->params['breadcrumbs'][] = ['label' => 'Hcupm25sharpdatainfos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="hcupm25sharp-create">
+<div class="hcupm25sharpdatainfo-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

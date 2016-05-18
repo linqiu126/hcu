@@ -79,6 +79,8 @@
 #define COMM_FRONT_SPSVIRGO 1 //1=ON, 0/OTHERS=OFF
 #define COMM_FRONT_AVORION 1 //1=ON, 0/OTHERS=OFF
 #define COMM_FRONT_CLOUDVELA 1 //1=ON, 0/OTHERS=OFF
+#define COMM_FRONT_I2CBUSLIBRA 1 //1=ON, 0/OTHERS=OFF
+#define COMM_FRONT_SPIBUSARIES 1 //1=ON, 0/OTHERS=OFF
 #define COMM_FRONT_SPS485 1 //1=ON, 0/OTHERS=OFF
 #define COMM_FRONT_SPS232 1 //1=ON, 0/OTHERS=OFF
 #define COMM_FRONT_MICROPHONE 1 //1=ON, 0/OTHERS=OFF
@@ -147,7 +149,17 @@
 #define TOXICGAS_TIMER_DURATION_PERIOD_READ 600
 #define SYSPM_TIMER_DURATION_PERIOD_WORKING 600
 
-#define DURATION_OF_INIT_FB_WAIT_MAX 300
+#ifdef TARGET_LINUX_ARM
+#define DURATION_OF_INIT_FB_WAIT_MAX 2000 //in us iso ms, caculate by task_id * this value, to wait for period for SVRCON too much INIT_WAIT_FOR_FB coming at the same time.
+#endif
+
+#ifdef TARGET_LINUX_X86
+#define DURATION_OF_INIT_FB_WAIT_MAX 20000 //in us iso ms, caculate by task_id * this value, to wait for period for SVRCON too much INIT_WAIT_FOR_FB coming at the same time.
+#endif
+
+#ifdef TARGET_RASPBERRY_PI3B
+#define DURATION_OF_INIT_FB_WAIT_MAX 20000 //in us iso ms, caculate by task_id * this value, to wait for period for SVRCON too much INIT_WAIT_FOR_FB coming at the same time.
+#endif
 
 //定时器，控制摄像头工作周期及时长
 #define HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
@@ -216,6 +228,5 @@
 #define TRACE_MSG_MODE_COMBINE_DOUBLE_ALLOW 34  //通过模块和消息枚举
 #define TRACE_MSG_MODE_COMBINE_DOUBLE_RESTRICT 35  //通过模块和消息枚举
 #define TRACE_MSG_ON TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
-
 
 #endif /* L0COMVM_SYSCONFIG_H_ */

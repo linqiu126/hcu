@@ -9,6 +9,7 @@
 
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
+#include "../l1com/l1comdef.h"
 
 /*
 ** FSM of the CO1
@@ -67,7 +68,7 @@ OPSTAT fsm_co1_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CO1, &snd0, snd0.length);
 		if (ret == FAILURE){

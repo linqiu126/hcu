@@ -36,6 +36,8 @@ FsmStateItem_t FsmSpi[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+float zHcuSpiTempRht03;
+float zHcuSpiHumidRht03;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -59,7 +61,7 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPI, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -82,6 +84,9 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_SPI] = 0;
+	zHcuSpiTempRht03 = 0;
+	zHcuSpiHumidRht03 = 0;
+
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPI, FSM_STATE_SPI_RECEIVED) == FAILURE){
@@ -92,28 +97,12 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPI: Enter FSM_STATE_SPI_ACTIVED status, Keeping refresh here!\n");
 	}
-	/*
 
-	//进入阻塞式接收数据状态，然后继续发送
+	//进入循环工作模式
 	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给HSMMP
-			msg_struct_spi_hsmmp_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_spi_hsmmp_data_rx_t));
-			snd.length = sizeof(msg_struct_spi_hsmmp_data_rx_t);
-			ret = hcu_message_send(MSG_ID_SPI_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_SPI, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_SPI]++;
-				HcuErrorPrint("SPI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPI], zHcuTaskNameList[TASK_ID_HSMMP]);
-				return FAILURE;
-			}
-		}
-
-		hcu_sleep(5);
+		func_spi_read_data_rht03();
+		hcu_sleep(RPI_SPI_SENSOR_READ_GAP);
 	}
-	*/
 
 	return SUCCESS;
 }
@@ -131,4 +120,37 @@ OPSTAT func_spi_int_init(void)
 	return SUCCESS;
 }
 
+//Starting point for Raspberry-Pi function definition
 
+OPSTAT func_spi_read_data_rht03(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+	int fd;
+	int temp, humid;
+	float tmp1, tmp2;
+
+	if((fd=wiringPiSPISetup(RPI_SPI_ADDR_RHT03, RPI_SPI_SPEED))<0){
+		HcuDebugPrint("SPI: can't find spi!\n");
+		zHcuRunErrCnt[TASK_ID_SPI]++;
+		return fd;
+	}
+	delay (200);
+
+	temp = wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, NULL, 0);
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("SPI: Sensor RHT03 Original read result Temp=0x%xC, DATA_MOSI#=%d\n", temp, RPI_SPI_PIN_RHT03_MOSI);
+	}
+//	tmp1 = (temp>>8)&0xFF;
+//	tmp2 = ((temp&0xFF)<<8)&0xFF00;
+//	zHcuI2cTempSht20 = (tmp1 + tmp2) * 175.72 / 1024 / 64 - 46.85;
+//	tmp1 = (humid>>8)&0xFF;
+//	tmp2 = ((humid&0xFF)<<8)&0xFF00;
+//	zHcuI2cHumidSht20 = (tmp1 + tmp2) * 125 / 1024 / 64 - 6;
+//	HcuDebugPrint("I2C: Sensor SHT20 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_I2C#=%d\n", zHcuI2cTempSht20, zHcuI2cHumidSht20, RPI_I2C_PIN_SHT20_SDA);
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}

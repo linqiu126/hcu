@@ -87,11 +87,32 @@
 #ifdef TARGET_RASPBERRY_PI3B
 #include <mysql/mysql.h>
 #endif
+
 //sqlite3 DB
 #include <sqlite3.h>
 
+#ifdef TARGET_RASPBERRY_PI3B
+#include <wiringPi.h>
+//GPIO
+
+//Serial port
+#include <wiringSerial.h>
+#include <termios.h>
+//I2C
+#include <wiringPiI2C.h>
+//SPI
+#include <wiringPiSPI.h>
+//Software driving tone
+#include <softTone.h>
+//PWM
+#include <softPwm.h>
+#endif
+
+//I2C
+#include <linux/i2c-dev.h>
+
 //2. 公共消息结构体定义
-//Under normal case, 1024Byte shall be enough for internal message communciation purpose.
+//Under normal case, 1024Byte shall be enough for internal message communication purpose.
 //If not enough, need modify here to enlarge
 #define MAX_HCU_MSG_BUF_LENGTH MAX_HCU_MSG_BODY_LENGTH-16
 typedef struct HcuMsgSruct
@@ -646,6 +667,13 @@ typedef struct  sensor_pm25_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_pm25_data_element_t;
+typedef struct  sensor_pm25_sharp_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 pm2d5Value;
+	UINT32 timeStamp;
+}sensor_pm25_sharp_data_element_t;
 typedef struct  sensor_winddir_data_element //
 {
 	UINT32 equipid;
@@ -676,6 +704,27 @@ typedef struct  sensor_temp_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_temp_data_element_t;
+typedef struct  sensor_temp_dht11_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_dht11_data_element_t;
+typedef struct  sensor_temp_sht20_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_sht20_data_element_t;
+typedef struct  sensor_temp_rht03_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_rht03_data_element_t;
 typedef struct  sensor_humid_data_element //
 {
 	UINT32 equipid;
@@ -686,6 +735,27 @@ typedef struct  sensor_humid_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_humid_data_element_t;
+typedef struct  sensor_humid_dht11_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	UINT32 timeStamp;
+}sensor_humid_dht11_data_element_t;
+typedef struct  sensor_humid_sht20_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	UINT32 timeStamp;
+}sensor_humid_sht20_data_element_t;
+typedef struct  sensor_humid_rht03_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	UINT32 timeStamp;
+}sensor_humid_rht03_data_element_t;
 typedef struct  sensor_noise_data_element //
 {
 	UINT32 equipid;
@@ -727,6 +797,13 @@ typedef struct  sensor_airprs_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_airprs_data_element_t;
+typedef struct  sensor_airprs_bmp180_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 airprsValue;
+	UINT32 timeStamp;
+}sensor_airprs_bmp180_data_element_t;
 typedef struct  sensor_co1_data_element //
 {
 	UINT32 equipid;
@@ -747,6 +824,13 @@ typedef struct  sensor_lightstr_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_lightstr_data_element_t;
+typedef struct  sensor_lightstr_bh1750_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 lightstrValue;
+	UINT32 timeStamp;
+}sensor_lightstr_bh1750_data_element_t;
 typedef struct  sensor_alcohol_data_element //
 {
 	UINT32 equipid;
@@ -777,6 +861,13 @@ typedef struct  sensor_toxicgas_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_toxicgas_data_element_t;
+typedef struct  sensor_toxicgas_mq135_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 toxicgasValue;
+	UINT32 timeStamp;
+}sensor_toxicgas_mq135_data_element_t;
 //缺省消息都使用UINT32进行定义，在内存不是最重要的制约因素下，这种统一的方式，是为了更加不容易出错，不用在不同
 //长度的字型之间进行转换。如果遇到INT类型，直接强制转换即可，符号单独处理
 //message definition

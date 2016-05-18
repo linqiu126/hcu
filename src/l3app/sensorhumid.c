@@ -60,6 +60,9 @@ SensorHumidInfo_t zSensorHumidInfo[MAX_NUM_OF_SENSOR_HUMID_INSTALLED];
 UINT8 currentSensorHumidId;
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
 //extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
+extern float zHcuGpioHumidDht11;
+extern float zHcuI2cHumidSht20;
+extern float zHcuSpiHumidRht03;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -87,7 +90,7 @@ OPSTAT fsm_humid_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HUMID, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -189,6 +192,12 @@ OPSTAT fsm_humid_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 				return FAILURE;
 			}//FsmSetState
 		}
+
+#ifdef TARGET_RASPBERRY_PI3B
+		if (SENSOR_HUMID_RPI_DHT11_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_dht11();
+		if (SENSOR_HUMID_RPI_DHT11_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_sht20();
+		if (SENSOR_HUMID_RPI_DHT11_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_rht03();
+#endif
 		func_humid_time_out_read_data_from_modbus();
 	}
 
@@ -551,3 +560,78 @@ OPSTAT fsm_humid_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_p
 {
 	return SUCCESS;
 }
+
+//暂时没考虑发送给后台云平台
+OPSTAT func_humid_time_out_read_data_from_dht11(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_humid_dht11_data_element_t humidData;
+		memset(&humidData, 0, sizeof(sensor_humid_dht11_data_element_t));
+		humidData.equipid = 0;
+		humidData.timeStamp = time(0);
+		humidData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		humidData.humidValue = (int)(zHcuGpioHumidDht11*100);
+
+		ret = dbi_HcuHumidDht11DataInfo_save(&humidData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_HUMID]++;
+			HcuErrorPrint("HUMID: Can not save HumidDht11 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_humid_time_out_read_data_from_sht20(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_humid_sht20_data_element_t humidData;
+		memset(&humidData, 0, sizeof(sensor_humid_sht20_data_element_t));
+		humidData.equipid = 0;
+		humidData.timeStamp = time(0);
+		humidData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		humidData.humidValue = (int)(zHcuI2cHumidSht20*100);
+
+		ret = dbi_HcuHumidSht20DataInfo_save(&humidData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_HUMID]++;
+			HcuErrorPrint("HUMID: Can not save HumidSht20 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_humid_time_out_read_data_from_rht03(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_humid_rht03_data_element_t humidData;
+		memset(&humidData, 0, sizeof(sensor_humid_rht03_data_element_t));
+		humidData.equipid = 0;
+		humidData.timeStamp = time(0);
+		humidData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		humidData.humidValue = (int)(zHcuSpiHumidRht03*100);
+
+		ret = dbi_HcuHumidRht03DataInfo_save(&humidData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_HUMID]++;
+			HcuErrorPrint("HUMID: Can not save HumidRht03 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
+

@@ -17,6 +17,7 @@
 //SYSENGPAR数据表格式
 // HcuSysEngPar
 /*
+
 CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `prjname` char(20) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
@@ -32,6 +33,8 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `commframespsvirgo` int(1) NOT NULL,
   `commframeavorion` int(1) NOT NULL,
   `commframecloudvela` int(1) NOT NULL,
+  `commframei2cbuslibra` int(1) NOT NULL,
+  `commframespibusaries` int(1) NOT NULL,
   `commfrontsps485` int(1) NOT NULL,
   `commfrontsps232` int(1) NOT NULL,
   `commfrontmicrophone` int(1) NOT NULL,
@@ -116,26 +119,25 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   PRIMARY KEY (`prjname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`,
-`commhwboardlcd`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commfrontsps485`,
-`commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`,  `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`,
-`commfrontswitch`, `commfrontrelay`, `commfrontmotor`,
-`commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`, `commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`,
-`commfrontsensorairprs`,  `commfrontsensorco1`,  `commfrontsensorlightstr`,  `commfrontsensoralcohol`,  `commfrontsensorhcho`,  `commfrontsensortoxicgas`,`commfrontsensorpm25sharp`,
-`hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`,
-`emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`,
-`winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `heartbeattimer`, `heartbeartbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`,
-`hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`,
-`airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `syspmworkingtimer`,
- `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`,
-`cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`,
-`browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
-('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,
-'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 60, 10, 60, 10, 60, 10, 60, 10, 60, 10, 60, 10, 60, 10, 70, 5, 300, 2, 12, 20, 60, 60, 60, 60, 60, 60, 3600,
-1, 0, 0,'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/main/cloud_callback.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php',
+`commhwboardlcd`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`,
+`commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`,
+`commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`,
+`commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`,
+`commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensorpm25sharp`, `hcudbhost`, `hcudbuser`,
+`hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`,
+`pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `heartbeattimer`,
+`heartbeartbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`,
+`co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`,
+`seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`,
+`cloudbhitfframestd`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`,
+`browselworkingoption`) VALUES
+('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'localhost', 'root',
+'123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 300, 2, 12, 20, 60, 60, 60, 60, 60, 60, 3600, 3, 1, 0,
+'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/main/cloud_callback.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php',
 'http://mfunhcu.sinaapp.com/wechat/cloud_callback.php', 'AQ_HCU', 'HCU_SH_0304', 1, '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/',
 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
-
 
 */
 
@@ -183,72 +185,34 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (23, 'HARDDISK', 1, 1, 1, 1, 1),
 (24, 'CAMERA', 1, 1, 1, 1, 1),
 (25, 'MICROPHONE', 1, 1, 1, 1, 1),
-(26, 'SPSVIRGO', 1, 1, 1, 1, 1),
-(27, 'FLASH', 1, 1, 1, 1, 1),
-(28, 'GPS', 1, 1, 1, 1, 1),
-(29, 'LCD', 1, 1, 1, 1, 1),
-(30, 'HWINV', 1, 1, 1, 1, 1),
+(26, 'FLASH', 1, 1, 1, 1, 1),
+(27, 'GPS', 1, 1, 1, 1, 1),
+(28, 'LCD', 1, 1, 1, 1, 1),
+(29, 'HWINV', 1, 1, 1, 1, 1),
+(30, 'SPSVIRGO', 1, 1, 1, 1, 1),
 (31, 'CLOUDVELA', 1, 1, 1, 1, 1),
 (32, 'MODBUS', 1, 1, 1, 1, 1),
 (33, 'AVORION', 1, 1, 1, 1, 1),
-(34, 'HSMMP', 1, 1, 1, 1, 1),
-(35, 'EMC', 1, 1, 1, 1, 1),
-(36, 'HUMID', 1, 1, 1, 1, 1),
-(37, 'PM25', 1, 1, 1, 1, 1),
-(38, 'TEMP', 1, 1, 1, 1, 1),
-(39, 'WINDDIR', 1, 1, 1, 1, 1),
-(40, 'WINDSPD', 1, 1, 1, 1, 1),
-(41, 'NOISE', 1, 1, 1, 1, 1),
-(42, 'AIRPRS', 1, 1, 1, 1, 1),
-(43, 'CO1', 1, 1, 1, 1, 1),
-(44, 'LIGHTSTR', 1, 1, 1, 1, 1),
-(45, 'ALCOHOL', 1, 1, 1, 1, 1),
-(46, 'HCHO', 1, 1, 1, 1, 1),
-(47, 'TOXICGAS', 1, 1, 1, 1, 1),
-(48, 'SVRCON', 1, 1, 1, 1, 1),
-(49, 'SYSPM', 1, 1, 1, 1, 1),
-(49, 'PM25SHARP', 1, 1, 1, 1, 1),
-(51, 'MAX', 1, 1, 1, 1, 1);
-
-//Old ones
-INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `moduletoallow`, `moduletorestrict`, `modulefromallow`, `modulefromrestrict`) VALUES
-(0, 'MIN', 1, 1, 1, 1, 1),
-(1, 'HCUMAIN', 1, 1, 1, 1, 1),
-(2, 'HCUVM', 1, 1, 1, 1, 1),
-(3, 'TRACE', 1, 1, 1, 1, 1),
-(4, 'CONFIG', 1, 1, 1, 1, 1),
-(5, 'TIMER', 1, 1, 1, 1, 1),
-(6, 'MMC', 1, 1, 1, 1, 1),
-(7, 'GPIO', 1, 1, 1, 1, 1),
-(8, 'GRPS', 1, 1, 1, 1, 1),
-(9, 'SPS232', 1, 1, 1, 1, 1),
-(10, 'SPS485', 1, 1, 1, 1, 1),
-(11, 'BLE', 1, 1, 1, 1, 1),
-(12, 'ETHERNET', 1, 1, 1, 1, 1),
-(13, 'WIFI', 1, 1, 1, 1, 1),
-(14, 'USBNET', 1, 1, 1, 1, 1),
-(15, '3G4G', 1, 1, 1, 1, 1),
-(16, 'HARDDISK', 1, 1, 1, 1, 1),
-(17, 'CAMERA', 1, 1, 1, 1, 1),
-(18, 'MICROPHONE', 1, 1, 1, 1, 1),
-(19, 'SPSVIRGO', 1, 1, 1, 1, 1),
-(20, 'FLASH', 1, 1, 1, 1, 1),
-(21, 'GPS', 1, 1, 1, 1, 1),
-(22, 'LCD', 1, 1, 1, 1, 1),
-(23, 'HWINV', 1, 1, 1, 1, 1),
-(24, 'CLOUDVELA', 1, 1, 1, 1, 1),
-(25, 'MODBUS', 1, 1, 1, 1, 1),
-(26, 'AVORION', 1, 1, 1, 1, 1),
-(27, 'HSMMP', 1, 1, 1, 1, 1),
-(28, 'EMC', 1, 1, 1, 1, 1),
-(29, 'HUMID', 1, 1, 1, 1, 1),
-(30, 'PM25', 1, 1, 1, 1, 1),
-(31, 'TEMP', 1, 1, 1, 1, 1),
-(32, 'WINDDIR', 1, 1, 1, 1, 1),
-(33, 'WINDSPD', 1, 1, 1, 1, 1),
-(34, 'NOISE', 1, 1, 1, 1, 1),
-(35, 'SVRCON', 1, 1, 1, 1, 1),
-(36, 'MAX', 1, 1, 1, 1, 1);
+(34, 'I2CBUSLIBRA', 1, 1, 1, 1, 1),
+(35, 'SPIBUSARIES', 1, 1, 1, 1, 1),
+(36, 'HSMMP', 1, 1, 1, 1, 1),
+(37, 'EMC', 1, 1, 1, 1, 1),
+(38, 'HUMID', 1, 1, 1, 1, 1),
+(39, 'PM25', 1, 1, 1, 1, 1),
+(40, 'TEMP', 1, 1, 1, 1, 1),
+(41, 'WINDDIR', 1, 1, 1, 1, 1),
+(42, 'WINDSPD', 1, 1, 1, 1, 1),
+(43, 'NOISE', 1, 1, 1, 1, 1),
+(44, 'AIRPRS', 1, 1, 1, 1, 1),
+(45, 'CO1', 1, 1, 1, 1, 1),
+(46, 'LIGHTSTR', 1, 1, 1, 1, 1),
+(47, 'ALCOHOL', 1, 1, 1, 1, 1),
+(48, 'HCHO', 1, 1, 1, 1, 1),
+(49, 'TOXICGAS', 1, 1, 1, 1, 1),
+(50, 'SVRCON', 1, 1, 1, 1, 1),
+(51, 'SYSPM', 1, 1, 1, 1, 1),
+(52, 'PM25SHARP', 1, 1, 1, 1, 1),
+(53, 'MAX', 1, 1, 1, 1, 1);
 
 */
 
@@ -478,6 +442,8 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname)
 		if(sqlRow[index]) engPar->comm.commFrameSpsvirgo = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if(sqlRow[index]) engPar->comm.commFrameAvorion = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if(sqlRow[index]) engPar->comm.commFrameCloudvela = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->comm.commFrameI2cbuslibra = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->comm.commFrameSpibusaries = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		//printf("engPar->comm.commFrameCloudvela = %d\n", engPar->comm.commFrameCloudvela);
 		if(sqlRow[index]) engPar->comm.commFrontSps485 = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if(sqlRow[index]) engPar->comm.commFrontSps232 = (UINT8)(atol(sqlRow[index++]) & 0xFF);
