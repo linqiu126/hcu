@@ -41,6 +41,8 @@ float zHcuI2cTempSht20;
 float zHcuI2cHumidSht20;
 float zHcuI2cLightstrBh1750;
 float zHcuI2cAirprsBmp180;
+float zHcuI2cTempBmp180;
+float zHcuI2cAltitudeBmp180;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -87,8 +89,12 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_I2C] = 0;
-	zHcuI2cTempSht20 = 0;
-	zHcuI2cHumidSht20 = 0;
+	zHcuI2cTempSht20 = HCU_SENSOR_VALUE_NULL;
+	zHcuI2cHumidSht20 = HCU_SENSOR_VALUE_NULL;
+	zHcuI2cLightstrBh1750 = HCU_SENSOR_VALUE_NULL;
+	zHcuI2cAirprsBmp180 = HCU_SENSOR_VALUE_NULL;
+	zHcuI2cTempBmp180 = HCU_SENSOR_VALUE_NULL;
+	zHcuI2cAltitudeBmp180 = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_I2C, FSM_STATE_I2C_RECEIVED) == FAILURE){
@@ -133,45 +139,40 @@ OPSTAT func_i2c_int_init(void)
 OPSTAT func_i2c_read_data_sht20(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd;
+	int fd, i;
 	int temp, humid;
-	float tmp1, tmp2;
-	//short int ax,ay,az,tmp,gx,gy,gz;
-//	pinMode(8,I2C_PIN);
-//	pinMode(9,I2C_PIN);
+	float tmp1, tmp2, tempSum, humidSum;
+
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_SHT20))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
 		zHcuRunErrCnt[TASK_ID_I2C]++;
 		return FAILURE;
 	}
-	//wiringPiI2CWriteReg8(fd, RPI_I2C_ADDR_SHT20, 00);
-	delay (1000);
-	temp = wiringPiI2CReadReg16(fd, 0xE3);
-	humid = wiringPiI2CReadReg16(fd, 0xE5);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("I2C: Sensor SHT20 Original read result Temp=0x%xC, Humid=0x%x\%, DATA_GPIO#=%d\n", temp, humid, RPI_I2C_PIN_SHT20_SDA);
-	}
-	tmp1 = (temp>>8)&0xFF;
-	tmp2 = ((temp&0xFF)<<8)&0xFF00;
-	zHcuI2cTempSht20 = (tmp1 + tmp2) * 175.72 / 1024 / 64 - 46.85;
-	tmp1 = (humid>>8)&0xFF;
-	tmp2 = ((humid&0xFF)<<8)&0xFF00;
-	zHcuI2cHumidSht20 = (tmp1 + tmp2) * 125 / 1024 / 64 - 6;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("I2C: Sensor SHT20 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_I2C#=%d\n", zHcuI2cTempSht20, zHcuI2cHumidSht20, RPI_I2C_PIN_SHT20_SDA);
+
+	tempSum = 0;
+	humidSum = 0;
+	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++){
+		delay (200);
+		temp = wiringPiI2CReadReg16(fd, 0xE3);
+		humid = wiringPiI2CReadReg16(fd, 0xE5);
+//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//			HcuDebugPrint("I2C: Sensor SHT20 Original read result Temp=0x%xC, Humid=0x%x\%, DATA_I2C_SDA#=%d\n", temp, humid, RPI_I2C_PIN_SDA);
+//		}
+		tmp1 = (temp>>8)&0xFF;
+		tmp2 = ((temp&0xFF)<<8)&0xFF00;
+		tempSum += (tmp1 + tmp2) * 175.72 / 1024 / 64 - 46.85;
+		tmp1 = (humid>>8)&0xFF;
+		tmp2 = ((humid&0xFF)<<8)&0xFF00;
+		humidSum += (tmp1 + tmp2) * 125 / 1024 / 64 - 6;
 	}
 
-	/*while(1){
-		ax=wiringPiI2CReadReg8(fd,0x3B)<<8|wiringPiI2CReadReg8(fd,0x3C);
-		ay=wiringPiI2CReadReg8(fd,0x3D)<<8|wiringPiI2CReadReg8(fd,0x3E);
-		az=wiringPiI2CReadReg8(fd,0x3F)<<8|wiringPiI2CReadReg8(fd,0x40);
-		gx=wiringPiI2CReadReg8(fd,0x43)<<8|wiringPiI2CReadReg8(fd,0x44);
-		gy=wiringPiI2CReadReg8(fd,0x45)<<8|wiringPiI2CReadReg8(fd,0x46);
-		gz=wiringPiI2CReadReg8(fd,0x47)<<8|wiringPiI2CReadReg8(fd,0x48);
-		HcuDebugPrint("I2C: ax=%d  ay=%d  az=%d\n",ax,ay,az);
-		HcuDebugPrint("I2C: gx=%d  gy=%d  gz=%d\n",gx,gy,gz);
-		delay(100);
-	}*/
+	//求平均
+	zHcuI2cTempSht20 = tempSum / RPI_I2C_READ_REPEAT_TIMES;
+	zHcuI2cHumidSht20 = humidSum / RPI_I2C_READ_REPEAT_TIMES;
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("I2C: Sensor SHT20 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_I2C_SDA#=%d\n", zHcuI2cTempSht20, zHcuI2cHumidSht20, RPI_I2C_PIN_SDA);
+	}
+
 	return SUCCESS;
 #else
     //对于其他平台, 暂时啥都不做
@@ -184,9 +185,9 @@ OPSTAT func_i2c_read_data_bh1750(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
 	int fd;
-	char buf[RPI_I2C_READ_REPEAT_TIMES][3];
+	char buf[3];
 	char val;
-	float flight[RPI_I2C_READ_REPEAT_TIMES], tmp;
+	float flight, flightSum;
 
 	//打开I2C设备
 	fd=open(RPI_DEV_I2C_ADDRESS, O_RDWR);
@@ -208,29 +209,29 @@ OPSTAT func_i2c_read_data_bh1750(void)
 	val=0x01;
 	if(write(fd, &val,1)<0)
 	{
-		HcuErrorPrint("I2C: write 0x01 err\n");
+		//HcuErrorPrint("I2C: write 0x01 err\n");
 		zHcuRunErrCnt[TASK_ID_I2C]++;
 	}
 
 	val=0x10;
 	if(write(fd, &val,1)<0)
 	{
-		HcuErrorPrint("I2C: write 0x10 err\n");
+		//HcuErrorPrint("I2C: write 0x10 err\n");
 		zHcuRunErrCnt[TASK_ID_I2C]++;
 	}
 
 	int i=0;
-	tmp = 0;
+	flightSum = 0;
 	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++)
 	{
-		flight[i]=0;
-		if(read(fd, &buf[i][0], 3))
+		flight=0;
+		if(read(fd, &buf, 3))
 		{
-			flight[i]=(buf[i][0]*256+buf[i][1])/1.2;
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-				HcuDebugPrint("I2C: Sensor BH1750 Original float result light = %6.2f lx\n", flight[i]);
-			}
-			tmp+= flight[i];
+			flight=(buf[0]*256 + buf[1])/1.2;
+//			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//				HcuDebugPrint("I2C: Sensor BH1750 Original float result light = %6.2f lx, DATA_I2C_SDA#=%d\n", flight, RPI_I2C_PIN_SDA);
+//			}
+			flightSum+= flight;
 		}
 		else
 		{
@@ -239,12 +240,12 @@ OPSTAT func_i2c_read_data_bh1750(void)
 			close(fd);
 			return FAILURE;
 		}
-		hcu_usleep(100000);//sleep 0.1s
+		hcu_usleep(100000);//sleep 100ms
 	}
 	//输出结果到目标变量中
-	zHcuI2cLightstrBh1750 = tmp/RPI_I2C_READ_REPEAT_TIMES;
+	zHcuI2cLightstrBh1750 = flightSum / RPI_I2C_READ_REPEAT_TIMES;
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("I2C: Sensor BH1750 Transformed float result light = %6.2f lx\n", zHcuI2cLightstrBh1750);
+		HcuDebugPrint("I2C: Sensor BH1750 Transformed average float result light = %6.2f lx, DATA_I2C_SDA#=%d\n", zHcuI2cLightstrBh1750, RPI_I2C_PIN_SDA);
 	}
 	close(fd);
 
@@ -255,27 +256,51 @@ OPSTAT func_i2c_read_data_bh1750(void)
 #endif
 }
 
-//气压GY68
+//气压温度GY68
+//BMP180的度数需要校准，比较复杂，待定！
 OPSTAT func_i2c_read_data_bmp180(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd;
-	int airprs;
+	int fd, i;
+	int airprs, temp;
+	float airprsSum, tempSum;
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMP180))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
 		zHcuRunErrCnt[TASK_ID_I2C]++;
 		return FAILURE;
 	}
-	delay (1000);
-	airprs = wiringPiI2CReadReg16(fd, 0x00);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("I2C: Sensor BMP180 Original read result Airprs=0x%xPa\n", airprs);
+
+	airprsSum = 0;
+	tempSum = 0;
+	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++){
+		delay (200);
+		airprs = wiringPiI2CReadReg16(fd, 0x00);
+		airprsSum += airprs;
+		delay (200);
+		temp = wiringPiI2CReadReg16(fd, 0x02);
+		tempSum += temp;
+		//计算算法待定
+//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//			HcuDebugPrint("I2C: Sensor BMP180 Original read result Airprs=0x%xPa, Temp=0x%xC, DATA_I2C_SDA#=%d\n", airprs, temp, RPI_I2C_PIN_SDA);
+//		}
 	}
-	zHcuI2cAirprsBmp180 = airprs;
+
+	//求平均
+	zHcuI2cAirprsBmp180 = airprsSum / RPI_I2C_READ_REPEAT_TIMES;
+	zHcuI2cTempBmp180 = tempSum / RPI_I2C_READ_REPEAT_TIMES;
+
+	//计算出海拔高度数据
+	zHcuI2cAltitudeBmp180 = zHcuI2cAirprsBmp180 * 10;
+
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("I2C: Sensor BMP180 Transformed average float result Airprs=%6.2fPa, Temp=%6.2fC, Altitude = %6.2fm, DATA_I2C_SDA#=%d\n", zHcuI2cAirprsBmp180, zHcuI2cTempBmp180, zHcuI2cAltitudeBmp180, RPI_I2C_PIN_SDA);
+	}
+
 	return SUCCESS;
 #else
     //对于其他平台, 暂时啥都不做
     return SUCCESS;
 #endif
 }
+
 

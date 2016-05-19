@@ -7,6 +7,7 @@
 
 #include "../l1hwopt/gpio.h"
 #include "../l0service/trace.h"
+#include "../l1com/l1comdef.h"
 
 /*
 ** FSM of the GPIO
@@ -19,12 +20,12 @@ FsmStateItem_t FsmGpio[] =
 	//如果没有必要进行初始化，可以设置为NULL
 	{MSG_ID_ENTRY,       		FSM_STATE_ENTRY,            			fsm_gpio_task_entry}, //Starting
 
-	//System level initialization, only controlled by HCU-MAIN
+	//System level initialisation, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_gpio_init},
     {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_gpio_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
-    //Task level initialization
+    //Task level initialiSation
     {MSG_ID_COM_RESTART,        FSM_STATE_GPIO_RECEIVED,            	fsm_gpio_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_GPIO_RECEIVED,            	fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_GPIO_RECEIVED,       			fsm_com_heart_beat_rcv},
@@ -79,14 +80,15 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 	//初始化硬件接口
 	if (func_gpio_int_init() == FAILURE){
-		HcuErrorPrint("GPIO: Error initialize interface!\n");
+		HcuErrorPrint("GPIO: Error initialiSe interface!\n");
 		return FAILURE;
 	}
 
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_GPIO] = 0;
-	zHcuGpioTempDht11 = 0;
-	zHcuGpioHumidDht11 = 0;
+	zHcuGpioTempDht11 = HCU_SENSOR_VALUE_NULL;
+	zHcuGpioHumidDht11 = HCU_SENSOR_VALUE_NULL;
+	zHcuGpioToxicgasMq135 = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_GPIO, FSM_STATE_GPIO_RECEIVED) == FAILURE){
@@ -132,36 +134,45 @@ UINT32 databuf;
 OPSTAT func_gpio_read_data_dht11(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	float tmp1, tmp2;
+	int i;
+	float tmp1, tmp2, tempSum, humidSum;
     pinMode(RPI_GPIO_PIN_DHT11_DATA, OUTPUT);
     digitalWrite(RPI_GPIO_PIN_DHT11_DATA, 1);
 
-    while(1) {
+	tempSum = 0;
+	humidSum = 0;
+	databuf = 0;
+	for (i=0; i<RPI_GPIO_READ_REPEAT_TIMES; i++){
+		delay(200);
         pinMode(RPI_GPIO_PIN_DHT11_DATA, OUTPUT);
         digitalWrite(RPI_GPIO_PIN_DHT11_DATA, 1);
-        delay(1000); //wiringPi functions
+        delay(200); //wiringPi functions
         if(func_gpio_readSensorDht11Data(RPI_GPIO_PIN_DHT11_DATA))
         {
-        	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-            	HcuDebugPrint("GPIO: Sensor DHT11 Original read result Temp=%d.%dC, Humid=%d.%d\%, DATA_GPIO#=%d\n", (databuf>>8)&0xFF, databuf&0xFF, (databuf>>24)&0xFF, (databuf>>16)&0xFF, RPI_GPIO_PIN_DHT11_DATA);
-        	}
+//        	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//            	HcuDebugPrint("GPIO: Sensor DHT11 Original read result Temp=%d.%dC, Humid=%d.%d\%, DATA_GPIO#=%d\n", (databuf>>8)&0xFF, databuf&0xFF, (databuf>>24)&0xFF, (databuf>>16)&0xFF, RPI_GPIO_PIN_DHT11_DATA);
+//        	}
         	tmp1 =  (databuf>>8)&0xFF;
         	tmp2 = databuf&0xFF;
-        	zHcuGpioTempDht11 = tmp1 + tmp2/256;
+        	tempSum += tmp1 + tmp2/256;
         	tmp1 =  (databuf>>24)&0xFF;
         	tmp2 = (databuf>>16)&0xFF;
-        	zHcuGpioHumidDht11 = tmp1 + tmp2/256;
-        	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-            	HcuDebugPrint("GPIO: Sensor DHT11 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_GPIO#=%d\n", zHcuGpioTempDht11, zHcuGpioHumidDht11, RPI_GPIO_PIN_DHT11_DATA);
-        	}
+        	humidSum += tmp1 + tmp2/256;
             databuf=0;
-            break;
         }
         else
         {
             databuf=0;
         }
     }
+
+	//求平均
+	zHcuGpioTempDht11 = tempSum / RPI_GPIO_READ_REPEAT_TIMES;
+	zHcuGpioHumidDht11 = humidSum / RPI_GPIO_READ_REPEAT_TIMES;
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+    	HcuDebugPrint("GPIO: Sensor DHT11 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_GPIO#=%d\n", zHcuGpioTempDht11, zHcuGpioHumidDht11, RPI_GPIO_PIN_DHT11_DATA);
+	}
+
     return SUCCESS;
 #else
     //对于其他平台, 暂时啥都不做
@@ -173,25 +184,37 @@ OPSTAT func_gpio_read_data_dht11(void)
 OPSTAT func_gpio_read_data_mq135(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int result;
-	delay(200);
-    pinMode(RPI_GPIO_PIN_MQ135_DATA, INPUT);
-    delay(200);
-    //目前还有较多的问题，读取的数据总是HIGH，待完善
-	result = digitalRead(RPI_GPIO_PIN_MQ135_DATA);
-	if ((result == 1) && (zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE)
-		HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [HIGH], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
-	else if ((result == 0) && (zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE)
-		HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [LOW], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
-	else
-	{
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-			HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [NULL-%d], DATA_GPIO#=%d\n", result, RPI_GPIO_PIN_MQ135_DATA);
-		}
+	int toxicgas, i;
+	float toxicgasSum;
+
+	toxicgasSum = 0;
+	for (i=0; i<RPI_GPIO_READ_REPEAT_TIMES; i++){
+		delay(100);
+	    pinMode(RPI_GPIO_PIN_MQ135_DATA, INPUT);
+	    delay(100);
+	    //目前还有较多的问题，读取的数据总是HIGH，待完善
+	    toxicgas = digitalRead(RPI_GPIO_PIN_MQ135_DATA);
+	    toxicgasSum += toxicgas;
+
+//		if ((toxicgas == 1) && (zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE)
+//			HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [HIGH], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
+//		else if ((toxicgas == 0) && (zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE)
+//			HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [LOW], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
+//		else
+//		{
+//			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//				HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [NULL-%d], DATA_GPIO#=%d\n", toxicgas, RPI_GPIO_PIN_MQ135_DATA);
+//			}
+//		}
+	}
+
+	//求平均
+	zHcuGpioToxicgasMq135 = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("GPIO: Sensor MQ135 Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuGpioToxicgasMq135, RPI_GPIO_PIN_MQ135_DATA);
 	}
 
 	//先准备好如此的数据存储框架，未来再改进该数据的正确性
-	zHcuGpioToxicgasMq135 = result;
 
 	return SUCCESS;
 #else

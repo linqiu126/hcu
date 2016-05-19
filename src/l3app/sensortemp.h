@@ -53,6 +53,7 @@ typedef struct SensorTempInfo
 #define SENSOR_TEMP_RPI_DHT11_PRESENT SENSOR_TEMP_RPI_PRESENT_TRUE
 #define SENSOR_TEMP_RPI_SHT20_PRESENT SENSOR_TEMP_RPI_PRESENT_TRUE
 #define SENSOR_TEMP_RPI_RHT03_PRESENT SENSOR_TEMP_RPI_PRESENT_TRUE
+#define SENSOR_TEMP_RPI_BMP180_PRESENT SENSOR_TEMP_RPI_PRESENT_TRUE
 
 //#define TEMP_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define TEMP_TIMER_DURATION_MODBUS_FB 3    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题
@@ -71,6 +72,7 @@ extern OPSTAT fsm_temp_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * p
 OPSTAT func_temp_time_out_read_data_from_dht11(void);
 OPSTAT func_temp_time_out_read_data_from_sht20(void);
 OPSTAT func_temp_time_out_read_data_from_rht03(void);
+OPSTAT func_temp_time_out_read_data_from_bmp180(void);
 
 //引用外部API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);
@@ -80,6 +82,6 @@ extern OPSTAT dbi_HcuTempDataInfo_save(sensor_temp_data_element_t *tempData);
 extern OPSTAT dbi_HcuTempDht11DataInfo_save(sensor_temp_dht11_data_element_t *tempData);
 extern OPSTAT dbi_HcuTempSht20DataInfo_save(sensor_temp_sht20_data_element_t *tempData);
 extern OPSTAT dbi_HcuTempRht03DataInfo_save(sensor_temp_rht03_data_element_t *tempData);
-
+extern OPSTAT dbi_HcuTempBmp180DataInfo_save(sensor_temp_bmp180_data_element_t *tempData);
 
 #endif /* L3APP_SENSORTEMP_H_ */

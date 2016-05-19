@@ -169,6 +169,8 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'toxicgasreqtimer') ?>
 
+    <?php // echo $form->field($model, 'pm25sharpreqtimer') ?>
+
     <?php // echo $form->field($model, 'syspmworkingtimer') ?>
 
     <?php // echo $form->field($model, 'seriesportformodbus') ?>
@@ -192,6 +194,14 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'cloudbhhcuname') ?>
 
     <?php // echo $form->field($model, 'cloudbhitfframestd') ?>
+
+    <?php // echo $form->field($model, 'cloudftpadd') ?>
+
+    <?php // echo $form->field($model, 'cloudftpuser') ?>
+
+    <?php // echo $form->field($model, 'cloudftppwd') ?>
+
+    <?php // echo $form->field($model, 'hcuswdownloaddir') ?>
 
     <?php // echo $form->field($model, 'hcuvideoserverdir') ?>
 

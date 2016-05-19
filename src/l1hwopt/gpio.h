@@ -29,13 +29,14 @@ extern float zHcuGpioHumidDht11;
 extern float zHcuGpioToxicgasMq135;
 
 //Local definition
-#define RPI_GPIO_PIN_DHT11_VCC 1
-#define RPI_GPIO_PIN_DHT11_GND 9
+#define RPI_GPIO_PIN_VCC 1
+#define RPI_GPIO_PIN_GND 9
 #define RPI_GPIO_PIN_DHT11_DATA 0  //Pin#11
-#define RPI_GPIO_HIGH_TIME 32
 #define RPI_GPIO_PIN_MQ135_DATA 5  //Pin#18
 
-#define RPI_GPIO_SENSOR_READ_GAP 20 //in second
+#define RPI_GPIO_HIGH_TIME 32
+#define RPI_GPIO_SENSOR_READ_GAP 60 //in second
+#define RPI_GPIO_READ_REPEAT_TIMES 10
 
 //API
 extern OPSTAT fsm_gpio_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

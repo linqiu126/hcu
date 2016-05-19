@@ -104,9 +104,12 @@ extern OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudv
 extern OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 extern OPSTAT func_cloudvela_heart_beat_received_handle(void);
 
-//Added by Shanchun for control cmd
+//Added by Shanchun for PM25 control cmd
 extern OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 powerOnOff, UINT32 interSample, UINT32 meausTimes, UINT32 newEquId, UINT32 workCycle,CloudDataSendBuf_t *buf);
 
+//Added by Shanchun for SW download and SW inventory
+extern OPSTAT func_cloudvela_standard_xml_swinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
+extern OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 
 //Global API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);

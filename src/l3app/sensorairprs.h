@@ -43,6 +43,6 @@ OPSTAT func_airprs_int_init(void);
 //引用外部API
 extern OPSTAT dbi_HcuAirprsDataInfo_save(sensor_airprs_data_element_t *airprsData);
 extern OPSTAT dbi_HcuAirprsBmp180DataInfo_save(sensor_airprs_bmp180_data_element_t *airprsData);
-
+extern OPSTAT dbi_HcuAirprsAltitudeBmp180DataInfo_save(sensor_airprs_altitude_bmp180_data_element_t *altitudeData);
 
 #endif /* L3APP_SENSORAIRPRS_H_ */

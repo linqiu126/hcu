@@ -28,19 +28,20 @@ extern float zHcuI2cTempSht20;
 extern float zHcuI2cHumidSht20;
 extern float zHcuI2cLightstrBh1750;
 extern float zHcuI2cAirprsBmp180;
+extern float zHcuI2cTempBmp180;
+extern float zHcuI2cAltitudeBmp180; //通过气压计算出的海拔高度数据
 
 //Local definition
-#define RPI_I2C_PIN_SHT20_VCC 17
-#define RPI_I2C_PIN_SHT20_GND 25
-#define RPI_I2C_PIN_SHT20_SDA 3
-#define RPI_I2C_PIN_SHT20_SCL 5
+#define RPI_I2C_PIN_VCC 17
+#define RPI_I2C_PIN_GND 25
+#define RPI_I2C_PIN_SDA 3
+#define RPI_I2C_PIN_SCL 5
 
 #define RPI_I2C_ADDR_SHT20 0x40
 #define RPI_I2C_ADDR_BH1750 0x23
 #define RPI_I2C_ADDR_BMP180 0x77
 #define RPI_I2C_READ_REPEAT_TIMES 10
-
-#define RPI_I2C_SENSOR_READ_GAP 20 //in second
+#define RPI_I2C_SENSOR_READ_GAP 60 //in second
 
 //API
 extern OPSTAT fsm_i2c_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

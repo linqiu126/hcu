@@ -207,7 +207,7 @@ OPSTAT func_toxicgas_time_out_read_data_from_mq135(void)
 	int ret=0;
 
 	//存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioToxicgasMq135 >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuGpioToxicgasMq135 <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
 	{
 		sensor_toxicgas_mq135_data_element_t toxicgasData;
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_mq135_data_element_t));

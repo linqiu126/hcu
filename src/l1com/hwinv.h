@@ -342,6 +342,8 @@ extern OPSTAT dbi_HcuSyspmGlobalDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuLightstrBh1750DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuAirprsBmp180DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuToxicgasMq135DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(UINT32 days);
 
 //create video server directory by Shanchun
 UINT32 hcu_create_multi_dir(const char *path);

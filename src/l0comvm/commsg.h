@@ -725,6 +725,13 @@ typedef struct  sensor_temp_rht03_data_element //
 	UINT32 tempValue;
 	UINT32 timeStamp;
 }sensor_temp_rht03_data_element_t;
+typedef struct  sensor_temp_bmp180_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_bmp180_data_element_t;
 typedef struct  sensor_humid_data_element //
 {
 	UINT32 equipid;
@@ -804,6 +811,13 @@ typedef struct  sensor_airprs_bmp180_data_element //
 	UINT32 airprsValue;
 	UINT32 timeStamp;
 }sensor_airprs_bmp180_data_element_t;
+typedef struct  sensor_airprs_altitude_bmp180_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 altitudeValue;
+	UINT32 timeStamp;
+}sensor_airprs_altitude_bmp180_data_element_t;
 typedef struct  sensor_co1_data_element //
 {
 	UINT32 equipid;

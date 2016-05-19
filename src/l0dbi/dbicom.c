@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `alcoholreqtimer` int(1) NOT NULL,
   `hchoreqtimer` int(1) NOT NULL,
   `toxicgasreqtimer` int(1) NOT NULL,
+  `pm25sharpreqtimer` int(1) NOT NULL,
   `syspmworkingtimer` int(1) NOT NULL,
   `seriesportformodbus` int(1) NOT NULL,
   `seriesportforgps` int(1) NOT NULL,
@@ -108,6 +109,10 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `cloudbhservername` char(12) NOT NULL,
   `cloudbhhcuname` char(12) NOT NULL,
   `cloudbhitfframestd` int(1) NOT NULL,
+   `cloudftpadd` char(64) NOT NULL,
+  `cloudftpuser` char(12) NOT NULL,
+  `cloudftppwd` char(12) NOT NULL,
+  `hcuswdownloaddir` char(64) NOT NULL,
   `hcuvideoserverdir` char(64) NOT NULL,
   `hcuvideoserverhttp` char(64) NOT NULL,
   `debugmode` int(1) NOT NULL,
@@ -129,14 +134,15 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`,
 `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`,
 `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `heartbeattimer`,
 `heartbeartbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`,
-`co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`,
+`co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `pm25sharpreqtimer`,
+`syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`,
 `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`,
-`cloudbhitfframestd`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`,
+`cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `hcuswdownloaddir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`,
 `browselworkingoption`) VALUES
 ('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'localhost', 'root',
-'123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 300, 2, 12, 20, 60, 60, 60, 60, 60, 60, 3600, 3, 1, 0,
+'123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 300, 2, 12, 20, 60, 60, 60, 60, 60, 60, 60, 3600, 3, 1, 0,
 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/main/cloud_callback.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php',
-'http://mfunhcu.sinaapp.com/wechat/cloud_callback.php', 'AQ_HCU', 'HCU_SH_0304', 1, '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/',
+'http://mfunhcu.sinaapp.com/wechat/cloud_callback.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177','anonymous','anonymous', '/home/pi/hcusw/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/',
 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
 
 */
@@ -510,6 +516,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname)
 		if(sqlRow[index]) engPar->timer.alcoholReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		if(sqlRow[index]) engPar->timer.hchoReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		if(sqlRow[index]) engPar->timer.toxicgasReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+		if(sqlRow[index]) engPar->timer.pm25sharpReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		if(sqlRow[index]) engPar->timer.syspmWorkingTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 
 		//Series Port config by Shanchun
@@ -529,6 +536,14 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname)
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudBhServerName, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudBhHcuName, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 		if(sqlRow[index]) engPar->cloud.cloudBhItfFrameStd = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+
+		//For HCU SW download
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpAdd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUser, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
+
+		if(sqlRow[index]) strncpy(engPar->swDownload.hcuSwDownloadDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+
 		//视频服务器部分
 		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);
 		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerHttp, sqlRow[index++], SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);
@@ -541,6 +556,8 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname)
 		if(sqlRow[index]) engPar->localUI.browselAutoStartUpFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselProg, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN-1);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselStartUpAddress, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN-1);
+		//Check segment position is right or not: [http://localhost/yii2basic/web/index.php]
+		//HcuDebugPrint("DBICOM: Pure test to cross-check whether it is the right position of segment, StartupAddress = [%s]!\n", engPar->localUI.browselStartUpAddress);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselWorkingOption, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN-1);
 	}
 
