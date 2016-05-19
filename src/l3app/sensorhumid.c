@@ -567,7 +567,7 @@ OPSTAT func_humid_time_out_read_data_from_dht11(void)
 	int ret=0;
 
 	//存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioHumidDht11 >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuGpioHumidDht11 <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_dht11_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_dht11_data_element_t));
@@ -591,7 +591,7 @@ OPSTAT func_humid_time_out_read_data_from_sht20(void)
 	int ret=0;
 
 	//存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cHumidSht20 >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuI2cHumidSht20 <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_sht20_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_sht20_data_element_t));
@@ -615,7 +615,7 @@ OPSTAT func_humid_time_out_read_data_from_rht03(void)
 	int ret=0;
 
 	//存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSpiHumidRht03 >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuSpiHumidRht03 <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_rht03_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_rht03_data_element_t));

@@ -20,6 +20,8 @@ extern OPSTAT dbi_HcuAirprsDataInfo_delete_3monold(UINT32 days);
 
 extern OPSTAT dbi_HcuAirprsBmp180DataInfo_save(sensor_airprs_bmp180_data_element_t *airprsData);
 extern OPSTAT dbi_HcuAirprsBmp180DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuAirprsAltitudeBmp180DataInfo_save(sensor_airprs_altitude_bmp180_data_element_t *altitudeData);
+extern OPSTAT dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(UINT32 days);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

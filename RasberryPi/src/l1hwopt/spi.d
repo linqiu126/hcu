@@ -26,7 +26,9 @@ src/l1hwopt/spi.d: ../src/l1hwopt/spi.c ../src/l1hwopt/../l1hwopt/spi.h \
  ../src/l1hwopt/../l1hwopt/../l0comvm/../l0comvm/sysengpar.h \
  ../src/l1hwopt/../l1hwopt/../l0comvm/../l0comvm/sysengpar.h \
  ../src/l1hwopt/../l0service/trace.h \
- ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h
+ ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h \
+ ../src/l1hwopt/../l1com/l1comdef.h \
+ ../src/l1hwopt/../l1com/../l0comvm/vmlayer.h
 
 ../src/l1hwopt/../l1hwopt/spi.h:
 
@@ -93,3 +95,7 @@ src/l1hwopt/spi.d: ../src/l1hwopt/spi.c ../src/l1hwopt/../l1hwopt/spi.h \
 ../src/l1hwopt/../l0service/trace.h:
 
 ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h:
+
+../src/l1hwopt/../l1com/l1comdef.h:
+
+../src/l1hwopt/../l1com/../l0comvm/vmlayer.h:

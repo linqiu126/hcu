@@ -252,6 +252,24 @@ typedef enum
 	L3PO_noise_max,
 }L3NoiseOptIdDef;
 
+typedef enum
+{
+	L3PO_swdownload_min = 0,
+	L3PO_swdownload_none = 0,
+	L3PO_swdownload_req = 0x01, //Sw download Request
+	L3PO_swdownload_report = 0x81, //Sw download Response
+	L3PO_swdownload_max,
+}L3SwDownloadOptIdDef;
+
+typedef enum
+{
+	L3PO_swinventory_min = 0,
+	L3PO_swinventory_none = 0,
+	L3PO_swinventory_req = 0x01, //Sw download Request
+	L3PO_swinventory_report = 0x81, //Sw download Response
+	L3PO_swinventory_max,
+}L3SwInventoryOptIdDef;
+
 
 //UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数，针对读数到底是周期性的还是一次性的
 //内部定义，内部使用
@@ -654,5 +672,45 @@ typedef struct GpsPosInfo
 
 //定义本地I2C设备
 #define RPI_DEV_I2C_ADDRESS "/dev/i2c-1"
+
+//传感器合理范围
+#define HCU_SENSOR_VALUE_NULL 0x0FFFFFFF
+#define HCU_SENSOR_TEMP_VALUE_MIN -40 //in degree
+#define HCU_SENSOR_TEMP_VALUE_MAX 125
+#define HCU_SENSOR_HUMID_VALUE_MIN -0 //in %
+#define HCU_SENSOR_HUMID_VALUE_MAX 100
+#define HCU_SENSOR_AIRPRS_VALUE_MIN 0 //in pa
+#define HCU_SENSOR_AIRPRS_VALUE_MAX 120000 //海平面大气压为103125pa，故而超过120000不太可能
+#define HCU_SENSOR_LIGHTSTR_VALUE_MIN 0 //in lx
+#define HCU_SENSOR_LIGHTSTR_VALUE_MAX 100000
+#define HCU_SENSOR_ALTITUDE_VALUE_MIN -10000 //in meter, 海拔高度，由气压推测计算出来的
+#define HCU_SENSOR_ALTITUDE_VALUE_MAX 100000
+#define HCU_SENSOR_CO1_VALUE_MIN 0  //in mg/L
+#define HCU_SENSOR_CO1_VALUE_MAX 10000
+#define HCU_SENSOR_EMC_VALUE_MIN 0  //in mv/cm2
+#define HCU_SENSOR_EMC_VALUE_MAX 10000
+#define HCU_SENSOR_HCHO_VALUE_MIN 0  //in mg/L
+#define HCU_SENSOR_HCHO_VALUE_MAX 10000
+#define HCU_SENSOR_NOISE_VALUE_MIN 0  //in 分贝
+#define HCU_SENSOR_NOISE_VALUE_MAX 10000
+#define HCU_SENSOR_PM1D0_VALUE_MIN 0  //in mg/L
+#define HCU_SENSOR_PM1D0_VALUE_MAX 10000
+#define HCU_SENSOR_PM25_VALUE_MIN 0  //in mg/L
+#define HCU_SENSOR_PM25_VALUE_MAX 10000
+#define HCU_SENSOR_PM10_VALUE_MIN 0  //in mg/L
+#define HCU_SENSOR_PM10_VALUE_MAX 10000
+#define HCU_SENSOR_TOXICGAS_VALUE_MIN 0  //in mg/L
+#define HCU_SENSOR_TOXICGAS_VALUE_MAX 10000
+#define HCU_SENSOR_WINDDIR_VALUE_MIN 0  //in degree
+#define HCU_SENSOR_WINDDIR_VALUE_MAX 360
+#define HCU_SENSOR_WINDSPD_VALUE_MIN 0  //in m/s
+#define HCU_SENSOR_WINDSPD_VALUE_MAX 100
+#define HCU_SENSOR_GPSX_VALUE_MIN 0  //in m
+#define HCU_SENSOR_GPSX_VALUE_MAX 1000000
+#define HCU_SENSOR_GPSY_VALUE_MIN 0  //in m
+#define HCU_SENSOR_GPSY_VALUE_MAX 1000000
+#define HCU_SENSOR_GPSZ_VALUE_MIN 0  //in m
+#define HCU_SENSOR_GPSZ_VALUE_MAX 30000
+
 
 #endif /* L1COM_L1COMDEF_H_ */

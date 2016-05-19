@@ -25,7 +25,8 @@ extern OPSTAT dbi_HcuTempSht20DataInfo_save(sensor_temp_sht20_data_element_t *te
 extern OPSTAT dbi_HcuTempSht20DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuTempRht03DataInfo_save(sensor_temp_rht03_data_element_t *tempData);
 extern OPSTAT dbi_HcuTempRht03DataInfo_delete_3monold(UINT32 days);
-
+extern OPSTAT dbi_HcuTempBmp180DataInfo_save(sensor_temp_bmp180_data_element_t *tempData);
+extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

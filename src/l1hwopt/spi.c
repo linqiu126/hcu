@@ -7,6 +7,7 @@
 
 #include "../l1hwopt/spi.h"
 #include "../l0service/trace.h"
+#include "../l1com/l1comdef.h"
 
 /*
 ** FSM of the SPI
@@ -84,9 +85,8 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_SPI] = 0;
-	zHcuSpiTempRht03 = 0;
-	zHcuSpiHumidRht03 = 0;
-
+	zHcuSpiTempRht03 = HCU_SENSOR_VALUE_NULL;
+	zHcuSpiHumidRht03 = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPI, FSM_STATE_SPI_RECEIVED) == FAILURE){
@@ -125,28 +125,46 @@ OPSTAT func_spi_int_init(void)
 OPSTAT func_spi_read_data_rht03(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd;
+	int fd, i;
 	int temp, humid;
-	float tmp1, tmp2;
+	float tmp1, tmp2, tempSum, humidSum;
 
 	if((fd=wiringPiSPISetup(RPI_SPI_ADDR_RHT03, RPI_SPI_SPEED))<0){
 		HcuDebugPrint("SPI: can't find spi!\n");
 		zHcuRunErrCnt[TASK_ID_SPI]++;
 		return fd;
 	}
-	delay (200);
 
-	temp = wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, NULL, 0);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPI: Sensor RHT03 Original read result Temp=0x%xC, DATA_MOSI#=%d\n", temp, RPI_SPI_PIN_RHT03_MOSI);
+	tempSum = 0;
+	humidSum = 0;
+	for (i=0; i<RPI_SPI_READ_REPEAT_TIMES; i++){
+		delay (200);
+		temp = wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, NULL, 0);
+		tempSum += temp;
+		delay (200);
+		humid = wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, NULL, 0);
+		humidSum += humid;
+		//计算算法待定
+		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+			HcuDebugPrint("SPI: Sensor RHT03 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
+		}
 	}
+
+	//求平均
+	zHcuSpiTempRht03 = tempSum / RPI_SPI_READ_REPEAT_TIMES;
+	zHcuSpiHumidRht03 = humidSum / RPI_SPI_READ_REPEAT_TIMES;
+
 //	tmp1 = (temp>>8)&0xFF;
 //	tmp2 = ((temp&0xFF)<<8)&0xFF00;
 //	zHcuI2cTempSht20 = (tmp1 + tmp2) * 175.72 / 1024 / 64 - 46.85;
 //	tmp1 = (humid>>8)&0xFF;
 //	tmp2 = ((humid&0xFF)<<8)&0xFF00;
 //	zHcuI2cHumidSht20 = (tmp1 + tmp2) * 125 / 1024 / 64 - 6;
-//	HcuDebugPrint("I2C: Sensor SHT20 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_I2C#=%d\n", zHcuI2cTempSht20, zHcuI2cHumidSht20, RPI_I2C_PIN_SHT20_SDA);
+//	HcuDebugPrint("SPI: Sensor SHT20 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuI2cTempSht20, zHcuI2cHumidSht20, RPI_SPI_PIN_MOSI);
+
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("SPI: Sensor RHT03 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuSpiTempRht03, zHcuSpiHumidRht03, RPI_SPI_PIN_MOSI);
+	}
 
 	return SUCCESS;
 #else

@@ -46,6 +46,7 @@ FsmStateItem_t FsmAirprs[] =
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 extern float zHcuI2cAirprsBmp180;
+extern float zHcuI2cAltitudeBmp180;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -207,7 +208,7 @@ OPSTAT func_airprs_time_out_read_data_from_bmp180(void)
 	int ret=0;
 
 	//存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cAirprsBmp180 >= HCU_SENSOR_AIRPRS_VALUE_MIN) && (zHcuI2cAirprsBmp180 <= HCU_SENSOR_AIRPRS_VALUE_MAX))
 	{
 		sensor_airprs_bmp180_data_element_t airprsData;
 		memset(&airprsData, 0, sizeof(sensor_airprs_bmp180_data_element_t));
@@ -220,6 +221,23 @@ OPSTAT func_airprs_time_out_read_data_from_bmp180(void)
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_AIRPRS]++;
 			HcuErrorPrint("AIRPRS: Can not save AirprsBmp180 data into database!\n");
+		}
+	}
+
+	//存入数据库
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cAltitudeBmp180 >= HCU_SENSOR_ALTITUDE_VALUE_MIN) && (zHcuI2cAltitudeBmp180 <= HCU_SENSOR_ALTITUDE_VALUE_MAX))
+	{
+		sensor_airprs_altitude_bmp180_data_element_t altitudeData;
+		memset(&altitudeData, 0, sizeof(sensor_airprs_altitude_bmp180_data_element_t));
+		altitudeData.equipid = 0;
+		altitudeData.timeStamp = time(0);
+		altitudeData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		altitudeData.altitudeValue = (int)(zHcuI2cAltitudeBmp180*100);
+
+		ret = dbi_HcuAirprsAltitudeBmp180DataInfo_save(&altitudeData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_AIRPRS]++;
+			HcuErrorPrint("AIRPRS: Can not save AltitudeBmp180 data into database!\n");
 		}
 	}
 

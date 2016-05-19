@@ -27,7 +27,9 @@ src/l1hwopt/gpio.d: ../src/l1hwopt/gpio.c \
  ../src/l1hwopt/../l1hwopt/../l0comvm/../l0comvm/sysengpar.h \
  ../src/l1hwopt/../l1hwopt/../l0comvm/../l0comvm/sysengpar.h \
  ../src/l1hwopt/../l0service/trace.h \
- ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h
+ ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h \
+ ../src/l1hwopt/../l1com/l1comdef.h \
+ ../src/l1hwopt/../l1com/../l0comvm/vmlayer.h
 
 ../src/l1hwopt/../l1hwopt/gpio.h:
 
@@ -94,3 +96,7 @@ src/l1hwopt/gpio.d: ../src/l1hwopt/gpio.c \
 ../src/l1hwopt/../l0service/trace.h:
 
 ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h:
+
+../src/l1hwopt/../l1com/l1comdef.h:
+
+../src/l1hwopt/../l1com/../l0comvm/vmlayer.h:

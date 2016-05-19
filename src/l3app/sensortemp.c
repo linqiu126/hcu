@@ -10,6 +10,8 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l2frame/cloudvela.h"
+#include "../l1com/l1comdef.h"
+
 /*
 ** FSM of the TEMP
 */
@@ -62,6 +64,7 @@ UINT8 currentSensorTempId;
 extern float zHcuGpioTempDht11;
 extern float zHcuI2cTempSht20;
 extern float zHcuSpiTempRht03;
+extern float zHcuI2cTempBmp180;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -196,6 +199,7 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		if (SENSOR_TEMP_RPI_DHT11_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_dht11();
 		if (SENSOR_TEMP_RPI_SHT20_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_sht20();
 		if (SENSOR_TEMP_RPI_RHT03_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_rht03();
+		if (SENSOR_TEMP_RPI_BMP180_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_bmp180();
 #endif
 		func_temp_time_out_read_data_from_modbus();
 	}
@@ -565,7 +569,7 @@ OPSTAT func_temp_time_out_read_data_from_dht11(void)
 	int ret=0;
 
 	//存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioTempDht11 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuGpioTempDht11 <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_dht11_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_dht11_data_element_t));
@@ -589,7 +593,7 @@ OPSTAT func_temp_time_out_read_data_from_sht20(void)
 	int ret=0;
 
 	//存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cTempSht20 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuI2cTempSht20 <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_sht20_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_sht20_data_element_t));
@@ -613,7 +617,7 @@ OPSTAT func_temp_time_out_read_data_from_rht03(void)
 	int ret=0;
 
 	//存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSpiTempRht03 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuSpiTempRht03 <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_rht03_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_rht03_data_element_t));
@@ -632,5 +636,27 @@ OPSTAT func_temp_time_out_read_data_from_rht03(void)
 	return SUCCESS;
 }
 
+OPSTAT func_temp_time_out_read_data_from_bmp180(void)
+{
+	int ret=0;
 
+	//存入数据库
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cTempBmp180 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuI2cTempBmp180 <= HCU_SENSOR_TEMP_VALUE_MAX))
+	{
+		sensor_temp_bmp180_data_element_t tempData;
+		memset(&tempData, 0, sizeof(sensor_temp_bmp180_data_element_t));
+		tempData.equipid = 0;
+		tempData.timeStamp = time(0);
+		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		tempData.tempValue = (int)(zHcuI2cTempBmp180*100);
+
+		ret = dbi_HcuTempBmp180DataInfo_save(&tempData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Can not save TempBmp180 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
 

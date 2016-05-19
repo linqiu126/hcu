@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 17, 2016 at 11:28 PM
+-- Generation Time: May 18, 2016 at 11:18 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -19,6 +19,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `hcudb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcuairprsaltitudebmp180datainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `deviceid` int(4) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `dataformat` int(1) NOT NULL,
+  `altitudevalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `hcuairprsaltitudebmp180datainfo`
+--
+
+INSERT INTO `hcuairprsaltitudebmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `altitudevalue`) VALUES
+(1, 3, 2, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -145,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `gpsz` int(4) NOT NULL,
   `onofflineflag` int(2) NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=516 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=545 ;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -662,7 +684,36 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 (512, 5, 1463304649, 1, 5581, 'E', 0, 'N', 0, 0, 1),
 (513, 5, 1463312158, 1, 5101, 'E', 0, 'N', 0, 0, 1),
 (514, 5, 1463312218, 1, 5151, 'E', 0, 'N', 0, 0, 1),
-(515, 5, 1463312339, 1, 5101, 'E', 0, 'N', 0, 0, 1);
+(515, 5, 1463312339, 1, 5101, 'E', 0, 'N', 0, 0, 1),
+(516, 5, 1463582745, 1, 5230, 'E', 0, 'N', 0, 0, 1),
+(517, 5, 1463582805, 1, 5506, 'E', 0, 'N', 0, 0, 1),
+(518, 5, 1463582865, 1, 4984, 'E', 0, 'N', 0, 0, 1),
+(519, 5, 1463582925, 1, 5284, 'E', 0, 'N', 0, 0, 1),
+(520, 5, 1463582985, 1, 5479, 'E', 0, 'N', 0, 0, 1),
+(521, 5, 1463583045, 1, 5227, 'E', 0, 'N', 0, 0, 1),
+(522, 5, 1463583105, 1, 5389, 'E', 0, 'N', 0, 0, 1),
+(523, 5, 1463583165, 1, 5000, 'E', 0, 'N', 0, 0, 1),
+(524, 5, 1463583225, 1, 4849, 'E', 0, 'N', 0, 0, 1),
+(525, 5, 1463583285, 1, 5023, 'E', 0, 'N', 0, 0, 1),
+(526, 5, 1463583345, 1, 5571, 'E', 0, 'N', 0, 0, 1),
+(527, 5, 1463583405, 1, 4988, 'E', 0, 'N', 0, 0, 1),
+(528, 5, 1463583465, 1, 4723, 'E', 0, 'N', 0, 0, 1),
+(529, 5, 1463583525, 1, 4968, 'E', 0, 'N', 0, 0, 1),
+(530, 5, 1463583585, 1, 5064, 'E', 0, 'N', 0, 0, 1),
+(531, 5, 1463583645, 1, 5281, 'E', 0, 'N', 0, 0, 1),
+(532, 5, 1463583705, 1, 4938, 'E', 0, 'N', 0, 0, 1),
+(533, 5, 1463583765, 1, 5012, 'E', 0, 'N', 0, 0, 1),
+(534, 5, 1463583825, 1, 5015, 'E', 0, 'N', 0, 0, 1),
+(535, 5, 1463583888, 1, 5132, 'E', 0, 'N', 0, 0, 1),
+(536, 5, 1463583945, 1, 4840, 'E', 0, 'N', 0, 0, 1),
+(537, 5, 1463584005, 1, 4975, 'E', 0, 'N', 0, 0, 1),
+(538, 5, 1463584065, 1, 5480, 'E', 0, 'N', 0, 0, 1),
+(539, 5, 1463584125, 1, 4801, 'E', 0, 'N', 0, 0, 1),
+(540, 5, 1463584185, 1, 5258, 'E', 0, 'N', 0, 0, 1),
+(541, 5, 1463584245, 1, 5479, 'E', 0, 'N', 0, 0, 1),
+(542, 5, 1463584305, 1, 5088, 'E', 0, 'N', 0, 0, 1),
+(543, 5, 1463584365, 1, 4794, 'E', 0, 'N', 0, 0, 1),
+(544, 5, 1463584425, 1, 5610, 'E', 0, 'N', 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -830,7 +881,7 @@ CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `bh1750value` int(4) NOT NULL,
+  `lightstrvalue` int(4) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
@@ -838,7 +889,7 @@ CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
 -- Dumping data for table `hculightstrbh1750datainfo`
 --
 
-INSERT INTO `hculightstrbh1750datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `bh1750value`) VALUES
+INSERT INTO `hculightstrbh1750datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `lightstrvalue`) VALUES
 (1, 3, 2, 1, 4);
 
 -- --------------------------------------------------------
@@ -1019,6 +1070,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `alcoholreqtimer` int(1) NOT NULL,
   `hchoreqtimer` int(1) NOT NULL,
   `toxicgasreqtimer` int(1) NOT NULL,
+  `pm25sharpreqtimer` int(1) NOT NULL,
   `syspmworkingtimer` int(1) NOT NULL,
   `seriesportformodbus` int(1) NOT NULL,
   `seriesportforgps` int(1) NOT NULL,
@@ -1031,6 +1083,10 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `cloudbhservername` char(12) NOT NULL,
   `cloudbhhcuname` char(12) NOT NULL,
   `cloudbhitfframestd` int(1) NOT NULL,
+  `cloudftpadd` char(64) NOT NULL,
+  `cloudftpuser` char(12) NOT NULL,
+  `cloudftppwd` char(12) NOT NULL,
+  `hcuswdownloaddir` char(64) NOT NULL,
   `hcuvideoserverdir` char(64) NOT NULL,
   `hcuvideoserverhttp` char(64) NOT NULL,
   `debugmode` int(1) NOT NULL,
@@ -1046,8 +1102,8 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 -- Dumping data for table `hcusysengpar`
 --
 
-INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`, `commhwboardlcd`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`, `commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`, `commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`, `commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`, `commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensorpm25sharp`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `heartbeattimer`, `heartbeartbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
-('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 300, 2, 12, 20, 60, 60, 60, 60, 60, 60, 3600, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/main/cloud_callback.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/wechat/cloud_callback.php', 'AQ_HCU', 'HCU_SH_0304', 1, '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
+INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`, `commhwboardlcd`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`, `commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`, `commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`, `commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`, `commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensorpm25sharp`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `heartbeattimer`, `heartbeartbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `pm25sharpreqtimer`, `syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `hcuswdownloaddir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
+('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 300, 2, 12, 20, 60, 60, 60, 60, 60, 60, 60, 3600, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/main/cloud_callback.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/wechat/cloud_callback.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'anonymous', 'anonymous', '/home/pi/hcusw/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
 
 -- --------------------------------------------------------
 
@@ -1126,6 +1182,28 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (64, 0, 51, 0, 1, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 1462954341),
 (65, 0, 162, 0, 10, 107, 2, 0, 4, 1, 3, 3, 3, 3, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 11, 1463231142),
 (66, 0, 720, 0, 25, 112, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 59, 1463240854);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcutempbmp180datainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `deviceid` int(4) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `dataformat` int(1) NOT NULL,
+  `tempvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `hcutempbmp180datainfo`
+--
+
+INSERT INTO `hcutempbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `tempvalue`) VALUES
+(1, 3, 2, 1, 4);
 
 -- --------------------------------------------------------
 

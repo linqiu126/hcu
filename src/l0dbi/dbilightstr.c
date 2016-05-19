@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `bh1750value` int(4) NOT NULL,
+  `lightstrvalue` int(4) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
@@ -58,7 +58,7 @@ INSERT INTO `hcudb`.`hculightstrbh1750datainfo` (
 `deviceid` ,
 `timestamp` ,
 `dataformat`,
-`bh1750value`
+`lightstrvalue`
 )
 VALUES (
 '1', '3', '2', '1', '4');
@@ -218,7 +218,7 @@ OPSTAT dbi_HcuLightstrDataInfo_delete_3monold(UINT32 days)
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBILIGHTSTR: INSET data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBILIGHTSTR: INSERT data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
@@ -306,7 +306,7 @@ OPSTAT dbi_HcuLightstrBh1750DataInfo_delete_3monold(UINT32 days)
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBILIGHTSTR: INSET data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBILIGHTSTR: INSERT data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 

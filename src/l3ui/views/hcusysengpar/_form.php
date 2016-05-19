@@ -166,6 +166,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'toxicgasreqtimer')->textInput() ?>
 
+    <?= $form->field($model, 'pm25sharpreqtimer')->textInput() ?>
+
     <?= $form->field($model, 'syspmworkingtimer')->textInput() ?>
 
     <?= $form->field($model, 'seriesportformodbus')->textInput() ?>
@@ -189,6 +191,14 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'cloudbhhcuname')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'cloudbhitfframestd')->textInput() ?>
+
+    <?= $form->field($model, 'cloudftpadd')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'cloudftpuser')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'cloudftppwd')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'hcuswdownloaddir')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'hcuvideoserverdir')->textInput(['maxlength' => true]) ?>
 
