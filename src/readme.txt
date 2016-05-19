@@ -608,6 +608,8 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 增加BMP180/GY68气压完整工作的模块，包括数据库，DBIAPI以及L3处理
 > 增加MQ135/有毒气体完整工作的模块，包括数据库，DBIAPI以及L3处理
 
+
+
 == Update log: 2016 May 18 SW Version: XQ.HCU.SW.R01.087 //ZSC
 > add curl FTP modle 
 > add the modules for HCU SW inventory and HCU SW download
@@ -620,6 +622,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 根据气压数据，计算出海拔高度数据，并跟气压一起存入独立的数据库表单中去
 > PM25SHARP的工作过程调整为定时方式，以便更为灵活/方便/统一的方式对其进行处理控制
 > 手工合并ZJL/ZSC代码
+
 
 
 
