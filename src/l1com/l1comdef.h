@@ -543,6 +543,12 @@ typedef struct CloudBhItfDevReportStdXml
 	char conNewEquId[3];
 	char conWorkCycle[3];
 
+	//Added by Shanchun for hcu sw download
+	char conSwDownload[3];
+
+	//Added by Shanchun for hcu sw inventory
+	char conSwInventory[3];
+
 	char conTimeStamp[9]; //4B
 	char conNtimes[5];   //2B
 	char Content_r[14];

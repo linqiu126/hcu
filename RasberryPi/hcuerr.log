@@ -1,0 +1,10 @@
+DBG : T: 05/19/16 07:53:04:681: c/l1hwopt/sps485.c: 211 : Series Port: Can't Open Serial Port COM1
+DBG : T: 05/19/16 07:53:04:681: c/l1hwopt/sps485.c: 494 : Series Port: InitSerialPort serial port COM1 open failure.
+DBG : T: 05/19/16 07:53:04:681: /src/l1hwopt/gps.c: 115 : GPS: Init Serial Port Failure, Exit.
+DBG : T: 05/19/16 07:53:04:682: /l0comvm/vmlayer.c: 1619: HCU-VM: Internal error is found in the state function.
+DBG : T: 05/19/16 07:53:04:682: /l0comvm/vmlayer.c: 1532: HCU-VM: Error execute FsmRun state machine!
+DBG : T: 05/19/16 07:57:52:696: c/l1hwopt/sps485.c: 211 : Series Port: Can't Open Serial Port COM1
+DBG : T: 05/19/16 07:57:52:697: c/l1hwopt/sps485.c: 494 : Series Port: InitSerialPort serial port COM1 open failure.
+DBG : T: 05/19/16 07:57:52:697: /src/l1hwopt/gps.c: 115 : GPS: Init Serial Port Failure, Exit.
+DBG : T: 05/19/16 07:57:52:697: /l0comvm/vmlayer.c: 1619: HCU-VM: Internal error is found in the state function.
+DBG : T: 05/19/16 07:57:52:697: /l0comvm/vmlayer.c: 1532: HCU-VM: Error execute FsmRun state machine!
