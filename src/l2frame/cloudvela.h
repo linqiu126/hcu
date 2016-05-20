@@ -110,6 +110,10 @@ extern OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, U
 //Added by Shanchun for SW download and SW inventory
 extern OPSTAT func_cloudvela_standard_xml_swinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 extern OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
+extern OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 swDownload, CloudDataSendBuf_t *buf);
+extern OPSTAT func_cloudvela_sw_download(char *filename);
+
+extern OPSTAT func_cloudvela_huanbao_sw_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 swInventory, CloudDataSendBuf_t *buf);
 
 //Global API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);

@@ -15,7 +15,6 @@
 //SW version control, for internal usage
 #define CURRENT_SW_RELEASE 1 //R01 = 0x01 (XQ.HCU.SW.R01.456)
 
-#define CURRENT_SW_DELIVERY 87 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
 
 #define CURRENT_SW_DELIVERY 88 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
 
@@ -102,14 +101,14 @@
 //= ZJL, 2016 May.14, CURRENT_SW_DELIVERY 84
 //= ZJL, 2016 May.15, CURRENT_SW_DELIVERY 85
 //= ZJL, 2016 May.17, CURRENT_SW_DELIVERY 86
-<<<<<<< HEAD
+
 //= ZSC, 2016 May.18, CURRENT_SW_DELIVERY 87
 //= ZJL, 2016 May.18, CURRENT_SW_DELIVERY 88
-=======
+
 //= ZJL, 2016 May.18, CURRENT_SW_DELIVERY 87
 
 
->>>>>>> e08bb240f5ee4ae0280b9a33e05b9a84af4ce538
+
 
 
 
