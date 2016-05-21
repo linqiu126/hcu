@@ -12,6 +12,7 @@ $this->title = 'BXXH-HCU本地主页界面';
         <p class="lead">HCU local interface.</p>
 
         <p><a class="btn btn-lg btn-success" href="http://mfuncloud.sinaapp.com/web/index.php">Go back to BXXH Homepage</a> <a class="btn btn-lg btn-success" href="http://localhost/yii2basic/web/index.php?r=gii">Gii继续生成CRUD</a> <a class="btn btn-lg btn-success" href="http://localhost/phpmyadmin">PHPMyAdmin</a> </p>
+        <a class="btn btn-lg btn-success" href="http://http://localhost/hcu/src/l3ui/web/index.php">Aiqi Yun PHPMyAdmin Entry</a>
     </div>
 
     <div class="body-content">
