@@ -12,6 +12,7 @@ function chartrotation () {
 	sensor[5] = "charthcutempdatainfosingle";
 	sensor[6] = "charthcuhumidsht20datainfosingle";
 	sensor[7] = "charthcutoxicgasmq135datainfosingle";
+	sensor[8] = "charthculightstrbh1750datainfosingle";
 	
 	//charthcupm25datainfo();
 	
@@ -21,7 +22,7 @@ function chartrotation () {
 		
 		$('#container').highcharts().destroy();
 
-		nextID=(activeID+1)%8;
+		nextID=(activeID+1)%9;
 
 		activeID=nextID;
 
