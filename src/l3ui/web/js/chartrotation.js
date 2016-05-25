@@ -5,11 +5,13 @@ function chartrotation () {
 	var nextID = 0;
 	var intervalID;
 	sensor[0] = "charthcuwindspddatainfosingle";
-	sensor[4] = "charthcuwinddirdatainfosingle";
+	sensor[1] = "charthcupm25sharpdatainfosingle";
 	sensor[2] = "charthcuhumiddatainfosingle";
 	sensor[3] = "charthcunoisedatainfosingle";
-	sensor[1] = "charthcupm25sharpsingle";
+	sensor[4] = "charthcuwinddirdatainfosingle";
 	sensor[5] = "charthcutempdatainfosingle";
+	sensor[6] = "charthcuhumidsht20datainfosingle";
+	sensor[7] = "charthcutoxicgasmq135datainfosingle";
 	
 	//charthcupm25datainfo();
 	
@@ -19,7 +21,7 @@ function chartrotation () {
 		
 		$('#container').highcharts().destroy();
 
-		nextID=(activeID+1)%6;
+		nextID=(activeID+1)%8;
 
 		activeID=nextID;
 

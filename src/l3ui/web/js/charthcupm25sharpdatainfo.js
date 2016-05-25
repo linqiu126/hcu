@@ -1,4 +1,4 @@
-function charthcupm25sharp() {
+function charthcupm25sharpdatainfo() {
 
 	Highcharts.setOptions({  
             global: {  
@@ -145,7 +145,7 @@ function charthcupm25sharp() {
 		        }*/
 
 		        //json start
-		        $.getJSON('/yii2basic/web/index.php?r=hcupm25sharp/getlasthcupm25sharp', function(result){
+		        $.getJSON('/yii2basic/web/index.php?r=hcupm25sharpdatainfo/getlasthcupm25sharp', function(result){
 		        	dataval = result.data.pm2d5value;
 		        	//alert(result.data.pm25value);
 		        	point.update(dataval);
@@ -165,7 +165,7 @@ function charthcupm25sharp() {
 	});
 }
 
-function charthcupm25sharpsingle() {
+function charthcupm25sharpdatainfosingle() {
 
 	Highcharts.setOptions({  
             global: {  
@@ -192,7 +192,7 @@ function charthcupm25sharpsingle() {
 	    },
 	    
 	    title: {
-	        text: 'PM25传感器'
+	        text: 'PM25 SHARP传感器'
 	    },
 	    
 	    pane: {
@@ -279,8 +279,8 @@ function charthcupm25sharpsingle() {
 	function (chart) {
 		if (!chart.renderer.forExport) {
 		        var point = chart.series[0].points[0], dataval;
-		        $.getJSON('/yii2basic/web/index.php?r=hcupm25sharp/getlasthcupm25sharp', function(result){
-		        	dataval = result.data.pm25;
+		        $.getJSON("index.php?r=hcupm25sharpdatainfo/getlasthcupm25sharpdatainfo", function(result){
+		        	dataval = result.data.pm2d5value;
 		        	point.update(dataval);
 		        });
 		}
