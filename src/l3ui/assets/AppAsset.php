@@ -33,6 +33,8 @@ class AppAsset extends AssetBundle
         'js/chartrotation.js',
         'js/charthcuhumidsht20datainfo.js',
         'js/charthcutoxicgasmq135datainfo.js',
+        'js/charthculightstrbh1750datainfo.js',
+
     ];
     public $depends = [
         'yii\web\YiiAsset',
