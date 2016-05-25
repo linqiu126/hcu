@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Hcupm25sharpdatainfo;
-use app\models\Hcupm25sharpdatainfoSearch;
+use app\models\Hculightstrbh1750datainfo;
+use app\models\Hculightstrbh1750datainfoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * Hcupm25sharpdatainfoController implements the CRUD actions for Hcupm25sharpdatainfo model.
+ * Hculightstrbh1750datainfoController implements the CRUD actions for Hculightstrbh1750datainfo model.
  */
-class Hcupm25sharpdatainfoController extends Controller
+class Hculightstrbh1750datainfoController extends Controller
 {
     public function behaviors()
     {
@@ -27,12 +27,12 @@ class Hcupm25sharpdatainfoController extends Controller
     }
 
     /**
-     * Lists all Hcupm25sharpdatainfo models.
+     * Lists all Hculightstrbh1750datainfo models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new Hcupm25sharpdatainfoSearch();
+        $searchModel = new Hculightstrbh1750datainfoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -42,7 +42,7 @@ class Hcupm25sharpdatainfoController extends Controller
     }
 
     /**
-     * Displays a single Hcupm25sharpdatainfo model.
+     * Displays a single Hculightstrbh1750datainfo model.
      * @param integer $id
      * @return mixed
      */
@@ -54,13 +54,13 @@ class Hcupm25sharpdatainfoController extends Controller
     }
 
     /**
-     * Creates a new Hcupm25sharpdatainfo model.
+     * Creates a new Hculightstrbh1750datainfo model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Hcupm25sharpdatainfo();
+        $model = new Hculightstrbh1750datainfo();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->sid]);
@@ -72,7 +72,7 @@ class Hcupm25sharpdatainfoController extends Controller
     }
 
     /**
-     * Updates an existing Hcupm25sharpdatainfo model.
+     * Updates an existing Hculightstrbh1750datainfo model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -91,7 +91,7 @@ class Hcupm25sharpdatainfoController extends Controller
     }
 
     /**
-     * Deletes an existing Hcupm25sharpdatainfo model.
+     * Deletes an existing Hculightstrbh1750datainfo model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -104,34 +104,34 @@ class Hcupm25sharpdatainfoController extends Controller
     }
 
     /**
-     * Finds the Hcupm25sharpdatainfo model based on its primary key value.
+     * Finds the Hculightstrbh1750datainfo model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Hcupm25sharpdatainfo the loaded model
+     * @return Hculightstrbh1750datainfo the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Hcupm25sharpdatainfo::findOne($id)) !== null) {
+        if (($model = Hculightstrbh1750datainfo::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
 
-    public  function  actionGetlasthcupm25sharpdatainfo()
+    public  function  actionGetlasthculightstrbh1750datainfo()
     //http://localhost/l3ui/web/index.php?r=hcuwindspddatainfo/getlasthcuwindspddatainfo&callback=myCallbackFunction    
     {
         
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; //直接使用的话，不用在web.php中定义JSONPARSE
         //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSONP;
         //取最后一条记录，本地界面中，应该没有deviceid的考虑，应该是只连接一台风速传感器
-        $Lasthcupm25sharpdatainfo = Hcupm25sharpdatainfo::find()->orderBy(['sid' => SORT_DESC])->one(); 
+        $Lasthculightstrbh1750datainfo = Hculightstrbh1750datainfo::find()->orderBy(['sid' => SORT_DESC])->one(); 
 
         /*print_r($Lasthcuwindspddatainfo);
         echo '<hr/>';*/
 
-        $exportarray = $Lasthcupm25sharpdatainfo->attributes;
+        $exportarray = $Lasthculightstrbh1750datainfo->attributes;
         //print_r($exportarray);
         return ['data' => $exportarray];
         //return ['callback' => $callback, 'data' => $exportarray];

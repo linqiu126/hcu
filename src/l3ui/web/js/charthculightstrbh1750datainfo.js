@@ -1,4 +1,4 @@
-function charthcupm25sharp() {
+function charthculightstrbh1750datainfo() {
 
 	Highcharts.setOptions({  
             global: {  
@@ -45,7 +45,7 @@ function charthcupm25sharp() {
 	    },
 	    
 	    title: {
-	        text: 'PM25传感器'
+	        text: '光照传感器'
 	    },
 	    
 	    pane: {
@@ -120,7 +120,7 @@ function charthcupm25sharp() {
 	    },
 	
 	    series: [{
-	        name: 'PM25',
+	        name: '光照传感器',
 	        data: [80], //初始值
 	        tooltip: {
 	            valueSuffix: ' 单位'
@@ -145,8 +145,8 @@ function charthcupm25sharp() {
 		        }*/
 
 		        //json start
-		        $.getJSON('/yii2basic/web/index.php?r=hcupm25sharp/getlasthcupm25sharp', function(result){
-		        	dataval = result.data.pm2d5value;
+		        $.getJSON('/yii2basic/web/index.php?r=hculightstrbh1750datainfo/getlasthculightstrbh1750datainfo', function(result){
+		        	dataval = result.data.lightstrvalue;
 		        	//alert(result.data.pm25value);
 		        	point.update(dataval);
 		        });
@@ -165,7 +165,7 @@ function charthcupm25sharp() {
 	});
 }
 
-function charthcupm25sharpsingle() {
+function charthculightstrbh1750datainfosingle() {
 
 	Highcharts.setOptions({  
             global: {  
@@ -192,7 +192,7 @@ function charthcupm25sharpsingle() {
 	    },
 	    
 	    title: {
-	        text: 'PM25传感器'
+	        text: '光照传感器'
 	    },
 	    
 	    pane: {
@@ -267,7 +267,7 @@ function charthcupm25sharpsingle() {
 	    },
 	
 	    series: [{
-	        name: 'PM25',
+	        name: '光照传感器',
 	        data: [80], //初始值
 	        tooltip: {
 	            valueSuffix: ' 单位'
@@ -279,8 +279,8 @@ function charthcupm25sharpsingle() {
 	function (chart) {
 		if (!chart.renderer.forExport) {
 		        var point = chart.series[0].points[0], dataval;
-		        $.getJSON('/yii2basic/web/index.php?r=hcupm25sharp/getlasthcupm25sharp', function(result){
-		        	dataval = result.data.pm25;
+		        $.getJSON("index.php?r=hculightstrbh1750datainfo/getlasthculightstrbh1750datainfo", function(result){
+		        	dataval = result.data.lightstrvalue;
 		        	point.update(dataval);
 		        });
 		}
