@@ -26,11 +26,13 @@ class AppAsset extends AssetBundle
         'js/charthcuwinddirdatainfo.js',
         'js/charthcuhumiddatainfo.js',
         'js/charthcupm25datainfo.js',
-        'js/charthcupm25sharp.js',
+        'js/charthcupm25sharpdatainfo.js',
         'js/charthcunoisedatainfo.js',
         'js/charthcutempdatainfo.js',
         'js/charthcuemcdatainfo.js',
         'js/chartrotation.js',
+        'js/charthcuhumidsht20datainfo.js',
+        'js/charthcutoxicgasmq135datainfo.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
