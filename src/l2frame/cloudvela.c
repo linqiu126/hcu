@@ -2361,6 +2361,15 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	strcat(da, xmlFormat->conSwDownload);
 
 
+	//strcat(da, xmlFormat->conHwUuid);
+	strcat(da, xmlFormat->conHwType);
+	strcat(da, xmlFormat->conHwVersion);
+	strcat(da, xmlFormat->conSwDelivery);
+	strcat(da, xmlFormat->conSwRelease);
+
+
+	//char conSwInventory[3]; //1B
+	strcat(da, xmlFormat->conAvUpload);
 
 	//char conTimeStamp[9]; //4B
 	strcat(da, xmlFormat->conTimeStamp);
@@ -2368,11 +2377,13 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//char conNtimes[5];   //2B
 	strcat(da, xmlFormat->conNtimes);
 
+	HcuDebugPrint("CLOUDVELA: da: %s!!!\n", da);
+
 	//获取变长部分的长度, Len=0的情况存在，比如Heart_Beat消息，这里为了统一处理函数的简化，不做过分的区别对待和处理，尽量让处理函数通用化
 	int len = 0;
 	len = strlen(da);
 	if ((len < 0) || ((len % 2) != 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
-		HcuErrorPrint("CLOUDVELA: No data to be pack or too long length of data content!!!\n");
+		HcuErrorPrint("CLOUDVELA: No data to be pack or too long length of data content %d!!!\n", len);
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
@@ -2918,7 +2929,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 	}
 
-	else if((cmdId==L3CI_emc)||(cmdId==L3CI_pm25)||(cmdId==L3CI_winddir)||(cmdId ==L3CI_windspd)||(cmdId ==L3CI_temp)||(cmdId ==L3CI_humid)||(cmdId ==L3CI_noise)||(cmdId ==L3CI_hsmmp)||(cmdId ==L3CI_sw_inventory)||(cmdId ==L3CI_sw_package))
+	else if((cmdId==L3CI_emc)||(cmdId==L3CI_pm25)||(cmdId==L3CI_winddir)||(cmdId ==L3CI_windspd)||(cmdId ==L3CI_temp)||(cmdId ==L3CI_humid)||(cmdId ==L3CI_noise)||(cmdId ==L3CI_hsmmp)||(cmdId ==L3CI_hcu_inventory)||(cmdId ==L3CI_sw_package))
 	{
 		CMDPollingNoCommandNum = 0;
 
@@ -3014,8 +3025,8 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			}
 			break;
 
-		case L3CI_sw_inventory:
-			if (func_cloudvela_standard_xml_swinventory_msg_unpack(rcv) == FAILURE){
+		case L3CI_hcu_inventory:
+			if (func_cloudvela_standard_xml_hcuinventory_msg_unpack(rcv) == FAILURE){
 				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of SW INVENTORY!\n");
 				return FAILURE;
@@ -4646,19 +4657,111 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 
 OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
-	return SUCCESS;
-}
-
-
-
-//for hcu sw invertory by shanchun
-OPSTAT func_cloudvela_standard_xml_swinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
-{
-	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, swInventory=0, ret=0;
+	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, avUpload=0, ret=0;
 	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
-	cmdId = L3CI_sw_inventory;
+	cmdId = L3CI_hsmmp;
+	backType = L3CI_cmdid_back_type_control;
+
+	//长度域，1BYTE
+	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	strncpy(st, &rcv->buf[index], 2);
+	len = strtoul(st, NULL, 16);
+	index = index + 2;
+	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	//操作字，1BYTE
+	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	strncpy(st, &rcv->buf[index], 2);
+	optId = strtoul(st, NULL, 16);
+	index = index + 2;
+	len = len-1;
+	if ((optId <= L3PO_hsmmp_min) || (optId >= L3PO_hsmmp_max)){
+		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	//AV file name to be uploaded
+	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	strncpy(st, &rcv->buf[index], len);
+	HcuDebugPrint("CLOUDVELA: AV file name to be uploaded: %s!\n\n\n\n\n\n\n\n\n\n", st);
+
+	//根据OptId操作字进行进一步的分解
+	if ((optId == L3PO_hsmmp_data_req)){
+		if (func_cloudvela_av_upload(st) == SUCCESS){
+			HcuDebugPrint("CLOUDVELA: AV file upload successful.\n\n\n");
+			avUpload = TRUE;
+		}
+		else{
+			HcuErrorPrint("CLOUDVELA: AV file Upload failed.\n\n\n");
+			avUpload = FALSE;
+		}
+
+
+		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+			HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
+			HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
+			HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
+			HcuDebugPrint("CLOUDVELA: control command avUpload= %d\n", avUpload);
+
+		}
+
+	    // send resp msg to cloud: 01 successful 00: failure
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+			//初始化变量
+			CloudDataSendBuf_t buf;
+			memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+			//打包数据
+			if (FAILURE == func_cloudvela_huanbao_av_upload_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, avUpload, &buf))
+			{
+				HcuErrorPrint("CLOUDVELA: Package message error!\n");
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				//return FAILURE;
+			}
+			//Send out
+			ret = func_cloudvela_send_data_to_cloud(&buf);
+			if ( ret == SUCCESS){
+				HcuDebugPrint("CLOUDVELA: Online state, send AV Upload Resp to cloud success!\n");
+				//return FAILURE;
+			}
+			else{
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				HcuErrorPrint("CLOUDVELA: Online state, send AV Upload Resp to cloud failure!\n");
+				return FAILURE;
+			}
+		}
+	}
+
+
+	else{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
+		return FAILURE;
+	}
+
+	return SUCCESS;
+
+}
+
+
+//for hcu sw invertory by shanchun
+OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+{
+	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, ret=0;
+	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	HcuInventoryInfot hcuInventoryInfo;
+
+	memset(&hcuInventoryInfo, 0, sizeof(HcuInventoryInfot));
+
+
+	//命令字
+	cmdId = L3CI_hcu_inventory;
 	backType = L3CI_cmdid_back_type_control;
 
 	//长度域，1BYTE
@@ -4671,15 +4774,6 @@ OPSTAT func_cloudvela_standard_xml_swinventory_msg_unpack(msg_struct_com_cloudve
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
-	//确保长度域是完全一致的
-	/*
-	it = len*2 + 4;
-	if (it != rcv->length){
-		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	*/
 
 	//操作字，1BYTE
 	memset(st, 0, sizeof(st));
@@ -4687,49 +4781,38 @@ OPSTAT func_cloudvela_standard_xml_swinventory_msg_unpack(msg_struct_com_cloudve
 	optId = strtoul(st, NULL, 16);
 	index = index + 2;
 	len = len-1;
-	if ((optId <= L3PO_swinventory_min) || (optId >= L3PO_swinventory_max)){
+	if ((optId <= L3PO_hcuinventory_min) || (optId >= L3PO_hcuinventory_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
-	/*
-	//HCU file name to be downloaded
-	memset(st, 0, sizeof(st));
-	strncpy(st, &rcv->buf[index], len);
-	HcuDebugPrint("CLOUDVELA: SW download HCU file name: %s!\n\n\n\n\n\n\n\n\n\n", st);
-	*/
-
 	//根据OptId操作字进行进一步的分解
-	if ((optId == L3PO_swinventory_req)){
-
-		/*
-
-		if (func_cloudvela_sw_download(st) == SUCCESS){
-			HcuDebugPrint("CLOUDVELA: HCU SW Download success.\n\n\n");
-			swDownload = TRUE;
-
-		*/
-
-		    swInventory = CURRENT_SW_DELIVERY;
+	if ((optId == L3PO_hcuinventory_req)){
+		    optId = L3PO_hcuinventory_report;
+			hcuInventoryInfo.hw_type = CURRENT_HW_TYPE;
+			hcuInventoryInfo.hw_version = CURRENT_HW_MODULE;
+			hcuInventoryInfo.sw_delivery = CURRENT_SW_RELEASE;
+			hcuInventoryInfo.sw_release = CURRENT_SW_DELIVERY;
 
 			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
-				HcuDebugPrint("cloudvela: control command cmdId= %d\n", cmdId);
-				HcuDebugPrint("cloudvela: control command optId= %d\n", optId);
-				HcuDebugPrint("cloudvela: control command backType = %d\n", backType);
-				HcuDebugPrint("cloudvela: control command swInventory= %d\n", swInventory);
+				HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
+				HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
+				HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
+				HcuDebugPrint("CLOUDVELA: control command hw_type = %d\n", hcuInventoryInfo.hw_type);
+				HcuDebugPrint("CLOUDVELA: control command hw_version= %d\n", hcuInventoryInfo.hw_version);
+				HcuDebugPrint("CLOUDVELA: control command sw_delivery = %d\n", hcuInventoryInfo.sw_delivery);
+				HcuDebugPrint("CLOUDVELA: control command sw_release= %d\n", hcuInventoryInfo.sw_release);
 
 			}
 
-		    // send resp msg to cloud: 01 successful 00: failure
-
-			//发送数据给后台
+		    // send resp msg to cloud
 			if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 				//初始化变量
 				CloudDataSendBuf_t buf;
 				memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 				//打包数据
-				if (FAILURE == func_cloudvela_huanbao_sw_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, swInventory, &buf))
+				if (FAILURE == func_cloudvela_huanbao_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &hcuInventoryInfo, &buf))
 				{
 					HcuErrorPrint("CLOUDVELA: Package message error!\n");
 					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -4739,21 +4822,13 @@ OPSTAT func_cloudvela_standard_xml_swinventory_msg_unpack(msg_struct_com_cloudve
 				ret = func_cloudvela_send_data_to_cloud(&buf);
 				if ( ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-					HcuErrorPrint("CLOUDVELA: Package message error!\n");
-					//return FAILURE;
+					HcuErrorPrint("CLOUDVELA: Online state, send HCU Inventory Resp to cloud failure!\n");
+					return FAILURE;
 				}
 
-			}
-
-			else{
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-				HcuErrorPrint("CLOUDVELA: Error send HCU Inventory ack to cloud!");
-				return FAILURE;
-			}
-
-			//结束
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
-				HcuDebugPrint("CLOUDVELA: Online state, send HCU Inventory ack to cloud success!\n");
+				else{
+					HcuDebugPrint("CLOUDVELA: Online state, send HCU Inventory Resp to cloud success!\n");
+				}
 			}
 	}
 
@@ -4779,7 +4854,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	backType = L3CI_cmdid_back_type_control;
 
 	//长度域，1BYTE
-	memset(st, 0, sizeof(st));
+	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
@@ -4799,7 +4874,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	*/
 
 	//操作字，1BYTE
-	memset(st, 0, sizeof(st));
+	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
 	strncpy(st, &rcv->buf[index], 2);
 	optId = strtoul(st, NULL, 16);
 	index = index + 2;
@@ -4811,7 +4886,9 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	}
 
 	//HCU file name to be downloaded
-	memset(st, 0, sizeof(st));
+	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	// TODO: Check len
+
 	strncpy(st, &rcv->buf[index], len);
 	HcuDebugPrint("CLOUDVELA: SW download HCU file name: %s!\n\n\n\n\n\n\n\n\n\n", st);
 
@@ -4819,14 +4896,14 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	if ((optId == L3PO_swdownload_req)){
 
 		if (func_cloudvela_sw_download(st) == SUCCESS){
-			HcuDebugPrint("CLOUDVELA: HCU SW Download success.\n\n\n");
+			HcuDebugPrint("CLOUDVELA: HCU SW Download successful.\n\n\n");
 			swDownload = TRUE;
 
 			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
-				HcuDebugPrint("cloudvela: control command cmdId= %d\n", cmdId);
-				HcuDebugPrint("cloudvela: control command optId= %d\n", optId);
-				HcuDebugPrint("cloudvela: control command backType = %d\n", backType);
-				HcuDebugPrint("cloudvela: control command swDownload= %d\n", swDownload);
+				HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
+				HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
+				HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
+				HcuDebugPrint("CLOUDVELA: control command swDownload= %d\n", swDownload);
 
 			}
 
@@ -4856,18 +4933,32 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 
 			else{
 				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-				HcuErrorPrint("CLOUDVELA: Error send HCU SW Download Success ack to cloud!");
+				HcuErrorPrint("CLOUDVELA: Error send HCU SW Download Success Resp to cloud!");
 				return FAILURE;
 			}
 
 			//结束
 			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
-				HcuDebugPrint("CLOUDVELA: Online state, send HCU SW Download Success ack to cloud success!\n");
+				HcuDebugPrint("CLOUDVELA: Online state, send HCU SW Download Success Resp to cloud success!\n");
 			}
 
+		    //system("reboot");
 
 
-		    system("reboot");
+		    FILE   *stream;
+		    //FILE    *wstream;
+		    char   buf[1024];
+
+		    memset( buf, '/0', sizeof(buf) );//初始化buf,以免后面写如乱码到文件中
+		    stream = popen( "reboot", "r" ); //将“ls －l”命令的输出 通过管道读取（“r”参数）到FILE* stream
+		    //wstream = fopen( "test_popen.txt", "w+"); //新建一个可写的文件
+
+		    fread( buf, sizeof(char), sizeof(buf),  stream);  //将刚刚FILE* stream的数据流读取到buf中
+		    //fwrite( buf, 1, sizeof(buf), wstream );//将buf中的数据写到FILE    *wstream对应的流中，也是写到文件中
+		    HcuDebugPrint("CLOUDVELA: Return of popen-reboot!\n\n\n\n\n\n\n\n\n", buf);
+		    pclose( stream );
+		    //fclose( wstream );
+
 		}
 
 
@@ -4878,10 +4969,10 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 				swDownload = FALSE;
 
 				if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
-					HcuDebugPrint("cloudvela: control command cmdId= %d\n", cmdId);
-					HcuDebugPrint("cloudvela: control command optId= %d\n", optId);
-					HcuDebugPrint("cloudvela: control command backType = %d\n", backType);
-					HcuDebugPrint("cloudvela: control command swDownload= %d\n", swDownload);
+					HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
+					HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
+					HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
+					HcuDebugPrint("CLOUDVELA: control command swDownload= %d\n", swDownload);
 
 				}
 				// send resp msg to cloud: 00 failure
@@ -4910,13 +5001,13 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 
 				else{
 					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-					HcuErrorPrint("CLOUDVELA: Error send HCU SW Download Failure ack to cloud!");
+					HcuErrorPrint("CLOUDVELA: Error send HCU SW Download Failure Resp to cloud!");
 					return FAILURE;
 				}
 
 				//结束
 				if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
-					HcuDebugPrint("CLOUDVELA: Online state, send HCU SW Download Failure ack to cloud success!\n");
+					HcuDebugPrint("CLOUDVELA: Online state, send HCU SW Download Failure Resp to cloud success!\n");
 				}
 
 		}
@@ -5491,17 +5582,23 @@ OPSTAT func_cloudvela_sw_download(char *filename)
 	FTP_OPT ftp_opt;
 
 	char usrtmp[3] = ":";
-	ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
+
+	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
+
+	//ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
 	strcat(ftp_opt.user_key, usrtmp);
 	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n\n\n", ftp_opt.user_key);
 
 	//char filetmp[64] = "swdownload.txt";
-	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	//ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
 	strcat(ftp_opt.url, filename);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n\n\n", ftp_opt.url);
 
-	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	strcat(ftp_opt.file, zHcuSysEngPar.swDownload.hcuSwDownloadDir);
 	strcat(ftp_opt.file, filename);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n\n\n", ftp_opt.file);
 
@@ -5518,6 +5615,42 @@ OPSTAT func_cloudvela_sw_download(char *filename)
 	    // send resp msg to cloud: 00 failure
 		return FAILURE;
 
+	}
+
+}
+
+OPSTAT func_cloudvela_av_upload(char *filename)
+{
+	FTP_OPT ftp_opt;
+
+	char usrtmp[3] = ":";
+
+	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
+
+	//ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
+	strcat(ftp_opt.user_key, usrtmp);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n\n\n", ftp_opt.user_key);
+
+	//char filetmp[64] = "swdownload.txt";
+	//ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
+	strcat(ftp_opt.url, filename);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n\n\n", ftp_opt.url);
+
+	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	strcat(ftp_opt.file, zHcuSysEngPar.videoSev.hcuVideoServerDir);
+	strcat(ftp_opt.file, filename);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n\n\n", ftp_opt.file);
+
+	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt)){
+		return SUCCESS;
+	}
+
+	else
+	{
+		return FAILURE;
 	}
 
 }
@@ -5871,7 +6004,7 @@ OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8
 
 
 //Adding by Shanchun for hcu sw inventory response
-OPSTAT func_cloudvela_huanbao_sw_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 swInventory, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, HcuInventoryInfot *hcuInventoryInfo, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -5889,21 +6022,35 @@ OPSTAT func_cloudvela_huanbao_sw_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT
 		//pack数据到临时字符串中, 将数据打印到关键的数值中
 		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
 		sprintf(xmlFormat.conBackType, "%02X", backType & 0xFF);
-		//sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
-        //Shanchun: need to change optId, response as ACK
+
+		int i;
+
+
 		switch(optId)
 		{
-		    case L3PO_swinventory_req:
-		    	optId = L3PO_swinventory_report;
+		    case L3PO_hcuinventory_report:
+		    	//optId = L3PO_hcuinventory_report;
 		    	sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
-		    	sprintf(xmlFormat.conSwInventory, "%02X", swInventory & 0xFF);
-			    break;
+
+		    	char temp[2];
+		    	for(i=0;i<6;i++){
+					//sprintf(xmlFormat.conHwUuid[i], "%02X", hcuInventoryInfo->hw_uuid[i]);
+		    		sprintf(temp, "%02X", hcuInventoryInfo->hw_uuid[i] & 0xFF);
+		    		strcat(xmlFormat.conHwUuid, temp);
+		    	}
+
+				sprintf(xmlFormat.conHwType, "%02X", hcuInventoryInfo->hw_type & 0xFF);
+				sprintf(xmlFormat.conHwVersion, "%04X", hcuInventoryInfo->hw_version & 0xFFFF);
+				sprintf(xmlFormat.conSwDelivery, "%02X", hcuInventoryInfo->sw_delivery & 0xFF);
+				sprintf(xmlFormat.conSwRelease, "%04X", hcuInventoryInfo->sw_release & 0xFFFF);
+			   break;
 
 		    default:
 			    HcuErrorPrint("CLOUDVELA: Error operation code received!\n");
 			    zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			    return FAILURE;
 			    break;
+
 		}
 
 		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
@@ -5935,9 +6082,70 @@ OPSTAT func_cloudvela_huanbao_sw_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT
 	return SUCCESS;
 }
 
+//Adding by Shanchun for hcu sw inventory response
+OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 avUpload, CloudDataSendBuf_t *buf)
+{
+	//参数检查，其它参数无所谓
+	if (buf == NULL){
+		HcuErrorPrint("CLOUDVELA: Error CloudDataSendBuf_t pointer!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
 
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == CLOUDVELA_BH_INTERFACE_STANDARD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	{
+		//初始化变量
+		CloudBhItfDevReportStdXml_t xmlFormat;
+		memset(&xmlFormat, 0, sizeof(CloudBhItfDevReportStdXml_t));
 
+		//pack数据到临时字符串中, 将数据打印到关键的数值中
+		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
+		sprintf(xmlFormat.conBackType, "%02X", backType & 0xFF);
+		//sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
+		//Shanchun: need to change optId, response as ACK
+		switch(optId)
+		{
+			case L3PO_hsmmp_data_req:
+				optId = L3PO_hsmmp_data_report;
+				sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
+				sprintf(xmlFormat.conAvUpload, "%02X", avUpload & 0xFF);
+				break;
 
+			default:
+				HcuErrorPrint("CLOUDVELA: Error operation code received!\n");
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				return FAILURE;
+				break;
+		}
+
+		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		else {
+			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+			HcuDebugPrint("CLOUDVELA: HCU sw inventory response XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+		}
+	}
+
+	else{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
+		return FAILURE;
+	}
+
+	return SUCCESS;
+}
 
 
 

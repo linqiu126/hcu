@@ -107,13 +107,18 @@ extern OPSTAT func_cloudvela_heart_beat_received_handle(void);
 //Added by Shanchun for PM25 control cmd
 extern OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 powerOnOff, UINT32 interSample, UINT32 meausTimes, UINT32 newEquId, UINT32 workCycle,CloudDataSendBuf_t *buf);
 
-//Added by Shanchun for SW download and SW inventory
-extern OPSTAT func_cloudvela_standard_xml_swinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
+//Added by Shanchun for SW download, SW inventory, AV upload
+extern OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 extern OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 extern OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 swDownload, CloudDataSendBuf_t *buf);
 extern OPSTAT func_cloudvela_sw_download(char *filename);
 
-extern OPSTAT func_cloudvela_huanbao_sw_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 swInventory, CloudDataSendBuf_t *buf);
+
+extern OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, HcuInventoryInfot *hcuInventoryInfo, CloudDataSendBuf_t *buf);
+
+extern OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
+extern OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 avUpload, CloudDataSendBuf_t *buf);
+extern OPSTAT func_cloudvela_av_upload(char *filename);
 
 //Global API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);

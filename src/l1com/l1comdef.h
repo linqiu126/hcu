@@ -77,7 +77,7 @@ typedef enum
 	L3CI_airprs = 0x2A, //Air pressure
 	L3CI_noise = 0x2B, //Noise
 	L3CI_hsmmp = 0x2C, //Camer or audio high speed
-	L3CI_sw_inventory = 0xA0,	//Èí¼þÇåµ¥
+	L3CI_hcu_inventory = 0xA0,	//Èí¼þÇåµ¥
 	L3CI_sw_package = 0xA1,	//Èí¼þ°æ±¾Ìå
 	L3CI_equipment_info = 0xF0,	//Éè±¸»ù±¾ÐÅÏ¢
 	L3CI_personal_info = 0xF1,	//¸öÈË»ù±¾ÐÅÏ¢
@@ -263,12 +263,12 @@ typedef enum
 
 typedef enum
 {
-	L3PO_swinventory_min = 0,
-	L3PO_swinventory_none = 0,
-	L3PO_swinventory_req = 0x01, //Sw download Request
-	L3PO_swinventory_report = 0x81, //Sw download Response
-	L3PO_swinventory_max,
-}L3SwInventoryOptIdDef;
+	L3PO_hcuinventory_min = 0,
+	L3PO_hcuinventory_none = 0,
+	L3PO_hcuinventory_req = 0x01, //Hcu Inventory Request
+	L3PO_hcuinventory_report = 0x81, //Hcu Inventory Response
+	L3PO_hcuinventory_max,
+}L3HcuInventoryOptIdDef;
 
 
 //UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数，针对读数到底是周期性的还是一次性的
@@ -546,8 +546,18 @@ typedef struct CloudBhItfDevReportStdXml
 	//Added by Shanchun for hcu sw download
 	char conSwDownload[3];
 
-	//Added by Shanchun for hcu sw inventory
-	char conSwInventory[3];
+
+	//Added by Shanchun for hcu inventory
+
+	char conHwUuid[12];//6B
+
+	char conHwType[3];//1B
+	char conHwVersion[5];//2B
+	char conSwDelivery[5];//1B
+	char conSwRelease[5];//2B
+
+	//Added by Shanchun for av upload
+	char conAvUpload[3];
 
 	char conTimeStamp[9]; //4B
 	char conNtimes[5];   //2B
@@ -664,6 +674,16 @@ typedef struct GpsPosInfo
 	UINT32 speed; //速度
 	UINT32 resistence; //反映多少个GPS模块扫描周期一直没有数值的情况
 }GpsPosInfo_t;
+
+
+typedef struct  HcuInventoryInfo
+{
+	UINT8 hw_uuid[6];
+	UINT8 hw_type;
+	UINT16 hw_version;
+	UINT8 sw_release;
+	UINT16 sw_delivery;
+}HcuInventoryInfot;
 
 //Adding by Shanchun for socket handling
 #define PORT 4454
