@@ -584,7 +584,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		break;
 
 	case L3CI_hsmmp:
-		if (func_cloudvela_huanbao_hsmmp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_hsmmp_data_report, L3CI_cmdid_back_type_period, record.equipid, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, record.hsmmpLink, &buf) == FAILURE){
+		if (func_cloudvela_huanbao_hsmmp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_hsmmp_upload_req, L3CI_cmdid_back_type_period, record.equipid, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, record.hsmmpLink, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: HSMMP pack message error!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -4693,7 +4693,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 	HcuDebugPrint("CLOUDVELA: AV file name to be uploaded: %s!\n\n\n\n\n\n\n\n\n\n", st);
 
 	//根据OptId操作字进行进一步的分解
-	if ((optId == L3PO_hsmmp_data_req)){
+	if ((optId == L3PO_hsmmp_upload_req)){
 		if (func_cloudvela_av_upload(st) == SUCCESS){
 			HcuDebugPrint("CLOUDVELA: AV file upload successful.\n\n\n");
 			avUpload = TRUE;
@@ -6105,8 +6105,8 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		//Shanchun: need to change optId, response as ACK
 		switch(optId)
 		{
-			case L3PO_hsmmp_data_req:
-				optId = L3PO_hsmmp_data_report;
+			case L3PO_hsmmp_upload_req:
+				optId = L3PO_hsmmp_upload_report;
 				sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
 				sprintf(xmlFormat.conAvUpload, "%02X", avUpload & 0xFF);
 				break;
@@ -6134,7 +6134,7 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			return FAILURE;
 		}
 		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("CLOUDVELA: HCU sw inventory response XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+			HcuDebugPrint("CLOUDVELA: HCU video upload response XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
