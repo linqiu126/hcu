@@ -220,13 +220,13 @@ typedef enum
 	L3PO_hsmmp_min = 0,
 	L3PO_hsmmp_none = 0,
 	L3PO_hsmmp_data_req = 0x01, //Data Request
-	L3PO_hsmmp_set_switch = 0x02,
+	L3PO_hsmmp_upload_req = 0x02,
 	L3PO_hsmmp_set_modbus_address =0x03,
 	L3PO_hsmmp_set_work_cycle = 0x04, //In second
 	L3PO_hsmmp_set_sample_cycle = 0x05, //In second
 	L3PO_hsmmp_set_sample_number = 0x06,
 	L3PO_hsmmp_data_report = 0x81, //Data Report
-	L3PO_hsmmp_read_switch = 0x82,
+	L3PO_hsmmp_upload_report = 0x82,
 	L3PO_hsmmp_read_modbus_address = 0x83,
 	L3PO_hsmmp_read_work_cycle = 0x84, //In second
 	L3PO_hsmmp_read_sample_cycle = 0x85, //In second
