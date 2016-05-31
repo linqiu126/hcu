@@ -11,6 +11,7 @@
 #include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
 
+
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01
@@ -23,6 +24,17 @@ enum FSM_STATE_HSMMP
 };
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
+
+typedef struct dir
+{
+	long d_ino;
+	off_t d_off;
+	UINT16 d_reclen;
+	UINT8 d_type;
+	char d_name[HSMMP_PATH_MAX + 1];
+}Dirent_t;
+
+
 
 //Global variables
 extern FsmStateItem_t FsmHsmmp[];
@@ -52,6 +64,7 @@ extern OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void
 //Local API
 OPSTAT func_hsmmp_time_out_period(void);
 OPSTAT func_hsmmp_time_out_wait_for_cammera_fb(void);
+
 
 //引用外部函数
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);
