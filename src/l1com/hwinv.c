@@ -478,6 +478,8 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 
 		//local SW storage address
 		strcpy(zHcuSysEngPar.swDownload.hcuSwDownloadDir, HCU_SW_DOWNLOAD_DIR_DEFAULT);
+		strcpy(zHcuSysEngPar.swDownload.hcuSwActiveDir, HCU_SW_ACTIVE_DIR_DEFAULT);
+		strcpy(zHcuSysEngPar.swDownload.hcuSwBackupDir, HCU_SW_BACKUP_DIR_DEFAULT);
 
 		//视频服务器部分
 		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT);
@@ -537,11 +539,11 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	}
 	else
 	{
-		HcuDebugPrint("HWINV: Create successfully for video server directory: %s\n\n\n\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
+		HcuDebugPrint("HWINV: Create successfully for video server directory: %s\n\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
 
 	}
 
-    //create HCU SW download local directory by Shanchun
+    //create HCU SW download/active/backup local directory by Shanchun
 	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwDownloadDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW download local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
@@ -551,6 +553,27 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		HcuDebugPrint("HWINV: Create successfully for HCU SW download local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
 
 	}
+
+	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwActiveDir);
+    if (ret == FAILURE){
+    	HcuErrorPrint("HWINV: Can't create HCU SW active local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
+	}
+	else
+	{
+		HcuDebugPrint("HWINV: Create successfully for HCU SW active local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
+
+	}
+
+	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwBackupDir);
+    if (ret == FAILURE){
+    	HcuErrorPrint("HWINV: Can't create HCU SW backup local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
+	}
+	else
+	{
+		HcuDebugPrint("HWINV: Create successfully for HCU SW backup local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
+
+	}
+
 
 	return SUCCESS;
 }
@@ -748,7 +771,28 @@ void func_hwinv_scan_main_board(void)
 {}
 
 void func_hwinv_scan_hard_disc(void)
-{}
+{
+	//by shanchun
+	struct statfs diskInfo;
+	statfs("/", &diskInfo);
+	UINT64 totalBlocks = diskInfo.f_bsize;
+	UINT64 totalSize = totalBlocks * diskInfo.f_blocks;
+	size_t mbTotalsize = totalSize>>20;
+	UINT64 freeDisk = diskInfo.f_bfree * totalBlocks;
+	size_t mbFreedisk = freeDisk>>20;
+
+	float r = (float)mbFreedisk/mbTotalsize*100;
+
+	if(r <= HCU_HARDDISK_TRESHOLD)
+	{
+		HcuDebugPrint("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%\n\n\n",mbTotalsize,mbFreedisk,r);
+		HcuDebugPrint("HWINV: log directry of HCU: s% \n\n\n\n\n", zCurTimeDate.curLogDir);
+		//hcu_delete_file("/home/pi/workspace/hcu/RasberryPi/log");
+		hcu_delete_file(zCurTimeDate.curLogDir);
+
+	}
+
+}
 
 void func_hwinv_scan_gpio(void)
 {}
@@ -1243,6 +1287,80 @@ UINT32 hcu_create_multi_dir(const char *path)
 
         return SUCCESS;
 }
+
+
+
+//by shanchun: for file & directory removal when hard disk treshold is reached
+OPSTAT hcu_is_dir(const char *path)
+{
+	struct stat statbuf;
+	if(lstat(path, &statbuf) == 0)
+	{
+		return S_ISDIR(statbuf.st_mode) != 0;
+	}
+
+	return FALSE;
+
+}
+OPSTAT hcu_is_file(const char *path)
+{
+	struct stat statbuf;
+	if(lstat(path, &statbuf) == 0)
+	{
+		return S_ISREG(statbuf.st_mode) != 0;
+
+	}
+
+	return FALSE;
+
+}
+OPSTAT hcu_is_special_dir(const char *path)
+{
+	return strcmp(path, ".") == 0 || strcmp(path, "..") == 0;
+
+}
+void hcu_get_file_path(const char *path, const char *file_name, char *file_path)
+{
+	strcpy(file_path, path);
+	if(file_path[strlen(path) - 1] != '/')
+		strcat(file_path, "/");
+	strcat(file_path, file_name);
+
+}
+void hcu_delete_file(const char *path)
+{
+	DIR *dir;
+	struct dirent *dir_info;
+
+	char file_path[CLOUDVELA_PATH_MAX];
+	if(hcu_is_file(path))
+	{
+		HcuDebugPrint("HSMMP: is file: %s \n\n", path);
+		remove(path);
+		return;
+	}
+
+	if(hcu_is_dir(path))
+	{
+		//HcuDebugPrint("is dir: %s \n\n\n\n\n\n\n\n\n\n\n", path);
+		if((dir = opendir(path)) == NULL)
+				return;
+		while((dir_info = readdir(dir)) != NULL)
+		{
+			//HcuDebugPrint("is dir_into: %s \n\n\n\n\n\n\n\n\n\n\n", dir_info->d_name);
+
+			hcu_get_file_path(path,dir_info->d_name,file_path);
+			HcuDebugPrint("HWINV: is dir_into: %s \n\n\n", file_path);
+			if(hcu_is_special_dir(dir_info->d_name))
+				continue;
+			hcu_delete_file(file_path);
+			rmdir(file_path);
+		}
+	}
+
+}
+
+
 
 
 /*

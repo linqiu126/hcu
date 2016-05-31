@@ -189,7 +189,9 @@
 #define  CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
 
 //local SW storage address for HCU SW upgrade by shanchun
-#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcusw/"
+#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
 
 //系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 #define CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME

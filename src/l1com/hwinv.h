@@ -12,6 +12,21 @@
 #include "../l0comvm/vmlayer.h"
 #include "../l0service/sysinfo.h"
 
+
+//by shanchun for disk size and file removal
+#include <sys/vfs.h>
+
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+//#include <limits.h>
+//#include <dirent.h>
+#include <string.h>
+#include <stdio.h>
+//#include <dirent.h>
+
+
+
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01
@@ -222,6 +237,8 @@ typedef struct HcuHwinvCtrlTable
 #define HCU_RECORD_FILE_NAME_EXTEND_H264 		".h264"
 #define HCU_RECORD_FILE_NAME_EXTEND_MKV			".mkv"
 
+#define HCU_HARDDISK_TRESHOLD 10
+
 //时间全局变量
 typedef struct zHcuTimeDateTable
 {
@@ -279,7 +296,7 @@ extern void func_hwinv_scan_flash(void);
 extern void func_hwinv_scan_rtc(void);
 extern void func_hwinv_scan_memroy(void);
 extern void func_hwinv_scan_main_board(void);
-extern void func_hwinv_scan_hard_disc(void);
+extern void func_hwinv_scan_hard_disc(void);//updated by shanchun
 extern void func_hwinv_scan_gpio(void);
 extern void func_hwinv_scan_sps232(void);
 extern void func_hwinv_scan_sps485(void);
@@ -308,6 +325,13 @@ extern void func_hwinv_scan_toxicgas(void);
 extern void func_hwinv_scan_pm25sharp(void);
 extern void func_hwinv_scan_local_ui();
 extern void func_hwinv_scan_message_queue(void);
+
+//extern OPSTAT func_hwinv_scan_disksize(void);//for disk size checking by shanchun
+extern OPSTAT hcu_is_dir(const char *path);//check if it is directory
+extern OPSTAT hcu_is_file(const char *path);//check if it is file
+extern OPSTAT hcu_is_special_dir(const char *path);//check if it is special file
+extern void hcu_get_file_path(const char *path, const char *file_name, char *file_path);//check if it is special file
+extern void hcu_delete_file(const char *path);//file delete
 
 //External APIs
 extern UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen);

@@ -738,5 +738,9 @@ typedef struct  HcuInventoryInfo
 #define HCU_SENSOR_GPSZ_VALUE_MIN 0  //in m
 #define HCU_SENSOR_GPSZ_VALUE_MAX 30000
 
+#define CLOUDVELA_PATH_MAX 1024  //for readlink by shanchun
+#define HSMMP_PATH_MAX 254  //for readlink by shanchun
+
+
 
 #endif /* L1COM_L1COMDEF_H_ */

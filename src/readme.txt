@@ -631,6 +631,11 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > merge hcu.sh(the scripts of auto starp-up) into hcu project
 
 
+== Update log: 2016 May 29 SW Version: XQ.HCU.SW.R01.092 //ZSC
+> upload AV file (softlink)
+> delete log file in case hard disk usage > 90%
+
+
 
 
 
