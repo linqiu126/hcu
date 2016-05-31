@@ -113,6 +113,8 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `cloudftpuser` char(12) NOT NULL,
   `cloudftppwd` char(12) NOT NULL,
   `hcuswdownloaddir` char(64) NOT NULL,
+  `hcuswactivedir` char(64) NOT NULL,
+  `hcuswbackupdir` char(64) NOT NULL,
   `hcuvideoserverdir` char(64) NOT NULL,
   `hcuvideoserverhttp` char(64) NOT NULL,
   `debugmode` int(1) NOT NULL,
@@ -137,12 +139,12 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`,
 `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `pm25sharpreqtimer`,
 `syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`,
 `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`,
-`cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `hcuswdownloaddir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`,
+`cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `hcuswdownloaddir`,`hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`,
 `browselworkingoption`) VALUES
 ('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'localhost', 'root',
 '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 300, 2, 12, 20, 60, 60, 60, 60, 60, 60, 60, 3600, 3, 1, 0,
 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/main/cloud_callback.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php',
-'http://mfunhcu.sinaapp.com/wechat/cloud_callback.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177','anonymous','anonymous', '/home/pi/hcusw/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/',
+'http://mfunhcu.sinaapp.com/wechat/cloud_callback.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177','anonymous','anonymous', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/',
 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
 
 */
@@ -543,6 +545,9 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname)
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 
 		if(sqlRow[index]) strncpy(engPar->swDownload.hcuSwDownloadDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->swDownload.hcuSwActiveDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->swDownload.hcuSwBackupDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+
 
 		//视频服务器部分
 		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);
