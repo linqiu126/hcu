@@ -32,7 +32,7 @@ extern float zHcuGpioToxicgasMq135;
 #define RPI_GPIO_PIN_VCC 1
 #define RPI_GPIO_PIN_GND 9
 #define RPI_GPIO_PIN_DHT11_DATA 0  //Pin#11
-#define RPI_GPIO_PIN_MQ135_DATA 25  //Pin#37  //应CZ要求，管脚改变，从GPIO#5改为GPIO#25，管脚从pin#18改为pin#37
+#define RPI_GPIO_PIN_MQ135_DATA 6  //Pin#22  //应CZ要求，管脚改变，从GPIO#5改为GPIO#6，管脚从pin#18改为pin#22
 
 #define RPI_GPIO_HIGH_TIME 32
 #define RPI_GPIO_SENSOR_READ_GAP 60 //in second
