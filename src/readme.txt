@@ -608,8 +608,6 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 增加BMP180/GY68气压完整工作的模块，包括数据库，DBIAPI以及L3处理
 > 增加MQ135/有毒气体完整工作的模块，包括数据库，DBIAPI以及L3处理
 
-
-
 == Update log: 2016 May 18 SW Version: XQ.HCU.SW.R01.087 //ZSC
 > add curl FTP modle 
 > add the module for HCU SW download
@@ -630,8 +628,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > add the module for the captured video upload
 > merge hcu.sh(the scripts of auto starp-up) into hcu project
 
-
-
+== Update log: 2016 May 31 SW Version: XQ.HCU.SW.R01.091
+> MQ135, GPIO#5 -> change to GPIO#6
+> 去掉部分内部模块HEART_BEAT，不然SVRCON的消息队列满
 
 
 
