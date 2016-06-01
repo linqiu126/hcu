@@ -628,19 +628,14 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > add the module for the captured video upload
 > merge hcu.sh(the scripts of auto starp-up) into hcu project
 
-<<<<<<< HEAD
+== Update log: 2016 May 31 SW Version: XQ.HCU.SW.R01.091
+> MQ135, GPIO#5 -> change to GPIO#6
+> 去掉部分内部模块HEART_BEAT，不然SVRCON的消息队列满
 
 == Update log: 2016 May 29 SW Version: XQ.HCU.SW.R01.092 //ZSC
 > upload AV file (softlink)
 > delete log file in case hard disk usage > 90%
 
-
-
-=======
-== Update log: 2016 May 31 SW Version: XQ.HCU.SW.R01.091
-> MQ135, GPIO#5 -> change to GPIO#6
-> 去掉部分内部模块HEART_BEAT，不然SVRCON的消息队列满
->>>>>>> 7e21f327bd5a88710690dde264fec9fa6d4b2c80
 
 
 
