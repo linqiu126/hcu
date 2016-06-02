@@ -127,6 +127,7 @@ OPSTAT func_spi_read_data_rht03(void)
 #ifdef TARGET_RASPBERRY_PI3B
 	int fd, i;
 	int temp, humid;
+	unsigned char read[4] = {0, 0, 0, 0};
 	float tmp1, tmp2, tempSum, humidSum;
 
 	if((fd=wiringPiSPISetup(RPI_SPI_ADDR_RHT03, RPI_SPI_SPEED))<0){
@@ -139,28 +140,21 @@ OPSTAT func_spi_read_data_rht03(void)
 	humidSum = 0;
 	for (i=0; i<RPI_SPI_READ_REPEAT_TIMES; i++){
 		delay (200);
-		temp = wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, NULL, 0);
-		tempSum += temp;
-		delay (200);
-		humid = wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, NULL, 0);
+		//数据存在的位置是前两个字节是温度，第三个字节是湿度，第四个是CRC
+		//CRC暂时不检查，未来需要检查
+		wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, read, 4);
+		temp = (read[0]<<8)&0xFF00 + read[1]&0xFF - 400;
+		tempSum += temp/10;
+		humid = read[2]&0xFF;
 		humidSum += humid;
-		//计算算法待定
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-			HcuDebugPrint("SPI: Sensor RHT03 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
-		}
+//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//			HcuDebugPrint("SPI: Sensor RHT03 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
+//		}
 	}
 
 	//求平均
 	zHcuSpiTempRht03 = tempSum / RPI_SPI_READ_REPEAT_TIMES;
 	zHcuSpiHumidRht03 = humidSum / RPI_SPI_READ_REPEAT_TIMES;
-
-//	tmp1 = (temp>>8)&0xFF;
-//	tmp2 = ((temp&0xFF)<<8)&0xFF00;
-//	zHcuI2cTempSht20 = (tmp1 + tmp2) * 175.72 / 1024 / 64 - 46.85;
-//	tmp1 = (humid>>8)&0xFF;
-//	tmp2 = ((humid&0xFF)<<8)&0xFF00;
-//	zHcuI2cHumidSht20 = (tmp1 + tmp2) * 125 / 1024 / 64 - 6;
-//	HcuDebugPrint("SPI: Sensor SHT20 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuI2cTempSht20, zHcuI2cHumidSht20, RPI_SPI_PIN_MOSI);
 
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPI: Sensor RHT03 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuSpiTempRht03, zHcuSpiHumidRht03, RPI_SPI_PIN_MOSI);
