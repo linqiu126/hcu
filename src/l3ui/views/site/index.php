@@ -13,7 +13,7 @@ $this->title = 'BXXH-HCU本地主页界面';
 
         <p><a class="btn btn-lg btn-success" href="http://121.40.185.177/xhzn/mfunhcu/ui/Login.html">爱启云用户UI</a> <a class="btn btn-lg btn-success" href="http://h5.aiqiworld.com/xhzn/mfuncloud/web/index.php">爱启云后台管理UI</a> <a class="btn btn-lg btn-success" href="http://h5.aiqiworld.com/myAdmin/">爱启云PHPMyAdmin</a></p>
         <p><a class="btn btn-lg btn-success" href="http://mfuncloud.sinaapp.com/web/index.php">新浪云BXXH主页</a></p>
-        <p><a class="btn btn-lg btn-success" href="<?php Yii::getAlias('@web'); ?>index.php?r=gii">Gii继续生成CRUD</a> <a class="btn btn-lg btn-success" href="http://localhost/phpmyadmin">本机PHPMyAdmin</a> <a class="btn btn-lg btn-success" href="http://localhost/hcu/src/l3ui/web/index.php?r=hcusysengpar%2Fview&id=HCU_PRJ_AQYC">HCU工参检查和修改</a></p>
+        <p><a class="btn btn-lg btn-success" href="<?php Yii::getAlias('@web'); ?>index.php?r=gii">Gii继续生成CRUD</a> <a class="btn btn-lg btn-success" href="<?php Yii::getAlias('@web'); ?>/phpmyadmin">本机PHPMyAdmin</a> <a class="btn btn-lg btn-success" href="<?php Yii::getAlias('@web'); ?>index.php?r=hcusysengpar%2Fview&id=HCU_PRJ_AQYC">HCU工参检查和修改</a></p>
 
         
     </div>
