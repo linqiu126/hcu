@@ -13,6 +13,9 @@
 #include "../l1com/hwinv.h"
 #include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
+
+
+
 /*
 ** FSM of the HSMMP
 */
@@ -121,7 +124,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 			TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("WINDSPD: Error start timer!\n");
+		HcuErrorPrint("HSMMP: Error start timer!\n");
 		return FAILURE;
 	}
 
@@ -182,6 +185,12 @@ OPSTAT fsm_hsmmp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	else if ((rcv.timeId == TIMER_ID_1S_HSMMP_AVORION_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_hsmmp_time_out_wait_for_cammera_fb();
 	}
+/*
+	//For disk size checking by shanchun
+	if ((rcv.timeId == TIMER_ID_1S_HSMMP_FILESIZE_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		ret = func_hsmmp_time_out_disksize();
+	}
+*/
 
 	//这里的ret=FAILURE並不算严重，只不过造成状态机返回差错而已，并不会造成程序崩溃和数据混乱，所以只是程序的自我保护而已
 	return ret;
@@ -551,3 +560,4 @@ OPSTAT func_hsmmp_time_out_wait_for_cammera_fb(void)
 	}
 	return SUCCESS;
 }
+

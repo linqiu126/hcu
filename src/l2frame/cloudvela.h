@@ -120,6 +120,8 @@ extern OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudv
 extern OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 avUpload, CloudDataSendBuf_t *buf);
 extern OPSTAT func_cloudvela_av_upload(char *filename);
 
+//extern char* func_cloudvela_get_file_path(char *file, char *buf, int count);
+
 //Global API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);
 extern OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);

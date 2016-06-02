@@ -159,6 +159,8 @@ typedef struct SysEngParElementCloudvela
 typedef struct SysEngParElementHcuSwDownload
 {
 	char  hcuSwDownloadDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
+	char  hcuSwActiveDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
+	char  hcuSwBackupDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
 
 }SysEngParElementHcuSwDownload_t;
 

@@ -141,12 +141,8 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuDebugPrint("CLOUDVELA: HCU SW Upload success.\n\n\n");
 	else
 		HcuErrorPrint("CLOUDVELA: HCU SW Upload failed.\n\n\n");
-*/
-
-	//usleep(1000000);
 
 
-/*
 	char filedownload[64] = "hcu1.log";
 	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
 	strcat(ftp_opt.url, filedownload);
@@ -160,12 +156,45 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuDebugPrint("CLOUDVELA: HCU SW Download success.\n\n\n");
 	else
 		HcuErrorPrint("CLOUDVELA: HCU SW Download failed.\n\n\n");
-*/
 
-	//ftp_opt.url = "ftp://121.40.185.177/test.txt";
-	//ftp_opt.file = "/home/pi/ftp/test.txt";
 
 	//FTP test end by zsc!
+*/
+
+/*
+	//readlink test start by zsc!
+	char filepath[CLOUDVELA_PATH_MAX];
+	memset(filepath,0,CLOUDVELA_PATH_MAX);
+	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+
+	FTP_OPT ftp_opt;
+	//memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
+
+	memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
+	char *temp = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+	//ftp_opt.file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+	strcpy(ftp_opt.file,temp);
+
+
+	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);
+	if(rslt<0 || (rslt >=CLOUDVELA_PATH_MAX-1))
+	{
+		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n\n", rslt);
+	}
+	else
+	{
+		filepath[rslt] = '\0';
+		memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
+		strcpy(ftp_opt.file,filepath);
+	}
+
+
+	HcuDebugPrint("CLOUDVELA: AV file path: %s!\n\n\n", ftp_opt.file);
+*/
+
+
+	//readlink test end by zsc!
+
 
 
 	int ret=0;
@@ -5627,22 +5656,42 @@ OPSTAT func_cloudvela_av_upload(char *filename)
 
 	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
 
-	//ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
 	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
 	strcat(ftp_opt.user_key, usrtmp);
 	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n\n\n", ftp_opt.user_key);
 
-	//char filetmp[64] = "swdownload.txt";
-	//ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
 	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
 	strcat(ftp_opt.url, filename);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n\n\n", ftp_opt.url);
 
-	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
 	strcat(ftp_opt.file, zHcuSysEngPar.videoSev.hcuVideoServerDir);
 	strcat(ftp_opt.file, filename);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n\n\n", ftp_opt.file);
+
+///
+	char filepath[CLOUDVELA_PATH_MAX];
+	memset(filepath,0,CLOUDVELA_PATH_MAX);
+	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+
+	//int i;
+	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);
+	if(rslt<0 || (rslt >=CLOUDVELA_PATH_MAX-1))
+	{
+		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n\n", rslt);
+
+		//return NULL;
+	}
+	else
+	{
+		filepath[rslt] = '\0';
+		memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
+		strcpy(ftp_opt.file,filepath);
+
+	}
+	HcuDebugPrint("CLOUDVELA: AV file path: %s!\n\n\n\n", ftp_opt.file);
+
+///
 
 	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt)){
 		return SUCCESS;
@@ -6134,7 +6183,7 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			return FAILURE;
 		}
 		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("CLOUDVELA: HCU video upload response XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+			HcuDebugPrint("CLOUDVELA: HCU video response XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
@@ -6146,6 +6195,35 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 
 	return SUCCESS;
 }
+
+/*
+char* func_cloudvela_get_file_path(char *file, char *buf, int count)
+{
+
+	int i;
+	int rslt = readlink(file,buf,count-1);
+	if(rslt<0 || (rslt >=count-1))
+	{
+		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n\n\n\n\n\n\n\n\n", rslt);
+
+		return NULL;
+	}
+	buf[rslt] = '\0';
+	for(i=rslt;i>=0;i--)
+	{
+		HcuDebugPrint("CLOUDVELA: buff[%d] %c\n\n",i,buf[i]);
+		if(buf[i] == '/')
+		{
+			buf[i+1] = '\0';
+			break;
+
+		}
+	}
+
+	return buf;
+
+}
+*/
 
 
 
