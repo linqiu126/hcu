@@ -260,7 +260,7 @@ void func_pm25_sharp_read_data(UINT32 fd)
 					  pm25Data.timeStamp = time(0);
 					  pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
 					  pm25Data.pm2d5Value = (int)(average_pm25*100);
-					  ret = dbi_HcuPM25SharpDataInfo_save(&pm25Data);
+					  ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
 					  if (ret == FAILURE){
 							zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
 							HcuErrorPrint("PM25SHARP: Can not save data into database!\n");

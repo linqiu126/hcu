@@ -1726,3 +1726,39 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 	return SUCCESS;
 }
+
+
+/******************函数CRC_16()*********小端
+返回short int
+参数data【】数组、len 数组长度
+例子：datax【8】={01, 03, 00, 00, 00, 01, 00, 00}16 进制
+unsigned short int x=CRC_16(datax,6);
+得到x=0x840a;
+***************************************************/
+UINT16 hcu_CRC_16(unsigned char *data,int len)
+{
+	unsigned char *buf;
+	unsigned short int * CRC;
+	unsigned short int crch,crcl;
+	unsigned char p;
+	unsigned char j;
+	char err;
+	buf= & data[len];
+	CRC=(unsigned short int *)buf;
+	buf[0]=0xff;//lsb
+	buf[1]=0xff;//msb
+	for(p=0;p<len;p++)
+	{
+		buf[1]=buf[1]^data[p];
+		for(j=0;j<8;j++)
+		{
+			err=buf[1]&1;
+			*CRC=*CRC/2;
+			if(err) *CRC=*CRC^0xa001;
+		}
+	}
+	crch=*CRC>>8;
+	crcl=*CRC<<8;
+	*CRC=crch+crcl;
+	return(*CRC);
+}

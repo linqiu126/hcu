@@ -632,9 +632,24 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > MQ135, GPIO#5 -> change to GPIO#6
 > 去掉部分内部模块HEART_BEAT，不然SVRCON的消息队列满
 
-== Update log: 2016 May 29 SW Version: XQ.HCU.SW.R01.092 //ZSC
+== Update log: 2016 May.31 SW Version: XQ.HCU.SW.R01.092 //ZSC
 > upload AV file (softlink)
 > delete log file in case hard disk usage > 90%
+
+== Update log: 2016 June.2 SW Version: XQ.HCU.SW.R01.093 //ZJL
+> 增加MTH01-SPI传感器： DBICOM， SensorTemp/SensorHumid, SPI.*, 数据库文件
+> 增加BMPD300 PM2.5传感器，内容同上
+> Add  extern UINT16 hcu_CRC_16(unsigned char *data,int len);
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -652,7 +667,6 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 
 
 == Coming Later...
-> 使用XML页面的方式，来配置系统的参数选项
 > 如何将UT-TEST环境包装进咱们项
 > MMC机制，让人工可以通过命令行进行控制，以便启动和配置模块的运行与否
 > MSG_COM_STOP->任务停留在DISABLED状态
@@ -661,9 +675,6 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 蓝牙工作模块
 > Audio/Camera作为传感器，有两种工作方式原理：一是永恒工作，就像其它传感器一样，数据存在本地，上层需要，直接取结果；二是完全由上层L3控制启动工作与否。目前采用的是第一种方式，是否足够好，需要再讨论。
 > 从功耗和效率的角度，也许视频采用按需工作比较好，而噪声采用永恒工作的模式比较好，再研究并确定
-
-
-
 
 == 遗留问题
 1. 消除WARNING，其中有一种情况是函数未在.h中进行申明
