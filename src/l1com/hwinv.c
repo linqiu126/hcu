@@ -1091,6 +1091,7 @@ void func_hwinv_scan_db(void)
 		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
@@ -1102,6 +1103,7 @@ void func_hwinv_scan_db(void)
 		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;

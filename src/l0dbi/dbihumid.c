@@ -101,6 +101,25 @@ INSERT INTO `hcudb`.`hcuhumidrht03datainfo` (
 VALUES (
 '1', '3', '2', '1', '4');
 
+CREATE TABLE IF NOT EXISTS `hcuhumidmth01datainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `deviceid` int(4) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `dataformat` int(1) NOT NULL,
+  `humidvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+INSERT INTO `hcudb`.`hcuhumidmth01datainfo` (
+`sid` ,
+`deviceid` ,
+`timestamp` ,
+`dataformat`,
+`humidvalue`
+)
+VALUES (
+'1', '3', '2', '1', '4');
+
 
 */
 
@@ -529,4 +548,93 @@ OPSTAT dbi_HcuHumidRht03DataInfo_delete_3monold(UINT32 days)
     mysql_close(sqlHandler);
     return SUCCESS;
 }
+
+//存储HUMID数据，每一次存储，都是新增一条记录
+//由于是本地数据库，这里不考虑网格问题，直接存储，简单处理
+OPSTAT dbi_HcuHumidMth01DataInfo_save(sensor_humid_mth01_data_element_t *humidData)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (humidData == NULL){
+    	HcuErrorPrint("DBIHUMID: Input parameter NULL pointer!\n");
+        return FAILURE;
+    }
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIHUMID: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//存入新的数据
+    sprintf(strsql, "INSERT INTO `hcuhumidmth01datainfo` (deviceid, timestamp, dataformat, humidvalue) VALUES \
+    		('%d', '%d', '%d', '%d')", humidData->equipid, humidData->timeStamp, humidData->dataFormat, humidData->humidValue);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: INSERT data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("DBIHUMID: HUMID MTH01 data record save to DB!\n");
+	}
+    return SUCCESS;
+}
+
+//删除对应用户所有超过90天的数据
+//缺省做成90天，如果参数错误，导致90天以内的数据强行删除，则不被认可
+OPSTAT dbi_HcuHumidMth01DataInfo_delete_3monold(UINT32 days)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+    UINT32 cursec = 0;
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (days < HUMID_DATA_SAVE_DAYS_MIN) days = HUMID_DATA_SAVE_DAYS_MIN;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIHUMID: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//删除满足条件的数据
+    cursec = time(NULL);
+    days = days * 24 * 3600;
+    sprintf(strsql, "DELETE FROM `hcuhumidmth01datainfo` WHERE (%d - `timestamp` > '%d')", cursec, days);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: INSET data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
 

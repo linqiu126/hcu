@@ -26,9 +26,9 @@ enum FSM_STATE_PM25SHARP
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
-#define SENSOR_PM25_RPI_PRESENT_TRUE 1
-#define SENSOR_PM25_RPI_PRESENT_FALSE 0
-#define SENSOR_PM25_RPI_SHARP_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
+#define SENSOR_PM25_SHARP_RPI_PRESENT_TRUE 1
+#define SENSOR_PM25_SHARP_RPI_PRESENT_FALSE 0
+#define SENSOR_PM25_RPI_SHARP_PRESENT SENSOR_PM25_SHARP_RPI_PRESENT_TRUE
 
 //Global variables
 extern FsmStateItem_t FsmPm25Sharp[];
@@ -46,7 +46,7 @@ OPSTAT func_pm25sharp_int_init(void);
 
 //For sharp pm25
 void func_pm25_sharp_read_data(UINT32 fd);
-extern OPSTAT dbi_HcuPM25SharpDataInfo_save(sensor_pm25_sharp_data_element_t *pm25Data);
+extern OPSTAT dbi_HcuPm25SharpDataInfo_save(sensor_pm25_sharp_data_element_t *pm25Data);
 
 
 

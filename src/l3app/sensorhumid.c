@@ -63,6 +63,7 @@ UINT8 currentSensorHumidId;
 extern float zHcuGpioHumidDht11;
 extern float zHcuI2cHumidSht20;
 extern float zHcuSpiHumidRht03;
+extern float zHcuSpiHumidMth01;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -195,8 +196,9 @@ OPSTAT fsm_humid_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 #ifdef TARGET_RASPBERRY_PI3B
 		if (SENSOR_HUMID_RPI_DHT11_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_dht11();
-		if (SENSOR_HUMID_RPI_DHT11_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_sht20();
-		if (SENSOR_HUMID_RPI_DHT11_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_rht03();
+		if (SENSOR_HUMID_RPI_SHT20_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_sht20();
+		if (SENSOR_HUMID_RPI_RHT03_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_rht03();
+		if (SENSOR_HUMID_RPI_MTH01_PRESENT == SENSOR_HUMID_RPI_PRESENT_TRUE) func_humid_time_out_read_data_from_mth01();
 #endif
 		func_humid_time_out_read_data_from_modbus();
 	}
@@ -633,5 +635,30 @@ OPSTAT func_humid_time_out_read_data_from_rht03(void)
 
 	return SUCCESS;
 }
+
+OPSTAT func_humid_time_out_read_data_from_mth01(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSpiHumidMth01 >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuSpiHumidMth01 <= HCU_SENSOR_HUMID_VALUE_MAX))
+	{
+		sensor_humid_mth01_data_element_t humidData;
+		memset(&humidData, 0, sizeof(sensor_humid_mth01_data_element_t));
+		humidData.equipid = 0;
+		humidData.timeStamp = time(0);
+		humidData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		humidData.humidValue = (int)(zHcuSpiHumidMth01*100);
+
+		ret = dbi_HcuHumidMth01DataInfo_save(&humidData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_HUMID]++;
+			HcuErrorPrint("HUMID: Can not save HumidMth01 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
 
 

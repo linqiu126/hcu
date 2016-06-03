@@ -43,6 +43,7 @@ float zHcuI2cLightstrBh1750;
 float zHcuI2cAirprsBmp180;
 float zHcuI2cTempBmp180;
 float zHcuI2cAltitudeBmp180;
+float zHcuI2cPm25Bmpd300;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -109,11 +110,13 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	//进入循环工作模式
 	while(1){
 		func_i2c_read_data_sht20();
-		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/3);
+		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
 		func_i2c_read_data_bh1750();
-		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/3);
+		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
 		func_i2c_read_data_bmp180();
-		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/3);
+		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
+		func_i2c_read_data_bmpd300();
+		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
 	}
 
 	return SUCCESS;
@@ -303,4 +306,41 @@ OPSTAT func_i2c_read_data_bmp180(void)
 #endif
 }
 
+//BM PD300 PM25读取
+OPSTAT func_i2c_read_data_bmpd300(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+	int fd, i;
+	int pm25;
+	float pm25Sum;
+	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMPD300))<0){
+		HcuDebugPrint("I2C: can't find i2c!!\n");
+		zHcuRunErrCnt[TASK_ID_I2C]++;
+		return FAILURE;
+	}
 
+	pm25Sum = 0;
+	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++){
+		delay (200);
+		delay (200);
+		pm25 = wiringPiI2CReadReg16(fd, 0x00);
+		pm25Sum += pm25;
+		//计算算法待定
+//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//			HcuDebugPrint("I2C: Sensor BMPD300 Original read result Pm25=0x%xmg/m3DATA_I2C_SDA#=%d\n", pm25, RPI_I2C_PIN_SDA);
+//		}
+	}
+
+	//求平均
+	zHcuI2cPm25Bmpd300 = pm25Sum / RPI_I2C_READ_REPEAT_TIMES;
+
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("I2C: Sensor BMPD300 Transformed average float result Pm25=%6.2fmg/m3, DATA_I2C_SDA#=%d\n", zHcuI2cPm25Bmpd300, RPI_I2C_PIN_SDA);
+	}
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}

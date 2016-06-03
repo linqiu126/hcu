@@ -66,6 +66,7 @@ sensor_modbus_opertion_general_t zPM25ConfigData;//Added by Shanchun to save sen
 
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
 //extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
+extern float zHcuI2cPm25Bmpd300;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -197,6 +198,10 @@ OPSTAT fsm_pm25_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 				return FAILURE;
 			}//FsmSetState
 		}
+
+#ifdef TARGET_RASPBERRY_PI3B
+		if (SENSOR_PM25_RPI_BMPD300_PRESENT == SENSOR_PM25_RPI_PRESENT_TRUE) func_pm25_time_out_read_data_from_bmpd300();
+#endif
 		func_pm25_time_out_read_data_from_modbus();
 	}
 
@@ -981,5 +986,31 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	return SUCCESS;
 }
+
+
+OPSTAT func_pm25_time_out_read_data_from_bmpd300(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cPm25Bmpd300 >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuI2cPm25Bmpd300 <= HCU_SENSOR_PM25_VALUE_MAX))
+	{
+		sensor_pm25_bmpd300_data_element_t pm25Data;
+		memset(&pm25Data, 0, sizeof(sensor_pm25_bmpd300_data_element_t));
+		pm25Data.equipid = 0;
+		pm25Data.timeStamp = time(0);
+		pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+		pm25Data.pm2d5Value = (int)(zHcuI2cPm25Bmpd300);
+
+		ret = dbi_HcuPm25Bmpd300DataInfo_save(&pm25Data);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_PM25]++;
+			HcuErrorPrint("PM25: Can not save Pm25Bmpd300 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
 
 

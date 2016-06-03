@@ -78,6 +78,24 @@ INSERT INTO `hcudb`.`hcupm25sharpdatainfo` (
 VALUES (
 '1', '3', '2', '1', '4');
 
+CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `deviceid` int(4) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `dataformat` int(1) NOT NULL,
+  `pm2d5value` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+INSERT INTO `hcudb`.`hcupm25bmpd300datainfo` (
+`sid` ,
+`deviceid` ,
+`timestamp` ,
+`dataformat`,
+`pm2d5value`
+)
+VALUES (
+'1', '3', '2', '1', '4');
 
 */
 
@@ -376,7 +394,7 @@ OPSTAT dbi_HcuPm25DataInfo_delete_3monold(UINT32 days)
 
 //存储PM25 sharp数据，每一次存储，都是新增一条记录
 //由于是本地数据库，这里不考虑网格问题，直接存储，简单处理
-OPSTAT dbi_HcuPM25SharpDataInfo_save(sensor_pm25_sharp_data_element_t *pm25Data)
+OPSTAT dbi_HcuPm25SharpDataInfo_save(sensor_pm25_sharp_data_element_t *pm25Data)
 {
 	MYSQL *sqlHandler;
     int result = 0;
@@ -451,6 +469,95 @@ OPSTAT dbi_HcuPm25SharpDataInfo_delete_3monold(UINT32 days)
     cursec = time(NULL);
     days = days * 24 * 3600;
     sprintf(strsql, "DELETE FROM `hcupm25sharpdatainfo` WHERE (%d - `timestamp` > '%d')", cursec, days);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: INSET data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+//存储PM25 bmpd300数据，每一次存储，都是新增一条记录
+//由于是本地数据库，这里不考虑网格问题，直接存储，简单处理
+OPSTAT dbi_HcuPm25Bmpd300DataInfo_save(sensor_pm25_bmpd300_data_element_t *pm25Data)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+
+     if (pm25Data == NULL){
+    	HcuErrorPrint("DBIPM25: Input parameter NULL pointer!\n");
+        return FAILURE;
+    }
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//存入新的数据
+    sprintf(strsql, "INSERT INTO `hcupm25bmpd300datainfo` (deviceid, timestamp, dataformat, pm2d5value) VALUES \
+    		('%d', '%d', '%d', '%d')", pm25Data->equipid, pm25Data->timeStamp, pm25Data->dataFormat, pm25Data->pm2d5Value);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: INSERT data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("DBIPM25: PM25 bmpd300 data record save to DB!\n");
+	}
+    return SUCCESS;
+}
+
+//删除对应用户所有超过90天的数据
+//缺省做成90天，如果参数错误，导致90天以内的数据强行删除，则不被认可
+OPSTAT dbi_HcuPm25Bmpd300DataInfo_delete_3monold(UINT32 days)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+    UINT32 cursec = 0;
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (days < PM25SHARP_DATA_SAVE_DAYS_MIN) days = PM25SHARP_DATA_SAVE_DAYS_MIN;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//删除满足条件的数据
+    cursec = time(NULL);
+    days = days * 24 * 3600;
+    sprintf(strsql, "DELETE FROM `hcupm25bmpd300datainfo` WHERE (%d - `timestamp` > '%d')", cursec, days);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

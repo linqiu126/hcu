@@ -53,6 +53,7 @@ typedef struct SensorHumidInfo
 #define SENSOR_HUMID_RPI_DHT11_PRESENT SENSOR_HUMID_RPI_PRESENT_TRUE
 #define SENSOR_HUMID_RPI_SHT20_PRESENT SENSOR_HUMID_RPI_PRESENT_TRUE
 #define SENSOR_HUMID_RPI_RHT03_PRESENT SENSOR_HUMID_RPI_PRESENT_TRUE
+#define SENSOR_HUMID_RPI_MTH01_PRESENT SENSOR_HUMID_RPI_PRESENT_TRUE
 
 //#define HUMID_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define HUMID_TIMER_DURATION_MODBUS_FB 3    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题
@@ -80,6 +81,6 @@ extern OPSTAT dbi_HcuHumidDataInfo_save(sensor_humid_data_element_t *humidData);
 extern OPSTAT dbi_HcuHumidDht11DataInfo_save(sensor_humid_dht11_data_element_t *humidData);
 extern OPSTAT dbi_HcuHumidSht20DataInfo_save(sensor_humid_sht20_data_element_t *humidData);
 extern OPSTAT dbi_HcuHumidRht03DataInfo_save(sensor_humid_rht03_data_element_t *humidData);
-
+extern OPSTAT dbi_HcuHumidMth01DataInfo_save(sensor_humid_mth01_data_element_t *humidData);
 
 #endif /* L3APP_SENSORHUMID_H_ */
