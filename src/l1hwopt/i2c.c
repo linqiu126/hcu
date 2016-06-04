@@ -277,11 +277,19 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	tempSum = 0;
 	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++){
 		delay (200);
-		airprs = wiringPiI2CReadReg16(fd, 0x00);
-		airprsSum += airprs;
-		delay (200);
-		temp = wiringPiI2CReadReg16(fd, 0x02);
+		//貌似复杂的算法
+		wiringPiI2CWriteReg8(fd, 0xF4, 0x2E);
+		delay(5);
+		temp = wiringPiI2CReadReg16(fd, 0xF6);
+		temp = ((temp&0xFF)<<8) + ((temp&0xFF00)>>8);
 		tempSum += temp;
+		delay (200);
+		wiringPiI2CWriteReg8(fd, 0xF4, 0x34);
+		delay(5);
+		airprs = wiringPiI2CReadReg16(fd, 0xF6);
+		airprs = ((airprs&0xFF)<<8) + ((airprs&0xFF00)>>8);
+		airprs = wiringPiI2CReadReg16(fd, 0xF6);
+		airprsSum += airprs;
 		//计算算法待定
 //		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("I2C: Sensor BMP180 Original read result Airprs=0x%xPa, Temp=0x%xC, DATA_I2C_SDA#=%d\n", airprs, temp, RPI_I2C_PIN_SDA);
@@ -322,10 +330,14 @@ OPSTAT func_i2c_read_data_bmpd300(void)
 	pm25Sum = 0;
 	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++){
 		delay (200);
-		delay (200);
-		pm25 = wiringPiI2CReadReg16(fd, 0x00);
-		pm25Sum += pm25;
-		//计算算法待定
+		//数据格式以及计算方法
+		//读数格式为0x0B，0xXX, 0xXX，后两个
+		if (wiringPiI2CReadReg8(fd, 0x00) == 0x0B){
+			delay(200);
+			pm25 = wiringPiI2CReadReg16(fd, 0x01);
+			pm25 = ((pm25&0xFF)<<8) + ((pm25&0xFF00)>>8);
+			pm25Sum += pm25;
+		}
 //		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("I2C: Sensor BMPD300 Original read result Pm25=0x%xmg/m3DATA_I2C_SDA#=%d\n", pm25, RPI_I2C_PIN_SDA);
 //		}

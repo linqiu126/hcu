@@ -128,9 +128,9 @@ OPSTAT func_spi_int_init(void)
 OPSTAT func_spi_read_data_mth01(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd, i;
+	int fd, i, j;
 	int temp, humid, tmp;
-	unsigned char read[4] = {0, 0, 0, 0};
+	unsigned char read[256], str[850], strtmp[3];
 	float tempSum, humidSum;
 
 	if((fd=wiringPiSPISetup(RPI_SPI_ADDR_MTH01, RPI_SPI_SPEED))<0){
@@ -142,11 +142,19 @@ OPSTAT func_spi_read_data_mth01(void)
 	tempSum = 0;
 	humidSum = 0;
 	for (i=0; i<RPI_SPI_READ_REPEAT_TIMES; i++){
-		delay (200);
+		delay (1000);
 		//数据存在的位置是前两个字节是温度，第三个字节是湿度，第四个是CRC
 		//CRC8暂时不检查，未来需要检查
+//		for (j=0;j<256;j++) read[j]=j;
 		tmp = wiringPiSPIDataRW(RPI_SPI_ADDR_MTH01, read, 4);
-		HcuDebugPrint("SPI: Sensor MTH01 read result: Index=%d, Read[4] = 0x%x %x %x %x, Return=%d\n", i, read[0], read[1], read[2], read[3], tmp);
+//		sprintf(str, "SPI: Sensor MTH01 read result: Index=%d, Return = %d, Read result = 0x ", i, tmp);
+//		for(j=0;j<256;j++){
+//			sprintf(strtmp, "%02x ", read[j]);
+//			strcat(str, strtmp);
+//		}
+//		strcat(str, "\n");
+//		HcuDebugPrint(str);
+		//HcuDebugPrint("SPI: Sensor MTH01 read result: Index=%d, Read[4] = 0x%x %x %x %x, Return=%d\n", i, read[0], read[1], read[2], read[3], tmp);
 		temp = ((read[0]<<8)&0xFF00) + (read[1]&0xFF) - 400;
 		tempSum += temp/10;
 		humid = read[2]&0xFF;
@@ -161,7 +169,7 @@ OPSTAT func_spi_read_data_mth01(void)
 	zHcuSpiHumidMth01 = humidSum / RPI_SPI_READ_REPEAT_TIMES;
 
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPI: Sensor RHT03 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuSpiTempRht03, zHcuSpiHumidRht03, RPI_SPI_PIN_MOSI);
+		HcuDebugPrint("SPI: Sensor MTH01 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuSpiTempMth01, zHcuSpiHumidMth01, RPI_SPI_PIN_MOSI);
 	}
 
 	return SUCCESS;
@@ -193,7 +201,7 @@ OPSTAT func_spi_read_data_rht03(void)
 		//数据存在的位置是前两个字节是温度，第三个字节是湿度，第四个是CRC
 		//CRC16暂时不检查，未来需要检查
 		tmp = wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, read, 4);
-		HcuDebugPrint("SPI: Sensor RHT03 read result: Index=%d, Read[4] = 0x%x %x %x %x, Return=%d\n", i, read[0], read[1], read[2], read[3], tmp);
+		//HcuDebugPrint("SPI: Sensor RHT03 read result: Index=%d, Read[4] = 0x%x %x %x %x, Return=%d\n", i, read[0], read[1], read[2], read[3], tmp);
 		temp = ((read[0]<<8)&0xFF00) + (read[1]&0xFF) - 400;
 		tempSum += temp/10;
 		humid = read[2]&0xFF;

@@ -40,8 +40,8 @@ extern float zHcuSpiHumidMth01;
 
 #define RPI_SPI_ADDR_MTH01 0 //选择第一个地址，CE0
 #define RPI_SPI_ADDR_RHT03 1 //选择第二个地址，CE1
-#define RPI_SPI_SPEED 4000000
-#define RPI_SPI_SENSOR_READ_GAP 10 //in second
+#define RPI_SPI_SPEED 4000000 //另外一种情况是直接采用官方所说的2K的速率，这里采用4Mbps
+#define RPI_SPI_SENSOR_READ_GAP 60 //in second
 #define RPI_SPI_READ_REPEAT_TIMES 10
 
 //API

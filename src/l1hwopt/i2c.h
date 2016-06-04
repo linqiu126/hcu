@@ -41,7 +41,7 @@ extern float zHcuI2cPm25Bmpd300;
 #define RPI_I2C_ADDR_SHT20 0x40
 #define RPI_I2C_ADDR_BH1750 0x23
 #define RPI_I2C_ADDR_BMP180 0x77
-#define RPI_I2C_ADDR_BMPD300 0x11  //待确定
+#define RPI_I2C_ADDR_BMPD300 0x28  //待确定
 #define RPI_I2C_READ_REPEAT_TIMES 10
 #define RPI_I2C_SENSOR_READ_GAP 60 //in second
 

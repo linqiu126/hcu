@@ -72,6 +72,7 @@ extern OPSTAT fsm_humid_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * 
 OPSTAT func_humid_time_out_read_data_from_dht11(void);
 OPSTAT func_humid_time_out_read_data_from_sht20(void);
 OPSTAT func_humid_time_out_read_data_from_rht03(void);
+OPSTAT func_humid_time_out_read_data_from_mth01(void);
 
 //引用外部API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);
