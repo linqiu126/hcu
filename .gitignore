@@ -1,7 +1,4 @@
-hcuerr.log
-hcu.log
-
-
+*.log
 *.o
 *.dat
 /X86_dev/
