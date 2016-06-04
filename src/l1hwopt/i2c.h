@@ -45,6 +45,9 @@ extern float zHcuI2cPm25Bmpd300;
 #define RPI_I2C_READ_REPEAT_TIMES 10
 #define RPI_I2C_SENSOR_READ_GAP 60 //in second
 
+#define RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET 0 //ultra low power=0, standard=1, high resolution=2, ultra high resolution=3
+#define RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS 101325
+
 //API
 extern OPSTAT fsm_i2c_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

@@ -142,8 +142,8 @@ OPSTAT func_i2c_int_init(void)
 OPSTAT func_i2c_read_data_sht20(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd, i;
-	int temp, humid;
+	INT32 fd, i;
+	INT32 temp, humid;
 	float tmp1, tmp2, tempSum, humidSum;
 
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_SHT20))<0){
@@ -187,7 +187,7 @@ OPSTAT func_i2c_read_data_sht20(void)
 OPSTAT func_i2c_read_data_bh1750(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd;
+	INT32 fd;
 	char buf[3];
 	char val;
 	float flight, flightSum;
@@ -264,44 +264,87 @@ OPSTAT func_i2c_read_data_bh1750(void)
 OPSTAT func_i2c_read_data_bmp180(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd, i;
-	int airprs, temp;
-	float airprsSum, tempSum;
+	INT32 fd, i;
+	INT64 airprs, temp, ut, x1, x2, x3, b5, b6, b7, p;
+	UINT64 b4;
+	INT64 airprsSum, tempSum;
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMP180))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
 		zHcuRunErrCnt[TASK_ID_I2C]++;
 		return FAILURE;
 	}
 
-	airprsSum = 0;
+	//读取校准数据 Read calibration data
+	INT16 ac1, ac2, ac3, b1, b2, b3, mc, md;
+	UINT16 ac4, ac5, ac6;
+	delay(2); ac1 = wiringPiI2CReadReg16(fd, 0xAA); ac1 = ((ac1&0xFF)<<8) + ((ac1&0xFF00)>>8);
+	delay(2); ac2 = wiringPiI2CReadReg16(fd, 0xAC); ac2 = ((ac2&0xFF)<<8) + ((ac2&0xFF00)>>8);
+	delay(2); ac3 = wiringPiI2CReadReg16(fd, 0xAE); ac3 = ((ac3&0xFF)<<8) + ((ac3&0xFF00)>>8);
+	delay(2); ac4 = wiringPiI2CReadReg16(fd, 0xB0); ac4 = ((ac4&0xFF)<<8) + ((ac4&0xFF00)>>8);
+	delay(2); ac5 = wiringPiI2CReadReg16(fd, 0xB2); ac5 = ((ac5&0xFF)<<8) + ((ac5&0xFF00)>>8);
+	delay(2); ac6 = wiringPiI2CReadReg16(fd, 0xB4); ac6 = ((ac6&0xFF)<<8) + ((ac6&0xFF00)>>8);
+	delay(2); b1 = wiringPiI2CReadReg16(fd, 0xB6); b1 = ((b1&0xFF)<<8) + ((b1&0xFF00)>>8);
+	delay(2); b2 = wiringPiI2CReadReg16(fd, 0xB8); b2 = ((b2&0xFF)<<8) + ((b2&0xFF00)>>8);
+	delay(2); mb = wiringPiI2CReadReg16(fd, 0xBA); mb = ((mb&0xFF)<<8) + ((mb&0xFF00)>>8);
+	delay(2); mc = wiringPiI2CReadReg16(fd, 0xBC); mc = ((mc&0xFF)<<8) + ((mc&0xFF00)>>8);
+	delay(2); md = wiringPiI2CReadReg16(fd, 0xBE); md = ((md&0xFF)<<8) + ((md&0xFF00)>>8);
+
+	//循环读取
 	tempSum = 0;
+	airprsSum = 0;
 	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++){
-		delay (200);
-		//貌似复杂的算法
-		wiringPiI2CWriteReg8(fd, 0xF4, 0x2E);
-		delay(5);
-		temp = wiringPiI2CReadReg16(fd, 0xF6);
+		//读取温度temp
+		delay (10); wiringPiI2CWriteReg8(fd, 0xF4, 0x2E);
+		delay(5); temp = wiringPiI2CReadReg16(fd, 0xF6);
 		temp = ((temp&0xFF)<<8) + ((temp&0xFF00)>>8);
 		tempSum += temp;
-		delay (200);
-		wiringPiI2CWriteReg8(fd, 0xF4, 0x34);
-		delay(5);
-		airprs = wiringPiI2CReadReg16(fd, 0xF6);
-		airprs = ((airprs&0xFF)<<8) + ((airprs&0xFF00)>>8);
-		airprs = wiringPiI2CReadReg16(fd, 0xF6);
+		//读取气压airprs
+		delay (10); wiringPiI2CWriteReg8(fd, 0xF4, (0x34+(RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET<<6));
+		delay(5); airprs = wiringPiI2CReadReg16(fd, 0xF6);
+		delay(5); tmp = wiringPiI2CReadReg8(fd, 0xF8);
+		airprs = ((((airprs&0xFF)<<16) + ((airprs&0xFF00)>>8 + tmp&0xFF)) >> (8-RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET));
 		airprsSum += airprs;
-		//计算算法待定
 //		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("I2C: Sensor BMP180 Original read result Airprs=0x%xPa, Temp=0x%xC, DATA_I2C_SDA#=%d\n", airprs, temp, RPI_I2C_PIN_SDA);
 //		}
 	}
 
 	//求平均
-	zHcuI2cAirprsBmp180 = airprsSum / RPI_I2C_READ_REPEAT_TIMES;
-	zHcuI2cTempBmp180 = tempSum / RPI_I2C_READ_REPEAT_TIMES;
+	tempSum = tempSum / RPI_I2C_READ_REPEAT_TIMES;
+	airprsSum = airprsSum / RPI_I2C_READ_REPEAT_TIMES;
+
+	//计算真实温度
+	x1 = (tempSum - ac6) * ac5 / 215;
+	x2 = (mc << 11) / (x1 + md);
+	b5 = x1 + x2;
+	tempSum = ((b5 + 8) >> 4); //in 0.1degree
+	zHcuI2cTempBmp180 = tempSum / 10; //in 1 degree
+
+	//计算真实气压
+	b6 = b5 - 4000;
+	x1 = (b2 * ((b6 * b6)>>12)) >> 11;
+	x2 = (ac2 * b6) >> 11;
+	x3 = x1 + x2;
+	b3 = ((ac1*4 + x3) << RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET + 2) / 4;
+	x1 = (ac3 * b6) >> 13;
+	x2 = (b1 * ((b6 * b6) >> 12)) >> 16;
+	x3 = ((x1 + x2) + 2) >> 2;
+	b4 = ac4 * (UINT64)(x3 + 32768) >> 15;
+	b7 = ((UINT64)airprsSum - b3) *(50000 >> RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET);
+	if (b7 < 0x80000000){
+		p = (b7*2)/b4;
+	}else{
+		p = (b7/b4)*2;
+	}
+	x1 = (p >> 8) * (p >> 8);
+	x1 = (x1 * 3038) >> 16;
+	x2 = (-7357 * p) >> 16;
+	p = P + ((x1 + x2 + 3791) << 4);
+
+	zHcuI2cAirprsBmp180 = p; //in Parsca
 
 	//计算出海拔高度数据
-	zHcuI2cAltitudeBmp180 = zHcuI2cAirprsBmp180 * 10;
+	zHcuI2cAltitudeBmp180 = 44330 * (1- pow(p/RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS, 1/5.255));
 
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("I2C: Sensor BMP180 Transformed average float result Airprs=%6.2fPa, Temp=%6.2fC, Altitude = %6.2fm, DATA_I2C_SDA#=%d\n", zHcuI2cAirprsBmp180, zHcuI2cTempBmp180, zHcuI2cAltitudeBmp180, RPI_I2C_PIN_SDA);
@@ -309,7 +352,8 @@ OPSTAT func_i2c_read_data_bmp180(void)
 
 	return SUCCESS;
 #else
-    //对于其他平台, 暂时啥都不做
+    //对于其他平台, 暂时啥都不做, 以下only for test
+	//float t = 44330 * (1- pow(69965/RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS, 1/5.255));
     return SUCCESS;
 #endif
 }
@@ -318,8 +362,8 @@ OPSTAT func_i2c_read_data_bmp180(void)
 OPSTAT func_i2c_read_data_bmpd300(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd, i;
-	int pm25;
+	INT32 fd, i;
+	INT32 pm25;
 	float pm25Sum;
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMPD300))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
