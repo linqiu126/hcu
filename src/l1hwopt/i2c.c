@@ -96,6 +96,7 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	zHcuI2cAirprsBmp180 = HCU_SENSOR_VALUE_NULL;
 	zHcuI2cTempBmp180 = HCU_SENSOR_VALUE_NULL;
 	zHcuI2cAltitudeBmp180 = HCU_SENSOR_VALUE_NULL;
+	zHcuI2cPm25Bmpd300 = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_I2C, FSM_STATE_I2C_RECEIVED) == FAILURE){
@@ -109,11 +110,11 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 	//进入循环工作模式
 	while(1){
+		func_i2c_read_data_bmp180();
+		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
 		func_i2c_read_data_sht20();
 		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
 		func_i2c_read_data_bh1750();
-		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
-		func_i2c_read_data_bmp180();
 		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
 		func_i2c_read_data_bmpd300();
 		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/4);
@@ -265,9 +266,10 @@ OPSTAT func_i2c_read_data_bmp180(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
 	INT32 fd, i;
-	INT64 airprs, temp, ut, x1, x2, x3, b5, b6, b7, p;
+	INT64 airprs, temp, x1, x2, x3, b5, b6, b7, p, tmp;
 	UINT64 b4;
 	INT64 airprsSum, tempSum;
+	float coef;
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMP180))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
 		zHcuRunErrCnt[TASK_ID_I2C]++;
@@ -275,7 +277,7 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	}
 
 	//读取校准数据 Read calibration data
-	INT16 ac1, ac2, ac3, b1, b2, b3, mc, md;
+	INT16 ac1, ac2, ac3, b1, b2, b3, mb, mc, md;
 	UINT16 ac4, ac5, ac6;
 	delay(2); ac1 = wiringPiI2CReadReg16(fd, 0xAA); ac1 = ((ac1&0xFF)<<8) + ((ac1&0xFF00)>>8);
 	delay(2); ac2 = wiringPiI2CReadReg16(fd, 0xAC); ac2 = ((ac2&0xFF)<<8) + ((ac2&0xFF00)>>8);
@@ -299,10 +301,10 @@ OPSTAT func_i2c_read_data_bmp180(void)
 		temp = ((temp&0xFF)<<8) + ((temp&0xFF00)>>8);
 		tempSum += temp;
 		//读取气压airprs
-		delay (10); wiringPiI2CWriteReg8(fd, 0xF4, (0x34+(RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET<<6));
+		delay (10); wiringPiI2CWriteReg8(fd, 0xF4, (0x34+(RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET<<6)));
 		delay(5); airprs = wiringPiI2CReadReg16(fd, 0xF6);
 		delay(5); tmp = wiringPiI2CReadReg8(fd, 0xF8);
-		airprs = ((((airprs&0xFF)<<16) + ((airprs&0xFF00)>>8 + tmp&0xFF)) >> (8-RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET));
+		airprs = ((((airprs&0xFF)<<16) + ((airprs&0xFF00)>>8) + (tmp&0xFF)) >> (8-RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET));
 		airprsSum += airprs;
 //		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("I2C: Sensor BMP180 Original read result Airprs=0x%xPa, Temp=0x%xC, DATA_I2C_SDA#=%d\n", airprs, temp, RPI_I2C_PIN_SDA);
@@ -314,7 +316,7 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	airprsSum = airprsSum / RPI_I2C_READ_REPEAT_TIMES;
 
 	//计算真实温度
-	x1 = (tempSum - ac6) * ac5 / 215;
+	x1 = ((tempSum - ac6) * ac5 ) >> 15;
 	x2 = (mc << 11) / (x1 + md);
 	b5 = x1 + x2;
 	tempSum = ((b5 + 8) >> 4); //in 0.1degree
@@ -325,7 +327,7 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	x1 = (b2 * ((b6 * b6)>>12)) >> 11;
 	x2 = (ac2 * b6) >> 11;
 	x3 = x1 + x2;
-	b3 = ((ac1*4 + x3) << RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET + 2) / 4;
+	b3 = (((ac1*4 + x3) << RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET) + 2) >> 2;
 	x1 = (ac3 * b6) >> 13;
 	x2 = (b1 * ((b6 * b6) >> 12)) >> 16;
 	x3 = ((x1 + x2) + 2) >> 2;
@@ -339,13 +341,13 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	x1 = (p >> 8) * (p >> 8);
 	x1 = (x1 * 3038) >> 16;
 	x2 = (-7357 * p) >> 16;
-	p = P + ((x1 + x2 + 3791) << 4);
+	p = p + ((x1 + x2 + 3791) << 4);
 
 	zHcuI2cAirprsBmp180 = p; //in Parsca
 
 	//计算出海拔高度数据
-	zHcuI2cAltitudeBmp180 = 44330 * (1- pow(p/RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS, 1/5.255));
-
+	coef = powf(((float)p/(float)RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS), (float)(1.0/5.255));
+	zHcuI2cAltitudeBmp180 = 44330 * (1- coef);
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("I2C: Sensor BMP180 Transformed average float result Airprs=%6.2fPa, Temp=%6.2fC, Altitude = %6.2fm, DATA_I2C_SDA#=%d\n", zHcuI2cAirprsBmp180, zHcuI2cTempBmp180, zHcuI2cAltitudeBmp180, RPI_I2C_PIN_SDA);
 	}
