@@ -89,6 +89,8 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	zHcuRunErrCnt[TASK_ID_SPI] = 0;
 	zHcuSpiTempRht03 = HCU_SENSOR_VALUE_NULL;
 	zHcuSpiHumidRht03 = HCU_SENSOR_VALUE_NULL;
+	zHcuSpiTempMth01 = HCU_SENSOR_VALUE_NULL;
+	zHcuSpiHumidMth01 = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPI, FSM_STATE_SPI_RECEIVED) == FAILURE){
