@@ -775,21 +775,19 @@ void func_hwinv_scan_hard_disc(void)
 	//by shanchun
 	struct statfs diskInfo;
 	statfs("/", &diskInfo);
-	UINT64 totalBlocks = diskInfo.f_bsize;
-	UINT64 totalSize = totalBlocks * diskInfo.f_blocks;
+	unsigned long long totalBlocks = diskInfo.f_bsize;
+	unsigned long long totalSize = totalBlocks * diskInfo.f_blocks;
 	size_t mbTotalsize = totalSize>>20;
-	UINT64 freeDisk = diskInfo.f_bfree * totalBlocks;
+	unsigned long long freeDisk = diskInfo.f_bfree * totalBlocks;
 	size_t mbFreedisk = freeDisk>>20;
 
 	float r = (float)mbFreedisk/mbTotalsize*100;
+	HcuDebugPrint("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%\n\n\n",mbTotalsize,mbFreedisk,r);
 
 	if(r <= HCU_HARDDISK_TRESHOLD)
 	{
-		HcuDebugPrint("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%\n\n\n",mbTotalsize,mbFreedisk,r);
-		HcuDebugPrint("HWINV: log directry of HCU: s% \n\n\n\n\n", zCurTimeDate.curLogDir);
 		//hcu_delete_file("/home/pi/workspace/hcu/RasberryPi/log");
 		hcu_delete_file(zCurTimeDate.curLogDir);
-
 	}
 
 }
