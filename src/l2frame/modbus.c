@@ -435,7 +435,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	}
 	else
 	{
-	  HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d", ret);
+	  HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d\n", ret);
 	  zHcuRunErrCnt[TASK_ID_MODBUS]++;
 	  return FAILURE;
 	}
@@ -960,7 +960,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Received temp data length: %d \n ", ret);
-	 HcuDebugPrint("MODBUS: Received temp data content: %02X %02X %02X %02X %02X %02X %02X %02X %02X\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8]);
+	 HcuDebugPrint("MODBUS: Received temp data content: %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8]);
 	}
 	else
 	{
@@ -2825,7 +2825,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 	memcpy(&rcv, param_ptr, param_len);
 	currentSensorEqpId = rcv.opt.equId;
-	HcuDebugPrint("MODBUS: current sensor ID  = %d\n\n", currentSensorEqpId);
+	HcuDebugPrint("MODBUS: current sensor ID  = %d\n", currentSensorEqpId);
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_pm25)){
@@ -2956,11 +2956,11 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 
-		HcuDebugPrint("modbus: control command--switch= %d\n\n", snd.opt.powerOnOff);
-		HcuDebugPrint("modbus: control command--address= %d\n\n", snd.opt.newEquId);
-		HcuDebugPrint("modbus: control command--workCycle= %d\n\n", snd.opt.workCycle);
-		HcuDebugPrint("modbus: control command--interSample= %d\n\n", snd.opt.interSample);
-		HcuDebugPrint("modbus: control command--meausTimes= %d\n\n", snd.opt.meausTimes);
+		HcuDebugPrint("modbus: control command--switch= %d\n", snd.opt.powerOnOff);
+		HcuDebugPrint("modbus: control command--address= %d\n", snd.opt.newEquId);
+		HcuDebugPrint("modbus: control command--workCycle= %d\n", snd.opt.workCycle);
+		HcuDebugPrint("modbus: control command--interSample= %d\n", snd.opt.interSample);
+		HcuDebugPrint("modbus: control command--meausTimes= %d\n", snd.opt.meausTimes);
 	}
 
 	//Remaining data to be filled
