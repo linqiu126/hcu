@@ -641,6 +641,23 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 增加BMPD300 PM2.5传感器，内容同上
 > Add  extern UINT16 hcu_CRC_16(unsigned char *data,int len);
 
+== Update log: 2016 June.5 SW Version: XQ.HCU.SW.R01.094 //多人修改中，还未形成正式版本
+> 完善BMP180气压高度温度的计算算法
+> 修正MessageQue满时一直重启[TIMER]任务的错误
+> 修正了一些多行\n\n等问题
+> 修正了字符串结束符'/0'为'\0'，不然出现严重告警的问题。
+> 修正了PM25SHARP中的SUM_2S没有初始化的问题
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -670,7 +687,6 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 如何将UT-TEST环境包装进咱们项
 > MMC机制，让人工可以通过命令行进行控制，以便启动和配置模块的运行与否
 > MSG_COM_STOP->任务停留在DISABLED状态
-> VM内存机制
 > 从网络时钟同步机制，并合理跟GPS时钟融合的问题
 > 蓝牙工作模块
 > Audio/Camera作为传感器，有两种工作方式原理：一是永恒工作，就像其它传感器一样，数据存在本地，上层需要，直接取结果；二是完全由上层L3控制启动工作与否。目前采用的是第一种方式，是否足够好，需要再讨论。
@@ -681,13 +697,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 2. 自创账户没有足够的权限启动TASK，必须在ROOT权限下工作，但ROOT权限下并没有安装中文输入，导致必须两边切IDE环境，比较麻烦
 3. HCU创建的文件，其权限不确定，HWINV还有bug
 4. 网络在非连接转连接态，HCU并不能正常恢复到连接态，需要重启才能恢复。HWINV还有bug
-5. R01.030: 出现的潜在问题：Ubuntu14中，接收出现阻塞现象，导致CLOUD模块的接收消息区满的情形，这跟Ubuntu15的状态完全不一样，而且U14运行时，也不是每一次都如此。
 > 遗留问题：偶尔会出现usleep()的无效问题，可能还是信号量的不合理设置，需要待调查
 > 遗留问题：偶尔出现后台发送不成功，及时再ETHERNET的情况下，非常值得调查起原因
 > 遗留问题：目前情况下，一旦一次发送失败，该数据将丢失，而不是保存下来下次继续发送，未来需要改进，以便改善数据的准确性
-
-
-
 
 ==TIPS & Best Practice===
 > chmod -R 777 *   => 一旦在ROOT下操作后，可能造成普通账户编译不过，文件不能访问，该命令将放开所有相关文件的权限，要在ROOT下操作
@@ -708,12 +720,3 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 如果发现有些传感器发送的速度过快或者过慢，可以在L3目录中查看，相关的传感器.h中有时长定义，可以适当调整
 > 另外，对于各个传感器的启动性问题，都采用了随机延迟的方案，减少各个任务之间的碰撞概率。延迟碰撞的时长设置在L2COMDEF.h文件中
 
-
-	
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, record add = %08x\n", &record);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, lastSid = %d\n", zHcuMemStorageBuf.lastSid);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, offlineNbr = %d\n", zHcuMemStorageBuf.offlineNbr);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, rdCnt = %d\n", zHcuMemStorageBuf.rdCnt);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, recordNbr = %d\n", zHcuMemStorageBuf.recordNbr);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, wrtCnt = %d\n", zHcuMemStorageBuf.wrtCnt);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, Sensortype = %d\n", record.sensortype);

@@ -1191,8 +1191,12 @@ void func_hwinv_scan_message_queue(void)
 		//扫描其messageQue，看看是否满，如果是，意味着故障
 		if ((taskid != TASK_ID_HWINV) && (zHcuTaskInfo[taskid].swTaskActive == HCU_TASK_SW_ACTIVE) && (zHcuTaskInfo[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
 		{
+			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuTaskNameList[taskid]);
+			}
 			//重新启动该任务
-			hcu_system_task_init_call(TASK_ID_TIMER, zHcuTaskInfo[taskid].fsmPtr);
+			zHcuTaskInfo[taskid].TaskId = TASK_ID_INVALID;
+			hcu_system_task_init_call(taskid, zHcuTaskInfo[taskid].fsmPtr);
 			zHcuTaskInfo[taskid].QueFullFlag = HCU_TASK_QUEUE_FULL_FALSE;
 
 			//再发送init消息给该模块，以便启动改模块
