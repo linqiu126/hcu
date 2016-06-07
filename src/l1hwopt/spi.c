@@ -55,7 +55,7 @@ OPSTAT fsm_spi_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -102,12 +102,22 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		HcuDebugPrint("SPI: Enter FSM_STATE_SPI_ACTIVED status, Keeping refresh here!\n");
 	}
 
+	int workingCycle = 2;
 	//进入循环工作模式
 	while(1){
-		func_spi_read_data_mth01();
-		hcu_sleep(RPI_SPI_SENSOR_READ_GAP/2);
-		func_spi_read_data_rht03();
-		hcu_sleep(RPI_SPI_SENSOR_READ_GAP/2);
+		conCounter = 0;
+		if (HCU_SENSOR_PRESENT_MTH01 == HCU_SENSOR_PRESENT_YES){
+			func_spi_read_data_mth01();
+			hcu_sleep(RPI_SPI_SENSOR_READ_GAP/workingCycle);
+			conCounter++;
+		}
+		if (HCU_SENSOR_PRESENT_RHT03 == HCU_SENSOR_PRESENT_YES){
+			func_spi_read_data_rht03();
+			hcu_sleep(RPI_SPI_SENSOR_READ_GAP/workingCycle);
+			conCounter++;
+		}
+		conCounter = workingCycle-conCounter;
+		hcu_sleep(RPI_SPI_SENSOR_READ_GAP/workingCycle * conCounter);
 	}
 
 	return SUCCESS;

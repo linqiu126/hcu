@@ -647,12 +647,11 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 修正了一些多行\n\n等问题
 > 修正了字符串结束符'/0'为'\0'，不然出现严重告警的问题。
 > 修正了PM25SHARP中的SUM_2S没有初始化的问题
-> PM25SHARP长时间跑，会出现消息缓冲区满的情况，针对该问题进行必要的优化。
-
-
-
-
-
+> 使用SYSCONFIG全局控制静态变量，控制底层传感器是否启动
+问题1：PM25SHARP长时间跑，会出现消息缓冲区满的情况，针对该问题进行必要的优化。
+问题2：长时间运行SLEEP会被打断
+问题3：创建任务，并没有成功
+问题4：hcu_task_delete(taskid)中，是否需要抹掉TASKID对应的全局表控制区
 
 
 

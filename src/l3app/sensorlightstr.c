@@ -191,7 +191,7 @@ OPSTAT fsm_lightstr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		}
 
 #ifdef TARGET_RASPBERRY_PI3B
-		if (SENSOR_LIGHTSTR_RPI_BH1750_PRESENT == SENSOR_LIGHTSTR_RPI_PRESENT_TRUE) func_lightstr_time_out_read_data_from_bh1750();
+		if ((SENSOR_LIGHTSTR_RPI_BH1750_PRESENT == SENSOR_LIGHTSTR_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_BH1750 == HCU_SENSOR_PRESENT_YES)) func_lightstr_time_out_read_data_from_bh1750();
 #endif
 
 		//目前在非树莓派条件下，DO NOTHING

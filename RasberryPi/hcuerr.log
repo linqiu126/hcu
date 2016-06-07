@@ -24252,3 +24252,21 @@ DBG : T: 06/07/16 13:50:59:348: /l0comvm/vmlayer.c: 1369: HCU-VM: This task_id h
 DBG : T: 06/07/16 13:50:59:348: /l0comvm/vmlayer.c: 556 : HCU-VM: Init state machine FsmAddNew error, taskid = 52
 DBG : T: 06/07/16 13:50:59:348: ../src/hcu.c      : 937 : HCU-MAIN: create task env [PM25SHARP] un-successfully, program exit.
 DBG : T: 06/07/16 13:50:59:348: /l0comvm/vmlayer.c: 648 : HCU-VM: msgsnd() write msg failed, errno=11[Resource temporarily unavailable]
+DBG : T: 06/07/16 14:19:29:842: c/l1hwopt/sps485.c: 211 : Series Port: Can't Open Serial Port COM1
+DBG : T: 06/07/16 14:19:29:842: c/l1hwopt/sps485.c: 494 : Series Port: InitSerialPort serial port COM1 open failure.
+DBG : T: 06/07/16 14:19:29:842: /src/l1hwopt/gps.c: 115 : GPS: Init Serial Port Failure, Exit.
+DBG : T: 06/07/16 14:19:29:842: /l0comvm/vmlayer.c: 1619: HCU-VM: Internal error is found in the state function.
+DBG : T: 06/07/16 14:19:29:842: /l0comvm/vmlayer.c: 1532: HCU-VM: Error execute FsmRun state machine!
+DBG : T: 06/07/16 14:25:14:390: /l2frame/avorion.c: 1045: AVORION: Couldn't open input stream.
+DBG : T: 06/07/16 14:25:14:391: /l2frame/avorion.c: 220 : AVORION: Error capture frame main loop function!
+DBG : T: 06/07/16 14:25:14:391: /l0comvm/vmlayer.c: 1619: HCU-VM: Internal error is found in the state function.
+DBG : T: 06/07/16 14:25:14:391: /l0comvm/vmlayer.c: 1532: HCU-VM: Error execute FsmRun state machine!
+DBG : T: 06/07/16 14:29:46:300: c/l1hwopt/sps485.c: 581 : Series Port: Read Data failure 
+DBG : T: 06/07/16 14:29:46:301: c/l2frame/modbus.c: 1321: MODBUS: Can not read data from serial port, return of read -1 
+DBG : T: 06/07/16 14:29:46:301: /l0comvm/vmlayer.c: 1619: HCU-VM: Internal error is found in the state function.
+DBG : T: 06/07/16 14:29:46:301: /l0comvm/vmlayer.c: 1532: HCU-VM: Error execute FsmRun state machine!
+DBG : T: 06/07/16 14:30:15:647: c/l1hwopt/sps485.c: 211 : Series Port: Can't Open Serial Port COM1
+DBG : T: 06/07/16 14:30:15:647: c/l1hwopt/sps485.c: 494 : Series Port: InitSerialPort serial port COM1 open failure.
+DBG : T: 06/07/16 14:30:15:647: /src/l1hwopt/gps.c: 115 : GPS: Init Serial Port Failure, Exit.
+DBG : T: 06/07/16 14:30:15:648: /l0comvm/vmlayer.c: 1619: HCU-VM: Internal error is found in the state function.
+DBG : T: 06/07/16 14:30:15:648: /l0comvm/vmlayer.c: 1532: HCU-VM: Error execute FsmRun state machine!
