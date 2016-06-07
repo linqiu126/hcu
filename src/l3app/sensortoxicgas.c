@@ -191,7 +191,7 @@ OPSTAT fsm_toxicgas_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		}
 
 #ifdef TARGET_RASPBERRY_PI3B
-		if (SENSOR_TOXICGAS_RPI_MQ135_PRESENT == SENSOR_TOXICGAS_RPI_PRESENT_TRUE) func_toxicgas_time_out_read_data_from_mq135();
+		if ((SENSOR_TOXICGAS_RPI_MQ135_PRESENT == SENSOR_TOXICGAS_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_MQ135 == HCU_SENSOR_PRESENT_YES)) func_toxicgas_time_out_read_data_from_mq135();
 #endif
 
 		//目前在非树莓派条件下，DO NOTHING

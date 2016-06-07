@@ -200,7 +200,7 @@ OPSTAT fsm_pm25_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		}
 
 #ifdef TARGET_RASPBERRY_PI3B
-		if (SENSOR_PM25_RPI_BMPD300_PRESENT == SENSOR_PM25_RPI_PRESENT_TRUE) func_pm25_time_out_read_data_from_bmpd300();
+		if ((SENSOR_PM25_RPI_BMPD300_PRESENT == SENSOR_PM25_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_BMPD300 == HCU_SENSOR_PRESENT_YES)) func_pm25_time_out_read_data_from_bmpd300();
 #endif
 		func_pm25_time_out_read_data_from_modbus();
 	}
