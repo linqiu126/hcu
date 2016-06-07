@@ -647,7 +647,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 修正了一些多行\n\n等问题
 > 修正了字符串结束符'/0'为'\0'，不然出现严重告警的问题。
 > 修正了PM25SHARP中的SUM_2S没有初始化的问题
-
+> PM25SHARP长时间跑，会出现消息缓冲区满的情况，针对该问题进行必要的优化。
 
 
 

@@ -222,7 +222,8 @@ void func_pm25_sharp_read_data(UINT32 fd)
 	start_time = time((time_t*)NULL);
 
 	//读取数据
-	if ((nread = read(fd,&received_single_byte,1))>0)
+	nread = read(fd, &received_single_byte, 1);
+	if (nread > 0)
 	{
 		//起始位是0xAA
 		if(received_single_byte == 0xaa){
