@@ -116,9 +116,6 @@ OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 
 OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-<<<<<<< HEAD
-=======
-
 /*
 	//FTP test start by zsc!
 
@@ -194,12 +191,8 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	HcuDebugPrint("CLOUDVELA: AV file path: %s!\n", ftp_opt.file);
 */
 
-
 	//readlink test end by zsc!
 
-
-
->>>>>>> feature
 	int ret=0;
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
