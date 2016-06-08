@@ -652,6 +652,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 问题2：长时间运行SLEEP会被打断
 问题3：创建任务，并没有成功
 问题4：hcu_task_delete(taskid)中，是否需要抹掉TASKID对应的全局表控制区
+问题5：如果使用了task_delete，会导致程序quit而不再持续执行的问题，只能先去掉，这样又回到重新创建任务不成功的情形
 
 
 
