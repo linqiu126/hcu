@@ -1194,7 +1194,8 @@ void func_hwinv_scan_message_queue(void)
 			}
 			//重新启动该任务
 			//zHcuTaskInfo[taskid].TaskId = TASK_ID_INVALID;
-			hcu_task_delete(taskid);
+			//执行以下删除任务，会导致程序QUIT的情形，暂时不用
+			//hcu_task_delete(taskid);
 			hcu_system_task_init_call(taskid, zHcuTaskInfo[taskid].fsmPtr);
 			zHcuTaskInfo[taskid].QueFullFlag = HCU_TASK_QUEUE_FULL_FALSE;
 
