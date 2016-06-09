@@ -421,6 +421,11 @@ UINT32 hcu_task_delete(UINT32 task_id)
 	//Not exist
 	if (zHcuTaskInfo[task_id].ThrId ==0){return FAILURE;}
 
+	//只是清理掉FSM中的信息
+	FsmRemove(task_id);
+
+	//以下KILL线程会出错，未来待研究验证
+	/*
 	//SIGKILL用于杀死整个进程, 返回为ESRCH则表示线程不存在
 	if (pthread_kill(zHcuTaskInfo[task_id].ThrId, 0) != (EINVAL || ESRCH)) {
 		pthread_kill(zHcuTaskInfo[task_id].ThrId, SIGQUIT);
@@ -428,6 +433,8 @@ UINT32 hcu_task_delete(UINT32 task_id)
 	}else{
 		return FAILURE;
 	}
+	*/
+	return SUCCESS;
 }
 
 /**************************************************************************************
@@ -645,7 +652,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	ret = msgsnd(hcu_msgque_inquery(dest_id), msg, (sizeof(HcuMsgSruct_t)-sizeof(long)), IPC_NOWAIT);
 	free(msg);
 	if ( ret < 0 ) {
-		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s]\n",errno,strerror(errno));
+		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuTaskNameList[dest_id]);
 		zHcuTaskInfo[dest_id].QueFullFlag = HCU_TASK_QUEUE_FULL_TRUE;
 		return FAILURE;
 	}
@@ -1469,6 +1476,21 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 	if (ret == FAILURE){
 		HcuErrorPrint("HCU-VM: Error set FSM State!\n");
 	}
+
+    return SUCCESS;
+}
+
+UINT32 FsmRemove(UINT32 task_id)
+{
+	//入参检查
+	if((task_id < TASK_ID_MIN) || (task_id > TASK_ID_MAX))
+	{
+		HcuErrorPrint("HCU-VM: The task_ID is invalid.\n");
+		return FAILURE;
+	}
+
+	//设置无效
+	zHcuFsmTable.pFsmCtrlTable[task_id].taskId = TASK_ID_INVALID;
 
     return SUCCESS;
 }

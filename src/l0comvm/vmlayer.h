@@ -257,6 +257,7 @@ extern UINT16 hcu_CRC_16(unsigned char *data,int len);
 /*FSM related APIs */
 extern UINT32 FsmInit(void);
 extern UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem);
+extern UINT32 FsmRemove(UINT32 task_id);
 extern UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len);
 extern UINT32 FsmProcessingLaunch(void);
 extern OPSTAT FsmSetState(UINT32 task_id, UINT8 newState);

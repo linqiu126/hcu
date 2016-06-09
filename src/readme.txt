@@ -648,11 +648,14 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 修正了字符串结束符'/0'为'\0'，不然出现严重告警的问题。
 > 修正了PM25SHARP中的SUM_2S没有初始化的问题
 > 使用SYSCONFIG全局控制静态变量，控制底层传感器是否启动
-问题1：PM25SHARP长时间跑，会出现消息缓冲区满的情况，针对该问题进行必要的优化。
+> 优化VM消息发送时msgsnd error的提示信息
+> 删除任务并重新创建/启动任务成功
+> 本版本出现的新问题：
+问题1：PM25SHARP长时间跑，会出现消息缓冲区满的情况，这应该是READ阻塞的原因，待解决
+>>  MODBUS采用了SELECT机制，搞成非阻塞，MODBUS.c line 430
+>> 	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+>>  PM25SHARP需要修改为一样的机制
 问题2：长时间运行SLEEP会被打断
-问题3：创建任务，并没有成功
-问题4：hcu_task_delete(taskid)中，是否需要抹掉TASKID对应的全局表控制区
-问题5：如果使用了task_delete，会导致程序quit而不再持续执行的问题，只能先去掉，这样又回到重新创建任务不成功的情形
 
 
 
