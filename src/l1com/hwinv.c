@@ -782,7 +782,7 @@ void func_hwinv_scan_hard_disc(void)
 	size_t mbFreedisk = freeDisk>>20;
 
 	float r = (float)mbFreedisk/mbTotalsize*100;
-	HcuDebugPrint("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%\n", mbTotalsize, mbFreedisk,r);
+	HcuDebugPrint("HWINV: Disk total = %dMB, free=%dMB, free/total ratio =%.2f%%\n", mbTotalsize, mbFreedisk,r);
 
 	if(r <= HCU_HARDDISK_TRESHOLD)
 	{
@@ -1193,9 +1193,7 @@ void func_hwinv_scan_message_queue(void)
 				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuTaskNameList[taskid]);
 			}
 			//重新启动该任务
-			//zHcuTaskInfo[taskid].TaskId = TASK_ID_INVALID;
-			//执行以下删除任务，会导致程序QUIT的情形，暂时不用
-			//hcu_task_delete(taskid);
+			hcu_task_delete(taskid);
 			hcu_system_task_init_call(taskid, zHcuTaskInfo[taskid].fsmPtr);
 			zHcuTaskInfo[taskid].QueFullFlag = HCU_TASK_QUEUE_FULL_FALSE;
 
