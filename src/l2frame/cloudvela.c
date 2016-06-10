@@ -13,6 +13,7 @@
 
 #include "../l0webser/ftp.h"
 #include "../l0comvm/sysversion.h"
+#include <sys/reboot.h>
 
 /*
 ** FSM of the CLOUDVELA
@@ -4892,20 +4893,19 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 
 		    //system("reboot");
 
-
+/*
 		    FILE   *stream;
-		    //FILE    *wstream;
 		    char   buf[1024];
 
 		    memset( buf, '/0', sizeof(buf) );//初始化buf,以免后面写如乱码到文件中
 		    stream = popen( "reboot", "r" ); //将“ls －l”命令的输出 通过管道读取（“r”参数）到FILE* stream
-		    //wstream = fopen( "test_popen.txt", "w+"); //新建一个可写的文件
 
 		    fread( buf, sizeof(char), sizeof(buf),  stream);  //将刚刚FILE* stream的数据流读取到buf中
-		    //fwrite( buf, 1, sizeof(buf), wstream );//将buf中的数据写到FILE    *wstream对应的流中，也是写到文件中
 		    HcuDebugPrint("CLOUDVELA: Return of popen-reboot!\n\n\n\n\n\n\n\n\n", buf);
 		    pclose( stream );
-		    //fclose( wstream );
+*/
+			sync();
+			reboot(RB_AUTOBOOT);
 
 		}
 
@@ -4959,37 +4959,6 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 				}
 
 		}
-
-
-
-/*
-		FTP_OPT ftp_opt;
-
-		char usrtmp[3] = ":";
-		ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
-		strcat(ftp_opt.user_key, usrtmp);
-		strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
-		HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n\n\n", ftp_opt.user_key);
-
-		//char filetmp[64] = "swdownload.txt";
-		ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
-		strcat(ftp_opt.url, st);
-		HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n\n\n", ftp_opt.url);
-
-		ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
-		strcat(ftp_opt.file, st);
-		HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n\n\n", ftp_opt.file);
-
-		if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt)){
-			HcuDebugPrint("CLOUDVELA: HCU SW Download success.\n\n\n");
-		    // send resp msg to cloud: 01 successful
-		    system("reboot");
-		}
-
-		else
-			HcuErrorPrint("CLOUDVELA: HCU SW Download failed.\n\n\n");
-		    // send resp msg to cloud: 00 failure
-*/
 
 	}
 
@@ -5591,7 +5560,7 @@ OPSTAT func_cloudvela_av_upload(char *filename)
 ///
 	char filepath[CLOUDVELA_PATH_MAX];
 	memset(filepath,0,CLOUDVELA_PATH_MAX);
-	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160528.dat";
 
 	//int i;
 	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);

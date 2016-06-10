@@ -787,6 +787,7 @@ void func_hwinv_scan_hard_disc(void)
 	if(r <= HCU_HARDDISK_TRESHOLD)
 	{
 		//hcu_delete_file("/home/pi/workspace/hcu/RasberryPi/log");
+		HcuDebugPrint("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%, removing log file to free the disk\n\n\n",mbTotalsize,mbFreedisk,r);
 		hcu_delete_file(zCurTimeDate.curLogDir);
 	}
 
