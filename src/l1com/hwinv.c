@@ -782,7 +782,7 @@ void func_hwinv_scan_hard_disc(void)
 	size_t mbFreedisk = freeDisk>>20;
 
 	float r = (float)mbFreedisk/mbTotalsize*100;
-	HcuDebugPrint("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%\n\n\n",mbTotalsize,mbFreedisk,r);
+	HcuDebugPrint("HWINV: Disk total = %dMB, free=%dMB, free/total ratio =%.2f%%\n", mbTotalsize, mbFreedisk,r);
 
 	if(r <= HCU_HARDDISK_TRESHOLD)
 	{
@@ -1090,6 +1090,7 @@ void func_hwinv_scan_db(void)
 		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
@@ -1101,6 +1102,7 @@ void func_hwinv_scan_db(void)
 		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
@@ -1188,8 +1190,12 @@ void func_hwinv_scan_message_queue(void)
 		//扫描其messageQue，看看是否满，如果是，意味着故障
 		if ((taskid != TASK_ID_HWINV) && (zHcuTaskInfo[taskid].swTaskActive == HCU_TASK_SW_ACTIVE) && (zHcuTaskInfo[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
 		{
+			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuTaskNameList[taskid]);
+			}
 			//重新启动该任务
-			hcu_system_task_init_call(TASK_ID_TIMER, zHcuTaskInfo[taskid].fsmPtr);
+			hcu_task_delete(taskid);
+			hcu_system_task_init_call(taskid, zHcuTaskInfo[taskid].fsmPtr);
 			zHcuTaskInfo[taskid].QueFullFlag = HCU_TASK_QUEUE_FULL_FALSE;
 
 			//再发送init消息给该模块，以便启动改模块

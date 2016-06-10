@@ -118,4 +118,22 @@ class Hcupm25sharpdatainfoController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public  function  actionGetlasthcupm25sharpdatainfo()
+    //http://localhost/l3ui/web/index.php?r=hcuwindspddatainfo/getlasthcuwindspddatainfo&callback=myCallbackFunction    
+    {
+        
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; //直接使用的话，不用在web.php中定义JSONPARSE
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSONP;
+        //取最后一条记录，本地界面中，应该没有deviceid的考虑，应该是只连接一台风速传感器
+        $Lasthcupm25sharpdatainfo = Hcupm25sharpdatainfo::find()->orderBy(['sid' => SORT_DESC])->one(); 
+
+        /*print_r($Lasthcuwindspddatainfo);
+        echo '<hr/>';*/
+
+        $exportarray = $Lasthcupm25sharpdatainfo->attributes;
+        //print_r($exportarray);
+        return ['data' => $exportarray];
+        //return ['callback' => $callback, 'data' => $exportarray];
+    }
 }

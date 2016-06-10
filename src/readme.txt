@@ -608,8 +608,6 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 增加BMP180/GY68气压完整工作的模块，包括数据库，DBIAPI以及L3处理
 > 增加MQ135/有毒气体完整工作的模块，包括数据库，DBIAPI以及L3处理
 
-
-
 == Update log: 2016 May 18 SW Version: XQ.HCU.SW.R01.087 //ZSC
 > add curl FTP modle 
 > add the module for HCU SW download
@@ -630,10 +628,48 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > add the module for the captured video upload
 > merge hcu.sh(the scripts of auto starp-up) into hcu project
 
+== Update log: 2016 May 31 SW Version: XQ.HCU.SW.R01.091
+> MQ135, GPIO#5 -> change to GPIO#6
+> 去掉部分内部模块HEART_BEAT，不然SVRCON的消息队列满
 
-== Update log: 2016 May 29 SW Version: XQ.HCU.SW.R01.092 //ZSC
+== Update log: 2016 May.31 SW Version: XQ.HCU.SW.R01.092 //ZSC
 > upload AV file (softlink)
 > delete log file in case hard disk usage > 90%
+
+== Update log: 2016 June.2 SW Version: XQ.HCU.SW.R01.093 //ZJL
+> 增加MTH01-SPI传感器： DBICOM， SensorTemp/SensorHumid, SPI.*, 数据库文件
+> 增加BMPD300 PM2.5传感器，内容同上
+> Add  extern UINT16 hcu_CRC_16(unsigned char *data,int len);
+
+== Update log: 2016 June.5 SW Version: XQ.HCU.SW.R01.094 //多人修改中，还未形成正式版本
+> 完善BMP180气压高度温度的计算算法
+> 修正MessageQue满时一直重启[TIMER]任务的错误
+> 修正了一些多行\n\n等问题
+> 修正了字符串结束符'/0'为'\0'，不然出现严重告警的问题。
+> 修正了PM25SHARP中的SUM_2S没有初始化的问题
+> 使用SYSCONFIG全局控制静态变量，控制底层传感器是否启动
+> 优化VM消息发送时msgsnd error的提示信息
+> 删除任务并重新创建/启动任务成功
+> 本版本出现的新问题：
+问题1：PM25SHARP长时间跑，会出现消息缓冲区满的情况，这应该是READ阻塞的原因，待解决
+>>  MODBUS采用了SELECT机制，搞成非阻塞，MODBUS.c line 430
+>> 	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+>>  PM25SHARP需要修改为一样的机制
+问题2：长时间运行SLEEP会被打断
+
+== Update log: 2016 June.5 SW Version: XQ.HCU.SW.R01.094 //多人修改中，还未形成正式版本
+>>M25SHARP修改为非阻塞机制
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -653,31 +689,22 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 
 
 == Coming Later...
-> 使用XML页面的方式，来配置系统的参数选项
 > 如何将UT-TEST环境包装进咱们项
 > MMC机制，让人工可以通过命令行进行控制，以便启动和配置模块的运行与否
 > MSG_COM_STOP->任务停留在DISABLED状态
-> VM内存机制
 > 从网络时钟同步机制，并合理跟GPS时钟融合的问题
 > 蓝牙工作模块
 > Audio/Camera作为传感器，有两种工作方式原理：一是永恒工作，就像其它传感器一样，数据存在本地，上层需要，直接取结果；二是完全由上层L3控制启动工作与否。目前采用的是第一种方式，是否足够好，需要再讨论。
 > 从功耗和效率的角度，也许视频采用按需工作比较好，而噪声采用永恒工作的模式比较好，再研究并确定
-
-
-
 
 == 遗留问题
 1. 消除WARNING，其中有一种情况是函数未在.h中进行申明
 2. 自创账户没有足够的权限启动TASK，必须在ROOT权限下工作，但ROOT权限下并没有安装中文输入，导致必须两边切IDE环境，比较麻烦
 3. HCU创建的文件，其权限不确定，HWINV还有bug
 4. 网络在非连接转连接态，HCU并不能正常恢复到连接态，需要重启才能恢复。HWINV还有bug
-5. R01.030: 出现的潜在问题：Ubuntu14中，接收出现阻塞现象，导致CLOUD模块的接收消息区满的情形，这跟Ubuntu15的状态完全不一样，而且U14运行时，也不是每一次都如此。
 > 遗留问题：偶尔会出现usleep()的无效问题，可能还是信号量的不合理设置，需要待调查
 > 遗留问题：偶尔出现后台发送不成功，及时再ETHERNET的情况下，非常值得调查起原因
 > 遗留问题：目前情况下，一旦一次发送失败，该数据将丢失，而不是保存下来下次继续发送，未来需要改进，以便改善数据的准确性
-
-
-
 
 ==TIPS & Best Practice===
 > chmod -R 777 *   => 一旦在ROOT下操作后，可能造成普通账户编译不过，文件不能访问，该命令将放开所有相关文件的权限，要在ROOT下操作
@@ -698,12 +725,3 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 如果发现有些传感器发送的速度过快或者过慢，可以在L3目录中查看，相关的传感器.h中有时长定义，可以适当调整
 > 另外，对于各个传感器的启动性问题，都采用了随机延迟的方案，减少各个任务之间的碰撞概率。延迟碰撞的时长设置在L2COMDEF.h文件中
 
-
-	
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, record add = %08x\n", &record);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, lastSid = %d\n", zHcuMemStorageBuf.lastSid);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, offlineNbr = %d\n", zHcuMemStorageBuf.offlineNbr);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, rdCnt = %d\n", zHcuMemStorageBuf.rdCnt);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, recordNbr = %d\n", zHcuMemStorageBuf.recordNbr);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, wrtCnt = %d\n", zHcuMemStorageBuf.wrtCnt);
-	HcuDebugPrint("CLOUDCONT: Read data from MEM Storage, Sensortype = %d\n", record.sensortype);

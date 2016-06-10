@@ -65,6 +65,7 @@ extern float zHcuGpioTempDht11;
 extern float zHcuI2cTempSht20;
 extern float zHcuSpiTempRht03;
 extern float zHcuI2cTempBmp180;
+extern float zHcuSpiTempMth01;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -196,10 +197,11 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		}
 
 #ifdef TARGET_RASPBERRY_PI3B
-		if (SENSOR_TEMP_RPI_DHT11_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_dht11();
-		if (SENSOR_TEMP_RPI_SHT20_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_sht20();
-		if (SENSOR_TEMP_RPI_RHT03_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_rht03();
-		if (SENSOR_TEMP_RPI_BMP180_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) func_temp_time_out_read_data_from_bmp180();
+		if ((SENSOR_TEMP_RPI_DHT11_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_DHT11 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_dht11();
+		if ((SENSOR_TEMP_RPI_SHT20_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_SHT20 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_sht20();
+		if ((SENSOR_TEMP_RPI_RHT03_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_RHT03 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_rht03();
+		if ((SENSOR_TEMP_RPI_BMP180_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_BMP180 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_bmp180();
+		if ((SENSOR_TEMP_RPI_MTH01_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_MTH01 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_mth01();
 #endif
 		func_temp_time_out_read_data_from_modbus();
 	}
@@ -659,4 +661,29 @@ OPSTAT func_temp_time_out_read_data_from_bmp180(void)
 
 	return SUCCESS;
 }
+
+OPSTAT func_temp_time_out_read_data_from_mth01(void)
+{
+	int ret=0;
+
+	//存入数据库
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSpiTempMth01 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuSpiTempMth01 <= HCU_SENSOR_TEMP_VALUE_MAX))
+	{
+		sensor_temp_mth01_data_element_t tempData;
+		memset(&tempData, 0, sizeof(sensor_temp_mth01_data_element_t));
+		tempData.equipid = 0;
+		tempData.timeStamp = time(0);
+		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		tempData.tempValue = (int)(zHcuSpiTempMth01*100);
+
+		ret = dbi_HcuTempMth01DataInfo_save(&tempData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Can not save TempMth01 data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
+
 

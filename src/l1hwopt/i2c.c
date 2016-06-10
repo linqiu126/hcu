@@ -43,6 +43,7 @@ float zHcuI2cLightstrBh1750;
 float zHcuI2cAirprsBmp180;
 float zHcuI2cTempBmp180;
 float zHcuI2cAltitudeBmp180;
+float zHcuI2cPm25Bmpd300;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -57,7 +58,7 @@ OPSTAT fsm_i2c_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -95,6 +96,7 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	zHcuI2cAirprsBmp180 = HCU_SENSOR_VALUE_NULL;
 	zHcuI2cTempBmp180 = HCU_SENSOR_VALUE_NULL;
 	zHcuI2cAltitudeBmp180 = HCU_SENSOR_VALUE_NULL;
+	zHcuI2cPm25Bmpd300 = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_I2C, FSM_STATE_I2C_RECEIVED) == FAILURE){
@@ -106,14 +108,32 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		HcuDebugPrint("I2C: Enter FSM_STATE_I2C_ACTIVED status, Keeping refresh here!\n");
 	}
 
+	int workingCycle = 4;
 	//进入循环工作模式
 	while(1){
-		func_i2c_read_data_sht20();
-		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/3);
-		func_i2c_read_data_bh1750();
-		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/3);
-		func_i2c_read_data_bmp180();
-		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/3);
+		conCounter = 0;
+		if (HCU_SENSOR_PRESENT_BMP180 == HCU_SENSOR_PRESENT_YES){
+			func_i2c_read_data_bmp180();
+			hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle);
+			conCounter++;
+		}
+		if (HCU_SENSOR_PRESENT_SHT20 == HCU_SENSOR_PRESENT_YES){
+			func_i2c_read_data_sht20();
+			hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle);
+			conCounter++;
+		}
+		if (HCU_SENSOR_PRESENT_BH1750 == HCU_SENSOR_PRESENT_YES){
+			func_i2c_read_data_bh1750();
+			hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle);
+			conCounter++;
+		}
+		if (HCU_SENSOR_PRESENT_BMPD300 == HCU_SENSOR_PRESENT_YES){
+			func_i2c_read_data_bmpd300();
+			hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle);
+			conCounter++;
+		}
+		conCounter = workingCycle-conCounter;
+		hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle * conCounter);
 	}
 
 	return SUCCESS;
@@ -139,8 +159,8 @@ OPSTAT func_i2c_int_init(void)
 OPSTAT func_i2c_read_data_sht20(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd, i;
-	int temp, humid;
+	INT32 fd, i;
+	INT32 temp, humid;
 	float tmp1, tmp2, tempSum, humidSum;
 
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_SHT20))<0){
@@ -184,7 +204,7 @@ OPSTAT func_i2c_read_data_sht20(void)
 OPSTAT func_i2c_read_data_bh1750(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd;
+	INT32 fd;
 	char buf[3];
 	char val;
 	float flight, flightSum;
@@ -261,39 +281,135 @@ OPSTAT func_i2c_read_data_bh1750(void)
 OPSTAT func_i2c_read_data_bmp180(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd, i;
-	int airprs, temp;
-	float airprsSum, tempSum;
+	INT32 fd, i;
+	INT64 airprs, temp, x1, x2, x3, b5, b6, b7, p, tmp;
+	UINT64 b4;
+	INT64 airprsSum, tempSum;
+	float coef;
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMP180))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
 		zHcuRunErrCnt[TASK_ID_I2C]++;
 		return FAILURE;
 	}
 
-	airprsSum = 0;
+	//读取校准数据 Read calibration data
+	INT16 ac1, ac2, ac3, b1, b2, b3, mb, mc, md;
+	UINT16 ac4, ac5, ac6;
+	delay(2); ac1 = wiringPiI2CReadReg16(fd, 0xAA); ac1 = ((ac1&0xFF)<<8) + ((ac1&0xFF00)>>8);
+	delay(2); ac2 = wiringPiI2CReadReg16(fd, 0xAC); ac2 = ((ac2&0xFF)<<8) + ((ac2&0xFF00)>>8);
+	delay(2); ac3 = wiringPiI2CReadReg16(fd, 0xAE); ac3 = ((ac3&0xFF)<<8) + ((ac3&0xFF00)>>8);
+	delay(2); ac4 = wiringPiI2CReadReg16(fd, 0xB0); ac4 = ((ac4&0xFF)<<8) + ((ac4&0xFF00)>>8);
+	delay(2); ac5 = wiringPiI2CReadReg16(fd, 0xB2); ac5 = ((ac5&0xFF)<<8) + ((ac5&0xFF00)>>8);
+	delay(2); ac6 = wiringPiI2CReadReg16(fd, 0xB4); ac6 = ((ac6&0xFF)<<8) + ((ac6&0xFF00)>>8);
+	delay(2); b1 = wiringPiI2CReadReg16(fd, 0xB6); b1 = ((b1&0xFF)<<8) + ((b1&0xFF00)>>8);
+	delay(2); b2 = wiringPiI2CReadReg16(fd, 0xB8); b2 = ((b2&0xFF)<<8) + ((b2&0xFF00)>>8);
+	delay(2); mb = wiringPiI2CReadReg16(fd, 0xBA); mb = ((mb&0xFF)<<8) + ((mb&0xFF00)>>8);
+	delay(2); mc = wiringPiI2CReadReg16(fd, 0xBC); mc = ((mc&0xFF)<<8) + ((mc&0xFF00)>>8);
+	delay(2); md = wiringPiI2CReadReg16(fd, 0xBE); md = ((md&0xFF)<<8) + ((md&0xFF00)>>8);
+
+	//循环读取
 	tempSum = 0;
+	airprsSum = 0;
 	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++){
-		delay (200);
-		airprs = wiringPiI2CReadReg16(fd, 0x00);
-		airprsSum += airprs;
-		delay (200);
-		temp = wiringPiI2CReadReg16(fd, 0x02);
+		//读取温度temp
+		delay (10); wiringPiI2CWriteReg8(fd, 0xF4, 0x2E);
+		delay(5); temp = wiringPiI2CReadReg16(fd, 0xF6);
+		temp = ((temp&0xFF)<<8) + ((temp&0xFF00)>>8);
 		tempSum += temp;
-		//计算算法待定
+		//读取气压airprs
+		delay (10); wiringPiI2CWriteReg8(fd, 0xF4, (0x34+(RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET<<6)));
+		delay(5); airprs = wiringPiI2CReadReg16(fd, 0xF6);
+		delay(5); tmp = wiringPiI2CReadReg8(fd, 0xF8);
+		airprs = ((((airprs&0xFF)<<16) + ((airprs&0xFF00)>>8) + (tmp&0xFF)) >> (8-RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET));
+		airprsSum += airprs;
 //		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("I2C: Sensor BMP180 Original read result Airprs=0x%xPa, Temp=0x%xC, DATA_I2C_SDA#=%d\n", airprs, temp, RPI_I2C_PIN_SDA);
 //		}
 	}
 
 	//求平均
-	zHcuI2cAirprsBmp180 = airprsSum / RPI_I2C_READ_REPEAT_TIMES;
-	zHcuI2cTempBmp180 = tempSum / RPI_I2C_READ_REPEAT_TIMES;
+	tempSum = tempSum / RPI_I2C_READ_REPEAT_TIMES;
+	airprsSum = airprsSum / RPI_I2C_READ_REPEAT_TIMES;
+
+	//计算真实温度
+	x1 = ((tempSum - ac6) * ac5 ) >> 15;
+	x2 = (mc << 11) / (x1 + md);
+	b5 = x1 + x2;
+	tempSum = ((b5 + 8) >> 4); //in 0.1degree
+	zHcuI2cTempBmp180 = tempSum / 10; //in 1 degree
+
+	//计算真实气压
+	b6 = b5 - 4000;
+	x1 = (b2 * ((b6 * b6)>>12)) >> 11;
+	x2 = (ac2 * b6) >> 11;
+	x3 = x1 + x2;
+	b3 = (((ac1*4 + x3) << RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET) + 2) >> 2;
+	x1 = (ac3 * b6) >> 13;
+	x2 = (b1 * ((b6 * b6) >> 12)) >> 16;
+	x3 = ((x1 + x2) + 2) >> 2;
+	b4 = ac4 * (UINT64)(x3 + 32768) >> 15;
+	b7 = ((UINT64)airprsSum - b3) *(50000 >> RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET);
+	if (b7 < 0x80000000){
+		p = (b7*2)/b4;
+	}else{
+		p = (b7/b4)*2;
+	}
+	x1 = (p >> 8) * (p >> 8);
+	x1 = (x1 * 3038) >> 16;
+	x2 = (-7357 * p) >> 16;
+	p = p + ((x1 + x2 + 3791) << 4);
+
+	zHcuI2cAirprsBmp180 = p; //in Parsca
 
 	//计算出海拔高度数据
-	zHcuI2cAltitudeBmp180 = zHcuI2cAirprsBmp180 * 10;
-
+	coef = powf(((float)p/(float)RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS), (float)(1.0/5.255));
+	zHcuI2cAltitudeBmp180 = 44330 * (1- coef);
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("I2C: Sensor BMP180 Transformed average float result Airprs=%6.2fPa, Temp=%6.2fC, Altitude = %6.2fm, DATA_I2C_SDA#=%d\n", zHcuI2cAirprsBmp180, zHcuI2cTempBmp180, zHcuI2cAltitudeBmp180, RPI_I2C_PIN_SDA);
+	}
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做, 以下only for test
+	//float t = 44330 * (1- pow(69965/RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS, 1/5.255));
+    return SUCCESS;
+#endif
+}
+
+//BM PD300 PM25读取
+OPSTAT func_i2c_read_data_bmpd300(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+	INT32 fd, i;
+	INT32 pm25;
+	float pm25Sum;
+	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMPD300))<0){
+		HcuDebugPrint("I2C: can't find i2c!!\n");
+		zHcuRunErrCnt[TASK_ID_I2C]++;
+		return FAILURE;
+	}
+
+	pm25Sum = 0;
+	for (i=0; i<RPI_I2C_READ_REPEAT_TIMES; i++){
+		delay (200);
+		//数据格式以及计算方法
+		//读数格式为0x0B，0xXX, 0xXX，后两个
+		if (wiringPiI2CReadReg8(fd, 0x00) == 0x0B){
+			delay(200);
+			pm25 = wiringPiI2CReadReg16(fd, 0x01);
+			pm25 = ((pm25&0xFF)<<8) + ((pm25&0xFF00)>>8);
+			pm25Sum += pm25;
+		}
+//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//			HcuDebugPrint("I2C: Sensor BMPD300 Original read result Pm25=0x%xmg/m3DATA_I2C_SDA#=%d\n", pm25, RPI_I2C_PIN_SDA);
+//		}
+	}
+
+	//求平均
+	zHcuI2cPm25Bmpd300 = pm25Sum / RPI_I2C_READ_REPEAT_TIMES;
+
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("I2C: Sensor BMPD300 Transformed average float result Pm25=%6.2fmg/m3, DATA_I2C_SDA#=%d\n", zHcuI2cPm25Bmpd300, RPI_I2C_PIN_SDA);
 	}
 
 	return SUCCESS;
@@ -302,5 +418,3 @@ OPSTAT func_i2c_read_data_bmp180(void)
     return SUCCESS;
 #endif
 }
-
-
