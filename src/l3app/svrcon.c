@@ -754,10 +754,10 @@ OPSTAT fsm_svrcon_heart_beat(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	func_svrcon_heart_beat_send_out(TASK_ID_HSMMP);
 	func_svrcon_heart_beat_send_out(TASK_ID_NOISE);
 
-	func_svrcon_heart_beat_send_out(TASK_ID_AVORION);
-	func_svrcon_heart_beat_send_out(TASK_ID_CLOUDVELA);
-	func_svrcon_heart_beat_send_out(TASK_ID_MODBUS);
-	func_svrcon_heart_beat_send_out(TASK_ID_SPSVIRGO);
+//	func_svrcon_heart_beat_send_out(TASK_ID_AVORION);
+//	func_svrcon_heart_beat_send_out(TASK_ID_CLOUDVELA);
+//	func_svrcon_heart_beat_send_out(TASK_ID_MODBUS);
+//	func_svrcon_heart_beat_send_out(TASK_ID_SPSVIRGO);
 
 
 	//这里只处理AVORION，未来可能会增加其它监控的进程级任务模块

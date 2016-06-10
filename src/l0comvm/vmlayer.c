@@ -421,6 +421,11 @@ UINT32 hcu_task_delete(UINT32 task_id)
 	//Not exist
 	if (zHcuTaskInfo[task_id].ThrId ==0){return FAILURE;}
 
+	//只是清理掉FSM中的信息
+	FsmRemove(task_id);
+
+	//以下KILL线程会出错，未来待研究验证
+	/*
 	//SIGKILL用于杀死整个进程, 返回为ESRCH则表示线程不存在
 	if (pthread_kill(zHcuTaskInfo[task_id].ThrId, 0) != (EINVAL || ESRCH)) {
 		pthread_kill(zHcuTaskInfo[task_id].ThrId, SIGQUIT);
@@ -428,6 +433,8 @@ UINT32 hcu_task_delete(UINT32 task_id)
 	}else{
 		return FAILURE;
 	}
+	*/
+	return SUCCESS;
 }
 
 /**************************************************************************************
@@ -645,7 +652,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	ret = msgsnd(hcu_msgque_inquery(dest_id), msg, (sizeof(HcuMsgSruct_t)-sizeof(long)), IPC_NOWAIT);
 	free(msg);
 	if ( ret < 0 ) {
-		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s]\n",errno,strerror(errno));
+		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuTaskNameList[dest_id]);
 		zHcuTaskInfo[dest_id].QueFullFlag = HCU_TASK_QUEUE_FULL_TRUE;
 		return FAILURE;
 	}
@@ -1473,6 +1480,21 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
     return SUCCESS;
 }
 
+UINT32 FsmRemove(UINT32 task_id)
+{
+	//入参检查
+	if((task_id < TASK_ID_MIN) || (task_id > TASK_ID_MAX))
+	{
+		HcuErrorPrint("HCU-VM: The task_ID is invalid.\n");
+		return FAILURE;
+	}
+
+	//设置无效
+	zHcuFsmTable.pFsmCtrlTable[task_id].taskId = TASK_ID_INVALID;
+
+    return SUCCESS;
+}
+
 
 /*******************************************************************************
 ** METHOD : FsmProcessingLaunch
@@ -1725,4 +1747,40 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	//也可能是调用关系，故而直接采用SRC_ID=0的方式，这种情况原则上也允许
 
 	return SUCCESS;
+}
+
+
+/******************函数CRC_16()*********小端
+返回short int
+参数data【】数组、len 数组长度
+例子：datax【8】={01, 03, 00, 00, 00, 01, 00, 00}16 进制
+unsigned short int x=CRC_16(datax,6);
+得到x=0x840a;
+***************************************************/
+UINT16 hcu_CRC_16(unsigned char *data,int len)
+{
+	unsigned char *buf;
+	unsigned short int * CRC;
+	unsigned short int crch,crcl;
+	unsigned char p;
+	unsigned char j;
+	char err;
+	buf= & data[len];
+	CRC=(unsigned short int *)buf;
+	buf[0]=0xff;//lsb
+	buf[1]=0xff;//msb
+	for(p=0;p<len;p++)
+	{
+		buf[1]=buf[1]^data[p];
+		for(j=0;j<8;j++)
+		{
+			err=buf[1]&1;
+			*CRC=*CRC/2;
+			if(err) *CRC=*CRC^0xa001;
+		}
+	}
+	crch=*CRC>>8;
+	crcl=*CRC<<8;
+	*CRC=crch+crcl;
+	return(*CRC);
 }

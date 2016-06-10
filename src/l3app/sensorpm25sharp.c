@@ -105,7 +105,7 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 	else
 	{
-		HcuDebugPrint("PM25SHARP: Init Serial Port Success ...\n\n\n");
+		HcuDebugPrint("PM25SHARP: Init Serial Port Success ...\n");
 	}
 
 	SerialPortSetVtimeVmin(&gSerialPortForPm25Sharp, 10, 5);
@@ -130,7 +130,7 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("PM25SHARP: Enter FSM_STATE_PM25SHARP_ACTIVED status, Keeping refresh here!\n\n\n\n");
+		HcuDebugPrint("PM25SHARP: Enter FSM_STATE_PM25SHARP_ACTIVED status, Keeping refresh here!\n");
 	}
 
 	return SUCCESS;
@@ -215,14 +215,18 @@ void func_pm25_sharp_read_data(UINT32 fd)
 	unsigned char received_single_byte;
 	unsigned char pm25_frame_received_buff[7];
 	int start_time, end_time;
-	float average_pm25,sum_2s;
+	float average_pm25, sum_2s = 0;
 	sensor_pm25_sharp_data_element_t pm25Data;
 
 	//起始时间
 	start_time = time((time_t*)NULL);
 
 	//读取数据
-	if ((nread = read(fd,&received_single_byte,1))>0)
+	//memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+	//ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	//nread = read(fd, &received_single_byte, 1);
+	nread = hcu_sps485_serial_port_get(&gSerialPortForPm25Sharp, &received_single_byte, 1);
+	if (nread > 0)
 	{
 		//起始位是0xAA
 		if(received_single_byte == 0xaa){
@@ -250,7 +254,7 @@ void func_pm25_sharp_read_data(UINT32 fd)
 			  if((end_time - start_time) > 2)
 			  {
 				  //log_debug(logfile,"Last bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-				  HcuDebugPrint("PM25SHARP: Last bytes received: %02x %02x %02x %02x %02x %02x %02x \n\n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+				  HcuDebugPrint("PM25SHARP: Last bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
 				  average_pm25 = sum_2s / counter;
 
 				  if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (average_pm25 >= HCU_SENSOR_PM25_VALUE_MIN) && (average_pm25 <= HCU_SENSOR_PM25_VALUE_MAX))
@@ -260,7 +264,7 @@ void func_pm25_sharp_read_data(UINT32 fd)
 					  pm25Data.timeStamp = time(0);
 					  pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
 					  pm25Data.pm2d5Value = (int)(average_pm25*100);
-					  ret = dbi_HcuPM25SharpDataInfo_save(&pm25Data);
+					  ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
 					  if (ret == FAILURE){
 							zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
 							HcuErrorPrint("PM25SHARP: Can not save data into database!\n");
@@ -271,7 +275,7 @@ void func_pm25_sharp_read_data(UINT32 fd)
 				  counter = 0;
 				  sum_2s = 0;
 				  start_time = time((time_t*)NULL);
-				  HcuDebugPrint("PM25SHARP: counter_good_frame is: %d, counter_total_frame is: %d.\n\n\n\n\n",counter_good_frame, counter_total_frame);
+				  HcuDebugPrint("PM25SHARP: counter_good_frame is: %d, counter_total_frame is: %d.\n",counter_good_frame, counter_total_frame);
 			  }
 			  counter_good_frame++;
 			  //log_debug(logfile,"counter_good_frame is: %d.",counter_good_frame);
@@ -285,7 +289,7 @@ void func_pm25_sharp_read_data(UINT32 fd)
 		  //log_debug(logfile,"counter_total_frame is: %d.\n",counter_total_frame);
 		  //PM25计算和输出完成之后相关变量清零
 		  j=0;
-		  received_single_byte='/0';
+		  received_single_byte='\0';
 		  for(i=0;i<7;i++){
 			  pm25_frame_received_buff[i]=0;
 		  }

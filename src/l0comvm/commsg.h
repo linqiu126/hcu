@@ -674,6 +674,13 @@ typedef struct  sensor_pm25_sharp_data_element //
 	UINT32 pm2d5Value;
 	UINT32 timeStamp;
 }sensor_pm25_sharp_data_element_t;
+typedef struct  sensor_pm25_bmpd300_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 pm2d5Value;
+	UINT32 timeStamp;
+}sensor_pm25_bmpd300_data_element_t;
 typedef struct  sensor_winddir_data_element //
 {
 	UINT32 equipid;
@@ -725,6 +732,13 @@ typedef struct  sensor_temp_rht03_data_element //
 	UINT32 tempValue;
 	UINT32 timeStamp;
 }sensor_temp_rht03_data_element_t;
+typedef struct  sensor_temp_mth01_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_mth01_data_element_t;
 typedef struct  sensor_temp_bmp180_data_element //
 {
 	UINT32 equipid;
@@ -763,6 +777,13 @@ typedef struct  sensor_humid_rht03_data_element //
 	UINT32 humidValue;
 	UINT32 timeStamp;
 }sensor_humid_rht03_data_element_t;
+typedef struct  sensor_humid_mth01_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	UINT32 timeStamp;
+}sensor_humid_mth01_data_element_t;
 typedef struct  sensor_noise_data_element //
 {
 	UINT32 equipid;

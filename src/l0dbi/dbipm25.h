@@ -20,8 +20,11 @@ extern OPSTAT dbi_HcuPm25DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuPm25ConfigData_save(sensor_modbus_opertion_general_t *PM25ConfigData);
 extern OPSTAT dbi_HcuPm25ConfigData_update(UINT8 optId, sensor_modbus_opertion_general_t *PM25ConfigData);
 
-extern OPSTAT dbi_HcuPM25SharpDataInfo_save(sensor_pm25_sharp_data_element_t *pm25Data);
+extern OPSTAT dbi_HcuPm25SharpDataInfo_save(sensor_pm25_sharp_data_element_t *pm25Data);
 extern OPSTAT dbi_HcuPm25SharpDataInfo_delete_3monold(UINT32 days);
+
+extern OPSTAT dbi_HcuPm25Bmpd300DataInfo_save(sensor_pm25_bmpd300_data_element_t *pm25Data);
+extern OPSTAT dbi_HcuPm25Bmpd300DataInfo_delete_3monold(UINT32 days);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

@@ -27,6 +27,10 @@ enum FSM_STATE_PM25
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+#define SENSOR_PM25_RPI_PRESENT_TRUE 1
+#define SENSOR_PM25_RPI_PRESENT_FALSE 0
+#define SENSOR_PM25_RPI_BMPD300_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
+
 //Global variables
 extern FsmStateItem_t FsmPm25[];
 
@@ -65,6 +69,7 @@ void func_pm25_time_out_read_data_from_modbus(void);
 void func_pm25_time_out_processing_no_rsponse(void);
 extern OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+OPSTAT func_pm25_time_out_read_data_from_bmpd300(void);
 
 //引用外部API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);
@@ -73,5 +78,6 @@ extern OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record);
 extern OPSTAT dbi_HcuPm25DataInfo_save(sensor_pm25_data_element_t *pm25Data);
 extern OPSTAT dbi_HcuPm25ConfigData_save(sensor_modbus_opertion_general_t *PM25ConfigData);
 extern OPSTAT dbi_HcuPm25ConfigData_update(UINT8 optId, sensor_modbus_opertion_general_t *PM25ConfigData);
+extern OPSTAT dbi_HcuPm25Bmpd300DataInfo_save(sensor_pm25_bmpd300_data_element_t *pm25Data);
 
 #endif /* L3APP_SENSORPM25_H_ */

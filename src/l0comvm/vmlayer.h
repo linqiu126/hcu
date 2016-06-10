@@ -252,10 +252,12 @@ extern OPSTAT hcu_timer_clear(UINT32 timerid, UINT32 taskid);
 extern void hcu_sleep(UINT32 second);
 extern void hcu_usleep(UINT32 usecond);  //resulution 10^(-6)s = 1 microsecond
 //UNIX下时钟函数非常丰富，这里不再做任何抽象化，上层应用可以直接调用系统库函数进行使用和处理
+extern UINT16 hcu_CRC_16(unsigned char *data,int len);
 
 /*FSM related APIs */
 extern UINT32 FsmInit(void);
 extern UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem);
+extern UINT32 FsmRemove(UINT32 task_id);
 extern UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len);
 extern UINT32 FsmProcessingLaunch(void);
 extern OPSTAT FsmSetState(UINT32 task_id, UINT8 newState);

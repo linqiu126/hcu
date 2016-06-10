@@ -192,7 +192,7 @@ OPSTAT fsm_airprs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		}
 
 #ifdef TARGET_RASPBERRY_PI3B
-		if (SENSOR_AIRPRS_RPI_BMP180_PRESENT == SENSOR_AIRPRS_RPI_PRESENT_TRUE) func_airprs_time_out_read_data_from_bmp180();
+		if ((SENSOR_AIRPRS_RPI_BMP180_PRESENT == SENSOR_AIRPRS_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_BMP180 == HCU_SENSOR_PRESENT_YES)) func_airprs_time_out_read_data_from_bmp180();
 #endif
 
 		//目前在非树莓派条件下，DO NOTHING
