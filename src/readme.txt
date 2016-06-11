@@ -658,8 +658,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 问题2：长时间运行SLEEP会被打断
 >>M25SHARP修改为非阻塞机制
 
-
-
+== Update log: 2016 June.11 SW Version: XQ.HCU.SW.R01.095 //ZJL
+> 增加有毒气体VOC ZP01，MQ3酒精传感器以及甲醛ZE08CH2O传感器
+> 同步修改的还有数据库
 
 
 

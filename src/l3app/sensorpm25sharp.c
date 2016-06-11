@@ -194,14 +194,14 @@ OPSTAT fsm_pm25sharp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("PM25SHARP: fd = %d !\n", pm25sharpfd);
 		}
-		func_pm25_sharp_read_data(pm25sharpfd);
+		func_pm25sharp_read_data(pm25sharpfd);
 		close(pm25sharpfd);
 	}
 
 	return SUCCESS;
 }
 
-void func_pm25_sharp_read_data(UINT32 fd)
+void func_pm25sharp_read_data(UINT32 fd)
 {
 
 	int ret = 0;

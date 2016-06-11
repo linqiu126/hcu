@@ -27,12 +27,16 @@ extern FsmStateItem_t FsmGpio[];
 extern float zHcuGpioTempDht11;
 extern float zHcuGpioHumidDht11;
 extern float zHcuGpioToxicgasMq135;
+extern float zHcuGpioAlcoholMq3alco;
+extern float zHcuGpioToxicgasZp01voc;
 
 //Local definition
 #define RPI_GPIO_PIN_VCC 1
 #define RPI_GPIO_PIN_GND 9
 #define RPI_GPIO_PIN_DHT11_DATA 0  //Pin#11
-#define RPI_GPIO_PIN_MQ135_DATA 5  //Pin#22  //应CZ要求，管脚改变，从GPIO#5改为GPIO#6，管脚从pin#18改为pin#22
+#define RPI_GPIO_PIN_MQ135_DATA 5  //Pin#18  //应CZ要求，管脚改变，从GPIO#5改为GPIO#6，管脚从pin#18改为pin#22
+#define RPI_GPIO_PIN_MQ3ALCO_DATA 26  //Pin#32
+#define RPI_GPIO_PIN_ZP01VOC_DATA 27  //Pin#36
 
 #define RPI_GPIO_HIGH_TIME 32
 #define RPI_GPIO_SENSOR_READ_GAP 60 //in second
@@ -48,6 +52,8 @@ OPSTAT func_gpio_int_init(void);
 UINT8 func_gpio_readSensorDht11Data(UINT32 pin);
 OPSTAT func_gpio_read_data_dht11(void);
 OPSTAT func_gpio_read_data_mq135(void);
+OPSTAT func_gpio_read_data_mq3alco(void);
+OPSTAT func_gpio_read_data_zp01voc(void);
 
 /*
  * Old inherit apigpio.h

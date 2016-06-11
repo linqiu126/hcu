@@ -46,6 +46,7 @@ FsmStateItem_t FsmToxicgas[] =
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 extern float zHcuGpioToxicgasMq135;
+extern float zHcuGpioToxicgasZp01voc;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -192,6 +193,7 @@ OPSTAT fsm_toxicgas_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 
 #ifdef TARGET_RASPBERRY_PI3B
 		if ((SENSOR_TOXICGAS_RPI_MQ135_PRESENT == SENSOR_TOXICGAS_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_MQ135 == HCU_SENSOR_PRESENT_YES)) func_toxicgas_time_out_read_data_from_mq135();
+		if ((SENSOR_TOXICGAS_RPI_ZP01VOC_PRESENT == SENSOR_TOXICGAS_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_ZP01VOC == HCU_SENSOR_PRESENT_YES)) func_toxicgas_time_out_read_data_from_zp01voc();
 #endif
 
 		//目前在非树莓派条件下，DO NOTHING
@@ -226,5 +228,28 @@ OPSTAT func_toxicgas_time_out_read_data_from_mq135(void)
 	return SUCCESS;
 }
 
+//暂时没考虑发送给后台云平台
+OPSTAT func_toxicgas_time_out_read_data_from_zp01voc(void)
+{
+	int ret=0;
 
+	//存入数据库
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioToxicgasZp01voc >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuGpioToxicgasZp01voc <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
+	{
+		sensor_toxicgas_zp01voc_data_element_t toxicgasData;
+		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_zp01voc_data_element_t));
+		toxicgasData.equipid = 0;
+		toxicgasData.timeStamp = time(0);
+		toxicgasData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		toxicgasData.toxicgasValue = (int)(zHcuGpioToxicgasZp01voc*100);
+
+		ret = dbi_HcuToxicgasZp01vocDataInfo_save(&toxicgasData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TOXICGAS]++;
+			HcuErrorPrint("TOXICGAS: Can not save ToxicgasZp01voc data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
 

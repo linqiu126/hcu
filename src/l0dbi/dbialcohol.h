@@ -18,7 +18,8 @@
 extern OPSTAT dbi_HcuAlcoholDataInfo_save(sensor_alcohol_data_element_t *alcoholData);
 extern OPSTAT dbi_HcuAlcoholDataInfo_inqury_1st_record(UINT32 deviceid, sensor_alcohol_data_element_t *alcoholData);
 extern OPSTAT dbi_HcuAlcoholDataInfo_delete_3monold(UINT32 days);
-
+extern OPSTAT dbi_HcuAlcoholMq3alcoDataInfo_save(sensor_alcohol_mq3alco_data_element_t *alcoholData);
+extern OPSTAT dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(UINT32 days);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

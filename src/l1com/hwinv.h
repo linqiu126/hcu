@@ -365,12 +365,15 @@ extern OPSTAT dbi_HcuAirprsDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuCo1DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuLightstrDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuAlcoholDataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuHchoDataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuToxicgasDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuSyspmGlobalDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuLightstrBh1750DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuAirprsBmp180DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuToxicgasMq135DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(UINT32 days);
 

@@ -1112,9 +1112,12 @@ void func_hwinv_scan_db(void)
 		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 	}
 }

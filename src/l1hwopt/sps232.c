@@ -95,28 +95,6 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuDebugPrint("SPS232: Enter FSM_STATE_SPS232_ACTIVED status, Keeping refresh here!\n");
 	}
 
-	/*
-	//进入阻塞式接收数据状态，然后继续发送
-	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给CLOUDCONT
-			msg_struct_sps232_modbus_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_sps232_modbus_data_rx_t));
-			snd.length = sizeof(msg_struct_sps232_modbus_data_rx_t);
-			ret = hcu_message_send(MSG_ID_SPS232_MODBUS_DATA_RX, TASK_ID_MODBUS, TASK_ID_SPS232, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_SPS232]++;
-				HcuErrorPrint("SPS232: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPS232], zHcuTaskNameList[TASK_ID_MODBUS]);
-				return FAILURE;
-			}
-		}
-
-		hcu_sleep(5);
-	}
-	*/
-
 	return SUCCESS;
 }
 

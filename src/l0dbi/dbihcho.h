@@ -18,7 +18,8 @@
 extern OPSTAT dbi_HcuHchoDataInfo_save(sensor_hcho_data_element_t *hchoData);
 extern OPSTAT dbi_HcuHchoDataInfo_inqury_1st_record(UINT32 deviceid, sensor_hcho_data_element_t *hchoData);
 extern OPSTAT dbi_HcuHchoDataInfo_delete_3monold(UINT32 days);
-
+extern OPSTAT dbi_HcuHcHoZe08ch2oDataInfo_save(sensor_hcho_ze08ch2o_data_element_t *hchoData);
+extern OPSTAT dbi_HcuHcHoZe08ch2oDataInfo_delete_3monold(UINT32 days);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

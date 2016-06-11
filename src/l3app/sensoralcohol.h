@@ -23,6 +23,11 @@ enum FSM_STATE_ALCOHOL
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+#define SENSOR_ALCOHOL_RPI_PRESENT_TRUE 1
+#define SENSOR_ALCOHOL_RPI_PRESENT_FALSE 0
+#define SENSOR_ALCOHOL_RPI_MQ3ALCO_PRESENT SENSOR_ALCOHOL_RPI_PRESENT_TRUE
+extern OPSTAT func_alcohol_time_out_read_data_from_mq3alco(void);
+
 //Global variables
 extern FsmStateItem_t FsmAlcohol[];
 
@@ -34,5 +39,9 @@ extern OPSTAT fsm_alcohol_time_out(UINT32 dest_id, UINT32 src_id, void * param_p
 
 //Local API
 OPSTAT func_alcohol_int_init(void);
+
+//引用外部API
+extern OPSTAT dbi_HcuAlcoholDataInfo_save(sensor_alcohol_data_element_t *alcoholData);
+extern OPSTAT dbi_HcuAlcoholMq3alcoDataInfo_save(sensor_alcohol_mq3alco_data_element_t *alcoholData);
 
 #endif /* L3APP_SENSORALCOHOL_H_ */

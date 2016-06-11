@@ -23,6 +23,10 @@ enum FSM_STATE_HCHO
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+#define SENSOR_HCHO_RPI_PRESENT_TRUE 1
+#define SENSOR_HCHO_RPI_PRESENT_FALSE 0
+#define SENSOR_HCHO_RPI_ZE08CH2O_PRESENT SENSOR_HCHO_RPI_PRESENT_TRUE
+
 //Global variables
 extern FsmStateItem_t FsmHcho[];
 
@@ -34,5 +38,9 @@ extern OPSTAT fsm_hcho_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 
 //Local API
 OPSTAT func_hcho_int_init(void);
+
+//引用外部API
+extern OPSTAT dbi_HcuHchoDataInfo_save(sensor_hcho_data_element_t *hchoData);
+extern OPSTAT dbi_HcuHchoZe08ch2oDataInfo_save(sensor_hcho_ze08ch2o_data_element_t *hchoData);
 
 #endif /* L3APP_SENSORHCHO_H_ */
