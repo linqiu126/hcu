@@ -30,8 +30,8 @@ extern float zHcuSps232Pm25Sharp;
 extern float zHcuSps232HchoZe08ch2o;
 
 
-#define RPI_SPS232_READ_REPEAT_TIMES 10
-#define RPI_SPS232_SENSOR_READ_GAP 60 //in second
+#define RPI_SPS232_READ_REPEAT_TIMES 3
+#define RPI_SPS232_SENSOR_READ_GAP 20 //in second
 
 //API
 extern OPSTAT fsm_sps232_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
