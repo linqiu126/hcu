@@ -26,8 +26,12 @@ src/l1hwopt/sps232.d: ../src/l1hwopt/sps232.c \
  ../src/l1hwopt/../l1hwopt/../l0comvm/../l0comvm/sysversion.h \
  ../src/l1hwopt/../l1hwopt/../l0comvm/../l0comvm/sysengpar.h \
  ../src/l1hwopt/../l1hwopt/../l0comvm/../l0comvm/sysengpar.h \
+ ../src/l1hwopt/../l1hwopt/../l1hwopt/sps485.h \
+ ../src/l1hwopt/../l1hwopt/../l1hwopt/../l0comvm/vmlayer.h \
  ../src/l1hwopt/../l0service/trace.h \
- ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h
+ ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h \
+ ../src/l1hwopt/../l1com/l1comdef.h \
+ ../src/l1hwopt/../l1com/../l0comvm/vmlayer.h
 
 ../src/l1hwopt/../l1hwopt/sps232.h:
 
@@ -91,6 +95,14 @@ src/l1hwopt/sps232.d: ../src/l1hwopt/sps232.c \
 
 ../src/l1hwopt/../l1hwopt/../l0comvm/../l0comvm/sysengpar.h:
 
+../src/l1hwopt/../l1hwopt/../l1hwopt/sps485.h:
+
+../src/l1hwopt/../l1hwopt/../l1hwopt/../l0comvm/vmlayer.h:
+
 ../src/l1hwopt/../l0service/trace.h:
 
 ../src/l1hwopt/../l0service/../l0comvm/vmlayer.h:
+
+../src/l1hwopt/../l1com/l1comdef.h:
+
+../src/l1hwopt/../l1com/../l0comvm/vmlayer.h:
