@@ -876,6 +876,13 @@ typedef struct  sensor_alcohol_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_alcohol_data_element_t;
+typedef struct  sensor_alcohol_mq3alco_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 alcoholValue;
+	UINT32 timeStamp;
+}sensor_alcohol_mq3alco_data_element_t;
 typedef struct  sensor_hcho_data_element //
 {
 	UINT32 equipid;
@@ -886,6 +893,13 @@ typedef struct  sensor_hcho_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_hcho_data_element_t;
+typedef struct  sensor_hcho_ze08ch2o_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 hchoValue;
+	UINT32 timeStamp;
+}sensor_hcho_ze08ch2o_data_element_t;
 typedef struct  sensor_toxicgas_data_element //
 {
 	UINT32 equipid;
@@ -903,6 +917,13 @@ typedef struct  sensor_toxicgas_mq135_data_element //
 	UINT32 toxicgasValue;
 	UINT32 timeStamp;
 }sensor_toxicgas_mq135_data_element_t;
+typedef struct  sensor_toxicgas_zp01voc_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 toxicgasValue;
+	UINT32 timeStamp;
+}sensor_toxicgas_zp01voc_data_element_t;
 //缺省消息都使用UINT32进行定义，在内存不是最重要的制约因素下，这种统一的方式，是为了更加不容易出错，不用在不同
 //长度的字型之间进行转换。如果遇到INT类型，直接强制转换即可，符号单独处理
 //message definition

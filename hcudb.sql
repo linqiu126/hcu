@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 03, 2016 at 10:21 AM
+-- Generation Time: Jun 11, 2016 at 01:32 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -1903,6 +1903,28 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
   `onofflineflag` int(2) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcualcoholmq3alcodatainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `deviceid` int(4) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `dataformat` int(1) NOT NULL,
+  `alcoholvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `hcualcoholmq3alcodatainfo`
+--
+
+INSERT INTO `hcualcoholmq3alcodatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `alcoholvalue`) VALUES
+(1, 3, 2, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -3809,6 +3831,28 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
   `onofflineflag` int(2) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcuhchoze08ch2odatainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `deviceid` int(4) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `dataformat` int(1) NOT NULL,
+  `hchovalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `hcuhchoze08ch2odatainfo`
+--
+
+INSERT INTO `hcuhchoze08ch2odatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `hchovalue`) VALUES
+(1, 3, 2, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -8899,6 +8943,28 @@ INSERT INTO `hcutoxicgasmq135datainfo` (`sid`, `deviceid`, `timestamp`, `datafor
 (1815, 0, 1464384335, 3, 0),
 (1816, 0, 1464389507, 3, 0),
 (1817, 0, 1464390107, 3, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcutoxicgaszp01vocdatainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `deviceid` int(4) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `dataformat` int(1) NOT NULL,
+  `toxicgasvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `hcutoxicgaszp01vocdatainfo`
+--
+
+INSERT INTO `hcutoxicgaszp01vocdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `toxicgasvalue`) VALUES
+(1, 3, 2, 1, 4);
 
 -- --------------------------------------------------------
 

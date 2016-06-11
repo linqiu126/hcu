@@ -44,6 +44,25 @@ VALUES (
 '2', '3', '2', '2', '4', 'n', '5', 'w', '6', '7', '8'
 );
 
+CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `deviceid` int(4) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `dataformat` int(1) NOT NULL,
+  `alcoholvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+INSERT INTO `hcudb`.`hcualcoholmq3alcodatainfo` (
+`sid` ,
+`deviceid` ,
+`timestamp` ,
+`dataformat`,
+`alcoholvalue`
+)
+VALUES (
+'1', '3', '2', '1', '4');
+
 */
 
 //存储ALCOHOL数据，每一次存储，都是新增一条记录
@@ -208,4 +227,91 @@ OPSTAT dbi_HcuAlcoholDataInfo_delete_3monold(UINT32 days)
     return SUCCESS;
 }
 
+//存储ALCOHOL数据，每一次存储，都是新增一条记录
+//由于是本地数据库，这里不考虑网格问题，直接存储，简单处理
+OPSTAT dbi_HcuAlcoholMq3alcoDataInfo_save(sensor_alcohol_mq3alco_data_element_t *alcoholData)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (alcoholData == NULL){
+    	HcuErrorPrint("DBIALCOHOL: Input parameter NULL pointer!\n");
+        return FAILURE;
+    }
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIALCOHOL: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIALCOHOL: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//存入新的数据
+    sprintf(strsql, "INSERT INTO `hcualcoholmq3alcodatainfo` (deviceid, timestamp, dataformat, alcoholvalue) VALUES \
+    		('%d', '%d', '%d', '%d')", alcoholData->equipid, alcoholData->timeStamp, alcoholData->dataFormat, alcoholData->alcoholValue);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIALCOHOL: INSERT data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("DBIALCOHOL: ALCOHOL MQ3ALCO data record save to DB!\n");
+	}
+    return SUCCESS;
+}
+
+//删除对应用户所有超过90天的数据
+//缺省做成90天，如果参数错误，导致90天以内的数据强行删除，则不被认可
+OPSTAT dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(UINT32 days)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+    UINT32 cursec = 0;
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (days < ALCOHOL_DATA_SAVE_DAYS_MIN) days = ALCOHOL_DATA_SAVE_DAYS_MIN;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIALCOHOL: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIALCOHOL: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//删除满足条件的数据
+    cursec = time(NULL);
+    days = days * 24 * 3600;
+    sprintf(strsql, "DELETE FROM `hcualcoholmq3alcodatainfo` WHERE (%d - `timestamp` > '%d')", cursec, days);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIALCOHOL: INSET data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
 

@@ -150,8 +150,78 @@ OPSTAT func_hcho_int_init(void)
 
 OPSTAT fsm_hcho_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret;
+
+	//Receive message and copy to local variable
+	msg_struct_com_time_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
+		HcuErrorPrint("HCHO: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_HCHO]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_HCHO]是否超限
+	if (zHcuRunErrCnt[TASK_ID_HCHO] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+		//减少重复RESTART的概率
+		zHcuRunErrCnt[TASK_ID_HCHO] = zHcuRunErrCnt[TASK_ID_HCHO] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		msg_struct_com_restart_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
+		snd0.length = sizeof(msg_struct_com_restart_t);
+		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_HCHO, TASK_ID_HCHO, &snd0, snd0.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_HCHO]++;
+			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HCHO], zHcuTaskNameList[TASK_ID_HCHO]);
+			return FAILURE;
+		}
+	}
+
+	//Period time out received
+	if ((rcv.timeId == TIMER_ID_1S_HCHO_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//保护周期读数的优先级，强制抢占状态，并简化问题
+		if (FsmGetState(TASK_ID_HCHO) != FSM_STATE_HCHO_ACTIVED){
+			ret = FsmSetState(TASK_ID_HCHO, FSM_STATE_HCHO_ACTIVED);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_HCHO]++;
+				HcuErrorPrint("HCHO: Error Set FSM State!\n");
+				return FAILURE;
+			}//FsmSetState
+		}
+
+#ifdef TARGET_RASPBERRY_PI3B
+		if ((SENSOR_HCHO_RPI_ZE08CH2O_PRESENT == SENSOR_HCHO_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_ZE08CH2O == HCU_SENSOR_PRESENT_YES)) func_hcho_time_out_read_data_from_ze08ch2o();
+#endif
+
+		//目前在非树莓派条件下，DO NOTHING
+	}
+
 	return SUCCESS;
 }
 
+//暂时没考虑发送给后台云平台
+OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void)
+{
+	int ret=0;
+	float ze08ch2oValue = 0;
 
+	//存入数据库
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (ze08ch2oValue >= HCU_SENSOR_HCHO_VALUE_MIN) && (ze08ch2oValue <= HCU_SENSOR_HCHO_VALUE_MAX))
+	{
+		sensor_hcho_ze08ch2o_data_element_t hchoData;
+		memset(&hchoData, 0, sizeof(sensor_hcho_ze08ch2o_data_element_t));
+		hchoData.equipid = 0;
+		hchoData.timeStamp = time(0);
+		hchoData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+		hchoData.hchoValue = (int)(ze08ch2oValue*100);
+
+		ret = dbi_HcuHchoZe08ch2oDataInfo_save(&hchoData);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_HCHO]++;
+			HcuErrorPrint("HCHO: Can not save HchoZe08ch2o data into database!\n");
+		}
+	}
+
+	return SUCCESS;
+}
 
