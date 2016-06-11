@@ -167,6 +167,7 @@ OPSTAT func_sps232_int_init(void)
 }
 
 
+//读取PM25SHARP传感器的串口数据
 OPSTAT func_sps232_read_data_pm25sharp(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
@@ -183,77 +184,76 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 	unsigned char pm25_frame_received_buff[7];
 	int start_time, end_time;
 	float average_pm25, sum_2s = 0;
-	//sensor_pm25_sharp_data_element_t pm25Data;
 
 	//起始时间
 	start_time = time((time_t*)NULL);
 
 	//读取数据
-
 	nread = hcu_sps485_serial_port_get(&gSerialPortForSPS232, &received_single_byte, 1);
-	if (nread > 0)
+	if (nread <=0)
 	{
-		//起始位是0xAA
-		if(received_single_byte == 0xaa){
-		  j=0;
-		  pm25_frame_received_buff[j] = received_single_byte;
-		}
-		else{
-		  j++;
-		  pm25_frame_received_buff[j] = received_single_byte;
-		}
+		HcuErrorPrint("SPS232: Sensor PM25Sharp Read data error!\n");
+		zHcuRunErrCnt[TASK_ID_SPS232]++;
+		return FAILURE;
+	}
 
-		if(j==6)
-		{
-		  sum = pm25_frame_received_buff[1]+ pm25_frame_received_buff[2]+ pm25_frame_received_buff[3] + pm25_frame_received_buff[4];
-		  //log_debug(logfile,"Bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-		  if(pm25_frame_received_buff[5]==sum && pm25_frame_received_buff[6]== 0xff ) //终止位是0xFF
+	//帧解码，起始位是0xAA
+	if(received_single_byte == 0xaa){
+	  j=0;
+	  pm25_frame_received_buff[j] = received_single_byte;
+	}
+	else{
+	  j++;
+	  pm25_frame_received_buff[j] = received_single_byte;
+	}
+
+	if(j==6)
+	{
+	  sum = pm25_frame_received_buff[1]+ pm25_frame_received_buff[2]+ pm25_frame_received_buff[3] + pm25_frame_received_buff[4];
+	  //log_debug(logfile,"Bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+	  if(pm25_frame_received_buff[5]==sum && pm25_frame_received_buff[6]== 0xff ) //终止位是0xFF
+	  {
+		  vo=(pm25_frame_received_buff[1]*256.0+pm25_frame_received_buff[2])/1024.00*5.000;
+		  pm25value = vo*700;
+		  //log_debug(logfile,"pm25 value is:%f",pm25value);
+		  //2秒内的平均值求取
+		  counter++;
+		  sum_2s = sum_2s + pm25value;
+		  end_time = time((time_t*)NULL);
+		  if((end_time - start_time) > 2)
 		  {
-			  vo=(pm25_frame_received_buff[1]*256.0+pm25_frame_received_buff[2])/1024.00*5.000;
-			  pm25value = vo*700;
-			  //log_debug(logfile,"pm25 value is:%f",pm25value);
-			  //2秒内的平均值求取
-			  counter++;
-			  sum_2s = sum_2s + pm25value;
-			  end_time = time((time_t*)NULL);
-			  if((end_time - start_time) > 2)
-			  {
-				  //log_debug(logfile,"Last bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-				  HcuDebugPrint("SPS232: Sensor PM25Sharp sast bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-				  zHcuSps232Pm25Sharp = sum_2s / counter;
-				  HcuDebugPrint("SPS232: Sensor PM25Sharp start_time is %d, end_time is %d, counter in 2 seconds is %d, sum_2s is %f, average_pm25 value is:%f \n", start_time, end_time, counter, sum_2s, average_pm25);
-				  counter = 0;
-				  sum_2s = 0;
-				  start_time = time((time_t*)NULL);
-				  HcuDebugPrint("SPS232: Sensor PM25Sharp counter_good_frame is: %d, counter_total_frame is: %d.\n",counter_good_frame, counter_total_frame);
-			  }
-			  counter_good_frame++;
-			  //log_debug(logfile,"counter_good_frame is: %d.",counter_good_frame);
+			  //log_debug(logfile,"Last bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+			  HcuDebugPrint("SPS232: Sensor PM25Sharp sast bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+			  zHcuSps232Pm25Sharp = sum_2s / counter;
+			  HcuDebugPrint("SPS232: Sensor PM25Sharp start_time is %d, end_time is %d, counter in 2 seconds is %d, sum_2s is %f, average_pm25 value is:%f \n", start_time, end_time, counter, sum_2s, average_pm25);
+			  counter = 0;
+			  sum_2s = 0;
+			  start_time = time((time_t*)NULL);
+			  HcuDebugPrint("SPS232: Sensor PM25Sharp counter_good_frame is: %d, counter_total_frame is: %d.\n",counter_good_frame, counter_total_frame);
 		  }
-		  else
-		  {
-			  counter_bad_frame++;
-			  HcuDebugPrint("SPS232: Sensor PM25Sharp counter_bad_frame is: %d.",counter_bad_frame);
-		  }
-		  counter_total_frame++;
-		  //log_debug(logfile,"counter_total_frame is: %d.\n",counter_total_frame);
-		  //PM25计算和输出完成之后相关变量清零
-		  j=0;
-		  received_single_byte='\0';
-		  for(i=0;i<7;i++){
-			  pm25_frame_received_buff[i]=0;
-		  }
+		  counter_good_frame++;
+		  //log_debug(logfile,"counter_good_frame is: %d.",counter_good_frame);
+	  }
+	  else
+	  {
+		  counter_bad_frame++;
+		  HcuDebugPrint("SPS232: Sensor PM25Sharp counter_bad_frame is: %d.",counter_bad_frame);
+	  }
+	  counter_total_frame++;
+	  //log_debug(logfile,"counter_total_frame is: %d.\n",counter_total_frame);
+	  //PM25计算和输出完成之后相关变量清零
+	  j=0;
+	  received_single_byte='\0';
+	  for(i=0;i<7;i++){
+		  pm25_frame_received_buff[i]=0;
+	  }
 
-		}
-		else
-		{
-
-		}
 	}
 	else
 	{
-		HcuDebugPrint("SPS232: Sensor PM25Sharp Read(fd, &received_single_byte, 1) error!\n");
+
 	}
+
 
 
 	return SUCCESS;
@@ -263,10 +263,40 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 #endif
 }
 
+//读取甲醛的数据
 OPSTAT func_sps232_read_data_ze08ch2o(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
+	int hcho, i;
+	float hchoSum = 0;
+	int nread = 0;
+	UINT8 received_byte;
+	UINT8 rb[19];
 
+	hchoSum = 0;
+	nread = hcu_sps485_serial_port_get(&gSerialPortForSPS232, rb, 18);
+	HcuDebugPrint("SPS232: Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n", rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10], rb[11], rb[12], rb[13], rb[14], rb[15], rb[16], rb[17]);
+
+/*	for (i=0; i<RPI_GPIO_READ_REPEAT_TIMES; i++){
+		nread = hcu_sps485_serial_port_get(&gSerialPortForSPS232, &received_single_byte, 18);
+		if (nread <=0)
+		{
+			HcuErrorPrint("SPS232: Sensor ZE08CH2O Read data error!\n");
+			zHcuRunErrCnt[TASK_ID_SPS232]++;
+		}
+		//读取数据正常
+		else{
+
+
+
+		}
+	}
+*/
+	//求平均
+	zHcuSps232HchoZe08ch2o = hchoSum / RPI_SPS232_READ_REPEAT_TIMES;
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("SPS232: Sensor ZE08CH2O Transformed float average read result pollution= %d\n", (int)zHcuSps232HchoZe08ch2o);
+	}
 
 	return SUCCESS;
 #else
