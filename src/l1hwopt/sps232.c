@@ -8,6 +8,7 @@
 #include "../l1hwopt/sps232.h"
 
 #include "../l0service/trace.h"
+#include "../l1com/l1comdef.h"
 
 /*
 ** FSM of the SPS232
@@ -37,6 +38,10 @@ FsmStateItem_t FsmSps232[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+//For Serial Port Init
+SerialPort_t gSerialPortForSPS232;
+
+float zHcuPm25Sharp;
 
 
 //Main Entry
@@ -52,7 +57,7 @@ OPSTAT fsm_sps232_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 
 OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -84,6 +89,8 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Global variables
 	zHcuRunErrCnt[TASK_ID_SPS232] = 0;
+	zHcuPm25Sharp = HCU_SENSOR_VALUE_NULL;
+
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPS232, FSM_STATE_SPS232_RECEIVED) == FAILURE){
@@ -93,6 +100,20 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPS232: Enter FSM_STATE_SPS232_ACTIVED status, Keeping refresh here!\n");
+	}
+
+	int workingCycle = 1;
+	//进入循环工作模式
+	while(1){
+		conCounter = 0;
+		if (HCU_SENSOR_PRESENT_SHARP == HCU_SENSOR_PRESENT_YES){
+			func_sps232_read_data_pm25sharp();
+			hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle);
+			conCounter++;
+		}
+
+		conCounter = workingCycle-conCounter;
+		hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle * conCounter);
 	}
 
 	return SUCCESS;
@@ -108,6 +129,150 @@ OPSTAT fsm_sps232_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 OPSTAT func_sps232_int_init(void)
 {
+	//初始化硬件接口
+	gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
+	gSerialPortForSPS232.nSpeed = 2400;
+	gSerialPortForSPS232.nBits = 8;
+	gSerialPortForSPS232.nEvent = 'N';
+	gSerialPortForSPS232.nStop = 1;
+	gSerialPortForSPS232.fd = HCU_INVALID_U16;
+	gSerialPortForSPS232.vTime = HCU_INVALID_U8;
+	gSerialPortForSPS232.vMin = HCU_INVALID_U8;
+	gSerialPortForSPS232.c_lflag = 0;
+
+	int ret=0;
+
+	ret = hcu_sps485_serial_init(&gSerialPortForSPS232);
+	if (FAILURE == ret)
+	{
+		HcuErrorPrint("SPSRS232: Init Serial Port Failure, Exit.\n");
+		return ret;
+	}
+	else
+	{
+		HcuDebugPrint("SPSRS232: Init Serial Port Success ...\n");
+	}
+
+	SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
+	HcuDebugPrint("SPSRS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForSPS232.vTime, gSerialPortForSPS232.vMin);
+
+
 	return SUCCESS;
 }
+
+
+OPSTAT func_sps232_read_data_pm25sharp(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+
+	int ret = 0;
+	int nread;
+	int i=0,j=0,sum=0,counter=0;
+	int counter_good_frame = 0;
+	int counter_bad_frame = 0;
+	int counter_total_frame = 0;
+	float vo;
+	float pm25value;
+	unsigned char received_single_byte;
+	unsigned char pm25_frame_received_buff[7];
+	int start_time, end_time;
+	float average_pm25, sum_2s = 0;
+	//sensor_pm25_sharp_data_element_t pm25Data;
+
+	//起始时间
+	start_time = time((time_t*)NULL);
+
+	//读取数据
+
+	nread = hcu_sps485_serial_port_get(&gSerialPortForSPS232, &received_single_byte, 1);
+	if (nread > 0)
+	{
+		//起始位是0xAA
+		if(received_single_byte == 0xaa){
+		  j=0;
+		  pm25_frame_received_buff[j] = received_single_byte;
+		}
+		else{
+		  j++;
+		  pm25_frame_received_buff[j] = received_single_byte;
+		}
+
+		if(j==6)
+		{
+		  sum = pm25_frame_received_buff[1]+ pm25_frame_received_buff[2]+ pm25_frame_received_buff[3] + pm25_frame_received_buff[4];
+		  //log_debug(logfile,"Bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+		  if(pm25_frame_received_buff[5]==sum && pm25_frame_received_buff[6]== 0xff ) //终止位是0xFF
+		  {
+			  vo=(pm25_frame_received_buff[1]*256.0+pm25_frame_received_buff[2])/1024.00*5.000;
+			  pm25value = vo*700;
+			  //log_debug(logfile,"pm25 value is:%f",pm25value);
+			  //2秒内的平均值求取
+			  counter++;
+			  sum_2s = sum_2s + pm25value;
+			  end_time = time((time_t*)NULL);
+			  if((end_time - start_time) > 2)
+			  {
+				  //log_debug(logfile,"Last bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+				  HcuDebugPrint("SPSRS232: Sensor PM25Sharp sast bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+				  zHcuPm25Sharp = sum_2s / counter;
+
+				  /*
+
+				  if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (average_pm25 >= HCU_SENSOR_PM25_VALUE_MIN) && (average_pm25 <= HCU_SENSOR_PM25_VALUE_MAX))
+				  {
+					  memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
+					  pm25Data.equipid = 0;
+					  pm25Data.timeStamp = time(0);
+					  pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+					  pm25Data.pm2d5Value = (int)(average_pm25*100);
+					  ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
+					  if (ret == FAILURE){
+							zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
+							HcuErrorPrint("PM25SHARP: Can not save data into database!\n");
+					  }
+
+				  }
+				  */
+				  HcuDebugPrint("SPSRS232: Sensor PM25Sharp start_time is %d, end_time is %d, counter in 2 seconds is %d, sum_2s is %f, average_pm25 value is:%f \n", start_time, end_time, counter, sum_2s, average_pm25);
+				  counter = 0;
+				  sum_2s = 0;
+				  start_time = time((time_t*)NULL);
+				  HcuDebugPrint("SPSRS232: Sensor PM25Sharp counter_good_frame is: %d, counter_total_frame is: %d.\n",counter_good_frame, counter_total_frame);
+			  }
+			  counter_good_frame++;
+			  //log_debug(logfile,"counter_good_frame is: %d.",counter_good_frame);
+		  }
+		  else
+		  {
+			  counter_bad_frame++;
+			  HcuDebugPrint("SPSRS232: Sensor PM25Sharp counter_bad_frame is: %d.",counter_bad_frame);
+		  }
+		  counter_total_frame++;
+		  //log_debug(logfile,"counter_total_frame is: %d.\n",counter_total_frame);
+		  //PM25计算和输出完成之后相关变量清零
+		  j=0;
+		  received_single_byte='\0';
+		  for(i=0;i<7;i++){
+			  pm25_frame_received_buff[i]=0;
+		  }
+
+		}
+		else
+		{
+
+		}
+	}
+	else
+	{
+		HcuDebugPrint("SPSRS232: Sensor PM25Sharp Read(fd, &received_single_byte, 1) error!\n");
+	}
+
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
 
