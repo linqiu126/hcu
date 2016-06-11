@@ -86,6 +86,7 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
+	/*
 	//初始化硬件接口
 	gSerialPortForPm25Sharp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
 	gSerialPortForPm25Sharp.nSpeed = 2400;
@@ -110,18 +111,20 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	SerialPortSetVtimeVmin(&gSerialPortForPm25Sharp, 10, 5);
 	HcuDebugPrint("PM25SHARP: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForPm25Sharp.vTime, gSerialPortForPm25Sharp.vMin);
-
+    */
 
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_PM25SHARP] = 0;
 
 	//启动周期性定时器
+	/*
 	ret = hcu_timer_start(TASK_ID_PM25SHARP, TIMER_ID_1S_PM25SHARP_PERIOD_READ, zHcuSysEngPar.timer.pm25sharpReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
 		HcuErrorPrint("PM25SHARP: Error start period timer!\n");
 		return FAILURE;
 	}
+	*/
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_PM25SHARP, FSM_STATE_PM25SHARP_ACTIVED) == FAILURE){
