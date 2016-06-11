@@ -1,4 +1,5 @@
 *.log
 *.o
 *.dat
+*.d
 /X86_dev/
