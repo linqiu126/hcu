@@ -656,9 +656,8 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 >> 	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
 >>  PM25SHARP需要修改为一样的机制
 问题2：长时间运行SLEEP会被打断
-
-== Update log: 2016 June.5 SW Version: XQ.HCU.SW.R01.094 //多人修改中，还未形成正式版本
 >>M25SHARP修改为非阻塞机制
+
 
 
 
