@@ -715,7 +715,7 @@ typedef struct  HcuInventoryInfo
 #define HCU_SENSOR_CO1_VALUE_MAX 10000
 #define HCU_SENSOR_EMC_VALUE_MIN 0  //in mv/cm2
 #define HCU_SENSOR_EMC_VALUE_MAX 10000
-#define HCU_SENSOR_HCHO_VALUE_MIN 0  //in mg/L
+#define HCU_SENSOR_HCHO_VALUE_MIN 0  //in ppb，跟ug/m3之间的换算，待定
 #define HCU_SENSOR_HCHO_VALUE_MAX 10000
 #define HCU_SENSOR_ALCOHOL_VALUE_MIN 0  //in mg/L
 #define HCU_SENSOR_ALCOHOL_VALUE_MAX 10000

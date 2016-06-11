@@ -67,7 +67,7 @@ sensor_modbus_opertion_general_t zPM25ConfigData;//Added by Shanchun to save sen
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
 //extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 extern float zHcuI2cPm25Bmpd300;
-extern float zHcuPm25Sharp;
+extern float zHcuSps232Pm25Sharp;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -1019,14 +1019,14 @@ OPSTAT func_pm25_time_out_read_data_from_sharp(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuPm25Sharp >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuPm25Sharp <= HCU_SENSOR_PM25_VALUE_MAX))
+	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSps232Pm25Sharp >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuSps232Pm25Sharp <= HCU_SENSOR_PM25_VALUE_MAX))
 	{
 		sensor_pm25_sharp_data_element_t pm25Data;
 		memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
 		pm25Data.equipid = 0;
 		pm25Data.timeStamp = time(0);
 		pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		pm25Data.pm2d5Value = (int)(zHcuPm25Sharp*100);
+		pm25Data.pm2d5Value = (int)(zHcuSps232Pm25Sharp*100);
 
 		ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
 		if (ret == FAILURE){

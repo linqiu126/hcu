@@ -41,8 +41,8 @@ extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 //For Serial Port Init
 SerialPort_t gSerialPortForSPS232;
 
-float zHcuPm25Sharp;
-
+float zHcuSps232Pm25Sharp;
+float zHcuSps232HchoZe08ch2o;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -89,8 +89,8 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Global variables
 	zHcuRunErrCnt[TASK_ID_SPS232] = 0;
-	zHcuPm25Sharp = HCU_SENSOR_VALUE_NULL;
-
+	zHcuSps232Pm25Sharp = HCU_SENSOR_VALUE_NULL;
+	zHcuSps232HchoZe08ch2o = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPS232, FSM_STATE_SPS232_RECEIVED) == FAILURE){
@@ -102,7 +102,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuDebugPrint("SPS232: Enter FSM_STATE_SPS232_ACTIVED status, Keeping refresh here!\n");
 	}
 
-	int workingCycle = 1;
+	int workingCycle = 2;
 	//进入循环工作模式
 	while(1){
 		conCounter = 0;
@@ -111,7 +111,11 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 			hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-
+		if (HCU_SENSOR_PRESENT_ZE08CH2O == HCU_SENSOR_PRESENT_YES){
+			func_sps232_read_data_ze08ch2o();
+			hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle);
+			conCounter++;
+		}
 		conCounter = workingCycle-conCounter;
 		hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle * conCounter);
 	}
@@ -131,7 +135,9 @@ OPSTAT func_sps232_int_init(void)
 {
 	//初始化硬件接口
 	gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-	gSerialPortForSPS232.nSpeed = 2400;
+	//可能要根据每一种传感器，分别进行单次操作的初始化，待定待完善
+	if (HCU_SENSOR_PRESENT_SHARP == HCU_SENSOR_PRESENT_YES) gSerialPortForSPS232.nSpeed = 2400;
+	else gSerialPortForSPS232.nSpeed = 9600;
 	gSerialPortForSPS232.nBits = 8;
 	gSerialPortForSPS232.nEvent = 'N';
 	gSerialPortForSPS232.nStop = 1;
@@ -145,16 +151,16 @@ OPSTAT func_sps232_int_init(void)
 	ret = hcu_sps485_serial_init(&gSerialPortForSPS232);
 	if (FAILURE == ret)
 	{
-		HcuErrorPrint("SPSRS232: Init Serial Port Failure, Exit.\n");
+		HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
 		return ret;
 	}
 	else
 	{
-		HcuDebugPrint("SPSRS232: Init Serial Port Success ...\n");
+		HcuDebugPrint("SPS232: Init Serial Port Success ...\n");
 	}
 
 	SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
-	HcuDebugPrint("SPSRS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForSPS232.vTime, gSerialPortForSPS232.vMin);
+	HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForSPS232.vTime, gSerialPortForSPS232.vMin);
 
 
 	return SUCCESS;
@@ -213,31 +219,13 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 			  if((end_time - start_time) > 2)
 			  {
 				  //log_debug(logfile,"Last bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-				  HcuDebugPrint("SPSRS232: Sensor PM25Sharp sast bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-				  zHcuPm25Sharp = sum_2s / counter;
-
-				  /*
-
-				  if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (average_pm25 >= HCU_SENSOR_PM25_VALUE_MIN) && (average_pm25 <= HCU_SENSOR_PM25_VALUE_MAX))
-				  {
-					  memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
-					  pm25Data.equipid = 0;
-					  pm25Data.timeStamp = time(0);
-					  pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-					  pm25Data.pm2d5Value = (int)(average_pm25*100);
-					  ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
-					  if (ret == FAILURE){
-							zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
-							HcuErrorPrint("PM25SHARP: Can not save data into database!\n");
-					  }
-
-				  }
-				  */
-				  HcuDebugPrint("SPSRS232: Sensor PM25Sharp start_time is %d, end_time is %d, counter in 2 seconds is %d, sum_2s is %f, average_pm25 value is:%f \n", start_time, end_time, counter, sum_2s, average_pm25);
+				  HcuDebugPrint("SPS232: Sensor PM25Sharp sast bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
+				  zHcuSps232Pm25Sharp = sum_2s / counter;
+				  HcuDebugPrint("SPS232: Sensor PM25Sharp start_time is %d, end_time is %d, counter in 2 seconds is %d, sum_2s is %f, average_pm25 value is:%f \n", start_time, end_time, counter, sum_2s, average_pm25);
 				  counter = 0;
 				  sum_2s = 0;
 				  start_time = time((time_t*)NULL);
-				  HcuDebugPrint("SPSRS232: Sensor PM25Sharp counter_good_frame is: %d, counter_total_frame is: %d.\n",counter_good_frame, counter_total_frame);
+				  HcuDebugPrint("SPS232: Sensor PM25Sharp counter_good_frame is: %d, counter_total_frame is: %d.\n",counter_good_frame, counter_total_frame);
 			  }
 			  counter_good_frame++;
 			  //log_debug(logfile,"counter_good_frame is: %d.",counter_good_frame);
@@ -245,7 +233,7 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 		  else
 		  {
 			  counter_bad_frame++;
-			  HcuDebugPrint("SPSRS232: Sensor PM25Sharp counter_bad_frame is: %d.",counter_bad_frame);
+			  HcuDebugPrint("SPS232: Sensor PM25Sharp counter_bad_frame is: %d.",counter_bad_frame);
 		  }
 		  counter_total_frame++;
 		  //log_debug(logfile,"counter_total_frame is: %d.\n",counter_total_frame);
@@ -264,8 +252,20 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 	}
 	else
 	{
-		HcuDebugPrint("SPSRS232: Sensor PM25Sharp Read(fd, &received_single_byte, 1) error!\n");
+		HcuDebugPrint("SPS232: Sensor PM25Sharp Read(fd, &received_single_byte, 1) error!\n");
 	}
+
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
+OPSTAT func_sps232_read_data_ze08ch2o(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
 
 
 	return SUCCESS;

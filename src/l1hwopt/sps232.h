@@ -26,20 +26,22 @@ enum FSM_STATE_SPS232
 
 //Global variables
 extern FsmStateItem_t FsmSps232[];
+extern float zHcuSps232Pm25Sharp;
+extern float zHcuSps232HchoZe08ch2o;
+
+
+#define RPI_SPS232_READ_REPEAT_TIMES 10
+#define RPI_SPS232_SENSOR_READ_GAP 60 //in second
 
 //API
 extern OPSTAT fsm_sps232_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sps232_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
-OPSTAT func_sps232_read_data_pm25sharp(void); //PM25 sharp
-
-
 //Local API
 OPSTAT func_sps232_int_init(void);
 
-#define RPI_SPS232_READ_REPEAT_TIMES 10
-#define RPI_SPS232_SENSOR_READ_GAP 60 //in second
-
+OPSTAT func_sps232_read_data_pm25sharp(void); //PM25 sharp
+OPSTAT func_sps232_read_data_ze08ch2o(void); //甲醛
 
 #endif /* L1HWOPT_SPS232_H_ */
