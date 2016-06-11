@@ -26,6 +26,7 @@ enum FSM_STATE_HCHO
 #define SENSOR_HCHO_RPI_PRESENT_TRUE 1
 #define SENSOR_HCHO_RPI_PRESENT_FALSE 0
 #define SENSOR_HCHO_RPI_ZE08CH2O_PRESENT SENSOR_HCHO_RPI_PRESENT_TRUE
+extern OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void);
 
 //Global variables
 extern FsmStateItem_t FsmHcho[];
