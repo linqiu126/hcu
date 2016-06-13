@@ -46,7 +46,7 @@ FsmStateItem_t FsmPm25Sharp[] =
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
 //For Serial Port Init
-SerialPort_t gSerialPortForPm25Sharp;
+SerialPortCom_t gSerialPortForPm25Sharp;
 
 
 //Main Entry

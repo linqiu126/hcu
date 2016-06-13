@@ -661,22 +661,41 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 == Update log: 2016 June.11 SW Version: XQ.HCU.SW.R01.095 //ZJL
 > 增加有毒气体VOC ZP01，MQ3酒精传感器以及甲醛ZE08CH2O传感器
 > 同步修改的还有数据库
+> MQ3酒精传感器完成，完全复用范式
+> ZE08CH2O甲醛传感器使用串口，串口的基本功能通过minicom工具调好后，基本上可以工作了。
+> 在树莓派下，Pin#14/15管脚对应的TX/RX是ttyARM0，工参配置为0端口
+> ZE08CH2O的帧协议解码完成
+> PM25SHARP的帧协议解码重新撰写
+> ZP01VOC有毒气体传感器，还未拿到，待测试。
 
+== Update log: 2016 June.15 SW Version: XQ.HCU.SW.R01.096 //ZJL
+> 重点解决串口的问题
+> autorun改为l0autorun，以便对其其它目录。如果该目录下的hcu.sh也用到这个目录绝对路径，则需要同步修改
+> 去掉hw-inv中对磁盘的定时打印，太多太烦，不方便调试
+> SPS232相关的处理函数移动到SPSAPI.×中，然后直接调用它们
+> SPS232的串口初始化放到每一次进行，这样可以让不同速度的串口同时存在，而不互斥。
+> 由于外设的响应需要一分钟，导致每单次初始化串口之后必须等待1分钟才能再读取数据，整体读取速率将会变慢，但的确能正常工作。
+> 在实际多个串口外设工作的时候，还是需要按照下列方式进行配置，不然数据读取反应速度会极其慢
+	==> 为了设置串口传感器互斥，必须在SYSCONFIG中设置  #define HCU_SENSOR_PRESENT_SHARP HCU_SENSOR_PRESENT_NO
 
+== Update log: 2016 June.16 SW Version: XQ.HCU.SW.R01.097 //ZJL
+> 映射SPSAPI到SPS485，规范化SPS485模块功能
+> MODBUS的串口初始化移到SPS485模块中去了
+> 所有的其它任务，均直接调用SPSAPI，而不在是SPS485了。
+> 由于这次改动较大，直接做一个版本，提交到DEV，防止更多的错误
 
+== Update log: 2016 June.16 SW Version: XQ.HCU.SW.R01.098 //ZJL
+> 增加LED任务模块，以便单独完成LED相关的控制
+> 这个模块的增加，涉及到DBICOM等部分的修改，以及工程参数表单的修改，还有L3UI的修改，数据库的备份等。
+> 注意，该过了数据库，需要重新IMPORT数据库以及L3UI到目标地
 
-
-
-
-
-
-
-
-
-
-
-
-
+== Update log: 2016 June.16 SW Version: XQ.HCU.SW.R01.099 //ZJL
+> 按照传感器说明书，完善ZP01VOC功能
+> 实验LED以及马达功能
+> CLOUDVELA过于庞大，将其中的XML和ZHB两种编解码函数集合全部拆出来，形成独立的文件模块，分别为BHCODECXML及BHCODECZHB
+> LED自己编制的闪灯方案工作正常
+> PWM控制的LED闪灯工作正常
+> PWM控制的马达SG90偶尔工作一下，不能连续工作，待确定其正常工作的条件
 
 
 

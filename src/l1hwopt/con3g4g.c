@@ -561,7 +561,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, make sure BandRate is correct, via AT+IPR=<rate> firstly, usb Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -572,7 +572,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	else
 	{
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		return FAILURE;
 	}
@@ -583,7 +583,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, Serial Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -595,7 +595,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -604,7 +604,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -616,7 +616,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -627,7 +627,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -639,7 +639,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -650,7 +650,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -668,12 +668,12 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		zHcuRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS READ Realtime Clock failure, Usb Port COM%d closed ...\n");
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
 	/* return successfully */
-	SerialPortClose(fd);
+	spsapi_SerialPortClose(fd);
 	HcuDebugPrint("UsbUmtsCardInit: GPRS status checking OK.\n");
 
 	/* PPP Configuration File */

@@ -75,12 +75,12 @@ FsmStateItem_t FsmModbus[] =
 
 //extern global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern SerialPortCom_t gSerialPortMobus;
 
 //Task level global variables，该任务是单入的，所以两个传感器同时操作是不可以的
 UINT32 currentSensorEqpId;  //当前正在工作的传感器
 SerialModbusMsgBuf_t currentModbusBuf;
-//SerialPort_t gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
-SerialPort_t gSerialPort;
+
 //MYC 2015/12/08, For 335xD, RS485 is ttyO2 !!!
 
 //Main Entry
@@ -132,7 +132,42 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	currentSensorEqpId = 0;
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 	zHcuRunErrCnt[TASK_ID_MODBUS] = 0;
-/*
+
+	//这部分代码移到SPS485模块中去了，以便层次化程序结构
+	//初始化硬件端口
+//	gSerialPort.id = zHcuSysEngPar.serialport.SeriesPortForModbus;
+//	gSerialPort.nSpeed = 9600;
+//	gSerialPort.nBits = 8;
+//	gSerialPort.nEvent = 'N';
+//	gSerialPort.nStop = 1;
+//	gSerialPort.fd = HCU_INVALID_U16;
+//	gSerialPort.vTime = HCU_INVALID_U8;
+//	gSerialPort.vMin = HCU_INVALID_U8;
+//	gSerialPort.c_lflag = 0;
+//
+//	//gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
+//
+//	ret = hcu_sps485_serial_init(&gSerialPort);
+//	if (FAILURE == ret)
+//	{
+//		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+//		HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
+//	}
+//	else
+//	{
+//		HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
+//		//基本上不设置状态机，所有操作均为同步式，这样就不需要状态机了
+//		ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_ACTIVED);
+//		if (ret == FAILURE){
+//			zHcuRunErrCnt[TASK_ID_MODBUS]++;
+//			HcuErrorPrint("MODBUS: Error Set FSM State at fsm_modbus_init!\n");
+//			return FAILURE;
+//		}
+//	}
+//
+//	SerialPortSetVtimeVmin(&gSerialPort, 1, 20);
+//	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
+
 	//基本上不设置状态机，所有操作均为同步式，这样就不需要状态机了
 	ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_ACTIVED);
 	if (ret == FAILURE){
@@ -140,40 +175,6 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuErrorPrint("MODBUS: Error Set FSM State at fsm_modbus_init!\n");
 		return FAILURE;
 	}
-*/
-
-	gSerialPort.id = zHcuSysEngPar.serialport.SeriesPortForModbus;
-	gSerialPort.nSpeed = 9600;
-	gSerialPort.nBits = 8;
-	gSerialPort.nEvent = 'N';
-	gSerialPort.nStop = 1;
-	gSerialPort.fd = HCU_INVALID_U16;
-	gSerialPort.vTime = HCU_INVALID_U8;
-	gSerialPort.vMin = HCU_INVALID_U8;
-	gSerialPort.c_lflag = 0;
-
-	//gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
-
-	ret = hcu_sps485_serial_init(&gSerialPort);
-	if (FAILURE == ret)
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
-	}
-	else
-	{
-		HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
-		//基本上不设置状态机，所有操作均为同步式，这样就不需要状态机了
-		ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_ACTIVED);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_MODBUS]++;
-			HcuErrorPrint("MODBUS: Error Set FSM State at fsm_modbus_init!\n");
-			return FAILURE;
-		}
-	}
-
-	SerialPortSetVtimeVmin(&gSerialPort, 1, 20);
-	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
 
 	return SUCCESS;
 }
@@ -410,7 +411,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
     */
 
-	ret = hcu_sps485_serial_port_send(&gSerialPort, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -427,7 +428,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
@@ -588,7 +589,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
     */
 
-	ret = hcu_sps485_serial_port_send(&gSerialPort, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -605,7 +606,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH); //获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH); //获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
@@ -764,7 +765,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
     */
 
-	ret = hcu_sps485_serial_port_send(&gSerialPort, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -780,7 +781,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
@@ -938,7 +939,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	SerialPortSetVtimeVmin(&gSerialPort, 0, 9);
 	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
 */
-	ret = hcu_sps485_serial_port_send(&gSerialPort, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -956,7 +957,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//从相应的从设备中读取数据
 
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, 9); //获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, 9); //获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Received temp data length: %d \n ", ret);
@@ -1116,7 +1117,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
     */
 
-	ret = hcu_sps485_serial_port_send(&gSerialPort, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -1132,7 +1133,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 		 HcuDebugPrint("MODBUS: Len %d\n", ret);
@@ -1293,7 +1294,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
     */
 
-	ret = hcu_sps485_serial_port_send(&gSerialPort, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -1309,7 +1310,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 		 HcuDebugPrint("MODBUS: Len %d\n", ret);
@@ -2847,7 +2848,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 		HcuDebugPrint("MODBUS: Preparing send PM25 control cmd = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	ret = hcu_sps485_serial_port_send(&gSerialPort, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
@@ -2865,7 +2866,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
-	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Len %d  \n", ret);

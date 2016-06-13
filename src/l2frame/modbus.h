@@ -9,7 +9,7 @@
 #define L2FRAME_MODBUS_H_
 
 #include "../l0comvm/vmlayer.h"
-#include "../l1hwopt/sps485.h"
+#include "../l1hwopt/spsapi.h"
 #include "../l1com/l1comdef.h"
 
 //State definition
@@ -84,9 +84,9 @@ extern void CheckCRCModBus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
 extern UINT16 crc_ccitt(unsigned char *q, int len);
 
 //外部函数引用API by Shanchun
-extern UINT32 hcu_sps485_serial_init(SerialPort_t *sp);
-extern UINT32 hcu_sps485_serial_port_get(SerialPort_t *sp, UINT8 *send_buf, UINT32 Len);
-extern UINT32 hcu_sps485_serial_port_send(SerialPort_t *sp, UINT8 *rcv_buf, UINT32 Len);
+extern UINT32 hcu_sps485_serial_init(SerialPortCom_t *sp);
+extern UINT32 hcu_sps485_serial_port_get(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 Len);
+extern UINT32 hcu_sps485_serial_port_send(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Len);
 
 
 #endif /* L2FRAME_MODBUS_H_ */

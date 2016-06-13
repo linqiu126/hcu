@@ -9,7 +9,7 @@
 #define L1HWOPT_APIGPRS_H_
 
 #include "../l0comvm/vmlayer.h"
-#include "../l1hwopt/sps485.h"
+#include "../l1hwopt/spsapi.h"
 
 #define MAX_AT_COMMOND_REPLY	8
 
@@ -37,17 +37,17 @@ typedef struct GprsPppdConf
 
 /* System Information */
 SysInfo_t gSysInfo;
-SerialPort_t gSerialPortGprs;
+SerialPortCom_t gSerialPortGprs;
 GprsPppdConf_t gGprsPppdConf;
 /*
  * Function API prototype for Serial Port
  */
-UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc);
+UINT32 GprsInit(SerialPortCom_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc);
 UINT32 GprsPppdStart(GprsPppdConf_t *gpc);
 void GprsPppdSwShutdown();
 void GprsHwReset();
 UINT32 GprsPppdSystemStartup(GprsPppdConf_t *gpc);
-UINT32 AtCommand(SerialPort_t *pGprsSerialPortConfig, char *AtCmd, char *ReplyStr, int *ReplyCnt);
+UINT32 AtCommand(SerialPortCom_t *pGprsSerialPortConfig, char *AtCmd, char *ReplyStr, int *ReplyCnt);
 void SetSystemTime(char *t);
 
 

@@ -50,6 +50,7 @@ char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU] ={
 	"FLASH",
 	"GPS",
 	"LCD",
+	"LED",
 	"HWINV",
 	"SPSVIRGO",
 	"CLOUDVELA",

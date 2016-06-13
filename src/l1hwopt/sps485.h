@@ -8,8 +8,8 @@
 #ifndef L1HWOPT_SPS485_H_
 #define L1HWOPT_SPS485_H_
 
-
 #include "../l0comvm/vmlayer.h"
+#include "../l1hwopt/spsapi.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -25,16 +25,21 @@ enum FSM_STATE_SPS485
 
 //Global variables
 extern FsmStateItem_t FsmSps485[];
+extern SerialPortCom_t gSerialPortMobus;
 
 //API
 extern OPSTAT fsm_sps485_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sps485_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern UINT32 hcu_sps485_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8 vMin);
+extern UINT32 hcu_sps485_serial_init(SerialPortCom_t *sp);
+extern UINT32 hcu_sps485_serial_port_get(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 Len);
+extern UINT32 hcu_sps485_serial_port_send(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Len);
 
 //Local API
 OPSTAT func_sps485_int_init(void);
 
-
+/*
 #define COM_PORT_0 	0x00
 #define COM_PORT_1 	0x01
 #define COM_PORT_2 	0x02
@@ -48,34 +53,35 @@ OPSTAT func_sps485_int_init(void);
 
 #define TIMER_FOR_SERIAL_PORT_READ 3
 
-/*
-** 第一种串口方式
-**
-*/
+
+// 第一种串口方式
+
 typedef struct SerialPort
 {
-	UINT32 id;			/* COM1=>0, COM1=>1, COM2=>2 ....  */
-	UINT32 nSpeed;		/* 1200, 2400, 4800, 4800, 9600, 19200, 38400, 57600, 115200 */
-	UINT16 nBits;		/* 7 or 8 */
-	UINT8 nEvent;		/* '0', 'N', 'E' */
-	UINT16 nStop;		/* 0, or 1 */
-	UINT32 fd;			/* file descriptor for com port */
-	UINT8 vTime;        /* */
-	UINT8 vMin;         /* */
-	UINT32 c_lflag;     /* ICANON : enable canonical input */
-} SerialPort_t;
+	UINT32 id;			// COM1=>0, COM1=>1, COM2=>2 ....
+	UINT32 nSpeed;		// 1200, 2400, 4800, 4800, 9600, 19200, 38400, 57600, 115200
+	UINT16 nBits;		// 7 or 8
+	UINT8 nEvent;		// '0', 'N', 'E'
+	UINT16 nStop;		// 0, or 1
+	UINT32 fd;			// file descriptor for com port
+	UINT8 vTime;        //
+	UINT8 vMin;         //
+	UINT32 c_lflag;     // ICANON : enable canonical input
+}SerialPort_t;
 
-/*
- * Function API prototype for Serial Port
- */
+
+// Function API prototype for Serial Port
+
 extern UINT32 SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd);
 extern UINT32 SerialPortSet(SerialPort_t *sp);
 extern UINT32 SerialPortClose(UINT16 fd);
-extern UINT32 SerialPortSetVtimeVmin(SerialPort_t *sp, UINT8 vTime, UINT8 vMin);
 
+extern UINT32 SerialPortSetVtimeVmin(SerialPort_t *sp, UINT8 vTime, UINT8 vMin);
 extern UINT32 hcu_sps485_serial_init(SerialPort_t *sp);
 extern UINT32 hcu_sps485_serial_port_get(SerialPort_t *sp, UINT8 *send_buf, UINT32 Len);
 extern UINT32 hcu_sps485_serial_port_send(SerialPort_t *sp, UINT8 *rcv_buf, UINT32 Len);
+*/
+
 
 // 第二种函数方法： 串口操作函数
 

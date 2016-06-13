@@ -16,7 +16,7 @@
 enum FSM_STATE_GPIO
 {
 	FSM_STATE_GPIO_INITED = 0x02,
-	FSM_STATE_GPIO_RECEIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
+	FSM_STATE_GPIO_ACTIVIED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_GPIO_MAX,
 };
 //#define FSM_STATE_END   0xFE
@@ -36,7 +36,8 @@ extern float zHcuGpioToxicgasZp01voc;
 #define RPI_GPIO_PIN_DHT11_DATA 0  //Pin#11
 #define RPI_GPIO_PIN_MQ135_DATA 5  //Pin#18  //应CZ要求，管脚改变，从GPIO#5改为GPIO#6，管脚从pin#18改为pin#22
 #define RPI_GPIO_PIN_MQ3ALCO_DATA 26  //Pin#32
-#define RPI_GPIO_PIN_ZP01VOC_DATA 27  //Pin#36
+#define RPI_GPIO_PIN_ZP01VOC_DATA_A 27  //Pin#36
+#define RPI_GPIO_PIN_ZP01VOC_DATA_B 28  //Pin#38
 
 #define RPI_GPIO_HIGH_TIME 32
 #define RPI_GPIO_SENSOR_READ_GAP 60 //in second

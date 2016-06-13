@@ -9,6 +9,7 @@
 #define L1HWOPT_CON3G4G_H_
 
 #include "../l0comvm/vmlayer.h"
+#include "../l1hwopt/spsapi.h"
 #include "../l1com/l1comdef.h"
 
 

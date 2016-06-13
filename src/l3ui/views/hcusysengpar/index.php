@@ -7,21 +7,21 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\HcusysengparSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'HCU系统参数修改';
-//$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Hcusysengpars';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="hcusysengpar-index">
 
-    <h5><?= Html::encode($this->title) ?></h5>
+    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <!-- <p>
+    <p>
         <?= Html::a('Create Hcusysengpar', ['create'], ['class' => 'btn btn-success']) ?>
-    </p> -->
+    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -33,6 +33,7 @@ $this->title = 'HCU系统参数修改';
             'commhwboard3g4g',
             'commhwboardgps',
             'commhwboardlcd',
+            'commhwboardled',
             'commhwboardzeegbe',
             'commhwboardflash',
             'commframemodbus',
@@ -119,6 +120,8 @@ $this->title = 'HCU系统参数修改';
             'cloudftpuser',
             'cloudftppwd',
             'hcuswdownloaddir',
+            'hcuswactivedir',
+            'hcuswbackupdir',
             'hcuvideoserverdir',
             'hcuvideoserverhttp',
             'debugmode',
