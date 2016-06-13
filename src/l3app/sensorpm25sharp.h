@@ -10,7 +10,7 @@
 
 
 #include "../l0comvm/vmlayer.h"
-#include "../l1hwopt/sps485.h"
+#include "../l1hwopt/spsapi.h"
 #include "../l1com/l1comdef.h"
 
 

@@ -5,11 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Hcusysengpar */
 
-//$this->title = 'Update Hcusysengpar: ' . ' ' . $model->prjname;
-$this->title = 'HCU工参修改';
-//$this->params['breadcrumbs'][] = ['label' => 'Hcusysengpars', 'url' => ['index']];
-//$this->params['breadcrumbs'][] = ['label' => $model->prjname, 'url' => ['view', 'id' => $model->prjname]];
-//$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Update Hcusysengpar: ' . ' ' . $model->prjname;
+$this->params['breadcrumbs'][] = ['label' => 'Hcusysengpars', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->prjname, 'url' => ['view', 'id' => $model->prjname]];
+$this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="hcusysengpar-update">
 

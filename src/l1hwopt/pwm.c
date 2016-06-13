@@ -25,10 +25,10 @@ FsmStateItem_t FsmPwm[] =
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
     //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_PWM_RECEIVED,            		fsm_pwm_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_PWM_RECEIVED,            		fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_PWM_RECEIVED,       			fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_PWM_RECEIVED,       			fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,        FSM_STATE_PWM_ACTIVIED,            		fsm_pwm_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_PWM_ACTIVIED,            		fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_PWM_ACTIVIED,       			fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_PWM_ACTIVIED,       			fsm_com_do_nothing},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -50,7 +50,7 @@ OPSTAT fsm_pwm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -84,7 +84,7 @@ OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	zHcuRunErrCnt[TASK_ID_PWM] = 0;
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_PWM, FSM_STATE_PWM_RECEIVED) == FAILURE){
+	if (FsmSetState(TASK_ID_PWM, FSM_STATE_PWM_ACTIVIED) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_PWM]++;
 		HcuErrorPrint("PWM: Error Set FSM State!\n");
 		return FAILURE;
@@ -92,28 +92,24 @@ OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("PWM: Enter FSM_STATE_PWM_ACTIVED status, Keeping refresh here!\n");
 	}
-	/*
 
-	//进入阻塞式接收数据状态，然后继续发送
+	int workingCycle = 2;
+	//进入循环工作模式
 	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给HSMMP
-			msg_struct_pwm_hsmmp_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_pwm_hsmmp_data_rx_t));
-			snd.length = sizeof(msg_struct_pwm_hsmmp_data_rx_t);
-			ret = hcu_message_send(MSG_ID_PWM_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_PWM, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_PWM]++;
-				HcuErrorPrint("PWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PWM], zHcuTaskNameList[TASK_ID_HSMMP]);
-				return FAILURE;
-			}
+		conCounter = 0;
+		if (HCU_SENSOR_PRESENT_MOTOR_SG90 == HCU_SENSOR_PRESENT_YES){
+			func_pwm_write_data_motor_sg90();
+			hcu_sleep(RPI_PWM_SENSOR_WRITE_GAP/workingCycle);
+			conCounter++;
 		}
-
-		hcu_sleep(5);
+		if (HCU_SENSOR_PRESENT_PWM_LED2PIN == HCU_SENSOR_PRESENT_YES){
+			func_pwm_write_data_led_2pin();
+			hcu_sleep(RPI_PWM_SENSOR_WRITE_GAP/workingCycle);
+			conCounter++;
+		}
+		conCounter = workingCycle-conCounter;
+		hcu_sleep(RPI_PWM_SENSOR_WRITE_GAP/workingCycle * conCounter);
 	}
-	*/
 
 	return SUCCESS;
 }
@@ -130,5 +126,67 @@ OPSTAT func_pwm_int_init(void)
 {
 	return SUCCESS;
 }
+
+//控制TowerPro SG90马达的过程
+//  下面是wiringPi提供的标准PWM函数，据说不好使，因为没法设置工作时钟/周期，导致20ms的SG90周期对不齐
+//	pwmSetMode(PWM_MODE_BAL); //或者PWM_MODE_MS
+//	pwmSetRange(1024); //默认为1024
+//	pwmSetClock(50);
+//	pwmWrite(RPI_PWM_PIN_OUTPUT, 1);
+//  据说softPwmWrite的周期为6.64us，还不能改动，需要使用pwmWirte实验一番
+//  如果的确是，则起0-2ms = 0-2000us对应的输入数值是0-301，再试验一番这个东西。
+OPSTAT func_pwm_write_data_motor_sg90(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+	int pwmValueSg90 = 0;
+	int i=0, j=0;
+
+	softPwmCreate(RPI_PWM_PIN_OUTPUT_SG90, pwmValueSg90, RPI_PWM_WORKING_RANGE);
+	//循环工作RPI_PWM_WRITE_REPEAT_TIMES个周期
+	for (j=0; j<RPI_PWM_WRITE_REPEAT_TIMES; j++){
+		for (i=0; i<RPI_PWM_WORKING_RANGE; i++){
+			delay(20);
+			pwmValueSg90 = 7 + (int)(i*21/255);
+			softPwmWrite(RPI_PWM_PIN_OUTPUT_SG90, i);
+			delay(20);
+			softPwmWrite(RPI_PWM_PIN_OUTPUT_SG90, 0);
+		}
+		//HcuDebugPrint("PWM: SG90 Index = %d \n", j);
+	}
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
+//控制简易LED的过程
+OPSTAT func_pwm_write_data_led_2pin(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+
+	int pwmValueLed2pin = 0;
+	int i=0, j=0;
+
+	softPwmCreate(RPI_PWM_PIN_OUTPUT_LED2PIN, pwmValueLed2pin, RPI_PWM_WORKING_RANGE);
+	//循环工作RPI_PWM_WRITE_REPEAT_TIMES个周期
+	for (j=0; j<RPI_PWM_WRITE_REPEAT_TIMES; j++){
+		for (i=0; i<RPI_PWM_WORKING_RANGE; i++){
+			delay(20);
+			softPwmWrite(RPI_PWM_PIN_OUTPUT_LED2PIN, i);
+			delay(20);
+			softPwmWrite(RPI_PWM_PIN_OUTPUT_LED2PIN, 0);
+		}
+		//HcuDebugPrint("PWM: LED2PIN Index = %d \n", j);
+	}
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
 
 

@@ -394,6 +394,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.comm.commHwBoard3g4g = COMM_HW_BOARD_3G4G;
 		zHcuSysEngPar.comm.commHwBoardGps = COMM_HW_BOARD_GPS;
 		zHcuSysEngPar.comm.commHwBoardLcd = COMM_HW_BOARD_LCD;
+		zHcuSysEngPar.comm.commHwBoardLed = COMM_HW_BOARD_LED;
 		zHcuSysEngPar.comm.commHwBoardZeegbe = COMM_HW_BOARD_ZEEGBE;
 		zHcuSysEngPar.comm.commHwBoardFlash = COMM_HW_BOARD_FLASH;
 		zHcuSysEngPar.comm.commFrameModbus = COMM_FRONT_MODBUS;
@@ -782,7 +783,7 @@ void func_hwinv_scan_hard_disc(void)
 	size_t mbFreedisk = freeDisk>>20;
 
 	float r = (float)mbFreedisk/mbTotalsize*100;
-	HcuDebugPrint("HWINV: Disk total = %dMB, free=%dMB, free/total ratio =%.2f%%\n", mbTotalsize, mbFreedisk,r);
+	//HcuDebugPrint("HWINV: Disk total = %dMB, free=%dMB, free/total ratio =%.2f%%\n", mbTotalsize, mbFreedisk,r);
 
 	if(r <= HCU_HARDDISK_TRESHOLD)
 	{

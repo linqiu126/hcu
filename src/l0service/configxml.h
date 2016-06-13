@@ -9,7 +9,7 @@
 #define L0SERVICE_CONFIGXML_H_
 
 #include "../l0comvm/vmlayer.h"
-#include "../l1hwopt/sps485.h"
+#include "../l1hwopt/spsapi.h"
 
 //包含L2FRAME的文件，层次结构稍微有点乱，后期需要调整这个东西
 
@@ -24,8 +24,8 @@ void ApartAddress(char *temp, char *stringAdd1, char *stringAdd2);
 /*
  * Extern Global Variables
  */
-SerialPort_t gSerialPortZb;
-SerialPort_t gSerialPortGprs;
+SerialPortCom_t gSerialPortZb;
+SerialPortCom_t gSerialPortGprs;
 SocketPort_t gSocketPort;
 HcuMeasureBehavior_t gHcuMeasureBehavior;
 WedSensors_t gZbSensors;

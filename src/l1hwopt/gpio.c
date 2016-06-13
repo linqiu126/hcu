@@ -26,10 +26,10 @@ FsmStateItem_t FsmGpio[] =
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
     //Task level initialiSation
-    {MSG_ID_COM_RESTART,        FSM_STATE_GPIO_RECEIVED,            	fsm_gpio_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_GPIO_RECEIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_GPIO_RECEIVED,       			fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_GPIO_RECEIVED,       			fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,        FSM_STATE_GPIO_ACTIVIED,            	fsm_gpio_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_GPIO_ACTIVIED,            	fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_GPIO_ACTIVIED,       			fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_GPIO_ACTIVIED,       			fsm_com_do_nothing},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -95,7 +95,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	zHcuGpioToxicgasZp01voc = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_GPIO, FSM_STATE_GPIO_RECEIVED) == FAILURE){
+	if (FsmSetState(TASK_ID_GPIO, FSM_STATE_GPIO_ACTIVIED) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_GPIO]++;
 		HcuErrorPrint("GPIO: Error Set FSM State!\n");
 		return FAILURE;
@@ -333,25 +333,37 @@ OPSTAT func_gpio_read_data_mq3alco(void)
 OPSTAT func_gpio_read_data_zp01voc(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int toxicgas, i;
+	int toxicgas, toxicgasA, toxicgasB, i;
 	float toxicgasSum;
 
 	toxicgasSum = 0;
 	for (i=0; i<RPI_GPIO_READ_REPEAT_TIMES; i++){
 		delay(100);
-	    pinMode(RPI_GPIO_PIN_ZP01VOC_DATA, INPUT);
+	    pinMode(RPI_GPIO_PIN_ZP01VOC_DATA_A, INPUT);
+		delay(100);
+	    pinMode(RPI_GPIO_PIN_ZP01VOC_DATA_B, INPUT);
 	    delay(100);
-	    toxicgas = digitalRead(RPI_GPIO_PIN_ZP01VOC_DATA);
+	    toxicgasA = digitalRead(RPI_GPIO_PIN_ZP01VOC_DATA_A);
+	    delay(100);
+	    toxicgasB = digitalRead(RPI_GPIO_PIN_ZP01VOC_DATA_B);
+	    if ((toxicgasA == 0) && (toxicgasB == 0)) toxicgas = 0;  //清洁空气
+	    else if ((toxicgasA == 0) && (toxicgasB == 1)) toxicgas = 1;  //轻微污染空气
+	    else if ((toxicgasA == 1) && (toxicgasB == 0)) toxicgas = 2;  //中度污染空气
+	    else if ((toxicgasA == 1) && (toxicgasB == 1)) toxicgas = 3;  //重度污染空气
+	    else{
+	    	HcuErrorPrint("GPIO: Read taxicgas sensor ZP01VOC A/B data pin error, A=%d, B=%d\n", toxicgasA, toxicgasB);
+	    	zHcuRunErrCnt[TASK_ID_GPIO]++;
+	    	toxicgas = 0;
+	    	return FAILURE;
+	    }
 	    toxicgasSum += toxicgas;
 	}
 
 	//求平均
 	zHcuGpioToxicgasZp01voc = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("GPIO: Sensor ZP01VOC Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuGpioToxicgasZp01voc, RPI_GPIO_PIN_ZP01VOC_DATA);
+		HcuDebugPrint("GPIO: Sensor ZP01VOC Transformed float average read result pollution= %d[Times], DATA_GPIO_A#=%d, DATA_GPIO_B#=%d\n", (int)zHcuGpioToxicgasZp01voc, RPI_GPIO_PIN_ZP01VOC_DATA_A, RPI_GPIO_PIN_ZP01VOC_DATA_B);
 	}
-
-	//先准备好如此的数据存储框架，未来再改进该数据的正确性
 
 	return SUCCESS;
 #else
@@ -365,9 +377,6 @@ OPSTAT func_gpio_read_data_zp01voc(void)
 /*
 ** Local static variables
 */
-
-//估计不会用到这个变量，待确定
-//static unsigned char traceFileName[] = __FILE__;
 
 
 #define BASE 0x7f008000
