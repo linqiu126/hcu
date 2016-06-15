@@ -101,6 +101,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuDebugPrint("SPS232: Enter FSM_STATE_SPS232_ACTIVED status, Keeping refresh here!\n");
 	}
 
+	//由于SHARP模块的速率跟其他模块不一样，而程序启动时只初始化了一次，故而如果需要同时支持多个模块的操作，则只能做成互斥式，否则可能读取出问题
 	int workingCycle = 2;
 	//进入循环工作模式
 	while(1){
