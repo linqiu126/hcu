@@ -162,7 +162,6 @@ OPSTAT func_sps232_int_init(void)
 	spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
 	HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForSPS232.vTime, gSerialPortForSPS232.vMin);
 
-
 	return SUCCESS;
 }
 
@@ -240,8 +239,8 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 	//求平均
 	zHcuSps232HchoZe08ch2o = hchoSum / RPI_SPS232_READ_REPEAT_TIMES;
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPS232: Sensor ZE08CH2O Transformed float average read result pollution= %6.2fppb\n", zHcuSps232HchoZe08ch2o);
-	}
+		HcuDebugPrint("SPS232: Sensor ZE08CH2O Transformed float average read result HCHO = %6.2fppb, around %6.2fug/m3\n", zHcuSps232HchoZe08ch2o, zHcuSps232HchoZe08ch2o*1.295);
+	} //ppb转化为ug/m3，使用了1.295g/L的空气密度，只能算是近似。
 
 	return SUCCESS;
 #else
