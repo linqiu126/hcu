@@ -6,9 +6,8 @@
  */
 
 #include "../l1hwopt/sps485.h"
-
 #include "../l0service/trace.h"
-
+#include "../l1com/l1comdef.h"
 /*
 ** FSM of the SPS485
 */
