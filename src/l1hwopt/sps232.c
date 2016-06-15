@@ -6,7 +6,6 @@
  */
 
 #include "../l1hwopt/sps232.h"
-
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
 
@@ -39,7 +38,7 @@ FsmStateItem_t FsmSps232[] =
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 //For Serial Port Init
-SerialPort_t gSerialPortForSPS232;
+SerialPortCom_t gSerialPortForSPS232;
 
 float zHcuSps232Pm25Sharp;
 float zHcuSps232HchoZe08ch2o;
@@ -148,7 +147,7 @@ OPSTAT func_sps232_int_init(void)
 
 	int ret=0;
 
-	ret = hcu_sps485_serial_init(&gSerialPortForSPS232);
+	ret = hcu_spsapi_serial_init(&gSerialPortForSPS232);
 	if (FAILURE == ret)
 	{
 		HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
@@ -159,7 +158,7 @@ OPSTAT func_sps232_int_init(void)
 		HcuDebugPrint("SPS232: Init Serial Port Success ...\n");
 	}
 
-	SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
+	spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
 	HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForSPS232.vTime, gSerialPortForSPS232.vMin);
 
 
@@ -182,7 +181,7 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 	for (readCount=0; readCount<RPI_SPS232_READ_REPEAT_TIMES; readCount++){
 		delay(100);
 		//读取数据
-		nread = hcu_sps485_serial_port_get(&gSerialPortForSPS232, rb, (2*RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN));
+		nread = hcu_spsapi_serial_port_get(&gSerialPortForSPS232, rb, (2*RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN));
 		if (nread <=0)
 		{
 			HcuErrorPrint("SPS232: Sensor ZE08CH2O Read data error. nread=%d!\n", nread);
@@ -268,7 +267,7 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 	for (readCount=0; readCount<RPI_SPS232_READ_REPEAT_TIMES; readCount++){
 		delay(100);
 		//读取数据
-		nread = hcu_sps485_serial_port_get(&gSerialPortForSPS232, rb, (2*RPI_SPS232_SENSOR_PM25SHARP_FRAME_LEN));
+		nread = hcu_spsapi_serial_port_get(&gSerialPortForSPS232, rb, (2*RPI_SPS232_SENSOR_PM25SHARP_FRAME_LEN));
 		if (nread <=0)
 		{
 			HcuErrorPrint("SPS232: Sensor PM25Sharp Read data error!\n");
@@ -365,7 +364,7 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 	start_time = time((time_t*)NULL);
 
 	//读取数据
-	nread = hcu_sps485_serial_port_get(&gSerialPortForSPS232, &received_single_byte, 1);
+	nread = hcu_spsapi_serial_port_get(&gSerialPortForSPS232, &received_single_byte, 1);
 	if (nread <=0)
 	{
 		HcuErrorPrint("SPS232: Sensor PM25Sharp Read data error!\n");
