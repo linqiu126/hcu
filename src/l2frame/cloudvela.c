@@ -2753,53 +2753,40 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 		return FAILURE;
 	}
 
-
 	memcpy(rcv.buf, param_ptr, param_len);
 	rcv.length = param_len;
 
 	//workaround solution to fix the bug(the first two byte of cmd response received from aiqiyun： 13 10 )
-
 	//workaround solution to fix the bug(the first two byte of cmd response received from aiqiyun： 13 and/or 10
 
 	if (rcv.buf[0] == 13 && rcv.buf[1] == 10)
 	{
 		rcv.length = param_len - 2;
 		memcpy(rcv.buf, &rcv.buf[2], rcv.length);
-
 	}
 
 	else if (rcv.buf[0] == 10 && rcv.buf[1] == 13)
 	{
 		rcv.length = param_len - 2;
 		memcpy(rcv.buf, &rcv.buf[2], rcv.length);
-
 	}
 
 	else if (rcv.buf[0] == 13 || rcv.buf[1] == 10)
 	{
 		rcv.length = param_len - 1;
 		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
-
 	}
 
 	else if (rcv.buf[0] == 10 || rcv.buf[1] == 13)
 	{
 		rcv.length = param_len - 1;
 		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
-
 	}
-
-
 
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
-		//HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
-		int i;
-		for(i =0; i<rcv.length; i++)
-			HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
-		//for(i =0; i<rcv.length; i++)
-			//HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%d], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
-
+		//int i;
+		//for(i =0; i<rcv.length; i++) HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
 	}
 
 	//如果是XML自定义格式
@@ -2829,7 +2816,6 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
 		return FAILURE;
 	}
-
 
 	return SUCCESS;
 }
