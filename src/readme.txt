@@ -661,6 +661,12 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 == Update log: 2016 June.11 SW Version: XQ.HCU.SW.R01.095 //ZJL
 > 增加有毒气体VOC ZP01，MQ3酒精传感器以及甲醛ZE08CH2O传感器
 > 同步修改的还有数据库
+> MQ3酒精传感器完成，完全复用范式
+> ZE08CH2O甲醛传感器使用串口，串口的基本功能通过minicom工具调好后，基本上可以工作了。
+> 在树莓派下，Pin#14/15管脚对应的TX/RX是ttyARM0，工参配置为0端口
+> ZE08CH2O的帧协议解码完成
+> PM25SHARP的帧协议解码重新撰写
+> ZP01VOC有毒气体传感器，还未拿到，待测试。
 
 
 

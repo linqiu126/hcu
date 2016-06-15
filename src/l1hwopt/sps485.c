@@ -484,58 +484,35 @@ UINT32 SerialPortSetVtimeVmin(SerialPort_t *sp, UINT8 vTime, UINT8 vMin)
 
 UINT32 hcu_sps485_serial_init(SerialPort_t *sp)
 {
-  UINT32 ret = SUCCESS;
+	UINT32 ret = SUCCESS;
 
-  HcuDebugPrint("Series Port: InitSerialPort Start ...\n");
+	HcuDebugPrint("Series Port: InitSerialPort Start ...\n");
 
-  ret = SerialPortOpen(sp->id, (UINT16 *)(&(sp->fd)));
-  if (FAILURE == ret)
-  {
-    HcuErrorPrint("Series Port: InitSerialPort serial port COM%d open failure.\n", sp->id);
-    zHcuRunErrCnt[TASK_ID_SPS485]++;
-    return ret;
-  }
-  HcuDebugPrint("Series Port: InitSerialPort serial port COM%d open successfully.\n", sp->id);
+	ret = SerialPortOpen(sp->id, (UINT16 *)(&(sp->fd)));
+	if (FAILURE == ret)
+	{
+		HcuErrorPrint("Series Port: InitSerialPort serial port COM%d open failure.\n", sp->id);
+		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		return ret;
+	}
+	HcuDebugPrint("Series Port: InitSerialPort serial port COM%d open successfully.\n", sp->id);
 
-  ret = SerialPortSet(sp);
-  if (FAILURE == ret)
-  {
-    HcuErrorPrint("Series Port: Open Serial Port %d failure.\n", sp->id);
-    zHcuRunErrCnt[TASK_ID_SPS485]++;
-    return ret;
-  }
-  HcuDebugPrint("Series Port: InitSerialPort serial port COM%d properties has been set successfully.\n", sp->id);
+	ret = SerialPortSet(sp);
+	if (FAILURE == ret)
+	{
+		HcuErrorPrint("Series Port: Open Serial Port %d failure.\n", sp->id);
+		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		return ret;
+	}
+	HcuDebugPrint("Series Port: InitSerialPort serial port COM%d properties has been set successfully.\n", sp->id);
 
 
-  HcuDebugPrint("Series Port: InitSerialPort completed.\n");
-  return ret;
+	HcuDebugPrint("Series Port: InitSerialPort completed.\n");
+	return ret;
 }
 
 UINT32 hcu_sps485_serial_port_get(SerialPort_t *sp, UINT8 *rcv_buf, UINT32 Len)
 {
-	/*
-    UINT16  fd = sp->fd;
-    UINT32 ret = SUCCESS;
-
-    ret = read(fd, rcv_buf, Len);
-    if (FAILURE == ret)
-   {
-        HcuErrorPrint("Series Port: Read Data failure \n");
-        zHcuRunErrCnt[TASK_ID_SPS485]++;
-        return FAILURE;
-    }
-    else if(!ret)
-    {
-         HcuErrorPrint("Series Port: Read return 0 byte \n");
-         zHcuRunErrCnt[TASK_ID_SPS485]++;
-         return FAILURE;
-     }
-
-
-    return ret;
-    */
-
-
 	UINT16 fd = sp->fd;
 	UINT32 ret = SUCCESS;
 
@@ -551,36 +528,36 @@ UINT32 hcu_sps485_serial_port_get(SerialPort_t *sp, UINT8 *rcv_buf, UINT32 Len)
 		if(FD_ISSET(fd, &rfds))
 		{
 			ret = read(fd, rcv_buf, Len);
-			HcuDebugPrint("Series Port:: Len of read %d  \n\n\n\n", ret);
-		    if (FAILURE == ret)
+			//HcuDebugPrint("Series Port: Len of read %d\n", ret);
+			if (FAILURE == ret)
 		   {
-		        HcuErrorPrint("Series Port: Read Data failure \n");
-		        zHcuRunErrCnt[TASK_ID_SPS485]++;
-		        return FAILURE;
-		    }
-		    else if(!ret)
-		    {
-		         HcuErrorPrint("Series Port: Read return 0 byte \n");
-		         zHcuRunErrCnt[TASK_ID_SPS485]++;
-		         return FAILURE;
-		     }
+				HcuErrorPrint("Series Port: Read Data failure \n");
+				zHcuRunErrCnt[TASK_ID_SPS485]++;
+				return FAILURE;
+			}
+			else if(!ret)
+			{
+				 HcuErrorPrint("Series Port: Read return 0 byte \n");
+				 zHcuRunErrCnt[TASK_ID_SPS485]++;
+				 return FAILURE;
+			 }
 
 			return ret;
 		}
 
 		else
 		{
-	        HcuErrorPrint("Series Port: Read Data failure \n");
-	        zHcuRunErrCnt[TASK_ID_SPS485]++;
-	        return  FAILURE;
+			HcuErrorPrint("Series Port: Read Data failure \n");
+			zHcuRunErrCnt[TASK_ID_SPS485]++;
+			return  FAILURE;
 		}
 	}
 
 	else
 	{
-        HcuErrorPrint("Series Port: Read Data failure \n");
-        zHcuRunErrCnt[TASK_ID_SPS485]++;
-        return  FAILURE;
+		HcuErrorPrint("Series Port: Read Data failure \n");
+		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		return  FAILURE;
 
 	}
 }
