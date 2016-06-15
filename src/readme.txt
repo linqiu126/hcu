@@ -673,6 +673,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > autorun改为l0autorun，以便对其其它目录。如果该目录下的hcu.sh也用到这个目录绝对路径，则需要同步修改
 > 去掉hw-inv中对磁盘的定时打印，太多太烦，不方便调试
 > SPS232相关的处理函数移动到SPSAPI.×中，然后直接调用它们
+> SPS232的串口初始化放到每一次进行，这样可以让不同速度的串口同时存在，而不互斥。
 
 
 
