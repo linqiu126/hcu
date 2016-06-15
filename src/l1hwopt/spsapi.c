@@ -9,6 +9,8 @@
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
 
+//Global variables
+extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 /*
 ** Local static variables
 */
@@ -17,7 +19,6 @@
 
 UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 {
-
 	/* Port Open Result */
 	if (NULL == fd)
 	{
@@ -113,7 +114,6 @@ UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 
 UINT32 spsapi_SerialPortSet(SerialPortCom_t *sp)
 {
-
 	/* Local variable */
 	struct termios newtio, oldtio;
 	UINT32 cflag, iflag, oflag, lflag;
@@ -214,7 +214,6 @@ UINT32 spsapi_SerialPortSet(SerialPortCom_t *sp)
 	{
 		HcuErrorPrint("SPSAPI: Invalid stop bit for com port, Error return\n");
 		return FAILURE;
-
 	}
 
 	/* default VTIME and VMIN */
@@ -241,8 +240,10 @@ UINT32 spsapi_SerialPortSet(SerialPortCom_t *sp)
 	oflag = (UINT32)newtio.c_oflag;
 	lflag = (UINT32)newtio.c_lflag;
 
-	HcuDebugPrint("SPSAPI: COM port flags: c_cflag = 0x%X, c_iflag = 0x%X, c_oflag = 0x%X, c_lflag = 0x%X, VTIME = 0x%d, TMIN = 0x%d\n", cflag, iflag, oflag, lflag, newtio.c_cc[VTIME], newtio.c_cc[VMIN] = 1);
-	HcuDebugPrint("SPSAPI: COM port set done!\n");
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("SPSAPI: COM port flags: c_cflag = 0x%X, c_iflag = 0x%X, c_oflag = 0x%X, c_lflag = 0x%X, VTIME = 0x%d, TMIN = 0x%d\n", cflag, iflag, oflag, lflag, newtio.c_cc[VTIME], newtio.c_cc[VMIN] = 1);
+		HcuDebugPrint("SPSAPI: COM port set done!\n");
+	}
 
 	return SUCCESS;
 }
@@ -301,8 +302,7 @@ UINT32 hcu_spsapi_serial_init(SerialPortCom_t *sp)
 {
 	UINT32 ret = SUCCESS;
 
-	HcuDebugPrint("SPSAPI: InitSerialPort Start ...\n");
-
+	//HcuDebugPrint("SPSAPI: InitSerialPort Start ...\n");
 	ret = spsapi_SerialPortOpen(sp->id, (UINT16 *)(&(sp->fd)));
 	if (FAILURE == ret)
 	{
@@ -317,10 +317,8 @@ UINT32 hcu_spsapi_serial_init(SerialPortCom_t *sp)
 		HcuErrorPrint("SPSAPI: Open Serial Port %d failure.\n", sp->id);
 		return ret;
 	}
-	HcuDebugPrint("SPSAPI: InitSerialPort serial port COM%d properties has been set successfully.\n", sp->id);
-
-
-	HcuDebugPrint("SPSAPI: InitSerialPort completed.\n");
+	//HcuDebugPrint("SPSAPI: InitSerialPort serial port COM%d properties has been set successfully.\n", sp->id);
+	//HcuDebugPrint("SPSAPI: InitSerialPort completed.\n");
 	return ret;
 }
 
