@@ -674,8 +674,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 去掉hw-inv中对磁盘的定时打印，太多太烦，不方便调试
 > SPS232相关的处理函数移动到SPSAPI.×中，然后直接调用它们
 > SPS232的串口初始化放到每一次进行，这样可以让不同速度的串口同时存在，而不互斥。
-
-
+> 由于外设的响应需要一分钟，导致每单次初始化串口之后必须等待1分钟才能再读取数据，整体读取速率将会变慢，但的确能正常工作。
+> 在实际多个串口外设工作的时候，还是需要按照下列方式进行配置，不然数据读取反应速度会极其慢
+	==> 为了设置串口传感器互斥，必须在SYSCONFIG中设置  #define HCU_SENSOR_PRESENT_SHARP HCU_SENSOR_PRESENT_NO
 
 
 

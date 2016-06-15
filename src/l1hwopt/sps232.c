@@ -101,6 +101,11 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuDebugPrint("SPS232: Enter FSM_STATE_SPS232_ACTIVED status, Keeping refresh here!\n");
 	}
 
+	//串口同时支持两种速率，没有成功，意味着不同的外设具备不同速度时，必须设置树莓派的串口环境速率，然后这里u一次性初始化，而不能单次重复初始化
+	//多个串口外设同时打开时，互相斥需要将不工作的传感器关掉，不然它会无谓的占据很多的时间，导致其它正常工作的传感器得不到快速响应
+
+	//这里等待，是为了保证外设在串口初始化后有足够的时间稳定，不然其读数不太正常
+	hcu_sleep(60);
 	int workingCycle = 2;
 	//进入循环工作模式
 	while(1){
@@ -176,23 +181,29 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 	UINT8 rb[2*RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN+1] = {0}; //2*9+1=19
 	UINT8 checksum=0;
 
-	//初始化硬件接口
-	gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-	gSerialPortForSPS232.nSpeed = 9600;
-	gSerialPortForSPS232.nBits = 8;
-	gSerialPortForSPS232.nEvent = 'N';
-	gSerialPortForSPS232.nStop = 1;
-	gSerialPortForSPS232.fd = HCU_INVALID_U16;
-	gSerialPortForSPS232.vTime = HCU_INVALID_U8;
-	gSerialPortForSPS232.vMin = HCU_INVALID_U8;
-	gSerialPortForSPS232.c_lflag = 0;
-	if (hcu_spsapi_serial_init(&gSerialPortForSPS232) == FAILURE)
-	{
-		HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
-		zHcuRunErrCnt[TASK_ID_SPS232]++;
-		return FAILURE;
+	//无限次工作模式打开，效率是比较低下的，但可以多个传感器可以一起兼容工作
+	if(RPI_SPS232_SENSOR_SINGLE_PRESENT != RPI_SPS232_SENSOR_SINGLE_PRESENT_TRUE){
+		//先关掉串口句柄
+		spsapi_SerialPortClose(gSerialPortForSPS232.fd);
+		//初始化硬件接口
+		gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
+		gSerialPortForSPS232.nSpeed = 9600;
+		gSerialPortForSPS232.nBits = 8;
+		gSerialPortForSPS232.nEvent = 'N';
+		gSerialPortForSPS232.nStop = 1;
+		gSerialPortForSPS232.fd = HCU_INVALID_U16;
+		gSerialPortForSPS232.vTime = HCU_INVALID_U8;
+		gSerialPortForSPS232.vMin = HCU_INVALID_U8;
+		gSerialPortForSPS232.c_lflag = 0;
+		if (hcu_spsapi_serial_init(&gSerialPortForSPS232) == FAILURE)
+		{
+			HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
+			zHcuRunErrCnt[TASK_ID_SPS232]++;
+			return FAILURE;
+		}
+		spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
+		delay(60000);
 	}
-	spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
 
 	//循环读取多次
 	hchoSum = 0;
@@ -208,7 +219,7 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 		}
 		//HcuDebugPrint("SPS232: Fd = %d, ZE08CH2O receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10], rb[11], rb[12], rb[13], rb[14], rb[15], rb[16], rb[17]);
 
-		//example: ff 17 04 00 01 20 13 88 29 ff
+		//example: ff 17	//先关掉串口句柄 04 00 01 20 13 88 29 ff
 		//寻找帧头
 		for (i=0; i<RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN; i++){
 			if ((rb[i] == RPI_SPS232_SENSOR_ZE08CH2O_FRAME_HEAD1) || (rb[i] == RPI_SPS232_SENSOR_ZE08CH2O_FRAME_HEAD2))
@@ -278,23 +289,29 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 	UINT8 rb[2*RPI_SPS232_SENSOR_PM25SHARP_FRAME_LEN+1] = {0}; //2*7+1=15
 	UINT8 checksum=0;
 
-	//初始化硬件接口
-	gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-	gSerialPortForSPS232.nSpeed = 2400;
-	gSerialPortForSPS232.nBits = 8;
-	gSerialPortForSPS232.nEvent = 'N';
-	gSerialPortForSPS232.nStop = 1;
-	gSerialPortForSPS232.fd = HCU_INVALID_U16;
-	gSerialPortForSPS232.vTime = HCU_INVALID_U8;
-	gSerialPortForSPS232.vMin = HCU_INVALID_U8;
-	gSerialPortForSPS232.c_lflag = 0;
-	if (hcu_spsapi_serial_init(&gSerialPortForSPS232) == FAILURE)
-	{
-		HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
-		zHcuRunErrCnt[TASK_ID_SPS232]++;
-		return FAILURE;
+	//无限次工作模式打开，效率是比较低下的，但可以多个传感器可以一起兼容工作
+	if(RPI_SPS232_SENSOR_SINGLE_PRESENT != RPI_SPS232_SENSOR_SINGLE_PRESENT_TRUE){
+		//先关掉串口句柄
+		spsapi_SerialPortClose(gSerialPortForSPS232.fd);
+		//初始化硬件接口
+		gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
+		gSerialPortForSPS232.nSpeed = 2400;
+		gSerialPortForSPS232.nBits = 8;
+		gSerialPortForSPS232.nEvent = 'N';
+		gSerialPortForSPS232.nStop = 1;
+		gSerialPortForSPS232.fd = HCU_INVALID_U16;
+		gSerialPortForSPS232.vTime = HCU_INVALID_U8;
+		gSerialPortForSPS232.vMin = HCU_INVALID_U8;
+		gSerialPortForSPS232.c_lflag = 0;
+		if (hcu_spsapi_serial_init(&gSerialPortForSPS232) == FAILURE)
+		{
+			HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
+			zHcuRunErrCnt[TASK_ID_SPS232]++;
+			return FAILURE;
+		}
+		spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
+		delay(60000);
 	}
-	spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
 
 	//循环读取多次
 	pm25sharpSum = 0;
