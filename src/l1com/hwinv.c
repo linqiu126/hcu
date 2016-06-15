@@ -782,7 +782,7 @@ void func_hwinv_scan_hard_disc(void)
 	size_t mbFreedisk = freeDisk>>20;
 
 	float r = (float)mbFreedisk/mbTotalsize*100;
-	HcuDebugPrint("HWINV: Disk total = %dMB, free=%dMB, free/total ratio =%.2f%%\n", mbTotalsize, mbFreedisk,r);
+	//HcuDebugPrint("HWINV: Disk total = %dMB, free=%dMB, free/total ratio =%.2f%%\n", mbTotalsize, mbFreedisk,r);
 
 	if(r <= HCU_HARDDISK_TRESHOLD)
 	{

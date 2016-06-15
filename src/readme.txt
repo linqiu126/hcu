@@ -668,7 +668,10 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > PM25SHARP的帧协议解码重新撰写
 > ZP01VOC有毒气体传感器，还未拿到，待测试。
 
-
+== Update log: 2016 June.15 SW Version: XQ.HCU.SW.R01.096 //ZJL
+> 重点解决串口的问题
+> autorun改为l0autorun，以便对其其它目录。如果该目录下的hcu.sh也用到这个目录绝对路径，则需要同步修改
+> 去掉hw-inv中对磁盘的定时打印，太多太烦，不方便调试
 
 
 
