@@ -8,8 +8,8 @@
 #ifndef L1HWOPT_SPS485_H_
 #define L1HWOPT_SPS485_H_
 
-
 #include "../l0comvm/vmlayer.h"
+#include "../l1hwopt/spsapi.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -63,7 +63,7 @@ typedef struct SerialPort
 	UINT8 vTime;        /* */
 	UINT8 vMin;         /* */
 	UINT32 c_lflag;     /* ICANON : enable canonical input */
-} SerialPort_t;
+}SerialPort_t;
 
 /*
  * Function API prototype for Serial Port
