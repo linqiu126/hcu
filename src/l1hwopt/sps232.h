@@ -8,9 +8,8 @@
 #ifndef L1HWOPT_SPS232_H_
 #define L1HWOPT_SPS232_H_
 
-
 #include "../l0comvm/vmlayer.h"
-#include "../l1hwopt/sps485.h"
+#include "../l1hwopt/spsapi.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00

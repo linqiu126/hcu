@@ -744,5 +744,40 @@ typedef struct  HcuInventoryInfo
 #define HSMMP_PATH_MAX 254  //for readlink by shanchun
 
 
+//串口设备地址相关的公共定义，跟配置以及使用的硬件环境非常相关
+#ifdef TARGET_LINUX_ARM
+//#define SPS_COM_PORT_PATH_0  "/dev/ttySAC0"
+//#define SPS_COM_PORT_PATH_1  "/dev/ttySAC1"
+//#define SPS_COM_PORT_PATH_2  "/dev/ttySAC2"
+//#define SPS_COM_PORT_PATH_3  "/dev/ttySAC3"
+//#define SPS_COM_PORT_PATH_4  "/dev/ttySAC4"
+#define SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
+#define SPS_COM_PORT_PATH_1  "/dev/ttyO1"
+#define SPS_COM_PORT_PATH_2  "/dev/ttyO2"
+#define SPS_COM_PORT_PATH_3  "/dev/ttyO3"
+#define SPS_COM_PORT_PATH_4  "/dev/ttyO4"
+#endif
+
+#ifdef TARGET_LINUX_X86
+#define SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
+#define SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
+#define SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
+#define SPS_COM_PORT_PATH_3  "/dev/ttyS0"
+#define SPS_COM_PORT_PATH_4  "/dev/ttyS1"
+//#define SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
+//#define SPS_COM_PORT_PATH_4  "/dev/ttyUSB4"
+#endif
+
+#ifdef TARGET_RASPBERRY_PI3B
+#define SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
+//#define SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
+#define SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
+#define SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
+#define SPS_COM_PORT_PATH_3  "/dev/ttyS0"
+#define SPS_COM_PORT_PATH_4  "/dev/ttyS1"
+//#define SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
+//#define SPS_COM_PORT_PATH_3  "/dev/ttyUSB4"
+#endif
+
 
 #endif /* L1COM_L1COMDEF_H_ */
