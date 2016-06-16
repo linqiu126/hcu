@@ -50,7 +50,7 @@ OPSTAT fsm_pwm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -92,28 +92,24 @@ OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("PWM: Enter FSM_STATE_PWM_ACTIVED status, Keeping refresh here!\n");
 	}
-	/*
 
-	//进入阻塞式接收数据状态，然后继续发送
+	int workingCycle = 2;
+	//进入循环工作模式
 	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给HSMMP
-			msg_struct_pwm_hsmmp_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_pwm_hsmmp_data_rx_t));
-			snd.length = sizeof(msg_struct_pwm_hsmmp_data_rx_t);
-			ret = hcu_message_send(MSG_ID_PWM_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_PWM, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_PWM]++;
-				HcuErrorPrint("PWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PWM], zHcuTaskNameList[TASK_ID_HSMMP]);
-				return FAILURE;
-			}
+		conCounter = 0;
+		if (HCU_SENSOR_PRESENT_MOTOR_SG90 == HCU_SENSOR_PRESENT_YES){
+			func_pwm_write_data_motor_sg90();
+			hcu_sleep(RPI_PWM_SENSOR_WRITE_GAP/workingCycle);
+			conCounter++;
 		}
-
-		hcu_sleep(5);
+		if (HCU_SENSOR_PRESENT_LED_2PIN == HCU_SENSOR_PRESENT_YES){
+			func_pwm_write_data_led_2pin();
+			hcu_sleep(RPI_PWM_SENSOR_WRITE_GAP/workingCycle);
+			conCounter++;
+		}
+		conCounter = workingCycle-conCounter;
+		hcu_sleep(RPI_PWM_SENSOR_WRITE_GAP/workingCycle * conCounter);
 	}
-	*/
 
 	return SUCCESS;
 }
@@ -130,5 +126,30 @@ OPSTAT func_pwm_int_init(void)
 {
 	return SUCCESS;
 }
+
+//控制TowerPro SG90马达的过程
+OPSTAT func_pwm_write_data_motor_sg90(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
+//控制简易LED的过程
+OPSTAT func_pwm_write_data_led_2pin(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
 
 
