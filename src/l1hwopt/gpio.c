@@ -333,15 +333,29 @@ OPSTAT func_gpio_read_data_mq3alco(void)
 OPSTAT func_gpio_read_data_zp01voc(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int toxicgas, i;
+	int toxicgas, toxicgasA, toxicgasB, i;
 	float toxicgasSum;
 
 	toxicgasSum = 0;
 	for (i=0; i<RPI_GPIO_READ_REPEAT_TIMES; i++){
 		delay(100);
-	    pinMode(RPI_GPIO_PIN_ZP01VOC_DATA, INPUT);
+	    pinMode(RPI_GPIO_PIN_ZP01VOC_DATA_A, INPUT);
+		delay(100);
+	    pinMode(RPI_GPIO_PIN_ZP01VOC_DATA_B, INPUT);
 	    delay(100);
-	    toxicgas = digitalRead(RPI_GPIO_PIN_ZP01VOC_DATA);
+	    toxicgasA = digitalRead(RPI_GPIO_PIN_ZP01VOC_DATA_A);
+	    delay(100);
+	    toxicgasB = digitalRead(RPI_GPIO_PIN_ZP01VOC_DATA_B);
+	    if ((toxicgasA == 0) && (toxicgasB == 0)) toxicgas = 0;  //清洁空气
+	    else if ((toxicgasA == 0) && (toxicgasB == 1)) toxicgas = 1;  //轻微污染空气
+	    else if ((toxicgasA == 1) && (toxicgasB == 0)) toxicgas = 2;  //中度污染空气
+	    else if ((toxicgasA == 1) && (toxicgasB == 1)) toxicgas = 3;  //重度污染空气
+	    else{
+	    	HcuErrorPrint("GPIO: Read taxicgas sensor ZP01VOC A/B data pin error, A=%d, B=%d\n", toxicgasA, toxicgasB);
+	    	zHcuRunErrCnt[TASK_ID_GPIO]++;
+	    	toxicgas = 0;
+	    	return FAILURE;
+	    }
 	    toxicgasSum += toxicgas;
 	}
 
@@ -350,8 +364,6 @@ OPSTAT func_gpio_read_data_zp01voc(void)
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor ZP01VOC Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuGpioToxicgasZp01voc, RPI_GPIO_PIN_ZP01VOC_DATA);
 	}
-
-	//先准备好如此的数据存储框架，未来再改进该数据的正确性
 
 	return SUCCESS;
 #else
