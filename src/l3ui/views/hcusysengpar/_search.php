@@ -31,6 +31,8 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'commhwboardlcd') ?>
 
+    <?php // echo $form->field($model, 'commhwboardled') ?>
+
     <?php // echo $form->field($model, 'commhwboardzeegbe') ?>
 
     <?php // echo $form->field($model, 'commhwboardflash') ?>
@@ -202,6 +204,10 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'cloudftppwd') ?>
 
     <?php // echo $form->field($model, 'hcuswdownloaddir') ?>
+
+    <?php // echo $form->field($model, 'hcuswactivedir') ?>
+
+    <?php // echo $form->field($model, 'hcuswbackupdir') ?>
 
     <?php // echo $form->field($model, 'hcuvideoserverdir') ?>
 

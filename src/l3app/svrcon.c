@@ -368,6 +368,16 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSvrConTaskInitInfo[TASK_ID_LCD].active = SVRCON_TASK_ACTIVE;
 	zHcuSvrConTaskInitInfo[TASK_ID_LCD].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 
+	if (zHcuTaskInfo[TASK_ID_LED].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_LED, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_LED]);
+		}
+	}
+	zHcuSvrConTaskInitInfo[TASK_ID_LED].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_LED].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
 	if (zHcuTaskInfo[TASK_ID_CAMERA].swTaskActive == HCU_TASK_PNP_ON){
 		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_CAMERA, TASK_ID_SVRCON, &snd, snd.length);
 		if (ret == FAILURE){

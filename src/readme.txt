@@ -684,8 +684,10 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 所有的其它任务，均直接调用SPSAPI，而不在是SPS485了。
 > 由于这次改动较大，直接做一个版本，提交到DEV，防止更多的错误
 
-
-
+== Update log: 2016 June.16 SW Version: XQ.HCU.SW.R01.098 //ZJL
+> 增加LED任务模块，以便单独完成LED相关的控制
+> 这个模块的增加，涉及到DBICOM等部分的修改，以及工程参数表单的修改，还有L3UI的修改，数据库的备份等。
+> 注意，该过了数据库，需要重新IMPORT数据库以及L3UI到目标地
 
 
 

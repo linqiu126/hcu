@@ -28,6 +28,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'commhwboardlcd')->textInput() ?>
 
+    <?= $form->field($model, 'commhwboardled')->textInput() ?>
+
     <?= $form->field($model, 'commhwboardzeegbe')->textInput() ?>
 
     <?= $form->field($model, 'commhwboardflash')->textInput() ?>
@@ -199,6 +201,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'cloudftppwd')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'hcuswdownloaddir')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'hcuswactivedir')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'hcuswbackupdir')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'hcuvideoserverdir')->textInput(['maxlength' => true]) ?>
 
