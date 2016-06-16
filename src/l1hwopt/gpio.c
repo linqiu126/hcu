@@ -362,7 +362,7 @@ OPSTAT func_gpio_read_data_zp01voc(void)
 	//求平均
 	zHcuGpioToxicgasZp01voc = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("GPIO: Sensor ZP01VOC Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuGpioToxicgasZp01voc, RPI_GPIO_PIN_ZP01VOC_DATA);
+		HcuDebugPrint("GPIO: Sensor ZP01VOC Transformed float average read result pollution= %d[Times], DATA_GPIO_A#=%d, DATA_GPIO_B#=%d\n", (int)zHcuGpioToxicgasZp01voc, RPI_GPIO_PIN_ZP01VOC_DATA_A, RPI_GPIO_PIN_ZP01VOC_DATA_B);
 	}
 
 	return SUCCESS;
