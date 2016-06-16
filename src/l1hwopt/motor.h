@@ -16,7 +16,7 @@
 enum FSM_STATE_MOTOR
 {
 	FSM_STATE_MOTOR_INITED = 0x02,
-	FSM_STATE_MOTOR_RECEIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
+	FSM_STATE_MOTOR_ACTIVIED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_MOTOR_MAX,
 };
 //#define FSM_STATE_END   0xFE

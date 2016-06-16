@@ -26,10 +26,10 @@ FsmStateItem_t FsmAdc[] =
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
     //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_ADC_RECEIVED,            		fsm_adc_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_ADC_RECEIVED,            		fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_ADC_RECEIVED,       			fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_ADC_RECEIVED,       			fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,        FSM_STATE_ADC_ACTIVIED,            		fsm_adc_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_ADC_ACTIVIED,            		fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_ADC_ACTIVIED,       			fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_ADC_ACTIVIED,       			fsm_com_do_nothing},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -85,7 +85,7 @@ OPSTAT fsm_adc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	zHcuRunErrCnt[TASK_ID_ADC] = 0;
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_ADC, FSM_STATE_ADC_RECEIVED) == FAILURE){
+	if (FsmSetState(TASK_ID_ADC, FSM_STATE_ADC_ACTIVIED) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_ADC]++;
 		HcuErrorPrint("ADC: Error Set FSM State!\n");
 		return FAILURE;

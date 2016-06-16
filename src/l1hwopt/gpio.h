@@ -16,7 +16,7 @@
 enum FSM_STATE_GPIO
 {
 	FSM_STATE_GPIO_INITED = 0x02,
-	FSM_STATE_GPIO_RECEIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
+	FSM_STATE_GPIO_ACTIVIED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_GPIO_MAX,
 };
 //#define FSM_STATE_END   0xFE

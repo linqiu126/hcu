@@ -27,10 +27,10 @@ FsmStateItem_t FsmLed[] =
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
     //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_LED_RECEIVED,            		fsm_led_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_LED_RECEIVED,            		fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_LED_RECEIVED,       			fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_LED_RECEIVED,       			fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,        FSM_STATE_LED_ACTIVIED,            		fsm_led_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_LED_ACTIVIED,            		fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_LED_ACTIVIED,       			fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_LED_ACTIVIED,       			fsm_com_do_nothing},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -38,7 +38,6 @@ FsmStateItem_t FsmLed[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
-
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -53,7 +52,7 @@ OPSTAT fsm_led_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -87,7 +86,7 @@ OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	zHcuRunErrCnt[TASK_ID_LED] = 0;
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_LED, FSM_STATE_LED_RECEIVED) == FAILURE){
+	if (FsmSetState(TASK_ID_LED, FSM_STATE_LED_ACTIVIED) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_LED]++;
 		HcuErrorPrint("LED: Error Set FSM State!\n");
 		return FAILURE;
@@ -95,28 +94,19 @@ OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("LED: Enter FSM_STATE_LED_ACTIVED status, Keeping refresh here!\n");
 	}
-	/*
 
-	//进入阻塞式接收数据状态，然后继续发送
+	int workingCycle = 1;
+	//进入循环工作模式
 	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给AVORION
-			msg_struct_led_avorion_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_led_avorion_data_rx_t));
-			snd.length = sizeof(msg_struct_led_avorion_data_rx_t);
-			ret = hcu_message_send(MSG_ID_LED_AVORION_DATA_RX, TASK_ID_AVORION, TASK_ID_LED, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_LED]++;
-				HcuErrorPrint("LED: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_LED], zHcuTaskNameList[TASK_ID_AVORION]);
-				return FAILURE;
-			}
+		conCounter = 0;
+		if (HCU_SENSOR_PRESENT_LED_LED2PIN == HCU_SENSOR_PRESENT_YES){
+			func_led_write_data_led_2pin();
+			hcu_sleep(RPI_LED_SENSOR_WRITE_GAP/workingCycle);
+			conCounter++;
 		}
-
-		hcu_sleep(5);
+		conCounter = workingCycle-conCounter;
+		hcu_sleep(RPI_LED_SENSOR_WRITE_GAP/workingCycle * conCounter);
 	}
-	*/
 
 	return SUCCESS;
 }
@@ -133,3 +123,59 @@ OPSTAT func_led_int_init(void)
 {
 	return SUCCESS;
 }
+
+OPSTAT func_led_write_data_led_2pin(void)
+{
+#ifdef TARGET_RASPBERRY_PI3B
+
+	int i=0;
+
+    pinMode(RPI_LED_PIN_OUTPUT_LED2PIN, OUTPUT);
+    delay(25);
+    digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, 0);
+    delay(25);
+
+    //慢闪图案
+    for (i=0;i<RPI_LED_WRITE_REPEAT_TIMES;i++){
+    	delay(500);
+    	digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, LOW);
+    	delay(500);
+    	digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, HIGH);
+    }
+
+    //快闪图案
+    for (i=0;i<RPI_LED_WRITE_REPEAT_TIMES*5;i++){
+    	delay(100);
+    	digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, LOW);
+    	delay(100);
+    	digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, HIGH);
+    }
+
+    //少亮图案
+    for (i=0;i<RPI_LED_WRITE_REPEAT_TIMES*2;i++){
+    	delay(500);
+    	digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, LOW);
+    	delay(100);
+    	digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, HIGH);
+    }
+
+    //多亮图案
+    for (i=0;i<RPI_LED_WRITE_REPEAT_TIMES*2;i++){
+    	delay(100);
+    	digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, LOW);
+    	delay(500);
+    	digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, HIGH);
+    }
+
+    //结束，复位到灭灯
+    delay(25);
+    digitalWrite(RPI_LED_PIN_OUTPUT_LED2PIN, 0);
+
+	return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+}
+
+
