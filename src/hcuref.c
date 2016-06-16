@@ -10,13 +10,14 @@
 #include "l0service/sysinfo.h"
 #include "l0service/trace.h"
 #include "l1hwopt/apigprs.h"
-#include "l1hwopt/sps485.h"
+#include "l1hwopt/spsapi.h"
+#include "l1com/l1comdef.h"
 
 /*
  * Global Varible for Serial Port
  */
-SerialPort_t gSerialPortZb = {COM_PORT_1, 38400, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};
-SerialPort_t gSerialPortGprs = {COM_PORT_1, 115200, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};
+SerialPortCom_t gSerialPortZb = {SPS_COM_PORT_PATH_1, 38400, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};
+SerialPortCom_t gSerialPortGprs = {SPS_COM_PORT_PATH_1, 115200, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};
 /*
  * Global Variable for Socket
  */
@@ -158,7 +159,7 @@ UINT32 ThreadCreate(pthread_t *thrdId, void *(*start_func)(void *), void *arg, i
 UINT32 HcuMainLoop();
 UINT32 ReadCommandLineParameter(int argc, char *argv[]);
 UINT32 InitGlobleVarialbles();
-UINT32 InitSerialPort(SerialPort_t *sp);
+UINT32 InitSerialPort(SerialPortCom_t *sp);
 UINT32 InitSocketPort(SocketPort_t *sp);
 UINT32 IsFrameFcsOk(UINT8 *f);
 UINT32 IsBindStatusInd(UINT8 *f);
@@ -166,7 +167,7 @@ void MsgProcBindStatusInd(UINT8 *f);
 void HcuResetZigbee();
 void WaitZbStartUp();
 UINT32 FindNextPoolingIndex(WedSensors_t *wss, PollingLoopBehavior_t *plb);
-void SensorPolling(SerialPort_t *sp, WedSensors_t *wss, SensorsMeasurementsTable_t *smt, HcuMeasureBehavior_t *wmb, PollingLoopBehavior_t *plb);
+void SensorPolling(SerialPortCom_t *sp, WedSensors_t *wss, SensorsMeasurementsTable_t *smt, HcuMeasureBehavior_t *wmb, PollingLoopBehavior_t *plb);
 void BuildDataReq(UINT8 *zbCmd, char *sensorCmd,UINT32 NumOfSensor);
 //UINT32 AnalyzePollingResult( UINT32 idxPollingLoop, UINT32 idxSensor, UINT32 idxMeasure, char *CmdReceivedOverSerial, UINT32 len, char **validCmdString);
 UINT32 ZbCmdProssing(UINT8 *CmdString, UINT32 LenOfCmd);
@@ -337,7 +338,7 @@ int wip_Main(int argc, char *argv[])
 	HcuDebugPrint("Hcu Zigbee started, COORD_START_IND over Serial received.\n");
 
 	/* Chang the serial from 0, 1 to 2, 1, enable serial time out*/
-	SerialPortSetVtimeVmin(&gSerialPortZb, gHcuMeasureBehavior.SerialVtime, gHcuMeasureBehavior.SerialVmin);
+	hcu_spsapi_SerialPortSetVtimeVmin(&gSerialPortZb, gHcuMeasureBehavior.SerialVtime, gHcuMeasureBehavior.SerialVmin);
 	HcuDebugPrint("Hcu is preparing to start timers for sensor pooling and report reading, Serial timeout set to VTIME = %d*0.1 s, VMIN = %d\n", gHcuMeasureBehavior.SerialVtime, gHcuMeasureBehavior.SerialVmin);
 
 	/* empty signals from the set */
@@ -791,13 +792,13 @@ UINT32 HcuMainLoop()
  * Initialize Serial Port
  *
  */
-UINT32 InitSerialPort(SerialPort_t *sp)
+UINT32 InitSerialPort(SerialPortCom_t *sp)
 {
 	UINT32 ret = SUCCESS;
 
 	HcuDebugPrint("InitSerialPort Start ...\n");
 
-	ret = SerialPortOpen(sp->id, (UINT16 *)(&(sp->fd)));
+	ret = spsapi_SerialPortOpen(sp->id, (UINT16 *)(&(sp->fd)));
 	if (FAILURE == ret)
 	{
 		HcuErrorPrint("InitSerialPort serial port COM%d open failure.\n", sp->id);
@@ -805,7 +806,7 @@ UINT32 InitSerialPort(SerialPort_t *sp)
 	}
 	HcuDebugPrint("InitSerialPort serial port COM%d open successfully.\n", sp->id);
 
-	ret = SerialPortSet(sp);
+	ret = spsapi_SerialPortSet(sp);
 	if (FAILURE == ret)
 	{
 		HcuErrorPrint("Open Serial Port %d failure.\n", sp->id);
@@ -906,27 +907,27 @@ UINT32 ReadCommandLineParameter(int argc, char *argv[])
 
 	if (0 == strcmp(argv[1],"0"))
 	{
-		gSerialPortZb.id = COM_PORT_0;
+		gSerialPortZb.id = SPS_COM_PORT_PATH_0;
 		HcuDebugPrint("ReadCommandLineParameter: COM0 port will be used ...\n");
 	}
 	else if (0 == strcmp(argv[1],"1"))
 	{
-		gSerialPortZb.id = COM_PORT_1;
+		gSerialPortZb.id = SPS_COM_PORT_PATH_1;
 		HcuDebugPrint("ReadCommandLineParameter: COM1 port will be used ...\n");
 	}
 	else if (0 == strcmp(argv[1],"2"))
 	{
-		gSerialPortZb.id = COM_PORT_2;
+		gSerialPortZb.id = SPS_COM_PORT_PATH_2;
 		HcuDebugPrint("ReadCommandLineParameter: COM2 port will be used ...\n");
 	}
 	else if (0 == strcmp(argv[1],"3"))
 	{
-		gSerialPortZb.id = COM_PORT_3;
+		gSerialPortZb.id = SPS_COM_PORT_PATH_3;
 		HcuDebugPrint("ReadCommandLineParameter: COM3 port will be used ...\n");
 	}
 	else if (0 == strcmp(argv[1],"4"))
 	{
-		gSerialPortZb.id = COM_PORT_4;
+		gSerialPortZb.id = SPS_COM_PORT_PATH_4;
 		HcuDebugPrint("ReadCommandLineParameter: COM4 port will be used ...\n");
 	}
 	else
@@ -1220,7 +1221,7 @@ UINT32 InitGlobleVarialbles()
 /*
  * Polling Sensors
  */
-void SensorPolling(SerialPort_t *sp, WedSensors_t *wss, SensorsMeasurementsTable_t *smt, HcuMeasureBehavior_t *wmb, PollingLoopBehavior_t *plb)
+void SensorPolling(SerialPortCom_t *sp, WedSensors_t *wss, SensorsMeasurementsTable_t *smt, HcuMeasureBehavior_t *wmb, PollingLoopBehavior_t *plb)
 {
 
 	UINT16	fd = sp->fd;

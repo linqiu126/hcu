@@ -38,8 +38,8 @@ typedef struct SerialPortCom
 extern UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd);
 extern UINT32 spsapi_SerialPortSet(SerialPortCom_t *sp);
 extern UINT32 spsapi_SerialPortClose(UINT16 fd);
-extern UINT32 spsapi_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8 vMin);
 
+extern UINT32 hcu_spsapi_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8 vMin);
 extern UINT32 hcu_spsapi_serial_init(SerialPortCom_t *sp);
 extern UINT32 hcu_spsapi_serial_port_get(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 Len);
 extern UINT32 hcu_spsapi_serial_port_send(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Len);

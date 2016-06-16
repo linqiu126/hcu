@@ -6,8 +6,6 @@
  */
 
 #include "../l1hwopt/gps.h"
-
-
 #include "../l0service/trace.h"
 #include "../l0dbi/dbicom.h"
 
@@ -43,7 +41,7 @@ extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
 //For Serial Port Init
 //SerialPort_t gSerialPortForGPS = {zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
-SerialPort_t gSerialPortForGPS;
+SerialPortCom_t gSerialPortForGPS;
 
 //For GPS receive data
 CHAR GPS_BUF[GPS_REC_BUFF_SIZE];
@@ -120,7 +118,7 @@ OPSTAT fsm_gps_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		HcuDebugPrint("GPS: Init Serial Port Success ...\n");
 	}
 
-	SerialPortSetVtimeVmin(&gSerialPortForGPS, 10, 5);
+	hcu_spsapi_SerialPortSetVtimeVmin(&gSerialPortForGPS, 10, 5);
 	//HcuDebugPrint("GPS: SeriesPortForGPS = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS);
 	HcuDebugPrint("GPS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForGPS.vTime, gSerialPortForGPS.vMin);
 

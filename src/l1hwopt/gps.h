@@ -9,7 +9,7 @@
 #define L1HWOPT_GPS_H_
 
 #include "../l0comvm/vmlayer.h"
-#include "../l1hwopt/sps485.h" //Shanchun: For serial port, to do later: move the serial port operation to a separated file
+#include "../l1hwopt/spsapi.h" //Shanchun: For serial port, to do later: move the serial port operation to a separated file
 #include "../l1com/l1comdef.h"
 
 

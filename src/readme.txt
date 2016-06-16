@@ -678,9 +678,11 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 在实际多个串口外设工作的时候，还是需要按照下列方式进行配置，不然数据读取反应速度会极其慢
 	==> 为了设置串口传感器互斥，必须在SYSCONFIG中设置  #define HCU_SENSOR_PRESENT_SHARP HCU_SENSOR_PRESENT_NO
 
-
-
-
+== Update log: 2016 June.16 SW Version: XQ.HCU.SW.R01.097 //ZJL
+> 映射SPSAPI到SPS485，规范化SPS485模块功能
+> MODBUS的串口初始化移到SPS485模块中去了
+> 所有的其它任务，均直接调用SPSAPI，而不在是SPS485了。
+> 由于这次改动较大，直接做一个版本，提交到DEV，防止更多的错误
 
 
 
