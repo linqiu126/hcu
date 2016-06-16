@@ -25,6 +25,9 @@ enum FSM_STATE_PWM
 //Global variables
 extern FsmStateItem_t FsmPwm[];
 
+#define RPI_PWM_SENSOR_WRITE_GAP 60 //in second
+#define RPI_PWM_WRITE_REPEAT_TIMES 10
+
 //API
 extern OPSTAT fsm_pwm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -32,5 +35,8 @@ extern OPSTAT fsm_pwm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 //Local API
 OPSTAT func_pwm_int_init(void);
+
+OPSTAT func_pwm_write_data_motor_sg90(void);
+OPSTAT func_pwm_write_data_led_2pin(void);
 
 #endif /* L1HWOPT_PWM_H_ */
