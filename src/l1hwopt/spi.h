@@ -16,7 +16,7 @@
 enum FSM_STATE_SPI
 {
 	FSM_STATE_SPI_INITED = 0x02,
-	FSM_STATE_SPI_RECEIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
+	FSM_STATE_SPI_ACTIVIED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_SPI_MAX,
 };
 //#define FSM_STATE_END   0xFE

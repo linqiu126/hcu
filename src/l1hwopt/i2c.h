@@ -16,7 +16,7 @@
 enum FSM_STATE_I2C
 {
 	FSM_STATE_I2C_INITED = 0x02,
-	FSM_STATE_I2C_RECEIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
+	FSM_STATE_I2C_ACTIVIED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_I2C_MAX,
 };
 //#define FSM_STATE_END   0xFE

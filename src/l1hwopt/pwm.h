@@ -16,7 +16,7 @@
 enum FSM_STATE_PWM
 {
 	FSM_STATE_PWM_INITED = 0x02,
-	FSM_STATE_PWM_RECEIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
+	FSM_STATE_PWM_ACTIVIED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_PWM_MAX,
 };
 //#define FSM_STATE_END   0xFE
@@ -25,7 +25,17 @@ enum FSM_STATE_PWM
 //Global variables
 extern FsmStateItem_t FsmPwm[];
 
-#define RPI_PWM_SENSOR_WRITE_GAP 60 //in second
+//Local variables
+#define RPI_PWM_PIN_VCC 2  //5V
+#define RPI_PWM_PIN_GND 6
+#define RPI_PWM_PIN_OUTPUT_SG90 1  //Pin#12   //用于SG90马达的测试
+#define RPI_PWM_PIN_OUTPUT_LED2PIN 29  //Pin#40  //用于LED的测试
+//有两种解释
+//第一种解释：0表示全关，100表示全开，所以范围就是100
+//第二种解释：1表示100us,200=20ms，正好等于50Hz/一个SG90的工作周期
+#define RPI_PWM_WORKING_RANGE 200  //，另外一种情形用200，然后模拟成7-28， 7+x*21/255，比较丑陋
+
+#define RPI_PWM_SENSOR_WRITE_GAP 20 //in second
 #define RPI_PWM_WRITE_REPEAT_TIMES 10
 
 //API
