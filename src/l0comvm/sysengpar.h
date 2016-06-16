@@ -21,6 +21,7 @@ typedef struct SysEngParElementComm
 	UINT8  commHwBoard3g4g;
 	UINT8  commHwBoardGps;
 	UINT8  commHwBoardLcd;
+	UINT8  commHwBoardLed;
 	UINT8  commHwBoardZeegbe;
 	UINT8  commHwBoardFlash;
 	UINT8  commFrameModbus;
