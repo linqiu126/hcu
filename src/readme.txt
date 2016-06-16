@@ -692,6 +692,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 == Update log: 2016 June.16 SW Version: XQ.HCU.SW.R01.099 //ZJL
 > 按照传感器说明书，完善ZP01VOC功能
 > 实验LED以及马达功能
+> CLOUDVELA过于庞大，将其中的XML和ZHB两种编解码函数集合全部拆出来，形成独立的文件模块，分别为BHCODECXML及BHCODECZHB
 
 
 
