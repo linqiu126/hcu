@@ -33,10 +33,10 @@ extern FsmStateItem_t FsmPwm[];
 //有两种解释
 //第一种解释：0表示全关，100表示全开，所以范围就是100
 //第二种解释：1表示100us,200=20ms，正好等于50Hz/一个SG90的工作周期
-#define RPI_PWM_WORKING_RANGE 200  //，另外一种情形用200，然后模拟成7-28， 7+x*21/255，比较丑陋
+#define RPI_PWM_WORKING_RANGE 100  //，另外一种情形用200，然后模拟成7-28， 7+x*21/255，比较丑陋
 
-#define RPI_PWM_SENSOR_WRITE_GAP 20 //in second
-#define RPI_PWM_WRITE_REPEAT_TIMES 10
+#define RPI_PWM_SENSOR_WRITE_GAP 10 //in second
+#define RPI_PWM_WRITE_REPEAT_TIMES 3
 
 //API
 extern OPSTAT fsm_pwm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

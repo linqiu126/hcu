@@ -213,8 +213,8 @@ OPSTAT func_alcohol_time_out_read_data_from_mq3alco(void)
 		memset(&alcoholData, 0, sizeof(sensor_alcohol_mq3alco_data_element_t));
 		alcoholData.equipid = 0;
 		alcoholData.timeStamp = time(0);
-		alcoholData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		alcoholData.alcoholValue = (int)(zHcuGpioAlcoholMq3alco*100);
+		alcoholData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+		alcoholData.alcoholValue = (int)(zHcuGpioAlcoholMq3alco);
 
 		ret = dbi_HcuAlcoholMq3alcoDataInfo_save(&alcoholData);
 		if (ret == FAILURE){
