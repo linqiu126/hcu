@@ -154,7 +154,7 @@ OPSTAT func_pwm_write_data_motor_sg90(void)
 			pwmValueSg90 = 7 + (int)(i*21/255);
 			softPwmWrite(RPI_PWM_PIN_OUTPUT_SG90, pwmValueSg90);
 			//回到原位
-			delay(20)
+			delay(20);
 			softPwmWrite(RPI_PWM_PIN_OUTPUT_SG90, 0);
 			//softPwmWrite(RPI_PWM_PIN_OUTPUT_M, i);
 		}
@@ -188,7 +188,7 @@ OPSTAT func_pwm_write_data_led_2pin(void)
 			pwmValueLed2pin = 7 + (int)(i*21/255);
 			softPwmWrite(RPI_PWM_PIN_OUTPUT_LED2PIN, pwmValueLed2pin);
 			//回到原位
-			delay(20)
+			delay(20);
 			softPwmWrite(RPI_PWM_PIN_OUTPUT_LED2PIN, 0);
 			//softPwmWrite(RPI_PWM_PIN_OUTPUT_S, i);
 		}
