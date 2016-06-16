@@ -27,6 +27,7 @@
 #include "./l1hwopt/ethernet.h"
 #include "./l1hwopt/gps.h"
 #include "./l1hwopt/lcd.h"
+#include "./l1hwopt/led.h"
 #include "./l1hwopt/sps232.h"
 #include "./l1hwopt/sps485.h"
 #include "./l1hwopt/usbnet.h"
@@ -406,6 +407,15 @@ void hcu_app_system_init()
 		zHcuTaskInfo[TASK_ID_LCD].hwPlugin = HCU_TASK_PNP_OFF;
 		zHcuTaskInfo[TASK_ID_LCD].hwActive = HCU_TASK_PNP_OFF;
 	}
+	if (zHcuSysEngPar.comm.commHwBoardLed == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_LED].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_LED].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_LED].hwActive = HCU_TASK_PNP_ON;
+	}else{
+		zHcuTaskInfo[TASK_ID_LED].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_LED].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_LED].hwActive = HCU_TASK_PNP_OFF;
+	}
 	if (zHcuSysEngPar.comm.commHwBoardEthernet == COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_ETHERNET].swTaskActive = HCU_TASK_PNP_ON;
 		zHcuTaskInfo[TASK_ID_ETHERNET].hwPlugin = HCU_TASK_PNP_ON;
@@ -775,6 +785,9 @@ void hcu_task_create_all(void)
 	//Create task LCD environments/26
 	hcu_system_task_init_call(TASK_ID_LCD, FsmLcd);
 
+	//Create task LCD environments/26.1
+	hcu_system_task_init_call(TASK_ID_LED, FsmLed);
+
 	//Create task Camera environments/27
 	hcu_system_task_init_call(TASK_ID_CAMERA, FsmCamera);
 
@@ -909,6 +922,9 @@ void hcu_task_create_all_but_avorion(void)
 
 	//Create task LCD environments/26
 	hcu_system_task_init_call(TASK_ID_LCD, FsmLcd);
+
+	//Create task LCD environments/26.1
+	hcu_system_task_init_call(TASK_ID_LED, FsmLed);
 
 	//Create task Camera environments/27
 	hcu_system_task_init_call(TASK_ID_CAMERA, FsmCamera);
@@ -1239,6 +1255,9 @@ UINT32 hcu_system_task_init(void)
 
 	    //Create task LCD environments/26
 	    hcu_system_task_init_call(TASK_ID_LCD, FsmLcd);
+
+	    //Create task LCD environments/26.1
+	    hcu_system_task_init_call(TASK_ID_LED, FsmLed);
 
 	    //Create task CAMERA environments/27
 	    hcu_system_task_init_call(TASK_ID_CAMERA, FsmCamera);
