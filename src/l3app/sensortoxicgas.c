@@ -215,8 +215,8 @@ OPSTAT func_toxicgas_time_out_read_data_from_mq135(void)
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_mq135_data_element_t));
 		toxicgasData.equipid = 0;
 		toxicgasData.timeStamp = time(0);
-		toxicgasData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		toxicgasData.toxicgasValue = (int)(zHcuGpioToxicgasMq135*100);
+		toxicgasData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+		toxicgasData.toxicgasValue = (int)(zHcuGpioToxicgasMq135);
 
 		ret = dbi_HcuToxicgasMq135DataInfo_save(&toxicgasData);
 		if (ret == FAILURE){
@@ -240,8 +240,8 @@ OPSTAT func_toxicgas_time_out_read_data_from_zp01voc(void)
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_zp01voc_data_element_t));
 		toxicgasData.equipid = 0;
 		toxicgasData.timeStamp = time(0);
-		toxicgasData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		toxicgasData.toxicgasValue = (int)(zHcuGpioToxicgasZp01voc*100);
+		toxicgasData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+		toxicgasData.toxicgasValue = (int)(zHcuGpioToxicgasZp01voc);
 
 		ret = dbi_HcuToxicgasZp01vocDataInfo_save(&toxicgasData);
 		if (ret == FAILURE){

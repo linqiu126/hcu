@@ -693,7 +693,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 按照传感器说明书，完善ZP01VOC功能
 > 实验LED以及马达功能
 > CLOUDVELA过于庞大，将其中的XML和ZHB两种编解码函数集合全部拆出来，形成独立的文件模块，分别为BHCODECXML及BHCODECZHB
-
+> LED自己编制的闪灯方案工作正常
+> PWM控制的LED闪灯工作正常
+> PWM控制的马达SG90偶尔工作一下，不能连续工作，待确定其正常工作的条件
 
 
 

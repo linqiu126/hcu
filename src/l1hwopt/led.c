@@ -100,7 +100,7 @@ OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	while(1){
 		conCounter = 0;
 		if (HCU_SENSOR_PRESENT_LED_LED2PIN == HCU_SENSOR_PRESENT_YES){
-			func_led_write_data_led_2pin();
+			func_led_write_data_led2pin();
 			hcu_sleep(RPI_LED_SENSOR_WRITE_GAP/workingCycle);
 			conCounter++;
 		}
@@ -124,7 +124,7 @@ OPSTAT func_led_int_init(void)
 	return SUCCESS;
 }
 
-OPSTAT func_led_write_data_led_2pin(void)
+OPSTAT func_led_write_data_led2pin(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
 

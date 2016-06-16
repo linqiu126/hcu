@@ -29,7 +29,7 @@ extern FsmStateItem_t FsmLed[];
 //Local variables
 #define RPI_LED_PIN_VCC 2  //5V
 #define RPI_LED_PIN_GND 6
-#define RPI_LED_PIN_OUTPUT_LED2PIN 29  //Pin#40  //用于LED的测试
+#define RPI_LED_PIN_OUTPUT_LED2PIN 25  //Pin#37  //用于LED的测试
 
 #define RPI_LED_SENSOR_WRITE_GAP 60 //in second
 #define RPI_LED_WRITE_REPEAT_TIMES 10
@@ -42,7 +42,7 @@ extern OPSTAT fsm_led_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 //Local API
 OPSTAT func_led_int_init(void);
 
-OPSTAT func_led_write_data_led_2pin(void);
+OPSTAT func_led_write_data_led2pin(void);
 
 
 #endif /* L1HWOPT_LED_H_ */

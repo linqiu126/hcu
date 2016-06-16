@@ -141,23 +141,17 @@ OPSTAT func_pwm_write_data_motor_sg90(void)
 	int pwmValueSg90 = 0;
 	int i=0, j=0;
 
-	if (softPwmCreate(RPI_PWM_PIN_OUTPUT_SG90, pwmValueSg90, RPI_PWM_WORKING_RANGE) !=0){  //1=100us, range 7-28
-		zHcuRunErrCnt[TASK_ID_PWM]++;
-		HcuErrorPrint("PWM: Error create PWM master!\n");
-		return FAILURE;
-	}
-
+	softPwmCreate(RPI_PWM_PIN_OUTPUT_SG90, pwmValueSg90, RPI_PWM_WORKING_RANGE);
 	//循环工作RPI_PWM_WRITE_REPEAT_TIMES个周期
 	for (j=0; j<RPI_PWM_WRITE_REPEAT_TIMES; j++){
 		for (i=0; i<RPI_PWM_WORKING_RANGE; i++){
 			delay(20);
 			pwmValueSg90 = 7 + (int)(i*21/255);
-			softPwmWrite(RPI_PWM_PIN_OUTPUT_SG90, pwmValueSg90);
-			//回到原位
+			softPwmWrite(RPI_PWM_PIN_OUTPUT_SG90, i);
 			delay(20);
 			softPwmWrite(RPI_PWM_PIN_OUTPUT_SG90, 0);
-			//softPwmWrite(RPI_PWM_PIN_OUTPUT_M, i);
 		}
+		//HcuDebugPrint("PWM: SG90 Index = %d \n", j);
 	}
 
 	return SUCCESS;
@@ -175,23 +169,16 @@ OPSTAT func_pwm_write_data_led_2pin(void)
 	int pwmValueLed2pin = 0;
 	int i=0, j=0;
 
-	if (softPwmCreate(RPI_PWM_PIN_OUTPUT_LED2PIN, pwmValueLed2pin, RPI_PWM_WORKING_RANGE) !=0){  //1=100us, range 7-28
-		zHcuRunErrCnt[TASK_ID_PWM]++;
-		HcuErrorPrint("PWM: Error create PWM slave!\n");
-		return FAILURE;
-	}
-
+	softPwmCreate(RPI_PWM_PIN_OUTPUT_LED2PIN, pwmValueLed2pin, RPI_PWM_WORKING_RANGE);
 	//循环工作RPI_PWM_WRITE_REPEAT_TIMES个周期
 	for (j=0; j<RPI_PWM_WRITE_REPEAT_TIMES; j++){
 		for (i=0; i<RPI_PWM_WORKING_RANGE; i++){
 			delay(20);
-			pwmValueLed2pin = 7 + (int)(i*21/255);
-			softPwmWrite(RPI_PWM_PIN_OUTPUT_LED2PIN, pwmValueLed2pin);
-			//回到原位
+			softPwmWrite(RPI_PWM_PIN_OUTPUT_LED2PIN, i);
 			delay(20);
 			softPwmWrite(RPI_PWM_PIN_OUTPUT_LED2PIN, 0);
-			//softPwmWrite(RPI_PWM_PIN_OUTPUT_S, i);
 		}
+		//HcuDebugPrint("PWM: LED2PIN Index = %d \n", j);
 	}
 
 	return SUCCESS;
