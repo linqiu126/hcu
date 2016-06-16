@@ -8,6 +8,7 @@
 #include "../l1hwopt/sps485.h"
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
+
 /*
 ** FSM of the SPS485
 */
@@ -36,6 +37,9 @@ FsmStateItem_t FsmSps485[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+
+//SerialPort_t gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
+SerialPortCom_t gSerialPortMobus;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -83,6 +87,33 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Global variables
 	zHcuRunErrCnt[TASK_ID_SPS485] = 0;
 
+	//为MODBUS初始化串口硬件端口
+	gSerialPortMobus.id = zHcuSysEngPar.serialport.SeriesPortForModbus;
+	gSerialPortMobus.nSpeed = 9600;
+	gSerialPortMobus.nBits = 8;
+	gSerialPortMobus.nEvent = 'N';
+	gSerialPortMobus.nStop = 1;
+	gSerialPortMobus.fd = HCU_INVALID_U16;
+	gSerialPortMobus.vTime = HCU_INVALID_U8;
+	gSerialPortMobus.vMin = HCU_INVALID_U8;
+	gSerialPortMobus.c_lflag = 0;
+	//gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
+	ret = hcu_sps485_serial_init(&gSerialPortMobus);
+	if (FAILURE == ret){
+		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		HcuErrorPrint("SPS485: Init Serial Port Failure, Exit.\n");
+	}
+	else{
+		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+			HcuDebugPrint("SPS485: Init Serial Port Success ...\n");
+		}
+	}
+
+	hcu_sps485_SerialPortSetVtimeVmin(&gSerialPortMobus, 1, 20);
+	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("SPS485: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortMobus.vTime, gSerialPortMobus.vMin);
+	}
+
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPS485, FSM_STATE_SPS485_RECEIVED) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_SPS485]++;
@@ -92,29 +123,6 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPS485: Enter FSM_STATE_SPS485_ACTIVED status, Keeping refresh here!\n");
 	}
-
-	/*
-
-	//进入阻塞式接收数据状态，然后继续发送
-	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给CLOUDCONT
-			msg_struct_sps485_modbus_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_sps485_modbus_data_rx_t));
-			snd.length = sizeof(msg_struct_sps485_modbus_data_rx_t);
-			ret = hcu_message_send(MSG_ID_SPS485_MODBUS_DATA_RX, TASK_ID_MODBUS, TASK_ID_SPS485, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_SPS485]++;
-				HcuErrorPrint("SPS485: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPS485], zHcuTaskNameList[TASK_ID_MODBUS]);
-				return FAILURE;
-			}
-		}
-
-		hcu_sleep(5);
-	}
-	*/
 
 	return SUCCESS;
 }
@@ -133,10 +141,64 @@ OPSTAT func_sps485_int_init(void)
 }
 
 
-////////////////////////////////////////////第一种串口函数方式//////////////////////////////////////////////////////
+UINT32 hcu_sps485_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8 vMin)
+{
+	int ret=0;
+	ret = hcu_spsapi_SerialPortSetVtimeVmin(sp, vTime, vMin);
+	if (ret == FAILURE){
+		HcuErrorPrint("SPS485: Serial port set vTime vMin error!");
+		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		return FAILURE;
+	}
+	return ret;
+}
+
+//SPS485 INIT
+UINT32 hcu_sps485_serial_init(SerialPortCom_t *sp)
+{
+	int ret=0;
+	ret = hcu_spsapi_serial_init(sp);
+	if (ret == FAILURE){
+		HcuErrorPrint("Serial port init error!\n");
+		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		return FAILURE;
+	}
+
+	return ret;
+}
+
+//SPS485 GET
+UINT32 hcu_sps485_serial_port_get(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Len)
+{
+	int ret=0;
+	ret = hcu_spsapi_serial_port_get(sp, rcv_buf, Len);
+	if (ret == FAILURE){
+		HcuErrorPrint("SPS485: Serial port get data error!\n");
+		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		return FAILURE;
+	}
+
+	return ret;
+}
+
+//SPS485发送
+UINT32 hcu_sps485_serial_port_send(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 Len)
+{
+	int ret=0;
+	ret = hcu_spsapi_serial_port_send(sp, send_buf, Len);
+	if ( ret == FAILURE){
+        HcuErrorPrint("SPS485: Serial port send data error!\n");
+        zHcuRunErrCnt[TASK_ID_SPS485]++;
+        return FAILURE;
+	}
+
+	return ret;
+}
+
+
+
 /*
- * Global Variables
- */
+////////////////////////////////////////////第一种串口函数方式//////////////////////////////////////////////////////
 
 #ifdef TARGET_LINUX_ARM
 //	static char com_port_0_path[] = "/dev/ttySAC0";
@@ -151,8 +213,6 @@ OPSTAT func_sps485_int_init(void)
 	static char com_port_4_path[] = "/dev/ttyO4";
 #endif
 
-/*
- */
 #ifdef TARGET_LINUX_X86
 	static char com_port_0_path[] = "/dev/ttyUSB0";
 	static char com_port_1_path[] = "/dev/ttyUSB1";
@@ -165,7 +225,7 @@ OPSTAT func_sps485_int_init(void)
 
 #ifdef TARGET_RASPBERRY_PI3B
 	static char com_port_0_path[] = "/dev/ttyAMA0";
-	/* static char com_port_0_path[] = "/dev/ttyUSB0"; */
+	// static char com_port_0_path[] = "/dev/ttyUSB0";
 	static char com_port_1_path[] = "/dev/ttyUSB1";
 	static char com_port_2_path[] = "/dev/ttyUSB2";
 	static char com_port_3_path[] = "/dev/ttyS0";
@@ -173,16 +233,12 @@ OPSTAT func_sps485_int_init(void)
     //static char com_port_3_path[] = "/dev/ttyUSB3";
     //static char com_port_4_path[] = "/dev/ttyUSB4";
 #endif
-/*
-** Local static variables
-*/
-//static unsigned char traceFileName[] = __FILE__;
 
 
 UINT32 SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 {
 
-	/* Port Open Result */
+	// Port Open Result
 	if (NULL == fd)
 	{
 		HcuErrorPrint("Series Port: Invalid fd, *fd is pointing to address NULL.\n");
@@ -261,34 +317,12 @@ UINT32 SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 		return FAILURE;
 	}
 
-/*
-	//non_blocking mode
-	if(fcntl(*fd, F_SETFL, FNDELAY) < 0)
-	{
-		HcuErrorPrint("SPS485: fcntl failed!\n");
-		zHcuRunErrCnt[TASK_ID_SPS485]++;
-		return FAILURE;
-	}
-*/
-
-	/*
-	if(0 == isatty(STDIN_FILENO))
-	{
-		HcuErrorPrint("Series Port: Standard input is not a terminal device\n");
-		zHcuRunErrCnt[TASK_ID_SPS485]++;
-		return FAILURE;
-	}
-	*/
-
-	/* Return the result */
 	HcuDebugPrint("Series Port: COM %d has been openned\n", com_port_to_open);
 	return SUCCESS;
 }
 
 UINT32 SerialPortSet(SerialPort_t *sp)
 {
-
-	/* Local variable */
 	struct termios newtio, oldtio;
 	UINT32 cflag, iflag, oflag, lflag;
 
@@ -299,13 +333,13 @@ UINT32 SerialPortSet(SerialPort_t *sp)
 		return FAILURE;
 	}
 
-	/* Set all bit to Zero */
+	// Set all bit to Zero
 	bzero( &newtio, sizeof( newtio ) );
 
 	newtio.c_cflag  |=  CLOCAL | CREAD;
 	newtio.c_cflag &= ~CSIZE;
 
-    /* set input mode (non-canonical, no echo,...) */
+    // set input mode (non-canonical, no echo,...)
     newtio.c_lflag = sp->c_lflag;
 
 	switch( sp->nBits )
@@ -396,14 +430,14 @@ UINT32 SerialPortSet(SerialPort_t *sp)
 
 	}
 
-	/* default VTIME and VMIN */
+	// default VTIME and VMIN
 	newtio.c_cc[VTIME] = 0;
-	newtio.c_cc[VMIN] = 1;  /* If there is one in the buffer, it will be return from block read, */
+	newtio.c_cc[VMIN] = 1;  // If there is one in the buffer, it will be return from block read,
 
-	/* Clean the buffer !!! before !!! the parameter active */
+	// Clean the buffer !!! before !!! the parameter active
 	tcflush(sp->fd, TCIFLUSH);
 
-	/* Set parameters */
+	// Set parameters
 	if((tcsetattr(sp->fd,TCSANOW, &newtio))!=0)
 	{
 		HcuErrorPrint("SPS485: COM port set error\n");
@@ -411,11 +445,11 @@ UINT32 SerialPortSet(SerialPort_t *sp)
 		return FAILURE;
 	}
 
-	/* Save VTIME and VMIN */
+	// Save VTIME and VMIN
 	sp->vTime = 0;
 	sp->vMin = 1;
 
-	/* Read out the config paramter for debug */
+	// Read out the config paramter for debug
 	cflag = (UINT32)newtio.c_cflag;
 	iflag = (UINT32)newtio.c_iflag;
 	oflag = (UINT32)newtio.c_oflag;
@@ -430,7 +464,7 @@ UINT32 SerialPortSet(SerialPort_t *sp)
 
 UINT32 SerialPortClose(UINT16 fd)
 {
-	/* Local variable */
+	// Local variable
 	struct termios oldtio;
 
 	if ( tcgetattr(fd, &oldtio)  !=  SUCCESS)
@@ -440,14 +474,14 @@ UINT32 SerialPortClose(UINT16 fd)
 		return FAILURE;
 	}
 
-	/* Close the PORT */
+	// Close the PORT
 	close(fd);
 	return SUCCESS;
 }
 
 UINT32 SerialPortSetVtimeVmin(SerialPort_t *sp, UINT8 vTime, UINT8 vMin)
 {
-	/* Local variable */
+	// Local variable
 	struct termios oldtio;
 	UINT8 fd = sp->fd;
 
@@ -458,14 +492,14 @@ UINT32 SerialPortSetVtimeVmin(SerialPort_t *sp, UINT8 vTime, UINT8 vMin)
 		return FAILURE;
 	}
 
-	/* Set VTIME and VMIN */
+	// Set VTIME and VMIN
 	oldtio.c_cc[VTIME]  = vTime;
-	oldtio.c_cc[VMIN] = vMin;  /* If there is one in the buffer, it will be return from block read, */
+	oldtio.c_cc[VMIN] = vMin;  // If there is one in the buffer, it will be return from block read,
 
-	/* Clean the buffer !!! before !!! the parameter active */
+	// Clean the buffer !!! before !!! the parameter active
 	tcflush(fd, TCIFLUSH);
 
-	/* Set parameters */
+	// Set parameters
 	if((tcsetattr(fd, TCSANOW, &oldtio))!=0)
 	{
 		HcuErrorPrint("Series Port: COM port set error\n");
@@ -473,7 +507,7 @@ UINT32 SerialPortSetVtimeVmin(SerialPort_t *sp, UINT8 vTime, UINT8 vMin)
 		return FAILURE;
 	}
 
-	/* Save VTIME and VMIN */
+	// Save VTIME and VMIN
 	sp->vTime = vTime;
 	sp->vMin = vMin;
 
@@ -575,7 +609,7 @@ UINT32 hcu_sps485_serial_port_send(SerialPort_t *sp, UINT8 *send_buf, UINT32 Len
      }
      return ret;
 }
-
+*/
 
 
 ////////////////////////////////////////////第二种串口函数方式//////////////////////////////////////////////////////

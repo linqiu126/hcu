@@ -6,7 +6,6 @@
  */
 
 #include "../l1hwopt/apigprs.h"
-
 #include "../l0service/trace.h"
 
 /*
@@ -21,7 +20,7 @@
 /*
  * Initialize the GPRS parameters from local configuration
  */
-UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
+UINT32 GprsInit(SerialPortCom_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 {
 
 	UINT8 id = pGprsSerialPortConfig->id;				/* COM1=>0, COM1=>1, COM2=>2 ....  */
@@ -47,7 +46,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 
 	HcuDebugPrint("GprsInit: GPRS and PPPD not actived, checking GPRS module ...\n");
 
-	ret = SerialPortOpen(id, &fd);
+	ret = spsapi_SerialPortOpen(id, &fd);
 	if (FAILURE == ret)
 	{
 		HcuErrorPrint("GprsInit: serial port COM%d open failure.\n", id);
@@ -58,7 +57,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	/* Save the handler back to Global variables */
 	pGprsSerialPortConfig->fd = fd;
 
-	ret = SerialPortSet(pGprsSerialPortConfig);
+	ret = spsapi_SerialPortSet(pGprsSerialPortConfig);
 	if (FAILURE == ret)
 	{
 		HcuErrorPrint("GprsInit: Open Serial Port %d failure.\n", id);
@@ -67,7 +66,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	HcuDebugPrint("GprsInit: InitSerialPort serial port COM%d properties has been set successfully.\n", id);
 
 	/* Chang the serial from 0, 1 to 2, 1, enable serial time out*/
-	SerialPortSetVtimeVmin(pGprsSerialPortConfig, 2, 0);
+	hcu_spsapi_SerialPortSetVtimeVmin(pGprsSerialPortConfig, 2, 0);
 
 	//bzero(BufSerial, HCU_MAX_LENGTH_CMD_SERIAL);
 	//readlen = read(fd, BufSerial, HCU_MAX_LENGTH_CMD_SERIAL);
@@ -78,7 +77,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	if (ret == FAILURE)
 	{
 		HcuErrorPrint("GprsInit: GPRS Modem is not ready, make sure BandRate is correct, via AT+IPR=<rate> firstly, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -89,7 +88,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	else
 	{
 		HcuErrorPrint("GprsInit: GPRS Modem is not ready, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -98,7 +97,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	if (ret == FAILURE)
 	{
 		HcuErrorPrint("GprsInit: GPRS Modem is not ready, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -109,7 +108,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	else
 	{
 		HcuErrorPrint("GprsInit: GPRS Modem is not ready, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -117,7 +116,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	if (ret == FAILURE)
 	{
 		HcuErrorPrint("GprsInit: GPRS SIM CARD is not ready, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -128,7 +127,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	else
 	{
 		HcuErrorPrint("GprsInit: GPRS SIM CARD is not ready, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -138,7 +137,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	if (ret == FAILURE)
 	{
 		HcuErrorPrint("GprsInit: GPRS SIM CARD is not REGISTRED, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -149,7 +148,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	else
 	{
 		HcuErrorPrint("GprsInit: GPRS SIM CARD is not REGISTRED, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -159,7 +158,7 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	if (ret == FAILURE)
 	{
 		HcuErrorPrint("GprsInit: GPRS READ Realtime Clock failure, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
@@ -176,12 +175,12 @@ UINT32 GprsInit(SerialPort_t *pGprsSerialPortConfig, GprsPppdConf_t *gpc)
 	else
 	{
 		HcuErrorPrint("GprsInit: GPRS READ Realtime Clock failure, Serial Port COM%d closed ...\n", id);
-		SerialPortClose(fd);
+		spsapi_SerialPortClose(fd);
 		return FAILURE;
 	}
 
 	/* return successfully */
-	SerialPortClose(fd);
+	spsapi_SerialPortClose(fd);
 	HcuDebugPrint("GprsInit: GPRS status checking OK.\n");
 
 	/* PPP Configuration File */
@@ -450,7 +449,7 @@ void GprsPppdSwShutdown()
  *
  */
 
-UINT32 AtCommand(SerialPort_t *pGprsSerialPortConfig, char *AtCmd, char *ReplyStr, int *ReplyCnt)
+UINT32 AtCommand(SerialPortCom_t *pGprsSerialPortConfig, char *AtCmd, char *ReplyStr, int *ReplyCnt)
 {
 
 	UINT32 cnt = 0;

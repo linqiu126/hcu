@@ -264,7 +264,7 @@ UINT32 spsapi_SerialPortClose(UINT16 fd)
 	return SUCCESS;
 }
 
-UINT32 spsapi_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8 vMin)
+UINT32 hcu_spsapi_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8 vMin)
 {
 	/* Local variable */
 	struct termios oldtio;

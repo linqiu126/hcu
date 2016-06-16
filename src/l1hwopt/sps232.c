@@ -163,7 +163,7 @@ OPSTAT func_sps232_int_init(void)
 		HcuDebugPrint("SPS232: Init Serial Port Success ...\n");
 	}
 
-	spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
+	hcu_spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForSPS232.vTime, gSerialPortForSPS232.vMin);
 	}
