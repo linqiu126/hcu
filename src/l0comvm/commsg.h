@@ -43,6 +43,7 @@
 #include <sys/ipc.h>
 #include <sys/time.h>
 #include <sys/msg.h>
+#include <sys/reboot.h>
 
 #include <libxml/xmlmemory.h>
 #include <libxml/tree.h>
