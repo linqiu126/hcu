@@ -1714,8 +1714,8 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}
 	index = index+2;
 
-	//取尾巴
-	if ((rcv->buf[rcv->length-2] !='\r')||(rcv->buf[rcv->length-2] !='\n')){
+	//取尾巴  \r = 0D, \n = 0A, should be 0D 0A
+	if ((rcv->buf[rcv->length-2] !='\r')||(rcv->buf[rcv->length-1] !='\n')){
 		HcuErrorPrint("CLOUDVELA: Invalid received data tail!\n");
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
