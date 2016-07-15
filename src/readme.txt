@@ -697,7 +697,8 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > PWM控制的LED闪灯工作正常
 > PWM控制的马达SG90偶尔工作一下，不能连续工作，待确定其正常工作的条件
 
-
+== Update log: 2016 July.14 SW Version: XQ.HCU.SW.R01.100 //ZSC
+> add the function: convert .h264 to mp4 so that the captured video can be played via http
 
 
 
