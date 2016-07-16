@@ -138,7 +138,7 @@ typedef struct SysEngParElementSeriesPort
 }SysEngParElementSeriesPort_t;
 
 //后台服务器地址部分
-#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN 64
+#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN 256
 #define SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME 12
 typedef struct SysEngParElementCloudvela
 {
