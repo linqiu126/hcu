@@ -82,7 +82,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Checking source of INIT message, only accept INIT from HCUMAIN.
 	//In future, maybe accept more cases, but right now this is the only allowable situation.
-	if (src_id != TASK_ID_HCUMAIN){
+	if (src_id != TASK_ID_HCUMAIN && src_id != TASK_ID_HWINV){
 		HcuErrorPrint("SVRCON: Error Init message get from task_id [%s]!\n", zHcuTaskNameList[src_id]);
 		return FAILURE;
 	}
