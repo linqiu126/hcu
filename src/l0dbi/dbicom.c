@@ -19,7 +19,7 @@
 /*
 
 CREATE TABLE IF NOT EXISTS `hcusysengpar` (
-  `prjname` char(20) NOT NULL,
+  `prjname` char(100) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
   `commhwboardethernet` int(1) NOT NULL,
   `commhwboardusbnet` int(1) NOT NULL,
@@ -102,17 +102,19 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `seriesportformodbus` int(1) NOT NULL,
   `seriesportforgps` int(1) NOT NULL,
   `seriesportforpm25sharp` int(1) NOT NULL,
-  `cloudhttpaddlocal` char(64) NOT NULL,
-  `cloudhttpaddtest` char(64) NOT NULL,
-  `cloudhttpaddsae` char(64) NOT NULL,
-  `cloudhttpaddjd` char(64) NOT NULL,
-  `cloudhttpaddwechat` char(64) NOT NULL,
+  `cloudhttpaddlocal` char(200) NOT NULL,
+  `cloudhttpaddtest` char(200) NOT NULL,
+  `cloudhttpaddsae` char(200) NOT NULL,
+  `cloudhttpaddjd` char(200) NOT NULL,
+  `cloudhttpaddwechat` char(200) NOT NULL,
   `cloudbhservername` char(12) NOT NULL,
   `cloudbhhcuname` char(12) NOT NULL,
   `cloudbhitfframestd` int(1) NOT NULL,
-   `cloudftpadd` char(64) NOT NULL,
+  `cloudftpadd` char(64) NOT NULL,
   `cloudftpuser` char(12) NOT NULL,
   `cloudftppwd` char(12) NOT NULL,
+  `cloudftppwdvideo` char(12) NOT NULL,
+  `cloudftpuservideo` char(12) NOT NULL,
   `hcuswdownloaddir` char(64) NOT NULL,
   `hcuswactivedir` char(64) NOT NULL,
   `hcuswbackupdir` char(64) NOT NULL,
@@ -123,30 +125,15 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `browselautostartupflag` int(1) NOT NULL,
   `browselprog` char(20) NOT NULL,
   `browselstartupaddress` char(128) NOT NULL,
-  `browselworkingoption` char(128) NOT NULL,
-  PRIMARY KEY (`prjname`)
+  `browselworkingoption` char(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `hcusysengpar`
+--
 
-INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`,
-`commhwboardlcd`, `commhwboardled`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`,
-`commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`,
-`commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`,
-`commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`,
-`commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensorpm25sharp`, `hcudbhost`, `hcudbuser`,
-`hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`,
-`pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `heartbeattimer`,
-`heartbeartbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`,
-`co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `pm25sharpreqtimer`,
-`syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`,
-`seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`,
-`cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `hcuswdownloaddir`,`hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`,
-`browselworkingoption`) VALUES
-('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'localhost', 'root',
-'123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 300, 2, 12, 20, 60, 60, 60, 60, 60, 60, 60, 3600, 3, 1, 0,
-'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/main/cloud_callback.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php',
-'http://mfunhcu.sinaapp.com/wechat/cloud_callback.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177','anonymous','anonymous', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/',
-31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
+INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`, `commhwboardlcd`, `commhwboardled`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`, `commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`, `commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`, `commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`, `commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensorpm25sharp`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `heartbeattimer`, `heartbeartbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `pm25sharpreqtimer`, `syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
+('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 3600, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
 
 */
 
