@@ -59,6 +59,9 @@ extern FsmStateItem_t FsmAvorion[];
 #define AVORION_SFM_REFRESH_EVENT  (SDL_USEREVENT + 1)
 #define AVORION_SFM_INVALID  (SDL_USEREVENT + 2)
 
+//The max file length of the Video file
+#define MAX_AVORION_FILE_LENGTH 255
+
 //API
 extern OPSTAT fsm_avorion_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

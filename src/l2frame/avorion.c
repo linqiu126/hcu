@@ -16,6 +16,34 @@
 #include <SDL2/SDL.h>
 #endif //AVORION_MONITOR_RECT_SDL2_OPEN_OR_NOT
 
+#include "libavutil/mathematics.h"
+#include "libavformat/avformat.h"
+#include "libavcodec/avcodec.h"
+#include "libavutil/avutil.h"
+#include "libavutil/opt.h"
+#include "libavutil/pixdesc.h"
+
+/*
+FIX: H.264 in some container format (FLV, MP4, MKV etc.) need
+"h264_mp4toannexb" bitstream filter (BSF)
+  *Add SPS,PPS in front of IDR frame
+  *Add start code ("0,0,0,1") in front of NALU
+H.264 in some container (MPEG2TS) don't need this BSF.
+*/
+//'1': Use H.264 Bitstream Filter
+#define USE_H264BSF 0
+
+/*
+FIX:AAC in some container format (FLV, MP4, MKV etc.) need
+"aac_adtstoasc" bitstream filter (BSF)
+*/
+//'1': Use AAC Bitstream Filter
+#define USE_AACBSF 0
+
+//in case mux the audio, no need for HCU
+#define USE_AUDIO 0
+
+
 /*
 ** FSM of the AVORION
 */
@@ -147,6 +175,7 @@ OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 		}
 	}*/
 
+
 	return SUCCESS;
 }
 
@@ -230,8 +259,12 @@ OPSTAT fsm_avorion_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	snd.length = sizeof(msg_struct_avorion_hsmmp_data_read_fb_t);
 	snd.hsmmp.equipid = rcv.equipid;
 	snd.boolBackCloud = rcv.boolBackCloud;
+	char outfiletype[5] = ".mp4";
 	strcpy(snd.hsmmp.hsmmpFdir, rcv.fDirName);
+	//add by shanchun for change file name from .264 to .mp4 due to the captured files have been converted into .mp4 files via func_avorion_ffmpeg_capture_and_save
+	strcat(snd.hsmmp.hsmmpFdir, outfiletype);
 	strcpy(snd.hsmmp.hsmmpFname, rcv.fName);
+	strcat(snd.hsmmp.hsmmpFname, outfiletype);
 	strcpy(snd.hsmmp.hsmmpLink, rcv.tmpFname); //使用linkname暂时代替TmpName，并带给上层模块
 	//考虑到AVORION将放到外部单独进程中，GPS时钟无法共享，故而GPS数据的采集直接放到HSMMP模块中，而不放到传感器中
 	snd.hsmmp.timeStamp = rcv.timeStampStart;
@@ -1520,8 +1553,284 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 
     //fclose(in_file);
 
+
+	/*
+	 * STEP12: convert h264 to mp4
+	 */
+	AVOutputFormat *Ofmt = NULL;
+	//Input AVFormatContext and Output AVFormatContext
+	AVFormatContext *ifmt_ctx_v = NULL, *ifmt_ctx_a = NULL,*ofmt_ctx = NULL;
+	AVPacket pkt;
+	//int ret, i;
+	int videoindex_v=-1,videoindex_out=-1;
+#if USE_AUDIO
+	int audioindex_a=-1,audioindex_out=-1;
+	const char *in_filename_a = "hcu.mp3";
+#endif
+	int frame_index=0;
+	int64_t cur_pts_v=0,cur_pts_a=0;
+
+	//const char *fdir = "/home/pi/workspace/hcu/RasberryPi/log/201607/avorion201606261823.h264";
+
+
+	char out_filename[MAX_AVORION_FILE_LENGTH];
+	memset(out_filename, 0, sizeof(out_filename));
+	strcpy(out_filename, fdir);
+	char outfiletype[5] = ".mp4";
+	strcat(out_filename,outfiletype);
+
+	//const char *out_filename = "/home/pi/workspace/hcu/RasberryPi/log/201607/avorion201606261823.h264.mp4";//Output file URL
+	av_register_all();
+	//Input
+	if ((ret = avformat_open_input(&ifmt_ctx_v, fdir, 0, 0)) < 0) {
+    	HcuErrorPrint("AVORION: Could not open input file!\n");
+    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+		goto end;
+	}
+	if ((ret = avformat_find_stream_info(ifmt_ctx_v, 0)) < 0) {
+    	HcuErrorPrint("AVORION: Failed to retrieve input stream information!\n");
+    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+		goto end;
+	}
+#if USE_AUDIO
+	if ((ret = avformat_open_input(&ifmt_ctx_a, in_filename_a, 0, 0)) < 0) {
+    	HcuErrorPrint("AVORION: Could not open input file!\n");
+    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+		goto end;
+	}
+	if ((ret = avformat_find_stream_info(ifmt_ctx_a, 0)) < 0) {
+    	HcuErrorPrint("AVORION: Failed to retrieve input stream information!\n");
+    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+		goto end;
+	}
+#endif
+	HcuDebugPrint("AVORION: ===========Input Information==========\n");
+	av_dump_format(ifmt_ctx_v, 0, fdir, 0);
+#if USE_AUDIO
+	av_dump_format(ifmt_ctx_a, 0, in_filename_a, 0);
+#endif
+	HcuDebugPrint("AVORION: ======================================\n");
+	//Output
+	avformat_alloc_output_context2(&ofmt_ctx, NULL, NULL, out_filename);
+	if (!ofmt_ctx) {
+    	HcuErrorPrint("AVORION: Could not create output context!\n");
+    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+		ret = AVERROR_UNKNOWN;
+		goto end;
+	}
+	Ofmt = ofmt_ctx->oformat;
+
+	for (i = 0; i < ifmt_ctx_v->nb_streams; i++) {
+		//Create output AVStream according to input AVStream
+		if(ifmt_ctx_v->streams[i]->codec->codec_type==AVMEDIA_TYPE_VIDEO){
+		AVStream *in_stream = ifmt_ctx_v->streams[i];
+		AVStream *out_stream = avformat_new_stream(ofmt_ctx, in_stream->codec->codec);
+		videoindex_v=i;
+		if (!out_stream) {
+	    	HcuErrorPrint("AVORION: Failed allocating output stream!\n");
+	    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+			ret = AVERROR_UNKNOWN;
+			goto end;
+		}
+		videoindex_out = out_stream->index;
+		//Copy the settings of AVCodecContext
+		if (avcodec_copy_context(out_stream->codec, in_stream->codec) < 0) {
+	    	HcuErrorPrint("AVORION: Failed to copy context from input to output stream codec context!\n");
+	    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+			goto end;
+		}
+		out_stream->codec->codec_tag = 0;
+		if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
+			out_stream->codec->flags |= CODEC_FLAG_GLOBAL_HEADER;
+		break;
+		}
+	}
+#if USE_AUDIO
+	for (i = 0; i < ifmt_ctx_a->nb_streams; i++) {
+		//Create output AVStream according to input AVStream
+		if(ifmt_ctx_a->streams[i]->codec->codec_type==AVMEDIA_TYPE_AUDIO){
+			AVStream *in_stream = ifmt_ctx_a->streams[i];
+			AVStream *out_stream = avformat_new_stream(ofmt_ctx, in_stream->codec->codec);
+			audioindex_a=i;
+			if (!out_stream) {
+		    	HcuErrorPrint("AVORION: Failed allocating output stream!\n");
+		    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+				ret = AVERROR_UNKNOWN;
+				goto end;
+			}
+			audioindex_out=out_stream->index;
+			//Copy the settings of AVCodecContext
+			if (avcodec_copy_context(out_stream->codec, in_stream->codec) < 0) {
+		    	HcuErrorPrint("AVORION: Failed to copy context from input to output stream codec context!\n");
+		    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+				goto end;
+			}
+			out_stream->codec->codec_tag = 0;
+			if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
+				out_stream->codec->flags |= CODEC_FLAG_GLOBAL_HEADER;
+
+			break;
+		}
+	}
+#endif
+
+	HcuDebugPrint("AVORION: ===========Output Information==========\n");
+	av_dump_format(ofmt_ctx, 0, out_filename, 1);
+	HcuDebugPrint("AVORION: ======================================\n");
+	//Open output file
+	if (!(Ofmt->flags & AVFMT_NOFILE)) {
+		if (avio_open(&ofmt_ctx->pb, out_filename, AVIO_FLAG_WRITE) < 0) {
+	    	HcuErrorPrint("AVORION: Could not open output file '%s'\n", out_filename);
+	    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+			goto end;
+		}
+	}
+	//Write file header
+	if (avformat_write_header(ofmt_ctx, NULL) < 0) {
+    	HcuErrorPrint("AVORION: Error occurred when opening output file!\n");
+    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+		goto end;
+	}
+
+
+#if USE_H264BSF
+	AVBitStreamFilterContext* h264bsfc =  av_bitstream_filter_init("h264_mp4toannexb");
+#endif
+#if USE_AACBSF
+	AVBitStreamFilterContext* aacbsfc =  av_bitstream_filter_init("aac_adtstoasc");
+#endif
+
+	while (1) {
+		AVFormatContext *ifmt_ctx;
+		int stream_index=0;
+		AVStream *in_stream, *out_stream;
+
+		//Get an AVPacket
+#if USE_AUDIO
+		if(av_compare_ts(cur_pts_v,ifmt_ctx_v->streams[videoindex_v]->time_base,cur_pts_a,ifmt_ctx_a->streams[audioindex_a]->time_base) <= 0){
+#endif
+			ifmt_ctx=ifmt_ctx_v;
+			stream_index=videoindex_out;
+
+			if(av_read_frame(ifmt_ctx, &pkt) >= 0){
+				do{
+					in_stream  = ifmt_ctx->streams[pkt.stream_index];
+					out_stream = ofmt_ctx->streams[stream_index];
+
+					if(pkt.stream_index==videoindex_v){
+						//FIX No PTS (Example: Raw H.264)
+						//Simple Write PTS
+						if(pkt.pts==AV_NOPTS_VALUE){
+							//Write PTS
+							AVRational time_base1=in_stream->time_base;
+							//Duration between 2 frames (us)
+							int64_t calc_duration=(double)AV_TIME_BASE/av_q2d(in_stream->r_frame_rate);
+							//Parameters
+							pkt.pts=(double)(frame_index*calc_duration)/(double)(av_q2d(time_base1)*AV_TIME_BASE);
+							pkt.dts=pkt.pts;
+							pkt.duration=(double)calc_duration/(double)(av_q2d(time_base1)*AV_TIME_BASE);
+							frame_index++;
+						}
+
+						cur_pts_v=pkt.pts;
+						break;
+					}
+				}while(av_read_frame(ifmt_ctx, &pkt) >= 0);
+			}else{
+				break;
+			}
+#if USE_AUDIO
+		}else{
+			ifmt_ctx=ifmt_ctx_a;
+			stream_index=audioindex_out;
+			if(av_read_frame(ifmt_ctx, &pkt) >= 0){
+				do{
+					in_stream  = ifmt_ctx->streams[pkt.stream_index];
+					out_stream = ofmt_ctx->streams[stream_index];
+
+					if(pkt.stream_index==audioindex_a){
+
+						//FIX No PTS
+						//Simple Write PTS
+						if(pkt.pts==AV_NOPTS_VALUE){
+							//Write PTS
+							AVRational time_base1=in_stream->time_base;
+							//Duration between 2 frames (us)
+							int64_t calc_duration=(double)AV_TIME_BASE/av_q2d(in_stream->r_frame_rate);
+							//Parameters
+							pkt.pts=(double)(frame_index*calc_duration)/(double)(av_q2d(time_base1)*AV_TIME_BASE);
+							pkt.dts=pkt.pts;
+							pkt.duration=(double)calc_duration/(double)(av_q2d(time_base1)*AV_TIME_BASE);
+							frame_index++;
+						}
+						cur_pts_a=pkt.pts;
+
+						break;
+					}
+				}while(av_read_frame(ifmt_ctx, &pkt) >= 0);
+			}else{
+				break;
+			}
+
+		}
+#endif
+
+		//FIX:Bitstream Filter
+#if USE_H264BSF
+		av_bitstream_filter_filter(h264bsfc, in_stream->codec, NULL, &pkt.data, &pkt.size, pkt.data, pkt.size, 0);
+#endif
+#if USE_AACBSF
+		av_bitstream_filter_filter(aacbsfc, out_stream->codec, NULL, &pkt.data, &pkt.size, pkt.data, pkt.size, 0);
+#endif
+
+
+		//Convert PTS/DTS
+		pkt.pts = av_rescale_q_rnd(pkt.pts, in_stream->time_base, out_stream->time_base, (AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
+		pkt.dts = av_rescale_q_rnd(pkt.dts, in_stream->time_base, out_stream->time_base, (AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
+		pkt.duration = av_rescale_q(pkt.duration, in_stream->time_base, out_stream->time_base);
+		pkt.pos = -1;
+		pkt.stream_index=stream_index;
+
+	    if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_IPT_ON) != FALSE){
+	    	HcuDebugPrint("AVORION: Write 1 Packet. size:%5d\tpts:%lld\n", pkt.size,pkt.pts);
+	    }
+
+		//Write
+		if (av_interleaved_write_frame(ofmt_ctx, &pkt) < 0) {
+	    	HcuErrorPrint("AVORION: Error muxing packet!\n");
+	    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+			break;
+		}
+		av_free_packet(&pkt);
+
+	}
+	//Write file trailer
+	av_write_trailer(ofmt_ctx);
+
+#if USE_H264BSF
+	av_bitstream_filter_close(h264bsfc);
+#endif
+#if USE_AACBSF
+	av_bitstream_filter_close(aacbsfc);
+#endif
+
+end:
+	avformat_close_input(&ifmt_ctx_v);
+	avformat_close_input(&ifmt_ctx_a);
+	/* close output */
+	if (ofmt_ctx && !(Ofmt->flags & AVFMT_NOFILE))
+		avio_close(ofmt_ctx->pb);
+	avformat_free_context(ofmt_ctx);
+	if (ret < 0 && ret != AVERROR_EOF) {
+    	HcuErrorPrint("AVORION: Error occurred!\n");
+    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+		return FAILURE;
+	}
+
+
 	return SUCCESS;
 }
+
 #endif //AVORION_MONITOR_RECT_SDL2_OPEN_OR_NOT
 
 
