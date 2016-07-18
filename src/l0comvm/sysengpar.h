@@ -138,7 +138,7 @@ typedef struct SysEngParElementSeriesPort
 }SysEngParElementSeriesPort_t;
 
 //后台服务器地址部分
-#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN 64
+#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN 256
 #define SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME 12
 typedef struct SysEngParElementCloudvela
 {
@@ -153,6 +153,8 @@ typedef struct SysEngParElementCloudvela
 	char  cloudFtpAdd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];//for HCU SW FTP by shanchun
 	char  cloudFtpUser[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
 	char  cloudFtpPwd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
+	char  cloudFtpUserVideo[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for video FTP by upload shanchun
+	char  cloudFtpPwdVideo[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for video FTP upload by shanchun
 }SysEngParElementCloudvela_t;
 
 //local SW storage address for HCU SW upgrade by shanchun
