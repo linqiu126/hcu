@@ -700,6 +700,17 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 == Update log: 2016 July.14 SW Version: XQ.HCU.SW.R01.100 //ZSC
 > add the function: convert .h264 to mp4 so that the captured video can be played via http
 
+//= Multi People, , 2016 July.18, CURRENT_SW_DELIVERY 101
+> 删掉垃圾信息
+> 定义更多的项目配置信息，包括AQYC/TBSWR/智能仪表等，数据库中的更新并存入基础数据待定。 =》项目名字需要改变长度定义，目前显然不够
+> 智能物联网的模块定义
+
+
+
+
+
+
+
 
 
 
