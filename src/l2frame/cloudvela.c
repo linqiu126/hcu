@@ -2252,9 +2252,9 @@ OPSTAT func_cloudvela_av_upload(char *filename)
 
 	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
 
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUserVideo);
 	strcat(ftp_opt.user_key, usrtmp);
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwdVideo);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
 
 	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);

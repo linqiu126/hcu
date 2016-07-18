@@ -372,6 +372,8 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpAdd = %s\n", zHcuSysEngPar.cloud.cloudFtpAdd);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUser = %s\n", zHcuSysEngPar.cloud.cloudFtpUser);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwd = %s\n", zHcuSysEngPar.cloud.cloudFtpPwd);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUserVideo = %s\n", zHcuSysEngPar.cloud.cloudFtpUserVideo);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwdVideo = %s\n", zHcuSysEngPar.cloud.cloudFtpPwdVideo);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.swDownload.hcuSwDownloadDir = %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
 
 			HcuDebugPrint("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
@@ -476,6 +478,10 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		strcpy(zHcuSysEngPar.cloud.cloudFtpAdd, CLOUDVELA_FTP_ADDRESS);
 		strcpy(zHcuSysEngPar.cloud.cloudFtpUser, CLOUDVELA_FTP_USER);
 		strcpy(zHcuSysEngPar.cloud.cloudFtpPwd, CLOUDVELA_FTP_PWD);
+
+		//for HCU video FTP upload by shanchun
+		strcpy(zHcuSysEngPar.cloud.cloudFtpUserVideo, CLOUDVELA_FTP_USER);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpPwdVideo, CLOUDVELA_FTP_PWD);
 
 		//local SW storage address
 		strcpy(zHcuSysEngPar.swDownload.hcuSwDownloadDir, HCU_SW_DOWNLOAD_DIR_DEFAULT);

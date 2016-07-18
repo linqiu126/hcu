@@ -171,7 +171,7 @@
 #define SYSPM_TIMER_DURATION_PERIOD_WORKING 600
 
 #ifdef TARGET_LINUX_ARM
-#define DURATION_OF_INIT_FB_WAIT_MAX 2000 //in us iso ms, caculate by task_id * this value, to wait for period for SVRCON too much INIT_WAIT_FOR_FB coming at the same time.
+#define DURATION_OF_INIT_FB_WAIT_MAX 20000 //in us iso ms, caculate by task_id * this value, to wait for period for SVRCON too much INIT_WAIT_FOR_FB coming at the same time.
 #endif
 
 #ifdef TARGET_LINUX_X86
