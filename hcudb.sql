@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 16, 2016 at 03:50 PM
+-- Generation Time: Jul 18, 2016 at 09:28 PM
 -- Server version: 5.5.44-0+deb8u1
 -- PHP Version: 5.6.20-0+deb8u1
 
@@ -1971,7 +1971,7 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
   `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=1874 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1879 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -3847,7 +3847,12 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 (1870, 5, 1468654388, 1, 5071, 'E', 0, 'N', 0, 0, 1),
 (1871, 5, 1468655024, 1, 5033, 'E', 0, 'N', 0, 0, 1),
 (1872, 5, 1468655084, 1, 5186, 'E', 0, 'N', 0, 0, 1),
-(1873, 5, 1468655144, 1, 5522, 'E', 0, 'N', 0, 0, 1);
+(1873, 5, 1468655144, 1, 5522, 'E', 0, 'N', 0, 0, 1),
+(1874, 5, 1468848248, 1, 5309, 'E', 0, 'N', 0, 0, 1),
+(1875, 5, 1468848308, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(1876, 5, 1468848368, 1, 5022, 'E', 0, 'N', 0, 0, 1),
+(1877, 5, 1468848428, 1, 4687, 'E', 0, 'N', 0, 0, 1),
+(1878, 5, 1468848488, 1, 5350, 'E', 0, 'N', 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -6290,7 +6295,7 @@ CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcusysengpar` (
-  `prjname` char(20) NOT NULL,
+  `prjname` char(100) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
   `commhwboardethernet` int(1) NOT NULL,
   `commhwboardusbnet` int(1) NOT NULL,
@@ -6373,11 +6378,11 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `seriesportformodbus` int(1) NOT NULL,
   `seriesportforgps` int(1) NOT NULL,
   `seriesportforpm25sharp` int(1) NOT NULL,
-  `cloudhttpaddlocal` char(100) NOT NULL,
-  `cloudhttpaddtest` char(100) NOT NULL,
-  `cloudhttpaddsae` char(100) NOT NULL,
-  `cloudhttpaddjd` char(100) NOT NULL,
-  `cloudhttpaddwechat` char(100) NOT NULL,
+  `cloudhttpaddlocal` char(200) NOT NULL,
+  `cloudhttpaddtest` char(200) NOT NULL,
+  `cloudhttpaddsae` char(200) NOT NULL,
+  `cloudhttpaddjd` char(200) NOT NULL,
+  `cloudhttpaddwechat` char(200) NOT NULL,
   `cloudbhservername` char(12) NOT NULL,
   `cloudbhhcuname` char(12) NOT NULL,
   `cloudbhitfframestd` int(1) NOT NULL,
@@ -9397,12 +9402,6 @@ ALTER TABLE `hcupm25sharpdatainfo`
  ADD PRIMARY KEY (`sid`);
 
 --
--- Indexes for table `hcusysengpar`
---
-ALTER TABLE `hcusysengpar`
- ADD PRIMARY KEY (`prjname`);
-
---
 -- Indexes for table `hcusyspmglobaldatainfo`
 --
 ALTER TABLE `hcusyspmglobaldatainfo`
@@ -9524,7 +9523,7 @@ MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `hcuemcdatainfo`
 --
 ALTER TABLE `hcuemcdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1874;
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1879;
 --
 -- AUTO_INCREMENT for table `hcuhchodatainfo`
 --

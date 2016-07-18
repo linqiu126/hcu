@@ -443,9 +443,9 @@
 //定义后台CLOUD连接到本地及SAE的地址
 #define CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
 #define CLOUDVELA_HTTP_ADDRESS_TEST "http://aaa.bbb/"
-#define CLOUDVELA_HTTP_ADDRESS_SAE "http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-#define CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-#define CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
+#define CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+#define CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+#define CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
 
 //定义后台CLOUD  FTP 的地址
 #define  CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
