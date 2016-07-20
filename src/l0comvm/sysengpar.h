@@ -30,6 +30,8 @@ typedef struct SysEngParElementComm
 	UINT8  commFrameCloudvela;
 	UINT8  commFrameI2cbuslibra;
 	UINT8  commFrameSpibusaries;
+	UINT8  commFrameNbiotcj188;
+	UINT8  commFrameNbiotqg376;
 	UINT8  commFrontSps485;
 	UINT8  commFrontSps232;
 	UINT8  commFrontMicrophone;
@@ -45,7 +47,6 @@ typedef struct SysEngParElementComm
 	UINT8  commFrontMotor;
 	UINT8  commFrontSensorEmc;
 	UINT8  commFrontSensorPm25;
-	UINT8  commFrontSensorPm25Sharp;//by shanchun
 	UINT8  commFrontSensorTemp;
 	UINT8  commFrontSensorHumid;
 	UINT8  commFrontSensorWinddir;
@@ -58,7 +59,11 @@ typedef struct SysEngParElementComm
 	UINT8  commFrontSensorAlcohol;
 	UINT8  commFrontSensorHcho;
 	UINT8  commFrontSensorToxicgas;
-
+	UINT8  commFrontSensorIwm;
+	UINT8  commFrontSensorIhm;
+	UINT8  commFrontSensorIgm;
+	UINT8  commFrontSensorIpm;
+	UINT8  commFrontSensorPm25Sharp;//by shanchun
 }SysEngParElementComm_t;
 
 //数据库部分
@@ -124,6 +129,10 @@ typedef struct SysEngParElementSensor
 	INT32 alcoholReqTimer;
 	INT32 hchoReqTimer;
 	INT32 toxicgasReqTimer;
+	INT32 iwmReqTimer;
+	INT32 ihmReqTimer;
+	INT32 igmReqTimer;
+	INT32 ipmReqTimer;
 	INT32 pm25sharpReqTimer;
 	INT32 syspmWorkingTimer;
 }SysEngParElementSensorTimer_t;
