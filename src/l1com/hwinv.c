@@ -368,17 +368,13 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDurationFB = %d\n", zHcuSysEngPar.timer.hsmmpCapDurationFB);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpRefRate = %d\n", zHcuSysEngPar.timer.hsmmpRefRate);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.videoSev.hcuVideoServerDir = %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
-
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpAdd = %s\n", zHcuSysEngPar.cloud.cloudFtpAdd);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUser = %s\n", zHcuSysEngPar.cloud.cloudFtpUser);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwd = %s\n", zHcuSysEngPar.cloud.cloudFtpPwd);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUserVideo = %s\n", zHcuSysEngPar.cloud.cloudFtpUserVideo);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwdVideo = %s\n", zHcuSysEngPar.cloud.cloudFtpPwdVideo);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.swDownload.hcuSwDownloadDir = %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
-
 			HcuDebugPrint("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
-
-
 			HcuDebugPrint("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 		}
 	}
@@ -405,6 +401,8 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.comm.commFrameCloudvela = COMM_FRONT_CLOUDVELA;
 		zHcuSysEngPar.comm.commFrameI2cbuslibra = COMM_FRONT_I2CBUSLIBRA;
 		zHcuSysEngPar.comm.commFrameSpibusaries = COMM_FRONT_SPIBUSARIES;
+		zHcuSysEngPar.comm.commFrameNbiotcj188 = COMM_FRONT_NBIOTCJ188;
+		zHcuSysEngPar.comm.commFrameNbiotqg376 = COMM_FRONT_NBIOTQG376;
 		zHcuSysEngPar.comm.commFrontSps485 = COMM_FRONT_SPS485;
 		zHcuSysEngPar.comm.commFrontSps232 = COMM_FRONT_SPS232;
 		zHcuSysEngPar.comm.commFrontMicrophone = COMM_FRONT_MICROPHONE;
@@ -419,6 +417,11 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.comm.commFrontSensorNoise = COMM_FRONT_SENSOR_NOISE;
 		zHcuSysEngPar.comm.commFrontSensorHsmmp = COMM_FRONT_SENSOR_HSMMP;
 		zHcuSysEngPar.comm.commFrontSensorPm25Sharp = COMM_FRONT_SENSOR_PM25SHARP;
+		zHcuSysEngPar.comm.commFrontSensorIwm = COMM_FRONT_SENSOR_IWM;
+		zHcuSysEngPar.comm.commFrontSensorIhm = COMM_FRONT_SENSOR_IHM;
+		zHcuSysEngPar.comm.commFrontSensorIgm = COMM_FRONT_SENSOR_IGM;
+		zHcuSysEngPar.comm.commFrontSensorIpm = COMM_FRONT_SENSOR_IPM;
+
 		//数据库部分
 		strcpy(zHcuSysEngPar.dbi.hcuDbHost, HCU_DB_HOST_DEFAULT);
 		strcpy(zHcuSysEngPar.dbi.hcuDbUser, HCU_DB_USER_DEFAULT);
@@ -455,7 +458,11 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.timer.alcoholReqTimer = ALCOHOL_TIMER_DURATION_PERIOD_READ;
 		zHcuSysEngPar.timer.hchoReqTimer = HCHO_TIMER_DURATION_PERIOD_READ;
 		zHcuSysEngPar.timer.toxicgasReqTimer = TOXICGAS_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.pm25sharpReqTimer = TOXICGAS_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.pm25sharpReqTimer = PM25SHARP_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.iwmReqTimer = IWM_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.ihmReqTimer = IHM_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.igmReqTimer = IGM_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.ipmReqTimer = IPM_TIMER_DURATION_PERIOD_READ;
 		zHcuSysEngPar.timer.syspmWorkingTimer = SYSPM_TIMER_DURATION_PERIOD_WORKING;
 
 		//Series Port config by Shanchun
@@ -619,6 +626,10 @@ void func_hwinv_scan_all(void)
 	func_hwinv_scan_alcohol();
 	func_hwinv_scan_hcho();
 	func_hwinv_scan_toxicgas();
+	func_hwinv_scan_iwm();
+	func_hwinv_scan_ihm();
+	func_hwinv_scan_igm();
+	func_hwinv_scan_ipm();
 	func_hwinv_scan_local_ui();
 	func_hwinv_scan_message_queue();
 }
@@ -1166,6 +1177,18 @@ void func_hwinv_scan_hcho(void)
 {}
 
 void func_hwinv_scan_toxicgas(void)
+{}
+
+void func_hwinv_scan_iwm(void)
+{}
+
+void func_hwinv_scan_ihm(void)
+{}
+
+void func_hwinv_scan_igm(void)
+{}
+
+void func_hwinv_scan_ipm(void)
 {}
 
 void func_hwinv_scan_pm25sharp(void)
