@@ -704,6 +704,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 删掉垃圾信息
 > 定义更多的项目配置信息，包括AQYC/TBSWR/智能仪表等，数据库中的更新并存入基础数据待定。 =》项目名字需要改变长度定义，目前显然不够
 > 智能物联网的模块定义，搭建整体任务模块框架
+> 先完善engpar数据表单
+> 再完善ModuleCtrl模块
+> 基本完成6个新任务模块的搭建
 
 
 
