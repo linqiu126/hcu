@@ -558,6 +558,7 @@ typedef struct CloudBhItfDevReportStdXml
 
 	//Added by Shanchun for av upload
 	char conAvUpload[3];
+	char conAvFileName[HCU_FILE_NAME_LENGTH_MAX];
 
 	char conTimeStamp[9]; //4B
 	char conNtimes[5];   //2B

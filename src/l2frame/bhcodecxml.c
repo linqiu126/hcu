@@ -180,6 +180,7 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 
 	//char conSwInventory[3]; //1B
 	strcat(da, xmlFormat->conAvUpload);
+	strcat(da, xmlFormat->conAvFileName);
 
 	//char conTimeStamp[9]; //4B
 	strcat(da, xmlFormat->conTimeStamp);
@@ -2087,7 +2088,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 			HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 			HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
 			HcuDebugPrint("CLOUDVELA: control command avUpload= %d\n", avUpload);
-
+			HcuDebugPrint("CLOUDVELA: control command avFileName= %s\n", st);
 		}
 
 	    // send resp msg to cloud: 01 successful 00: failure
@@ -2096,7 +2097,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 			CloudDataSendBuf_t buf;
 			memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 			//打包数据
-			if (FAILURE == func_cloudvela_huanbao_av_upload_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, avUpload, &buf))
+			if (FAILURE == func_cloudvela_huanbao_av_upload_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, avUpload, st, &buf))
 			{
 				HcuErrorPrint("CLOUDVELA: Package message error!\n");
 				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;

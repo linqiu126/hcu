@@ -233,29 +233,43 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcat(stmp, zCurTimeDate.sDay);
 	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND);
 	strcpy(zCurTimeDate.curSensorFd, stmp);
+
 	//Microphone是小时级别
 	strcpy(stmp, zCurTimeDate.curYmDir);
 	strcat(stmp, HCU_RECORD_FILE_NAME_MICROPHONE);
 	strcat(stmp, zCurTimeDate.sHour);
 	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND);
 	strcpy(zCurTimeDate.curMicrophoneFd, stmp);
+
 	//Avorion是分钟级别
 	strcpy(stmp, zCurTimeDate.curYmDir);
-	strcat(stmp, HCU_RECORD_FILE_NAME_AVORION);
+	//strcat(stmp, HCU_RECORD_FILE_NAME_AVORION);
+	strcat(stmp, "/");
+	strcat(stmp,zHcuSysEngPar.cloud.cloudBhHcuName);
+	strcat(stmp,"_");
+	strcat(stmp, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(stmp, zCurTimeDate.sMin);
+	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND_H264);
+	strcpy(zCurTimeDate.curAvorionFdH264, stmp);
+	//HcuDebugPrint("HWINV: zCurTimeDate.curAvorionFdH264 %s!\n", zCurTimeDate.curAvorionFdH264);
+
 	strcpy(zCurTimeDate.curAvorionFdAvi, stmp);
 	strcat(zCurTimeDate.curAvorionFdAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-	strcpy(zCurTimeDate.curAvorionFdH264, stmp);
-	strcat(zCurTimeDate.curAvorionFdH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
 	strcpy(zCurTimeDate.curAvorionFdMkv, stmp);
 	strcat(zCurTimeDate.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
+
 	//特殊的干净文件名字
+	strcpy(zCurTimeDate.curAvorionFnameH264,zHcuSysEngPar.cloud.cloudBhHcuName);
+	strcat(zCurTimeDate.curAvorionFnameH264,"_");
+	strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+	strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
+	strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
+	//HcuDebugPrint("HWINV: zCurTimeDate.curAvorionFnameH264 %s!\n", zCurTimeDate.curAvorionFnameH264);
+
 	strcpy(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(zCurTimeDate.curAvorionFnameAvi, zCurTimeDate.sMin);
 	strcat(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-	strcpy(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-	strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
-	strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
+
 	strcpy(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(zCurTimeDate.curAvorionFnameMkv, zCurTimeDate.sMin);
 	strcat(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
@@ -742,22 +756,32 @@ void func_hwinv_scan_date(void)
 	//Avorion是分钟级别
 	if (flagMin == TRUE){
 		strcpy(stmp, zCurTimeDate.curYmDir);
-		strcat(stmp, HCU_RECORD_FILE_NAME_AVORION);
+
+		strcat(stmp, "/");
+		strcat(stmp,zHcuSysEngPar.cloud.cloudBhHcuName);
+		strcat(stmp,"_");
+		strcat(stmp, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 		strcat(stmp, zCurTimeDate.sMin);
+		strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND_H264);
+		strcpy(zCurTimeDate.curAvorionFdH264, stmp);
+
 		strcpy(zCurTimeDate.curAvorionFdAvi, stmp);
 		strcat(zCurTimeDate.curAvorionFdAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-		strcpy(zCurTimeDate.curAvorionFdH264, stmp);
-		strcat(zCurTimeDate.curAvorionFdH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
 		strcpy(zCurTimeDate.curAvorionFdMkv, stmp);
 		strcat(zCurTimeDate.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
+
 		//特殊的干净文件名字
+		strcpy(zCurTimeDate.curAvorionFnameH264,zHcuSysEngPar.cloud.cloudBhHcuName);
+		strcat(zCurTimeDate.curAvorionFnameH264,"_");
+		strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+		strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
+		strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
+
 		strcpy(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 		strcat(zCurTimeDate.curAvorionFnameAvi, zCurTimeDate.sMin);
 		strcat(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-		strcpy(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-		strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
-		strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
-		strcpy(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+
+	    strcpy(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 		strcat(zCurTimeDate.curAvorionFnameMkv, zCurTimeDate.sMin);
 		strcat(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 	}
