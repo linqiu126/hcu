@@ -113,12 +113,13 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("ETHERNET: Enter FSM_STATE_ETHERNET_ACTIVED status, Keeping refresh here!\n");
 	}
-/*
+
+
 	//初始化MSGSEND参数
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
 	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
 
-
+/*
 	//创建服务器端套接字描述符，用于监听客户端请求
 	int listenfd = socket(AF_INET, SOCK_STREAM,0);
 
@@ -215,134 +216,83 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	close(listenfd);
 */
 
-/*
-	//Start:change the communication method(socket instead of curl)
 
-	//初始化MSGSEND参数
-	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
-	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
+//Start: socket for client
 
-	//创建Client端套接字描述符
-	int clientfd = socket(AF_INET, SOCK_STREAM,0);
+		//创建Client端套接字描述符
+		int clientfd = socket(AF_INET, SOCK_STREAM,0);
 
-	if(clientfd < 0){
-		HcuErrorPrint("ETHERNET: Can not create socket!\n");
-		return FAILURE;
-	}
-
-	//创建用于服务的Client端套接字，注意与 Server端创建的套接字的区别  IP段里，Server端是可以为任何IP提供服务的，客户端里的IP是请求的端点
-
-	char **pptr = NULL;
-	struct hostent *hptr = NULL;//
-	char str[16];
-
-	//hptr = gethostbyname(zHcuSysEngPar.cloud.cloudHttpAddSae);
-	hptr = gethostbyname("www.sina.com");
-	if(hptr ==  NULL)
-	{
-		HcuErrorPrint("ETHERNET: gethostbyname error for host: %s!\n", zHcuSysEngPar.cloud.cloudHttpAddSae);
-		return FAILURE;
-	}
-	else
-	{
-		HcuDebugPrint("ETHERNET: official hostname: %s\n", hptr->h_name);
-	}
-
-	for(pptr = hptr->h_aliases; *pptr != NULL; pptr++)
-	{
-		HcuDebugPrint("ETHERNET: official hostname alias: %s\n", *pptr);
-	}
-
-	switch(hptr->h_addrtype)
-	{
-	case AF_INET:
-	case AF_INET6:
-		//for(pptr = hptr->h_addr_list; *pptr != NULL; pptr++){
-
-			//HcuDebugPrint("ETHERNET: host address: %s\n", inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str)));
-		//}
-		pptr = hptr->h_addr_list;
-		//inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str));
-		HcuDebugPrint("ETHERNET: host address: %s\n", inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str)));
-		HcuDebugPrint("ETHERNET: host address: %s\n\n\n\n", str);
-		break;
-
-	default:
-		HcuErrorPrint("ETHERNET: unknown address type\n");
-		break;
-
-	}
-
-
-	struct sockaddr_in serveraddr;
-	bzero((char *)&serveraddr,sizeof(serveraddr));
-	serveraddr.sin_family = AF_INET;
-	//inet_pton(AF_INET,str,&serveraddr.sin_addr);
-	inet_pton(hptr->h_addrtype,str,&serveraddr.sin_addr);
-
-	//serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);//zHcuSysEngPar.cloud.cloudHttpAddSae
-	serveraddr.sin_port = htons(PORT);
-
-	if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
-	{
-		HcuErrorPrint("ETHERNET: Socket can not connect!\n");
-		return FAILURE;
-	}
-	else
-	{
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-			HcuDebugPrint("ETHERNET: Socket connected\n\n\n\n\n\n\n");
+		if(clientfd < 0){
+			HcuErrorPrint("ETHERNET: Can not create socket!\n");
+			return FAILURE;
 		}
-	}
 
-	//struct sockaddr_in clientaddr;
-	//int clientlen, connfd;
-	int idata;
+		//创建用于服务的Client端套接字，注意与 Server端创建的套接字的区别  IP段里，Server端是可以为任何IP提供服务的，客户端里的IP是请求的端点
+		struct sockaddr_in serveraddr;
+		//struct hostent *hp;//
+		bzero((char *)&serveraddr,sizeof(serveraddr));
+		serveraddr.sin_family = AF_INET;
+		//inet_pton(AF_INET,CLOUDSRV_ADDRESS,&serveraddr.sin_addr);
+		serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+		//serveraddr.sin_addr.s_addr = inet_addr(CLOUDSRV_ADDRESS);
 
-	//进入阻塞式接收数据状态，收到数据后发送给CLOUDCONT进行处理
-	while(1){
-		idata = 0;
+		serveraddr.sin_port = htons(CLOUDSRV_PORT);
 
-		//send(clientfd,buf->curBuf,buf->curLen,0);
-
-		idata = recv(clientfd, &receiveBuffer.buf,MAX_HCU_MSG_BUF_LENGTH,0);
-		if(idata < 0){
-			HcuErrorPrint("ETHERNET: Socket receive error!\n");
+		if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
+		{
+			HcuErrorPrint("ETHERNET: Socket can not connect!\n\n\n\n\n\n\n");
 			return FAILURE;
 		}
 		else
 		{
-			receiveBuffer.length = idata;
 			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-				HcuDebugPrint("ETHERNET: Socket receive data from the client of cloud, data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
+				HcuDebugPrint("ETHERNET: Socket conected\n");
 			}
 		}
 
-		if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_ETHERNET)
-		{
+		int idata;
 
-			//将数据发送给CLOUD，有关这个长度应该>0或者>1的问题，最后还是1，因为心跳握手帧只有二个字节的长度
-			if (receiveBuffer.length > 1){
-				//发送数据给CLOUDCONT
-				ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
-				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-					HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
-					return FAILURE;
+		//进入阻塞式接收数据状态，收到数据后发送给CLOUDCONT进行处理
+		while(1){
+			idata = 0;
+			//send(clientfd,receiveBuffer.buf,receiveBuffer.length,0);
+			idata = recv(clientfd, &receiveBuffer.buf,MAX_HCU_MSG_BUF_LENGTH,0);
+			if(idata < 0){
+				HcuErrorPrint("ETHERNET: Socket receive error!\n");
+				return FAILURE;
+			}
+			else
+			{
+				receiveBuffer.length = idata;
+				if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+					HcuDebugPrint("ETHERNET: Socket receive data from the client of cloud, Data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
 				}
-			}//end of send data
-
-			else{
-				zHcuGlobalCounter.CloudDataTimeOutCnt++;
 			}
-		}
 
-	}//while(1) end
+			if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_ETHERNET)
+			{
+				//将数据发送给CLOUD
+				if (receiveBuffer.length > 1){
+					//发送数据给CLOUDCONT
+					ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
+					if (ret == FAILURE){
+						zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+						HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+						return FAILURE;
+					}
+				}//end of send data
 
-	//close(connfd);
-	close(clientfd);
-*/
-	//End:change the communication method(socket instead of curl)
+				else{
+					zHcuGlobalCounter.CloudDataTimeOutCnt++;
+				}
+			}
+
+		}//while(1) end
+
+		close(clientfd);
+
+//End: socket for client
+
 	return SUCCESS;
 }
 
@@ -479,91 +429,6 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 
 	return SUCCESS;
 
-
-/*
-	//Start:change the communication method(socket instead of curl)
-
-	//创建Client端套接字描述符
-	int clientfd = socket(AF_INET, SOCK_STREAM,0);
-
-	if(clientfd < 0){
-		HcuErrorPrint("ETHERNET: Can not create socket!\n");
-		return FAILURE;
-	}
-
-	//创建用于服务的Client端套接字，注意与 Server端创建的套接字的区别  IP段里，Server端是可以为任何IP提供服务的，客户端里的IP是请求的端点
-	struct sockaddr_in serveraddr;
-	//struct hostent *hp;//
-	bzero((char *)&serveraddr,sizeof(serveraddr));
-	serveraddr.sin_family = AF_INET;
-	//inet_pton(AF_INET,"192.168.77.130",&serveraddr.sin_addr);
-	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);//zHcuSysEngPar.cloud.cloudHttpAddSae
-	serveraddr.sin_port = htons(PORT);
-
-	if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
-	{
-		HcuErrorPrint("ETHERNET: Socket can not connect!\n");
-		return FAILURE;
-	}
-	else
-	{
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-			HcuDebugPrint("ETHERNET: Socket connectted\n");
-		}
-	}
-
-	//struct sockaddr_in clientaddr;
-	//int clientlen, connfd;
-	int idata;
-
-	//进入阻塞式接收数据状态，收到数据后发送给CLOUDCONT进行处理
-	//while(1){
-		idata = 0;
-
-		send(clientfd,buf->curBuf,buf->curLen,0);
-
-		idata = recv(clientfd, &receiveBuffer.buf,MAX_HCU_MSG_BUF_LENGTH,0);
-		if(idata < 0){
-			HcuErrorPrint("ETHERNET: Socket receive error!\n");
-			return FAILURE;
-		}
-		else
-		{
-			receiveBuffer.length = idata;
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
-				HcuDebugPrint("ETHERNET: Socket receive data from the client of cloud, data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
-			}
-		}
-
-		if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_ETHERNET)
-		{
-
-			//将数据发送给CLOUD，有关这个长度应该>0或者>1的问题，最后还是1，因为心跳握手帧只有二个字节的长度
-			if (receiveBuffer.length > 1){
-				//发送数据给CLOUDCONT
-				ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
-				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-					HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
-					return FAILURE;
-				}
-			}//end of send data
-
-			else{
-				zHcuGlobalCounter.CloudDataTimeOutCnt++;
-			}
-		}
-
-	//}//while(1) end
-
-	//close(connfd);
-	close(clientfd);
-
-	return SUCCESS;
-
-	//End:change the communication method(socket instead of curl)
-
-	*/
 }
 
 OPSTAT hcu_ethernet_phy_link_setup(void)
