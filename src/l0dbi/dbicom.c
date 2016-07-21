@@ -256,7 +256,6 @@ CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
  MESSAGE的消息数量有任何改动，需要更新这里，否则会出错！
 INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msgrestrict`) VALUES
 (0, 'MSG_ID_COM_MIN', 1, 1, 1),
@@ -818,3 +817,6 @@ void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow)
     }
     HcuDebugPrint("\n");
 }
+
+
+

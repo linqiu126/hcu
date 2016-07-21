@@ -925,6 +925,75 @@ typedef struct  sensor_toxicgas_zp01voc_data_element //
 	UINT32 toxicgasValue;
 	UINT32 timeStamp;
 }sensor_toxicgas_zp01voc_data_element_t;
+//智能表数据结构
+typedef struct  sensor_general_cj188_data_element //
+{
+	float currentaccuvolume;
+	INT8 currentaccuvolumeuint;
+	float flowvolume;
+	INT8 flowvolumeunit;
+	INT8 lastmonth;
+	INT32 accumuworktime;
+	float supplywatertemp;
+	float backwatertemp;
+	char realtime[15]; //多申请一位
+	char st[5]; //多申请一位
+	INT8 billdate;
+	INT8 readdate;
+	INT64 key;
+	float price1;
+	INT32 volume1;
+	float price2;
+	INT32 volume2;
+	float price3;
+	INT8 buycode;
+	float thisamount;
+	float accuamount;
+	float remainamount;
+	INT8 keyver;
+}sensor_general_cj188_data_element_t;
+typedef struct  sensor_iwm_cj188_data_element //
+{
+	char cj188address[15];  //多申请一位
+	UINT32 timestamp;
+	INT8 equtype;
+	float todayaccuvolume;
+	INT8 todayaccuvolumeuint;
+	sensor_general_cj188_data_element_t iwm;
+}sensor_iwm_cj188_data_element_t;
+typedef struct  sensor_igm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float todayaccuvolume;
+	INT8 todayaccuvolumeuint;
+	sensor_general_cj188_data_element_t igm;
+}sensor_igm_cj188_data_element_t;
+typedef struct  sensor_ipm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float todayaccuvolume;
+	INT8 todayaccuvolumeuint;
+	sensor_general_cj188_data_element_t ipm;
+}sensor_ipm_cj188_data_element_t;
+typedef struct  sensor_ihm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float heatpower;
+	INT8 heatpoweruint;
+	float currentheat;
+	INT8 currentheatuint;
+	float todayheat;
+	INT8 todayheatuint;
+	sensor_general_cj188_data_element_t ihm;
+}sensor_ihm_cj188_data_element_t;
+
+
 //缺省消息都使用UINT32进行定义，在内存不是最重要的制约因素下，这种统一的方式，是为了更加不容易出错，不用在不同
 //长度的字型之间进行转换。如果遇到INT类型，直接强制转换即可，符号单独处理
 //message definition

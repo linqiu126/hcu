@@ -18,6 +18,7 @@ extern OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjnam
 extern OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTablet_t *engPar);
 extern OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTablet_t *engPar);
 
+
 //引用外部API
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 

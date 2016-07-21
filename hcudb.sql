@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 20, 2016 at 11:25 PM
+-- Generation Time: Jul 22, 2016 at 12:05 AM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -4371,6 +4371,166 @@ INSERT INTO `hcuhumidsht20datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 (9, 0, 1463639575, 3, 11899),
 (10, 0, 1463640175, 3, 11899),
 (11, 0, 1463640775, 3, 11899);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcuigmcj188datainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `cj188address` char(14) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `equtype` int(1) NOT NULL,
+  `todayaccuvolume` float(8,2) NOT NULL,
+  `todayaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolume` float(8,2) NOT NULL,
+  `currentaccuvolumeuint` int(1) NOT NULL,
+  `flowvolume` float(8,2) NOT NULL,
+  `flowvolumeuint` int(1) NOT NULL,
+  `lastmonth` int(1) NOT NULL,
+  `accumuworktime` int(3) NOT NULL,
+  `supplywatertemp` float(6,2) NOT NULL,
+  `backwatertemp` float(6,2) NOT NULL,
+  `realtime` char(14) NOT NULL,
+  `st` char(4) NOT NULL,
+  `billdate` int(1) NOT NULL,
+  `readdate` int(1) NOT NULL,
+  `key` int(8) NOT NULL,
+  `price1` float(6,2) NOT NULL,
+  `volume1` int(3) NOT NULL,
+  `price2` float(6,2) NOT NULL,
+  `volume2` int(3) NOT NULL,
+  `price3` float(6,2) NOT NULL,
+  `buycode` int(1) NOT NULL,
+  `thisamount` float(8,2) NOT NULL,
+  `accuamount` float(8,2) NOT NULL,
+  `remainamount` float(8,2) NOT NULL,
+  `keyver` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcuihmcj188datainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `cj188address` char(14) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `equtype` int(1) NOT NULL,
+  `heatpower` float(8,2) NOT NULL,
+  `heatpoweruint` int(1) NOT NULL,
+  `currentheat` float(8,2) NOT NULL,
+  `currentheatuint` int(1) NOT NULL,
+  `todayheat` float(8,2) NOT NULL,
+  `todayheatuint` int(1) NOT NULL,
+  `currentaccuvolume` float(8,2) NOT NULL,
+  `currentaccuvolumeuint` int(1) NOT NULL,
+  `flowvolume` float(8,2) NOT NULL,
+  `flowvolumeuint` int(1) NOT NULL,
+  `lastmonth` int(1) NOT NULL,
+  `accumuworktime` int(3) NOT NULL,
+  `supplywatertemp` float(6,2) NOT NULL,
+  `backwatertemp` float(6,2) NOT NULL,
+  `realtime` char(14) NOT NULL,
+  `st` char(4) NOT NULL,
+  `billdate` int(1) NOT NULL,
+  `readdate` int(1) NOT NULL,
+  `key` int(8) NOT NULL,
+  `price1` float(6,2) NOT NULL,
+  `volume1` int(3) NOT NULL,
+  `price2` float(6,2) NOT NULL,
+  `volume2` int(3) NOT NULL,
+  `price3` float(6,2) NOT NULL,
+  `buycode` int(1) NOT NULL,
+  `thisamount` float(8,2) NOT NULL,
+  `accuamount` float(8,2) NOT NULL,
+  `remainamount` float(8,2) NOT NULL,
+  `keyver` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcuipmcj188datainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `cj188address` char(14) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `equtype` int(1) NOT NULL,
+  `todayaccuvolume` float(8,2) NOT NULL,
+  `todayaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolume` float(8,2) NOT NULL,
+  `currentaccuvolumeuint` int(1) NOT NULL,
+  `flowvolume` float(8,2) NOT NULL,
+  `flowvolumeuint` int(1) NOT NULL,
+  `lastmonth` int(1) NOT NULL,
+  `accumuworktime` int(3) NOT NULL,
+  `supplywatertemp` float(6,2) NOT NULL,
+  `backwatertemp` float(6,2) NOT NULL,
+  `realtime` char(14) NOT NULL,
+  `st` char(4) NOT NULL,
+  `billdate` int(1) NOT NULL,
+  `readdate` int(1) NOT NULL,
+  `key` int(8) NOT NULL,
+  `price1` float(6,2) NOT NULL,
+  `volume1` int(3) NOT NULL,
+  `price2` float(6,2) NOT NULL,
+  `volume2` int(3) NOT NULL,
+  `price3` float(6,2) NOT NULL,
+  `buycode` int(1) NOT NULL,
+  `thisamount` float(8,2) NOT NULL,
+  `accuamount` float(8,2) NOT NULL,
+  `remainamount` float(8,2) NOT NULL,
+  `keyver` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcuiwmcj188datainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `cj188address` char(14) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `equtype` int(1) NOT NULL,
+  `todayaccuvolume` float(8,2) NOT NULL,
+  `todayaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolume` float(8,2) NOT NULL,
+  `currentaccuvolumeuint` int(1) NOT NULL,
+  `flowvolume` float(8,2) NOT NULL,
+  `flowvolumeuint` int(1) NOT NULL,
+  `lastmonth` int(1) NOT NULL,
+  `accumuworktime` int(3) NOT NULL,
+  `supplywatertemp` float(6,2) NOT NULL,
+  `backwatertemp` float(6,2) NOT NULL,
+  `realtime` char(14) NOT NULL,
+  `st` char(4) NOT NULL,
+  `billdate` int(1) NOT NULL,
+  `readdate` int(1) NOT NULL,
+  `key` int(8) NOT NULL,
+  `price1` float(6,2) NOT NULL,
+  `volume1` int(3) NOT NULL,
+  `price2` float(6,2) NOT NULL,
+  `volume2` int(3) NOT NULL,
+  `price3` float(6,2) NOT NULL,
+  `buycode` int(1) NOT NULL,
+  `thisamount` float(8,2) NOT NULL,
+  `accuamount` float(8,2) NOT NULL,
+  `remainamount` float(8,2) NOT NULL,
+  `keyver` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
