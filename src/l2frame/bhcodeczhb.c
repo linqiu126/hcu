@@ -1279,8 +1279,8 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 	return SUCCESS;
 }
 
-//Adding by Shanchun for hcu sw inventory response
-OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 avUpload, CloudDataSendBuf_t *buf)
+//Adding by Shanchun for hcu av upload response
+OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 avUpload, char *avFileName, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1306,6 +1306,7 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 				optId = L3PO_hsmmp_upload_report;
 				sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
 				sprintf(xmlFormat.conAvUpload, "%02X", avUpload & 0xFF);
+				strcpy(xmlFormat.conAvFileName, avFileName);
 				break;
 
 			default:

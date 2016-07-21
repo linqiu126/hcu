@@ -65,6 +65,7 @@ FsmStateItem_t FsmHsmmp[] =
 
 //Global Variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
 
 //用于描述发送到后台，多少次才发送一次
 UINT32 zHcuHsmmpSendSaeCnt = 0;
@@ -278,8 +279,9 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 		}
 		//重置为HTTP地址
 		newpath[0]='\0';
-		strcpy(newpath, zHcuSysEngPar.videoSev.hcuVideoServerHttp);
-		strcat(newpath, rcv.hsmmp.hsmmpFname);
+		//strcpy(newpath, zHcuSysEngPar.videoSev.hcuVideoServerHttp);
+		//strcat(newpath, rcv.hsmmp.hsmmpFname);
+		strcpy(newpath, rcv.hsmmp.hsmmpFname);
 	}
 	//发送后台
 	if (strlen(newpath) > 0){
@@ -506,7 +508,6 @@ OPSTAT func_hsmmp_time_out_period(void)
         zHcuRunErrCnt[TASK_ID_HSMMP]++;
         return FAILURE;
     }
-
 	//发送后台的控制器，目前暂时是以10次回送一次的方式，未来可以由服务器后台控制
     zHcuHsmmpSendSaeCnt++;
     zHcuHsmmpSendSaeCnt = (zHcuHsmmpSendSaeCnt % HSMMP_SEND_BACK_MOD_BASE);
