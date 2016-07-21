@@ -242,8 +242,8 @@ OPSTAT fsm_avorion_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	zHcuAvorionRefreshRate = rcv.refreshRate;
 
 	//启动干活
-	printf("AVORION: TotalFrame=%d, RefreshRate=%d, FileType=%d, Fdir=[%s], tmpFile=[%s]\n", zHcuAvorionFrameTotalNum, zHcuAvorionRefreshRate,
-			rcv.fileType, rcv.fDirName, rcv.tmpFname);
+	printf("AVORION: TotalFrame=%d, RefreshRate=%d, FileType=%d, Fdir=[%s], Fname=[%s], tmpFile=[%s]\n", zHcuAvorionFrameTotalNum, zHcuAvorionRefreshRate,
+			rcv.fileType, rcv.fDirName, rcv.fName, rcv.tmpFname);
 	if (func_avorion_ffmpeg_capture_and_save(rcv.fileType, rcv.fDirName, rcv.tmpFname) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_AVORION]++;
 		HcuErrorPrint("AVORION: Error capture frame main loop function!\n");
