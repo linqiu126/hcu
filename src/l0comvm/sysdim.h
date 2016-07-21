@@ -9,7 +9,7 @@
 #define L0COMVM_SYSDIM_H_
 
 //系统任务级
-#define MAX_TASK_NUM_IN_ONE_HCU 64  //之前放成64个，为了优化，放60个足够
+#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
 #define TASK_NAME_MAX_LENGTH 12
 
 //系统消息级

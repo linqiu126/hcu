@@ -49,6 +49,8 @@
 #include "./l2frame/cloudvela.h"
 #include "./l2frame/i2cbuslibra.h"
 #include "./l2frame/spibusaries.h"
+#include "./l2frame/nbiotcj188.h"
+#include "./l2frame/nbiotqg376.h"
 
 #include "./l3app/svrcon.h"
 #include "./l3app/sensoremc.h"
@@ -65,8 +67,12 @@
 #include "./l3app/sensoralcohol.h"
 #include "./l3app/sensorhcho.h"
 #include "./l3app/sensortoxicgas.h"
-#include "./l3app/syspm.h"
+#include "./l3app/sensoriwm.h"
+#include "./l3app/sensorihm.h"
+#include "./l3app/sensorigm.h"
+#include "./l3app/sensoripm.h"
 #include "./l3app/sensorpm25sharp.h"
+#include "./l3app/syspm.h"
 
 
 //Global variables to be shared with SVRCON
@@ -388,6 +394,24 @@ void hcu_app_system_init()
 		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_INVALID;
 		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_INVALID;
 	}
+	if (zHcuSysEngPar.comm.commFrameNbiotcj188 == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwActive = HCU_TASK_PNP_INVALID;
+	}else{
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwActive = HCU_TASK_PNP_INVALID;
+	}
+	if (zHcuSysEngPar.comm.commFrameNbiotqg376 == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_INVALID;
+	}else{
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_INVALID;
+	}
 
 	if (zHcuSysEngPar.comm.commHwBoardGps == COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_GPS].swTaskActive = HCU_TASK_PNP_ON;
@@ -695,6 +719,51 @@ void hcu_app_system_init()
 		zHcuTaskInfo[TASK_ID_TOXICGAS].hwPlugin = HCU_TASK_PNP_OFF;
 		zHcuTaskInfo[TASK_ID_TOXICGAS].hwActive = HCU_TASK_PNP_OFF;
 	}
+	if (zHcuSysEngPar.comm.commFrontSensorIwm == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_IWM].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IWM].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IWM].hwActive = HCU_TASK_PNP_ON;
+	}else{
+		zHcuTaskInfo[TASK_ID_IWM].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IWM].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IWM].hwActive = HCU_TASK_PNP_OFF;
+	}
+	if (zHcuSysEngPar.comm.commFrontSensorIwm == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_IWM].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IWM].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IWM].hwActive = HCU_TASK_PNP_ON;
+	}else{
+		zHcuTaskInfo[TASK_ID_IWM].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IWM].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IWM].hwActive = HCU_TASK_PNP_OFF;
+	}
+	if (zHcuSysEngPar.comm.commFrontSensorIhm == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_IHM].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IHM].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IHM].hwActive = HCU_TASK_PNP_ON;
+	}else{
+		zHcuTaskInfo[TASK_ID_IHM].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IHM].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IHM].hwActive = HCU_TASK_PNP_OFF;
+	}
+	if (zHcuSysEngPar.comm.commFrontSensorIgm == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_IGM].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IGM].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IGM].hwActive = HCU_TASK_PNP_ON;
+	}else{
+		zHcuTaskInfo[TASK_ID_IGM].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IGM].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IGM].hwActive = HCU_TASK_PNP_OFF;
+	}
+	if (zHcuSysEngPar.comm.commFrontSensorIpm == COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_IPM].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IPM].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_IPM].hwActive = HCU_TASK_PNP_ON;
+	}else{
+		zHcuTaskInfo[TASK_ID_IPM].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IPM].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_IPM].hwActive = HCU_TASK_PNP_OFF;
+	}
 	if (zHcuSysEngPar.comm.commFrontSensorPm25Sharp == COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_PM25SHARP].swTaskActive = HCU_TASK_PNP_ON;
 		zHcuTaskInfo[TASK_ID_PM25SHARP].hwPlugin = HCU_TASK_PNP_ON;
@@ -727,6 +796,12 @@ void hcu_task_create_all(void)
 
 	//Create task Modbus environments /7
 	hcu_system_task_init_call(TASK_ID_MODBUS, FsmModbus);
+
+	//Create task Nbiotcj188 environments
+	hcu_system_task_init_call(TASK_ID_NBIOTCJ188, FsmNbiotcj188);
+
+	//Create task Nbiotqg376 environments
+	hcu_system_task_init_call(TASK_ID_NBIOTQG376, FsmNbiotqg376);
 
 	//Create task EMC environments/8
 	hcu_system_task_init_call(TASK_ID_EMC, FsmEmc);
@@ -842,11 +917,23 @@ void hcu_task_create_all(void)
 	//Create task Pm25Sharp environments/44
 	hcu_system_task_init_call(TASK_ID_PM25SHARP, FsmPm25Sharp);
 
-	//Create task Pm25Sharp environments/45
+	//Create task I2cbuslibra environments/45
 	hcu_system_task_init_call(TASK_ID_I2CBUSLIBRA, FsmI2cbuslibra);
 
-	//Create task Pm25Sharp environments/46
+	//Create task Spibusaries environments/46
 	hcu_system_task_init_call(TASK_ID_SPIBUSARIES, FsmSpibusaries);
+
+	//Create task Iwm environments/47
+	hcu_system_task_init_call(TASK_ID_IWM, FsmIwm);
+
+	//Create task Ihm environments/48
+	hcu_system_task_init_call(TASK_ID_IHM, FsmIhm);
+
+	//Create task Igm environments/49
+	hcu_system_task_init_call(TASK_ID_IGM, FsmIgm);
+
+	//Create task Ipm environments/50
+	hcu_system_task_init_call(TASK_ID_IPM, FsmIpm);
 }
 
 void hcu_task_create_all_but_avorion(void)
