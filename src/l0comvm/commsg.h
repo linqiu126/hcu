@@ -397,9 +397,11 @@ extern INT32  outputOnCrt;
 
 
 /*
- *
- * 每定义一个新消息，请去修改vmlayer.c中的变量zHcuMsgNameList[]，不然TRACE会出现消息内容解析的错误
- *
+ * 【增加消息】总共需要修改三个地方：
+ * - HCU_INTER_TASK_MSG_ID
+ * - 每定义一个新消息，请去修改vmlayer.c中的变量zHcuMsgNameList[]，不然TRACE会出现消息内容解析的错误
+ * - 还要去DBICOM模块中对应的MessageTrace机制一并修改，并备份数据库
+ * - 如果需要完美表现，还得最终需要升级L3UI的CRUD，不然相应的工具会出错
  */
 
 //4. 新消息新程序结构体定义部分
@@ -424,6 +426,8 @@ enum HCU_INTER_TASK_MSG_ID
 
 	//ETHERNET
 	MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,
+	MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX,
+	MSG_ID_ETHERNET_NBIOTQG376_DATA_RX,
 
 	//WIFI
 	MSG_ID_WIFI_CLOUDVELA_DATA_RX,
@@ -490,6 +494,18 @@ enum HCU_INTER_TASK_MSG_ID
 
 	MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
 	MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD,
+
+	//NBIOT message
+	MSG_ID_NBIOTCJ188_IWM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IHM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IGM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IPM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,
+	MSG_ID_NBIOTQG376_IPM_DATA_REQ,
+	MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,
 
 	//Modbus report
 	MSG_ID_MODBUS_EMC_DATA_REPORT,
@@ -564,6 +580,24 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,
 	MSG_ID_NOISE_MODBUS_DATA_READ,
 	MSG_ID_NOISE_MODBUS_CONTROL_CMD,
+
+	//IWM
+	MSG_ID_IWM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IWM_NBIOTCJ188_CONTROL_FB,
+
+	//IHM
+	MSG_ID_IHM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IHM_NBIOTCJ188_CONTROL_FB,
+
+	//IGM
+	MSG_ID_IGM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IGM_NBIOTCJ188_CONTROL_FB,
+
+	//IPM
+	MSG_ID_IPM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,
+	MSG_ID_IPM_NBIOTQG376_DATA_RESP,
+	MSG_ID_IPM_NBIOTQG376_CONTROL_FB,
 
 	//AirSync message
 	MSG_ID_AIRSYNC_INIT,
@@ -925,6 +959,7 @@ typedef struct  sensor_toxicgas_zp01voc_data_element //
 	UINT32 toxicgasValue;
 	UINT32 timeStamp;
 }sensor_toxicgas_zp01voc_data_element_t;
+
 //智能表数据结构
 typedef struct  sensor_general_cj188_data_element //
 {
@@ -992,6 +1027,20 @@ typedef struct  sensor_ihm_cj188_data_element //
 	INT8 todayheatuint;
 	sensor_general_cj188_data_element_t ihm;
 }sensor_ihm_cj188_data_element_t;
+typedef struct  sensor_ipm_qg376_data_element //
+{
+	char ipmaddress[14];
+	UINT32 timestamp;
+	INT8 equtype;
+}sensor_ipm_qg376_data_element_t;
+
+
+
+
+
+
+
+
 
 
 //缺省消息都使用UINT32进行定义，在内存不是最重要的制约因素下，这种统一的方式，是为了更加不容易出错，不用在不同
@@ -1069,6 +1118,16 @@ typedef struct  msg_struct_ethernet_cloudvela_data_rx //
 	UINT32 length;
 	char buf[MAX_HCU_MSG_BUF_LENGTH];
 }msg_struct_ethernet_cloudvela_data_rx_t;
+typedef struct  msg_struct_ethernet_nbiotcj188_data_rx //
+{
+	UINT32 length;
+	char buf[MAX_HCU_MSG_BUF_LENGTH];
+}msg_struct_ethernet_nbiotcj188_data_rx_t;
+typedef struct  msg_struct_ethernet_nbiotqg376_data_rx //
+{
+	UINT32 length;
+	char buf[MAX_HCU_MSG_BUF_LENGTH];
+}msg_struct_ethernet_nbiotqg376_data_rx_t;
 typedef struct  msg_struct_wifi_cloudvela_data_rx //
 {
 	UINT32 length;
@@ -1201,6 +1260,47 @@ typedef struct  msg_struct_cloudvela_noise_data_req //
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_noise_data_req_t;
+typedef struct  msg_struct_nbiotcj188_iwm_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_nbiotcj188_iwm_data_req_t;
+typedef struct  msg_struct_nbiotcj188_ihm_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_nbiotcj188_ihm_data_req_t;
+typedef struct  msg_struct_nbiotcj188_igm_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_nbiotcj188_igm_data_req_t;
+typedef struct  msg_struct_nbiotcj188_ipm_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_nbiotcj188_ipm_data_req_t;
+typedef struct  msg_struct_nbiotqg376_ipm_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_nbiotqg376_ipm_data_req_t;
+
 
 typedef struct  msg_struct_cloudvela_emc_control_cmd //
 {
@@ -1274,6 +1374,41 @@ typedef struct  msg_struct_cloudvela_hsmmp_control_cmd //
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_control_cmd_t;
+typedef struct  msg_struct_nbiotcj188_iwm_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_nbiotcj188_iwm_control_cmd_t;
+typedef struct  msg_struct_nbiotcj188_ihm_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_nbiotcj188_ihm_control_cmd_t;
+typedef struct  msg_struct_nbiotcj188_igm_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_nbiotcj188_igm_control_cmd_t;
+typedef struct  msg_struct_nbiotcj188_ipm_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_nbiotcj188_ipm_control_cmd_t;
+typedef struct  msg_struct_nbiotqg376_ipm_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_nbiotqg376_ipm_control_cmd_t;
 
 //SENSOR Data request to MODBUS
 typedef struct  msg_struct_emc_modbus_data_read //
@@ -1608,6 +1743,41 @@ typedef struct msg_struct_noise_cloudvela_data_resp
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_noise_cloudvela_data_resp_t;
+typedef struct msg_struct_iwm_nbiotcj188_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 length;
+}msg_struct_iwm_nbiotcj188_data_resp_t;
+typedef struct msg_struct_ihm_nbiotcj188_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 length;
+}msg_struct_ihm_nbiotcj188_data_resp_t;
+typedef struct msg_struct_igm_nbiotcj188_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 length;
+}msg_struct_igm_nbiotcj188_data_resp_t;
+typedef struct msg_struct_ipm_nbiotcj188_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 length;
+}msg_struct_ipm_nbiotcj188_data_resp_t;
+typedef struct msg_struct_ipm_nbiotqg376_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 length;
+}msg_struct_ipm_nbiotqg376_data_resp_t;
 
 typedef struct msg_struct_emc_cloudvela_control_fb
 {
@@ -1672,6 +1842,42 @@ typedef struct msg_struct_noise_cloudvela_control_fb
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_noise_cloudvela_control_fb_t;
+typedef struct msg_struct_iwm_nbiotcj188_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_iwm_nbiotcj188_control_fb_t;
+typedef struct msg_struct_ihm_nbiotcj188_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_ihm_nbiotcj188_control_fb_t;
+typedef struct msg_struct_igm_nbiotcj188_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_igm_nbiotcj188_control_fb_t;
+typedef struct msg_struct_ipm_nbiotcj188_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_ipm_nbiotcj188_control_fb_t;
+typedef struct msg_struct_ipm_nbiotqg376_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_ipm_nbiotqg376_control_fb_t;
+
 
 //HSMMP-AVORION交互消息
 typedef struct msg_struct_hsmmp_avorion_data_read //
