@@ -20,24 +20,28 @@ FsmStateItem_t FsmIpm[] =
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
 	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
 	//如果没有必要进行初始化，可以设置为NULL
-	{MSG_ID_ENTRY,       		FSM_STATE_ENTRY,            			fsm_ipm_task_entry}, //Starting
+	{MSG_ID_ENTRY,       						FSM_STATE_ENTRY,            			fsm_ipm_task_entry}, //Starting
 
 	//System level initialization, only controlled by HCU-MAIN
-    {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_ipm_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_ipm_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            				fsm_ipm_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            				fsm_ipm_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       	FSM_STATE_IPM_INITIED,            	fsm_ipm_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IPM_INITIED,            	fsm_ipm_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IPM_INITIED,            	fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_IPM_INITIED,            		fsm_ipm_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_IPM_INITIED,            		fsm_ipm_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IPM_INITIED,            		fsm_com_do_nothing},
 
-    //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_IPM_ACTIVED,            	fsm_ipm_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IPM_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_IPM_ACTIVED,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_IPM_ACTIVED,       		fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       FSM_STATE_IPM_ACTIVED,          		fsm_ipm_time_out},
+	//Normal working status
+    {MSG_ID_COM_RESTART,        				FSM_STATE_IPM_ACTIVED,            		fsm_ipm_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IPM_ACTIVED,            		fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_IPM_ACTIVED,       			fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_IPM_ACTIVED,       			fsm_com_do_nothing},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_IPM_ACTIVED,          		fsm_ipm_time_out},
+	{MSG_ID_NBIOTCJ188_IPM_DATA_REQ,     		FSM_STATE_IPM_ACTIVED,      			fsm_ipm_nbiotcj188_data_req},
+	{MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotcj188_control_cmd},
+	{MSG_ID_NBIOTQG376_IPM_DATA_REQ,     		FSM_STATE_IPM_ACTIVED,      			fsm_ipm_nbiotqg376_data_req},
+	{MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotqg376_control_cmd},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -153,3 +157,22 @@ OPSTAT fsm_ipm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	return SUCCESS;
 }
 
+OPSTAT fsm_ipm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_ipm_nbiotcj188_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_ipm_nbiotqg376_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_ipm_nbiotqg376_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}

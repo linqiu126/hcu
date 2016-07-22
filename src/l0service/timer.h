@@ -31,7 +31,7 @@ enum FSM_STATE_TIMER
 #define HCU_TIMER_TICK_100_MS_IN_NS 100000000  //in n second
 
 //Timer Id definition
-#define MAX_TIMER_NUM_IN_ONE_HCU_1S 32  //Normal situation
+#define MAX_TIMER_NUM_IN_ONE_HCU_1S 40  //Normal situation
 #define MAX_TIMER_NUM_IN_ONE_HCU_10MS 4 //Frame usage
 #define MAX_TIMER_NUM_IN_ONE_HCU_1MS 4  //Real-time usage
 #define MAX_TIMER_SET_DURATION 100000

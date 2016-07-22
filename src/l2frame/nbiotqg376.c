@@ -32,11 +32,24 @@ FsmStateItem_t FsmNbiotqg376[] =
     {MSG_ID_COM_RESTART,		FSM_STATE_NBIOTQG376_INITIED,            	fsm_nbiotqg376_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_NBIOTQG376_INITIED,            	fsm_com_do_nothing},
 
-    //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_NBIOTQG376_ACTIVED,            	fsm_nbiotqg376_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_NBIOTQG376_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_NBIOTQG376_ACTIVED,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_NBIOTQG376_ACTIVED,       		fsm_com_do_nothing},
+	//Offline working, 定时重新启动链路，但不接受任何L3消息
+    {MSG_ID_COM_RESTART,        FSM_STATE_NBIOTQG376_OFFLINE,            	fsm_nbiotqg376_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_NBIOTQG376_OFFLINE,            	fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_NBIOTQG376_OFFLINE,       		fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_NBIOTQG376_OFFLINE,       		fsm_com_do_nothing},
+	{MSG_ID_COM_TIME_OUT,       FSM_STATE_NBIOTQG376_OFFLINE,            	fsm_nbiotqg376_time_out},
+
+    //Online working， 定时检查链路，并安排离线数据的及时上传
+    {MSG_ID_COM_RESTART,        			FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_NBIOTQG376_ONLINE,	fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     			FSM_STATE_NBIOTQG376_ONLINE,    fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  			FSM_STATE_NBIOTQG376_ONLINE,    fsm_com_do_nothing},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_time_out},
+	{MSG_ID_IPM_NBIOTQG376_DATA_RESP,   	FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ipm_data_resp},
+	{MSG_ID_IPM_NBIOTQG376_CONTROL_FB,   	FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ipm_contrl_fb},
+
+	//Online working，这里不再考虑不同的物理链接导致的差异性链路。从Linux系统来看，WIFI/ETHERNET/USBNET/34G都是同一种连接
+	{MSG_ID_ETHERNET_NBIOTQG376_DATA_RX,    FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ethernet_data_rx},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -92,7 +105,7 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	zHcuRunErrCnt[TASK_ID_NBIOTQG376] = 0;
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_ACTIVED) == FAILURE){
+	if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
 		HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
 		return FAILURE;
@@ -138,3 +151,24 @@ OPSTAT func_nbiotqg376_int_init(void)
 {
 	return SUCCESS;
 }
+
+OPSTAT fsm_nbiotqg376_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_nbiotqg376_ipm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_nbiotqg376_ipm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_nbiotqg376_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+

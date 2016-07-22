@@ -710,7 +710,10 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 
 //= ZJL, 2016 July.21, CURRENT_SW_DELIVERY 102
 > L3UI待完善，包括CRUD
-> 先搞传感器数据库的存储和函数，不然编解码没法进行
+> 先搞传感器数据库的存储和函数，完成
+> HWINV对传感器IWM/IHM/IGM/IPM数据的定期清理
+> 消息定义，CJ188/QG376/IWM/IHM/IGM/IPM模块状态机和处理函数框架搭建完成
+> 消息结构定义完成
 
 
 

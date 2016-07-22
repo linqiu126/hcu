@@ -19,7 +19,12 @@
 //不是任务的任务，比如TRACE/CONFIG/3G/GPIO等等，留待清理，简化任务列表
 /*
  *
- *   【增加任务】，必须同时修改三个地方：HCU_TASK_NAME_ID， HCU_TASK_QUEUE_ID， zHcuTaskNameList
+ *   【增加任务】，必须同时修改四个地方：
+ *   - HCU_TASK_NAME_ID
+ *   - HCU_TASK_QUEUE_ID
+ *   - zHcuTaskNameList
+ *   - 还要DBICOM中去修改ModuleTrace的数据，不然通过L3UI界面进行控制TRACE也会出错，并备份数据库
+ *   - 如果需要完美表现，还得最终需要升级L3UI的CRUD，不然相应的工具会出错
  *
  */
 enum HCU_TASK_NAME_ID

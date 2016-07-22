@@ -16,8 +16,8 @@
 /*
  * Global Varible for Serial Port
  */
-SerialPortCom_t gSerialPortZb = {SPS_COM_PORT_PATH_1, 38400, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};
-SerialPortCom_t gSerialPortGprs = {SPS_COM_PORT_PATH_1, 115200, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};
+SerialPortCom_t gSerialPortZb = {1, 38400, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};; //{SPS_COM_PORT_PATH_1, 38400, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};
+SerialPortCom_t gSerialPortGprs = {1, 115200, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};; //{SPS_COM_PORT_PATH_1, 115200, 8, 'N', 1, HCU_INVALID_U16, 0, 0, 0};
 /*
  * Global Variable for Socket
  */
@@ -907,27 +907,27 @@ UINT32 ReadCommandLineParameter(int argc, char *argv[])
 
 	if (0 == strcmp(argv[1],"0"))
 	{
-		gSerialPortZb.id = SPS_COM_PORT_PATH_0;
+		gSerialPortZb.id = 0; //SPS_COM_PORT_PATH_0;
 		HcuDebugPrint("ReadCommandLineParameter: COM0 port will be used ...\n");
 	}
 	else if (0 == strcmp(argv[1],"1"))
 	{
-		gSerialPortZb.id = SPS_COM_PORT_PATH_1;
+		gSerialPortZb.id = 1; // SPS_COM_PORT_PATH_1;
 		HcuDebugPrint("ReadCommandLineParameter: COM1 port will be used ...\n");
 	}
 	else if (0 == strcmp(argv[1],"2"))
 	{
-		gSerialPortZb.id = SPS_COM_PORT_PATH_2;
+		gSerialPortZb.id = 2; //SPS_COM_PORT_PATH_2;
 		HcuDebugPrint("ReadCommandLineParameter: COM2 port will be used ...\n");
 	}
 	else if (0 == strcmp(argv[1],"3"))
 	{
-		gSerialPortZb.id = SPS_COM_PORT_PATH_3;
+		gSerialPortZb.id = 3; //SPS_COM_PORT_PATH_3;
 		HcuDebugPrint("ReadCommandLineParameter: COM3 port will be used ...\n");
 	}
 	else if (0 == strcmp(argv[1],"4"))
 	{
-		gSerialPortZb.id = SPS_COM_PORT_PATH_4;
+		gSerialPortZb.id = 4; //SPS_COM_PORT_PATH_4;
 		HcuDebugPrint("ReadCommandLineParameter: COM4 port will be used ...\n");
 	}
 	else

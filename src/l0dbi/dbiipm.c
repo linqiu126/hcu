@@ -240,3 +240,17 @@ OPSTAT dbi_HcuIpmCj188DataInfo_delete_3monold(UINT32 days)
     return SUCCESS;
 }
 
+OPSTAT dbi_HcuIpmQg376DataInfo_save(sensor_ipm_qg376_data_element_t *ipmData)
+{
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuIpmQg376DataInfo_inqury_1st_record(char *addr, sensor_ipm_qg376_data_element_t *ipmData)
+{
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuIpmQg376DataInfo_delete_3monold(UINT32 days)
+{
+    return SUCCESS;
+}

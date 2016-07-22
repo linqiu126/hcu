@@ -17,7 +17,8 @@ enum FSM_STATE_NBIOTQG376
 {
 	FSM_STATE_NBIOTQG376_INITED = 0x02,
 	FSM_STATE_NBIOTQG376_INITIED,
-	FSM_STATE_NBIOTQG376_ACTIVED,
+	FSM_STATE_NBIOTQG376_OFFLINE,
+	FSM_STATE_NBIOTQG376_ONLINE,
 	FSM_STATE_NBIOTQG376_MAX,
 };
 //#define FSM_STATE_END   0xFE
@@ -30,6 +31,10 @@ extern FsmStateItem_t FsmNbiotqg376[];
 extern OPSTAT fsm_nbiotqg376_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_nbiotqg376_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_nbiotqg376_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_nbiotqg376_ipm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_nbiotqg376_ipm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_nbiotqg376_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_nbiotqg376_int_init(void);
