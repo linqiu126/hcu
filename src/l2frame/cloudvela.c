@@ -115,83 +115,6 @@ OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 
 OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-/*
-	//FTP test start by zsc!
-
-	FTP_OPT ftp_opt;
-
-	char usrtmp[3] = ":";
-	ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
-	strcat(ftp_opt.user_key, usrtmp);
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
-
-	char fileupload[64] = "hcu1.log";
-	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
-	strcat(ftp_opt.url, fileupload);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
-
-	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
-	strcat(ftp_opt.file, fileupload);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
-
-	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt))
-		HcuDebugPrint("CLOUDVELA: HCU SW Upload success.\n");
-	else
-		HcuErrorPrint("CLOUDVELA: HCU SW Upload failed.\n");
-
-
-	char filedownload[64] = "hcu1.log";
-	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
-	strcat(ftp_opt.url, filedownload);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
-
-	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
-	strcat(ftp_opt.file, filedownload);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
-
-	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt))
-		HcuDebugPrint("CLOUDVELA: HCU SW Download success.\n");
-	else
-		HcuErrorPrint("CLOUDVELA: HCU SW Download failed.\n");
-
-
-	//FTP test end by zsc!
-*/
-
-/*
-	//readlink test start by zsc!
-	char filepath[CLOUDVELA_PATH_MAX];
-	memset(filepath,0,CLOUDVELA_PATH_MAX);
-	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
-
-	FTP_OPT ftp_opt;
-	//memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
-
-	memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
-	char *temp = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
-	//ftp_opt.file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
-	strcpy(ftp_opt.file,temp);
-
-
-	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);
-	if(rslt<0 || (rslt >=CLOUDVELA_PATH_MAX-1))
-	{
-		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n", rslt);
-	}
-	else
-	{
-		filepath[rslt] = '\0';
-		memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
-		strcpy(ftp_opt.file,filepath);
-	}
-
-
-	HcuDebugPrint("CLOUDVELA: AV file path: %s!\n", ftp_opt.file);
-*/
-
-	//readlink test end by zsc!
-
 	int ret=0;
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -200,7 +123,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CLOUDVELA, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -214,7 +137,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_init\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Enter FSM_STATE_CLOUDVELA_INITED status, everything goes well!\n");
 	}
 
@@ -355,7 +278,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 		//如果是失败情况，并不返回错误，属于正常情况
 		//当链路不可用时，这个打印结果会非常频繁，放开比较好
 		else{
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_IPT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			}
 		}
@@ -632,7 +555,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Under online state, send off-line data to cloud success!\n");
 	}
 	//State no change
@@ -662,7 +585,7 @@ OPSTAT func_cloudvela_time_out_period_for_cmd_control(void)
 		//如果是失败情况，并不返回错误，属于正常情况
 		//当链路不可用时，这个打印结果会非常频繁，放开比较好
 		else{
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_IPT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			}
 		}
@@ -736,7 +659,7 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period EMC to cloud success!\n");
 	}
 	//State no change
@@ -791,7 +714,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period PM25 to cloud success!\n");
 	}
 	//State no change
@@ -846,7 +769,7 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period WINDDIR to cloud success!\n");
 	}
 	//State no change
@@ -900,7 +823,7 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period WINDSPD to cloud success!\n");
 	}
 	//State no change
@@ -954,7 +877,7 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period TEMPERATURE to cloud success!\n");
 	}
 	//State no change
@@ -1008,7 +931,7 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period HUMIDITY to cloud success!\n");
 	}
 	//State no change
@@ -1062,7 +985,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period NOISE to cloud success!\n");
 	}
 	//State no change
@@ -1124,7 +1047,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period HSMMP to cloud success!\n");
 	}
 	//State no change
@@ -1239,7 +1162,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	if ((rand()%10)>5)
 		return SUCCESS;
 	else*/
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
 	}
 	zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1286,7 +1209,7 @@ OPSTAT func_cloudvela_heart_beat_check(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send HEART_BEAT message out to cloud success!\n");
 	}
 	//State no change
@@ -1311,7 +1234,7 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 		}
 
 		//for GPS test
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: NS is %c, latitude is %d, EW is %c, longitude is %d, Status is %c, speed is %d, high is %d.\n",
 					zHcuGpsPosInfo.NS, zHcuGpsPosInfo.gpsY, zHcuGpsPosInfo.EW, zHcuGpsPosInfo.gpsX, zHcuGpsPosInfo.status, zHcuGpsPosInfo.speed, zHcuGpsPosInfo.gpsZ);
 			HcuDebugPrint("CLOUDVELA: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuGpsPosInfo.D.year, zHcuGpsPosInfo.D.month, zHcuGpsPosInfo.D.day, zHcuGpsPosInfo.D.hour, zHcuGpsPosInfo.D.minute, zHcuGpsPosInfo.D.second);
@@ -1331,7 +1254,7 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send CMD CONTROL CHECK message out to cloud success!\n");
 	}
 	//State no change
@@ -1389,7 +1312,7 @@ OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 	zHcuMemStorageBuf.lastSid = sid;  //最新一个写入记录的SID数值
 
 	//Always successful, as the storage is a cycle buffer!
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Data record save to MEM-DISC, sid=%d, totalNbr=%d, offNbr=%d\n", sid, totalNbr, zHcuMemStorageBuf.offlineNbr);
 	}
 	return SUCCESS;
@@ -1447,7 +1370,7 @@ OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Data record read from MEM-DISC, rdCnt=%d, totalNbr = %d, offNbr=%d\n", readCnt, totalNbr, zHcuMemStorageBuf.offlineNbr);
 	}
 	return SUCCESS;
@@ -1606,14 +1529,14 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
 		//int i;
 		//for(i =0; i<rcv.length; i++) HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
 	}
 
 	//如果是XML自定义格式
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
 	{
 		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1623,7 +1546,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
 	{
 		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1772,7 +1695,7 @@ OPSTAT func_cloudvela_heart_beat_received_handle(void)
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Ack HEART_BEAT successful!\n");
 	}
 
@@ -1937,7 +1860,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 		//初始化变量
 		CloudDataSendBuf_t buf;
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("cloudvela: control command cmdId= %d\n", rcv.cmdId);
 			HcuDebugPrint("cloudvela: control command optId= %d\n", rcv.optId);
 			HcuDebugPrint("cloudvela: control command backType = %d\n", rcv.backType);
@@ -1973,7 +1896,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send PM25 Sensor Control CMD ACK to cloud success!\n");
 	}
 	//State no change
@@ -2043,7 +1966,82 @@ char* func_cloudvela_get_file_path(char *file, char *buf, int count)
 }
 */
 
+/*
+	//FTP test start by zsc!
 
+	FTP_OPT ftp_opt;
+
+	char usrtmp[3] = ":";
+	ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
+	strcat(ftp_opt.user_key, usrtmp);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
+
+	char fileupload[64] = "hcu1.log";
+	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	strcat(ftp_opt.url, fileupload);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
+
+	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	strcat(ftp_opt.file, fileupload);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
+
+	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt))
+		HcuDebugPrint("CLOUDVELA: HCU SW Upload success.\n");
+	else
+		HcuErrorPrint("CLOUDVELA: HCU SW Upload failed.\n");
+
+
+	char filedownload[64] = "hcu1.log";
+	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	strcat(ftp_opt.url, filedownload);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
+
+	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	strcat(ftp_opt.file, filedownload);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
+
+	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt))
+		HcuDebugPrint("CLOUDVELA: HCU SW Download success.\n");
+	else
+		HcuErrorPrint("CLOUDVELA: HCU SW Download failed.\n");
+
+
+	//FTP test end by zsc!
+*/
+
+/*
+	//readlink test start by zsc!
+	char filepath[CLOUDVELA_PATH_MAX];
+	memset(filepath,0,CLOUDVELA_PATH_MAX);
+	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+
+	FTP_OPT ftp_opt;
+	//memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
+
+	memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
+	char *temp = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+	//ftp_opt.file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+	strcpy(ftp_opt.file,temp);
+
+
+	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);
+	if(rslt<0 || (rslt >=CLOUDVELA_PATH_MAX-1))
+	{
+		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n", rslt);
+	}
+	else
+	{
+		filepath[rslt] = '\0';
+		memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
+		strcpy(ftp_opt.file,filepath);
+	}
+
+
+	HcuDebugPrint("CLOUDVELA: AV file path: %s!\n", ftp_opt.file);
+*/
+
+	//readlink test end by zsc!
 
 
 

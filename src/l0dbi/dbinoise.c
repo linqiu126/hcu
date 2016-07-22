@@ -86,7 +86,7 @@ OPSTAT dbi_HcuNoiseDataInfo_save(sensor_noise_data_element_t *noiseData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBINOISE: NOISE data record save to DB!\n");
 	}
     return SUCCESS;

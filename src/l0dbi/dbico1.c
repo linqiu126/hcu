@@ -86,7 +86,7 @@ OPSTAT dbi_HcuCo1DataInfo_save(sensor_co1_data_element_t *co1Data)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBICO1: CO1 data record save to DB!\n");
 	}
     return SUCCESS;

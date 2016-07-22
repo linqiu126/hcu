@@ -692,7 +692,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTablet_t *engPar)
 		engPar->traceList.mod[moduleId].moduleId = moduleId;
 		if(sqlRow[index]) strncpy(engPar->traceList.mod[moduleId].moduleName, sqlRow[index++], TASK_NAME_MAX_LENGTH-1);
 		if (strcmp(engPar->traceList.mod[moduleId].moduleName, zHcuTaskNameList[moduleId])){
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("DBICOM: Error Module name populated!\n");
 			}
 		}
@@ -770,7 +770,7 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTablet_t *engPar)
 		engPar->traceList.msg[msgId].msgId = msgId;
 		if(sqlRow[index]) strncpy(engPar->traceList.msg[msgId].msgName, sqlRow[index++], MSG_NAME_MAX_LENGTH-1);
 		if (strcmp(engPar->traceList.msg[msgId].msgName, zHcuMsgNameList[msgId])){
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("DBICOM: Error Message name populated, MsgId = %d, engPar->traceList.msg = [%s], zHcuMsgNameList = [%s]!\n", msgId, engPar->traceList.msg[msgId].msgName, zHcuMsgNameList[msgId]);
 			}
 		}

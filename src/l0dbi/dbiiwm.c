@@ -99,7 +99,7 @@ OPSTAT dbi_HcuIwmCj188DataInfo_save(sensor_iwm_cj188_data_element_t *iwmData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIIWM: CO1 data record save to DB!\n");
 	}
     return SUCCESS;

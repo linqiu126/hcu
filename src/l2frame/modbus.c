@@ -109,7 +109,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MODBUS, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -124,7 +124,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Enter FSM_STATE_MODBUS_INITED status, everything goes well!\n");
 	}
 
@@ -218,7 +218,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus EMC req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -389,7 +389,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus PM25 req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -567,7 +567,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Prepareing send modbus winddir req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -743,7 +743,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus windspd req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -918,7 +918,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus temp req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -1095,7 +1095,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus humid req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -1272,7 +1272,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus noise req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -2844,7 +2844,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send PM25 control cmd = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -2955,7 +2955,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 		break;
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 
 		HcuDebugPrint("modbus: control command--switch= %d\n", snd.opt.powerOnOff);
 		HcuDebugPrint("modbus: control command--address= %d\n", snd.opt.newEquId);
