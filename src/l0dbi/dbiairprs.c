@@ -126,7 +126,7 @@ OPSTAT dbi_HcuAirprsDataInfo_save(sensor_airprs_data_element_t *airprsData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIAIRPRS: AIRPRS data record save to DB!\n");
 	}
     return SUCCESS;
@@ -288,7 +288,7 @@ OPSTAT dbi_HcuAirprsBmp180DataInfo_save(sensor_airprs_bmp180_data_element_t *air
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIAIRPRS: AIRPRS BMP180 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -376,7 +376,7 @@ OPSTAT dbi_HcuAirprsAltitudeBmp180DataInfo_save(sensor_airprs_altitude_bmp180_da
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIAIRPRS: AIRPRS BMP180 data record save to DB!\n");
 	}
     return SUCCESS;

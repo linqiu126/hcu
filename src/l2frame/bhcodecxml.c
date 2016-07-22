@@ -270,7 +270,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	else if (cmdId ==L3CI_cmd_control)
 	{//CMD polling response from Clound: 0x00FD
 
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: CMD polling Ack from Cloud: cmdID =%d\n", cmdId);
 		}
 
@@ -2083,7 +2083,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 		}
 
 
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 			HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 			HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
@@ -2174,7 +2174,7 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 			hcuInventoryInfo.sw_delivery = CURRENT_SW_RELEASE;
 			hcuInventoryInfo.sw_release = CURRENT_SW_DELIVERY;
 
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 				HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 				HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
@@ -2278,7 +2278,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 			HcuDebugPrint("CLOUDVELA: HCU SW Download successful.\n");
 			swDownload = TRUE;
 
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 				HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 				HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
@@ -2317,7 +2317,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 			}
 
 			//结束
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Online state, send HCU SW Download Success Resp to cloud success!\n");
 			}
 
@@ -2351,7 +2351,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 
 				swDownload = FALSE;
 
-				if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 					HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 					HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 					HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
@@ -2389,7 +2389,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 				}
 
 				//结束
-				if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 					HcuDebugPrint("CLOUDVELA: Online state, send HCU SW Download Failure Resp to cloud success!\n");
 				}
 

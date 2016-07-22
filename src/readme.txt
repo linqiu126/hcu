@@ -715,8 +715,8 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 消息定义，CJ188/QG376/IWM/IHM/IGM/IPM模块状态机和处理函数框架搭建完成
 > 消息结构定义完成
 
-
-
+//= ZJL, 2016 July.22, CURRENT_SW_DELIVERY 103
+> L3UI待完善，包括CRUD
 
 
 
@@ -762,4 +762,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 全局变量命名规则： zHcuTaskxxx => 全局表单，使用extern进行修饰，以便其它模块引用
 > 如果发现有些传感器发送的速度过快或者过慢，可以在L3目录中查看，相关的传感器.h中有时长定义，可以适当调整
 > 另外，对于各个传感器的启动性问题，都采用了随机延迟的方案，减少各个任务之间的碰撞概率。延迟碰撞的时长设置在L2COMDEF.h文件中
+> ps -ef | grep hcu
+> kill -9 12345
+
 

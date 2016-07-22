@@ -93,7 +93,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
 		//hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HSMMP, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -108,7 +108,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("HSMMP: Enter FSM_STATE_HSMMP_INITED status, Keeping refresh here!\n");
 	}
 
@@ -229,7 +229,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("AVORION: Recover to ACTIVED state during period timer out!\n");
 		}
 		return SUCCESS;
@@ -466,7 +466,7 @@ OPSTAT func_hsmmp_time_out_period(void)
 			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("AVORION: Recover to ACTIVED state during period timer out!\n");
 		}
 

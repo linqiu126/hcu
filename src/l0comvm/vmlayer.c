@@ -604,7 +604,7 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
 		HcuErrorPrint("HCU-VM: Init state machine FsmAddNew error, taskid = %d\n", task_id);
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 		HcuDebugPrint("HCU-VM: FsmAddNew Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskNameList[task_id]);
 	}
 
@@ -615,7 +615,7 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
     	HcuErrorPrint("HCU-VM: Create queue unsuccessfully, taskId = %d\n", task_id);
     	return FAILURE;
     }
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 	    HcuDebugPrint("HCU-VM: hcu_msgque_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskNameList[task_id]);
 	}
 
@@ -626,11 +626,11 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
     	HcuErrorPrint("HCU-VM: Create task un-successfully, taskid = %d\n", task_id);
     	return FAILURE;
     }
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 	    HcuDebugPrint("HCU-VM: hcu_task_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskNameList[task_id]);
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_IPT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
 		HcuDebugPrint("HCU-VM: Whole task environment setup successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskNameList[task_id]);
 	}
 
@@ -713,20 +713,20 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	char s1[TASK_NAME_MAX_LENGTH+2]="", s2[TASK_NAME_MAX_LENGTH+2]="", s3[MSG_NAME_MAX_LENGTH]="";
 	switch (zHcuSysEngPar.traceMode)
 	{
-		case TRACE_MSG_MODE_OFF:
+		case HCU_TRACE_MSG_MODE_OFF:
 			break;
 
-		case TRACE_MSG_MODE_INVALID:
+		case HCU_TRACE_MSG_MODE_INVALID:
 			break;
 
-		case TRACE_MSG_MODE_ALL:
+		case HCU_TRACE_MSG_MODE_ALL:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			break;
 
-		case TRACE_MSG_MODE_ALL_BUT_TIME_OUT:
+		case HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -735,7 +735,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_ALL_BUT_HEART_BEAT:
+		case HCU_TRACE_MSG_MODE_ALL_BUT_HEART_BEAT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -744,7 +744,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT:
+		case HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -753,7 +753,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_MOUDLE_TO_ALLOW:
+		case HCU_TRACE_MSG_MODE_MOUDLE_TO_ALLOW:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -762,7 +762,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_MOUDLE_TO_RESTRICT:
+		case HCU_TRACE_MSG_MODE_MOUDLE_TO_RESTRICT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -771,7 +771,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_MOUDLE_FROM_ALLOW:
+		case HCU_TRACE_MSG_MODE_MOUDLE_FROM_ALLOW:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -780,7 +780,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_MOUDLE_FROM_RESTRICT:
+		case HCU_TRACE_MSG_MODE_MOUDLE_FROM_RESTRICT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -789,7 +789,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_MOUDLE_DOUBLE_ALLOW:
+		case HCU_TRACE_MSG_MODE_MOUDLE_DOUBLE_ALLOW:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -799,7 +799,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_MOUDLE_DOUBLE_RESTRICT:
+		case HCU_TRACE_MSG_MODE_MOUDLE_DOUBLE_RESTRICT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -809,7 +809,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_MSGID_ALLOW:
+		case HCU_TRACE_MSG_MODE_MSGID_ALLOW:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -818,7 +818,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_MSGID_RESTRICT:
+		case HCU_TRACE_MSG_MODE_MSGID_RESTRICT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -827,7 +827,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_COMBINE_TO_ALLOW:
+		case HCU_TRACE_MSG_MODE_COMBINE_TO_ALLOW:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -837,7 +837,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_COMBINE_TO_RESTRICT:
+		case HCU_TRACE_MSG_MODE_COMBINE_TO_RESTRICT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -847,7 +847,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_COMBINE_FROM_ALLOW:
+		case HCU_TRACE_MSG_MODE_COMBINE_FROM_ALLOW:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -857,7 +857,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_COMBINE_FROM_RESTRICT:
+		case HCU_TRACE_MSG_MODE_COMBINE_FROM_RESTRICT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -867,7 +867,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_COMBINE_DOUBLE_ALLOW:
+		case HCU_TRACE_MSG_MODE_COMBINE_DOUBLE_ALLOW:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -878,7 +878,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			}
 			break;
 
-		case TRACE_MSG_MODE_COMBINE_DOUBLE_RESTRICT:
+		case HCU_TRACE_MSG_MODE_COMBINE_DOUBLE_RESTRICT:
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
@@ -890,7 +890,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		default:
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 				HcuErrorPrint("HCU-VM: System Engineering Parameter Trace Mode setting error! DebugMode=%d\n", zHcuSysEngPar.debugMode);
 			}
 			break;
@@ -1313,7 +1313,7 @@ void hcu_sleep(UINT32 second)
 	second = sleep(second);
 	while (second>0)
 	{
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 			//太多的错误，未来需要再研究这个错误出现的原因，这里留下一点点报告的可行性
 			if ((rand()%1000) > 998){
 				HcuDebugPrint("HCU-VM: Sleep interrupt by other higher level system call, remaining %d second to be executed\n", second);
@@ -1329,7 +1329,7 @@ void hcu_usleep(UINT32 usecond)
 	usecond = usleep(usecond);
 	while (usecond>0)
 	{
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 			HcuErrorPrint("HCU-VM: uSleep interrupt by other higher level system call, remaining %d usecond to be executed\n", usecond);
 		}
 		usecond = usleep(usecond);
@@ -1368,7 +1368,7 @@ UINT32 FsmInit(void)
 	}
 	zHcuFsmTable.currentTaskId = TASK_ID_INVALID;
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("HCU-VM: Maxium (%d) process supported.\n", MAX_TASK_NUM_IN_ONE_HCU);
 	}
 
@@ -1396,7 +1396,7 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 	UINT32 msgid;
 	UINT32 item, itemNo, i, j;
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("HCU-VM: >>Register new FSM. TaskId:(%d), pFsm(0x%x)\n", task_id, pFsmStateItem);
 	}
 	/*
@@ -1466,7 +1466,7 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 	*/
 	zHcuFsmTable.numOfFsmCtrlTable ++;
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE)
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE)
 	{
 		HcuDebugPrint("HCU-VM: FsmAddNew: task_id = 0x%x [%s], src_id= %x, dest_id= %X\n", task_id, zHcuTaskNameList[task_id], 0, 0);
 		HcuDebugPrint("HCU-VM: After add this one, Total (%d) FSM in the table.\n", zHcuFsmTable.numOfFsmCtrlTable);
@@ -1664,7 +1664,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 		HcuErrorPrint("HCU-VM: The state(%d) or msgId(0x%x) of task(0x%x) is error\n", 	state, mid, dest_id);
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_IPT_ON) != FALSE)
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE)
 	{
 		HcuDebugPrint("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
 				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskNameList[dest_id], mid, zHcuMsgNameList[mid], src_id, zHcuTaskNameList[src_id]);

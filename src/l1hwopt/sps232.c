@@ -65,7 +65,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPS232, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -97,7 +97,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		zHcuRunErrCnt[TASK_ID_SPS232]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPS232: Enter FSM_STATE_SPS232_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -164,7 +164,7 @@ OPSTAT func_sps232_int_init(void)
 	}
 
 	hcu_spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForSPS232.vTime, gSerialPortForSPS232.vMin);
 	}
 
@@ -266,7 +266,7 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 
 	//求平均
 	zHcuSps232HchoZe08ch2o = hchoSum / RPI_SPS232_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPS232: Sensor ZE08CH2O Transformed float average read result HCHO = %6.2fppb, around %6.2fug/m3\n", zHcuSps232HchoZe08ch2o, zHcuSps232HchoZe08ch2o*1.295);
 	} //ppb转化为ug/m3，使用了1.295g/L的空气密度，只能算是近似。
 
@@ -359,7 +359,7 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 
 	//求平均
 	zHcuSps232Pm25Sharp = pm25sharpSum / RPI_SPS232_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPS232: Sensor PM25SHARP Transformed float average read result PM25= %6.2fug/m3\n", zHcuSps232Pm25Sharp);
 	}
 
