@@ -376,7 +376,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.windspdreqtimer = %d\n", zHcuSysEngPar.timer.windspdReqTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.noisereqtimer = %d\n", zHcuSysEngPar.timer.noiseReqTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cmdcontrollongtimer = %d\n", zHcuSysEngPar.timer.cmdcontrolLongTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.heartbeattimer = %d\n", zHcuSysEngPar.timer.heartbeatTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.heartbeattimer = %d\n", zHcuSysEngPar.timer.cloudvelaHbTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpReqTimer = %d\n", zHcuSysEngPar.timer.hsmmpReqTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDuration = %d\n", zHcuSysEngPar.timer.hsmmpCapDuration);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDurationFB = %d\n", zHcuSysEngPar.timer.hsmmpCapDurationFB);
@@ -458,8 +458,12 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.timer.winddirReqTimerFB = HCU_WINDDIR_TIMER_DURATION_MODBUS_FB;
 		zHcuSysEngPar.timer.windspdReqTimer = HCU_WINDSPD_TIMER_DURATION_PERIOD_READ;
 		zHcuSysEngPar.timer.windspdReqTimerFB = HCU_WINDSPD_TIMER_DURATION_MODBUS_FB;
-		zHcuSysEngPar.timer.heartbeatTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_HEART_BEAT;
-		zHcuSysEngPar.timer.heartbeartBackTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
+		zHcuSysEngPar.timer.cloudvelaHbTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT;
+		zHcuSysEngPar.timer.cloudvelaHbBackTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
+		zHcuSysEngPar.timer.nbiotcj188HbTimer = HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT;
+		zHcuSysEngPar.timer.nbiotcj188HbBackTimer = HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
+		zHcuSysEngPar.timer.nbiotqg376HbTimer = HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT;
+		zHcuSysEngPar.timer.nbiotqg376HbBackTimer = HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
 		zHcuSysEngPar.timer.cmdcontrolLongTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG;
 		zHcuSysEngPar.timer.cmdcontrolShortTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT;
         zHcuSysEngPar.timer.hsmmpReqTimer = HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ;

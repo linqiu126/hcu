@@ -115,8 +115,12 @@ typedef struct SysEngParElementSensor
 	INT32 winddirReqTimerFB;
 	INT32 windspdReqTimer;
 	INT32 windspdReqTimerFB;
-	INT32 heartbeatTimer;
-	INT32 heartbeartBackTimer;
+	INT32 cloudvelaHbTimer;
+	INT32 cloudvelaHbBackTimer;
+	INT32 nbiotcj188HbTimer;
+	INT32 nbiotcj188HbBackTimer;
+	INT32 nbiotqg376HbTimer;
+	INT32 nbiotqg376HbBackTimer;
 	INT32 cmdcontrolLongTimer;
 	INT32 cmdcontrolShortTimer;
 	INT32 hsmmpReqTimer;

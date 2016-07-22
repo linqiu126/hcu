@@ -717,6 +717,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 
 //= ZJL, 2016 July.22, CURRENT_SW_DELIVERY 103
 > L3UI待完善，包括CRUD
+> 清理全局常量的命名形式
+> 建立SOCKET工作的假机制，以便继续CJ88 
+> 建立CJ188链路
 
 
 

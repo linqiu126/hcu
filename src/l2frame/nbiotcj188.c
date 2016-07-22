@@ -110,6 +110,14 @@ OPSTAT fsm_nbiotcj188_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_NBIOTCJ188] = 0;
 
+	//启动周期性定时器
+	ret = hcu_timer_start(TASK_ID_NBIOTCJ188, TIMER_ID_1S_NBIOTCJ188_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.nbiotcj188HbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error start timer!\n");
+		return FAILURE;
+	}
+
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_NBIOTCJ188, FSM_STATE_NBIOTCJ188_OFFLINE) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
@@ -119,28 +127,6 @@ OPSTAT fsm_nbiotcj188_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("NBIOTCJ188: Enter FSM_STATE_NBIOTCJ188_ACTIVED status, Keeping refresh here!\n");
 	}
-	/*
-
-	//进入阻塞式接收数据状态，然后继续发送
-	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给HSMMP
-			msg_struct_nbiotcj188_hsmmp_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_nbiotcj188_hsmmp_data_rx_t));
-			snd.length = sizeof(msg_struct_nbiotcj188_hsmmp_data_rx_t);
-			ret = hcu_message_send(MSG_ID_NBIOTCJ188_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_NBIOTCJ188, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-				HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_HSMMP]);
-				return FAILURE;
-			}
-		}
-
-		hcu_sleep(5);
-	}
-	*/
 
 	return SUCCESS;
 }
@@ -158,9 +144,48 @@ OPSTAT func_nbiotcj188_int_init(void)
 	return SUCCESS;
 }
 
+//TIME_OUT负责链路的重连/非在线检查/奇异状态恢复等情况
 OPSTAT fsm_nbiotcj188_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	return SUCCESS;
+	int ret=0;
+
+	//Receive message and copy to local variable
+	msg_struct_com_time_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_NBIOTCJ188]是否超限
+	if (zHcuRunErrCnt[TASK_ID_NBIOTCJ188] > HCU_RUN_ERROR_LEVEL_3_CRITICAL){
+		//减少重复RESTART的概率
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188] = zHcuRunErrCnt[TASK_ID_NBIOTCJ188] - HCU_RUN_ERROR_LEVEL_3_CRITICAL;
+		msg_struct_com_restart_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
+		snd0.length = sizeof(msg_struct_com_restart_t);
+		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_NBIOTCJ188, TASK_ID_NBIOTCJ188, &snd0, snd0.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_NBIOTCJ188]);
+			return FAILURE;
+		}
+	}
+
+	//定时长时钟进行链路检测的
+	if ((rcv.timeId == TIMER_ID_1S_NBIOTCJ188_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		ret = func_nbiotcj188_time_out_period();
+	}
+
+	//定时短时钟进行离线数据回送，这里暂时没有啥用途，但基于跟NBIOTCJ188模块的一致性，还是放在这里
+	else if ((rcv.timeId == TIMER_ID_1S_NBIOTCJ188_SEND_DATA_BACK) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		ret = func_nbiotcj188_time_out_sendback_offline_data();
+	}
+
+	//这里的ret=FAILURE並不算严重，只不过造成状态机返回差错而已，并不会造成程序崩溃和数据混乱，所以只是程序的自我保护而已
+	return ret;
 }
 
 OPSTAT fsm_nbiotcj188_iwm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -207,3 +232,128 @@ OPSTAT fsm_nbiotcj188_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * par
 {
 	return SUCCESS;
 }
+
+//长周期定时器, 周期性心跳时钟处理机制
+OPSTAT func_nbiotcj188_time_out_period(void)
+{
+	//检查链路状态，离线，则再连接
+	if (FsmGetState(TASK_ID_NBIOTCJ188) == FSM_STATE_NBIOTCJ188_OFFLINE){
+		if (hcu_ethernet_socket_link_setup() == SUCCESS){
+			//State Transfer to FSM_STATE_NBIOTCJ188_ONLINE
+			if (FsmSetState(TASK_ID_NBIOTCJ188, FSM_STATE_NBIOTCJ188_ONLINE) == FAILURE){
+				zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+				HcuErrorPrint("NBIOTCJ188: Error Set FSM State!\n");
+				return FAILURE;
+			}
+			HcuDebugPrint("NBIOTCJ188: Connect state change, from OFFLINE to ONLINE!\n");
+		}
+		//如果是失败情况，并不返回错误，属于正常情况
+		//当链路不可用时，这个打印结果会非常频繁，放开比较好
+		else{
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
+				HcuDebugPrint("NBIOTCJ188: Try to setup connection with back-cloud, but not success!\n");
+			}
+		}
+	}
+
+	//在线状态，则检查
+	else if(FsmGetState(TASK_ID_NBIOTCJ188) == FSM_STATE_NBIOTCJ188_ONLINE){
+		if (func_nbiotcj188_heart_beat_check() == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			//State Transfer to FSM_STATE_NBIOTCJ188_OFFLINE
+			if (FsmSetState(TASK_ID_NBIOTCJ188, FSM_STATE_NBIOTCJ188_OFFLINE) == FAILURE){
+				zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+				HcuErrorPrint("NBIOTCJ188: Error Set FSM State!\n");
+				return FAILURE;
+			}
+			HcuDebugPrint("NBIOTCJ188: Connect state change, from ONLINE to OFFLINE!\n");
+			//并不立即启动连接的建立，而是等待下一个周期带来，否则状态机过于复杂
+		}//心跳握手失败
+		//在线而且心跳握手正常
+		//Do nothing
+	}//end of 长周期定时在线状态
+
+	//既不在线，也不离线，强制转移到离线状态以便下次恢复，这种情况很难得，一般不会跑到这儿来，这种情况通常发生在初始化期间或者状态机胡乱的情况下
+	else{
+		if (FsmSetState(TASK_ID_NBIOTCJ188, FSM_STATE_NBIOTCJ188_OFFLINE) == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			HcuErrorPrint("NBIOTCJ188: Error Set FSM State!\n");
+			return FAILURE;
+		}
+	}
+
+	return SUCCESS;
+}
+
+//心跳检测机制
+OPSTAT func_nbiotcj188_heart_beat_check(void)
+{
+	int ret = 0;
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_NBIOTCJ188) == FSM_STATE_NBIOTCJ188_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+		//打包数据
+		if (func_nbiotcj188_heart_beat_msg_pack(&buf) == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+			return FAILURE;
+		}
+
+		//Send out
+		ret = func_nbiotcj188_send_data_to_cloud(&buf);
+		if ( ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			HcuErrorPrint("NBIOTCJ188: Error send data to back-cloud!\n");
+			return FAILURE;
+		}
+	}else{
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send HEART_BEAT to cloud, get by ONLINE, but back off line so quick!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send HEART_BEAT message out to cloud success!\n");
+	}
+	//State no change
+	return SUCCESS;
+}
+
+//Heart Beat消息的组包
+OPSTAT func_nbiotcj188_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
+{
+	return SUCCESS;
+}
+
+//Send to backhawl cloud
+OPSTAT func_nbiotcj188_send_data_to_cloud(CloudDataSendBuf_t *buf)
+{
+	//参数检查
+	if ((buf->curLen <=0) || (buf->curLen >MAX_HCU_MSG_BUF_LENGTH)){
+		HcuErrorPrint("CLOUDVELA: Error message length to send back for cloud!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	//这里只考虑ETHERNET一种网络配置情况，其它的不考虑
+	if (hcu_ethernet_socket_date_send(buf) == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
+		return FAILURE;
+	}
+
+	return SUCCESS;
+}
+
+//用于积累的缓冲数据回送服务器，这里暂时没有啥用，为了维持跟NBIOTCJ188类似的架构，保持它而已，暂时不用。
+OPSTAT func_nbiotcj188_time_out_sendback_offline_data(void)
+{
+	return SUCCESS;
+}
+
+
