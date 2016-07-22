@@ -132,6 +132,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		}
 	}
 
+	//收到初始化消息后，进入初始化状态
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_INITED);
 	if (ret == FAILURE){
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_init\n");
@@ -150,12 +151,11 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//zHcuCloudCurlPtrTx = NULL;
 
 	//Added by Shanchun for CMD command
-   CMDShortTimerFlag = CMD_POLLING_SHORT_TIMER_START_OFF;
-   CMDPollingNoCommandNum = 0;
-
+    CMDShortTimerFlag = CMD_POLLING_SHORT_TIMER_START_OFF;
+    CMDPollingNoCommandNum = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_HEART_BEAT, zHcuSysEngPar.timer.heartbeatTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.cloudvelaHbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -169,10 +169,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
 		return FAILURE;
 	}
-
     CMDLongTimerFlag = CMD_POLLING_LONG_TIMER_START_ON;
-
-
 
 	//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
@@ -223,7 +220,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	}
 
 	//定时长时钟进行链路检测的
-	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_period();
 	}
 
@@ -267,7 +264,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 
 			//启动周期性短定时器，進行数据回传云平台
 			if (zHcuMemStorageBuf.offlineNbr>0){
-				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.heartbeartBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.cloudvelaHbBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -393,7 +390,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 
 			//然后再试图启动周期性短定时器，進行数据回传云平台
 			if (zHcuMemStorageBuf.offlineNbr>0){
-				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.heartbeartBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.cloudvelaHbBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error start timer!\n");

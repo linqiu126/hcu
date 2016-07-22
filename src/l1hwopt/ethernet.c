@@ -577,6 +577,23 @@ OPSTAT hcu_ethernet_phy_link_disconnect(void)
 	return SUCCESS;
 }
 
+//为SOCKET建立链路
+OPSTAT hcu_ethernet_socket_link_setup(void)
+{
+	return SUCCESS;
+}
+
+//为SOCKET断掉链路
+OPSTAT hcu_ethernet_socket_link_disconnect(void)
+{
+	return SUCCESS;
+}
+
+//在SOCKET上发送数据
+OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
+{
+	return SUCCESS;
+}
 /*
 static int base64_encode(char *str, int str_len, char *encode, int encode_len){
     BIO *bmem,*b64;

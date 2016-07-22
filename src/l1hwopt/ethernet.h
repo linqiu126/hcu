@@ -37,12 +37,15 @@ extern OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 extern OPSTAT fsm_ethernet_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT hcu_ethernet_phy_link_setup(void);
 extern OPSTAT hcu_ethernet_phy_link_disconnect(void);
+extern OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf);
+
+//API for NBIOT CJ188/QG376
+extern OPSTAT hcu_ethernet_socket_link_setup(void);
+extern OPSTAT hcu_ethernet_socket_link_disconnect(void);
+extern OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf);
 
 //Local API
 OPSTAT func_ethernet_intf_init(void);
-
-//extern API
-extern OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf);
 
 //引用外部函数
 extern size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);

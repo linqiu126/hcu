@@ -9,6 +9,7 @@
 #define L2FRAME_NBIOTCJ188_H_
 
 #include "../l0comvm/vmlayer.h"
+#include "../l1com/l1comdef.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -44,5 +45,16 @@ extern OPSTAT fsm_nbiotcj188_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, voi
 
 //Local API
 OPSTAT func_nbiotcj188_int_init(void);
+OPSTAT func_nbiotcj188_time_out_period(void);
+OPSTAT func_nbiotcj188_time_out_sendback_offline_data(void);
+OPSTAT func_nbiotcj188_heart_beat_check(void);
+OPSTAT func_nbiotcj188_heart_beat_msg_pack(CloudDataSendBuf_t *buf);
+OPSTAT func_nbiotcj188_send_data_to_cloud(CloudDataSendBuf_t *buf);
+
+
+//外部引用
+extern OPSTAT hcu_ethernet_socket_link_setup(void);
+extern OPSTAT hcu_ethernet_socket_link_disconnect(void);
+extern OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf);
 
 #endif /* L2FRAME_NBIOTCJ188_H_ */
