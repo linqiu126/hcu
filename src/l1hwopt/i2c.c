@@ -210,7 +210,7 @@ OPSTAT func_i2c_read_data_bh1750(void)
 	float flight, flightSum;
 
 	//打开I2C设备
-	fd=open(RPI_DEV_I2C_ADDRESS, O_RDWR);
+	fd=open(HCU_RPI_DEV_I2C_ADDRESS, O_RDWR);
 	if(fd<0)
 	{
 		HcuErrorPrint("I2C: err open file:%s\n", strerror(errno));
