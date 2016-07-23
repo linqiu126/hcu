@@ -449,7 +449,7 @@ UINT32 GetComma(UINT32 num,CHAR *str)
 
 
 //将世界时转换为北京时
-void UTC2BTC(date_time GPS)
+void UTC2BTC(hcuStrDateTime_t GPS)
 {
 
 //如果秒号先出,再出时间数据,则将时间数据+1秒

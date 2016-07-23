@@ -171,7 +171,7 @@ OPSTAT func_spi_read_data_mth01(void)
 		tempSum += temp/10;
 		humid = read[2]&0xFF;
 		humidSum += humid;
-//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("SPI: Sensor MTH01 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
 //		}
 	}
@@ -218,7 +218,7 @@ OPSTAT func_spi_read_data_rht03(void)
 		tempSum += temp/10;
 		humid = read[2]&0xFF;
 		humidSum += humid;
-//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("SPI: Sensor RHT03 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
 //		}
 	}
