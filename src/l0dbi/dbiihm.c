@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `st` char(4) NOT NULL,
   `billtodaydate` int(1) NOT NULL,
   `readamountcurdate` int(1) NOT NULL,
+  `startdate` int(1) NOT NULL,
   `key` int(8) NOT NULL,
   `price1` float(6,2) NOT NULL,
   `volume1` int(3) NOT NULL,
@@ -49,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
+  `switchctrl` int(1) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -87,17 +89,17 @@ OPSTAT dbi_HcuIhmCj188DataInfo_save(sensor_ihm_cj188_data_element_t *ihmData)
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcuihmcj188datainfo` (cj188address, timestamp, equtype, heatpower, heatpowerunit, currentheat, currentheatunit,\
     		billtodayheat, billtodayheatunit, currentaccuvolume, currentaccuvolumeunit, flowvolume, flowvolumeunit, lastmonth, \
-    		accumuworktime, supplywatertemp, backwatertemp, realtime, st, billtodaydate, readamountcurdate, key, price1, volume1,\
-    		price2, volume2, price3, buycode, thisamount, accuamount, remainamount, keyver) VALUES \
+    		accumuworktime, supplywatertemp, backwatertemp, realtime, st, billtodaydate, readamountcurdate, startdate, key, price1, volume1,\
+    		price2, volume2, price3, buycode, thisamount, accuamount, remainamount, keyver, switchctrl) VALUES \
     		('%s', '%d', '%d', '%f', '%d', '%f', '%d',\
     		'%f', '%d', '%f', '%d', '%f', '%d', '%d', \
-    		'%d', '%f', '%f', '%s', '%s', '%d', '%d', '%ld', '%f', '%d',\
-			'%f', '%d', '%f', '%d', '%f', '%f', '%f', '%d')",
+    		'%d', '%f', '%f', '%s', '%s', '%d', '%d', '%d', '%ld', '%f', '%d',\
+			'%f', '%d', '%f', '%d', '%f', '%f', '%f', '%d', '%d')",
 			ihmData->cj188address, ihmData->timestamp, ihmData->equtype, ihmData->heatpower, ihmData->heatpowerunit, ihmData->currentheat, ihmData->currentheatunit,
 			ihmData->billtodayheat, ihmData->billtodayheatunit, ihmData->ihm.currentaccuvolume, ihmData->ihm.currentaccuvolumeunit, ihmData->ihm.flowvolume, ihmData->ihm.flowvolumeunit, ihmData->ihm.lastmonth,
 			ihmData->ihm.accumuworktime, ihmData->ihm.supplywatertemp, ihmData->ihm.backwatertemp, ihmData->ihm.realtime, ihmData->ihm.st, ihmData->ihm.billtodaydate,
-			ihmData->ihm.readamountcurdate, ihmData->ihm.key, ihmData->ihm.price1, ihmData->ihm.volume1, ihmData->ihm.price2, ihmData->ihm.volume2, ihmData->ihm.price3, ihmData->ihm.buycode,
-			ihmData->ihm.thisamount, ihmData->ihm.accuamount, ihmData->ihm.remainamount, ihmData->ihm.keyver);
+			ihmData->ihm.readamountcurdate, ihmData->ihm.startdate, ihmData->ihm.key, ihmData->ihm.price1, ihmData->ihm.volume1, ihmData->ihm.price2, ihmData->ihm.volume2, ihmData->ihm.price3, ihmData->ihm.buycode,
+			ihmData->ihm.thisamount, ihmData->ihm.accuamount, ihmData->ihm.remainamount, ihmData->ihm.keyver, ihmData->ihm.switchctrl);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -191,6 +193,7 @@ OPSTAT dbi_HcuIhmCj188DataInfo_inqury_1st_record(char *addr, sensor_ihm_cj188_da
 		if (sqlRow[index]) strncpy(ihmData->ihm.st, sqlRow[index++], 4);
 		if (sqlRow[index]) ihmData->ihm.billtodaydate = (INT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ihmData->ihm.readamountcurdate = (INT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ihmData->ihm.startdate = (INT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ihmData->ihm.key = (INT64)atol(sqlRow[index++]);
 		if (sqlRow[index]) ihmData->ihm.price1 = (float)atof(sqlRow[index++]);
 		if (sqlRow[index]) ihmData->ihm.volume1 = (INT32)atol(sqlRow[index++]);
@@ -202,6 +205,7 @@ OPSTAT dbi_HcuIhmCj188DataInfo_inqury_1st_record(char *addr, sensor_ihm_cj188_da
 		if (sqlRow[index]) ihmData->ihm.accuamount = (float)atof(sqlRow[index++]);
 		if (sqlRow[index]) ihmData->ihm.remainamount = (float)atof(sqlRow[index++]);
 		if (sqlRow[index]) ihmData->ihm.keyver = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ihmData->ihm.switchctrl = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 	}
 
 	//释放记录集

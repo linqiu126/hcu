@@ -876,8 +876,8 @@ typedef struct  HcuInventoryInfo
 //消息头的全局定义
 #define  HCU_NBIOT_CJ188_FRAME_FIX_HEAD 0x68
 #define  HCU_NBIOT_CJ188_FRAME_FIX_TAIL 0x16
-#define  HCU_NBIOT_CJ188_FRAME_READ_MAX_LEN 64
-#define  HCU_NBIOT_CJ188_FRAME_WRITE_MAX_LEN 32
+#define  HCU_NBIOT_CJ188_FRAME_READ_MAX_LEN 77 //最少64+13的固定长度
+#define  HCU_NBIOT_CJ188_FRAME_WRITE_MAX_LEN 45 //最少32+13的固定长度
 
 //为了进行编解码，生成该结构
 typedef struct  NbiotCj188BhItfComElement //
@@ -912,6 +912,7 @@ typedef struct  NbiotCj188BhItfComCtrFlag //
 	UINT8 stFlag;
 	UINT8 billtodaydateFlag;
 	UINT8 readamountcurdateFlag;
+	UINT8 startdateFlag;
 	UINT8 keyFlag;
 	UINT8 price1Flag;
 	UINT8 volume1Flag;
@@ -923,9 +924,12 @@ typedef struct  NbiotCj188BhItfComCtrFlag //
 	UINT8 accuamountFlag;
 	UINT8 remainamountFlag;
 	UINT8 keyverFlag;
+	UINT8 switchctrlFlag;
 }NbiotCj188BhItfComCtrFlag_t;
 
-#define  HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL 1
-#define  HCU_NBIOT_CJ188_COMM_CHANNEL_ABNORMAL 2
+#define HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL 1
+#define HCU_NBIOT_CJ188_COMM_CHANNEL_ABNORMAL 2
+#define HCU_NBIOT_CJ188_SWITCH_CONTROL_ON 55
+#define HCU_NBIOT_CJ188_SWITCH_CONTROL_OFF 99
 
 #endif /* L1COM_L1COMDEF_H_ */

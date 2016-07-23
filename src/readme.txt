@@ -724,8 +724,8 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > CJ188上行链路编码完成
 
 //= ZJL, 2016 July.23, CURRENT_SW_DELIVERY 104
-> DL解码工作
-> L3UI待完善，包括CRUD
+> DL解码工作完成
+> L3消息处理待完成，L3UI及CRUD待完善
 
 
 

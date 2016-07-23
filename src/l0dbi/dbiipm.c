@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `st` char(4) NOT NULL,
   `billtodaydate` int(1) NOT NULL,
   `readamountcurdate` int(1) NOT NULL,
+  `startdate` int(1) NOT NULL,
   `key` int(8) NOT NULL,
   `price1` float(6,2) NOT NULL,
   `volume1` int(3) NOT NULL,
@@ -45,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
+  `switchctrl` int(1) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -82,14 +84,14 @@ OPSTAT dbi_HcuIpmCj188DataInfo_save(sensor_ipm_cj188_data_element_t *ipmData)
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcuipmcj188datainfo` (cj188address, timestamp, equtype, billtodayaccuvolume, billtodayaccuvolumeunit, currentaccuvolume, currentaccuvolumeunit,\
     		flowvolume, flowvolumeunit, lastmonth, \
-    		accumuworktime, supplywatertemp, backwatertemp, realtime, st, billtodaydate, readamountcurdate, key, price1, volume1,\
-    		price2, volume2, price3, buycode, thisamount, accuamount, remainamount, keyver) VALUES \
-    		('%s', '%d', '%d', '%f', '%d', '%f', '%d', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%s', '%d', '%d', '%ld', '%f', '%d', '%f', '%d', '%f', '%d', '%f', '%f', '%f', '%d')",
+    		accumuworktime, supplywatertemp, backwatertemp, realtime, st, billtodaydate, readamountcurdate, startdate, key, price1, volume1,\
+    		price2, volume2, price3, buycode, thisamount, accuamount, remainamount, keyver, switchctrl) VALUES \
+    		('%s', '%d', '%d', '%f', '%d', '%f', '%d', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%s', '%d', '%d', '%d', '%ld', '%f', '%d', '%f', '%d', '%f', '%d', '%f', '%f', '%f', '%d', '%d')",
 			ipmData->cj188address, ipmData->timestamp, ipmData->equtype, ipmData->billtodayaccuvolume, ipmData->billtodayaccuvolumeunit, ipmData->ipm.currentaccuvolume,
 			ipmData->ipm.currentaccuvolumeunit, ipmData->ipm.flowvolume, ipmData->ipm.flowvolumeunit, ipmData->ipm.lastmonth, ipmData->ipm.accumuworktime,
 			ipmData->ipm.supplywatertemp, ipmData->ipm.backwatertemp, ipmData->ipm.realtime, ipmData->ipm.st, ipmData->ipm.billtodaydate,
-			ipmData->ipm.readamountcurdate, ipmData->ipm.key, ipmData->ipm.price1, ipmData->ipm.volume1, ipmData->ipm.price2, ipmData->ipm.volume2, ipmData->ipm.price3, ipmData->ipm.buycode,
-			ipmData->ipm.thisamount, ipmData->ipm.accuamount, ipmData->ipm.remainamount, ipmData->ipm.keyver);
+			ipmData->ipm.readamountcurdate, ipmData->ipm.startdate, ipmData->ipm.key, ipmData->ipm.price1, ipmData->ipm.volume1, ipmData->ipm.price2, ipmData->ipm.volume2, ipmData->ipm.price3, ipmData->ipm.buycode,
+			ipmData->ipm.thisamount, ipmData->ipm.accuamount, ipmData->ipm.remainamount, ipmData->ipm.keyver, ipmData->ipm.switchctrl);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -179,6 +181,7 @@ OPSTAT dbi_HcuIpmCj188DataInfo_inqury_1st_record(char *addr, sensor_ipm_cj188_da
 		if (sqlRow[index]) strncpy(ipmData->ipm.st, sqlRow[index++], 4);
 		if (sqlRow[index]) ipmData->ipm.billtodaydate = (INT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ipmData->ipm.readamountcurdate = (INT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ipmData->ipm.startdate = (INT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ipmData->ipm.key = (INT64)atol(sqlRow[index++]);
 		if (sqlRow[index]) ipmData->ipm.price1 = (float)atof(sqlRow[index++]);
 		if (sqlRow[index]) ipmData->ipm.volume1 = (INT32)atol(sqlRow[index++]);
@@ -190,6 +193,7 @@ OPSTAT dbi_HcuIpmCj188DataInfo_inqury_1st_record(char *addr, sensor_ipm_cj188_da
 		if (sqlRow[index]) ipmData->ipm.accuamount = (float)atof(sqlRow[index++]);
 		if (sqlRow[index]) ipmData->ipm.remainamount = (float)atof(sqlRow[index++]);
 		if (sqlRow[index]) ipmData->ipm.keyver = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ipmData->ipm.switchctrl = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 	}
 
 	//释放记录集

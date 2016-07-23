@@ -28,6 +28,9 @@ enum FSM_STATE_NBIOTCJ188
 //Global variables
 extern FsmStateItem_t FsmNbiotcj188[];
 
+#define HCU_NBIOT_CJ188_REAL_TIME_IN_REALITY 2016071301152001
+
+
 //API
 extern OPSTAT fsm_nbiotcj188_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_nbiotcj188_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -51,7 +54,7 @@ OPSTAT func_nbiotcj188_heart_beat_check(void);
 OPSTAT func_nbiotcj188_heart_beat_msg_pack(CloudDataSendBuf_t *buf);
 OPSTAT func_nbiotcj188_send_data_to_cloud(CloudDataSendBuf_t *buf);
 OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudDataSendBuf_t *buf);
-OPSTAT func_nbiotcj188_dl_msg_unpack(NbiotCj188BhItfComElement_t *output, CloudDataSendBuf_t *buf);
+OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf, NbiotCj188BhItfComElement_t *output);
 OPSTAT func_nbiotcj188_checksum_caculate(char *s, INT8 output);
 
 //外部引用

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 23, 2016 at 02:44 PM
+-- Generation Time: Jul 24, 2016 at 12:53 AM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -4614,6 +4614,7 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
   `st` char(4) NOT NULL,
   `billtodaydate` int(1) NOT NULL,
   `readamountcurdate` int(1) NOT NULL,
+  `startdate` int(1) NOT NULL,
   `key` int(8) NOT NULL,
   `price1` float(6,2) NOT NULL,
   `volume1` int(3) NOT NULL,
@@ -4625,6 +4626,7 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
+  `switchctrl` int(1) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -4657,6 +4659,7 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `st` char(4) NOT NULL,
   `billtodaydate` int(1) NOT NULL,
   `readamountcurdate` int(1) NOT NULL,
+  `startdate` int(1) NOT NULL,
   `key` int(8) NOT NULL,
   `price1` float(6,2) NOT NULL,
   `volume1` int(3) NOT NULL,
@@ -4668,6 +4671,7 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
+  `switchctrl` int(1) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -4696,6 +4700,7 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `st` char(4) NOT NULL,
   `billtodaydate` int(1) NOT NULL,
   `readamountcurdate` int(1) NOT NULL,
+  `startdate` int(1) NOT NULL,
   `key` int(8) NOT NULL,
   `price1` float(6,2) NOT NULL,
   `volume1` int(3) NOT NULL,
@@ -4707,6 +4712,7 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
+  `switchctrl` int(1) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -4735,6 +4741,7 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
   `st` char(4) NOT NULL,
   `billtodaydate` int(1) NOT NULL,
   `readamountcurdate` int(1) NOT NULL,
+  `startdate` int(1) NOT NULL,
   `key` int(8) NOT NULL,
   `price1` float(6,2) NOT NULL,
   `volume1` int(3) NOT NULL,
@@ -4746,6 +4753,7 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
+  `switchctrl` int(1) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
