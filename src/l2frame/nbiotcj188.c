@@ -1226,6 +1226,14 @@ OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudData
 		index = index + 1;
 	}
 
+	//启动日
+	if (ctrFlag.startdateFlag == TRUE){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d", input->data.startdate);
+		strcat(da, tmp);
+		index = index + 1;
+	}
+
 	//本次购买序号
 	if (ctrFlag.buycodeFlag == TRUE){
 		memset(tmp, 0, sizeof(tmp));
@@ -1289,6 +1297,7 @@ OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudData
 		strcat(da, tmp);
 		index = index + 7;
 
+		//另外一种设计方式，是否选择它，待定
 		/*
 		if (strlen(input->data.realtime) != 14){
 			HcuErrorPrint("NBIOTCJ188: Invalid received control command!\n");
@@ -1308,6 +1317,14 @@ OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudData
 		strncpy(tmp, input->data.st, 4);
 		strcat(da, tmp);
 		index = index + 2;
+	}
+
+	//阀门控制操作
+	if (ctrFlag.switchctrlFlag == TRUE){
+		memset(tmp, 0, sizeof(tmp));
+		strncpy(tmp, input->data.switchctrl, 2);
+		strcat(da, tmp);
+		index = index + 1;
 	}
 
 	//检查长度
@@ -1350,25 +1367,592 @@ OPSTAT func_nbiotcj188_checksum_caculate(char *s, INT8 output)
 {
 	UINT32 index = 0;
 	output = 0;
-	INT8 tmp = 0;
+	UINT32 tmp = 0;
 	char tc[2] = "";
 
 	if (strlen(s) == 0 ) return SUCCESS;
 	if ((strlen(s)/2)*2 != strlen(s)) return FAILURE;
 
 	for (index = 0; index < strlen(s)/2; index++){
-		tc[0] = s[2*index];
-		tc[1] = s[2*index+1];
-		tmp = atoi(tc);
+		strncpy(tc, s[2*index], 2);
+		tmp = strtoul(tc, NULL, 16);
 		output = (output + tmp) & 0xFF;
 	}
 	return SUCCESS;
 }
 
 //消息unpack函数
-OPSTAT func_nbiotcj188_dl_msg_unpack(NbiotCj188BhItfComElement_t *output, CloudDataSendBuf_t *buf)
+OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf, NbiotCj188BhItfComElement_t *output)
 {
+	UINT32 ret = 0;
+
+	//检查参数
+	if (buf == NULL || output == NULL){
+		HcuErrorPrint("NBIOTCJ188: Invalid received data buffer!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	if ((buf->curLen <= 26) || (buf->curLen >= HCU_NBIOT_CJ188_FRAME_READ_MAX_LEN*2)|| (buf->curLen != strlen(buf->curBuf)) || (strlen(buf->curBuf) / 2 * 2 != strlen(buf->curBuf))){
+		HcuErrorPrint("NBIOTCJ188: Invalid received data length!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//初始化变量
+	UINT64 tmp = 0;
+	char stmp[17] = "";
+	INT8 equType = 0;
+	INT8 ctrl =0;
+	UINT8 msgLen = 0;
+	char addr[15] = "";
+	UINT32 index =0;
+	INT16 d0d1Id = 0;
+	INT8 serId = 0;
+	INT32 tp=0, t0=0, t2=0, t4=0;
+	float ftmp =0;
+
+	//固定头部解码
+	memset(stmp, 0, sizeof(stmp));
+	strncpy(stmp, &buf->curBuf[index], 2);
+	tmp = strtoul(stmp, NULL, 16);
+	if (tmp != HCU_NBIOT_CJ188_FRAME_FIX_HEAD) {
+		HcuErrorPrint("NBIOTCJ188: Invalid received data head!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//固定尾部解码
+	memset(stmp, 0, sizeof(stmp));
+	index = buf->curLen*2 - 2;
+	strncpy(stmp, &buf->curBuf[index], 2);
+	tmp = strtoul(stmp, NULL, 16);
+	if (tmp != HCU_NBIOT_CJ188_FRAME_FIX_TAIL) {
+		HcuErrorPrint("NBIOTCJ188: Invalid received data head!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//固定CHECKSUM部分解码
+	memset(stmp, 0, sizeof(stmp));
+	index = buf->curLen*2 - 4;
+	strncpy(stmp, &buf->curBuf[index], 2);
+	tmp = strtoul(stmp, NULL, 16);
+	INT8 checksum = 0;
+	char s[MAX_HCU_MSG_BUF_LENGTH];
+	memset(s, 0, sizeof(s));
+	strncpy(s, &buf->curBuf[22], buf->curLen-26);
+	if (func_nbiotcj188_checksum_caculate(s, checksum) == FAILURE)
+	if (tmp != checksum) {
+		HcuErrorPrint("NBIOTCJ188: Invalid received data checksum!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//固定设备类型解码
+	index = 2;
+	memset(stmp, 0, sizeof(stmp));
+	strncpy(stmp, &buf->curBuf[index], 2);
+	tmp = strtoul(stmp, NULL, 16);
+	if ((tmp < HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MIN) || (tmp > HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MAX)) {
+		HcuErrorPrint("NBIOTCJ188: Invalid received data equipment type!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	equType = (INT8)tmp;
+
+	//固定设备地址域解码
+	index = index + 2;
+	memset(addr, 0, sizeof(stmp));
+	strncpy(addr, &buf->curBuf[index], 14);
+
+	//固定控制域解码
+	index = index + 14;
+	memset(stmp, 0, sizeof(stmp));
+	strncpy(stmp, &buf->curBuf[index], 2);
+	tmp = strtoul(stmp, NULL, 16);
+	ctrl = tmp & 0xFF;
+	if (ctrl&0x80 > 7 != 1){
+		HcuErrorPrint("NBIOTCJ188: Invalid received communication direction!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	if (ctrl&0x40 > 6 == 1){
+		HcuErrorPrint("NBIOTCJ188: Invalid received communication abnormal!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	ctrl = ctrl & 0x3F;
+	if ((ctrl < HCU_NBIOT_CJ188_CTRL_MIN) || (ctrl > HCU_NBIOT_CJ188_CTRL_MAX)){
+		HcuErrorPrint("NBIOTCJ188: Invalid received control command!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//固定长度域解码
+	index = index + 2;
+	memset(stmp, 0, sizeof(stmp));
+	strncpy(stmp, &buf->curBuf[index], 2);
+	tmp = strtoul(stmp, NULL, 16);
+	msgLen = tmp & 0xFF;
+	//进一步，如果msgLen < 3，从主站发出的命令也是有问题的
+	if (((buf->curLen - 26) != msgLen) || (msgLen < 3)){
+		HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//解码数据部分长度部分
+	index = index + 2;
+	memset(stmp, 0, sizeof(stmp));
+	strncpy(stmp, &buf->curBuf[index], 4);
+	tmp = strtoul(stmp, NULL, 16);
+	d0d1Id = tmp & 0xFFFF;
+
+	index = index + 4;
+	memset(stmp, 0, sizeof(stmp));
+	strncpy(stmp, &buf->curBuf[index], 2);
+	tmp = strtoul(stmp, NULL, 16);
+	serId = tmp & 0xFF;
+
+	//准备向L3发送消息，为了后面的统一处理，这里必须浪费性的申请这么多消息体，不然没法实现较为精简的程序处理
+
+	//初始化发送函数，CONTROL_CMD在这里并没有生成
+	msg_struct_nbiotcj188_iwm_data_req_t snd1;
+	memset(&snd1, 0, sizeof(msg_struct_nbiotcj188_iwm_data_req_t));
+	snd1.length = sizeof(msg_struct_nbiotcj188_iwm_data_req_t);
+	snd1.equtype = equType;
+	snd1.iwmHead.ser = serId;
+	strncpy(snd1.iwmHead.addr, addr, 14);
+	snd1.iwmHead.ctrlId = ctrl;
+	snd1.iwmHead.d0d1Id = d0d1Id;
+	snd1.iwmHead.periodFlag = L3CI_cmdid_back_type_instance;
+
+	//初始化发送函数，CONTROL_CMD在这里并没有生成
+	msg_struct_nbiotcj188_ihm_data_req_t snd2;
+	memset(&snd2, 0, sizeof(msg_struct_nbiotcj188_ihm_data_req_t));
+	snd2.length = sizeof(msg_struct_nbiotcj188_ihm_data_req_t);
+	snd2.equtype = equType;
+	snd2.ihmHead.ser = serId;
+	strncpy(snd2.ihmHead.addr, addr, 14);
+	snd2.ihmHead.ctrlId = ctrl;
+	snd2.ihmHead.d0d1Id = d0d1Id;
+	snd2.ihmHead.periodFlag = L3CI_cmdid_back_type_instance;
+
+	//初始化发送函数，CONTROL_CMD在这里并没有生成
+	msg_struct_nbiotcj188_igm_data_req_t snd3;
+	memset(&snd3, 0, sizeof(msg_struct_nbiotcj188_igm_data_req_t));
+	snd3.length = sizeof(msg_struct_nbiotcj188_igm_data_req_t);
+	snd3.equtype = equType;
+	snd3.igmHead.ser = serId;
+	strncpy(snd3.igmHead.addr, addr, 14);
+	snd3.igmHead.ctrlId = ctrl;
+	snd3.igmHead.d0d1Id = d0d1Id;
+	snd3.igmHead.periodFlag = L3CI_cmdid_back_type_instance;
+
+	//初始化发送函数，CONTROL_CMD在这里并没有生成
+	msg_struct_nbiotcj188_ipm_data_req_t snd4;
+	memset(&snd4, 0, sizeof(msg_struct_nbiotcj188_ipm_data_req_t));
+	snd4.length = sizeof(msg_struct_nbiotcj188_ipm_data_req_t);
+	snd4.equtype = equType;
+	snd4.ipmHead.ser = serId;
+	strncpy(snd4.ipmHead.addr, addr, 14);
+	snd4.ipmHead.ctrlId = ctrl;
+	snd4.ipmHead.d0d1Id = d0d1Id;
+	snd4.ipmHead.periodFlag = L3CI_cmdid_back_type_instance;
+
+	//分类型处理，正常的读取
+	if (((ctrl == HCU_NBIOT_CJ188_CTRL_READ_DATA) && ((d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA)
+			 || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA1) || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA2)
+			 || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA3) || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA4)
+			 || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA5) || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA6)
+			 || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA7) || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA8)
+			 || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA9) || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA10)
+			 || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA11) || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA12)
+			 || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_PRICE_TABLE) || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_BILL_TODAY_DATE)
+			 || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_READ_ACCOUNT_CUR_DATE) || (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_BUY_AMOUNT))) ||
+			((ctrl == HCU_NBIOT_CJ188_CTRL_READ_KEY_VER) && (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_KEY_VER)) ||
+			((ctrl == HCU_NBIOT_CJ188_CTRL_READ_ADDR) && (d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_ADDRESS)))
+	{
+		if (msgLen != 0x3){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_CTRL_READ_DATA!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//没有普其它消息体，故而不再继续解码
+
+	}
+
+	//写价格表
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_PRICE_TABLE)){
+		if (msgLen != 0x13){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_PRICE_TABLE!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//价格１
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tp = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t0 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t2 = strtoul(stmp, NULL, 10);
+		ftmp = (float)((tp&0xFF)/100);
+		snd1.iwmData.price1 = (t2&0xFF)*100 + (t0&0xFF) + ftmp;
+		snd2.ihmData.price1 = snd1.iwmData.price1;
+		snd3.igmData.price1 = snd1.iwmData.price1;
+		snd4.ipmData.price1 = snd1.iwmData.price1;
+		//用量１
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t0 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t2 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t4 = strtoul(stmp, NULL, 10);
+		snd1.iwmData.volume1 = (t4&0xFF)*10000 + (t2&0xFF)*100 + (t0&0xFF);
+		snd2.ihmData.volume1 = snd1.iwmData.volume1;
+		snd3.igmData.volume1 = snd1.iwmData.volume1;
+		snd4.ipmData.volume1 = snd1.iwmData.volume1;
+		//价格2
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tp = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t0 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t2 = strtoul(stmp, NULL, 10);
+		ftmp = (float)((tp&0xFF)/100);
+		snd1.iwmData.price2 = (t2&0xFF)*100 + (t0&0xFF) + ftmp;
+		snd2.ihmData.price2 = snd1.iwmData.price2;
+		snd3.igmData.price2 = snd1.iwmData.price2;
+		snd4.ipmData.price2 = snd1.iwmData.price2;
+		//用量2
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t0 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t2 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t4 = strtoul(stmp, NULL, 10);
+		snd1.iwmData.volume2 = (t4&0xFF)*10000 + (t2&0xFF)*100 + (t0&0xFF);
+		snd2.ihmData.volume2 = snd1.iwmData.volume2;
+		snd3.igmData.volume2 = snd1.iwmData.volume2;
+		snd4.ipmData.volume2 = snd1.iwmData.volume2;
+		//价格3
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tp = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t0 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t2 = strtoul(stmp, NULL, 10);
+		ftmp = (float)((tp&0xFF)/100);
+		snd1.iwmData.price3 = (t2&0xFF)*100 + (t0&0xFF) + ftmp;
+		snd2.ihmData.price3 = snd1.iwmData.price3;
+		snd3.igmData.price3 = snd1.iwmData.price3;
+		snd4.ipmData.price3 = snd1.iwmData.price3;
+		//启动日期
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tmp = strtoul(stmp, NULL, 10);
+		snd1.iwmData.startdate = tmp & 0xFF;
+		snd2.ihmData.startdate = snd1.iwmData.startdate;
+		snd3.igmData.startdate = snd1.iwmData.startdate;
+		snd4.ipmData.startdate = snd1.iwmData.startdate;
+	}
+
+	//写结算日
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_BILL_TODAY_DATE)){
+		if (msgLen != 0x4){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_BILL_TODAY_DATE!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//结算日期
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tmp = strtoul(stmp, NULL, 10);
+		snd1.iwmData.billtodaydate = tmp & 0xFF;
+		snd2.ihmData.billtodaydate = snd1.iwmData.billtodaydate;
+		snd3.igmData.billtodaydate = snd1.iwmData.billtodaydate;
+		snd4.ipmData.billtodaydate = snd1.iwmData.billtodaydate;
+	}
+
+	//写抄表日
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_READ_ACCOUNT_CUR_DATE)){
+		if (msgLen != 0x4){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_READ_ACCOUNT_CUR_DATE!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//抄表日期
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tmp = strtoul(stmp, NULL, 10);
+		snd1.iwmData.readamountcurdate = tmp & 0xFF;
+		snd2.ihmData.readamountcurdate = snd1.iwmData.readamountcurdate;
+		snd3.igmData.readamountcurdate = snd1.iwmData.readamountcurdate;
+		snd4.ipmData.readamountcurdate = snd1.iwmData.readamountcurdate;
+	}
+
+	//写购入金额
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_BUY_AMOUNT)){
+		if (msgLen != 0x8){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_BUY_AMOUNT!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//本次买入序号
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tmp = strtoul(stmp, NULL, 16);
+		snd1.iwmData.buycode = tmp & 0xFF;
+		snd2.ihmData.buycode = snd1.iwmData.buycode;
+		snd3.igmData.buycode = snd1.iwmData.buycode;
+		snd4.ipmData.buycode = snd1.iwmData.buycode;
+		//本次购入金额
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tp = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t0 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t2 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t4 = strtoul(stmp, NULL, 10);
+		ftmp = (float)((tp&0xFF)/100);
+		snd1.iwmData.thisamount = (t4&0xFF)*10000 + (t2&0xFF)*100 + (t0&0xFF) + ftmp;
+		snd2.ihmData.thisamount = snd1.iwmData.thisamount;
+		snd3.igmData.thisamount = snd1.iwmData.thisamount;
+		snd4.ipmData.thisamount = snd1.iwmData.thisamount;
+	}
+
+	//写新秘钥
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_NEW_KEY)){
+		if (msgLen != 0x0C){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_NEW_KEY!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//新秘钥版本
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tmp = strtoul(stmp, NULL, 16);
+		snd1.iwmData.keyver = tmp & 0xFF;
+		snd2.ihmData.keyver = snd1.iwmData.keyver;
+		snd3.igmData.keyver = snd1.iwmData.keyver;
+		snd4.ipmData.keyver = snd1.iwmData.keyver;
+		//新秘钥
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 16);
+		snd1.iwmData.key = strtoul(stmp, NULL, 16);  //不考虑高低位
+		snd2.ihmData.key = snd1.iwmData.key;
+		snd3.igmData.key = snd1.iwmData.key;
+		snd4.ipmData.key = snd1.iwmData.key;
+	}
+
+	//写标准时间
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_STD_TIME)){
+		if (msgLen != 0x0A){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_STD_TIME!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//标准时间
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 14);
+		if (strtoul(stmp, NULL, 10) < HCU_NBIOT_CJ188_REAL_TIME_IN_REALITY){
+			HcuErrorPrint("NBIOTCJ188: Invalid received real time!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		strncpy(snd1.iwmData.realtime, &buf->curBuf[index], 14);
+		strncpy(snd2.ihmData.realtime, snd1.iwmData.realtime, 14);
+		strncpy(snd3.igmData.realtime, snd1.iwmData.realtime, 14);
+		strncpy(snd4.ipmData.realtime, snd1.iwmData.realtime, 14);
+	}
+
+	//写阀门控制
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_SWITCH_CTRL)){
+		if (msgLen != 0x04){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_SWITCH_CTRL!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//阀门开关操作
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tmp = strtoul(stmp, NULL, 10);
+		if ((tmp != HCU_NBIOT_CJ188_SWITCH_CONTROL_ON) && (tmp != HCU_NBIOT_CJ188_SWITCH_CONTROL_OFF)){
+			HcuErrorPrint("NBIOTCJ188: Invalid received switch control command!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		snd1.iwmData.switchctrl = tmp;
+		snd2.ihmData.switchctrl = snd1.iwmData.switchctrl;
+		snd3.igmData.switchctrl = snd1.iwmData.switchctrl;
+		snd4.ipmData.switchctrl = snd1.iwmData.switchctrl;
+	}
+
+	//写出厂设置
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_OFF_FACTORY_START)){
+		if (msgLen != 0x03){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_OFF_FACTORY_START!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//Do nothing
+	}
+
+	//写地址
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_ADDR) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_ADDRESS)){
+		if (msgLen != 0x0A){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_ADDRESS!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//新地址
+		index = index + 2;
+		strncpy(snd1.iwmHead.addr, &buf->curBuf[index], 14);
+		strncpy(snd2.ihmHead.addr, snd1.iwmHead.addr, 14);
+		strncpy(snd3.igmHead.addr, snd1.iwmHead.addr, 14);
+		strncpy(snd4.ipmHead.addr, snd1.iwmHead.addr, 14);
+	}
+
+	//写电机同步数据
+	else if ((ctrl == HCU_NBIOT_CJ188_CTRL_WRITE_DEVICE_SYN) && (d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_DEVICE_SYN_DATA)){
+		if (msgLen != 0x08){
+			HcuErrorPrint("NBIOTCJ188: Invalid received in-line message length on HCU_NBIOT_CJ188_WRITE_DI0DI1_DEVICE_SYN_DATA!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		//当前累计流量
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tp = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t0 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t2 = strtoul(stmp, NULL, 10);
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		t4 = strtoul(stmp, NULL, 10);
+		ftmp = (float)((tp&0xFF)/100);
+		snd1.iwmData.currentaccuvolume = (t4&0xFF)*10000 + (t2&0xFF)*100 + (t0&0xFF) + ftmp;
+		snd2.ihmData.currentaccuvolume = snd1.iwmData.currentaccuvolume;
+		snd3.igmData.currentaccuvolume = snd1.iwmData.currentaccuvolume;
+		snd4.ipmData.currentaccuvolume = snd1.iwmData.currentaccuvolume;
+		index = index + 2;
+		memset(stmp, 0, sizeof(stmp));
+		strncpy(stmp, &buf->curBuf[index], 2);
+		tmp = strtoul(stmp, NULL, 16);
+		snd1.iwmData.currentaccuvolumeunit = tmp & 0xFF;
+		snd2.ihmData.currentaccuvolumeunit = snd1.iwmData.currentaccuvolumeunit;
+		snd3.igmData.currentaccuvolumeunit = snd1.iwmData.currentaccuvolumeunit;
+		snd4.ipmData.currentaccuvolumeunit = snd1.iwmData.currentaccuvolumeunit;
+	}
+
+	//命令组合不存在
+	else{
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Received error CTRL + D0D1 combination command!\n");
+		return FAILURE;
+	}
+
+
+	//终于到了将消息发送到各个L３进行具体的处理的过程了
+	if ((equType >= HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MIN) && (equType <= HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MAX)){
+		//发送
+		ret = hcu_message_send(MSG_ID_NBIOTCJ188_IWM_DATA_REQ, TASK_ID_IWM, TASK_ID_NBIOTCJ188, &snd1, snd1.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_IWM]);
+			return FAILURE;
+		}
+	}//IWM
+	else if ((equType >= HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN) && (equType <= HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX)){
+
+		//发送
+		ret = hcu_message_send(MSG_ID_NBIOTCJ188_IHM_DATA_REQ, TASK_ID_IHM, TASK_ID_NBIOTCJ188, &snd2, snd2.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_IHM]);
+			return FAILURE;
+		}
+	}//IHM
+	else if ((equType >= HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MIN) && (equType <= HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MAX)){
+
+		//发送
+		ret = hcu_message_send(MSG_ID_NBIOTCJ188_IGM_DATA_REQ, TASK_ID_IGM, TASK_ID_NBIOTCJ188, &snd3, snd3.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_IGM]);
+			return FAILURE;
+		}
+	}//IGM
+	else if ((equType >= HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MIN) && (equType <= HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MAX)){
+
+		//发送
+		ret = hcu_message_send(MSG_ID_NBIOTCJ188_IPM_DATA_REQ, TASK_ID_IPM, TASK_ID_NBIOTCJ188, &snd4, snd4.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_IPM]);
+			return FAILURE;
+		}
+	}//IPM
+	else{
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Received error equipment + D0D1 combination command!\n");
+		return FAILURE;
+	}
+
 	return SUCCESS;
 }
-
 

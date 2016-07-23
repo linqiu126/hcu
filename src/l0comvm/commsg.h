@@ -1956,6 +1956,7 @@ typedef struct  sensor_general_cj188_data_element //
 	char st[5];               //多申请一位    状态
 	INT8 billtodaydate;       //结算日
 	INT8 readamountcurdate;   //抄表日
+	INT8 startdate;           //启动日
 	INT64 key;
 	float price1;
 	INT32 volume1;
@@ -1967,6 +1968,7 @@ typedef struct  sensor_general_cj188_data_element //
 	float accuamount;    //累计金额
 	float remainamount;   //剩余金额
 	INT8 keyver;
+	INT8 switchctrl;
 }sensor_general_cj188_data_element_t;
 
 //用于数据库的存入和交互
