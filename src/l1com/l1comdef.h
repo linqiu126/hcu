@@ -687,7 +687,8 @@ typedef struct  HcuInventoryInfo
 }HcuInventoryInfot;
 
 //Adding by Shanchun for socket handling
-#define PORT 4454
+#define CLOUDSRV_PORT 4454
+#define CLOUDSRV_ADDRESS "121.40.185.177"
 #define QUEUE 30
 
 //Adding by Shanchun for cmd timer flag

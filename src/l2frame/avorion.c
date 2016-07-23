@@ -40,8 +40,6 @@ FIX:AAC in some container format (FLV, MP4, MKV etc.) need
 //'1': Use AAC Bitstream Filter
 #define USE_AACBSF 0
 
-//in case mux the audio, no need for HCU
-#define USE_AUDIO 0
 
 
 /*
@@ -1558,20 +1556,15 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	 * STEP12: convert h264 to mp4
 	 */
 	AVOutputFormat *Ofmt = NULL;
-	//Input AVFormatContext and Output AVFormatContext
 	AVFormatContext *ifmt_ctx_v = NULL, *ifmt_ctx_a = NULL,*ofmt_ctx = NULL;
 	AVPacket pkt;
 	//int ret, i;
 	int videoindex_v=-1,videoindex_out=-1;
-#if USE_AUDIO
-	int audioindex_a=-1,audioindex_out=-1;
-	const char *in_filename_a = "hcu.mp3";
-#endif
 	int frame_index=0;
-	int64_t cur_pts_v=0,cur_pts_a=0;
+	//int64_t cur_pts_v=0;
+	double cur_pts_v=0;
 
 	//const char *fdir = "/home/pi/workspace/hcu/RasberryPi/log/201607/avorion201606261823.h264";
-
 
 	char out_filename[MAX_AVORION_FILE_LENGTH];
 	memset(out_filename, 0, sizeof(out_filename));
@@ -1592,23 +1585,10 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     	zHcuRunErrCnt[TASK_ID_AVORION]++;
 		goto end;
 	}
-#if USE_AUDIO
-	if ((ret = avformat_open_input(&ifmt_ctx_a, in_filename_a, 0, 0)) < 0) {
-    	HcuErrorPrint("AVORION: Could not open input file!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
-		goto end;
-	}
-	if ((ret = avformat_find_stream_info(ifmt_ctx_a, 0)) < 0) {
-    	HcuErrorPrint("AVORION: Failed to retrieve input stream information!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
-		goto end;
-	}
-#endif
+
 	HcuDebugPrint("AVORION: ===========Input Information==========\n");
 	av_dump_format(ifmt_ctx_v, 0, fdir, 0);
-#if USE_AUDIO
-	av_dump_format(ifmt_ctx_a, 0, in_filename_a, 0);
-#endif
+
 	HcuDebugPrint("AVORION: ======================================\n");
 	//Output
 	avformat_alloc_output_context2(&ofmt_ctx, NULL, NULL, out_filename);
@@ -1645,34 +1625,6 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		break;
 		}
 	}
-#if USE_AUDIO
-	for (i = 0; i < ifmt_ctx_a->nb_streams; i++) {
-		//Create output AVStream according to input AVStream
-		if(ifmt_ctx_a->streams[i]->codec->codec_type==AVMEDIA_TYPE_AUDIO){
-			AVStream *in_stream = ifmt_ctx_a->streams[i];
-			AVStream *out_stream = avformat_new_stream(ofmt_ctx, in_stream->codec->codec);
-			audioindex_a=i;
-			if (!out_stream) {
-		    	HcuErrorPrint("AVORION: Failed allocating output stream!\n");
-		    	zHcuRunErrCnt[TASK_ID_AVORION]++;
-				ret = AVERROR_UNKNOWN;
-				goto end;
-			}
-			audioindex_out=out_stream->index;
-			//Copy the settings of AVCodecContext
-			if (avcodec_copy_context(out_stream->codec, in_stream->codec) < 0) {
-		    	HcuErrorPrint("AVORION: Failed to copy context from input to output stream codec context!\n");
-		    	zHcuRunErrCnt[TASK_ID_AVORION]++;
-				goto end;
-			}
-			out_stream->codec->codec_tag = 0;
-			if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
-				out_stream->codec->flags |= CODEC_FLAG_GLOBAL_HEADER;
-
-			break;
-		}
-	}
-#endif
 
 	HcuDebugPrint("AVORION: ===========Output Information==========\n");
 	av_dump_format(ofmt_ctx, 0, out_filename, 1);
@@ -1706,9 +1658,6 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		AVStream *in_stream, *out_stream;
 
 		//Get an AVPacket
-#if USE_AUDIO
-		if(av_compare_ts(cur_pts_v,ifmt_ctx_v->streams[videoindex_v]->time_base,cur_pts_a,ifmt_ctx_a->streams[audioindex_a]->time_base) <= 0){
-#endif
 			ifmt_ctx=ifmt_ctx_v;
 			stream_index=videoindex_out;
 
@@ -1739,42 +1688,6 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 			}else{
 				break;
 			}
-#if USE_AUDIO
-		}else{
-			ifmt_ctx=ifmt_ctx_a;
-			stream_index=audioindex_out;
-			if(av_read_frame(ifmt_ctx, &pkt) >= 0){
-				do{
-					in_stream  = ifmt_ctx->streams[pkt.stream_index];
-					out_stream = ofmt_ctx->streams[stream_index];
-
-					if(pkt.stream_index==audioindex_a){
-
-						//FIX No PTS
-						//Simple Write PTS
-						if(pkt.pts==AV_NOPTS_VALUE){
-							//Write PTS
-							AVRational time_base1=in_stream->time_base;
-							//Duration between 2 frames (us)
-							int64_t calc_duration=(double)AV_TIME_BASE/av_q2d(in_stream->r_frame_rate);
-							//Parameters
-							pkt.pts=(double)(frame_index*calc_duration)/(double)(av_q2d(time_base1)*AV_TIME_BASE);
-							pkt.dts=pkt.pts;
-							pkt.duration=(double)calc_duration/(double)(av_q2d(time_base1)*AV_TIME_BASE);
-							frame_index++;
-						}
-						cur_pts_a=pkt.pts;
-
-						break;
-					}
-				}while(av_read_frame(ifmt_ctx, &pkt) >= 0);
-			}else{
-				break;
-			}
-
-		}
-#endif
-
 		//FIX:Bitstream Filter
 #if USE_H264BSF
 		av_bitstream_filter_filter(h264bsfc, in_stream->codec, NULL, &pkt.data, &pkt.size, pkt.data, pkt.size, 0);
@@ -1782,7 +1695,6 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 #if USE_AACBSF
 		av_bitstream_filter_filter(aacbsfc, out_stream->codec, NULL, &pkt.data, &pkt.size, pkt.data, pkt.size, 0);
 #endif
-
 
 		//Convert PTS/DTS
 		pkt.pts = av_rescale_q_rnd(pkt.pts, in_stream->time_base, out_stream->time_base, (AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
@@ -1794,7 +1706,6 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
 	    	HcuDebugPrint("AVORION: Write 1 Packet. size:%5d\tpts:%lld\n", pkt.size,pkt.pts);
 	    }
-
 		//Write
 		if (av_interleaved_write_frame(ofmt_ctx, &pkt) < 0) {
 	    	HcuErrorPrint("AVORION: Error muxing packet!\n");
