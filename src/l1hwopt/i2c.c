@@ -189,7 +189,7 @@ OPSTAT func_i2c_read_data_sht20(void)
 	//求平均
 	zHcuI2cTempSht20 = tempSum / RPI_I2C_READ_REPEAT_TIMES;
 	zHcuI2cHumidSht20 = humidSum / RPI_I2C_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("I2C: Sensor SHT20 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_I2C_SDA#=%d\n", zHcuI2cTempSht20, zHcuI2cHumidSht20, RPI_I2C_PIN_SDA);
 	}
 
@@ -264,7 +264,7 @@ OPSTAT func_i2c_read_data_bh1750(void)
 	}
 	//输出结果到目标变量中
 	zHcuI2cLightstrBh1750 = flightSum / RPI_I2C_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("I2C: Sensor BH1750 Transformed average float result light = %6.2f lx, DATA_I2C_SDA#=%d\n", zHcuI2cLightstrBh1750, RPI_I2C_PIN_SDA);
 	}
 	close(fd);
@@ -364,7 +364,7 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	//计算出海拔高度数据
 	coef = powf(((float)p/(float)RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS), (float)(1.0/5.255));
 	zHcuI2cAltitudeBmp180 = 44330 * (1- coef);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("I2C: Sensor BMP180 Transformed average float result Airprs=%6.2fPa, Temp=%6.2fC, Altitude = %6.2fm, DATA_I2C_SDA#=%d\n", zHcuI2cAirprsBmp180, zHcuI2cTempBmp180, zHcuI2cAltitudeBmp180, RPI_I2C_PIN_SDA);
 	}
 
@@ -408,7 +408,7 @@ OPSTAT func_i2c_read_data_bmpd300(void)
 	//求平均
 	zHcuI2cPm25Bmpd300 = pm25Sum / RPI_I2C_READ_REPEAT_TIMES;
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("I2C: Sensor BMPD300 Transformed average float result Pm25=%6.2fmg/m3, DATA_I2C_SDA#=%d\n", zHcuI2cPm25Bmpd300, RPI_I2C_PIN_SDA);
 	}
 

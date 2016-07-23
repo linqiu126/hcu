@@ -193,7 +193,7 @@ OPSTAT func_gpio_read_data_dht11(void)
 	//求平均
 	zHcuGpioTempDht11 = tempSum / RPI_GPIO_READ_REPEAT_TIMES;
 	zHcuGpioHumidDht11 = humidSum / RPI_GPIO_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
     	HcuDebugPrint("GPIO: Sensor DHT11 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_GPIO#=%d\n", zHcuGpioTempDht11, zHcuGpioHumidDht11, RPI_GPIO_PIN_DHT11_DATA);
 	}
 
@@ -285,7 +285,7 @@ OPSTAT func_gpio_read_data_mq135(void)
 
 	//求平均
 	zHcuGpioToxicgasMq135 = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor MQ135 Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuGpioToxicgasMq135, RPI_GPIO_PIN_MQ135_DATA);
 	}
 
@@ -316,7 +316,7 @@ OPSTAT func_gpio_read_data_mq3alco(void)
 
 	//求平均
 	zHcuGpioAlcoholMq3alco = alcoholSum / RPI_GPIO_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor MQ3ALCO Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuGpioAlcoholMq3alco, RPI_GPIO_PIN_MQ3ALCO_DATA);
 	}
 
@@ -361,7 +361,7 @@ OPSTAT func_gpio_read_data_zp01voc(void)
 
 	//求平均
 	zHcuGpioToxicgasZp01voc = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor ZP01VOC Transformed float average read result pollution= %d[Times], DATA_GPIO_A#=%d, DATA_GPIO_B#=%d\n", (int)zHcuGpioToxicgasZp01voc, RPI_GPIO_PIN_ZP01VOC_DATA_A, RPI_GPIO_PIN_ZP01VOC_DATA_B);
 	}
 
