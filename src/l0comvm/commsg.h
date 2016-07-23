@@ -1937,23 +1937,24 @@ typedef struct  sensor_general_cj188_control_head //
 	INT8  ctrlId;
 	INT8  d0d1Id;
 	UINT8  periodFlag; //指明是瞬时，还是周期性读数
+	UINT8 communicationFlag;  //反应通信是否异常的标示
 	char addr[15];
 	UINT32 timestamp;
 }sensor_general_cj188_control_head_t;
 typedef struct  sensor_general_cj188_data_element //
 {
-	float currentaccuvolume;
+	float currentaccuvolume;   //当前累计流量
 	INT8 currentaccuvolumeunit;
-	float flowvolume;
+	float flowvolume;         //流量
 	INT8 flowvolumeunit;
 	INT8 lastmonth;
-	INT32 accumuworktime;
-	float supplywatertemp;
-	float backwatertemp;
-	char realtime[15]; //多申请一位
-	char st[5]; //多申请一位
-	INT8 billdate;
-	INT8 readdate;
+	INT32 accumuworktime;     //累计工作时间
+	float supplywatertemp;    //供水温度
+	float backwatertemp;      //回水温度
+	char realtime[15];        //多申请一位， 实时时间
+	char st[5];               //多申请一位    状态
+	INT8 billtodaydate;       //结算日
+	INT8 readamountcurdate;   //抄表日
 	INT64 key;
 	float price1;
 	INT32 volume1;
@@ -1961,9 +1962,9 @@ typedef struct  sensor_general_cj188_data_element //
 	INT32 volume2;
 	float price3;
 	INT8 buycode;
-	float thisamount;
-	float accuamount;
-	float remainamount;
+	float thisamount;    //本次金额
+	float accuamount;    //累计金额
+	float remainamount;   //剩余金额
 	INT8 keyver;
 }sensor_general_cj188_data_element_t;
 
@@ -1973,8 +1974,8 @@ typedef struct  sensor_iwm_cj188_data_element //
 	char cj188address[15];  //多申请一位
 	UINT32 timestamp;
 	INT8 equtype;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwm;
 }sensor_iwm_cj188_data_element_t;
 typedef struct  sensor_igm_cj188_data_element //
@@ -1982,8 +1983,8 @@ typedef struct  sensor_igm_cj188_data_element //
 	char cj188address[14];
 	UINT32 timestamp;
 	INT8 equtype;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igm;
 }sensor_igm_cj188_data_element_t;
 typedef struct  sensor_ipm_cj188_data_element //
@@ -1991,8 +1992,8 @@ typedef struct  sensor_ipm_cj188_data_element //
 	char cj188address[14];
 	UINT32 timestamp;
 	INT8 equtype;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t ipm;
 }sensor_ipm_cj188_data_element_t;
 typedef struct  sensor_ihm_cj188_data_element //
@@ -2000,12 +2001,12 @@ typedef struct  sensor_ihm_cj188_data_element //
 	char cj188address[14];
 	UINT32 timestamp;
 	INT8 equtype;
-	float heatpower;
+	float heatpower;    //热功率
 	INT8 heatpowerunit;
-	float currentheat;
+	float currentheat;   //当前热量
 	INT8 currentheatunit;
-	float todayheat;
-	INT8 todayheatunit;
+	float billtodayheat;     //结算日热量
+	INT8 billtodayheatunit;
 	sensor_general_cj188_data_element_t ihm;
 }sensor_ihm_cj188_data_element_t;
 typedef struct  sensor_ipm_qg376_data_element //
@@ -2026,8 +2027,8 @@ typedef struct  msg_struct_nbiotcj188_iwm_data_req //
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t iwmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwmData;
 	UINT32 length;
 }msg_struct_nbiotcj188_iwm_data_req_t;
@@ -2039,8 +2040,8 @@ typedef struct  msg_struct_nbiotcj188_ihm_data_req //
 	INT8 heatpowerunit;
 	float currentheat;
 	INT8 currentheatunit;
-	float todayheat;
-	INT8 todayheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
 	sensor_general_cj188_data_element_t ihmData;
 	UINT32 length;
 }msg_struct_nbiotcj188_ihm_data_req_t;
@@ -2048,8 +2049,8 @@ typedef struct  msg_struct_nbiotcj188_igm_data_req //
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t igmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
 }msg_struct_nbiotcj188_igm_data_req_t;
@@ -2057,8 +2058,8 @@ typedef struct  msg_struct_nbiotcj188_ipm_data_req //
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t ipmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t ipmData;
 	UINT32 length;
 }msg_struct_nbiotcj188_ipm_data_req_t;
@@ -2068,8 +2069,8 @@ typedef struct  msg_struct_nbiotcj188_iwm_control_cmd //
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t iwmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwmData;
 	UINT32 length;
 }msg_struct_nbiotcj188_iwm_control_cmd_t;
@@ -2081,8 +2082,8 @@ typedef struct  msg_struct_nbiotcj188_ihm_control_cmd //
 	INT8 heatpowerunit;
 	float currentheat;
 	INT8 currentheatunit;
-	float todayheat;
-	INT8 todayheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
 	sensor_general_cj188_data_element_t ihmData;
 	UINT32 length;
 
@@ -2091,8 +2092,8 @@ typedef struct  msg_struct_nbiotcj188_igm_control_cmd //
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t igmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
 }msg_struct_nbiotcj188_igm_control_cmd_t;
@@ -2100,8 +2101,8 @@ typedef struct  msg_struct_nbiotcj188_ipm_control_cmd //
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t igmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
 }msg_struct_nbiotcj188_ipm_control_cmd_t;
@@ -2110,8 +2111,8 @@ typedef struct msg_struct_iwm_nbiotcj188_data_resp
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t iwmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwmData;
 	UINT32 length;
 }msg_struct_iwm_nbiotcj188_data_resp_t;
@@ -2123,8 +2124,8 @@ typedef struct msg_struct_ihm_nbiotcj188_data_resp
 	INT8 heatpowerunit;
 	float currentheat;
 	INT8 currentheatunit;
-	float todayheat;
-	INT8 todayheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
 	sensor_general_cj188_data_element_t ihmData;
 	UINT32 length;
 
@@ -2133,8 +2134,8 @@ typedef struct msg_struct_igm_nbiotcj188_data_resp
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t igmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
 }msg_struct_igm_nbiotcj188_data_resp_t;
@@ -2142,8 +2143,8 @@ typedef struct msg_struct_ipm_nbiotcj188_data_resp
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t ipmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t ipmData;
 	UINT32 length;
 }msg_struct_ipm_nbiotcj188_data_resp_t;
@@ -2152,8 +2153,8 @@ typedef struct msg_struct_iwm_nbiotcj188_control_fb
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t iwmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwmData;
 	UINT32 length;
 }msg_struct_iwm_nbiotcj188_control_fb_t;
@@ -2165,8 +2166,8 @@ typedef struct msg_struct_ihm_nbiotcj188_control_fb
 	INT8 heatpowerunit;
 	float currentheat;
 	INT8 currentheatunit;
-	float todayheat;
-	INT8 todayheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
 	sensor_general_cj188_data_element_t ihmData;
 	UINT32 length;
 
@@ -2175,8 +2176,8 @@ typedef struct msg_struct_igm_nbiotcj188_control_fb
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t igmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
 }msg_struct_igm_nbiotcj188_control_fb_t;
@@ -2184,8 +2185,8 @@ typedef struct msg_struct_ipm_nbiotcj188_control_fb
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t ipmHead;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t ipmData;
 	UINT32 length;
 }msg_struct_ipm_nbiotcj188_control_fb_t;

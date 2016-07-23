@@ -857,14 +857,14 @@ typedef struct  HcuInventoryInfo
 #define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA11 0xD12A
 #define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA12 0xD12B
 #define  HCU_NBIOT_CJ188_READ_DI0DI1_PRICE_TABLE 0x8102
-#define  HCU_NBIOT_CJ188_READ_DI0DI1_BILL_DATE 0x8103  //结算日
-#define  HCU_NBIOT_CJ188_READ_DI0DI1_ACCOUNT_DATE 0x8104 //抄表日
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_BILL_TODAY_DATE 0x8103  //结算日
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_READ_ACCOUNT_CUR_DATE 0x8104 //抄表日
 #define  HCU_NBIOT_CJ188_READ_DI0DI1_BUY_AMOUNT 0x8105 //购入金额
 #define  HCU_NBIOT_CJ188_READ_DI0DI1_KEY_VER 0x8106
 #define  HCU_NBIOT_CJ188_READ_DI0DI1_ADDRESS 0x810A
 #define  HCU_NBIOT_CJ188_WRITE_DI0DI1_PRICE_TABLE 0xA010
-#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_BILL_DATE 0xA011
-#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_ACCOUNT_DATE 0xA012
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_BILL_TODAY_DATE 0xA011    //结算日
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_READ_ACCOUNT_CUR_DATE 0xA012   //抄表日
 #define  HCU_NBIOT_CJ188_WRITE_DI0DI1_BUY_AMOUNT 0xA013
 #define  HCU_NBIOT_CJ188_WRITE_DI0DI1_NEW_KEY 0xA014
 #define  HCU_NBIOT_CJ188_WRITE_DI0DI1_STD_TIME 0xA015
@@ -884,17 +884,48 @@ typedef struct  NbiotCj188BhItfComElement //
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t head;
-	float todayaccuvolume;
-	INT8 todayaccuvolumeunit;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
 	float heatpower;
 	INT8 heatpowerunit;
 	float currentheat;
 	INT8 currentheatunit;
-	float todayheat;
-	INT8 todayheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
 	sensor_general_cj188_data_element_t data;
 	UINT32 length;
 }NbiotCj188BhItfComElement_t;
+typedef struct  NbiotCj188BhItfComCtrFlag //
+{
+	UINT8 d0d1Flag;
+	UINT8 billtodayaccuvolumeFlag;
+	UINT8 heatpowerFlag;
+	UINT8 currentheatFlag;
+	UINT8 billtodayheatFlag;
+	UINT8 currentaccuvolumeFlag;
+	UINT8 flowvolumeFlag;
+	UINT8 lastmonthFlag;
+	UINT8 accumuworktimeFlag;
+	UINT8 supplywatertempFlag;
+	UINT8 backwatertempFlag;
+	UINT8 realtimeFlag;
+	UINT8 stFlag;
+	UINT8 billtodaydateFlag;
+	UINT8 readamountcurdateFlag;
+	UINT8 keyFlag;
+	UINT8 price1Flag;
+	UINT8 volume1Flag;
+	UINT8 price2Flag;
+	UINT8 volume2Flag;
+	UINT8 price3Flag;
+	UINT8 buycodeFlag;
+	UINT8 thisamountFlag;
+	UINT8 accuamountFlag;
+	UINT8 remainamountFlag;
+	UINT8 keyverFlag;
+}NbiotCj188BhItfComCtrFlag_t;
 
+#define  HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL 1
+#define  HCU_NBIOT_CJ188_COMM_CHANNEL_ABNORMAL 2
 
 #endif /* L1COM_L1COMDEF_H_ */
