@@ -1403,7 +1403,7 @@ void hcu_delete_file(const char *path)
 	DIR *dir;
 	struct dirent *dir_info;
 
-	char file_path[CLOUDVELA_PATH_MAX];
+	char file_path[HCU_CLOUDVELA_PATH_MAX];
 	if(hcu_is_file(path))
 	{
 		HcuDebugPrint("HSMMP: is file: %s \n\n", path);

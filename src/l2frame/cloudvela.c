@@ -151,7 +151,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//zHcuCloudCurlPtrTx = NULL;
 
 	//Added by Shanchun for CMD command
-    CMDShortTimerFlag = CMD_POLLING_SHORT_TIMER_START_OFF;
+    CMDShortTimerFlag = HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_OFF;
     CMDPollingNoCommandNum = 0;
 
 	//启动周期性定时器
@@ -169,7 +169,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
 		return FAILURE;
 	}
-    CMDLongTimerFlag = CMD_POLLING_LONG_TIMER_START_ON;
+    CMDLongTimerFlag = HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_ON;
 
 	//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
@@ -301,7 +301,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 			//主动断掉链路，需要复位CurrentConnection指示以及Http-Curl全局指针
 
 			//如果当前是3G4G
-			if ((zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
+			if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
 					((zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 							(zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 							(zHcuHwinvTable.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
@@ -320,7 +320,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 						return FAILURE;
 					}
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 					//清除HTTP-CURL链接
 					//if((zHcuCloudCurlPtrTx != NULL) || (zHcuCloudCurlPtrRx != NULL)){
 					//	if(zHcuCloudCurlPtrTx != NULL) curl_easy_cleanup(zHcuCloudCurlPtrTx);  //End a libcurl easy session
@@ -331,7 +331,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 				//不做任何动作
 			}
 			//如果当前是WIFI
-			else if ((zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
+			else if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
 				((zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 						(zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
 				if ((zHcuCloudvelaTable.ethConTry == 0) || (zHcuCloudvelaTable.usbnetConTry == 0)){
@@ -348,7 +348,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 						return FAILURE;
 					}
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 					//清除HTTP-CURL链接
 					//if((zHcuCloudCurlPtrTx != NULL) || (zHcuCloudCurlPtrRx != NULL)){
 					//	if(zHcuCloudCurlPtrTx != NULL) curl_easy_cleanup(zHcuCloudCurlPtrTx);  //End a libcurl easy session
@@ -359,7 +359,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 				//不做任何动作
 			}
 			//如果当前是USBNET
-			else if ((zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
+			else if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
 					(zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE)){
 				if (zHcuCloudvelaTable.ethConTry == 0){
 					//Disconnect current usbnet connection!!!
@@ -375,7 +375,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 						return FAILURE;
 					}
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 					//清除HTTP-CURL链接
 					//if((zHcuCloudCurlPtrTx != NULL) || (zHcuCloudCurlPtrRx != NULL)){
 					//	if(zHcuCloudCurlPtrTx != NULL) curl_easy_cleanup(zHcuCloudCurlPtrTx);  //End a libcurl easy session
@@ -1108,7 +1108,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == SUCCESS){
 		zHcuCloudvelaTable.ethConTry = 0;
-		zHcuCloudvelaTable.curCon =CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 		return SUCCESS;
 	}
 
@@ -1122,7 +1122,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == SUCCESS){
 		zHcuCloudvelaTable.usbnetConTry = 0;
-		zHcuCloudvelaTable.curCon =CLOUDVELA_CONTROL_PHY_CON_USBNET;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
 		return SUCCESS;
 	}
 
@@ -1136,7 +1136,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == SUCCESS){
 		zHcuCloudvelaTable.wifiConTry = 0;
-		zHcuCloudvelaTable.curCon =CLOUDVELA_CONTROL_PHY_CON_WIFI;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
 		return SUCCESS;
 	}
 
@@ -1151,7 +1151,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == SUCCESS){
 		zHcuCloudvelaTable.g3g4ConTry = 0;
-		zHcuCloudvelaTable.curCon =CLOUDVELA_CONTROL_PHY_CON_3G4G;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
 		return SUCCESS;
 	}
 	/*
@@ -1416,28 +1416,28 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	//}
 
 	//根据系统配置，决定使用那一种后台网络
-	if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
+	if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		if (hcu_ethernet_date_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
-	else if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_USBNET){
+	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET){
 		if (hcu_usbnet_data_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
-	else if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_WIFI){
+	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI){
 		if (hcu_wifi_data_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
-	else if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_3G4G){
+	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G){
 		if (hcu_3g4g_data_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
@@ -1763,13 +1763,13 @@ OPSTAT func_cloudvela_av_upload(char *filename)
 	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
 
 ///
-	char filepath[CLOUDVELA_PATH_MAX];
-	memset(filepath,0,CLOUDVELA_PATH_MAX);
+	char filepath[HCU_CLOUDVELA_PATH_MAX];
+	memset(filepath,0,HCU_CLOUDVELA_PATH_MAX);
 	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160528.dat";
 
 	//int i;
-	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);
-	if(rslt<0 || (rslt >=CLOUDVELA_PATH_MAX-1))
+	int rslt = readlink(ftp_opt.file,filepath,HCU_CLOUDVELA_PATH_MAX-1);
+	if(rslt<0 || (rslt >=HCU_CLOUDVELA_PATH_MAX-1))
 	{
 		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n", rslt);
 

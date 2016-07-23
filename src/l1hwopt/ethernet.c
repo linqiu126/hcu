@@ -236,7 +236,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 		//serveraddr.sin_addr.s_addr = inet_addr(CLOUDSRV_ADDRESS);
 
-		serveraddr.sin_port = htons(CLOUDSRV_PORT);
+		serveraddr.sin_port = htons(HCU_CLOUDSRV_BH_PORT);
 
 		if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 		{
@@ -269,7 +269,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 				}
 			}
 
-			if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_ETHERNET)
+			if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET)
 			{
 				//将数据发送给CLOUD
 				if (receiveBuffer.length > 1){

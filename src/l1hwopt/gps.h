@@ -47,7 +47,7 @@ void func_gps_print_info(void);
 double get_double_number(CHAR *s);
 double get_locate(double temp);
 UINT32 GetComma(UINT32 num,CHAR *str);
-void UTC2BTC(date_time GPS);
+void UTC2BTC(hcuStrDateTime_t GPS);
 
 void func_gps_resolve_GPRMC(CHAR data);
 void func_gps_receive_data(UINT32 fd);

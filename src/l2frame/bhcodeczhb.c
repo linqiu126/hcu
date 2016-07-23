@@ -35,7 +35,7 @@ OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
 
 		//pack数据到临时字符串中, 将数据打印到关键的数值中
 		sprintf(xmlFormat.conCmdId, "%02X", L3CI_heart_beat & 0xFF);
-		strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 
 		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -54,7 +54,7 @@ OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
 
 		//关键数据填入
 		//未来HEART_BEAT帧可能会定义独特的命令类型（char cn[8]; //CN=命令编号），现在暂时没有细节，所以采用数据长度=0表示心跳帧
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -96,7 +96,7 @@ OPSTAT func_cloudvela_huanbao_cmd_control_msg_pack(CloudDataSendBuf_t *buf)
 
 		//pack数据到临时字符串中, 将数据打印到关键的数值中
 		sprintf(xmlFormat.conCmdId, "%02X", L3CI_cmd_control & 0xFF);
-		strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
 
 		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -117,7 +117,7 @@ OPSTAT func_cloudvela_huanbao_cmd_control_msg_pack(CloudDataSendBuf_t *buf)
 
 		//关键数据填入
 		//未来HEART_BEAT帧可能会定义独特的命令类型（char cn[8]; //CN=命令编号），现在暂时没有细节，所以采用数据长度=0表示心跳帧
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -171,9 +171,9 @@ OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 		sprintf(xmlFormat.conGpsz, "%08X", gpsz);
 		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -197,7 +197,7 @@ OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 
 		//关键数据填入
 		sprintf(zhbFormat.data.conEmc, "%04X", emcValue & 0xFFFF);
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -250,9 +250,9 @@ OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		sprintf(xmlFormat.conGpsz, "%08X", gpsz);
 		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -276,7 +276,7 @@ OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 
 		//关键数据填入
 		sprintf(zhbFormat.data.conPm2d5, "%08X", pm2d5Value);
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -327,9 +327,9 @@ OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		sprintf(xmlFormat.conGpsz, "%08X", gpsz);
 		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
@@ -353,7 +353,7 @@ OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 
 		//关键数据填入
 		sprintf(zhbFormat.data.conWinddir, "%04X", winddirValue & 0xFFFF);
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -404,9 +404,9 @@ OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		sprintf(xmlFormat.conGpsz, "%08X", gpsz);
 		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -430,7 +430,7 @@ OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 
 		//关键数据填入
 		sprintf(zhbFormat.data.conWindspd, "%04X", windspdValue & 0xFFFF);
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -482,9 +482,9 @@ OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		sprintf(xmlFormat.conGpsz, "%08X", gpsz);
 		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -508,7 +508,7 @@ OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 
 		//关键数据填入
 		sprintf(zhbFormat.data.conTemp, "%04X", tempValue & 0xFFFF);
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -559,9 +559,9 @@ OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		sprintf(xmlFormat.conGpsz, "%08X", gpsz);
 		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -585,7 +585,7 @@ OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 
 		//关键数据填入
 		sprintf(zhbFormat.data.conHumid, "%04X", humidValue & 0xFFFF);
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -636,9 +636,9 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		sprintf(xmlFormat.conGpsz, "%08X", gpsz);
 		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -662,7 +662,7 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 
 		//关键数据填入
 		sprintf(zhbFormat.data.conNoise, "%08X", noiseValue);
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -714,15 +714,15 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 
 		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (strlen(linkName) > CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH){
+		if (strlen(linkName) > HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH){
 			HcuErrorPrint("CLOUDVELA: Error FuncFlag / linkName len!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		strcpy(xmlFormat.FuncFlag, linkName);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -746,13 +746,13 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 
 		//关键数据填入
 		//sprintf(zhbFormat.data.linkLen, "%04X", linkLen & 0xFFFF);
-		if (strlen(linkName) > CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH){
+		if (strlen(linkName) > HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH){
 			HcuErrorPrint("CLOUDVELA: Error linkName len!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		strcpy(zhbFormat.data.linkName, linkName);
-		strcpy(zhbFormat.data.cn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
 		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -871,9 +871,9 @@ OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		}
 
 		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -959,9 +959,9 @@ OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		}
 
 		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1039,9 +1039,9 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 		}
 
 		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1105,9 +1105,9 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		}
 
 		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 		else {
 			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1149,7 +1149,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 {
 	UINT32 index=0;
 	UINT32 totalLen=0, it=0, ret=0;
-	char st[CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH] = "";
 
 	//检查参数 (固定包头为12个字符串)
 	if ((rcv == NULL) ||(rcv->length<=12) ||(rcv->length>MAX_HCU_MSG_BUF_LENGTH)){
@@ -1238,9 +1238,9 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	strncpy(icn, &rcv->buf[index], 7);
 	index = index+7;
 	totalLen = totalLen - 7;
-	if (strcmp(icn, CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT) == 0){
+	if (strcmp(icn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT) == 0){
 		flag = 1;
-	}else if (strcmp(icn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG) == 0){
+	}else if (strcmp(icn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG) == 0){
 		flag = 2;
 	}else{
 		HcuErrorPrint("CLOUDVELA: Invalid received data on CN!\n");
@@ -1333,7 +1333,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	//先发送控制消息给传感器任务模块，再判断是否还有后续参数
 
 	//EMC传感器任务
-	if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_EMC) == 0){
+	if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_EMC) == 0){
 		//初始化发送函数
 		msg_struct_cloudvela_emc_control_cmd_t snd;
 		memset(&snd, 0, sizeof(msg_struct_cloudvela_emc_control_cmd_t));
@@ -1358,7 +1358,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}//End of EMC传感器任务
 
 	//TEMP传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_TEMP) == 0){
+	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_TEMP) == 0){
 		//初始化发送函数
 		msg_struct_cloudvela_temp_control_cmd_t snd1;
 		memset(&snd1, 0, sizeof(msg_struct_cloudvela_temp_control_cmd_t));
@@ -1383,7 +1383,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}//End of TEMP传感器任务
 
 	//HUMID传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_HUMID) == 0){
+	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_HUMID) == 0){
 		//初始化发送函数
 		msg_struct_cloudvela_humid_control_cmd_t snd2;
 		memset(&snd2, 0, sizeof(msg_struct_cloudvela_humid_control_cmd_t));
@@ -1408,14 +1408,14 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}
 
 	//AIRPRS传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_AIRPRS) == 0){
+	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_AIRPRS) == 0){
 		HcuErrorPrint("CLOUDVELA: Invalid received data on CP common sensor type NOISY, to be supported!\n");
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}//End of AIRPRS传感器任务
 
 	//WINDSPD传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_WINDSPD) == 0){
+	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_WINDSPD) == 0){
 		//初始化发送函数
 		msg_struct_cloudvela_windspd_control_cmd_t snd4;
 		memset(&snd4, 0, sizeof(msg_struct_cloudvela_windspd_control_cmd_t));
@@ -1440,7 +1440,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}//End of WINDSPD传感器任务
 
 	//WINDDIR传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_WINDDIR) == 0){
+	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_WINDDIR) == 0){
 		//初始化发送函数
 		msg_struct_cloudvela_winddir_control_cmd_t snd5;
 		memset(&snd5, 0, sizeof(msg_struct_cloudvela_winddir_control_cmd_t));
@@ -1465,7 +1465,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}//End of WINDDIR传感器任务
 
 	//PM25传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_PM25) == 0){
+	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_PM25) == 0){
 		//初始化发送函数
 		msg_struct_cloudvela_pm25_control_cmd_t snd6;
 		memset(&snd6, 0, sizeof(msg_struct_cloudvela_pm25_control_cmd_t));
@@ -1490,7 +1490,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}//End of PM25传感器任务
 
 	//NOISE传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_NOISE) == 0){
+	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_NOISE) == 0){
 		//初始化发送函数
 		msg_struct_cloudvela_noise_control_cmd_t snd7;
 		memset(&snd7, 0, sizeof(msg_struct_cloudvela_noise_control_cmd_t));
@@ -1515,7 +1515,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}//End of NOISE传感器任务
 
 	//HSMMP传感器任务，待实现
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_HSMMP) == 0){
+	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_HSMMP) == 0){
 		//初始化发送函数
 		msg_struct_cloudvela_hsmmp_control_cmd_t snd8;
 		memset(&snd8, 0, sizeof(msg_struct_cloudvela_hsmmp_control_cmd_t));
@@ -1587,7 +1587,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 	//准备接龙字符串成为一整串
 	char s[MAX_HCU_MSG_BUF_LENGTH];
 	memset(s, 0, sizeof(s));
-	char tmp[CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH];
+	char tmp[HCU_CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH];
 
 	//char qn[21]; //请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令
 	memset(tmp, 0, sizeof(tmp));
@@ -1609,14 +1609,14 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 	//char cn[8]; //CN=命令编号
 	//命令编号，必然从上面带下来，故而这里不再做拷贝
 	//先看理想情况
-	if ((zhbFormat->data.cn[0] != '\0') && (strlen(zhbFormat->data.cn) == CLOUDVELA_BH_ITF_STD_ZHB_CN_FIX_LENGTH)){
+	if ((zhbFormat->data.cn[0] != '\0') && (strlen(zhbFormat->data.cn) == HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_FIX_LENGTH)){
 		strcat(s, zhbFormat->data.cn);
 	}
 	//再看长度小了，补"_"符号
-	else if ((zhbFormat->data.cn[0] != '\0') && (strlen(zhbFormat->data.cn) < CLOUDVELA_BH_ITF_STD_ZHB_CN_FIX_LENGTH)){
+	else if ((zhbFormat->data.cn[0] != '\0') && (strlen(zhbFormat->data.cn) < HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_FIX_LENGTH)){
 		int i=0, j=0;
 		i = strlen(zhbFormat->data.cn);
-		for (j=i; j<CLOUDVELA_BH_ITF_STD_ZHB_CN_FIX_LENGTH; j++){
+		for (j=i; j<HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_FIX_LENGTH; j++){
 			strcat(zhbFormat->data.cn, "_");
 		}
 		strcat(s, zhbFormat->data.cn);
@@ -1657,7 +1657,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, 气压
 	if (strlen(zhbFormat->data.conAirprs) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_AIRPRS);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_AIRPRS);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.conAirprs);
 		strcat(da, ",");
@@ -1665,7 +1665,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, EMC
 	if (strlen(zhbFormat->data.conEmc) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_EMC);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_EMC);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.conEmc);
 		strcat(da, ",");
@@ -1673,7 +1673,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, PM25 => 有关多种PMxy组合成总颗粒物数量，待完善，这个数据的长度为4/UINT32个字节，注意不要弄的不一样
 	if (strlen(zhbFormat->data.conPm2d5) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_PM25);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_PM25);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.conPm2d5);
 		strcat(da, ",");
@@ -1681,7 +1681,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, WINDDIR
 	if (strlen(zhbFormat->data.conWinddir) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_WINDDIR);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_WINDDIR);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.conWinddir);
 		strcat(da, ",");
@@ -1689,7 +1689,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, WINDSPD
 	if (strlen(zhbFormat->data.conWindspd) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_WINDSPD);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_WINDSPD);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.conWindspd);
 		strcat(da, ",");
@@ -1697,7 +1697,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, TEMP
 	if (strlen(zhbFormat->data.conTemp) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_TEMP);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_TEMP);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.conTemp);
 		strcat(da, ",");
@@ -1705,7 +1705,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, HUMID
 	if (strlen(zhbFormat->data.conHumid) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_HUMID);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_HUMID);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.conHumid);
 		strcat(da, ",");
@@ -1713,7 +1713,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, NOISE,   char conNoise[9];   //4B HCU->SAE only
 	if (strlen(zhbFormat->data.conNoise) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_NOISE);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_NOISE);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.conNoise);
 		strcat(da, ",");
@@ -1721,7 +1721,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//数据区域, HSMMP
 	if (strlen(zhbFormat->data.linkName) > 0){
-		strcat(da, CLOUDVELA_BH_ITF_STD_ZHB_HSMMP);
+		strcat(da, HCU_CLOUDVELA_BH_ITF_STD_ZHB_HSMMP);
 		strcat(da, "=");
 		strcat(da, zhbFormat->data.linkName);
 		strcat(da, ",");

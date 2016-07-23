@@ -274,11 +274,11 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			HcuDebugPrint("CLOUDVELA: CMD polling Ack from Cloud: cmdID =%d\n", cmdId);
 		}
 
-		if(CMDShortTimerFlag == CMD_POLLING_SHORT_TIMER_START_ON)
+		if(CMDShortTimerFlag == HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_ON)
 		{
 			CMDPollingNoCommandNum++;
 
-			if(CMDPollingNoCommandNum >= CMD_POLLING_NO_COMMAND_MAX)
+			if(CMDPollingNoCommandNum >= HCU_CLOUDVELA_CMD_POLLING_NO_COMMAND_MAX)
 			{
 				CMDPollingNoCommandNum = 0;
 
@@ -289,7 +289,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 					return FAILURE;
 				}
 
-				CMDShortTimerFlag = CMD_POLLING_SHORT_TIMER_START_OFF;
+				CMDShortTimerFlag = HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_OFF;
 
 				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_LONG, zHcuSysEngPar.timer.cmdcontrolLongTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
@@ -298,7 +298,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 					return FAILURE;
 				}
 
-				CMDLongTimerFlag = CMD_POLLING_LONG_TIMER_START_ON;
+				CMDLongTimerFlag = HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_ON;
 
 			}
 			return SUCCESS;
@@ -312,7 +312,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	{
 		CMDPollingNoCommandNum = 0;
 
-		if(CMDLongTimerFlag == CMD_POLLING_LONG_TIMER_START_ON)
+		if(CMDLongTimerFlag == HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_ON)
 		{
 			ret = hcu_timer_stop(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_LONG, TIMER_RESOLUTION_1S);
 			if (ret == FAILURE){
@@ -321,10 +321,10 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 				return FAILURE;
 			}
 
-			CMDLongTimerFlag = CMD_POLLING_LONG_TIMER_START_OFF;
+			CMDLongTimerFlag = HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_OFF;
 		}
 
-		if(CMDShortTimerFlag == CMD_POLLING_SHORT_TIMER_START_OFF)
+		if(CMDShortTimerFlag == HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_OFF)
 		{
 			ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_SHORT, zHcuSysEngPar.timer.cmdcontrolShortTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 			if (ret == FAILURE){
@@ -333,7 +333,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 				return FAILURE;
 			}
 
-			CMDShortTimerFlag = CMD_POLLING_SHORT_TIMER_START_ON;
+			CMDShortTimerFlag = HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_ON;
 		}
 	}
 
@@ -435,7 +435,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0;  //, cmdId=0
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	//cmdId = L3CI_heart_beat;
@@ -482,7 +482,7 @@ OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvel
 OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_emc;
@@ -707,7 +707,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_pm25;
@@ -926,7 +926,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_winddir;
@@ -1148,7 +1148,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_windspd;
@@ -1371,7 +1371,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_temp;
@@ -1593,7 +1593,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_humid;
@@ -1815,7 +1815,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_noise;
@@ -2037,14 +2037,14 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, avUpload=0, ret=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_hsmmp;
 	backType = L3CI_cmdid_back_type_control;
 
 	//长度域，1BYTE
-	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	memset(st, 0, HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
@@ -2055,7 +2055,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 	}
 
 	//操作字，1BYTE
-	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	memset(st, 0, HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
 	strncpy(st, &rcv->buf[index], 2);
 	optId = strtoul(st, NULL, 16);
 	index = index + 2;
@@ -2067,7 +2067,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 	}
 
 	//AV file name to be uploaded
-	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	memset(st, 0, HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
 	strncpy(st, &rcv->buf[index], len);
 	HcuDebugPrint("CLOUDVELA: AV file name to be uploaded: %s!\n", st);
 
@@ -2133,7 +2133,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, ret=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 	HcuInventoryInfot hcuInventoryInfo;
 
 	memset(&hcuInventoryInfo, 0, sizeof(HcuInventoryInfot));
@@ -2226,14 +2226,14 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, swDownload=0, ret=0;
-	char st[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
 
 	//命令字
 	cmdId = L3CI_sw_package;
 	backType = L3CI_cmdid_back_type_control;
 
 	//长度域，1BYTE
-	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	memset(st, 0, HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
@@ -2253,7 +2253,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	*/
 
 	//操作字，1BYTE
-	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	memset(st, 0, HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
 	strncpy(st, &rcv->buf[index], 2);
 	optId = strtoul(st, NULL, 16);
 	index = index + 2;
@@ -2265,7 +2265,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	}
 
 	//HCU file name to be downloaded
-	memset(st, 0, CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
+	memset(st, 0, HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH);
 	//To check Len
 
 	strncpy(st, &rcv->buf[index], len);
