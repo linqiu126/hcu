@@ -21,11 +21,11 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
   `todayaccuvolume` float(8,2) NOT NULL,
-  `todayaccuvolumeuint` int(1) NOT NULL,
+  `todayaccuvolumeunit` int(1) NOT NULL,
   `currentaccuvolume` float(8,2) NOT NULL,
-  `currentaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolumeunit` int(1) NOT NULL,
   `flowvolume` float(8,2) NOT NULL,
-  `flowvolumeuint` int(1) NOT NULL,
+  `flowvolumeunit` int(1) NOT NULL,
   `lastmonth` int(1) NOT NULL,
   `accumuworktime` int(3) NOT NULL,
   `supplywatertemp` float(6,2) NOT NULL,
@@ -80,13 +80,13 @@ OPSTAT dbi_HcuIpmCj188DataInfo_save(sensor_ipm_cj188_data_element_t *ipmData)
     }
 
 	//存入新的数据
-    sprintf(strsql, "INSERT INTO `hcuipmcj188datainfo` (cj188address, timestamp, equtype, todayaccuvolume, todayaccuvolumeuint, currentaccuvolume, currentaccuvolumeuint,\
-    		flowvolume, flowvolumeuint, lastmonth, \
+    sprintf(strsql, "INSERT INTO `hcuipmcj188datainfo` (cj188address, timestamp, equtype, todayaccuvolume, todayaccuvolumeunit, currentaccuvolume, currentaccuvolumeunit,\
+    		flowvolume, flowvolumeunit, lastmonth, \
     		accumuworktime, supplywatertemp, backwatertemp, realtime, st, billdate, readdate, key, price1, volume1,\
     		price2, volume2, price3, buycode, thisamount, accuamount, remainamount, keyver) VALUES \
     		('%s', '%d', '%d', '%f', '%d', '%f', '%d', '%f', '%d', '%d', '%d', '%f', '%f', '%s', '%s', '%d', '%d', '%ld', '%f', '%d', '%f', '%d', '%f', '%d', '%f', '%f', '%f', '%d')",
-			ipmData->cj188address, ipmData->timestamp, ipmData->equtype, ipmData->todayaccuvolume, ipmData->todayaccuvolumeuint, ipmData->ipm.currentaccuvolume,
-			ipmData->ipm.currentaccuvolumeuint, ipmData->ipm.flowvolume, ipmData->ipm.flowvolumeunit, ipmData->ipm.lastmonth, ipmData->ipm.accumuworktime,
+			ipmData->cj188address, ipmData->timestamp, ipmData->equtype, ipmData->todayaccuvolume, ipmData->todayaccuvolumeunit, ipmData->ipm.currentaccuvolume,
+			ipmData->ipm.currentaccuvolumeunit, ipmData->ipm.flowvolume, ipmData->ipm.flowvolumeunit, ipmData->ipm.lastmonth, ipmData->ipm.accumuworktime,
 			ipmData->ipm.supplywatertemp, ipmData->ipm.backwatertemp, ipmData->ipm.realtime, ipmData->ipm.st, ipmData->ipm.billdate,
 			ipmData->ipm.readdate, ipmData->ipm.key, ipmData->ipm.price1, ipmData->ipm.volume1, ipmData->ipm.price2, ipmData->ipm.volume2, ipmData->ipm.price3, ipmData->ipm.buycode,
 			ipmData->ipm.thisamount, ipmData->ipm.accuamount, ipmData->ipm.remainamount, ipmData->ipm.keyver);
@@ -166,9 +166,9 @@ OPSTAT dbi_HcuIpmCj188DataInfo_inqury_1st_record(char *addr, sensor_ipm_cj188_da
 		if (sqlRow[index]) ipmData->timestamp = (UINT32)atol(sqlRow[index++]);
 		if (sqlRow[index]) ipmData->equtype = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ipmData->todayaccuvolume = (float)atof(sqlRow[index++]);
-		if (sqlRow[index]) ipmData->todayaccuvolumeuint = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ipmData->todayaccuvolumeunit = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ipmData->ipm.currentaccuvolume = (float)atof(sqlRow[index++]);
-		if (sqlRow[index]) ipmData->ipm.currentaccuvolumeuint = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ipmData->ipm.currentaccuvolumeunit = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ipmData->ipm.flowvolume = (float)atof(sqlRow[index++]);
 		if (sqlRow[index]) ipmData->ipm.flowvolumeunit = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ipmData->ipm.lastmonth = (UINT8)(atol(sqlRow[index++]) & 0xFF);
