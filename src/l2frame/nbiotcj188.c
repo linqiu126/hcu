@@ -190,44 +190,509 @@ OPSTAT fsm_nbiotcj188_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 
 OPSTAT fsm_nbiotcj188_iwm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_iwm_nbiotcj188_data_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_iwm_nbiotcj188_data_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_iwm_nbiotcj188_data_resp_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive IWM message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MAX) || (rcv.iwmHead.timestamp <=0)){
+		HcuErrorPrint("NBIOTCJ188: Receive invalid message content from sensor!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台，这里不打算重新激活链路，而是由守护任务自动完成
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to cloud, IWM with cloud-link is not under right state!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComElement_t input;
+	memset(&input, 0, sizeof(NbiotCj188BhItfComElement_t));
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//数据拷贝
+	memcpy(&(input.head), &(rcv.iwmHead), sizeof(sensor_general_cj188_control_head_t));
+	memcpy(&(input.data), &(rcv.iwmData), sizeof(sensor_general_cj188_data_element_t));
+	input.equtype = rcv.equtype;
+	input.todayaccuvolume = rcv.todayaccuvolume;
+	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.length = sizeof(NbiotCj188BhItfComElement_t);
+
+	//打包数据
+	if (func_nbiotcj188_ul_msg_pack(&input, &buf) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send instance/period IWM to cloud success!\n"); }
+	//State no change
 	return SUCCESS;
 }
 
 OPSTAT fsm_nbiotcj188_iwm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_iwm_nbiotcj188_control_fb_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_iwm_nbiotcj188_control_fb_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_iwm_nbiotcj188_control_fb_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive IWM message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MAX) || (rcv.iwmHead.timestamp <=0)){
+		HcuErrorPrint("NBIOTCJ188: Receive invalid message content from sensor!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台，这里不打算重新激活链路，而是由守护任务自动完成
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to cloud, IWM with cloud-link is not under right state!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComElement_t input;
+	memset(&input, 0, sizeof(NbiotCj188BhItfComElement_t));
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//数据拷贝
+	memcpy(&(input.head), &(rcv.iwmHead), sizeof(sensor_general_cj188_control_head_t));
+	memcpy(&(input.data), &(rcv.iwmData), sizeof(sensor_general_cj188_data_element_t));
+	input.equtype = rcv.equtype;
+	input.todayaccuvolume = rcv.todayaccuvolume;
+	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.length = sizeof(NbiotCj188BhItfComElement_t);
+
+	//打包数据
+	if (func_nbiotcj188_ul_msg_pack(&input, &buf) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send instance/period IWM to cloud success!\n"); }
+	//State no change
 	return SUCCESS;
 }
 
 OPSTAT fsm_nbiotcj188_ihm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_ihm_nbiotcj188_data_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_ihm_nbiotcj188_data_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ihm_nbiotcj188_data_resp_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive IHM message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) || (rcv.ihmHead.timestamp <=0)){
+		HcuErrorPrint("NBIOTCJ188: Receive invalid message content from sensor!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台，这里不打算重新激活链路，而是由守护任务自动完成
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to cloud, IHM with cloud-link is not under right state!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComElement_t input;
+	memset(&input, 0, sizeof(NbiotCj188BhItfComElement_t));
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//数据拷贝
+	memcpy(&(input.head), &(rcv.ihmHead), sizeof(sensor_general_cj188_control_head_t));
+	memcpy(&(input.data), &(rcv.ihmData), sizeof(sensor_general_cj188_data_element_t));
+	input.equtype = rcv.equtype;
+	input.currentheat = rcv.currentheat;
+	input.currentheatunit = rcv.currentheatunit;
+	input.heatpower = rcv.heatpower;
+	input.heatpowerunit = rcv.heatpowerunit;
+	input.todayheat = rcv.todayheat;
+	input.todayheatunit = rcv.todayheatunit;
+	input.length = sizeof(NbiotCj188BhItfComElement_t);
+
+	//打包数据
+	if (func_nbiotcj188_ul_msg_pack(&input, &buf) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send instance/period IHM to cloud success!\n"); }
+	//State no change
 	return SUCCESS;
 }
 
 OPSTAT fsm_nbiotcj188_ihm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_ihm_nbiotcj188_control_fb_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_ihm_nbiotcj188_control_fb_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ihm_nbiotcj188_control_fb_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive IHM message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) || (rcv.ihmHead.timestamp <=0)){
+		HcuErrorPrint("NBIOTCJ188: Receive invalid message content from sensor!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台，这里不打算重新激活链路，而是由守护任务自动完成
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to cloud, IHM with cloud-link is not under right state!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComElement_t input;
+	memset(&input, 0, sizeof(NbiotCj188BhItfComElement_t));
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//数据拷贝
+	memcpy(&(input.head), &(rcv.ihmHead), sizeof(sensor_general_cj188_control_head_t));
+	memcpy(&(input.data), &(rcv.ihmData), sizeof(sensor_general_cj188_data_element_t));
+	input.equtype = rcv.equtype;
+	input.currentheat = rcv.currentheat;
+	input.currentheatunit = rcv.currentheatunit;
+	input.heatpower = rcv.heatpower;
+	input.heatpowerunit = rcv.heatpowerunit;
+	input.todayheat = rcv.todayheat;
+	input.todayheatunit = rcv.todayheatunit;
+	input.length = sizeof(NbiotCj188BhItfComElement_t);
+
+	//打包数据
+	if (func_nbiotcj188_ul_msg_pack(&input, &buf) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send instance/period IHM to cloud success!\n"); }
+	//State no change
 	return SUCCESS;
 }
 
 OPSTAT fsm_nbiotcj188_igm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_igm_nbiotcj188_data_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_igm_nbiotcj188_data_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_igm_nbiotcj188_data_resp_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive IGM message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MAX) || (rcv.igmHead.timestamp <=0)){
+		HcuErrorPrint("NBIOTCJ188: Receive invalid message content from sensor!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台，这里不打算重新激活链路，而是由守护任务自动完成
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to cloud, IGM with cloud-link is not under right state!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComElement_t input;
+	memset(&input, 0, sizeof(NbiotCj188BhItfComElement_t));
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//数据拷贝
+	memcpy(&(input.head), &(rcv.igmHead), sizeof(sensor_general_cj188_control_head_t));
+	memcpy(&(input.data), &(rcv.igmData), sizeof(sensor_general_cj188_data_element_t));
+	input.equtype = rcv.equtype;
+	input.todayaccuvolume = rcv.todayaccuvolume;
+	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.length = sizeof(NbiotCj188BhItfComElement_t);
+
+	//打包数据
+	if (func_nbiotcj188_ul_msg_pack(&input, &buf) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send instance/period IGM to cloud success!\n"); }
+	//State no change
 	return SUCCESS;
 }
 
 OPSTAT fsm_nbiotcj188_igm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_igm_nbiotcj188_control_fb_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_igm_nbiotcj188_control_fb_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_igm_nbiotcj188_control_fb_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive IGM message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MAX) || (rcv.igmHead.timestamp <=0)){
+		HcuErrorPrint("NBIOTCJ188: Receive invalid message content from sensor!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台，这里不打算重新激活链路，而是由守护任务自动完成
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to cloud, IGM with cloud-link is not under right state!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComElement_t input;
+	memset(&input, 0, sizeof(NbiotCj188BhItfComElement_t));
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//数据拷贝
+	memcpy(&(input.head), &(rcv.igmHead), sizeof(sensor_general_cj188_control_head_t));
+	memcpy(&(input.data), &(rcv.igmData), sizeof(sensor_general_cj188_data_element_t));
+	input.equtype = rcv.equtype;
+	input.todayaccuvolume = rcv.todayaccuvolume;
+	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.length = sizeof(NbiotCj188BhItfComElement_t);
+
+	//打包数据
+	if (func_nbiotcj188_ul_msg_pack(&input, &buf) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send instance/period IGM to cloud success!\n"); }
+	//State no change
 	return SUCCESS;
 }
 
 OPSTAT fsm_nbiotcj188_ipm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_ipm_nbiotcj188_data_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_ipm_nbiotcj188_data_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ipm_nbiotcj188_data_resp_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive IPM message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_POWER_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_POWER_METER_MAX) || (rcv.ipmHead.timestamp <=0)){
+		HcuErrorPrint("NBIOTCJ188: Receive invalid message content from sensor!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台，这里不打算重新激活链路，而是由守护任务自动完成
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to cloud, IPM with cloud-link is not under right state!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComElement_t input;
+	memset(&input, 0, sizeof(NbiotCj188BhItfComElement_t));
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//数据拷贝
+	memcpy(&(input.head), &(rcv.ipmHead), sizeof(sensor_general_cj188_control_head_t));
+	memcpy(&(input.data), &(rcv.ipmData), sizeof(sensor_general_cj188_data_element_t));
+	input.equtype = rcv.equtype;
+	input.todayaccuvolume = rcv.todayaccuvolume;
+	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.length = sizeof(NbiotCj188BhItfComElement_t);
+
+	//打包数据
+	if (func_nbiotcj188_ul_msg_pack(&input, &buf) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send instance/period IPM to cloud success!\n"); }
+	//State no change
 	return SUCCESS;
 }
 
 OPSTAT fsm_nbiotcj188_ipm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_ipm_nbiotcj188_control_fb_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_ipm_nbiotcj188_control_fb_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ipm_nbiotcj188_control_fb_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive IPM message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_POWER_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_POWER_METER_MAX) || (rcv.ipmHead.timestamp <=0)){
+		HcuErrorPrint("NBIOTCJ188: Receive invalid message content from sensor!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台，这里不打算重新激活链路，而是由守护任务自动完成
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to cloud, IPM with cloud-link is not under right state!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComElement_t input;
+	memset(&input, 0, sizeof(NbiotCj188BhItfComElement_t));
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//数据拷贝
+	memcpy(&(input.head), &(rcv.ipmHead), sizeof(sensor_general_cj188_control_head_t));
+	memcpy(&(input.data), &(rcv.ipmData), sizeof(sensor_general_cj188_data_element_t));
+	input.equtype = rcv.equtype;
+	input.todayaccuvolume = rcv.todayaccuvolume;
+	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.length = sizeof(NbiotCj188BhItfComElement_t);
+
+	//打包数据
+	if (func_nbiotcj188_ul_msg_pack(&input, &buf) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("NBIOTCJ188: Online state, send instance/period IPM to cloud success!\n"); }
+	//State no change
 	return SUCCESS;
 }
 
+//上行链路处理过程
 OPSTAT fsm_nbiotcj188_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
@@ -335,15 +800,15 @@ OPSTAT func_nbiotcj188_send_data_to_cloud(CloudDataSendBuf_t *buf)
 {
 	//参数检查
 	if ((buf->curLen <=0) || (buf->curLen >MAX_HCU_MSG_BUF_LENGTH)){
-		HcuErrorPrint("CLOUDVELA: Error message length to send back for cloud!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("NBIOTCJ188: Error message length to send back for cloud!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		return FAILURE;
 	}
 
 	//这里只考虑ETHERNET一种网络配置情况，其它的不考虑
 	if (hcu_ethernet_socket_date_send(buf) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to back-cloud!\n");
 		return FAILURE;
 	}
 
@@ -352,6 +817,20 @@ OPSTAT func_nbiotcj188_send_data_to_cloud(CloudDataSendBuf_t *buf)
 
 //用于积累的缓冲数据回送服务器，这里暂时没有啥用，为了维持跟NBIOTCJ188类似的架构，保持它而已，暂时不用。
 OPSTAT func_nbiotcj188_time_out_sendback_offline_data(void)
+{
+	return SUCCESS;
+}
+
+//消息pack函数
+OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudDataSendBuf_t *buf)
+{
+
+
+	return SUCCESS;
+}
+
+//消息unpack函数
+OPSTAT func_nbiotcj188_dl_msg_unpack(NbiotCj188BhItfComElement_t *output, CloudDataSendBuf_t *buf)
 {
 	return SUCCESS;
 }

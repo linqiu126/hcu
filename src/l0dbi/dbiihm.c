@@ -21,15 +21,15 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
   `heatpower` float(8,2) NOT NULL,
-  `heatpoweruint` int(1) NOT NULL,
+  `heatpowerunit` int(1) NOT NULL,
   `currentheat` float(8,2) NOT NULL,
-  `currentheatuint` int(1) NOT NULL,
+  `currentheatunit` int(1) NOT NULL,
   `todayheat` float(8,2) NOT NULL,
-  `todayheatuint` int(1) NOT NULL,
+  `todayheatunit` int(1) NOT NULL,
   `currentaccuvolume` float(8,2) NOT NULL,
-  `currentaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolumeunit` int(1) NOT NULL,
   `flowvolume` float(8,2) NOT NULL,
-  `flowvolumeuint` int(1) NOT NULL,
+  `flowvolumeunit` int(1) NOT NULL,
   `lastmonth` int(1) NOT NULL,
   `accumuworktime` int(3) NOT NULL,
   `supplywatertemp` float(6,2) NOT NULL,
@@ -85,16 +85,16 @@ OPSTAT dbi_HcuIhmCj188DataInfo_save(sensor_ihm_cj188_data_element_t *ihmData)
     }
 
 	//存入新的数据
-    sprintf(strsql, "INSERT INTO `hcuihmcj188datainfo` (cj188address, timestamp, equtype, heatpower, heatpoweruint, currentheat, currentheatuint,\
-    		todayheat, todayheatuint, currentaccuvolume, currentaccuvolumeuint, flowvolume, flowvolumeuint, lastmonth, \
+    sprintf(strsql, "INSERT INTO `hcuihmcj188datainfo` (cj188address, timestamp, equtype, heatpower, heatpowerunit, currentheat, currentheatunit,\
+    		todayheat, todayheatunit, currentaccuvolume, currentaccuvolumeunit, flowvolume, flowvolumeunit, lastmonth, \
     		accumuworktime, supplywatertemp, backwatertemp, realtime, st, billdate, readdate, key, price1, volume1,\
     		price2, volume2, price3, buycode, thisamount, accuamount, remainamount, keyver) VALUES \
     		('%s', '%d', '%d', '%f', '%d', '%f', '%d',\
     		'%f', '%d', '%f', '%d', '%f', '%d', '%d', \
     		'%d', '%f', '%f', '%s', '%s', '%d', '%d', '%ld', '%f', '%d',\
 			'%f', '%d', '%f', '%d', '%f', '%f', '%f', '%d')",
-			ihmData->cj188address, ihmData->timestamp, ihmData->equtype, ihmData->heatpower, ihmData->heatpoweruint, ihmData->currentheat, ihmData->currentheatuint,
-			ihmData->todayheat, ihmData->todayheatuint, ihmData->ihm.currentaccuvolume, ihmData->ihm.currentaccuvolumeuint, ihmData->ihm.flowvolume, ihmData->ihm.flowvolumeunit, ihmData->ihm.lastmonth,
+			ihmData->cj188address, ihmData->timestamp, ihmData->equtype, ihmData->heatpower, ihmData->heatpowerunit, ihmData->currentheat, ihmData->currentheatunit,
+			ihmData->todayheat, ihmData->todayheatunit, ihmData->ihm.currentaccuvolume, ihmData->ihm.currentaccuvolumeunit, ihmData->ihm.flowvolume, ihmData->ihm.flowvolumeunit, ihmData->ihm.lastmonth,
 			ihmData->ihm.accumuworktime, ihmData->ihm.supplywatertemp, ihmData->ihm.backwatertemp, ihmData->ihm.realtime, ihmData->ihm.st, ihmData->ihm.billdate,
 			ihmData->ihm.readdate, ihmData->ihm.key, ihmData->ihm.price1, ihmData->ihm.volume1, ihmData->ihm.price2, ihmData->ihm.volume2, ihmData->ihm.price3, ihmData->ihm.buycode,
 			ihmData->ihm.thisamount, ihmData->ihm.accuamount, ihmData->ihm.remainamount, ihmData->ihm.keyver);
@@ -174,11 +174,11 @@ OPSTAT dbi_HcuIhmCj188DataInfo_inqury_1st_record(char *addr, sensor_ihm_cj188_da
 		if (sqlRow[index]) ihmData->timestamp = (UINT32)atol(sqlRow[index++]);
 		if (sqlRow[index]) ihmData->equtype = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ihmData->heatpower = (float)atof(sqlRow[index++]);
-		if (sqlRow[index]) ihmData->heatpoweruint = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ihmData->heatpowerunit = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ihmData->currentheat = (float)atof(sqlRow[index++]);
-		if (sqlRow[index]) ihmData->currentheatuint = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ihmData->currentheatunit = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ihmData->todayheat = (float)atof(sqlRow[index++]);
-		if (sqlRow[index]) ihmData->todayheatuint = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if (sqlRow[index]) ihmData->todayheatunit = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ihmData->ihm.flowvolume = (float)atof(sqlRow[index++]);
 		if (sqlRow[index]) ihmData->ihm.flowvolumeunit = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if (sqlRow[index]) ihmData->ihm.flowvolume = (float)atof(sqlRow[index++]);

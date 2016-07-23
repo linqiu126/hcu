@@ -50,7 +50,8 @@ OPSTAT func_nbiotcj188_time_out_sendback_offline_data(void);
 OPSTAT func_nbiotcj188_heart_beat_check(void);
 OPSTAT func_nbiotcj188_heart_beat_msg_pack(CloudDataSendBuf_t *buf);
 OPSTAT func_nbiotcj188_send_data_to_cloud(CloudDataSendBuf_t *buf);
-
+OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudDataSendBuf_t *buf);
+OPSTAT func_nbiotcj188_dl_msg_unpack(NbiotCj188BhItfComElement_t *output, CloudDataSendBuf_t *buf);
 
 //外部引用
 extern OPSTAT hcu_ethernet_socket_link_setup(void);

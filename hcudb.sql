@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 22, 2016 at 09:07 PM
+-- Generation Time: Jul 23, 2016 at 11:24 AM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -1978,7 +1978,7 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `gpsz` int(4) NOT NULL,
   `onofflineflag` int(2) NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1960 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1980 ;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -3941,7 +3941,27 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 (1956, 5, 1469165347, 1, 5101, 'E', 0, 'N', 0, 0, 1),
 (1957, 5, 1469165410, 1, 5151, 'E', 0, 'N', 0, 0, 1),
 (1958, 5, 1469165470, 1, 5167, 'E', 0, 'N', 0, 0, 1),
-(1959, 5, 1469165530, 1, 4755, 'E', 0, 'N', 0, 0, 1);
+(1959, 5, 1469165530, 1, 4755, 'E', 0, 'N', 0, 0, 1),
+(1960, 5, 1469198329, 1, 5101, 'E', 0, 'N', 0, 0, 1),
+(1961, 5, 1469198389, 1, 5151, 'E', 0, 'N', 0, 0, 1),
+(1962, 5, 1469198449, 1, 5167, 'E', 0, 'N', 0, 0, 1),
+(1963, 5, 1469198509, 1, 4755, 'E', 0, 'N', 0, 0, 1),
+(1964, 5, 1469198569, 1, 4959, 'E', 0, 'N', 0, 0, 1),
+(1965, 5, 1469198629, 1, 5414, 'E', 0, 'N', 0, 0, 1),
+(1966, 5, 1469198689, 1, 5624, 'E', 0, 'N', 0, 0, 1),
+(1967, 5, 1469198749, 1, 5630, 'E', 0, 'N', 0, 0, 1),
+(1968, 5, 1469198809, 1, 4893, 'E', 0, 'N', 0, 0, 1),
+(1969, 5, 1469198872, 1, 5159, 'E', 0, 'N', 0, 0, 1),
+(1970, 5, 1469198929, 1, 4951, 'E', 0, 'N', 0, 0, 1),
+(1971, 5, 1469198989, 1, 4690, 'E', 0, 'N', 0, 0, 1),
+(1972, 5, 1469199049, 1, 4670, 'E', 0, 'N', 0, 0, 1),
+(1973, 5, 1469199109, 1, 5436, 'E', 0, 'N', 0, 0, 1),
+(1974, 5, 1469199169, 1, 5058, 'E', 0, 'N', 0, 0, 1),
+(1975, 5, 1469199229, 1, 5510, 'E', 0, 'N', 0, 0, 1),
+(1976, 5, 1469199289, 1, 5546, 'E', 0, 'N', 0, 0, 1),
+(1977, 5, 1469199349, 1, 5616, 'E', 0, 'N', 0, 0, 1),
+(1978, 5, 1469199409, 1, 5091, 'E', 0, 'N', 0, 0, 1),
+(1979, 5, 1469199469, 1, 4723, 'E', 0, 'N', 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -4466,11 +4486,11 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
   `todayaccuvolume` float(8,2) NOT NULL,
-  `todayaccuvolumeuint` int(1) NOT NULL,
+  `todayaccuvolumeunit` int(1) NOT NULL,
   `currentaccuvolume` float(8,2) NOT NULL,
-  `currentaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolumeunit` int(1) NOT NULL,
   `flowvolume` float(8,2) NOT NULL,
-  `flowvolumeuint` int(1) NOT NULL,
+  `flowvolumeunit` int(1) NOT NULL,
   `lastmonth` int(1) NOT NULL,
   `accumuworktime` int(3) NOT NULL,
   `supplywatertemp` float(6,2) NOT NULL,
@@ -4505,15 +4525,15 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
   `heatpower` float(8,2) NOT NULL,
-  `heatpoweruint` int(1) NOT NULL,
+  `heatpowerunit` int(1) NOT NULL,
   `currentheat` float(8,2) NOT NULL,
-  `currentheatuint` int(1) NOT NULL,
+  `currentheatunit` int(1) NOT NULL,
   `todayheat` float(8,2) NOT NULL,
-  `todayheatuint` int(1) NOT NULL,
+  `todayheatunit` int(1) NOT NULL,
   `currentaccuvolume` float(8,2) NOT NULL,
-  `currentaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolumeunit` int(1) NOT NULL,
   `flowvolume` float(8,2) NOT NULL,
-  `flowvolumeuint` int(1) NOT NULL,
+  `flowvolumeunit` int(1) NOT NULL,
   `lastmonth` int(1) NOT NULL,
   `accumuworktime` int(3) NOT NULL,
   `supplywatertemp` float(6,2) NOT NULL,
@@ -4548,11 +4568,11 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
   `todayaccuvolume` float(8,2) NOT NULL,
-  `todayaccuvolumeuint` int(1) NOT NULL,
+  `todayaccuvolumeunit` int(1) NOT NULL,
   `currentaccuvolume` float(8,2) NOT NULL,
-  `currentaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolumeunit` int(1) NOT NULL,
   `flowvolume` float(8,2) NOT NULL,
-  `flowvolumeuint` int(1) NOT NULL,
+  `flowvolumeunit` int(1) NOT NULL,
   `lastmonth` int(1) NOT NULL,
   `accumuworktime` int(3) NOT NULL,
   `supplywatertemp` float(6,2) NOT NULL,
@@ -4587,11 +4607,11 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
   `todayaccuvolume` float(8,2) NOT NULL,
-  `todayaccuvolumeuint` int(1) NOT NULL,
+  `todayaccuvolumeunit` int(1) NOT NULL,
   `currentaccuvolume` float(8,2) NOT NULL,
-  `currentaccuvolumeuint` int(1) NOT NULL,
+  `currentaccuvolumeunit` int(1) NOT NULL,
   `flowvolume` float(8,2) NOT NULL,
-  `flowvolumeuint` int(1) NOT NULL,
+  `flowvolumeunit` int(1) NOT NULL,
   `lastmonth` int(1) NOT NULL,
   `accumuworktime` int(3) NOT NULL,
   `supplywatertemp` float(6,2) NOT NULL,
