@@ -51,7 +51,7 @@ FsmStateItem_t FsmEthernet[] =
 };
 
 //Global Variables
-//extern CloudvelaTable_t zHcuCloudvelaTable;
+extern CloudvelaTable_t zHcuCloudvelaTable;
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
 //Main Entry
@@ -245,7 +245,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		}
 		else
 		{
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 				HcuDebugPrint("ETHERNET: Socket conected\n");
 			}
 		}
@@ -264,7 +264,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			else
 			{
 				receiveBuffer.length = idata;
-				if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 					HcuDebugPrint("ETHERNET: Socket receive data from the client of cloud, Data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
 				}
 			}
