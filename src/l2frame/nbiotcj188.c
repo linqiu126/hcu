@@ -853,34 +853,47 @@ OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudData
 	memset(s, 0, sizeof(s));
 	char da[MAX_HCU_MSG_BUF_LENGTH];
 	memset(da, 0, sizeof(da));
-	char tmp[3] = "";
+	char tmp[17] = ""; //最长8个字节
 	INT8 ctrl=0;
 	UINT8 msgLen = 3; //最小长度3字节，注意，CHAR和字节是差一倍的
-
+	INT32 tp=0, t0=0, t2=0, t4=0;
 
 	//固定消息头
+	memset(tmp, 0, sizeof(tmp));
 	sprintf(tmp, "%02X", HCU_NBIOT_CJ188_FRAME_FIX_HEAD & 0xFF);
 	strcat(s, tmp);
+
 	//消息TYPE
+	memset(tmp, 0, sizeof(tmp));
 	sprintf(tmp, "%02X", input->equtype & 0xFF);
 	strcat(s, tmp);
+
 	//消息地址
-	strcat(s, input->head.addr);
+	memset(tmp, 0, sizeof(tmp));
+	strncpy(tmp, input->head.addr, 14);
+	strcat(s, tmp);
 
 	//控制域-通信比特异常与否
 	ctrl = input->head.ctrlId & 0x3F;
 	ctrl = (ctrl + 0x80) & 0xFF; //上行方向标示比特
 	if (input->head.communicationFlag != HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL) ctrl = (ctrl + 0x40) & 0xFF;  //通信异常标示比特
+	memset(tmp, 0, sizeof(tmp));
 	sprintf(tmp, "%02X", ctrl & 0xFF);
 	strcat(s, tmp);
 
 	//根据指令，生成控制字段，确定消息变化长度
+	BOOL historyD0D1 = (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA1) || (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA2)
+		|| (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA3) || (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA4)
+		|| (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA5) || (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA6)
+		|| (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA7) || (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA8)
+		|| (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA9) || (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA10)
+		|| (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA11) || (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA12);
 	if (input->head.communicationFlag != HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL){
 		msgLen = 0x03;
 		ctrFlag.stFlag = TRUE;
 	}
-	else if ((input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA) && (input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) &&
-			(input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN) && (input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA)){
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA) &&
+			((input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) && (input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN))){
 		msgLen = 0x2E;
 		ctrFlag.d0d1Flag = TRUE;
 		ctrFlag.billtodaydateFlag = TRUE;
@@ -894,25 +907,461 @@ OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudData
 		ctrFlag.realtimeFlag = TRUE;
 		ctrFlag.stFlag = TRUE;
 	}
-	else if ((input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA) && (input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) &&
-		~((input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN) && (input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA))){
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA) &&
+			~((input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) && (input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN))){
 		msgLen = 0x16;
 		ctrFlag.d0d1Flag = TRUE;
-		ctrFlag.d0d1Flag = TRUE;
 		ctrFlag.currentaccuvolumeFlag = TRUE;
+		ctrFlag.billtodayaccuvolumeFlag = TRUE;
+		ctrFlag.realtimeFlag = TRUE;
+		ctrFlag.stFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && historyD0D1 &&
+			((input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) && (input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN))){
+		msgLen = 0x08;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.billtodayheatFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && historyD0D1 &&
+			~((input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) && (input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN))){
+		msgLen = 0x08;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.billtodayaccuvolumeFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_PRICE_TABLE)){
+		msgLen = 0x12;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.price1Flag = TRUE;
+		ctrFlag.volume1Flag = TRUE;
+		ctrFlag.price2Flag = TRUE;
+		ctrFlag.volume2Flag = TRUE;
+		ctrFlag.price3Flag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_BILL_TODAY_DATE)){
+		msgLen = 0x04;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.billtodaydateFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_READ_ACCOUNT_CUR_DATE)){
+		msgLen = 0x04;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.readamountcurdateFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_BUY_AMOUNT)){
+		msgLen = 0x12;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.buycodeFlag = TRUE;
+		ctrFlag.thisamountFlag = TRUE;
+		ctrFlag.accuamountFlag = TRUE;
+		ctrFlag.remainamountFlag = TRUE;
+		ctrFlag.stFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_KEY_VER) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_KEY_VER)){
+		msgLen = 0x12;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.keyverFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_ADDR) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_ADDRESS)){
+		msgLen = 0x03;
+		ctrFlag.d0d1Flag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_PRICE_TABLE)){
+		msgLen = 0x05;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.stFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_BILL_TODAY_DATE)){
+		msgLen = 0x03;
+		ctrFlag.d0d1Flag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_READ_ACCOUNT_CUR_DATE)){
+		msgLen = 0x03;
+		ctrFlag.d0d1Flag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_BUY_AMOUNT)){
+		msgLen = 0x08;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.buycodeFlag = TRUE;
+		ctrFlag.thisamountFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_NEW_KEY)){
+		msgLen = 0x04;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.keyverFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_STD_TIME)){
+		msgLen = 0x03;
+		ctrFlag.d0d1Flag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_SWITCH_CTRL)){
+		msgLen = 0x05;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.stFlag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_OFF_FACTORY_START)){
+		msgLen = 0x03;
+		ctrFlag.d0d1Flag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_ADDR) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_ADDRESS)){
+		msgLen = 0x03;
+		ctrFlag.d0d1Flag = TRUE;
+	}
+	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DEVICE_SYN) && (input->head.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_DEVICE_SYN_DATA)){
+		msgLen = 0x05;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.stFlag = TRUE;
+	}
+	else{
+		HcuErrorPrint("NBIOTCJ188: Invalid received CTRL ID + D0D1ID!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
 	}
 
+	//长度域
+	sprintf(tmp, "%02X", msgLen & 0xFF);
+	strcat(s, tmp);
 
-	//顺序是编码的黄金规则，千万不能错，否则就无法解开了!!!
+	UINT32 index = 0;
+	//变长部分：顺序是编码的黄金规则，千万不能错，否则就无法解开了!!!
+	//D0D1
+	if (ctrFlag.d0d1Flag == TRUE){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%04X", input->head.d0d1Id & 0xFFFF);
+		strcat(da, tmp);
+		index = index + 2;
+	}
 
+	//SER是固定必然有的，所以没有判定的必要
+	memset(tmp, 0, sizeof(tmp));
+	sprintf(tmp, "%02X", input->head.ser & 0xFF);
+	strcat(da, tmp);
+	index++;
 
-	//所有变长部分
+	//当前累计流量
+	if (ctrFlag.currentaccuvolumeFlag == TRUE){
+		t4 = (int)(input->data.currentaccuvolume / 10000);
+		t2 = (int)(input->data.currentaccuvolume / 100) - t4*100;
+		t0 = (int)(input->data.currentaccuvolume) - t4*10000 - t2*100;
+		tp = (int)((input->data.currentaccuvolume - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d%02X", tp&0xFF, t0&0xFF, t0&0xFF, t0&0xFF, (input->data.currentaccuvolumeunit) & 0xFF);
+		strcat(da, tmp);
+		index = index + 5;
+	}
 
+	//结算日累计流量
+	if (ctrFlag.billtodayaccuvolumeFlag == TRUE){
+		t4 = (int)(input->billtodayaccuvolume / 10000);
+		t2 = (int)(input->billtodayaccuvolume / 100) - t4*100;
+		t0 = (int)(input->billtodayaccuvolume) - t4*10000 - t2*100;
+		tp = (int)((input->billtodayaccuvolume - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d%02X", tp&0xFF, t0&0xFF, t0&0xFF, t0&0xFF, (input->billtodayaccuvolumeunit) & 0xFF);
+		strcat(da, tmp);
+		index = index + 5;
+	}
 
+	//结算日热量
+	if (ctrFlag.billtodayheatFlag== TRUE){
+		t4 = (int)(input->billtodayheat / 10000);
+		t2 = (int)(input->billtodayheat / 100) - t4*100;
+		t0 = (int)(input->billtodayheat) - t4*10000 - t2*100;
+		tp = (int)((input->billtodayheat - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d%02X", tp&0xFF, t0&0xFF, t0&0xFF, t0&0xFF, (input->billtodayheatunit) & 0xFF);
+		strcat(da, tmp);
+		index = index + 5;
+	}
 
+	//当前热量
+	if (ctrFlag.currentheatFlag== TRUE){
+		t4 = (int)(input->currentheat / 10000);
+		t2 = (int)(input->currentheat / 100) - t4*100;
+		t0 = (int)(input->currentheat) - t4*10000 - t2*100;
+		tp = (int)((input->currentheat - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d%02X", tp&0xFF, t0&0xFF, t0&0xFF, t0&0xFF, (input->currentheatunit) & 0xFF);
+		strcat(da, tmp);
+		index = index + 5;
+	}
 
+	//热功率
+	if (ctrFlag.heatpowerFlag== TRUE){
+		t4 = (int)(input->heatpower / 10000);
+		t2 = (int)(input->heatpower / 100) - t4*100;
+		t0 = (int)(input->heatpower) - t4*10000 - t2*100;
+		tp = (int)((input->heatpower - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d%02X", tp&0xFF, t0&0xFF, t0&0xFF, t0&0xFF, (input->heatpowerunit) & 0xFF);
+		strcat(da, tmp);
+		index = index + 5;
+	}
 
+	//流量
+	if (ctrFlag.flowvolumeFlag== TRUE){
+		t4 = (int)(input->data.flowvolume / 10000);
+		t2 = (int)(input->data.flowvolume / 100) - t4*100;
+		t0 = (int)(input->data.flowvolume) - t4*10000 - t2*100;
+		tp = (int)((input->data.flowvolume - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d%02X", tp&0xFF, t0&0xFF, t0&0xFF, t0&0xFF, (input->data.flowvolumeunit) & 0xFF);
+		strcat(da, tmp);
+		index = index + 5;
+	}
 
+	//累计流量
+	if (ctrFlag.currentaccuvolumeFlag== TRUE){
+		t4 = (int)(input->data.currentaccuvolume / 10000);
+		t2 = (int)(input->data.currentaccuvolume / 100) - t4*100;
+		t0 = (int)(input->data.currentaccuvolume) - t4*10000 - t2*100;
+		tp = (int)((input->data.currentaccuvolume - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d%02X", tp&0xFF, t0&0xFF, t0&0xFF, t0&0xFF, (input->data.currentaccuvolumeunit) & 0xFF);
+		strcat(da, tmp);
+		index = index + 5;
+	}
+
+	//供水温度
+	if (ctrFlag.supplywatertempFlag== TRUE){
+		t2 = (int)(input->data.supplywatertemp / 100);
+		t0 = (int)(input->data.supplywatertemp) - t2*100;
+		tp = (int)((input->data.supplywatertemp - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d", tp&0xFF, t0&0xFF, t2&0xFF);
+		strcat(da, tmp);
+		index = index + 3;
+	}
+
+	//回水温度
+	if (ctrFlag.backwatertempFlag== TRUE){
+		t2 = (int)(input->data.backwatertemp / 100);
+		t0 = (int)(input->data.backwatertemp) - t2*100;
+		tp = (int)((input->data.backwatertemp - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d", tp&0xFF, t0&0xFF, t2&0xFF);
+		strcat(da, tmp);
+		index = index + 3;
+	}
+
+	//累计工作时间
+	if (ctrFlag.accumuworktimeFlag== TRUE){
+		t2 = (int)(input->data.accumuworktime / 100);
+		t0 = (int)(input->data.accumuworktime) - t2*100;
+		tp = (int)((input->data.accumuworktime - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d", tp&0xFF, t0&0xFF, t2&0xFF);
+		strcat(da, tmp);
+		index = index + 3;
+	}
+
+	//价格1
+	//累计工作时间
+	if (ctrFlag.price1Flag== TRUE){
+		t2 = (int)(input->data.price1 / 100);
+		t0 = (int)(input->data.price1) - t2*100;
+		tp = (int)((input->data.price1 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d", tp&0xFF, t0&0xFF, t2&0xFF);
+		strcat(da, tmp);
+		index = index + 3;
+	}
+
+	//用量1
+	if (ctrFlag.volume1Flag== TRUE){
+		t4 = (int)(input->data.volume1 / 10000);
+		t2 = (int)(input->data.volume1/100) - t4*100;
+		t0 = (int)(input->data.volume1) - t4*10000 - t2*100;
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d", t0&0xFF, t0&0xFF, t4&0xFF);
+		strcat(da, tmp);
+		index = index + 3;
+	}
+
+	//价格2
+	if (ctrFlag.price2Flag== TRUE){
+		t2 = (int)(input->data.price2 / 100);
+		t0 = (int)(input->data.price2) - t2*100;
+		tp = (int)((input->data.price2 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d", tp&0xFF, t0&0xFF, t2&0xFF);
+		strcat(da, tmp);
+		index = index + 3;
+	}
+
+	//用量2
+	if (ctrFlag.volume2Flag== TRUE){
+		t4 = (int)(input->data.volume2 / 10000);
+		t2 = (int)(input->data.volume2/100) - t4*100;
+		t0 = (int)(input->data.volume2) - t4*10000 - t2*100;
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d", t0&0xFF, t0&0xFF, t4&0xFF);
+		strcat(da, tmp);
+		index = index + 3;
+	}
+
+	//价格3
+	if (ctrFlag.price3Flag== TRUE){
+		t2 = (int)(input->data.price3 / 100);
+		t0 = (int)(input->data.price3) - t2*100;
+		tp = (int)((input->data.price3 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d", tp&0xFF, t0&0xFF, t2&0xFF);
+		strcat(da, tmp);
+		index = index + 3;
+	}
+
+	//结算日
+	if (ctrFlag.billtodaydateFlag == TRUE){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d", input->data.billtodaydate);
+		strcat(da, tmp);
+		index = index + 1;
+	}
+
+	//抄表日
+	if (ctrFlag.readamountcurdateFlag == TRUE){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d", input->data.readamountcurdate);
+		strcat(da, tmp);
+		index = index + 1;
+	}
+
+	//本次购买序号
+	if (ctrFlag.buycodeFlag == TRUE){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02X", input->data.buycode);
+		strcat(da, tmp);
+		index = index + 1;
+	}
+
+	//本次买入金额
+	if (ctrFlag.thisamountFlag== TRUE){
+		t4 = (int)(input->data.thisamount / 10000);
+		t2 = (int)(input->data.thisamount / 100) - t4*100;
+		t0 = (int)(input->data.thisamount) - t4*10000 - t2*100;
+		tp = (int)((input->data.thisamount - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d", tp&0xFF, t0&0xFF, t0&0xFF, t4&0xFF);
+		strcat(da, tmp);
+		index = index + 4;
+	}
+
+	//累计买入金额
+	if (ctrFlag.accuamountFlag== TRUE){
+		t4 = (int)(input->data.accuamount / 10000);
+		t2 = (int)(input->data.accuamount / 100) - t4*100;
+		t0 = (int)(input->data.accuamount) - t4*10000 - t2*100;
+		tp = (int)((input->data.accuamount - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d", tp&0xFF, t0&0xFF, t0&0xFF, t4&0xFF);
+		strcat(da, tmp);
+		index = index + 4;
+	}
+
+	//剩余金额
+	if (ctrFlag.remainamountFlag== TRUE){
+		t4 = (int)(input->data.remainamount / 10000);
+		t2 = (int)(input->data.remainamount / 100) - t4*100;
+		t0 = (int)(input->data.remainamount) - t4*10000 - t2*100;
+		tp = (int)((input->data.remainamount - t4*10000 - t2*100 - t0) * 100);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02d%02d%02d%02d", tp&0xFF, t0&0xFF, t0&0xFF, t4&0xFF);
+		strcat(da, tmp);
+		index = index + 4;
+	}
+
+	//密钥版本号
+	if (ctrFlag.keyverFlag == TRUE){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%02X", input->data.keyver);
+		strcat(da, tmp);
+		index = index + 1;
+	}
+
+	//实时时间: 另外一种考虑就是直接拷贝REALTIME字符串
+	if (ctrFlag.realtimeFlag== TRUE){
+		time_t lt;
+		struct tm *cu;
+		lt=time(NULL);
+		cu = localtime(&lt);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp,  "%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+		strcat(da, tmp);
+		index = index + 7;
+
+		/*
+		if (strlen(input->data.realtime) != 14){
+			HcuErrorPrint("NBIOTCJ188: Invalid received control command!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		memset(tmp, 0, sizeof(tmp));
+		strncpy(tmp, input->data.realtime, 14);
+		strcat(da, tmp);
+		index = index + 7;
+		*/
+	}
+
+	//状态
+	if (ctrFlag.stFlag == TRUE){
+		memset(tmp, 0, sizeof(tmp));
+		strncpy(tmp, input->data.st, 4);
+		strcat(da, tmp);
+		index = index + 2;
+	}
+
+	//检查长度
+	if (msgLen != index){
+		HcuErrorPrint("NBIOTCJ188: Pack message error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//头+变长的数据部分
+	strcat(s, da);
+
+	//计算CHECKSUM部分
+	INT8 checksum = 0;
+	//检查长度
+	if (func_nbiotcj188_checksum_caculate(da, checksum) == FAILURE){
+		HcuErrorPrint("NBIOTCJ188: Checksum caculation error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memset(tmp, 0, sizeof(tmp));
+	sprintf(tmp, "%02X", checksum & 0xFF);
+	strcat(s, tmp);
+
+	//固定尾巴
+	memset(tmp, 0, sizeof(tmp));
+	sprintf(tmp, "%02X", HCU_NBIOT_CJ188_FRAME_FIX_TAIL & 0xFF);
+	strcat(s, tmp);
+
+	//输出
+	strcpy(buf->curBuf, s);
+	buf->curLen = strlen(s);
+
+	//返回
+	return SUCCESS;
+}
+
+//消息unpack函数
+OPSTAT func_nbiotcj188_checksum_caculate(char *s, INT8 output)
+{
+	UINT32 index = 0;
+	output = 0;
+	INT8 tmp = 0;
+	char tc[2] = "";
+
+	if (strlen(s) == 0 ) return SUCCESS;
+	if ((strlen(s)/2)*2 != strlen(s)) return FAILURE;
+
+	for (index = 0; index < strlen(s)/2; index++){
+		tc[0] = s[2*index];
+		tc[1] = s[2*index+1];
+		tmp = atoi(tc);
+		output = (output + tmp) & 0xFF;
+	}
 	return SUCCESS;
 }
 

@@ -721,7 +721,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 建立SOCKET工作的假机制，以便继续CJ88 
 > 建立CJ188链路
 > L3和NBIOTCJ88链路之间的消息处理函数
-> CJ188上行链路编码
+> CJ188上行链路编码完成
 
 
 

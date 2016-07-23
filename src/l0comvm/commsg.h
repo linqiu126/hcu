@@ -1935,7 +1935,8 @@ typedef struct  msg_struct_modbus_uart1_frame_timtout
 typedef struct  sensor_general_cj188_control_head //
 {
 	INT8  ctrlId;
-	INT8  d0d1Id;
+	INT16  d0d1Id;
+	INT8  ser;
 	UINT8  periodFlag; //指明是瞬时，还是周期性读数
 	UINT8 communicationFlag;  //反应通信是否异常的标示
 	char addr[15];
