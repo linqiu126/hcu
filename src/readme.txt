@@ -723,6 +723,11 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > L3和NBIOTCJ88链路之间的消息处理函数
 > CJ188上行链路编码完成
 
+//= ZJL, 2016 July.23, CURRENT_SW_DELIVERY 104
+> DL解码工作
+> L3UI待完善，包括CRUD
+
+
 
 
 
