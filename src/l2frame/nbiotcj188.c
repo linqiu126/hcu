@@ -224,8 +224,8 @@ OPSTAT fsm_nbiotcj188_iwm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	memcpy(&(input.head), &(rcv.iwmHead), sizeof(sensor_general_cj188_control_head_t));
 	memcpy(&(input.data), &(rcv.iwmData), sizeof(sensor_general_cj188_data_element_t));
 	input.equtype = rcv.equtype;
-	input.todayaccuvolume = rcv.todayaccuvolume;
-	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.billtodayaccuvolume = rcv.billtodayaccuvolume;
+	input.billtodayaccuvolumeunit = rcv.billtodayaccuvolumeunit;
 	input.length = sizeof(NbiotCj188BhItfComElement_t);
 
 	//打包数据
@@ -286,8 +286,8 @@ OPSTAT fsm_nbiotcj188_iwm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	memcpy(&(input.head), &(rcv.iwmHead), sizeof(sensor_general_cj188_control_head_t));
 	memcpy(&(input.data), &(rcv.iwmData), sizeof(sensor_general_cj188_data_element_t));
 	input.equtype = rcv.equtype;
-	input.todayaccuvolume = rcv.todayaccuvolume;
-	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.billtodayaccuvolume = rcv.billtodayaccuvolume;
+	input.billtodayaccuvolumeunit = rcv.billtodayaccuvolumeunit;
 	input.length = sizeof(NbiotCj188BhItfComElement_t);
 
 	//打包数据
@@ -352,8 +352,8 @@ OPSTAT fsm_nbiotcj188_ihm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	input.currentheatunit = rcv.currentheatunit;
 	input.heatpower = rcv.heatpower;
 	input.heatpowerunit = rcv.heatpowerunit;
-	input.todayheat = rcv.todayheat;
-	input.todayheatunit = rcv.todayheatunit;
+	input.billtodayheat = rcv.billtodayheat;
+	input.billtodayheatunit = rcv.billtodayheatunit;
 	input.length = sizeof(NbiotCj188BhItfComElement_t);
 
 	//打包数据
@@ -418,8 +418,8 @@ OPSTAT fsm_nbiotcj188_ihm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	input.currentheatunit = rcv.currentheatunit;
 	input.heatpower = rcv.heatpower;
 	input.heatpowerunit = rcv.heatpowerunit;
-	input.todayheat = rcv.todayheat;
-	input.todayheatunit = rcv.todayheatunit;
+	input.billtodayheat = rcv.billtodayheat;
+	input.billtodayheatunit = rcv.billtodayheatunit;
 	input.length = sizeof(NbiotCj188BhItfComElement_t);
 
 	//打包数据
@@ -480,8 +480,8 @@ OPSTAT fsm_nbiotcj188_igm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	memcpy(&(input.head), &(rcv.igmHead), sizeof(sensor_general_cj188_control_head_t));
 	memcpy(&(input.data), &(rcv.igmData), sizeof(sensor_general_cj188_data_element_t));
 	input.equtype = rcv.equtype;
-	input.todayaccuvolume = rcv.todayaccuvolume;
-	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.billtodayaccuvolume = rcv.billtodayaccuvolume;
+	input.billtodayaccuvolumeunit = rcv.billtodayaccuvolumeunit;
 	input.length = sizeof(NbiotCj188BhItfComElement_t);
 
 	//打包数据
@@ -542,8 +542,8 @@ OPSTAT fsm_nbiotcj188_igm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	memcpy(&(input.head), &(rcv.igmHead), sizeof(sensor_general_cj188_control_head_t));
 	memcpy(&(input.data), &(rcv.igmData), sizeof(sensor_general_cj188_data_element_t));
 	input.equtype = rcv.equtype;
-	input.todayaccuvolume = rcv.todayaccuvolume;
-	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.billtodayaccuvolume = rcv.billtodayaccuvolume;
+	input.billtodayaccuvolumeunit = rcv.billtodayaccuvolumeunit;
 	input.length = sizeof(NbiotCj188BhItfComElement_t);
 
 	//打包数据
@@ -604,8 +604,8 @@ OPSTAT fsm_nbiotcj188_ipm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	memcpy(&(input.head), &(rcv.ipmHead), sizeof(sensor_general_cj188_control_head_t));
 	memcpy(&(input.data), &(rcv.ipmData), sizeof(sensor_general_cj188_data_element_t));
 	input.equtype = rcv.equtype;
-	input.todayaccuvolume = rcv.todayaccuvolume;
-	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.billtodayaccuvolume = rcv.billtodayaccuvolume;
+	input.billtodayaccuvolumeunit = rcv.billtodayaccuvolumeunit;
 	input.length = sizeof(NbiotCj188BhItfComElement_t);
 
 	//打包数据
@@ -666,8 +666,8 @@ OPSTAT fsm_nbiotcj188_ipm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	memcpy(&(input.head), &(rcv.ipmHead), sizeof(sensor_general_cj188_control_head_t));
 	memcpy(&(input.data), &(rcv.ipmData), sizeof(sensor_general_cj188_data_element_t));
 	input.equtype = rcv.equtype;
-	input.todayaccuvolume = rcv.todayaccuvolume;
-	input.todayaccuvolumeunit = rcv.todayaccuvolumeunit;
+	input.billtodayaccuvolume = rcv.billtodayaccuvolume;
+	input.billtodayaccuvolumeunit = rcv.billtodayaccuvolumeunit;
 	input.length = sizeof(NbiotCj188BhItfComElement_t);
 
 	//打包数据
@@ -756,28 +756,28 @@ OPSTAT func_nbiotcj188_heart_beat_check(void)
 	int ret = 0;
 
 	//发送数据给后台
-	if (FsmGetState(TASK_ID_NBIOTCJ188) == FSM_STATE_NBIOTCJ188_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-
-		//打包数据
-		if (func_nbiotcj188_heart_beat_msg_pack(&buf) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-			HcuErrorPrint("NBIOTCJ188: Package message error!\n");
-			return FAILURE;
-		}
-
-		//Send out
-		ret = func_nbiotcj188_send_data_to_cloud(&buf);
-		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-			HcuErrorPrint("NBIOTCJ188: Error send data to back-cloud!\n");
-			return FAILURE;
-		}
-	}else{
+	if (FsmGetState(TASK_ID_NBIOTCJ188) != FSM_STATE_NBIOTCJ188_ONLINE){
 		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		HcuErrorPrint("NBIOTCJ188: Error send HEART_BEAT to cloud, get by ONLINE, but back off line so quick!\n");
+		return FAILURE;
+	}
+
+	//初始化变量
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+	//打包数据
+	if (func_nbiotcj188_heart_beat_msg_pack(&buf) == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Package message error!\n");
+		return FAILURE;
+	}
+
+	//Send out
+	ret = func_nbiotcj188_send_data_to_cloud(&buf);
+	if ( ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Error send data to back-cloud!\n");
 		return FAILURE;
 	}
 
@@ -824,6 +824,93 @@ OPSTAT func_nbiotcj188_time_out_sendback_offline_data(void)
 //消息pack函数
 OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudDataSendBuf_t *buf)
 {
+	//检查参数
+	if (input == NULL || buf == NULL){
+		HcuErrorPrint("NBIOTCJ188: Invalid received data buffer!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	if ((input->equtype < HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MIN) || (input->equtype > HCU_NBIOT_CJ188_T_TYPE_POWER_METER_MAX)){
+		HcuErrorPrint("NBIOTCJ188: Invalid received equipment Type!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	if (strlen(input->head.addr) != 14) {
+		HcuErrorPrint("NBIOTCJ188: Invalid received equipment address!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	if ((input->head.ctrlId < HCU_NBIOT_CJ188_CTRL_MIN) || (input->head.ctrlId > HCU_NBIOT_CJ188_CTRL_MAX)){
+		HcuErrorPrint("NBIOTCJ188: Invalid received control command!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+
+	//初始化变量
+	NbiotCj188BhItfComCtrFlag_t ctrFlag;
+	memset(&ctrFlag, 0, sizeof(NbiotCj188BhItfComCtrFlag_t));
+	char s[MAX_HCU_MSG_BUF_LENGTH];
+	memset(s, 0, sizeof(s));
+	char da[MAX_HCU_MSG_BUF_LENGTH];
+	memset(da, 0, sizeof(da));
+	char tmp[3] = "";
+	INT8 ctrl=0;
+	UINT8 msgLen = 3; //最小长度3字节，注意，CHAR和字节是差一倍的
+
+
+	//固定消息头
+	sprintf(tmp, "%02X", HCU_NBIOT_CJ188_FRAME_FIX_HEAD & 0xFF);
+	strcat(s, tmp);
+	//消息TYPE
+	sprintf(tmp, "%02X", input->equtype & 0xFF);
+	strcat(s, tmp);
+	//消息地址
+	strcat(s, input->head.addr);
+
+	//控制域-通信比特异常与否
+	ctrl = input->head.ctrlId & 0x3F;
+	ctrl = (ctrl + 0x80) & 0xFF; //上行方向标示比特
+	if (input->head.communicationFlag != HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL) ctrl = (ctrl + 0x40) & 0xFF;  //通信异常标示比特
+	sprintf(tmp, "%02X", ctrl & 0xFF);
+	strcat(s, tmp);
+
+	//根据指令，生成控制字段，确定消息变化长度
+	if (input->head.communicationFlag != HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL){
+		msgLen = 0x03;
+		ctrFlag.stFlag = TRUE;
+	}
+	else if ((input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA) && (input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) &&
+			(input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN) && (input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA)){
+		msgLen = 0x2E;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.billtodaydateFlag = TRUE;
+		ctrFlag.currentheatFlag = TRUE;
+		ctrFlag.heatpowerFlag = TRUE;
+		ctrFlag.flowvolumeFlag = TRUE;
+		ctrFlag.accuamountFlag = TRUE;
+		ctrFlag.supplywatertempFlag = TRUE;
+		ctrFlag.backwatertempFlag = TRUE;
+		ctrFlag.accumuworktimeFlag = TRUE;
+		ctrFlag.realtimeFlag = TRUE;
+		ctrFlag.stFlag = TRUE;
+	}
+	else if ((input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA) && (input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) &&
+		~((input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN) && (input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA))){
+		msgLen = 0x16;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.d0d1Flag = TRUE;
+		ctrFlag.currentaccuvolumeFlag = TRUE;
+	}
+
+
+	//顺序是编码的黄金规则，千万不能错，否则就无法解开了!!!
+
+
+	//所有变长部分
+
+
+
+
 
 
 	return SUCCESS;
