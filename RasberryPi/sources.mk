@@ -17,6 +17,7 @@ src/l4bi \
 src/l3app \
 src/l2frame \
 src/l1hwopt \
+src/l1hwopt/usb_dac \
 src/l1com \
 src/l0webser \
 src/l0service \
