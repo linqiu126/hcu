@@ -150,17 +150,61 @@ OPSTAT func_igm_int_init(void)
 	return SUCCESS;
 }
 
+//暂时啥都不干，定时到达后，还不明确是否需要支持定时工作
 OPSTAT fsm_igm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret;
+
+	//Receive message and copy to local variable
+	msg_struct_com_time_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
+		HcuErrorPrint("IGM: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_IGM]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_IGM]是否超限
+	if (zHcuRunErrCnt[TASK_ID_IGM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+		//减少重复RESTART的概率
+		zHcuRunErrCnt[TASK_ID_IGM] = zHcuRunErrCnt[TASK_ID_IGM] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		msg_struct_com_restart_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
+		snd0.length = sizeof(msg_struct_com_restart_t);
+		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_IGM, TASK_ID_IGM, &snd0, snd0.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_IGM]++;
+			HcuErrorPrint("IGM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_IGM], zHcuTaskNameList[TASK_ID_IGM]);
+			return FAILURE;
+		}
+	}
+
+	//Period time out received
+	if ((rcv.timeId == TIMER_ID_1S_IGM_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//保护周期读数的优先级，强制抢占状态，并简化问题
+		if (FsmGetState(TASK_ID_IGM) != FSM_STATE_IGM_ACTIVED){
+			ret = FsmSetState(TASK_ID_IGM, FSM_STATE_IGM_ACTIVED);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_IGM]++;
+				HcuErrorPrint("IGM: Error Set FSM State!\n");
+				return FAILURE;
+			}//FsmSetState
+		}
+
+		//Do nothing
+
+	}
+
 	return SUCCESS;
 }
-
 
 OPSTAT fsm_igm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
 
+//暂时不用，留待未来使用
 OPSTAT fsm_igm_nbiotcj188_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;

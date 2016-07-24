@@ -1322,7 +1322,12 @@ OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudData
 	//阀门控制操作
 	if (ctrFlag.switchctrlFlag == TRUE){
 		memset(tmp, 0, sizeof(tmp));
-		strncpy(tmp, input->data.switchctrl, 2);
+		if ((input->data.switchctrl != HCU_NBIOT_CJ188_SWITCH_CONTROL_ON) && (input->data.switchctrl != HCU_NBIOT_CJ188_SWITCH_CONTROL_OFF)){
+			HcuErrorPrint("NBIOTCJ188: Invalid received switch control command!\n");
+			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+			return FAILURE;
+		}
+		sprintf(tmp, "%02d", input->data.switchctrl);
 		strcat(da, tmp);
 		index = index + 1;
 	}
@@ -1374,7 +1379,7 @@ OPSTAT func_nbiotcj188_checksum_caculate(char *s, INT8 output)
 	if ((strlen(s)/2)*2 != strlen(s)) return FAILURE;
 
 	for (index = 0; index < strlen(s)/2; index++){
-		strncpy(tc, s[2*index], 2);
+		strncpy(tc, &s[2*index], 2);
 		tmp = strtoul(tc, NULL, 16);
 		output = (output + tmp) & 0xFF;
 	}
@@ -1471,12 +1476,12 @@ OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf, NbiotCj188BhItfCom
 	strncpy(stmp, &buf->curBuf[index], 2);
 	tmp = strtoul(stmp, NULL, 16);
 	ctrl = tmp & 0xFF;
-	if (ctrl&0x80 > 7 != 1){
+	if ((ctrl&0x80) >> 7 != 1){
 		HcuErrorPrint("NBIOTCJ188: Invalid received communication direction!\n");
 		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		return FAILURE;
 	}
-	if (ctrl&0x40 > 6 == 1){
+	if ((ctrl&0x40 >> 6) == 1){
 		HcuErrorPrint("NBIOTCJ188: Invalid received communication abnormal!\n");
 		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		return FAILURE;
