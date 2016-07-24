@@ -201,6 +201,248 @@ OPSTAT fsm_igm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 OPSTAT fsm_igm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_nbiotcj188_igm_data_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_nbiotcj188_igm_data_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_nbiotcj188_igm_data_req_t))){
+		HcuErrorPrint("IGM: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_IGM]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//验证入参的正确性
+	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MAX)){
+		HcuErrorPrint("IGM: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_IGM]++;
+		return FAILURE;
+	}
+
+	//包括地址信息是否正确
+	//仪表的状态是否合适等等
+
+
+	//申明新的参量，目的是为了回复参数
+	char tmp[17] = "";
+	msg_struct_igm_nbiotcj188_data_resp_t igmResp;
+	memset(&igmResp, 0, sizeof(msg_struct_igm_nbiotcj188_data_resp_t));
+	igmResp.equtype = rcv.equtype;
+	igmResp.igmHead.ctrlId = rcv.igmHead.ctrlId;
+	strcpy(igmResp.igmHead.addr, rcv.igmHead.addr);
+	igmResp.igmHead.d0d1Id = rcv.igmHead.d0d1Id;
+	igmResp.igmHead.ser = rcv.igmHead.ser;
+	igmResp.igmHead.periodFlag = rcv.igmHead.periodFlag;
+	igmResp.igmHead.timestamp = time(0);
+
+	//如果探测到通信异常，可以设置这个标志位
+	igmResp.igmHead.communicationFlag = HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL;
+
+	//根据命令，对仪表分别进行操控
+	//准备读取控制的仪表的数据
+	if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA)){
+		//设置假数据，为了测试方便
+		igmResp.igmData.currentaccuvolume = rand()%1000000;
+		igmResp.igmData.currentaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		//如果需要设置当前的时间的话
+		time_t lt;
+		struct tm *cu;
+		lt=time(NULL);
+		cu = localtime(&lt);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp,  "%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+		strncpy(igmResp.igmData.realtime, tmp, 14);
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%04d", rand()%10000);
+		strncpy(igmResp.igmData.st, tmp, 4);
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA1)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 1;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA2)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 2;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA3)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 3;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA4)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 4;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA5)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 5;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA6)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 6;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA7)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 7;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA8)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 8;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA9)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 9;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA10)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 10;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA11)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 11;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA12)){
+		//设置假数据，为了测试方便
+		igmResp.billtodayaccuvolume = rand()%1000000;
+		igmResp.billtodayaccuvolumeunit = HCU_NBIOT_CJ188_UNIT_M3;
+		igmResp.igmData.lastmonth = 12;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_PRICE_TABLE)){
+		//设置假数据，为了测试方便
+		igmResp.igmData.price1 = rand()%1000000;
+		igmResp.igmData.volume1 = rand()%1000000;
+		igmResp.igmData.price2 = rand()%1000000;
+		igmResp.igmData.volume2 = rand()%1000000;
+		igmResp.igmData.price3 = rand()%1000000;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_BILL_TODAY_DATE)){ //结算日
+		//设置假数据，为了测试方便
+		igmResp.igmData.billtodaydate = rand()%256;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_READ_ACCOUNT_CUR_DATE)){ //抄表日
+		//设置假数据，为了测试方便
+		igmResp.igmData.readamountcurdate = rand()%256;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_BUY_AMOUNT)){ //购入金额
+		//设置假数据，为了测试方便
+		igmResp.igmData.thisamount = rand()%1000000;
+		igmResp.igmData.accuamount = rand()%1000000;
+		igmResp.igmData.remainamount = rand()%1000000;
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%04d", rand()%10000);
+		strncpy(igmResp.igmData.st, tmp, 4);
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_KEY_VER) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_KEY_VER)){
+		//设置假数据，为了测试方便
+		igmResp.igmData.keyver = rand()%256;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_ADDR) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_ADDRESS)){
+		//设置假数据，为了测试方便
+		//Do nothing
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_PRICE_TABLE)){
+		//设置假数据，为了测试方便
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%04d", rand()%10000);
+		strncpy(igmResp.igmData.st, tmp, 4);
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_BILL_TODAY_DATE)){
+		//设置假数据，为了测试方便
+		//Do nothing
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_READ_ACCOUNT_CUR_DATE)){
+		//设置假数据，为了测试方便
+		//Do nothing
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_BUY_AMOUNT)){
+		//设置假数据，为了测试方便
+		igmResp.igmData.buycode = rand()%256;
+		igmResp.igmData.thisamount = rand()%1000000;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_NEW_KEY)){
+		//设置假数据，为了测试方便
+		igmResp.igmData.keyver = rand()%256;
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_STD_TIME)){
+		//设置假数据，为了测试方便
+		//Do nothing
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_SWITCH_CTRL)){
+		//设置假数据，为了测试方便
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%04d", rand()%10000);
+		strncpy(igmResp.igmData.st, tmp, 4);
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DATA) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_OFF_FACTORY_START)){
+		//设置假数据，为了测试方便
+		//Do nothing
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_ADDR) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_ADDRESS)){
+		//设置假数据，为了测试方便
+		//Do nothing
+	}
+	else if ((rcv.igmHead.ctrlId == HCU_NBIOT_CJ188_CTRL_WRITE_DEVICE_SYN) && (rcv.igmHead.d0d1Id == HCU_NBIOT_CJ188_WRITE_DI0DI1_DEVICE_SYN_DATA)){
+		//设置假数据，为了测试方便
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%04d", rand()%10000);
+		strncpy(igmResp.igmData.st, tmp, 4);
+	}
+	else{
+		HcuErrorPrint("IGM: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_IGM]++;
+		return FAILURE;
+	}
+
+	//准备存入本地数据库, RECORD还要存入数据库
+	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	{
+		sensor_igm_cj188_data_element_t igmDbSave;
+		memset(&igmDbSave, 0, sizeof(sensor_igm_cj188_data_element_t));
+		memcpy(&igmDbSave.igm, &igmResp.igmData, sizeof(sensor_general_cj188_data_element_t));
+		strcpy(igmDbSave.cj188address, igmResp.igmHead.addr);
+		igmDbSave.equtype = igmResp.equtype;
+		igmDbSave.timestamp = igmResp.igmHead.timestamp;
+		igmDbSave.billtodayaccuvolume = igmResp.billtodayaccuvolume;
+		igmDbSave.billtodayaccuvolumeunit = igmResp.billtodayaccuvolumeunit;
+		ret = dbi_HcuIgmCj188DataInfo_save(&igmDbSave);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_IGM]++;
+			HcuErrorPrint("IGM: Can not save data into database!\n");
+		}
+	}
+
+	//准备发送数据回去给NBIOTCJ188，然后通过UL上行链路送回CLOUD平台
+	igmResp.length = sizeof(msg_struct_igm_nbiotcj188_data_resp_t);
+	ret = hcu_message_send(MSG_ID_IGM_NBIOTCJ188_DATA_RESP, TASK_ID_NBIOTCJ188, TASK_ID_IGM, &igmResp, igmResp.length);
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_IGM]++;
+		HcuErrorPrint("IGM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_IGM], zHcuTaskNameList[TASK_ID_NBIOTCJ188]);
+		return FAILURE;
+	}
+
+	//返回
 	return SUCCESS;
 }
 

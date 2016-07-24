@@ -692,9 +692,27 @@ OPSTAT fsm_nbiotcj188_ipm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-//上行链路处理过程
+//下行链路数据报文处理过程
 OPSTAT fsm_nbiotcj188_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	int ret=0;
+	msg_struct_ethernet_nbiotcj188_data_rx_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_ethernet_nbiotcj188_data_rx_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ethernet_nbiotcj188_data_rx_t))){
+		HcuErrorPrint("NBIOTCJ188: Receive ETHERNET package error!\n");
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//格式的区分，这里不再做，所以这里就比较简单了。
+	//如果需要通过这里进行消息解码的格式区分，也可以通过全局变量进行区分
+	if (func_nbiotcj188_dl_msg_unpack(&rcv) == FAILURE){
+		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
+		HcuErrorPrint("NBIOTCJ188: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+		return FAILURE;
+	}
+
 	return SUCCESS;
 }
 
@@ -1387,12 +1405,12 @@ OPSTAT func_nbiotcj188_checksum_caculate(char *s, INT8 output)
 }
 
 //消息unpack函数
-OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf, NbiotCj188BhItfComElement_t *output)
+OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf)
 {
 	UINT32 ret = 0;
 
 	//检查参数
-	if (buf == NULL || output == NULL){
+	if (buf == NULL){
 		HcuErrorPrint("NBIOTCJ188: Invalid received data buffer!\n");
 		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		return FAILURE;
