@@ -728,7 +728,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 
 //= ZJL, 2016 July.24, CURRENT_SW_DELIVERY 105
 > L3消息处理机制全部完成
-> L3UI及CRUD待完善
+> L3UI及CRUD完成
 
 
 

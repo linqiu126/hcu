@@ -49,6 +49,10 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'commframespibusaries') ?>
 
+    <?php // echo $form->field($model, 'commframenbiotcj188') ?>
+
+    <?php // echo $form->field($model, 'commframenbiotqg376') ?>
+
     <?php // echo $form->field($model, 'commfrontsps485') ?>
 
     <?php // echo $form->field($model, 'commfrontsps232') ?>
@@ -103,6 +107,14 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'commfrontsensortoxicgas') ?>
 
+    <?php // echo $form->field($model, 'commfrontsensoriwm') ?>
+
+    <?php // echo $form->field($model, 'commfrontsensorihm') ?>
+
+    <?php // echo $form->field($model, 'commfrontsensorigm') ?>
+
+    <?php // echo $form->field($model, 'commfrontsensoripm') ?>
+
     <?php // echo $form->field($model, 'commfrontsensorpm25sharp') ?>
 
     <?php // echo $form->field($model, 'hcudbhost') ?>
@@ -143,9 +155,17 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'windspdreqtimerfb') ?>
 
-    <?php // echo $form->field($model, 'heartbeattimer') ?>
+    <?php // echo $form->field($model, 'cloudvelahbtimer') ?>
 
-    <?php // echo $form->field($model, 'heartbeartbacktimer') ?>
+    <?php // echo $form->field($model, 'cloudvelahbbacktimer') ?>
+
+    <?php // echo $form->field($model, 'nbiotcj188hbtimer') ?>
+
+    <?php // echo $form->field($model, 'nbiotcj188hbbacktimer') ?>
+
+    <?php // echo $form->field($model, 'nbiotqg376hbtimer') ?>
+
+    <?php // echo $form->field($model, 'nbiotqg376hbbacktimer') ?>
 
     <?php // echo $form->field($model, 'cmdcontrollongtimer') ?>
 
@@ -170,6 +190,14 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'hchoreqtimer') ?>
 
     <?php // echo $form->field($model, 'toxicgasreqtimer') ?>
+
+    <?php // echo $form->field($model, 'iwmreqtimer') ?>
+
+    <?php // echo $form->field($model, 'ihmreqtimer') ?>
+
+    <?php // echo $form->field($model, 'igmreqtimer') ?>
+
+    <?php // echo $form->field($model, 'ipmreqtimer') ?>
 
     <?php // echo $form->field($model, 'pm25sharpreqtimer') ?>
 
@@ -202,6 +230,10 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'cloudftpuser') ?>
 
     <?php // echo $form->field($model, 'cloudftppwd') ?>
+
+    <?php // echo $form->field($model, 'cloudftppwdvideo') ?>
+
+    <?php // echo $form->field($model, 'cloudftpuservideo') ?>
 
     <?php // echo $form->field($model, 'hcuswdownloaddir') ?>
 

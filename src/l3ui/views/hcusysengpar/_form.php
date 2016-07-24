@@ -46,6 +46,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'commframespibusaries')->textInput() ?>
 
+    <?= $form->field($model, 'commframenbiotcj188')->textInput() ?>
+
+    <?= $form->field($model, 'commframenbiotqg376')->textInput() ?>
+
     <?= $form->field($model, 'commfrontsps485')->textInput() ?>
 
     <?= $form->field($model, 'commfrontsps232')->textInput() ?>
@@ -100,6 +104,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'commfrontsensortoxicgas')->textInput() ?>
 
+    <?= $form->field($model, 'commfrontsensoriwm')->textInput() ?>
+
+    <?= $form->field($model, 'commfrontsensorihm')->textInput() ?>
+
+    <?= $form->field($model, 'commfrontsensorigm')->textInput() ?>
+
+    <?= $form->field($model, 'commfrontsensoripm')->textInput() ?>
+
     <?= $form->field($model, 'commfrontsensorpm25sharp')->textInput() ?>
 
     <?= $form->field($model, 'hcudbhost')->textInput(['maxlength' => true]) ?>
@@ -140,9 +152,17 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'windspdreqtimerfb')->textInput() ?>
 
-    <?= $form->field($model, 'heartbeattimer')->textInput() ?>
+    <?= $form->field($model, 'cloudvelahbtimer')->textInput() ?>
 
-    <?= $form->field($model, 'heartbeartbacktimer')->textInput() ?>
+    <?= $form->field($model, 'cloudvelahbbacktimer')->textInput() ?>
+
+    <?= $form->field($model, 'nbiotcj188hbtimer')->textInput() ?>
+
+    <?= $form->field($model, 'nbiotcj188hbbacktimer')->textInput() ?>
+
+    <?= $form->field($model, 'nbiotqg376hbtimer')->textInput() ?>
+
+    <?= $form->field($model, 'nbiotqg376hbbacktimer')->textInput() ?>
 
     <?= $form->field($model, 'cmdcontrollongtimer')->textInput() ?>
 
@@ -167,6 +187,14 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'hchoreqtimer')->textInput() ?>
 
     <?= $form->field($model, 'toxicgasreqtimer')->textInput() ?>
+
+    <?= $form->field($model, 'iwmreqtimer')->textInput() ?>
+
+    <?= $form->field($model, 'ihmreqtimer')->textInput() ?>
+
+    <?= $form->field($model, 'igmreqtimer')->textInput() ?>
+
+    <?= $form->field($model, 'ipmreqtimer')->textInput() ?>
 
     <?= $form->field($model, 'pm25sharpreqtimer')->textInput() ?>
 
@@ -199,6 +227,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'cloudftpuser')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'cloudftppwd')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'cloudftppwdvideo')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'cloudftpuservideo')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'hcuswdownloaddir')->textInput(['maxlength' => true]) ?>
 

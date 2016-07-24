@@ -18,8 +18,8 @@ class HcusysengparSearch extends Hcusysengpar
     public function rules()
     {
         return [
-            [['prjname', 'hcudbhost', 'hcudbuser', 'hcudbpsw', 'hcudbname', 'cloudhttpaddlocal', 'cloudhttpaddtest', 'cloudhttpaddsae', 'cloudhttpaddjd', 'cloudhttpaddwechat', 'cloudbhservername', 'cloudbhhcuname', 'cloudftpadd', 'cloudftpuser', 'cloudftppwd', 'hcuswdownloaddir', 'hcuswactivedir', 'hcuswbackupdir', 'hcuvideoserverdir', 'hcuvideoserverhttp', 'browselprog', 'browselstartupaddress', 'browselworkingoption'], 'safe'],
-            [['commbackhawlcon', 'commhwboardethernet', 'commhwboardusbnet', 'commhwboardwifi', 'commhwboard3g4g', 'commhwboardgps', 'commhwboardlcd', 'commhwboardled', 'commhwboardzeegbe', 'commhwboardflash', 'commframemodbus', 'commframespsvirgo', 'commframeavorion', 'commframecloudvela', 'commframei2cbuslibra', 'commframespibusaries', 'commfrontsps485', 'commfrontsps232', 'commfrontmicrophone', 'commfrontcamera', 'commfrontble', 'commfrontgpio', 'commfronti2c', 'commfrontspi', 'commfrontpwm', 'commfrontadc', 'commfrontswitch', 'commfrontrelay', 'commfrontmotor', 'commfrontsensoremc', 'commfrontsensorpm25', 'commfrontsensortemp', 'commfrontsensorhumid', 'commfrontsensorwinddir', 'commfrontsensorwindspd', 'commfrontsensornoise', 'commfrontsensorhsmmp', 'commfrontsensorairprs', 'commfrontsensorco1', 'commfrontsensorlightstr', 'commfrontsensoralcohol', 'commfrontsensorhcho', 'commfrontsensortoxicgas', 'commfrontsensorpm25sharp', 'hcudbport', 'emcreqtimer', 'emcreqtimerfb', 'humidreqtimer', 'humidreqtimerfb', 'noisereqtimer', 'noisereqtimerfb', 'pm25reqtimer', 'pm25reqtimerfb', 'tempreqtimer', 'tempreqtimerfb', 'winddirreqtimer', 'winddirreqtimerfb', 'windspdreqtimer', 'windspdreqtimerfb', 'heartbeattimer', 'heartbeartbacktimer', 'cmdcontrollongtimer', 'cmdcontrolshorttimer', 'hsmmpreqtimer', 'hsmmpcapduration', 'hsmmpcapdurationfb', 'hsmmprefrate', 'airprsreqtimer', 'co1reqtimer', 'lightstrreqtimer', 'alcoholreqtimer', 'hchoreqtimer', 'toxicgasreqtimer', 'pm25sharpreqtimer', 'syspmworkingtimer', 'seriesportformodbus', 'seriesportforgps', 'seriesportforpm25sharp', 'cloudbhitfframestd', 'debugmode', 'tracemode', 'browselautostartupflag'], 'integer'],
+            [['prjname', 'hcudbhost', 'hcudbuser', 'hcudbpsw', 'hcudbname', 'cloudhttpaddlocal', 'cloudhttpaddtest', 'cloudhttpaddsae', 'cloudhttpaddjd', 'cloudhttpaddwechat', 'cloudbhservername', 'cloudbhhcuname', 'cloudftpadd', 'cloudftpuser', 'cloudftppwd', 'cloudftppwdvideo', 'cloudftpuservideo', 'hcuswdownloaddir', 'hcuswactivedir', 'hcuswbackupdir', 'hcuvideoserverdir', 'hcuvideoserverhttp', 'browselprog', 'browselstartupaddress', 'browselworkingoption'], 'safe'],
+            [['commbackhawlcon', 'commhwboardethernet', 'commhwboardusbnet', 'commhwboardwifi', 'commhwboard3g4g', 'commhwboardgps', 'commhwboardlcd', 'commhwboardled', 'commhwboardzeegbe', 'commhwboardflash', 'commframemodbus', 'commframespsvirgo', 'commframeavorion', 'commframecloudvela', 'commframei2cbuslibra', 'commframespibusaries', 'commframenbiotcj188', 'commframenbiotqg376', 'commfrontsps485', 'commfrontsps232', 'commfrontmicrophone', 'commfrontcamera', 'commfrontble', 'commfrontgpio', 'commfronti2c', 'commfrontspi', 'commfrontpwm', 'commfrontadc', 'commfrontswitch', 'commfrontrelay', 'commfrontmotor', 'commfrontsensoremc', 'commfrontsensorpm25', 'commfrontsensortemp', 'commfrontsensorhumid', 'commfrontsensorwinddir', 'commfrontsensorwindspd', 'commfrontsensornoise', 'commfrontsensorhsmmp', 'commfrontsensorairprs', 'commfrontsensorco1', 'commfrontsensorlightstr', 'commfrontsensoralcohol', 'commfrontsensorhcho', 'commfrontsensortoxicgas', 'commfrontsensoriwm', 'commfrontsensorihm', 'commfrontsensorigm', 'commfrontsensoripm', 'commfrontsensorpm25sharp', 'hcudbport', 'emcreqtimer', 'emcreqtimerfb', 'humidreqtimer', 'humidreqtimerfb', 'noisereqtimer', 'noisereqtimerfb', 'pm25reqtimer', 'pm25reqtimerfb', 'tempreqtimer', 'tempreqtimerfb', 'winddirreqtimer', 'winddirreqtimerfb', 'windspdreqtimer', 'windspdreqtimerfb', 'cloudvelahbtimer', 'cloudvelahbbacktimer', 'nbiotcj188hbtimer', 'nbiotcj188hbbacktimer', 'nbiotqg376hbtimer', 'nbiotqg376hbbacktimer', 'cmdcontrollongtimer', 'cmdcontrolshorttimer', 'hsmmpreqtimer', 'hsmmpcapduration', 'hsmmpcapdurationfb', 'hsmmprefrate', 'airprsreqtimer', 'co1reqtimer', 'lightstrreqtimer', 'alcoholreqtimer', 'hchoreqtimer', 'toxicgasreqtimer', 'iwmreqtimer', 'ihmreqtimer', 'igmreqtimer', 'ipmreqtimer', 'pm25sharpreqtimer', 'syspmworkingtimer', 'seriesportformodbus', 'seriesportforgps', 'seriesportforpm25sharp', 'cloudbhitfframestd', 'debugmode', 'tracemode', 'browselautostartupflag'], 'integer'],
         ];
     }
 
@@ -75,6 +75,8 @@ class HcusysengparSearch extends Hcusysengpar
             'commframecloudvela' => $this->commframecloudvela,
             'commframei2cbuslibra' => $this->commframei2cbuslibra,
             'commframespibusaries' => $this->commframespibusaries,
+            'commframenbiotcj188' => $this->commframenbiotcj188,
+            'commframenbiotqg376' => $this->commframenbiotqg376,
             'commfrontsps485' => $this->commfrontsps485,
             'commfrontsps232' => $this->commfrontsps232,
             'commfrontmicrophone' => $this->commfrontmicrophone,
@@ -102,6 +104,10 @@ class HcusysengparSearch extends Hcusysengpar
             'commfrontsensoralcohol' => $this->commfrontsensoralcohol,
             'commfrontsensorhcho' => $this->commfrontsensorhcho,
             'commfrontsensortoxicgas' => $this->commfrontsensortoxicgas,
+            'commfrontsensoriwm' => $this->commfrontsensoriwm,
+            'commfrontsensorihm' => $this->commfrontsensorihm,
+            'commfrontsensorigm' => $this->commfrontsensorigm,
+            'commfrontsensoripm' => $this->commfrontsensoripm,
             'commfrontsensorpm25sharp' => $this->commfrontsensorpm25sharp,
             'hcudbport' => $this->hcudbport,
             'emcreqtimer' => $this->emcreqtimer,
@@ -118,8 +124,12 @@ class HcusysengparSearch extends Hcusysengpar
             'winddirreqtimerfb' => $this->winddirreqtimerfb,
             'windspdreqtimer' => $this->windspdreqtimer,
             'windspdreqtimerfb' => $this->windspdreqtimerfb,
-            'heartbeattimer' => $this->heartbeattimer,
-            'heartbeartbacktimer' => $this->heartbeartbacktimer,
+            'cloudvelahbtimer' => $this->cloudvelahbtimer,
+            'cloudvelahbbacktimer' => $this->cloudvelahbbacktimer,
+            'nbiotcj188hbtimer' => $this->nbiotcj188hbtimer,
+            'nbiotcj188hbbacktimer' => $this->nbiotcj188hbbacktimer,
+            'nbiotqg376hbtimer' => $this->nbiotqg376hbtimer,
+            'nbiotqg376hbbacktimer' => $this->nbiotqg376hbbacktimer,
             'cmdcontrollongtimer' => $this->cmdcontrollongtimer,
             'cmdcontrolshorttimer' => $this->cmdcontrolshorttimer,
             'hsmmpreqtimer' => $this->hsmmpreqtimer,
@@ -132,6 +142,10 @@ class HcusysengparSearch extends Hcusysengpar
             'alcoholreqtimer' => $this->alcoholreqtimer,
             'hchoreqtimer' => $this->hchoreqtimer,
             'toxicgasreqtimer' => $this->toxicgasreqtimer,
+            'iwmreqtimer' => $this->iwmreqtimer,
+            'ihmreqtimer' => $this->ihmreqtimer,
+            'igmreqtimer' => $this->igmreqtimer,
+            'ipmreqtimer' => $this->ipmreqtimer,
             'pm25sharpreqtimer' => $this->pm25sharpreqtimer,
             'syspmworkingtimer' => $this->syspmworkingtimer,
             'seriesportformodbus' => $this->seriesportformodbus,
@@ -158,6 +172,8 @@ class HcusysengparSearch extends Hcusysengpar
             ->andFilterWhere(['like', 'cloudftpadd', $this->cloudftpadd])
             ->andFilterWhere(['like', 'cloudftpuser', $this->cloudftpuser])
             ->andFilterWhere(['like', 'cloudftppwd', $this->cloudftppwd])
+            ->andFilterWhere(['like', 'cloudftppwdvideo', $this->cloudftppwdvideo])
+            ->andFilterWhere(['like', 'cloudftpuservideo', $this->cloudftpuservideo])
             ->andFilterWhere(['like', 'hcuswdownloaddir', $this->hcuswdownloaddir])
             ->andFilterWhere(['like', 'hcuswactivedir', $this->hcuswactivedir])
             ->andFilterWhere(['like', 'hcuswbackupdir', $this->hcuswbackupdir])
