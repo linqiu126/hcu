@@ -1307,6 +1307,7 @@ UINT32 msgid_to_string(UINT32 id, char *string)
 }
 
 //API abstract
+//通过时钟问题的解决，这个问题终于解决了，原因就是SLEEP和SIGALM公用同一套信号量，导致相互冲突。时钟采用线程方式后，再也没有问题了
 void hcu_sleep(UINT32 second)
 {
 	if (second <0) second =0;
@@ -1315,9 +1316,9 @@ void hcu_sleep(UINT32 second)
 	{
 		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 			//太多的错误，未来需要再研究这个错误出现的原因，这里留下一点点报告的可行性
-			if ((rand()%1000) > 998){
+			//if ((rand()%1000) > 998){
 				HcuDebugPrint("HCU-VM: Sleep interrupt by other higher level system call, remaining %d second to be executed\n", second);
-			}
+			//}
 		}
 		second = sleep(second);
 	}

@@ -127,6 +127,10 @@ typedef struct HcuTimerTable
 #define TIMER_RESOLUTION_1MS 3
 #define TIMER_RESOLUTION_INVALID 0xFF
 
+#define HCU_TIMER_CONFIG_START_RESOLUTION_1S TRUE
+#define HCU_TIMER_CONFIG_START_RESOLUTION_10MS FALSE
+#define HCU_TIMER_CONFIG_START_RESOLUTION_1MS FALSE
+
 //Global variables
 extern FsmStateItem_t FsmTimer[];
 
@@ -139,7 +143,9 @@ extern OPSTAT hcu_timer_stop(UINT32 task_id, UINT32 timer_id, UINT8 t_res);
 
 //local API
 void func_timer_routine(int signo);
+void func_timer_routine_handler_1s(union sigval v);
 void func_timer_routine_handler_10ms(union sigval v);
+void func_timer_routine_handler_1ms(union sigval v);
 
 
 #endif /* L0SERVICE_TIMER_H_ */
