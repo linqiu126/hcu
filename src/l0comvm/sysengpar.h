@@ -30,6 +30,8 @@ typedef struct SysEngParElementComm
 	UINT8  commFrameCloudvela;
 	UINT8  commFrameI2cbuslibra;
 	UINT8  commFrameSpibusaries;
+	UINT8  commFrameNbiotcj188;
+	UINT8  commFrameNbiotqg376;
 	UINT8  commFrontSps485;
 	UINT8  commFrontSps232;
 	UINT8  commFrontMicrophone;
@@ -45,7 +47,6 @@ typedef struct SysEngParElementComm
 	UINT8  commFrontMotor;
 	UINT8  commFrontSensorEmc;
 	UINT8  commFrontSensorPm25;
-	UINT8  commFrontSensorPm25Sharp;//by shanchun
 	UINT8  commFrontSensorTemp;
 	UINT8  commFrontSensorHumid;
 	UINT8  commFrontSensorWinddir;
@@ -58,7 +59,11 @@ typedef struct SysEngParElementComm
 	UINT8  commFrontSensorAlcohol;
 	UINT8  commFrontSensorHcho;
 	UINT8  commFrontSensorToxicgas;
-
+	UINT8  commFrontSensorIwm;
+	UINT8  commFrontSensorIhm;
+	UINT8  commFrontSensorIgm;
+	UINT8  commFrontSensorIpm;
+	UINT8  commFrontSensorPm25Sharp;//by shanchun
 }SysEngParElementComm_t;
 
 //数据库部分
@@ -110,8 +115,12 @@ typedef struct SysEngParElementSensor
 	INT32 winddirReqTimerFB;
 	INT32 windspdReqTimer;
 	INT32 windspdReqTimerFB;
-	INT32 heartbeatTimer;
-	INT32 heartbeartBackTimer;
+	INT32 cloudvelaHbTimer;
+	INT32 cloudvelaHbBackTimer;
+	INT32 nbiotcj188HbTimer;
+	INT32 nbiotcj188HbBackTimer;
+	INT32 nbiotqg376HbTimer;
+	INT32 nbiotqg376HbBackTimer;
 	INT32 cmdcontrolLongTimer;
 	INT32 cmdcontrolShortTimer;
 	INT32 hsmmpReqTimer;
@@ -124,6 +133,10 @@ typedef struct SysEngParElementSensor
 	INT32 alcoholReqTimer;
 	INT32 hchoReqTimer;
 	INT32 toxicgasReqTimer;
+	INT32 iwmReqTimer;
+	INT32 ihmReqTimer;
+	INT32 igmReqTimer;
+	INT32 ipmReqTimer;
 	INT32 pm25sharpReqTimer;
 	INT32 syspmWorkingTimer;
 }SysEngParElementSensorTimer_t;
@@ -138,7 +151,7 @@ typedef struct SysEngParElementSeriesPort
 }SysEngParElementSeriesPort_t;
 
 //后台服务器地址部分
-#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN 64
+#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN 256
 #define SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME 12
 typedef struct SysEngParElementCloudvela
 {
@@ -153,6 +166,8 @@ typedef struct SysEngParElementCloudvela
 	char  cloudFtpAdd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];//for HCU SW FTP by shanchun
 	char  cloudFtpUser[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
 	char  cloudFtpPwd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
+	char  cloudFtpUserVideo[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for video FTP by upload shanchun
+	char  cloudFtpPwdVideo[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for video FTP upload by shanchun
 }SysEngParElementCloudvela_t;
 
 //local SW storage address for HCU SW upgrade by shanchun

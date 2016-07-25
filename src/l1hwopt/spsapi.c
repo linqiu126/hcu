@@ -28,7 +28,7 @@ UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 
 	if (SPSAPI_COM_PORT_0 == com_port_to_open)
 	{
-		*fd = open(SPS_COM_PORT_PATH_0, O_RDWR|O_NOCTTY|O_NDELAY);
+		*fd = open(HCU_SPS_COM_PORT_PATH_0, O_RDWR|O_NOCTTY|O_NDELAY);
 
 		if (HCU_INVALID_U16 == *fd)
 		{
@@ -38,7 +38,7 @@ UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 	}
 	else if(SPSAPI_COM_PORT_1 == com_port_to_open)
 	{
-		*fd = open(SPS_COM_PORT_PATH_1, O_RDWR|O_NOCTTY|O_NDELAY);
+		*fd = open(HCU_SPS_COM_PORT_PATH_1, O_RDWR|O_NOCTTY|O_NDELAY);
 
 		if (HCU_INVALID_U16 == *fd)
 		{
@@ -48,7 +48,7 @@ UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 	}
 	else if(SPSAPI_COM_PORT_2 == com_port_to_open)
 	{
-		*fd = open(SPS_COM_PORT_PATH_2, O_RDWR|O_NOCTTY|O_NDELAY);
+		*fd = open(HCU_SPS_COM_PORT_PATH_2, O_RDWR|O_NOCTTY|O_NDELAY);
 
 		if (HCU_INVALID_U16 == *fd)
 		{
@@ -59,7 +59,7 @@ UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 
 	else if(SPSAPI_COM_PORT_3 == com_port_to_open)
 	{
-		*fd = open(SPS_COM_PORT_PATH_3, O_RDWR|O_NOCTTY|O_NDELAY);
+		*fd = open(HCU_SPS_COM_PORT_PATH_3, O_RDWR|O_NOCTTY|O_NDELAY);
 
 		if (HCU_INVALID_U16 == *fd)
 		{
@@ -70,7 +70,7 @@ UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 
 	else if(SPSAPI_COM_PORT_4 == com_port_to_open)
 	{
-		*fd = open(SPS_COM_PORT_PATH_4, O_RDWR|O_NOCTTY|O_NDELAY);
+		*fd = open(HCU_SPS_COM_PORT_PATH_4, O_RDWR|O_NOCTTY|O_NDELAY);
 
 		if (HCU_INVALID_U16 == *fd)
 		{
@@ -240,7 +240,7 @@ UINT32 spsapi_SerialPortSet(SerialPortCom_t *sp)
 	oflag = (UINT32)newtio.c_oflag;
 	lflag = (UINT32)newtio.c_lflag;
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPSAPI: COM port flags: c_cflag = 0x%X, c_iflag = 0x%X, c_oflag = 0x%X, c_lflag = 0x%X, VTIME = 0x%d, TMIN = 0x%d\n", cflag, iflag, oflag, lflag, newtio.c_cc[VTIME], newtio.c_cc[VMIN] = 1);
 		HcuDebugPrint("SPSAPI: COM port set done!\n");
 	}

@@ -82,7 +82,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Checking source of INIT message, only accept INIT from HCUMAIN.
 	//In future, maybe accept more cases, but right now this is the only allowable situation.
-	if (src_id != TASK_ID_HCUMAIN){
+	if (src_id != TASK_ID_HCUMAIN && src_id != TASK_ID_HWINV){
 		HcuErrorPrint("SVRCON: Error Init message get from task_id [%s]!\n", zHcuTaskNameList[src_id]);
 		return FAILURE;
 	}
@@ -185,6 +185,29 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_EMC]);
 		}
 	}
+
+	zHcuSvrConTaskInitInfo[TASK_ID_NBIOTCJ188].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_NBIOTCJ188].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
+	if (zHcuTaskInfo[TASK_ID_NBIOTCJ188].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_NBIOTCJ188, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_NBIOTCJ188]);
+		}
+	}
+
+	zHcuSvrConTaskInitInfo[TASK_ID_NBIOTQG376].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_NBIOTQG376].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
+	if (zHcuTaskInfo[TASK_ID_NBIOTQG376].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_NBIOTQG376, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_NBIOTQG376]);
+		}
+	}
+
 	zHcuSvrConTaskInitInfo[TASK_ID_EMC].active = SVRCON_TASK_ACTIVE;
 	zHcuSvrConTaskInitInfo[TASK_ID_EMC].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 
@@ -548,6 +571,46 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSvrConTaskInitInfo[TASK_ID_TOXICGAS].active = SVRCON_TASK_ACTIVE;
 	zHcuSvrConTaskInitInfo[TASK_ID_TOXICGAS].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 
+	if (zHcuTaskInfo[TASK_ID_IWM].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_IWM, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_IWM]);
+		}
+	}
+	zHcuSvrConTaskInitInfo[TASK_ID_IWM].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_IWM].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
+	if (zHcuTaskInfo[TASK_ID_IHM].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_IHM, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_IHM]);
+		}
+	}
+	zHcuSvrConTaskInitInfo[TASK_ID_IHM].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_IHM].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
+	if (zHcuTaskInfo[TASK_ID_IGM].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_IGM, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_IGM]);
+		}
+	}
+	zHcuSvrConTaskInitInfo[TASK_ID_IGM].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_IGM].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
+	if (zHcuTaskInfo[TASK_ID_IPM].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_IPM, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_IPM]);
+		}
+	}
+	zHcuSvrConTaskInitInfo[TASK_ID_IPM].active = SVRCON_TASK_ACTIVE;
+	zHcuSvrConTaskInitInfo[TASK_ID_IPM].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+
 	// by shanchun
 	if (zHcuTaskInfo[TASK_ID_PM25SHARP].swTaskActive == HCU_TASK_PNP_ON){
 		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_PM25SHARP, TASK_ID_SVRCON, &snd, snd.length);
@@ -587,7 +650,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuErrorPrint("SVRCON: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SVRCON: Enter FSM_STATE_SVRCON_WAIT_FOR_FB status, everything goes well!\n");
 	}
 	return SUCCESS;
@@ -616,7 +679,7 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//检查所有的反馈是否都收到，不然维持状态不变
 	if (func_svrcon_init_caculate_all_fb() == TRUE){
 
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 			int i=0;
 			for(i=0;i<MAX_TASK_NUM_IN_ONE_HCU;i++){
 				HcuDebugPrint("SVRCON:Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskNameList[i]);
@@ -636,7 +699,7 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			return FAILURE;
 		}
 		//Enter active status, keep working
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("SVRCON: Enter FSM_STATE_SVRCON_ACTIVED status, Getting to SLEEP mode for a while!\n");
 		}
 	}
@@ -680,7 +743,7 @@ OPSTAT fsm_svrcon_init_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	if ((rcv.timeId == TIMER_ID_1S_SVRCON_INIT_FB) && (rcv.timeRes == TIMER_RESOLUTION_1S)){
 		HcuErrorPrint("SVRCON: Error! Time out before receve all tasks feedback, fatal error!\n");
 
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 			int i=0;
 			for(i=0;i<MAX_TASK_NUM_IN_ONE_HCU;i++){
 				HcuDebugPrint("SVRCON:Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskNameList[i]);

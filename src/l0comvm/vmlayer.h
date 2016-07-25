@@ -19,7 +19,12 @@
 //不是任务的任务，比如TRACE/CONFIG/3G/GPIO等等，留待清理，简化任务列表
 /*
  *
- *   【增加任务】，必须同时修改三个地方：HCU_TASK_NAME_ID， HCU_TASK_QUEUE_ID， zHcuTaskNameList
+ *   【增加任务】，必须同时修改四个地方：
+ *   - HCU_TASK_NAME_ID
+ *   - HCU_TASK_QUEUE_ID
+ *   - zHcuTaskNameList
+ *   - 还要DBICOM中去修改ModuleTrace的数据，不然通过L3UI界面进行控制TRACE也会出错，并备份数据库
+ *   - 如果需要完美表现，还得最终需要升级L3UI的CRUD，不然相应的工具会出错
  *
  */
 enum HCU_TASK_NAME_ID
@@ -61,6 +66,8 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_AVORION,
 	TASK_ID_I2CBUSLIBRA,
 	TASK_ID_SPIBUSARIES,
+	TASK_ID_NBIOTCJ188,
+	TASK_ID_NBIOTQG376,
 	TASK_ID_HSMMP,  //High Speed MultiMedia processing
 	TASK_ID_EMC,
 	TASK_ID_HUMID,
@@ -75,6 +82,10 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_ALCOHOL, //酒精
 	TASK_ID_HCHO,    //甲醛
 	TASK_ID_TOXICGAS,//有毒气体
+	TASK_ID_IWM,  //智能水表
+	TASK_ID_IHM,  //智能热表
+	TASK_ID_IGM,  //智能煤气表
+	TASK_ID_IPM,  //智能电表
 	TASK_ID_SVRCON,
 	TASK_ID_SYSPM,  //性能统计
 	TASK_ID_PM25SHARP,  //for pm25sharp sensor by shanchun
@@ -121,6 +132,8 @@ enum HCU_TASK_QUEUE_ID
 	TASK_QUE_ID_AVORION,
 	TASK_QUE_ID_I2CBUSLIBRA,
 	TASK_QUE_ID_SPIBUSARIES,
+	TASK_QUE_ID_NBIOTCJ188,
+	TASK_QUE_ID_NBIOTQG376,
 	TASK_QUE_ID_HSMMP,
 	TASK_QUE_ID_EMC,
 	TASK_QUE_ID_HUMID,
@@ -135,9 +148,14 @@ enum HCU_TASK_QUEUE_ID
 	TASK_QUE_ID_ALCOHOL, //酒精
 	TASK_QUE_ID_HCHO,    //甲醛
 	TASK_QUE_ID_TOXICGAS,//有毒气体
+	TASK_QUE_ID_IWM,  //智能水表
+	TASK_QUE_ID_IHM,  //智能热表
+	TASK_QUE_ID_IGM,  //智能煤气表
+	TASK_QUE_ID_IPM,  //智能电表
 	TASK_QUE_ID_SVRCON,
 	TASK_QUE_ID_SYSPM,
 	TASK_QUE_ID_PM25SHARP, //for pm25sharp sensor by shanchun
+
 	TASK_QUE_ID_MAX,
 	TASK_QUE_ID_NULL = 0xFFFFFFFF,
 }; //end of HCU_TASK_QUEUE_ID

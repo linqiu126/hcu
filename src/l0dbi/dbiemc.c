@@ -90,7 +90,7 @@ OPSTAT dbi_HcuEmcDataInfo_save(sensor_emc_data_element_t *emcData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIEMC: EMC data record save to DB!\n");
 	}
     return SUCCESS;

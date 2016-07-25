@@ -456,12 +456,12 @@ typedef enum
 #define HCU_HWINV_STATUS_INVALID 0xFF
 
 //CLOUD模块中zHcuCloudConTable对当前工作物理接口的定义，为了互斥
-#define CLOUDVELA_CONTROL_PHY_CON_NULL 0
-#define CLOUDVELA_CONTROL_PHY_CON_ETHERNET 1
-#define CLOUDVELA_CONTROL_PHY_CON_USBNET 2
-#define CLOUDVELA_CONTROL_PHY_CON_WIFI 3
-#define CLOUDVELA_CONTROL_PHY_CON_3G4G 4
-#define CLOUDVELA_CONTROL_PHY_CON_INVALID 0xFF
+#define HCU_CLOUDVELA_CONTROL_PHY_CON_NULL 0
+#define HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET 1
+#define HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET 2
+#define HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI 3
+#define HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G 4
+#define HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID 0xFF
 
 //在CLOUD模块中定义的公共数据Buffer结构体，必须放在这儿，不然ETHERNET/USBNET/WIFI/CON3G4G/CLOUDCONT之间的包含关系混乱了
 //这里的数据，已经是编码后的数据长度，故而必须考虑到字符串稀释后的长度
@@ -491,29 +491,29 @@ enum CloudBhMsgTypeEnum
 	CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_UINT8,
 	CLOUDVELA_BH_MSG_TYPE_MAX,
 };
-#define CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING  "hcu_text"  //"hcu_text"
-#define CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING  "hcu_command" //"hcu_command"
-#define CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING "hcu_heart_beat"   //"hcu_heart_beat"  //心跳协议，里面的数据内容是空的
-#define CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_STRING "hcu_biz_itg"  //业务智能 hcu_biz_inteligence
+#define HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING  "hcu_text"  //"hcu_text"
+#define HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING  "hcu_command" //"hcu_command"
+#define HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING "hcu_heart_beat"   //"hcu_heart_beat"  //心跳协议，里面的数据内容是空的
+#define HCU_CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_STRING "hcu_biz_itg"  //业务智能 hcu_biz_inteligence
 
 
 //XML格式定义
 //主体内容中，各个不同的字段完全按照这个优先级进行编码，解码时将由各种操作字的隐含必选关系进行解码，从而简化编码函数
-#define CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH HCU_FILE_NAME_LENGTH_MAX  //要传递HTTP名字会后台，只能扩大该域的长度
+#define HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH HCU_FILE_NAME_LENGTH_MAX  //要传递HTTP名字会后台，只能扩大该域的长度
 typedef struct CloudBhItfDevReportStdXml
 {
 	char xml_l[6];
 	char ToUserName_l[22];
-	char ToUserName[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
+	char ToUserName[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
 	char ToUserName_r[17];
 	char FromUserName_l[24];
-	char FromUserName[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
+	char FromUserName[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
 	char FromUserName_r[19];
 	char CreateTime_l[13];
-	char CreateTime[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
+	char CreateTime[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
 	char CreateTime_r[14];
 	char MsgType_l[19];
-	char MsgType[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
+	char MsgType[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
 	char MsgType_r[14];
 	char Content_l[19];
 	char conCmdId[3];
@@ -558,12 +558,13 @@ typedef struct CloudBhItfDevReportStdXml
 
 	//Added by Shanchun for av upload
 	char conAvUpload[3];
+	char conAvFileName[HCU_FILE_NAME_LENGTH_MAX];
 
 	char conTimeStamp[9]; //4B
 	char conNtimes[5];   //2B
 	char Content_r[14];
 	char FuncFlag_l[11];
-	char FuncFlag[CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
+	char FuncFlag[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH+1];
 	char FuncFlag_r[12];
 	char xml_r[7];
 }CloudBhItfDevReportStdXml_t;
@@ -601,8 +602,8 @@ typedef struct CloudBhItfDevReportStdXml
  */
 
 //中环保协议标准的格式定义
-#define CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH 30
-//#define CLOUDVELA_BH_ITF_STD_ZHB_DATA_TOTAL_MAX_LENGTH 1025
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH 30
+//#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_DATA_TOTAL_MAX_LENGTH 1025
 typedef struct CloudBhItfDevReportStdZhbData
 {
 	char qn[21]; //请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令
@@ -627,7 +628,7 @@ typedef struct CloudBhItfDevReportStdZhbData
 	char conNoise[9];   //4B HCU->SAE only
 	char conAirprs[5];   //2B HCU->SAE only
 }CloudBhItfDevReportStdZhbData_t;
-#define CLOUDVELA_BH_ITF_STD_ZHB_CN_FIX_LENGTH 7
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_FIX_LENGTH 7
 typedef struct CloudBhItfDevReportStdZhb
 {
 	char zhb_header[3]; //1B 固定为##
@@ -636,23 +637,23 @@ typedef struct CloudBhItfDevReportStdZhb
 	char crc16[5]; //2B, 数据段的校验结果
 	char zhb_tail[3]; //1B, 固定为<CR><LF>
 }CloudBhItfDevReportStdZhb_t;
-#define CLOUDVELA_BH_ITF_STD_ZHB_EMC "a01000"
-#define CLOUDVELA_BH_ITF_STD_ZHB_TEMP "a01001"
-#define CLOUDVELA_BH_ITF_STD_ZHB_HUMID "a01002"
-#define CLOUDVELA_BH_ITF_STD_ZHB_AIRPRS "a01006"
-#define CLOUDVELA_BH_ITF_STD_ZHB_WINDSPD "a01007"
-#define CLOUDVELA_BH_ITF_STD_ZHB_WINDDIR "a01008"
-#define CLOUDVELA_BH_ITF_STD_ZHB_PM25 "a34001"
-#define CLOUDVELA_BH_ITF_STD_ZHB_NOISE "a50001"
-#define CLOUDVELA_BH_ITF_STD_ZHB_HSMMP "a60001"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_EMC "a01000"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_TEMP "a01001"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_HUMID "a01002"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_AIRPRS "a01006"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_WINDSPD "a01007"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_WINDDIR "a01008"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_PM25 "a34001"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_NOISE "a50001"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_HSMMP "a60001"
 
 //定义ZHB中环保协议中的系统命令，以便区分心跳/普通包，该定义的详细阐述留待以后再明确
-#define CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT "ZHB_HRB"
-#define CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG "ZHB_NOM"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT "ZHB_HRB"
+#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG "ZHB_NOM"
 
 
 //L2 and L3 module used GPS information, defined structure here
-typedef struct datatime
+typedef struct hcuStrDataTime
 {
 	UINT32 hour;
 	UINT32 minute;
@@ -660,11 +661,11 @@ typedef struct datatime
 	UINT32 day;
 	UINT32 month;
 	UINT32 year;
-}date_time;
+}hcuStrDateTime_t;
 
 typedef struct GpsPosInfo
 {
-	date_time D; //UTC日期时间
+	hcuStrDateTime_t D; //UTC日期时间
 	CHAR status;
 	UINT32 gpsX; //纬度
 	CHAR EW;
@@ -686,18 +687,19 @@ typedef struct  HcuInventoryInfo
 }HcuInventoryInfot;
 
 //Adding by Shanchun for socket handling
-#define PORT 4454
-#define QUEUE 30
+#define HCU_CLOUDSRV_BH_PORT 4454
+#define HCU_CLOUDSRV_BH_ADDRESS "121.40.185.177"
+#define HCU_CLOUDSRV_BH_QUEUE 30
 
 //Adding by Shanchun for cmd timer flag
-#define CMD_POLLING_LONG_TIMER_START_ON 1
-#define CMD_POLLING_LONG_TIMER_START_OFF 2
-#define CMD_POLLING_SHORT_TIMER_START_ON 1
-#define CMD_POLLING_SHORT_TIMER_START_OFF 2
-#define CMD_POLLING_NO_COMMAND_MAX 10
+#define HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_ON 1
+#define HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_OFF 2
+#define HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_ON 1
+#define HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_OFF 2
+#define HCU_CLOUDVELA_CMD_POLLING_NO_COMMAND_MAX 10
 
 //定义本地I2C设备
-#define RPI_DEV_I2C_ADDRESS "/dev/i2c-1"
+#define HCU_RPI_DEV_I2C_ADDRESS "/dev/i2c-1"
 
 //传感器合理范围
 #define HCU_SENSOR_VALUE_NULL 0x0FFFFFFF
@@ -740,44 +742,213 @@ typedef struct  HcuInventoryInfo
 #define HCU_SENSOR_GPSZ_VALUE_MIN 0  //in m
 #define HCU_SENSOR_GPSZ_VALUE_MAX 30000
 
-#define CLOUDVELA_PATH_MAX 1024  //for readlink by shanchun
-#define HSMMP_PATH_MAX 254  //for readlink by shanchun
+#define HCU_CLOUDVELA_PATH_MAX 1024  //for readlink by shanchun
+#define HCU_CLOUDVELA_HSMMP_PATH_MAX 254  //for readlink by shanchun
 
 
 //串口设备地址相关的公共定义，跟配置以及使用的硬件环境非常相关
 #ifdef TARGET_LINUX_ARM
-//#define SPS_COM_PORT_PATH_0  "/dev/ttySAC0"
-//#define SPS_COM_PORT_PATH_1  "/dev/ttySAC1"
-//#define SPS_COM_PORT_PATH_2  "/dev/ttySAC2"
-//#define SPS_COM_PORT_PATH_3  "/dev/ttySAC3"
-//#define SPS_COM_PORT_PATH_4  "/dev/ttySAC4"
-#define SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
-#define SPS_COM_PORT_PATH_1  "/dev/ttyO1"
-#define SPS_COM_PORT_PATH_2  "/dev/ttyO2"
-#define SPS_COM_PORT_PATH_3  "/dev/ttyO3"
-#define SPS_COM_PORT_PATH_4  "/dev/ttyO4"
+//#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttySAC0"
+//#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttySAC1"
+//#define HCU_SPS_COM_PORT_PATH_2  "/dev/ttySAC2"
+//#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttySAC3"
+//#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttySAC4"
+#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
+#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyO1"
+#define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyO2"
+#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyO3"
+#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyO4"
 #endif
 
 #ifdef TARGET_LINUX_X86
-#define SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
-#define SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
-#define SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
-#define SPS_COM_PORT_PATH_3  "/dev/ttyS0"
-#define SPS_COM_PORT_PATH_4  "/dev/ttyS1"
-//#define SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
-//#define SPS_COM_PORT_PATH_4  "/dev/ttyUSB4"
+#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
+#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
+#define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
+#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyS0"
+#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyS1"
+//#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
+//#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyUSB4"
 #endif
 
 #ifdef TARGET_RASPBERRY_PI3B
-#define SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
-//#define SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
-#define SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
-#define SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
-#define SPS_COM_PORT_PATH_3  "/dev/ttyS0"
-#define SPS_COM_PORT_PATH_4  "/dev/ttyS1"
-//#define SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
-//#define SPS_COM_PORT_PATH_3  "/dev/ttyUSB4"
+#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
+//#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
+#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
+#define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
+#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyS0"
+#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyS1"
+//#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
+//#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB4"
 #endif
 
+/**************************************************************************************
+ *                            NBIOT IPM376消息定义                                    *
+ *************************************************************************************/
+//AFN消息字段
+#define  HCU_NBIOT_IPM376_AFN_CMDID_CNFNG 0x00
+#define  HCU_NBIOT_IPM376_AFN_CMDID_RESET 0x01
+#define  HCU_NBIOT_IPM376_AFN_CMDID_LICK 0x02  //Link Interface Check
+#define  HCU_NBIOT_IPM376_AFN_CMDID_RELAY 0x03
+#define  HCU_NBIOT_IPM376_AFN_CMDID_SETPAR 0x04
+#define  HCU_NBIOT_IPM376_AFN_CMDID_CONTROL 0x05
+#define  HCU_NBIOT_IPM376_AFN_CMDID_SECNEG 0x06
+#define  HCU_NBIOT_IPM376_AFN_CMDID_REQREP 0x08
+#define  HCU_NBIOT_IPM376_AFN_CMDID_REQCFG 0x09
+#define  HCU_NBIOT_IPM376_AFN_CMDID_INQPAR 0x0A
+#define  HCU_NBIOT_IPM376_AFN_CMDID_REQTSK 0x0B
+#define  HCU_NBIOT_IPM376_AFN_CMDID_REQDATA1 0x0C
+#define  HCU_NBIOT_IPM376_AFN_CMDID_REQDATA2 0x0D
+#define  HCU_NBIOT_IPM376_AFN_CMDID_REQDATA3 0x0E
+#define  HCU_NBIOT_IPM376_AFN_CMDID_FILETRNS 0x0F
+#define  HCU_NBIOT_IPM376_AFN_CMDID_DATAFWD 0x10
+
+//消息头的全局定义
+#define  HCU_NBIOT_IPM376_FRAME_FIX_HEAD 0x68
+#define  HCU_NBIOT_IPM376_FRAME_FIX_START 0x68
+#define  HCU_NBIOT_IPM376_FRAME_FIX_TAIL 0x16
+#define  HCU_NBIOT_IPM376_FRAME_MAX_LEN 255 //16383 under fix network transmission
+
+
+/**************************************************************************************
+ *                            NBIOT CJ188消息固定结构定义                                *
+ *************************************************************************************/
+//T代码标识不同的仪表
+#define  HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MIN 0x10
+#define  HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MAX 0x19
+#define  HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN 0x20
+#define  HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX 0x29
+#define  HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MIN 0x30
+#define  HCU_NBIOT_CJ188_T_TYPE_GAS_METER_MAX 0x39
+#define  HCU_NBIOT_CJ188_T_TYPE_POWER_METER_MIN 0x40
+#define  HCU_NBIOT_CJ188_T_TYPE_POWER_METER_MAX 0x49
+
+#define  HCU_NBIOT_CJ188_T_TYPE_COLD_WATER_METER 0x10
+#define  HCU_NBIOT_CJ188_T_TYPE_HOT_WATER_METER 0x11
+#define  HCU_NBIOT_CJ188_T_TYPE_DRINK_WATER_METER 0x12
+#define  HCU_NBIOT_CJ188_T_TYPE_MIDDLE_WATER_METER 0x13
+#define  HCU_NBIOT_CJ188_T_TYPE_HEAT_ENERGY_METER 0x20
+#define  HCU_NBIOT_CJ188_T_TYPE_COLD_ENERGY_METER 0x21
+#define  HCU_NBIOT_CJ188_T_TYPE_GAS_METER 0x30
+#define  HCU_NBIOT_CJ188_T_TYPE_ELECTRONIC_POWER_METER 0x40
+
+//Control码子代表的不同含义
+#define  HCU_NBIOT_CJ188_CTRL_MIN 0x0
+#define  HCU_NBIOT_CJ188_CTRL_RESERVED 0x0
+#define  HCU_NBIOT_CJ188_CTRL_READ_DATA 0x01
+#define  HCU_NBIOT_CJ188_CTRL_WRITE_DATA 0x04
+#define  HCU_NBIOT_CJ188_CTRL_READ_KEY_VER 0x09
+#define  HCU_NBIOT_CJ188_CTRL_READ_ADDR 0x03
+#define  HCU_NBIOT_CJ188_CTRL_WRITE_ADDR 0x05
+#define  HCU_NBIOT_CJ188_CTRL_WRITE_DEVICE_SYN 0x16
+#define  HCU_NBIOT_CJ188_CTRL_MAX 0x16
+
+//应用层DI0DI1的定义
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA 0x901F
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA1 0xD120
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA2 0xD121
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA3 0xD122
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA4 0xD123
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA5 0xD124
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA6 0xD125
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA7 0xD126
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA8 0xD127
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA9 0xD128
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA10 0xD129
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA11 0xD12A
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_HISTORY_COUNTER_DATA12 0xD12B
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_PRICE_TABLE 0x8102
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_BILL_TODAY_DATE 0x8103  //结算日
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_READ_ACCOUNT_CUR_DATE 0x8104 //抄表日
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_BUY_AMOUNT 0x8105 //购入金额
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_KEY_VER 0x8106
+#define  HCU_NBIOT_CJ188_READ_DI0DI1_ADDRESS 0x810A
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_PRICE_TABLE 0xA010
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_BILL_TODAY_DATE 0xA011    //结算日
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_READ_ACCOUNT_CUR_DATE 0xA012   //抄表日
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_BUY_AMOUNT 0xA013
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_NEW_KEY 0xA014
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_STD_TIME 0xA015
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_SWITCH_CTRL 0xA017
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_OFF_FACTORY_START 0xA019
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_ADDRESS 0xA018
+#define  HCU_NBIOT_CJ188_WRITE_DI0DI1_DEVICE_SYN_DATA 0xA016
+
+//单位代号表
+#define  HCU_NBIOT_CJ188_UNIT_WH 0x02
+#define  HCU_NBIOT_CJ188_UNIT_KWH 0x05
+#define  HCU_NBIOT_CJ188_UNIT_MWH 0x08
+#define  HCU_NBIOT_CJ188_UNIT_100MWH 0x0A
+#define  HCU_NBIOT_CJ188_UNIT_J 0x01
+#define  HCU_NBIOT_CJ188_UNIT_KJ 0x0B
+#define  HCU_NBIOT_CJ188_UNIT_MJ 0x0E
+#define  HCU_NBIOT_CJ188_UNIT_GJ 0x11
+#define  HCU_NBIOT_CJ188_UNIT_100GJ 0x13
+#define  HCU_NBIOT_CJ188_UNIT_W 0x14
+#define  HCU_NBIOT_CJ188_UNIT_KW 0x17
+#define  HCU_NBIOT_CJ188_UNIT_MW 0x1A
+#define  HCU_NBIOT_CJ188_UNIT_L 0x29
+#define  HCU_NBIOT_CJ188_UNIT_M3 0x2C
+#define  HCU_NBIOT_CJ188_UNIT_L_H 0x32
+#define  HCU_NBIOT_CJ188_UNIT_M3_H 0x35
+
+
+//消息头的全局定义
+#define  HCU_NBIOT_CJ188_FRAME_FIX_HEAD 0x68
+#define  HCU_NBIOT_CJ188_FRAME_FIX_TAIL 0x16
+#define  HCU_NBIOT_CJ188_FRAME_READ_MAX_LEN 77 //最少64+13的固定长度
+#define  HCU_NBIOT_CJ188_FRAME_WRITE_MAX_LEN 45 //最少32+13的固定长度
+
+//为了进行编解码，生成该结构
+typedef struct  NbiotCj188BhItfComElement //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t head;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t data;
+	UINT32 length;
+}NbiotCj188BhItfComElement_t;
+typedef struct  NbiotCj188BhItfComCtrFlag //
+{
+	UINT8 d0d1Flag;
+	UINT8 billtodayaccuvolumeFlag;
+	UINT8 heatpowerFlag;
+	UINT8 currentheatFlag;
+	UINT8 billtodayheatFlag;
+	UINT8 currentaccuvolumeFlag;
+	UINT8 flowvolumeFlag;
+	UINT8 lastmonthFlag;
+	UINT8 accumuworktimeFlag;
+	UINT8 supplywatertempFlag;
+	UINT8 backwatertempFlag;
+	UINT8 realtimeFlag;
+	UINT8 stFlag;
+	UINT8 billtodaydateFlag;
+	UINT8 readamountcurdateFlag;
+	UINT8 startdateFlag;
+	UINT8 keyFlag;
+	UINT8 price1Flag;
+	UINT8 volume1Flag;
+	UINT8 price2Flag;
+	UINT8 volume2Flag;
+	UINT8 price3Flag;
+	UINT8 buycodeFlag;
+	UINT8 thisamountFlag;
+	UINT8 accuamountFlag;
+	UINT8 remainamountFlag;
+	UINT8 keyverFlag;
+	UINT8 switchctrlFlag;
+}NbiotCj188BhItfComCtrFlag_t;
+
+#define HCU_NBIOT_CJ188_COMM_CHANNEL_NORMAL 1
+#define HCU_NBIOT_CJ188_COMM_CHANNEL_ABNORMAL 2
+#define HCU_NBIOT_CJ188_SWITCH_CONTROL_ON 55
+#define HCU_NBIOT_CJ188_SWITCH_CONTROL_OFF 99
 
 #endif /* L1COM_L1COMDEF_H_ */
