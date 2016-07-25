@@ -65,7 +65,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_GPIO, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -100,7 +100,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		HcuErrorPrint("GPIO: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("GPIO: Enter FSM_STATE_GPIO_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -173,7 +173,7 @@ OPSTAT func_gpio_read_data_dht11(void)
         delay(200); //wiringPi functions
         if(func_gpio_readSensorDht11Data(RPI_GPIO_PIN_DHT11_DATA))
         {
-//        	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//        	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 //            	HcuDebugPrint("GPIO: Sensor DHT11 Original read result Temp=%d.%dC, Humid=%d.%d\%, DATA_GPIO#=%d\n", (databuf>>8)&0xFF, databuf&0xFF, (databuf>>24)&0xFF, (databuf>>16)&0xFF, RPI_GPIO_PIN_DHT11_DATA);
 //        	}
         	tmp1 =  (databuf>>8)&0xFF;
@@ -193,7 +193,7 @@ OPSTAT func_gpio_read_data_dht11(void)
 	//求平均
 	zHcuGpioTempDht11 = tempSum / RPI_GPIO_READ_REPEAT_TIMES;
 	zHcuGpioHumidDht11 = humidSum / RPI_GPIO_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
     	HcuDebugPrint("GPIO: Sensor DHT11 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_GPIO#=%d\n", zHcuGpioTempDht11, zHcuGpioHumidDht11, RPI_GPIO_PIN_DHT11_DATA);
 	}
 
@@ -271,13 +271,13 @@ OPSTAT func_gpio_read_data_mq135(void)
 	    toxicgas = digitalRead(RPI_GPIO_PIN_MQ135_DATA);
 	    toxicgasSum += toxicgas;
 
-//		if ((toxicgas == 1) && (zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE)
+//		if ((toxicgas == 1) && (zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE)
 //			HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [HIGH], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
-//		else if ((toxicgas == 0) && (zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE)
+//		else if ((toxicgas == 0) && (zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE)
 //			HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [LOW], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
 //		else
 //		{
-//			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 //				HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [NULL-%d], DATA_GPIO#=%d\n", toxicgas, RPI_GPIO_PIN_MQ135_DATA);
 //			}
 //		}
@@ -285,7 +285,7 @@ OPSTAT func_gpio_read_data_mq135(void)
 
 	//求平均
 	zHcuGpioToxicgasMq135 = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor MQ135 Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuGpioToxicgasMq135, RPI_GPIO_PIN_MQ135_DATA);
 	}
 
@@ -316,7 +316,7 @@ OPSTAT func_gpio_read_data_mq3alco(void)
 
 	//求平均
 	zHcuGpioAlcoholMq3alco = alcoholSum / RPI_GPIO_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor MQ3ALCO Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuGpioAlcoholMq3alco, RPI_GPIO_PIN_MQ3ALCO_DATA);
 	}
 
@@ -361,7 +361,7 @@ OPSTAT func_gpio_read_data_zp01voc(void)
 
 	//求平均
 	zHcuGpioToxicgasZp01voc = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor ZP01VOC Transformed float average read result pollution= %d[Times], DATA_GPIO_A#=%d, DATA_GPIO_B#=%d\n", (int)zHcuGpioToxicgasZp01voc, RPI_GPIO_PIN_ZP01VOC_DATA_A, RPI_GPIO_PIN_ZP01VOC_DATA_B);
 	}
 

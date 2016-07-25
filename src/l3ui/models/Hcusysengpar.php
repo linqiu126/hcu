@@ -24,6 +24,8 @@ use Yii;
  * @property integer $commframecloudvela
  * @property integer $commframei2cbuslibra
  * @property integer $commframespibusaries
+ * @property integer $commframenbiotcj188
+ * @property integer $commframenbiotqg376
  * @property integer $commfrontsps485
  * @property integer $commfrontsps232
  * @property integer $commfrontmicrophone
@@ -51,6 +53,10 @@ use Yii;
  * @property integer $commfrontsensoralcohol
  * @property integer $commfrontsensorhcho
  * @property integer $commfrontsensortoxicgas
+ * @property integer $commfrontsensoriwm
+ * @property integer $commfrontsensorihm
+ * @property integer $commfrontsensorigm
+ * @property integer $commfrontsensoripm
  * @property integer $commfrontsensorpm25sharp
  * @property string $hcudbhost
  * @property string $hcudbuser
@@ -71,8 +77,12 @@ use Yii;
  * @property integer $winddirreqtimerfb
  * @property integer $windspdreqtimer
  * @property integer $windspdreqtimerfb
- * @property integer $heartbeattimer
- * @property integer $heartbeartbacktimer
+ * @property integer $cloudvelahbtimer
+ * @property integer $cloudvelahbbacktimer
+ * @property integer $nbiotcj188hbtimer
+ * @property integer $nbiotcj188hbbacktimer
+ * @property integer $nbiotqg376hbtimer
+ * @property integer $nbiotqg376hbbacktimer
  * @property integer $cmdcontrollongtimer
  * @property integer $cmdcontrolshorttimer
  * @property integer $hsmmpreqtimer
@@ -85,6 +95,10 @@ use Yii;
  * @property integer $alcoholreqtimer
  * @property integer $hchoreqtimer
  * @property integer $toxicgasreqtimer
+ * @property integer $iwmreqtimer
+ * @property integer $ihmreqtimer
+ * @property integer $igmreqtimer
+ * @property integer $ipmreqtimer
  * @property integer $pm25sharpreqtimer
  * @property integer $syspmworkingtimer
  * @property integer $seriesportformodbus
@@ -101,6 +115,8 @@ use Yii;
  * @property string $cloudftpadd
  * @property string $cloudftpuser
  * @property string $cloudftppwd
+ * @property string $cloudftppwdvideo
+ * @property string $cloudftpuservideo
  * @property string $hcuswdownloaddir
  * @property string $hcuswactivedir
  * @property string $hcuswbackupdir
@@ -129,11 +145,13 @@ class Hcusysengpar extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['prjname', 'commbackhawlcon', 'commhwboardethernet', 'commhwboardusbnet', 'commhwboardwifi', 'commhwboard3g4g', 'commhwboardgps', 'commhwboardlcd', 'commhwboardled', 'commhwboardzeegbe', 'commhwboardflash', 'commframemodbus', 'commframespsvirgo', 'commframeavorion', 'commframecloudvela', 'commframei2cbuslibra', 'commframespibusaries', 'commfrontsps485', 'commfrontsps232', 'commfrontmicrophone', 'commfrontcamera', 'commfrontble', 'commfrontgpio', 'commfronti2c', 'commfrontspi', 'commfrontpwm', 'commfrontadc', 'commfrontswitch', 'commfrontrelay', 'commfrontmotor', 'commfrontsensoremc', 'commfrontsensorpm25', 'commfrontsensortemp', 'commfrontsensorhumid', 'commfrontsensorwinddir', 'commfrontsensorwindspd', 'commfrontsensornoise', 'commfrontsensorhsmmp', 'commfrontsensorairprs', 'commfrontsensorco1', 'commfrontsensorlightstr', 'commfrontsensoralcohol', 'commfrontsensorhcho', 'commfrontsensortoxicgas', 'commfrontsensorpm25sharp', 'hcudbhost', 'hcudbuser', 'hcudbpsw', 'hcudbname', 'hcudbport', 'emcreqtimer', 'emcreqtimerfb', 'humidreqtimer', 'humidreqtimerfb', 'noisereqtimer', 'noisereqtimerfb', 'pm25reqtimer', 'pm25reqtimerfb', 'tempreqtimer', 'tempreqtimerfb', 'winddirreqtimer', 'winddirreqtimerfb', 'windspdreqtimer', 'windspdreqtimerfb', 'heartbeattimer', 'heartbeartbacktimer', 'cmdcontrollongtimer', 'cmdcontrolshorttimer', 'hsmmpreqtimer', 'hsmmpcapduration', 'hsmmpcapdurationfb', 'hsmmprefrate', 'airprsreqtimer', 'co1reqtimer', 'lightstrreqtimer', 'alcoholreqtimer', 'hchoreqtimer', 'toxicgasreqtimer', 'pm25sharpreqtimer', 'syspmworkingtimer', 'seriesportformodbus', 'seriesportforgps', 'seriesportforpm25sharp', 'cloudhttpaddlocal', 'cloudhttpaddtest', 'cloudhttpaddsae', 'cloudhttpaddjd', 'cloudhttpaddwechat', 'cloudbhservername', 'cloudbhhcuname', 'cloudbhitfframestd', 'cloudftpadd', 'cloudftpuser', 'cloudftppwd', 'hcuswdownloaddir', 'hcuswactivedir', 'hcuswbackupdir', 'hcuvideoserverdir', 'hcuvideoserverhttp', 'debugmode', 'tracemode', 'browselautostartupflag', 'browselprog', 'browselstartupaddress', 'browselworkingoption'], 'required'],
-            [['commbackhawlcon', 'commhwboardethernet', 'commhwboardusbnet', 'commhwboardwifi', 'commhwboard3g4g', 'commhwboardgps', 'commhwboardlcd', 'commhwboardled', 'commhwboardzeegbe', 'commhwboardflash', 'commframemodbus', 'commframespsvirgo', 'commframeavorion', 'commframecloudvela', 'commframei2cbuslibra', 'commframespibusaries', 'commfrontsps485', 'commfrontsps232', 'commfrontmicrophone', 'commfrontcamera', 'commfrontble', 'commfrontgpio', 'commfronti2c', 'commfrontspi', 'commfrontpwm', 'commfrontadc', 'commfrontswitch', 'commfrontrelay', 'commfrontmotor', 'commfrontsensoremc', 'commfrontsensorpm25', 'commfrontsensortemp', 'commfrontsensorhumid', 'commfrontsensorwinddir', 'commfrontsensorwindspd', 'commfrontsensornoise', 'commfrontsensorhsmmp', 'commfrontsensorairprs', 'commfrontsensorco1', 'commfrontsensorlightstr', 'commfrontsensoralcohol', 'commfrontsensorhcho', 'commfrontsensortoxicgas', 'commfrontsensorpm25sharp', 'hcudbport', 'emcreqtimer', 'emcreqtimerfb', 'humidreqtimer', 'humidreqtimerfb', 'noisereqtimer', 'noisereqtimerfb', 'pm25reqtimer', 'pm25reqtimerfb', 'tempreqtimer', 'tempreqtimerfb', 'winddirreqtimer', 'winddirreqtimerfb', 'windspdreqtimer', 'windspdreqtimerfb', 'heartbeattimer', 'heartbeartbacktimer', 'cmdcontrollongtimer', 'cmdcontrolshorttimer', 'hsmmpreqtimer', 'hsmmpcapduration', 'hsmmpcapdurationfb', 'hsmmprefrate', 'airprsreqtimer', 'co1reqtimer', 'lightstrreqtimer', 'alcoholreqtimer', 'hchoreqtimer', 'toxicgasreqtimer', 'pm25sharpreqtimer', 'syspmworkingtimer', 'seriesportformodbus', 'seriesportforgps', 'seriesportforpm25sharp', 'cloudbhitfframestd', 'debugmode', 'tracemode', 'browselautostartupflag'], 'integer'],
-            [['prjname', 'hcudbhost', 'hcudbuser', 'hcudbpsw', 'hcudbname', 'browselprog'], 'string', 'max' => 20],
-            [['cloudhttpaddlocal', 'cloudhttpaddtest', 'cloudhttpaddsae', 'cloudhttpaddjd', 'cloudhttpaddwechat', 'cloudftpadd', 'hcuswdownloaddir', 'hcuswactivedir', 'hcuswbackupdir', 'hcuvideoserverdir', 'hcuvideoserverhttp'], 'string', 'max' => 64],
-            [['cloudbhservername', 'cloudbhhcuname', 'cloudftpuser', 'cloudftppwd'], 'string', 'max' => 12],
+            [['prjname', 'commbackhawlcon', 'commhwboardethernet', 'commhwboardusbnet', 'commhwboardwifi', 'commhwboard3g4g', 'commhwboardgps', 'commhwboardlcd', 'commhwboardled', 'commhwboardzeegbe', 'commhwboardflash', 'commframemodbus', 'commframespsvirgo', 'commframeavorion', 'commframecloudvela', 'commframei2cbuslibra', 'commframespibusaries', 'commframenbiotcj188', 'commframenbiotqg376', 'commfrontsps485', 'commfrontsps232', 'commfrontmicrophone', 'commfrontcamera', 'commfrontble', 'commfrontgpio', 'commfronti2c', 'commfrontspi', 'commfrontpwm', 'commfrontadc', 'commfrontswitch', 'commfrontrelay', 'commfrontmotor', 'commfrontsensoremc', 'commfrontsensorpm25', 'commfrontsensortemp', 'commfrontsensorhumid', 'commfrontsensorwinddir', 'commfrontsensorwindspd', 'commfrontsensornoise', 'commfrontsensorhsmmp', 'commfrontsensorairprs', 'commfrontsensorco1', 'commfrontsensorlightstr', 'commfrontsensoralcohol', 'commfrontsensorhcho', 'commfrontsensortoxicgas', 'commfrontsensoriwm', 'commfrontsensorihm', 'commfrontsensorigm', 'commfrontsensoripm', 'commfrontsensorpm25sharp', 'hcudbhost', 'hcudbuser', 'hcudbpsw', 'hcudbname', 'hcudbport', 'emcreqtimer', 'emcreqtimerfb', 'humidreqtimer', 'humidreqtimerfb', 'noisereqtimer', 'noisereqtimerfb', 'pm25reqtimer', 'pm25reqtimerfb', 'tempreqtimer', 'tempreqtimerfb', 'winddirreqtimer', 'winddirreqtimerfb', 'windspdreqtimer', 'windspdreqtimerfb', 'cloudvelahbtimer', 'cloudvelahbbacktimer', 'nbiotcj188hbtimer', 'nbiotcj188hbbacktimer', 'nbiotqg376hbtimer', 'nbiotqg376hbbacktimer', 'cmdcontrollongtimer', 'cmdcontrolshorttimer', 'hsmmpreqtimer', 'hsmmpcapduration', 'hsmmpcapdurationfb', 'hsmmprefrate', 'airprsreqtimer', 'co1reqtimer', 'lightstrreqtimer', 'alcoholreqtimer', 'hchoreqtimer', 'toxicgasreqtimer', 'iwmreqtimer', 'ihmreqtimer', 'igmreqtimer', 'ipmreqtimer', 'pm25sharpreqtimer', 'syspmworkingtimer', 'seriesportformodbus', 'seriesportforgps', 'seriesportforpm25sharp', 'cloudhttpaddlocal', 'cloudhttpaddtest', 'cloudhttpaddsae', 'cloudhttpaddjd', 'cloudhttpaddwechat', 'cloudbhservername', 'cloudbhhcuname', 'cloudbhitfframestd', 'cloudftpadd', 'cloudftpuser', 'cloudftppwd', 'cloudftppwdvideo', 'cloudftpuservideo', 'hcuswdownloaddir', 'hcuswactivedir', 'hcuswbackupdir', 'hcuvideoserverdir', 'hcuvideoserverhttp', 'debugmode', 'tracemode', 'browselautostartupflag', 'browselprog', 'browselstartupaddress', 'browselworkingoption'], 'required'],
+            [['commbackhawlcon', 'commhwboardethernet', 'commhwboardusbnet', 'commhwboardwifi', 'commhwboard3g4g', 'commhwboardgps', 'commhwboardlcd', 'commhwboardled', 'commhwboardzeegbe', 'commhwboardflash', 'commframemodbus', 'commframespsvirgo', 'commframeavorion', 'commframecloudvela', 'commframei2cbuslibra', 'commframespibusaries', 'commframenbiotcj188', 'commframenbiotqg376', 'commfrontsps485', 'commfrontsps232', 'commfrontmicrophone', 'commfrontcamera', 'commfrontble', 'commfrontgpio', 'commfronti2c', 'commfrontspi', 'commfrontpwm', 'commfrontadc', 'commfrontswitch', 'commfrontrelay', 'commfrontmotor', 'commfrontsensoremc', 'commfrontsensorpm25', 'commfrontsensortemp', 'commfrontsensorhumid', 'commfrontsensorwinddir', 'commfrontsensorwindspd', 'commfrontsensornoise', 'commfrontsensorhsmmp', 'commfrontsensorairprs', 'commfrontsensorco1', 'commfrontsensorlightstr', 'commfrontsensoralcohol', 'commfrontsensorhcho', 'commfrontsensortoxicgas', 'commfrontsensoriwm', 'commfrontsensorihm', 'commfrontsensorigm', 'commfrontsensoripm', 'commfrontsensorpm25sharp', 'hcudbport', 'emcreqtimer', 'emcreqtimerfb', 'humidreqtimer', 'humidreqtimerfb', 'noisereqtimer', 'noisereqtimerfb', 'pm25reqtimer', 'pm25reqtimerfb', 'tempreqtimer', 'tempreqtimerfb', 'winddirreqtimer', 'winddirreqtimerfb', 'windspdreqtimer', 'windspdreqtimerfb', 'cloudvelahbtimer', 'cloudvelahbbacktimer', 'nbiotcj188hbtimer', 'nbiotcj188hbbacktimer', 'nbiotqg376hbtimer', 'nbiotqg376hbbacktimer', 'cmdcontrollongtimer', 'cmdcontrolshorttimer', 'hsmmpreqtimer', 'hsmmpcapduration', 'hsmmpcapdurationfb', 'hsmmprefrate', 'airprsreqtimer', 'co1reqtimer', 'lightstrreqtimer', 'alcoholreqtimer', 'hchoreqtimer', 'toxicgasreqtimer', 'iwmreqtimer', 'ihmreqtimer', 'igmreqtimer', 'ipmreqtimer', 'pm25sharpreqtimer', 'syspmworkingtimer', 'seriesportformodbus', 'seriesportforgps', 'seriesportforpm25sharp', 'cloudbhitfframestd', 'debugmode', 'tracemode', 'browselautostartupflag'], 'integer'],
+            [['prjname'], 'string', 'max' => 100],
+            [['hcudbhost', 'hcudbuser', 'hcudbpsw', 'hcudbname', 'browselprog'], 'string', 'max' => 20],
+            [['cloudhttpaddlocal', 'cloudhttpaddtest', 'cloudhttpaddsae', 'cloudhttpaddjd', 'cloudhttpaddwechat'], 'string', 'max' => 200],
+            [['cloudbhservername', 'cloudbhhcuname', 'cloudftpuser', 'cloudftppwd', 'cloudftppwdvideo', 'cloudftpuservideo'], 'string', 'max' => 12],
+            [['cloudftpadd', 'hcuswdownloaddir', 'hcuswactivedir', 'hcuswbackupdir', 'hcuvideoserverdir', 'hcuvideoserverhttp'], 'string', 'max' => 64],
             [['browselstartupaddress', 'browselworkingoption'], 'string', 'max' => 128],
         ];
     }
@@ -161,6 +179,8 @@ class Hcusysengpar extends \yii\db\ActiveRecord
             'commframecloudvela' => 'Commframecloudvela',
             'commframei2cbuslibra' => 'Commframei2cbuslibra',
             'commframespibusaries' => 'Commframespibusaries',
+            'commframenbiotcj188' => 'Commframenbiotcj188',
+            'commframenbiotqg376' => 'Commframenbiotqg376',
             'commfrontsps485' => 'Commfrontsps485',
             'commfrontsps232' => 'Commfrontsps232',
             'commfrontmicrophone' => 'Commfrontmicrophone',
@@ -188,6 +208,10 @@ class Hcusysengpar extends \yii\db\ActiveRecord
             'commfrontsensoralcohol' => 'Commfrontsensoralcohol',
             'commfrontsensorhcho' => 'Commfrontsensorhcho',
             'commfrontsensortoxicgas' => 'Commfrontsensortoxicgas',
+            'commfrontsensoriwm' => 'Commfrontsensoriwm',
+            'commfrontsensorihm' => 'Commfrontsensorihm',
+            'commfrontsensorigm' => 'Commfrontsensorigm',
+            'commfrontsensoripm' => 'Commfrontsensoripm',
             'commfrontsensorpm25sharp' => 'Commfrontsensorpm25sharp',
             'hcudbhost' => 'Hcudbhost',
             'hcudbuser' => 'Hcudbuser',
@@ -208,8 +232,12 @@ class Hcusysengpar extends \yii\db\ActiveRecord
             'winddirreqtimerfb' => 'Winddirreqtimerfb',
             'windspdreqtimer' => 'Windspdreqtimer',
             'windspdreqtimerfb' => 'Windspdreqtimerfb',
-            'heartbeattimer' => 'Heartbeattimer',
-            'heartbeartbacktimer' => 'Heartbeartbacktimer',
+            'cloudvelahbtimer' => 'Cloudvelahbtimer',
+            'cloudvelahbbacktimer' => 'Cloudvelahbbacktimer',
+            'nbiotcj188hbtimer' => 'Nbiotcj188hbtimer',
+            'nbiotcj188hbbacktimer' => 'Nbiotcj188hbbacktimer',
+            'nbiotqg376hbtimer' => 'Nbiotqg376hbtimer',
+            'nbiotqg376hbbacktimer' => 'Nbiotqg376hbbacktimer',
             'cmdcontrollongtimer' => 'Cmdcontrollongtimer',
             'cmdcontrolshorttimer' => 'Cmdcontrolshorttimer',
             'hsmmpreqtimer' => 'Hsmmpreqtimer',
@@ -222,6 +250,10 @@ class Hcusysengpar extends \yii\db\ActiveRecord
             'alcoholreqtimer' => 'Alcoholreqtimer',
             'hchoreqtimer' => 'Hchoreqtimer',
             'toxicgasreqtimer' => 'Toxicgasreqtimer',
+            'iwmreqtimer' => 'Iwmreqtimer',
+            'ihmreqtimer' => 'Ihmreqtimer',
+            'igmreqtimer' => 'Igmreqtimer',
+            'ipmreqtimer' => 'Ipmreqtimer',
             'pm25sharpreqtimer' => 'Pm25sharpreqtimer',
             'syspmworkingtimer' => 'Syspmworkingtimer',
             'seriesportformodbus' => 'Seriesportformodbus',
@@ -238,6 +270,8 @@ class Hcusysengpar extends \yii\db\ActiveRecord
             'cloudftpadd' => 'Cloudftpadd',
             'cloudftpuser' => 'Cloudftpuser',
             'cloudftppwd' => 'Cloudftppwd',
+            'cloudftppwdvideo' => 'Cloudftppwdvideo',
+            'cloudftpuservideo' => 'Cloudftpuservideo',
             'hcuswdownloaddir' => 'Hcuswdownloaddir',
             'hcuswactivedir' => 'Hcuswactivedir',
             'hcuswbackupdir' => 'Hcuswbackupdir',

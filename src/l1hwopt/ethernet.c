@@ -79,7 +79,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_ETHERNET, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -110,15 +110,16 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		HcuErrorPrint("ETHERNET: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("ETHERNET: Enter FSM_STATE_ETHERNET_ACTIVED status, Keeping refresh here!\n");
 	}
+
 
 	//初始化MSGSEND参数
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
 	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
 
-
+/*
 	//创建服务器端套接字描述符，用于监听客户端请求
 	int listenfd = socket(AF_INET, SOCK_STREAM,0);
 
@@ -213,6 +214,84 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 	close(connfd);
 	close(listenfd);
+*/
+
+
+//Start: socket for client
+
+		//创建Client端套接字描述符
+		int clientfd = socket(AF_INET, SOCK_STREAM,0);
+
+		if(clientfd < 0){
+			HcuErrorPrint("ETHERNET: Can not create socket!\n");
+			return FAILURE;
+		}
+
+		//创建用于服务的Client端套接字，注意与 Server端创建的套接字的区别  IP段里，Server端是可以为任何IP提供服务的，客户端里的IP是请求的端点
+		struct sockaddr_in serveraddr;
+		//struct hostent *hp;//
+		bzero((char *)&serveraddr,sizeof(serveraddr));
+		serveraddr.sin_family = AF_INET;
+		//inet_pton(AF_INET,CLOUDSRV_ADDRESS,&serveraddr.sin_addr);
+		serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+		//serveraddr.sin_addr.s_addr = inet_addr(CLOUDSRV_ADDRESS);
+
+		serveraddr.sin_port = htons(HCU_CLOUDSRV_BH_PORT);
+
+		if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
+		{
+			HcuErrorPrint("ETHERNET: Socket can not connect!\n\n\n\n\n\n\n");
+			return FAILURE;
+		}
+		else
+		{
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+				HcuDebugPrint("ETHERNET: Socket conected\n");
+			}
+		}
+
+		int idata;
+
+		//进入阻塞式接收数据状态，收到数据后发送给CLOUDCONT进行处理
+		while(1){
+			idata = 0;
+			//send(clientfd,receiveBuffer.buf,receiveBuffer.length,0);
+			idata = recv(clientfd, &receiveBuffer.buf,MAX_HCU_MSG_BUF_LENGTH,0);
+			if(idata < 0){
+				HcuErrorPrint("ETHERNET: Socket receive error!\n");
+				return FAILURE;
+			}
+			else
+			{
+				receiveBuffer.length = idata;
+				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+					HcuDebugPrint("ETHERNET: Socket receive data from the client of cloud, Data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
+				}
+			}
+
+			if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET)
+			{
+				//将数据发送给CLOUD
+				if (receiveBuffer.length > 1){
+					//发送数据给CLOUDCONT
+					ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
+					if (ret == FAILURE){
+						zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+						HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+						return FAILURE;
+					}
+				}//end of send data
+
+				else{
+					zHcuGlobalCounter.CloudDataTimeOutCnt++;
+				}
+			}
+
+		}//while(1) end
+
+		close(clientfd);
+
+//End: socket for client
 
 	return SUCCESS;
 }
@@ -308,14 +387,14 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 		curl_easy_cleanup(curl);
 
 		if(curlRes != CURLE_OK){
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuErrorPrint("ETHERNET: curl_easy_perform() failed: %s\n", curl_easy_strerror(curlRes));
 			}
 			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 			return FAILURE;
 		}else
 		{
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 				HcuDebugPrint("ETHERNET: Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
 			}
 		}
@@ -326,7 +405,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 		{
 			receiveBuffer.length = receiveBuffer.length - 2;
 			memcpy(receiveBuffer.buf, &receiveBuffer.buf[2], receiveBuffer.length);
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 				HcuDebugPrint("ETHERNET: Exception handling for Aiqiyun -- Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
 			}
 		}
@@ -349,6 +428,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 	}//End of working condition
 
 	return SUCCESS;
+
 }
 
 OPSTAT hcu_ethernet_phy_link_setup(void)
@@ -362,6 +442,23 @@ OPSTAT hcu_ethernet_phy_link_disconnect(void)
 	return SUCCESS;
 }
 
+//为SOCKET建立链路
+OPSTAT hcu_ethernet_socket_link_setup(void)
+{
+	return SUCCESS;
+}
+
+//为SOCKET断掉链路
+OPSTAT hcu_ethernet_socket_link_disconnect(void)
+{
+	return SUCCESS;
+}
+
+//在SOCKET上发送数据
+OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
+{
+	return SUCCESS;
+}
 /*
 static int base64_encode(char *str, int str_len, char *encode, int encode_len){
     BIO *bmem,*b64;

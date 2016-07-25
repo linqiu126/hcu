@@ -230,8 +230,8 @@ typedef struct HcuHwinvCtrlTable
 #define HCU_RECORD_FILE_NAME_SENSOR_CLEAN   	"sensor"
 #define HCU_RECORD_FILE_NAME_MICROPHONE    		"/microphone"
 #define HCU_RECORD_FILE_NAME_MICROPHONE_CLEAN	"microhpone"
-#define HCU_RECORD_FILE_NAME_AVORION    		"/avorion"
-#define HCU_RECORD_FILE_NAME_AVORION_CLEAN		"avorion"
+#define HCU_RECORD_FILE_NAME_AVORION    		"/av"
+#define HCU_RECORD_FILE_NAME_AVORION_CLEAN		"av"
 #define HCU_RECORD_FILE_NAME_EXTEND				".dat"
 #define HCU_RECORD_FILE_NAME_EXTEND_AVI 		".avi"
 #define HCU_RECORD_FILE_NAME_EXTEND_H264 		".h264"
@@ -322,6 +322,10 @@ extern void func_hwinv_scan_lightstr(void);
 extern void func_hwinv_scan_alcohol(void);
 extern void func_hwinv_scan_hcho(void);
 extern void func_hwinv_scan_toxicgas(void);
+extern void func_hwinv_scan_iwm(void);
+extern void func_hwinv_scan_ihm(void);
+extern void func_hwinv_scan_igm(void);
+extern void func_hwinv_scan_ipm(void);
 extern void func_hwinv_scan_pm25sharp(void);
 extern void func_hwinv_scan_local_ui();
 extern void func_hwinv_scan_message_queue(void);
@@ -376,6 +380,11 @@ extern OPSTAT dbi_HcuToxicgasMq135DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuIwmCj188DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuIhmCj188DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuIgmCj188DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuIpmCj188DataInfo_delete_3monold(UINT32 days);
+extern OPSTAT dbi_HcuIpmQg376DataInfo_delete_3monold(UINT32 days);
 
 //create video server directory by Shanchun
 UINT32 hcu_create_multi_dir(const char *path);

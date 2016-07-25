@@ -115,83 +115,6 @@ OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 
 OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-/*
-	//FTP test start by zsc!
-
-	FTP_OPT ftp_opt;
-
-	char usrtmp[3] = ":";
-	ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
-	strcat(ftp_opt.user_key, usrtmp);
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
-
-	char fileupload[64] = "hcu1.log";
-	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
-	strcat(ftp_opt.url, fileupload);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
-
-	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
-	strcat(ftp_opt.file, fileupload);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
-
-	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt))
-		HcuDebugPrint("CLOUDVELA: HCU SW Upload success.\n");
-	else
-		HcuErrorPrint("CLOUDVELA: HCU SW Upload failed.\n");
-
-
-	char filedownload[64] = "hcu1.log";
-	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
-	strcat(ftp_opt.url, filedownload);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
-
-	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
-	strcat(ftp_opt.file, filedownload);
-	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
-
-	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt))
-		HcuDebugPrint("CLOUDVELA: HCU SW Download success.\n");
-	else
-		HcuErrorPrint("CLOUDVELA: HCU SW Download failed.\n");
-
-
-	//FTP test end by zsc!
-*/
-
-/*
-	//readlink test start by zsc!
-	char filepath[CLOUDVELA_PATH_MAX];
-	memset(filepath,0,CLOUDVELA_PATH_MAX);
-	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
-
-	FTP_OPT ftp_opt;
-	//memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
-
-	memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
-	char *temp = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
-	//ftp_opt.file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
-	strcpy(ftp_opt.file,temp);
-
-
-	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);
-	if(rslt<0 || (rslt >=CLOUDVELA_PATH_MAX-1))
-	{
-		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n", rslt);
-	}
-	else
-	{
-		filepath[rslt] = '\0';
-		memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
-		strcpy(ftp_opt.file,filepath);
-	}
-
-
-	HcuDebugPrint("CLOUDVELA: AV file path: %s!\n", ftp_opt.file);
-*/
-
-	//readlink test end by zsc!
-
 	int ret=0;
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -200,7 +123,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CLOUDVELA, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -209,12 +132,13 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		}
 	}
 
+	//收到初始化消息后，进入初始化状态
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_INITED);
 	if (ret == FAILURE){
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_init\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Enter FSM_STATE_CLOUDVELA_INITED status, everything goes well!\n");
 	}
 
@@ -227,12 +151,11 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//zHcuCloudCurlPtrTx = NULL;
 
 	//Added by Shanchun for CMD command
-   CMDShortTimerFlag = CMD_POLLING_SHORT_TIMER_START_OFF;
-   CMDPollingNoCommandNum = 0;
-
+    CMDShortTimerFlag = HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_OFF;
+    CMDPollingNoCommandNum = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_HEART_BEAT, zHcuSysEngPar.timer.heartbeatTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.cloudvelaHbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -246,10 +169,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
 		return FAILURE;
 	}
-
-    CMDLongTimerFlag = CMD_POLLING_LONG_TIMER_START_ON;
-
-
+    CMDLongTimerFlag = HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_ON;
 
 	//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
@@ -300,7 +220,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	}
 
 	//定时长时钟进行链路检测的
-	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_period();
 	}
 
@@ -344,7 +264,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 
 			//启动周期性短定时器，進行数据回传云平台
 			if (zHcuMemStorageBuf.offlineNbr>0){
-				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.heartbeartBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.cloudvelaHbBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -355,7 +275,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 		//如果是失败情况，并不返回错误，属于正常情况
 		//当链路不可用时，这个打印结果会非常频繁，放开比较好
 		else{
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_IPT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			}
 		}
@@ -381,7 +301,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 			//主动断掉链路，需要复位CurrentConnection指示以及Http-Curl全局指针
 
 			//如果当前是3G4G
-			if ((zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
+			if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
 					((zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 							(zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 							(zHcuHwinvTable.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
@@ -400,7 +320,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 						return FAILURE;
 					}
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 					//清除HTTP-CURL链接
 					//if((zHcuCloudCurlPtrTx != NULL) || (zHcuCloudCurlPtrRx != NULL)){
 					//	if(zHcuCloudCurlPtrTx != NULL) curl_easy_cleanup(zHcuCloudCurlPtrTx);  //End a libcurl easy session
@@ -411,7 +331,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 				//不做任何动作
 			}
 			//如果当前是WIFI
-			else if ((zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
+			else if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
 				((zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 						(zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
 				if ((zHcuCloudvelaTable.ethConTry == 0) || (zHcuCloudvelaTable.usbnetConTry == 0)){
@@ -428,7 +348,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 						return FAILURE;
 					}
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 					//清除HTTP-CURL链接
 					//if((zHcuCloudCurlPtrTx != NULL) || (zHcuCloudCurlPtrRx != NULL)){
 					//	if(zHcuCloudCurlPtrTx != NULL) curl_easy_cleanup(zHcuCloudCurlPtrTx);  //End a libcurl easy session
@@ -439,7 +359,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 				//不做任何动作
 			}
 			//如果当前是USBNET
-			else if ((zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
+			else if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
 					(zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE)){
 				if (zHcuCloudvelaTable.ethConTry == 0){
 					//Disconnect current usbnet connection!!!
@@ -455,7 +375,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 						return FAILURE;
 					}
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 					//清除HTTP-CURL链接
 					//if((zHcuCloudCurlPtrTx != NULL) || (zHcuCloudCurlPtrRx != NULL)){
 					//	if(zHcuCloudCurlPtrTx != NULL) curl_easy_cleanup(zHcuCloudCurlPtrTx);  //End a libcurl easy session
@@ -470,7 +390,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 
 			//然后再试图启动周期性短定时器，進行数据回传云平台
 			if (zHcuMemStorageBuf.offlineNbr>0){
-				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.heartbeartBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.cloudvelaHbBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -632,7 +552,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Under online state, send off-line data to cloud success!\n");
 	}
 	//State no change
@@ -662,7 +582,7 @@ OPSTAT func_cloudvela_time_out_period_for_cmd_control(void)
 		//如果是失败情况，并不返回错误，属于正常情况
 		//当链路不可用时，这个打印结果会非常频繁，放开比较好
 		else{
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_IPT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			}
 		}
@@ -736,7 +656,7 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period EMC to cloud success!\n");
 	}
 	//State no change
@@ -791,7 +711,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period PM25 to cloud success!\n");
 	}
 	//State no change
@@ -846,7 +766,7 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period WINDDIR to cloud success!\n");
 	}
 	//State no change
@@ -900,7 +820,7 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period WINDSPD to cloud success!\n");
 	}
 	//State no change
@@ -954,7 +874,7 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period TEMPERATURE to cloud success!\n");
 	}
 	//State no change
@@ -1008,7 +928,7 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period HUMIDITY to cloud success!\n");
 	}
 	//State no change
@@ -1062,7 +982,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period NOISE to cloud success!\n");
 	}
 	//State no change
@@ -1124,7 +1044,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period HSMMP to cloud success!\n");
 	}
 	//State no change
@@ -1188,7 +1108,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == SUCCESS){
 		zHcuCloudvelaTable.ethConTry = 0;
-		zHcuCloudvelaTable.curCon =CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 		return SUCCESS;
 	}
 
@@ -1202,7 +1122,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == SUCCESS){
 		zHcuCloudvelaTable.usbnetConTry = 0;
-		zHcuCloudvelaTable.curCon =CLOUDVELA_CONTROL_PHY_CON_USBNET;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
 		return SUCCESS;
 	}
 
@@ -1216,7 +1136,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == SUCCESS){
 		zHcuCloudvelaTable.wifiConTry = 0;
-		zHcuCloudvelaTable.curCon =CLOUDVELA_CONTROL_PHY_CON_WIFI;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
 		return SUCCESS;
 	}
 
@@ -1231,7 +1151,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == SUCCESS){
 		zHcuCloudvelaTable.g3g4ConTry = 0;
-		zHcuCloudvelaTable.curCon =CLOUDVELA_CONTROL_PHY_CON_3G4G;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
 		return SUCCESS;
 	}
 	/*
@@ -1239,7 +1159,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	if ((rand()%10)>5)
 		return SUCCESS;
 	else*/
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
 	}
 	zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1286,7 +1206,7 @@ OPSTAT func_cloudvela_heart_beat_check(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send HEART_BEAT message out to cloud success!\n");
 	}
 	//State no change
@@ -1311,7 +1231,7 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 		}
 
 		//for GPS test
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: NS is %c, latitude is %d, EW is %c, longitude is %d, Status is %c, speed is %d, high is %d.\n",
 					zHcuGpsPosInfo.NS, zHcuGpsPosInfo.gpsY, zHcuGpsPosInfo.EW, zHcuGpsPosInfo.gpsX, zHcuGpsPosInfo.status, zHcuGpsPosInfo.speed, zHcuGpsPosInfo.gpsZ);
 			HcuDebugPrint("CLOUDVELA: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuGpsPosInfo.D.year, zHcuGpsPosInfo.D.month, zHcuGpsPosInfo.D.day, zHcuGpsPosInfo.D.hour, zHcuGpsPosInfo.D.minute, zHcuGpsPosInfo.D.second);
@@ -1331,7 +1251,7 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send CMD CONTROL CHECK message out to cloud success!\n");
 	}
 	//State no change
@@ -1389,7 +1309,7 @@ OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 	zHcuMemStorageBuf.lastSid = sid;  //最新一个写入记录的SID数值
 
 	//Always successful, as the storage is a cycle buffer!
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Data record save to MEM-DISC, sid=%d, totalNbr=%d, offNbr=%d\n", sid, totalNbr, zHcuMemStorageBuf.offlineNbr);
 	}
 	return SUCCESS;
@@ -1447,7 +1367,7 @@ OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Data record read from MEM-DISC, rdCnt=%d, totalNbr = %d, offNbr=%d\n", readCnt, totalNbr, zHcuMemStorageBuf.offlineNbr);
 	}
 	return SUCCESS;
@@ -1496,28 +1416,28 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	//}
 
 	//根据系统配置，决定使用那一种后台网络
-	if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
+	if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		if (hcu_ethernet_date_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
-	else if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_USBNET){
+	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET){
 		if (hcu_usbnet_data_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
-	else if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_WIFI){
+	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI){
 		if (hcu_wifi_data_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
-	else if (zHcuCloudvelaTable.curCon == CLOUDVELA_CONTROL_PHY_CON_3G4G){
+	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G){
 		if (hcu_3g4g_data_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
@@ -1606,14 +1526,14 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
 		//int i;
 		//for(i =0; i<rcv.length; i++) HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
 	}
 
 	//如果是XML自定义格式
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
 	{
 		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1623,7 +1543,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
 	{
 		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1679,429 +1599,6 @@ OPSTAT fsm_cloudvela_3g4g_data_rx(UINT32 dest_id, UINT32 src_id, void * param_pt
 	return SUCCESS;
 }
 
-
-
-/*
- *  有关后台针对环保协议的几个关键点：
- *  1. 该协议的标准格式终结在本模块中
- *  2. 与该协议相关的独特字段处理，均留给业务模块来完成
- *  3. 到底是应该采用通用的消息来处理不同格式的协议，还是应该使用单独的协议来进行，这是个值得探讨的问题
- *     一般来说，如果两个协议比较接近，可以使用共享协议，否则应该分开做，以解耦他们之间的关联
- *  4. 本次，自定义XML格式和中环保协议采用共享通用消息方式
- *  5. 业务处理以及跟外设的完整过程，需要再完善
- *  6. 有关ZHB的字段内容与自定义XML的融合，需要等待ZHB协议内容的再完善
- *
- */
-
-OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
-{
-	UINT32 index=0;
-	UINT32 totalLen=0, it=0, ret=0;
-	char st[CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH] = "";
-
-	//检查参数 (固定包头为12个字符串)
-	if ((rcv == NULL) ||(rcv->length<=12) ||(rcv->length>MAX_HCU_MSG_BUF_LENGTH)){
-		HcuErrorPrint("CLOUDVELA: Invalid received data buffer or length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	//取头部
-	if ((rcv->buf[index] !='#')||(rcv->buf[index+1] !='#')){
-		HcuErrorPrint("CLOUDVELA: Invalid received data header!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	index = index+2;
-
-	//取尾巴  \r = 0D, \n = 0A, should be 0D 0A
-	if ((rcv->buf[rcv->length-2] !='\r')||(rcv->buf[rcv->length-1] !='\n')){
-		HcuErrorPrint("CLOUDVELA: Invalid received data tail!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	//取长度
-	memset(st, 0, sizeof(st));
-	strncpy(st, &rcv->buf[index], 4);
-	it = strtoul(st, NULL, 10); //10进制
-	index = index + 4;
-	totalLen = rcv->length-12;  //12字符长度的固定包头
-	if (it != totalLen){
-		HcuErrorPrint("CLOUDVELA: Invalid received data length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	//取CRC并做比较判断
-	memset(st, 0, sizeof(st));
-	strncpy(st, &rcv->buf[rcv->length-6], 4);
-	it = strtoul(st, NULL, 16);  //16进制
-	UINT16 crc16=0;
-	CheckCRCModBus((UINT8*)&rcv->buf[index], rcv->length-12, &crc16);
-	if (it != crc16){
-		HcuErrorPrint("CLOUDVELA: Invalid received data CRC16!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	//初始化临时参数
-	char   iqn[21]; //中环保标准，20c, QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求, 用于请求命令或通知命令
-	char   ist[6];  //中环保标准，5c, ST=系统编号
-	char   icn[8];  //中环保标准，7c, 命令编号 CN
-	char   ipw[7];  //中环保标准， 6c, PW=访问密码
-	char   imn[13]; //中环保标准， 12c, 设备唯一标识MN
-	UINT8  iansFlag;//中环保标准， 3c, 数据包是否拆分及应答标志 Flag，从云后台的接收方向
-	UINT8 flag = 0;
-
-	//取数据区的请求编码
-	if (totalLen <20){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on QN!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	memset(iqn, 0, sizeof(iqn));
-	strncpy(iqn, &rcv->buf[index], 20);
-	index = index+20;
-	totalLen = totalLen - 20;
-
-	//取数据区的系统编号
-	if (totalLen <5){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on QN!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	memset(ist, 0, sizeof(ist));
-	strncpy(ist, &rcv->buf[index], 5);
-	index = index+5;
-	totalLen = totalLen - 5;
-
-	//取数据区的命令编号
-	if (totalLen <7){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on CN!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	memset(icn, 0, sizeof(icn));
-	strncpy(icn, &rcv->buf[index], 7);
-	index = index+7;
-	totalLen = totalLen - 7;
-	if (strcmp(icn, CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT) == 0){
-		flag = 1;
-	}else if (strcmp(icn, CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG) == 0){
-		flag = 2;
-	}else{
-		HcuErrorPrint("CLOUDVELA: Invalid received data on CN!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	//取数据区的访问密码
-	if (totalLen <6){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on PW!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	memset(ipw, 0, sizeof(ipw));
-	strncpy(ipw, &rcv->buf[index], 6);
-	index = index+6;
-	totalLen = totalLen - 6;
-
-	//取数据区的设备唯一标识MN
-	if (totalLen <12){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on MN!\n");
-		return FAILURE;
-	}
-	memset(imn, 0, sizeof(imn));
-	strncpy(imn, &rcv->buf[index], 6);
-	index = index+12;
-	totalLen = totalLen - 12;
-
-	//取数据区的数据包是否拆分及应答标志 Flag
-	if (totalLen <3){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on MN!\n");
-		return FAILURE;
-	}
-	memset(st, 0, sizeof(st));
-	strncpy(st, &rcv->buf[index], 3);
-	it = strtoul(st, NULL, 16);
-	iansFlag = it & 0x03;  //只有最后的两个比特Bit0/1在使用，其它的未用
-	index = index+3;
-	totalLen = totalLen - 3;
-
-	//长度=0,表示隐含的心跳检测答复帧
-	if (totalLen == 0){
-		//心跳接收的特殊处理
-		if (flag == 1){
-			if (func_cloudvela_heart_beat_received_handle() == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-				HcuErrorPrint("CLOUDVELA: Heart_beat processing error!\n");
-				return FAILURE;
-			}
-		}
-		else{
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Heart Beat type but with not-zero length of data!\n");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-
-	//数据去CP的格式暂时不是特别清晰，等待更为完善的规范
-	//先假设每次都只有一个参数进来，例子如下
-	//CP=&&数据区&&， 数据区是采用发送一样的编码方式，只有一个传感器类型，将命令参数发往传感器L3模块就为胜利
-	if (totalLen <10){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on CP command length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	memset(st, 0, sizeof(st));
-	strncpy(st, &rcv->buf[index], 2);
-	index = index+2;
-	totalLen = totalLen - 2;
-	if (strcmp(st, "&&") != 0){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on CP command prefix!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	memset(st, 0, sizeof(st));
-	strncpy(st, &rcv->buf[index+6], 2);
-	totalLen = totalLen -2;
-	if (strcmp(st, "&&") != 0){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on CP command pigback!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	memset(st, 0, sizeof(st));
-	strncpy(st, &rcv->buf[index], 6);
-	index = index + 8; //为下一个参数
-	totalLen = totalLen -6;
-
-	//先发送控制消息给传感器任务模块，再判断是否还有后续参数
-
-	//EMC传感器任务
-	if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_EMC) == 0){
-		//初始化发送函数
-		msg_struct_cloudvela_emc_control_cmd_t snd;
-		memset(&snd, 0, sizeof(msg_struct_cloudvela_emc_control_cmd_t));
-
-		//赋值
-		snd.cmdId = L3CI_emc;
-		strcpy(snd.zhbDl.qn, iqn);
-		strcpy(snd.zhbDl.st, ist);
-		strcpy(snd.zhbDl.cn, icn);
-		strcpy(snd.zhbDl.pw, ipw);
-		strcpy(snd.zhbDl.mn, imn);
-		snd.zhbDl.ansFlag = iansFlag;
-		snd.length = sizeof(msg_struct_cloudvela_emc_control_cmd_t);
-
-		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_EMC_CONTROL_CMD, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_EMC]);
-			return FAILURE;
-		}
-	}//End of EMC传感器任务
-
-	//TEMP传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_TEMP) == 0){
-		//初始化发送函数
-		msg_struct_cloudvela_temp_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_temp_control_cmd_t));
-
-		//赋值
-		snd1.cmdId = L3CI_temp;
-		strcpy(snd1.zhbDl.qn, iqn);
-		strcpy(snd1.zhbDl.st, ist);
-		strcpy(snd1.zhbDl.cn, icn);
-		strcpy(snd1.zhbDl.pw, ipw);
-		strcpy(snd1.zhbDl.mn, imn);
-		snd1.zhbDl.ansFlag = iansFlag;
-		snd1.length = sizeof(msg_struct_cloudvela_temp_control_cmd_t);
-
-		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd1, snd1.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_TEMP]);
-			return FAILURE;
-		}
-	}//End of TEMP传感器任务
-
-	//HUMID传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_HUMID) == 0){
-		//初始化发送函数
-		msg_struct_cloudvela_humid_control_cmd_t snd2;
-		memset(&snd2, 0, sizeof(msg_struct_cloudvela_humid_control_cmd_t));
-
-		//赋值
-		snd2.cmdId = L3CI_humid;
-		strcpy(snd2.zhbDl.qn, iqn);
-		strcpy(snd2.zhbDl.st, ist);
-		strcpy(snd2.zhbDl.cn, icn);
-		strcpy(snd2.zhbDl.pw, ipw);
-		strcpy(snd2.zhbDl.mn, imn);
-		snd2.zhbDl.ansFlag = iansFlag;
-		snd2.length = sizeof(msg_struct_cloudvela_humid_control_cmd_t);
-
-		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd2, snd2.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_HUMID]);
-			return FAILURE;
-		}
-	}
-
-	//AIRPRS传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_AIRPRS) == 0){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on CP common sensor type NOISY, to be supported!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}//End of AIRPRS传感器任务
-
-	//WINDSPD传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_WINDSPD) == 0){
-		//初始化发送函数
-		msg_struct_cloudvela_windspd_control_cmd_t snd4;
-		memset(&snd4, 0, sizeof(msg_struct_cloudvela_windspd_control_cmd_t));
-
-		//赋值
-		snd4.cmdId = L3CI_windspd;
-		strcpy(snd4.zhbDl.qn, iqn);
-		strcpy(snd4.zhbDl.st, ist);
-		strcpy(snd4.zhbDl.cn, icn);
-		strcpy(snd4.zhbDl.pw, ipw);
-		strcpy(snd4.zhbDl.mn, imn);
-		snd4.zhbDl.ansFlag = iansFlag;
-		snd4.length = sizeof(msg_struct_cloudvela_windspd_control_cmd_t);
-
-		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd4, snd4.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_WINDSPD]);
-			return FAILURE;
-		}
-	}//End of WINDSPD传感器任务
-
-	//WINDDIR传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_WINDDIR) == 0){
-		//初始化发送函数
-		msg_struct_cloudvela_winddir_control_cmd_t snd5;
-		memset(&snd5, 0, sizeof(msg_struct_cloudvela_winddir_control_cmd_t));
-
-		//赋值
-		snd5.cmdId = L3CI_winddir;
-		strcpy(snd5.zhbDl.qn, iqn);
-		strcpy(snd5.zhbDl.st, ist);
-		strcpy(snd5.zhbDl.cn, icn);
-		strcpy(snd5.zhbDl.pw, ipw);
-		strcpy(snd5.zhbDl.mn, imn);
-		snd5.zhbDl.ansFlag = iansFlag;
-		snd5.length = sizeof(msg_struct_cloudvela_winddir_control_cmd_t);
-
-		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd5, snd5.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_WINDDIR]);
-			return FAILURE;
-		}
-	}//End of WINDDIR传感器任务
-
-	//PM25传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_PM25) == 0){
-		//初始化发送函数
-		msg_struct_cloudvela_pm25_control_cmd_t snd6;
-		memset(&snd6, 0, sizeof(msg_struct_cloudvela_pm25_control_cmd_t));
-
-		//赋值
-		snd6.cmdId = L3CI_pm25;
-		strcpy(snd6.zhbDl.qn, iqn);
-		strcpy(snd6.zhbDl.st, ist);
-		strcpy(snd6.zhbDl.cn, icn);
-		strcpy(snd6.zhbDl.pw, ipw);
-		strcpy(snd6.zhbDl.mn, imn);
-		snd6.zhbDl.ansFlag = iansFlag;
-		snd6.length = sizeof(msg_struct_cloudvela_pm25_control_cmd_t);
-
-		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_PM25_CONTROL_CMD, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd6, snd6.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_PM25]);
-			return FAILURE;
-		}
-	}//End of PM25传感器任务
-
-	//NOISE传感器任务
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_NOISE) == 0){
-		//初始化发送函数
-		msg_struct_cloudvela_noise_control_cmd_t snd7;
-		memset(&snd7, 0, sizeof(msg_struct_cloudvela_noise_control_cmd_t));
-
-		//赋值
-		snd7.cmdId = L3CI_noise;
-		strcpy(snd7.zhbDl.qn, iqn);
-		strcpy(snd7.zhbDl.st, ist);
-		strcpy(snd7.zhbDl.cn, icn);
-		strcpy(snd7.zhbDl.pw, ipw);
-		strcpy(snd7.zhbDl.mn, imn);
-		snd7.zhbDl.ansFlag = iansFlag;
-		snd7.length = sizeof(msg_struct_cloudvela_noise_control_cmd_t);
-
-		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd7, snd7.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_NOISE]);
-			return FAILURE;
-		}
-	}//End of NOISE传感器任务
-
-	//HSMMP传感器任务，待实现
-	else if (strcmp(st, CLOUDVELA_BH_ITF_STD_ZHB_HSMMP) == 0){
-		//初始化发送函数
-		msg_struct_cloudvela_hsmmp_control_cmd_t snd8;
-		memset(&snd8, 0, sizeof(msg_struct_cloudvela_hsmmp_control_cmd_t));
-
-		//赋值
-		snd8.cmdId = L3CI_hsmmp;
-		strcpy(snd8.zhbDl.qn, iqn);
-		strcpy(snd8.zhbDl.st, ist);
-		strcpy(snd8.zhbDl.cn, icn);
-		strcpy(snd8.zhbDl.pw, ipw);
-		strcpy(snd8.zhbDl.mn, imn);
-		snd8.zhbDl.ansFlag = iansFlag;
-		snd8.length = sizeof(msg_struct_cloudvela_hsmmp_control_cmd_t);
-
-		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd8, snd8.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_HSMMP]);
-			return FAILURE;
-		}
-	}//End of HSMMP传感器任务
-
-	else {
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Invalid received data on CP command sensor type!\n");
-		return FAILURE;
-	}
-
-	//如果剩余长度不为0, 则意味着目前的CP已经包含了多个CP命令，暂时不支持，报错
-	if (totalLen != 0){
-		HcuErrorPrint("CLOUDVELA: Invalid received data on CP command with more than support capability!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	return SUCCESS;
-}
 
 OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -2195,7 +1692,7 @@ OPSTAT func_cloudvela_heart_beat_received_handle(void)
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Ack HEART_BEAT successful!\n");
 	}
 
@@ -2252,9 +1749,9 @@ OPSTAT func_cloudvela_av_upload(char *filename)
 
 	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
 
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUserVideo);
 	strcat(ftp_opt.user_key, usrtmp);
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwdVideo);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
 
 	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
@@ -2266,13 +1763,13 @@ OPSTAT func_cloudvela_av_upload(char *filename)
 	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
 
 ///
-	char filepath[CLOUDVELA_PATH_MAX];
-	memset(filepath,0,CLOUDVELA_PATH_MAX);
+	char filepath[HCU_CLOUDVELA_PATH_MAX];
+	memset(filepath,0,HCU_CLOUDVELA_PATH_MAX);
 	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160528.dat";
 
 	//int i;
-	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);
-	if(rslt<0 || (rslt >=CLOUDVELA_PATH_MAX-1))
+	int rslt = readlink(ftp_opt.file,filepath,HCU_CLOUDVELA_PATH_MAX-1);
+	if(rslt<0 || (rslt >=HCU_CLOUDVELA_PATH_MAX-1))
 	{
 		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n", rslt);
 
@@ -2360,7 +1857,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 		//初始化变量
 		CloudDataSendBuf_t buf;
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("cloudvela: control command cmdId= %d\n", rcv.cmdId);
 			HcuDebugPrint("cloudvela: control command optId= %d\n", rcv.optId);
 			HcuDebugPrint("cloudvela: control command backType = %d\n", rcv.backType);
@@ -2396,7 +1893,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send PM25 Sensor Control CMD ACK to cloud success!\n");
 	}
 	//State no change
@@ -2466,7 +1963,82 @@ char* func_cloudvela_get_file_path(char *file, char *buf, int count)
 }
 */
 
+/*
+	//FTP test start by zsc!
 
+	FTP_OPT ftp_opt;
+
+	char usrtmp[3] = ":";
+	ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
+	strcat(ftp_opt.user_key, usrtmp);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
+
+	char fileupload[64] = "hcu1.log";
+	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	strcat(ftp_opt.url, fileupload);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
+
+	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	strcat(ftp_opt.file, fileupload);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
+
+	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt))
+		HcuDebugPrint("CLOUDVELA: HCU SW Upload success.\n");
+	else
+		HcuErrorPrint("CLOUDVELA: HCU SW Upload failed.\n");
+
+
+	char filedownload[64] = "hcu1.log";
+	ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	strcat(ftp_opt.url, filedownload);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
+
+	ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	strcat(ftp_opt.file, filedownload);
+	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
+
+	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt))
+		HcuDebugPrint("CLOUDVELA: HCU SW Download success.\n");
+	else
+		HcuErrorPrint("CLOUDVELA: HCU SW Download failed.\n");
+
+
+	//FTP test end by zsc!
+*/
+
+/*
+	//readlink test start by zsc!
+	char filepath[CLOUDVELA_PATH_MAX];
+	memset(filepath,0,CLOUDVELA_PATH_MAX);
+	//char *file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+
+	FTP_OPT ftp_opt;
+	//memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
+
+	memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
+	char *temp = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+	//ftp_opt.file = "/usr/local/apache_arm/htdocs/avorion/sensor20160507.dat";
+	strcpy(ftp_opt.file,temp);
+
+
+	int rslt = readlink(ftp_opt.file,filepath,CLOUDVELA_PATH_MAX-1);
+	if(rslt<0 || (rslt >=CLOUDVELA_PATH_MAX-1))
+	{
+		HcuErrorPrint("CLOUDVELA: read file path failure %d!\n", rslt);
+	}
+	else
+	{
+		filepath[rslt] = '\0';
+		memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
+		strcpy(ftp_opt.file,filepath);
+	}
+
+
+	HcuDebugPrint("CLOUDVELA: AV file path: %s!\n", ftp_opt.file);
+*/
+
+	//readlink test end by zsc!
 
 
 

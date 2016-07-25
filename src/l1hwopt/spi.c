@@ -64,7 +64,7 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPI, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -98,7 +98,7 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		HcuErrorPrint("SPI: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPI: Enter FSM_STATE_SPI_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -171,7 +171,7 @@ OPSTAT func_spi_read_data_mth01(void)
 		tempSum += temp/10;
 		humid = read[2]&0xFF;
 		humidSum += humid;
-//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("SPI: Sensor MTH01 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
 //		}
 	}
@@ -180,7 +180,7 @@ OPSTAT func_spi_read_data_mth01(void)
 	zHcuSpiTempMth01 = tempSum / RPI_SPI_READ_REPEAT_TIMES;
 	zHcuSpiHumidMth01 = humidSum / RPI_SPI_READ_REPEAT_TIMES;
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPI: Sensor MTH01 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuSpiTempMth01, zHcuSpiHumidMth01, RPI_SPI_PIN_MOSI);
 	}
 
@@ -218,7 +218,7 @@ OPSTAT func_spi_read_data_rht03(void)
 		tempSum += temp/10;
 		humid = read[2]&0xFF;
 		humidSum += humid;
-//		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 //			HcuDebugPrint("SPI: Sensor RHT03 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
 //		}
 	}
@@ -227,7 +227,7 @@ OPSTAT func_spi_read_data_rht03(void)
 	zHcuSpiTempRht03 = tempSum / RPI_SPI_READ_REPEAT_TIMES;
 	zHcuSpiHumidRht03 = humidSum / RPI_SPI_READ_REPEAT_TIMES;
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPI: Sensor RHT03 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuSpiTempRht03, zHcuSpiHumidRht03, RPI_SPI_PIN_MOSI);
 	}
 

@@ -63,7 +63,7 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPS485, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -104,13 +104,13 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuErrorPrint("SPS485: Init Serial Port Failure, Exit.\n");
 	}
 	else{
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 			HcuDebugPrint("SPS485: Init Serial Port Success ...\n");
 		}
 	}
 
 	hcu_sps485_SerialPortSetVtimeVmin(&gSerialPortMobus, 1, 20);
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPS485: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortMobus.vTime, gSerialPortMobus.vMin);
 	}
 
@@ -120,7 +120,7 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuErrorPrint("SPS485: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPS485: Enter FSM_STATE_SPS485_ACTIVED status, Keeping refresh here!\n");
 	}
 

@@ -71,7 +71,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HWINV, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -102,7 +102,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		HcuErrorPrint("HWINV: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("HWINV: Enter FSM_STATE_HWINV_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -233,29 +233,43 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcat(stmp, zCurTimeDate.sDay);
 	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND);
 	strcpy(zCurTimeDate.curSensorFd, stmp);
+
 	//Microphone是小时级别
 	strcpy(stmp, zCurTimeDate.curYmDir);
 	strcat(stmp, HCU_RECORD_FILE_NAME_MICROPHONE);
 	strcat(stmp, zCurTimeDate.sHour);
 	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND);
 	strcpy(zCurTimeDate.curMicrophoneFd, stmp);
+
 	//Avorion是分钟级别
 	strcpy(stmp, zCurTimeDate.curYmDir);
-	strcat(stmp, HCU_RECORD_FILE_NAME_AVORION);
+	//strcat(stmp, HCU_RECORD_FILE_NAME_AVORION);
+	strcat(stmp, "/");
+	strcat(stmp,zHcuSysEngPar.cloud.cloudBhHcuName);
+	strcat(stmp,"_");
+	strcat(stmp, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(stmp, zCurTimeDate.sMin);
+	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND_H264);
+	strcpy(zCurTimeDate.curAvorionFdH264, stmp);
+	//HcuDebugPrint("HWINV: zCurTimeDate.curAvorionFdH264 %s!\n", zCurTimeDate.curAvorionFdH264);
+
 	strcpy(zCurTimeDate.curAvorionFdAvi, stmp);
 	strcat(zCurTimeDate.curAvorionFdAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-	strcpy(zCurTimeDate.curAvorionFdH264, stmp);
-	strcat(zCurTimeDate.curAvorionFdH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
 	strcpy(zCurTimeDate.curAvorionFdMkv, stmp);
 	strcat(zCurTimeDate.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
+
 	//特殊的干净文件名字
+	strcpy(zCurTimeDate.curAvorionFnameH264,zHcuSysEngPar.cloud.cloudBhHcuName);
+	strcat(zCurTimeDate.curAvorionFnameH264,"_");
+	strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+	strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
+	strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
+	//HcuDebugPrint("HWINV: zCurTimeDate.curAvorionFnameH264 %s!\n", zCurTimeDate.curAvorionFnameH264);
+
 	strcpy(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(zCurTimeDate.curAvorionFnameAvi, zCurTimeDate.sMin);
 	strcat(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-	strcpy(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-	strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
-	strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
+
 	strcpy(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(zCurTimeDate.curAvorionFnameMkv, zCurTimeDate.sMin);
 	strcat(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
@@ -267,41 +281,41 @@ OPSTAT func_hwinv_global_par_init(void)
 	//初始化ETHERNET后台接口
 	zHcuHwinvTable.ethernet.hwBase.taskId = TASK_ID_ETHERNET;
 	zHcuHwinvTable.ethernet.hwBase.hwResistence = 0;
-	if (COMM_HW_BOARD_ETHERNET == COMM_HW_BOARD_OFF)
+	if (HCU_COMM_HW_BOARD_ETHERNET == HCU_COMM_HW_BOARD_OFF)
 		zHcuHwinvTable.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((COMM_HW_BOARD_ETHERNET == COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_ETHERNET == NULL))
+	if ((HCU_COMM_HW_BOARD_ETHERNET == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_ETHERNET == NULL))
 		zHcuHwinvTable.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((COMM_HW_BOARD_ETHERNET == COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_ETHERNET != NULL))
+	if ((HCU_COMM_HW_BOARD_ETHERNET == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_ETHERNET != NULL))
 		zHcuHwinvTable.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化USBNET后台接口
 	zHcuHwinvTable.usbnet.hwBase.taskId = TASK_ID_USBNET;
 	zHcuHwinvTable.usbnet.hwBase.hwResistence = 0;
-	if (COMM_HW_BOARD_USBNET == COMM_HW_BOARD_OFF)
+	if (HCU_COMM_HW_BOARD_USBNET == HCU_COMM_HW_BOARD_OFF)
 		zHcuHwinvTable.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((COMM_HW_BOARD_USBNET == COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_NET == NULL))
+	if ((HCU_COMM_HW_BOARD_USBNET == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_NET == NULL))
 		zHcuHwinvTable.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((COMM_HW_BOARD_USBNET == COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_NET != NULL))
+	if ((HCU_COMM_HW_BOARD_USBNET == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_NET != NULL))
 		zHcuHwinvTable.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化WIFI后台接口
 	zHcuHwinvTable.wifi.hwBase.taskId = TASK_ID_WIFI;
 	zHcuHwinvTable.wifi.hwBase.hwResistence = 0;
-	if (COMM_HW_BOARD_WIFI == COMM_HW_BOARD_OFF)
+	if (HCU_COMM_HW_BOARD_WIFI == HCU_COMM_HW_BOARD_OFF)
 		zHcuHwinvTable.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((COMM_HW_BOARD_WIFI == COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI == NULL))
+	if ((HCU_COMM_HW_BOARD_WIFI == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI == NULL))
 		zHcuHwinvTable.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((COMM_HW_BOARD_WIFI == COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI != NULL))
+	if ((HCU_COMM_HW_BOARD_WIFI == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI != NULL))
 		zHcuHwinvTable.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化3G4G后台接口
 	zHcuHwinvTable.g3g4.hwBase.taskId = TASK_ID_3G4G;
 	zHcuHwinvTable.g3g4.hwBase.hwResistence = 0;
-	if (COMM_HW_BOARD_3G4G == COMM_HW_BOARD_OFF)
+	if (HCU_COMM_HW_BOARD_3G4G == HCU_COMM_HW_BOARD_OFF)
 		zHcuHwinvTable.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((COMM_HW_BOARD_3G4G == COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G == NULL))
+	if ((HCU_COMM_HW_BOARD_3G4G == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G == NULL))
 		zHcuHwinvTable.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((COMM_HW_BOARD_3G4G == COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G != NULL))
+	if ((HCU_COMM_HW_BOARD_3G4G == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G != NULL))
 		zHcuHwinvTable.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 
@@ -310,7 +324,7 @@ OPSTAT func_hwinv_global_par_init(void)
 
 void func_hwinv_copy_right(void)
 {
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
 		HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
 		HcuDebugPrint("**                                                                **\n"); /* prints !!!Hello World!!! */
@@ -351,7 +365,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 
 	if (ret == SUCCESS){
 
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.cloud.cloudBhHcuName);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.emcReqTimer = %d\n", zHcuSysEngPar.timer.emcReqTimer);
@@ -362,21 +376,19 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.windspdreqtimer = %d\n", zHcuSysEngPar.timer.windspdReqTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.noisereqtimer = %d\n", zHcuSysEngPar.timer.noiseReqTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cmdcontrollongtimer = %d\n", zHcuSysEngPar.timer.cmdcontrolLongTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.heartbeattimer = %d\n", zHcuSysEngPar.timer.heartbeatTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.heartbeattimer = %d\n", zHcuSysEngPar.timer.cloudvelaHbTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpReqTimer = %d\n", zHcuSysEngPar.timer.hsmmpReqTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDuration = %d\n", zHcuSysEngPar.timer.hsmmpCapDuration);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDurationFB = %d\n", zHcuSysEngPar.timer.hsmmpCapDurationFB);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpRefRate = %d\n", zHcuSysEngPar.timer.hsmmpRefRate);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.videoSev.hcuVideoServerDir = %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
-
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpAdd = %s\n", zHcuSysEngPar.cloud.cloudFtpAdd);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUser = %s\n", zHcuSysEngPar.cloud.cloudFtpUser);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwd = %s\n", zHcuSysEngPar.cloud.cloudFtpPwd);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUserVideo = %s\n", zHcuSysEngPar.cloud.cloudFtpUserVideo);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwdVideo = %s\n", zHcuSysEngPar.cloud.cloudFtpPwdVideo);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.swDownload.hcuSwDownloadDir = %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
-
 			HcuDebugPrint("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
-
-
 			HcuDebugPrint("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 		}
 	}
@@ -387,36 +399,43 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuRunErrCnt[TASK_ID_HWINV]++;
 		HcuErrorPrint("HWINV: Read error from system engineering parameter database!\n");
 		//通信部分
-		zHcuSysEngPar.comm.commBackHawlCon = COMM_BACK_HAWL_CON;
-		zHcuSysEngPar.comm.commHwBoardEthernet = COMM_HW_BOARD_ETHERNET;
-		zHcuSysEngPar.comm.commHwBoardUsbnet = COMM_HW_BOARD_USBNET;
-		zHcuSysEngPar.comm.commHwBoardWifi = COMM_HW_BOARD_WIFI;
-		zHcuSysEngPar.comm.commHwBoard3g4g = COMM_HW_BOARD_3G4G;
-		zHcuSysEngPar.comm.commHwBoardGps = COMM_HW_BOARD_GPS;
-		zHcuSysEngPar.comm.commHwBoardLcd = COMM_HW_BOARD_LCD;
-		zHcuSysEngPar.comm.commHwBoardLed = COMM_HW_BOARD_LED;
-		zHcuSysEngPar.comm.commHwBoardZeegbe = COMM_HW_BOARD_ZEEGBE;
-		zHcuSysEngPar.comm.commHwBoardFlash = COMM_HW_BOARD_FLASH;
-		zHcuSysEngPar.comm.commFrameModbus = COMM_FRONT_MODBUS;
-		zHcuSysEngPar.comm.commFrameSpsvirgo = COMM_FRONT_SPSVIRGO;
-		zHcuSysEngPar.comm.commFrameAvorion = COMM_FRONT_AVORION;
-		zHcuSysEngPar.comm.commFrameCloudvela = COMM_FRONT_CLOUDVELA;
-		zHcuSysEngPar.comm.commFrameI2cbuslibra = COMM_FRONT_I2CBUSLIBRA;
-		zHcuSysEngPar.comm.commFrameSpibusaries = COMM_FRONT_SPIBUSARIES;
-		zHcuSysEngPar.comm.commFrontSps485 = COMM_FRONT_SPS485;
-		zHcuSysEngPar.comm.commFrontSps232 = COMM_FRONT_SPS232;
-		zHcuSysEngPar.comm.commFrontMicrophone = COMM_FRONT_MICROPHONE;
-		zHcuSysEngPar.comm.commFrontCamera = COMM_FRONT_CAMERA;
-		zHcuSysEngPar.comm.commFrontBle = COMM_FRONT_BLE;
-		zHcuSysEngPar.comm.commFrontSensorEmc = COMM_FRONT_SENSOR_EMC;
-		zHcuSysEngPar.comm.commFrontSensorPm25 = COMM_FRONT_SENSOR_PM25;
-		zHcuSysEngPar.comm.commFrontSensorTemp = COMM_FRONT_SENSOR_TEMP;
-		zHcuSysEngPar.comm.commFrontSensorHumid = COMM_FRONT_SENSOR_HUMID;
-		zHcuSysEngPar.comm.commFrontSensorWinddir = COMM_FRONT_SENSOR_WINDDIR;
-		zHcuSysEngPar.comm.commFrontSensorWindspd = COMM_FRONT_SENSOR_WINDSPD;
-		zHcuSysEngPar.comm.commFrontSensorNoise = COMM_FRONT_SENSOR_NOISE;
-		zHcuSysEngPar.comm.commFrontSensorHsmmp = COMM_FRONT_SENSOR_HSMMP;
-		zHcuSysEngPar.comm.commFrontSensorPm25Sharp = COMM_FRONT_SENSOR_PM25SHARP;
+		zHcuSysEngPar.comm.commBackHawlCon = HCU_COMM_BACK_HAWL_CON;
+		zHcuSysEngPar.comm.commHwBoardEthernet = HCU_COMM_HW_BOARD_ETHERNET;
+		zHcuSysEngPar.comm.commHwBoardUsbnet = HCU_COMM_HW_BOARD_USBNET;
+		zHcuSysEngPar.comm.commHwBoardWifi = HCU_COMM_HW_BOARD_WIFI;
+		zHcuSysEngPar.comm.commHwBoard3g4g = HCU_COMM_HW_BOARD_3G4G;
+		zHcuSysEngPar.comm.commHwBoardGps = HCU_COMM_HW_BOARD_GPS;
+		zHcuSysEngPar.comm.commHwBoardLcd = HCU_COMM_HW_BOARD_LCD;
+		zHcuSysEngPar.comm.commHwBoardLed = HCU_COMM_HW_BOARD_LED;
+		zHcuSysEngPar.comm.commHwBoardZeegbe = HCU_COMM_HW_BOARD_ZEEGBE;
+		zHcuSysEngPar.comm.commHwBoardFlash = HCU_COMM_HW_BOARD_FLASH;
+		zHcuSysEngPar.comm.commFrameModbus = HCU_COMM_FRONT_MODBUS;
+		zHcuSysEngPar.comm.commFrameSpsvirgo = HCU_COMM_FRONT_SPSVIRGO;
+		zHcuSysEngPar.comm.commFrameAvorion = HCU_COMM_FRONT_AVORION;
+		zHcuSysEngPar.comm.commFrameCloudvela = HCU_COMM_FRONT_CLOUDVELA;
+		zHcuSysEngPar.comm.commFrameI2cbuslibra = HCU_COMM_FRONT_I2CBUSLIBRA;
+		zHcuSysEngPar.comm.commFrameSpibusaries = HCU_COMM_FRONT_SPIBUSARIES;
+		zHcuSysEngPar.comm.commFrameNbiotcj188 = HCU_COMM_FRONT_NBIOTCJ188;
+		zHcuSysEngPar.comm.commFrameNbiotqg376 = HCU_COMM_FRONT_NBIOTQG376;
+		zHcuSysEngPar.comm.commFrontSps485 = HCU_COMM_FRONT_SPS485;
+		zHcuSysEngPar.comm.commFrontSps232 = HCU_COMM_FRONT_SPS232;
+		zHcuSysEngPar.comm.commFrontMicrophone = HCU_COMM_FRONT_MICROPHONE;
+		zHcuSysEngPar.comm.commFrontCamera = HCU_COMM_FRONT_CAMERA;
+		zHcuSysEngPar.comm.commFrontBle = HCU_COMM_FRONT_BLE;
+		zHcuSysEngPar.comm.commFrontSensorEmc = HCU_COMM_FRONT_SENSOR_EMC;
+		zHcuSysEngPar.comm.commFrontSensorPm25 = HCU_COMM_FRONT_SENSOR_PM25;
+		zHcuSysEngPar.comm.commFrontSensorTemp = HCU_COMM_FRONT_SENSOR_TEMP;
+		zHcuSysEngPar.comm.commFrontSensorHumid = HCU_COMM_FRONT_SENSOR_HUMID;
+		zHcuSysEngPar.comm.commFrontSensorWinddir = HCU_COMM_FRONT_SENSOR_WINDDIR;
+		zHcuSysEngPar.comm.commFrontSensorWindspd = HCU_COMM_FRONT_SENSOR_WINDSPD;
+		zHcuSysEngPar.comm.commFrontSensorNoise = HCU_COMM_FRONT_SENSOR_NOISE;
+		zHcuSysEngPar.comm.commFrontSensorHsmmp = HCU_COMM_FRONT_SENSOR_HSMMP;
+		zHcuSysEngPar.comm.commFrontSensorPm25Sharp = HCU_COMM_FRONT_SENSOR_PM25SHARP;
+		zHcuSysEngPar.comm.commFrontSensorIwm = HCU_COMM_FRONT_SENSOR_IWM;
+		zHcuSysEngPar.comm.commFrontSensorIhm = HCU_COMM_FRONT_SENSOR_IHM;
+		zHcuSysEngPar.comm.commFrontSensorIgm = HCU_COMM_FRONT_SENSOR_IGM;
+		zHcuSysEngPar.comm.commFrontSensorIpm = HCU_COMM_FRONT_SENSOR_IPM;
+
 		//数据库部分
 		strcpy(zHcuSysEngPar.dbi.hcuDbHost, HCU_DB_HOST_DEFAULT);
 		strcpy(zHcuSysEngPar.dbi.hcuDbUser, HCU_DB_USER_DEFAULT);
@@ -425,36 +444,44 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.dbi.hcuDbPort = HCU_DB_PORT_DEFAULT;
 
 		// Sensor timer by Shanchun
-		zHcuSysEngPar.timer.emcReqTimer = EMC_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.emcReqTimerFB = EMC_TIMER_DURATION_MODBUS_FB;
-		zHcuSysEngPar.timer.humidReqTimer = HUMID_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.humidReqTimerFB = HUMID_TIMER_DURATION_MODBUS_FB;
-		zHcuSysEngPar.timer.noiseReqTimer = NOISE_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.noiseReqTimerFB = NOISE_TIMER_DURATION_MODBUS_FB;
-		zHcuSysEngPar.timer.pm25ReqTimer = PM25_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.pm25ReqTimerFB = PM25_TIMER_DURATION_MODBUS_FB;
-		zHcuSysEngPar.timer.tempReqTimer = TEMP_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.tempReqTimerFB = TEMP_TIMER_DURATION_MODBUS_FB;
-		zHcuSysEngPar.timer.winddirReqTimer = WINDDIR_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.winddirReqTimerFB = WINDDIR_TIMER_DURATION_MODBUS_FB;
-		zHcuSysEngPar.timer.windspdReqTimer = WINDSPD_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.windspdReqTimerFB = WINDSPD_TIMER_DURATION_MODBUS_FB;
-		zHcuSysEngPar.timer.heartbeatTimer = TIMER_DURATION_PERIOD_HEART_BEAT;
-		zHcuSysEngPar.timer.heartbeartBackTimer = TIMER_DURATION_PERIOD_SEND_DATA_BACK;
-		zHcuSysEngPar.timer.cmdcontrolLongTimer = TIMER_DURATION_PERIOD_CMD_CONTROL_LONG;
-		zHcuSysEngPar.timer.cmdcontrolShortTimer = TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT;
-        zHcuSysEngPar.timer.hsmmpReqTimer = HSMMP_TIMER_DURATION_PERIOD_AVORION_READ;
-		zHcuSysEngPar.timer.hsmmpCapDuration = HSMMP_AVORION_CAPTURE_DURATION_DEFAULT;
-		zHcuSysEngPar.timer.hsmmpCapDurationFB = HSMMP_TIMER_DURATION_AVORION_FB;
-		zHcuSysEngPar.timer.hsmmpRefRate = HSMMP_AVORION_REFRESH_RATE_DEFAULT;
-		zHcuSysEngPar.timer.airprsReqTimer = AIRPRS_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.co1ReqTimer = CO1_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.lightstrReqTimer = LIGHTSTR_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.alcoholReqTimer = ALCOHOL_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.hchoReqTimer = HCHO_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.toxicgasReqTimer = TOXICGAS_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.pm25sharpReqTimer = TOXICGAS_TIMER_DURATION_PERIOD_READ;
-		zHcuSysEngPar.timer.syspmWorkingTimer = SYSPM_TIMER_DURATION_PERIOD_WORKING;
+		zHcuSysEngPar.timer.emcReqTimer = HCU_EMC_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.emcReqTimerFB = HCU_EMC_TIMER_DURATION_MODBUS_FB;
+		zHcuSysEngPar.timer.humidReqTimer = HCU_HUMID_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.humidReqTimerFB = HCU_HUMID_TIMER_DURATION_MODBUS_FB;
+		zHcuSysEngPar.timer.noiseReqTimer = HCU_NOISE_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.noiseReqTimerFB = HCU_NOISE_TIMER_DURATION_MODBUS_FB;
+		zHcuSysEngPar.timer.pm25ReqTimer = HCU_PM25_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.pm25ReqTimerFB = HCU_PM25_TIMER_DURATION_MODBUS_FB;
+		zHcuSysEngPar.timer.tempReqTimer = HCU_TEMP_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.tempReqTimerFB = HCU_TEMP_TIMER_DURATION_MODBUS_FB;
+		zHcuSysEngPar.timer.winddirReqTimer = HCU_WINDDIR_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.winddirReqTimerFB = HCU_WINDDIR_TIMER_DURATION_MODBUS_FB;
+		zHcuSysEngPar.timer.windspdReqTimer = HCU_WINDSPD_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.windspdReqTimerFB = HCU_WINDSPD_TIMER_DURATION_MODBUS_FB;
+		zHcuSysEngPar.timer.cloudvelaHbTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT;
+		zHcuSysEngPar.timer.cloudvelaHbBackTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
+		zHcuSysEngPar.timer.nbiotcj188HbTimer = HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT;
+		zHcuSysEngPar.timer.nbiotcj188HbBackTimer = HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
+		zHcuSysEngPar.timer.nbiotqg376HbTimer = HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT;
+		zHcuSysEngPar.timer.nbiotqg376HbBackTimer = HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
+		zHcuSysEngPar.timer.cmdcontrolLongTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG;
+		zHcuSysEngPar.timer.cmdcontrolShortTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT;
+        zHcuSysEngPar.timer.hsmmpReqTimer = HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ;
+		zHcuSysEngPar.timer.hsmmpCapDuration = HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT;
+		zHcuSysEngPar.timer.hsmmpCapDurationFB = HCU_HSMMP_TIMER_DURATION_AVORION_FB;
+		zHcuSysEngPar.timer.hsmmpRefRate = HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT;
+		zHcuSysEngPar.timer.airprsReqTimer = HCU_AIRPRS_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.co1ReqTimer = HCU_CO1_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.lightstrReqTimer = HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.alcoholReqTimer = HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.hchoReqTimer = HCU_HCHO_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.toxicgasReqTimer = HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.pm25sharpReqTimer = HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.iwmReqTimer = HCU_IWM_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.ihmReqTimer = HCU_IHM_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.igmReqTimer = HCU_IGM_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.ipmReqTimer = HCU_IPM_TIMER_DURATION_PERIOD_READ;
+		zHcuSysEngPar.timer.syspmWorkingTimer = HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING;
 
 		//Series Port config by Shanchun
 		zHcuSysEngPar.serialport.SeriesPortForModbus = HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT;
@@ -463,19 +490,23 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		//zHcuSysEngPar.serialport.BautRate = HCU_SERIESPORT_BAUTRATE_DEFAULT;
 
 		//后台部分
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, CLOUDVELA_HTTP_ADDRESS_LOCAL);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddTest, CLOUDVELA_HTTP_ADDRESS_TEST);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddSae, CLOUDVELA_HTTP_ADDRESS_SAE);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddJd, CLOUDVELA_HTTP_ADDRESS_JD);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, CLOUDVELA_HTTP_ADDRESS_WECHAT);
-		strcpy(zHcuSysEngPar.cloud.cloudBhServerName, CLOUDVELA_BH_SERVER_NAME);
-		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, CLOUDVELA_BH_HCU_NAME);
-		zHcuSysEngPar.cloud.cloudBhItfFrameStd = CLOUDVELA_BH_INTERFACE_STANDARD;
+		strcpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL);
+		strcpy(zHcuSysEngPar.cloud.cloudHttpAddTest, HCU_CLOUDVELA_HTTP_ADDRESS_TEST);
+		strcpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_CLOUDVELA_HTTP_ADDRESS_SAE);
+		strcpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_CLOUDVELA_HTTP_ADDRESS_JD);
+		strcpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT);
+		strcpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_BH_SERVER_NAME);
+		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_CLOUDVELA_BH_HCU_NAME);
+		zHcuSysEngPar.cloud.cloudBhItfFrameStd = HCU_CLOUDVELA_BH_INTERFACE_STANDARD;
 
 		//for HCU SW FTP by shanchun
-		strcpy(zHcuSysEngPar.cloud.cloudFtpAdd, CLOUDVELA_FTP_ADDRESS);
-		strcpy(zHcuSysEngPar.cloud.cloudFtpUser, CLOUDVELA_FTP_USER);
-		strcpy(zHcuSysEngPar.cloud.cloudFtpPwd, CLOUDVELA_FTP_PWD);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_CLOUDVELA_FTP_ADDRESS);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_CLOUDVELA_FTP_USER);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpPwd, HCU_CLOUDVELA_FTP_PWD);
+
+		//for HCU video FTP upload by shanchun
+		strcpy(zHcuSysEngPar.cloud.cloudFtpUserVideo, HCU_CLOUDVELA_FTP_USER);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpPwdVideo, HCU_CLOUDVELA_FTP_PWD);
 
 		//local SW storage address
 		strcpy(zHcuSysEngPar.swDownload.hcuSwDownloadDir, HCU_SW_DOWNLOAD_DIR_DEFAULT);
@@ -486,10 +517,10 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT);
 		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT);
 		//DEBUG部分
-		zHcuSysEngPar.debugMode = TRACE_DEBUG_ON;
+		zHcuSysEngPar.debugMode = HCU_TRACE_DEBUG_ON;
 		//TRACE部分
-		zHcuSysEngPar.traceMode = TRACE_MSG_ON;
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+		zHcuSysEngPar.traceMode = HCU_TRACE_MSG_ON;
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("HWINV: Set basic engineering data correctly from SYSTEM DEFAULT parameters!\n");
 		}
 	}
@@ -501,7 +532,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		HcuErrorPrint("HWINV: Read Trace Module Control DB error!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("HWINV: Set Trace Moduble based engineering data correctly from DATABASE parameters!\n");
 	}
 
@@ -512,7 +543,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		HcuErrorPrint("HWINV: Read Trace Message Control DB error!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
 	}
 
@@ -613,6 +644,10 @@ void func_hwinv_scan_all(void)
 	func_hwinv_scan_alcohol();
 	func_hwinv_scan_hcho();
 	func_hwinv_scan_toxicgas();
+	func_hwinv_scan_iwm();
+	func_hwinv_scan_ihm();
+	func_hwinv_scan_igm();
+	func_hwinv_scan_ipm();
 	func_hwinv_scan_local_ui();
 	func_hwinv_scan_message_queue();
 }
@@ -725,22 +760,32 @@ void func_hwinv_scan_date(void)
 	//Avorion是分钟级别
 	if (flagMin == TRUE){
 		strcpy(stmp, zCurTimeDate.curYmDir);
-		strcat(stmp, HCU_RECORD_FILE_NAME_AVORION);
+
+		strcat(stmp, "/");
+		strcat(stmp,zHcuSysEngPar.cloud.cloudBhHcuName);
+		strcat(stmp,"_");
+		strcat(stmp, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 		strcat(stmp, zCurTimeDate.sMin);
+		strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND_H264);
+		strcpy(zCurTimeDate.curAvorionFdH264, stmp);
+
 		strcpy(zCurTimeDate.curAvorionFdAvi, stmp);
 		strcat(zCurTimeDate.curAvorionFdAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-		strcpy(zCurTimeDate.curAvorionFdH264, stmp);
-		strcat(zCurTimeDate.curAvorionFdH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
 		strcpy(zCurTimeDate.curAvorionFdMkv, stmp);
 		strcat(zCurTimeDate.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
+
 		//特殊的干净文件名字
+		strcpy(zCurTimeDate.curAvorionFnameH264,zHcuSysEngPar.cloud.cloudBhHcuName);
+		strcat(zCurTimeDate.curAvorionFnameH264,"_");
+		strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+		strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
+		strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
+
 		strcpy(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 		strcat(zCurTimeDate.curAvorionFnameAvi, zCurTimeDate.sMin);
 		strcat(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-		strcpy(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-		strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
-		strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
-		strcpy(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+
+	    strcpy(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 		strcat(zCurTimeDate.curAvorionFnameMkv, zCurTimeDate.sMin);
 		strcat(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 	}
@@ -1005,7 +1050,7 @@ void func_hwinv_scan_eng_par(void)
 	//这里先使用持续的动态刷新读取，未来可以再优化，降低进入的概率
 	if ((dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE) == SUCCESS) &&
 			(dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar) == SUCCESS) && (dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar) == SUCCESS)){
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("HWINV: Retrieve all engineering data correctly from DATABASE parameters!\n");
 		}
 	}
@@ -1119,6 +1164,11 @@ void func_hwinv_scan_db(void)
 		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIwmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIhmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIgmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
 	}
 }
@@ -1162,6 +1212,18 @@ void func_hwinv_scan_hcho(void)
 void func_hwinv_scan_toxicgas(void)
 {}
 
+void func_hwinv_scan_iwm(void)
+{}
+
+void func_hwinv_scan_ihm(void)
+{}
+
+void func_hwinv_scan_igm(void)
+{}
+
+void func_hwinv_scan_ipm(void)
+{}
+
 void func_hwinv_scan_pm25sharp(void)
 {}
 
@@ -1194,7 +1256,7 @@ void func_hwinv_scan_message_queue(void)
 		//扫描其messageQue，看看是否满，如果是，意味着故障
 		if ((taskid != TASK_ID_HWINV) && (zHcuTaskInfo[taskid].swTaskActive == HCU_TASK_SW_ACTIVE) && (zHcuTaskInfo[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
 		{
-			if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_NOR_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuTaskNameList[taskid]);
 			}
 			//重新启动该任务
@@ -1259,7 +1321,7 @@ UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen)
 	write(fHandler, dataBuffer, dataLen);
 	close(fHandler);
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("HWINV: Save record into hd-disk successful, Orginal file Len =%d, add len = %d!\n", file_len, dataLen);
 	}
 	return SUCCESS;
@@ -1341,7 +1403,7 @@ void hcu_delete_file(const char *path)
 	DIR *dir;
 	struct dirent *dir_info;
 
-	char file_path[CLOUDVELA_PATH_MAX];
+	char file_path[HCU_CLOUDVELA_PATH_MAX];
 	if(hcu_is_file(path))
 	{
 		HcuDebugPrint("HSMMP: is file: %s \n\n", path);

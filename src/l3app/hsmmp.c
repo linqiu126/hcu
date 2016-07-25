@@ -65,6 +65,7 @@ FsmStateItem_t FsmHsmmp[] =
 
 //Global Variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
 
 //用于描述发送到后台，多少次才发送一次
 UINT32 zHcuHsmmpSendSaeCnt = 0;
@@ -92,7 +93,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
 		//hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
-		hcu_usleep(dest_id*DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HSMMP, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -107,7 +108,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("HSMMP: Enter FSM_STATE_HSMMP_INITED status, Keeping refresh here!\n");
 	}
 
@@ -228,7 +229,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("AVORION: Recover to ACTIVED state during period timer out!\n");
 		}
 		return SUCCESS;
@@ -278,8 +279,9 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 		}
 		//重置为HTTP地址
 		newpath[0]='\0';
-		strcpy(newpath, zHcuSysEngPar.videoSev.hcuVideoServerHttp);
-		strcat(newpath, rcv.hsmmp.hsmmpFname);
+		//strcpy(newpath, zHcuSysEngPar.videoSev.hcuVideoServerHttp);
+		//strcat(newpath, rcv.hsmmp.hsmmpFname);
+		strcpy(newpath, rcv.hsmmp.hsmmpFname);
 	}
 	//发送后台
 	if (strlen(newpath) > 0){
@@ -464,7 +466,7 @@ OPSTAT func_hsmmp_time_out_period(void)
 			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("AVORION: Recover to ACTIVED state during period timer out!\n");
 		}
 
@@ -506,7 +508,6 @@ OPSTAT func_hsmmp_time_out_period(void)
         zHcuRunErrCnt[TASK_ID_HSMMP]++;
         return FAILURE;
     }
-
 	//发送后台的控制器，目前暂时是以10次回送一次的方式，未来可以由服务器后台控制
     zHcuHsmmpSendSaeCnt++;
     zHcuHsmmpSendSaeCnt = (zHcuHsmmpSendSaeCnt % HSMMP_SEND_BACK_MOD_BASE);

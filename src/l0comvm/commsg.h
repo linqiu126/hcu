@@ -396,12 +396,16 @@ typedef struct OamControlMsgBuf
 extern INT32  outputOnCrt;
 
 
-/*
- *
- * 每定义一个新消息，请去修改vmlayer.c中的变量zHcuMsgNameList[]，不然TRACE会出现消息内容解析的错误
- *
- */
 
+/**************************************************************************************
+ *                                                                                    *
+ * 【增加消息】总共需要修改三个地方：
+ * - HCU_INTER_TASK_MSG_ID
+ * - 每定义一个新消息，请去修改vmlayer.c中的变量zHcuMsgNameList[]，不然TRACE会出现消息内容解析的错误
+ * - 还要去DBICOM模块中对应的MessageTrace机制一并修改，并备份数据库
+ * - 如果需要完美表现，还得最终需要升级L3UI的CRUD，不然相应的工具会出错                       *
+ *                                                                                    *
+ *************************************************************************************/
 //4. 新消息新程序结构体定义部分
 //复用下位机的消息定义
 #define MSG_ID_ENTRY 0
@@ -424,6 +428,8 @@ enum HCU_INTER_TASK_MSG_ID
 
 	//ETHERNET
 	MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,
+	MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX,
+	MSG_ID_ETHERNET_NBIOTQG376_DATA_RX,
 
 	//WIFI
 	MSG_ID_WIFI_CLOUDVELA_DATA_RX,
@@ -490,6 +496,18 @@ enum HCU_INTER_TASK_MSG_ID
 
 	MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
 	MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD,
+
+	//NBIOT message
+	MSG_ID_NBIOTCJ188_IWM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IHM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IGM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IPM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,
+	MSG_ID_NBIOTQG376_IPM_DATA_REQ,
+	MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,
 
 	//Modbus report
 	MSG_ID_MODBUS_EMC_DATA_REPORT,
@@ -565,6 +583,24 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_NOISE_MODBUS_DATA_READ,
 	MSG_ID_NOISE_MODBUS_CONTROL_CMD,
 
+	//IWM
+	MSG_ID_IWM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IWM_NBIOTCJ188_CONTROL_FB,
+
+	//IHM
+	MSG_ID_IHM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IHM_NBIOTCJ188_CONTROL_FB,
+
+	//IGM
+	MSG_ID_IGM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IGM_NBIOTCJ188_CONTROL_FB,
+
+	//IPM
+	MSG_ID_IPM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,
+	MSG_ID_IPM_NBIOTQG376_DATA_RESP,
+	MSG_ID_IPM_NBIOTQG376_CONTROL_FB,
+
 	//AirSync message
 	MSG_ID_AIRSYNC_INIT,
 	MSG_ID_AIRSYNC_BLE_CONNNECTD,
@@ -609,7 +645,12 @@ enum HCU_INTER_TASK_MSG_ID
 #define MSG_ID_END 0xFF  //跟MASK_MSGID_NUM_IN_ONE_TASK设置息息相关，不能随便改动
 #define MSG_ID_INVALID 0xFFFFFFFF
 
-//COMMON MESSAGE STRUCTURE
+
+/**************************************************************************************
+ *                                                                                    *
+ *            COMMON MESSAGE STRUCTURE                                                *
+ *                                                                                    *
+ *************************************************************************************/
 typedef struct com_gps_pos //
 {
 	char ew;
@@ -925,8 +966,18 @@ typedef struct  sensor_toxicgas_zp01voc_data_element //
 	UINT32 toxicgasValue;
 	UINT32 timeStamp;
 }sensor_toxicgas_zp01voc_data_element_t;
-//缺省消息都使用UINT32进行定义，在内存不是最重要的制约因素下，这种统一的方式，是为了更加不容易出错，不用在不同
-//长度的字型之间进行转换。如果遇到INT类型，直接强制转换即可，符号单独处理
+
+
+
+
+/***************************************************************************************************************
+ *                                                                                                             *
+ *  消息结构定义                                                                                                 *
+ *                                                                                                             *
+ *  - 缺省消息都使用UINT32进行定义，在内存不是最重要的制约因素下，这种统一的方式，是为了更加不容易出错，不用在不同            *
+ *  - 长度的字型之间进行转换。如果遇到INT类型，直接强制转换即可，符号单独处理                                            *
+ *                                                                                                             *
+ **************************************************************************************************************/
 //message definition
 typedef struct msg_struct_com_init //
 {
@@ -1000,6 +1051,8 @@ typedef struct  msg_struct_ethernet_cloudvela_data_rx //
 	UINT32 length;
 	char buf[MAX_HCU_MSG_BUF_LENGTH];
 }msg_struct_ethernet_cloudvela_data_rx_t;
+
+
 typedef struct  msg_struct_wifi_cloudvela_data_rx //
 {
 	UINT32 length;
@@ -1205,6 +1258,8 @@ typedef struct  msg_struct_cloudvela_hsmmp_control_cmd //
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_control_cmd_t;
+
+
 
 //SENSOR Data request to MODBUS
 typedef struct  msg_struct_emc_modbus_data_read //
@@ -1540,6 +1595,8 @@ typedef struct msg_struct_noise_cloudvela_data_resp
 	UINT32 length;
 }msg_struct_noise_cloudvela_data_resp_t;
 
+
+
 typedef struct msg_struct_emc_cloudvela_control_fb
 {
 	UINT8  cmdId;
@@ -1604,6 +1661,9 @@ typedef struct msg_struct_noise_cloudvela_control_fb
 	UINT32 length;
 }msg_struct_noise_cloudvela_control_fb_t;
 
+
+
+
 //HSMMP-AVORION交互消息
 typedef struct msg_struct_hsmmp_avorion_data_read //
 {
@@ -1667,24 +1727,11 @@ typedef struct msg_struct_noise_spsvirgo_stop //
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Old world message structure, for removal
+/***************************************************************************************************************
+ *                                                                                                             *
+ *  Old world message structure, for removal                                                                   *
+ *                                                                                                             *
+ **************************************************************************************************************/
 typedef struct  msg_struct_airsync_ble_connected //
 {
 	UINT32 length;
@@ -1867,10 +1914,330 @@ typedef struct  msg_struct_modbus_period_report_humid_trigger
 	UINT32 length;
 }msg_struct_modbus_period_report_humid_trigger_t;
 
-
 typedef struct  msg_struct_modbus_uart1_frame_timtout
 {
 	UINT32 length;
 }msg_struct_modbus_uart1_frame_timtout_t;
+
+
+
+
+/**************************************************************************************
+ *                                                                                    *
+ *  NBIOT CJ188消息结构                                                                *
+ *                                                                                    *
+ *  - 定义的逻辑是，每条消息都是全集消息，这样针对不同的命令字处理，由层3模块IWM在收到具体的      *
+ *    命令后，根据命令字进行分拣，这样大大降低这里消息定义的难度，并且增加其适应性，不会因为      *
+ *    不同的内容，导致消息完全不一样                                                      *
+ *                                                                                    *
+ *************************************************************************************/
+//智能表数据结构
+typedef struct  sensor_general_cj188_control_head //
+{
+	INT8  ctrlId;
+	INT16  d0d1Id;
+	INT8  ser;
+	UINT8  periodFlag; //指明是瞬时，还是周期性读数
+	UINT8 communicationFlag;  //反应通信是否异常的标示
+	char addr[15];
+	UINT32 timestamp;
+}sensor_general_cj188_control_head_t;
+typedef struct  sensor_general_cj188_data_element //
+{
+	float currentaccuvolume;   //当前累计流量
+	INT8 currentaccuvolumeunit;
+	float flowvolume;         //流量
+	INT8 flowvolumeunit;
+	INT8 lastmonth;
+	INT32 accumuworktime;     //累计工作时间
+	float supplywatertemp;    //供水温度
+	float backwatertemp;      //回水温度
+	char realtime[15];        //多申请一位， 实时时间
+	char st[5];               //多申请一位    状态
+	INT8 billtodaydate;       //结算日
+	INT8 readamountcurdate;   //抄表日
+	INT8 startdate;           //启动日
+	INT64 key;
+	float price1;
+	INT32 volume1;
+	float price2;
+	INT32 volume2;
+	float price3;
+	INT8 buycode;
+	float thisamount;    //本次金额
+	float accuamount;    //累计金额
+	float remainamount;   //剩余金额
+	INT8 keyver;
+	INT8 switchctrl;
+}sensor_general_cj188_data_element_t;
+
+//用于数据库的存入和交互
+typedef struct  sensor_iwm_cj188_data_element //
+{
+	char cj188address[15];  //多申请一位
+	UINT32 timestamp;
+	INT8 equtype;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwm;
+}sensor_iwm_cj188_data_element_t;
+typedef struct  sensor_igm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igm;
+}sensor_igm_cj188_data_element_t;
+typedef struct  sensor_ipm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t ipm;
+}sensor_ipm_cj188_data_element_t;
+typedef struct  sensor_ihm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float heatpower;    //热功率
+	INT8 heatpowerunit;
+	float currentheat;   //当前热量
+	INT8 currentheatunit;
+	float billtodayheat;     //结算日热量
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihm;
+}sensor_ihm_cj188_data_element_t;
+typedef struct  sensor_ipm_qg376_data_element //
+{
+	char ipmaddress[14];
+	UINT32 timestamp;
+	INT8 equtype;
+}sensor_ipm_qg376_data_element_t;
+
+//为了四种仪表IWM/IHM/IGM/IPM定义的通用消息交互结构
+typedef struct  msg_struct_ethernet_nbiotcj188_data_rx //
+{
+	UINT32 length;
+	char buf[MAX_HCU_MSG_BUF_LENGTH];
+}msg_struct_ethernet_nbiotcj188_data_rx_t;
+
+typedef struct  msg_struct_nbiotcj188_iwm_data_req //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t iwmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_iwm_data_req_t;
+typedef struct  msg_struct_nbiotcj188_ihm_data_req //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ihmHead;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_ihm_data_req_t;
+typedef struct  msg_struct_nbiotcj188_igm_data_req //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_igm_data_req_t;
+typedef struct  msg_struct_nbiotcj188_ipm_data_req //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ipmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t ipmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_ipm_data_req_t;
+
+
+typedef struct  msg_struct_nbiotcj188_iwm_control_cmd //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t iwmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_iwm_control_cmd_t;
+typedef struct  msg_struct_nbiotcj188_ihm_control_cmd //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ihmHead;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihmData;
+	UINT32 length;
+
+}msg_struct_nbiotcj188_ihm_control_cmd_t;
+typedef struct  msg_struct_nbiotcj188_igm_control_cmd //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_igm_control_cmd_t;
+typedef struct  msg_struct_nbiotcj188_ipm_control_cmd //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_ipm_control_cmd_t;
+
+typedef struct msg_struct_iwm_nbiotcj188_data_resp
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t iwmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwmData;
+	UINT32 length;
+}msg_struct_iwm_nbiotcj188_data_resp_t;
+typedef struct msg_struct_ihm_nbiotcj188_data_resp
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ihmHead;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihmData;
+	UINT32 length;
+
+}msg_struct_ihm_nbiotcj188_data_resp_t;
+typedef struct msg_struct_igm_nbiotcj188_data_resp
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_igm_nbiotcj188_data_resp_t;
+typedef struct msg_struct_ipm_nbiotcj188_data_resp
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ipmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t ipmData;
+	UINT32 length;
+}msg_struct_ipm_nbiotcj188_data_resp_t;
+
+typedef struct msg_struct_iwm_nbiotcj188_control_fb
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t iwmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwmData;
+	UINT32 length;
+}msg_struct_iwm_nbiotcj188_control_fb_t;
+typedef struct msg_struct_ihm_nbiotcj188_control_fb
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ihmHead;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihmData;
+	UINT32 length;
+
+}msg_struct_ihm_nbiotcj188_control_fb_t;
+typedef struct msg_struct_igm_nbiotcj188_control_fb
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_igm_nbiotcj188_control_fb_t;
+typedef struct msg_struct_ipm_nbiotcj188_control_fb
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ipmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t ipmData;
+	UINT32 length;
+}msg_struct_ipm_nbiotcj188_control_fb_t;
+
+
+/**************************************************************************************
+ *                                                                                    *
+ *                            NBIOT QG376消息结构                                      *
+ *                                                                                    *
+ *************************************************************************************/
+typedef struct  msg_struct_ethernet_nbiotqg376_data_rx //
+{
+	UINT32 length;
+	char buf[MAX_HCU_MSG_BUF_LENGTH];
+}msg_struct_ethernet_nbiotqg376_data_rx_t;
+
+typedef struct  msg_struct_nbiotqg376_ipm_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_nbiotqg376_ipm_control_cmd_t;
+typedef struct msg_struct_ipm_nbiotqg376_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 length;
+}msg_struct_ipm_nbiotqg376_data_resp_t;
+typedef struct msg_struct_ipm_nbiotqg376_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_ipm_nbiotqg376_control_fb_t;
+typedef struct  msg_struct_nbiotqg376_ipm_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_nbiotqg376_ipm_data_req_t;
+
+
+
+
 
 #endif /* L0COMVM_COMMSG_H_ */

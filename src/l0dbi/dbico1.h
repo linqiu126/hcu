@@ -12,9 +12,6 @@
 
 #define CO1_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
 
-
-#define CO1_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
-
 extern OPSTAT dbi_HcuCo1DataInfo_save(sensor_co1_data_element_t *co1Data);
 extern OPSTAT dbi_HcuCo1DataInfo_inqury_1st_record(UINT32 deviceid, sensor_co1_data_element_t *co1Data);
 extern OPSTAT dbi_HcuCo1DataInfo_delete_3monold(UINT32 days);

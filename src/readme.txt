@@ -697,8 +697,48 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > PWM控制的LED闪灯工作正常
 > PWM控制的马达SG90偶尔工作一下，不能连续工作，待确定其正常工作的条件
 
+== Update log: 2016 July.14 SW Version: XQ.HCU.SW.R01.100 //ZSC
+> add the function: convert .h264 to mp4 so that the captured video can be played via http
 
+//= ZJL, 2016 July.18, CURRENT_SW_DELIVERY 101
+> 删掉垃圾信息
+> 定义更多的项目配置信息，包括AQYC/TBSWR/智能仪表等，数据库中的更新并存入基础数据待定。 =》项目名字需要改变长度定义，目前显然不够
+> 智能物联网的模块定义，搭建整体任务模块框架
+> 先完善engpar数据表单
+> 再完善ModuleCtrl模块
+> 基本完成6个新任务模块的搭建
 
+//= ZJL, 2016 July.21, CURRENT_SW_DELIVERY 102
+> L3UI待完善，包括CRUD
+> 先搞传感器数据库的存储和函数，完成
+> HWINV对传感器IWM/IHM/IGM/IPM数据的定期清理
+> 消息定义，CJ188/QG376/IWM/IHM/IGM/IPM模块状态机和处理函数框架搭建完成
+> 消息结构定义完成
+
+//= ZJL, 2016 July.22, CURRENT_SW_DELIVERY 103
+> L3UI待完善，包括CRUD
+> 清理全局常量的命名形式
+> 建立SOCKET工作的假机制，以便继续CJ88 
+> 建立CJ188链路
+> L3和NBIOTCJ88链路之间的消息处理函数
+> CJ188上行链路编码完成
+
+//= ZJL, 2016 July.23, CURRENT_SW_DELIVERY 104
+> DL解码工作完成
+
+//= ZJL, 2016 July.24, CURRENT_SW_DELIVERY 105
+> L3消息处理机制全部完成
+> L3UI及CRUD完成
+
+//= ZJL, 2016 July.24, CURRENT_SW_DELIVERY 106
+> 临时集成了USB-DAC功能，放在L1HWOPT下了
+> apt-get install libusb.*以后，并增加usb编译库后，才能通过.
+> 目前已经将Unbuntu和Raspi环境配置好了，335D的环境需要再配置才好使。如果一时搞不好，可以使用编译选项将其隔绝，反正335D暂时也用不到。
+> 修正了NBIOTCJ188取非的一个BUG
+
+//= ZJL, 2016 July.25, CURRENT_SW_DELIVERY 107
+> 修正了时钟的问题，之前一直跟SLEEP相互冲突，现在修改为线程模式后，该问题得到解决。总体上感觉，这种方式的静态性不够好，但足够使用的了。
+> 目前时钟可以支持到最低ns级，考虑到系统的实时性，暂时将10ms和1ms的定时关掉了。如果需要，可以在TIMER.H中修改配置信息进行打开
 
 
 
@@ -743,4 +783,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 全局变量命名规则： zHcuTaskxxx => 全局表单，使用extern进行修饰，以便其它模块引用
 > 如果发现有些传感器发送的速度过快或者过慢，可以在L3目录中查看，相关的传感器.h中有时长定义，可以适当调整
 > 另外，对于各个传感器的启动性问题，都采用了随机延迟的方案，减少各个任务之间的碰撞概率。延迟碰撞的时长设置在L2COMDEF.h文件中
+> ps -ef | grep hcu
+> kill -9 12345
+
 

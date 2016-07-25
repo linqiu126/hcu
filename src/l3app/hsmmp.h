@@ -31,7 +31,7 @@ typedef struct dir
 	off_t d_off;
 	UINT16 d_reclen;
 	UINT8 d_type;
-	char d_name[HSMMP_PATH_MAX + 1];
+	char d_name[HCU_CLOUDVELA_HSMMP_PATH_MAX + 1];
 }Dirent_t;
 
 
