@@ -11,7 +11,7 @@ RM := rm -rf
 -include src/l4bi/subdir.mk
 -include src/l3app/subdir.mk
 -include src/l2frame/subdir.mk
--include src/l1hwopt/usb_dac/subdir.mk
+-include src/l1hwopt/usb_adc/subdir.mk
 -include src/l1hwopt/subdir.mk
 -include src/l1com/subdir.mk
 -include src/l0webser/subdir.mk
