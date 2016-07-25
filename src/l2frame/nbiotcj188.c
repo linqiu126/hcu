@@ -926,7 +926,7 @@ OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudData
 		ctrFlag.stFlag = TRUE;
 	}
 	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && (input->head.d0d1Id == HCU_NBIOT_CJ188_READ_DI0DI1_CURRENT_COUNTER_DATA) &&
-			~((input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) && (input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN))){
+			!((input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) && (input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN))){
 		msgLen = 0x16;
 		ctrFlag.d0d1Flag = TRUE;
 		ctrFlag.currentaccuvolumeFlag = TRUE;
@@ -941,7 +941,7 @@ OPSTAT func_nbiotcj188_ul_msg_pack(NbiotCj188BhItfComElement_t *input, CloudData
 		ctrFlag.billtodayheatFlag = TRUE;
 	}
 	else if ((input->head.ctrlId == HCU_NBIOT_CJ188_CTRL_READ_DATA) && historyD0D1 &&
-			~((input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) && (input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN))){
+			!((input->equtype <=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MAX) && (input->equtype >=HCU_NBIOT_CJ188_T_TYPE_HEAT_METER_MIN))){
 		msgLen = 0x08;
 		ctrFlag.d0d1Flag = TRUE;
 		ctrFlag.billtodayaccuvolumeFlag = TRUE;
