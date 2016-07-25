@@ -736,6 +736,10 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 目前已经将Unbuntu和Raspi环境配置好了，335D的环境需要再配置才好使。如果一时搞不好，可以使用编译选项将其隔绝，反正335D暂时也用不到。
 > 修正了NBIOTCJ188取非的一个BUG
 
+//= ZJL, 2016 July.25, CURRENT_SW_DELIVERY 107
+> 修正了时钟的问题，之前一直跟SLEEP相互冲突，现在修改为线程模式后，该问题得到解决。总体上感觉，这种方式的静态性不够好，但足够使用的了。
+> 目前时钟可以支持到最低ns级，考虑到系统的实时性，暂时将10ms和1ms的定时关掉了。如果需要，可以在TIMER.H中修改配置信息进行打开
+
 
 
 

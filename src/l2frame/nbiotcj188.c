@@ -17,7 +17,7 @@
 FsmStateItem_t FsmNbiotcj188[] =
 {
     //MessageId                 //State                   		 		//Function
-	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
+	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无CloudDataSendBuf法实现
 	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
 	//如果没有必要进行初始化，可以设置为NULL
 	{MSG_ID_ENTRY,       		FSM_STATE_ENTRY,            			fsm_nbiotcj188_task_entry}, //Starting
@@ -695,7 +695,7 @@ OPSTAT fsm_nbiotcj188_ipm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 //下行链路数据报文处理过程
 OPSTAT fsm_nbiotcj188_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	//int ret=0;
 	msg_struct_ethernet_nbiotcj188_data_rx_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_ethernet_nbiotcj188_data_rx_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ethernet_nbiotcj188_data_rx_t))){
@@ -705,9 +705,14 @@ OPSTAT fsm_nbiotcj188_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * par
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
+	//跟msg_struct_ethernet_nbiotcj188_data_rx_t是完全一致的结构
+	CloudDataSendBuf_t buf;
+	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+	memcpy(&buf, &rcv, sizeof(CloudDataSendBuf_t));
+
 	//格式的区分，这里不再做，所以这里就比较简单了。
 	//如果需要通过这里进行消息解码的格式区分，也可以通过全局变量进行区分
-	if (func_nbiotcj188_dl_msg_unpack(&rcv) == FAILURE){
+	if (func_nbiotcj188_dl_msg_unpack(&buf) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		HcuErrorPrint("NBIOTCJ188: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
 		return FAILURE;
