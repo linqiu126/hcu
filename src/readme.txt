@@ -734,7 +734,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 临时集成了USB-DAC功能，放在L1HWOPT下了
 > apt-get install libusb.*以后，并增加usb编译库后，才能通过.
 > 目前已经将Unbuntu和Raspi环境配置好了，335D的环境需要再配置才好使。如果一时搞不好，可以使用编译选项将其隔绝，反正335D暂时也用不到。
-
+> 修正了NBIOTCJ188取非的一个BUG
 
 
 
