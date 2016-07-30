@@ -45,7 +45,7 @@ hcu: $(OBJS) $(USER_OBJS)
 
 # Other Targets
 clean:
-	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) hcu
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) hcu
 	-@echo ' '
 
 .PHONY: all clean dependents
