@@ -740,7 +740,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > 修正了时钟的问题，之前一直跟SLEEP相互冲突，现在修改为线程模式后，该问题得到解决。总体上感觉，这种方式的静态性不够好，但足够使用的了。
 > 目前时钟可以支持到最低ns级，考虑到系统的实时性，暂时将10ms和1ms的定时关掉了。如果需要，可以在TIMER.H中修改配置信息进行打开
 
-
+//= ZSC, 2016 July.30, CURRENT_SW_DELIVERY 108
+> bug fix for video play(E2E)。
+> add socket client(blocking receive), to replace CMD polling 
 
 
 
