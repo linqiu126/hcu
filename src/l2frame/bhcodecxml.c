@@ -180,7 +180,7 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 
 	//char conSwInventory[3]; //1B
 	strcat(da, xmlFormat->conAvUpload);
-	strcat(da, xmlFormat->conAvFileName);
+	//strcat(da, xmlFormat->conAvFileName);
 
 	//char conTimeStamp[9]; //4B
 	strcat(da, xmlFormat->conTimeStamp);
@@ -193,12 +193,15 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//获取变长部分的长度, Len=0的情况存在，比如Heart_Beat消息，这里为了统一处理函数的简化，不做过分的区别对待和处理，尽量让处理函数通用化
 	int len = 0;
 	len = strlen(da);
-	if ((len < 0) || ((len % 2) != 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
+	//if ((len < 0) || ((len % 2) != 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len < 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: No data to be pack or too long length of data content %d!!!\n", len);
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
+
 	len = len / 2;  //字节长度，而非字符串长度
+
 
 	//如果长度=0,则正好，包含一个长度域=0的东东，非常好！省得底层收到的长度=1的HEART_BEAT消息
 	//char conLen[3];  //1B
