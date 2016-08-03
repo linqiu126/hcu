@@ -424,7 +424,7 @@
 #endif
 
 #ifdef TARGET_RASPBERRY_PI3B
-#define HCU_DURATION_OF_INIT_FB_WAIT_MAX 20000 //in us iso ms, caculate by task_id * this value, to wait for period for SVRCON too much INIT_WAIT_FOR_FB coming at the same time.
+#define HCU_DURATION_OF_INIT_FB_WAIT_MAX 10000 //in us iso ms, caculate by task_id * this value, to wait for period for SVRCON too much INIT_WAIT_FOR_FB coming at the same time.
 #endif
 
 //定时器，控制摄像头工作周期及时长

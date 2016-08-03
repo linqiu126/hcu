@@ -268,7 +268,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		//	#endif //TRACE_DEBUG_ON
 		//}
 	}
-
+/*
 	// updated by Shanchun for CMD control polling
 	else if (cmdId ==L3CI_cmd_control)
 	{//CMD polling response from Clound: 0x00FD
@@ -339,6 +339,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			CMDShortTimerFlag = HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_ON;
 		}
 	}
+*/
 
 	switch(cmdId)
 	{
