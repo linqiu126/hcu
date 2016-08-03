@@ -151,8 +151,8 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//zHcuCloudCurlPtrTx = NULL;
 
 	//Added by Shanchun for CMD command
-    CMDShortTimerFlag = HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_OFF;
-    CMDPollingNoCommandNum = 0;
+    //CMDShortTimerFlag = HCU_CLOUDVELA_CMD_POLLING_SHORT_TIMER_START_OFF;
+    //CMDPollingNoCommandNum = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.cloudvelaHbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -162,6 +162,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
+	/*
 	//For cmd control by Shanchun
 	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_LONG, zHcuSysEngPar.timer.cmdcontrolLongTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
@@ -170,6 +171,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
     CMDLongTimerFlag = HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_ON;
+    */
 
 	//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
@@ -228,7 +230,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_sendback_offline_data();
 	}
-
+/*
 	//for cmd control by Shanchun
 	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_LONG) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_period_for_cmd_control();
@@ -237,7 +239,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_SHORT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_period_for_cmd_control();
 	}
-
+*/
 	//这里的ret=FAILURE並不算严重，只不过造成状态机返回差错而已，并不会造成程序崩溃和数据混乱，所以只是程序的自我保护而已
 	return ret;
 }
@@ -1527,7 +1529,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
+		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
 		//int i;
 		//for(i =0; i<rcv.length; i++) HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
 	}

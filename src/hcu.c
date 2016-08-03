@@ -207,7 +207,7 @@ void hcu_process_2_mainapp_double(void)
 
 	//wait for ever
 	while (1){
-		hcu_sleep(60);
+		hcu_sleep(160);
 		//hcu_usleep(100);
 		hcu_task_send_hb_to_svrcon();
 	}
@@ -257,7 +257,7 @@ void hcu_process_3_entry_supervisor(void)
 
 	//wait for ever
 	while (1){
-		hcu_sleep(60);
+		hcu_sleep(160);
 		//hcu_usleep(100);
 		hcu_task_send_hb_to_svrcon();
 		//HcuDebugPrint("HCUMAIN: PS_3_SUPERVISOR test!\n");

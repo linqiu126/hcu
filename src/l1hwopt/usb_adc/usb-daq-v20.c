@@ -1,3 +1,5 @@
+#ifndef TARGET_LINUX_ARM
+
 #include <stdio.h>
 #include <string.h>
 #include <usb.h>
@@ -771,6 +773,8 @@ BYTE DI_Soft(void)
    
  
 }
+
+#endif
 
 /*
 

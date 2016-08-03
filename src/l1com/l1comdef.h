@@ -687,7 +687,7 @@ typedef struct  HcuInventoryInfo
 }HcuInventoryInfot;
 
 //Adding by Shanchun for socket handling
-#define HCU_CLOUDSRV_BH_PORT 4454
+#define HCU_CLOUDSRV_BH_PORT 9501
 #define HCU_CLOUDSRV_BH_ADDRESS "121.40.185.177"
 #define HCU_CLOUDSRV_BH_QUEUE 30
 
