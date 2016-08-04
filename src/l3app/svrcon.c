@@ -204,6 +204,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 
 
+
 	if (zHcuTaskInfo[TASK_ID_NBIOTCJ188].swTaskActive == HCU_TASK_PNP_ON){
 		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_NBIOTCJ188, TASK_ID_SVRCON, &snd, snd.length);
 		if (ret == FAILURE){

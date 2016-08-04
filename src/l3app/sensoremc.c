@@ -247,6 +247,10 @@ void func_emc_time_out_read_data_from_modbus(void)
 			HcuErrorPrint("EMC: Error start timer!\n");
 			return;
 		}
+		else{
+			HcuDebugPrint("EMC: Succeed on starting timer: TIMER_ID_1S_EMC_MODBUS_FB!\n");
+		}
+
 
 		//设置当前传感器到忙，没反应之前，不置状态
 		zSensorEmcInfo[currentSensorEmcId].hwAccess = SENSOR_EMC_HW_ACCESS_BUSY;
@@ -259,6 +263,9 @@ void func_emc_time_out_read_data_from_modbus(void)
 			HcuErrorPrint("EMC: Error Set FSM State!\n");
 			return;
 		}//FsmSetState
+		else{
+			HcuDebugPrint("EMC: Succeed on set FSM Status: FSM_STATE_EMC_OPT_WFFB!\n");
+		}
 	}//SENSOR_EMC_HW_ACCESS_IDLE
 
 	//任何其他状态，强制初始化

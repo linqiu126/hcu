@@ -1,4 +1,4 @@
-/*
+ /*
  * timer.c
  *
  *  Created on: 2015年11月15日
@@ -177,7 +177,8 @@ OPSTAT fsm_timer_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	/*
 	 *   方法三：线程机制，实时系统的稳态性肯定要差点，但还是在某种限度内，没有太大的问题。
 	 */
-    // 1ms
+    // 1s
+
 	if (HCU_TIMER_CONFIG_START_RESOLUTION_1S == TRUE){
 	    struct sigevent evp1s;
 	    struct itimerspec ts1s;
@@ -186,8 +187,8 @@ OPSTAT fsm_timer_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	    memset (&evp1s, 0, sizeof (evp1s));
 	    evp1s.sigev_value.sival_ptr = &timer1s;
 	    evp1s.sigev_notify = SIGEV_THREAD;
-	    evp1s.sigev_notify_function = func_timer_routine_handler_10ms;
-	    evp1s.sigev_value.sival_int = 3; //作为func_timer_routine_handler_10ms的参数
+	    evp1s.sigev_notify_function = func_timer_routine_handler_1s;
+	    evp1s.sigev_value.sival_int = 3; //作为func_timer_routine_handler_1s的参数
 
 	    if (timer_create(CLOCK_REALTIME, &evp1s, &timer1s) == -1) {
 	    	HcuErrorPrint("TIMER: Error create timer timer_create()!\n");
@@ -471,7 +472,7 @@ void func_timer_routine_handler_1s(union sigval v)
 
 	if (v.sival_int !=3) return;
 
-	HcuDebugPrint("TIMER: 1s resolution timer enter one time!\n");
+	//HcuDebugPrint("TIMER: 1s resolution timer enter one time!\n");
 	//HcuDebugPrint("TIMER: SIGPROF 1S resolution timer enter one time!\n");
 	for (i=0;i<MAX_TIMER_NUM_IN_ONE_HCU_1S;i++)
 	{
