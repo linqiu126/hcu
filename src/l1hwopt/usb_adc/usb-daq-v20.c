@@ -1,4 +1,6 @@
-#ifndef TARGET_LINUX_ARM
+//#ifndef TARGET_LINUX_ARM
+
+#ifdef TARGET_RASPBERRY_PI3B
 
 #include <stdio.h>
 #include <string.h>

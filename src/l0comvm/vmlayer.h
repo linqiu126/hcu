@@ -248,6 +248,7 @@ typedef struct HcuGlobalCounter
 	UINT32 cloudVelaConnCnt;
 	UINT32 cloudVelaDiscCnt;
 	UINT32 CloudDataTimeOutCnt;
+	UINT32 SocketDiscCnt;
 }HcuGlobalCounter_t;
 extern HcuGlobalCounter_t zHcuGlobalCounter;
 

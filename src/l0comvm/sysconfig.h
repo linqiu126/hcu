@@ -414,6 +414,7 @@
 #define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
 #define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
 #define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
+#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
 
 #ifdef TARGET_LINUX_ARM
 #define HCU_DURATION_OF_INIT_FB_WAIT_MAX 20000 //in us iso ms, caculate by task_id * this value, to wait for period for SVRCON too much INIT_WAIT_FOR_FB coming at the same time.
