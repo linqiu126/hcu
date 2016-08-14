@@ -1,3 +1,5 @@
+#ifdef TARGET_RASPBERRY_PI3B
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -124,4 +126,6 @@ int usb_test_main(int argc, char* argv[])
     
  return 0;
 }
+
+#endif
 

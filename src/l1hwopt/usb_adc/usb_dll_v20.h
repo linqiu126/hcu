@@ -1,3 +1,5 @@
+#ifdef TARGET_RASPBERRY_PI3B
+
 typedef unsigned char BYTE;
 int OpenUsb(void);
 int CloseUsb(void);
@@ -17,3 +19,5 @@ int PWM_In(int mod);
 int COUNT(int mod);
 int Read_PWM_In(float* Freq, int* DutyCycle);
 int Read_COUNT(int* count);
+
+#endif
