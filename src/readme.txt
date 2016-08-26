@@ -745,6 +745,12 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > add socket client(blocking receive), to replace CMD polling 
 
 
+//= ZSC, 2016 Aug.26, CURRENT_SW_DELIVERY 109
+> add socket client heart beart checking 
+> add socket client re-connect mechanism 
+
+
+
 
 
 

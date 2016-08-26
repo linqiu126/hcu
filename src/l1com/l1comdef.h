@@ -687,9 +687,16 @@ typedef struct  HcuInventoryInfo
 }HcuInventoryInfot;
 
 //Adding by Shanchun for socket handling
-#define HCU_CLOUDSRV_BH_PORT 9501
-#define HCU_CLOUDSRV_BH_ADDRESS "121.40.185.177"
-#define HCU_CLOUDSRV_BH_QUEUE 30
+#define HCU_CLOUDSRV_SOCKET_PORT 9501
+#define HCU_CLOUDSRV_SOCKET_ADDRESS "121.40.185.177"
+#define HCU_CLOUDSRV_SOCKET_QUEUE 30
+
+//Adding by Shanchun for socket heart beat
+#define HCU_CLOUDSRV_SOCKET_KEEPALIVE 1  // set KeepAlive
+#define HCU_CLOUDSRV_SOCKET_KEEPIDLE 5   //tcp idle time before first KeepAlive checking
+#define HCU_CLOUDSRV_SOCKET_KEEPINTERVAL 1  //interval between two KeepAlive checking
+#define HCU_CLOUDSRV_SOCKET_KEEPCOUNT 1  //count before disconnect Keepalive
+
 
 //Adding by Shanchun for cmd timer flag
 #define HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_ON 1
