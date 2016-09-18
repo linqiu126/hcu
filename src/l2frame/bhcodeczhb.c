@@ -1013,8 +1013,8 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 
 		switch(optId)
 		{
-		    case L3PO_hcuinventory_report:
-		    	//optId = L3PO_hcuinventory_report;
+		    case L3PO_hcuinventory_req:
+		    	optId = L3PO_hcuinventory_report;
 		    	sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
 
 		    	char temp[2];
@@ -1094,7 +1094,8 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 				optId = L3PO_hsmmp_upload_report;
 				sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
 				sprintf(xmlFormat.conAvUpload, "%02X", avUpload & 0xFF);
-				strcpy(xmlFormat.conAvFileName, avFileName);
+				strcpy(xmlFormat.FuncFlag, avFileName);
+				//strcpy(xmlFormat.conAvFileName, avFileName);
 				break;
 
 			default:

@@ -272,7 +272,8 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 	if(rcv.boolBackCloud == TRUE){
 		strcpy(newpath, zHcuSysEngPar.videoSev.hcuVideoServerDir);
 		strcat(newpath, rcv.hsmmp.hsmmpFname);
-		if (symlink(rcv.hsmmp.hsmmpFname, newpath) < 0){
+		//if (symlink(rcv.hsmmp.hsmmpFname, newpath) < 0){
+		if (symlink(rcv.hsmmp.hsmmpFdir, newpath) < 0){
 			HcuErrorPrint("HSMMP: Error create soft link for log avorion file!\n");
 			zHcuRunErrCnt[TASK_ID_HSMMP]++;
 			return FAILURE;

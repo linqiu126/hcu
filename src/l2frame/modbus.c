@@ -2874,7 +2874,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 	else
 	{
-	  HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d", ret);
+	  HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 	  zHcuRunErrCnt[TASK_ID_MODBUS]++;
 	  return FAILURE;
 	}
