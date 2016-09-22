@@ -230,7 +230,7 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=0, cmdId=0;
-	int ret = 0;
+	//int ret = 0;
 
 	//检查参数
 	if (rcv == NULL){
@@ -829,8 +829,8 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 			memset(st, 0, sizeof(st));
 			strncpy(st, &rcv->buf[index], 2);
 			it = strtoul(st, NULL, 16);
-			index = index + 2;
-			len = len-1;
+			index = index + 4;
+			len = len-2;
 			snd1.opt.newEquId = it;
 
 			if (len != 0 ){

@@ -750,6 +750,8 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > add socket client re-connect mechanism 
 
 
+//= ZSC, 2016 Sep.20, CURRENT_SW_DELIVERY 110
+> bug fix for Sensor address config 
 
 
 
