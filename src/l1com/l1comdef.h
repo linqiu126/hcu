@@ -77,6 +77,40 @@ typedef enum
 	L3CI_airprs = 0x2A, //Air pressure
 	L3CI_noise = 0x2B, //Noise
 	L3CI_hsmmp = 0x2C, //Camer or audio high speed
+
+	L3CI_audio = 0x2D,//声音
+	L3CI_video = 0x2E,//视频
+	L3CI_picture = 0x2F,//图片
+	L3CI_lock = 0x30,//云控锁
+	L3CI_water_meter = 0x31,//水表
+	L3CI_heat_meter = 0x32,//热表
+	L3CI_gas_meter = 0x33,//气表
+	L3CI_power_meter = 0x34,//电表
+	L3CI_light_strength = 0x35,//光照强度
+	L3CI_toxicgas = 0x36,//有毒气体VOC
+	L3CI_altitude = 0x37,//海拔高度
+	L3CI_moto = 0x38,//马达
+	L3CI_switch = 0x39,//马达
+	L3CI_transporter = 0x3A,//导轨传送带
+
+
+	//for SPIBUSARIES start
+	L3CI_itf_sps = 0x40,//串口读取/返回结果
+	L3CI_itf_adc = 0x41,//ADC读取/返回结果
+	L3CI_itf_dac = 0x42,//DAC读取/返回结果
+	L3CI_itf_i2c = 0x43,//I2C读取/返回结果
+	L3CI_itf_pwm = 0x44,//PWM读取/返回结果
+	L3CI_itf_di = 0x45,//DI读取/返回结果
+	L3CI_itf_do = 0x46,//DO读取/返回结果
+	L3CI_itf_can = 0x47,//CAN读取/返回结果
+	L3CI_itf_spi = 0x48,//SPI读取/返回结果
+	L3CI_itf_usb = 0x49,//USB读取/返回结果
+	L3CI_itf_eth = 0x4A,//网口读取/返回结果
+	L3CI_itf_485 = 0x4B,//485读取/返回结果
+
+	//for SPIBUSARIES end
+
+
 	L3CI_hcu_inventory = 0xA0,	//Èí¼þÇåµ¥
 	L3CI_sw_package = 0xA1,	//Èí¼þ°æ±¾Ìå
 	L3CI_equipment_info = 0xF0,	//Éè±¸»ù±¾ÐÅÏ¢
@@ -295,7 +329,7 @@ typedef enum
 	MODBUS_TEMP_RTU_EQUIPMENT_ID = 0x06,
 	MODBUS_HUMID_RTU_EQUIPMENT_ID = 0x06,
 	MODBUS_NOISE_RTU_EQUIPMENT_ID = 0x0A,  //暂时改不了，所以就先改为缺省的0A，未来再改动
-	SPSVIRGO_NOISE_RTU_EQUIPMENT_ID = 0x81,
+	SPSVIRGO_NOISE_RTU_EQUIPMENT_ID = 0x41,
 	MODBUS_INVALID_RTU_EQUIPMENT_ID = 0xFF,
 }ModbusSensorEquipmentIdDef;
 
@@ -778,8 +812,8 @@ typedef struct  HcuInventoryInfo
 #endif
 
 #ifdef TARGET_RASPBERRY_PI3B
-#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
-//#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
+//#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
+#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
 #define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
 #define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
 #define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyS0"

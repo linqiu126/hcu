@@ -36,6 +36,7 @@ typedef struct SerialModbusMsgBuf
 	UINT8  curBuf[MAX_HCU_MSG_BODY_LENGTH];
 }SerialModbusMsgBuf_t;
 
+
 //FSM API
 extern OPSTAT fsm_modbus_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

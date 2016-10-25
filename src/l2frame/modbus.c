@@ -1266,16 +1266,29 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//对信息进行MODBUS协议的编码，包括CRC16的生成
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+
 	ret = func_modbus_noise_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
+
+
+
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus noise req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
+/*
+	currentModbusBuf.curLen = 4;
+	UINT8 sample[] = {0x41,0x57,0x41,0x30};
+	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+		HcuDebugPrint("MODBUS: Preparing send modbus noise req data = %02X %02x %02X %02X \n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3]);
+	}
+
+*/
 	//Init Serial Port
 	/*
 	ret = hcu_sps485_serial_init(&gSerialPort);

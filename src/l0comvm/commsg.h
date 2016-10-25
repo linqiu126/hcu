@@ -557,9 +557,12 @@ enum HCU_INTER_TASK_MSG_ID
 
 	//TEMPERATURE message
 	MSG_ID_TEMP_MODBUS_DATA_READ,
+	MSG_ID_TEMP_SPIBUSARIES_DATA_READ,//SPIBUSARIES
 	MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
 	MSG_ID_TEMP_MODBUS_CONTROL_CMD,
+	MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD,//SPIBUSARIES
 	MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,
+
 
 	//HUMIDITY message
 	MSG_ID_HUMID_MODBUS_DATA_READ,
@@ -577,7 +580,7 @@ enum HCU_INTER_TASK_MSG_ID
 	//NOISE
 	MSG_ID_NOISE_SPSVIRGO_DATA_READ,
 	MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD,
-	MSG_ID_NOISE_SPSVIRGO_STOP,
+	//MSG_ID_NOISE_SPSVIRGO_STOP,
 	MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
 	MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,
 	MSG_ID_NOISE_MODBUS_DATA_READ,
@@ -1302,6 +1305,17 @@ typedef struct  msg_struct_temp_modbus_data_read //
 	UINT32 equId;
 	UINT32 length;
 }msg_struct_temp_modbus_data_read_t;
+
+//for SPIBUSARIES
+typedef struct  msg_struct_temp_spibusaries_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_temp_spibusaries_data_read_t;
+
 typedef struct  msg_struct_humid_modbus_data_read //
 {
 	UINT8  cmdId;
