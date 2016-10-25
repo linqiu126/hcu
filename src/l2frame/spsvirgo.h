@@ -9,6 +9,8 @@
 #define L2FRAME_SPSVIRGO_H_
 
 #include "../l0comvm/vmlayer.h"
+#include "../l1hwopt/spsapi.h"
+#include "../l1com/l1comdef.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -29,6 +31,12 @@ extern FsmStateItem_t FsmSpsvirgo[];
 #define SPSVIRGO_ACTIVE_CHOICE_NOISE_MICROPHONE 1
 #define SPSVIRGO_ACTIVE_CHOICE_NOISE_ZSY 2  //自行购买的噪声仪，还挺贵的，700大元呢，奈何格式搞不清楚。。。
 #define SPSVIRGO_ACTIVE_CHOICE_NOISE_FINAL  SPSVIRGO_ACTIVE_CHOICE_NOISE_MICROPHONE
+
+typedef struct SerialSpsMsgBuf
+{
+	UINT32 curLen;
+	UINT8  curBuf[MAX_HCU_MSG_BODY_LENGTH];
+}SerialSpsMsgBuf_t;
 
 
 //API

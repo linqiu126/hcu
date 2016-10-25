@@ -238,7 +238,7 @@ void func_windspd_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_MODBUS_FB, zHcuSysEngPar.timer.winddirReqTimerFB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		ret = hcu_timer_start(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_MODBUS_FB, zHcuSysEngPar.timer.windspdReqTimer, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
 			HcuErrorPrint("WINDSPD: Error start timer!\n");

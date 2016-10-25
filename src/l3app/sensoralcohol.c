@@ -191,7 +191,7 @@ OPSTAT fsm_alcohol_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 		}
 
 #ifdef TARGET_RASPBERRY_PI3B
-		if ((SENSOR_ALCOHOL_RPI_MQ3ALCO_PRESENT == SENSOR_ALCOHOL_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_MQ3ALCO == HCU_SENSOR_PRESENT_YES)) func_alcohol_time_out_read_data_from_mq3alco();
+		//if ((SENSOR_ALCOHOL_RPI_MQ3ALCO_PRESENT == SENSOR_ALCOHOL_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_MQ3ALCO == HCU_SENSOR_PRESENT_YES)) func_alcohol_time_out_read_data_from_mq3alco();
 #endif
 
 		//目前在非树莓派条件下，DO NOTHING
