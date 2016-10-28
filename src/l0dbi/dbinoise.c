@@ -74,10 +74,13 @@ OPSTAT dbi_HcuNoiseDataInfo_save(sensor_noise_data_element_t *noiseData)
         return FAILURE;
     }
 
+    HcuDebugPrint("hcunoisedatainfo: deviceid = %d, timestamp = %d, dataformat = %d, noisevalue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n", noiseData->equipid, noiseData->timeStamp, noiseData->dataFormat, noiseData->noiseValue, noiseData->gps.ew, noiseData->gps.gpsx, noiseData->gps.ns, noiseData->gps.gpsy, noiseData->gps.gpsz, noiseData->onOffLineFlag);
+
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcunoisedatainfo` (deviceid, timestamp, dataformat, noisevalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
     		('%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", noiseData->equipid, noiseData->timeStamp, noiseData->dataFormat, noiseData->noiseValue, noiseData->gps.ew, noiseData->gps.gpsx, noiseData->gps.ns, noiseData->gps.gpsy, noiseData->gps.gpsz, noiseData->onOffLineFlag);
-	result = mysql_query(sqlHandler, strsql);
+
+    result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBINOISE: INSERT data error: %s\n", mysql_error(sqlHandler));

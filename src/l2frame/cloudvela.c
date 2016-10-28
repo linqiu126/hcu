@@ -974,7 +974,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+			HcuErrorPrint("CLOUDVELA: Send message error!\n");
 			return FAILURE;
 		}
 	}else{

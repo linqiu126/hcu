@@ -751,7 +751,15 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 
 
 //= ZSC, 2016 Sep.20, CURRENT_SW_DELIVERY 110
-> bug fix for Sensor address config 
+> bug fix for PM25 Sensor address config 
+
+//= ZSC, 2016 Oct.20, CURRENT_SW_DELIVERY 111
+> update for support AWA noise sensor(ASCII code/decode) 
+> bug fix in spibusaries module
+
+//= ZSC, 2016 Oct.28, CURRENT_SW_DELIVERY 112
+> update for support KUANKE windspd&dir(equid and register add modify)
+> bug fix for series port read/write to fix segement failure error 
 
 
 

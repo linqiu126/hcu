@@ -376,7 +376,7 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 		}
 		else
 		{
-			HcuDebugPrint("NOISE: Send message suceed, TASK [%s] to TASK[%s]!\n\n\n\n\n\n\n\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_SPSVIRGO]);
+			HcuDebugPrint("NOISE: Send message suceed, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_SPSVIRGO]);
 		}
 
 		//启动一次性定时器
@@ -665,6 +665,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			record.gpsx = rcv.noise.gps.gpsx;
 			record.gpsy = rcv.noise.gps.gpsy;
 			record.gpsz = rcv.noise.gps.gpsz;
+			record.ew = rcv.noise.gps.ew;
+			record.ns = rcv.noise.gps.ns;
 			ret = hcu_save_to_storage_mem(&record);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_NOISE]++;
@@ -688,6 +690,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 				noiseData.gps.gpsx = record.gpsx;
 				noiseData.gps.gpsy = record.gpsy;
 				noiseData.gps.gpsz = record.gpsz;
+				noiseData.gps.ew = record.ew;
+				noiseData.gps.ns = record.ns;
 				noiseData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 				if (ret == FAILURE){
@@ -719,6 +723,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		snd.noise.gps.gpsx = rcv.noise.gps.gpsx;
 		snd.noise.gps.gpsy = rcv.noise.gps.gpsy;
 		snd.noise.gps.gpsz = rcv.noise.gps.gpsz;
+		snd.noise.gps.ew = rcv.noise.gps.ew;
+		snd.noise.gps.ns = rcv.noise.gps.ns;
 		ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NOISE]++;
@@ -740,6 +746,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			record.gpsx = rcv.noise.gps.gpsx;
 			record.gpsy = rcv.noise.gps.gpsy;
 			record.gpsz = rcv.noise.gps.gpsz;
+			record.ew = rcv.noise.gps.ew;
+			record.ns = rcv.noise.gps.ns;
 			ret = hcu_save_to_storage_mem(&record);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_NOISE]++;
@@ -763,6 +771,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 				noiseData.gps.gpsx = record.gpsx;
 				noiseData.gps.gpsy = record.gpsy;
 				noiseData.gps.gpsz = record.gpsz;
+				noiseData.gps.ew = record.ew;
+				noiseData.gps.ns = record.ns;
 				noiseData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 				if (ret == FAILURE){

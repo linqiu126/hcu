@@ -26,11 +26,12 @@ enum FSM_STATE_SPSVIRGO
 
 //Global variables
 extern FsmStateItem_t FsmSpsvirgo[];
+extern GpsPosInfo_t zHcuGpsPosInfo;
 
 
 #define SPSVIRGO_ACTIVE_CHOICE_NOISE_MICROPHONE 1
 #define SPSVIRGO_ACTIVE_CHOICE_NOISE_ZSY 2  //自行购买的噪声仪，还挺贵的，700大元呢，奈何格式搞不清楚。。。
-#define SPSVIRGO_ACTIVE_CHOICE_NOISE_FINAL  SPSVIRGO_ACTIVE_CHOICE_NOISE_MICROPHONE
+#define SPSVIRGO_ACTIVE_CHOICE_NOISE_FINAL  SPSVIRGO_ACTIVE_CHOICE_NOISE_ZSY
 
 typedef struct SerialSpsMsgBuf
 {
@@ -49,6 +50,7 @@ extern OPSTAT fsm_spsvirgo_noise_control_cmd(UINT32 dest_id, UINT32 src_id, void
 
 //Local API
 OPSTAT func_spsvirgo_int_init(void);
+unsigned char HexToAsc(unsigned char aChar);
 
 //外部引用API
 extern OPSTAT func_microphone_noise_apower_value_read(UINT32 noiseValue);
