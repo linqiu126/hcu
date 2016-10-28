@@ -223,55 +223,9 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	}
 
 	//串口不总是好的，而且也没有EMC外设，所以EMC保持为假数据，以便测试后台
-	/*
-	//Init Serial Port
-	ret = hcu_sps485_serial_init(&gSerialPort);
-	if (FAILURE == ret)
-	{
-	zHcuRunErrCnt[TASK_ID_MODBUS]++;
-	HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
-	return ret;
-	}
-	else
-	{
-	HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
-	}
-
-	SerialPortSetVtimeVmin(&gSerialPort, 0, 7);
-	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
-
-	ret = hcu_sps485_serial_port_send(&gSerialPort, currentModbusBuf.curBuf, currentModbusBuf.curLen);
-
-	if (FAILURE == ret)
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
-	}
-
-	else
-	{
-	  HcuDebugPrint("MODBUS: Send EMC req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
-	}
-	*/
 
 	hcu_usleep(50); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
 
-	/*
-	//从相应的从设备中读取数据
-	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
-	if (ret > 0)
-	{
-	 HcuDebugPrint("MODBUS: Len %d \n ", ret);
-	 HcuDebugPrint("MODBUS: Received EMC data succeed: %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
-	}
-	else
-	{
-	  HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d", ret);
-	  zHcuRunErrCnt[TASK_ID_MODBUS]++;
-	  return FAILURE;
-	}
-	*/
 
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_emc_data_report_t snd;
@@ -393,23 +347,6 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		HcuDebugPrint("MODBUS: Preparing send modbus PM25 req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	//Init Serial Port
-	/*
-	ret = hcu_sps485_serial_init(&gSerialPort);
-	if (FAILURE == ret)
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
-		return ret;
-	}
-	else
-	{
-		HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
-	}
-
-	SerialPortSetVtimeVmin(&gSerialPort, 0, 17);
-	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
-    */
 
 	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
@@ -417,6 +354,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+		return FAILURE;
 	}
 
 	else
@@ -571,30 +509,13 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		HcuDebugPrint("MODBUS: Prepareing send modbus winddir req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	//Init Serial Port
-	/*
-	ret = hcu_sps485_serial_init(&gSerialPort);
-	if (FAILURE == ret)
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
-		return ret;
-	}
-	else
-	{
-	HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
-	}
-
-	SerialPortSetVtimeVmin(&gSerialPort, 0, 7);
-	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
-    */
-
 	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+		return FAILURE;
 	}
 
 	else
@@ -747,30 +668,13 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		HcuDebugPrint("MODBUS: Preparing send modbus windspd req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	//Init Serial Port
-	/*
-	ret = hcu_sps485_serial_init(&gSerialPort);
-	if (FAILURE == ret)
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
-		return ret;
-	}
-	else
-	{
-		HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
-	}
-
-	SerialPortSetVtimeVmin(&gSerialPort, 0, 7);
-	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
-    */
-
 	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+		return FAILURE;
 	}
 	else
 	{
@@ -922,29 +826,14 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		HcuDebugPrint("MODBUS: Preparing send modbus temp req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	//Init Serial Port
-	/*
-	ret = hcu_sps485_serial_init(&gSerialPort);
-	if (FAILURE == ret)
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
-		return ret;
-	}
-	else
-	{
-	HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
-	}
 
-	SerialPortSetVtimeVmin(&gSerialPort, 0, 9);
-	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
-*/
 	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+		return FAILURE;
 	}
 
 	else
@@ -1099,23 +988,6 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HcuDebugPrint("MODBUS: Preparing send modbus humid req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	//Init Serial Port
-	/*
-	ret = hcu_sps485_serial_init(&gSerialPort);
-	if (FAILURE == ret)
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
-		return ret;
-	}
-	else
-	{
-		HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
-	}
-
-	SerialPortSetVtimeVmin(&gSerialPort, 0, 9);
-	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
-    */
 
 	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
@@ -1123,6 +995,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+		return FAILURE;
 	}
 	else
 	{
@@ -1289,23 +1162,6 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 
 */
-	//Init Serial Port
-	/*
-	ret = hcu_sps485_serial_init(&gSerialPort);
-	if (FAILURE == ret)
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Init Serial Port Failure, Exit.\n");
-		return ret;
-	}
-	else
-	{
-		HcuDebugPrint("MODBUS: Init Serial Port Success ...\n");
-	}
-
-	SerialPortSetVtimeVmin(&gSerialPort, 0, 9);
-	HcuDebugPrint("MODBUS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPort.vTime, gSerialPort.vMin);
-    */
 
 	ret = hcu_sps485_serial_port_send(&gSerialPortMobus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
@@ -1313,6 +1169,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+		return FAILURE;
 	}
 	else
 	{
