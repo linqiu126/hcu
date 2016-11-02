@@ -414,7 +414,8 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (149, 'MSG_ID_MODBUS_DATA_REQ_TEMPERATURE_REPORT', 1, 1, 1),
 (150, 'MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT', 1, 1, 1),
 (151, 'MSG_ID_MODBUS_UART1_FRAME_TIMEOUT', 1, 1, 1),
-(152, 'MSG_ID_COM_MAX', 1, 1, 1);
+(152, 'MSG_ID_COM_ALARM_REPORT', 1, 1, 1),
+(153, 'MSG_ID_COM_MAX', 1, 1, 1);
 
 
 */

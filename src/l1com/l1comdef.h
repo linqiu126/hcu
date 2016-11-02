@@ -113,6 +113,9 @@ typedef enum
 
 	L3CI_hcu_inventory = 0xA0,	//Èí¼þÇåµ¥
 	L3CI_sw_package = 0xA1,	//Èí¼þ°æ±¾Ìå
+
+	L3CI_alarm_info = 0xB0, //for alarm report
+
 	L3CI_equipment_info = 0xF0,	//Éè±¸»ù±¾ÐÅÏ¢
 	L3CI_personal_info = 0xF1,	//¸öÈË»ù±¾ÐÅÏ¢
 	L3CI_time_sync = 0xF2,	//Ê±¼äÍ¬²½
@@ -459,6 +462,28 @@ typedef enum
 	FILE_OPERATION_TYPE_INVALID = 0xFF,
 }FileOperationTypeEnum;
 
+//for alarm report added by ZSC
+typedef enum
+{
+	ALARM_TYPE_NONE = 0,
+	ALARM_TYPE_SENSOR,
+	ALARM_TYPE_NETWORK,
+	ALARM_TYPE_INVALID = 0xFF,
+}AlarmTypeEnum;
+
+typedef enum
+{
+	ALARM_CONTENT_NONE = 0,
+	ALARM_CONTENT_PM25_NO_CONNECT,
+	ALARM_CONTENT_TEMP_NO_CONNECT,
+	ALARM_CONTENT_HUMID_NO_CONNECT,
+	ALARM_CONTENT_WINDDIR_NO_CONNECT,
+	ALARM_CONTENT_WINDSPD_NO_CONNECT,
+	ALARM_CONTENT_NOISE_NO_CONNECT,
+	ALARM_CONTENT_VIDEO_NO_CONNECT,
+	ALARM_CONTENT_INVALID = 0xFF,
+}AlarmContentEnum;
+
 //公共定义的设备缺省标识，暂时以335D设备为模版
 #define	HCU_DEFAULT_DEVICE_ETHERNET "eth0"
 #define	HCU_DEFAULT_DEVICE_LCD  "/sys/class/blacklight"
@@ -529,12 +554,15 @@ enum CloudBhMsgTypeEnum
 	CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8,
 	CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8,
 	CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_UINT8,
+	CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8,//for alarm report
 	CLOUDVELA_BH_MSG_TYPE_MAX,
 };
 #define HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING  "hcu_text"  //"hcu_text"
 #define HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING  "hcu_command" //"hcu_command"
 #define HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING "hcu_heart_beat"   //"hcu_heart_beat"  //心跳协议，里面的数据内容是空的
 #define HCU_CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_STRING "hcu_biz_itg"  //业务智能 hcu_biz_inteligence
+#define HCU_CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_STRING "hcu_alarm"  //for alarm report
+
 
 
 //XML格式定义
@@ -576,6 +604,11 @@ typedef struct CloudBhItfDevReportStdXml
 	char conNS[3];//1B
 	char conGpsy[9];   //4B
 	char conGpsz[9];   //4B
+
+	//Added by Shanchun for alarm report
+	char conAlarmType[5];   //2B
+	char conAlarmContent[5];//2B
+
 	//Added by Shanchun for control cmd
 	char conPowerOnOff[3];
 	char conInterSample[3];
@@ -823,7 +856,7 @@ typedef struct  HcuInventoryInfo
 #define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
 #define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
 #define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
-#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyUSB4"
+#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyACM0"
 //#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
 //#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB4"
 #endif

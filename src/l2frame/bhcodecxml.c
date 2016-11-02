@@ -151,6 +151,15 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//char conGpsz[9];   //4B
 	strcat(da, xmlFormat->conGpsz);
 
+
+	//Adding by Shanchun for alarm report
+	//char conAlarmType[5]; //2B
+	strcat(da, xmlFormat->conAlarmType);
+
+	//char conAlarmContent[5]; //2B
+	strcat(da, xmlFormat->conAlarmContent);
+
+
 	//Adding by Shanchun for control cmd
 	//char conPowerOnOff[3]; //1B
 	strcat(da, xmlFormat->conPowerOnOff);

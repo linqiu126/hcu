@@ -210,6 +210,24 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		{
 			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Error send command to serials port!\n");
+
+			//for alarm report added by ZSC
+			msg_struct_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.usercmdid = L3CI_alarm_info;
+			snd.timeStamp = time(0);
+			snd.equID = rcv.equId;
+			snd.alarmType = ALARM_TYPE_SENSOR;
+			snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
+
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SPSVIRGO, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPSVIRGO], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
 			return FAILURE;
 		}
 		else

@@ -761,7 +761,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > update for support KUANKE windspd&dir(equid and register add modify)
 > bug fix for series port read/write to fix segement failure error 
 
-
+//= ZSC, 2016 Nov.4, CURRENT_SW_DELIVERY 113
+> update for support USB GPS receive(ttyAMC0)
+> add alarm report function(for Sensors) 
 
 
 
