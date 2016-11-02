@@ -767,6 +767,11 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 
 
 
+//= ZSC, 2016 Nov.6, CURRENT_SW_DELIVERY 114
+> add Pm report function(for Module restart & Cloud Discon & Socket Discon) 
+
+
+
 == Coming Later...
 > 如何将UT-TEST环境包装进咱们项
 > MMC机制，让人工可以通过命令行进行控制，以便启动和配置模块的运行与否

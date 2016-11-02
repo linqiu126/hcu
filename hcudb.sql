@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 02, 2016 at 02:42 PM
+-- Generation Time: Nov 02, 2016 at 10:03 PM
 -- Server version: 5.5.44-0+deb8u1
 -- PHP Version: 5.6.20-0+deb8u1
 
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
   `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4926 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5037 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -2976,6 +2976,118 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 (4923, 5, 1477743525, 1, 5592, 'E', 0, 'N', 0, 0, 2),
 (4924, 5, 1477743625, 1, 4720, 'E', 0, 'N', 0, 0, 2),
 (4925, 5, 1477743725, 1, 5336, 'E', 0, 'N', 0, 0, 2);
+INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emcvalue`, `EW`, `gpsx`, `NS`, `gpsy`, `gpsz`, `onofflineflag`) VALUES
+(4926, 5, 1478074820, 1, 5152, 'E', 0, 'N', 0, 0, 1),
+(4927, 5, 1478074920, 1, 5309, 'E', 0, 'N', 0, 0, 1),
+(4928, 5, 1478083493, 1, 5152, 'E', 0, 'N', 0, 0, 1),
+(4929, 5, 1478083593, 1, 5309, 'E', 0, 'N', 0, 0, 1),
+(4930, 5, 1478083693, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(4931, 5, 1478083793, 1, 5022, 'E', 0, 'N', 0, 0, 1),
+(4932, 5, 1478083893, 1, 4687, 'E', 0, 'N', 0, 0, 1),
+(4933, 5, 1478084843, 1, 5152, 'E', 0, 'N', 0, 0, 1),
+(4934, 5, 1478084943, 1, 5309, 'E', 0, 'N', 0, 0, 1),
+(4935, 5, 1478085043, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(4936, 5, 1478085143, 1, 5022, 'E', 0, 'N', 0, 0, 1),
+(4937, 5, 1478085243, 1, 4687, 'E', 0, 'N', 0, 0, 1),
+(4938, 5, 1478085343, 1, 5350, 'E', 0, 'N', 0, 0, 1),
+(4939, 5, 1478085443, 1, 4719, 'E', 0, 'N', 0, 0, 1),
+(4940, 5, 1478085543, 1, 5423, 'E', 0, 'N', 0, 0, 1),
+(4941, 5, 1478085643, 1, 5586, 'E', 0, 'N', 0, 0, 1),
+(4942, 5, 1478085743, 1, 5200, 'E', 0, 'N', 0, 0, 1),
+(4943, 5, 1478085843, 1, 5086, 'E', 0, 'N', 0, 0, 1),
+(4944, 5, 1478085943, 1, 4832, 'E', 0, 'N', 0, 0, 1),
+(4945, 5, 1478086043, 1, 5396, 'E', 0, 'N', 0, 0, 1),
+(4946, 5, 1478086143, 1, 4871, 'E', 0, 'N', 0, 0, 1),
+(4947, 5, 1478086243, 1, 5028, 'E', 0, 'N', 0, 0, 1),
+(4948, 5, 1478086343, 1, 5227, 'E', 0, 'N', 0, 0, 1),
+(4949, 5, 1478086443, 1, 5089, 'E', 0, 'N', 0, 0, 1),
+(4950, 5, 1478086750, 1, 5152, 'E', 0, 'N', 0, 0, 1),
+(4951, 5, 1478086850, 1, 5309, 'E', 0, 'N', 0, 0, 1),
+(4952, 5, 1478086950, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(4953, 5, 1478087050, 1, 5022, 'E', 0, 'N', 0, 0, 1),
+(4954, 5, 1478087150, 1, 4687, 'E', 0, 'N', 0, 0, 1),
+(4955, 5, 1478087250, 1, 5350, 'E', 0, 'N', 0, 0, 1),
+(4956, 5, 1478087350, 1, 4719, 'E', 0, 'N', 0, 0, 1),
+(4957, 5, 1478087450, 1, 5423, 'E', 0, 'N', 0, 0, 1),
+(4958, 5, 1478087550, 1, 5586, 'E', 0, 'N', 0, 0, 1),
+(4959, 5, 1478087650, 1, 5200, 'E', 0, 'N', 0, 0, 1),
+(4960, 5, 1478087750, 1, 5086, 'E', 0, 'N', 0, 0, 1),
+(4961, 5, 1478087850, 1, 4832, 'E', 0, 'N', 0, 0, 1),
+(4962, 5, 1478087950, 1, 5396, 'E', 0, 'N', 0, 0, 1),
+(4963, 5, 1478088050, 1, 4871, 'E', 0, 'N', 0, 0, 1),
+(4964, 5, 1478088150, 1, 5028, 'E', 0, 'N', 0, 0, 1),
+(4965, 5, 1478088250, 1, 5227, 'E', 0, 'N', 0, 0, 1),
+(4966, 5, 1478088350, 1, 5089, 'E', 0, 'N', 0, 0, 1),
+(4967, 5, 1478088450, 1, 5442, 'E', 0, 'N', 0, 0, 1),
+(4968, 5, 1478088550, 1, 5190, 'E', 0, 'N', 0, 0, 1),
+(4969, 5, 1478088650, 1, 5522, 'E', 0, 'N', 0, 0, 1),
+(4970, 5, 1478088750, 1, 4783, 'E', 0, 'N', 0, 0, 1),
+(4971, 5, 1478088850, 1, 4727, 'E', 0, 'N', 0, 0, 1),
+(4972, 5, 1478088950, 1, 4795, 'E', 0, 'N', 0, 0, 1),
+(4973, 5, 1478089050, 1, 5589, 'E', 0, 'N', 0, 0, 1),
+(4974, 5, 1478089150, 1, 5462, 'E', 0, 'N', 0, 0, 1),
+(4975, 5, 1478089250, 1, 4682, 'E', 0, 'N', 0, 0, 1),
+(4976, 5, 1478089350, 1, 4718, 'E', 0, 'N', 0, 0, 1),
+(4977, 5, 1478089450, 1, 4729, 'E', 0, 'N', 0, 0, 1),
+(4978, 5, 1478089550, 1, 4827, 'E', 0, 'N', 0, 0, 1),
+(4979, 5, 1478089650, 1, 5053, 'E', 0, 'N', 0, 0, 1),
+(4980, 5, 1478089750, 1, 5116, 'E', 0, 'N', 0, 0, 1),
+(4981, 5, 1478089850, 1, 4671, 'E', 0, 'N', 0, 0, 1),
+(4982, 5, 1478089950, 1, 4702, 'E', 0, 'N', 0, 0, 1),
+(4983, 5, 1478090050, 1, 4889, 'E', 0, 'N', 0, 0, 1),
+(4984, 5, 1478090150, 1, 5033, 'E', 0, 'N', 0, 0, 1),
+(4985, 5, 1478090250, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(4986, 5, 1478090350, 1, 5579, 'E', 0, 'N', 0, 0, 1),
+(4987, 5, 1478090450, 1, 5444, 'E', 0, 'N', 0, 0, 1),
+(4988, 5, 1478090550, 1, 5197, 'E', 0, 'N', 0, 0, 1),
+(4989, 5, 1478090650, 1, 4858, 'E', 0, 'N', 0, 0, 1),
+(4990, 5, 1478090750, 1, 4984, 'E', 0, 'N', 0, 0, 1),
+(4991, 5, 1478090850, 1, 4975, 'E', 0, 'N', 0, 0, 1),
+(4992, 5, 1478090950, 1, 5030, 'E', 0, 'N', 0, 0, 1),
+(4993, 5, 1478091050, 1, 5073, 'E', 0, 'N', 0, 0, 1),
+(4994, 5, 1478091150, 1, 5186, 'E', 0, 'N', 0, 0, 1),
+(4995, 5, 1478091250, 1, 4751, 'E', 0, 'N', 0, 0, 1),
+(4996, 5, 1478091350, 1, 5640, 'E', 0, 'N', 0, 0, 1),
+(4997, 5, 1478091450, 1, 5616, 'E', 0, 'N', 0, 0, 1),
+(4998, 5, 1478091550, 1, 5533, 'E', 0, 'N', 0, 0, 1),
+(4999, 5, 1478091650, 1, 5522, 'E', 0, 'N', 0, 0, 1),
+(5000, 5, 1478091750, 1, 4830, 'E', 0, 'N', 0, 0, 1),
+(5001, 5, 1478091850, 1, 5656, 'E', 0, 'N', 0, 0, 1),
+(5002, 5, 1478091950, 1, 4941, 'E', 0, 'N', 0, 0, 1),
+(5003, 5, 1478092050, 1, 4965, 'E', 0, 'N', 0, 0, 1),
+(5004, 5, 1478092150, 1, 5585, 'E', 0, 'N', 0, 0, 1),
+(5005, 5, 1478092250, 1, 4744, 'E', 0, 'N', 0, 0, 1),
+(5006, 5, 1478092350, 1, 4987, 'E', 0, 'N', 0, 0, 1),
+(5007, 5, 1478092450, 1, 4996, 'E', 0, 'N', 0, 0, 1),
+(5008, 5, 1478092550, 1, 5165, 'E', 0, 'N', 0, 0, 1),
+(5009, 5, 1478092650, 1, 5506, 'E', 0, 'N', 0, 0, 1),
+(5010, 5, 1478092750, 1, 5389, 'E', 0, 'N', 0, 0, 1),
+(5011, 5, 1478092850, 1, 4973, 'E', 0, 'N', 0, 0, 1),
+(5012, 5, 1478092950, 1, 5517, 'E', 0, 'N', 0, 0, 1),
+(5013, 5, 1478093050, 1, 4784, 'E', 0, 'N', 0, 0, 1),
+(5014, 5, 1478093150, 1, 5555, 'E', 0, 'N', 0, 0, 1),
+(5015, 5, 1478093250, 1, 5242, 'E', 0, 'N', 0, 0, 1),
+(5016, 5, 1478093350, 1, 5205, 'E', 0, 'N', 0, 0, 1),
+(5017, 5, 1478093450, 1, 5474, 'E', 0, 'N', 0, 0, 1),
+(5018, 5, 1478093550, 1, 5027, 'E', 0, 'N', 0, 0, 1),
+(5019, 5, 1478093650, 1, 5094, 'E', 0, 'N', 0, 0, 1),
+(5020, 5, 1478093750, 1, 5024, 'E', 0, 'N', 0, 0, 1),
+(5021, 5, 1478093850, 1, 4703, 'E', 0, 'N', 0, 0, 1),
+(5022, 5, 1478093950, 1, 5410, 'E', 0, 'N', 0, 0, 1),
+(5023, 5, 1478094050, 1, 4747, 'E', 0, 'N', 0, 0, 1),
+(5024, 5, 1478094150, 1, 5468, 'E', 0, 'N', 0, 0, 1),
+(5025, 5, 1478094250, 1, 4936, 'E', 0, 'N', 0, 0, 1),
+(5026, 5, 1478094350, 1, 4838, 'E', 0, 'N', 0, 0, 1),
+(5027, 5, 1478094450, 1, 5448, 'E', 0, 'N', 0, 0, 1),
+(5028, 5, 1478094550, 1, 5244, 'E', 0, 'N', 0, 0, 1),
+(5029, 5, 1478094650, 1, 5063, 'E', 0, 'N', 0, 0, 1),
+(5030, 5, 1478094750, 1, 5311, 'E', 0, 'N', 0, 0, 1),
+(5031, 5, 1478094850, 1, 5414, 'E', 0, 'N', 0, 0, 1),
+(5032, 5, 1478094950, 1, 5059, 'E', 0, 'N', 0, 0, 1),
+(5033, 5, 1478095050, 1, 5592, 'E', 0, 'N', 0, 0, 1),
+(5034, 5, 1478095150, 1, 4720, 'E', 0, 'N', 0, 0, 1),
+(5035, 5, 1478095250, 1, 5336, 'E', 0, 'N', 0, 0, 1),
+(5036, 5, 1478095350, 1, 5028, 'E', 0, 'N', 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -4722,7 +4834,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 --
 
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`, `commhwboardlcd`, `commhwboardled`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`, `commframenbiotcj188`, `commframenbiotqg376`, `commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`, `commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`, `commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`, `commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensoriwm`, `commfrontsensorihm`, `commfrontsensorigm`, `commfrontsensoripm`, `commfrontsensorpm25sharp`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `cloudvelahbtimer`, `cloudvelahbbacktimer`, `nbiotcj188hbtimer`, `nbiotcj188hbbacktimer`, `nbiotqg376hbtimer`, `nbiotqg376hbbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `iwmreqtimer`, `ihmreqtimer`, `igmreqtimer`, `ipmreqtimer`, `pm25sharpreqtimer`, `syspmworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
-('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYC', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_NBIOT_CJ188', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_NBIOT_QG376', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_TBSWR', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
@@ -4763,7 +4875,7 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `cloudveladisccnt` int(4) NOT NULL,
   `clouddatatimeoutcnt` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcusyspmglobaldatainfo`
@@ -4866,7 +4978,9 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (177, 0, 723, 0, 149, 157, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1800, 30, 29, 0, 1477710538),
 (178, 0, 1440, 0, 303, 319, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3598, 60, 60, 0, 1477714138),
 (179, 0, 723, 0, 114, 243, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1799, 30, 30, 0, 1477738682),
-(180, 0, 1440, 0, 232, 493, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3598, 60, 59, 0, 1477742282);
+(180, 0, 1440, 0, 232, 493, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3598, 60, 59, 0, 1477742282),
+(181, 0, 723, 0, 114, 484, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 1, 0, 0, 1478090207),
+(182, 0, 1440, 0, 232, 984, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 1, 0, 0, 1478093807);
 
 -- --------------------------------------------------------
 
@@ -6919,7 +7033,8 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (150, 'MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT', 1, 1, 1),
 (151, 'MSG_ID_MODBUS_UART1_FRAME_TIMEOUT', 1, 1, 1),
 (152, 'MSG_ID_COM_ALARM_REPORT', 1, 1, 1),
-(153, 'MSG_ID_COM_MAX', 1, 1, 1);
+(153, 'MSG_ID_COM_PM_REPORT', 1, 1, 1),
+(154, 'MSG_ID_COM_MAX', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -7243,7 +7358,7 @@ MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `hcuemcdatainfo`
 --
 ALTER TABLE `hcuemcdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4926;
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5037;
 --
 -- AUTO_INCREMENT for table `hcuhchodatainfo`
 --
@@ -7338,7 +7453,7 @@ MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `hcusyspmglobaldatainfo`
 --
 ALTER TABLE `hcusyspmglobaldatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=181;
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=183;
 --
 -- AUTO_INCREMENT for table `hcutempbmp180datainfo`
 --

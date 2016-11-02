@@ -9,6 +9,8 @@
 #include "../l0service/trace.h"
 #include "../l1com/hwinv.h"
 #include "bhcodeczhb.h"
+
+#include "../l1com/l1comdef.h"
 #include "cloudvela.h"
 
 //Task Global variables
@@ -1811,7 +1813,7 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT32 
 			return FAILURE;
 		}
 		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("CLOUDVELA: TEMP XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+			HcuDebugPrint("CLOUDVELA: XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
@@ -1844,3 +1846,83 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT32 
 
 	return SUCCESS;
 }
+
+
+
+
+//For alarm report
+//rcv输入参数，buf输出参数
+extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT32 restartCnt, UINT32 cloudVelaDiscCnt, UINT32 SocketDiscCnt, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+{
+	//参数检查，其它参数无所谓
+	if (buf == NULL){
+		HcuErrorPrint("CLOUDVELA: Error CloudDataSendBuf_t pointer!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	{
+		//初始化变量
+		CloudBhItfDevReportStdXml_t xmlFormat;
+		memset(&xmlFormat, 0, sizeof(CloudBhItfDevReportStdXml_t));
+
+		//pack数据到临时字符串中, 将数据打印到关键的数值中
+		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
+		sprintf(xmlFormat.conPmRestartCnt, "%04X", restartCnt & 0xFF);
+		sprintf(xmlFormat.conPmCloudVelaDiscCnt, "%04X", cloudVelaDiscCnt & 0xFF);
+		sprintf(xmlFormat.conPmSocketDiscCnt, "%04X", SocketDiscCnt & 0xFF);
+
+		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_PM_REPORT_STRING);
+
+		else {
+			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
+			return FAILURE;
+		}
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+			HcuDebugPrint("CLOUDVELA: XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+		}
+	}
+
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+		/*
+		//初始化变量
+		CloudBhItfDevReportStdZhb_t zhbFormat;
+		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
+
+		//关键数据填入
+		sprintf(zhbFormat.data.conTemp, "%04X", contempValue & 0xFFFF);
+		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
+
+		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
+			return FAILURE;
+		}
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+			HcuDebugPrint("CLOUDVELA: TEMP ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+		}
+		*/
+	}
+
+	else{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
+		return FAILURE;
+	}
+
+	return SUCCESS;
+}
+

@@ -322,8 +322,9 @@ char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK] ={
 		"MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT",  //Send to AIRSYNC directly
 		"MSG_ID_MODBUS_UART1_FRAME_TIMEOUT",  //TIMR FOR UART1 Frame construction
 
-		//for alarm report added by ZSC
+		//for alarm & pm report added by ZSC
 		"MSG_ID_COM_ALARM_REPORT",
+		"MSG_ID_COM_PM_REPORT",
 
 		"MSG_ID_COM_MAX", //Ending point
 		"NULL"

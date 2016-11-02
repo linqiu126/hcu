@@ -115,6 +115,7 @@ typedef enum
 	L3CI_sw_package = 0xA1,	//Èí¼þ°æ±¾Ìå
 
 	L3CI_alarm_info = 0xB0, //for alarm report
+	L3CI_performance_info = 0xB1, // or PM report
 
 	L3CI_equipment_info = 0xF0,	//Éè±¸»ù±¾ÐÅÏ¢
 	L3CI_personal_info = 0xF1,	//¸öÈË»ù±¾ÐÅÏ¢
@@ -555,6 +556,7 @@ enum CloudBhMsgTypeEnum
 	CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8,
 	CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_UINT8,
 	CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8,//for alarm report
+	CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8,//for pm report
 	CLOUDVELA_BH_MSG_TYPE_MAX,
 };
 #define HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING  "hcu_text"  //"hcu_text"
@@ -562,6 +564,8 @@ enum CloudBhMsgTypeEnum
 #define HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING "hcu_heart_beat"   //"hcu_heart_beat"  //心跳协议，里面的数据内容是空的
 #define HCU_CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_STRING "hcu_biz_itg"  //业务智能 hcu_biz_inteligence
 #define HCU_CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_STRING "hcu_alarm"  //for alarm report
+#define HCU_CLOUDVELA_BH_MSG_TYPE_PM_REPORT_STRING "hcu_pm"  //for pm report
+
 
 
 
@@ -608,6 +612,11 @@ typedef struct CloudBhItfDevReportStdXml
 	//Added by Shanchun for alarm report
 	char conAlarmType[5];   //2B
 	char conAlarmContent[5];//2B
+
+	//Added by Shanchun for PM report
+	char conPmRestartCnt[5];   //2B
+	char conPmCloudVelaDiscCnt[5];//2B
+	char conPmSocketDiscCnt[5];//2B
 
 	//Added by Shanchun for control cmd
 	char conPowerOnOff[3];

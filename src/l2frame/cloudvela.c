@@ -65,8 +65,9 @@ FsmStateItem_t FsmCloudvela[] =
 	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hsmmp_control_fb},
 	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hsmmp_data_link_resp},
 
-	//for alarm report added by ZSC
+	//for alarm & pm report added by ZSC
 	{MSG_ID_COM_ALARM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_alarm_report},
+	{MSG_ID_COM_PM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_pm_report},
 
 
 
@@ -1997,6 +1998,60 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 	//结束
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send alarm info to cloud success!\n");
+	}
+	//State no change
+	return SUCCESS;
+}
+
+
+OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0;
+	msg_struct_pm_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_pm_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm_report_t))){
+		HcuErrorPrint("CLOUDVELA: Receive PM message error!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.usercmdid != L3CI_performance_info) || (rcv.timeStamp <=0)){
+		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+		//打包数据
+		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.PmRestartCnt, rcv.PmCloudVelaDiscCnt, rcv.PmSocketDiscCnt, rcv.timeStamp, &buf) == FAILURE){
+			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		//Send out
+		ret = func_cloudvela_send_data_to_cloud(&buf);
+		if ( ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+			return FAILURE;
+		}
+	}else{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get PM by ONLINE, but back off line so quick!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("CLOUDVELA: Online state, send PM info to cloud success!\n");
 	}
 	//State no change
 	return SUCCESS;
