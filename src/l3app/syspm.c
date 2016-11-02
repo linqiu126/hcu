@@ -9,6 +9,7 @@
 
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
+#include "../l2frame/cloudvela.h"
 
 /*
 ** FSM of the SYSPM
@@ -44,6 +45,7 @@ FsmStateItem_t FsmSyspm[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuGlobalCounter_t zHcuGlobalCounter;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -194,6 +196,36 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		//检查COUNTER的情况，并生成相应的事件。这里暂时空着
 		//存储事件到数据库中，形成报告
 		if (dbi_HcuSyspmGlobalDataInfo_save() == FAILURE) zHcuRunErrCnt[TASK_ID_SYSPM]++;
+
+		//PM report to Cloud added by ZSC
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+			msg_struct_pm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_pm_report_t));
+
+			snd.length = sizeof(msg_struct_pm_report_t);
+			snd.usercmdid = L3CI_performance_info;
+			snd.timeStamp = time(0);
+			snd.PmRestartCnt = zHcuGlobalCounter.restartCnt;
+			snd.PmCloudVelaDiscCnt = zHcuGlobalCounter.cloudVelaDiscCnt;
+			snd.PmSocketDiscCnt = zHcuGlobalCounter.SocketDiscCnt;
+
+			ret = hcu_message_send(MSG_ID_COM_PM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_SYSPM]++;
+				HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SYSPM], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
+
+		}
+
+		//差错情形
+		else{
+			HcuErrorPrint("SYSPM: Wrong state of CLOUDVELA when data need send out!\n");
+			zHcuRunErrCnt[TASK_ID_SYSPM]++;
+			return FAILURE;
+		}
+
+
 	}
 
 	return SUCCESS;

@@ -644,8 +644,10 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT,  //Send to AIRSYNC directly
 	MSG_ID_MODBUS_UART1_FRAME_TIMEOUT,  //TIMR FOR UART1 Frame construction
 
-	//for alarm report added by ZSC
+	//for alarm & pm report added by ZSC
 	MSG_ID_COM_ALARM_REPORT,
+	MSG_ID_COM_PM_REPORT,
+
 	MSG_ID_COM_MAX, //Ending point
 
 }; //end of HCU_INTER_TASK_MSG_ID
@@ -2265,6 +2267,19 @@ typedef struct msg_struct_alarm_report
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_alarm_report_t;
+
+//for PM report added by ZSC
+typedef struct msg_struct_pm_report
+{
+	UINT8  usercmdid;
+	//HcuGlobalCounter_t zHcuGlobalCounter;
+
+	UINT32 PmRestartCnt;
+	UINT32 PmCloudVelaDiscCnt;
+	UINT32 PmSocketDiscCnt;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_pm_report_t;
 
 
 #endif /* L0COMVM_COMMSG_H_ */
