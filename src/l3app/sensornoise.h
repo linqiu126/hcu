@@ -56,7 +56,7 @@ typedef struct SensorNoiseInfo
 
 #define NOISE_ACTIVE_CHOICE_MODBUS 1
 #define NOISE_ACTIVE_CHOICE_SPSVIRGO 2
-#define NOISE_ACTIVE_CHOICE_FINAL  NOISE_ACTIVE_CHOICE_MODBUS
+#define NOISE_ACTIVE_CHOICE_FINAL  NOISE_ACTIVE_CHOICE_SPSVIRGO
 
 //API
 extern OPSTAT fsm_noise_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

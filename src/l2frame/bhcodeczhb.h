@@ -29,6 +29,10 @@ extern OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmd
 extern OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 extern OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, CloudDataSendBuf_t *buf);
 
+//for alarm report
+extern OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT32 alarmType, UINT32 alarmContent, UINT32 equID, UINT32 timeStamp, CloudDataSendBuf_t *buf);
+
+
 //Extern API
 //Added by Shanchun for SW download, SW inventory, AV upload
 extern OPSTAT func_cloudvela_heart_beat_received_handle(void);

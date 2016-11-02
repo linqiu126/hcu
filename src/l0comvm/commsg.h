@@ -424,6 +424,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_COM_HEART_BEAT_FB,
 	MSG_ID_COM_PROCESS_REBOOT,  //L2->重新创建任务和进程, 包括装载数据。还有一种层次，是L3->重新RESET硬件
 
+
 	//Service Control message
 
 	//ETHERNET
@@ -642,6 +643,9 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_MODBUS_DATA_REQ_TEMPERATURE_REPORT,  //Send to AIRSYNC directly
 	MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT,  //Send to AIRSYNC directly
 	MSG_ID_MODBUS_UART1_FRAME_TIMEOUT,  //TIMR FOR UART1 Frame construction
+
+	//for alarm report added by ZSC
+	MSG_ID_COM_ALARM_REPORT,
 	MSG_ID_COM_MAX, //Ending point
 
 }; //end of HCU_INTER_TASK_MSG_ID
@@ -2251,7 +2255,16 @@ typedef struct  msg_struct_nbiotqg376_ipm_data_req //
 }msg_struct_nbiotqg376_ipm_data_req_t;
 
 
-
+//for alarm report added by ZSC
+typedef struct msg_struct_alarm_report
+{
+	UINT8  usercmdid;
+	UINT32 equID;
+	UINT32 alarmType;
+	UINT32 alarmContent;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_alarm_report_t;
 
 
 #endif /* L0COMVM_COMMSG_H_ */
