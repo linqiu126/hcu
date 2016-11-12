@@ -77,8 +77,46 @@ typedef enum
 	L3CI_airprs = 0x2A, //Air pressure
 	L3CI_noise = 0x2B, //Noise
 	L3CI_hsmmp = 0x2C, //Camer or audio high speed
+
+	L3CI_audio = 0x2D,//声音
+	L3CI_video = 0x2E,//视频
+	L3CI_picture = 0x2F,//图片
+	L3CI_lock = 0x30,//云控锁
+	L3CI_water_meter = 0x31,//水表
+	L3CI_heat_meter = 0x32,//热表
+	L3CI_gas_meter = 0x33,//气表
+	L3CI_power_meter = 0x34,//电表
+	L3CI_light_strength = 0x35,//光照强度
+	L3CI_toxicgas = 0x36,//有毒气体VOC
+	L3CI_altitude = 0x37,//海拔高度
+	L3CI_moto = 0x38,//马达
+	L3CI_switch = 0x39,//马达
+	L3CI_transporter = 0x3A,//导轨传送带
+
+
+	//for SPIBUSARIES start
+	L3CI_itf_sps = 0x40,//串口读取/返回结果
+	L3CI_itf_adc = 0x41,//ADC读取/返回结果
+	L3CI_itf_dac = 0x42,//DAC读取/返回结果
+	L3CI_itf_i2c = 0x43,//I2C读取/返回结果
+	L3CI_itf_pwm = 0x44,//PWM读取/返回结果
+	L3CI_itf_di = 0x45,//DI读取/返回结果
+	L3CI_itf_do = 0x46,//DO读取/返回结果
+	L3CI_itf_can = 0x47,//CAN读取/返回结果
+	L3CI_itf_spi = 0x48,//SPI读取/返回结果
+	L3CI_itf_usb = 0x49,//USB读取/返回结果
+	L3CI_itf_eth = 0x4A,//网口读取/返回结果
+	L3CI_itf_485 = 0x4B,//485读取/返回结果
+
+	//for SPIBUSARIES end
+
+
 	L3CI_hcu_inventory = 0xA0,	//Èí¼þÇåµ¥
 	L3CI_sw_package = 0xA1,	//Èí¼þ°æ±¾Ìå
+
+	L3CI_alarm_info = 0xB0, //for alarm report
+	L3CI_performance_info = 0xB1, // or PM report
+
 	L3CI_equipment_info = 0xF0,	//Éè±¸»ù±¾ÐÅÏ¢
 	L3CI_personal_info = 0xF1,	//¸öÈË»ù±¾ÐÅÏ¢
 	L3CI_time_sync = 0xF2,	//Ê±¼äÍ¬²½
@@ -289,13 +327,17 @@ typedef enum
 {
 	MODBUS_NONE_RTU_EQUIPMENT_ID = 0,
 	MODBUS_PM25_RTU_EQUIPMENT_ID = 0x1,
-	MODBUS_WINDSPD_RTU_EQUIPMENT_ID = 0x02,
-	MODBUS_WINDDIR_RTU_EQUIPMENT_ID = 0x03,
+	//MODBUS_WINDSPD_RTU_EQUIPMENT_ID = 0x02,
+	//MODBUS_WINDDIR_RTU_EQUIPMENT_ID = 0x03,
+	MODBUS_WINDSPD_RTU_EQUIPMENT_ID = 0x21,//for KUANKER sensor, don't know how to modify equid for the mement, to update later
+	MODBUS_WINDDIR_RTU_EQUIPMENT_ID = 0x23,
 	MODBUS_EMC_RTU_EQUIPMENT_ID = 0x05,
 	MODBUS_TEMP_RTU_EQUIPMENT_ID = 0x06,
 	MODBUS_HUMID_RTU_EQUIPMENT_ID = 0x06,
 	MODBUS_NOISE_RTU_EQUIPMENT_ID = 0x0A,  //暂时改不了，所以就先改为缺省的0A，未来再改动
-	SPSVIRGO_NOISE_RTU_EQUIPMENT_ID = 0x81,
+	SPSVIRGO_NOISE_RTU_EQUIPMENT_ID = 0x41,
+	SPSVIRGO_NOISE_RTU_EQUIPMENT_IND = 0x64,
+	SPSVIRGO_NOISE_RTU_EQUIPMENT_END = 0x03,
 	MODBUS_INVALID_RTU_EQUIPMENT_ID = 0xFF,
 }ModbusSensorEquipmentIdDef;
 
@@ -347,16 +389,18 @@ typedef enum
 //WIND DIRECTION寄存器定义
 typedef enum
 {
-	WINDDIR_REG_DATA_READ = 0,  //2B
+	WINDDIR_REG_DATA_READ = 0x07,  //2B
 	WINDDIR_LENGTH_OF_REG = 0x01, //2个寄存器，返回2B
-	WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x03,
+    //INDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x03,
+	WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x04,//modify for KUANKE sensor
 }WinddirRegisterSelfDef;
 //WIND SPEED寄存器定义
 typedef enum
 {
-	WINDSPD_REG_DATA_READ = 0,  //2B
+	WINDSPD_REG_DATA_READ = 0x06,  //2B
 	WINDSPD_LENGTH_OF_REG = 0x01, //2个寄存器，返回2B
-	WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x03,
+	//WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x03,
+	WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x04,//modify for KUANKE sensor
 }WindSpdRegisterSelfDef;
 //TEMP寄存器定义
 typedef enum
@@ -418,6 +462,28 @@ typedef enum
 	FILE_OPERATION_TYPE_MAX,
 	FILE_OPERATION_TYPE_INVALID = 0xFF,
 }FileOperationTypeEnum;
+
+//for alarm report added by ZSC
+typedef enum
+{
+	ALARM_TYPE_NONE = 0,
+	ALARM_TYPE_SENSOR,
+	ALARM_TYPE_NETWORK,
+	ALARM_TYPE_INVALID = 0xFF,
+}AlarmTypeEnum;
+
+typedef enum
+{
+	ALARM_CONTENT_NONE = 0,
+	ALARM_CONTENT_PM25_NO_CONNECT,
+	ALARM_CONTENT_TEMP_NO_CONNECT,
+	ALARM_CONTENT_HUMID_NO_CONNECT,
+	ALARM_CONTENT_WINDDIR_NO_CONNECT,
+	ALARM_CONTENT_WINDSPD_NO_CONNECT,
+	ALARM_CONTENT_NOISE_NO_CONNECT,
+	ALARM_CONTENT_VIDEO_NO_CONNECT,
+	ALARM_CONTENT_INVALID = 0xFF,
+}AlarmContentEnum;
 
 //公共定义的设备缺省标识，暂时以335D设备为模版
 #define	HCU_DEFAULT_DEVICE_ETHERNET "eth0"
@@ -489,12 +555,18 @@ enum CloudBhMsgTypeEnum
 	CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8,
 	CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8,
 	CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_UINT8,
+	CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8,//for alarm report
+	CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8,//for pm report
 	CLOUDVELA_BH_MSG_TYPE_MAX,
 };
 #define HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING  "hcu_text"  //"hcu_text"
 #define HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING  "hcu_command" //"hcu_command"
 #define HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING "hcu_heart_beat"   //"hcu_heart_beat"  //心跳协议，里面的数据内容是空的
 #define HCU_CLOUDVELA_BH_MSG_TYPE_BIZ_ITG_STRING "hcu_biz_itg"  //业务智能 hcu_biz_inteligence
+#define HCU_CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_STRING "hcu_alarm"  //for alarm report
+#define HCU_CLOUDVELA_BH_MSG_TYPE_PM_REPORT_STRING "hcu_pm"  //for pm report
+
+
 
 
 //XML格式定义
@@ -536,6 +608,16 @@ typedef struct CloudBhItfDevReportStdXml
 	char conNS[3];//1B
 	char conGpsy[9];   //4B
 	char conGpsz[9];   //4B
+
+	//Added by Shanchun for alarm report
+	char conAlarmType[5];   //2B
+	char conAlarmContent[5];//2B
+
+	//Added by Shanchun for PM report
+	char conPmRestartCnt[5];   //2B
+	char conPmCloudVelaDiscCnt[5];//2B
+	char conPmSocketDiscCnt[5];//2B
+
 	//Added by Shanchun for control cmd
 	char conPowerOnOff[3];
 	char conInterSample[3];
@@ -687,9 +769,16 @@ typedef struct  HcuInventoryInfo
 }HcuInventoryInfot;
 
 //Adding by Shanchun for socket handling
-#define HCU_CLOUDSRV_BH_PORT 9501
-#define HCU_CLOUDSRV_BH_ADDRESS "121.40.185.177"
-#define HCU_CLOUDSRV_BH_QUEUE 30
+#define HCU_CLOUDSRV_SOCKET_PORT 9501
+#define HCU_CLOUDSRV_SOCKET_ADDRESS "121.40.185.177"
+#define HCU_CLOUDSRV_SOCKET_QUEUE 30
+
+//Adding by Shanchun for socket heart beat
+#define HCU_CLOUDSRV_SOCKET_KEEPALIVE 1  // set KeepAlive
+#define HCU_CLOUDSRV_SOCKET_KEEPIDLE 5   //tcp idle time before first KeepAlive checking
+#define HCU_CLOUDSRV_SOCKET_KEEPINTERVAL 1  //interval between two KeepAlive checking
+#define HCU_CLOUDSRV_SOCKET_KEEPCOUNT 1  //count before disconnect Keepalive
+
 
 //Adding by Shanchun for cmd timer flag
 #define HCU_CLOUDVELA_CMD_POLLING_LONG_TIMER_START_ON 1
@@ -771,12 +860,12 @@ typedef struct  HcuInventoryInfo
 #endif
 
 #ifdef TARGET_RASPBERRY_PI3B
-#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
-//#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
+//#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
+#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
 #define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
 #define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
-#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyS0"
-#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyS1"
+#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
+#define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyACM0"
 //#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
 //#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB4"
 #endif

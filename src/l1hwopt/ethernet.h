@@ -45,7 +45,7 @@ extern OPSTAT hcu_ethernet_socket_link_disconnect(void);
 extern OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf);
 
 //Local API
-OPSTAT func_ethernet_intf_init(void);
+OPSTAT func_ethernet_int_init(void);
 
 //引用外部函数
 extern size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);

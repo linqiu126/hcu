@@ -108,6 +108,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	hcu_sleep(60);
 	int workingCycle = 2;
 	//进入循环工作模式
+	/*
 	while(1){
 		conCounter = 0;
 		if (HCU_SENSOR_PRESENT_ZE08CH2O == HCU_SENSOR_PRESENT_YES){
@@ -123,6 +124,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		conCounter = workingCycle-conCounter;
 		hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle * conCounter);
 	}
+	*/
 
 	return SUCCESS;
 }

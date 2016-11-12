@@ -68,6 +68,8 @@ extern OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, vo
 extern OPSTAT fsm_temp_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 void func_temp_time_out_read_data_from_modbus(void);
 void func_temp_time_out_processing_no_rsponse(void);
+void func_temp_time_out_read_data_from_spibusaries(void);//for SPIBUSARIES
+
 extern OPSTAT fsm_temp_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_temp_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT func_temp_time_out_read_data_from_dht11(void);

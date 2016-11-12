@@ -144,7 +144,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_PERIOD_READ, zHcuSysEngPar.timer.humidReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_PERIOD_READ, zHcuSysEngPar.timer.noiseReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_NOISE]++;
 		HcuErrorPrint("NOISE: Error start timer!\n");
@@ -198,7 +198,7 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		}
 	}
 
-	//Period time out received, send command to SPSVIRGO for read
+	//Period time out received, send command to SPSVIRGO/MODBUS for read
 	if ((rcv.timeId == TIMER_ID_1S_NOISE_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_NOISE) != FSM_STATE_NOISE_ACTIVED){
@@ -359,7 +359,7 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
 	//如果当前传感器处于空闲态，干活！
 	else if (zSensorNoiseInfo[currentSensorNoiseId].hwAccess == SENSOR_NOISE_HW_ACCESS_IDLE){
-		//Do somemthing
+		//Do something
 		//Send out message to SPSVIRGO
 		msg_struct_noise_spsvirgo_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_noise_spsvirgo_data_read_t));
@@ -373,6 +373,10 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 			zHcuRunErrCnt[TASK_ID_NOISE]++;
 			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_SPSVIRGO]);
 			return;
+		}
+		else
+		{
+			HcuDebugPrint("NOISE: Send message suceed, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_SPSVIRGO]);
 		}
 
 		//启动一次性定时器
@@ -661,6 +665,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			record.gpsx = rcv.noise.gps.gpsx;
 			record.gpsy = rcv.noise.gps.gpsy;
 			record.gpsz = rcv.noise.gps.gpsz;
+			record.ew = rcv.noise.gps.ew;
+			record.ns = rcv.noise.gps.ns;
 			ret = hcu_save_to_storage_mem(&record);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_NOISE]++;
@@ -684,6 +690,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 				noiseData.gps.gpsx = record.gpsx;
 				noiseData.gps.gpsy = record.gpsy;
 				noiseData.gps.gpsz = record.gpsz;
+				noiseData.gps.ew = record.ew;
+				noiseData.gps.ns = record.ns;
 				noiseData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 				if (ret == FAILURE){
@@ -715,6 +723,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		snd.noise.gps.gpsx = rcv.noise.gps.gpsx;
 		snd.noise.gps.gpsy = rcv.noise.gps.gpsy;
 		snd.noise.gps.gpsz = rcv.noise.gps.gpsz;
+		snd.noise.gps.ew = rcv.noise.gps.ew;
+		snd.noise.gps.ns = rcv.noise.gps.ns;
 		ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NOISE]++;
@@ -736,6 +746,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			record.gpsx = rcv.noise.gps.gpsx;
 			record.gpsy = rcv.noise.gps.gpsy;
 			record.gpsz = rcv.noise.gps.gpsz;
+			record.ew = rcv.noise.gps.ew;
+			record.ns = rcv.noise.gps.ns;
 			ret = hcu_save_to_storage_mem(&record);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_NOISE]++;
@@ -759,6 +771,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 				noiseData.gps.gpsx = record.gpsx;
 				noiseData.gps.gpsy = record.gpsy;
 				noiseData.gps.gpsz = record.gpsz;
+				noiseData.gps.ew = record.ew;
+				noiseData.gps.ns = record.ns;
 				noiseData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 				if (ret == FAILURE){

@@ -184,7 +184,7 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		}
 	}
 
-	//Period time out received, send command to MODBUS for read
+	//Period time out received, send command to MODBUS/SPIBUSARIES for read
 	if ((rcv.timeId == TIMER_ID_1S_TEMP_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		if (FsmGetState(TASK_ID_TEMP) != FSM_STATE_TEMP_ACTIVED){
@@ -195,7 +195,7 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 				return FAILURE;
 			}//FsmSetState
 		}
-
+/*
 #ifdef TARGET_RASPBERRY_PI3B
 		if ((SENSOR_TEMP_RPI_DHT11_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_DHT11 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_dht11();
 		if ((SENSOR_TEMP_RPI_SHT20_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_SHT20 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_sht20();
@@ -203,11 +203,20 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		if ((SENSOR_TEMP_RPI_BMP180_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_BMP180 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_bmp180();
 		if ((SENSOR_TEMP_RPI_MTH01_PRESENT == SENSOR_TEMP_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_MTH01 == HCU_SENSOR_PRESENT_YES)) func_temp_time_out_read_data_from_mth01();
 #endif
+*/
+
+		//update for SPIBUSARIES start
+#if HCU_CURRENT_WORKING_PROJECT_NAME_INT_UNIQUE == HCU_WORKING_PROJECT_NAME_INT_AQYC
 		func_temp_time_out_read_data_from_modbus();
+#elif HCU_CURRENT_WORKING_PROJECT_NAME_INT_UNIQUE == HCU_WORKING_PROJECT_NAME_INT_TBSWR
+		func_temp_time_out_read_data_from_spibusaries();
+#else
+		func_temp_time_out_read_data_from_modbus();
+#endif
 	}
 
 	//Modbus received FB time out message received
-	else if ((rcv.timeId == TIMER_ID_1S_TEMP_MODBUS_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+	else if ((rcv.timeId == TIMER_ID_1S_TEMP_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		func_temp_time_out_processing_no_rsponse();
 	}
 
@@ -253,7 +262,7 @@ void func_temp_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_TEMP, TIMER_ID_1S_TEMP_MODBUS_FB, zHcuSysEngPar.timer.tempReqTimerFB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		ret = hcu_timer_start(TASK_ID_TEMP, TIMER_ID_1S_TEMP_FB, zHcuSysEngPar.timer.tempReqTimerFB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_TEMP]++;
 			HcuErrorPrint("TEMP: Error start timer!\n");
@@ -282,6 +291,75 @@ void func_temp_time_out_read_data_from_modbus(void)
 
 	return;
 }
+
+//for SPIBUSARIES start
+void func_temp_time_out_read_data_from_spibusaries(void)
+{
+	int ret = 0;
+	//如果当前传感器还处于忙的状态，意味着下面操作还未完成，继续等待，下一次再操作
+	//通过多次等待，让离线的设备自动变成长周期读取一次
+	if (zSensorTempInfo[currentSensorTempId].hwAccess == SENSOR_TEMP_HW_ACCESS_BUSY){
+		//多次等待后强行恢复
+		if ((zSensorTempInfo[currentSensorTempId].busyCount < 0) || (zSensorTempInfo[currentSensorTempId].busyCount >= SENSOR_TEMP_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
+			zSensorTempInfo[currentSensorTempId].busyCount = 0;
+			zSensorTempInfo[currentSensorTempId].hwAccess =SENSOR_TEMP_HW_ACCESS_IDLE;
+		}else{
+			zSensorTempInfo[currentSensorTempId].busyCount++;
+			//Keep busy status
+		}
+		//状态机不能动，可能在ACTIVE，也可能在WFB，因为定时随时都可能来的
+	}
+
+	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
+	//如果当前传感器处于空闲态，干活！
+	else if (zSensorTempInfo[currentSensorTempId].hwAccess == SENSOR_TEMP_HW_ACCESS_IDLE){
+		//Do somemthing
+		//Send out message to SPIBUSARIES
+		msg_struct_temp_spibusaries_data_read_t snd;
+		memset(&snd, 0, sizeof(msg_struct_temp_spibusaries_data_read_t));
+		snd.length = sizeof(msg_struct_temp_spibusaries_data_read_t);
+		snd.equId = zSensorTempInfo[currentSensorTempId].equId;
+		snd.cmdId = L3CI_temp;
+		snd.optId = L3PO_temp_data_req;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
+		ret = hcu_message_send(MSG_ID_TEMP_SPIBUSARIES_DATA_READ, TASK_ID_SPIBUSARIES, TASK_ID_TEMP, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TEMP], zHcuTaskNameList[TASK_ID_SPIBUSARIES]);
+			return;
+		}
+
+		//启动一次性定时器
+		ret = hcu_timer_start(TASK_ID_TEMP, TIMER_ID_1S_TEMP_FB, zHcuSysEngPar.timer.tempReqTimerFB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Error start timer!\n");
+			return;
+		}
+
+		//设置当前传感器到忙，没反应之前，不置状态
+		zSensorTempInfo[currentSensorTempId].hwAccess = SENSOR_TEMP_HW_ACCESS_BUSY;
+		zSensorTempInfo[currentSensorTempId].busyCount = 0;
+
+		//State Transfer to FSM_STATE_TEMP_OPT_WFFB
+		ret = FsmSetState(TASK_ID_TEMP, FSM_STATE_TEMP_OPT_WFFB);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Error Set FSM State!\n");
+			return;
+		}//FsmSetState
+	}//SENSOR_TEMP_HW_ACCESS_IDLE
+
+	//任何其他状态，强制初始化
+	else{
+		zSensorTempInfo[currentSensorTempId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
+		zSensorTempInfo[currentSensorTempId].hwStatus = SENSOR_TEMP_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		zSensorTempInfo[currentSensorTempId].busyCount = 0;
+	}
+
+	return;
+}
+//for SPIBUSARIES end
 
 //超时失败，走向下一个传感器
 void func_temp_time_out_processing_no_rsponse(void)
@@ -335,7 +413,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
 
 	//停止定时器
-	ret = hcu_timer_stop(TASK_ID_TEMP, TIMER_ID_1S_TEMP_MODBUS_FB, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_stop(TASK_ID_TEMP, TIMER_ID_1S_TEMP_FB, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_TEMP]++;
 		HcuErrorPrint("TEMP: Error stop timer!\n");

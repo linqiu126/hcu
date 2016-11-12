@@ -191,7 +191,7 @@ OPSTAT fsm_hcho_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		}
 
 #ifdef TARGET_RASPBERRY_PI3B
-		if ((SENSOR_HCHO_RPI_ZE08CH2O_PRESENT == SENSOR_HCHO_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_ZE08CH2O == HCU_SENSOR_PRESENT_YES)) func_hcho_time_out_read_data_from_ze08ch2o();
+		//if ((SENSOR_HCHO_RPI_ZE08CH2O_PRESENT == SENSOR_HCHO_RPI_PRESENT_TRUE) && (HCU_SENSOR_PRESENT_ZE08CH2O == HCU_SENSOR_PRESENT_YES)) func_hcho_time_out_read_data_from_ze08ch2o();
 #endif
 
 		//目前在非树莓派条件下，DO NOTHING

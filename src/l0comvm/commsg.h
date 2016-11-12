@@ -424,6 +424,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_COM_HEART_BEAT_FB,
 	MSG_ID_COM_PROCESS_REBOOT,  //L2->重新创建任务和进程, 包括装载数据。还有一种层次，是L3->重新RESET硬件
 
+
 	//Service Control message
 
 	//ETHERNET
@@ -557,9 +558,12 @@ enum HCU_INTER_TASK_MSG_ID
 
 	//TEMPERATURE message
 	MSG_ID_TEMP_MODBUS_DATA_READ,
+	MSG_ID_TEMP_SPIBUSARIES_DATA_READ,//SPIBUSARIES
 	MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
 	MSG_ID_TEMP_MODBUS_CONTROL_CMD,
+	MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD,//SPIBUSARIES
 	MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,
+
 
 	//HUMIDITY message
 	MSG_ID_HUMID_MODBUS_DATA_READ,
@@ -580,7 +584,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_NOISE_SPSVIRGO_STOP,
 	MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
 	MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,
-	MSG_ID_NOISE_MODBUS_DATA_READ,
+	MSG_ID_NOISE_MODBUS_DATA_READ,//0x67,103?
 	MSG_ID_NOISE_MODBUS_CONTROL_CMD,
 
 	//IWM
@@ -639,6 +643,11 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_MODBUS_DATA_REQ_TEMPERATURE_REPORT,  //Send to AIRSYNC directly
 	MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT,  //Send to AIRSYNC directly
 	MSG_ID_MODBUS_UART1_FRAME_TIMEOUT,  //TIMR FOR UART1 Frame construction
+
+	//for alarm & pm report added by ZSC
+	MSG_ID_COM_ALARM_REPORT,
+	MSG_ID_COM_PM_REPORT,
+
 	MSG_ID_COM_MAX, //Ending point
 
 }; //end of HCU_INTER_TASK_MSG_ID
@@ -1302,6 +1311,17 @@ typedef struct  msg_struct_temp_modbus_data_read //
 	UINT32 equId;
 	UINT32 length;
 }msg_struct_temp_modbus_data_read_t;
+
+//for SPIBUSARIES
+typedef struct  msg_struct_temp_spibusaries_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_temp_spibusaries_data_read_t;
+
 typedef struct  msg_struct_humid_modbus_data_read //
 {
 	UINT8  cmdId;
@@ -2237,7 +2257,29 @@ typedef struct  msg_struct_nbiotqg376_ipm_data_req //
 }msg_struct_nbiotqg376_ipm_data_req_t;
 
 
+//for alarm report added by ZSC
+typedef struct msg_struct_alarm_report
+{
+	UINT8  usercmdid;
+	UINT32 equID;
+	UINT32 alarmType;
+	UINT32 alarmContent;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_alarm_report_t;
 
+//for PM report added by ZSC
+typedef struct msg_struct_pm_report
+{
+	UINT8  usercmdid;
+	//HcuGlobalCounter_t zHcuGlobalCounter;
+
+	UINT32 PmRestartCnt;
+	UINT32 PmCloudVelaDiscCnt;
+	UINT32 PmSocketDiscCnt;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_pm_report_t;
 
 
 #endif /* L0COMVM_COMMSG_H_ */
