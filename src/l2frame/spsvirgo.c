@@ -34,15 +34,23 @@ FsmStateItem_t FsmSpsvirgo[] =
 	{MSG_ID_COM_HEART_BEAT,       		FSM_STATE_SPSVIRGO_RECEIVED,       	fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_SPSVIRGO_RECEIVED,       	fsm_com_do_nothing},
     {MSG_ID_NOISE_SPSVIRGO_DATA_READ,   FSM_STATE_SPSVIRGO_RECEIVED,       	fsm_spsvirgo_noise_data_read},
-    {MSG_ID_NOISE_SPSVIRGO_STOP,     	FSM_STATE_SPSVIRGO_RECEIVED,      	fsm_spsvirgo_stop_work},
 	{MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD, FSM_STATE_SPSVIRGO_RECEIVED,   		fsm_spsvirgo_noise_control_cmd},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
+//extern global variables
 extern GpsPosInfo_t zHcuGpsPosInfo;
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+
+//extern SerialPortCom_t gSerialPortForSPS232;
+extern SerialPortCom_t gSerialPortMobus;
+
+
+UINT32 currentSensorEqpId;  //当前正在工作的传感器
+SerialSpsMsgBuf_t currentSpsBuf;
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -144,7 +152,7 @@ OPSTAT fsm_spsvirgo_stop_work(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0, currentSensorEqpId=0;
+	int ret=0;
 
 	//消息参数检查
 	msg_struct_noise_spsvirgo_data_read_t rcv;
@@ -180,22 +188,101 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	//读取RS232接口，获取结果
 	else if (SPSVIRGO_ACTIVE_CHOICE_NOISE_FINAL == SPSVIRGO_ACTIVE_CHOICE_NOISE_ZSY)
 	{
+		//对信息进行MODBUS协议的编码，包括CRC16的生成
+		memset(&currentSpsBuf, 0, sizeof(SerialSpsMsgBuf_t));
+		snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		//对发送数据进行编码
 
+		//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
+        //Req Hex: 41 57 41 30(ASCII: AWA0)
+		//Resp Hex: 41 57 41 41 2C 20 34 33 2E 34 64 42 41 2C 42 03(ASCII: AWAA, 43.4dBA,B end)
+		currentSpsBuf.curLen = 4;
+		UINT8 sample[] = {0x41,0x57,0x41,0x30};
+		memcpy(currentSpsBuf.curBuf, sample, currentSpsBuf.curLen);
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+			HcuDebugPrint("SPSVIRGO: Preparing send SPSVIRGO noise req data = %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
+		}
 
 		//发送串口指令
+		ret = hcu_spsapi_serial_port_send(&gSerialPortMobus, currentSpsBuf.curBuf, currentSpsBuf.curLen);
+
+		if (FAILURE == ret)
+		{
+			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+			HcuErrorPrint("SPSVIRGO: Error send command to serials port!\n");
+
+			//for alarm report added by ZSC
+			msg_struct_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.usercmdid = L3CI_alarm_info;
+			snd.timeStamp = time(0);
+			snd.equID = rcv.equId;
+			snd.alarmType = ALARM_TYPE_SENSOR;
+			snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
+
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SPSVIRGO, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPSVIRGO], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
+			return FAILURE;
+		}
+		else
+		{
+			HcuDebugPrint("SPSVIRGO: Send SPSVIRGO noise req data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
+			//HcuDebugPrint("SPSVIRGO: Send noise req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15],currentSpsBuf.curBuf[16]);
+		}
 
 		//等待短时
-		hcu_usleep(10);
+		hcu_usleep(30);
 
 		//读取串口数据
+		//从相应的从设备中读取数据
+		memset(&currentSpsBuf, 0, sizeof(SerialSpsMsgBuf_t));
+		ret = hcu_spsapi_serial_port_get(&gSerialPortMobus, currentSpsBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentSpsBuf中
+		if (ret > 0)
+		{
+			HcuDebugPrint("SPSVIRGO: Len %d\n", ret);
+			HcuDebugPrint("SPSVIRGO: Received noise resp data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15]);
 
-		//解码
+		}
+		else
+		{
+			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+			HcuErrorPrint("SPSVIRGO: Can not read data from serial port, return of read %d \n", ret);
+			return FAILURE;
+		}
 
-		//检查返回结果
+		//解码,检查返回结果,赋值
+		if (currentSpsBuf.curBuf[9] == SPSVIRGO_NOISE_RTU_EQUIPMENT_IND && currentSpsBuf.curBuf[0] == SPSVIRGO_NOISE_RTU_EQUIPMENT_ID)
+		{
+			//HcuDebugPrint("SPSVIRGO: Received noise data succeed 9!\n\n");
+			snd.noise.noiseValue = (UINT32)(HexToAsc(currentSpsBuf.curBuf[6]))*10 + (UINT32)(HexToAsc(currentSpsBuf.curBuf[7]));
 
-		//赋值
+			HcuDebugPrint("SPSVIRGO: Received noise data resp succeed!= %d  \n\n", snd.noise.noiseValue);
+		}
+		else if (currentSpsBuf.curBuf[10] == SPSVIRGO_NOISE_RTU_EQUIPMENT_IND && currentSpsBuf.curBuf[0] == SPSVIRGO_NOISE_RTU_EQUIPMENT_ID)
+		{
+			//HcuDebugPrint("SPSVIRGO: Received noise data succeed 10!\n\n");
+			snd.noise.noiseValue = (UINT32)(HexToAsc(currentSpsBuf.curBuf[6]))*100 + (UINT32)(HexToAsc(currentSpsBuf.curBuf[7]))*10 + (UINT32)(HexToAsc(currentSpsBuf.curBuf[9]));
 
+			HcuDebugPrint("SPSVIRGO: Received noise data resp succeed!= %d  \n\n", snd.noise.noiseValue);
+		}
+		else if(currentSpsBuf.curBuf[11] == SPSVIRGO_NOISE_RTU_EQUIPMENT_IND && currentSpsBuf.curBuf[0] == SPSVIRGO_NOISE_RTU_EQUIPMENT_ID)
+		{
+			//HcuDebugPrint("SPSVIRGO: Received noise data succeed 11!\n\n");
+			snd.noise.noiseValue = (UINT32)(HexToAsc(currentSpsBuf.curBuf[6]))*1000 + (UINT32)(HexToAsc(currentSpsBuf.curBuf[7]))*100 + (UINT32)(HexToAsc(currentSpsBuf.curBuf[8]))*10 + (UINT32)(HexToAsc(currentSpsBuf.curBuf[10]));
+			HcuDebugPrint("SPSVIRGO: Received noise data resp succeed!= %d  \n\n", snd.noise.noiseValue);
+		}
+		else
+		{
+			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+			HcuErrorPrint("SPSVIRGO: Error unpack message!\n");
+			return FAILURE;
+		}
 	}
 
 	else
@@ -248,15 +335,18 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		snd.useroptid = L3PO_noise_read_sample_number;
 		break;
 	default:
-		HcuErrorPrint("NOISE: Error operation code received!\n");
+		HcuErrorPrint("SPSVIRGO: Error operation code received!\n");
 		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
 		return FAILURE;
 		break;
 	}
+	//snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 	snd.noise.gps.gpsx = zHcuGpsPosInfo.gpsX;
 	snd.noise.gps.gpsy = zHcuGpsPosInfo.gpsY;
 	snd.noise.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-	//Remaining data to be filled
+	snd.noise.gps.ew = zHcuGpsPosInfo.EW;
+	snd.noise.gps.ns = zHcuGpsPosInfo.NS;
+
 	ret = hcu_message_send(MSG_ID_SPSVIRGO_NOISE_DATA_REPORT, TASK_ID_NOISE, TASK_ID_SPSVIRGO, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
@@ -274,5 +364,19 @@ OPSTAT fsm_spsvirgo_noise_control_cmd(UINT32 dest_id, UINT32 src_id, void * para
 {
 
 	return SUCCESS;
+}
+
+//函 数 名：HexToAsc()
+//功能描述：把16进制转换为ASCII
+unsigned char HexToAsc(unsigned char aChar)
+{
+    if((aChar>=0x30)&&(aChar<=0x39))
+        aChar -= 0x30;
+    else if((aChar>=0x41)&&(aChar<=0x46))//大写字母
+        aChar -= 0x37;
+    else if((aChar>=0x61)&&(aChar<=0x66))//小写字母
+        aChar -= 0x57;
+    else aChar = 0xff;
+    return aChar;
 }
 
