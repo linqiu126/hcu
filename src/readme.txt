@@ -744,11 +744,9 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > bug fix for video play(E2E)。
 > add socket client(blocking receive), to replace CMD polling 
 
-
 //= ZSC, 2016 Aug.26, CURRENT_SW_DELIVERY 109
 > add socket client heart beart checking 
 > add socket client re-connect mechanism 
-
 
 //= ZSC, 2016 Sep.20, CURRENT_SW_DELIVERY 110
 > bug fix for PM25 Sensor address config 
@@ -765,10 +763,33 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 > update for support USB GPS receive(ttyAMC0)
 > add alarm report function(for Sensors) 
 
-
-
-//= ZSC, 2016 Nov.6, CURRENT_SW_DELIVERY 114
+//= ZSC, 2016 Nov.6, CURRENT_SW_DELIVERY 114 => AQYC项目
 > add Pm report function(for Module restart & Cloud Discon & Socket Discon) 
+
+//= ZJL, 2016 NOV.12, CURRENT_SW_DELIVERY R01.114　=>增加新项目
+= 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
