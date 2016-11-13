@@ -1,0 +1,28 @@
+# ignore these files #
+######################
+Debug/log/*
+Debug/src/*
+Linux_Arm_A8/src/*
+RasberryPi/src/*
+Release/src/*
+
+# Compiled source # 
+####################
+*.o
+*.d
+
+# Logs # 
+########
+*.log
+
+# other files #
+###############
+*.dat
+/X86_dev/
+
+# OS generated files # 
+###################### 
+.DS_Store* 
+ehthumbs.db 
+Icon? 
+Thumbs.db
