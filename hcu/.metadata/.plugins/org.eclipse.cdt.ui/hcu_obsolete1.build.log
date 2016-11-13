@@ -1,6 +1,0 @@
-21:43:48 **** Build of configuration Default for project hcu_obsolete1 ****
-make all 
-make: *** 没有规则可以创建目标“all”。 停止。
-
-21:43:48 Build Finished (took 121ms)
-
