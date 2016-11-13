@@ -1,7 +1,0 @@
-23:53:58 **** Clean-only build of configuration Debug for project TestHellopWorld ****
-make clean 
-rm -rf  ./src/TestHellopWorld.o  ./src/TestHellopWorld.d  TestHellopWorld
- 
-
-23:53:58 Build Finished (took 67ms)
-
