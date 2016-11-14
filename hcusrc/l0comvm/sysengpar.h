@@ -12,6 +12,8 @@
 #include "../l0comvm/sysdim.h"
 
 //基础的通信和硬件部分
+//由于内存和硬件大小，相对于这么一点配置参数来说，不是一个太大的问题，故而在针对不同项目的时候，这部分将会时全集，从而简化本地配置界面，以及相应数据库的操纵
+//从未来进一步发展的角度，过于复杂的参数配置以及控制，都会影响这个系统的运作。如果没有特殊情况，不再增加新的可配参数内容。剩下的参数，都作为软件程序级参数配置内容。
 typedef struct SysEngParElementComm
 {
 	UINT8  commBackHawlCon;
@@ -64,6 +66,22 @@ typedef struct SysEngParElementComm
 	UINT8  commFrontSensorIgm;
 	UINT8  commFrontSensorIpm;
 	UINT8  commFrontSensorPm25Sharp;//by shanchun
+	//不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
+
 }SysEngParElementComm_t;
 
 //数据库部分
@@ -81,26 +99,6 @@ typedef struct SysEngParElementDb
 //Timer setting for sensor data req by Shanchun
 typedef struct SysEngParElementSensor
 {
-	/*
-	UINT32 emcReqTimer;
-	UINT32 emcReqTimerFB;
-	UINT32 humidReqTimer;
-	UINT32 humidReqTimerFB;
-	UINT32 noiseReqTimer;
-	UINT32 noiseReqTimerFB;
-	UINT32 pm25ReqTimer;
-	UINT32 pm25ReqTimerFB;
-	UINT32 tempReqTimer;
-	UINT32 tempReqTimerFB;
-	UINT32 winddirReqTimer;
-	UINT32 winddirReqTimerFB;
-	UINT32 windspdReqTimer;
-	UINT32 windspdReqTimerFB;
-	UINT32 heartbeatTimer;
-	UINT32 heartbeartBackTimer;
-	UINT32 cmdcontrolLongTimer;
-	UINT32 cmdcontrolShortTimer;
-	*/
 	INT32 emcReqTimer;
 	INT32 emcReqTimerFB;
 	INT32 humidReqTimer;
@@ -139,6 +137,21 @@ typedef struct SysEngParElementSensor
 	INT32 ipmReqTimer;
 	INT32 pm25sharpReqTimer;
 	INT32 syspmWorkingTimer;
+	//不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
 }SysEngParElementSensorTimer_t;
 
 //Series port config by Shanchun
@@ -237,9 +250,28 @@ typedef struct SysEngParElementLocalUi
 	char  browselWorkingOption[SYS_ENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN];
 }SysEngParElementLocalUi_t;
 
+//由程序指定的配置参数区，不用到数据库中进行配置，以降低项目工程的复杂度
+typedef struct SysEngParElementProgramCodeDefineFix
+{
+	//不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
+}SysEngParElementProgramCodeDefineFix_t;
 
 //工程参数总控制表
-#define SYS_ENG_PAR_PRJ_NAME_LEN 20
+#define SYS_ENG_PAR_PRJ_NAME_LEN 100  //保持跟数据库的一致性
 typedef struct HcuSysEngParTable
 {
 	char prjname[SYS_ENG_PAR_PRJ_NAME_LEN];
@@ -254,6 +286,7 @@ typedef struct HcuSysEngParTable
 	UINT8 traceMode;
 	SysEngParElementTrace_t traceList;
 	SysEngParElementLocalUi_t localUI;
+	//SysEngParElementProgramCodeDefineFix_t codeDefineFix;
 }HcuSysEngParTablet_t;
 
 
@@ -276,7 +309,6 @@ typedef struct  sp_errcnt_data_element //
 	UINT32 taskHumidEC;
 	UINT32 taskNoiseEC;
 	UINT32 taskPm25SharpEC; //by shanchun
-
 	UINT32 timeStamp;
 }sp_errcnt_data_element_t;
 

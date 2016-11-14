@@ -26,6 +26,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>src/hcudb.sql</name>
+			<type>1</type>
+			<location>/home/hitpony/workspace/hcu/hcusrc/hcudb.sql</location>
+		</link>
+		<link>
 			<name>src/l0autorun</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
