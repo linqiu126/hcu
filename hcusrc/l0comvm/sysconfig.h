@@ -8,8 +8,10 @@
 #ifndef L0COMVM_SYSCONFIG_H_
 #define L0COMVM_SYSCONFIG_H_
 
-#include "sysversion.h"
-#include "sysengpar.h"
+#include "../l0comvm/sysversion.h"
+#include "../l0comvm/comtype.h"
+#include "../l0comvm/sysdim.h"
+#include "../l0comvm/sysengpar.h"
 
 /*
  *
@@ -37,21 +39,6 @@
 #define HCU_DISC_SENSOR_SAVE_FLAG_YES 1
 #define HCU_DISC_SENSOR_SAVE_FLAG_NO 0 //and Others
 #define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
-
-//项目名称，每个项目均为唯一，编译生成项，用于本项目选择启动配置数据库中的工参信息
-//注意这里是互斥性定义，不要弄的重复了
-//#undef HCU_WORKING_PROJECT_NAME_AQYC
-#define HCU_WORKING_PROJECT_NAME_AQYC "HCU_PRJ_AQYC"
-#undef HCU_WORKING_PROJECT_NAME_TBSWR  //相当于挂墙仪表G3
-//#define HCU_WORKING_PROJECT_NAME_TBSWR "HCU_PRJ_TBSWR"
-#undef HCU_WORKING_PROJECT_NAME_NBIOT_CJ188
-//#define HCU_WORKING_PROJECT_NAME_NBIOT_CJ188 "HCU_PRJ_NBIOT_CJ188" //Intelligence Meter
-#undef HCU_WORKING_PROJECT_NAME_NBIOT_QG376
-//#define HCU_WORKING_PROJECT_NAME_NBIOT_QG376 "HCU_PRJ_NBIOT_QG376"
-#undef HCU_WORKING_PROJECT_NAME_TEST_MODE
-//#define HCU_WORKING_PROJECT_NAME_TEST_MODE "HCU_PRJ_TESTMODE"
-
-#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE HCU_WORKING_PROJECT_NAME_AQYC
 
 
 //for SPIBUSARIES start
