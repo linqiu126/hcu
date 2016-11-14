@@ -345,7 +345,8 @@ void hcu_vm_system_init(void)
 	//HcuDebugPrint("HCU-VM: HCU HW MAC Address = [%02X %02X %02X %02X %02X %02X], DEFAULT HCU Name = [%s]\n", MacAddress[5], MacAddress[4], MacAddress[3], MacAddress[2], MacAddress[1], MacAddress[0], CLOUDVELA_BH_HCU_NAME);
 
 	//初始化全局变量TASK_ID/QUE_ID/TASK_STAT
-	memset(&(zHcuTaskInfo[0].TaskId), 0, sizeof(zHcuTaskInfo)*(TASK_ID_MAX-TASK_ID_MIN+1));
+	//memset(&(zHcuTaskInfo[0].TaskId), 0, sizeof(zHcuTaskInfo)*(TASK_ID_MAX-TASK_ID_MIN+1));
+	memset(zHcuTaskInfo, 0, sizeof(zHcuTaskInfo));
 	int i=0;
 	for (i=TASK_ID_MIN; i<TASK_ID_MAX; i++){
 		zHcuTaskInfo[i].TaskId = i;
