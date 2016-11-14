@@ -33,5 +33,6 @@ src/l1hwopt \
 src/l1hwopt/usb_adc \
 src/l2frame \
 src/l3app \
+src/l3appbfsc \
 src/l4bi \
 

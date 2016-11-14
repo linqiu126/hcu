@@ -81,6 +81,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>src/l3appgqybg40</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>src/l4bi</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -1039,6 +1044,16 @@
 			<name>src/l3app/syspm.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3app/syspm.h</locationURI>
+		</link>
+		<link>
+			<name>src/l3appgqybg40/l3gqybg40.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appgqybg40/l3gqybg40.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3appgqybg40/l3gqybg40.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appgqybg40/l3gqybg40.h</locationURI>
 		</link>
 		<link>
 			<name>src/l4bi/aiqiyc.c</name>
