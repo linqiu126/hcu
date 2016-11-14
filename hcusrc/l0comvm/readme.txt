@@ -4,7 +4,11 @@
 ====================================================================================================
 
 //= ZJL, 2016 NOV.14, CURRENT_SW_DELIVERY 116 =>BFSC项目
-= 修改VMLAYER.x中的bug，memset(zHcuTaskInfo, 0, sizeof(zHcuTaskInfo));
+= 修改VMLAYER.x中的bug，memset(zHcuTaskInfo, 0, sizeof(zHcuTaskInfo));，不然导致段错误。这个错误如果是直接import原有项目，不会出错
+   但一旦重新建立新项目就会出错。重新重新如此修正，应该不再出现问题了。
+= 增加PrjTbswrG30, PrjGqybG40,  PrjCxIlc, PrjGlacm, PrjTestMode项目
+= 除了挂墙仪表项目一定会使用树莓派之外，其它项目可能会使用335D/RasberryPi等不同硬件平台，所以军采用了4种Build-Configuration的G10项目模板。
+= 挂墙仪表G40采用了AqycG20的项目模板，只有3种build-configuration
 
 //= ZJL, 2016 NOV.13, CURRENT_SW_DELIVERY 115 =>BFSC项目
 =增加和创建新的多项目共流框架
