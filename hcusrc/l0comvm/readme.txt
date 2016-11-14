@@ -771,7 +771,7 @@ root@ok335x:/home/forlinx# LD_LIBRARY_PATH=/usr/local/mysql_arm/lib:/usr/local/n
 //= ZJL, 2016 NOV.13, CURRENT_SW_DELIVERY 114 =>BFSC项目
 =增加和创建新的多项目共流框架
 =创建BFSC项目程序框架
-
+= 编译所有工作环境通过
 
 
 
