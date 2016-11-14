@@ -19,7 +19,7 @@
 	<section name="NewWizardAction">
 	</section>
 	<section name="ImportExportAction">
-		<item value="org.eclipse.ui.wizards.import.ExternalProject" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
+		<item value="org.eclipse.ui.wizards.import.FileSystem" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
 		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
 			<item value="org.eclipse.ui.Basic"/>
 		</list>
@@ -32,6 +32,15 @@
 		<item value="true" key="WizardFileSystemResourceImportPage1.STORE_CREATE_LINKS_IN_WORKSPACE_ID"/>
 		<item value="true" key="WizardFileSystemResourceImportPage1.STORE_PATH_VARIABLE_SELECTED_ID"/>
 		<list key="WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3apptbswrg30"/>
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appnblpm"/>
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appnbhpm"/>
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appgqybg40"/>
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appcxilc"/>
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appcxglacm"/>
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appbfsc"/>
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appaqycg20"/>
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appaqycg10"/>
 			<item value="/home/hitpony/workspace/hcu/hcusrc/l3ui"/>
 		</list>
 	</section>
