@@ -1,11 +1,4 @@
-11:47:23 **** Build of configuration Debug for project PrjTestMode ****
-make all 
-Building target: PrjTestMode
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjTestMode"  ./src/l4bi/aiqiyc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o ./src/l0main/hcuref.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjTestMode
- 
-12:29:14 **** Build of configuration Debug for project PrjBfsc ****
+13:59:43 **** Incremental Build of configuration Debug for project PrjTestMode ****
 make all 
 Building file: /home/hitpony/workspace/hcu/hcusrc/l4bi/aiqiyc.c
 Invoking: Cross GCC Compiler
@@ -88,8 +81,8 @@ gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg
 /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c: In function ‘func_pm25sharp_read_data’:
 /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c:231:2: warning: implicit declaration of function ‘hcu_sps485_serial_port_get’ [-Wimplicit-function-declaration]
   nread = hcu_sps485_serial_port_get(&gSerialPortForPm25Sharp, &received_single_byte, 1);
-  ^
 Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c
+  ^
  
 Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c
 Invoking: Cross GCC Compiler
@@ -202,16 +195,6 @@ Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c
 Invoking: Cross GCC Compiler
 gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/spsvirgo.d" -MT"src/l2frame/spsvirgo.o" -o "src/l2frame/spsvirgo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c"
 Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usb_adc/usb-daq-v20.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/usb_adc/usb-daq-v20.d" -MT"src/l1hwopt/usb_adc/usb-daq-v20.o" -o "src/l1hwopt/usb_adc/usb-daq-v20.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/usb_adc/usb-daq-v20.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usb_adc/usb-daq-v20.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usb_adc/usb_daq_test.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/usb_adc/usb_daq_test.d" -MT"src/l1hwopt/usb_adc/usb_daq_test.o" -o "src/l1hwopt/usb_adc/usb_daq_test.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/usb_adc/usb_daq_test.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usb_adc/usb_daq_test.c
  
 Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c
 Invoking: Cross GCC Compiler
@@ -463,26 +446,6 @@ Invoking: Cross GCC Compiler
 gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0webser/ftp.d" -MT"src/l0webser/ftp.o" -o "src/l0webser/ftp.o" "/home/hitpony/workspace/hcu/hcusrc/l0webser/ftp.c"
 Finished building: /home/hitpony/workspace/hcu/hcusrc/l0webser/ftp.c
  
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0webser/get_time.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0webser/get_time.d" -MT"src/l0webser/get_time.o" -o "src/l0webser/get_time.o" "/home/hitpony/workspace/hcu/hcusrc/l0webser/get_time.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0webser/get_time.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0webser/http_session.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0webser/http_session.d" -MT"src/l0webser/http_session.o" -o "src/l0webser/http_session.o" "/home/hitpony/workspace/hcu/hcusrc/l0webser/http_session.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0webser/http_session.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0webser/init_socket.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0webser/init_socket.d" -MT"src/l0webser/init_socket.o" -o "src/l0webser/init_socket.o" "/home/hitpony/workspace/hcu/hcusrc/l0webser/init_socket.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0webser/init_socket.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0webser/webserver.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0webser/webserver.d" -MT"src/l0webser/webserver.o" -o "src/l0webser/webserver.o" "/home/hitpony/workspace/hcu/hcusrc/l0webser/webserver.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0webser/webserver.c
- 
 Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/configxml.c
 Invoking: Cross GCC Compiler
 gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/configxml.d" -MT"src/l0service/configxml.o" -o "src/l0service/configxml.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/configxml.c"
@@ -560,11 +523,6 @@ Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
 Invoking: Cross GCC Compiler
 gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
 Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcuref.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcuref.d" -MT"src/l0main/hcuref.o" -o "src/l0main/hcuref.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcuref.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcuref.c
  
 Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c
 Invoking: Cross GCC Compiler
@@ -676,8 +634,8 @@ Invoking: Cross GCC Compiler
 gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0comvm/vmlayer.d" -MT"src/l0comvm/vmlayer.o" -o "src/l0comvm/vmlayer.o" "/home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c"
 Finished building: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
  
-Building target: PrjBfsc
+Building target: PrjTestMode
 Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o ./src/l0main/hcuref.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjTestMode"  ./src/l4bi/aiqiyc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjTestMode
  

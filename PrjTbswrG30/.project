@@ -366,11 +366,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0main/hcu.h</locationURI>
 		</link>
 		<link>
-			<name>src/l0main/hcuref.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0main/hcuref.c</locationURI>
-		</link>
-		<link>
 			<name>src/l0service/configxml.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0service/configxml.c</locationURI>
