@@ -2,25 +2,33 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="SysInfo_t" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="SysInfo_t"/>
-			<item value="HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE"/>
-			<item value="zHcuTaskInfo"/>
-			<item value="HcuTaskTag_t"/>
+			<item value="HCU_CANITF_TIMER_WORKING_SCAN_DURATION"/>
+			<item value="TIMER_ID_1S_CANITFLEO_WORKING_SCAN"/>
+			<item value="hcu_working_mode_single"/>
+			<item value="hcu_process_1_mainapp_single"/>
+			<item value="hcu_task_create_all"/>
+			<item value="canitf"/>
+			<item value="I2CBUSLIBRA"/>
+			<item value="I2cbuslibra"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION"/>
+			<item value="CANITFLEO"/>
+			<item value="Canitfleo"/>
+			<item value="canitfleo"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="298" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|8.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="411" key="DIALOG_HEIGHT"/>
-		<item value="634" key="DIALOG_X_ORIGIN"/>
-		<item value="178" key="DIALOG_Y_ORIGIN"/>
+		<item value="974" key="DIALOG_X_ORIGIN"/>
+		<item value="169" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
