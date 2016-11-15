@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="L3TBSWRG30" key="selection"/>
+		<item value="CANITFLEO" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="BFSCUICOMM"/>
+			<item value="Bfscuicomm"/>
+			<item value="bfscuicomm"/>
+			<item value="PM25"/>
 			<item value="L3BFSC"/>
-			<item value="l3bfsc"/>
 			<item value="L3bfsc"/>
-			<item value="L3BSFC"/>
-			<item value="fsm_l3bfsc_nbiotcj188_data_req"/>
-			<item value="HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID"/>
-			<item value="TASK_ID_TIMER"/>
-			<item value="igm"/>
+			<item value="l3bfsc"/>
+			<item value="fsm_l3bfsc_uicomm_cmd_req"/>
 		</list>
 		<list key="replacehistory">
+			<item value="CANITFLEO"/>
+			<item value="Canitfleo"/>
+			<item value="canitfleo"/>
+			<item value="BFSCUICOMM"/>
+			<item value="L3BFSC"/>
+			<item value="Bfscuicomm"/>
+			<item value="bfscuicomm"/>
 			<item value="L3TBSWRG30"/>
-			<item value="l3tbswrg30"/>
-			<item value="L3tbswrg30"/>
-			<item value="L3opwldtdr"/>
-			<item value="l3opwldtdr"/>
-			<item value="L3OPWLOTDR"/>
-			<item value="L3NBLPM"/>
-			<item value="l3nblpm"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

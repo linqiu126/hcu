@@ -663,6 +663,26 @@ enum HCU_INTER_TASK_MSG_ID
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	//L3BFSC
+	MSG_ID_L3BFSC_CAN_CMD_REQ,
+	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  //出料
+	MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   //放弃物料
+	MSG_ID_L3BFSC_UICOMM_CMD_RESP,
+	MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
+
+	//CANITFLEO
+	MSG_ID_CAN_L3BFSC_WS_REPORT,
+	MSG_ID_CAN_L3BFSC_CMD_RESP,
+	MSG_ID_L3BFSC_CAN_WS_COMB_OUT_FB,
+	MSG_ID_L3BFSC_CAN_WS_GIVE_UP_FB,
+
+	//BFSCUICOMM
+	MSG_ID_UICOMM_L3BFSC_CMD_REQ,
+
+	//CLOUDVELA
+	MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
+
+
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 
 //小技巧，不要这部分，以便加强编译检查
@@ -2322,6 +2342,75 @@ typedef struct msg_struct_canitfleo_data_report
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+typedef struct msg_struct_l3bfsc_can_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_l3bfsc_can_cmd_req_t;
+typedef struct msg_struct_l3bfsc_can_ws_comb_out
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_comb_out_t;
+typedef struct msg_struct_l3bfsc_can_ws_give_up
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_give_up_t;
+typedef struct msg_struct_can_l3bfsc_ws_report
+{
+	UINT8  wsid;
+	UINT32 weight;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_report_t;
+typedef struct msg_struct_can_l3bfsc_cmd_resp
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_can_l3bfsc_cmd_resp_t;
+typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_comb_out_fb_t;
+typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_give_up_fb_t;
+typedef struct msg_struct_l3bfsc_uicomm_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_l3bfsc_uicomm_cmd_req_t;
+typedef struct msg_struct_uicomm_l3bfsc_cmd_resp
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_uicomm_l3bfsc_cmd_resp_t;
+typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_cmd_req_t;
+typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_cmd_resp_t;
+
+
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 
 //小技巧，不要这部分，以便加强编译检查

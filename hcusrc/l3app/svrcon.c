@@ -786,7 +786,15 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		zHcuSvrConTaskInitInfo[TASK_ID_L3BFSC].active = SVRCON_TASK_ACTIVE;
 		zHcuSvrConTaskInitInfo[TASK_ID_L3BFSC].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 	}
-
+	if (zHcuTaskInfo[TASK_ID_BFSCUICOMM].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_BFSCUICOMM, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_BFSCUICOMM]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_BFSCUICOMM].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_BFSCUICOMM].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	if (zHcuTaskInfo[TASK_ID_L3OPWLOTDR].swTaskActive == HCU_TASK_PNP_ON){
 		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3OPWLOTDR, TASK_ID_SVRCON, &snd, snd.length);

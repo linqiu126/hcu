@@ -529,27 +529,6 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		}
 	}
 
-	//第三部分/zHcuSysEngPar总共三步分
-	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决
-
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	zHcuSysEngPar.codeDefineFix.test = 1;   //测试一下
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-
-//小技巧，不要这部分，以便加强编译检查
-#else
-#endif
-
 	//读取HcuTraceModuleCtr表单到系统内存中
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE){
@@ -560,24 +539,18 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("HWINV: Set Trace Moduble based engineering data correctly from DATABASE parameters!\n");
 	}
-	//从TASK_ID_COM_BOTTOM开始，不通过数据库配置的参数区域
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 
-//小技巧，不要这部分，以便加强编译检查
-#else
-#endif
-
+	//从TASK_ID_COM_BOTTOM开始，固定配置TRACE选项
+	int i=0;
+	for (i=TASK_ID_COM_BOTTOM; i< (TASK_ID_MAX+1); i++){
+		zHcuSysEngPar.traceList.mod[i].moduleId = i;
+		strcpy(zHcuSysEngPar.traceList.mod[i].moduleName, zHcuTaskNameList[i]);
+		zHcuSysEngPar.traceList.mod[i].moduleCtrFlag = 1;
+		zHcuSysEngPar.traceList.mod[i].moduleFromAllow = 1;
+		zHcuSysEngPar.traceList.mod[i].moduleFromRestrict = 1;
+		zHcuSysEngPar.traceList.mod[i].moduleToAllow = 1;
+		zHcuSysEngPar.traceList.mod[i].moduleToRestrict = 1;
+	}
 
 	//读取HcuTraceMsgCtr表单到系统内存中
 	ret = dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar);
@@ -589,7 +562,19 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
 	}
+
 	//从MSG_ID_COM_BOTTOM开始，不通过数据库配置的参数区域
+	for (i=MSG_ID_COM_BOTTOM; i< (MSG_ID_COM_MAX+1); i++){
+		zHcuSysEngPar.traceList.msg[i].msgId = i;
+		strcpy(zHcuSysEngPar.traceList.msg[i].msgName, zHcuMsgNameList[i]);
+		zHcuSysEngPar.traceList.msg[i].msgCtrFlag = 1;
+		zHcuSysEngPar.traceList.msg[i].msgAllow = 1;
+		zHcuSysEngPar.traceList.msg[i].msgRestrict = 1;
+	}
+
+	//第三部分/zHcuSysEngPar总共三步分
+	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决
+	//zHcuSysEngPar.codeDefineFix部分
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
@@ -616,6 +601,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	zHcuSysEngPar.codeDefineFix.test = 1;   //测试一下
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 
 //小技巧，不要这部分，以便加强编译检查

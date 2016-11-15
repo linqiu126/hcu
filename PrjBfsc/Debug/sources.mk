@@ -34,5 +34,6 @@ src/l1hwopt/usb_adc \
 src/l2frame \
 src/l3app \
 src/l3appctrl \
+src/l3uiconnect \
 src/l4bi \
 
