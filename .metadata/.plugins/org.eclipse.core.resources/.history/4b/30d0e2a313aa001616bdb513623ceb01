@@ -1,6 +1,0 @@
-eclipse.preferences.version=1
-environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1016107742.1963420531.2077438189/PATH/delimiter=\:
-environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1016107742.1963420531.2077438189/PATH/operation=replace
-environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1016107742.1963420531.2077438189/PATH/value=/bin\:/usr/local/arm/arm-2009q3/bin\:/usr/local/arm/cross/am335xt3/devkit/bin\:/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/usr/games\:/usr/local/games\:/opt/java/jdk1.8.0_45/bin\:/opt/java/jdk1.8.0_45/jre/bin\:/usr/ffmpeg-2.8.3
-environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1016107742.1963420531.2077438189/append=true
-environment/project/cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1016107742.1963420531.2077438189/appendContributed=true
