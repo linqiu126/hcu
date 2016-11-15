@@ -51,6 +51,7 @@
 #include "../l2frame/spibusaries.h"
 #include "../l2frame/nbiotcj188.h"
 #include "../l2frame/nbiotqg376.h"
+#include "../l2frame/canitfleo.h"
 
 #include "../l3app/svrcon.h"
 #include "../l3app/sensoremc.h"
@@ -121,7 +122,7 @@ int main(void) {
 	hcu_app_system_init();
 	HcuDebugPrint("HCU-MAIN: System level initialization starting...\n");
 
-	//单进程方式
+	//单进程方式，当前的工作模式！！！
 	if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_SINGLE){
 		hcu_working_mode_single();
 	}
@@ -144,7 +145,7 @@ int main(void) {
 	return EXIT_SUCCESS;
 }
 
-//单进程模式
+//单进程模式，当前的工作模式！！！
 void hcu_working_mode_single(void)
 {
 	zHcuCurrentProcessInfo.curProcId = getpid();
@@ -202,7 +203,7 @@ void hcu_working_mode_multipy(void)
 	}
 }
 
-//单进程模式入口程序组
+//单进程模式入口程序组，当前的工作模式！！！
 void hcu_process_1_mainapp_single(void)
 {
 	hcu_task_create_hcumain_env();
@@ -441,6 +442,15 @@ void hcu_app_system_init()
 		zHcuTaskInfo[TASK_ID_NBIOTQG376].swTaskActive = HCU_TASK_PNP_OFF;
 		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_INVALID;
 		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_INVALID;
+	}
+	if (zHcuSysEngPar.comm.commFrontCanitf == HCU_COMM_HW_BOARD_ON){
+		zHcuTaskInfo[TASK_ID_CANITFLEO].swTaskActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_CANITFLEO].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_CANITFLEO].hwActive = HCU_TASK_PNP_INVALID;
+	}else{
+		zHcuTaskInfo[TASK_ID_CANITFLEO].swTaskActive = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_CANITFLEO].hwPlugin = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_CANITFLEO].hwActive = HCU_TASK_PNP_INVALID;
 	}
 
 	if (zHcuSysEngPar.comm.commHwBoardGps == HCU_COMM_HW_BOARD_ON){
@@ -806,6 +816,7 @@ void hcu_app_system_init()
 	//Nothing
 }
 
+//当前的工作模式！！！
 //目前系统启动暂时就是使用了这种方式，并没有采用其他多进程的方式
 void hcu_task_create_all(void)
 {
@@ -832,6 +843,9 @@ void hcu_task_create_all(void)
 
 	//Create task Nbiotqg376 environments
 	hcu_system_task_init_call(TASK_ID_NBIOTQG376, FsmNbiotqg376);
+
+	//Create task Canitfleo environments
+	hcu_system_task_init_call(TASK_ID_CANITFLEO, FsmCanitfleo);
 
 	//Create task EMC environments/8
 	hcu_system_task_init_call(TASK_ID_EMC, FsmEmc);
@@ -1048,6 +1062,23 @@ void hcu_task_create_all_but_avorion(void)
 
 	//Create task Microphone environments/28
 	hcu_system_task_init_call(TASK_ID_MICROPHONE, FsmMicrophone);
+
+	//不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
 
 	/*
 	if (ret == FAILURE){

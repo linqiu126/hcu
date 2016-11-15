@@ -363,6 +363,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTablet_t));
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
 
+	//第一部分/zHcuSysEngPar总共三步分
 	if (ret == SUCCESS){
 
 		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
@@ -393,6 +394,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		}
 	}
 
+	//第二部分/zHcuSysEngPar总共三步分
 	//ret = FAILURE;
 	//如果出错，就使用SYSCONF.H中的DEFAULT参数赋值给这些全局变量
 	if (ret == FAILURE){
@@ -435,6 +437,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.comm.commFrontSensorIhm = HCU_COMM_FRONT_SENSOR_IHM;
 		zHcuSysEngPar.comm.commFrontSensorIgm = HCU_COMM_FRONT_SENSOR_IGM;
 		zHcuSysEngPar.comm.commFrontSensorIpm = HCU_COMM_FRONT_SENSOR_IPM;
+		zHcuSysEngPar.comm.commFrontCanitf = HCU_COMM_FRONT_CANITF;
 
 		//数据库部分
 		strcpy(zHcuSysEngPar.dbi.hcuDbHost, HCU_DB_HOST_DEFAULT);
@@ -482,6 +485,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.timer.igmReqTimer = HCU_IGM_TIMER_DURATION_PERIOD_READ;
 		zHcuSysEngPar.timer.ipmReqTimer = HCU_IPM_TIMER_DURATION_PERIOD_READ;
 		zHcuSysEngPar.timer.syspmWorkingTimer = HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING;
+		zHcuSysEngPar.timer.canitfWorkingTimer = HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION;
 
 		//Series Port config by Shanchun
 		zHcuSysEngPar.serialport.SeriesPortForModbus = HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT;
@@ -525,6 +529,27 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		}
 	}
 
+	//第三部分/zHcuSysEngPar总共三步分
+	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	zHcuSysEngPar.codeDefineFix.test = 1;   //测试一下
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
+
 	//读取HcuTraceModuleCtr表单到系统内存中
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE){
@@ -535,6 +560,24 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("HWINV: Set Trace Moduble based engineering data correctly from DATABASE parameters!\n");
 	}
+	//从TASK_ID_COM_BOTTOM开始，不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
+
 
 	//读取HcuTraceMsgCtr表单到系统内存中
 	ret = dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar);
@@ -546,8 +589,14 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
 	}
-
-	//启动FIREFOX等本地浏览器
+	//从MSG_ID_COM_BOTTOM开始，不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+	//启动FIREFOX等本地浏览器，挂墙仪表项目独有内容
 	char cmdStr[SYS_ENG_PAR_ELEMENT_UI_MAX_LEN] = "";
 	//char outputStr[SYS_ENG_PAR_ELEMENT_UI_MAX_LEN] = "";
 	if ((zHcuSysEngPar.localUI.browselProg != NULL) && (zHcuSysEngPar.localUI.browselAutoStartUpFlag == TRUE)){
@@ -562,6 +611,16 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		sprintf(cmdStr, "%s %s %s > /dev/null &", zHcuSysEngPar.localUI.browselProg, zHcuSysEngPar.localUI.browselStartUpAddress, zHcuSysEngPar.localUI.browselWorkingOption);
 		system(cmdStr);
 	}
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
 
     //create video server directory by Shanchun
 	ret = hcu_create_multi_dir(zHcuSysEngPar.videoSev.hcuVideoServerDir);
@@ -572,7 +631,6 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	else
 	{
 		HcuDebugPrint("HWINV: Create successfully for video server directory: %s\n\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
-
 	}
 
     //create HCU SW download/active/backup local directory by Shanchun
@@ -583,7 +641,6 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	else
 	{
 		HcuDebugPrint("HWINV: Create successfully for HCU SW download local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
-
 	}
 
 	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwActiveDir);
@@ -593,7 +650,6 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	else
 	{
 		HcuDebugPrint("HWINV: Create successfully for HCU SW active local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
-
 	}
 
 	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwBackupDir);
@@ -603,10 +659,9 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	else
 	{
 		HcuDebugPrint("HWINV: Create successfully for HCU SW backup local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
-
 	}
 
-
+    //返回
 	return SUCCESS;
 }
 

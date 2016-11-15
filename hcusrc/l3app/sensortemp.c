@@ -206,12 +206,33 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 */
 
 		//update for SPIBUSARIES start
-#if HCU_CURRENT_WORKING_PROJECT_NAME_INT_UNIQUE == HCU_WORKING_PROJECT_NAME_INT_AQYC
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 		func_temp_time_out_read_data_from_modbus();
-#elif HCU_CURRENT_WORKING_PROJECT_NAME_INT_UNIQUE == HCU_WORKING_PROJECT_NAME_INT_TBSWR
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 		func_temp_time_out_read_data_from_spibusaries();
-#else
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
 		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+		func_temp_time_out_read_data_from_modbus();
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+		func_temp_time_out_read_data_from_modbus();
+
+//小技巧，不要这部分，以便加强编译检查
+#else
 #endif
 	}
 
