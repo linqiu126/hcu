@@ -202,9 +202,6 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		zHcuSvrConTaskInitInfo[TASK_ID_EMC].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 	}
 
-
-
-
 	if (zHcuTaskInfo[TASK_ID_NBIOTCJ188].swTaskActive == HCU_TASK_PNP_ON){
 		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_NBIOTCJ188, TASK_ID_SVRCON, &snd, snd.length);
 		if (ret == FAILURE){
@@ -214,7 +211,6 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		zHcuSvrConTaskInitInfo[TASK_ID_NBIOTCJ188].active = SVRCON_TASK_ACTIVE;
 		zHcuSvrConTaskInitInfo[TASK_ID_NBIOTCJ188].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 	}
-
 
 
 	if (zHcuTaskInfo[TASK_ID_NBIOTQG376].swTaskActive == HCU_TASK_PNP_ON){
@@ -227,6 +223,15 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		zHcuSvrConTaskInitInfo[TASK_ID_NBIOTQG376].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 	}
 
+	if (zHcuTaskInfo[TASK_ID_CANITFLEO].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_CANITFLEO, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_CANITFLEO].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_CANITFLEO].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
 
 	if (zHcuTaskInfo[TASK_ID_PM25].swTaskActive == HCU_TASK_PNP_ON){
 		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_PM25, TASK_ID_SVRCON, &snd, snd.length);
@@ -680,8 +685,124 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		zHcuSvrConTaskInitInfo[TASK_ID_PM25SHARP].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
 	}
 
+	//不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+	if (zHcuTaskInfo[TASK_ID_L3AQYCG10].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3AQYCG10, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3AQYCG10]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3AQYCG10].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3AQYCG10].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
 
-	//wiringPi only could be initialised once, so put here, i.s.o. setup once per task and then render errors.
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+	if (zHcuTaskInfo[TASK_ID_L3AQYCG20].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3AQYCG20, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3AQYCG20]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3AQYCG20].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3AQYCG20].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+	if (zHcuTaskInfo[TASK_ID_L3TBSWRG30].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3TBSWRG30, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3TBSWRG30]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3TBSWRG30].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3TBSWRG30].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+	if (zHcuTaskInfo[TASK_ID_L3GQYBG40].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3GQYBG40, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3GQYBG40]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3GQYBG40].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3GQYBG40].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+	if (zHcuTaskInfo[TASK_ID_L3CXILC].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3CXILC, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3CXILC]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3CXILC].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3CXILC].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+	if (zHcuTaskInfo[TASK_ID_L3CXGLACM].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3CXGLACM, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3CXGLACM]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3CXGLACM].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3CXGLACM].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+	if (zHcuTaskInfo[TASK_ID_L3NBLPM].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3NBLPM, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3NBLPM]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3NBLPM].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3NBLPM].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+	if (zHcuTaskInfo[TASK_ID_L3NBHPM].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3NBHPM, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3NBHPM]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3NBHPM].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3NBHPM].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	if (zHcuTaskInfo[TASK_ID_L3BFSC].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3BFSC, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3BFSC]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3BFSC].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3BFSC].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+	if (zHcuTaskInfo[TASK_ID_L3OPWLOTDR].swTaskActive == HCU_TASK_PNP_ON){
+		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_L3OPWLOTDR, TASK_ID_SVRCON, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_SVRCON]++;
+			HcuErrorPrint("SVRCON: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SVRCON], zHcuTaskNameList[TASK_ID_L3OPWLOTDR]);
+		}
+		zHcuSvrConTaskInitInfo[TASK_ID_L3OPWLOTDR].active = SVRCON_TASK_ACTIVE;
+		zHcuSvrConTaskInitInfo[TASK_ID_L3OPWLOTDR].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
+	}
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
+
+	//wiringPi only could be initialized once, so put here, i.s.o. setup once per task and then render errors.
 #ifdef TARGET_RASPBERRY_PI3B
 	if ((zHcuTaskInfo[TASK_ID_GPIO].swTaskActive == HCU_TASK_PNP_ON) || (zHcuTaskInfo[TASK_ID_I2C].swTaskActive == HCU_TASK_PNP_ON) || (zHcuTaskInfo[TASK_ID_SPI].swTaskActive == HCU_TASK_PNP_ON))
 	if (wiringPiSetup() == -1) {
@@ -735,6 +856,7 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//存入到反馈表中
 	zHcuSvrConTaskInitInfo[src_id].state = SVRCON_TASK_INIT_FEEDBACK;
 
+	char svrconState[15];
 	//检查所有的反馈是否都收到，不然维持状态不变
 	if (func_svrcon_init_caculate_all_fb() == TRUE){
 
@@ -742,7 +864,17 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			int i=0;
 			for(i=0;i<MAX_TASK_NUM_IN_ONE_HCU;i++){
 				//HcuDebugPrint("SVRCON:Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskNameList[i]);
-				HcuDebugPrint("SVRCON:Task info: PNP[%d],  Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuTaskInfo[i].swTaskActive, zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskNameList[i]);
+				if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_SEND) strcpy(svrconState, "INIT_SEND");
+				else if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK) strcpy(svrconState, "INIT_WAIT_FB");
+				else if  (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK) strcpy(svrconState, "INIT_FB");
+				else strcpy(svrconState, "INIT_INVLID");
+
+				HcuDebugPrint("SVRCON:Task info: PNP[%d, %s],  Task init info: State[%d, %s] and Active[%d, %s] of Task[%s], Init result is [%s]!\n",\
+						zHcuTaskInfo[i].swTaskActive, zHcuTaskInfo[i].swTaskActive==HCU_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\
+						zHcuSvrConTaskInitInfo[i].active, (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE)?"ACTIVE":"DEACTIVE",\
+						zHcuSvrConTaskInitInfo[i].state, svrconState,\
+						zHcuTaskNameList[i],\
+						((zHcuTaskInfo[i].swTaskActive==HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK))?"RUNNING":"NOT_RUN");
 			}
 		}
 

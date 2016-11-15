@@ -630,7 +630,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	}
 	else
 	{
-		HcuDebugPrint("HWINV: Create successfully for video server directory: %s\n\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
+		HcuDebugPrint("HWINV: Create successfully for video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
 	}
 
     //create HCU SW download/active/backup local directory by Shanchun
@@ -640,7 +640,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	}
 	else
 	{
-		HcuDebugPrint("HWINV: Create successfully for HCU SW download local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
+		HcuDebugPrint("HWINV: Create successfully for HCU SW download local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
 	}
 
 	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwActiveDir);
@@ -649,7 +649,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	}
 	else
 	{
-		HcuDebugPrint("HWINV: Create successfully for HCU SW active local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
+		HcuDebugPrint("HWINV: Create successfully for HCU SW active local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
 	}
 
 	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwBackupDir);
@@ -658,7 +658,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	}
 	else
 	{
-		HcuDebugPrint("HWINV: Create successfully for HCU SW backup local directory: %s\n\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
+		HcuDebugPrint("HWINV: Create successfully for HCU SW backup local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
 	}
 
     //返回

@@ -2,26 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION" key="selection"/>
+		<item value="L3TBSWRG30" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HCU_CANITF_TIMER_WORKING_SCAN_DURATION"/>
-			<item value="TIMER_ID_1S_CANITFLEO_WORKING_SCAN"/>
-			<item value="hcu_working_mode_single"/>
-			<item value="hcu_process_1_mainapp_single"/>
-			<item value="hcu_task_create_all"/>
-			<item value="canitf"/>
-			<item value="I2CBUSLIBRA"/>
-			<item value="I2cbuslibra"/>
+			<item value="L3BFSC"/>
+			<item value="l3bfsc"/>
+			<item value="L3bfsc"/>
+			<item value="L3BSFC"/>
+			<item value="fsm_l3bfsc_nbiotcj188_data_req"/>
+			<item value="HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID"/>
+			<item value="TASK_ID_TIMER"/>
+			<item value="igm"/>
 		</list>
 		<list key="replacehistory">
-			<item value="HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION"/>
-			<item value="CANITFLEO"/>
-			<item value="Canitfleo"/>
-			<item value="canitfleo"/>
+			<item value="L3TBSWRG30"/>
+			<item value="l3tbswrg30"/>
+			<item value="L3tbswrg30"/>
+			<item value="L3opwldtdr"/>
+			<item value="l3opwldtdr"/>
+			<item value="L3OPWLOTDR"/>
+			<item value="L3NBLPM"/>
+			<item value="l3nblpm"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

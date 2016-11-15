@@ -103,9 +103,6 @@
 #endif
 
 
-
-
-
 //Global variables to be shared with SVRCON
 
 
@@ -361,11 +358,28 @@ void hcu_app_system_init()
 	}
 	//肯定需要启动的任务模块
 	zHcuTaskInfo[TASK_ID_HCUMAIN].swTaskActive = HCU_TASK_PNP_OFF;
+	zHcuTaskInfo[TASK_ID_HCUMAIN].hwPlugin = HCU_TASK_PNP_OFF;
+	zHcuTaskInfo[TASK_ID_HCUMAIN].hwActive = HCU_TASK_PNP_OFF;
+
 	zHcuTaskInfo[TASK_ID_TIMER].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_TIMER].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_TIMER].hwActive = HCU_TASK_PNP_ON;
+
 	zHcuTaskInfo[TASK_ID_SVRCON].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_SVRCON].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_SVRCON].hwActive = HCU_TASK_PNP_ON;
+
 	zHcuTaskInfo[TASK_ID_MMC].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_MMC].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_MMC].hwActive = HCU_TASK_PNP_ON;
+
 	zHcuTaskInfo[TASK_ID_HWINV].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_HWINV].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_HWINV].hwActive = HCU_TASK_PNP_ON;
+
 	zHcuTaskInfo[TASK_ID_SYSPM].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_SYSPM].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_SYSPM].hwActive = HCU_TASK_PNP_ON;
 
 	//Switch-case
 	//printf("zHcuSysEngPar.comm.commFrameCloudvela = %d\n", zHcuSysEngPar.comm.commFrameCloudvela);
@@ -375,82 +389,82 @@ void hcu_app_system_init()
 		zHcuTaskInfo[TASK_ID_CLOUDVELA].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_CLOUDVELA].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_CLOUDVELA].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_CLOUDVELA].hwActive = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_CLOUDVELA].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_CLOUDVELA].hwActive = HCU_TASK_PNP_OFF;
 	}
 
 	if (zHcuSysEngPar.comm.commFrameModbus == HCU_COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_MODBUS].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_MODBUS].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_MODBUS].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_MODBUS].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_MODBUS].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_MODBUS].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_MODBUS].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_MODBUS].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_MODBUS].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_MODBUS].hwActive = HCU_TASK_PNP_OFF;
 	}
 
 	if (zHcuSysEngPar.comm.commFrameAvorion == HCU_COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_AVORION].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_AVORION].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_AVORION].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_AVORION].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_AVORION].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_AVORION].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_AVORION].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_AVORION].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_AVORION].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_AVORION].hwActive = HCU_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrameSpsvirgo == HCU_COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_SPSVIRGO].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_SPSVIRGO].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_SPSVIRGO].hwActive = HCU_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrameI2cbuslibra == HCU_COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].hwActive = HCU_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrameSpibusaries == HCU_COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_SPIBUSARIES].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_SPIBUSARIES].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrameNbiotcj188 == HCU_COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_NBIOTCJ188].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_NBIOTCJ188].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_NBIOTCJ188].hwActive = HCU_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrameNbiotqg376 == HCU_COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_NBIOTQG376].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_NBIOTQG376].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontCanitf == HCU_COMM_HW_BOARD_ON){
 		zHcuTaskInfo[TASK_ID_CANITFLEO].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuTaskInfo[TASK_ID_CANITFLEO].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_CANITFLEO].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_CANITFLEO].hwPlugin = HCU_TASK_PNP_ON;
+		zHcuTaskInfo[TASK_ID_CANITFLEO].hwActive = HCU_TASK_PNP_ON;
 	}else{
 		zHcuTaskInfo[TASK_ID_CANITFLEO].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuTaskInfo[TASK_ID_CANITFLEO].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuTaskInfo[TASK_ID_CANITFLEO].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuTaskInfo[TASK_ID_CANITFLEO].hwPlugin = HCU_TASK_PNP_OFF;
+		zHcuTaskInfo[TASK_ID_CANITFLEO].hwActive = HCU_TASK_PNP_OFF;
 	}
 
 	if (zHcuSysEngPar.comm.commHwBoardGps == HCU_COMM_HW_BOARD_ON){
@@ -814,9 +828,57 @@ void hcu_app_system_init()
 		zHcuTaskInfo[TASK_ID_PM25SHARP].hwActive = HCU_TASK_PNP_OFF;
 	}//by shanchun
 	//Nothing
+	//不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+	zHcuTaskInfo[TASK_ID_L3AQYCG10].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3AQYCG10].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3AQYCG10].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+	zHcuTaskInfo[TASK_ID_L3AQYCG20].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3AQYCG20].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3AQYCG20].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+	zHcuTaskInfo[TASK_ID_L3TBSWRG30].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3TBSWRG30].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3TBSWRG30].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+	zHcuTaskInfo[TASK_ID_L3GQYBG40].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3GQYBG40].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3GQYBG40].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+	zHcuTaskInfo[TASK_ID_L3CXILC].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3CXILC].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3CXILC].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+	zHcuTaskInfo[TASK_ID_L3CXGLACM].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3CXGLACM].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3CXGLACM].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+	zHcuTaskInfo[TASK_ID_L3NBLPM].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3NBLPM].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3NBLPM].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+	zHcuTaskInfo[TASK_ID_L3NBHPM].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3NBHPM].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3NBHPM].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	zHcuTaskInfo[TASK_ID_L3BFSC].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3BFSC].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3BFSC].hwActive = HCU_TASK_PNP_ON;
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+	zHcuTaskInfo[TASK_ID_L3OPWLOTDR].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3OPWLOTDR].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_L3OPWLOTDR].hwActive = HCU_TASK_PNP_ON;
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
 }
 
 //当前的工作模式！！！
+//不同项目的特定任务启动，只改造了这个一个函数，其它的函数暂时未能启用
 //目前系统启动暂时就是使用了这种方式，并没有采用其他多进程的方式
 void hcu_task_create_all(void)
 {
@@ -978,6 +1040,36 @@ void hcu_task_create_all(void)
 
 	//Create task Ipm environments/50
 	hcu_system_task_init_call(TASK_ID_IPM, FsmIpm);
+
+	//不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+	hcu_system_task_init_call(TASK_ID_L3AQYCG10, FsmL3aqycg10);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+	hcu_system_task_init_call(TASK_ID_L3AQYCG20, FsmL3aqycg20);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+	hcu_system_task_init_call(TASK_ID_L3TBSWRG30, FsmL3tbswrg30);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+	hcu_system_task_init_call(TASK_ID_L3GQYBG40, FsmL3gqybg40);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+	hcu_system_task_init_call(TASK_ID_L3CXILC, FsmL3cxilc);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+	hcu_system_task_init_call(TASK_ID_L3CXGLACM, FsmL3cxglacm);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+	hcu_system_task_init_call(TASK_ID_L3NBLPM, FsmL3nblpm);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+	hcu_system_task_init_call(TASK_ID_L3NBHPM, FsmL3nbhpm);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	hcu_system_task_init_call(TASK_ID_L3BFSC, FsmL3bfsc);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+	hcu_system_task_init_call(TASK_ID_L3OPWLOTDR, FsmL3opwlotdr);
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
+
+
 }
 
 void hcu_task_create_all_but_avorion(void)
@@ -1062,23 +1154,6 @@ void hcu_task_create_all_but_avorion(void)
 
 	//Create task Microphone environments/28
 	hcu_system_task_init_call(TASK_ID_MICROPHONE, FsmMicrophone);
-
-	//不通过数据库配置的参数区域
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-//小技巧，不要这部分，以便加强编译检查
-#else
-#endif
 
 	/*
 	if (ret == FAILURE){
