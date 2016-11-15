@@ -78,23 +78,25 @@
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-	#include "../l3appaqycg10/l3aqycg10.h"
+	#include "../l3appctrl/l3aqycg10.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-	#include "../l3appaqycg20/l3aqycg20.h"
+	#include "../l3appctrl/l3aqycg20.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-	#include "../l3apptbswrg30/l3tbswrg30.h"
+	#include "../l3appctrl/l3tbswrg30.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-	#include "../l3appgqybg40/l3qgybg40.h"
+	#include "../l3appctrl/l3qgybg40.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-	#include "../l3appcxilc/l3cxilc.h"
+	#include "../l3appctrl/l3cxilc.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-	#include "../l3appcxglacm/l3cxglacm.h"
+	#include "../l3appctrl/l3cxglacm.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-	#include "../l3appnbhpm/l3nbhpm.h"
+	#include "../l3appctrl/l3nbhpm.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-	#include "../l3appnblpm/l3nblpm.h"
+	#include "../l3appctrl/l3nblpm.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	#include "../l3appbfsc/l3bfsc.h"
+	#include "../l3appctrl/l3bfsc.h"
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+	#include "../l3appctrl/l3opwlotdr.h"
 //小技巧，不要这部分，以便加强编译检查
 #else
 #endif

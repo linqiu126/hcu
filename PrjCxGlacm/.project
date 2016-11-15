@@ -81,7 +81,7 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>src/l3appcxglacm</name>
+			<name>src/l3appctrl</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -1051,14 +1051,14 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3app/syspm.h</locationURI>
 		</link>
 		<link>
-			<name>src/l3appcxglacm/l3cxglacm.c</name>
+			<name>src/l3appctrl/l3cxglacm.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appcxglacm/l3cxglacm.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3cxglacm.c</locationURI>
 		</link>
 		<link>
-			<name>src/l3appcxglacm/l3cxglacm.h</name>
+			<name>src/l3appctrl/l3cxglacm.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appcxglacm/l3cxglacm.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3cxglacm.h</locationURI>
 		</link>
 		<link>
 			<name>src/l3ui/.bowerrc</name>
