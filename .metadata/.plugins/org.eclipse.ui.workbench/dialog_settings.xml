@@ -32,6 +32,7 @@
 		<item value="true" key="WizardFileSystemResourceImportPage1.STORE_CREATE_LINKS_IN_WORKSPACE_ID"/>
 		<item value="true" key="WizardFileSystemResourceImportPage1.STORE_PATH_VARIABLE_SELECTED_ID"/>
 		<list key="WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="/home/hitpony/workspace/hcu/hcusrc/l3uiconnect"/>
 			<item value="/home/hitpony/workspace/hcu/hcusrc/l3appctrl"/>
 			<item value="/home/hitpony/workspace/hcu/hcusrc/l2frame"/>
 			<item value="/home/hitpony/workspace/hcu/hcusrc/l3apptbswrg30"/>

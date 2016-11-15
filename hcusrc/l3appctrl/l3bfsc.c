@@ -39,9 +39,29 @@ FsmStateItem_t FsmL3bfsc[] =
 	//Normal working status
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_ACTIVED,            		fsm_l3bfsc_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3BFSC_ACTIVED,            		fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_L3BFSC_ACTIVED,       			fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_L3BFSC_ACTIVED,       			fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_ACTIVED,          			fsm_l3bfsc_time_out},
+
+	//人工配置状态
+    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OPR_CFG,            		fsm_l3bfsc_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_time_out},
+	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_uicomm_cmd_req},
+	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       	FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_cloudvela_cmd_req},
+
+	//进料组合态
+    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_SCAN,            		fsm_l3bfsc_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_time_out},
+	{MSG_ID_CAN_L3BFSC_CMD_RESP,       			FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_cmd_resp},
+	{MSG_ID_CAN_L3BFSC_WS_REPORT,       		FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_ws_report},
+
+	//出料流程态
+    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_TTT,            		fsm_l3bfsc_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_time_out},
+	{MSG_ID_L3BFSC_CAN_WS_COMB_OUT_FB,       	FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_can_ws_comb_out_fb},
+
+	//放弃物料态
+    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_TGU,            		fsm_l3bfsc_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_time_out},
+	{MSG_ID_L3BFSC_CAN_WS_GIVE_UP_FB,       	FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_can_ws_give_up_fb},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -180,12 +200,142 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	return SUCCESS;
 }
 
+OPSTAT fsm_l3bfsc_canitf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("L3BFSC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
 
 
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfsc_canitf_ws_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("L3BFSC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
 
 
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfsc_can_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("L3BFSC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
 
 
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfsc_can_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("L3BFSC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
 
 
+	//返回
+	return SUCCESS;
+}
 
+//从BFSCUICOMM来的消息和命令
+OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("L3BFSC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
+
+
+	//返回
+	return SUCCESS;
+}
+
+
+OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("L3BFSC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
+
+
+	//返回
+	return SUCCESS;
+}

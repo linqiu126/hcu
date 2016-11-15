@@ -96,6 +96,8 @@
 	#include "../l3appctrl/l3nblpm.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	#include "../l3appctrl/l3bfsc.h"
+	#include "../l3uiconnect/bfscuicomm.h"
+
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	#include "../l3appctrl/l3opwlotdr.h"
 //小技巧，不要这部分，以便加强编译检查
@@ -867,6 +869,9 @@ void hcu_app_system_init()
 	zHcuTaskInfo[TASK_ID_L3BFSC].swTaskActive = HCU_TASK_PNP_ON;
 	zHcuTaskInfo[TASK_ID_L3BFSC].hwPlugin = HCU_TASK_PNP_ON;
 	zHcuTaskInfo[TASK_ID_L3BFSC].hwActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_BFSCUICOMM].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_BFSCUICOMM].hwPlugin = HCU_TASK_PNP_ON;
+	zHcuTaskInfo[TASK_ID_BFSCUICOMM].hwActive = HCU_TASK_PNP_ON;
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	zHcuTaskInfo[TASK_ID_L3OPWLOTDR].swTaskActive = HCU_TASK_PNP_ON;
 	zHcuTaskInfo[TASK_ID_L3OPWLOTDR].hwPlugin = HCU_TASK_PNP_ON;
@@ -1062,13 +1067,13 @@ void hcu_task_create_all(void)
 	hcu_system_task_init_call(TASK_ID_L3NBHPM, FsmL3nbhpm);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	hcu_system_task_init_call(TASK_ID_L3BFSC, FsmL3bfsc);
+	hcu_system_task_init_call(TASK_ID_BFSCUICOMM, FsmBfscuicomm);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	hcu_system_task_init_call(TASK_ID_L3OPWLOTDR, FsmL3opwlotdr);
 
 //小技巧，不要这部分，以便加强编译检查
 #else
 #endif
-
 
 }
 

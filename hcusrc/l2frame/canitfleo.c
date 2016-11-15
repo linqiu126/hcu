@@ -20,23 +20,43 @@ FsmStateItem_t FsmCanitfleo[] =
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
 	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
 	//如果没有必要进行初始化，可以设置为NULL
-	{MSG_ID_ENTRY,       		FSM_STATE_ENTRY,            			fsm_canitfleo_task_entry}, //Starting
+	{MSG_ID_ENTRY,       					FSM_STATE_ENTRY,            			fsm_canitfleo_task_entry}, //Starting
 
 	//System level initialization, only controlled by HCU-MAIN
-    {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_canitfleo_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_canitfleo_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       				FSM_STATE_IDLE,            				fsm_canitfleo_init},
+    {MSG_ID_COM_RESTART,					FSM_STATE_IDLE,            				fsm_canitfleo_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       	FSM_STATE_CANITFLEO_INITIED,            	fsm_canitfleo_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_CANITFLEO_INITIED,            	fsm_canitfleo_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_CANITFLEO_INITIED,            	fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       				FSM_STATE_CANITFLEO_INITIED,            	fsm_canitfleo_init},
+    {MSG_ID_COM_RESTART,					FSM_STATE_CANITFLEO_INITIED,            	fsm_canitfleo_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_CANITFLEO_INITIED,            	fsm_com_do_nothing},
 
-    //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_CANITFLEO_ACTIVED,            	fsm_canitfleo_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_CANITFLEO_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_CANITFLEO_ACTIVED,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_CANITFLEO_ACTIVED,       		fsm_com_do_nothing},
+    //Normal task status
+    {MSG_ID_COM_RESTART,        			FSM_STATE_CANITFLEO_ACTIVED,            	fsm_canitfleo_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_CANITFLEO_ACTIVED,            	fsm_com_do_nothing},
+	{MSG_ID_COM_TIME_OUT,      				FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_timeout},
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	{MSG_ID_L3BFSC_CAN_CMD_REQ,      		FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_cmd_req},
+	{MSG_ID_L3BFSC_CAN_WS_COMB_OUT,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_comb_out},
+	{MSG_ID_L3BFSC_CAN_WS_GIVE_UP,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_give_up},
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -141,4 +161,143 @@ OPSTAT func_canitfleo_int_init(void)
 {
 	return SUCCESS;
 }
+
+//暂时啥都不干，定时到达后，还不明确是否需要支持定时工作
+OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret;
+
+	//Receive message and copy to local variable
+	msg_struct_com_time_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
+		HcuErrorPrint("CANITFLEO: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_CANITFLEO]是否超限
+	if (zHcuRunErrCnt[TASK_ID_CANITFLEO] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+		//减少重复RESTART的概率
+		zHcuRunErrCnt[TASK_ID_CANITFLEO] = zHcuRunErrCnt[TASK_ID_CANITFLEO] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		msg_struct_com_restart_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
+		snd0.length = sizeof(msg_struct_com_restart_t);
+		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd0, snd0.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+			return FAILURE;
+		}
+	}
+
+	//Period time out received
+	if ((rcv.timeId == TIMER_ID_1S_CANITFLEO_WORKING_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//保护周期读数的优先级，强制抢占状态，并简化问题
+		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
+			ret = FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+				HcuErrorPrint("CANITFLEO: Error Set FSM State!\n");
+				return FAILURE;
+			}//FsmSetState
+		}
+
+		//Do nothing
+
+	}
+
+	return SUCCESS;
+}
+
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+OPSTAT fsm_canitfleo_l3bfsc_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("CANITFLEO: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
+
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("CANITFLEO: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
+
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("CANITFLEO: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
+
+
+	//返回
+	return SUCCESS;
+}
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+#endif
+
+
+
 
