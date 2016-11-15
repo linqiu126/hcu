@@ -81,7 +81,7 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>src/l3appbfsc</name>
+			<name>src/l3appctrl</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -1046,14 +1046,14 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3app/syspm.h</locationURI>
 		</link>
 		<link>
-			<name>src/l3appbfsc/l3bfsc.c</name>
+			<name>src/l3appctrl/l3bfsc.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appbfsc/l3bfsc.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3bfsc.c</locationURI>
 		</link>
 		<link>
-			<name>src/l3appbfsc/l3bfsc.h</name>
+			<name>src/l3appctrl/l3bfsc.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appbfsc/l3bfsc.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3bfsc.h</locationURI>
 		</link>
 		<link>
 			<name>src/l4bi/aiqiyc.c</name>
