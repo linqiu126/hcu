@@ -771,6 +771,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/bhcodeczhb.h</locationURI>
 		</link>
 		<link>
+			<name>src/l2frame/canitfleo.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canitfleo.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2frame/canitfleo.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canitfleo.h</locationURI>
+		</link>
+		<link>
 			<name>src/l2frame/cloudvela.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/cloudvela.c</locationURI>
