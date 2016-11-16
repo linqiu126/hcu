@@ -656,7 +656,7 @@ enum HCU_INTER_TASK_MSG_ID
 	//////////////////////////////////////////////////////////////////////////////////
 
 	//L3BFSC
-	MSG_ID_L3BFSC_CAN_CMD_REQ,
+	MSG_ID_L3BFSC_CAN_INQ_CMD_REQ,
 	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  //出料
 	MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   //放弃物料
 	MSG_ID_L3BFSC_UICOMM_CMD_RESP,
@@ -664,15 +664,15 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_CAN_WS_INIT_REQ,
 
 	//CANITFLEO
-	MSG_ID_CAN_L3BFSC_WS_REPORT,
-	MSG_ID_CAN_L3BFSC_CMD_RESP,
+	MSG_ID_CAN_L3BFSC_INQ_CMD_RESP,
 	MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,
 	MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,
 	MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,
-	MSG_ID_CAN_L3FSC_WS_INIT_RESP,
+	MSG_ID_CAN_L3FSC_WS_INIT_FB,
 
 	//BFSCUICOMM
 	MSG_ID_UICOMM_L3BFSC_CMD_REQ,
+	MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,
 
 	//CLOUDVELA
 	MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
@@ -2327,27 +2327,27 @@ typedef struct msg_struct_canitfleo_data_report
  *************************************************************************************/
 
 //L3BFSC
-//MSG_ID_L3BFSC_CAN_CMD_REQ,
-typedef struct msg_struct_l3bfsc_can_cmd_req
+#define HCU_L3BFSC_MAX_SENSOR_NBR 20
+//MSG_ID_L3BFSC_CAN_INQ_CMD_REQ,
+typedef struct msg_struct_l3bfsc_can_inq_cmd_req
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
+	UINT8  sensorid;
+	UINT8  sensorBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
-}msg_struct_l3bfsc_can_cmd_req_t;
+}msg_struct_l3bfsc_can_inq_cmd_req_t;
 
 //MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  //出料
 typedef struct msg_struct_l3bfsc_can_ws_comb_out
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
+	UINT8  combnbr;
+	UINT8  sensorBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_comb_out_t;
 
 //MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   //放弃物料
 typedef struct msg_struct_l3bfsc_can_ws_give_up
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
+	UINT8  sensorBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_give_up_t;
 
@@ -2367,37 +2367,34 @@ typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_cmd_resp_t;
 
-//CANITFLEO
-//MSG_ID_CAN_L3BFSC_WS_REPORT,
-typedef struct msg_struct_can_l3bfsc_ws_report
+//MSG_ID_L3BFSC_CAN_WS_INIT_REQ
+typedef struct msg_struct_l3bfsc_can_ws_init_req
 {
-	UINT8  wsid;
-	UINT32 weight;
-	UINT32 timestamp;
+	UINT8  wsBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
-}msg_struct_can_l3bfsc_ws_report_t;
+}msg_struct_l3bfsc_can_ws_init_req_t;
 
-//MSG_ID_CAN_L3BFSC_CMD_RESP,
-typedef struct msg_struct_can_l3bfsc_cmd_resp
+//CANITFLEO
+//MSG_ID_CAN_L3BFSC_INQ_CMD_RESP,
+typedef struct msg_struct_can_l3bfsc_inq_cmd_resp
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
+	UINT8 sensorid;
+	UINT32 sensorWsValue;
+	UINT8 flag;
 	UINT32 length;
-}msg_struct_can_l3bfsc_cmd_resp_t;
+}msg_struct_can_l3bfsc_inq_cmd_resp_t;
 
 //MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,
 typedef struct msg_struct_can_l3bfsc_new_ready_event
 {
-	UINT8  sensorId;
-	UINT8  sensorValue;
+	UINT8  sensorid;
+	UINT32  sensorWsValue;
 	UINT32 length;
 }msg_struct_can_l3bfsc_new_ready_event_t;
 
 //MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,
 typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_comb_out_fb_t;
 
@@ -2412,8 +2409,8 @@ typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
 //MSG_ID_CAN_L3FSC_WS_INIT_FB,
 typedef struct msg_struct_can_l3bfsc_ws_init_fb
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
+	UINT8  sensorid;
+	UINT8  initFlag;
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_init_fb_t;
 
@@ -2425,6 +2422,16 @@ typedef struct msg_struct_uicomm_l3bfsc_cmd_req
 	UINT32 timestamp;
 	UINT32 length;
 }msg_struct_uicomm_l3bfsc_cmd_req_t;
+
+//MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT
+typedef struct msg_struct_uicomm_l3bfsc_param_set_result
+{
+	UINT32  targetValue;
+	UINT32	targetUpLimit;
+	UINT8	minWsNbr;
+	UINT8	maxWsNbr;
+	UINT32 	length;
+}msg_struct_uicomm_l3bfsc_param_set_result_t;
 
 //CLOUDVELA
 //MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,

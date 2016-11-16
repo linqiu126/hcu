@@ -33,19 +33,21 @@ typedef struct L3BfscGenCtrlTable
 	UINT32	targetUpLimit;
 	UINT8	minWsNbr;
 	UINT8	maxWsNbr;
-	UINT8	currentStatus;
+	//UINT8	currentStatus;
 	L3BfscSensorWsInfo_t	sensorWs[HCU_BFSC_SENSOR_WS_NBR_MAX];
-	UINT32 wsRrSearchStart; //搜索算法从哪一个搜索系数开始
-	UINT8 wsValueNbrFree;  	//空闲的有值秤盘数量
-	UINT8 wsValueNbrTtt;  	//待出料有值秤盘数量
-	UINT8 wsValueNbrTgu;  	//待出料有值秤盘数量
+	UINT32 	wsRrSearchStart; //搜索算法从哪一个搜索系数开始
+	UINT8  	wsValueNbrFree;  	//空闲的0值秤盘数量
+	UINT8   wsValueNbrWeight;	//空闲有值的秤盘数量
+	UINT8 	wsValueNbrTtt;  	//待出料有值秤盘数量
+	UINT8 	wsValueNbrTgu;  	//待出料有值秤盘数量
+	UINT8 	wsBitmap[HCU_BFSC_SENSOR_WS_NBR_MAX];  //组合出的秤盘标示
 }L3BfscGenCtrlTable_t;
-#define HCU_L3BFSC_WHOLE_STATUS_INVALID		0
-#define HCU_L3BFSC_WHOLE_STATUS_INVALID1	255
-#define HCU_L3BFSC_WHOLE_STATUS_TO_COMB		1
-#define HCU_L3BFSC_WHOLE_STATUS_ERROR		2
-#define HCU_L3BFSC_WHOLE_STATUS_TTT			3
-#define HCU_L3BFSC_WHOLE_STATUS_TGU			4
+//#define HCU_L3BFSC_WHOLE_STATUS_INVALID		0
+//#define HCU_L3BFSC_WHOLE_STATUS_INVALID1	255
+//#define HCU_L3BFSC_WHOLE_STATUS_TO_COMB		1
+//#define HCU_L3BFSC_WHOLE_STATUS_ERROR		2
+//#define HCU_L3BFSC_WHOLE_STATUS_TTT			3
+//#define HCU_L3BFSC_WHOLE_STATUS_TGU			4
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -74,17 +76,23 @@ extern OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 extern OPSTAT fsm_l3bfsc_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_ws_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_can_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_can_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_can_ws_init_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_can_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_l3bfsc_int_init(void);
 void func_l3bfsc_cacluate_sensor_ws_valid_value(void);
 INT32 func_l3bfsc_ws_sensor_search_combination(void);
+void func_l3bfsc_ws_sensor_search_give_up(void);
+OPSTAT func_l3bfsc_time_out_ws_init_req_process(void);
+OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
+OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void);
+OPSTAT func_l3bfsc_time_out_error_scan_process(void);
 
 #endif /* L3APP_BFSC_H_ */
