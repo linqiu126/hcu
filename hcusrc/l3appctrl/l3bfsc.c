@@ -14,7 +14,6 @@
 #include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
 
-
 /*
 ** FSM of the L3BFSC
 */
@@ -24,51 +23,67 @@ FsmStateItem_t FsmL3bfsc[] =
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
 	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
 	//如果没有必要进行初始化，可以设置为NULL
-	{MSG_ID_ENTRY,       						FSM_STATE_ENTRY,            			fsm_l3bfsc_task_entry}, //Starting
+	{MSG_ID_ENTRY,       						FSM_STATE_ENTRY,            				fsm_l3bfsc_task_entry}, //Starting
 
 	//System level initialization, only controlled by HCU-MAIN
-    {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            				fsm_l3bfsc_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            				fsm_l3bfsc_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            					fsm_l3bfsc_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            					fsm_l3bfsc_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            					fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       					FSM_STATE_L3BFSC_INITIED,            		fsm_l3bfsc_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_L3BFSC_INITIED,            		fsm_l3bfsc_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3BFSC_INITIED,            		fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_L3BFSC_INITED,            		fsm_l3bfsc_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_L3BFSC_INITED,            		fsm_l3bfsc_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3BFSC_INITED,            		fsm_com_do_nothing},
 
-	//Normal working status
+	//Normal working status：等待人工干预-登录触发
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_ACTIVED,            		fsm_l3bfsc_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3BFSC_ACTIVED,            		fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_ACTIVED,          			fsm_l3bfsc_time_out},
+	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_ACTIVED,          			fsm_l3bfsc_uicomm_cmd_req},
 
-	//人工配置状态
+	//人工配置状态：等待参数配置完成。完成后，发送MSG_ID_L3BFSC_CAN_WS_INIT_REQ，进入FSM_STATE_L3BFSC_WS_INIT
+	//任何状态下，允许人工界面强行发送重启命令（后台或者本地界面），BFSCUICOMM模块将发送MSG_ID_COM_RESTART，从而重启整个系统
+	//重启需要重新登录并初始化整个秤盘传感器
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OPR_CFG,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_time_out},
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_uicomm_cmd_req},
 	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       	FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_cloudvela_cmd_req},
 
-	//进料组合态
+	//等待下位机完成参数初始化：等待MSG_ID_CAN_L3FSC_WS_INIT_RESP，完成后进入FSM_STATE_L3BFSC_OOS_SCAN
+    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_WS_INIT,            		fsm_l3bfsc_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_WS_INIT,          			fsm_l3bfsc_time_out},
+	{MSG_ID_CAN_L3FSC_WS_INIT_RESP,       		FSM_STATE_L3BFSC_WS_INIT,          			fsm_l3bfsc_can_ws_init_resp},
+
+	//进料组合态：等待正常的MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT，每一次进来均触发一次组合算法。结果无动作，或发送MSG_ID_L3BFSC_CAN_WS_COMB_OUT/MSG_ID_L3BFSC_CAN_WS_GIVE_UP
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_SCAN,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_time_out},
-	{MSG_ID_CAN_L3BFSC_CMD_RESP,       			FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_cmd_resp},
-	{MSG_ID_CAN_L3BFSC_WS_REPORT,       		FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_ws_report},
+	{MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,      FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_ws_new_ready_event},  //只能触发数据存储，不进入组合算法的执行
 
-	//出料流程态
+	//出料流程态：单纯等待MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_TTT,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_time_out},
-	{MSG_ID_L3BFSC_CAN_WS_COMB_OUT_FB,       	FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_can_ws_comb_out_fb},
+	{MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,       	FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_can_ws_comb_out_fb},
 
-	//放弃物料态
+	//放弃物料态：单纯等待MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_TGU,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_time_out},
-	{MSG_ID_L3BFSC_CAN_WS_GIVE_UP_FB,       	FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_can_ws_give_up_fb},
+	{MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,       	FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_can_ws_give_up_fb},
+
+	//数据差错，重新采样所有数据：收到MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT差错，发送MSG_ID_L3BFSC_CAN_CMD_REQ，等待传感器传回所有差错的重测值。结束以后进入FSM_STATE_L3BFSC_OOS_SCAN。
+    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_ERROR_INQ,            		fsm_l3bfsc_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_ERROR_INQ,          		fsm_l3bfsc_time_out},
+	{MSG_ID_CAN_L3BFSC_WS_REPORT,       		FSM_STATE_L3BFSC_ERROR_INQ,          		fsm_l3bfsc_canitf_ws_report},  //只能触发数据存储，不进入组合算法的执行
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+L3BfscGenCtrlTable_t zHcuL3BfscGenCtrlTable; //波峰秤盘的总控表
+
+//用于描述发送到后台，多少次才发送一次
+UINT32 zHcuHsmmpSendSaeCnt = 0;
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -115,6 +130,21 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_L3BFSC] = 0;
+
+	//秤盘数据表单控制表初始化
+	memset(&zHcuL3BfscGenCtrlTable, 0, sizeof(L3BfscGenCtrlTable_t));
+	int i=0;
+	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorWsId = i;
+		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorValue = 0;
+		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus = IHU_L3BFSC_SENSOR_WS_STATUS_EMPTY;
+	}
+	zHcuL3BfscGenCtrlTable.minWsNbr = 1;
+	zHcuL3BfscGenCtrlTable.minWsNbr = HCU_BFSC_SENSOR_WS_NBR_MAX;
+	zHcuL3BfscGenCtrlTable.targetValue = 0;
+	zHcuL3BfscGenCtrlTable.targetUpLimit = 0;
+	zHcuL3BfscGenCtrlTable.currentStatus = IHU_L3BFSC_WHOLE_STATUS_TO_COMB;
+	zHcuL3BfscGenCtrlTable.wsRrSearchStart = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, HCU_L3BFSC_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -308,6 +338,7 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	memcpy(&rcv, param_ptr, param_len);*/
 
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+	//检查参数配置的合法性，目标值必须在一定的合理范围内，否则拒绝进入进料状态
 
 	//停止定时器
 
@@ -339,3 +370,52 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 	//返回
 	return SUCCESS;
 }
+
+//触发组合算法
+OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("L3BFSC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
+
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfsc_can_ws_init_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HcuErrorPrint("L3BFSC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+
+	//停止定时器
+
+
+	//返回
+	return SUCCESS;
+}
+
+
