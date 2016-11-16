@@ -8,6 +8,12 @@
 ==> 12个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互
 ==> CANITFLEO的命令字
 
+//= ZJL, 2016 NOV.16, CURRENT_SW_DELIVERY 124 =>BFSC项目
+
+
+
+
+
 //= ZJL, 2016 NOV.16, CURRENT_SW_DELIVERY 123 =>BFSC项目
 = 由于SYSDIM的复杂性，暂时恢复一次全局定义，不用各个项目分别定义，毕竟咱们主要对付的是高级A7以上的平台，内存还没到达如此严重的地步
 = 简化TASK和MESSAGE ID的平铺直叙，统一编码，不然关键共享任务模块的编写过于复杂
@@ -15,7 +21,6 @@
 = 修改SYSCONFIG中有关BFSC的启动模块，只留下必要的模块
 = 内部HeartBeat优化
 = 打印最终PNP状态优化
-
 
 //= ZJL, 2016 NOV.15, CURRENT_SW_DELIVERY 122 =>BFSC项目
 = 固定设置MSG_ID_COM_BOTTOM以及TRASK_ID_COM_BOTTOM朝上的TRACE选项，不用再通过数据表单以及开关项进行设置了
@@ -30,6 +35,7 @@
 = TIMER由SYSDIM+L1TIMER单独搞定，不需要通过工程参数来过渡
 = 所有项目的新L3APPCTRL任务框架搭建好了，
 
+//= ZJL, 2016 NOV.15, CURRENT_SW_DELIVERY 120 =>BFSC项目
 = 删去SPIBUS的选择性临时#define
 = 增加CANITF公共模块，修改启动部分，任务模块部分，TIMER部分，以及数据库部分
 = TRACE MODULE和MSG部分需要跟着一起修改
