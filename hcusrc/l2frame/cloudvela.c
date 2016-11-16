@@ -22,73 +22,54 @@ FsmStateItem_t FsmCloudvela[] =
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
 	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
 	//如果没有必要进行初始化，可以设置为NULL
-	{MSG_ID_ENTRY,       		FSM_STATE_ENTRY,            			fsm_cloudvela_task_entry}, //Starting
+	{MSG_ID_ENTRY,       						FSM_STATE_ENTRY,            			fsm_cloudvela_task_entry}, //Starting
 
 	//System level initialization
-    {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_cloudvela_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_cloudvela_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            				fsm_cloudvela_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            				fsm_cloudvela_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       	FSM_STATE_CLOUDVELA_INITED,            	fsm_cloudvela_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_CLOUDVELA_INITED,            	fsm_cloudvela_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_CLOUDVELA_INITED,            	fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_CLOUDVELA_INITED,            	fsm_cloudvela_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_CLOUDVELA_INITED,            	fsm_cloudvela_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_CLOUDVELA_INITED,            	fsm_com_do_nothing},
 
     //Offline working, 定时重新启动链路，但不接受任何L3消息
-    {MSG_ID_COM_RESTART,        FSM_STATE_CLOUDVELA_OFFLINE,            fsm_cloudvela_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_CLOUDVELA_OFFLINE,            fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_CLOUDVELA_OFFLINE,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_CLOUDVELA_OFFLINE,       		fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       FSM_STATE_CLOUDVELA_OFFLINE,            fsm_cloudvela_time_out},
+    {MSG_ID_COM_RESTART,        				FSM_STATE_CLOUDVELA_OFFLINE,            fsm_cloudvela_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_CLOUDVELA_OFFLINE,            fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_CLOUDVELA_OFFLINE,       		fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_CLOUDVELA_OFFLINE,       		fsm_com_do_nothing},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_CLOUDVELA_OFFLINE,            fsm_cloudvela_time_out},
+	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 			fsm_cloudvela_hwinv_phy_status_chg},
 
     //Online working， 定时检查链路，并安排离线数据的及时上传
-    {MSG_ID_COM_RESTART,        			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_CLOUDVELA_ONLINE,     fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     			FSM_STATE_CLOUDVELA_ONLINE,     fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  			FSM_STATE_CLOUDVELA_ONLINE,     fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_time_out},
-	{MSG_ID_EMC_CLOUDVELA_DATA_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_emc_data_resp},
-	{MSG_ID_EMC_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_emc_contrl_fb},
-	{MSG_ID_PM25_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_pm25_data_resp},
-	{MSG_ID_PM25_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_pm25_contrl_fb},
-	{MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP, 		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_winddir_data_resp},
-	{MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_winddir_contrl_fb},
-	{MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_windspd_data_resp},
-	{MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_windspd_contrl_fb},
-	{MSG_ID_TEMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_temp_data_resp},
-	{MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_temp_contrl_fb},
-	{MSG_ID_HUMID_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_humid_data_resp},
-	{MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_humid_contrl_fb},
-	{MSG_ID_NOISE_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_noise_data_resp},
-	{MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_noise_contrl_fb},
-	{MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hsmmp_data_resp},
-	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hsmmp_control_fb},
-	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hsmmp_data_link_resp},
-
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	{MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_l3bfsc_cmd_resp},
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-
-//小技巧，不要这部分，以便加强编译检查
-#else
-#endif
+    {MSG_ID_COM_RESTART,        				FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_CLOUDVELA_ONLINE,     		fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_CLOUDVELA_ONLINE,     		fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_CLOUDVELA_ONLINE,     		fsm_com_do_nothing},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_time_out},
+	{MSG_ID_EMC_CLOUDVELA_DATA_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_emc_data_resp},
+	{MSG_ID_EMC_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_emc_contrl_fb},
+	{MSG_ID_PM25_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_pm25_data_resp},
+	{MSG_ID_PM25_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_pm25_contrl_fb},
+	{MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP, 		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_winddir_data_resp},
+	{MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_winddir_contrl_fb},
+	{MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_windspd_data_resp},
+	{MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_windspd_contrl_fb},
+	{MSG_ID_TEMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_temp_data_resp},
+	{MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_temp_contrl_fb},
+	{MSG_ID_HUMID_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_humid_data_resp},
+	{MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_humid_contrl_fb},
+	{MSG_ID_NOISE_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_noise_data_resp},
+	{MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_noise_contrl_fb},
+	{MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_hsmmp_data_resp},
+	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_hsmmp_control_fb},
+	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_hsmmp_data_link_resp},
+	{MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_l3bfsc_cmd_resp},
 
 	//for alarm & pm report added by ZSC
-	{MSG_ID_COM_ALARM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_alarm_report},
-	{MSG_ID_COM_PM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_pm_report},
-
-
-
+	{MSG_ID_COM_ALARM_REPORT,   				FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_alarm_report},
+	{MSG_ID_COM_PM_REPORT,   					FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_pm_report},
 
 	//Online working， 从后台接收到数据和控制命令，四种均有可能，具体是哪一种起作用，将由HWINV定时扫描并解决互斥问题
 	//通过全局变量/本模块任务中心跳检测的共同作用，确定到底是哪一种通信接口在运行，确保不同后连接的PnP即插即用特性
@@ -102,10 +83,9 @@ FsmStateItem_t FsmCloudvela[] =
 
 	//HWINV发来了硬件状态的改变，一般是硬件重新插拔造成的PnP状态改变
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hwinv_phy_status_chg},
-	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 	fsm_cloudvela_hwinv_phy_status_chg},
 
     //结束点，固定定义，不要改动
-    {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
+    {MSG_ID_END,            					FSM_STATE_END,             		NULL},  //Ending
 };
 
 //Global variables
@@ -2075,28 +2055,9 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	return SUCCESS;
 }
 
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
-
-
-
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-
-//小技巧，不要这部分，以便加强编译检查
-#else
-#endif
 
 

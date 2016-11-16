@@ -191,7 +191,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 	if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 	{
-		HcuErrorPrint("ETHERNET: Socket can not connect!\n\n");
+		HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 		//return FAILURE;
 		//to restart this task
@@ -201,7 +201,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length);
 
-		HcuErrorPrint("ETHERNET: Try to connect [Server IP: %s] .......\n\n", HCU_CLOUDSRV_SOCKET_ADDRESS);
+		HcuErrorPrint("ETHERNET: Try to connect [Server IP: %s] .......\n", HCU_CLOUDSRV_SOCKET_ADDRESS);
 
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
@@ -213,7 +213,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	else
 	{
 		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-			HcuDebugPrint("ETHERNET: Socket connected\n\n");
+			HcuDebugPrint("ETHERNET: Socket connected\n");
 		}
 
 		echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
@@ -222,7 +222,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 		}
 		else{
-			HcuDebugPrint("ETHERNET: Socket send data to Server succeed: %s!\n\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+			HcuDebugPrint("ETHERNET: Socket send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
 
 		}
 
@@ -240,7 +240,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
-			HcuErrorPrint("ETHERNET: Socket receive error: %d !\n\n\n", idata);
+			HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			zHcuGlobalCounter.SocketDiscCnt++;
 			//return FAILURE;
 
@@ -281,14 +281,14 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 			if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 			{
-				HcuErrorPrint("ETHERNET: Socket can not connect!\n\n");
+				HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 				//return FAILURE;
 			}
 			else
 			{
 				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-					HcuDebugPrint("ETHERNET: Socket connected\n\n");
+					HcuDebugPrint("ETHERNET: Socket connected\n");
 				}
 
 				echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
@@ -297,7 +297,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 					zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 				}
 				else{
-					HcuDebugPrint("ETHERNET: Socket send data to Server succeed: %s!\n\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+					HcuDebugPrint("ETHERNET: Socket send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
 
 				}
 			}
@@ -308,7 +308,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		{
 			//receiveBuffer.length = idata;
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-				HcuDebugPrint("ETHERNET: Socket receive data from the client of cloud, Data Len=%d, Buffer=%s\n\n", receiveBuffer.length,  receiveBuffer.buf);
+				HcuDebugPrint("ETHERNET: Socket receive data from the client of cloud, Data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
 
 			}
 

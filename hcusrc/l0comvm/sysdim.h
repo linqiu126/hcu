@@ -61,6 +61,24 @@
 //#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE 		HCU_WORKING_PROJECT_NAME_OPWL_OTDR
 //#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE 		HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID
 
+//全局统一定义
+//系统任务级
+#define MAX_TASK_NUM_IN_ONE_HCU 100  //需要根据系统中实际多少任务模块来决定，从70改为100，不然随着新模块的加入，已经不够了
+#define TASK_NAME_MAX_LENGTH 15  //从12改为15
+//系统消息级
+//maxmum state number and msg number in one task, no instance concept
+#define HCU_TASK_QUEUE_ID_START 1024
+#define MAX_MSGID_NUM_IN_ONE_TASK 400 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多：从200改为400个
+#define MASK_MSGID_NUM_IN_ONE_TASK 511 //消息号段在同一个任务中必须连续到这个范围内：从255改为511个
+#define MAX_STATE_NUM_IN_ONE_TASK 12  //一个任务之中最多定义的状态数量：从8个改为12个
+#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+//消息长度
+#define MSG_NAME_MAX_LENGTH 70
+#define MAX_HCU_MSG_BODY_LENGTH 512 //MYC改为1500，就是为了ETHERNET数据段的最大长度。考虑到实时性，应该缩短。考虑到LINUX最大9K的单个任务QUEUE，应该缩短。
+#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+
+
+/*
 
 //分项目设置不同项目的全局性能参数
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
@@ -282,6 +300,7 @@
 //小技巧，不要这部分，以便加强编译检查
 #else
 #endif
+*/
 
 //#define HCU_WORKING_PROJECT_NAME_TBSWR "HCU_PRJ_TBSWR"
 //#define HCU_WORKING_PROJECT_NAME_NBIOT_CJ188 "HCU_PRJ_NBIOT_CJ188" //Intelligence Meter
