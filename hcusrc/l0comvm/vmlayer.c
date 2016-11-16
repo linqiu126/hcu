@@ -346,6 +346,8 @@ char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK] ={
 
 		//BOTTOM
 		"MSG_ID_COM_BOTTOM",
+		//////////////////////////////////////////////////////////////////////////////////
+
 		//L3BFSC
 		"MSG_ID_L3BFSC_CAN_CMD_REQ",
 		"MSG_ID_L3BFSC_CAN_WS_COMB_OUT",  //出料

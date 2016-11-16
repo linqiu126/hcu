@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="zHcuHsmmpSendSaeCnt" key="selection"/>
+		<item value="MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT"/>
+			<item value="IHU"/>
 			<item value="zHcuHsmmpSendSaeCnt"/>
 			<item value="fsm_l3bfsc_can_ws_init"/>
 			<item value="MSG_ID_CAN_L3FSC_WS_INIT_FB"/>
 			<item value="fsm_l3bfsc_uicomm_cmd_req"/>
 			<item value="MSG_ID_CAN_L3BFSC_WS_REPORT"/>
 			<item value="HCU_TIMER_CONFIG_START_RESOLUTION_10MS"/>
-			<item value="HCU_TRACE_DEBUG_NOR_ON"/>
-			<item value="HCU_TRACE_DEBUG_INF_ON"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU"/>
 			<item value="CANITFLEO"/>
 			<item value="Canitfleo"/>
 			<item value="canitfleo"/>
@@ -25,7 +26,6 @@
 			<item value="L3BFSC"/>
 			<item value="Bfscuicomm"/>
 			<item value="bfscuicomm"/>
-			<item value="L3TBSWRG30"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

@@ -80,10 +80,8 @@ FsmStateItem_t FsmL3bfsc[] =
 
 //Global variables
 L3BfscGenCtrlTable_t zHcuL3BfscGenCtrlTable; //波峰秤盘的总控表
-
-//用于描述发送到后台，多少次才发送一次
-UINT32 zHcuHsmmpSendSaeCnt = 0;
-
+UINT8 *zHcuSearchCoefficientPointer;
+UINT32 zHcuSearchSpaceTotalNbr = 0; //搜索的长度，12对应4096
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -137,15 +135,55 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorWsId = i;
 		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorValue = 0;
-		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus = IHU_L3BFSC_SENSOR_WS_STATUS_EMPTY;
+		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY;
 	}
 	zHcuL3BfscGenCtrlTable.minWsNbr = 1;
 	zHcuL3BfscGenCtrlTable.minWsNbr = HCU_BFSC_SENSOR_WS_NBR_MAX;
 	zHcuL3BfscGenCtrlTable.targetValue = 0;
 	zHcuL3BfscGenCtrlTable.targetUpLimit = 0;
-	zHcuL3BfscGenCtrlTable.currentStatus = IHU_L3BFSC_WHOLE_STATUS_TO_COMB;
+	zHcuL3BfscGenCtrlTable.currentStatus = HCU_L3BFSC_WHOLE_STATUS_TO_COMB;
 	zHcuL3BfscGenCtrlTable.wsRrSearchStart = 0;
+	zHcuL3BfscGenCtrlTable.wsValueNbrFree = 0;
+	zHcuL3BfscGenCtrlTable.wsValueNbrTtt = 0;
+	zHcuL3BfscGenCtrlTable.wsValueNbrTgu = 0;
 
+	//为搜索空间申请内存
+	zHcuSearchSpaceTotalNbr = pow(2, HCU_BFSC_SENSOR_WS_NBR_MAX);
+	zHcuSearchCoefficientPointer = malloc(zHcuSearchSpaceTotalNbr * HCU_BFSC_SENSOR_WS_NBR_MAX * sizeof(UINT8));
+	if (zHcuSearchCoefficientPointer == NULL){
+		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
+		HcuErrorPrint("L3BFSC: Init parameter error!\n");
+		return FAILURE;
+	}
+	memset(zHcuSearchCoefficientPointer, 0, zHcuSearchSpaceTotalNbr * HCU_BFSC_SENSOR_WS_NBR_MAX  * sizeof(UINT8));
+
+	//初始化搜索系数表
+	//UINT8 *p = NULL;
+	UINT8 j=0;
+	UINT32 k=0, t=0;
+	UINT32 kUp = 0;
+	//UINT32 tLow=0;
+	UINT32 tUp = 0, Index=0;
+	//UINT32 total = 0;
+	for (j=0; j<HCU_BFSC_SENSOR_WS_NBR_MAX; j++){
+		kUp = pow(2, HCU_BFSC_SENSOR_WS_NBR_MAX-j-1);
+		for (k=0; k< kUp; k++){
+			//tLow = k*pow(2, j+1);
+			tUp = pow(2, j);
+			for (t=0; t<tUp; t++){
+				//Index = j*zHcuSearchSpaceTotalNbr + k*pow(2, j+1) + t + tLow;
+				Index = j + (k * pow(2, j+1) + t) * HCU_BFSC_SENSOR_WS_NBR_MAX;
+				*(zHcuSearchCoefficientPointer + Index) = 1;
+				//total++;
+				//HcuDebugPrint("L3BFSC: Total set [%d], index = [%d]\n", total, Index);
+			}
+		}
+	}
+	//p = zHcuSearchCoefficientPointer;
+/*	for (i=0; i<zHcuSearchSpaceTotalNbr; i++){
+		//HcuDebugPrint("L3BFSC: Matrix Table[%d]=[%d%d%d]\n", i, *(p+3*i),*(p+3*i+1), *(p+3*i+2));
+		HcuDebugPrint("L3BFSC: Matrix Table[%d]=[%d%d%d%d%d%d%d%d%d%d%d%d]\n", i, *(p+12*i),*(p+12*i+1),*(p+12*i+2),*(p+12*i+3),*(p+12*i+4),*(p+12*i+5),*(p+12*i+6),*(p+12*i+7),*(p+12*i+8),*(p+12*i+9),*(p+12*i+10),*(p+12*i+11));
+	}*/
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, HCU_L3BFSC_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
@@ -375,16 +413,16 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-/*	HcuDiscDataSampleStorageArray_t record;
 
-	msg_struct_modbus_pm25_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+	//入参检查
+	msg_struct_can_l3bfsc_new_ready_event_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_new_ready_event_t))){
 		HcuErrorPrint("L3BFSC: Receive message error!\n");
 		zHcuRunErrCnt[TASK_ID_L3BFSC]++;
 		return FAILURE;
 	}
-	memcpy(&rcv, param_ptr, param_len);*/
+	memcpy(&rcv, param_ptr, param_len);
 
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
 
@@ -417,5 +455,56 @@ OPSTAT fsm_l3bfsc_can_ws_init_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 	//返回
 	return SUCCESS;
 }
+
+//系统参数的合法性检查，均在参数初始化中完成，后面不再检查
+INT32 func_l3bfsc_ws_sensor_search_combination(void)
+{
+	UINT32 WsSensorStart = 0;
+	UINT32 i=0, j=0;
+	UINT32 result=0;
+
+	//选取起始位置
+	WsSensorStart = zHcuL3BfscGenCtrlTable.wsRrSearchStart % zHcuSearchSpaceTotalNbr;
+
+	//组合搜索
+	for (i=WsSensorStart; i< (zHcuSearchSpaceTotalNbr + WsSensorStart); i++){
+		result = 0;
+		for (j=0; j<HCU_BFSC_SENSOR_WS_NBR_MAX; j++){
+			if (zHcuL3BfscGenCtrlTable.sensorWs[j].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
+				result += zHcuL3BfscGenCtrlTable.sensorWs[j].sensorValue * (*(zHcuSearchCoefficientPointer + (i%zHcuSearchSpaceTotalNbr) * HCU_BFSC_SENSOR_WS_NBR_MAX + j));
+			}
+		}
+		//如果落入目标范围
+		if ((result >= zHcuL3BfscGenCtrlTable.targetValue) && (result <= zHcuL3BfscGenCtrlTable.targetUpLimit)){
+			zHcuL3BfscGenCtrlTable.wsRrSearchStart = ((i+1) % zHcuSearchSpaceTotalNbr);
+			return (i % zHcuSearchSpaceTotalNbr);
+		}
+	}
+	zHcuL3BfscGenCtrlTable.wsRrSearchStart = ((i+1) % zHcuSearchSpaceTotalNbr);
+	return -1;
+}
+
+void func_l3bfsc_cacluate_sensor_ws_valid_value(void)
+{
+	int i=0, resFree = 0, resTtt =0, resTgu = 0;
+	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++)
+	{
+		if (zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB)
+			resFree++;
+		else if (zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT)
+			resTtt++;
+		else if (zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU)
+			resTgu++;
+	}
+
+	//存入全局控制表
+	zHcuL3BfscGenCtrlTable.wsValueNbrFree = resFree;
+	zHcuL3BfscGenCtrlTable.wsValueNbrTtt = resTtt;
+	zHcuL3BfscGenCtrlTable.wsValueNbrTgu = resTgu;
+
+	//返回
+	return;
+}
+
 
 
