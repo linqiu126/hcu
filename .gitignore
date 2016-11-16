@@ -26,3 +26,6 @@ Release/src/*
 ehthumbs.db 
 Icon? 
 Thumbs.db
+
+# Eclipse .metadata directory
+.metadata/
