@@ -18,13 +18,13 @@ typedef struct L3BfscSensorWsInfo
 	UINT8  sensorStatus; //无效，空料，有料数值错误，有料待组合，有料待出料
 }L3BfscSensorWsInfo_t;
 //秤盘状态定义
-#define IHU_L3BFSC_SENSOR_WS_STATUS_INVALID 	0  		//秤盘无效
-#define IHU_L3BFSC_SENSOR_WS_STATUS_INVALID1 255  		//秤盘无效
-#define IHU_L3BFSC_SENSOR_WS_STATUS_EMPTY 1       		//秤盘空
-#define IHU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR 2 		//秤盘有料数值错误
-#define IHU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB 3 	//秤盘有料待组合
-#define IHU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 4		//秤盘有料待出料
-#define IHU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 5		//秤盘有料待抛弃
+#define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID 	0  		//秤盘无效
+#define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID1 255  		//秤盘无效
+#define HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY 1       		//秤盘空
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR 2 		//秤盘有料数值错误
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB 3 	//秤盘有料待组合
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 4		//秤盘有料待出料
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 5		//秤盘有料待抛弃
 
 //组合目标的控制表
 typedef struct L3BfscGenCtrlTable
@@ -35,15 +35,17 @@ typedef struct L3BfscGenCtrlTable
 	UINT8	maxWsNbr;
 	UINT8	currentStatus;
 	L3BfscSensorWsInfo_t	sensorWs[HCU_BFSC_SENSOR_WS_NBR_MAX];
-	UINT8 wsRrSearchStart;  //素搜算法从哪一个秤盘传感器开始
+	UINT32 wsRrSearchStart; //搜索算法从哪一个搜索系数开始
+	UINT8 wsValueNbrFree;  	//空闲的有值秤盘数量
+	UINT8 wsValueNbrTtt;  	//待出料有值秤盘数量
+	UINT8 wsValueNbrTgu;  	//待出料有值秤盘数量
 }L3BfscGenCtrlTable_t;
-#define IHU_L3BFSC_WHOLE_STATUS_INVALID		0
-#define IHU_L3BFSC_WHOLE_STATUS_INVALID1	255
-#define IHU_L3BFSC_WHOLE_STATUS_TO_COMB		1
-#define IHU_L3BFSC_WHOLE_STATUS_ERROR		2
-#define IHU_L3BFSC_WHOLE_STATUS_TTT			3
-#define IHU_L3BFSC_WHOLE_STATUS_TGU			4
-
+#define HCU_L3BFSC_WHOLE_STATUS_INVALID		0
+#define HCU_L3BFSC_WHOLE_STATUS_INVALID1	255
+#define HCU_L3BFSC_WHOLE_STATUS_TO_COMB		1
+#define HCU_L3BFSC_WHOLE_STATUS_ERROR		2
+#define HCU_L3BFSC_WHOLE_STATUS_TTT			3
+#define HCU_L3BFSC_WHOLE_STATUS_TGU			4
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -82,7 +84,7 @@ extern OPSTAT fsm_l3bfsc_can_ws_init_resp(UINT32 dest_id, UINT32 src_id, void * 
 
 //Local API
 OPSTAT func_l3bfsc_int_init(void);
-
-
+void func_l3bfsc_cacluate_sensor_ws_valid_value(void);
+INT32 func_l3bfsc_ws_sensor_search_combination(void);
 
 #endif /* L3APP_BFSC_H_ */
