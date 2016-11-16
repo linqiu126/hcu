@@ -31,9 +31,9 @@ FsmStateItem_t FsmL3cxglacm[] =
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       					FSM_STATE_L3CXGLACM_INITIED,            		fsm_l3cxglacm_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_L3CXGLACM_INITIED,            		fsm_l3cxglacm_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3CXGLACM_INITIED,            		fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_L3CXGLACM_INITED,            		fsm_l3cxglacm_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_L3CXGLACM_INITED,            		fsm_l3cxglacm_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3CXGLACM_INITED,            		fsm_com_do_nothing},
 
 	//Normal working status
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3CXGLACM_ACTIVED,            		fsm_l3cxglacm_restart},

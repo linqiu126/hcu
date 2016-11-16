@@ -31,9 +31,9 @@ FsmStateItem_t FsmL3aqycg20[] =
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       					FSM_STATE_L3AQYCG20_INITIED,            		fsm_l3aqycg20_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_L3AQYCG20_INITIED,            		fsm_l3aqycg20_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3AQYCG20_INITIED,            		fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_L3AQYCG20_INITED,            		fsm_l3aqycg20_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_L3AQYCG20_INITED,            		fsm_l3aqycg20_restart},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3AQYCG20_INITED,            		fsm_com_do_nothing},
 
 	//Normal working status
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3AQYCG20_ACTIVED,            		fsm_l3aqycg20_restart},

@@ -34,8 +34,6 @@ typedef struct dir
 	char d_name[HCU_CLOUDVELA_HSMMP_PATH_MAX + 1];
 }Dirent_t;
 
-
-
 //Global variables
 extern FsmStateItem_t FsmHsmmp[];
 extern GpsPosInfo_t zHcuGpsPosInfo;
