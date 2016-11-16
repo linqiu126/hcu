@@ -32,8 +32,6 @@ extern OPSTAT fsm_bfscuicomm_restart(UINT32 dest_id, UINT32 src_id, void * param
 extern OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
-
-
 //Local API
 OPSTAT func_bfscuicomm_int_init(void);
 

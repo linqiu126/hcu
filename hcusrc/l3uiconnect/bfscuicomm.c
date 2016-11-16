@@ -103,29 +103,27 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("BFSCUICOMM: Enter FSM_STATE_BFSCUICOMM_ACTIVED status, Keeping refresh here!\n");
 	}
-	/*
 
-	//进入阻塞式接收数据状态，然后继续发送
-	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给HSMMP
-			msg_struct_bfscuicomm_hsmmp_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_bfscuicomm_hsmmp_data_rx_t));
-			snd.length = sizeof(msg_struct_bfscuicomm_hsmmp_data_rx_t);
-			ret = hcu_message_send(MSG_ID_BFSCUICOMM_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_BFSCUICOMM, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_BFSCUICOMM]++;
-				HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_BFSCUICOMM], zHcuTaskNameList[TASK_ID_HSMMP]);
-				return FAILURE;
-			}
-		}
+	//为了测试目的，主动发送参数设置内容给L3BFSC
+	msg_struct_uicomm_l3bfsc_param_set_result_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_param_set_result_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfsc_param_set_result_t);
+	snd.minWsNbr = 1 + rand()%3;
+	snd.maxWsNbr = 5 + rand()%8;
+	snd.targetValue = 2000+ (rand()%100);
+	snd.targetUpLimit = 50 + (rand()%10);
 
-		hcu_sleep(5);
+	//等待一会儿
+	hcu_sleep(5);
+
+	ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_BFSCUICOMM]++;
+		HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_BFSCUICOMM], zHcuTaskNameList[TASK_ID_L3BFSC]);
+		return FAILURE;
 	}
-	*/
 
+	//返回
 	return SUCCESS;
 }
 

@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="Input" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT"/>
-			<item value="IHU"/>
-			<item value="zHcuHsmmpSendSaeCnt"/>
-			<item value="fsm_l3bfsc_can_ws_init"/>
-			<item value="MSG_ID_CAN_L3FSC_WS_INIT_FB"/>
-			<item value="fsm_l3bfsc_uicomm_cmd_req"/>
-			<item value="MSG_ID_CAN_L3BFSC_WS_REPORT"/>
-			<item value="HCU_TIMER_CONFIG_START_RESOLUTION_10MS"/>
+			<item value="input"/>
+			<item value="msg_struct_can_l3bfsc_new_ready_event_t"/>
+			<item value="fsm_l3bfsc_can_ws_init_fb"/>
+			<item value="fsm_l3bfsc_canitf_ws_new_ready_event"/>
+			<item value="hcu_timer_start"/>
+			<item value="fsm_l3bfsc_can_ws_give_up_fb"/>
+			<item value="fsm_canitfleo_l3bfsc_ws_give_up"/>
+			<item value="MSG_ID_L3BFSC_CAN_WS_GIVE_UP"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU"/>
