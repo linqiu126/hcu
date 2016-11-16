@@ -1094,7 +1094,7 @@ void func_hwinv_scan_eng_par(void)
 	//这里先使用持续的动态刷新读取，未来可以再优化，降低进入的概率
 	if ((dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE) == SUCCESS) &&
 			(dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar) == SUCCESS) && (dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar) == SUCCESS)){
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 			HcuDebugPrint("HWINV: Retrieve all engineering data correctly from DATABASE parameters!\n");
 		}
 	}

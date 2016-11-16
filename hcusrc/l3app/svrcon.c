@@ -867,24 +867,43 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	char svrconState[15];
 	//检查所有的反馈是否都收到，不然维持状态不变
 	if (func_svrcon_init_caculate_all_fb() == TRUE){
-
 		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 			int i=0;
+			//打印不RUNNING的
 			for(i=0;i<MAX_TASK_NUM_IN_ONE_HCU;i++){
 				//HcuDebugPrint("SVRCON:Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskNameList[i]);
 				if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_SEND) strcpy(svrconState, "INIT_SEND");
 				else if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK) strcpy(svrconState, "INIT_WAIT_FB");
 				else if  (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK) strcpy(svrconState, "INIT_FB");
 				else strcpy(svrconState, "INIT_INVLID");
-
-				HcuDebugPrint("SVRCON:Task info: PNP[%d, %s],  Task init info: State[%d, %s] and Active[%d, %s] of Task[%s], Init result is [%s]!\n",\
+				if ((zHcuTaskInfo[i].swTaskActive!=HCU_TASK_PNP_ON) || (zHcuSvrConTaskInitInfo[i].active != SVRCON_TASK_ACTIVE) || (zHcuSvrConTaskInitInfo[i].state != SVRCON_TASK_INIT_FEEDBACK)){
+				HcuDebugPrint("SVRCON: Task PNP[%d, %s], Init State[%d, %s], Active State[%d, %s] of Task[%2x, %s], Init result is [%s]!\n", \
 						zHcuTaskInfo[i].swTaskActive, zHcuTaskInfo[i].swTaskActive==HCU_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\
 						zHcuSvrConTaskInitInfo[i].active, (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE)?"ACTIVE":"DEACTIVE",\
 						zHcuSvrConTaskInitInfo[i].state, svrconState,\
-						zHcuTaskNameList[i],\
+						i, zHcuTaskNameList[i],\
 						((zHcuTaskInfo[i].swTaskActive==HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK))?"RUNNING":"NOT_RUN");
-			}
-		}
+				}
+
+			}//For
+			//打印RUNNING的
+			for(i=0;i<MAX_TASK_NUM_IN_ONE_HCU;i++){
+				//HcuDebugPrint("SVRCON:Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskNameList[i]);
+				if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_SEND) strcpy(svrconState, "INIT_SEND");
+				else if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK) strcpy(svrconState, "INIT_WAIT_FB");
+				else if  (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK) strcpy(svrconState, "INIT_FB");
+				else strcpy(svrconState, "INIT_INVLID");
+				if ((zHcuTaskInfo[i].swTaskActive==HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK)){
+					HcuDebugPrint("SVRCON: Task PNP[%d, %s], Init State[%d, %s], Active State[%d, %s] of Task[%2x, %s], Init result is [%s]!\n", \
+							zHcuTaskInfo[i].swTaskActive, zHcuTaskInfo[i].swTaskActive==HCU_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\
+							zHcuSvrConTaskInitInfo[i].active, (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE)?"ACTIVE":"DEACTIVE",\
+							zHcuSvrConTaskInitInfo[i].state, svrconState,\
+							i, zHcuTaskNameList[i],\
+							((zHcuTaskInfo[i].swTaskActive==HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK))?"RUNNING":"NOT_RUN");
+				}
+			}//For
+
+		}//if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE)
 
 		ret = hcu_timer_stop(TASK_ID_SVRCON, TIMER_ID_1S_SVRCON_INIT_FB, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
@@ -902,7 +921,7 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("SVRCON: Enter FSM_STATE_SVRCON_ACTIVED status, Getting to SLEEP mode for a while!\n");
 		}
-	}
+	}//if (func_svrcon_init_caculate_all_fb() == TRUE)
 
 	//No need FSM status change
 	return SUCCESS;
@@ -1020,14 +1039,14 @@ OPSTAT fsm_svrcon_heart_beat(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 
 	//循环处理所有模块的计数器，定时不太太短，否则负荷太大
 	//考虑各种方案，即使采用MSGQUE的方式来判断，还是不准确，最终选择手工发送选择任务的方式
-	func_svrcon_heart_beat_send_out(TASK_ID_EMC);
-	func_svrcon_heart_beat_send_out(TASK_ID_PM25);
-	func_svrcon_heart_beat_send_out(TASK_ID_WINDDIR);
-	func_svrcon_heart_beat_send_out(TASK_ID_WINDSPD);
-	func_svrcon_heart_beat_send_out(TASK_ID_HUMID);
-	func_svrcon_heart_beat_send_out(TASK_ID_TEMP);
-	func_svrcon_heart_beat_send_out(TASK_ID_HSMMP);
-	func_svrcon_heart_beat_send_out(TASK_ID_NOISE);
+	if (zHcuTaskInfo[TASK_ID_EMC].swTaskActive == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_EMC);
+	if (zHcuTaskInfo[TASK_ID_PM25].swTaskActive == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_PM25);
+	if (zHcuTaskInfo[TASK_ID_WINDDIR].swTaskActive == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_WINDDIR);
+	if (zHcuTaskInfo[TASK_ID_WINDSPD].swTaskActive == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_WINDSPD);
+	if (zHcuTaskInfo[TASK_ID_HUMID].swTaskActive == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_HUMID);
+	if (zHcuTaskInfo[TASK_ID_TEMP].swTaskActive == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_TEMP);
+	if (zHcuTaskInfo[TASK_ID_HSMMP].swTaskActive == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_HSMMP);
+	if (zHcuTaskInfo[TASK_ID_NOISE].swTaskActive == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_NOISE);
 
 //	func_svrcon_heart_beat_send_out(TASK_ID_AVORION);
 //	func_svrcon_heart_beat_send_out(TASK_ID_CLOUDVELA);
