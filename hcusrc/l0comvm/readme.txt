@@ -12,6 +12,7 @@ PRJ_BFSC待完成或者回答的问题：
 //= ZJL, 2016 NOV.17, CURRENT_SW_DELIVERY 127 =>BFSC项目
 = 完整HUITP统一字段的定义，以便跟下位机及后台统一FRAME及消息结构定义
 ==> CLOUDVELA来的消息，所有消息统一定义？格式解码？发送到L3BFSC模块中来：初步给出通道
+= HELLOWORLD程序中，加入了CANTEST的工具源代码，待研究
 
 //= ZJL, 2016 NOV.17, CURRENT_SW_DELIVERY 126 =>BFSC项目
 = 加快CATITFLEO的仿真速度
