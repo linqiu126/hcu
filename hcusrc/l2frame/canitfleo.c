@@ -174,6 +174,7 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		func_canitfleo_working_scan_process();
 	}
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//测试目的，正式程序中可以去掉
 	else if ((rcv.timeId == TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
@@ -187,7 +188,7 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		}
 		func_canitfleo_working_scan_process();
 	}
-
+#endif
 	return SUCCESS;
 }
 
@@ -207,6 +208,7 @@ OPSTAT fsm_canitfleo_l3bfsc_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//应该生成命令发送给下位机
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//为了测试目的
 	if (rcv.sensorid < HCU_BFSC_SENSOR_WS_NBR_MAX){
 		hcu_usleep(10 + rand()%10);
@@ -244,7 +246,7 @@ OPSTAT fsm_canitfleo_l3bfsc_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 			}
 		}
 	}
-
+#endif
 	//返回
 	return SUCCESS;
 }
@@ -266,6 +268,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//等待返回命令
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//测试命令，发送结果给L3BFSC
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 		if (rcv.sensorBitmap[i] == 1){
@@ -283,6 +286,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 			}
 		}
 	}
+#endif
 
 	//返回
 	return SUCCESS;
@@ -305,6 +309,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 
 	//等待返回命令
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//测试命令，发送结果给L3BFSC
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 		if (rcv.sensorBitmap[i] == 1){
@@ -322,6 +327,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 			}
 		}
 	}
+#endif
 
 	//返回
 	return SUCCESS;
@@ -342,6 +348,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//生成命令分别发送命令给各个下位机
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 		if (rcv.wsBitmap[i] ==1){
@@ -382,7 +389,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 		HcuErrorPrint("CANITFLEO: Error start timer!\n");
 		return FAILURE;
 	}
-
+#endif
 	//返回
 	return SUCCESS;
 }
@@ -392,6 +399,7 @@ void func_canitfleo_working_scan_process(void)
 {
 	int ret = 0;
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	msg_struct_can_l3bfsc_new_ready_event_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
 	snd.length = sizeof(msg_struct_can_l3bfsc_new_ready_event_t);
@@ -399,7 +407,7 @@ void func_canitfleo_working_scan_process(void)
 	HcuSensorIdRoundBing = (HcuSensorIdRoundBing % HCU_BFSC_SENSOR_WS_NBR_MAX);
 	snd.sensorid = HcuSensorIdRoundBing;*/
 	snd.sensorid = rand() % HCU_BFSC_SENSOR_WS_NBR_MAX;
-	snd.sensorWsValue = 500 + (rand()%50);
+	snd.sensorWsValue = 499;// + (rand()%50);
 
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
@@ -407,4 +415,6 @@ void func_canitfleo_working_scan_process(void)
 		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
 		return;
 	}
+#endif
+
 }

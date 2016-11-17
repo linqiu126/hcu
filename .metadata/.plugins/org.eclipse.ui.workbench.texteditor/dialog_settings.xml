@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="float" key="selection"/>
+		<item value="L3PO_" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="L3PO_"/>
+			<item value="targetUpLimit"/>
 			<item value="float"/>
 			<item value="*(p"/>
 			<item value="fsm_l3bfsc_canitf_ws_new_ready_event"/>
 			<item value="fsm_l3bfsc_can_ws_comb_out_fb"/>
 			<item value="hcu_usleep"/>
 			<item value="100"/>
-			<item value="GprsHwReset"/>
-			<item value="GpioPortOp"/>
 		</list>
 		<list key="replacehistory">
+			<item value="L3PO_generic_"/>
 			<item value="MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n"/>
 			<item value=""/>
 			<item value="HCU_ERROR_PRINT_L3BFSC"/>
@@ -25,7 +26,6 @@
 			<item value="CANITFLEO"/>
 			<item value="Canitfleo"/>
 			<item value="canitfleo"/>
-			<item value="BFSCUICOMM"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
