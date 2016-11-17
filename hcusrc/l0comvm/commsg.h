@@ -2395,14 +2395,14 @@ typedef struct msg_struct_can_l3bfsc_new_ready_event
 //MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,
 typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
 {
+	UINT8  sensorid;
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_comb_out_fb_t;
 
 //MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,
 typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
+	UINT8  sensorid;
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_give_up_fb_t;
 

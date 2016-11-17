@@ -778,7 +778,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+			HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			break;
 
 		case HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT:
@@ -786,7 +786,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if (msg_id != MSG_ID_COM_TIME_OUT){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -795,7 +795,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if ((msg_id != MSG_ID_COM_HEART_BEAT) && (msg_id != MSG_ID_COM_HEART_BEAT_FB)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -804,7 +804,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if ((msg_id != MSG_ID_COM_TIME_OUT) && (msg_id != MSG_ID_COM_HEART_BEAT) && (msg_id != MSG_ID_COM_HEART_BEAT_FB)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -813,7 +813,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -822,7 +822,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict!= TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -831,7 +831,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleToAllow == TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -840,7 +840,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleToRestrict!= TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -850,7 +850,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleToAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -860,7 +860,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleToRestrict != TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict != TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -869,7 +869,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -878,7 +878,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -888,7 +888,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -898,7 +898,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict != TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -908,7 +908,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromAllow == TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -918,7 +918,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromRestrict != TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -929,7 +929,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromAllow == TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -940,7 +940,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict != TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromRestrict != TRUE)){
-				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
@@ -1720,11 +1720,10 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 		HcuErrorPrint("HCU-VM: The state(%d) or msgId(0x%x) of task(0x%x) is error\n", 	state, mid, dest_id);
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE)
-	{
-		HcuDebugPrint("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
+
+	//未来可以提升到IPT层面
+	HCU_DEBUG_PRINT_INF("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
 				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskNameList[dest_id], mid, zHcuMsgNameList[mid], src_id, zHcuTaskNameList[src_id]);
-	}
 
 	/*
 	** Call the state function.
