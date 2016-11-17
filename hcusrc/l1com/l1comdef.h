@@ -57,77 +57,91 @@ typedef struct HcuDiscDataSampleStorage
 typedef enum
 {
 	L3CI_none = 0,
-	L3CI_blood_glucose = 1,  //ÑªÌÇ
-	L3CI_single_sports = 2,  //µ¥´ÎÔË¶¯
-	L3CI_single_sleep = 3, //µ¥´ÎË¯Ãß
-	L3CI_body_fat = 4,  //ÌåÖ¬
-	L3CI_blood_pressure = 5, //ÑªÑ¹
-	L3CI_runner_machine_report = 0x0A, //ÅÜ²½»úÊý¾ÝÉÏ±¨
-	L3CI_runner_machine_control = 0x0B, //ÅÜ²½»úÈÎÎñ¿ØÖÆ
-	L3CI_emc = 0x20, //µç´Å·øÉäÇ¿¶È
-	L3CI_emc_accumulation = 0x21, //µç´Å·øÉä¼ÁÁ¿
-	L3CI_co = 0x22, //COÒ»Ñõ»¯Ì¼
-	L3CI_formaldehyde = 0x23, //¼×È©
-	L3CI_alcohol = 0x24, //¾Æ¾«
+	L3CI_blood_glucose = 1,  //血糖
+	L3CI_single_sports = 2,  //单次运动
+	L3CI_single_sleep = 3, //单次睡眠
+	L3CI_body_fat = 4,  //体脂
+	L3CI_blood_pressure = 5, //血压
+	L3CI_runner_machine_report = 0x0A, //跑步机数据上报
+	L3CI_runner_machine_control = 0x0B, //跑步机任务控制
+	L3CI_gps = 0x0C, //GPS地址
+	L3CI_hcu_iau_control = 0x10, //HCU与IAU之间控制命令
+	L3CI_emc = 0x20, //电磁辐射强度
+	L3CI_emc_accumulation = 0x21, //电磁辐射剂量
+	L3CI_emc_indicator = 0x20, //电磁辐射强度
+	L3CI_co = 0x22, //一氧化碳
+	L3CI_formaldehyde = 0x23, //甲醛HCHO
+	L3CI_alcohol = 0x24, //酒精
 	L3CI_pm25 = 0x25, //PM1/2.5/10
-	L3CI_windspd = 0x26, //Wind Speed
-	L3CI_winddir = 0x27, //Wind Direction
-	L3CI_temp = 0x28, //Temperature
-	L3CI_humid = 0x29, //Humidity
-	L3CI_airprs = 0x2A, //Air pressure
-	L3CI_noise = 0x2B, //Noise
-	L3CI_hsmmp = 0x2C, //Camer or audio high speed
-
-	L3CI_audio = 0x2D,//声音
-	L3CI_video = 0x2E,//视频
-	L3CI_picture = 0x2F,//图片
-	L3CI_lock = 0x30,//云控锁
-	L3CI_water_meter = 0x31,//水表
-	L3CI_heat_meter = 0x32,//热表
-	L3CI_gas_meter = 0x33,//气表
-	L3CI_power_meter = 0x34,//电表
-	L3CI_light_strength = 0x35,//光照强度
-	L3CI_toxicgas = 0x36,//有毒气体VOC
-	L3CI_altitude = 0x37,//海拔高度
-	L3CI_moto = 0x38,//马达
-	L3CI_switch = 0x39,//马达
-	L3CI_transporter = 0x3A,//导轨传送带
-
-
-	//for SPIBUSARIES start
-	L3CI_itf_sps = 0x40,//串口读取/返回结果
-	L3CI_itf_adc = 0x41,//ADC读取/返回结果
-	L3CI_itf_dac = 0x42,//DAC读取/返回结果
-	L3CI_itf_i2c = 0x43,//I2C读取/返回结果
-	L3CI_itf_pwm = 0x44,//PWM读取/返回结果
-	L3CI_itf_di = 0x45,//DI读取/返回结果
-	L3CI_itf_do = 0x46,//DO读取/返回结果
-	L3CI_itf_can = 0x47,//CAN读取/返回结果
-	L3CI_itf_spi = 0x48,//SPI读取/返回结果
-	L3CI_itf_usb = 0x49,//USB读取/返回结果
-	L3CI_itf_eth = 0x4A,//网口读取/返回结果
-	L3CI_itf_485 = 0x4B,//485读取/返回结果
-
-	//for SPIBUSARIES end
-
-
-	L3CI_hcu_inventory = 0xA0,	//Èí¼þÇåµ¥
-	L3CI_sw_package = 0xA1,	//Èí¼þ°æ±¾Ìå
-
+	L3CI_windspd = 0x26, //风速Wind Speed
+	L3CI_winddir = 0x27, //风向Wind Direction
+	L3CI_temp = 0x28, //温度Temperature
+	L3CI_humid = 0x29, //湿度Humidity
+	L3CI_airprs = 0x2A, //气压Air pressure
+	L3CI_noise = 0x2B, //噪声Noise
+	L3CI_hsmmp = 0x2C, //相机Camer or audio high speed
+	L3CI_audio = 0x2D, //声音
+	L3CI_video = 0x2E, //视频
+	L3CI_picture = 0x2F, //图片
+	L3CI_lock = 0x30, //云控锁
+	L3CI_water_meter = 0x31, //水表
+	L3CI_heat_meter = 0x32, //热表
+	L3CI_gas_meter = 0x33, //气表
+	L3CI_power_meter = 0x34, //电表
+	L3CI_light_strength = 0x35, //光照强度
+	L3CI_toxicgas = 0x36, //有毒气体VOC
+	L3CI_altitude = 0x37, //海拔高度
+	L3CI_moto = 0x38, //马达
+	L3CI_switch = 0x39, //继电器
+	L3CI_transporter = 0x3A, //导轨传送带
+	L3CI_itf_sps = 0x40, //串口读取命令/返回结果
+	L3CI_itf_adc = 0x41, //ADC读取命令/返回结果
+	L3CI_itf_dac = 0x42, //DAC读取命令/返回结果
+	L3CI_itf_i2c = 0x43, //I2C读取命令/返回结果
+	L3CI_itf_pwm = 0x44, //PWM读取命令/返回结果
+	L3CI_itf_di = 0x45, //DI读取命令/返回结果
+	L3CI_itf_do = 0x46, //DO读取命令/返回结果
+	L3CI_itf_can = 0x47, //CAN读取命令/返回结果
+	L3CI_itf_spi = 0x48, //SPI读取命令/返回结果
+	L3CI_itf_usb = 0x49, //USB读取命令/返回结果
+	L3CI_itf_eth = 0x4A, //网口读取命令/返回结果
+	L3CI_itf_485 = 0x4B, //485读取命令/返回结果
+	L3CI_hcu_inventory= 0xA0,	//软件清单
+	L3CI_sw_package = 0xA1,	//软件版本体
 	L3CI_alarm_info = 0xB0, //for alarm report
 	L3CI_performance_info = 0xB1, // or PM report
-
-	L3CI_equipment_info = 0xF0,	//Éè±¸»ù±¾ÐÅÏ¢
-	L3CI_personal_info = 0xF1,	//¸öÈË»ù±¾ÐÅÏ¢
-	L3CI_time_sync = 0xF2,	//Ê±¼äÍ¬²½
-	L3CI_read_data = 0xF3,	//¶ÁÈ¡Êý¾Ý
-	L3CI_clock_timeout = 0xF4,	//¶¨Ê±ÄÖÖÓ¼°¾Ã×øÌáÐÑ
-	L3CI_sync_charging = 0xF5,	//Í¬²½³äµç£¬Ë«»÷Çé¿ö
-	L3CI_sync_trigger = 0xF6,	//Í¬²½Í¨ÖªÐÅÏ¢
-
-	L3CI_cmd_control = 0xFD, //for cmd control by Shanchun
-	L3CI_heart_beat = 0xFE,
+	L3CI_equipment_info = 0xF0,	//设备基本信息
+	L3CI_personal_info = 0xF1,	//个人基本信息
+	L3CI_time_sync = 0xF2,	//时间同步
+	L3CI_read_data = 0xF3,	//读取数据
+	L3CI_clock_timeout = 0xF4,	//定时闹钟及久坐提醒
+	L3CI_sync_charging = 0xF5,	//同步充电，双击情况
+	L3CI_sync_trigger = 0xF6,	//同步通知信息
+	L3CI_cmd_control = 0xFD,  //for cmd control by Shanchun
+	L3CI_heart_beat = 0xFE, //心跳
+	L3CI_null = 0xFF, //无效
 }L3UserCmdIdDef;
+
+//L3PO的通用定义，如果不属于任何传感器，则可以使用这个定义
+typedef enum
+{
+	L3PO_generic_min = 0,
+	L3PO_generic_none = 0,
+	L3PO_generic_data_req = 0x01, //Data Request
+	L3PO_generic_set_switch = 0x02,
+	L3PO_generic_set_modbus_address =0x03,
+	L3PO_generic_set_work_cycle = 0x04, //In second
+	L3PO_generic_set_sample_cycle = 0x05, //In second
+	L3PO_generic_set_sample_number = 0x06,
+	L3PO_generic_data_report = 0x81, //Data Report
+	L3PO_generic_read_switch = 0x82,
+	L3PO_generic_read_modbus_address = 0x83,
+	L3PO_generic_read_work_cycle = 0x84, //In second
+	L3PO_generic_read_sample_cycle = 0x85, //In second
+	L3PO_generic_read_sample_number = 0x86,
+	L3PO_generic_max,
+}L3GenericOptIdDef;
+
 //CLOUD<->HCU之间定义的操作字
 //所有的操作字，需要极度的丰富化，以形成完整的处理任务模块
 typedef enum
@@ -158,20 +172,17 @@ typedef enum
 	L3PO_pm25_set_work_cycle = 0x04, //In second
 	L3PO_pm25_set_sample_cycle = 0x05, //In second
 	L3PO_pm25_set_sample_number = 0x06,
-
 	L3PO_pm25_data_report = 0x81,//PM3 Response
 	L3PO_pm25_set_switch_ack = 0x82,
 	L3PO_pm25_set_modbus_address_ack =0x83,
 	L3PO_pm25_set_work_cycle_ack = 0x84, //In second
 	L3PO_pm25_set_sample_cycle_ack = 0x85, //In second
 	L3PO_pm25_set_sample_number_ack = 0x86,
-
 	L3PO_pm25_read_switch = 0x07,
 	L3PO_pm25_read_modbus_address = 0x08,
 	L3PO_pm25_read_work_cycle = 0x09, //In second
 	L3PO_pm25_read_sample_cycle = 0x0A, //In second
 	L3PO_pm25_read_sample_number = 0x0B,
-
 	L3PO_pm25_read_switch_ack = 0x87,
 	L3PO_pm25_read_modbus_address_ack = 0x88,
 	L3PO_pm25_read_work_cycle_ack = 0x89, //In second
@@ -1039,5 +1050,19 @@ typedef struct  NbiotCj188BhItfComCtrFlag //
 #define HCU_NBIOT_CJ188_COMM_CHANNEL_ABNORMAL 2
 #define HCU_NBIOT_CJ188_SWITCH_CONTROL_ON 55
 #define HCU_NBIOT_CJ188_SWITCH_CONTROL_OFF 99
+
+
+/**************************************************************************************
+ *   HUITP标准链路层FRAME定义                                                           *
+ *************************************************************************************/
+//帧结构定义
+typedef struct StrHuiFrame
+{
+    UINT8 	start; //0xFE
+    UINT8 	checksum1; //加总头的结果
+    UINT16 	len; //0-1500，原则上不能超过系统定义的消息体长度
+    UINT8 	msgBody[];
+}StrHuiFrame_t;
+
 
 #endif /* L1COM_L1COMDEF_H_ */
