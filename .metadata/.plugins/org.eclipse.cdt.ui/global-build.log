@@ -654,3 +654,76 @@ Invoking: Cross G++ Linker
 g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
 Finished building target: PrjBfsc
  
+20:43:35 **** Clean-only build of configuration Debug for project TestHellopWorld ****
+make clean 
+rm -rf  ./src/TestHellopWorld.o  ./src/TestHellopWorld.d  TestHellopWorld
+ 
+20:43:37 **** Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘panic’:
+../src/TestHellopWorld.c:83:5: warning: format not a string literal and no format arguments [-Wformat-security]
+     printf(msg);
+     ^
+../src/TestHellopWorld.c: In function ‘delay_ms’:
+../src/TestHellopWorld.c:94:5: warning: implicit declaration of function ‘nanosleep’ [-Wimplicit-function-declaration]
+     nanosleep(&tv, NULL);
+     ^
+../src/TestHellopWorld.c: In function ‘str_isdigit’:
+../src/TestHellopWorld.c:111:24: warning: suggest parentheses around ‘&&’ within ‘||’ [-Wparentheses]
+         if (s[i] >='0' && s[i] <= '9' || (point && s[i] == '.') ||
+                        ^
+../src/TestHellopWorld.c: In function ‘get_errframe_info’:
+../src/TestHellopWorld.c:297:17: warning: case label value exceeds maximum value for type [enabled by default]
+                 case CAN_ERR_PROT_TX:       l += sprintf(p + l, "传输错误");         break;
+                 ^
+../src/TestHellopWorld.c: In function ‘parse_options’:
+../src/TestHellopWorld.c:650:31: warning: unused variable ‘n’ [-Wunused-variable]
+     int  i = 0, j = 0, m = 0, n = 0;
+                               ^
+../src/TestHellopWorld.c:650:24: warning: unused variable ‘m’ [-Wunused-variable]
+     int  i = 0, j = 0, m = 0, n = 0;
+                        ^
+../src/TestHellopWorld.c: In function ‘printf_frame’:
+../src/TestHellopWorld.c:886:5: warning: implicit declaration of function ‘strftime’ [-Wimplicit-function-declaration]
+     (void)strftime(timestamp, 128, "%X", localtime(&tv.tv_sec));
+     ^
+../src/TestHellopWorld.c:886:11: warning: incompatible implicit declaration of built-in function ‘strftime’ [enabled by default]
+     (void)strftime(timestamp, 128, "%X", localtime(&tv.tv_sec));
+           ^
+../src/TestHellopWorld.c:886:5: warning: implicit declaration of function ‘localtime’ [-Wimplicit-function-declaration]
+     (void)strftime(timestamp, 128, "%X", localtime(&tv.tv_sec));
+     ^
+../src/TestHellopWorld.c:886:5: warning: passing argument 4 of ‘strftime’ makes pointer from integer without a cast [enabled by default]
+../src/TestHellopWorld.c:886:5: note: expected ‘const void *’ but argument is of type ‘int’
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:1028:13: warning: pointer targets in passing argument 2 of ‘send_frame’ differ in signedness [-Wpointer-sign]
+             ret = send_frame(send_socket_fd, (char *)&sendframe, sizeof(sendframe));
+             ^
+../src/TestHellopWorld.c:585:5: note: expected ‘const byte *’ but argument is of type ‘char *’
+ int send_frame(const int sockfd, const byte* data, const int count)
+     ^
+../src/TestHellopWorld.c:1032:17: warning: pointer targets in passing argument 2 of ‘printf_frame’ differ in signedness [-Wpointer-sign]
+                 true);
+                 ^
+../src/TestHellopWorld.c:866:6: note: expected ‘const char *’ but argument is of type ‘__u8 *’
+ void printf_frame(const __u32 frame_id, const char *data, const __u8 len,
+      ^
+../src/TestHellopWorld.c:1096:21: warning: pointer targets in passing argument 2 of ‘printf_frame’ differ in signedness [-Wpointer-sign]
+                     false);
+                     ^
+../src/TestHellopWorld.c:866:6: note: expected ‘const char *’ but argument is of type ‘__u8 *’
+ void printf_frame(const __u32 frame_id, const char *data, const __u8 len,
+      ^
+../src/TestHellopWorld.c:946:11: warning: unused variable ‘psendframe’ [-Wunused-variable]
+     byte *psendframe = (byte *)&sendframe;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
