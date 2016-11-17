@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="wsTotalncomingCnt" key="selection"/>
+		<item value="float" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="wsTotalncomingCnt"/>
+			<item value="float"/>
+			<item value="*(p"/>
 			<item value="fsm_l3bfsc_canitf_ws_new_ready_event"/>
-			<item value="Ttt"/>
-			<item value="wsValueNbrTtt"/>
-			<item value="TIMER_ID_1S_L3BFSC_TTT_WAIT_FB"/>
-			<item value="TIMER_ID_1S_L3BFSC_TGU_WAIT_FB"/>
-			<item value="timer"/>
-			<item value="msg_struct_can_l3bfsc_ws_comb_out_fb_t"/>
+			<item value="fsm_l3bfsc_can_ws_comb_out_fb"/>
+			<item value="hcu_usleep"/>
+			<item value="100"/>
+			<item value="GprsHwReset"/>
+			<item value="GpioPortOp"/>
 		</list>
 		<list key="replacehistory">
 			<item value="MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n"/>
