@@ -318,5 +318,11 @@ extern int msgctl(int msqid, int cmd, struct msqid_ds *buf);
 extern int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
 extern ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
 
+//高级定义，简化程序的可读性
+#define HCU_DEBUG_PRINT_INF		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_NOR		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_IPT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_CRT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_FAT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE) HcuDebugPrint
 
 #endif /* L0COMVM_VMLAYER_H_ */

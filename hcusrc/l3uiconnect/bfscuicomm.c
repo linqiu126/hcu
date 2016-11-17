@@ -114,7 +114,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	snd.targetUpLimit = 50 + (rand()%10);
 
 	//等待一会儿
-	hcu_sleep(5);
+	hcu_sleep(2);
 
 	ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
 	if (ret == FAILURE){

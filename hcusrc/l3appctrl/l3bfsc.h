@@ -41,6 +41,11 @@ typedef struct L3BfscGenCtrlTable
 	UINT8 	wsValueNbrTtt;  	//待出料有值秤盘数量
 	UINT8 	wsValueNbrTgu;  	//待出料有值秤盘数量
 	UINT8 	wsBitmap[HCU_BFSC_SENSOR_WS_NBR_MAX];  //组合出的秤盘标示
+	UINT32	wsTotalncomingCnt;  		//总共称重和计料数量
+	UINT32	wsTotalCombSucTimes;  		//总共成功素搜到目标的次数
+	UINT32	wsTotalCombOutMatCnt;		//总共出料的数量
+	UINT32	wsTotalGiveupTimes;  		//总共被TGU的次数
+	UINT32	wsTotalGiveupMatCnt;		//总共被抛弃的数量
 }L3BfscGenCtrlTable_t;
 //#define HCU_L3BFSC_WHOLE_STATUS_INVALID		0
 //#define HCU_L3BFSC_WHOLE_STATUS_INVALID1	255
@@ -94,5 +99,9 @@ OPSTAT func_l3bfsc_time_out_ws_init_req_process(void);
 OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_error_scan_process(void);
+
+
+//高级定义，简化程序的可读性
+#define HCU_ERROR_PRINT_L3BFSC	zHcuRunErrCnt[TASK_ID_L3BFSC]++; HcuErrorPrint
 
 #endif /* L3APP_BFSC_H_ */

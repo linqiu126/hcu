@@ -11,9 +11,8 @@ BFSC待完成或者回答的问题：
 ==> 发送给后台统计报告
 
 //= ZJL, 2016 NOV.16, CURRENT_SW_DELIVERY 125 =>BFSC项目
-
-
-
+= 优化函数中HCU_PRINT_ERROR_L3BFSC和HCU_DEBUG_PRINT_NOR的可读性
+= 完善了整个状态机工作机制，统计内容放入总控表
 
 //= ZJL, 2016 NOV.16, CURRENT_SW_DELIVERY 124 =>BFSC项目
 = 测试10MS时钟，将其打开，因为后续任务可能需要这个中等精度时钟

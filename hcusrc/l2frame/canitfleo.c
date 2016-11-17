@@ -235,7 +235,7 @@ OPSTAT fsm_canitfleo_l3bfsc_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, i=0;
 
 	msg_struct_l3bfsc_can_ws_comb_out_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_ws_comb_out_t));
@@ -251,16 +251,21 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 	//等待返回命令
 
 	//测试命令，发送结果给L3BFSC
-	hcu_usleep(100);
-	msg_struct_can_l3bfsc_ws_comb_out_fb_t snd;
-	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t));
-	snd.length = sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t);
+	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+		if (rcv.sensorBitmap[i] == 1){
+			hcu_usleep(100);
+			msg_struct_can_l3bfsc_ws_comb_out_fb_t snd;
+			memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t));
+			snd.sensorid = i;
+			snd.length = sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t);
 
-	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
-	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
-		return FAILURE;
+			ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+				return FAILURE;
+			}
+		}
 	}
 
 	//返回
@@ -269,7 +274,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, i=0;
 
 	msg_struct_l3bfsc_can_ws_give_up_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_ws_give_up_t));
@@ -285,16 +290,21 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 	//等待返回命令
 
 	//测试命令，发送结果给L3BFSC
-	hcu_usleep(100);
-	msg_struct_can_l3bfsc_ws_give_up_fb_t snd;
-	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t));
-	snd.length = sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t);
+	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+		if (rcv.sensorBitmap[i] == 1){
+			hcu_usleep(100);
+			msg_struct_can_l3bfsc_ws_give_up_fb_t snd;
+			memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t));
+			snd.sensorid = i;
+			snd.length = sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t);
 
-	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
-	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
-		return FAILURE;
+			ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+				return FAILURE;
+			}
+		}
 	}
 
 	//返回
