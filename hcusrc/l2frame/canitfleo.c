@@ -407,7 +407,7 @@ void func_canitfleo_working_scan_process(void)
 	HcuSensorIdRoundBing = (HcuSensorIdRoundBing % HCU_BFSC_SENSOR_WS_NBR_MAX);
 	snd.sensorid = HcuSensorIdRoundBing;*/
 	snd.sensorid = rand() % HCU_BFSC_SENSOR_WS_NBR_MAX;
-	snd.sensorWsValue = 499;// + (rand()%50);
+	snd.sensorWsValue = 500 + (rand()%50);
 
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){

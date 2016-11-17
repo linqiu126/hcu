@@ -111,7 +111,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	snd.minWsNbr = 1 + rand()%3;
 	snd.maxWsNbr = 5 + rand()%8;
 	snd.targetValue = 2000+ (rand()%100);
-	snd.targetUpLimit = 0; //50 + (rand()%10);
+	snd.targetUpLimit = 50 + (rand()%10);
 
 	//等待一会儿
 	hcu_sleep(2);
