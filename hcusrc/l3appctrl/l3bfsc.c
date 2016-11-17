@@ -150,7 +150,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	memset(zHcuSearchCoefficientPointer, 0, zHcuSearchSpaceTotalNbr * HCU_BFSC_SENSOR_WS_NBR_MAX  * sizeof(UINT8));
 
 	//初始化搜索系数表
-	//UINT8 *p = NULL;
+	UINT8 *p = NULL;
 	UINT8 j=0;
 	UINT32 k=0, t=0;
 	UINT32 kUp = 0;
@@ -171,11 +171,19 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 			}
 		}
 	}
-//	p = zHcuSearchCoefficientPointer;
-//	for (i=0; i<zHcuSearchSpaceTotalNbr; i++){
-//		//HCU_DEBUG_PRINT_INF("L3BFSC: Matrix Table[%d]=[%d%d%d]\n", i, *(p+3*i),*(p+3*i+1), *(p+3*i+2));
-//		HCU_DEBUG_PRINT_INF("L3BFSC: Matrix Table[%d]=[%d%d%d%d%d%d%d%d%d%d%d%d]\n", i, *(p+12*i),*(p+12*i+1),*(p+12*i+2),*(p+12*i+3),*(p+12*i+4),*(p+12*i+5),*(p+12*i+6),*(p+12*i+7),*(p+12*i+8),*(p+12*i+9),*(p+12*i+10),*(p+12*i+11));
-//	}
+	p = zHcuSearchCoefficientPointer;
+	char targetStr[100];
+	char tStr[10];
+	for (i=0; i<zHcuSearchSpaceTotalNbr; i++){
+		//这个长度是按照HCU_BFSC_SENSOR_WS_NBR_MAX=12来固定设定的，如果改变，改参数打印函数需要从新改变，不然会导致程序死机
+		sprintf(targetStr, "L3BFSC: Matrix Table[%d]=[", i);
+		for (j=0; j<HCU_BFSC_SENSOR_WS_NBR_MAX; j++){
+			sprintf(tStr, "%d", *(p+HCU_BFSC_SENSOR_WS_NBR_MAX*i+j));
+			strcat(targetStr, tStr);
+		}
+		strcat(targetStr, "]\n");
+		HCU_DEBUG_PRINT_INF(targetStr);
+	}
 
 	//启动周期性定时器
 /*	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, HCU_L3BFSC_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -382,6 +390,8 @@ OPSTAT fsm_l3bfsc_can_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
+	zHcuL3BfscGenCtrlTable.wsTotalCombOutMatCnt++;
+
 	//恢复
 	if (zHcuL3BfscGenCtrlTable.wsBitmap[rcv.sensorid] == 1){
 		zHcuL3BfscGenCtrlTable.sensorWs[rcv.sensorid].sensorValue = 0;
@@ -389,7 +399,6 @@ OPSTAT fsm_l3bfsc_can_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param
 		zHcuL3BfscGenCtrlTable.wsBitmap[rcv.sensorid] = 0;
 		zHcuL3BfscGenCtrlTable.wsValueNbrFree++;
 		if (zHcuL3BfscGenCtrlTable.wsValueNbrTtt>0) zHcuL3BfscGenCtrlTable.wsValueNbrTtt--;
-		zHcuL3BfscGenCtrlTable.wsTotalCombOutMatCnt++;
 	}
 
 	//检查是否收到所有传感器的反馈
@@ -433,6 +442,8 @@ OPSTAT fsm_l3bfsc_can_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
+	zHcuL3BfscGenCtrlTable.wsTotalGiveupMatCnt++;
+
 	//恢复
 	if (zHcuL3BfscGenCtrlTable.wsBitmap[rcv.sensorid] == 1){
 		zHcuL3BfscGenCtrlTable.sensorWs[rcv.sensorid].sensorValue = 0;
@@ -440,7 +451,6 @@ OPSTAT fsm_l3bfsc_can_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuL3BfscGenCtrlTable.wsBitmap[rcv.sensorid] = 0;
 		zHcuL3BfscGenCtrlTable.wsValueNbrFree++;
 		if (zHcuL3BfscGenCtrlTable.wsValueNbrTgu>0) zHcuL3BfscGenCtrlTable.wsValueNbrTgu--;
-		zHcuL3BfscGenCtrlTable.wsTotalGiveupMatCnt++;
 	}
 
 	//检查是否收到所有传感器的反馈
@@ -512,7 +522,7 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 //触发组合算法
 OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, i=0;
 
 	//入参检查
 	msg_struct_can_l3bfsc_new_ready_event_t rcv;
@@ -618,10 +628,15 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				}
 
 				//测试打印
-				UINT8 *p=NULL;
-				p=zHcuL3BfscGenCtrlTable.wsBitmap;
-				HCU_DEBUG_PRINT_IPT("L3BFSC: Send out TGU_OUT bitmap [%d]=[%d%d%d%d%d%d%d%d%d%d%d%d]\n", zHcuL3BfscGenCtrlTable.wsValueNbrTgu,\
-						*(p),*(p+1),*(p+2),*(p+3),*(p+4),*(p+5),*(p+6),*(p+7),*(p+8),*(p+9),*(p+10),*(p+11));
+				char targetStr[100];
+				char tStr[10];
+				sprintf(targetStr, "L3BFSC: Send out TGU_OUT bitmap [%d]=[", zHcuL3BfscGenCtrlTable.wsValueNbrTgu);
+				for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+					sprintf(tStr, "%d", *(zHcuL3BfscGenCtrlTable.wsBitmap+i));
+					strcat(targetStr, tStr);
+				}
+				strcat(targetStr, "]\n");
+				HCU_DEBUG_PRINT_IPT(targetStr);
 
 				//启动定时器
 				ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_TGU_WAIT_FB, HCU_L3BFSC_TIMER_DURATION_TGU_WAIT_FB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
@@ -655,10 +670,16 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			}
 
 			//测试打印
-			UINT8 *p=NULL;
-			p=zHcuL3BfscGenCtrlTable.wsBitmap;
-			HCU_DEBUG_PRINT_IPT("L3BFSC: Send out TTT_OUT bitmap [%d]=[%d%d%d%d%d%d%d%d%d%d%d%d]\n", zHcuL3BfscGenCtrlTable.wsValueNbrTtt,\
-					*(p),*(p+1),*(p+2),*(p+3),*(p+4),*(p+5),*(p+6),*(p+7),*(p+8),*(p+9),*(p+10),*(p+11));
+			char targetStr[100];
+			char tStr[10];
+			sprintf(targetStr, "L3BFSC: Send out TTT_OUT bitmap [%d]=[", zHcuL3BfscGenCtrlTable.wsValueNbrTtt);
+			for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+				sprintf(tStr, "%d", *(zHcuL3BfscGenCtrlTable.wsBitmap+i));
+				strcat(targetStr, tStr);
+			}
+			strcat(targetStr, "]\n");
+			HCU_DEBUG_PRINT_IPT(targetStr);
+
 
 			//启动定时器
 			ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_TTT_WAIT_FB, HCU_L3BFSC_TIMER_DURATION_TTT_WAIT_FB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
@@ -676,12 +697,11 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 
 	//重要的统计功能挂载
-	HCU_DEBUG_PRINT_CRT("L3BFSC: Control statistics, Running Free/Weight/Ttt/Tgu = [%d, %d, %d, %d], Total Inc Cnt = [%d], Combination Rate = [%6.2f\%], Give-up Rate = [%6.2f\%]\n",\
+	HCU_DEBUG_PRINT_CRT("L3BFSC: Control statistics, Running Free/Weight/Ttt/Tgu = [%d, %d, %d, %d], Total Inc Cnt = [%d], Combination Rate = [%5.2f\%], Give-up Rate = [%5.2f\%]\n",\
 			zHcuL3BfscGenCtrlTable.wsValueNbrFree, zHcuL3BfscGenCtrlTable.wsValueNbrWeight,\
 			zHcuL3BfscGenCtrlTable.wsValueNbrTtt, zHcuL3BfscGenCtrlTable.wsValueNbrTgu, zHcuL3BfscGenCtrlTable.wsTotalncomingCnt, \
-			(zHcuL3BfscGenCtrlTable.wsTotalncomingCnt == 0)?0:(float)zHcuL3BfscGenCtrlTable.wsTotalCombOutMatCnt/(float)zHcuL3BfscGenCtrlTable.wsTotalncomingCnt, \
-			(zHcuL3BfscGenCtrlTable.wsTotalncomingCnt == 0)?0:(float)zHcuL3BfscGenCtrlTable.wsTotalGiveupMatCnt/(float)zHcuL3BfscGenCtrlTable.wsTotalncomingCnt);
-
+			(float)(zHcuL3BfscGenCtrlTable.wsTotalCombOutMatCnt)/(float)(zHcuL3BfscGenCtrlTable.wsTotalncomingCnt+0.01) * 100, \
+			(float)(zHcuL3BfscGenCtrlTable.wsTotalGiveupMatCnt)/(float)(zHcuL3BfscGenCtrlTable.wsTotalncomingCnt+0.01) * 100);
 	//返回
 	return SUCCESS;
 }

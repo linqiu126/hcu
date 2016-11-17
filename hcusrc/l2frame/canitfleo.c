@@ -47,6 +47,7 @@ FsmStateItem_t FsmCanitfleo[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+UINT8 HcuSensorIdRoundBing;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -93,6 +94,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//Global Variables
 	zHcuRunErrCnt[TASK_ID_CANITFLEO] = 0;
+	HcuSensorIdRoundBing = 0;
 
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
 /*	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -172,6 +174,20 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		func_canitfleo_working_scan_process();
 	}
 
+	//测试目的，正式程序中可以去掉
+	else if ((rcv.timeId == TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
+		//保护周期读数的优先级，强制抢占状态，并简化问题
+		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
+			ret = FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+				HcuErrorPrint("CANITFLEO: Error Set FSM State!\n");
+				return FAILURE;
+			}//FsmSetState
+		}
+		func_canitfleo_working_scan_process();
+	}
+
 	return SUCCESS;
 }
 
@@ -193,7 +209,7 @@ OPSTAT fsm_canitfleo_l3bfsc_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//为了测试目的
 	if (rcv.sensorid < HCU_BFSC_SENSOR_WS_NBR_MAX){
-		hcu_usleep(100);
+		hcu_usleep(10 + rand()%10);
 		msg_struct_can_l3bfsc_inq_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t));
 		snd.length = sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t);
@@ -212,7 +228,7 @@ OPSTAT fsm_canitfleo_l3bfsc_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 	else{
 		for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 			if (rcv.sensorBitmap[i] ==1){
-				hcu_usleep(100);
+				hcu_usleep(10 + rand()%10);
 				msg_struct_can_l3bfsc_inq_cmd_resp_t snd;
 				memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t));
 				snd.length = sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t);
@@ -253,7 +269,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 	//测试命令，发送结果给L3BFSC
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 		if (rcv.sensorBitmap[i] == 1){
-			hcu_usleep(100);
+			hcu_usleep(10 + rand()%10);
 			msg_struct_can_l3bfsc_ws_comb_out_fb_t snd;
 			memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t));
 			snd.sensorid = i;
@@ -292,7 +308,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 	//测试命令，发送结果给L3BFSC
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 		if (rcv.sensorBitmap[i] == 1){
-			hcu_usleep(100);
+			hcu_usleep(10 + rand()%10);
 			msg_struct_can_l3bfsc_ws_give_up_fb_t snd;
 			memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t));
 			snd.sensorid = i;
@@ -342,7 +358,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.initFlag = 1; //标明是初始化成功了
 
 		//等待一会儿
-		hcu_usleep(100 + rand()%100);
+		hcu_usleep(10 + rand()%10);
 		ret = hcu_message_send(MSG_ID_CAN_L3FSC_WS_INIT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
@@ -352,7 +368,15 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
-	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+/*	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("CANITFLEO: Error start timer!\n");
+		return FAILURE;
+	}*/
+
+	//启动定时器：更快的毫秒级定时器
+	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA, HCU_CANITFLEO_TIMER_10MS_SIM_DATA, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Error start timer!\n");
@@ -371,6 +395,9 @@ void func_canitfleo_working_scan_process(void)
 	msg_struct_can_l3bfsc_new_ready_event_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
 	snd.length = sizeof(msg_struct_can_l3bfsc_new_ready_event_t);
+/*	HcuSensorIdRoundBing++;
+	HcuSensorIdRoundBing = (HcuSensorIdRoundBing % HCU_BFSC_SENSOR_WS_NBR_MAX);
+	snd.sensorid = HcuSensorIdRoundBing;*/
 	snd.sensorid = rand() % HCU_BFSC_SENSOR_WS_NBR_MAX;
 	snd.sensorWsValue = 500 + (rand()%50);
 
