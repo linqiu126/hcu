@@ -24,7 +24,7 @@ enum FSM_STATE_HSMMP
 };
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
-
+/*
 typedef struct dir
 {
 	long d_ino;
@@ -33,7 +33,7 @@ typedef struct dir
 	UINT8 d_type;
 	char d_name[HCU_CLOUDVELA_HSMMP_PATH_MAX + 1];
 }Dirent_t;
-
+*/
 //Global variables
 extern FsmStateItem_t FsmHsmmp[];
 extern GpsPosInfo_t zHcuGpsPosInfo;
