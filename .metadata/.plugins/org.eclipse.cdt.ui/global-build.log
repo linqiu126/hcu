@@ -727,3 +727,2518 @@ Invoking: GCC C Linker
 gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
 Finished building target: TestHellopWorld
  
+09:50:31 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:22:2: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
+  printf("This is a test!\n");
+  ^
+../src/TestHellopWorld.c:22:2: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+09:57:44 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:27:2: warning: implicit declaration of function ‘puts’ [-Wimplicit-function-declaration]
+  puts("This is a test!\n");
+  ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:00:25 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:29:2: warning: implicit declaration of function ‘puts’ [-Wimplicit-function-declaration]
+  puts("Test starting...\n");
+  ^
+../src/TestHellopWorld.c:33:3: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
+   printf("No input file, exit!"”);
+   ^
+../src/TestHellopWorld.c:33:3: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+../src/TestHellopWorld.c:33:3: error: stray ‘\342’ in program
+../src/TestHellopWorld.c:33:3: error: stray ‘\200’ in program
+../src/TestHellopWorld.c:33:3: error: stray ‘\235’ in program
+../src/TestHellopWorld.c:37:3: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+   printf(*argv);
+   ^
+../src/TestHellopWorld.c:37:3: warning: format not a string literal and no format arguments [-Wformat-security]
+../src/TestHellopWorld.c:26:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+make: *** [src/TestHellopWorld.o] 错误 1
+10:00:32 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:29:2: warning: implicit declaration of function ‘puts’ [-Wimplicit-function-declaration]
+  puts("Test starting...\n");
+  ^
+../src/TestHellopWorld.c:33:3: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
+   printf("No input file, exit!");
+   ^
+../src/TestHellopWorld.c:33:3: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+../src/TestHellopWorld.c:37:3: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+   printf(*argv);
+   ^
+../src/TestHellopWorld.c:37:3: warning: format not a string literal and no format arguments [-Wformat-security]
+../src/TestHellopWorld.c:26:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:00:58 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:29:2: warning: implicit declaration of function ‘puts’ [-Wimplicit-function-declaration]
+  puts("Test starting...\n");
+  ^
+../src/TestHellopWorld.c:33:3: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
+   printf("No input file, exit!");
+   ^
+../src/TestHellopWorld.c:33:3: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+../src/TestHellopWorld.c:37:3: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+   printf(*argv);
+   ^
+../src/TestHellopWorld.c:37:3: warning: format not a string literal and no format arguments [-Wformat-security]
+../src/TestHellopWorld.c:26:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:01:09 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:29:2: warning: implicit declaration of function ‘puts’ [-Wimplicit-function-declaration]
+  puts("Test starting...\n");
+  ^
+../src/TestHellopWorld.c:33:3: warning: implicit declaration of function ‘printf’ [-Wimplicit-function-declaration]
+   printf("No input file, exit!\n");
+   ^
+../src/TestHellopWorld.c:33:3: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+../src/TestHellopWorld.c:37:3: warning: incompatible implicit declaration of built-in function ‘printf’ [enabled by default]
+   printf(*argv);
+   ^
+../src/TestHellopWorld.c:37:3: warning: format not a string literal and no format arguments [-Wformat-security]
+../src/TestHellopWorld.c:26:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:03:08 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:39:3: warning: format not a string literal and no format arguments [-Wformat-security]
+   printf(*argv);
+   ^
+../src/TestHellopWorld.c:28:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:05:50 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:39:3: warning: passing argument 1 of ‘printf’ makes pointer from integer without a cast [enabled by default]
+   printf(*argv[1]);
+   ^
+In file included from ../src/TestHellopWorld.c:24:0:
+/usr/include/stdio.h:362:12: note: expected ‘const char * __restrict__’ but argument is of type ‘char’
+ extern int printf (const char *__restrict __format, ...);
+            ^
+../src/TestHellopWorld.c:39:3: warning: format not a string literal and no format arguments [-Wformat-security]
+   printf(*argv[1]);
+   ^
+../src/TestHellopWorld.c:28:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:07:41 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:39:3: warning: format ‘%s’ expects argument of type ‘char *’, but argument 2 has type ‘int’ [-Wformat=]
+   printf("Your input parameter =%s", *argv[1]);
+   ^
+../src/TestHellopWorld.c:28:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:07:55 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:28:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:08:13 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:28:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:08:30 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:28:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:14:44 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:16:46 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:67:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:22:16 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:69:59: error: expected ‘)’ before ‘{’ token
+  if ((strcmp(strTemp, ".bmp") && (strcmp(strTemp, ".BMP")){
+                                                           ^
+../src/TestHellopWorld.c:76:1: error: expected ‘)’ before ‘}’ token
+ }
+ ^
+../src/TestHellopWorld.c:76:1: error: expected expression before ‘}’ token
+../src/TestHellopWorld.c:51:6: warning: unused variable ‘fileHandle’ [-Wunused-variable]
+  int fileHandle;
+      ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+../src/TestHellopWorld.c:76:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+make: *** [src/TestHellopWorld.o] 错误 1
+10:24:20 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:69:2: error: too few arguments to function ‘strncmp’
+  if ((strncmp(strTemp, ".bmp") && (strcmp(strTemp, ".BMP")){
+  ^
+../src/TestHellopWorld.c:69:60: error: expected ‘)’ before ‘{’ token
+  if ((strncmp(strTemp, ".bmp") && (strcmp(strTemp, ".BMP")){
+                                                            ^
+../src/TestHellopWorld.c:76:1: error: expected ‘)’ before ‘}’ token
+ }
+ ^
+../src/TestHellopWorld.c:76:1: error: expected expression before ‘}’ token
+../src/TestHellopWorld.c:51:6: warning: unused variable ‘fileHandle’ [-Wunused-variable]
+  int fileHandle;
+      ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+../src/TestHellopWorld.c:76:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+make: *** [src/TestHellopWorld.o] 错误 1
+10:24:28 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:69:2: error: too few arguments to function ‘strncmp’
+  if ((strncmp(strTemp, ".bmp") && (strncmp(strTemp, ".BMP")){
+  ^
+../src/TestHellopWorld.c:69:2: error: too few arguments to function ‘strncmp’
+../src/TestHellopWorld.c:69:61: error: expected ‘)’ before ‘{’ token
+  if ((strncmp(strTemp, ".bmp") && (strncmp(strTemp, ".BMP")){
+                                                             ^
+../src/TestHellopWorld.c:76:1: error: expected ‘)’ before ‘}’ token
+ }
+ ^
+../src/TestHellopWorld.c:76:1: error: expected expression before ‘}’ token
+../src/TestHellopWorld.c:51:6: warning: unused variable ‘fileHandle’ [-Wunused-variable]
+  int fileHandle;
+      ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+../src/TestHellopWorld.c:76:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+make: *** [src/TestHellopWorld.o] 错误 1
+10:28:17 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:75:7: error: ‘res’ undeclared (first use in this function)
+  if ((res !=0) && (res2 !=0 )) {
+       ^
+../src/TestHellopWorld.c:75:7: note: each undeclared identifier is reported only once for each function it appears in
+../src/TestHellopWorld.c:79:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:72:6: warning: variable ‘res1’ set but not used [-Wunused-but-set-variable]
+  int res1=0, res2=0;
+      ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+make: *** [src/TestHellopWorld.o] 错误 1
+10:28:40 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:80:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:30:04 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:82:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:31:02 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:70:2: error: too few arguments to function ‘memset’
+  memset(InputFile, sizeof(InputFile));
+  ^
+../src/TestHellopWorld.c:72:2: error: too few arguments to function ‘memset’
+  memset(strTemp, sizeof(strTemp));
+  ^
+../src/TestHellopWorld.c:84:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+make: *** [src/TestHellopWorld.o] 错误 1
+10:31:14 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:84:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:31:26 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:84:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:50:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:33:31 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:87:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:53:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:34:00 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:87:2: warning: implicit declaration of function ‘open’ [-Wimplicit-function-declaration]
+  fileHandle = open(InputFile, 1705);
+  ^
+../src/TestHellopWorld.c:53:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:35:27 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:87:2: warning: passing argument 2 of ‘fopen’ makes pointer from integer without a cast [enabled by default]
+  fileHandle = fopen(InputFile, 1705);
+  ^
+In file included from ../src/TestHellopWorld.c:19:0:
+/usr/include/stdio.h:272:14: note: expected ‘const char * __restrict__’ but argument is of type ‘int’
+ extern FILE *fopen (const char *__restrict __filename,
+              ^
+../src/TestHellopWorld.c:87:13: warning: assignment makes integer from pointer without a cast [enabled by default]
+  fileHandle = fopen(InputFile, 1705);
+             ^
+../src/TestHellopWorld.c:53:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:38:06 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:89:2: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘struct FILE *’ [-Wformat=]
+  printf("Your input file handler = [%d]\n", fp);
+  ^
+../src/TestHellopWorld.c:53:6: warning: unused variable ‘fileHandle’ [-Wunused-variable]
+  int fileHandle;
+      ^
+../src/TestHellopWorld.c:52:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:38:17 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:88:2: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘struct FILE *’ [-Wformat=]
+  printf("Your input file handler = [%d]\n", fp);
+  ^
+../src/TestHellopWorld.c:52:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:38:52 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:88:2: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘struct FILE *’ [-Wformat=]
+  printf("Your input file handler = [%d]\n", fp);
+  ^
+../src/TestHellopWorld.c:52:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:41:10 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:87:9: warning: assignment makes pointer from integer without a cast [enabled by default]
+  if (fp = fopen(zInputFile, "r") == NULL){
+         ^
+../src/TestHellopWorld.c:87:2: warning: suggest parentheses around assignment used as truth value [-Wparentheses]
+  if (fp = fopen(zInputFile, "r") == NULL){
+  ^
+../src/TestHellopWorld.c:93:2: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘struct FILE *’ [-Wformat=]
+  printf("Your input file handler = [%d]\n", fp);
+  ^
+../src/TestHellopWorld.c:52:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:41:23 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:93:2: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘struct FILE *’ [-Wformat=]
+  printf("Your input file handler = [%d]\n", fp);
+  ^
+../src/TestHellopWorld.c:52:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:41:54 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:52:6: warning: unused variable ‘i’ [-Wunused-variable]
+  int i=0;
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:51:56 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:55:37 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:112:10: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘unsigned int *’ [-Wformat=]
+          printf("Picture read column [%d] = %-20s, Size = %d\n", i, zStg1PicSource[i], sizeof(zStg1PicSource[i]));
+          ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:57:05 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:112:10: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘unsigned int *’ [-Wformat=]
+          printf("Picture read column [%d] = %s, Size = %d\n", i, zStg1PicSource[i], sizeof(zStg1PicSource[i]));
+          ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:57:27 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+10:57:54 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:00:45 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:00:55 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:01:17 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:02:21 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:03:37 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:07:46 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:4: warning: passing argument 1 of ‘fread’ makes pointer from integer without a cast [enabled by default]
+    if(fread(zStg1PicSource[j][i], 1, 1, fp) != 1){
+    ^
+In file included from ../src/TestHellopWorld.c:19:0:
+/usr/include/stdio.h:709:15: note: expected ‘void * __restrict__’ but argument is of type ‘unsigned int’
+ extern size_t fread (void *__restrict __ptr, size_t __size,
+               ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:08:29 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:09:10 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:4: warning: passing argument 1 of ‘fread’ makes pointer from integer without a cast [enabled by default]
+    fread(zStg1PicSource[j][i], 1, 1, fp);
+    ^
+In file included from ../src/TestHellopWorld.c:19:0:
+/usr/include/stdio.h:709:15: note: expected ‘void * __restrict__’ but argument is of type ‘unsigned int’
+ extern size_t fread (void *__restrict __ptr, size_t __size,
+               ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:09:35 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:11:59 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:52:11: warning: unused variable ‘j’ [-Wunused-variable]
+  int i=0, j=0;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:12:11 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:52:11: warning: unused variable ‘j’ [-Wunused-variable]
+  int i=0, j=0;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:12:38 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:52:11: warning: unused variable ‘j’ [-Wunused-variable]
+  int i=0, j=0;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:13:43 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:96:6: warning: unused variable ‘IncomingWidth’ [-Wunused-variable]
+  int IncomingWidth = 10;
+      ^
+../src/TestHellopWorld.c:52:11: warning: unused variable ‘j’ [-Wunused-variable]
+  int i=0, j=0;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:14:06 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:52:11: warning: unused variable ‘j’ [-Wunused-variable]
+  int i=0, j=0;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:14:27 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:109:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:52:11: warning: unused variable ‘j’ [-Wunused-variable]
+  int i=0, j=0;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:15:46 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:112:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:52:11: warning: unused variable ‘j’ [-Wunused-variable]
+  int i=0, j=0;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:16:39 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:112:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:52:11: warning: unused variable ‘j’ [-Wunused-variable]
+  int i=0, j=0;
+           ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:22:59 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+make: 没有什么可以做的为 `all'。
+11:37:29 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:135:55: error: expected ‘)’ before ‘;’ token
+      printf(", Size = %d\n", sizeof(zStg1PicSource[j]);
+                                                       ^
+../src/TestHellopWorld.c:136:4: error: expected ‘;’ before ‘}’ token
+    }
+    ^
+../src/TestHellopWorld.c:139:12: error: two or more data types in declaration specifiers
+     double float tResult = 0;
+            ^
+make: *** [src/TestHellopWorld.o] 错误 1
+11:37:39 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:135:55: error: expected ‘)’ before ‘;’ token
+      printf(", Size = %d\n", sizeof(zStg1PicSource[j]);
+                                                       ^
+../src/TestHellopWorld.c:136:4: error: expected ‘;’ before ‘}’ token
+    }
+    ^
+make: *** [src/TestHellopWorld.o] 错误 1
+11:38:06 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:38:58 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:41:01 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:41:23 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:42:00 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:47:19 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:48:34 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:49:40 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:149:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘double’ [-Wformat=]
+     printf("Temp av = %d\n", tResultAvg);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:50:46 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:140:14: error: both ‘unsigned’ and ‘double’ in declaration specifiers
+     unsigned double tResultAvg = 0;
+              ^
+../src/TestHellopWorld.c:141:14: error: both ‘unsigned’ and ‘double’ in declaration specifiers
+     unsigned double tResultVar = 0;
+              ^
+make: *** [src/TestHellopWorld.o] 错误 1
+11:51:48 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:149:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘double’ [-Wformat=]
+     printf("Temp av = %d\n", tResultAvg);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:52:27 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:149:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘double’ [-Wformat=]
+     printf("Temp av = %d\n", tResultAvg);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:52:54 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:149:5: warning: unknown conversion type character 0xa in format [-Wformat=]
+     printf("Temp av = %l\n", tResultAvg);
+     ^
+../src/TestHellopWorld.c:149:5: warning: too many arguments for format [-Wformat-extra-args]
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:53:11 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:149:5: warning: format ‘%ld’ expects argument of type ‘long int’, but argument 2 has type ‘double’ [-Wformat=]
+     printf("Temp av = %ld\n", tResultAvg);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+11:54:05 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:20:47 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:21:01 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:21:22 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:22:26 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:23:11 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:113:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:43:29 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:170:66: error: expected ‘;’ before ‘)’ token
+    t2 = (int)(((float)zStg1PicSource[j][i] - tResultAvg))/difBase);
+                                                                  ^
+../src/TestHellopWorld.c:170:66: error: expected statement before ‘)’ token
+make: *** [src/TestHellopWorld.o] 错误 1
+12:44:38 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:170:4: warning: implicit declaration of function ‘round’ [-Wimplicit-function-declaration]
+    t2 = (int)round(((float)zStg1PicSource[j][i] - tResultAvg))/difBase + 0.5);
+    ^
+../src/TestHellopWorld.c:170:14: warning: incompatible implicit declaration of built-in function ‘round’ [enabled by default]
+    t2 = (int)round(((float)zStg1PicSource[j][i] - tResultAvg))/difBase + 0.5);
+              ^
+../src/TestHellopWorld.c:170:77: error: expected ‘;’ before ‘)’ token
+    t2 = (int)round(((float)zStg1PicSource[j][i] - tResultAvg))/difBase + 0.5);
+                                                                             ^
+../src/TestHellopWorld.c:170:77: error: expected statement before ‘)’ token
+make: *** [src/TestHellopWorld.o] 错误 1
+12:46:56 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:170:72: error: expected ‘;’ before ‘)’ token
+    t2 = (int)(((float)zStg1PicSource[j][i] - tResultAvg))/difBase + 0.5);
+                                                                        ^
+../src/TestHellopWorld.c:170:72: error: expected statement before ‘)’ token
+make: *** [src/TestHellopWorld.o] 错误 1
+12:47:54 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:48:25 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d => [%4.2f\%]", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:48:46 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d=>[%4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:50:28 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d=>[%4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:51:27 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d=>[%4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:52:42 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d=>[%4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:54:07 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d=>[%4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:54:56 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d-[%4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:55:09 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d-[%4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:55:27 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: conversion lacks type at end of format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d-%4.2f\% ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:55:57 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: conversion lacks type at end of format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("|%d %4.2f\% ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:56:31 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: conversion lacks type at end of format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("%d %4.2f\% ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:56:58 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("[%d %4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:57:18 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("[%d-%4.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:57:50 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("[%d-%6.3f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+12:58:15 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:114:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c:186:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:03:50 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:116:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:197:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:05:06 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:116:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:199:5: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+     for (i=0; i<PDR_STATISTIC_DIM; i++) printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+     ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:08:54 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:116:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:200:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:09:04 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:116:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:09:12 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:116:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:200:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:09:43 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:116:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:200:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:09:58 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:116:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:200:6: error: too many arguments to function ‘puts’
+      puts("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+make: *** [src/TestHellopWorld.o] 错误 1
+13:10:05 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:116:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:200:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:10:55 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:111:1: warning: "/*" within comment [-Wcomment]
+ /* for (j=0; j<IncomingHeight; j++){
+ ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:195:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:11:59 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:171:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:22:04 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:173:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:22:59 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:173:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:23:34 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:56:20: warning: unused variable ‘j’ [-Wunused-variable]
+  unsigned int i=0, j=0;
+                    ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:173:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+13:25:20 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:56:20: warning: unused variable ‘j’ [-Wunused-variable]
+  unsigned int i=0, j=0;
+                    ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:173:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+15:59:23 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c:49:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘strPdrPIxel_t’
+ strPdrPIxel_t   zStg1PicSource[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
+ ^
+../src/TestHellopWorld.c:49:1: error: unknown type name ‘strPdrPIxel_t’
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:66:9: error: ‘zStg1PicSource’ undeclared (first use in this function)
+  memset(zStg1PicSource, 0, sizeof(zStg1PicSource));
+         ^
+../src/TestHellopWorld.c:66:9: note: each undeclared identifier is reported only once for each function it appears in
+../src/TestHellopWorld.c:101:68: error: ‘strPdrPIxel_t’ undeclared (first use in this function)
+   if((feof(fp)) || (fread(zStg1PicSource[i], IncomingWidth, sizeof(strPdrPIxel_t), fp) != sizeof(strPdrPIxel_t))){
+                                                                    ^
+../src/TestHellopWorld.c:61:20: warning: unused variable ‘j’ [-Wunused-variable]
+  unsigned int i=0, j=0;
+                    ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:138:18: error: ‘zStg1PicSource’ undeclared (first use in this function)
+    tResultAvg += zStg1PicSource[j][i];
+                  ^
+../src/TestHellopWorld.c:178:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:00:02 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c:49:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘strPdrPIxel_t’
+ strPdrPIxel_t   zStg1PicSource[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
+ ^
+../src/TestHellopWorld.c:49:1: error: unknown type name ‘strPdrPIxel_t’
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:66:9: error: ‘zStg1PicSource’ undeclared (first use in this function)
+  memset(zStg1PicSource, 0, sizeof(zStg1PicSource));
+         ^
+../src/TestHellopWorld.c:66:9: note: each undeclared identifier is reported only once for each function it appears in
+../src/TestHellopWorld.c:102:53: error: ‘strPdrPIxel_t’ undeclared (first use in this function)
+   if(fread(zStg1PicSource[i], IncomingWidth, sizeof(strPdrPIxel_t), fp) != sizeof(strPdrPIxel_t)){
+                                                     ^
+../src/TestHellopWorld.c:61:20: warning: unused variable ‘j’ [-Wunused-variable]
+  unsigned int i=0, j=0;
+                    ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:139:18: error: ‘zStg1PicSource’ undeclared (first use in this function)
+    tResultAvg += zStg1PicSource[j][i];
+                  ^
+../src/TestHellopWorld.c:179:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:01:28 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c:49:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘strPdrPIxel_t’
+ strPdrPIxel_t   zStg1PicSource[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
+ ^
+../src/TestHellopWorld.c:49:1: error: unknown type name ‘strPdrPIxel_t’
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:66:9: error: ‘zStg1PicSource’ undeclared (first use in this function)
+  memset(zStg1PicSource, 0, sizeof(zStg1PicSource));
+         ^
+../src/TestHellopWorld.c:66:9: note: each undeclared identifier is reported only once for each function it appears in
+../src/TestHellopWorld.c:103:42: error: ‘strPdrPIxel_t’ undeclared (first use in this function)
+    if(fread(zStg1PicSource[i][j], sizeof(strPdrPIxel_t), 1, fp) != 1){
+                                          ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:141:18: error: ‘zStg1PicSource’ undeclared (first use in this function)
+    tResultAvg += zStg1PicSource[j][i];
+                  ^
+../src/TestHellopWorld.c:181:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:02:53 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:103:4: error: incompatible type for argument 1 of ‘fread’
+    if(fread(zStg1PicSource[i][j], sizeof(strPdrPIxel_t), 1, fp) != 1){
+    ^
+In file included from ../src/TestHellopWorld.c:19:0:
+/usr/include/stdio.h:709:15: note: expected ‘void * __restrict__’ but argument is of type ‘strPdrPIxel_t’
+ extern size_t fread (void *__restrict __ptr, size_t __size,
+               ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:141:15: error: invalid operands to binary + (have ‘double’ and ‘strPdrPIxel_t’)
+    tResultAvg += zStg1PicSource[j][i];
+               ^
+../src/TestHellopWorld.c:151:43: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    tResultVar += abs(zStg1PicSource[j][i] - iRes);
+                                           ^
+../src/TestHellopWorld.c:165:4: error: aggregate value used where a float was expected
+    t3 = (float)zStg1PicSource[j][i] - tResultAvg;
+    ^
+../src/TestHellopWorld.c:181:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:188:33: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    if (abs(zStg1PicSource[j][i] - iRes) <= iVar){
+                                 ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:03:40 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:103:4: error: incompatible type for argument 1 of ‘fread’
+    if((fread(zStg1PicSource[i][j], sizeof(strPdrPIxel_t), 1, fp) != 1){
+    ^
+In file included from ../src/TestHellopWorld.c:19:0:
+/usr/include/stdio.h:709:15: note: expected ‘void * __restrict__’ but argument is of type ‘strPdrPIxel_t’
+ extern size_t fread (void *__restrict __ptr, size_t __size,
+               ^
+../src/TestHellopWorld.c:103:71: error: expected ‘)’ before ‘{’ token
+    if((fread(zStg1PicSource[i][j], sizeof(strPdrPIxel_t), 1, fp) != 1){
+                                                                       ^
+../src/TestHellopWorld.c:108:3: error: expected expression before ‘}’ token
+   }
+   ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:141:15: error: invalid operands to binary + (have ‘double’ and ‘strPdrPIxel_t’)
+    tResultAvg += zStg1PicSource[j][i];
+               ^
+../src/TestHellopWorld.c:151:43: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    tResultVar += abs(zStg1PicSource[j][i] - iRes);
+                                           ^
+../src/TestHellopWorld.c:165:4: error: aggregate value used where a float was expected
+    t3 = (float)zStg1PicSource[j][i] - tResultAvg;
+    ^
+../src/TestHellopWorld.c:181:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:188:33: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    if (abs(zStg1PicSource[j][i] - iRes) <= iVar){
+                                 ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:04:25 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:104:4: error: incompatible type for argument 1 of ‘fread’
+    if(fread(zStg1PicSource[i][j], sizeof(t0), 1, fp) != 1){
+    ^
+In file included from ../src/TestHellopWorld.c:19:0:
+/usr/include/stdio.h:709:15: note: expected ‘void * __restrict__’ but argument is of type ‘strPdrPIxel_t’
+ extern size_t fread (void *__restrict __ptr, size_t __size,
+               ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:142:15: error: invalid operands to binary + (have ‘double’ and ‘strPdrPIxel_t’)
+    tResultAvg += zStg1PicSource[j][i];
+               ^
+../src/TestHellopWorld.c:152:43: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    tResultVar += abs(zStg1PicSource[j][i] - iRes);
+                                           ^
+../src/TestHellopWorld.c:166:4: error: aggregate value used where a float was expected
+    t3 = (float)zStg1PicSource[j][i] - tResultAvg;
+    ^
+../src/TestHellopWorld.c:182:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:189:33: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    if (abs(zStg1PicSource[j][i] - iRes) <= iVar){
+                                 ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:06:29 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:104:4: error: incompatible type for argument 1 of ‘fread’
+    if(fread(zStg1PicSource[i][j], 3, 1, fp) != 1){
+    ^
+In file included from ../src/TestHellopWorld.c:19:0:
+/usr/include/stdio.h:709:15: note: expected ‘void * __restrict__’ but argument is of type ‘strPdrPIxel_t’
+ extern size_t fread (void *__restrict __ptr, size_t __size,
+               ^
+../src/TestHellopWorld.c:100:16: warning: unused variable ‘t0’ [-Wunused-variable]
+  strPdrPIxel_t t0;
+                ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:142:15: error: invalid operands to binary + (have ‘double’ and ‘strPdrPIxel_t’)
+    tResultAvg += zStg1PicSource[j][i];
+               ^
+../src/TestHellopWorld.c:152:43: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    tResultVar += abs(zStg1PicSource[j][i] - iRes);
+                                           ^
+../src/TestHellopWorld.c:166:4: error: aggregate value used where a float was expected
+    t3 = (float)zStg1PicSource[j][i] - tResultAvg;
+    ^
+../src/TestHellopWorld.c:182:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:189:33: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    if (abs(zStg1PicSource[j][i] - iRes) <= iVar){
+                                 ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:07:47 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘main’:
+../src/TestHellopWorld.c:100:16: warning: unused variable ‘t0’ [-Wunused-variable]
+  strPdrPIxel_t t0;
+                ^
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:142:15: error: invalid operands to binary + (have ‘double’ and ‘strPdrPIxel_t’)
+    tResultAvg += zStg1PicSource[j][i];
+               ^
+../src/TestHellopWorld.c:152:43: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    tResultVar += abs(zStg1PicSource[j][i] - iRes);
+                                           ^
+../src/TestHellopWorld.c:166:4: error: aggregate value used where a float was expected
+    t3 = (float)zStg1PicSource[j][i] - tResultAvg;
+    ^
+../src/TestHellopWorld.c:182:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:189:33: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    if (abs(zStg1PicSource[j][i] - iRes) <= iVar){
+                                 ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:08:27 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:142:15: error: invalid operands to binary + (have ‘double’ and ‘strPdrPIxel_t’)
+    tResultAvg += zStg1PicSource[j][i];
+               ^
+../src/TestHellopWorld.c:152:43: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    tResultVar += abs(zStg1PicSource[j][i] - iRes);
+                                           ^
+../src/TestHellopWorld.c:166:4: error: aggregate value used where a float was expected
+    t3 = (float)zStg1PicSource[j][i] - tResultAvg;
+    ^
+../src/TestHellopWorld.c:182:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:189:33: error: invalid operands to binary - (have ‘strPdrPIxel_t’ and ‘unsigned int’)
+    if (abs(zStg1PicSource[j][i] - iRes) <= iVar){
+                                 ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:10:38 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:181:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:11:50 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:181:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:12:38 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:181:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:14:36 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘data_process_distribution’:
+../src/TestHellopWorld.c:181:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:26:04 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:182:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:27:43 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:184:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:28:05 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:163:10: warning: variable ‘t3’ set but not used [-Wunused-but-set-variable]
+    float t3 = 0;
+          ^
+../src/TestHellopWorld.c:183:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:28:14 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:183:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:32:46 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:177:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:33:32 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:177:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:45:19 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:180:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:47:32 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:180:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:48:53 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:182:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:49:30 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:182:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:50:56 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:182:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:52:44 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:180:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
+16:57:22 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:178:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:207:11: error: redefinition of ‘difBase’
+     float difBase = tResultVar;
+           ^
+../src/TestHellopWorld.c:160:11: note: previous definition of ‘difBase’ was here
+     float difBase = tResultVar;
+           ^
+../src/TestHellopWorld.c:225:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:207:11: warning: unused variable ‘difBase’ [-Wunused-variable]
+     float difBase = tResultVar;
+           ^
+make: *** [src/TestHellopWorld.o] 错误 1
+16:57:30 **** Incremental Build of configuration Debug for project TestHellopWorld ****
+make all 
+Building file: ../src/TestHellopWorld.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/TestHellopWorld.d" -MT"src/TestHellopWorld.o" -o "src/TestHellopWorld.o" "../src/TestHellopWorld.c"
+../src/TestHellopWorld.c: In function ‘picture_pre_distribution_process’:
+../src/TestHellopWorld.c:178:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+../src/TestHellopWorld.c:224:6: warning: unknown conversion type character ‘]’ in format [-Wformat=]
+      printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+      ^
+Finished building: ../src/TestHellopWorld.c
+ 
+Building target: TestHellopWorld
+Invoking: GCC C Linker
+gcc  -o "TestHellopWorld"  ./src/TestHellopWorld.o   
+Finished building target: TestHellopWorld
+ 
