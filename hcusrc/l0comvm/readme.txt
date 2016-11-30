@@ -9,6 +9,16 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 12个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
 ==> 发送给后台统计报告
 
+//= ZSC/ZJL, 2016 NOV.30, CURRENT_SW_DELIVERY 128 =>BFSC项目/G2项目
+= 完善Rasperry上的G20编译环境
+= CANITFLEO的完整命令字
+
+
+
+
+
+
+
 //= ZJL, 2016 NOV.17, CURRENT_SW_DELIVERY 127 =>BFSC项目
 = 完整HUITP统一字段的定义，以便跟下位机及后台统一FRAME及消息结构定义
 ==> CLOUDVELA来的消息，所有消息统一定义？格式解码？发送到L3BFSC模块中来：初步给出通道

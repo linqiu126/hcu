@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="send_frame" key="selection"/>
+		<item value="HCU" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="IHU"/>
+			<item value="Ihu"/>
+			<item value="func_canitfleo_working_scan_process"/>
+			<item value="cnt"/>
+			<item value="    &#x09;&#x09;fsm_canitfleo_init},"/>
 			<item value="send_frame"/>
 			<item value="open_can"/>
 			<item value="close_can"/>
-			<item value="L3PO_"/>
-			<item value="targetUpLimit"/>
-			<item value="float"/>
-			<item value="*(p"/>
-			<item value="fsm_l3bfsc_canitf_ws_new_ready_event"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU"/>
+			<item value="Hcu"/>
 			<item value="L3PO_generic_"/>
 			<item value="MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n"/>
 			<item value=""/>
 			<item value="HCU_ERROR_PRINT_L3BFSC"/>
-			<item value="HCU"/>
 			<item value="CANITFLEO"/>
 			<item value="Canitfleo"/>
-			<item value="canitfleo"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
