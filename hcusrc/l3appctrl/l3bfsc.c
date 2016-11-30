@@ -289,7 +289,6 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		}
 	}
 
-
 	//返回
 	return SUCCESS;
 }
