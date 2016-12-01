@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HCU" key="selection"/>
+		<item value="MAX" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="IHU"/>
-			<item value="Ihu"/>
-			<item value="func_canitfleo_working_scan_process"/>
-			<item value="cnt"/>
-			<item value="    &#x09;&#x09;fsm_canitfleo_init},"/>
-			<item value="send_frame"/>
-			<item value="open_can"/>
-			<item value="close_can"/>
+			<item value="MAX"/>
+			<item value="func_cloudvela_huanbao_bfsc_msg_pack"/>
+			<item value="func_cloudvela_standard_xml_pack"/>
+			<item value="msg_struct_l3bfsc_cloudvela_cmd_resp_t"/>
+			<item value="MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP"/>
+			<item value="MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ"/>
+			<item value="func_cloudvela_standard_xml_bfsc_msg_unpack"/>
+			<item value="L3CI_noise"/>
 		</list>
 		<list key="replacehistory">
+			<item value="canitf_"/>
 			<item value="HCU"/>
 			<item value="Hcu"/>
 			<item value="L3PO_generic_"/>
@@ -25,14 +26,13 @@
 			<item value=""/>
 			<item value="HCU_ERROR_PRINT_L3BFSC"/>
 			<item value="CANITFLEO"/>
-			<item value="Canitfleo"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1070" key="DIALOG_X_ORIGIN"/>
-		<item value="309" key="DIALOG_Y_ORIGIN"/>
+		<item value="1109" key="DIALOG_X_ORIGIN"/>
+		<item value="275" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

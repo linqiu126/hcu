@@ -685,6 +685,102 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 	return SUCCESS;
 }
 
+//rcv输入参数，buf输出参数
+//只支持XML格式
+OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 optpar, UINT32 equipId, UINT8 dataFormat, UINT32 modbusValue, UINT8 sensorNbr, UINT32 *sensorValue, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+{
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	int i=0;
+	//参数检查，其它参数无所谓
+	if (buf == NULL){
+		HcuErrorPrint("CLOUDVELA: Error CloudDataSendBuf_t pointer!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	if ((zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML) && ((optId == L3PO_bfsc_start_resp) || (optId == L3PO_bfsc_stop_resp)))
+	{
+		//初始化变量
+		CloudBhItfDevReportStdXml_t xmlFormat;
+		memset(&xmlFormat, 0, sizeof(CloudBhItfDevReportStdXml_t));
+
+		//pack数据到临时字符串中, 将数据打印到关键的数值中
+		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
+		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
+		sprintf(xmlFormat.conBackType, "%02X", optpar & 0xFF);
+		sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
+		sprintf(xmlFormat.conBfsc, "%08X", modbusValue);
+		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
+		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		else {
+			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
+			return FAILURE;
+		}
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+			HcuDebugPrint("CLOUDVELA: NOISE XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+		}
+	}
+
+	else if ((zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML) && (optId == L3PO_bfsc_data_report))
+	{
+		//初始化变量
+		CloudBhItfDevReportStdXml_t xmlFormat;
+		memset(&xmlFormat, 0, sizeof(CloudBhItfDevReportStdXml_t));
+
+		//pack数据到临时字符串中, 将数据打印到关键的数值中
+		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
+		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
+		sprintf(xmlFormat.conBackType, "%02X", optpar & 0xFF);
+		sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
+		sprintf(xmlFormat.conBfscSensorNb, "%02X", sensorNbr);
+		if (sensorNbr > HCU_BFSC_SENSOR_WS_NBR_MAX){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Pack message error， too large sensor numbers!\n");
+			return FAILURE;
+		}
+		//这里应用了高级的技巧，是否可行，待测试
+		for (i=0; i<sensorNbr; i++){
+			sprintf(xmlFormat.conBfscData[i*8], "%08X", (UINT32)*(sensorValue + 4*i));
+		}
+		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
+		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
+		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
+		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+		else {
+			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
+			return FAILURE;
+		}
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+			HcuDebugPrint("CLOUDVELA: NOISE XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+		}
+	}
+
+	else{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
+		return FAILURE;
+	}
+#endif
+	return SUCCESS;
+}
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数

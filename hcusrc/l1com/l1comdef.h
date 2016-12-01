@@ -94,6 +94,7 @@ typedef enum
 	L3CI_moto = 0x38, //马达
 	L3CI_switch = 0x39, //继电器
 	L3CI_transporter = 0x3A, //导轨传送带
+	L3CI_bfsc_comb_scale = 0x3B, //组合秤
 	L3CI_itf_sps = 0x40, //串口读取命令/返回结果
 	L3CI_itf_adc = 0x41, //ADC读取命令/返回结果
 	L3CI_itf_dac = 0x42, //DAC读取命令/返回结果
@@ -319,6 +320,18 @@ typedef enum
 	L3PO_hcuinventory_max,
 }L3HcuInventoryOptIdDef;
 
+typedef enum
+{
+	L3PO_bfsc_min = 0,
+	L3PO_bfsc_none = 0,
+	L3PO_bfsc_data_req = 0x01, //Data Request
+	L3PO_bfsc_start_cmd = 0x02, //start
+	L3PO_bfsc_stop_cmd = 0x03, //stop
+	L3PO_bfsc_data_report = 0x81, //Data Report
+	L3PO_bfsc_start_resp = 0x82, //start
+	L3PO_bfsc_stop_resp = 0x83, //stop
+	L3PO_bfsc_max,
+}L3BfscOptIdDef;
 
 //UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数，针对读数到底是周期性的还是一次性的
 //内部定义，内部使用
@@ -619,6 +632,13 @@ typedef struct CloudBhItfDevReportStdXml
 	char conNS[3];//1B
 	char conGpsy[9];   //4B
 	char conGpsz[9];   //4B
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	//BFSC
+	char conBfsc[9];  //4B, 组合秤
+	char conBfscSensorNb[3];  //1B
+	char conBfscData[8 * HCU_BFSC_SENSOR_WS_NBR_MAX + 1]; //4B * HCU_BFSC_SENSOR_WS_NBR_MAX传感器数量
+#endif
 
 	//Added by Shanchun for alarm report
 	char conAlarmType[5];   //2B
@@ -1063,6 +1083,82 @@ typedef struct StrHuiFrame
     UINT16 	len; //0-1500，原则上不能超过系统定义的消息体长度
     UINT8 	msgBody[];
 }StrHuiFrame_t;
+
+
+/**************************************************************************************
+ *   CANITF接口的FRAME格式定义：因为CLOUD/L3BFSC/CANITFLEO都要用到这个定义                   *
+ *   所以必须放在这个进行公共定义                                                          *
+ *************************************************************************************/
+/*
+叶工，测试指令和之前你的测试平台使用一致，没有改变：
+
+重量读取：23 00 65 02 00 00 00 00
+自动0点跟踪：23 00 65 09 xx xx xx xx （值设定及含义同modbus协议）
+最小灵敏度：23 00 65 0a xx xx xx xx （值设定及含义同modbus协议）
+手动清零：23 00 65 0c xx xx xx xx (值设定及含义同modbus协议)
+静止检测范围：23 00 65 0d xx xx xx xx （值设定及含义同modbus协议）
+静止检测时间：23 00 65 0e xx xx xx xx （值设定及含义同modbus协议）
+称量0校准：23 00 65 10 01 00 00 00
+称量1kg校准：23 00 65 10 02 00 00 00
+称量退出校准：23 00 65 10 00 00 00 00
+退出校正的指令要改成：23 00 65 10 03 00 00 00
+电机正转：23 00 65 20 01 00 00 00
+电机反转：23 00 65 20 02 00 00 00
+电机停止：23 00 65 20 03 00 00 00
+电机速度：23 00 65 21 xx xx xx xx
+量程：23 00 65 25 xx xx xx xx
+
+校准顺序是，首先空称台，然后点零载，
+放砝码，然后点满载。然后点退出校准保存。
+32位的数据低位在前，例如，23 00 65 0d 01 00 00 00
+ */
+
+typedef struct strHcuCanitfleoCmdFrame
+{
+	UINT8 bfscCmdPrefixH;
+	UINT8 bfscCmdPrefixL;
+	UINT8 bfscCmdId;
+	UINT8 bfscOptId;
+	UINT8 bfscOptPar;
+	UINT8 bfscPar1;
+	UINT8 bfscPar2;
+	UINT8 bfscPar3;
+}strHcuCanitfleoCmdFrame_t;
+#define HCU_CANITFLEO_CMD_PREFIXH 0x23
+#define HCU_CANITFLEO_CMD_PREFIXL 0x00
+#define HCU_CANITFLEO_CMD_BFSC_ID 0x65
+//不同的控制命令
+typedef enum
+{
+	HCU_CANITFLEO_OPTID_none = 0,
+	HCU_CANITFLEO_OPTID_min = 0x01,
+	HCU_CANITFLEO_OPTID_wegith_read = 0x02,
+	HCU_CANITFLEO_OPTID_auto_zero_track = 0x09,  //（值设定及含义同modbus协议）
+	HCU_CANITFLEO_OPTID_min_sensitivity = 0x0A,  //（值设定及含义同modbus协议）
+	HCU_CANITFLEO_OPTID_manual_set_zero = 0x0C,  //（值设定及含义同modbus协议）
+	HCU_CANITFLEO_OPTID_static_detect_range = 0x0D, //（值设定及含义同modbus协议）
+	HCU_CANITFLEO_OPTID_static_detect_duration = 0x0E, //（值设定及含义同modbus协议）
+	HCU_CANITFLEO_OPTID_weight_scale_calibration = 0x10,
+	HCU_CANITFLEO_OPTID_motor_turn_around = 0x20,
+	HCU_CANITFLEO_OPTID_motor_speed = 0x21,
+	HCU_CANITFLEO_OPTID_scale_range = 0x25,
+	HCU_CANITFLEO_OPTID_max,
+	HCU_CANITFLEO_OPT_invalid = 0xFF,
+}HcuCanitfleoOptidEnmu;
+typedef enum
+{
+	HCU_CANITFLEO_OPTPAR_none = 0,
+	HCU_CANITFLEO_OPTPAR_motor_turn_around_normal = 0x01,
+	HCU_CANITFLEO_OPTPAR_motor_turn_around_reverse = 0x02,
+	HCU_CANITFLEO_OPTPAR_motor_turn_around_stop = 0x03,
+	HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0 = 0x01,
+	HCU_CANITFLEO_OPTPAR_weight_scale_calibration_1kg = 0x02,
+	HCU_CANITFLEO_OPTPAR_weight_scale_calibration_exit = 0x03,
+	HCU_CANITFLEO_OPTPAR_invalid = 0xFF,
+}HcuCanitfleoOptParEnmu;
+//如果是32为量值数据，则采用little_endian_windows的风格，低位在前
+
+
 
 
 #endif /* L1COM_L1COMDEF_H_ */

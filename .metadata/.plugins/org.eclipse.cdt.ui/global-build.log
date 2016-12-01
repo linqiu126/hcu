@@ -1,4 +1,4 @@
-14:38:17 **** Incremental Build of configuration Debug for project PrjBfsc ****
+17:09:30 **** Incremental Build of configuration Debug for project PrjBfsc ****
 make all 
 Building file: /home/hitpony/workspace/hcu/hcusrc/l4bi/aiqiyc.c
 Invoking: Cross GCC Compiler
@@ -13,6 +13,10 @@ Finished building: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
 Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
 Invoking: Cross GCC Compiler
 gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_canitf_general_cmd_resp’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:568:13: warning: unused variable ‘i’ [-Wunused-variable]
+  int ret=0, i=0;
+             ^
 Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
  
 Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c
@@ -169,6 +173,17 @@ Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodecxml.c
 Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodeczhb.c
 Invoking: Cross GCC Compiler
 gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/bhcodeczhb.d" -MT"src/l2frame/bhcodeczhb.o" -o "src/l2frame/bhcodeczhb.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodeczhb.c"
+/home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodeczhb.c: In function ‘func_cloudvela_huanbao_bfsc_msg_pack’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodeczhb.c:753:4: warning: passing argument 1 of ‘sprintf’ makes pointer from integer without a cast [enabled by default]
+    sprintf(xmlFormat.conBfscData[i*8], "%08X", (UINT32)*(sensorValue + 4*i));
+    ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l2frame/../l0service/../l0comvm/../l0comvm/commsg.h:14:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l2frame/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l2frame/../l0service/timer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodeczhb.c:8:
+/usr/include/stdio.h:364:12: note: expected ‘char * __restrict__’ but argument is of type ‘char’
+ extern int sprintf (char *__restrict __s,
+            ^
 Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodeczhb.c
  
 Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
@@ -648,223 +663,6 @@ Building file: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
 Invoking: Cross GCC Compiler
 gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0comvm/vmlayer.d" -MT"src/l0comvm/vmlayer.o" -o "src/l0comvm/vmlayer.o" "/home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c"
 Finished building: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-15:35:02 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: In function ‘func_canitfleo_frame_encode’:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:435:17: error: lvalue required as left operand of assignment
-  (UINT8)*pframe =IHU_CANITFLEO_CMD_PREFIXH;
-                 ^
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:436:21: error: lvalue required as left operand of assignment
-  (UINT8)*(pframe+1) = IHU_CANITFLEO_CMD_PREFIXL;
-                     ^
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:437:21: error: lvalue required as left operand of assignment
-  (UINT8)*(pframe+2) = IHU_CANITFLEO_CMD_BFSC_ID;
-                     ^
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:438:21: error: lvalue required as left operand of assignment
-  (UINT8)*(pframe+3) = optid;
-                     ^
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:482:2: error: duplicate case value
-  case IHU_CANITFLEO_OPTID_motor_turn_around:
-  ^
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:470:2: error: previously used here
-  case IHU_CANITFLEO_OPTID_motor_turn_around:
-  ^
-make: *** [src/l2frame/canitfleo.o] 错误 1
-15:38:06 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: In function ‘func_canitfleo_frame_encode’:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:482:2: error: duplicate case value
-  case IHU_CANITFLEO_OPTID_motor_turn_around:
-  ^
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:470:2: error: previously used here
-  case IHU_CANITFLEO_OPTID_motor_turn_around:
-  ^
-make: *** [src/l2frame/canitfleo.o] 错误 1
-15:39:00 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-15:39:33 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-15:47:30 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-15:52:29 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-16:03:05 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-16:11:35 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-16:13:03 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: In function ‘fsm_canitfleo_l3bfsc_ws_init_req’:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:222:10: warning: ‘p’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-    memset(p, 0, sizeof(strIhuCanitfleoCmdFrame_t));
-          ^
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-16:13:24 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building target: PrjBfsc
-Invoking: Cross G++ Linker
-g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/bhcodecxml.o ./src/l2frame/bhcodeczhb.o ./src/l2frame/canitfleo.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
-Finished building target: PrjBfsc
- 
-17:13:39 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: In function ‘fsm_canitfleo_l3bfsc_ws_init_req’:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:223:4: warning: passing argument 3 of ‘func_canitfleo_frame_encode’ makes integer from pointer without a cast [enabled by default]
-    if (func_canitfleo_frame_encode(HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, &p) == FAILURE){
-    ^
-In file included from /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:8:0:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.h:111:8: note: expected ‘UINT32’ but argument is of type ‘struct strHcuCanitfleoCmdFrame_t *’
- OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
-        ^
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:223:4: error: too few arguments to function ‘func_canitfleo_frame_encode’
-    if (func_canitfleo_frame_encode(HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, &p) == FAILURE){
-    ^
-In file included from /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:8:0:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.h:111:8: note: declared here
- OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
-        ^
-make: *** [src/l2frame/canitfleo.o] 错误 1
-17:14:42 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: In function ‘fsm_canitfleo_l3bfsc_ws_init_req’:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:223:4: warning: passing argument 3 of ‘func_canitfleo_frame_encode’ makes integer from pointer without a cast [enabled by default]
-    if (func_canitfleo_frame_encode(HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, &p) == FAILURE){
-    ^
-In file included from /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:8:0:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.h:111:8: note: expected ‘UINT32’ but argument is of type ‘struct strHcuCanitfleoCmdFrame_t *’
- OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
-        ^
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:223:4: error: too few arguments to function ‘func_canitfleo_frame_encode’
-    if (func_canitfleo_frame_encode(HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, &p) == FAILURE){
-    ^
-In file included from /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:8:0:
-/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.h:111:8: note: declared here
- OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
-        ^
-make: *** [src/l2frame/canitfleo.o] 错误 1
-17:15:09 **** Incremental Build of configuration Debug for project PrjBfsc ****
-make all 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
- 
-Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
-Invoking: Cross GCC Compiler
-gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
-Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
  
 Building target: PrjBfsc
 Invoking: Cross G++ Linker

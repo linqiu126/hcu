@@ -26,6 +26,7 @@ extern OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudv
 extern OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 extern OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 extern OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
+extern OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 
 //Extern API
 //Added by Shanchun for SW download, SW inventory, AV upload

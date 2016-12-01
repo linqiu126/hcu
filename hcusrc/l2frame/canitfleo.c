@@ -37,9 +37,11 @@ FsmStateItem_t FsmCanitfleo[] =
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_CANITFLEO_ACTIVED,            	fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,      				FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_timeout},
 	{MSG_ID_L3BFSC_CAN_WS_INIT_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_init_req},  //称重传感器初始化
-	{MSG_ID_L3BFSC_CAN_INQ_CMD_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_inq_cmd_req},  //发送指令
+	{MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,   FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_error_inq_cmd_req},  //发送指令
 	{MSG_ID_L3BFSC_CAN_WS_COMB_OUT,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_comb_out},  //组合指令
 	{MSG_ID_L3BFSC_CAN_WS_GIVE_UP,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_give_up},   //剔除指令
+	{MSG_ID_L3BFSC_CAN_WS_READ_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_read_req},   //周期性读取
+	{MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,     FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_general_cmd_req}, //后台的指令
 
 	//结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -240,7 +242,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 
 		//等待一会儿
 		hcu_usleep(10 + rand()%10);
-		ret = hcu_message_send(MSG_ID_CAN_L3FSC_WS_INIT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
+		ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_INIT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
@@ -271,13 +273,13 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 
 //这本来就是L3BFSC专用的消息及处理函数，由于简化系统设计，消息的统一化以及VMTASK的统一化，造成所有这些函数必须在消息路由表中，必须在各个项目中都可以出现
 //这必然造成了处理的具体内容需要根据不同项目进行分类处理
-OPSTAT fsm_canitfleo_l3bfsc_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int i=0, ret=0;
 
-	msg_struct_l3bfsc_can_inq_cmd_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t))){
+	msg_struct_l3bfsc_can_error_inq_cmd_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t))){
 		HcuErrorPrint("CANITFLEO: Receive message error!\n");
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 		return FAILURE;
@@ -290,13 +292,13 @@ OPSTAT fsm_canitfleo_l3bfsc_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 	//为了测试目的
 	if (rcv.sensorid < HCU_BFSC_SENSOR_WS_NBR_MAX){
 		hcu_usleep(10 + rand()%10);
-		msg_struct_can_l3bfsc_inq_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t));
-		snd.length = sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t);
+		msg_struct_can_l3bfsc_error_inq_cmd_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t));
+		snd.length = sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t);
 		snd.sensorid = rcv.sensorid;
 		snd.sensorWsValue = 400 + rand()%100;
 		snd.flag = 1;
-		ret = hcu_message_send(MSG_ID_CAN_L3BFSC_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
+		ret = hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
@@ -310,13 +312,13 @@ OPSTAT fsm_canitfleo_l3bfsc_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 		for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 			if (rcv.sensorBitmap[i] ==1){
 				hcu_usleep(10 + rand()%10);
-				msg_struct_can_l3bfsc_inq_cmd_resp_t snd;
-				memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t));
-				snd.length = sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t);
+				msg_struct_can_l3bfsc_error_inq_cmd_resp_t snd;
+				memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t));
+				snd.length = sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t);
 				snd.sensorid = rcv.sensorid;
 				snd.sensorWsValue = 400 + rand()%100;
 				snd.flag = 1;
-				ret = hcu_message_send(MSG_ID_CAN_L3BFSC_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
+				ret = hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 					HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
@@ -375,6 +377,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 //剔除算法
 OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	int ret=0, i=0;
 
 	msg_struct_l3bfsc_can_ws_give_up_t rcv;
@@ -390,7 +393,6 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 
 	//等待返回命令
 
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//测试命令，发送结果给L3BFSC
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 		if (rcv.sensorBitmap[i] == 1){
@@ -414,14 +416,96 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 	return SUCCESS;
 }
 
+//周期性读取
+OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	int ret=0, i=0;
+
+	msg_struct_l3bfsc_can_ws_read_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_ws_read_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_ws_read_req_t))){
+		HcuErrorPrint("CANITFLEO: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//将收到的传感器发送到下位机
+
+	//等待返回命令
+
+	//测试命令，发送结果给L3BFSC
+	hcu_usleep(10 + rand()%10);
+	msg_struct_can_l3bfsc_ws_read_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_read_resp_t));
+	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+		if (rcv.wsBitmap[i] == 1){
+			snd.sensorWsValue[i] = rand()%1000;
+		}
+	}
+	snd.length = sizeof(msg_struct_can_l3bfsc_ws_read_resp_t);
+	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_READ_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+		return FAILURE;
+	}
+#endif
+
+	//返回
+	return SUCCESS;
+}
+
+//后台的控制指令：启动/停止组合秤
+OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	int ret=0;
+
+	msg_struct_l3bfsc_can_general_cmd_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_general_cmd_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_general_cmd_req_t))){
+		HcuErrorPrint("CANITFLEO: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//将收到的传感器发送到下位机
+	//这里需要控制发送所有的命令，也就是连续发送12个CAN命令到每一个传感器
+
+	//等待返回命令
+
+	//测试命令，发送结果给L3BFSC
+	hcu_usleep(10 + rand()%10);
+	msg_struct_can_l3bfsc_general_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_general_cmd_resp_t));
+	snd.optid = rcv.optid;
+	snd.optpar = rcv.optpar;
+	snd.sensorid = rcv.sensorid;
+	snd.length = sizeof(msg_struct_can_l3bfsc_general_cmd_resp_t);
+	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+		return FAILURE;
+	}
+#endif
+
+	//返回
+	return SUCCESS;
+}
+
+
 //发送测试数据给L3BFSC
 void func_canitfleo_working_scan_process(void)
 {
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	int ret = 0;
 
 	//这里的定时工作，是为了测试目标。
 	//这里的定时已经启动，是为了定时产生假测试数据，喂给L3BFSC模块，以便测试算法
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	msg_struct_can_l3bfsc_new_ready_event_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
 	snd.length = sizeof(msg_struct_can_l3bfsc_new_ready_event_t);
