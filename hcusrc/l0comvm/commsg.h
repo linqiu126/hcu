@@ -656,26 +656,31 @@ enum HCU_INTER_TASK_MSG_ID
 	//////////////////////////////////////////////////////////////////////////////////
 
 	//L3BFSC
-	MSG_ID_L3BFSC_CAN_INQ_CMD_REQ,
+	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  //差错情况下的查询请求
 	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  //出料
 	MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   //放弃物料
-	MSG_ID_L3BFSC_UICOMM_CMD_RESP,
-	MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
-	MSG_ID_L3BFSC_CAN_WS_INIT_REQ,
+	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  //本地界面反馈
+	MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,   //后台命令反馈：启动/停止等等
+	MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,   //将定时读到的数据送往后台
+	MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  //传感器初始化
+	MSG_ID_L3BFSC_CAN_WS_READ_REQ,  //所有传感器读取一次性读取请求
+	MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  //来自后台的控制命令，只能在SCAN下工作
 
 	//CANITFLEO
-	MSG_ID_CAN_L3BFSC_INQ_CMD_RESP,
-	MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,
-	MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,
-	MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,
-	MSG_ID_CAN_L3FSC_WS_INIT_FB,
+	MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,    //差错情况下的查询反馈
+	MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  //传感器新数据事件
+	MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  //出料确认
+	MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   //放弃物料确认
+	MSG_ID_CAN_L3BFSC_WS_INIT_FB,       //传感器初始化确认
+	MSG_ID_CAN_L3BFSC_WS_READ_RESP,  //所有传感器读取一次性读取确认
+	MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, //来自后台的控制命令反馈，只能在SCAN下工作
 
 	//BFSCUICOMM
-	MSG_ID_UICOMM_L3BFSC_CMD_REQ,
-	MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,
+	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       //本地界面请求
+	MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,   //本地界面设置结果
 
 	//CLOUDVELA
-	MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
+	MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       //后台命令请求：启动/停止等等
 
 
 	MSG_ID_COM_MAX, //Ending point
@@ -2328,13 +2333,13 @@ typedef struct msg_struct_canitfleo_data_report
 
 //L3BFSC
 #define HCU_L3BFSC_MAX_SENSOR_NBR 20
-//MSG_ID_L3BFSC_CAN_INQ_CMD_REQ,
-typedef struct msg_struct_l3bfsc_can_inq_cmd_req
+//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,
+typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
 {
 	UINT8  sensorid;
 	UINT8  sensorBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
-}msg_struct_l3bfsc_can_inq_cmd_req_t;
+}msg_struct_l3bfsc_can_error_inq_cmd_req_t;
 
 //MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  //出料
 typedef struct msg_struct_l3bfsc_can_ws_comb_out
@@ -2363,9 +2368,28 @@ typedef struct msg_struct_l3bfsc_uicomm_cmd_resp
 typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
 {
 	UINT8  cmdid;
+	UINT8  eqpid;
+	UINT8  optid;
+	UINT8  optpar;
+	UINT32 modbusVal;
+	UINT8 dataFormat;
 	UINT32 timestamp;
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_cmd_resp_t;
+
+//MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT
+typedef struct msg_struct_l3bfsc_cloudvela_data_report
+{
+	UINT8  cmdid;
+	UINT8  eqpid;
+	UINT8  optid;
+	UINT8  optpar;
+	UINT8 dataFormat;
+	UINT8  sensorNbr;
+	UINT32 sensorWsValue[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_data_report_t;
 
 //MSG_ID_L3BFSC_CAN_WS_INIT_REQ
 typedef struct msg_struct_l3bfsc_can_ws_init_req
@@ -2374,15 +2398,34 @@ typedef struct msg_struct_l3bfsc_can_ws_init_req
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_init_req_t;
 
+//MSG_ID_L3BFSC_CAN_WS_READ_REQ
+typedef struct msg_struct_l3bfsc_can_ws_read_req
+{
+	UINT8 sensorid;
+	UINT8  wsBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_read_req_t;
+
+//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ
+typedef struct msg_struct_l3bfsc_can_general_cmd_req
+{
+	UINT8 sensorid;
+	UINT8 optid;
+	UINT8 optpar;
+	UINT32 modbusVal;
+	UINT32 length;
+}msg_struct_l3bfsc_can_general_cmd_req_t;
+
+
 //CANITFLEO
-//MSG_ID_CAN_L3BFSC_INQ_CMD_RESP,
-typedef struct msg_struct_can_l3bfsc_inq_cmd_resp
+//MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,
+typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 {
 	UINT8 sensorid;
 	UINT32 sensorWsValue;
 	UINT8 flag;
 	UINT32 length;
-}msg_struct_can_l3bfsc_inq_cmd_resp_t;
+}msg_struct_can_l3bfsc_error_inq_cmd_resp_t;
 
 //MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,
 typedef struct msg_struct_can_l3bfsc_new_ready_event
@@ -2406,13 +2449,32 @@ typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_give_up_fb_t;
 
-//MSG_ID_CAN_L3FSC_WS_INIT_FB,
+//MSG_ID_CAN_L3BFSC_WS_INIT_FB,
 typedef struct msg_struct_can_l3bfsc_ws_init_fb
 {
 	UINT8  sensorid;
 	UINT8  initFlag;
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_init_fb_t;
+
+//MSG_ID_CAN_L3BFSC_WS_READ_RESP
+typedef struct msg_struct_can_l3bfsc_ws_read_resp
+{
+	UINT32 sensorWsValue[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_read_resp_t;
+
+//MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP
+typedef struct msg_struct_can_l3bfsc_general_cmd_resp
+{
+	UINT8  sensorid;
+	UINT8  cmdid;
+	UINT8  optid;
+	UINT8  optpar;
+	UINT32 modbusVal;
+	UINT32 length;
+}msg_struct_can_l3bfsc_general_cmd_resp_t;
+
 
 //BFSCUICOMM
 //MSG_ID_UICOMM_L3BFSC_CMD_REQ,
@@ -2433,11 +2495,16 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
 	UINT32 	length;
 }msg_struct_uicomm_l3bfsc_param_set_result_t;
 
+
+
 //CLOUDVELA
 //MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
 typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
 {
 	UINT8  cmdid;
+	UINT8  eqpid;
+	UINT8  optid;
+	UINT8  optopr;
 	UINT32 timestamp;
 	UINT32 length;
 }msg_struct_cloudvela_l3bfsc_cmd_req_t;

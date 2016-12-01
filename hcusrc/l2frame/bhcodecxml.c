@@ -151,6 +151,17 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//char conGpsz[9];   //4B
 	strcat(da, xmlFormat->conGpsz);
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	//char conBfsc[9];  //4B, 组合秤
+	strcat(da, xmlFormat->conBfsc);
+
+	//char conBfscSensorNb[3];  //1B
+	strcat(da, xmlFormat->conBfscSensorNb);
+
+	//char conBfscData[8 * HCU_BFSC_SENSOR_WS_NBR_MAX + 1]; //4B * HCU_BFSC_SENSOR_WS_NBR_MAX传感器数量
+	strcat(da, xmlFormat->conBfscData);
+
+#endif
 
 	//Adding by Shanchun for alarm report
 	//char conAlarmType[5]; //2B
@@ -408,6 +419,19 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 				return FAILURE;
 			}
 			break;
+
+			//BFSC组合秤暂时不支持ZHB协议，也没必要支持那玩意
+			//而且BFSC也只有在BFSC项目下被支持，其它情况下不应该被支持的
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+			case L3CI_bfsc_comb_scale:
+				if (func_cloudvela_standard_xml_bfsc_msg_unpack(rcv) == FAILURE){
+					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					HcuErrorPrint("CLOUDVELA: Error unpack receiving message of HSMMP!\n");
+					return FAILURE;
+				}
+				break;
+#endif
+
 
 		case L3CI_hsmmp:
 			if (func_cloudvela_standard_xml_hsmmp_msg_unpack(rcv) == FAILURE){
@@ -2139,6 +2163,132 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 
 	return SUCCESS;
 
+}
+
+OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+{
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
+	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
+
+	//命令字
+	cmdId = L3CI_bfsc_comb_scale;
+
+	//长度域，1BYTE
+	memset(st, 0, sizeof(st));
+	strncpy(st, &rcv->buf[index], 2);
+	len = strtoul(st, NULL, 16);
+	index = index + 2;
+	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	//确保长度域是完全一致的
+	it = len*2 + 4;
+	if (it != rcv->length){
+		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	//操作字，1BYTE
+	memset(st, 0, sizeof(st));
+	strncpy(st, &rcv->buf[index], 2);
+	it = strtoul(st, NULL, 16);
+	index = index + 2;
+	len = len-1;
+	if ((it <= L3PO_bfsc_min) || (it >= L3PO_bfsc_max)){
+		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	optId = it;
+
+	//设备号，1BYTE
+	if (len <=0){
+		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	memset(st, 0, sizeof(st));
+	strncpy(st, &rcv->buf[index], 2);
+	it = strtoul(st, NULL, 16);
+	index = index + 2;
+	len = len-1;
+	equId = it;
+
+	//根据OptId操作字分别进行进一步的分解
+	if ((optId == L3PO_bfsc_data_req) || (optId == L3PO_bfsc_data_report)){
+
+		//暂时不支持该命令组合，故而忽略
+
+/*		//初始化发送函数
+		msg_struct_cloudvela_l3bfsc_data_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_cloudvela_l3bfsc_data_req_t));
+
+		snd.cmdId = cmdId;
+		snd.optId = optId;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.equId = equId;
+
+		//消息结构还需要进一步细化，这里是按照最严格的检查方式进行，一旦有错，全部拒绝，以保护HCU的安全执行
+		//这里的格式是，CLOUD->HCU读取PM3:  25 02(len) 01(opt) 01(equ)
+		if (len != 0 ){
+			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		//将消息命令发送给L3BFSC任务
+		snd.length = sizeof(msg_struct_cloudvela_l3bfsc_data_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_NOISE]);
+			return FAILURE;
+		}*/
+	}
+
+	else if ((optId == L3PO_bfsc_start_cmd) || (optId == L3PO_bfsc_stop_cmd) ){
+
+		//初始化发送函数
+		msg_struct_cloudvela_l3bfsc_cmd_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_l3bfsc_cmd_req_t));
+
+		snd1.cmdid = cmdId;
+		snd1.optid = optId;
+		snd1.eqpid = equId;
+
+		//这里的格式是，CLOUD->HCU 设置传感器开关: 3B 02(len) 02(opt) 01(equ)
+		//如果是START/STOP命令，则结束了
+		if (len != 0 ){
+			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		//将消息命令发送给L3BFSC任务
+		snd1.length = sizeof(msg_struct_cloudvela_l3bfsc_cmd_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		if (ret == FAILURE){
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_L3BFSC]);
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+	} //end of if complex ||||||
+
+
+	else{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
+		return FAILURE;
+	}
+#endif
+
+	//返回
+	return SUCCESS;
 }
 
 

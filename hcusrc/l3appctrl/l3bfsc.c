@@ -54,31 +54,39 @@ FsmStateItem_t FsmL3bfsc[] =
 	//等待下位机完成参数初始化：等待MSG_ID_CAN_L3FSC_WS_INIT_RESP，完成后进入FSM_STATE_L3BFSC_OOS_SCAN
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_WS_INIT,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_WS_INIT,          			fsm_l3bfsc_time_out},
-	{MSG_ID_CAN_L3FSC_WS_INIT_FB,       		FSM_STATE_L3BFSC_WS_INIT,          			fsm_l3bfsc_can_ws_init_fb},
+	{MSG_ID_CAN_L3BFSC_WS_INIT_FB,       		FSM_STATE_L3BFSC_WS_INIT,          			fsm_l3bfsc_canitf_ws_init_fb},
 
 	//进料组合态：等待正常的MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT，每一次进来均触发一次组合算法。结果无动作，或发送MSG_ID_L3BFSC_CAN_WS_COMB_OUT/MSG_ID_L3BFSC_CAN_WS_GIVE_UP
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_SCAN,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_time_out},
 	{MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,      FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_ws_new_ready_event},  //只能触发数据存储，不进入组合算法的执行
+	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       	FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_cloudvela_cmd_req},  //只有在最为常见的SCAN状态下才允许后台干预，否则太复杂
+	{MSG_ID_CAN_L3BFSC_WS_READ_RESP,       		FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_period_read_resp},  //只有在最为常见的SCAN状态下才允许定时上报，否则太复杂
+	{MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP,       	FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_general_cmd_resp},  //只有在最为常见的SCAN状态下才允许后台，否则太复杂
 
 	//出料流程态：单纯等待MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_TTT,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_time_out},
-	{MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,       	FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_can_ws_comb_out_fb},
+	{MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,       	FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_canitf_ws_comb_out_fb},
 
 	//放弃物料态：单纯等待MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_TGU,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_time_out},
-	{MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,       	FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_can_ws_give_up_fb},
+	{MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,       	FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_canitf_ws_give_up_fb},
 
 	//数据差错，重新采样所有数据：收到MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT差错，发送MSG_ID_L3BFSC_CAN_CMD_REQ，等待传感器传回所有差错的重测值。结束以后进入FSM_STATE_L3BFSC_OOS_SCAN。
     {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_ERROR_INQ,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_ERROR_INQ,          		fsm_l3bfsc_time_out},
-	{MSG_ID_CAN_L3BFSC_INQ_CMD_RESP,       		FSM_STATE_L3BFSC_ERROR_INQ,          		fsm_l3bfsc_canitf_inq_cmd_resp},  //只能触发数据存储，不进入组合算法的执行
+	{MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,      FSM_STATE_L3BFSC_ERROR_INQ,          		fsm_l3bfsc_canitf_error_inq_cmd_resp},  //只能触发数据存储，不进入组合算法的执行
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
+
+//状态机中的一些遗留问题：
+//1. 什么是否允许后台查询或者发送命令？任何时候？这意味着状态机需要变得较为复杂了
+//2.为了演示任务，定时读取
+
 
 //Global variables
 L3BfscGenCtrlTable_t zHcuL3BfscGenCtrlTable; //波峰秤盘的总控表
@@ -185,12 +193,12 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HCU_DEBUG_PRINT_INF(targetStr);
 	}
 
-	//启动周期性定时器
-/*	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, HCU_L3BFSC_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	//启动周期性定时器：这个定时器是为了定时汇报12个传感器的测量数量
+	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, HCU_L3BFSC_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");
 		return FAILURE;
-	}*/
+	}
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE){
@@ -247,20 +255,29 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//Period time out received
 	if ((rcv.timeId == TIMER_ID_1S_L3BFSC_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
-		if (FsmGetState(TASK_ID_L3BFSC) != FSM_STATE_L3BFSC_ACTIVED){
+		//在这个较为复杂的状态机中，这里的简单状态判定不适用，暂时去掉
+		/*if (FsmGetState(TASK_ID_L3BFSC) != FSM_STATE_L3BFSC_ACTIVED){
 			ret = FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED);
 			if (ret == FAILURE){
 				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
+		}*/
+		//周期性读取，只能在FSM_STATE_L3BFSC_OOS_SCAN下，否则不允许上报。如果不在此状态，直接返回，但此时不认为是差错
+		if (FsmGetState(TASK_ID_L3BFSC) != FSM_STATE_L3BFSC_OOS_SCAN){
+			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Not in FSM_STATE_L3BFSC_OOS_SCAN, so can not execute period read command!\n");
+			return SUCCESS;
 		}
-		//Do nothing
+		else if (func_l3bfsc_time_out_period_read_process() == FAILURE){
+			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error process time out message!\n");
+			return FAILURE;
+		}
 	}
 
 	//这个地方无限循环初始化
 	else if ((rcv.timeId == TIMER_ID_1S_L3BFSC_INIT_FB_WAIT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		if (func_l3bfsc_time_out_ws_init_req_process() == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error prceoss time out message!\n");
+			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error process time out message!\n");
 			return FAILURE;
 		}
 	}
@@ -293,13 +310,14 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3bfsc_canitf_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//专门用于处理在差错状态下的状态查询
+OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 
-	msg_struct_can_l3bfsc_inq_cmd_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_inq_cmd_resp_t))){
+	msg_struct_can_l3bfsc_error_inq_cmd_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t))){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
 		return FAILURE;
 	}
@@ -330,11 +348,11 @@ OPSTAT fsm_l3bfsc_canitf_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 		}
 
 		//重新发送查询命令
-		msg_struct_l3bfsc_can_inq_cmd_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t));
-		snd.length = sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t);
+		msg_struct_l3bfsc_can_error_inq_cmd_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
+		snd.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
 		snd.sensorid = rcv.sensorid;
-		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
+		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
 			return FAILURE;
@@ -378,7 +396,7 @@ OPSTAT fsm_l3bfsc_canitf_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3bfsc_can_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 	msg_struct_can_l3bfsc_ws_comb_out_fb_t rcv;
@@ -430,7 +448,7 @@ OPSTAT fsm_l3bfsc_can_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3bfsc_can_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 	msg_struct_can_l3bfsc_ws_give_up_fb_t rcv;
@@ -496,23 +514,86 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 }
 
 
+//后来来的命令，发送到CANITFLEO模块，执行命令后，再返回给后台
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
 OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-/*	HcuDiscDataSampleStorageArray_t record;
+	int ret=0;
 
-	msg_struct_modbus_pm25_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+	//入参检查
+	msg_struct_cloudvela_l3bfsc_cmd_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_l3bfsc_cmd_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_l3bfsc_cmd_req_t))){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
 		return FAILURE;
 	}
-	memcpy(&rcv, param_ptr, param_len);*/
+	memcpy(&rcv, param_ptr, param_len);
+	if (rcv.cmdid != L3CI_bfsc_comb_scale){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
+		return FAILURE;
+	}
 
-	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+	//将命令发送到传感器下位机
+	msg_struct_l3bfsc_can_general_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_general_cmd_req_t));
+	snd.length = sizeof(msg_struct_l3bfsc_can_general_cmd_req_t);
 
-	//停止定时器
+	//这里只支持一种启动和停止命令，其它的暂时不支持
+	if ((rcv.optid != L3PO_bfsc_start_cmd) && (rcv.optid != L3PO_bfsc_stop_cmd)){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Can not supported command coming from cloud!\n");
+		return FAILURE;
+	}
 
+	snd.optid = rcv.optid;
+	snd.optpar = rcv.optopr;
+	//这里如此设置，表示是为了全局所有的传感器
+	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
+	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		return FAILURE;
+	}
+
+	//状态不转移
+
+	//短时钟不启动
+
+	//返回
+	return SUCCESS;
+}
+
+//后台命令执行的结果
+OPSTAT fsm_l3bfsc_canitf_general_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0, i=0;
+
+	//入参检查
+	msg_struct_can_l3bfsc_general_cmd_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_general_cmd_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_general_cmd_resp_t))){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//将数据发送到CLOUDVELA中去
+	//这里暂时不做数据合法性的判定，未来再考虑提高可靠性和安全性
+	msg_struct_l3bfsc_cloudvela_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t));
+	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t);
+	snd.optid = rcv.optid;
+	snd.optpar = rcv.optpar;
+	snd.modbusVal = rcv.modbusVal;
+	snd.timestamp = time(0);
+	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+		return FAILURE;
+	}
+
+	//状态不转移
+
+	//短时钟不启动
 
 	//返回
 	return SUCCESS;
@@ -582,11 +663,11 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		}
 
 		//发送查询命令
-		msg_struct_l3bfsc_can_inq_cmd_req_t snd0;
-		memset(&snd0, 0, sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t));
-		snd0.length = sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t);
+		msg_struct_l3bfsc_can_error_inq_cmd_req_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
+		snd0.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
 		snd0.sensorid = rcv.sensorid;
-		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd0, snd0.length);
+		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd0, snd0.length);
 		if (ret == FAILURE) {HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]); return FAILURE;}
 
 		//设置新状态
@@ -705,7 +786,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3bfsc_can_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 
@@ -755,6 +836,50 @@ OPSTAT fsm_l3bfsc_can_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//返回
 	return SUCCESS;
 }
+
+//周期性读取数据并送往后台
+OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0, i=0;
+
+	//入参检查
+	msg_struct_can_l3bfsc_ws_read_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_ws_read_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_ws_read_resp_t))){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//将数据发送到CLOUDVELA中去
+	//这里暂时不做数据合法性的判定，未来再考虑提高可靠性和安全性
+	msg_struct_l3bfsc_cloudvela_data_report_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
+	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_data_report_t);
+	snd.sensorNbr = HCU_BFSC_SENSOR_WS_NBR_MAX;
+	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+		snd.sensorWsValue[i] = rcv.sensorWsValue[i];
+	}
+	snd.timestamp = time(0);
+
+	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+		return FAILURE;
+	}
+
+	//状态不转移
+
+	//短时钟不启动
+
+	//返回
+	return SUCCESS;
+}
+
+
+
+
+
 
 OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -927,13 +1052,13 @@ OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void)
 	}
 
 	//发送扫描需求
-	msg_struct_l3bfsc_can_inq_cmd_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t));
-	snd.length = sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t);
+	msg_struct_l3bfsc_can_error_inq_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
+	snd.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
 	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
 
-	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
+	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
 		return FAILURE;
@@ -961,13 +1086,13 @@ OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void)
 	}
 
 	//发送扫描需求
-	msg_struct_l3bfsc_can_inq_cmd_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t));
-	snd.length = sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t);
+	msg_struct_l3bfsc_can_error_inq_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
+	snd.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
 	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
 
-	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
+	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
 		return FAILURE;
@@ -989,13 +1114,13 @@ OPSTAT func_l3bfsc_time_out_error_scan_process(void)
 	int ret = 0, i=0;
 
 	//发送扫描需求
-	msg_struct_l3bfsc_can_inq_cmd_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t));
-	snd.length = sizeof(msg_struct_l3bfsc_can_inq_cmd_req_t);
+	msg_struct_l3bfsc_can_error_inq_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
+	snd.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
 	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
 
-	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
+	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
 		return FAILURE;
@@ -1004,6 +1129,29 @@ OPSTAT func_l3bfsc_time_out_error_scan_process(void)
 	//返回
 	return SUCCESS;
 }
+
+//周期性定时读取
+OPSTAT func_l3bfsc_time_out_period_read_process(void)
+{
+	int ret = 0, i=0;
+
+	//发送读取命令到CAN接口，但并不启动定时器，以简化整个状态机的设置
+	msg_struct_l3bfsc_can_ws_read_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_ws_read_req_t));
+	snd.length = sizeof(msg_struct_l3bfsc_can_ws_read_req_t);
+	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
+	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.wsBitmap[i] = 1;
+
+	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_READ_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		return FAILURE;
+	}
+
+	//返回
+	return SUCCESS;
+}
+
 
 
 

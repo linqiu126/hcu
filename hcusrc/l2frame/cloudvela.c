@@ -66,6 +66,7 @@ FsmStateItem_t FsmCloudvela[] =
 	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_hsmmp_control_fb},
 	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_hsmmp_data_link_resp},
 	{MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_l3bfsc_cmd_resp},
+	{MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_l3bfsc_data_report},
 
 	//for alarm & pm report added by ZSC
 	{MSG_ID_COM_ALARM_REPORT,   				FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_alarm_report},
@@ -2057,7 +2058,113 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 
 OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	int ret=0;
+	msg_struct_l3bfsc_cloudvela_cmd_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t))){
+		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
+		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+		//打包数据
+		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
+				rcv.dataFormat, rcv.modbusVal, 0, NULL, rcv.timestamp, &buf) == FAILURE){
+			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		//Send out
+		ret = func_cloudvela_send_data_to_cloud(&buf);
+		if ( ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error!\n");
+			return FAILURE;
+		}
+	}else{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
+	}
+
+#endif
 	return SUCCESS;
 }
 
+OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	int ret=0;
+	msg_struct_l3bfsc_cloudvela_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_report_t))){
+		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
+		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+		//打包数据：这里引用了比较高潮的技巧，将传感器数组传递到目标
+		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
+				rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
+			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}
+
+		//Send out
+		ret = func_cloudvela_send_data_to_cloud(&buf);
+		if ( ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error!\n");
+			return FAILURE;
+		}
+	}else{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
+	}
+
+#endif
+	return SUCCESS;
+}
 
