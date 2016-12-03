@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="MAX" key="selection"/>
+		<item value="can_receive" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="MAX"/>
+			<item value="can_receive"/>
+			<item value=" can_receive"/>
+			<item value="can_send"/>
+			<item value="can_init"/>
+			<item value="bfsc"/>
+			<item value="func_canitfleo_working_scan_process"/>
 			<item value="func_cloudvela_huanbao_bfsc_msg_pack"/>
-			<item value="func_cloudvela_standard_xml_pack"/>
-			<item value="msg_struct_l3bfsc_cloudvela_cmd_resp_t"/>
-			<item value="MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP"/>
-			<item value="MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ"/>
-			<item value="func_cloudvela_standard_xml_bfsc_msg_unpack"/>
-			<item value="L3CI_noise"/>
+			<item value="MAX"/>
 		</list>
 		<list key="replacehistory">
 			<item value="canitf_"/>

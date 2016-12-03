@@ -8,8 +8,16 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 12个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
 ==> 发送给后台统计报告
 
+<<<<<<< HEAD
 //= ZSC, 2016 DEC.3, CURRENT_SW_DELIVERY 130 =>G20项目 
 = add application layer heart beat check for socket
+=======
+
+//= ZSC/ZJL, 2016 DEC.3, CURRENT_SW_DELIVERY 130 =>BFSC项目
+= 修改完善CloudVela中对于数据格式发送的BFSC部分
+= CAN函数测试程序上线
+= 继续完善CAN的操控
+>>>>>>> refs/remotes/origin/dev
 
 //= ZSC/ZJL, 2016 DEC.1, CURRENT_SW_DELIVERY 129 =>BFSC项目
 = 周期性读取完成

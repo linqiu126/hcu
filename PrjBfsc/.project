@@ -781,6 +781,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canitfleo.h</locationURI>
 		</link>
 		<link>
+			<name>src/l2frame/canlib.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canlib.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2frame/canlib.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canlib.h</locationURI>
+		</link>
+		<link>
 			<name>src/l2frame/cloudvela.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/cloudvela.c</locationURI>

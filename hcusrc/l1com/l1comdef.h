@@ -95,18 +95,29 @@ typedef enum
 	L3CI_switch = 0x39, //继电器
 	L3CI_transporter = 0x3A, //导轨传送带
 	L3CI_bfsc_comb_scale = 0x3B, //组合秤
-	L3CI_itf_sps = 0x40, //串口读取命令/返回结果
-	L3CI_itf_adc = 0x41, //ADC读取命令/返回结果
-	L3CI_itf_dac = 0x42, //DAC读取命令/返回结果
-	L3CI_itf_i2c = 0x43, //I2C读取命令/返回结果
-	L3CI_itf_pwm = 0x44, //PWM读取命令/返回结果
-	L3CI_itf_di = 0x45, //DI读取命令/返回结果
-	L3CI_itf_do = 0x46, //DO读取命令/返回结果
-	L3CI_itf_can = 0x47, //CAN读取命令/返回结果
-	L3CI_itf_spi = 0x48, //SPI读取命令/返回结果
-	L3CI_itf_usb = 0x49, //USB读取命令/返回结果
-	L3CI_itf_eth = 0x4A, //网口读取命令/返回结果
-	L3CI_itf_485 = 0x4B, //485读取命令/返回结果
+	L3CI_fhys_cci = 0x40,  //智能锁
+	L3CI_fhys_door = 0x41, //光交箱门
+	L3CI_fhys_rfid = 0x42, //光交箱RFID模块
+	L3CI_fhys_ble = 0x43, //光交箱BLE模块
+	L3CI_fhys_gprs = 0x44, //光交箱GPRS模块
+	L3CI_fhys_battery = 0x45, //光交箱电池模块
+	L3CI_fhys_vibration = 0x46, //光交箱震动
+	L3CI_fhys_smoke = 0x47, //光交箱烟雾
+	L3CI_fhys_water = 0x48, //光交箱水浸
+	L3CI_fhys_temp = 0x49, //光交箱温度
+	L3CI_fhys_humid = 0x4A, //光交箱湿度
+	L3CI_itf_sps = 0x50, //串口读取命令/返回结果
+	L3CI_itf_adc = 0x51, //ADC读取命令/返回结果
+	L3CI_itf_dac = 0x52, //DAC读取命令/返回结果
+	L3CI_itf_i2c = 0x53, //I2C读取命令/返回结果
+	L3CI_itf_pwm = 0x54, //PWM读取命令/返回结果
+	L3CI_itf_di = 0x55, //DI读取命令/返回结果
+	L3CI_itf_do = 0x56, //DO读取命令/返回结果
+	L3CI_itf_can = 0x57, //CAN读取命令/返回结果
+	L3CI_itf_spi = 0x58, //SPI读取命令/返回结果
+	L3CI_itf_usb = 0x59, //USB读取命令/返回结果
+	L3CI_itf_eth = 0x5A, //网口读取命令/返回结果
+	L3CI_itf_485 = 0x5B, //485读取命令/返回结果
 	L3CI_hcu_inventory= 0xA0,	//软件清单
 	L3CI_sw_package = 0xA1,	//软件版本体
 	L3CI_alarm_info = 0xB0, //for alarm report
@@ -1125,9 +1136,21 @@ typedef struct strHcuCanitfleoCmdFrame
 	UINT8 bfscPar2;
 	UINT8 bfscPar3;
 }strHcuCanitfleoCmdFrame_t;
-#define HCU_CANITFLEO_CMD_PREFIXH 0x23
 #define HCU_CANITFLEO_CMD_PREFIXL 0x00
 #define HCU_CANITFLEO_CMD_BFSC_ID 0x65
+typedef enum
+{
+	HCU_CANITFLEO_PREFIXH_none = 0,
+	HCU_CANITFLEO_PREFIXH_min = 0x22,
+	HCU_CANITFLEO_PREFIXH_motor_ctrl = 0x23,
+	HCU_CANITFLEO_PREFIXH_motor_resp = 0x60,
+	HCU_CANITFLEO_PREFIXH_ws_ctrl = 0x40,
+	HCU_CANITFLEO_PREFIXH_ws_resp = 0x43,
+	HCU_CANITFLEO_PREFIXH_heart_beat = 0x7F,  //心跳
+	HCU_CANITFLEO_PREFIXH_max,
+	HCU_CANITFLEO_PREFIXH_invalid = 0xFF,
+}HcuCanitfleoPrefixHCmdidEnmu;
+
 //不同的控制命令
 typedef enum
 {
@@ -1144,7 +1167,7 @@ typedef enum
 	HCU_CANITFLEO_OPTID_motor_speed = 0x21,
 	HCU_CANITFLEO_OPTID_scale_range = 0x25,
 	HCU_CANITFLEO_OPTID_max,
-	HCU_CANITFLEO_OPT_invalid = 0xFF,
+	HCU_CANITFLEO_OPTID_invalid = 0xFF,
 }HcuCanitfleoOptidEnmu;
 typedef enum
 {
