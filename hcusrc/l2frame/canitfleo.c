@@ -222,7 +222,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 		if (rcv.wsBitmap[i] ==1){
 			//生成CAN命令
 			memset(&p, 0, sizeof(strHcuCanitfleoCmdFrame_t));
-			if (func_canitfleo_frame_encode(HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, 0, &p) == FAILURE){
+			if (func_canitfleo_frame_encode(HCU_CANITFLEO_PREFIXH_ws_ctrl, HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, 0, &p) == FAILURE){
 				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 				HcuErrorPrint("CANITFLEO: Generate CAN Frame error!\n");
 				return FAILURE;
@@ -526,7 +526,7 @@ void func_canitfleo_working_scan_process(void)
 }
 
 //生成FRAME函数
-OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe)
+OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe)
 {
 	//先检查输入参数
 	if ((optid <= HCU_CANITFLEO_OPTID_min) || (optid >= HCU_CANITFLEO_OPTID_max) || (pframe == NULL)){
@@ -536,7 +536,7 @@ OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, 
 	}
 
 	//按字节，生成消息结构帧
-	pframe->bfscCmdPrefixH =HCU_CANITFLEO_CMD_PREFIXH;
+	pframe->bfscCmdPrefixH = prefixcmdid;
 	pframe->bfscCmdPrefixL = HCU_CANITFLEO_CMD_PREFIXL;
 	pframe->bfscCmdId = HCU_CANITFLEO_CMD_BFSC_ID;
 	pframe->bfscOptId = optid;
@@ -615,7 +615,7 @@ OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, 
 }
 
 //解码FRAME的函数
-OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 optid, UINT8 optpar, UINT32 modbusval)
+OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval)
 {
 	//入参检查
 	if (pframe == NULL){
@@ -625,11 +625,12 @@ OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 opti
 	}
 
 	//检查最重要的参数
-	if ((pframe->bfscCmdPrefixH != HCU_CANITFLEO_CMD_PREFIXH) || (pframe->bfscCmdPrefixL != HCU_CANITFLEO_CMD_PREFIXL) || (pframe->bfscCmdId != HCU_CANITFLEO_CMD_BFSC_ID)){
+	if ((pframe->bfscCmdPrefixH <= HCU_CANITFLEO_PREFIXH_min) || (pframe->bfscCmdPrefixH >= HCU_CANITFLEO_PREFIXH_max) || (pframe->bfscCmdPrefixL != HCU_CANITFLEO_CMD_PREFIXL) || (pframe->bfscCmdId != HCU_CANITFLEO_CMD_BFSC_ID)){
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Frame header error!\n");
 		return FAILURE;
 	}
+	prefixcmdid= pframe->bfscCmdId;
 	optid = pframe->bfscOptId;
 	if ((optid <=HCU_CANITFLEO_OPTID_min) || (optid >=HCU_CANITFLEO_OPTID_max)){
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;

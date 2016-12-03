@@ -1135,9 +1135,21 @@ typedef struct strHcuCanitfleoCmdFrame
 	UINT8 bfscPar2;
 	UINT8 bfscPar3;
 }strHcuCanitfleoCmdFrame_t;
-#define HCU_CANITFLEO_CMD_PREFIXH 0x23
 #define HCU_CANITFLEO_CMD_PREFIXL 0x00
 #define HCU_CANITFLEO_CMD_BFSC_ID 0x65
+typedef enum
+{
+	HCU_CANITFLEO_PREFIXH_none = 0,
+	HCU_CANITFLEO_PREFIXH_min = 0x22,
+	HCU_CANITFLEO_PREFIXH_motor_ctrl = 0x23,
+	HCU_CANITFLEO_PREFIXH_motor_resp = 0x60,
+	HCU_CANITFLEO_PREFIXH_ws_ctrl = 0x40,
+	HCU_CANITFLEO_PREFIXH_ws_resp = 0x43,
+	HCU_CANITFLEO_PREFIXH_heart_beat = 0x7F,  //心跳
+	HCU_CANITFLEO_PREFIXH_max,
+	HCU_CANITFLEO_PREFIXH_invalid = 0xFF,
+}HcuCanitfleoPrefixHCmdidEnmu;
+
 //不同的控制命令
 typedef enum
 {
@@ -1154,7 +1166,7 @@ typedef enum
 	HCU_CANITFLEO_OPTID_motor_speed = 0x21,
 	HCU_CANITFLEO_OPTID_scale_range = 0x25,
 	HCU_CANITFLEO_OPTID_max,
-	HCU_CANITFLEO_OPT_invalid = 0xFF,
+	HCU_CANITFLEO_OPTID_invalid = 0xFF,
 }HcuCanitfleoOptidEnmu;
 typedef enum
 {
