@@ -63,8 +63,6 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//func_hwinv_scan_date(); //更新时间戳
 	strcpy(xmlFormat->CreateTime, zCurTimeDate.sSec);
 
-
-
 	//MsgType参数，必须由调用函数填入，因为它才能知晓这是什么样的内容体
 	//strcpy(xmlFormat->MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT);
 	if (strlen(xmlFormat->FuncFlag) <=0 )	sprintf(xmlFormat->FuncFlag, "%1d", 0);
@@ -208,7 +206,7 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//char conNtimes[5];   //2B
 	strcat(da, xmlFormat->conNtimes);
 
-	HcuDebugPrint("CLOUDVELA: da: %s!!!\n", da);
+	HcuDebugPrint("CLOUDVELA: Send out data DA: %s!!!\n", da);
 
 	//获取变长部分的长度, Len=0的情况存在，比如Heart_Beat消息，这里为了统一处理函数的简化，不做过分的区别对待和处理，尽量让处理函数通用化
 	int len = 0;

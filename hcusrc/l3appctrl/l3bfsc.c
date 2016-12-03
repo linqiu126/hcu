@@ -856,6 +856,8 @@ OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * 
 	msg_struct_l3bfsc_cloudvela_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
 	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_data_report_t);
+	snd.cmdid = L3CI_bfsc_comb_scale;
+	snd.optid = L3PO_bfsc_data_report;
 	snd.sensorNbr = HCU_BFSC_SENSOR_WS_NBR_MAX;
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
 		snd.sensorWsValue[i] = rcv.sensorWsValue[i];

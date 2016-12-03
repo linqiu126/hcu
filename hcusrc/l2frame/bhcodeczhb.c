@@ -691,6 +691,7 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 {
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	int i=0;
+	char stemp[9];
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
 		HcuErrorPrint("CLOUDVELA: Error CloudDataSendBuf_t pointer!\n");
@@ -707,11 +708,11 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		//pack数据到临时字符串中, 将数据打印到关键的数值中
 		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
 		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
-		sprintf(xmlFormat.conBackType, "%02X", optpar & 0xFF);
-		sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
-		sprintf(xmlFormat.conBfsc, "%08X", modbusValue);
-		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
-		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
+		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
+		//sprintf(xmlFormat.conBackType, "%02X", optpar & 0xFF);
+		//sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
+		//sprintf(xmlFormat.conBfsc, "%08X", modbusValue);
+		//sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
 		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
 		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
@@ -740,8 +741,10 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		//pack数据到临时字符串中, 将数据打印到关键的数值中
 		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
 		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
-		sprintf(xmlFormat.conBackType, "%02X", optpar & 0xFF);
-		sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
+		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
+		//sprintf(xmlFormat.conBackType, "%02X", optpar & 0xFF);
+		//sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
+		//sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conBfscSensorNb, "%02X", sensorNbr);
 		if (sensorNbr > HCU_BFSC_SENSOR_WS_NBR_MAX){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -750,10 +753,11 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		}
 		//这里应用了高级的技巧，是否可行，待测试
 		for (i=0; i<sensorNbr; i++){
-			sprintf(xmlFormat.conBfscData[i*8], "%08X", (UINT32)*(sensorValue + 4*i));
+			//sprintf(xmlFormat.conBfscData[i*8], "%08X", (UINT32)*(sensorValue + 4*i));
+			memset(stemp, 0, sizeof(stemp));
+			sprintf(stemp, "%08X", (UINT32)*(sensorValue + 4*i));
+			strcat(xmlFormat.conBfscData, stemp);
 		}
-		sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
-		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
 		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
 		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
 		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);

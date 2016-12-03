@@ -2139,7 +2139,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据：这里引用了比较高潮的技巧，将传感器数组传递到目标
-		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
+		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
 				rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
