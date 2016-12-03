@@ -112,6 +112,10 @@
 //I2C
 #include <linux/i2c-dev.h>
 
+//CAN
+#include <linux/can.h>
+#include <linux/can/raw.h>
+
 //2. 公共消息结构体定义
 //Under normal case, 1024Byte shall be enough for internal message communication purpose.
 //If not enough, need modify here to enlarge

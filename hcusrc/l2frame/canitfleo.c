@@ -222,7 +222,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 		if (rcv.wsBitmap[i] ==1){
 			//生成CAN命令
 			memset(&p, 0, sizeof(strHcuCanitfleoCmdFrame_t));
-			if (func_canitfleo_frame_encode(HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, 0, &p) == FAILURE){
+			if (func_canitfleo_frame_encode(HCU_CANITFLEO_PREFIXH_ws_ctrl, HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, 0, &p) == FAILURE){
 				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 				HcuErrorPrint("CANITFLEO: Generate CAN Frame error!\n");
 				return FAILURE;
@@ -526,7 +526,7 @@ void func_canitfleo_working_scan_process(void)
 }
 
 //生成FRAME函数
-OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe)
+OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe)
 {
 	//先检查输入参数
 	if ((optid <= HCU_CANITFLEO_OPTID_min) || (optid >= HCU_CANITFLEO_OPTID_max) || (pframe == NULL)){
@@ -536,7 +536,7 @@ OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, 
 	}
 
 	//按字节，生成消息结构帧
-	pframe->bfscCmdPrefixH =HCU_CANITFLEO_CMD_PREFIXH;
+	pframe->bfscCmdPrefixH = prefixcmdid;
 	pframe->bfscCmdPrefixL = HCU_CANITFLEO_CMD_PREFIXL;
 	pframe->bfscCmdId = HCU_CANITFLEO_CMD_BFSC_ID;
 	pframe->bfscOptId = optid;
@@ -615,7 +615,7 @@ OPSTAT func_canitfleo_frame_encode(UINT8 optid, UINT8 optpar, UINT32 modbusval, 
 }
 
 //解码FRAME的函数
-OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 optid, UINT8 optpar, UINT32 modbusval)
+OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval)
 {
 	//入参检查
 	if (pframe == NULL){
@@ -625,11 +625,12 @@ OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 opti
 	}
 
 	//检查最重要的参数
-	if ((pframe->bfscCmdPrefixH != HCU_CANITFLEO_CMD_PREFIXH) || (pframe->bfscCmdPrefixL != HCU_CANITFLEO_CMD_PREFIXL) || (pframe->bfscCmdId != HCU_CANITFLEO_CMD_BFSC_ID)){
+	if ((pframe->bfscCmdPrefixH <= HCU_CANITFLEO_PREFIXH_min) || (pframe->bfscCmdPrefixH >= HCU_CANITFLEO_PREFIXH_max) || (pframe->bfscCmdPrefixL != HCU_CANITFLEO_CMD_PREFIXL) || (pframe->bfscCmdId != HCU_CANITFLEO_CMD_BFSC_ID)){
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Frame header error!\n");
 		return FAILURE;
 	}
+	prefixcmdid= pframe->bfscCmdId;
 	optid = pframe->bfscOptId;
 	if ((optid <=HCU_CANITFLEO_OPTID_min) || (optid >=HCU_CANITFLEO_OPTID_max)){
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
@@ -696,4 +697,380 @@ OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 opti
 }
 
 
+
+#define MAXSOCK 16    /* max. number of CAN interfaces given on the cmdline */
+#define MAXIFNAMES 30 /* size of receive name index to omit ioctls */
+#define MAXCOL 6      /* number of different colors for colorized output */
+#define ANYDEV "any"  /* name of interface to receive from any CAN interface */
+#define ANL "\r\n"    /* newline in ASC mode */
+
+#define SILENT_INI 42 /* detect user setting on commandline */
+#define SILENT_OFF 0  /* no silent mode */
+#define SILENT_ANI 1  /* silent mode with animation */
+#define SILENT_ON  2  /* silent mode (completely silent) */
+
+//#define BOLD    ATTBOLD
+//#define RED     ATTBOLD FGRED
+//#define GREEN   ATTBOLD FGGREEN
+//#define YELLOW  ATTBOLD FGYELLOW
+//#define BLUE    ATTBOLD FGBLUE
+//#define MAGENTA ATTBOLD FGMAGENTA
+//#define CYAN    ATTBOLD FGCYAN
+
+//const char col_on [MAXCOL][19] = {BLUE, RED, GREEN, BOLD, MAGENTA, CYAN};
+const char col_off []; //ATTRESET;
+
+static char *cmdlinename[MAXSOCK];
+static __u32 dropcnt[MAXSOCK];
+static __u32 last_dropcnt[MAXSOCK];
+static char devname[MAXIFNAMES][IFNAMSIZ+1];
+static int  dindex[MAXIFNAMES];
+static int  max_devname_len; /* to prevent frazzled device name output */
+
+#define MAXANI 4
+const char anichar[MAXANI] = {'|', '/', '-', '\\'};
+
+#define MAX_CANFRAME      "12345678#01.23.45.67.89.AB.CD.EF"
+
+extern int optind, opterr, optopt;
+
+static volatile int running = 1;
+
+/*
+ *
+ * Initialize the SocketCAN
+ * In: char *canitfname, like "can0"
+ * Out: int *sock, sick id after initialized
+ * Return: 1 Failure, 0 Success
+ * MAKE SURE "sudo /sbin/ip link set can0 up type can bitrate 500000"
+ *
+ */
+OPSTAT func_canitfleo_can_init(char *canitfname, int *sock)
+{
+
+	int s; /* can raw socket */
+	//int nbytes;
+	struct sockaddr_can addr;
+	//struct can_frame frame;
+	struct ifreq ifr;
+
+	/* check command line options */
+	if (NULL == canitfname) {
+		fprintf(stderr, "canitfname == NULL\n");
+		return 1;
+	}
+
+	/* open socket */
+	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
+		perror("socket open error");
+		return 1;
+	}
+
+	addr.can_family = AF_CAN;
+
+	strcpy(ifr.ifr_name, canitfname);
+	if (ioctl(s, SIOCGIFINDEX, &ifr) < 0) {
+		perror("SIOCGIFINDEX");
+		return 1;
+	}
+	addr.can_ifindex = ifr.ifr_ifindex;
+
+	/* disable default receive filter on this RAW socket */
+	/* This is obsolete as we do not read from the socket at all, but for */
+	/* this reason we can remove the receive list in the Kernel to save a */
+	/* little (really a very little!) CPU usage.                          */
+	//setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, NULL, 0);
+	/* comment this will be able to disable the filter */
+
+	if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+		perror("bind");
+		return 1;
+	}
+
+	/* Return / Get back the socket ID */
+	*sock = s;
+
+	return 0;
+}
+
+/*
+ *
+ * Send out a CAN frame with CAN ID
+ * In: int socket, socket which has been initialized already
+ * In: char *canid_canframe, can ID + can frame in the string format of "CANID#CANFRAME", like "602#0201030400000000"
+ * Return: 1 Failure, 0 Success
+ *
+ */
+OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe)
+{
+
+	int s; /* can raw socket */
+	int nbytes;
+	struct can_frame frame;
+
+	if (0 == socket || -1 == socket) {
+		fprintf(stderr, "Invalid Socket ID.\n");
+		return 1;
+	}
+
+	s = socket;
+
+	/* check command line options */
+	if (NULL == canid_canframe) {
+		fprintf(stderr, "canid_canframe == NULL\n");
+		return 1;
+	}
+
+	/* parse CAN frame */
+	if (parse_canframe(canid_canframe, &frame)){
+		fprintf(stderr, "\nWrong CAN-frame format!\n\n");
+		fprintf(stderr, "Try: <can_id>#{R|data}\n");
+		fprintf(stderr, "can_id can have 3 (SFF) or 8 (EFF) hex chars\n");
+		fprintf(stderr, "data has 0 to 8 hex-values that can (optionally)");
+		fprintf(stderr, " be seperated by '.'\n\n");
+		fprintf(stderr, "e.g. 5A1#11.2233.44556677.88 / 123#DEADBEEF / ");
+		fprintf(stderr, "5AA# /\n     1F334455#1122334455667788 / 123#R ");
+		fprintf(stderr, "for remote transmission request.\n\n");
+		return 1;
+	}
+
+	/* send frame */
+	if ((nbytes = write(s, &frame, sizeof(frame))) != sizeof(frame)) {
+		perror("write");
+		return 1;
+	}
+
+	return 0;
+}
+
+/*
+ *
+ * To block receive a CAN frame
+ * In: int socket, socket which has been initialized already
+ * Out: canid_t *canid, CAN ID
+ * Out: char *canid_canframe, binary array for the CAN frame
+ * Out: char *canid_canframe_char, string format of "CANID#CANFRAME", like "602#0201030400000000"
+ * Return: 1 Failure, 0 Success
+ *
+ */
+
+OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char)
+{
+
+	int s; /* can raw socket */
+	int nbytes;
+	struct sockaddr_can addr;
+	struct can_frame frame;
+
+
+	char ctrlmsg[CMSG_SPACE(sizeof(struct timeval)) + CMSG_SPACE(sizeof(__u32))];
+	struct iovec iov;
+	struct msghdr msg;
+
+	if (0 == socket || -1 == socket) {
+		fprintf(stderr, "Invalid Socket ID.\n");
+		return 1;
+	}
+
+	s = socket;
+
+	/* check command line options */
+	if (NULL == canframe_hex || NULL == canid_canframe_char) {
+		fprintf(stderr, "canid_canframe == NULL\n");
+		return 1;
+	}
+
+	/* these settings are static and can be held out of the hot path */
+	iov.iov_base = &frame;
+	msg.msg_name = &addr;
+	msg.msg_iov = &iov;
+	msg.msg_iovlen = 1;
+	msg.msg_control = &ctrlmsg;
+
+	/* these settings may be modified by recvmsg() */
+	iov.iov_len = sizeof(frame);
+	msg.msg_namelen = sizeof(addr);
+	msg.msg_controllen = sizeof(ctrlmsg);
+	msg.msg_flags = 0;
+
+	nbytes = recvmsg(s, &msg, 0);
+	//nbytes = read(s, &frame, sizeof(frame));
+
+	if (nbytes < 0) {
+		perror("read");
+		return 1;
+	}
+
+	if (nbytes < sizeof(struct can_frame)) {
+		fprintf(stderr, "read: incomplete CAN frame\n");
+		return 1;
+	}
+
+	*canid = frame.can_id;
+	memcpy(canframe_hex, frame.data, frame.can_dlc);
+
+	//fprint_canframe(stdout, &frame, "\n", 0);
+	sprint_canframe(canid_canframe_char, &frame, 0);
+
+	return 0;
+
+}
+
+int func_canitfleo_test_main(int argc, char **argv)
+{
+	//puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
+    //can_send_receive(argc, argv);
+
+	int sock;
+	int ret;
+	canid_t canid = 0x0000;
+	char buf[sizeof(MAX_CANFRAME)+1]; /* max length */
+	char canframe_hex[256];
+
+	int weight;
+	int loop = 10, i = 0;
+	int sleep_second = 2;
+
+	printf("pi_cantest_bf [loop] [sleep_second]\r\n");
+	printf("pi_cantest_bf 10 2, loop 10 time, wait for 2 seconds between each of the action\r\n");
+
+	if(2 == argc) loop = atoi(argv[1]);
+	if(3 == argc) {loop = atoi(argv[1]); sleep_second = atoi(argv[2]);}
+
+	printf("pi_cantest_bf loop = %d sleep_second = %d\r\n", loop, sleep_second);
+
+	/****** MAKE SURE "sudo /sbin/ip link set can0 up type can bitrate 500000" ********/
+	ret = func_canitfleo_can_init("can0", &sock);
+	if(1 == ret)
+	{
+		printf("can_init failure.\r\n");
+	}
+	printf("can_init successful.\r\n");
+
+	/* int func_canitfleo_can_send(int socket, char *canid_canframe) */
+	/* int func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char) */
+	/*  ALL THESE COMMAND ARE DEFINED BY BOFENG
+
+	CAN COMMAND:
+	TX FrameID: 0x0602
+	RX FrameID: 0x0582
+
+	MOTOR START   CLOCKWISE: 23 00 65 20 01 00 00 00, Response: 60 00 65 20 00 00 00 00
+	MOTOR START C-CLOCKWISE: 23 00 65 20 02 00 00 00, Response: 60 00 65 20 00 00 00 00
+	MOTOR STOP             : 23 00 65 20 03 00 00 00, Response: 60 00 65 20 00 00 00 00
+	WEIGHT READ            : 40 00 65 02 00 00 00 00, Response: 43 00 65 02 DD CC BB AA
+
+	HEART BEAT
+	FrameID : 0x0702
+	        : 7F
+
+	cansend can0 602#2300652001000000
+	candump can0
+
+	*/
+	for(i = 0; i < loop; i++)
+	{
+		/* =============================================================*/
+		/* ========================= clockwise =========================*/
+		/* =============================================================*/
+		sleep(sleep_second);
+		ret = func_canitfleo_can_send(sock, "602#2300652001000000");
+		if(1 == ret)
+		{
+			printf("func_canitfleo_can_send(sock, 602#2300652001000000.\r\n");
+		}
+		printf("func_canitfleo_can_send(sock, 602#2300652001000000 successful.\r\n");
+
+		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
+		do{
+			ret = func_canitfleo_can_receive(sock, &canid, canframe_hex, buf);
+			if(1 == ret)
+			{
+				printf("can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
+			}
+			if(canid == 0x702)
+				printf("can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
+		}while(canid == 0x702);
+
+		printf("can_receive(sock, &canid, &canframe_hex, &buf), buf = %s\r\n", buf);
+
+
+		/* =============================================================*/
+		/* ======================== r-clockwise ========================*/
+		/* =============================================================*/
+		sleep(sleep_second);
+		ret = func_canitfleo_can_send(sock, "602#2300652002000000");
+		if(1 == ret)
+		{
+			printf("func_canitfleo_can_send(sock, 602#2300652002000000.\r\n");
+		}
+		printf("func_canitfleo_can_send(sock, 602#2300652002000000 successful.\r\n");
+
+		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
+		do{
+			ret = func_canitfleo_can_receive(sock, &canid, canframe_hex, buf);
+			if(1 == ret)
+			{
+				printf("func_canitfleo_can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
+			}
+			if(canid == 0x702)
+				printf("func_canitfleo_can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
+		}while(canid == 0x702);
+		printf("func_canitfleo_can_receive(sock, &canid, &canframe_hex, &buf), buf = %s\r\n", buf);
+
+		/* =============================================================*/
+		/* ======================== stop motor  ========================*/
+		/* =============================================================*/
+		sleep(sleep_second);
+		ret = func_canitfleo_can_send(sock, "602#2300652003000000");
+		if(1 == ret)
+		{
+			printf("func_canitfleo_can_send(sock, 602#2300652003000000.\r\n");
+		}
+		printf("func_canitfleo_can_send(sock, 602#2300652003000000 successful.\r\n");
+
+		//usleep(2000);
+		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
+		do{
+			ret = func_canitfleo_can_receive(sock, &canid, canframe_hex, buf);
+			if(1 == ret)
+			{
+				printf("func_canitfleo_can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
+			}
+			if(canid == 0x702)
+				printf("func_canitfleo_can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
+
+		}while(canid == 0x702);
+		printf("func_canitfleo_can_receive(sock, &canid, &canframe_hex, &buf), buf = %s\r\n", buf);
+
+		/* =============================================================*/
+		/* ======================== Weight Get  ========================*/
+		/* =============================================================*/
+		sleep(sleep_second);
+		ret = func_canitfleo_can_send(sock, "602#4000650200000000");
+		if(1 == ret)
+		{
+			printf("func_canitfleo_can_send(sock, 602#4000650200000000.\r\n");
+		}
+		printf("func_canitfleo_can_send(sock, 602#4000650200000000 successful.\r\n");
+
+		//usleep(2000);
+		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
+		do{
+			ret = func_canitfleo_can_receive(sock, &canid, canframe_hex, buf);
+			if(1 == ret)
+			{
+				printf("can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
+			}
+			if(canid == 0x702)
+				printf("can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
+
+		}while(canid == 0x702);
+		weight = canframe_hex[4] + (canframe_hex[5] << 8) + (canframe_hex[6] << 16) + (canframe_hex[7] << 24);
+		printf("can_receive(sock, &canid, &canframe_hex, &buf), buf = %s, weight = %d\r\n", buf, weight);
+
+	}
+
+	return EXIT_SUCCESS;
+}
 

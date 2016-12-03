@@ -353,8 +353,8 @@ char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK] ={
 		"MSG_ID_L3BFSC_CAN_WS_COMB_OUT",  //出料
 		"MSG_ID_L3BFSC_CAN_WS_GIVE_UP",   //放弃物料
 		"MSG_ID_L3BFSC_UICOMM_CMD_RESP",  //本地界面反馈
-		"MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT",  //将定时读到的数据送往后台
 		"MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP",  //后台命令反馈：启动/停止等等
+		"MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT",  //将定时读到的数据送往后台
 		"MSG_ID_L3BFSC_CAN_WS_INIT_REQ",  //传感器初始化
 		"MSG_ID_L3BFSC_CAN_WS_READ_REQ",  //所有传感器读取一次性读取请求
 		"MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ",  //来自后台的控制命令，只能在SCAN下工作
