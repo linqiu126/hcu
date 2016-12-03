@@ -43,5 +43,9 @@ OPSTAT func_canitfleo_int_init(void);
 void func_canitfleo_working_scan_process(void);
 OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
 OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval);
+OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char);
+OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe);
+OPSTAT func_canitfleo_can_init(char *canitfname, int *sock);
+
 
 #endif /* L2FRAME_CANITFLEO_H_ */
