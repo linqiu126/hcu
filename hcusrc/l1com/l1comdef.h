@@ -801,7 +801,8 @@ typedef struct  HcuInventoryInfo
 
 //Adding by Shanchun for socket handling
 #define HCU_CLOUDSRV_SOCKET_PORT 9501
-#define HCU_CLOUDSRV_SOCKET_ADDRESS "121.40.185.177"
+//#define HCU_CLOUDSRV_SOCKET_ADDRESS "121.40.185.177"
+//#define HCU_CLOUDSRV_SOCKET_ADDRESS "121.40.118.33"
 #define HCU_CLOUDSRV_SOCKET_QUEUE 30
 
 //Adding by Shanchun for socket heart beat

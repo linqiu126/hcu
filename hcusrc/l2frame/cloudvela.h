@@ -82,7 +82,7 @@ OPSTAT func_cloudvela_http_conn_setup(void);
 OPSTAT func_cloudvela_heart_beat_check(void);
 OPSTAT func_cloudvela_time_out_period(void);
 OPSTAT func_cloudvela_cmd_control_check(void);//for cmd control by Shanchun
-OPSTAT func_cloudvela_time_out_period_for_cmd_control(void);//for cmd control by Shanchun
+OPSTAT func_cloudvela_time_out_period_for_socket_heart(void);
 OPSTAT func_cloudvela_time_out_sendback_offline_data(void);
 OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf);
 
