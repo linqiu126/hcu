@@ -13,6 +13,19 @@
 
 #include "cloudvela.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+
+#include <netinet/tcp.h>
+
 /*
 ** FSM of the CLOUDVELA
 */
@@ -97,6 +110,7 @@ CloudvelaTable_t zHcuCloudvelaTable;
 
 //Task Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern int clientfd;
 
 //Added by Shanchun for CMD command
 UINT8 CMDShortTimerFlag;
@@ -167,6 +181,17 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
+
+	//For socket heart
+	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_LONG, zHcuSysEngPar.timer.cmdcontrolLongTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
+		return FAILURE;
+	}
+
+
+
 	/*
 	//For cmd control by Shanchun
 	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_LONG, zHcuSysEngPar.timer.cmdcontrolLongTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -234,6 +259,11 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	//定时短时钟进行离线数据回送
 	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_sendback_offline_data();
+	}
+
+	//for socket heart
+	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_CMD_CONTROL_LONG) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		ret = func_cloudvela_time_out_period_for_socket_heart();
 	}
 /*
 	//for cmd control by Shanchun
@@ -567,7 +597,8 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	return SUCCESS;
 }
 
-//for cmd control by Shanchun
+/*
+//for socket heart
 OPSTAT func_cloudvela_time_out_period_for_cmd_control(void)
 {
 	//int ret = 0;
@@ -614,7 +645,36 @@ OPSTAT func_cloudvela_time_out_period_for_cmd_control(void)
 
 	return SUCCESS;
 }
+*/
 
+OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
+{
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+		if(clientfd < 0){
+				HcuErrorPrint("CLOUDVELA: socket id is not valid!\n");
+				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+				return FAILURE;
+		}
+		else
+		{
+			HcuDebugPrint("CLOUDVELA: Socket connected, socket id = %d \n\n", clientfd);
+
+		}
+	}
+
+	UINT32 echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
+	if (send(clientfd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen)
+	{
+		HcuErrorPrint("CLOUDVELA: Mismatch in number of send bytes");
+		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+	}
+	else
+	{
+		HcuDebugPrint("CLOUDVELA: send HEART_BEAT message to socket server success: %s!\n\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+	}
+
+	return SUCCESS;
+}
 
 OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {

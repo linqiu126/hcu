@@ -518,7 +518,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		strcpy(zHcuSysEngPar.swDownload.hcuSwBackupDir, HCU_SW_BACKUP_DIR_DEFAULT);
 
 		//视频服务器部分
-		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT);
+		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT);
 		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT);
 		//DEBUG部分
 		zHcuSysEngPar.debugMode = HCU_TRACE_DEBUG_ON;

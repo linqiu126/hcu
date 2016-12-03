@@ -47,6 +47,7 @@ FsmStateItem_t FsmSyspm[] =
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 extern HcuGlobalCounter_t zHcuGlobalCounter;
 
+
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_syspm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
