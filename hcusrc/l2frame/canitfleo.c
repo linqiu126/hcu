@@ -49,7 +49,7 @@ FsmStateItem_t FsmCanitfleo[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
-UINT8 HcuSensorIdRoundBing;
+UINT32 HcuSensorIdRoundBing;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -440,9 +440,10 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	msg_struct_can_l3bfsc_ws_read_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_read_resp_t));
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
-		if (rcv.wsBitmap[i] == 1){
-			snd.sensorWsValue[i] = rand()%1000;
-		}
+		snd.sensorWsValue[i] = ++HcuSensorIdRoundBing;
+		//if (rcv.wsBitmap[i] == 1){
+		//	snd.sensorWsValue[i] = rand()%1000;
+		//}
 	}
 	snd.length = sizeof(msg_struct_can_l3bfsc_ws_read_resp_t);
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_READ_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);

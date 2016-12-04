@@ -755,7 +755,7 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		for (i=0; i<sensorNbr; i++){
 			//sprintf(xmlFormat.conBfscData[i*8], "%08X", (UINT32)*(sensorValue + 4*i));
 			memset(stemp, 0, sizeof(stemp));
-			sprintf(stemp, "%08X", (UINT32)*(sensorValue + 4*i));
+			sprintf(stemp, "%08X", (UINT32)*(sensorValue + i));
 			strcat(xmlFormat.conBfscData, stemp);
 		}
 		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
