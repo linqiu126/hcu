@@ -9,10 +9,15 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 发送给后台统计报告
 
 
+//= ZSC, 2016 DEC.4, CURRENT_SW_DELIVERY 131 =>G20项目 
+= add application layer heart beat check for socket
+
+
 //= ZSC/ZJL, 2016 DEC.3, CURRENT_SW_DELIVERY 130 =>BFSC项目
 = 修改完善CloudVela中对于数据格式发送的BFSC部分
 = CAN函数测试程序上线
 = 继续完善CAN的操控
+
 
 //= ZSC/ZJL, 2016 DEC.1, CURRENT_SW_DELIVERY 129 =>BFSC项目
 = 周期性读取完成
