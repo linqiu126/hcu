@@ -1,10 +1,16 @@
 # ignore these files #
 ######################
-Debug/log/*
-Debug/src/*
-Linux_Arm_A8/src/*
-RasberryPi/src/*
-Release/src/*
+#Debug/log/*
+#Debug/src/*
+#Linux_Arm_A8/src/*
+#RasberryPi/src/*
+#Release/src/*
+
+Debug/*
+Linux_Arm_A8/*
+RasberryPi/*
+Release/*
+RemoteSystemsTempFiles/*
 
 # Compiled source # 
 ####################
