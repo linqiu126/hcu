@@ -11,6 +11,43 @@
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
 
+/* ************ CAN ************** */
+#define MAXSOCK 16    /* max. number of CAN interfaces given on the cmdline */
+#define MAXIFNAMES 30 /* size of receive name index to omit ioctls */
+#define MAXCOL 6      /* number of different colors for colorized output */
+#define ANYDEV "any"  /* name of interface to receive from any CAN interface */
+#define ANL "\r\n"    /* newline in ASC mode */
+
+#define SILENT_INI 42 /* detect user setting on commandline */
+#define SILENT_OFF 0  /* no silent mode */
+#define SILENT_ANI 1  /* silent mode with animation */
+#define SILENT_ON  2  /* silent mode (completely silent) */
+
+//#define BOLD    ATTBOLD
+//#define RED     ATTBOLD FGRED
+//#define GREEN   ATTBOLD FGGREEN
+//#define YELLOW  ATTBOLD FGYELLOW
+//#define BLUE    ATTBOLD FGBLUE
+//#define MAGENTA ATTBOLD FGMAGENTA
+//#define CYAN    ATTBOLD FGCYAN
+
+//const char col_on [MAXCOL][19] = {BLUE, RED, GREEN, BOLD, MAGENTA, CYAN};
+const char col_off []; //ATTRESET;
+
+static char *cmdlinename[MAXSOCK];
+static __u32 dropcnt[MAXSOCK];
+static __u32 last_dropcnt[MAXSOCK];
+static char devname[MAXIFNAMES][IFNAMSIZ+1];
+static int  dindex[MAXIFNAMES];
+static int  max_devname_len; /* to prevent frazzled device name output */
+
+#define MAXANI 4
+const char anichar[MAXANI] = {'|', '/', '-', '\\'};
+
+#define MAX_CANFRAME      "12345678#01.23.45.67.89.AB.CD.EF"
+/* ************ CAN ************ */
+
+
 /*
 ** FSM of the CANITFLEO
 */
@@ -50,6 +87,8 @@ FsmStateItem_t FsmCanitfleo[] =
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 UINT8 HcuSensorIdRoundBing;
+
+UINT32 can_socket_id; //MYC
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -132,7 +171,16 @@ OPSTAT fsm_canitfleo_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 //本模块初始化的机会
 OPSTAT func_canitfleo_int_init(void)
 {
-	return SUCCESS;
+	//MYC
+	INT32 ret;
+	ret = func_canitfleo_can_init("can0", &can_socket_id);
+
+	if(0 == ret)
+		return SUCCESS;
+	else if (1 == ret)
+		return FAILURE;
+	else
+		return FAILURE;
 }
 
 //暂时啥都不干，定时到达后，还不明确是否需要支持定时工作
@@ -422,6 +470,11 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	int ret=0, i=0;
 
+	canid_t canid = 0x0000;
+	char buf[sizeof(MAX_CANFRAME)+1]; /* max length */
+	char canframe_hex[256];
+	int weight;
+
 	msg_struct_l3bfsc_can_ws_read_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_ws_read_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_ws_read_req_t))){
@@ -433,6 +486,29 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//将收到的传感器发送到下位机
 
+	/* MYC ADDED FOR BF DEMO */
+		ret = func_canitfleo_can_send(can_socket_id, "602#4000650200000000");
+		if(1 == ret)
+		{
+			HcuErrorPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#4000650200000000.\r\n");
+		}
+		HcuDebugPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#4000650200000000 successful.\r\n");
+
+
+		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
+		do{
+			ret = func_canitfleo_can_receive(can_socket_id, &canid, canframe_hex, buf);
+			if(1 == ret)
+			{
+				HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
+			}
+			if(canid == 0x702)
+				HcuDebugPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
+
+		}while(canid == 0x702);
+		weight = canframe_hex[4] + (canframe_hex[5] << 8) + (canframe_hex[6] << 16) + (canframe_hex[7] << 24);
+		HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), canid =0x%X, buf = %s, weight = %d\r\n", (UINT32)canid, buf, weight);
+
 	//等待返回命令
 
 	//测试命令，发送结果给L3BFSC
@@ -440,9 +516,11 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	msg_struct_can_l3bfsc_ws_read_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_read_resp_t));
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
-		if (rcv.wsBitmap[i] == 1){
-			snd.sensorWsValue[i] = rand()%1000;
-		}
+		//if (rcv.wsBitmap[i] == 1){
+			snd.sensorWsValue[i] = 1000;
+			if ( i == (canid & 0xF))    //MYC
+				snd.sensorWsValue[i] = weight;
+		//}
 	}
 	snd.length = sizeof(msg_struct_can_l3bfsc_ws_read_resp_t);
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_READ_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
@@ -463,6 +541,11 @@ OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	int ret=0;
 
+	canid_t canid = 0x0000;
+	char buf[sizeof(MAX_CANFRAME)+1]; /* max length */
+	char canframe_hex[256];
+	int weight;
+
 	msg_struct_l3bfsc_can_general_cmd_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_general_cmd_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_general_cmd_req_t))){
@@ -475,6 +558,53 @@ OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void 
 	//将收到的传感器发送到下位机
 	//这里需要控制发送所有的命令，也就是连续发送12个CAN命令到每一个传感器
 
+	/* MYC ADDED FOR BF DEMO */
+	if (L3PO_bfsc_start_cmd == rcv.optid)
+	{
+		ret = func_canitfleo_can_send(can_socket_id, "602#2300652002000000");
+		if(1 == ret)
+		{
+			HcuErrorPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#2300652002000000.\r\n");
+		}
+		HcuDebugPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#2300652002000000 successful.\r\n");
+		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
+		do{
+			ret = func_canitfleo_can_receive(can_socket_id, &canid, canframe_hex, buf);
+			if(1 == ret)
+			{
+				HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
+			}
+			if(canid == 0x702)
+				HcuDebugPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
+
+		}while(canid == 0x702);
+	}
+	else if (L3PO_bfsc_stop_cmd == rcv.optid)
+	{
+		ret = func_canitfleo_can_send(can_socket_id, "602#2300652003000000");
+		if(1 == ret)
+		{
+			HcuErrorPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#2300652003000000.\r\n");
+		}
+		HcuDebugPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#2300652003000000 successful.\r\n");
+		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
+		do{
+			ret = func_canitfleo_can_receive(can_socket_id, &canid, canframe_hex, buf);
+			if(1 == ret)
+			{
+				HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
+			}
+			if(canid == 0x702)
+				HcuDebugPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
+
+		}while(canid == 0x702);
+	}
+	else
+	{
+
+	}
+	/* MYC ADDED FOR BF DEMO */
+
 	//等待返回命令
 
 	//测试命令，发送结果给L3BFSC
@@ -484,6 +614,7 @@ OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void 
 	snd.optid = rcv.optid;
 	snd.optpar = rcv.optpar;
 	snd.sensorid = rcv.sensorid;
+
 	snd.length = sizeof(msg_struct_can_l3bfsc_general_cmd_resp_t);
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
@@ -504,6 +635,11 @@ void func_canitfleo_working_scan_process(void)
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	int ret = 0;
 
+	canid_t canid = 0x0000;
+	char buf[sizeof(MAX_CANFRAME)+1]; /* max length */
+	char canframe_hex[256];
+	int weight;
+
 	//这里的定时工作，是为了测试目标。
 	//这里的定时已经启动，是为了定时产生假测试数据，喂给L3BFSC模块，以便测试算法
 	msg_struct_can_l3bfsc_new_ready_event_t snd;
@@ -512,8 +648,36 @@ void func_canitfleo_working_scan_process(void)
 /*	HcuSensorIdRoundBing++;
 	HcuSensorIdRoundBing = (HcuSensorIdRoundBing % HCU_BFSC_SENSOR_WS_NBR_MAX);
 	snd.sensorid = HcuSensorIdRoundBing;*/
+
+	/* MYC ADDED FOR BF DEMO */
+	ret = func_canitfleo_can_send(can_socket_id, "602#4000650200000000");
+	if(1 == ret)
+	{
+		HcuErrorPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#4000650200000000.\r\n");
+	}
+	HcuDebugPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#4000650200000000 successful.\r\n");
+
+
+	memset(buf, 0, sizeof(MAX_CANFRAME)+1);
+	do{
+		ret = func_canitfleo_can_receive(can_socket_id, &canid, canframe_hex, buf);
+		if(1 == ret)
+		{
+			HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
+		}
+		if(canid == 0x702)
+			HcuDebugPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
+
+	}while(canid == 0x702);
+	weight = canframe_hex[4] + (canframe_hex[5] << 8) + (canframe_hex[6] << 16) + (canframe_hex[7] << 24);
+	HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), canid =0x%X, buf = %s, weight = %d\r\n", (UINT32)canid, buf, weight);
+
 	snd.sensorid = rand() % HCU_BFSC_SENSOR_WS_NBR_MAX;
 	snd.sensorWsValue = 500 + (rand()%50);
+	if (snd.sensorid == (canid & 0xF))
+		snd.sensorWsValue = weight;
+
+	/* MYC ADDED FOR BF DEMO */
 
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
@@ -698,39 +862,6 @@ OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 pref
 
 
 
-#define MAXSOCK 16    /* max. number of CAN interfaces given on the cmdline */
-#define MAXIFNAMES 30 /* size of receive name index to omit ioctls */
-#define MAXCOL 6      /* number of different colors for colorized output */
-#define ANYDEV "any"  /* name of interface to receive from any CAN interface */
-#define ANL "\r\n"    /* newline in ASC mode */
-
-#define SILENT_INI 42 /* detect user setting on commandline */
-#define SILENT_OFF 0  /* no silent mode */
-#define SILENT_ANI 1  /* silent mode with animation */
-#define SILENT_ON  2  /* silent mode (completely silent) */
-
-//#define BOLD    ATTBOLD
-//#define RED     ATTBOLD FGRED
-//#define GREEN   ATTBOLD FGGREEN
-//#define YELLOW  ATTBOLD FGYELLOW
-//#define BLUE    ATTBOLD FGBLUE
-//#define MAGENTA ATTBOLD FGMAGENTA
-//#define CYAN    ATTBOLD FGCYAN
-
-//const char col_on [MAXCOL][19] = {BLUE, RED, GREEN, BOLD, MAGENTA, CYAN};
-const char col_off []; //ATTRESET;
-
-static char *cmdlinename[MAXSOCK];
-static __u32 dropcnt[MAXSOCK];
-static __u32 last_dropcnt[MAXSOCK];
-static char devname[MAXIFNAMES][IFNAMSIZ+1];
-static int  dindex[MAXIFNAMES];
-static int  max_devname_len; /* to prevent frazzled device name output */
-
-#define MAXANI 4
-const char anichar[MAXANI] = {'|', '/', '-', '\\'};
-
-#define MAX_CANFRAME      "12345678#01.23.45.67.89.AB.CD.EF"
 
 extern int optind, opterr, optopt;
 
