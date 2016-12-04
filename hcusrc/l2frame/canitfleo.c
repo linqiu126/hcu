@@ -86,7 +86,7 @@ FsmStateItem_t FsmCanitfleo[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
-UINT8 HcuSensorIdRoundBing;
+UINT32 HcuSensorIdRoundBing;
 
 UINT32 can_socket_id; //MYC
 
@@ -516,10 +516,16 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	msg_struct_can_l3bfsc_ws_read_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_read_resp_t));
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+<<<<<<< HEAD
 		//if (rcv.wsBitmap[i] == 1){
 			snd.sensorWsValue[i] = 1000;
 			if ( i == (canid & 0xF))    //MYC
 				snd.sensorWsValue[i] = weight;
+=======
+		snd.sensorWsValue[i] = ++HcuSensorIdRoundBing;
+		//if (rcv.wsBitmap[i] == 1){
+		//	snd.sensorWsValue[i] = rand()%1000;
+>>>>>>> feature
 		//}
 	}
 	snd.length = sizeof(msg_struct_can_l3bfsc_ws_read_resp_t);
