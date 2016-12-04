@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HcuSensorIdRoundBing" key="selection"/>
+		<item value="func_canitfleo_can_init" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="func_canitfleo_can_init"/>
+			<item value="bfsc"/>
 			<item value="HcuSensorIdRoundBing"/>
 			<item value="can_receive"/>
 			<item value=" can_receive"/>
 			<item value="can_send"/>
 			<item value="can_init"/>
-			<item value="bfsc"/>
 			<item value="func_canitfleo_working_scan_process"/>
-			<item value="func_cloudvela_huanbao_bfsc_msg_pack"/>
 		</list>
 		<list key="replacehistory">
 			<item value="canitf_"/>

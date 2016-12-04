@@ -9,9 +9,13 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 发送给后台统计报告
 
 
-//= ZSC, 2016 DEC.4, CURRENT_SW_DELIVERY 131 =>G20项目 
+//= ZSC, 2016 DEC.4, CURRENT_SW_DELIVERY 131 =>G20项目/BFSC
 = add application layer heart beat check for socket
-
+= 将#define HCU_CANITFLEO_TIMER_10MS_SIM_DATA 50000，未来应该保留为50。目前只是为了抑制大量CANITFLEO生成的WS_EVENT消息
+= 编码器中对于DATA_REPORT部分的对其BUG
+= 为了方便Ubuntu和树莓派对CANITFLEO双方的初始化，使用编译选项对初始化进行分类处理
+= 数据库表单重新更新
+= 将大量不需要启动的任务模块从BFSC中去掉了，特别I2C模块，如果直接启动，会造成树莓派执行出错，待查问题来源
 
 //= ZSC/ZJL, 2016 DEC.3, CURRENT_SW_DELIVERY 130 =>BFSC项目
 = 修改完善CloudVela中对于数据格式发送的BFSC部分

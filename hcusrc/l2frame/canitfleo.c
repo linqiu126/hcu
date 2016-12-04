@@ -172,15 +172,16 @@ OPSTAT fsm_canitfleo_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 OPSTAT func_canitfleo_int_init(void)
 {
 	//MYC
+#ifdef TARGET_RASPBERRY_PI3B
 	INT32 ret;
 	ret = func_canitfleo_can_init("can0", &can_socket_id);
 
 	if(0 == ret)
 		return SUCCESS;
-	else if (1 == ret)
-		return FAILURE;
 	else
 		return FAILURE;
+#endif
+		return SUCCESS;
 }
 
 //暂时啥都不干，定时到达后，还不明确是否需要支持定时工作
@@ -516,16 +517,11 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	msg_struct_can_l3bfsc_ws_read_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_read_resp_t));
 	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
-<<<<<<< HEAD
-		//if (rcv.wsBitmap[i] == 1){
-			snd.sensorWsValue[i] = 1000;
-			if ( i == (canid & 0xF))    //MYC
-				snd.sensorWsValue[i] = weight;
-=======
 		snd.sensorWsValue[i] = ++HcuSensorIdRoundBing;
+		if ( i == (canid & 0xF))    //MYC
+			snd.sensorWsValue[i] = weight;
 		//if (rcv.wsBitmap[i] == 1){
 		//	snd.sensorWsValue[i] = rand()%1000;
->>>>>>> feature
 		//}
 	}
 	snd.length = sizeof(msg_struct_can_l3bfsc_ws_read_resp_t);
