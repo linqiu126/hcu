@@ -9,6 +9,10 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 发送给后台统计报告
 
 
+//= ZSC, 2016 DEC.7, CURRENT_SW_DELIVERY 132 
+= bug fix:Curl是否在链接状态都要处理 socket收到的server端来的消息，HCU要去除Curl全换成socket通信方式,待完成
+
+
 //= ZSC, 2016 DEC.4, CURRENT_SW_DELIVERY 131 =>G20项目/BFSC
 = add application layer heart beat check for socket
 = 将#define HCU_CANITFLEO_TIMER_10MS_SIM_DATA 50000，未来应该保留为50。目前只是为了抑制大量CANITFLEO生成的WS_EVENT消息

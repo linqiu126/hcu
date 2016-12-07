@@ -54,6 +54,8 @@ FsmStateItem_t FsmCloudvela[] =
 	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_CLOUDVELA_OFFLINE,       		fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_CLOUDVELA_OFFLINE,            fsm_cloudvela_time_out},
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 			fsm_cloudvela_hwinv_phy_status_chg},
+	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_OFFLINE, 			fsm_cloudvela_socket_data_rx},
+
 
     //Online working， 定时检查链路，并安排离线数据的及时上传
     {MSG_ID_COM_RESTART,        				FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_restart},
@@ -94,6 +96,7 @@ FsmStateItem_t FsmCloudvela[] =
 	{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_usbnet_data_rx
 	{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_wifi_data_rx
 	{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_3g4g_data_rx
+	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_socket_data_rx},
 
 	//HWINV发来了硬件状态的改变，一般是硬件重新插拔造成的PnP状态改变
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hwinv_phy_status_chg},
@@ -655,22 +658,17 @@ OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
 				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 				return FAILURE;
 		}
-		else
-		{
-			HcuDebugPrint("CLOUDVELA: Socket connected, socket id = %d \n\n", clientfd);
-
-		}
 	}
 
 	UINT32 echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
 	if (send(clientfd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen)
 	{
-		HcuErrorPrint("CLOUDVELA: Mismatch in number of send bytes");
+		HcuErrorPrint("CLOUDVELA: Socket disconnected & Mismatch in number of send bytes!\n\n");
 		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 	}
 	else
 	{
-		HcuDebugPrint("CLOUDVELA: send HEART_BEAT message to socket server success: %s!\n\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+		HcuDebugPrint("CLOUDVELA: Socket connected, send HEART_BEAT message to socket server success: %s!\n\n", zHcuSysEngPar.cloud.cloudBhHcuName);
 	}
 
 	return SUCCESS;
@@ -2225,6 +2223,96 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 #endif
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//参数检查
+	if ((param_len <=0) || (param_len >MAX_HCU_MSG_BODY_LENGTH)){
+		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuTaskNameList[src_id]);
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	if (param_ptr == NULL){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuTaskNameList[src_id]);
+		return FAILURE;
+	}
+
+	//接收消息解码
+	msg_struct_com_cloudvela_data_rx_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_cloudvela_data_rx_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_cloudvela_data_rx_t))){
+		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	memcpy(rcv.buf, param_ptr, param_len);
+	rcv.length = param_len;
+
+	//workaround solution to fix the bug(the first two byte of cmd response received from aiqiyun： 13 and/or 10
+
+	if (rcv.buf[0] == 13 && rcv.buf[1] == 10)
+	{
+		rcv.length = param_len - 2;
+		memcpy(rcv.buf, &rcv.buf[2], rcv.length);
+	}
+
+	else if (rcv.buf[0] == 10 && rcv.buf[1] == 13)
+	{
+		rcv.length = param_len - 2;
+		memcpy(rcv.buf, &rcv.buf[2], rcv.length);
+	}
+
+	else if (rcv.buf[0] == 13 || rcv.buf[1] == 10)
+	{
+		rcv.length = param_len - 1;
+		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
+	}
+
+	else if (rcv.buf[0] == 10 || rcv.buf[1] == 13)
+	{
+		rcv.length = param_len - 1;
+		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
+	}
+
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
+		//int i;
+		//for(i =0; i<rcv.length; i++) HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
+	}
+
+	//如果是XML自定义格式
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	{
+		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+			return FAILURE;
+		}
+	}
+
+	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	{
+		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+			return FAILURE;
+		}
+	}
+
+	//非法格式
+	else
+	{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
+		return FAILURE;
+	}
+
 	return SUCCESS;
 }
 

@@ -954,7 +954,7 @@ OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe)
 		return 1;
 	}
 
-	/* parse CAN frame */
+	/* parse CAN frame
 	if (parse_canframe(canid_canframe, &frame)){
 		fprintf(stderr, "\nWrong CAN-frame format!\n\n");
 		fprintf(stderr, "Try: <can_id>#{R|data}\n");
@@ -965,7 +965,7 @@ OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe)
 		fprintf(stderr, "5AA# /\n     1F334455#1122334455667788 / 123#R ");
 		fprintf(stderr, "for remote transmission request.\n\n");
 		return 1;
-	}
+	}*/
 
 	/* send frame */
 	if ((nbytes = write(s, &frame, sizeof(frame))) != sizeof(frame)) {
@@ -1043,7 +1043,7 @@ OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex
 	memcpy(canframe_hex, frame.data, frame.can_dlc);
 
 	//fprint_canframe(stdout, &frame, "\n", 0);
-	sprint_canframe(canid_canframe_char, &frame, 0);
+	//sprint_canframe(canid_canframe_char, &frame, 0);
 
 	return 0;
 

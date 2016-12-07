@@ -55,7 +55,7 @@ FsmStateItem_t FsmEthernet[] =
 //Global Variables
 //extern CloudvelaTable_t zHcuCloudvelaTable;
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
-int clientfd;
+int clientfd = 0;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -315,7 +315,8 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 			}
 
-			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
+			//ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
+			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
