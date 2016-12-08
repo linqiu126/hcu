@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 4.2.12deb2+deb8u1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 05, 2016 at 12:46 AM
--- Server version: 5.5.47-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.14
+-- Generation Time: Dec 08, 2016 at 09:36 PM
+-- Server version: 5.5.44-0+deb8u1
+-- PHP Version: 5.6.20-0+deb8u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -27,13 +27,38 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `altitudevalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `altitudevalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcuairprsaltitudebmp180datainfo`
+--
+
+INSERT INTO `hcuairprsaltitudebmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `altitudevalue`) VALUES
+(1, 0, 1481085437, 3, 66715),
+(2, 0, 1481086078, 3, 66715),
+(3, 0, 1481086660, 3, 66715),
+(4, 0, 1481087237, 3, 66715),
+(5, 0, 1481087837, 3, 66715),
+(6, 0, 1481088437, 3, 66715),
+(7, 0, 1481089038, 3, 66715),
+(8, 0, 1481089637, 3, 66715),
+(9, 0, 1481090237, 3, 66715),
+(10, 0, 1481090837, 3, 66715),
+(11, 0, 1481091437, 3, 66715),
+(12, 0, 1481092037, 3, 66715),
+(13, 0, 1481096723, 3, 66715),
+(14, 0, 1481097323, 3, 66715),
+(15, 0, 1481097923, 3, 66715),
+(16, 0, 1481098523, 3, 66715),
+(17, 0, 1481099123, 3, 66715),
+(18, 0, 1481099723, 3, 66715),
+(19, 0, 1481100323, 3, 66715),
+(20, 0, 1481100923, 3, 66715);
 
 -- --------------------------------------------------------
 
@@ -42,13 +67,38 @@ CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `airprsvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `airprsvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcuairprsbmp180datainfo`
+--
+
+INSERT INTO `hcuairprsbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `airprsvalue`) VALUES
+(1, 0, 1481085437, 3, 9356400),
+(2, 0, 1481086049, 3, 9356400),
+(3, 0, 1481086637, 3, 9356400),
+(4, 0, 1481087237, 3, 9356400),
+(5, 0, 1481087837, 3, 9356400),
+(6, 0, 1481088437, 3, 9356400),
+(7, 0, 1481089037, 3, 9356400),
+(8, 0, 1481089637, 3, 9356400),
+(9, 0, 1481090237, 3, 9356400),
+(10, 0, 1481090837, 3, 9356400),
+(11, 0, 1481091437, 3, 9356400),
+(12, 0, 1481092037, 3, 9356400),
+(13, 0, 1481096723, 3, 9356400),
+(14, 0, 1481097323, 3, 9356400),
+(15, 0, 1481097923, 3, 9356400),
+(16, 0, 1481098523, 3, 9356400),
+(17, 0, 1481099123, 3, 9356400),
+(18, 0, 1481099723, 3, 9356400),
+(19, 0, 1481100323, 3, 9356400),
+(20, 0, 1481100923, 3, 9356400);
 
 -- --------------------------------------------------------
 
@@ -57,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -67,9 +117,8 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -78,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -88,9 +137,8 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -99,13 +147,38 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `alcoholvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `alcoholvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcualcoholmq3alcodatainfo`
+--
+
+INSERT INTO `hcualcoholmq3alcodatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `alcoholvalue`) VALUES
+(1, 0, 1481085438, 1, 0),
+(2, 0, 1481086049, 1, 0),
+(3, 0, 1481086638, 1, 0),
+(4, 0, 1481087238, 1, 0),
+(5, 0, 1481087838, 1, 0),
+(6, 0, 1481088438, 1, 0),
+(7, 0, 1481089038, 1, 0),
+(8, 0, 1481089638, 1, 0),
+(9, 0, 1481090238, 1, 0),
+(10, 0, 1481090838, 1, 0),
+(11, 0, 1481091438, 1, 0),
+(12, 0, 1481092038, 1, 0),
+(13, 0, 1481096724, 1, 0),
+(14, 0, 1481097324, 1, 0),
+(15, 0, 1481097924, 1, 0),
+(16, 0, 1481098524, 1, 0),
+(17, 0, 1481099124, 1, 0),
+(18, 0, 1481099724, 1, 0),
+(19, 0, 1481100324, 1, 0),
+(20, 0, 1481100924, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -114,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -124,9 +197,8 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -135,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -145,9 +217,8 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5050 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5310 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -3107,7 +3178,267 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 (5046, 5, 1479264530, 1, 5575, 'E', 0, 'N', 0, 0, 1),
 (5047, 5, 1479264686, 1, 5437, 'E', 0, 'N', 0, 0, 1),
 (5048, 5, 1479264897, 1, 5437, 'E', 0, 'N', 0, 0, 1),
-(5049, 5, 1479265816, 1, 5437, 'E', 0, 'N', 0, 0, 1);
+(5049, 5, 1479265816, 1, 5437, 'E', 0, 'N', 0, 0, 1),
+(5050, 5, 1481085243, 1, 5393, 'E', 0, 'N', 0, 0, 1),
+(5051, 5, 1481085303, 1, 4660, 'E', 0, 'N', 0, 0, 1),
+(5052, 5, 1481085363, 1, 4891, 'E', 0, 'N', 0, 0, 1),
+(5053, 5, 1481085423, 1, 4957, 'E', 0, 'N', 0, 0, 1),
+(5054, 5, 1481085486, 1, 5302, 'E', 0, 'N', 0, 0, 1),
+(5055, 5, 1481085543, 1, 5476, 'E', 0, 'N', 0, 0, 1),
+(5056, 5, 1481085603, 1, 4756, 'E', 0, 'N', 0, 0, 1),
+(5057, 5, 1481085663, 1, 5449, 'E', 0, 'N', 0, 0, 1),
+(5058, 5, 1481085723, 1, 5414, 'E', 0, 'N', 0, 0, 1),
+(5059, 5, 1481085783, 1, 5376, 'E', 0, 'N', 0, 0, 1),
+(5060, 5, 1481085843, 1, 5636, 'E', 0, 'N', 0, 0, 1),
+(5061, 5, 1481085903, 1, 4850, 'E', 0, 'N', 0, 0, 1),
+(5062, 5, 1481085963, 1, 5401, 'E', 0, 'N', 0, 0, 1),
+(5063, 5, 1481086023, 1, 5329, 'E', 0, 'N', 0, 0, 1),
+(5064, 5, 1481086083, 1, 5535, 'E', 0, 'N', 0, 0, 1),
+(5065, 5, 1481086143, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(5066, 5, 1481086203, 1, 5106, 'E', 0, 'N', 0, 0, 1),
+(5067, 5, 1481086263, 1, 5020, 'E', 0, 'N', 0, 0, 1),
+(5068, 5, 1481086323, 1, 4930, 'E', 0, 'N', 0, 0, 1),
+(5069, 5, 1481086383, 1, 5413, 'E', 0, 'N', 0, 0, 1),
+(5070, 5, 1481086443, 1, 4936, 'E', 0, 'N', 0, 0, 1),
+(5071, 5, 1481086503, 1, 5044, 'E', 0, 'N', 0, 0, 1),
+(5072, 5, 1481086563, 1, 5579, 'E', 0, 'N', 0, 0, 1),
+(5073, 5, 1481086623, 1, 5104, 'E', 0, 'N', 0, 0, 1),
+(5074, 5, 1481086683, 1, 5415, 'E', 0, 'N', 0, 0, 1),
+(5075, 5, 1481086743, 1, 5612, 'E', 0, 'N', 0, 0, 1),
+(5076, 5, 1481086803, 1, 5376, 'E', 0, 'N', 0, 0, 1),
+(5077, 5, 1481086863, 1, 5307, 'E', 0, 'N', 0, 0, 1),
+(5078, 5, 1481086923, 1, 5363, 'E', 0, 'N', 0, 0, 1),
+(5079, 5, 1481086983, 1, 5594, 'E', 0, 'N', 0, 0, 1),
+(5080, 5, 1481087043, 1, 4809, 'E', 0, 'N', 0, 0, 1),
+(5081, 5, 1481087103, 1, 5104, 'E', 0, 'N', 0, 0, 1),
+(5082, 5, 1481087163, 1, 5118, 'E', 0, 'N', 0, 0, 1),
+(5083, 5, 1481087223, 1, 4725, 'E', 0, 'N', 0, 0, 1),
+(5084, 5, 1481087283, 1, 4666, 'E', 0, 'N', 0, 0, 1),
+(5085, 5, 1481087343, 1, 5165, 'E', 0, 'N', 0, 0, 1),
+(5086, 5, 1481087403, 1, 5185, 'E', 0, 'N', 0, 0, 1),
+(5087, 5, 1481087463, 1, 5629, 'E', 0, 'N', 0, 0, 1),
+(5088, 5, 1481087523, 1, 4828, 'E', 0, 'N', 0, 0, 1),
+(5089, 5, 1481087583, 1, 4982, 'E', 0, 'N', 0, 0, 1),
+(5090, 5, 1481087643, 1, 5019, 'E', 0, 'N', 0, 0, 1),
+(5091, 5, 1481087703, 1, 5280, 'E', 0, 'N', 0, 0, 1),
+(5092, 5, 1481087763, 1, 5172, 'E', 0, 'N', 0, 0, 1),
+(5093, 5, 1481087823, 1, 4700, 'E', 0, 'N', 0, 0, 1),
+(5094, 5, 1481087883, 1, 5618, 'E', 0, 'N', 0, 0, 2),
+(5095, 5, 1481087943, 1, 4985, 'E', 0, 'N', 0, 0, 1),
+(5096, 5, 1481088003, 1, 5049, 'E', 0, 'N', 0, 0, 1),
+(5097, 5, 1481088063, 1, 5327, 'E', 0, 'N', 0, 0, 1),
+(5098, 5, 1481088123, 1, 4874, 'E', 0, 'N', 0, 0, 1),
+(5099, 5, 1481088183, 1, 5132, 'E', 0, 'N', 0, 0, 1),
+(5100, 5, 1481088243, 1, 4922, 'E', 0, 'N', 0, 0, 1),
+(5101, 5, 1481088303, 1, 5331, 'E', 0, 'N', 0, 0, 1),
+(5102, 5, 1481088363, 1, 5139, 'E', 0, 'N', 0, 0, 1),
+(5103, 5, 1481088423, 1, 5605, 'E', 0, 'N', 0, 0, 1),
+(5104, 5, 1481088483, 1, 5038, 'E', 0, 'N', 0, 0, 1),
+(5105, 5, 1481088543, 1, 5529, 'E', 0, 'N', 0, 0, 1),
+(5106, 5, 1481088603, 1, 4762, 'E', 0, 'N', 0, 0, 1),
+(5107, 5, 1481088663, 1, 5099, 'E', 0, 'N', 0, 0, 1),
+(5108, 5, 1481088723, 1, 4675, 'E', 0, 'N', 0, 0, 1),
+(5109, 5, 1481088783, 1, 5659, 'E', 0, 'N', 0, 0, 1),
+(5110, 5, 1481088843, 1, 4934, 'E', 0, 'N', 0, 0, 1),
+(5111, 5, 1481088903, 1, 5484, 'E', 0, 'N', 0, 0, 1),
+(5112, 5, 1481088963, 1, 5029, 'E', 0, 'N', 0, 0, 1),
+(5113, 5, 1481089023, 1, 5006, 'E', 0, 'N', 0, 0, 1),
+(5114, 5, 1481089086, 1, 4854, 'E', 0, 'N', 0, 0, 2),
+(5115, 5, 1481089203, 1, 5471, 'E', 0, 'N', 0, 0, 1),
+(5116, 5, 1481089263, 1, 4931, 'E', 0, 'N', 0, 0, 1),
+(5117, 5, 1481089326, 1, 5198, 'E', 0, 'N', 0, 0, 1),
+(5118, 5, 1481089383, 1, 5542, 'E', 0, 'N', 0, 0, 1),
+(5119, 5, 1481089443, 1, 5084, 'E', 0, 'N', 0, 0, 1),
+(5120, 5, 1481089503, 1, 5094, 'E', 0, 'N', 0, 0, 1),
+(5121, 5, 1481089563, 1, 5026, 'E', 0, 'N', 0, 0, 1),
+(5122, 5, 1481089623, 1, 4670, 'E', 0, 'N', 0, 0, 1),
+(5123, 5, 1481089686, 1, 5374, 'E', 0, 'N', 0, 0, 1),
+(5124, 5, 1481089743, 1, 5636, 'E', 0, 'N', 0, 0, 1),
+(5125, 5, 1481089803, 1, 5089, 'E', 0, 'N', 0, 0, 1),
+(5126, 5, 1481089863, 1, 5500, 'E', 0, 'N', 0, 0, 1),
+(5127, 5, 1481089923, 1, 5411, 'E', 0, 'N', 0, 0, 1),
+(5128, 5, 1481089983, 1, 4791, 'E', 0, 'N', 0, 0, 1),
+(5129, 5, 1481090043, 1, 5524, 'E', 0, 'N', 0, 0, 1),
+(5130, 5, 1481090103, 1, 5098, 'E', 0, 'N', 0, 0, 1),
+(5131, 5, 1481090163, 1, 5107, 'E', 0, 'N', 0, 0, 1),
+(5132, 5, 1481090223, 1, 4970, 'E', 0, 'N', 0, 0, 1),
+(5133, 5, 1481090283, 1, 4914, 'E', 0, 'N', 0, 0, 1),
+(5134, 5, 1481090343, 1, 4686, 'E', 0, 'N', 0, 0, 1),
+(5135, 5, 1481090403, 1, 4925, 'E', 0, 'N', 0, 0, 1),
+(5136, 5, 1481090463, 1, 5093, 'E', 0, 'N', 0, 0, 1),
+(5137, 5, 1481090523, 1, 4829, 'E', 0, 'N', 0, 0, 1),
+(5138, 5, 1481090583, 1, 5586, 'E', 0, 'N', 0, 0, 1),
+(5139, 5, 1481090643, 1, 4767, 'E', 0, 'N', 0, 0, 1),
+(5140, 5, 1481090703, 1, 5380, 'E', 0, 'N', 0, 0, 1),
+(5141, 5, 1481090734, 1, 5566, 'E', 0, 'N', 0, 0, 2),
+(5142, 5, 1481090763, 1, 5106, 'E', 0, 'N', 0, 0, 1),
+(5143, 5, 1481090823, 1, 5391, 'E', 0, 'N', 0, 0, 1),
+(5144, 5, 1481090886, 1, 4933, 'E', 0, 'N', 0, 0, 1),
+(5145, 5, 1481090934, 1, 5138, 'E', 0, 'N', 0, 0, 1),
+(5146, 5, 1481090943, 1, 5505, 'E', 0, 'N', 0, 0, 1),
+(5147, 5, 1481091003, 1, 5594, 'E', 0, 'N', 0, 0, 1),
+(5148, 5, 1481091063, 1, 5526, 'E', 0, 'N', 0, 0, 1),
+(5149, 5, 1481091123, 1, 5239, 'E', 0, 'N', 0, 0, 1),
+(5150, 5, 1481091183, 1, 5192, 'E', 0, 'N', 0, 0, 1),
+(5151, 5, 1481091243, 1, 4923, 'E', 0, 'N', 0, 0, 1),
+(5152, 5, 1481091303, 1, 5596, 'E', 0, 'N', 0, 0, 1),
+(5153, 5, 1481091363, 1, 5525, 'E', 0, 'N', 0, 0, 1),
+(5154, 5, 1481091423, 1, 4946, 'E', 0, 'N', 0, 0, 1),
+(5155, 5, 1481091483, 1, 4972, 'E', 0, 'N', 0, 0, 1),
+(5156, 5, 1481091543, 1, 5516, 'E', 0, 'N', 0, 0, 1),
+(5157, 5, 1481091603, 1, 4711, 'E', 0, 'N', 0, 0, 1),
+(5158, 5, 1481091663, 1, 5637, 'E', 0, 'N', 0, 0, 1),
+(5159, 5, 1481091723, 1, 5025, 'E', 0, 'N', 0, 0, 1),
+(5160, 5, 1481091771, 1, 5195, 'E', 0, 'N', 0, 0, 1),
+(5161, 5, 1481091783, 1, 4715, 'E', 0, 'N', 0, 0, 1),
+(5162, 5, 1481091843, 1, 4997, 'E', 0, 'N', 0, 0, 1),
+(5163, 5, 1481091871, 1, 4768, 'E', 0, 'N', 0, 0, 1),
+(5164, 5, 1481091906, 1, 5374, 'E', 0, 'N', 0, 0, 1),
+(5165, 5, 1481091963, 1, 5453, 'E', 0, 'N', 0, 0, 1),
+(5166, 5, 1481091971, 1, 4663, 'E', 0, 'N', 0, 0, 1),
+(5167, 5, 1481092023, 1, 4705, 'E', 0, 'N', 0, 0, 1),
+(5168, 5, 1481092083, 1, 5515, 'E', 0, 'N', 0, 0, 1),
+(5169, 5, 1481092143, 1, 4955, 'E', 0, 'N', 0, 0, 1),
+(5170, 5, 1481092198, 1, 5070, 'E', 0, 'N', 0, 0, 2),
+(5171, 5, 1481092203, 1, 5360, 'E', 0, 'N', 0, 0, 2),
+(5172, 5, 1481092263, 1, 4700, 'E', 0, 'N', 0, 0, 1),
+(5173, 5, 1481092298, 1, 5625, 'E', 0, 'N', 0, 0, 2),
+(5174, 5, 1481092323, 1, 4690, 'E', 0, 'N', 0, 0, 1),
+(5175, 5, 1481092383, 1, 5223, 'E', 0, 'N', 0, 0, 1),
+(5176, 5, 1481096529, 1, 4886, 'E', 0, 'N', 0, 0, 2),
+(5177, 5, 1481096583, 1, 4944, 'E', 0, 'N', 0, 0, 1),
+(5178, 5, 1481096589, 1, 5069, 'E', 0, 'N', 0, 0, 1),
+(5179, 5, 1481096649, 1, 4935, 'E', 0, 'N', 0, 0, 1),
+(5180, 5, 1481096683, 1, 5289, 'E', 0, 'N', 0, 0, 1),
+(5181, 5, 1481096709, 1, 5580, 'E', 0, 'N', 0, 0, 1),
+(5182, 5, 1481096769, 1, 4777, 'E', 0, 'N', 0, 0, 1),
+(5183, 5, 1481096829, 1, 5183, 'E', 0, 'N', 0, 0, 1),
+(5184, 5, 1481096883, 1, 4936, 'E', 0, 'N', 0, 0, 1),
+(5185, 5, 1481096889, 1, 4948, 'E', 0, 'N', 0, 0, 1),
+(5186, 5, 1481096949, 1, 5584, 'E', 0, 'N', 0, 0, 2),
+(5187, 5, 1481096983, 1, 4684, 'E', 0, 'N', 0, 0, 1),
+(5188, 5, 1481097009, 1, 4975, 'E', 0, 'N', 0, 0, 1),
+(5189, 5, 1481097069, 1, 4725, 'E', 0, 'N', 0, 0, 1),
+(5190, 5, 1481097129, 1, 4957, 'E', 0, 'N', 0, 0, 1),
+(5191, 5, 1481097162, 1, 5635, 'E', 0, 'N', 0, 0, 1),
+(5192, 5, 1481097190, 1, 5000, 'E', 0, 'N', 0, 0, 1),
+(5193, 5, 1481097249, 1, 5645, 'E', 0, 'N', 0, 0, 1),
+(5194, 5, 1481097262, 1, 5206, 'E', 0, 'N', 0, 0, 1),
+(5195, 5, 1481097309, 1, 5597, 'E', 0, 'N', 0, 0, 1),
+(5196, 5, 1481097369, 1, 5377, 'E', 0, 'N', 0, 0, 1),
+(5197, 5, 1481097429, 1, 5321, 'E', 0, 'N', 0, 0, 1),
+(5198, 5, 1481097472, 1, 5057, 'E', 0, 'N', 0, 0, 1),
+(5199, 5, 1481097489, 1, 5408, 'E', 0, 'N', 0, 0, 1),
+(5200, 5, 1481097549, 1, 5511, 'E', 0, 'N', 0, 0, 1),
+(5201, 5, 1481097572, 1, 4698, 'E', 0, 'N', 0, 0, 1),
+(5202, 5, 1481097609, 1, 5317, 'E', 0, 'N', 0, 0, 1),
+(5203, 5, 1481097669, 1, 4818, 'E', 0, 'N', 0, 0, 1),
+(5204, 5, 1481097672, 1, 5210, 'E', 0, 'N', 0, 0, 1),
+(5205, 5, 1481097729, 1, 5276, 'E', 0, 'N', 0, 0, 1),
+(5206, 5, 1481097772, 1, 5010, 'E', 0, 'N', 0, 0, 1),
+(5207, 5, 1481097789, 1, 4965, 'E', 0, 'N', 0, 0, 1),
+(5208, 5, 1481097849, 1, 5187, 'E', 0, 'N', 0, 0, 1),
+(5209, 5, 1481097872, 1, 4994, 'E', 0, 'N', 0, 0, 1),
+(5210, 5, 1481097909, 1, 4925, 'E', 0, 'N', 0, 0, 1),
+(5211, 5, 1481097972, 1, 5338, 'E', 0, 'N', 0, 0, 1),
+(5212, 5, 1481098029, 1, 4822, 'E', 0, 'N', 0, 0, 1),
+(5213, 5, 1481098072, 1, 4697, 'E', 0, 'N', 0, 0, 1),
+(5214, 5, 1481098089, 1, 5651, 'E', 0, 'N', 0, 0, 1),
+(5215, 5, 1481098149, 1, 4698, 'E', 0, 'N', 0, 0, 1),
+(5216, 5, 1481098172, 1, 5386, 'E', 0, 'N', 0, 0, 1),
+(5217, 5, 1481098209, 1, 4960, 'E', 0, 'N', 0, 0, 1),
+(5218, 5, 1481098269, 1, 4803, 'E', 0, 'N', 0, 0, 1),
+(5219, 5, 1481098272, 1, 5219, 'E', 0, 'N', 0, 0, 1),
+(5220, 5, 1481098329, 1, 4776, 'E', 0, 'N', 0, 0, 1),
+(5221, 5, 1481098372, 1, 5409, 'E', 0, 'N', 0, 0, 1),
+(5222, 5, 1481098389, 1, 5466, 'E', 0, 'N', 0, 0, 1),
+(5223, 5, 1481098449, 1, 4932, 'E', 0, 'N', 0, 0, 1),
+(5224, 5, 1481098509, 1, 4931, 'E', 0, 'N', 0, 0, 1),
+(5225, 5, 1481098572, 1, 4667, 'E', 0, 'N', 0, 0, 1),
+(5226, 5, 1481098629, 1, 5500, 'E', 0, 'N', 0, 0, 1),
+(5227, 5, 1481098689, 1, 5522, 'E', 0, 'N', 0, 0, 1),
+(5228, 5, 1481098740, 1, 4802, 'E', 0, 'N', 0, 0, 1),
+(5229, 5, 1481098749, 1, 5149, 'E', 0, 'N', 0, 0, 1),
+(5230, 5, 1481098809, 1, 4826, 'E', 0, 'N', 0, 0, 1),
+(5231, 5, 1481098840, 1, 5415, 'E', 0, 'N', 0, 0, 1),
+(5232, 5, 1481098869, 1, 5034, 'E', 0, 'N', 0, 0, 1),
+(5233, 5, 1481098929, 1, 5039, 'E', 0, 'N', 0, 0, 1),
+(5234, 5, 1481098940, 1, 4969, 'E', 0, 'N', 0, 0, 1),
+(5235, 5, 1481098989, 1, 4767, 'E', 0, 'N', 0, 0, 1),
+(5236, 5, 1481099040, 1, 5326, 'E', 0, 'N', 0, 0, 1),
+(5237, 5, 1481099049, 1, 4673, 'E', 0, 'N', 0, 0, 1),
+(5238, 5, 1481099109, 1, 4773, 'E', 0, 'N', 0, 0, 1),
+(5239, 5, 1481099140, 1, 4994, 'E', 0, 'N', 0, 0, 2),
+(5240, 5, 1481099174, 1, 5588, 'E', 0, 'N', 0, 0, 2),
+(5241, 5, 1481099229, 1, 4815, 'E', 0, 'N', 0, 0, 1),
+(5242, 5, 1481099240, 1, 4921, 'E', 0, 'N', 0, 0, 1),
+(5243, 5, 1481099289, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(5244, 5, 1481099340, 1, 5388, 'E', 0, 'N', 0, 0, 1),
+(5245, 5, 1481099349, 1, 5419, 'E', 0, 'N', 0, 0, 1),
+(5246, 5, 1481099409, 1, 5273, 'E', 0, 'N', 0, 0, 1),
+(5247, 5, 1481099440, 1, 5544, 'E', 0, 'N', 0, 0, 1),
+(5248, 5, 1481099469, 1, 4909, 'E', 0, 'N', 0, 0, 1),
+(5249, 5, 1481099529, 1, 4949, 'E', 0, 'N', 0, 0, 1),
+(5250, 5, 1481099540, 1, 4717, 'E', 0, 'N', 0, 0, 1),
+(5251, 5, 1481099589, 1, 4853, 'E', 0, 'N', 0, 0, 1),
+(5252, 5, 1481099640, 1, 5559, 'E', 0, 'N', 0, 0, 1),
+(5253, 5, 1481099649, 1, 5054, 'E', 0, 'N', 0, 0, 1),
+(5254, 5, 1481099709, 1, 4910, 'E', 0, 'N', 0, 0, 1),
+(5255, 5, 1481099740, 1, 5083, 'E', 0, 'N', 0, 0, 1),
+(5256, 5, 1481099769, 1, 5658, 'E', 0, 'N', 0, 0, 1),
+(5257, 5, 1481099829, 1, 5037, 'E', 0, 'N', 0, 0, 1),
+(5258, 5, 1481099840, 1, 5064, 'E', 0, 'N', 0, 0, 1),
+(5259, 5, 1481099889, 1, 5624, 'E', 0, 'N', 0, 0, 1),
+(5260, 5, 1481099940, 1, 5288, 'E', 0, 'N', 0, 0, 1),
+(5261, 5, 1481099949, 1, 5433, 'E', 0, 'N', 0, 0, 1),
+(5262, 5, 1481100009, 1, 5098, 'E', 0, 'N', 0, 0, 1),
+(5263, 5, 1481100040, 1, 5347, 'E', 0, 'N', 0, 0, 1),
+(5264, 5, 1481100069, 1, 4741, 'E', 0, 'N', 0, 0, 1),
+(5265, 5, 1481100129, 1, 5225, 'E', 0, 'N', 0, 0, 1),
+(5266, 5, 1481100140, 1, 4961, 'E', 0, 'N', 0, 0, 1),
+(5267, 5, 1481100189, 1, 5348, 'E', 0, 'N', 0, 0, 1),
+(5268, 5, 1481100240, 1, 4942, 'E', 0, 'N', 0, 0, 1),
+(5269, 5, 1481100249, 1, 4846, 'E', 0, 'N', 0, 0, 1),
+(5270, 5, 1481100309, 1, 5583, 'E', 0, 'N', 0, 0, 1),
+(5271, 5, 1481100340, 1, 5249, 'E', 0, 'N', 0, 0, 1),
+(5272, 5, 1481100372, 1, 5465, 'E', 0, 'N', 0, 0, 1),
+(5273, 5, 1481100429, 1, 5197, 'E', 0, 'N', 0, 0, 1),
+(5274, 5, 1481100440, 1, 4855, 'E', 0, 'N', 0, 0, 1),
+(5275, 5, 1481100489, 1, 5404, 'E', 0, 'N', 0, 0, 1),
+(5276, 5, 1481100540, 1, 5384, 'E', 0, 'N', 0, 0, 1),
+(5277, 5, 1481100549, 1, 5377, 'E', 0, 'N', 0, 0, 1),
+(5278, 5, 1481100609, 1, 5049, 'E', 0, 'N', 0, 0, 1),
+(5279, 5, 1481100640, 1, 4847, 'E', 0, 'N', 0, 0, 1),
+(5280, 5, 1481100669, 1, 5055, 'E', 0, 'N', 0, 0, 1),
+(5281, 5, 1481100729, 1, 5085, 'E', 0, 'N', 0, 0, 1),
+(5282, 5, 1481100740, 1, 5478, 'E', 0, 'N', 0, 0, 1),
+(5283, 5, 1481100789, 1, 4968, 'E', 0, 'N', 0, 0, 1),
+(5284, 5, 1481100840, 1, 4695, 'E', 0, 'N', 0, 0, 1),
+(5285, 5, 1481100849, 1, 5144, 'E', 0, 'N', 0, 0, 1),
+(5286, 5, 1481100909, 1, 4866, 'E', 0, 'N', 0, 0, 1),
+(5287, 5, 1481201765, 1, 5152, 'E', 0, 'N', 0, 0, 1),
+(5288, 5, 1481201865, 1, 5309, 'E', 0, 'N', 0, 0, 1),
+(5289, 5, 1481201965, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(5290, 5, 1481202065, 1, 5022, 'E', 0, 'N', 0, 0, 1),
+(5291, 5, 1481202266, 1, 5152, 'E', 0, 'N', 0, 0, 1),
+(5292, 5, 1481202366, 1, 5309, 'E', 0, 'N', 0, 0, 1),
+(5293, 5, 1481202466, 1, 5081, 'E', 0, 'N', 0, 0, 1),
+(5294, 5, 1481202566, 1, 5022, 'E', 0, 'N', 0, 0, 1),
+(5295, 5, 1481202666, 1, 4687, 'E', 0, 'N', 0, 0, 1),
+(5296, 5, 1481202766, 1, 5350, 'E', 0, 'N', 0, 0, 1),
+(5297, 5, 1481202866, 1, 4719, 'E', 0, 'N', 0, 0, 1),
+(5298, 5, 1481202966, 1, 5423, 'E', 0, 'N', 0, 0, 1),
+(5299, 5, 1481203066, 1, 5586, 'E', 0, 'N', 0, 0, 1),
+(5300, 5, 1481203166, 1, 5200, 'E', 0, 'N', 0, 0, 1),
+(5301, 5, 1481203266, 1, 5086, 'E', 0, 'N', 0, 0, 1),
+(5302, 5, 1481203366, 1, 4832, 'E', 0, 'N', 0, 0, 1),
+(5303, 5, 1481203466, 1, 5396, 'E', 0, 'N', 0, 0, 1),
+(5304, 5, 1481203566, 1, 4871, 'E', 0, 'N', 0, 0, 1),
+(5305, 5, 1481203666, 1, 5028, 'E', 0, 'N', 0, 0, 1),
+(5306, 5, 1481203766, 1, 5227, 'E', 0, 'N', 0, 0, 1),
+(5307, 5, 1481203967, 1, 5152, 'E', 0, 'N', 0, 0, 1),
+(5308, 5, 1481204067, 1, 5309, 'E', 0, 'N', 0, 0, 1),
+(5309, 5, 1481204167, 1, 5081, 'E', 0, 'N', 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -3116,7 +3447,7 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -3126,9 +3457,8 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3137,13 +3467,12 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `hchovalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `hchovalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3152,7 +3481,7 @@ CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `hsmmpfdir` char(100) NOT NULL,
@@ -3163,9 +3492,8 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3174,7 +3502,7 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -3184,9 +3512,8 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=130 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuhumiddatainfo`
@@ -3330,13 +3657,12 @@ INSERT INTO `hcuhumiddatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `h
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumiddht11datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=664 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=696 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuhumiddht11datainfo`
@@ -3838,7 +4164,39 @@ INSERT INTO `hcuhumiddht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 (660, 0, 1477323277, 3, 0),
 (661, 0, 1477323387, 3, 0),
 (662, 0, 1477323457, 3, 0),
-(663, 0, 1477323715, 3, 0);
+(663, 0, 1477323715, 3, 0),
+(664, 0, 1481085494, 3, 0),
+(665, 0, 1481086094, 3, 0),
+(666, 0, 1481086694, 3, 0),
+(667, 0, 1481087294, 3, 0),
+(668, 0, 1481087894, 3, 0),
+(669, 0, 1481088494, 3, 0),
+(670, 0, 1481089094, 3, 0),
+(671, 0, 1481089694, 3, 0),
+(672, 0, 1481090294, 3, 0),
+(673, 0, 1481090757, 3, 0),
+(674, 0, 1481090877, 3, 0),
+(675, 0, 1481090894, 3, 0),
+(676, 0, 1481090997, 3, 0),
+(677, 0, 1481091494, 3, 0),
+(678, 0, 1481091794, 3, 0),
+(679, 0, 1481091914, 3, 0),
+(680, 0, 1481092034, 3, 0),
+(681, 0, 1481092094, 3, 0),
+(682, 0, 1481096780, 3, 0),
+(683, 0, 1481097185, 3, 0),
+(684, 0, 1481097380, 3, 0),
+(685, 0, 1481097495, 3, 0),
+(686, 0, 1481097615, 3, 0),
+(687, 0, 1481097735, 3, 0),
+(688, 0, 1481097855, 3, 0),
+(689, 0, 1481097975, 3, 0),
+(690, 0, 1481097980, 3, 0),
+(691, 0, 1481098580, 3, 0),
+(692, 0, 1481099180, 3, 0),
+(693, 0, 1481099243, 3, 0),
+(694, 0, 1481099780, 3, 0),
+(695, 0, 1481100380, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -3847,13 +4205,12 @@ INSERT INTO `hcuhumiddht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidmth01datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuhumidmth01datainfo`
@@ -3869,13 +4226,12 @@ INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -3884,13 +4240,12 @@ CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=508 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=508 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuhumidsht20datainfo`
@@ -4401,7 +4756,7 @@ INSERT INTO `hcuhumidsht20datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 --
 
 CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -4431,9 +4786,8 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4442,7 +4796,7 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -4476,9 +4830,8 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4487,7 +4840,7 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -4517,9 +4870,8 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4528,7 +4880,7 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -4558,9 +4910,8 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4569,13 +4920,38 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `lightstrvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `lightstrvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hculightstrbh1750datainfo`
+--
+
+INSERT INTO `hculightstrbh1750datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `lightstrvalue`) VALUES
+(1, 0, 1481085437, 3, 0),
+(2, 0, 1481086049, 3, 0),
+(3, 0, 1481086637, 3, 0),
+(4, 0, 1481087237, 3, 0),
+(5, 0, 1481087837, 3, 0),
+(6, 0, 1481088437, 3, 0),
+(7, 0, 1481089037, 3, 0),
+(8, 0, 1481089637, 3, 0),
+(9, 0, 1481090237, 3, 0),
+(10, 0, 1481090837, 3, 0),
+(11, 0, 1481091437, 3, 0),
+(12, 0, 1481092037, 3, 0),
+(13, 0, 1481096723, 3, 0),
+(14, 0, 1481097323, 3, 0),
+(15, 0, 1481097923, 3, 0),
+(16, 0, 1481098523, 3, 0),
+(17, 0, 1481099123, 3, 0),
+(18, 0, 1481099723, 3, 0),
+(19, 0, 1481100323, 3, 0),
+(20, 0, 1481100923, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -4584,7 +4960,7 @@ CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4594,9 +4970,8 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4605,7 +4980,7 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4615,9 +4990,8 @@ CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=60 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcunoisedatainfo`
@@ -4691,13 +5065,12 @@ INSERT INTO `hcunoisedatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `n
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm2d5value` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `pm2d5value` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4706,7 +5079,7 @@ CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4718,9 +5091,8 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4729,13 +5101,12 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm2d5value` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `pm2d5value` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -4866,8 +5237,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `browselautostartupflag` int(1) NOT NULL,
   `browselprog` char(20) NOT NULL,
   `browselstartupaddress` char(128) NOT NULL,
-  `browselworkingoption` char(128) NOT NULL,
-  PRIMARY KEY (`prjname`)
+  `browselworkingoption` char(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -4876,9 +5246,9 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`, `commhwboardlcd`, `commhwboardled`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`, `commframenbiotcj188`, `commframenbiotqg376`, `commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`, `commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`, `commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`, `commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensoriwm`, `commfrontsensorihm`, `commfrontsensorigm`, `commfrontsensoripm`, `commfrontsensorpm25sharp`, `commfrontcanitf`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `cloudvelahbtimer`, `cloudvelahbbacktimer`, `nbiotcj188hbtimer`, `nbiotcj188hbbacktimer`, `nbiotqg376hbtimer`, `nbiotqg376hbbacktimer`, `cmdcontrollongtimer`, `cmdcontrolshorttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `iwmreqtimer`, `ihmreqtimer`, `igmreqtimer`, `ipmreqtimer`, `pm25sharpreqtimer`, `syspmworkingtimer`, `canitfworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudhttpaddtest`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
 ('HCU_PRJ_AQYCG10_335D', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_AQYCG20_RASBERRY', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYCG20_RASBERRY', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_AQYC_OBSOLETE', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_BFSC_CBU', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_SH_0499', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFSC_CBU', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_SH_0499', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_CXGLACM', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_CXILC', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_GQYBG40', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
@@ -4895,7 +5265,7 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`,
 --
 
 CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `taskhcuvmec` int(4) NOT NULL,
   `taskhwinvec` int(4) NOT NULL,
   `tasksyspmec` int(4) NOT NULL,
@@ -4922,9 +5292,8 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `cloudvelaconncnt` int(4) NOT NULL,
   `cloudveladisccnt` int(4) NOT NULL,
   `clouddatatimeoutcnt` int(4) NOT NULL,
-  `timestamp` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=183 ;
+  `timestamp` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcusyspmglobaldatainfo`
@@ -5029,7 +5398,10 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (179, 0, 723, 0, 114, 243, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1799, 30, 30, 0, 1477738682),
 (180, 0, 1440, 0, 232, 493, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3598, 60, 59, 0, 1477742282),
 (181, 0, 723, 0, 114, 484, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 1, 0, 0, 1478090207),
-(182, 0, 1440, 0, 232, 984, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 1, 0, 0, 1478093807);
+(182, 0, 1440, 0, 232, 984, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 1, 0, 0, 1478093807),
+(183, 0, 3588, 0, 174, 1368, 178, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 0, 1481087838),
+(184, 0, 4290, 0, 223, 1670, 214, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 43, 43, 0, 1481091438),
+(185, 0, 5010, 0, 328, 2417, 250, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 56, 55, 0, 1481099124);
 
 -- --------------------------------------------------------
 
@@ -5038,13 +5410,12 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=650 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=702 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcutempbmp180datainfo`
@@ -5542,7 +5913,59 @@ INSERT INTO `hcutempbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 (646, 0, 1477323143, 3, 0),
 (647, 0, 1477323383, 3, 0),
 (648, 0, 1477323453, 3, 0),
-(649, 0, 1477323711, 3, 0);
+(649, 0, 1477323711, 3, 0),
+(650, 0, 1481085490, 3, 1200),
+(651, 0, 1481086090, 3, 1200),
+(652, 0, 1481086690, 3, 1200),
+(653, 0, 1481087290, 3, 1200),
+(654, 0, 1481087895, 3, 1200),
+(655, 0, 1481088491, 3, 1200),
+(656, 0, 1481089090, 3, 1200),
+(657, 0, 1481089690, 3, 1200),
+(658, 0, 1481090290, 3, 1200),
+(659, 0, 1481090766, 3, 1200),
+(660, 0, 1481090886, 3, 1200),
+(661, 0, 1481090890, 3, 1200),
+(662, 0, 1481091006, 3, 1200),
+(663, 0, 1481091490, 3, 1200),
+(664, 0, 1481091803, 3, 1200),
+(665, 0, 1481091923, 3, 1200),
+(666, 0, 1481092043, 3, 1200),
+(667, 0, 1481092090, 3, 1200),
+(668, 0, 1481092230, 3, 1200),
+(669, 0, 1481092350, 3, 1200),
+(670, 0, 1481096555, 3, 1200),
+(671, 0, 1481096675, 3, 1200),
+(672, 0, 1481096776, 3, 1200),
+(673, 0, 1481096795, 3, 1200),
+(674, 0, 1481096915, 3, 1200),
+(675, 0, 1481097194, 3, 1200),
+(676, 0, 1481097314, 3, 1200),
+(677, 0, 1481097376, 3, 1200),
+(678, 0, 1481097976, 3, 1200),
+(679, 0, 1481097984, 3, 1200),
+(680, 0, 1481098576, 3, 1200),
+(681, 0, 1481098772, 3, 1200),
+(682, 0, 1481098892, 3, 1200),
+(683, 0, 1481099012, 3, 1200),
+(684, 0, 1481099132, 3, 1200),
+(685, 0, 1481099177, 3, 1200),
+(686, 0, 1481099252, 3, 1200),
+(687, 0, 1481099372, 3, 1200),
+(688, 0, 1481099492, 3, 1200),
+(689, 0, 1481099612, 3, 1200),
+(690, 0, 1481099732, 3, 1200),
+(691, 0, 1481099776, 3, 1200),
+(692, 0, 1481099852, 3, 1200),
+(693, 0, 1481099972, 3, 1200),
+(694, 0, 1481100092, 3, 1200),
+(695, 0, 1481100212, 3, 1200),
+(696, 0, 1481100332, 3, 1200),
+(697, 0, 1481100376, 3, 1200),
+(698, 0, 1481100452, 3, 1200),
+(699, 0, 1481100572, 3, 1200),
+(700, 0, 1481100692, 3, 1200),
+(701, 0, 1481100812, 3, 1200);
 
 -- --------------------------------------------------------
 
@@ -5551,7 +5974,7 @@ INSERT INTO `hcutempbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -5561,9 +5984,8 @@ CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=158 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcutempdatainfo`
@@ -5735,13 +6157,12 @@ INSERT INTO `hcutempdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `te
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempdht11datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=661 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=713 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcutempdht11datainfo`
@@ -6240,7 +6661,59 @@ INSERT INTO `hcutempdht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`
 (657, 0, 1477323143, 3, 0),
 (658, 0, 1477323383, 3, 0),
 (659, 0, 1477323453, 3, 0),
-(660, 0, 1477323711, 3, 0);
+(660, 0, 1477323711, 3, 0),
+(661, 0, 1481085490, 3, 0),
+(662, 0, 1481086090, 3, 0),
+(663, 0, 1481086690, 3, 0),
+(664, 0, 1481087290, 3, 0),
+(665, 0, 1481087890, 3, 0),
+(666, 0, 1481088490, 3, 0),
+(667, 0, 1481089090, 3, 0),
+(668, 0, 1481089690, 3, 0),
+(669, 0, 1481090290, 3, 0),
+(670, 0, 1481090766, 3, 0),
+(671, 0, 1481090886, 3, 0),
+(672, 0, 1481090890, 3, 0),
+(673, 0, 1481091006, 3, 0),
+(674, 0, 1481091490, 3, 0),
+(675, 0, 1481091803, 3, 0),
+(676, 0, 1481091923, 3, 0),
+(677, 0, 1481092043, 3, 0),
+(678, 0, 1481092090, 3, 0),
+(679, 0, 1481092230, 3, 0),
+(680, 0, 1481092350, 3, 0),
+(681, 0, 1481096555, 3, 0),
+(682, 0, 1481096675, 3, 0),
+(683, 0, 1481096776, 3, 0),
+(684, 0, 1481096795, 3, 0),
+(685, 0, 1481096915, 3, 0),
+(686, 0, 1481097194, 3, 0),
+(687, 0, 1481097314, 3, 0),
+(688, 0, 1481097376, 3, 0),
+(689, 0, 1481097976, 3, 0),
+(690, 0, 1481097984, 3, 0),
+(691, 0, 1481098576, 3, 0),
+(692, 0, 1481098772, 3, 0),
+(693, 0, 1481098892, 3, 0),
+(694, 0, 1481099012, 3, 0),
+(695, 0, 1481099132, 3, 0),
+(696, 0, 1481099176, 3, 0),
+(697, 0, 1481099252, 3, 0),
+(698, 0, 1481099372, 3, 0),
+(699, 0, 1481099492, 3, 0),
+(700, 0, 1481099612, 3, 0),
+(701, 0, 1481099732, 3, 0),
+(702, 0, 1481099776, 3, 0),
+(703, 0, 1481099852, 3, 0),
+(704, 0, 1481099972, 3, 0),
+(705, 0, 1481100092, 3, 0),
+(706, 0, 1481100212, 3, 0),
+(707, 0, 1481100332, 3, 0),
+(708, 0, 1481100376, 3, 0),
+(709, 0, 1481100452, 3, 0),
+(710, 0, 1481100572, 3, 0),
+(711, 0, 1481100692, 3, 0),
+(712, 0, 1481100812, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -6249,13 +6722,12 @@ INSERT INTO `hcutempdht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6264,13 +6736,12 @@ CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6279,13 +6750,12 @@ CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=504 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=504 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcutempsht20datainfo`
@@ -6792,7 +7262,7 @@ INSERT INTO `hcutempsht20datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -6802,9 +7272,8 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6813,13 +7282,38 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `toxicgasvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `toxicgasvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcutoxicgasmq135datainfo`
+--
+
+INSERT INTO `hcutoxicgasmq135datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `toxicgasvalue`) VALUES
+(1, 0, 1481085438, 1, 0),
+(2, 0, 1481086049, 1, 0),
+(3, 0, 1481086638, 1, 0),
+(4, 0, 1481087238, 1, 0),
+(5, 0, 1481087838, 1, 0),
+(6, 0, 1481088438, 1, 0),
+(7, 0, 1481089038, 1, 0),
+(8, 0, 1481089638, 1, 0),
+(9, 0, 1481090238, 1, 0),
+(10, 0, 1481090838, 1, 0),
+(11, 0, 1481091438, 1, 0),
+(12, 0, 1481092038, 1, 0),
+(13, 0, 1481096724, 1, 0),
+(14, 0, 1481097324, 1, 0),
+(15, 0, 1481097924, 1, 0),
+(16, 0, 1481098524, 1, 0),
+(17, 0, 1481099124, 1, 0),
+(18, 0, 1481099724, 1, 0),
+(19, 0, 1481100324, 1, 0),
+(20, 0, 1481100924, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -6828,13 +7322,38 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `toxicgasvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `toxicgasvalue` int(4) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcutoxicgaszp01vocdatainfo`
+--
+
+INSERT INTO `hcutoxicgaszp01vocdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `toxicgasvalue`) VALUES
+(1, 0, 1481085438, 1, 0),
+(2, 0, 1481086078, 1, 0),
+(3, 0, 1481086660, 1, 0),
+(4, 0, 1481087238, 1, 0),
+(5, 0, 1481087838, 1, 0),
+(6, 0, 1481088438, 1, 0),
+(7, 0, 1481089038, 1, 0),
+(8, 0, 1481089638, 1, 0),
+(9, 0, 1481090238, 1, 0),
+(10, 0, 1481090838, 1, 0),
+(11, 0, 1481091438, 1, 0),
+(12, 0, 1481092038, 1, 0),
+(13, 0, 1481096724, 1, 0),
+(14, 0, 1481097324, 1, 0),
+(15, 0, 1481097924, 1, 0),
+(16, 0, 1481098524, 1, 0),
+(17, 0, 1481099126, 1, 0),
+(18, 0, 1481099724, 1, 0),
+(19, 0, 1481100324, 1, 0),
+(20, 0, 1481100924, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -6849,8 +7368,7 @@ CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
   `moduletoallow` int(1) NOT NULL,
   `moduletorestrict` int(1) NOT NULL,
   `modulefromallow` int(1) NOT NULL,
-  `modulefromrestrict` int(1) NOT NULL,
-  PRIMARY KEY (`moduleid`)
+  `modulefromrestrict` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -6933,8 +7451,7 @@ CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
   `msgname` char(70) NOT NULL,
   `msgctrflag` int(1) NOT NULL,
   `msgallow` int(1) NOT NULL,
-  `msgrestrict` int(1) NOT NULL,
-  PRIMARY KEY (`msgid`)
+  `msgrestrict` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -6956,149 +7473,150 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (11, 'MSG_ID_ETHERNET_CLOUDVELA_DATA_RX', 1, 1, 1),
 (12, 'MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX', 1, 1, 1),
 (13, 'MSG_ID_ETHERNET_NBIOTQG376_DATA_RX', 1, 1, 1),
-(14, 'MSG_ID_WIFI_CLOUDVELA_DATA_RX', 1, 1, 1),
-(15, 'MSG_ID_USBNET_CLOUDVELA_DATA_RX', 1, 1, 1),
-(16, 'MSG_ID_3G4G_CLOUDVELA_DATA_RX', 1, 1, 1),
-(17, 'MSG_ID_SPS232_MODBUS_DATA_RX', 1, 1, 1),
-(18, 'MSG_ID_SPS485_MODBUS_DATA_RX', 1, 1, 1),
-(19, 'MSG_ID_SPSVIRGO_HSMMP_DATA_RX', 1, 1, 1),
-(20, 'MSG_ID_SPSVIRGO_NOISE_DATA_REPORT', 1, 1, 1),
-(21, 'MSG_ID_SPSVIRGO_NOISE_CONTROL_FB', 1, 1, 1),
-(22, 'MSG_ID_AVORION_HSMMP_DATA_READ_FB', 1, 1, 1),
-(23, 'MSG_ID_AVORION_HSMMP_DATA_RX', 1, 1, 1),
-(24, 'MSG_ID_BLE_HSMMP_DATA_RX', 1, 1, 1),
-(25, 'MSG_ID_BLE_MODBUS_DATA_RX', 1, 1, 1),
-(26, 'MSG_ID_LCD_AVORION_DATA_RX', 1, 1, 1),
-(27, 'MSG_ID_CAMERA_AVORION_DATA_RX', 1, 1, 1),
-(28, 'MSG_ID_MICROPHONE_AVORION_DATA_RX', 1, 1, 1),
-(29, 'MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG', 1, 1, 1),
-(30, 'MSG_ID_CLOUDVELA_EMC_DATA_REQ', 1, 1, 1),
-(31, 'MSG_ID_CLOUDVELA_EMC_CONTROL_CMD', 1, 1, 1),
-(32, 'MSG_ID_CLOUDVELA_PM25_DATA_REQ', 1, 1, 1),
-(33, 'MSG_ID_CLOUDVELA_PM25_CONTROL_CMD', 1, 1, 1),
-(34, 'MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ', 1, 1, 1),
-(35, 'MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD', 1, 1, 1),
-(36, 'MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ', 1, 1, 1),
-(37, 'MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD', 1, 1, 1),
-(38, 'MSG_ID_CLOUDVELA_TEMP_DATA_REQ', 1, 1, 1),
-(39, 'MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD', 1, 1, 1),
-(40, 'MSG_ID_CLOUDVELA_HUMID_DATA_REQ', 1, 1, 1),
-(41, 'MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD', 1, 1, 1),
-(42, 'MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD', 1, 1, 1),
-(43, 'MSG_ID_CLOUDVELA_NOISE_DATA_REQ', 1, 1, 1),
-(44, 'MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD', 1, 1, 1),
-(45, 'MSG_ID_NBIOTCJ188_IWM_DATA_REQ', 1, 1, 1),
-(46, 'MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD', 1, 1, 1),
-(47, 'MSG_ID_NBIOTCJ188_IHM_DATA_REQ', 1, 1, 1),
-(48, 'MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD', 1, 1, 1),
-(49, 'MSG_ID_NBIOTCJ188_IGM_DATA_REQ', 1, 1, 1),
-(50, 'MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD', 1, 1, 1),
-(51, 'MSG_ID_NBIOTCJ188_IPM_DATA_REQ', 1, 1, 1),
-(52, 'MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD', 1, 1, 1),
-(53, 'MSG_ID_NBIOTQG376_IPM_DATA_REQ', 1, 1, 1),
-(54, 'MSG_ID_NBIOTQG376_IPM_CONTROL_CMD', 1, 1, 1),
-(55, 'MSG_ID_MODBUS_EMC_DATA_REPORT', 1, 1, 1),
-(56, 'MSG_ID_MODBUS_EMC_CONTROL_FB', 1, 1, 1),
-(57, 'MSG_ID_MODBUS_PM25_DATA_REPORT', 1, 1, 1),
-(58, 'MSG_ID_MODBUS_PM25_CONTROL_FB', 1, 1, 1),
-(59, 'MSG_ID_MODBUS_WINDDIR_DATA_REPORT', 1, 1, 1),
-(60, 'MSG_ID_MODBUS_WINDDIR_CONTROL_FB', 1, 1, 1),
-(61, 'MSG_ID_MODBUS_WINDSPD_DATA_REPORT', 1, 1, 1),
-(62, 'MSG_ID_MODBUS_WINDSPD_CONTROL_FB', 1, 1, 1),
-(63, 'MSG_ID_MODBUS_TEMP_DATA_REPORT', 1, 1, 1),
-(64, 'MSG_ID_MODBUS_TEMP_CONTROL_FB', 1, 1, 1),
-(65, 'MSG_ID_MODBUS_HUMID_DATA_REPORT', 1, 1, 1),
-(66, 'MSG_ID_MODBUS_HUMID_CONTROL_FB', 1, 1, 1),
-(67, 'MSG_ID_MODBUS_NOISE_DATA_REPORT', 1, 1, 1),
-(68, 'MSG_ID_MODBUS_NOISE_CONTROL_FB', 1, 1, 1),
-(69, 'MSG_ID_EMC_MODBUS_DATA_READ', 1, 1, 1),
-(70, 'MSG_ID_EMC_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(71, 'MSG_ID_EMC_MODBUS_CONTROL_CMD', 1, 1, 1),
-(72, 'MSG_ID_EMC_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-(73, 'MSG_ID_PM25_MODBUS_DATA_READ', 1, 1, 1),
-(74, 'MSG_ID_PM25_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(75, 'MSG_ID_PM25_MODBUS_CONTROL_CMD', 1, 1, 1),
-(76, 'MSG_ID_PM25_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-(77, 'MSG_ID_WINDDIR_MODBUS_DATA_READ', 1, 1, 1),
-(78, 'MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(79, 'MSG_ID_WINDDIR_MODBUS_CONTROL_CMD', 1, 1, 1),
-(80, 'MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-(81, 'MSG_ID_WINDSPD_MODBUS_DATA_READ', 1, 1, 1),
-(82, 'MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(83, 'MSG_ID_WINDSPD_MODBUS_CONTROL_CMD', 1, 1, 1),
-(84, 'MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-(85, 'MSG_ID_TEMP_MODBUS_DATA_READ', 1, 1, 1),
-(86, 'MSG_ID_TEMP_SPIBUSARIES_DATA_READ', 1, 1, 1),
-(87, 'MSG_ID_TEMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(88, 'MSG_ID_TEMP_MODBUS_CONTROL_CMD', 1, 1, 1),
-(89, 'MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD', 1, 1, 1),
-(90, 'MSG_ID_TEMP_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-(91, 'MSG_ID_HUMID_MODBUS_DATA_READ', 1, 1, 1),
-(92, 'MSG_ID_HUMID_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(93, 'MSG_ID_HUMID_MODBUS_CONTROL_CMD', 1, 1, 1),
-(94, 'MSG_ID_HUMID_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-(95, 'MSG_ID_HSMMP_AVORION_DATA_READ', 1, 1, 1),
-(96, 'MSG_ID_HSMMP_AVORION_STOP', 1, 1, 1),
-(97, 'MSG_ID_HSMMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(98, 'MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-(99, 'MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP', 1, 1, 1),
-(100, 'MSG_ID_NOISE_SPSVIRGO_DATA_READ', 1, 1, 1),
-(101, 'MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD', 1, 1, 1),
-(102, 'MSG_ID_NOISE_SPSVIRGO_STOP', 1, 1, 1),
-(103, 'MSG_ID_NOISE_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(104, 'MSG_ID_NOISE_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-(105, 'MSG_ID_NOISE_MODBUS_DATA_READ', 1, 1, 1),
-(106, 'MSG_ID_NOISE_MODBUS_CONTROL_CMD', 1, 1, 1),
-(107, 'MSG_ID_IWM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
-(108, 'MSG_ID_IWM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
-(109, 'MSG_ID_IHM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
-(110, 'MSG_ID_IHM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
-(111, 'MSG_ID_IGM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
-(112, 'MSG_ID_IGM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
-(113, 'MSG_ID_IPM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
-(114, 'MSG_ID_IPM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
-(115, 'MSG_ID_IPM_NBIOTQG376_DATA_RESP', 1, 1, 1),
-(116, 'MSG_ID_IPM_NBIOTQG376_CONTROL_FB', 1, 1, 1),
-(117, 'MSG_ID_AIRSYNC_INIT', 1, 1, 1),
-(118, 'MSG_ID_AIRSYNC_BLE_CONNNECTD', 1, 1, 1),
-(119, 'MSG_ID_AIRSYNC_AUTH_REQ', 1, 1, 1),
-(120, 'MSG_ID_AIRSYNC_AUTH_RESP', 1, 1, 1),
-(121, 'MSG_ID_AIRSYNC_INIT_REQ', 1, 1, 1),
-(122, 'MSG_ID_AIRSYNC_INIT_RESP', 1, 1, 1),
-(123, 'MSG_ID_AIRSYNC_CONNECT_READY', 1, 1, 1),
-(124, 'MSG_ID_AIRSYNC_DATA_PUSH', 1, 1, 1),
-(125, 'MSG_ID_AIRSYNC_DATA_REQ', 1, 1, 1),
-(126, 'MSG_ID_AIRSYNC_DATA_RESP', 1, 1, 1),
-(127, 'MSG_ID_AIRSYNC_AUTH_WAIT_TIMER', 1, 1, 1),
-(128, 'MSG_ID_AIRSYNC_DISCONNECT_TIGGER_L3', 1, 1, 1),
-(129, 'MSG_ID_AIRSYNC_SEND_BLE_DATA_TIMER', 1, 1, 1),
-(130, 'MSG_ID_WXAPP_3MIN_TIMEOUT', 1, 1, 1),
-(131, 'MSG_ID_WXAPP_5SECOND_TIMEOUT', 1, 1, 1),
-(132, 'MSG_ID_WXAPP_DATA_REQ_EMC', 1, 1, 1),
-(133, 'MSG_ID_WXAPP_PERIOD_REPORT_EMC_TRIGGER', 1, 1, 1),
-(134, 'MSG_ID_WXAPP_DATA_REQ_TIME_SYNC', 1, 1, 1),
-(135, 'MSG_ID_WXAPP_EQUIPMENT_INFO_SYNC', 1, 1, 1),
-(136, 'MSG_ID_WXAPP_MODBUS_CONNECT_READY', 1, 1, 1),
-(137, 'MSG_ID_WXAPP_MODBUS_DATA_PUSH', 1, 1, 1),
-(138, 'MSG_ID_WXAPP_MODBUS_DISCONNECT', 1, 1, 1),
-(139, 'MSG_ID_MODBUS_10MIN_TIMEOUT', 1, 1, 1),
-(140, 'MSG_ID_MODBUS_5SECOND_TIMEOUT', 1, 1, 1),
-(141, 'MSG_ID_MODBUS_PERIOD_REPORT_PM1025_TRIGGER', 1, 1, 1),
-(142, 'MSG_ID_MODBUS_PERIOD_REPORT_WIND_SPEED_TRIGGER', 1, 1, 1),
-(143, 'MSG_ID_MODBUS_PERIOD_REPORT_WIND_DIR_TRIGGER', 1, 1, 1),
-(144, 'MSG_ID_MODBUS_PERIOD_REPORT_TEMPERATURE_TRIGGER', 1, 1, 1),
-(145, 'MSG_ID_MODBUS_PERIOD_REPORT_HUMIDITY_TRIGGER', 1, 1, 1),
-(146, 'MSG_ID_MODBUS_DATA_REQ_PM1025_REPORT', 1, 1, 1),
-(147, 'MSG_ID_MODBUS_DATA_REQ_WIND_SPEED_REPORT', 1, 1, 1),
-(148, 'MSG_ID_MODBUS_DATA_REQ_WIND_DIR_REPORT', 1, 1, 1),
-(149, 'MSG_ID_MODBUS_DATA_REQ_TEMPERATURE_REPORT', 1, 1, 1),
-(150, 'MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT', 1, 1, 1),
-(151, 'MSG_ID_MODBUS_UART1_FRAME_TIMEOUT', 1, 1, 1),
-(152, 'MSG_ID_COM_ALARM_REPORT', 1, 1, 1),
-(153, 'MSG_ID_COM_PM_REPORT', 1, 1, 1),
-(154, 'MSG_ID_CANITFLEO_DATA_REPORT', 1, 1, 1),
-(155, 'MSG_ID_COM_BOTTOM', 1, 1, 1),
-(156, 'MSG_ID_COM_MAX', 1, 1, 1);
+(14, 'MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX', 1, 1, 1),
+(15, 'MSG_ID_WIFI_CLOUDVELA_DATA_RX', 1, 1, 1),
+(16, 'MSG_ID_USBNET_CLOUDVELA_DATA_RX', 1, 1, 1),
+(17, 'MSG_ID_3G4G_CLOUDVELA_DATA_RX', 1, 1, 1),
+(18, 'MSG_ID_SPS232_MODBUS_DATA_RX', 1, 1, 1),
+(19, 'MSG_ID_SPS485_MODBUS_DATA_RX', 1, 1, 1),
+(20, 'MSG_ID_SPSVIRGO_HSMMP_DATA_RX', 1, 1, 1),
+(21, 'MSG_ID_SPSVIRGO_NOISE_DATA_REPORT', 1, 1, 1),
+(22, 'MSG_ID_SPSVIRGO_NOISE_CONTROL_FB', 1, 1, 1),
+(23, 'MSG_ID_AVORION_HSMMP_DATA_READ_FB', 1, 1, 1),
+(24, 'MSG_ID_AVORION_HSMMP_DATA_RX', 1, 1, 1),
+(25, 'MSG_ID_BLE_HSMMP_DATA_RX', 1, 1, 1),
+(26, 'MSG_ID_BLE_MODBUS_DATA_RX', 1, 1, 1),
+(27, 'MSG_ID_LCD_AVORION_DATA_RX', 1, 1, 1),
+(28, 'MSG_ID_CAMERA_AVORION_DATA_RX', 1, 1, 1),
+(29, 'MSG_ID_MICROPHONE_AVORION_DATA_RX', 1, 1, 1),
+(30, 'MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG', 1, 1, 1),
+(31, 'MSG_ID_CLOUDVELA_EMC_DATA_REQ', 1, 1, 1),
+(32, 'MSG_ID_CLOUDVELA_EMC_CONTROL_CMD', 1, 1, 1),
+(33, 'MSG_ID_CLOUDVELA_PM25_DATA_REQ', 1, 1, 1),
+(34, 'MSG_ID_CLOUDVELA_PM25_CONTROL_CMD', 1, 1, 1),
+(35, 'MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ', 1, 1, 1),
+(36, 'MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD', 1, 1, 1),
+(37, 'MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ', 1, 1, 1),
+(38, 'MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD', 1, 1, 1),
+(39, 'MSG_ID_CLOUDVELA_TEMP_DATA_REQ', 1, 1, 1),
+(40, 'MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD', 1, 1, 1),
+(41, 'MSG_ID_CLOUDVELA_HUMID_DATA_REQ', 1, 1, 1),
+(42, 'MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD', 1, 1, 1),
+(43, 'MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD', 1, 1, 1),
+(44, 'MSG_ID_CLOUDVELA_NOISE_DATA_REQ', 1, 1, 1),
+(45, 'MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD', 1, 1, 1),
+(46, 'MSG_ID_NBIOTCJ188_IWM_DATA_REQ', 1, 1, 1),
+(47, 'MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD', 1, 1, 1),
+(48, 'MSG_ID_NBIOTCJ188_IHM_DATA_REQ', 1, 1, 1),
+(49, 'MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD', 1, 1, 1),
+(50, 'MSG_ID_NBIOTCJ188_IGM_DATA_REQ', 1, 1, 1),
+(51, 'MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD', 1, 1, 1),
+(52, 'MSG_ID_NBIOTCJ188_IPM_DATA_REQ', 1, 1, 1),
+(53, 'MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD', 1, 1, 1),
+(54, 'MSG_ID_NBIOTQG376_IPM_DATA_REQ', 1, 1, 1),
+(55, 'MSG_ID_NBIOTQG376_IPM_CONTROL_CMD', 1, 1, 1),
+(56, 'MSG_ID_MODBUS_EMC_DATA_REPORT', 1, 1, 1),
+(57, 'MSG_ID_MODBUS_EMC_CONTROL_FB', 1, 1, 1),
+(58, 'MSG_ID_MODBUS_PM25_DATA_REPORT', 1, 1, 1),
+(59, 'MSG_ID_MODBUS_PM25_CONTROL_FB', 1, 1, 1),
+(60, 'MSG_ID_MODBUS_WINDDIR_DATA_REPORT', 1, 1, 1),
+(61, 'MSG_ID_MODBUS_WINDDIR_CONTROL_FB', 1, 1, 1),
+(62, 'MSG_ID_MODBUS_WINDSPD_DATA_REPORT', 1, 1, 1),
+(63, 'MSG_ID_MODBUS_WINDSPD_CONTROL_FB', 1, 1, 1),
+(64, 'MSG_ID_MODBUS_TEMP_DATA_REPORT', 1, 1, 1),
+(65, 'MSG_ID_MODBUS_TEMP_CONTROL_FB', 1, 1, 1),
+(66, 'MSG_ID_MODBUS_HUMID_DATA_REPORT', 1, 1, 1),
+(67, 'MSG_ID_MODBUS_HUMID_CONTROL_FB', 1, 1, 1),
+(68, 'MSG_ID_MODBUS_NOISE_DATA_REPORT', 1, 1, 1),
+(69, 'MSG_ID_MODBUS_NOISE_CONTROL_FB', 1, 1, 1),
+(70, 'MSG_ID_EMC_MODBUS_DATA_READ', 1, 1, 1),
+(71, 'MSG_ID_EMC_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(72, 'MSG_ID_EMC_MODBUS_CONTROL_CMD', 1, 1, 1),
+(73, 'MSG_ID_EMC_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(74, 'MSG_ID_PM25_MODBUS_DATA_READ', 1, 1, 1),
+(75, 'MSG_ID_PM25_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(76, 'MSG_ID_PM25_MODBUS_CONTROL_CMD', 1, 1, 1),
+(77, 'MSG_ID_PM25_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(78, 'MSG_ID_WINDDIR_MODBUS_DATA_READ', 1, 1, 1),
+(79, 'MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(80, 'MSG_ID_WINDDIR_MODBUS_CONTROL_CMD', 1, 1, 1),
+(81, 'MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(82, 'MSG_ID_WINDSPD_MODBUS_DATA_READ', 1, 1, 1),
+(83, 'MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(84, 'MSG_ID_WINDSPD_MODBUS_CONTROL_CMD', 1, 1, 1),
+(85, 'MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(86, 'MSG_ID_TEMP_MODBUS_DATA_READ', 1, 1, 1),
+(87, 'MSG_ID_TEMP_SPIBUSARIES_DATA_READ', 1, 1, 1),
+(88, 'MSG_ID_TEMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(89, 'MSG_ID_TEMP_MODBUS_CONTROL_CMD', 1, 1, 1),
+(90, 'MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD', 1, 1, 1),
+(91, 'MSG_ID_TEMP_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(92, 'MSG_ID_HUMID_MODBUS_DATA_READ', 1, 1, 1),
+(93, 'MSG_ID_HUMID_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(94, 'MSG_ID_HUMID_MODBUS_CONTROL_CMD', 1, 1, 1),
+(95, 'MSG_ID_HUMID_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(96, 'MSG_ID_HSMMP_AVORION_DATA_READ', 1, 1, 1),
+(97, 'MSG_ID_HSMMP_AVORION_STOP', 1, 1, 1),
+(98, 'MSG_ID_HSMMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(99, 'MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(100, 'MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP', 1, 1, 1),
+(101, 'MSG_ID_NOISE_SPSVIRGO_DATA_READ', 1, 1, 1),
+(102, 'MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD', 1, 1, 1),
+(103, 'MSG_ID_NOISE_SPSVIRGO_STOP', 1, 1, 1),
+(104, 'MSG_ID_NOISE_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(105, 'MSG_ID_NOISE_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(106, 'MSG_ID_NOISE_MODBUS_DATA_READ', 1, 1, 1),
+(107, 'MSG_ID_NOISE_MODBUS_CONTROL_CMD', 1, 1, 1),
+(108, 'MSG_ID_IWM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
+(109, 'MSG_ID_IWM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
+(110, 'MSG_ID_IHM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
+(111, 'MSG_ID_IHM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
+(112, 'MSG_ID_IGM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
+(113, 'MSG_ID_IGM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
+(114, 'MSG_ID_IPM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
+(115, 'MSG_ID_IPM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
+(116, 'MSG_ID_IPM_NBIOTQG376_DATA_RESP', 1, 1, 1),
+(117, 'MSG_ID_IPM_NBIOTQG376_CONTROL_FB', 1, 1, 1),
+(118, 'MSG_ID_AIRSYNC_INIT', 1, 1, 1),
+(119, 'MSG_ID_AIRSYNC_BLE_CONNNECTD', 1, 1, 1),
+(120, 'MSG_ID_AIRSYNC_AUTH_REQ', 1, 1, 1),
+(121, 'MSG_ID_AIRSYNC_AUTH_RESP', 1, 1, 1),
+(122, 'MSG_ID_AIRSYNC_INIT_REQ', 1, 1, 1),
+(123, 'MSG_ID_AIRSYNC_INIT_RESP', 1, 1, 1),
+(124, 'MSG_ID_AIRSYNC_CONNECT_READY', 1, 1, 1),
+(125, 'MSG_ID_AIRSYNC_DATA_PUSH', 1, 1, 1),
+(126, 'MSG_ID_AIRSYNC_DATA_REQ', 1, 1, 1),
+(127, 'MSG_ID_AIRSYNC_DATA_RESP', 1, 1, 1),
+(128, 'MSG_ID_AIRSYNC_AUTH_WAIT_TIMER', 1, 1, 1),
+(129, 'MSG_ID_AIRSYNC_DISCONNECT_TIGGER_L3', 1, 1, 1),
+(130, 'MSG_ID_AIRSYNC_SEND_BLE_DATA_TIMER', 1, 1, 1),
+(131, 'MSG_ID_WXAPP_3MIN_TIMEOUT', 1, 1, 1),
+(132, 'MSG_ID_WXAPP_5SECOND_TIMEOUT', 1, 1, 1),
+(133, 'MSG_ID_WXAPP_DATA_REQ_EMC', 1, 1, 1),
+(134, 'MSG_ID_WXAPP_PERIOD_REPORT_EMC_TRIGGER', 1, 1, 1),
+(135, 'MSG_ID_WXAPP_DATA_REQ_TIME_SYNC', 1, 1, 1),
+(136, 'MSG_ID_WXAPP_EQUIPMENT_INFO_SYNC', 1, 1, 1),
+(137, 'MSG_ID_WXAPP_MODBUS_CONNECT_READY', 1, 1, 1),
+(138, 'MSG_ID_WXAPP_MODBUS_DATA_PUSH', 1, 1, 1),
+(139, 'MSG_ID_WXAPP_MODBUS_DISCONNECT', 1, 1, 1),
+(140, 'MSG_ID_MODBUS_10MIN_TIMEOUT', 1, 1, 1),
+(141, 'MSG_ID_MODBUS_5SECOND_TIMEOUT', 1, 1, 1),
+(142, 'MSG_ID_MODBUS_PERIOD_REPORT_PM1025_TRIGGER', 1, 1, 1),
+(143, 'MSG_ID_MODBUS_PERIOD_REPORT_WIND_SPEED_TRIGGER', 1, 1, 1),
+(144, 'MSG_ID_MODBUS_PERIOD_REPORT_WIND_DIR_TRIGGER', 1, 1, 1),
+(145, 'MSG_ID_MODBUS_PERIOD_REPORT_TEMPERATURE_TRIGGER', 1, 1, 1),
+(146, 'MSG_ID_MODBUS_PERIOD_REPORT_HUMIDITY_TRIGGER', 1, 1, 1),
+(147, 'MSG_ID_MODBUS_DATA_REQ_PM1025_REPORT', 1, 1, 1),
+(148, 'MSG_ID_MODBUS_DATA_REQ_WIND_SPEED_REPORT', 1, 1, 1),
+(149, 'MSG_ID_MODBUS_DATA_REQ_WIND_DIR_REPORT', 1, 1, 1),
+(150, 'MSG_ID_MODBUS_DATA_REQ_TEMPERATURE_REPORT', 1, 1, 1),
+(151, 'MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT', 1, 1, 1),
+(152, 'MSG_ID_MODBUS_UART1_FRAME_TIMEOUT', 1, 1, 1),
+(153, 'MSG_ID_COM_ALARM_REPORT', 1, 1, 1),
+(154, 'MSG_ID_COM_PM_REPORT', 1, 1, 1),
+(155, 'MSG_ID_CANITFLEO_DATA_REPORT', 1, 1, 1),
+(156, 'MSG_ID_COM_BOTTOM', 1, 1, 1),
+(157, 'MSG_ID_COM_MAX', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -7107,7 +7625,7 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 --
 
 CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -7117,9 +7635,8 @@ CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -7128,7 +7645,7 @@ CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+`sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -7138,10 +7655,442 @@ CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `hcuairprsaltitudebmp180datainfo`
+--
+ALTER TABLE `hcuairprsaltitudebmp180datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuairprsbmp180datainfo`
+--
+ALTER TABLE `hcuairprsbmp180datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuairprsdatainfo`
+--
+ALTER TABLE `hcuairprsdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcualcoholdatainfo`
+--
+ALTER TABLE `hcualcoholdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcualcoholmq3alcodatainfo`
+--
+ALTER TABLE `hcualcoholmq3alcodatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuco1datainfo`
+--
+ALTER TABLE `hcuco1datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuemcdatainfo`
+--
+ALTER TABLE `hcuemcdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhchodatainfo`
+--
+ALTER TABLE `hcuhchodatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhchoze08ch2odatainfo`
+--
+ALTER TABLE `hcuhchoze08ch2odatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhsmmpdatainfo`
+--
+ALTER TABLE `hcuhsmmpdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumiddatainfo`
+--
+ALTER TABLE `hcuhumiddatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumiddht11datainfo`
+--
+ALTER TABLE `hcuhumiddht11datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidmth01datainfo`
+--
+ALTER TABLE `hcuhumidmth01datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidrht03datainfo`
+--
+ALTER TABLE `hcuhumidrht03datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidsht20datainfo`
+--
+ALTER TABLE `hcuhumidsht20datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuigmcj188datainfo`
+--
+ALTER TABLE `hcuigmcj188datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuihmcj188datainfo`
+--
+ALTER TABLE `hcuihmcj188datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuipmcj188datainfo`
+--
+ALTER TABLE `hcuipmcj188datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuiwmcj188datainfo`
+--
+ALTER TABLE `hcuiwmcj188datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hculightstrbh1750datainfo`
+--
+ALTER TABLE `hculightstrbh1750datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hculightstrdatainfo`
+--
+ALTER TABLE `hculightstrdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcunoisedatainfo`
+--
+ALTER TABLE `hcunoisedatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25bmpd300datainfo`
+--
+ALTER TABLE `hcupm25bmpd300datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25datainfo`
+--
+ALTER TABLE `hcupm25datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25sharpdatainfo`
+--
+ALTER TABLE `hcupm25sharpdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcusysengpar`
+--
+ALTER TABLE `hcusysengpar`
+ ADD PRIMARY KEY (`prjname`);
+
+--
+-- Indexes for table `hcusyspmglobaldatainfo`
+--
+ALTER TABLE `hcusyspmglobaldatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempbmp180datainfo`
+--
+ALTER TABLE `hcutempbmp180datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempdatainfo`
+--
+ALTER TABLE `hcutempdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempdht11datainfo`
+--
+ALTER TABLE `hcutempdht11datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempmth01datainfo`
+--
+ALTER TABLE `hcutempmth01datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutemprht03datainfo`
+--
+ALTER TABLE `hcutemprht03datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempsht20datainfo`
+--
+ALTER TABLE `hcutempsht20datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgasdatainfo`
+--
+ALTER TABLE `hcutoxicgasdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgasmq135datainfo`
+--
+ALTER TABLE `hcutoxicgasmq135datainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgaszp01vocdatainfo`
+--
+ALTER TABLE `hcutoxicgaszp01vocdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutracemodulectr`
+--
+ALTER TABLE `hcutracemodulectr`
+ ADD PRIMARY KEY (`moduleid`);
+
+--
+-- Indexes for table `hcutracemsgctr`
+--
+ALTER TABLE `hcutracemsgctr`
+ ADD PRIMARY KEY (`msgid`);
+
+--
+-- Indexes for table `hcuwinddirdatainfo`
+--
+ALTER TABLE `hcuwinddirdatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuwindspddatainfo`
+--
+ALTER TABLE `hcuwindspddatainfo`
+ ADD PRIMARY KEY (`sid`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `hcuairprsaltitudebmp180datainfo`
+--
+ALTER TABLE `hcuairprsaltitudebmp180datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcuairprsbmp180datainfo`
+--
+ALTER TABLE `hcuairprsbmp180datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcuairprsdatainfo`
+--
+ALTER TABLE `hcuairprsdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcualcoholdatainfo`
+--
+ALTER TABLE `hcualcoholdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcualcoholmq3alcodatainfo`
+--
+ALTER TABLE `hcualcoholmq3alcodatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcuco1datainfo`
+--
+ALTER TABLE `hcuco1datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuemcdatainfo`
+--
+ALTER TABLE `hcuemcdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5310;
+--
+-- AUTO_INCREMENT for table `hcuhchodatainfo`
+--
+ALTER TABLE `hcuhchodatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhchoze08ch2odatainfo`
+--
+ALTER TABLE `hcuhchoze08ch2odatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhsmmpdatainfo`
+--
+ALTER TABLE `hcuhsmmpdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhumiddatainfo`
+--
+ALTER TABLE `hcuhumiddatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=130;
+--
+-- AUTO_INCREMENT for table `hcuhumiddht11datainfo`
+--
+ALTER TABLE `hcuhumiddht11datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=696;
+--
+-- AUTO_INCREMENT for table `hcuhumidmth01datainfo`
+--
+ALTER TABLE `hcuhumidmth01datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `hcuhumidrht03datainfo`
+--
+ALTER TABLE `hcuhumidrht03datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhumidsht20datainfo`
+--
+ALTER TABLE `hcuhumidsht20datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=508;
+--
+-- AUTO_INCREMENT for table `hcuigmcj188datainfo`
+--
+ALTER TABLE `hcuigmcj188datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuihmcj188datainfo`
+--
+ALTER TABLE `hcuihmcj188datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuipmcj188datainfo`
+--
+ALTER TABLE `hcuipmcj188datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuiwmcj188datainfo`
+--
+ALTER TABLE `hcuiwmcj188datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hculightstrbh1750datainfo`
+--
+ALTER TABLE `hculightstrbh1750datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hculightstrdatainfo`
+--
+ALTER TABLE `hculightstrdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcunoisedatainfo`
+--
+ALTER TABLE `hcunoisedatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=60;
+--
+-- AUTO_INCREMENT for table `hcupm25bmpd300datainfo`
+--
+ALTER TABLE `hcupm25bmpd300datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcupm25datainfo`
+--
+ALTER TABLE `hcupm25datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcupm25sharpdatainfo`
+--
+ALTER TABLE `hcupm25sharpdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcusyspmglobaldatainfo`
+--
+ALTER TABLE `hcusyspmglobaldatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=186;
+--
+-- AUTO_INCREMENT for table `hcutempbmp180datainfo`
+--
+ALTER TABLE `hcutempbmp180datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=702;
+--
+-- AUTO_INCREMENT for table `hcutempdatainfo`
+--
+ALTER TABLE `hcutempdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=158;
+--
+-- AUTO_INCREMENT for table `hcutempdht11datainfo`
+--
+ALTER TABLE `hcutempdht11datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=713;
+--
+-- AUTO_INCREMENT for table `hcutempmth01datainfo`
+--
+ALTER TABLE `hcutempmth01datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcutemprht03datainfo`
+--
+ALTER TABLE `hcutemprht03datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcutempsht20datainfo`
+--
+ALTER TABLE `hcutempsht20datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=504;
+--
+-- AUTO_INCREMENT for table `hcutoxicgasdatainfo`
+--
+ALTER TABLE `hcutoxicgasdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcutoxicgasmq135datainfo`
+--
+ALTER TABLE `hcutoxicgasmq135datainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcutoxicgaszp01vocdatainfo`
+--
+ALTER TABLE `hcutoxicgaszp01vocdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcuwinddirdatainfo`
+--
+ALTER TABLE `hcuwinddirdatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuwindspddatainfo`
+--
+ALTER TABLE `hcuwindspddatainfo`
+MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
