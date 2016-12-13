@@ -206,16 +206,19 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			snd.length = sizeof(msg_struct_pm_report_t);
 			snd.usercmdid = L3CI_performance_info;
 			snd.timeStamp = time(0);
-			snd.PmRestartCnt = zHcuGlobalCounter.restartCnt;
+			snd.PmCloudVelaConnCnt = zHcuGlobalCounter.cloudVelaConnCnt;
+			snd.PmCloudVelaConnFailCnt = zHcuGlobalCounter.cloudVelaConnFailCnt;
 			snd.PmCloudVelaDiscCnt = zHcuGlobalCounter.cloudVelaDiscCnt;
 			snd.PmSocketDiscCnt = zHcuGlobalCounter.SocketDiscCnt;
 
 			ret = hcu_message_send(MSG_ID_COM_PM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length);
+			memset(&zHcuGlobalCounter, 0, sizeof(zHcuGlobalCounter));
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_SYSPM]++;
 				HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SYSPM], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
 				return FAILURE;
 			}
+
 
 		}
 

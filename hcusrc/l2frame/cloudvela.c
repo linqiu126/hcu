@@ -318,6 +318,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			}
+			zHcuGlobalCounter.cloudVelaConnFailCnt++;
 		}
 	}
 
@@ -2087,7 +2088,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.PmRestartCnt, rcv.PmCloudVelaDiscCnt, rcv.PmSocketDiscCnt, rcv.timeStamp, &buf) == FAILURE){
+		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.PmCloudVelaConnCnt, rcv.PmCloudVelaConnFailCnt, rcv.PmCloudVelaDiscCnt, rcv.PmSocketDiscCnt, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;

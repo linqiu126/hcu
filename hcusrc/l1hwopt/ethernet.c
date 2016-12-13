@@ -291,7 +291,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			else
 			{
 				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-					HcuDebugPrint("ETHERNET: Socket connected\n\n\n");
+					HcuDebugPrint("ETHERNET: Socket reconnected\n\n\n");
 				}
 
 				echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
@@ -300,7 +300,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 					zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 				}
 				else{
-					HcuDebugPrint("ETHERNET: Socket send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+					HcuDebugPrint("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
 
 				}
 			}

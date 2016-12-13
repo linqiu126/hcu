@@ -1952,7 +1952,7 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT32 
 
 //For alarm report
 //rcv输入参数，buf输出参数
-extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT32 restartCnt, UINT32 cloudVelaDiscCnt, UINT32 SocketDiscCnt, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT32 cloudVelaConnCnt, UINT32 cloudVelaConnFailCnt, UINT32 cloudVelaDiscCnt, UINT32 SocketDiscCnt, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1969,7 +1969,10 @@ extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UIN
 
 		//pack数据到临时字符串中, 将数据打印到关键的数值中
 		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
-		sprintf(xmlFormat.conPmRestartCnt, "%04X", restartCnt & 0xFF);
+
+
+		sprintf(xmlFormat.conPmCloudVelaConnCnt, "%04X", cloudVelaConnCnt & 0xFF);
+		sprintf(xmlFormat.conPmCloudVelaConnFailCnt, "%04X", cloudVelaConnFailCnt & 0xFF);
 		sprintf(xmlFormat.conPmCloudVelaDiscCnt, "%04X", cloudVelaDiscCnt & 0xFF);
 		sprintf(xmlFormat.conPmSocketDiscCnt, "%04X", SocketDiscCnt & 0xFF);
 

@@ -2312,9 +2312,9 @@ typedef struct msg_struct_alarm_report
 typedef struct msg_struct_pm_report
 {
 	UINT8  usercmdid;
-	//HcuGlobalCounter_t zHcuGlobalCounter;
-
-	UINT32 PmRestartCnt;
+	//UINT32 PmRestartCnt;
+	UINT32 PmCloudVelaConnCnt;
+	UINT32 PmCloudVelaConnFailCnt;
 	UINT32 PmCloudVelaDiscCnt;
 	UINT32 PmSocketDiscCnt;
 	UINT32 timeStamp;

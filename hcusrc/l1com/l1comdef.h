@@ -655,8 +655,8 @@ typedef struct CloudBhItfDevReportStdXml
 	char conAlarmType[5];   //2B
 	char conAlarmContent[5];//2B
 
-	//Added by Shanchun for PM report
-	char conPmRestartCnt[5];   //2B
+	char conPmCloudVelaConnCnt[5];   //2B
+	char conPmCloudVelaConnFailCnt[5];   //2B
 	char conPmCloudVelaDiscCnt[5];//2B
 	char conPmSocketDiscCnt[5];//2B
 

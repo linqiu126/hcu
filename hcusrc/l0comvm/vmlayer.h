@@ -271,6 +271,7 @@ typedef struct HcuGlobalCounter
 	UINT32 errCnt[MAX_TASK_NUM_IN_ONE_HCU];  //以每个任务为单位
 	UINT32 restartCnt;
 	UINT32 cloudVelaConnCnt;
+	UINT32 cloudVelaConnFailCnt;
 	UINT32 cloudVelaDiscCnt;
 	UINT32 CloudDataTimeOutCnt;
 	UINT32 SocketDiscCnt;
