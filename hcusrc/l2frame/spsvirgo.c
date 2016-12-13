@@ -216,7 +216,9 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
 			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm_info;
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
 			snd.alarmType = ALARM_TYPE_SENSOR;

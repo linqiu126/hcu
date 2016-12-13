@@ -120,8 +120,8 @@ typedef enum
 	L3CI_itf_485 = 0x5B, //485读取命令/返回结果
 	L3CI_hcu_inventory= 0xA0,	//软件清单
 	L3CI_sw_package = 0xA1,	//软件版本体
-	L3CI_alarm_info = 0xB0, //for alarm report
-	L3CI_performance_info = 0xB1, // or PM report
+	L3CI_alarm = 0xB0, //for alarm report
+	L3CI_performance = 0xB1, // or PM report
 	L3CI_equipment_info = 0xF0,	//设备基本信息
 	L3CI_personal_info = 0xF1,	//个人基本信息
 	L3CI_time_sync = 0xF2,	//时间同步
@@ -330,6 +330,23 @@ typedef enum
 	L3PO_hcuinventory_report = 0x81, //Hcu Inventory Response
 	L3PO_hcuinventory_max,
 }L3HcuInventoryOptIdDef;
+
+typedef enum
+{
+	L3PO_hcualarm_min = 0,
+	L3PO_hcualarm_none = 0,
+	L3PO_hcualarm_report = 0x81, //Hcu alarm report
+	L3PO_hcualarm_max,
+}L3HcuAlarmOptIdDef;
+
+typedef enum
+{
+	L3PO_hcupm_min = 0,
+	L3PO_hcupm_none = 0,
+	L3PO_hcupm_report = 0x81, //Hcu perfromance report
+	L3PO_hcupm_max,
+}L3HcuPmOptIdDef;
+
 
 typedef enum
 {

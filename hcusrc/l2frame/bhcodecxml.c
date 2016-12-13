@@ -169,6 +169,16 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	strcat(da, xmlFormat->conAlarmContent);
 
 
+	//char conPmCloudVelaConnCnt[5];   //2B
+	strcat(da, xmlFormat->conPmCloudVelaConnCnt);
+	//char conPmCloudVelaConnFailCnt[5];   //2B
+	strcat(da, xmlFormat->conPmCloudVelaConnFailCnt);
+	//char conPmCloudVelaDiscCnt[5];//2B
+	strcat(da, xmlFormat->conPmCloudVelaDiscCnt);
+	//char conPmSocketDiscCnt[5];//2B
+	strcat(da, xmlFormat->conPmSocketDiscCnt);
+
+
 	//Adding by Shanchun for control cmd
 	//char conPowerOnOff[3]; //1B
 	strcat(da, xmlFormat->conPowerOnOff);

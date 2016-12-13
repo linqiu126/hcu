@@ -2301,6 +2301,8 @@ typedef struct  msg_struct_nbiotqg376_ipm_data_req //
 typedef struct msg_struct_alarm_report
 {
 	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType;
 	UINT32 equID;
 	UINT32 alarmType;
 	UINT32 alarmContent;
@@ -2312,6 +2314,8 @@ typedef struct msg_struct_alarm_report
 typedef struct msg_struct_pm_report
 {
 	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType;
 	//UINT32 PmRestartCnt;
 	UINT32 PmCloudVelaConnCnt;
 	UINT32 PmCloudVelaConnFailCnt;

@@ -362,7 +362,9 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
 			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm_info;
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
 			snd.alarmType = ALARM_TYPE_SENSOR;
@@ -551,7 +553,9 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
 			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm_info;
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
 			snd.alarmType = ALARM_TYPE_SENSOR;
@@ -738,7 +742,9 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
 			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm_info;
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
 			snd.alarmType = ALARM_TYPE_SENSOR;
@@ -929,7 +935,9 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
 			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm_info;
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
 			snd.alarmType = ALARM_TYPE_SENSOR;
@@ -1120,7 +1128,9 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
 			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm_info;
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
 			snd.alarmType = ALARM_TYPE_SENSOR;
@@ -1325,7 +1335,9 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
 			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm_info;
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
 			snd.alarmType = ALARM_TYPE_SENSOR;

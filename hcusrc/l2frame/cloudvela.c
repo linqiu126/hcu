@@ -2013,7 +2013,7 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 	memcpy(&rcv, param_ptr, param_len);
 
 	//参数检查
-	if ((rcv.equID <= 0) || (rcv.usercmdid != L3CI_alarm_info) || (rcv.timeStamp <=0)){
+	if ((rcv.equID <= 0) || (rcv.usercmdid != L3CI_alarm) || (rcv.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -2034,7 +2034,7 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 			return FAILURE;
 		}
 		*/
-		if (func_cloudvela_huanbao_alarm_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.timeStamp, &buf) == FAILURE){
+		if (func_cloudvela_huanbao_alarm_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -2075,7 +2075,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	memcpy(&rcv, param_ptr, param_len);
 
 	//参数检查
-	if ((rcv.usercmdid != L3CI_performance_info) || (rcv.timeStamp <=0)){
+	if ((rcv.usercmdid != L3CI_performance) || (rcv.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -2088,7 +2088,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.PmCloudVelaConnCnt, rcv.PmCloudVelaConnFailCnt, rcv.PmCloudVelaDiscCnt, rcv.PmSocketDiscCnt, rcv.timeStamp, &buf) == FAILURE){
+		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.PmCloudVelaConnCnt, rcv.PmCloudVelaConnFailCnt, rcv.PmCloudVelaDiscCnt, rcv.PmSocketDiscCnt, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
