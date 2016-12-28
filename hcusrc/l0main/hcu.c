@@ -109,39 +109,51 @@
 
 
 //Main Entry, Father process
-int main(void) {
+int main(int argc, char* argv[]) {
 
-	//硬件初始化
-	hcu_vm_system_init();
-
-	//从数据库或者系统缺省配置中，读取系统配置的工程参数
-	hcu_hwinv_read_engineering_data_into_mem();
-
-	//任务模块启动初始化
-	hcu_app_system_init();
-	HcuDebugPrint("HCU-MAIN: System level initialization starting...\n");
-
-	//单进程方式，当前的工作模式！！！
-	if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_SINGLE){
-		hcu_working_mode_single();
+	if(argv[1] != 0)
+	{
+		if (!strcmp(argv[1],"version")){
+			printf("%d\n",CURRENT_SW_DELIVERY);
+			return EXIT_SUCCESS;
+		}
 	}
 
-	//双进程方式
-	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_DOUBLE){
-		hcu_working_mode_double();
-	}
+	else
+	{
 
-	//多进程方式
-	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_TRIPPLE){
-		hcu_working_mode_multipy();
-	}
+		//硬件初始化
+		hcu_vm_system_init();
 
-	//差错启动模式
-	else{
-		HcuErrorPrint("HCU: Can not work due to starting mode error!\n");
-	}
+		//从数据库或者系统缺省配置中，读取系统配置的工程参数
+		hcu_hwinv_read_engineering_data_into_mem();
 
-	return EXIT_SUCCESS;
+		//任务模块启动初始化
+		hcu_app_system_init();
+		HcuDebugPrint("HCU-MAIN: System level initialization starting...\n");
+
+		//单进程方式，当前的工作模式！！！
+		if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_SINGLE){
+			hcu_working_mode_single();
+		}
+
+		//双进程方式
+		else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_DOUBLE){
+			hcu_working_mode_double();
+		}
+
+		//多进程方式
+		else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_TRIPPLE){
+			hcu_working_mode_multipy();
+		}
+
+		//差错启动模式
+		else{
+			HcuErrorPrint("HCU: Can not work due to starting mode error!\n");
+		}
+
+		return EXIT_SUCCESS;
+	}
 }
 
 //单进程模式，当前的工作模式！！！

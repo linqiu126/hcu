@@ -9,6 +9,10 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 发送给后台统计报告
 
 
+//= ZSC, 2016 DEC.28, CURRENT_SW_DELIVERY 133
+= 为hcu升级增加软件版本检查
+
+
 //= ZSC, 2016 DEC.7, CURRENT_SW_DELIVERY 132 
 = bug fix:Curl是否在链接状态都要处理 socket收到的server端来的消息，HCU要去除Curl全换成socket通信方式,待完成
 
