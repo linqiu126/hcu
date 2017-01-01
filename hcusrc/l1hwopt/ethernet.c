@@ -154,7 +154,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	//serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	//temporarily use the element, to update DB later
-	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.videoSev.hcuVideoServerDir);
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.cloudSocketSrvAdd);
 	serveraddr.sin_port = htons(HCU_CLOUDSRV_SOCKET_PORT);
 	UINT32 echolen;
 
@@ -204,7 +204,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length);
 
-		HcuErrorPrint("ETHERNET: Try to connect [Server IP: %s] .......\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
+		HcuErrorPrint("ETHERNET: Try to connect [Server IP: %s] .......\n", zHcuSysEngPar.cloud.cloudSocketSrvAdd);
 
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_ETHERNET]++;

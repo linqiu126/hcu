@@ -140,9 +140,9 @@ OPSTAT func_spi_int_init(void)
 OPSTAT func_spi_read_data_mth01(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
-	int fd, i, j;
-	int temp, humid, tmp;
-	unsigned char read[256], str[850], strtmp[3];
+	int fd, i;
+	int temp, humid;
+	unsigned char read[256];
 	float tempSum, humidSum;
 
 	if((fd=wiringPiSPISetup(RPI_SPI_ADDR_MTH01, RPI_SPI_SPEED))<0){
@@ -158,7 +158,7 @@ OPSTAT func_spi_read_data_mth01(void)
 		//数据存在的位置是前两个字节是温度，第三个字节是湿度，第四个是CRC
 		//CRC8暂时不检查，未来需要检查
 //		for (j=0;j<256;j++) read[j]=j;
-		tmp = wiringPiSPIDataRW(RPI_SPI_ADDR_MTH01, read, 4);
+		wiringPiSPIDataRW(RPI_SPI_ADDR_MTH01, read, 4);
 //		sprintf(str, "SPI: Sensor MTH01 read result: Index=%d, Return = %d, Read result = 0x ", i, tmp);
 //		for(j=0;j<256;j++){
 //			sprintf(strtmp, "%02x ", read[j]);
@@ -196,7 +196,7 @@ OPSTAT func_spi_read_data_rht03(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
 	int fd, i;
-	int temp, humid, tmp;
+	int temp, humid;
 	unsigned char read[4] = {0, 0, 0, 0};
 	float tempSum, humidSum;
 
@@ -212,7 +212,7 @@ OPSTAT func_spi_read_data_rht03(void)
 		delay (200);
 		//数据存在的位置是前两个字节是温度，第三个字节是湿度，第四个是CRC
 		//CRC16暂时不检查，未来需要检查
-		tmp = wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, read, 4);
+		wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, read, 4);
 		//HcuDebugPrint("SPI: Sensor RHT03 read result: Index=%d, Read[4] = 0x%x %x %x %x, Return=%d\n", i, read[0], read[1], read[2], read[3], tmp);
 		temp = ((read[0]<<8)&0xFF00) + (read[1]&0xFF) - 400;
 		tempSum += temp/10;

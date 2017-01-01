@@ -623,6 +623,7 @@ UINT32 hcu_sps485_serial_port_send(SerialPort_t *sp, UINT8 *send_buf, UINT32 Len
 其中，lockTTY（）和unlockTTY（）是为了能够在多线程中使用。在读写操作的前后，需要锁定和释放串口资源。
 具体的使用方法，在代码实现的原文件中，main（）函数中进行了演示。下面就是源代码文件： */
 ////////////////////////////////////////////////////////////////////////////////
+/*
 TTY_INFO *readyTTY(int id)
 {
     TTY_INFO *ptty;
@@ -677,7 +678,7 @@ int setTTYSpeed(TTY_INFO *ptty, int speed)
     // 进行新的串口设置,数据位为8位
     bzero(&ptty->ntm, sizeof(ptty->ntm));
     tcgetattr(ptty->fd,&ptty->ntm);
-    ptty->ntm.c_cflag = /*CS8 |*/ CLOCAL | CREAD;
+    ptty->ntm.c_cflag =  CLOCAL | CREAD;
     switch(speed)
     {
     case 300:
@@ -757,22 +758,22 @@ int setTTYParity(TTY_INFO *ptty, int databits, char parity, int stopbits)
     { // 设置奇偶校验位数
     case 'n':
     case 'N':
-        ptty->ntm.c_cflag &= ~PARENB; /* Clear parity enable */
-        ptty->ntm.c_iflag &= ~INPCK; /* Enable parity checking */
+        ptty->ntm.c_cflag &= ~PARENB;
+        ptty->ntm.c_iflag &= ~INPCK;
         break;
     case 'o':
     case 'O':
-        ptty->ntm.c_cflag |= (PARODD|PARENB); /* 设置为奇效验*/
-        ptty->ntm.c_iflag |= INPCK; /* Disnable parity checking */
+        ptty->ntm.c_cflag |= (PARODD|PARENB);
+        ptty->ntm.c_iflag |= INPCK;
         break;
     case 'e':
     case 'E':
-        ptty->ntm.c_cflag |= PARENB; /* Enable parity */
-        ptty->ntm.c_cflag &= ~PARODD; /* 转换为偶效验*/
-        ptty->ntm.c_iflag |= INPCK; /* Disnable parity checking */
+        ptty->ntm.c_cflag |= PARENB;
+        ptty->ntm.c_cflag &= ~PARODD;
+        ptty->ntm.c_iflag |= INPCK;
         break;
     case 'S':
-    case 's': /*as no parity*/
+    case 's':
         ptty->ntm.c_cflag &= ~PARENB;
         ptty->ntm.c_cflag &= ~CSTOPB;
         break;
@@ -882,6 +883,7 @@ int unlockTTY(TTY_INFO *ptty)
 // 接口测试
 int sps_test_main(int argc,char **argv)
 {
+
     TTY_INFO *ptty;
     int nbyte,idx;
     unsigned char cc[16];
@@ -916,6 +918,8 @@ int sps_test_main(int argc,char **argv)
         HcuDebugPrint("SPS485: %d:%02X\n",idx++,cc[0]);
     }
     cleanTTY(ptty);
+
+	return 0;
 }
 
 ////////////////////////////////////////////第三种串口函数方式//////////////////////////////////////////////////////
@@ -924,17 +928,17 @@ int sps_test_main(int argc,char **argv)
 int set_opt(int fd, int nSpeed, int nBits, char nEvent, int nStop)
 {
     struct termios newtio, oldtio;
-    /*保存测试现有串口参数设置，在这里如果串口号等出错，会有相关的出错信息*/
+
     if (tcgetattr(fd, &oldtio) != 0)
     {
         HcuErrorPrint("SPS485: SPS486: SetupSerial 1 \n");
         return -1;
     }
     bzero(&newtio, sizeof(newtio));
-    /*步骤一，设置字符大小*/
+
     newtio.c_cflag |= CLOCAL;   //如果设置，modem 的控制线将会被忽略。如果没有设置，则 open()函数会阻塞直到载波检测线宣告 modem 处于摘机状态为止。
     newtio.c_cflag |= CREAD;    //使端口能读取输入的数据
-    /*设置每个数据的位数*/
+
     switch (nBits)
     {
     case 7:
@@ -944,7 +948,7 @@ int set_opt(int fd, int nSpeed, int nBits, char nEvent, int nStop)
         newtio.c_cflag |= CS8;
         break;
     }
-    /*设置奇偶校验位*/
+
     switch (nEvent)
     {
     case 'o':
@@ -964,7 +968,7 @@ int set_opt(int fd, int nSpeed, int nBits, char nEvent, int nStop)
         newtio.c_cflag &= ~PARENB;
         break;
     }
-    /*设置波特率*/
+
     switch (nSpeed)
     {
     case 2400:
@@ -992,21 +996,15 @@ int set_opt(int fd, int nSpeed, int nBits, char nEvent, int nStop)
         cfsetospeed(&newtio, B9600);
         break;
     }
-    /*
-     * 设置停止位
-     * 设置停止位的位数， 如果设置，则会在每帧后产生两个停止位， 如果没有设置，则产生一个
-     * 停止位。一般都是使用一位停止位。需要两位停止位的设备已过时了。
-     * */
-    if (nStop == 1)
-        newtio.c_cflag &= ~CSTOPB;
+
     else if (nStop == 2)
         newtio.c_cflag |= CSTOPB;
-    /*设置等待时间和最小接收字符*/
+
     newtio.c_cc[VTIME] = 0;
     newtio.c_cc[VMIN] = 0;
-    /*处理未接收字符*/
+
     tcflush(fd, TCIFLUSH);
-    /*激活新配置*/
+
     if ((tcsetattr(fd, TCSANOW, &newtio)) != 0)
     {
         HcuErrorPrint("SPS485: com set error\n");
@@ -1079,12 +1077,7 @@ int send_data_tty(int fd, char *send_buf, int Len)
 int SerFd = -1;
 void ProcessInit(void)
 {
-    /*
-     * 打开USB转串口（ttyUSB0）
-     * O_RDWR 可读写设备
-     * O_NOCTTY 如果欲打开的文件为终端机设备时，则不会将该终端机当成进程控制终端机
-     * O_NDELAY 以不可阻断的方式打开文件，也就是无论有无数据读取或等待，都会立即返回进程之中
-     */
+
     SerFd = open("/dev/ttyUSB0", O_RDWR|O_NOCTTY|O_NDELAY);
     if (0 < SerFd)
     {
@@ -1116,4 +1109,4 @@ int sps_test_main_linabell(int argc, char *argv[])
         }
     }
 }
-
+*/

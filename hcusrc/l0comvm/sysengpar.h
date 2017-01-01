@@ -122,7 +122,7 @@ typedef struct SysEngParElementSensor
 	INT32 nbiotcj188HbBackTimer;
 	INT32 nbiotqg376HbTimer;
 	INT32 nbiotqg376HbBackTimer;
-	INT32 cmdcontrolLongTimer;
+	INT32 cloudSocketHbTimer;
 	INT32 cmdcontrolShortTimer;
 	INT32 hsmmpReqTimer;
 	INT32 hsmmpCapDuration;
@@ -174,7 +174,7 @@ typedef struct SysEngParElementSeriesPort
 typedef struct SysEngParElementCloudvela
 {
 	char  cloudHttpAddLocal[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  cloudHttpAddTest[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
+	char  cloudSocketSrvAdd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
 	char  cloudHttpAddSae[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
 	char  cloudHttpAddJd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
 	char  cloudHttpAddWechat[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];

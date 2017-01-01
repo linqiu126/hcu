@@ -56,7 +56,8 @@ OPSTAT fsm_sps232_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 
 OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0, conCounter=0;
+	int ret=0;
+	//int conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -106,7 +107,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//这里等待，是为了保证外设在串口初始化后有足够的时间稳定，不然其读数不太正常
 	hcu_sleep(60);
-	int workingCycle = 2;
+	//int workingCycle = 2;
 	//进入循环工作模式
 	/*
 	while(1){

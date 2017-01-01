@@ -1426,17 +1426,17 @@ enum PixelFormat {
 /**************************************************************/
 /* audio output */
 
-static float t, tincr, tincr2;
-static INT16 *samples;
-static INT32 audio_input_frame_size;
+//static float t, tincr, tincr2;
+//static INT16 *samples;
+//static INT32 audio_input_frame_size;
 
 /* Add an output stream. */
 AVStream *func_camera_add_stream(AVFormatContext *oc, AVCodec **codec, enum AVCodecID codec_id)
 {
+	/*
     AVCodecContext *c;
     AVStream *st;
 
-    /* find the encoder */
     *codec = avcodec_find_encoder(codec_id);
     if (!(*codec)) {
         fprintf(stderr, "Could not find codec\n");
@@ -1465,25 +1465,18 @@ AVStream *func_camera_add_stream(AVFormatContext *oc, AVCodec **codec, enum AVCo
         c->codec_id = codec_id;
 
         c->bit_rate = 400000;
-        /* Resolution must be a multiple of two. */
+
         c->width    = 352;
         c->height   = 288;
-        /* timebase: This is the fundamental unit of time (in seconds) in terms
-         * of which frame timestamps are represented. For fixed-fps content,
-         * timebase should be 1/framerate and timestamp increments should be
-         * identical to 1. */
+
         c->time_base.den = zHcuCameraRefreshRate;
         c->time_base.num = 1;
-        c->gop_size      = 12; /* emit one intra frame every twelve frames at most */
+        c->gop_size      = 12;
         c->pix_fmt       = AVORION_STREAM_PIX_FMT_DEFAULT;
         if (c->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
-            /* just for testing, we also add B frames */
             c->max_b_frames = 2;
         }
         if (c->codec_id == AV_CODEC_ID_MPEG1VIDEO) {
-            /* Needed to avoid using macroblocks in which some coeffs overflow.
-             * This does not happen with normal video, it just happens here as
-             * the motion of the chroma plane does not match the luma plane. */
             c->mb_decision = 2;
         }
     break;
@@ -1492,36 +1485,40 @@ AVStream *func_camera_add_stream(AVFormatContext *oc, AVCodec **codec, enum AVCo
         break;
     }
 
-    /* Some formats want stream headers to be separate. */
+
     if (oc->oformat->flags & AVFMT_GLOBALHEADER)
         c->flags |= CODEC_FLAG_GLOBAL_HEADER;
 
     return st;
+    */
+
+	return 0;
 }
 
 /**************************************************************/
 /* audio output */
 
-static float t, tincr, tincr2;
-static INT16 *samples;
-static INT32 audio_input_frame_size;
+//static float t, tincr, tincr2;
+//static INT16 *samples;
+//static INT32 audio_input_frame_size;
 
 void func_camera_open_audio(AVFormatContext *oc, AVCodec *codec, AVStream *st)
 {
+	/*
     AVCodecContext *c;
 
     c = st->codec;
 
-    /* open it */
+
     if (avcodec_open2(c, codec, NULL) < 0) {
         fprintf(stderr, "Could not open audio codec\n");
         exit(1);
     }
 
-    /* init signal generator */
+
     t     = 0;
     tincr = 2 * M_PI * 110.0 / c->sample_rate;
-    /* increment frequency by 110 Hz per second */
+
     tincr2 = 2 * M_PI * 110.0 / c->sample_rate / c->sample_rate;
 
     if (c->codec->capabilities & CODEC_CAP_VARIABLE_FRAME_SIZE)
@@ -1535,12 +1532,14 @@ void func_camera_open_audio(AVFormatContext *oc, AVCodec *codec, AVStream *st)
         fprintf(stderr, "Could not allocate audio samples buffer\n");
         exit(1);
     }
+    */
 }
 
 /* Prepare a 16 bit dummy audio frame of 'frame_size' samples and
  * 'nb_channels' channels. */
 void func_camera_get_audio_frame(INT16 *samples, INT32 frame_size, INT32 nb_channels)
 {
+	/*
     INT32 j, i, v;
     INT16 *q;
 
@@ -1552,10 +1551,12 @@ void func_camera_get_audio_frame(INT16 *samples, INT32 frame_size, INT32 nb_chan
         t     += tincr;
         tincr += tincr2;
     }
+    */
 }
 
 void func_camera_write_audio_frame(AVFormatContext *oc, AVStream *st)
 {
+	/*
     AVCodecContext *c;
     AVPacket pkt = { 0 }; // data and size must be 0;
     AVFrame *frame = av_frame_alloc(); //avcodec_alloc_frame();
@@ -1583,56 +1584,57 @@ void func_camera_write_audio_frame(AVFormatContext *oc, AVStream *st)
 
     pkt.stream_index = st->index;
 
-    /* Write the compressed frame to the media file. */
     if (av_interleaved_write_frame(oc, &pkt) != 0) {
         fprintf(stderr, "Error while writing audio frame\n");
         exit(1);
     }
     av_frame_free(&frame);
+
+    */
 }
 
 void func_camera_close_audio(AVFormatContext *oc, AVStream *st)
 {
+	/*
     avcodec_close(st->codec);
 
     av_free(samples);
+    */
 }
 
 /**************************************************************/
 /* video output */
 
-static AVFrame *frame;
-static AVPicture src_picture, dst_picture;
-static INT32 frame_count;
+//static AVFrame *frame;
+//static AVPicture src_picture, dst_picture;
+//static INT32 frame_count;
 
 void func_camera_open_video(AVFormatContext *oc, AVCodec *codec, AVStream *st)
 {
+	/*
     INT32 ret;
     AVCodecContext *c = st->codec;
 
-    /* open the codec */
     if (avcodec_open2(c, codec, NULL) < 0) {
         fprintf(stderr, "Could not open video codec\n");
         exit(1);
     }
 
-    /* allocate and init a re-usable frame */
+
     frame = av_frame_alloc();
     if (!frame) {
         fprintf(stderr, "Could not allocate video frame\n");
         exit(1);
     }
 
-    /* Allocate the encoded raw picture. */
+
     ret = avpicture_alloc(&dst_picture, c->pix_fmt, c->width, c->height);
     if (ret < 0) {
         fprintf(stderr, "Could not allocate picture\n");
         exit(1);
     }
 
-    /* If the output format is not YUV420P, then a temporary YUV420P
-     * picture is needed too. It is then converted to the required
-     * output format. */
+
     if (c->pix_fmt != AV_PIX_FMT_YUV420P) {
         ret = avpicture_alloc(&src_picture, AV_PIX_FMT_YUV420P, c->width, c->height);
         if (ret < 0) {
@@ -1641,45 +1643,45 @@ void func_camera_open_video(AVFormatContext *oc, AVCodec *codec, AVStream *st)
         }
     }
 
-    /* copy data and linesize picture pointers to frame */
     *((AVPicture *)frame) = dst_picture;
+*/
 }
 
 /* Prepare a dummy image. */
 void func_camera_fill_yuv_image(AVPicture *pict, INT32 frame_index, INT32 width, INT32 height)
 {
+	/*
     INT32 x, y, i;
 
     i = frame_index;
 
-    /* Y */
+
     for (y = 0; y < height; y++)
         for (x = 0; x < width; x++)
             pict->data[0][y * pict->linesize[0] + x] = x + y + i * 3;
 
-    /* Cb and Cr */
+
     for (y = 0; y < height / 2; y++) {
         for (x = 0; x < width / 2; x++) {
             pict->data[1][y * pict->linesize[1] + x] = 128 + y + i * 2;
             pict->data[2][y * pict->linesize[2] + x] = 64 + x + i * 5;
         }
     }
+    */
 }
 
 void func_camera_write_video_frame(AVFormatContext *oc, AVStream *st)
 {
+	/*
     INT32 ret;
     static struct SwsContext *sws_ctx;
     AVCodecContext *c = st->codec;
 
     if (frame_count >= zHcuCameraFrameTotalNum) {
-        /* No more frames to compress. The codec has a latency of a few
-         * frames if using B-frames, so we get the last frames by
-         * passing the same picture again. */
+
     } else {
         if (c->pix_fmt != AV_PIX_FMT_YUV420P) {
-            /* as we only generate a YUV420P picture, we must convert it
-             * to the codec pixel format if needed */
+
             if (!sws_ctx) {
                 sws_ctx = sws_getContext(c->width, c->height, AV_PIX_FMT_YUV420P,
                                          c->width, c->height, c->pix_fmt,
@@ -1700,7 +1702,7 @@ void func_camera_write_video_frame(AVFormatContext *oc, AVStream *st)
     }
 
     if (oc->oformat->flags & AVFMT_RAWPICTURE) {
-        /* Raw video case - directly store the picture in the packet */
+
         AVPacket pkt;
         av_init_packet(&pkt);
 
@@ -1711,7 +1713,7 @@ void func_camera_write_video_frame(AVFormatContext *oc, AVStream *st)
 
         ret = av_interleaved_write_frame(oc, &pkt);
     } else {
-        /* encode the image */
+
         AVPacket pkt;
         INT32 got_output;
 
@@ -1725,14 +1727,14 @@ void func_camera_write_video_frame(AVFormatContext *oc, AVStream *st)
             exit(1);
         }
 
-        /* If size is zero, it means the image was buffered. */
+
         if (got_output) {
             if (c->coded_frame->key_frame);//(c->coded_frame->key_frame)
                 pkt.flags |= AV_PKT_FLAG_KEY;
 
             pkt.stream_index = st->index;
 
-            /* Write the compressed frame to the media file. */
+
             ret = av_interleaved_write_frame(oc, &pkt);
         } else {
             ret = 0;
@@ -1743,14 +1745,18 @@ void func_camera_write_video_frame(AVFormatContext *oc, AVStream *st)
         exit(1);
     }
     frame_count++;
+
+    */
 }
 
 void func_camera_close_video(AVFormatContext *oc, AVStream *st)
 {
+	/*
     avcodec_close(st->codec);
     av_free(src_picture.data[0]);
     av_free(dst_picture.data[0]);
     av_free(frame);
+    */
 }
 
 //官方样例，没有来得及仔细研究和应用，未来可以进一步融合和利用
@@ -1758,6 +1764,7 @@ void func_camera_close_video(AVFormatContext *oc, AVStream *st)
 /* media file output */
 INT32 func_camera_write_output_file(INT32 argc, char **argv, char *fileInput, char *fileOutput)
 {
+	/*
     const char *filename;
     AVOutputFormat *fmt;
     AVFormatContext *oc;
@@ -1766,7 +1773,7 @@ INT32 func_camera_write_output_file(INT32 argc, char **argv, char *fileInput, ch
     double audio_pts, video_pts;
     INT32 i;
 
-    /* Initialize libavcodec, and register all codecs and formats. */
+
     av_register_all();
 
     if (argc != 2) {
@@ -1782,7 +1789,7 @@ INT32 func_camera_write_output_file(INT32 argc, char **argv, char *fileInput, ch
 
     filename = argv[1];
 
-    /* allocate the output media context */
+
     avformat_alloc_output_context2(&oc, NULL, NULL, filename);
     if (!oc) {
         HcuDebugPrint("CAMERA: Could not deduce output format from file extension: using MPEG.\n");
@@ -1793,28 +1800,26 @@ INT32 func_camera_write_output_file(INT32 argc, char **argv, char *fileInput, ch
     }
     fmt = oc->oformat;
 
-    /* Add the audio and video streams using the default format codecs
-     * and initialize the codecs. */
+
     video_st = NULL;
     audio_st = NULL;
 
     if (fmt->video_codec != AV_CODEC_ID_NONE) {
-        video_st = func_camera_add_stream(oc, &video_codec, fmt->video_codec);
+        //video_st = func_camera_add_stream(oc, &video_codec, fmt->video_codec);
     }
     if (fmt->audio_codec != AV_CODEC_ID_NONE) {
-        audio_st = func_camera_add_stream(oc, &audio_codec, fmt->audio_codec);
+        //audio_st = func_camera_add_stream(oc, &audio_codec, fmt->audio_codec);
     }
 
-    /* Now that all the parameters are set, we can open the audio and
-     * video codecs and allocate the necessary encode buffers. */
+
     if (video_st)
-        func_camera_open_video(oc, video_codec, video_st);
+        //func_camera_open_video(oc, video_codec, video_st);
     if (audio_st)
-    	func_camera_open_audio(oc, audio_codec, audio_st);
+    	//func_camera_open_audio(oc, audio_codec, audio_st);
 
     av_dump_format(oc, 0, filename, 1);
 
-    /* open the output file, if needed */
+
     if (!(fmt->flags & AVFMT_NOFILE)) {
         if (avio_open(&oc->pb, filename, AVIO_FLAG_WRITE) < 0) {
             fprintf(stderr, "Could not open '%s'\n", filename);
@@ -1822,7 +1827,7 @@ INT32 func_camera_write_output_file(INT32 argc, char **argv, char *fileInput, ch
         }
     }
 
-    /* Write the stream header, if any. */
+
     if (avformat_write_header(oc, NULL) < 0) {
         fprintf(stderr, "Error occurred when opening output file\n");
         return 1;
@@ -1831,7 +1836,7 @@ INT32 func_camera_write_output_file(INT32 argc, char **argv, char *fileInput, ch
     if (frame)
         frame->pts = 0;
     for (;;) {
-        /* Compute current audio and video time. */
+
         if (audio_st)
             audio_pts = (double)audio_st->pts.val * audio_st->time_base.num / audio_st->time_base.den;
         else
@@ -1847,7 +1852,7 @@ INT32 func_camera_write_output_file(INT32 argc, char **argv, char *fileInput, ch
             (!video_st || video_pts >= zHcuCameraFrameTotalNum))
             break;
 
-        /* write interleaved audio and video frames */
+
         if (!video_st || (video_st && audio_st && audio_pts < video_pts)) {
         	func_camera_write_audio_frame(oc, audio_st);
         } else {
@@ -1856,30 +1861,27 @@ INT32 func_camera_write_output_file(INT32 argc, char **argv, char *fileInput, ch
         }
     }
 
-    /* Write the trailer, if any. The trailer must be written before you
-     * close the CodecContexts open when you wrote the header; otherwise
-     * av_write_trailer() may try to use memory that was freed on
-     * av_codec_close(). */
     av_write_trailer(oc);
 
-    /* Close each codec. */
+
     if (video_st)
         func_camera_close_video(oc, video_st);
     if (audio_st)
         func_camera_close_audio(oc, audio_st);
 
-    /* Free the streams. */
+
     for (i = 0; i < oc->nb_streams; i++) {
         av_freep(&oc->streams[i]->codec);
         av_freep(&oc->streams[i]);
     }
 
     if (!(fmt->flags & AVFMT_NOFILE))
-        /* Close the output file. */
+
         avio_close(oc->pb);
 
-    /* free the stream */
+
     av_free(oc);
+    */
 
     return 0;
 }

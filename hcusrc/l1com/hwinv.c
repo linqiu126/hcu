@@ -376,19 +376,9 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.winddirreqtimer = %d\n", zHcuSysEngPar.timer.winddirReqTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.windspdreqtimer = %d\n", zHcuSysEngPar.timer.windspdReqTimer);
 			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.noisereqtimer = %d\n", zHcuSysEngPar.timer.noiseReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cmdcontrollongtimer = %d\n", zHcuSysEngPar.timer.cmdcontrolLongTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.heartbeattimer = %d\n", zHcuSysEngPar.timer.cloudvelaHbTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpReqTimer = %d\n", zHcuSysEngPar.timer.hsmmpReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDuration = %d\n", zHcuSysEngPar.timer.hsmmpCapDuration);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpCapDurationFB = %d\n", zHcuSysEngPar.timer.hsmmpCapDurationFB);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.hsmmpRefRate = %d\n", zHcuSysEngPar.timer.hsmmpRefRate);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.videoSev.hcuVideoServerDir = %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpAdd = %s\n", zHcuSysEngPar.cloud.cloudFtpAdd);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUser = %s\n", zHcuSysEngPar.cloud.cloudFtpUser);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwd = %s\n", zHcuSysEngPar.cloud.cloudFtpPwd);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpUserVideo = %s\n", zHcuSysEngPar.cloud.cloudFtpUserVideo);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudFtpPwdVideo = %s\n", zHcuSysEngPar.cloud.cloudFtpPwdVideo);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.swDownload.hcuSwDownloadDir = %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cloudSocketHbTimer = %d\n", zHcuSysEngPar.timer.cloudSocketHbTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cloudvelaHbTimer = %d\n", zHcuSysEngPar.timer.cloudvelaHbTimer);
+			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudSocketSrvAdd = %s\n", zHcuSysEngPar.cloud.cloudSocketSrvAdd);
 			HcuDebugPrint("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
 			HcuDebugPrint("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 		}
@@ -467,7 +457,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.timer.nbiotcj188HbBackTimer = HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
 		zHcuSysEngPar.timer.nbiotqg376HbTimer = HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT;
 		zHcuSysEngPar.timer.nbiotqg376HbBackTimer = HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
-		zHcuSysEngPar.timer.cmdcontrolLongTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG;
+		zHcuSysEngPar.timer.cloudSocketHbTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT;
 		zHcuSysEngPar.timer.cmdcontrolShortTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT;
         zHcuSysEngPar.timer.hsmmpReqTimer = HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ;
 		zHcuSysEngPar.timer.hsmmpCapDuration = HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT;
@@ -495,7 +485,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 
 		//后台部分
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddTest, HCU_CLOUDVELA_HTTP_ADDRESS_TEST);
+		strcpy(zHcuSysEngPar.cloud.cloudSocketSrvAdd, HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT);
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_CLOUDVELA_HTTP_ADDRESS_SAE);
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_CLOUDVELA_HTTP_ADDRESS_JD);
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT);
@@ -518,7 +508,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		strcpy(zHcuSysEngPar.swDownload.hcuSwBackupDir, HCU_SW_BACKUP_DIR_DEFAULT);
 
 		//视频服务器部分
-		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT);
+		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT);
 		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT);
 		//DEBUG部分
 		zHcuSysEngPar.debugMode = HCU_TRACE_DEBUG_ON;

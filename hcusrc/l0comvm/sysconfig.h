@@ -805,7 +805,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
@@ -842,7 +842,7 @@
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_TEST "http://aaa.bbb/"
+	//#define HCU_CLOUDVELA_HTTP_ADDRESS_TEST "http://aaa.bbb/"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"

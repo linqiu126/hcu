@@ -534,7 +534,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	//UINT32 len = 0;
 	//UINT32 readlen = 0;
 	int NumOfLine = 0;
-	char buf[1024];
+	//char buf[1024];
 	char out[8][1024];
 
 	char CurTime[18]; /* +CCLK: "13/06/01,23:43:06" -> 13/06/01,23:43:06 */
@@ -721,7 +721,7 @@ UINT32 UsbUmtsAtCommand(UINT16 fd, char *AtCmd, char *ReplyStr, int *ReplyCnt)
 
 	UINT32 cnt = 0;
 	UINT32 i = 0;
-	UINT32 len = 0;
+	//UINT32 len = 0;
 	UINT32 readlen = 0;
 	int NumOfLine = 0;
 	UINT32 IdxOfCharInOneLine = 0;
@@ -752,7 +752,7 @@ UINT32 UsbUmtsAtCommand(UINT16 fd, char *AtCmd, char *ReplyStr, int *ReplyCnt)
 
 	/* Send second AT Command */
 	bzero(buf, 1024);
-	len = write(fd, AtCmd, strlen(AtCmd));
+	write(fd, AtCmd, strlen(AtCmd));
 	HcuDebugPrint("UsbUmtsAtCommand: AT SEND: %s\n", AtCmd);
 
 	usleep(NB_MICROS_IN_ONE_SECOND * 2);

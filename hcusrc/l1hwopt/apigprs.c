@@ -216,7 +216,7 @@ UINT32 GprsPppdStart(GprsPppdConf_t *gpc)
 {
 
 	/* "/usr/bin/pppd" */
-	int ret = 0;
+	UINT32 ret = 0;
 	int i;
 
 	system("ifconfig eth0 down");
@@ -263,7 +263,7 @@ UINT32 GprsPppdStart(GprsPppdConf_t *gpc)
 
 	HcuDebugPrint("GprsPppStart: pppd successful, ret = %d.\n", ret);
 	HcuDebugPrint("GprsPppStart: refresh system information ...\n", ret);
-	ret = HcuGetSysInfo(&gSysInfo);
+	HcuGetSysInfo(&gSysInfo);
 
 	return SUCCESS;
 
@@ -454,7 +454,7 @@ UINT32 AtCommand(SerialPortCom_t *pGprsSerialPortConfig, char *AtCmd, char *Repl
 
 	UINT32 cnt = 0;
 	UINT32 i = 0;
-	UINT32 len = 0;
+	//UINT32 len = 0;
 	UINT32 readlen = 0;
 	int NumOfLine = 0;
 	UINT32 IdxOfCharInOneLine = 0;
@@ -488,7 +488,7 @@ UINT32 AtCommand(SerialPortCom_t *pGprsSerialPortConfig, char *AtCmd, char *Repl
 
 	/* Send second AT Command */
 	bzero(buf, 1024);
-	len = write(fd, AtCmd, strlen(AtCmd));
+	write(fd, AtCmd, strlen(AtCmd));
 	HcuDebugPrint("AtCommand: AT SEND: %s\n", AtCmd);
 
 	usleep(NB_MICROS_IN_ONE_SECOND * 2);
