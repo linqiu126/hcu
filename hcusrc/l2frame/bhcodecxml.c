@@ -2305,9 +2305,9 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, ret=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
-	HcuInventoryInfot hcuInventoryInfo;
+	HcuInventoryInfo_t hcuInventoryInfo;
 
-	memset(&hcuInventoryInfo, 0, sizeof(HcuInventoryInfot));
+	memset(&hcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
 
 
 	//命令字

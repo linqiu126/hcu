@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `nbiotqg376hbtimer` int(1) NOT NULL,
   `nbiotqg376hbbacktimer` int(1) NOT NULL,
   `cloudsockethbtimer` int(1) NOT NULL,
-  `cmdcontrolshorttimer` int(1) NOT NULL,
+  `dbverreporttimer` int(1) NOT NULL,
   `hsmmpreqtimer` int(1) NOT NULL,
   `hsmmpcapduration` int(1) NOT NULL,
   `hsmmpcapdurationfb` int(11) NOT NULL,
@@ -583,7 +583,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname)
 		if(sqlRow[index]) engPar->timer.nbiotqg376HbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		if(sqlRow[index]) engPar->timer.nbiotqg376HbBackTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		if(sqlRow[index]) engPar->timer.cloudSocketHbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.cmdcontrolShortTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+		if(sqlRow[index]) engPar->timer.dbVerReportTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		if(sqlRow[index]) engPar->timer.hsmmpReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		if(sqlRow[index]) engPar->timer.hsmmpCapDuration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		if(sqlRow[index]) engPar->timer.hsmmpCapDurationFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
@@ -874,6 +874,73 @@ void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow)
         field_count++;
     }
     HcuDebugPrint("\n");
+}
+
+//查询当前HCU使用的数据库版本号
+OPSTAT dbi_HcuDbVersion_inqury(HcuInventoryInfo_t *hcuInv)
+{
+	MYSQL *sqlHandler;
+	MYSQL_RES *resPtr;
+	MYSQL_ROW sqlRow;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//获取数据
+    sprintf(strsql, "SELECT * FROM `hcuswdb` WHERE 1");
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: Inqury data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//查具体的结果
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+	//只读取第一条记录
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+		int index;  //.PRJNAME是INDEX=0的主键
+		/*for (index = 0; index < 43; index++){
+			printf("Field[%d]=%s\n", index, sqlRow[index]);
+		}*/
+		index = 0;
+
+		if(sqlRow[index]) hcuInv->db_delivery = (UINT16)(atol(sqlRow[index++]) & 0xFF);
+
+
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
 }
 
 

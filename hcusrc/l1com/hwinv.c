@@ -45,6 +45,7 @@ FsmStateItem_t FsmHwinv[] =
 HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 HcuHwinvCtrlTable_t zHcuHwinvTable; //硬件列表
 zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
+HcuInventoryInfo_t zHcuInventoryInfo; //软件及数据库版本
 
 // System Information
 SysInfo_t gSysInfo;
@@ -458,7 +459,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.timer.nbiotqg376HbTimer = HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT;
 		zHcuSysEngPar.timer.nbiotqg376HbBackTimer = HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK;
 		zHcuSysEngPar.timer.cloudSocketHbTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT;
-		zHcuSysEngPar.timer.cmdcontrolShortTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT;
+		zHcuSysEngPar.timer.dbVerReportTimer = HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT;
         zHcuSysEngPar.timer.hsmmpReqTimer = HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ;
 		zHcuSysEngPar.timer.hsmmpCapDuration = HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT;
 		zHcuSysEngPar.timer.hsmmpCapDurationFB = HCU_HSMMP_TIMER_DURATION_AVORION_FB;
@@ -528,6 +529,17 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	}
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("HWINV: Set Trace Moduble based engineering data correctly from DATABASE parameters!\n");
+	}
+
+	memset(&zHcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
+
+	//读取HcuDbVersion表单到系统内存中
+	ret = dbi_HcuDbVersion_inqury(&zHcuInventoryInfo);
+	//OPSTAT dbi_HcuDbVersion_inqury(HcuInventoryInfo_t *hcuInv)
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		HcuErrorPrint("HWINV: Read HCUDB version DB error!\n");
+		return FAILURE;
 	}
 
 	//从TASK_ID_COM_BOTTOM开始，固定配置TRACE选项

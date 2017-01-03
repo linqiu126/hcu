@@ -123,7 +123,7 @@ typedef struct SysEngParElementSensor
 	INT32 nbiotqg376HbTimer;
 	INT32 nbiotqg376HbBackTimer;
 	INT32 cloudSocketHbTimer;
-	INT32 cmdcontrolShortTimer;
+	INT32 dbVerReportTimer;
 	INT32 hsmmpReqTimer;
 	INT32 hsmmpCapDuration;
 	INT32 hsmmpCapDurationFB;

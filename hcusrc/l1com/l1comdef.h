@@ -694,8 +694,10 @@ typedef struct CloudBhItfDevReportStdXml
 
 	char conHwType[3];//1B
 	char conHwVersion[5];//2B
-	char conSwDelivery[5];//1B
-	char conSwRelease[5];//2B
+	char conSwRelease[3];//1B
+	char conSwDelivery[5];//2B
+	char conDbDelivery[5];//2B
+
 
 	//Added by Shanchun for av upload
 	char conAvUpload[3];
@@ -825,7 +827,8 @@ typedef struct  HcuInventoryInfo
 	UINT16 hw_version;
 	UINT8 sw_release;
 	UINT16 sw_delivery;
-}HcuInventoryInfot;
+	UINT16 db_delivery;
+}HcuInventoryInfo_t;
 
 //Adding by Shanchun for socket handling
 #define HCU_CLOUDSRV_SOCKET_PORT 9501

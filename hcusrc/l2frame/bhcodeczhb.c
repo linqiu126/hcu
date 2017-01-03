@@ -1091,7 +1091,7 @@ OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8
 
 
 //Adding by Shanchun for hcu sw inventory response
-OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, HcuInventoryInfot *hcuInventoryInfo, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, HcuInventoryInfo_t *hcuInventoryInfo, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1112,33 +1112,20 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 
 		int i;
 
+		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
 
-		switch(optId)
-		{
-		    case L3PO_hcuinventory_req:
-		    	optId = L3PO_hcuinventory_report;
-		    	sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
-
-		    	char temp[2];
-		    	for(i=0;i<6;i++){
-					//sprintf(xmlFormat.conHwUuid[i], "%02X", hcuInventoryInfo->hw_uuid[i]);
-		    		sprintf(temp, "%02X", hcuInventoryInfo->hw_uuid[i] & 0xFF);
-		    		strcat(xmlFormat.conHwUuid, temp);
-		    	}
-
-				sprintf(xmlFormat.conHwType, "%02X", hcuInventoryInfo->hw_type & 0xFF);
-				sprintf(xmlFormat.conHwVersion, "%04X", hcuInventoryInfo->hw_version & 0xFFFF);
-				sprintf(xmlFormat.conSwDelivery, "%02X", hcuInventoryInfo->sw_delivery & 0xFF);
-				sprintf(xmlFormat.conSwRelease, "%04X", hcuInventoryInfo->sw_release & 0xFFFF);
-			   break;
-
-		    default:
-			    HcuErrorPrint("CLOUDVELA: Error operation code received!\n");
-			    zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			    return FAILURE;
-			    break;
-
+		char temp[2];
+		for(i=0;i<6;i++){
+			//sprintf(xmlFormat.conHwUuid[i], "%02X", hcuInventoryInfo->hw_uuid[i]);
+			sprintf(temp, "%02X", hcuInventoryInfo->hw_uuid[i] & 0xFF);
+			strcat(xmlFormat.conHwUuid, temp);
 		}
+
+		sprintf(xmlFormat.conHwType, "%02X", hcuInventoryInfo->hw_type & 0xFF);
+		sprintf(xmlFormat.conHwVersion, "%04X", hcuInventoryInfo->hw_version & 0xFFFF);
+		sprintf(xmlFormat.conSwRelease, "%02X", hcuInventoryInfo->sw_release & 0xFF);
+		sprintf(xmlFormat.conSwDelivery, "%04X", hcuInventoryInfo->sw_delivery & 0xFFFF);
+		sprintf(xmlFormat.conDbDelivery, "%04X", hcuInventoryInfo->db_delivery & 0xFFFF);
 
 		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
 		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);

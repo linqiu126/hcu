@@ -113,6 +113,7 @@ CloudvelaTable_t zHcuCloudvelaTable;
 
 //Task Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuInventoryInfo_t zHcuInventoryInfo;
 extern int clientfd;
 
 //Added by Shanchun for CMD command
@@ -193,6 +194,14 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
+	//For sw&db version report
+	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_SW_DB_VERSION_REPORT, zHcuSysEngPar.timer.dbVerReportTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
+		return FAILURE;
+	}
+
 
 
 	/*
@@ -267,6 +276,11 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	//for socket heart
 	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_SOCKET_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_period_for_socket_heart();
+	}
+
+	//for sw&db version report
+	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_SW_DB_VERSION_REPORT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		ret = func_cloudvela_time_out_period_for_sw_db_report();
 	}
 /*
 	//for cmd control by Shanchun
@@ -670,6 +684,60 @@ OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
 	else
 	{
 		HcuDebugPrint("CLOUDVELA: Socket connected, send HEART_BEAT message to socket server success: %s!\n\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
+{
+	UINT32 optId=0, cmdId=0, backType=0, ret=0;
+
+	//命令字
+	cmdId = L3CI_hcu_inventory;
+	backType = L3CI_cmdid_back_type_period;
+    optId = L3PO_hcuinventory_report;
+    zHcuInventoryInfo.hw_type = CURRENT_HW_TYPE;
+    zHcuInventoryInfo.hw_version = CURRENT_HW_MODULE;
+    zHcuInventoryInfo.sw_release = CURRENT_SW_RELEASE;
+    zHcuInventoryInfo.sw_delivery = CURRENT_SW_DELIVERY;
+    //zHcuInventoryInfo.db_delivery = CURRENT_SW_DELIVERY;//to get from local db
+    /*
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+		HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
+		HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
+		HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
+		HcuDebugPrint("CLOUDVELA: control command hw_type = %d\n", zHcuInventoryInfo.hw_type);
+		HcuDebugPrint("CLOUDVELA: control command hw_version= %d\n", zHcuInventoryInfo.hw_version);
+		HcuDebugPrint("CLOUDVELA: control command sw_release = %d\n", zHcuInventoryInfo.sw_release);
+		HcuDebugPrint("CLOUDVELA: control command sw_delivery= %d\n", zHcuInventoryInfo.sw_delivery);
+		HcuDebugPrint("CLOUDVELA: control command db_delivery= %d\n", zHcuInventoryInfo.db_delivery);
+
+	}
+	*/
+	// send resp msg to cloud
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+		//打包数据
+		if (FAILURE == func_cloudvela_huanbao_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &zHcuInventoryInfo, &buf))
+		{
+			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			//return FAILURE;
+		}
+		//Send out
+		ret = func_cloudvela_send_data_to_cloud(&buf);
+		if ( ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Online state, send HCU Inventory Resp to cloud failure!\n");
+			return FAILURE;
+		}
+
+		else{
+			HcuDebugPrint("CLOUDVELA: Online state, send HCU Inventory Resp to cloud success!\n");
+		}
 	}
 
 	return SUCCESS;

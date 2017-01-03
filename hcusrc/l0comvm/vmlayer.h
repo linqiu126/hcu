@@ -12,6 +12,8 @@
 #include "../l0comvm/sysdim.h"
 #include "../l0comvm/sysconfig.h"
 #include "../l0comvm/sysengpar.h"
+#include "../l1com/l1comdef.h"
+
 
 //定义TASK对应的名字
 //!!!!!!!!!!!!!!!!ATTENTION!!!!!!!!!!!!!!!!

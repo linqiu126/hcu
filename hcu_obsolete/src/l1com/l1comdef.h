@@ -766,7 +766,8 @@ typedef struct  HcuInventoryInfo
 	UINT16 hw_version;
 	UINT8 sw_release;
 	UINT16 sw_delivery;
-}HcuInventoryInfot;
+	UINT16 db_delivery;
+}HcuInventoryInfo_t;
 
 //Adding by Shanchun for socket handling
 #define HCU_CLOUDSRV_SOCKET_PORT 9501
