@@ -1115,10 +1115,10 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
 
 		char temp[2];
-		for(i=0;i<6;i++){
+		for(i=0;i<18;i++){
 			//sprintf(xmlFormat.conHwUuid[i], "%02X", hcuInventoryInfo->hw_uuid[i]);
-			sprintf(temp, "%02X", hcuInventoryInfo->hw_uuid[i] & 0xFF);
-			strcat(xmlFormat.conHwUuid, temp);
+			sprintf(temp, "%02X", hcuInventoryInfo->hw_mac[i] & 0xFF);
+			strcat(xmlFormat.conHwMac, temp);
 		}
 
 		sprintf(xmlFormat.conHwType, "%02X", hcuInventoryInfo->hw_type & 0xFF);
@@ -1940,9 +1940,9 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 u
 
 
 
-//For alarm report
+//For performance report
 //rcv输入参数，buf输出参数
-extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT32 cloudVelaConnCnt, UINT32 cloudVelaConnFailCnt, UINT32 cloudVelaDiscCnt, UINT32 SocketDiscCnt, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT32 cloudVelaConnCnt, UINT32 cloudVelaConnFailCnt, UINT32 cloudVelaDiscCnt, UINT32 SocketDiscCnt, UINT32 TaskRestartCnt, UINT32 cpu_occupy, UINT32 mem_occupy, UINT32 disk_occupy, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1962,11 +1962,15 @@ extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UIN
 		sprintf(xmlFormat.conOptId, "%02X", useroptid & 0xFF);
 		sprintf(xmlFormat.conBackType, "%02X", cmdIdBackType & 0xFF);
 
-
 		sprintf(xmlFormat.conPmCloudVelaConnCnt, "%04X", cloudVelaConnCnt & 0xFF);
 		sprintf(xmlFormat.conPmCloudVelaConnFailCnt, "%04X", cloudVelaConnFailCnt & 0xFF);
 		sprintf(xmlFormat.conPmCloudVelaDiscCnt, "%04X", cloudVelaDiscCnt & 0xFF);
 		sprintf(xmlFormat.conPmSocketDiscCnt, "%04X", SocketDiscCnt & 0xFF);
+		sprintf(xmlFormat.conPmTaskRestartCnt, "%04X", TaskRestartCnt & 0xFF);
+		sprintf(xmlFormat.conPmCpuOccupy, "%04X", cpu_occupy & 0xFF);
+		sprintf(xmlFormat.conPmMemOccupy, "%04X", mem_occupy & 0xFF);
+		sprintf(xmlFormat.conPmDiskOccupy, "%04X", disk_occupy & 0xFF);
+
 
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
 		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);

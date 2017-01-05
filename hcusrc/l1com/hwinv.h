@@ -19,11 +19,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
-//#include <limits.h>
-//#include <dirent.h>
 #include <string.h>
 #include <stdio.h>
-//#include <dirent.h>
+
 
 
 
@@ -288,6 +286,7 @@ extern OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 extern OPSTAT fsm_hwinv_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT func_hwinv_global_par_init(void);
 extern OPSTAT hcu_hwinv_read_engineering_data_into_mem(void);
+extern OPSTAT hcu_hwinv_read_macaddress(void);
 extern void func_hwinv_copy_right(void);
 extern void func_hwinv_scan_all(void);
 extern void func_hwinv_scan_date();

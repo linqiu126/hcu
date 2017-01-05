@@ -926,15 +926,8 @@ OPSTAT dbi_HcuDbVersion_inqury(HcuInventoryInfo_t *hcuInv)
         return FAILURE;
 	}
 	else{
-		int index;  //.PRJNAME是INDEX=0的主键
-		/*for (index = 0; index < 43; index++){
-			printf("Field[%d]=%s\n", index, sqlRow[index]);
-		}*/
-		index = 0;
-
+		int index = 0;
 		if(sqlRow[index]) hcuInv->db_delivery = (UINT16)(atol(sqlRow[index++]) & 0xFF);
-
-
 	}
 
 	//释放记录集

@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
 INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`,
 `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`,
 `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`,
-`timestamp`) VALUES
-(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111);
+`cpuoccupy`, `memoccupy`, diskoccupy,`timestamp`) VALUES
+(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111);
 */
 
 //存储SysPerformance Global Counter数据，每一次存储，都是新增一条记录
@@ -78,16 +78,16 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void)
     sprintf(strsql, "INSERT INTO `hcusyspmglobaldatainfo` (taskhcuvmec, taskhwinvec, tasksyspmec, taskmodbusec,\
     		taskcloudvelaec, taskavorionec, taskspsvirgoec, taskhsmmpec, \
 			taskemcec, taskpm25ec, taskwinddirec, taskwindspdec, tasktempec, taskhumidec, tasknoiseec,\
-    		`taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`,\
-    		`restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, timestamp) VALUES \
-    		('%d', '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",\
+    		taskairprsec, taskco1ec, tasklightstrec, taskalcoholec, taskhchoec, tasktoxicgasec,\
+    		restartcnt, cloudvelaconncnt, cloudvelaconnfailcnt, cloudveladisccnt, clouddatatimeoutcnt, socketdisccnt, cpuoccupy, memoccupy, diskoccupy, timestamp) VALUES \
+    		('%d', '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",\
     		zHcuGlobalCounter.errCnt[TASK_ID_HCUVM], zHcuGlobalCounter.errCnt[TASK_ID_HWINV], zHcuGlobalCounter.errCnt[TASK_ID_SYSPM],zHcuGlobalCounter.errCnt[TASK_ID_MODBUS],\
     		zHcuGlobalCounter.errCnt[TASK_ID_CLOUDVELA], zHcuGlobalCounter.errCnt[TASK_ID_AVORION], zHcuGlobalCounter.errCnt[TASK_ID_SPSVIRGO], zHcuGlobalCounter.errCnt[TASK_ID_HSMMP],\
 			zHcuGlobalCounter.errCnt[TASK_ID_EMC], zHcuGlobalCounter.errCnt[TASK_ID_PM25], zHcuGlobalCounter.errCnt[TASK_ID_WINDDIR], zHcuGlobalCounter.errCnt[TASK_ID_WINDSPD], \
 			zHcuGlobalCounter.errCnt[TASK_ID_TEMP], zHcuGlobalCounter.errCnt[TASK_ID_HUMID], zHcuGlobalCounter.errCnt[TASK_ID_NOISE],\
     		zHcuGlobalCounter.errCnt[TASK_ID_AIRPRS], zHcuGlobalCounter.errCnt[TASK_ID_CO1], zHcuGlobalCounter.errCnt[TASK_ID_LIGHTSTR], zHcuGlobalCounter.errCnt[TASK_ID_ALCOHOL], zHcuGlobalCounter.errCnt[TASK_ID_HCHO], zHcuGlobalCounter.errCnt[TASK_ID_TOXICGAS],\
     		zHcuGlobalCounter.restartCnt, zHcuGlobalCounter.cloudVelaConnCnt, zHcuGlobalCounter.cloudVelaConnFailCnt, zHcuGlobalCounter.cloudVelaDiscCnt, zHcuGlobalCounter.CloudDataTimeOutCnt, zHcuGlobalCounter.SocketDiscCnt, \
-    		(UINT32)time(NULL));
+			zHcuGlobalCounter.cpu_occupy, zHcuGlobalCounter.mem_occupy, zHcuGlobalCounter.disk_occupy, (UINT32)time(NULL));
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

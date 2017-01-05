@@ -8,8 +8,14 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 12个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
 ==> 发送给后台统计报告
 
+//= ZSC, 2017 JAN.5, CURRENT_SW_DELIVERY 136
+= HCU inventory中增加eth0 MAC address
+= Performance 报告增加CPU/MEM/DISK 利用率
+
 //= ZSC, 2017 JAN.1, CURRENT_SW_DELIVERY 135
-= 增加本地数据库版本信息报告
+= 改变HCU inventory report 机制（由命令行触发变为定期上报：因为在用的DB可能升级变化）
+= HCU inventory中增加本地数据库版本信息报告
+
 
 //= ZSC, 2016 DEC.29, CURRENT_SW_DELIVERY 134
 = 编译告警清除

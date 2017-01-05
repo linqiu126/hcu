@@ -2316,11 +2316,14 @@ typedef struct msg_struct_pm_report
 	UINT8  usercmdid;
 	UINT8  useroptid;
 	UINT8  cmdIdBackType;
-	//UINT32 PmRestartCnt;
-	UINT32 PmCloudVelaConnCnt;
-	UINT32 PmCloudVelaConnFailCnt;
-	UINT32 PmCloudVelaDiscCnt;
-	UINT32 PmSocketDiscCnt;
+	UINT32 TaskRestartCnt;
+	UINT32 CloudVelaConnCnt;
+	UINT32 CloudVelaConnFailCnt;
+	UINT32 CloudVelaDiscCnt;
+	UINT32 SocketDiscCnt;
+	UINT32 cpu_occupy;
+	UINT32 mem_occupy;
+	UINT32 disk_occupy;
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_pm_report_t;
@@ -2336,7 +2339,7 @@ typedef struct msg_struct_canitfleo_data_report
 
 /**************************************************************************************
  *                                                                                    *
- *                            分类处理各个项目香瓜的消息结构                                     *
+ *                            分类处理各个项目相关的消息结构                                     *
  *                                                                                    *
  *************************************************************************************/
 

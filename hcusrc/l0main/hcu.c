@@ -128,6 +128,9 @@ int main(int argc, char* argv[]) {
 		//从数据库或者系统缺省配置中，读取系统配置的工程参数
 		hcu_hwinv_read_engineering_data_into_mem();
 
+		//读取宿主机eth0 Mac 地址
+		hcu_hwinv_read_macaddress();
+
 		//任务模块启动初始化
 		hcu_app_system_init();
 		HcuDebugPrint("HCU-MAIN: System level initialization starting...\n");

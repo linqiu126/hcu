@@ -9,6 +9,13 @@
 
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
+
+#include <string.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+
 /*
 ** FSM of the HWINV
 */
@@ -535,7 +542,6 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 
 	//读取HcuDbVersion表单到系统内存中
 	ret = dbi_HcuDbVersion_inqury(&zHcuInventoryInfo);
-	//OPSTAT dbi_HcuDbVersion_inqury(HcuInventoryInfo_t *hcuInv)
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_HWINV]++;
 		HcuErrorPrint("HWINV: Read HCUDB version DB error!\n");
@@ -651,6 +657,39 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 
     //返回
 	return SUCCESS;
+}
+
+OPSTAT hcu_hwinv_read_macaddress(void)
+{
+	/////////////////////////////////////////////////////////////////////////
+    struct ifreq ifreq;
+	int sock = 0;
+	sock = socket(AF_INET,SOCK_STREAM,0);
+	if(sock < 0)
+	{
+		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		HcuErrorPrint("HWINV: error sock when get mac address!\n");
+		return FAILURE;
+	}
+
+	strcpy(ifreq.ifr_name,"eth0");
+	if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0)
+	{
+		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		HcuErrorPrint("HWINV: error ioctl when get mac address!\n");
+		return FAILURE;
+	}
+
+	int j = 0;
+	for(j = 0; j < 6; j++){
+		sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", (unsigned char)ifreq.ifr_hwaddr.sa_data[j]);
+	}
+	zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
+	HcuDebugPrint("HWINV: eth0 MAC address= %s\n\n", zHcuInventoryInfo.hw_mac);
+
+    //返回
+	return SUCCESS;
+
 }
 
 void func_hwinv_scan_all(void)

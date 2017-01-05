@@ -702,11 +702,13 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
     zHcuInventoryInfo.sw_release = CURRENT_SW_RELEASE;
     zHcuInventoryInfo.sw_delivery = CURRENT_SW_DELIVERY;
     //zHcuInventoryInfo.db_delivery = CURRENT_SW_DELIVERY;//to get from local db
-    /*
+
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 		HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 		HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
+
+		HcuDebugPrint("CLOUDVELA: control command hw_mac = %s\n", zHcuInventoryInfo.hw_mac);
 		HcuDebugPrint("CLOUDVELA: control command hw_type = %d\n", zHcuInventoryInfo.hw_type);
 		HcuDebugPrint("CLOUDVELA: control command hw_version= %d\n", zHcuInventoryInfo.hw_version);
 		HcuDebugPrint("CLOUDVELA: control command sw_release = %d\n", zHcuInventoryInfo.sw_release);
@@ -714,7 +716,7 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 		HcuDebugPrint("CLOUDVELA: control command db_delivery= %d\n", zHcuInventoryInfo.db_delivery);
 
 	}
-	*/
+
 	// send resp msg to cloud
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 		//初始化变量
@@ -1991,6 +1993,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 		//初始化变量
 		CloudDataSendBuf_t buf;
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+		/*
 		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("cloudvela: control command cmdId= %d\n", rcv.cmdId);
 			HcuDebugPrint("cloudvela: control command optId= %d\n", rcv.optId);
@@ -2002,6 +2005,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 			HcuDebugPrint("cloudvela: control command interSample= %d\n", rcv.opt.interSample);
 			HcuDebugPrint("cloudvela: control command meausTimes= %d\n", rcv.opt.meausTimes);
 		}
+		*/
 
 		//func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 powerOnOff, UINT32 interSample, UINT32 meausTimes, UINT32 newEquId, UINT32 workCycle,CloudDataSendBuf_t *buf)
 		//打包数据
@@ -2156,7 +2160,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.PmCloudVelaConnCnt, rcv.PmCloudVelaConnFailCnt, rcv.PmCloudVelaDiscCnt, rcv.PmSocketDiscCnt, rcv.timeStamp, &buf) == FAILURE){
+		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.CloudVelaConnCnt, rcv.CloudVelaConnFailCnt, rcv.CloudVelaDiscCnt, rcv.SocketDiscCnt, rcv.TaskRestartCnt, rcv.cpu_occupy, rcv.mem_occupy, rcv.disk_occupy, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;

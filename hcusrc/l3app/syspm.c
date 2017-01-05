@@ -11,6 +11,10 @@
 #include "../l0service/trace.h"
 #include "../l2frame/cloudvela.h"
 
+#include <sys/vfs.h>
+
+
+
 /*
 ** FSM of the SYSPM
 */
@@ -45,7 +49,7 @@ FsmStateItem_t FsmSyspm[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
-extern HcuGlobalCounter_t zHcuGlobalCounter;
+extern HcuGlobalCounter_t zHcuGlobalCounter; //PM counter
 
 
 //Main Entry
@@ -191,10 +195,13 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 				return FAILURE;
 			}//FsmSetState
 		}
-		//干活的这儿！
+
 		//拷贝zHcuRunErrCnt到目标全局变量中
 		memcpy(&zHcuGlobalCounter.errCnt[0], &zHcuRunErrCnt[0], (sizeof(UINT32)*MAX_TASK_NUM_IN_ONE_HCU));
 		//检查COUNTER的情况，并生成相应的事件。这里暂时空着
+
+		func_syspm_cal_cpu_mem_disk_occupy();
+
 		//存储事件到数据库中，形成报告
 		if (dbi_HcuSyspmGlobalDataInfo_save() == FAILURE) zHcuRunErrCnt[TASK_ID_SYSPM]++;
 
@@ -208,10 +215,30 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			snd.useroptid = L3PO_hcupm_report;
 			snd.cmdIdBackType = L3CI_cmdid_back_type_period;
 			snd.timeStamp = time(0);
-			snd.PmCloudVelaConnCnt = zHcuGlobalCounter.cloudVelaConnCnt;
-			snd.PmCloudVelaConnFailCnt = zHcuGlobalCounter.cloudVelaConnFailCnt;
-			snd.PmCloudVelaDiscCnt = zHcuGlobalCounter.cloudVelaDiscCnt;
-			snd.PmSocketDiscCnt = zHcuGlobalCounter.SocketDiscCnt;
+			snd.CloudVelaConnCnt = zHcuGlobalCounter.cloudVelaConnCnt;
+			snd.CloudVelaConnFailCnt = zHcuGlobalCounter.cloudVelaConnFailCnt;
+			snd.CloudVelaDiscCnt = zHcuGlobalCounter.cloudVelaDiscCnt;
+			snd.SocketDiscCnt = zHcuGlobalCounter.SocketDiscCnt;
+			snd.TaskRestartCnt = zHcuGlobalCounter.restartCnt;
+			snd.cpu_occupy = zHcuGlobalCounter.cpu_occupy;
+			snd.mem_occupy = zHcuGlobalCounter.mem_occupy;
+			snd.disk_occupy = zHcuGlobalCounter.disk_occupy;
+
+
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+				HcuDebugPrint("syspm:  cmdId= %d\n", snd.usercmdid);
+				HcuDebugPrint("syspm:  optId= %d\n", snd.useroptid);
+				HcuDebugPrint("syspm:  backType = %d\n", snd.cmdIdBackType);
+				HcuDebugPrint("syspm:  CloudVelaConnCnt= %d\n", snd.CloudVelaConnCnt);
+				HcuDebugPrint("syspm:  CloudVelaConnFailCnt= %d\n", snd.CloudVelaConnFailCnt);
+				HcuDebugPrint("syspm:  CloudVelaDiscCnt= %d\n", snd.CloudVelaDiscCnt);
+				HcuDebugPrint("syspm:  SocketDiscCnt= %d\n", snd.SocketDiscCnt);
+				HcuDebugPrint("syspm:  TaskRestartCnt= %d\n", snd.TaskRestartCnt);
+				HcuDebugPrint("syspm:  cpu_occupy= %d\n", snd.cpu_occupy);
+				HcuDebugPrint("syspm:  mem_occupy= %d\n", snd.mem_occupy);
+				HcuDebugPrint("syspm:  disk_occupy= %d\n", snd.disk_occupy);
+			}
+
 
 			ret = hcu_message_send(MSG_ID_COM_PM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length);
 			memset(&zHcuGlobalCounter, 0, sizeof(zHcuGlobalCounter));
@@ -230,9 +257,113 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			zHcuRunErrCnt[TASK_ID_SYSPM]++;
 			return FAILURE;
 		}
-
-
 	}
 
 	return SUCCESS;
 }
+
+
+
+
+void func_syspm_get_memoccupy (PmMemOccupyInfo_t *mem) //对无类型get函数含有一个形参结构体类弄的指针O
+{
+    FILE *fd;
+    char buff[256];
+    PmMemOccupyInfo_t *m;
+    m=mem;
+
+    fd = fopen ("/proc/meminfo", "r");
+
+    fgets (buff, sizeof(buff), fd);
+    fgets (buff, sizeof(buff), fd);
+    fgets (buff, sizeof(buff), fd);
+    fgets (buff, sizeof(buff), fd);
+    sscanf (buff, "%s %d %s", m->name, &m->used, m->name2);
+
+    fgets (buff, sizeof(buff), fd); //从fd文件中读取长度为buff的字符串再存到起始地址为buff这个空间里
+    sscanf (buff, "%s %d", m->name2, &m->total);
+
+    fclose(fd);     //关闭文件fd
+}
+
+UINT32 func_syspm_cal_cpuoccupy (PmCpuOccupyInfo_t *o, PmCpuOccupyInfo_t *n)
+{
+    UINT32 od, nd;
+    UINT32 id, sd;
+    UINT32 cpu_use = 0;
+
+    od = (UINT32) (o->user + o->nice + o->system +o->idle);//第一次(用户+优先级+系统+空闲)的时间再赋给od
+    nd = (UINT32) (n->user + n->nice + n->system +n->idle);//第二次(用户+优先级+系统+空闲)的时间再赋给od
+
+    id = (UINT32) (n->user - o->user);    //用户第一次和第二次的时间之差再赋给id
+    sd = (UINT32) (n->system - o->system);//系统第一次和第二次的时间之差再赋给sd
+    if((nd-od) != 0)
+    	cpu_use = (UINT32)((sd+id)*100)/(nd-od); //((用户+系统)乖100)除(第一次和第二次的时间差)再赋给cpu_used
+    else cpu_use = 0;
+
+    return cpu_use;
+}
+
+void func_syspm_get_cpuoccupy (PmCpuOccupyInfo_t *cpust) //对无类型get函数含有一个形参结构体类弄的指针O
+{
+    FILE *fd;
+    char buff[256];
+    PmCpuOccupyInfo_t *cpu_occupy;
+    cpu_occupy=cpust;
+
+    fd = fopen ("/proc/stat", "r");
+    fgets (buff, sizeof(buff), fd);
+
+    sscanf (buff, "%s %d %d %d %d", cpu_occupy->name, &cpu_occupy->user, &cpu_occupy->nice,&cpu_occupy->system, &cpu_occupy->idle);
+
+    fclose(fd);
+}
+
+void func_syspm_get_diskoccupy(void)
+{
+	struct statfs diskInfo;
+	statfs("/", &diskInfo);
+	unsigned long long totalBlocks = diskInfo.f_bsize;
+	unsigned long long totalSize = totalBlocks * diskInfo.f_blocks;
+	size_t mbTotalsize = totalSize>>20;
+	unsigned long long freeDisk = diskInfo.f_bfree * totalBlocks;
+	size_t mbFreedisk = freeDisk>>20;
+
+	float r = (float)(mbTotalsize - mbFreedisk)*100/mbTotalsize;
+
+	zHcuGlobalCounter.disk_occupy = r;
+
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+		HcuDebugPrint("SYSPM: Disk total = %dMB, free=%dMB, usage/total ratio =%.2f%%, diskoccupy=%d\n", mbTotalsize, mbFreedisk,r, zHcuGlobalCounter.disk_occupy);
+	}
+
+}
+
+void func_syspm_cal_cpu_mem_disk_occupy(void)
+{
+	PmCpuOccupyInfo_t cpu_stat1;
+	PmCpuOccupyInfo_t cpu_stat2;
+	PmMemOccupyInfo_t mem_stat;
+
+
+    //获取内存
+    func_syspm_get_memoccupy ((PmMemOccupyInfo_t *)&mem_stat);
+    HcuDebugPrint("syspm:  mem_stat.total= %d, mem_stat.used = %d\n", mem_stat.total, mem_stat.used);
+
+    zHcuGlobalCounter.mem_occupy = mem_stat.used*100/mem_stat.total;
+
+    func_syspm_get_diskoccupy();
+
+
+    //第一次获取cpu使用情况
+    func_syspm_get_cpuoccupy((PmCpuOccupyInfo_t *)&cpu_stat1);
+    sleep(10);
+
+    //第二次获取cpu使用情况
+    func_syspm_get_cpuoccupy((PmCpuOccupyInfo_t *)&cpu_stat2);
+
+    //计算cpu使用率
+    zHcuGlobalCounter.cpu_occupy = func_syspm_cal_cpuoccupy ((PmCpuOccupyInfo_t *)&cpu_stat1, (PmCpuOccupyInfo_t *)&cpu_stat2);
+
+}
+

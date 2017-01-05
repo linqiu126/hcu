@@ -168,7 +168,7 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//char conAlarmContent[5]; //2B
 	strcat(da, xmlFormat->conAlarmContent);
 
-
+	//Adding by Shanchun for pm report
 	//char conPmCloudVelaConnCnt[5];   //2B
 	strcat(da, xmlFormat->conPmCloudVelaConnCnt);
 	//char conPmCloudVelaConnFailCnt[5];   //2B
@@ -177,33 +177,37 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	strcat(da, xmlFormat->conPmCloudVelaDiscCnt);
 	//char conPmSocketDiscCnt[5];//2B
 	strcat(da, xmlFormat->conPmSocketDiscCnt);
+	//char conPmTaskRestartCnt[5];//2B
+	strcat(da, xmlFormat->conPmTaskRestartCnt);
+	//char conPmCpuOccupy[5];//2B
+	strcat(da, xmlFormat->conPmCpuOccupy);
+	//char conPmMemOccupy[5];//2B
+	strcat(da, xmlFormat->conPmMemOccupy);
+	//char conPmDiskOccupy[5];//2B
+	strcat(da, xmlFormat->conPmDiskOccupy);
 
 
 	//Adding by Shanchun for control cmd
 	//char conPowerOnOff[3]; //1B
 	strcat(da, xmlFormat->conPowerOnOff);
-
 	//char conInterSample[3]; //1B
 	strcat(da, xmlFormat->conInterSample);
-
 	//char conMeausTimes[3]; //1B
 	strcat(da, xmlFormat->conMeausTimes);
-
 	//char conNewEquId[3]; //1B
 	strcat(da, xmlFormat->conNewEquId);
-
 	//char conWorkCycle[3]; //1B
 	strcat(da, xmlFormat->conWorkCycle);
-
 	//char conSwDownload[3]; //1B
 	strcat(da, xmlFormat->conSwDownload);
 
-
-	//strcat(da, xmlFormat->conHwUuid);
+	//Adding by Shanchun for inventory report
+	strcat(da, xmlFormat->conHwMac);
 	strcat(da, xmlFormat->conHwType);
 	strcat(da, xmlFormat->conHwVersion);
-	strcat(da, xmlFormat->conSwDelivery);
 	strcat(da, xmlFormat->conSwRelease);
+	strcat(da, xmlFormat->conSwDelivery);
+	strcat(da, xmlFormat->conDbDelivery);
 
 
 	//char conSwInventory[3]; //1B

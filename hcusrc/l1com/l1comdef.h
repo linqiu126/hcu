@@ -672,10 +672,15 @@ typedef struct CloudBhItfDevReportStdXml
 	char conAlarmType[5];   //2B
 	char conAlarmContent[5];//2B
 
+	//Added by Shanchun for pm report
 	char conPmCloudVelaConnCnt[5];   //2B
 	char conPmCloudVelaConnFailCnt[5];   //2B
 	char conPmCloudVelaDiscCnt[5];//2B
 	char conPmSocketDiscCnt[5];//2B
+	char conPmTaskRestartCnt[5];//2B
+	char conPmCpuOccupy[5];//2B
+	char conPmMemOccupy[5];//2B
+	char conPmDiskOccupy[5];//2B
 
 	//Added by Shanchun for control cmd
 	char conPowerOnOff[3];
@@ -690,7 +695,8 @@ typedef struct CloudBhItfDevReportStdXml
 
 	//Added by Shanchun for hcu inventory
 
-	char conHwUuid[12];//6B
+	//char conHwUuid[12];//6B
+	char conHwMac[36];//18B
 
 	char conHwType[3];//1B
 	char conHwVersion[5];//2B
@@ -822,12 +828,14 @@ typedef struct GpsPosInfo
 
 typedef struct  HcuInventoryInfo
 {
-	UINT8 hw_uuid[6];
+	//UINT8 hw_uuid[6];
+	UINT8 hw_mac[18];
 	UINT8 hw_type;
 	UINT16 hw_version;
 	UINT8 sw_release;
 	UINT16 sw_delivery;
 	UINT16 db_delivery;
+
 }HcuInventoryInfo_t;
 
 //Adding by Shanchun for socket handling
