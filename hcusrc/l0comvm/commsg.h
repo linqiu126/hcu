@@ -2303,8 +2303,10 @@ typedef struct msg_struct_alarm_report
 	UINT8  usercmdid;
 	UINT8  useroptid;
 	UINT8  cmdIdBackType;
-	UINT32 equID;
-	UINT32 alarmType;
+	UINT8  alarmServerity;
+	UINT8  alarmClearFlag;
+	UINT8  equID;
+	UINT8 alarmType;
 	UINT32 alarmContent;
 	UINT32 timeStamp;
 	UINT32 length;

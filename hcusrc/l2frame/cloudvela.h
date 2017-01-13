@@ -34,9 +34,9 @@ extern CURL *zHcuCloudCurlPtr;
 extern GpsPosInfo_t zHcuGpsPosInfo;//for test by shanchun
 
 //Added by Shanchun for CMD command
-extern UINT8 CMDShortTimerFlag;
-extern UINT8 CMDLongTimerFlag;
-extern UINT32 CMDPollingNoCommandNum;
+//extern UINT8 CMDShortTimerFlag;
+//extern UINT8 CMDLongTimerFlag;
+//extern UINT32 CMDPollingNoCommandNum;
 
 //#define CLOUDVELA_TIMER_DURATION_PERIOD_HEART_BEAT 600  //in second
 //#define CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second

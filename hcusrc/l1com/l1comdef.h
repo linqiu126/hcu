@@ -537,6 +537,23 @@ typedef enum
 	ALARM_CONTENT_INVALID = 0xFF,
 }AlarmContentEnum;
 
+typedef enum
+{
+	ALARM_SEVERITY_NONE = 0,
+	ALARM_SEVERITY_HIGH,
+	ALARM_SEVERITY_MEDIUM,
+	ALARM_SEVERITY_MINOR,
+	ALARM_SEVERITY_INVALID = 0xFF,
+}AlarmSeverityEnum;
+
+typedef enum
+{
+	ALARM_CLEAR_FLAG_NONE = 0,
+	ALARM_CLEAR_FLAG_OFF,
+	ALARM_CLEAR_FLAG_ON,
+	ALARM_CLEAR_FLAG_INVALID = 0xFF,
+}AlarmClearFlagEnum;
+
 //公共定义的设备缺省标识，暂时以335D设备为模版
 #define	HCU_DEFAULT_DEVICE_ETHERNET "eth0"
 #define	HCU_DEFAULT_DEVICE_LCD  "/sys/class/blacklight"
@@ -669,8 +686,10 @@ typedef struct CloudBhItfDevReportStdXml
 #endif
 
 	//Added by Shanchun for alarm report
-	char conAlarmType[5];   //2B
+	char conAlarmType[3];   //1B
 	char conAlarmContent[5];//2B
+	char conAlarmSeverity[3];//1B
+	char conAlarmClearFlag[3];//1B
 
 	//Added by Shanchun for pm report
 	char conPmCloudVelaConnCnt[5];   //2B
@@ -696,7 +715,7 @@ typedef struct CloudBhItfDevReportStdXml
 	//Added by Shanchun for hcu inventory
 
 	//char conHwUuid[12];//6B
-	char conHwMac[36];//18B
+	char conHwMac[35];//17B
 
 	char conHwType[3];//1B
 	char conHwVersion[5];//2B
@@ -829,7 +848,7 @@ typedef struct GpsPosInfo
 typedef struct  HcuInventoryInfo
 {
 	//UINT8 hw_uuid[6];
-	UINT8 hw_mac[18];
+	UINT8 hw_mac[32];
 	UINT8 hw_type;
 	UINT16 hw_version;
 	UINT8 sw_release;

@@ -664,6 +664,7 @@ OPSTAT hcu_hwinv_read_macaddress(void)
 	/////////////////////////////////////////////////////////////////////////
     struct ifreq ifreq;
 	int sock = 0;
+	//memset(&zHcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
 	sock = socket(AF_INET,SOCK_STREAM,0);
 	if(sock < 0)
 	{

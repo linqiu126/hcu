@@ -440,7 +440,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 		}
 
 		//workaround solution to fix the bug(remove the first two byte of cmd response received from aiqiyun： 13 10 )
-
+		/*
 		if (receiveBuffer.buf[0] == 13 && receiveBuffer.buf[1] == 10)
 		{
 			receiveBuffer.length = receiveBuffer.length - 2;
@@ -449,6 +449,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 				HcuDebugPrint("ETHERNET: Exception handling for Aiqiyun -- Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
 			}
 		}
+		*/
 
 		//将数据发送给CLOUD，有关这个长度应该>0或者>1的问题，最后还是1，因为心跳握手帧只有二个字节的长度
 		if (receiveBuffer.length > 1){

@@ -10,13 +10,13 @@
 
 //硬件版本定义及状态
 #define CURRENT_HW_TYPE 2 // 1 = WEMC, 2 = HCU, 3 = WIFI_EMC
-#define CURRENT_HW_MODULE 3 // 0 = NULL, 1 = Samsung 6410, 2 = FSL, 3 = Feilinx 335D, 4 = RaspberryPi 3B
+#define CURRENT_HW_MODULE 4 // 0 = NULL, 1 = Samsung 6410, 2 = FSL, 3 = Feilinx 335D, 4 = RaspberryPi 3B
 
 //SW version control, for internal usage
 #define CURRENT_SW_RELEASE 1 //R01 = 0x01 (XQ.HCU.SW.R01.456)
 
 
-#define CURRENT_SW_DELIVERY 136 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
+#define CURRENT_SW_DELIVERY 137 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
 
 
 //= ZJL, 2015 Nov.1, CURRENT_SW_DELIVERY 1
@@ -150,7 +150,7 @@
 //= ZSC, 2016 DEC.29, CURRENT_SW_DELIVERY 134 =>G20项目
 //= ZSC, 2017 JAN.3, CURRENT_SW_DELIVERY 135 =>G20项目
 //= ZSC, 2017 JAN.5, CURRENT_SW_DELIVERY 136 =>G20项目
-
+//= ZSC, 2017 JAN.13, CURRENT_SW_DELIVERY 137 =>G20项目
 
 
 

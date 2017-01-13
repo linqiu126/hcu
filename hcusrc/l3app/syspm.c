@@ -224,7 +224,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			snd.mem_occupy = zHcuGlobalCounter.mem_occupy;
 			snd.disk_occupy = zHcuGlobalCounter.disk_occupy;
 
-
+			/*
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("syspm:  cmdId= %d\n", snd.usercmdid);
 				HcuDebugPrint("syspm:  optId= %d\n", snd.useroptid);
@@ -238,6 +238,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 				HcuDebugPrint("syspm:  mem_occupy= %d\n", snd.mem_occupy);
 				HcuDebugPrint("syspm:  disk_occupy= %d\n", snd.disk_occupy);
 			}
+			*/
 
 
 			ret = hcu_message_send(MSG_ID_COM_PM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length);
@@ -348,7 +349,7 @@ void func_syspm_cal_cpu_mem_disk_occupy(void)
 
     //获取内存
     func_syspm_get_memoccupy ((PmMemOccupyInfo_t *)&mem_stat);
-    HcuDebugPrint("syspm:  mem_stat.total= %d, mem_stat.used = %d\n", mem_stat.total, mem_stat.used);
+    //HcuDebugPrint("syspm:  mem_stat.total= %d, mem_stat.used = %d\n", mem_stat.total, mem_stat.used);
 
     zHcuGlobalCounter.mem_occupy = mem_stat.used*100/mem_stat.total;
 

@@ -162,11 +162,16 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 #endif
 
 	//Adding by Shanchun for alarm report
-	//char conAlarmType[5]; //2B
-	strcat(da, xmlFormat->conAlarmType);
 
-	//char conAlarmContent[5]; //2B
+	//char conAlarmType[3];   //1B
+	strcat(da, xmlFormat->conAlarmType);
+	//char conAlarmContent[5];//2B
 	strcat(da, xmlFormat->conAlarmContent);
+	//char conAlarmSeverity[3];//1B
+	strcat(da, xmlFormat->conAlarmSeverity);
+	//char conAlarmClearFlag[3];//1B
+	strcat(da, xmlFormat->conAlarmClearFlag);
+
 
 	//Adding by Shanchun for pm report
 	//char conPmCloudVelaConnCnt[5];   //2B
@@ -202,11 +207,17 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	strcat(da, xmlFormat->conSwDownload);
 
 	//Adding by Shanchun for inventory report
+	//char conHwMac[35];//17B
 	strcat(da, xmlFormat->conHwMac);
+	//char conHwType[3];//1B
 	strcat(da, xmlFormat->conHwType);
+	//char conHwVersion[5];//2B
 	strcat(da, xmlFormat->conHwVersion);
+	//char conSwRelease[3];//1B
 	strcat(da, xmlFormat->conSwRelease);
+	//char conSwDelivery[5];//2B
 	strcat(da, xmlFormat->conSwDelivery);
+	//char conDbDelivery[5];//2B
 	strcat(da, xmlFormat->conDbDelivery);
 
 

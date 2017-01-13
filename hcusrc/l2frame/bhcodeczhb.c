@@ -1115,7 +1115,7 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
 
 		char temp[2];
-		for(i=0;i<18;i++){
+		for(i=0;i<17;i++){
 			//sprintf(xmlFormat.conHwUuid[i], "%02X", hcuInventoryInfo->hw_uuid[i]);
 			sprintf(temp, "%02X", hcuInventoryInfo->hw_mac[i] & 0xFF);
 			strcat(xmlFormat.conHwMac, temp);
@@ -1862,7 +1862,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 //For alarm report
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT32 alarmType, UINT32 alarmContent, UINT32 equID, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT8 alarmType, UINT32 alarmContent, UINT8 equID, UINT8 alarmSeverity, UINT8 alarmClearFlag, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1881,10 +1881,13 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 u
 		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
 		sprintf(xmlFormat.conOptId, "%02X", useroptid & 0xFF);
 		sprintf(xmlFormat.conBackType, "%02X", cmdIdBackType & 0xFF);
-
-		sprintf(xmlFormat.conAlarmType, "%04X", alarmType & 0xFF);
-		sprintf(xmlFormat.conAlarmContent, "%04X", alarmContent & 0xFF);
+		sprintf(xmlFormat.conAlarmType, "%02X", alarmType & 0xFF);
+		sprintf(xmlFormat.conAlarmContent, "%04X", alarmContent & 0xFFFF);
 		sprintf(xmlFormat.conEqpId, "%02X", equID & 0xFF);
+		sprintf(xmlFormat.conAlarmSeverity, "%02X", alarmSeverity & 0xFF);
+		sprintf(xmlFormat.conAlarmClearFlag, "%02X", alarmClearFlag & 0xFF);
+
+
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
 		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
 		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
@@ -1962,14 +1965,14 @@ extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UIN
 		sprintf(xmlFormat.conOptId, "%02X", useroptid & 0xFF);
 		sprintf(xmlFormat.conBackType, "%02X", cmdIdBackType & 0xFF);
 
-		sprintf(xmlFormat.conPmCloudVelaConnCnt, "%04X", cloudVelaConnCnt & 0xFF);
-		sprintf(xmlFormat.conPmCloudVelaConnFailCnt, "%04X", cloudVelaConnFailCnt & 0xFF);
-		sprintf(xmlFormat.conPmCloudVelaDiscCnt, "%04X", cloudVelaDiscCnt & 0xFF);
-		sprintf(xmlFormat.conPmSocketDiscCnt, "%04X", SocketDiscCnt & 0xFF);
-		sprintf(xmlFormat.conPmTaskRestartCnt, "%04X", TaskRestartCnt & 0xFF);
-		sprintf(xmlFormat.conPmCpuOccupy, "%04X", cpu_occupy & 0xFF);
-		sprintf(xmlFormat.conPmMemOccupy, "%04X", mem_occupy & 0xFF);
-		sprintf(xmlFormat.conPmDiskOccupy, "%04X", disk_occupy & 0xFF);
+		sprintf(xmlFormat.conPmCloudVelaConnCnt, "%04X", cloudVelaConnCnt & 0xFFFF);
+		sprintf(xmlFormat.conPmCloudVelaConnFailCnt, "%04X", cloudVelaConnFailCnt & 0xFFFF);
+		sprintf(xmlFormat.conPmCloudVelaDiscCnt, "%04X", cloudVelaDiscCnt & 0xFFFF);
+		sprintf(xmlFormat.conPmSocketDiscCnt, "%04X", SocketDiscCnt & 0xFFFF);
+		sprintf(xmlFormat.conPmTaskRestartCnt, "%04X", TaskRestartCnt & 0xFFFF);
+		sprintf(xmlFormat.conPmCpuOccupy, "%04X", cpu_occupy & 0xFFFF);
+		sprintf(xmlFormat.conPmMemOccupy, "%04X", mem_occupy & 0xFFFF);
+		sprintf(xmlFormat.conPmDiskOccupy, "%04X", disk_occupy & 0xFFFF);
 
 
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);

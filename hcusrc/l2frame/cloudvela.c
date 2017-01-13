@@ -702,7 +702,7 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
     zHcuInventoryInfo.sw_release = CURRENT_SW_RELEASE;
     zHcuInventoryInfo.sw_delivery = CURRENT_SW_DELIVERY;
     //zHcuInventoryInfo.db_delivery = CURRENT_SW_DELIVERY;//to get from local db
-
+    /*
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 		HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
@@ -716,6 +716,7 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 		HcuDebugPrint("CLOUDVELA: control command db_delivery= %d\n", zHcuInventoryInfo.db_delivery);
 
 	}
+	*/
 
 	// send resp msg to cloud
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -1635,7 +1636,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	memcpy(rcv.buf, param_ptr, param_len);
 	rcv.length = param_len;
 
-	//workaround solution to fix the bug(the first two byte of cmd response received from aiqiyun： 13 10 )
+	/*
 	//workaround solution to fix the bug(the first two byte of cmd response received from aiqiyun： 13 and/or 10
 
 	if (rcv.buf[0] == 13 && rcv.buf[1] == 10)
@@ -1661,6 +1662,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 		rcv.length = param_len - 1;
 		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
 	}
+	*/
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
@@ -2072,7 +2074,7 @@ OPSTAT fsm_cloudvela_hsmmp_control_fb(UINT32 dest_id, UINT32 src_id, void * para
 
 
 
-OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)//to create a seperate task in L3APP to handle all alarm stuff
 {
 	int ret=0;
 	msg_struct_alarm_report_t rcv;
@@ -2091,6 +2093,12 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 		return FAILURE;
 	}
 
+	if(dbi_HcuSysAlarmInfo_save(&rcv) == FAILURE)
+	{
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Can not save data into database!\n");
+	}
+
 	//发送数据给后台
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 		//初始化变量
@@ -2098,15 +2106,8 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		/*
-		if (func_cloudvela_huanbao_temp_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.temp.equipid,
-				rcv.temp.dataFormat, rcv.temp.tempValue, rcv.temp.gps.gpsx, rcv.temp.gps.gpsy, rcv.temp.gps.gpsz, rcv.temp.gps.ns, rcv.temp.gps.ew, rcv.temp.timeStamp, &buf) == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			return FAILURE;
-		}
-		*/
-		if (func_cloudvela_huanbao_alarm_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.timeStamp, &buf) == FAILURE){
+
+		if (func_cloudvela_huanbao_alarm_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -2152,6 +2153,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
+
 
 	//发送数据给后台
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -2327,7 +2329,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	rcv.length = param_len;
 
 	//workaround solution to fix the bug(the first two byte of cmd response received from aiqiyun： 13 and/or 10
-
+/*
 	if (rcv.buf[0] == 13 && rcv.buf[1] == 10)
 	{
 		rcv.length = param_len - 2;
@@ -2351,7 +2353,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 		rcv.length = param_len - 1;
 		memcpy(rcv.buf, &rcv.buf[1], rcv.length);
 	}
-
+*/
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
 		//int i;
