@@ -355,6 +355,35 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_PM25_NO_CONNECT;
+
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
+		}
+		//差错情形
+		else{
+			HcuErrorPrint("MODBUS: Wrong state of CLOUDVELA when data need send out!\n");
+			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
 		return FAILURE;
 
 	}
@@ -371,31 +400,30 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
-	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
-	 HcuDebugPrint("MODBUS: Received PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
+		HcuDebugPrint("MODBUS: Len %d  \n", ret);
+		HcuDebugPrint("MODBUS: Received PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
 	}
 	else
 	{
-	  HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d\n", ret);
-	  zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d\n", ret);
+		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_PM25_NO_CONNECT;
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
-
-			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm;
-			snd.useroptid = L3PO_hcualarm_report;
-			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
-			snd.timeStamp = time(0);
-			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_PM25_NO_CONNECT;
-
-			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
 				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
@@ -534,7 +562,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 	ret = func_modbus_winddir_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
-		HcuErrorPrint("MODBUS: Error pack message!\n");
+		HcuErrorPrint("MODBUS: Error pack message!\n");//route to L3 or direct to cloudvela, TBD
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -548,12 +576,42 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_WINDDIR_NO_CONNECT;
+
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
+
+		}
+		//差错情形
+		else{
+			HcuErrorPrint("MODBUS: Wrong state of CLOUDVELA when data need send out!\n");
+			return FAILURE;
+		}
+
 		return FAILURE;
 	}
 
 	else
 	{
-	  HcuDebugPrint("MODBUS: Send  winddir req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
+		HcuDebugPrint("MODBUS: Send  winddir req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
 	hcu_usleep(10); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
@@ -563,34 +621,34 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH); //获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
-	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
-	 HcuDebugPrint("MODBUS: Received windir data succeed: %02X %02X %02X %02X %02X %02X %02X \n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		 HcuDebugPrint("MODBUS: Len %d  \n", ret);
+		 HcuDebugPrint("MODBUS: Received windir data succeed: %02X %02X %02X %02X %02X %02X %02X \n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
 	}
 	else
 	{
-	  HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
-	  zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
+		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+
+
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_WINDDIR_NO_CONNECT;
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
-
-			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm;
-			snd.useroptid = L3PO_hcualarm_report;
-			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
-			snd.timeStamp = time(0);
-			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_WINDDIR_NO_CONNECT;
-
-			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
 				return FAILURE;
 			}
 
@@ -598,11 +656,10 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		//差错情形
 		else{
 			HcuErrorPrint("MODBUS: Wrong state of CLOUDVELA when data need send out!\n");
-			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
 
-	  return FAILURE;
+		return FAILURE;
 	}
 
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
@@ -740,52 +797,27 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
-		return FAILURE;
-	}
-	else
-	{
-	  HcuDebugPrint("MODBUS: Send windspd req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
-	}
-
-	hcu_usleep(10); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
-
-	//从相应的从设备中读取数据
-	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);
-	if (ret > 0)
-	{
-	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
-	 HcuDebugPrint("MODBUS: Received windspd data succeed %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
-	}
-	else
-	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n",  ret);
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_WINDSPD_NO_CONNECT;
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
-
-			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm;
-			snd.useroptid = L3PO_hcualarm_report;
-			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
-			snd.timeStamp = time(0);
-			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_WINDSPD_NO_CONNECT;
-
-			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
 				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
 				return FAILURE;
 			}
-
 
 		}
 
@@ -796,6 +828,59 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			return FAILURE;
 		}
 
+		return FAILURE;
+
+	}
+	else
+	{
+		HcuDebugPrint("MODBUS: Send windspd req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
+	}
+
+	hcu_usleep(10); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
+
+	//从相应的从设备中读取数据
+	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);
+	if (ret > 0)
+	{
+		HcuDebugPrint("MODBUS: Len %d  \n", ret);
+		HcuDebugPrint("MODBUS: Received windspd data succeed %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+	}
+	else
+	{
+		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n",  ret);
+
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_WINDSPD_NO_CONNECT;
+
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
+
+		}
+
+		//差错情形
+		else{
+			HcuErrorPrint("MODBUS: Wrong state of CLOUDVELA when data need send out!\n");
+			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
 
 		return FAILURE;
 	}
@@ -936,9 +1021,41 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_TEMP_NO_CONNECT;
+
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
+
+		}
+
+		//差错情形
+		else{
+			HcuErrorPrint("MODBUS: Wrong state of CLOUDVELA when data need send out!\n");
+			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
 
 
 		return FAILURE;
+
 	}
 
 	else
@@ -962,24 +1079,23 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_TEMP_NO_CONNECT;
+
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 
-			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
-
-			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm;
-			snd.useroptid = L3PO_hcualarm_report;
-			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
-			snd.timeStamp = time(0);
-			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_TEMP_NO_CONNECT;
-
-			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
 				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
@@ -1136,9 +1252,39 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_HUMID_NO_CONNECT;
+
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
+
+		}
+
+		//差错情形
+		else{
+			HcuErrorPrint("NOISE: Wrong state of CLOUDVELA when data need send out!\n");
+			return FAILURE;
+		}
 
 		return FAILURE;
+
 	}
 
 	else
@@ -1161,23 +1307,24 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 
+
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_HUMID_NO_CONNECT;
+
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm;
-			snd.useroptid = L3PO_hcualarm_report;
-			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
-			snd.timeStamp = time(0);
-			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_HUMID_NO_CONNECT;
-
-			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
 				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
@@ -1186,11 +1333,9 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		}
 
-
 		//差错情形
 		else{
 			HcuErrorPrint("NOISE: Wrong state of CLOUDVELA when data need send out!\n");
-			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
 
@@ -1347,10 +1492,38 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	{
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
 
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				return FAILURE;
+			}
+		}
+		//差错情形
+		else{
+			HcuErrorPrint("NOISE: Wrong state of CLOUDVELA when data need send out!\n");
+			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
 
 		return FAILURE;
+
 	}
 	else
 	{
@@ -1372,23 +1545,23 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.equId;
+		snd.alarmType = ALARM_TYPE_SENSOR;
+		snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
+
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
-			snd.usercmdid = L3CI_alarm;
-			snd.useroptid = L3PO_hcualarm_report;
-			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
-			snd.timeStamp = time(0);
-			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
-
-			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
 				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);

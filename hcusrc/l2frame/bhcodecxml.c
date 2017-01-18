@@ -14,9 +14,9 @@
 //Task Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 //Added by Shanchun for CMD command
-extern UINT8 CMDShortTimerFlag;
-extern UINT8 CMDLongTimerFlag;
-extern UINT32 CMDPollingNoCommandNum;
+//extern UINT8 CMDShortTimerFlag;
+//extern UINT8 CMDLongTimerFlag;
+//extern UINT32 CMDPollingNoCommandNum;
 
 //XML自定义标准的编码函数方式
 //完全自己手动编码的方式，未来可以灵活的改动
@@ -296,6 +296,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	HcuDebugPrint("CLOUDVELA: received comId %s !\n", tmp);
 	cmdId = strtoul(tmp, NULL, 16);
 
+/*
 	if (cmdId ==L3CI_heart_beat)
 	{
 		if (func_cloudvela_standard_xml_heart_beat_msg_unpack(rcv) == FAILURE){
@@ -311,7 +312,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		//	#endif //TRACE_DEBUG_ON
 		//}
 	}
-/*
+
 	// updated by Shanchun for CMD control polling
 	else if (cmdId ==L3CI_cmd_control)
 	{//CMD polling response from Clound: 0x00FD
@@ -386,6 +387,18 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 	switch(cmdId)
 	{
+
+		case L3CI_heart_beat:
+
+			if (func_cloudvela_standard_xml_heart_beat_msg_unpack(rcv) == FAILURE){
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of heart beat!\n");
+				return FAILURE;
+			}
+			break;
+
+
+
 		case L3CI_emc:
 
 			if (func_cloudvela_standard_xml_emc_msg_unpack(rcv) == FAILURE){

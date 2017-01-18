@@ -87,6 +87,7 @@ OPSTAT func_cloudvela_time_out_period_for_socket_heart(void);
 OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void);
 OPSTAT func_cloudvela_time_out_sendback_offline_data(void);
 OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf);
+OPSTAT func_cloudvela_socket_conn_setup(void);
 
 //Added by Shanchun for SW download, SW inventory, AV upload
 extern OPSTAT func_cloudvela_heart_beat_received_handle(void);

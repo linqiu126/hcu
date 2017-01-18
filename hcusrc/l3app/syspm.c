@@ -201,6 +201,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		//检查COUNTER的情况，并生成相应的事件。这里暂时空着
 
 		func_syspm_cal_cpu_mem_disk_occupy();
+		func_syspm_get_cpu_temp();
 
 		//存储事件到数据库中，形成报告
 		if (dbi_HcuSyspmGlobalDataInfo_save() == FAILURE) zHcuRunErrCnt[TASK_ID_SYSPM]++;
@@ -368,3 +369,21 @@ void func_syspm_cal_cpu_mem_disk_occupy(void)
 
 }
 
+void func_syspm_get_cpu_temp(void)
+{
+	/*
+	PmCpuTempInfo_t r[N];
+	for (unsigned i = 0; i < N; ++i)
+	{
+		(void)clock_gettime(CLOCK_REALTIME, &r[i].t);
+		FILE *fp = fopen("/sys/devices/virtual/thermal/thermal_zone0/temp", "r");
+		(void)fscanf(fp,"%u", &r[i].temp);
+		(void)fclose(fp);
+	}
+
+	for (unsigned i = 0; i < N; ++i)
+		printf("%lu.%06llu %u\n", r[i].t.tv_sec, (r[i].t.tv_nsec + 500ull) / 1000ull, r[i].temp);
+	*/
+
+
+}

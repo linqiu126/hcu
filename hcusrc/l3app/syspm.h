@@ -9,6 +9,7 @@
 #define L3APP_SYSPM_H_
 
 #include "../l0comvm/vmlayer.h"
+#include <time.h>
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -39,7 +40,16 @@ UINT32 total;
 char name2[20];
 UINT32 used;
 }PmMemOccupyInfo_t;
+/*
+const unsigned N = 10000;
+typedef struct PmCpuTempInfo         //定义一个cpu temp的结构体
+{
 
+	struct timespec t;
+	unsigned temp;
+
+}PmCpuTempInfo_t;
+*/
 
 //Global variables
 extern FsmStateItem_t FsmSyspm[];
@@ -57,5 +67,6 @@ void func_syspm_get_memoccupy (PmMemOccupyInfo_t *mem);
 void func_syspm_get_cpuoccupy (PmCpuOccupyInfo_t *cpust);
 UINT32 func_syspm_cal_cpuoccupy (PmCpuOccupyInfo_t *o, PmCpuOccupyInfo_t *n);
 void func_syspm_get_diskoccupy(void);
+void func_syspm_get_cpu_temp(void);
 
 #endif /* L3APP_SYSPM_H_ */

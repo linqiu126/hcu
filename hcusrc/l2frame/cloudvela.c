@@ -115,6 +115,7 @@ CloudvelaTable_t zHcuCloudvelaTable;
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 extern HcuInventoryInfo_t zHcuInventoryInfo;
 extern int clientfd;
+extern int socket_connected;
 
 //Added by Shanchun for CMD command
 //UINT8 CMDShortTimerFlag;
@@ -185,7 +186,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
-
+    /*
 	//For socket heart
 	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_SOCKET_HEART_BEAT, zHcuSysEngPar.timer.cloudSocketHbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
@@ -193,6 +194,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
 		return FAILURE;
 	}
+	*/
 
 	//For sw&db version report
 	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_SW_DB_VERSION_REPORT, zHcuSysEngPar.timer.dbVerReportTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -273,10 +275,12 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = func_cloudvela_time_out_sendback_offline_data();
 	}
 
+	/*
 	//for socket heart
 	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_SOCKET_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_cloudvela_time_out_period_for_socket_heart();
+		//ret = func_cloudvela_time_out_period_for_socket_heart();
 	}
+	*/
 
 	//for sw&db version report
 	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_SW_DB_VERSION_REPORT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
@@ -306,7 +310,8 @@ OPSTAT func_cloudvela_time_out_period(void)
 	//检查链路状态
 	//离线，则再连接
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
-		if (func_cloudvela_http_conn_setup() == SUCCESS){
+		//if (func_cloudvela_http_conn_setup() == SUCCESS){
+		if (socket_connected == TRUE && func_cloudvela_socket_conn_setup() == SUCCESS){
 			zHcuGlobalCounter.cloudVelaConnCnt++;
 			//State Transfer to FSM_STATE_CLOUDVELA_ONLINE
 			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE){
@@ -670,7 +675,7 @@ OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		if(clientfd < 0){
 				HcuErrorPrint("CLOUDVELA: socket id is not valid!\n");
-				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 		}
 	}
@@ -679,7 +684,7 @@ OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
 	if (send(clientfd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen)
 	{
 		HcuErrorPrint("CLOUDVELA: Socket disconnected & Mismatch in number of send bytes!\n\n");
-		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 	}
 	else
 	{
@@ -1555,6 +1560,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	//根据系统配置，决定使用那一种后台网络
 	if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		if (hcu_ethernet_date_send(buf) == FAILURE){
+		//if (hcu_ethernet_socket_date_send(buf) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
@@ -2389,5 +2395,110 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	return SUCCESS;
+}
+
+
+/*
+ * 后台连接采用如下策略：
+ * - HWINV不断更新硬件状态
+ * - 本任务的长定时器不断扫描链路状态，并进行心跳检测，目的是维护后台连接的长期性和稳定性
+ * - 如果心跳检测没变化，则不动
+ * - 如果心态检测发现链路有变化，则根据后台硬件状态，按照ETHERNET > USBNET > WIFI > 3G4G的优先级，进行链路连接建立的发起
+ * - 如果全部失败，则继续保持OFFLINE状态
+ * - 如果成功，则就进入ONLINE状态
+ *
+ */
+//调用此函数的条件是，已知状态就是OFFLINE了
+OPSTAT func_cloudvela_socket_conn_setup(void)
+{
+	int ret = FAILURE;
+	//3G, ETHERNET, WIFI connection?
+	//周期性的检测，随便连上哪一种链路，则自然的搞定
+	//后面的Hardware Inventory任务会制作一张实时全局硬件状态表，不需要通过消息发送给不同任务模块，这样谁需要访问，一查便知
+	//这种方式下，消息减少，还能方便的实现PnP功能
+
+	//检查任务模块状态
+	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_OFFLINE){
+		HcuErrorPrint("CLOUDVELA: Error task status, can not setup new connection with cloud!\n");
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	/*
+	if (hcu_cloudvela_http_link_init() == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("ETHERNET: Init Curl Http link failure!\n");
+		return FAILURE;
+	}
+	*/
+
+	//调用后台模块提供的函数，进行连接建立
+	//第一优先级：连接ETHERNET
+	//当前的情况下，ETHERNET物理链路的确啥都不干，只是回复成功，未来可以挂载更多的物理链路处理过程在其中
+	if (zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		ret = hcu_ethernet_phy_link_setup();
+	}
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuCloudvelaTable.ethConTry++;
+	}
+	if (ret == SUCCESS){
+		zHcuCloudvelaTable.ethConTry = 0;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+		return SUCCESS;
+	}
+
+	//第二优先级：连接USBNET
+	if (zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		ret = hcu_usbnet_phy_link_setup();
+	}
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuCloudvelaTable.usbnetConTry++;
+	}
+	if (ret == SUCCESS){
+		zHcuCloudvelaTable.usbnetConTry = 0;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
+		return SUCCESS;
+	}
+
+	//第三优先级：连接WIFI
+	if (zHcuHwinvTable.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		ret = hcu_wifi_phy_link_setup();
+	}
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuCloudvelaTable.wifiConTry++;
+	}
+	if (ret == SUCCESS){
+		zHcuCloudvelaTable.wifiConTry = 0;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
+		return SUCCESS;
+	}
+
+	//第四优先级：连接3G4G
+	if (zHcuHwinvTable.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		ret = hcu_3g4g_phy_link_setup();
+
+	}
+	if (ret == FAILURE){
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuCloudvelaTable.g3g4ConTry++;
+	}
+	if (ret == SUCCESS){
+		zHcuCloudvelaTable.g3g4ConTry = 0;
+		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
+		return SUCCESS;
+	}
+	/*
+	//保留用作测试目的
+	if ((rand()%10)>5)
+		return SUCCESS;
+	else*/
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
+	}
+	zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+	return FAILURE;
 }
 

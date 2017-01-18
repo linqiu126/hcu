@@ -683,10 +683,32 @@ OPSTAT hcu_hwinv_read_macaddress(void)
 
 	int j = 0;
 	for(j = 0; j < 6; j++){
+		/*
+		while(ifreq.ifr_hwaddr.sa_data[j] != 0)
+		{
+			if( (ifreq.ifr_hwaddr.sa_data[j]>='A') && (ifreq.ifr_hwaddr.sa_data[j]<='Z') )
+				ifreq.ifr_hwaddr.sa_data[j] += 32;
+
+		}
+		*/
 		sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", (unsigned char)ifreq.ifr_hwaddr.sa_data[j]);
 	}
 	zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
 	HcuDebugPrint("HWINV: eth0 MAC address= %s\n\n", zHcuInventoryInfo.hw_mac);
+/*
+	int i =0;
+	for(i = 0; i < 17; i++){
+
+		while(zHcuInventoryInfo.hw_mac[i] != 0)
+		{
+			if( (zHcuInventoryInfo.hw_mac[i] >= 'A') && (zHcuInventoryInfo.hw_mac[i] <= 'Z') )
+				zHcuInventoryInfo.hw_mac[i] += 32;
+
+		}
+
+		//sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", (unsigned char)ifreq.ifr_hwaddr.sa_data[j]);
+	}
+*/
 
     //返回
 	return SUCCESS;

@@ -10,7 +10,7 @@
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
 
-//Adding by Shanchun for socket handling(SAE Cloud as Client, HCU as Server)
+//Adding by Shanchun for socket handling
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -56,6 +56,7 @@ FsmStateItem_t FsmEthernet[] =
 //extern CloudvelaTable_t zHcuCloudvelaTable;
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 int clientfd = 0;
+int socket_connected = FALSE;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -122,27 +123,16 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
 	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
 
-//Start: socket for client by shanchun
 
+	/*
 	//创建Client端套接字描述符
 	clientfd = socket(AF_INET, SOCK_STREAM,0);
 
 	if(clientfd < 0){
 		HcuErrorPrint("ETHERNET: Can not create socket!\n");
 		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		socket_connected = FALSE;
 		return FAILURE;
-		/*
-		//to restart this task
-		msg_struct_com_restart_t snd0;
-		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
-		snd0.length = sizeof(msg_struct_com_restart_t);
-		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_ETHERNET]);
-			return FAILURE;
-		}
-		*/
 	}
 
 	//创建用于服务的Client端套接字，注意与 Server端创建的套接字的区别  IP段里，Server端是可以为任何IP提供服务的，客户端里的IP是请求的端点
@@ -196,7 +186,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	{
 		HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-		//return FAILURE;
+		socket_connected = FALSE;
 		//to restart this task
 		hcu_usleep(HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV * 10);
 		msg_struct_com_restart_t snd0;
@@ -225,14 +215,34 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 		}
 		else{
+			socket_connected = TRUE;
 			HcuDebugPrint("ETHERNET: Socket send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
 
 		}
 
 	}
+	*/
+
+	if (hcu_ethernet_socket_link_setup() == FAILURE){
+		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		HcuErrorPrint("ETHERNET: socket line setup failure!\n");
+		return FAILURE;
+	}
+
+	struct sockaddr_in serveraddr;
+	bzero((char *)&serveraddr,sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.cloudSocketSrvAdd);
+	serveraddr.sin_port = htons(HCU_CLOUDSRV_SOCKET_PORT);
+	UINT32 echolen;
+
+	//Heart beat checking in LLC
+	int keepAlive = HCU_CLOUDSRV_SOCKET_KEEPALIVE; // set KeepAlive
+	int keepIdle = HCU_CLOUDSRV_SOCKET_KEEPIDLE; //tcp idle time before first KeepAlive checking
+	int keepInterval = HCU_CLOUDSRV_SOCKET_KEEPINTERVAL; //interval between two KeepAlive checking
+	int keepCount = HCU_CLOUDSRV_SOCKET_KEEPCOUNT; //count before disconnect Keepalive
 
 	int idata;
-
 	//进入阻塞式接收数据状态，收到数据后发送给CLOUDCONT进行处理
 	while(1){
 		idata = 0;
@@ -245,6 +255,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		if(idata <= 0){
 			HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			zHcuGlobalCounter.SocketDiscCnt++;
+			socket_connected = FALSE;
 			//return FAILURE;
 
 			close(clientfd);
@@ -281,12 +292,11 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			}
 
 
-
 			if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 			{
 				HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-				//return FAILURE;
+				socket_connected = FALSE;
 			}
 			else
 			{
@@ -300,8 +310,8 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 					zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 				}
 				else{
+					socket_connected = TRUE;
 					HcuDebugPrint("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
-
 				}
 			}
 
@@ -311,7 +321,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		{
 			//receiveBuffer.length = idata;
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-				HcuDebugPrint("ETHERNET: Socket receive data from the client of cloud, Data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
+				HcuDebugPrint("ETHERNET: Socket receive data from cloud, Data Len=%d, Buffer=%s\n\n", receiveBuffer.length,  receiveBuffer.buf);
 
 			}
 
@@ -320,7 +330,6 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
 				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
-				//return FAILURE;
 			}
 
 		}
@@ -330,8 +339,6 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	}//while(1) end
 
 	close(clientfd);
-
-//End: socket for client
 
 	return SUCCESS;
 }
@@ -486,6 +493,104 @@ OPSTAT hcu_ethernet_phy_link_disconnect(void)
 //为SOCKET建立链路
 OPSTAT hcu_ethernet_socket_link_setup(void)
 {
+	int ret=0;
+	//创建Client端套接字描述符
+	clientfd = socket(AF_INET, SOCK_STREAM,0);
+
+	if(clientfd < 0){
+		HcuErrorPrint("ETHERNET: Can not create socket!\n");
+		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		socket_connected = FALSE;
+		return FAILURE;
+	}
+
+	//创建用于服务的Client端套接字，注意与 Server端创建的套接字的区别  IP段里，Server端是可以为任何IP提供服务的，客户端里的IP是请求的端点
+	struct sockaddr_in serveraddr;
+	//struct hostent *hp;//
+	bzero((char *)&serveraddr,sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	//inet_pton(AF_INET,CLOUDSRV_ADDRESS,&serveraddr.sin_addr);
+	//serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	//temporarily use the element, to update DB later
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.cloudSocketSrvAdd);
+	serveraddr.sin_port = htons(HCU_CLOUDSRV_SOCKET_PORT);
+	UINT32 echolen;
+
+
+	//Heart beat checking in LLC
+
+	int keepAlive = HCU_CLOUDSRV_SOCKET_KEEPALIVE; // set KeepAlive
+	int keepIdle = HCU_CLOUDSRV_SOCKET_KEEPIDLE; //tcp idle time before first KeepAlive checking
+	int keepInterval = HCU_CLOUDSRV_SOCKET_KEEPINTERVAL; //interval between two KeepAlive checking
+	int keepCount = HCU_CLOUDSRV_SOCKET_KEEPCOUNT; //count before disconnect Keepalive
+
+
+	if(setsockopt(clientfd, SOL_SOCKET, SO_KEEPALIVE,(void*)&keepAlive, sizeof(keepAlive)) == -1)
+	{
+		HcuErrorPrint("ETHERNET: setsockopt SO_KEEPALIVE error!\n");
+
+	}
+
+	if(setsockopt(clientfd, SOL_TCP, TCP_KEEPIDLE,(void*)&keepIdle, sizeof(keepIdle)) == -1)
+	{
+		HcuErrorPrint("ETHERNET: setsockopt SO_KEEPIDLE error!\n");
+
+	}
+
+	if(setsockopt(clientfd, SOL_TCP, TCP_KEEPINTVL,(void*)&keepInterval, sizeof(keepInterval)) == -1)
+	{
+		HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPINTVL error!\n");
+
+	}
+
+	if(setsockopt(clientfd, SOL_TCP, TCP_KEEPCNT,(void*)&keepCount, sizeof(keepCount)) == -1)
+	{
+		HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPCNT error!\n");
+
+	}
+
+
+	if( connect(clientfd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
+	{
+		HcuErrorPrint("ETHERNET: Socket can not connect!\n");
+		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		socket_connected = FALSE;
+		//to restart this task
+		hcu_usleep(HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV * 10);
+		msg_struct_com_restart_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
+		snd0.length = sizeof(msg_struct_com_restart_t);
+		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length);
+
+		HcuErrorPrint("ETHERNET: Try to connect [Server IP: %s] .......\n", zHcuSysEngPar.cloud.cloudSocketSrvAdd);
+
+		if (ret == FAILURE){
+			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_ETHERNET]);
+			return FAILURE;
+		}
+		return FAILURE;
+	}
+	else
+	{
+		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+			HcuDebugPrint("ETHERNET: Socket connected\n\n\n");
+		}
+
+		echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
+		if (send(clientfd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
+			HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
+			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		}
+		else{
+			socket_connected = TRUE;
+			HcuDebugPrint("ETHERNET: Socket send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+
+		}
+
+	}
+
 	return SUCCESS;
 }
 
@@ -498,6 +603,31 @@ OPSTAT hcu_ethernet_socket_link_disconnect(void)
 //在SOCKET上发送数据
 OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
 {
+
+	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+		if(clientfd < 0){
+				HcuErrorPrint("CLOUDVELA: socket id is not valid!\n");
+				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+				return FAILURE;
+		}
+	}
+
+	//UINT32 echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
+
+
+	if (send(clientfd, buf->curBuf, buf->curLen, 0) != buf->curLen)
+	{
+		HcuErrorPrint("ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
+		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		socket_connected = FALSE;
+		return FAILURE;
+	}
+	else
+	{
+		HcuDebugPrint("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);
+	}
+
+
 	return SUCCESS;
 }
 /*
