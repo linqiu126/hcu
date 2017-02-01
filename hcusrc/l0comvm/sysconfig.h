@@ -414,6 +414,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -609,6 +610,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -1000,6 +1002,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -1196,6 +1199,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -1392,6 +1396,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -1587,6 +1592,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -1782,6 +1788,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -1977,6 +1984,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -2172,6 +2180,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
@@ -2376,6 +2385,7 @@
 	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
+	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
 	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
 	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测

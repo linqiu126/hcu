@@ -8,6 +8,7 @@
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG"/>
 			<item value="func_canitfleo_can_init"/>
 			<item value="bfsc"/>
 			<item value="HcuSensorIdRoundBing"/>
@@ -15,7 +16,6 @@
 			<item value=" can_receive"/>
 			<item value="can_send"/>
 			<item value="can_init"/>
-			<item value="func_canitfleo_working_scan_process"/>
 		</list>
 		<list key="replacehistory">
 			<item value="canitf_"/>

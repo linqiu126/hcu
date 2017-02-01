@@ -8,13 +8,26 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 12个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
 ==> 发送给后台统计报告
 
+//BFSC项目待改进内容
+// 上位机LED改进
+//上位机复杂的L3状态机进行受控保护，确保从错误中进行恢复 => 使用优化的高级方法！！！
+//上位机func handler的优化  => 简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
+//上位机HUITPXML、HUITPJASON支持
+//上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
+//上位机Layui模块化前端UI框架 => http://www.layui.com/
+//上位机frp内网穿透工具 => https://github.com/fatedier/frp
+
+//= ZJL, 2017 Feb.1, CURRENT_SW_DELIVERY 140 =>BFSC项目
+= 改进LED的闪烁功能
+
+
+
 //= ZSC, 2017 JAN.18, CURRENT_SW_DELIVERY 139
 = Regression测试完成，修改几个bug
 
 //= ZSC, 2017 JAN.16, CURRENT_SW_DELIVERY 138
 = 修改上下行全部用socket通信机制替代curl机制，需要和后台regression测试
-
-
+\
 //= ZSC, 2017 JAN.13, CURRENT_SW_DELIVERY 137
 = 调整Alarm 表单，增加severity 和 alarm clear flag 
 = 修改几个测试中发现的bug
