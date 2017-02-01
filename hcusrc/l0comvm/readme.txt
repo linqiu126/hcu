@@ -9,16 +9,19 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 发送给后台统计报告
 
 //BFSC项目待改进内容
-// 上位机LED改进
 //上位机复杂的L3状态机进行受控保护，确保从错误中进行恢复 => 使用优化的高级方法！！！
-//上位机func handler的优化  => 简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
+//上位机func handler的优化 
+// 简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
 //上位机HUITPXML、HUITPJASON支持
+//上位机VM初始化简化
+//上位机启动时自身标识的改进
 //上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 //上位机Layui模块化前端UI框架 => http://www.layui.com/
 //上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 //= ZJL, 2017 Feb.1, CURRENT_SW_DELIVERY 140 =>BFSC项目
-= 改进LED的闪烁功能
+= 改进LED的闪烁功能：外部程序模块可以通过调用LED提供的LED闪烁图案获得任何想要的拉灯效果: hcu_led_galowag_start/stop
+=全局差错打印宏改进：HCU_ERROR_PRINT_TASK。后面再行大范围替换。
 
 
 

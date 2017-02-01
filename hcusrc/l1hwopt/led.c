@@ -7,7 +7,6 @@
 
 
 #include "../l1hwopt/led.h"
-
 #include "../l0service/trace.h"
 
 /*
@@ -30,6 +29,7 @@ FsmStateItem_t FsmLed[] =
     {MSG_ID_COM_RESTART,        FSM_STATE_LED_ACTIVIED,            		fsm_led_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_LED_ACTIVIED,            		fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_LED_ACTIVIED,       			fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_TIME_OUT,      	FSM_STATE_LED_ACTIVIED,          		fsm_led_time_out},
 	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_LED_ACTIVIED,       			fsm_com_do_nothing},
 
     //结束点，固定定义，不要改动
@@ -38,6 +38,22 @@ FsmStateItem_t FsmLed[] =
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+
+//Galowag总控表：以秒为单位
+//具体的闪烁图案，需要通过ON/OFF/CYCLE自行定义，初始化就在这里提前初始化写好
+GlobalGalowagCtrlTable_t zHcuGalogwagCtrlTable[] =
+{
+//ID,    状态控制          ON/OFF/CYCLE/总工作周期/双计数器, LED_ON的函数， LED_OFF的函数
+	{GALOWAG_CTRL_ID_MIN, GALOWAG_CTRL_STATE_MIN, 0, 0, 0, 0, 0, 0, NULL, NULL},//Starting
+	{GALOWAG_CTRL_ID_GLOBAL_POWER, GALOWAG_CTRL_STATE_OFF, 0, 0, 0, 0, 0, 0, NULL, NULL},
+	{GALOWAG_CTRL_ID_GLOBAL_COMMU, GALOWAG_CTRL_STATE_OFF, 0, 0, 0, 0, 0, 0, NULL, NULL},
+	{GALOWAG_CTRL_ID_GLOBAL_WORK_STATE, GALOWAG_CTRL_STATE_OFF, 2, 2, 4, 0xFFFF, 0, 0, func_led_work_state_on, func_led_work_state_off},
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	{GALOWAG_CTRL_ID_TEST1, GALOWAG_CTRL_STATE_OFF, 1, 10, 11, 22, 0, 0, func_led_test1_on, func_led_test1_off},
+#endif
+  {GALOWAG_CTRL_ID_MAX,GALOWAG_CTRL_STATE_MIN, 0, 0, 0, 0, 0, 0, NULL, NULL},//Ending
+};
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -91,21 +107,36 @@ OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		HcuErrorPrint("LED: Error Set FSM State!\n");
 		return FAILURE;
 	}
+
+	//由于内存限制的原因，暂时去激活了方波信号的生成
+	if (HCU_LED_GALOWAG_FUNC_SET == HCU_LED_GALOWAG_FUNC_ACTIVE){
+		//TIMER_ID_1S_LED_GALOWAG_SCAN，是为扫描方波信号的生成，标准的1秒为单位
+		ret = hcu_timer_start(TASK_ID_LED, TIMER_ID_1S_LED_GALOWAG_SCAN, 1, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		if (ret == FAILURE){
+			HcuErrorPrint("LED: Error start timer!\n");
+			return FAILURE;
+		}
+	}
+
+	//打印信息
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("LED: Enter FSM_STATE_LED_ACTIVED status, Keeping refresh here!\n");
 	}
 
-	int workingCycle = 1;
-	//进入循环工作模式
-	while(1){
-		conCounter = 0;
-		if (HCU_SENSOR_PRESENT_LED_LED2PIN == HCU_SENSOR_PRESENT_YES){
-			func_led_write_data_led2pin();
-			hcu_sleep(RPI_LED_SENSOR_WRITE_GAP/workingCycle);
-			conCounter++;
+	//正常是不会进入到这儿的
+	if (HCU_LED_BLINK_OLD_MODE_SET == HCU_LED_BLINK_OLD_MODE_SET){
+		int workingCycle = 1;
+		//进入循环工作模式
+		while(1){
+			conCounter = 0;
+			if (HCU_SENSOR_PRESENT_LED_LED2PIN == HCU_SENSOR_PRESENT_YES){
+				func_led_write_data_led2pin();
+				hcu_sleep(RPI_LED_SENSOR_WRITE_GAP/workingCycle);
+				conCounter++;
+			}
+			conCounter = workingCycle-conCounter;
+			hcu_sleep(RPI_LED_SENSOR_WRITE_GAP/workingCycle * conCounter);
 		}
-		conCounter = workingCycle-conCounter;
-		hcu_sleep(RPI_LED_SENSOR_WRITE_GAP/workingCycle * conCounter);
 	}
 
 	return SUCCESS;
@@ -123,6 +154,29 @@ OPSTAT func_led_int_init(void)
 {
 	return SUCCESS;
 }
+
+OPSTAT fsm_led_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret;
+
+	//Receive message and copy to local variable
+	msg_struct_com_time_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
+		HcuErrorPrint("EMC: Receive message error!\n");
+		zHcuRunErrCnt[TASK_ID_LED]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//Period time out received, send command to MODBUS for read
+	if ((rcv.timeId == TIMER_ID_1S_EMC_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		func_led_time_out_galowag_scan();
+	}
+
+	return SUCCESS;
+}
+
 
 OPSTAT func_led_write_data_led2pin(void)
 {
@@ -176,6 +230,78 @@ OPSTAT func_led_write_data_led2pin(void)
     //对于其他平台, 暂时啥都不做
     return SUCCESS;
 #endif
+}
+
+//WORK_STATE灯开
+void func_led_work_state_on(void)
+{
+	return;
+}
+
+//WORK_STATE灯灭
+void func_led_work_state_off(void)
+{
+	return;
+}
+
+//TEST1灯开
+void func_led_test1_on(void)
+{
+	return;
+}
+
+//TEST1灯灭
+void func_led_test1_off(void)
+{
+	return;
+}
+
+//GALOWAG的主循环程序，扫描所有设定的波形生成器
+void func_led_time_out_galowag_scan(void)
+{
+	int i = 0;
+	for (i = GALOWAG_CTRL_ID_MIN+1; i<GALOWAG_CTRL_ID_MAX; i++){
+		if (zHcuGalogwagCtrlTable[i].galState == GALOWAG_CTRL_STATE_ON){
+			zHcuGalogwagCtrlTable[i].galTotalWorkCounter++;
+			if (zHcuGalogwagCtrlTable[i].galTotalWorkCounter >= zHcuGalogwagCtrlTable[i].galTotalDuration) zHcuGalogwagCtrlTable[i].galState = GALOWAG_CTRL_STATE_OFF;
+			if (zHcuGalogwagCtrlTable[i].galPeriodWorkCounter == 0){
+				(void)zHcuGalogwagCtrlTable[i].galFuncOn();
+			}
+			if (zHcuGalogwagCtrlTable[i].galPeriodWorkCounter == zHcuGalogwagCtrlTable[i].galPattenOn){
+				(void)zHcuGalogwagCtrlTable[i].galFuncOff();
+			}
+			//放到下一次，是为了先激活灯，避免点亮需要等待一个周期满
+			zHcuGalogwagCtrlTable[i].galPeriodWorkCounter = (zHcuGalogwagCtrlTable[i].galTotalWorkCounter + 1) % zHcuGalogwagCtrlTable[i].galPattenCycle;
+		}
+	}
+
+	return;
+}
+
+//暂时不考虑周期可设，都是在程序初始化的时候HARD_CODE进去
+OPSTAT hcu_led_galowag_start(UINT8 galId, UINT32 galDur)
+{
+	//检查参数
+	if ((galId <= GALOWAG_CTRL_ID_MIN || galId >= GALOWAG_CTRL_ID_MAX))
+		HCU_ERROR_PRINT_TASK(TASK_ID_LED, "LED: Receive parameter error!\n");
+
+	//设置并启动
+	zHcuGalogwagCtrlTable[galId].galTotalDuration = galDur;
+	zHcuGalogwagCtrlTable[galId].galState = GALOWAG_CTRL_STATE_ON;
+
+	return SUCCESS;
+}
+
+OPSTAT hcu_led_galowag_stop(UINT8 galId)
+{
+	//检查参数
+	if ((galId <= GALOWAG_CTRL_ID_MIN || galId >= GALOWAG_CTRL_ID_MAX))
+		HCU_ERROR_PRINT_TASK(TASK_ID_LED, "LED: Receive parameter error!\n");
+
+	//设置并启动
+	zHcuGalogwagCtrlTable[galId].galState = GALOWAG_CTRL_STATE_OFF;
+
+	return SUCCESS;
 }
 
 
