@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="ERROR" key="selection"/>
+		<item value="MYC" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="ERROR"/>
-			<item value="zHcuGalogwagCtrlTable"/>
-			<item value="Ihu"/>
-			<item value="TASK_ID_EMC"/>
-			<item value="IHU"/>
-			<item value="error"/>
-			<item value="print"/>
-			<item value="HCU_SENSOR_PRESENT_LED_LED2PIN"/>
+			<item value="MYC"/>
+			<item value="func_canitfleo_test_main"/>
+			<item value="func_canitfleo_can_init"/>
+			<item value="sock"/>
+			<item value="func_canitfleo_can_send"/>
+			<item value="Invalid"/>
+			<item value="invalid"/>
+			<item value="printf"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Hcu"/>
@@ -32,7 +32,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1109" key="DIALOG_X_ORIGIN"/>
-		<item value="275" key="DIALOG_Y_ORIGIN"/>
+		<item value="1127" key="DIALOG_X_ORIGIN"/>
+		<item value="344" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
