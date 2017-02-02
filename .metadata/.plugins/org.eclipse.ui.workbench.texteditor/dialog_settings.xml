@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="MYC" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="MYC"/>
-			<item value="func_canitfleo_test_main"/>
-			<item value="func_canitfleo_can_init"/>
-			<item value="sock"/>
-			<item value="func_canitfleo_can_send"/>
-			<item value="Invalid"/>
-			<item value="invalid"/>
-			<item value="printf"/>
+			<item value="HCU_CLOUDVELA_HTTP_ADDRESS_TEST"/>
+			<item value="aaa"/>
+			<item value="#define HCU_PROCESS_WORK_MODE_CURRENT 1 //1=单进程 2=双进程 3=三进程，4=多进程, OTHERS=无效"/>
+			<item value=" 1 "/>
+			<item value="HCU_COMM_HW_BOARD_ON"/>
+			<item value="TF card"/>
+			<item value="HCU_COMM_BACK_HAWL_CON HCU_TASK_PNP_ON //0=NULL, 1=ETHERNET, 2=WIFI, 3=3G4G, 4=USBNET, 5/OTHERS=INVALID"/>
+			<item value=" //1=ON, 0/OTHERS=OFF"/>
 		</list>
 		<list key="replacehistory">
-			<item value="Hcu"/>
-			<item value="TASK_ID_LED"/>
-			<item value="OPSTAT fsm_emc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)&#x0A;{&#x0A;&#x09;int ret;&#x0A;&#x0A;&#x09;//Receive message and copy to local variable&#x0A;&#x09;msg_struct_com_time_out_t rcv;&#x0A;&#x09;memset(&amp;rcv, 0, sizeof(msg_struct_com_time_out_t));&#x0A;&#x09;if ((param_ptr == NULL || param_len &gt; sizeof(msg_struct_com_time_out_t))){&#x0A;&#x09;&#x09;HcuErrorPrint(&quot;EMC: Receive message error!\n&quot;);&#x0A;&#x09;&#x09;zHcuRunErrCnt[TASK_ID_EMC]++;&#x0A;&#x09;&#x09;return FAILURE;&#x0A;&#x09;}&#x0A;&#x09;memcpy(&amp;rcv, param_ptr, param_len);&#x0A;&#x0A;&#x09;//钩子在此处，检查zHcuRunErrCnt[TASK_ID_EMC]是否超限&#x0A;&#x09;if (zHcuRunErrCnt[TASK_ID_EMC] &gt; HCU_RUN_ERROR_LEVEL_2_MAJOR){&#x0A;&#x09;&#x09;//减少重复RESTART的概率&#x0A;&#x09;&#x09;zHcuRunErrCnt[TASK_ID_EMC] = zHcuRunErrCnt[TASK_ID_EMC] - HCU_RUN_ERROR_LEVEL_2_MAJOR;&#x0A;&#x09;&#x09;msg_struct_com_restart_t snd0;&#x0A;&#x09;&#x09;memset(&amp;snd0, 0, sizeof(msg_struct_com_restart_t));&#x0A;&#x09;&#x09;snd0.length = sizeof(msg_struct_com_restart_t);&#x0A;&#x09;&#x09;ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_EMC, TASK_ID_EMC, &amp;snd0, snd0.length);&#x0A;&#x09;&#x09;if (ret == FAILURE){&#x0A;&#x09;&#x09;&#x09;zHcuRunErrCnt[TASK_ID_EMC]++;&#x0A;&#x09;&#x09;&#x09;HcuErrorPrint(&quot;EMC: Send message error, TASK [%s] to TASK[%s]!\n&quot;, zHcuTaskNameList[TASK_ID_EMC], zHcuTaskNameList[TASK_ID_EMC]);&#x0A;&#x09;&#x09;&#x09;return FAILURE;&#x0A;&#x09;&#x09;}&#x0A;&#x09;}&#x0A;&#x0A;&#x09;//Period time out received, send command to MODBUS for read&#x0A;&#x09;if ((rcv.timeId == TIMER_ID_1S_EMC_PERIOD_READ) &amp;&amp;(rcv.timeRes == TIMER_RESOLUTION_1S)){&#x0A;&#x09;&#x09;//保护周期读数的优先级，强制抢占状态，并简化问题&#x0A;&#x09;&#x09;if (FsmGetState(TASK_ID_EMC) != FSM_STATE_EMC_ACTIVED){&#x0A;&#x09;&#x09;&#x09;ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);&#x0A;&#x09;&#x09;&#x09;if (ret == FAILURE){&#x0A;&#x09;&#x09;&#x09;&#x09;zHcuRunErrCnt[TASK_ID_EMC]++;&#x0A;&#x09;&#x09;&#x09;&#x09;HcuErrorPrint(&quot;EMC: Error Set FSM State!\n&quot;);&#x0A;&#x09;&#x09;&#x09;&#x09;return FAILURE;&#x0A;&#x09;&#x09;&#x09;}//FsmSetState&#x0A;&#x09;&#x09;}&#x0A;&#x09;&#x09;func_emc_time_out_read_data_from_modbus();&#x0A;&#x09;}&#x0A;&#x0A;&#x09;//Modbus received FB time out message received&#x0A;&#x09;else if ((rcv.timeId == TIMER_ID_1S_EMC_MODBUS_FB) &amp;&amp;(rcv.timeRes == TIMER_RESOLUTION_1S)){&#x0A;&#x09;&#x09;func_emc_time_out_processing_no_rsponse();&#x0A;&#x09;}&#x0A;&#x0A;&#x09;return SUCCESS;&#x0A;}&#x0A;"/>
-			<item value="HCU"/>
-			<item value="canitf_"/>
-			<item value="L3PO_generic_"/>
-			<item value="MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n"/>
-			<item value=""/>
+			<item value="#define HCU_PROCESS_WORK_MODE_CURRENT HCU_WORK_MODE_PROCESS_SINGLE"/>
+			<item value=" HCU_WORK_MODE_PROCESS_SINGLE "/>
+			<item value=" "/>
+			<item value="HCU_TASK_PNP_ON"/>
+			<item value="HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH"/>
+			<item value="HCU_CLOUDVELA_BH_PHY_LINK_ETH"/>
+			<item value=" HCU_TASK_PNP_OFF "/>
+			<item value=" HCU_TASK_PNP_ON "/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

@@ -217,14 +217,13 @@ typedef struct HcuTaskTag
 	FsmStateItem_t *fsmPtr;
 	UINT8 QueFullFlag;
 }HcuTaskTag_t;
-#define HCU_TASK_PNP_ON 2
-#define HCU_TASK_PNP_OFF 1
-#define HCU_TASK_PNP_INVALID 0xFF
-#define HCU_TASK_SW_ACTIVE 2
-#define HCU_TASK_SW_DEACTIVE 1
+#define HCU_TASK_SW_NULL 0
+#define HCU_TASK_SW_ACTIVE 1
+#define HCU_TASK_SW_DEACTIVE 2
 #define HCU_TASK_SW_INVALID 0xFF
-#define HCU_TASK_QUEUE_FULL_TRUE 2
-#define HCU_TASK_QUEUE_FULL_FALSE 1
+#define HCU_TASK_QUEUE_FULL_NULL 0
+#define HCU_TASK_QUEUE_FULL_TRUE 1
+#define HCU_TASK_QUEUE_FULL_FALSE 2
 #define HCU_TASK_QUEUE_FULL_INVALID 0xFF
 
 typedef struct HcuCurrentTaskTag
