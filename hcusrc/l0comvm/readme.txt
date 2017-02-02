@@ -19,11 +19,15 @@ PRJ_BFSC待完成或者回答的问题：
 //上位机Layui模块化前端UI框架 => http://www.layui.com/
 //上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+
+//= ZJL, 2017 Feb.2, CURRENT_SW_DELIVERY 141 =>BFSC项目
+=改进#error编译选项，放出#else选项，确保多项目的安全
+
+
+
 //= ZJL, 2017 Feb.1, CURRENT_SW_DELIVERY 140 =>BFSC项目
 = 改进LED的闪烁功能：外部程序模块可以通过调用LED提供的LED闪烁图案获得任何想要的拉灯效果: hcu_led_galowag_start/stop
 =全局差错打印宏改进：HCU_ERROR_PRINT_TASK。后面再行大范围替换。
-
-
 
 //= ZSC, 2017 JAN.18, CURRENT_SW_DELIVERY 139
 = Regression测试完成，修改几个bug

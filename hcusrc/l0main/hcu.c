@@ -102,6 +102,7 @@
 	#include "../l3appctrl/l3opwlotdr.h"
 //小技巧，不要这部分，以便加强编译检查
 #else
+	#error Un-correct constant definition
 #endif
 
 
@@ -895,6 +896,7 @@ void hcu_app_system_init()
 
 //小技巧，不要这部分，以便加强编译检查
 #else
+	#error Un-correct constant definition
 #endif
 }
 
@@ -1089,6 +1091,7 @@ void hcu_task_create_all(void)
 
 //小技巧，不要这部分，以便加强编译检查
 #else
+	#error Un-correct constant definition
 #endif
 
 }

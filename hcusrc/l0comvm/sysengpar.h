@@ -83,6 +83,7 @@ typedef struct SysEngParElementComm
 
 //小技巧，不要这部分，以便加强编译检查
 #else
+	#error Un-correct constant definition
 #endif
 
 }SysEngParElementComm_t;
