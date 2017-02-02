@@ -46,7 +46,7 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_SWITCH, //开关量
 	TASK_ID_RELAY,  //继电器
 	TASK_ID_MOTOR,  //马达
-	TASK_ID_GRPS,
+	TASK_ID_GPRS,
 	TASK_ID_SPS232,
 	TASK_ID_SPS485,
 	TASK_ID_BLE,
@@ -252,6 +252,14 @@ typedef struct FsmTable
 	FsmCtrlTable_t  pFsmCtrlTable[MAX_TASK_NUM_IN_ONE_HCU];
 }FsmTable_t;
 
+//任务配置的基础配置信息
+typedef struct StrHcuGlobalTaskInputConfig
+{
+	UINT8 taskInputId;
+	char  taskInputName[TASK_NAME_MAX_LENGTH];
+	void* fsmFuncEntry;
+}StrHcuGlobalTaskInputConfig_t;
+
 //Global variables 全局变量声明的好例子，不能加Static/Const等等修饰性，除非的确不改动
 extern HcuTaskTag_t zHcuTaskInfo[MAX_TASK_NUM_IN_ONE_HCU];
 extern char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU];
@@ -325,6 +333,79 @@ extern int msgget(key_t key, int msgflg);
 extern int msgctl(int msqid, int cmd, struct msqid_ds *buf);
 extern int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
 extern ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
+
+//统一定义，不会影响编译
+extern FsmStateItem_t HcuFsmHcuvm[];                             //状态机
+extern FsmStateItem_t HcuFsmTrace[];                             //状态机
+extern FsmStateItem_t HcuFsmConfig[];                            //状态机
+extern FsmStateItem_t HcuFsmTimer[];                             //状态机
+extern FsmStateItem_t HcuFsmMmc[];                               //状态机
+extern FsmStateItem_t HcuFsmGpio[];                              //状态机
+extern FsmStateItem_t HcuFsmI2c[];                               //状态机
+extern FsmStateItem_t HcuFsmSpi[];                               //状态机
+extern FsmStateItem_t HcuFsmPwm[];                               //状态机
+extern FsmStateItem_t HcuFsmAdc[];                               //状态机
+extern FsmStateItem_t HcuFsmSwitch[];                            //状态机
+extern FsmStateItem_t HcuFsmRelay[];                             //状态机
+extern FsmStateItem_t HcuFsmMotor[];                             //状态机
+extern FsmStateItem_t HcuFsmGprs[];                              //状态机
+extern FsmStateItem_t HcuFsmSps232[];                            //状态机
+extern FsmStateItem_t HcuFsmSps485[];                            //状态机
+extern FsmStateItem_t HcuFsmBle[];                               //状态机
+extern FsmStateItem_t HcuFsmEthernet[];                          //状态机
+extern FsmStateItem_t HcuFsmWifi[];                              //状态机
+extern FsmStateItem_t HcuFsmUsbnet[];                            //状态机
+extern FsmStateItem_t HcuFsm3g4g[];                              //状态机
+extern FsmStateItem_t HcuFsmHarddisk[];                          //状态机
+extern FsmStateItem_t HcuFsmCamera[];                            //状态机
+extern FsmStateItem_t HcuFsmMicrophone[];                        //状态机
+extern FsmStateItem_t HcuFsmFlash[];                             //状态机
+extern FsmStateItem_t HcuFsmGps[];                               //状态机
+extern FsmStateItem_t HcuFsmLcd[];                               //状态机
+extern FsmStateItem_t HcuFsmLed[];                               //状态机
+extern FsmStateItem_t HcuFsmHwinv[];                             //状态机
+extern FsmStateItem_t HcuFsmSpsvirgo[];                          //状态机
+extern FsmStateItem_t HcuFsmCloudvela[];                         //状态机
+extern FsmStateItem_t HcuFsmModbus[];                            //状态机
+extern FsmStateItem_t HcuFsmAvorion[];                           //状态机
+extern FsmStateItem_t HcuFsmI2cbuslibra[];                       //状态机
+extern FsmStateItem_t HcuFsmSpibusaries[];                       //状态机
+extern FsmStateItem_t HcuFsmNbiotcj188[];                        //状态机
+extern FsmStateItem_t HcuFsmNbiotqg376[];                        //状态机
+extern FsmStateItem_t HcuFsmHsmmp[];                             //状态机
+extern FsmStateItem_t HcuFsmEmc[];                               //状态机
+extern FsmStateItem_t HcuFsmHumid[];                             //状态机
+extern FsmStateItem_t HcuFsmPm25[];                              //状态机
+extern FsmStateItem_t HcuFsmTemp[];                              //状态机
+extern FsmStateItem_t HcuFsmWinddir[];                           //状态机
+extern FsmStateItem_t HcuFsmWindspd[];                           //状态机
+extern FsmStateItem_t HcuFsmNoise[];                             //状态机
+extern FsmStateItem_t HcuFsmAirprs[];                            //状态机
+extern FsmStateItem_t HcuFsmCo1[];                               //状态机
+extern FsmStateItem_t HcuFsmLightstr[];                          //状态机
+extern FsmStateItem_t HcuFsmAlcohol[];                           //状态机
+extern FsmStateItem_t HcuFsmHcho[];                              //状态机
+extern FsmStateItem_t HcuFsmToxicgas[];                          //状态机
+extern FsmStateItem_t HcuFsmIwm[];                               //状态机
+extern FsmStateItem_t HcuFsmIhm[];                               //状态机
+extern FsmStateItem_t HcuFsmIgm[];                               //状态机
+extern FsmStateItem_t HcuFsmIpm[];                               //状态机
+extern FsmStateItem_t HcuFsmSvrcon[];                            //状态机
+extern FsmStateItem_t HcuFsmSyspm[];                             //状态机
+extern FsmStateItem_t HcuFsmPm25sharp[];                         //状态机
+extern FsmStateItem_t HcuFsmCanitfleo[];                         //状态机
+extern FsmStateItem_t HcuFsmL3aqycg10[];                         //状态机
+extern FsmStateItem_t HcuFsmL3aqycg20[];                         //状态机
+extern FsmStateItem_t HcuFsmL3tbswrg30[];                        //状态机
+extern FsmStateItem_t HcuFsmL3gqybg40[];                         //状态机
+extern FsmStateItem_t HcuFsmL3cxilc[];                           //状态机
+extern FsmStateItem_t HcuFsmL3cxglacm[];                         //状态机
+extern FsmStateItem_t HcuFsmL3nblpm[];                           //状态机
+extern FsmStateItem_t HcuFsmL3nbhpm[];                           //状态机
+extern FsmStateItem_t HcuFsmL3bfsc[];                            //状态机
+extern FsmStateItem_t HcuFsmBfscuicomm[];                        //状态机
+extern FsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
+
 
 //高级定义，简化程序的可读性
 #define HCU_DEBUG_PRINT_INF		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE) HcuDebugPrint

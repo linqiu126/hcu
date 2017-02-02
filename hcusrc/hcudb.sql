@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.12deb2+deb8u1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 18, 2017 at 09:39 PM
--- Server version: 5.5.44-0+deb8u1
--- PHP Version: 5.6.20-0+deb8u1
+-- Generation Time: Feb 02, 2017 at 11:13 PM
+-- Server version: 5.5.47-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -27,12 +27,13 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `altitudevalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+  `altitudevalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `hcuairprsaltitudebmp180datainfo`
@@ -67,12 +68,13 @@ INSERT INTO `hcuairprsaltitudebmp180datainfo` (`sid`, `deviceid`, `timestamp`, `
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `airprsvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+  `airprsvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `hcuairprsbmp180datainfo`
@@ -107,7 +109,7 @@ INSERT INTO `hcuairprsbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataform
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -117,8 +119,9 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -127,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -137,8 +140,9 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -147,12 +151,13 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `alcoholvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+  `alcoholvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `hcualcoholmq3alcodatainfo`
@@ -187,7 +192,7 @@ INSERT INTO `hcualcoholmq3alcodatainfo` (`sid`, `deviceid`, `timestamp`, `datafo
 --
 
 CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -197,8 +202,9 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -207,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -217,8 +223,9 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9560 DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9560 ;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -5897,7 +5904,7 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -5907,8 +5914,9 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -5917,12 +5925,13 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `hchovalue` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `hchovalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -5931,7 +5940,7 @@ CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `hsmmpfdir` char(100) NOT NULL,
@@ -5942,8 +5951,9 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -5952,7 +5962,7 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -5962,8 +5972,9 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=1162 DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1162 ;
 
 --
 -- Dumping data for table `hcuhumiddatainfo`
@@ -7140,12 +7151,13 @@ INSERT INTO `hcuhumiddatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `h
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumiddht11datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=696 DEFAULT CHARSET=utf8;
+  `humidvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=696 ;
 
 --
 -- Dumping data for table `hcuhumiddht11datainfo`
@@ -7284,12 +7296,13 @@ INSERT INTO `hcuhumiddht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidmth01datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `humidvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `hcuhumidmth01datainfo`
@@ -7305,12 +7318,13 @@ INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `humidvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7319,12 +7333,13 @@ CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=508 DEFAULT CHARSET=utf8;
+  `humidvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=508 ;
 
 --
 -- Dumping data for table `hcuhumidsht20datainfo`
@@ -7431,7 +7446,7 @@ INSERT INTO `hcuhumidsht20datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 --
 
 CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -7461,8 +7476,9 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `switchctrl` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7471,7 +7487,7 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -7505,8 +7521,9 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `switchctrl` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7515,7 +7532,7 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -7545,8 +7562,9 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `switchctrl` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7555,7 +7573,7 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -7585,8 +7603,9 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `switchctrl` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7595,12 +7614,13 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `lightstrvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+  `lightstrvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `hculightstrbh1750datainfo`
@@ -7635,7 +7655,7 @@ INSERT INTO `hculightstrbh1750datainfo` (`sid`, `deviceid`, `timestamp`, `datafo
 --
 
 CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -7645,8 +7665,9 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7655,7 +7676,7 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -7665,8 +7686,9 @@ CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=60 ;
 
 --
 -- Dumping data for table `hcunoisedatainfo`
@@ -7740,12 +7762,13 @@ INSERT INTO `hcunoisedatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `n
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm2d5value` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `pm2d5value` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7754,7 +7777,7 @@ CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -7766,8 +7789,9 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7776,12 +7800,13 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm2d5value` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `pm2d5value` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -7807,14 +7832,15 @@ INSERT INTO `hcuswdb` (`dbver`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `hcusysalarminfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `eqpid` int(4) NOT NULL,
   `alarmtype` int(4) NOT NULL,
   `alarmcontent` int(4) NOT NULL,
   `alarmseverity` int(4) NOT NULL,
   `alarmclearflag` int(4) NOT NULL,
-  `timestamp` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4186 DEFAULT CHARSET=utf8;
+  `timestamp` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4186 ;
 
 --
 -- Dumping data for table `hcusysalarminfo`
@@ -12086,7 +12112,8 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `browselautostartupflag` int(1) NOT NULL,
   `browselprog` char(20) NOT NULL,
   `browselstartupaddress` char(128) NOT NULL,
-  `browselworkingoption` char(128) NOT NULL
+  `browselworkingoption` char(128) NOT NULL,
+  PRIMARY KEY (`prjname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -12094,18 +12121,18 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 --
 
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`, `commhwboardlcd`, `commhwboardled`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`, `commframenbiotcj188`, `commframenbiotqg376`, `commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`, `commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`, `commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`, `commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensoriwm`, `commfrontsensorihm`, `commfrontsensorigm`, `commfrontsensoripm`, `commfrontsensorpm25sharp`, `commfrontcanitf`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `cloudvelahbtimer`, `cloudvelahbbacktimer`, `nbiotcj188hbtimer`, `nbiotcj188hbbacktimer`, `nbiotqg376hbtimer`, `nbiotqg376hbbacktimer`, `cloudsockethbtimer`, `dbverreporttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `iwmreqtimer`, `ihmreqtimer`, `igmreqtimer`, `ipmreqtimer`, `pm25sharpreqtimer`, `syspmworkingtimer`, `canitfworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudsocketsvradd`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
-('HCU_PRJ_AQYCG10_335D', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_AQYCG20_RASBERRY', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 120, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 900, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_AQYC_OBSOLETE', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_BFSC_CBU', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_SH_0499', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_CXGLACM', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_CXILC', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_GQYBG40', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_NBIOT_HPM_QG', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_NBIOT_LPM_CJ', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_OPWL_OTDR', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_TBSWRG30', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_TEST_MODE', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
+('HCU_PRJ_AQYCG10_335D', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYCG20_RASBERRY', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 120, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 900, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYC_OBSOLETE', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFSC_CBU', 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_SH_0499', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXGLACM', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXILC', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_GQYBG40', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_HPM_QG', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_LPM_CJ', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_OPWL_OTDR', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0305', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TBSWRG30', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TEST_MODE', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_SH_0304', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
 
 -- --------------------------------------------------------
 
@@ -12114,7 +12141,7 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`,
 --
 
 CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `taskhcuvmec` int(4) NOT NULL,
   `taskhwinvec` int(4) NOT NULL,
   `tasksyspmec` int(4) NOT NULL,
@@ -12146,8 +12173,9 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `cpuoccupy` int(4) NOT NULL,
   `memoccupy` int(11) NOT NULL,
   `diskoccupy` int(11) NOT NULL,
-  `timestamp` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3990 DEFAULT CHARSET=utf8;
+  `timestamp` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3990 ;
 
 --
 -- Dumping data for table `hcusyspmglobaldatainfo`
@@ -14880,12 +14908,13 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=702 DEFAULT CHARSET=utf8;
+  `tempvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=702 ;
 
 --
 -- Dumping data for table `hcutempbmp180datainfo`
@@ -15039,7 +15068,7 @@ INSERT INTO `hcutempbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -15049,8 +15078,9 @@ CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=897 DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=897 ;
 
 --
 -- Dumping data for table `hcutempdatainfo`
@@ -15961,12 +15991,13 @@ INSERT INTO `hcutempdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `te
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempdht11datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=713 DEFAULT CHARSET=utf8;
+  `tempvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=713 ;
 
 --
 -- Dumping data for table `hcutempdht11datainfo`
@@ -16120,12 +16151,13 @@ INSERT INTO `hcutempdht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `tempvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -16134,12 +16166,13 @@ CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `tempvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -16148,12 +16181,13 @@ CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=504 DEFAULT CHARSET=utf8;
+  `tempvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=504 ;
 
 --
 -- Dumping data for table `hcutempsht20datainfo`
@@ -16255,7 +16289,7 @@ INSERT INTO `hcutempsht20datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -16265,8 +16299,9 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -16275,12 +16310,13 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `toxicgasvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+  `toxicgasvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `hcutoxicgasmq135datainfo`
@@ -16315,12 +16351,13 @@ INSERT INTO `hcutoxicgasmq135datainfo` (`sid`, `deviceid`, `timestamp`, `datafor
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `toxicgasvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+  `toxicgasvalue` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `hcutoxicgaszp01vocdatainfo`
@@ -16361,7 +16398,8 @@ CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
   `moduletoallow` int(1) NOT NULL,
   `moduletorestrict` int(1) NOT NULL,
   `modulefromallow` int(1) NOT NULL,
-  `modulefromrestrict` int(1) NOT NULL
+  `modulefromrestrict` int(1) NOT NULL,
+  PRIMARY KEY (`moduleid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -16444,7 +16482,8 @@ CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
   `msgname` char(70) NOT NULL,
   `msgctrflag` int(1) NOT NULL,
   `msgallow` int(1) NOT NULL,
-  `msgrestrict` int(1) NOT NULL
+  `msgrestrict` int(1) NOT NULL,
+  PRIMARY KEY (`msgid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -16570,46 +16609,11 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (115, 'MSG_ID_IPM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
 (116, 'MSG_ID_IPM_NBIOTQG376_DATA_RESP', 1, 1, 1),
 (117, 'MSG_ID_IPM_NBIOTQG376_CONTROL_FB', 1, 1, 1),
-(118, 'MSG_ID_AIRSYNC_INIT', 1, 1, 1),
-(119, 'MSG_ID_AIRSYNC_BLE_CONNNECTD', 1, 1, 1),
-(120, 'MSG_ID_AIRSYNC_AUTH_REQ', 1, 1, 1),
-(121, 'MSG_ID_AIRSYNC_AUTH_RESP', 1, 1, 1),
-(122, 'MSG_ID_AIRSYNC_INIT_REQ', 1, 1, 1),
-(123, 'MSG_ID_AIRSYNC_INIT_RESP', 1, 1, 1),
-(124, 'MSG_ID_AIRSYNC_CONNECT_READY', 1, 1, 1),
-(125, 'MSG_ID_AIRSYNC_DATA_PUSH', 1, 1, 1),
-(126, 'MSG_ID_AIRSYNC_DATA_REQ', 1, 1, 1),
-(127, 'MSG_ID_AIRSYNC_DATA_RESP', 1, 1, 1),
-(128, 'MSG_ID_AIRSYNC_AUTH_WAIT_TIMER', 1, 1, 1),
-(129, 'MSG_ID_AIRSYNC_DISCONNECT_TIGGER_L3', 1, 1, 1),
-(130, 'MSG_ID_AIRSYNC_SEND_BLE_DATA_TIMER', 1, 1, 1),
-(131, 'MSG_ID_WXAPP_3MIN_TIMEOUT', 1, 1, 1),
-(132, 'MSG_ID_WXAPP_5SECOND_TIMEOUT', 1, 1, 1),
-(133, 'MSG_ID_WXAPP_DATA_REQ_EMC', 1, 1, 1),
-(134, 'MSG_ID_WXAPP_PERIOD_REPORT_EMC_TRIGGER', 1, 1, 1),
-(135, 'MSG_ID_WXAPP_DATA_REQ_TIME_SYNC', 1, 1, 1),
-(136, 'MSG_ID_WXAPP_EQUIPMENT_INFO_SYNC', 1, 1, 1),
-(137, 'MSG_ID_WXAPP_MODBUS_CONNECT_READY', 1, 1, 1),
-(138, 'MSG_ID_WXAPP_MODBUS_DATA_PUSH', 1, 1, 1),
-(139, 'MSG_ID_WXAPP_MODBUS_DISCONNECT', 1, 1, 1),
-(140, 'MSG_ID_MODBUS_10MIN_TIMEOUT', 1, 1, 1),
-(141, 'MSG_ID_MODBUS_5SECOND_TIMEOUT', 1, 1, 1),
-(142, 'MSG_ID_MODBUS_PERIOD_REPORT_PM1025_TRIGGER', 1, 1, 1),
-(143, 'MSG_ID_MODBUS_PERIOD_REPORT_WIND_SPEED_TRIGGER', 1, 1, 1),
-(144, 'MSG_ID_MODBUS_PERIOD_REPORT_WIND_DIR_TRIGGER', 1, 1, 1),
-(145, 'MSG_ID_MODBUS_PERIOD_REPORT_TEMPERATURE_TRIGGER', 1, 1, 1),
-(146, 'MSG_ID_MODBUS_PERIOD_REPORT_HUMIDITY_TRIGGER', 1, 1, 1),
-(147, 'MSG_ID_MODBUS_DATA_REQ_PM1025_REPORT', 1, 1, 1),
-(148, 'MSG_ID_MODBUS_DATA_REQ_WIND_SPEED_REPORT', 1, 1, 1),
-(149, 'MSG_ID_MODBUS_DATA_REQ_WIND_DIR_REPORT', 1, 1, 1),
-(150, 'MSG_ID_MODBUS_DATA_REQ_TEMPERATURE_REPORT', 1, 1, 1),
-(151, 'MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT', 1, 1, 1),
-(152, 'MSG_ID_MODBUS_UART1_FRAME_TIMEOUT', 1, 1, 1),
-(153, 'MSG_ID_COM_ALARM_REPORT', 1, 1, 1),
-(154, 'MSG_ID_COM_PM_REPORT', 1, 1, 1),
-(155, 'MSG_ID_CANITFLEO_DATA_REPORT', 1, 1, 1),
-(156, 'MSG_ID_COM_BOTTOM', 1, 1, 1),
-(157, 'MSG_ID_COM_MAX', 1, 1, 1);
+(118, 'MSG_ID_COM_ALARM_REPORT', 1, 1, 1),
+(119, 'MSG_ID_COM_PM_REPORT', 1, 1, 1),
+(120, 'MSG_ID_CANITFLEO_DATA_REPORT', 1, 1, 1),
+(121, 'MSG_ID_COM_BOTTOM', 1, 1, 1),
+(122, 'MSG_ID_COM_MAX', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -16618,7 +16622,7 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 --
 
 CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -16628,8 +16632,9 @@ CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=652 DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=652 ;
 
 --
 -- Dumping data for table `hcuwinddirdatainfo`
@@ -17295,7 +17300,7 @@ INSERT INTO `hcuwinddirdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, 
 --
 
 CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
-`sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -17305,8 +17310,9 @@ CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=443 DEFAULT CHARSET=utf8;
+  `onofflineflag` int(2) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=443 ;
 
 --
 -- Dumping data for table `hcuwindspddatainfo`
@@ -17756,450 +17762,6 @@ INSERT INTO `hcuwindspddatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, 
 (441, 33, 1484260100, 1, 0, 'E', 0, 'N', 0, 0, 1),
 (442, 33, 1484260210, 1, 0, 'E', 0, 'N', 0, 0, 1);
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `hcuairprsaltitudebmp180datainfo`
---
-ALTER TABLE `hcuairprsaltitudebmp180datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuairprsbmp180datainfo`
---
-ALTER TABLE `hcuairprsbmp180datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuairprsdatainfo`
---
-ALTER TABLE `hcuairprsdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcualcoholdatainfo`
---
-ALTER TABLE `hcualcoholdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcualcoholmq3alcodatainfo`
---
-ALTER TABLE `hcualcoholmq3alcodatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuco1datainfo`
---
-ALTER TABLE `hcuco1datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuemcdatainfo`
---
-ALTER TABLE `hcuemcdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuhchodatainfo`
---
-ALTER TABLE `hcuhchodatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuhchoze08ch2odatainfo`
---
-ALTER TABLE `hcuhchoze08ch2odatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuhsmmpdatainfo`
---
-ALTER TABLE `hcuhsmmpdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuhumiddatainfo`
---
-ALTER TABLE `hcuhumiddatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuhumiddht11datainfo`
---
-ALTER TABLE `hcuhumiddht11datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuhumidmth01datainfo`
---
-ALTER TABLE `hcuhumidmth01datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuhumidrht03datainfo`
---
-ALTER TABLE `hcuhumidrht03datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuhumidsht20datainfo`
---
-ALTER TABLE `hcuhumidsht20datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuigmcj188datainfo`
---
-ALTER TABLE `hcuigmcj188datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuihmcj188datainfo`
---
-ALTER TABLE `hcuihmcj188datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuipmcj188datainfo`
---
-ALTER TABLE `hcuipmcj188datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuiwmcj188datainfo`
---
-ALTER TABLE `hcuiwmcj188datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hculightstrbh1750datainfo`
---
-ALTER TABLE `hculightstrbh1750datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hculightstrdatainfo`
---
-ALTER TABLE `hculightstrdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcunoisedatainfo`
---
-ALTER TABLE `hcunoisedatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcupm25bmpd300datainfo`
---
-ALTER TABLE `hcupm25bmpd300datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcupm25datainfo`
---
-ALTER TABLE `hcupm25datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcupm25sharpdatainfo`
---
-ALTER TABLE `hcupm25sharpdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcusysalarminfo`
---
-ALTER TABLE `hcusysalarminfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcusysengpar`
---
-ALTER TABLE `hcusysengpar`
- ADD PRIMARY KEY (`prjname`);
-
---
--- Indexes for table `hcusyspmglobaldatainfo`
---
-ALTER TABLE `hcusyspmglobaldatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutempbmp180datainfo`
---
-ALTER TABLE `hcutempbmp180datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutempdatainfo`
---
-ALTER TABLE `hcutempdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutempdht11datainfo`
---
-ALTER TABLE `hcutempdht11datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutempmth01datainfo`
---
-ALTER TABLE `hcutempmth01datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutemprht03datainfo`
---
-ALTER TABLE `hcutemprht03datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutempsht20datainfo`
---
-ALTER TABLE `hcutempsht20datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutoxicgasdatainfo`
---
-ALTER TABLE `hcutoxicgasdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutoxicgasmq135datainfo`
---
-ALTER TABLE `hcutoxicgasmq135datainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutoxicgaszp01vocdatainfo`
---
-ALTER TABLE `hcutoxicgaszp01vocdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcutracemodulectr`
---
-ALTER TABLE `hcutracemodulectr`
- ADD PRIMARY KEY (`moduleid`);
-
---
--- Indexes for table `hcutracemsgctr`
---
-ALTER TABLE `hcutracemsgctr`
- ADD PRIMARY KEY (`msgid`);
-
---
--- Indexes for table `hcuwinddirdatainfo`
---
-ALTER TABLE `hcuwinddirdatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcuwindspddatainfo`
---
-ALTER TABLE `hcuwindspddatainfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `hcuairprsaltitudebmp180datainfo`
---
-ALTER TABLE `hcuairprsaltitudebmp180datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
---
--- AUTO_INCREMENT for table `hcuairprsbmp180datainfo`
---
-ALTER TABLE `hcuairprsbmp180datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
---
--- AUTO_INCREMENT for table `hcuairprsdatainfo`
---
-ALTER TABLE `hcuairprsdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcualcoholdatainfo`
---
-ALTER TABLE `hcualcoholdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcualcoholmq3alcodatainfo`
---
-ALTER TABLE `hcualcoholmq3alcodatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
---
--- AUTO_INCREMENT for table `hcuco1datainfo`
---
-ALTER TABLE `hcuco1datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcuemcdatainfo`
---
-ALTER TABLE `hcuemcdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9560;
---
--- AUTO_INCREMENT for table `hcuhchodatainfo`
---
-ALTER TABLE `hcuhchodatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcuhchoze08ch2odatainfo`
---
-ALTER TABLE `hcuhchoze08ch2odatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcuhsmmpdatainfo`
---
-ALTER TABLE `hcuhsmmpdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcuhumiddatainfo`
---
-ALTER TABLE `hcuhumiddatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1162;
---
--- AUTO_INCREMENT for table `hcuhumiddht11datainfo`
---
-ALTER TABLE `hcuhumiddht11datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=696;
---
--- AUTO_INCREMENT for table `hcuhumidmth01datainfo`
---
-ALTER TABLE `hcuhumidmth01datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `hcuhumidrht03datainfo`
---
-ALTER TABLE `hcuhumidrht03datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcuhumidsht20datainfo`
---
-ALTER TABLE `hcuhumidsht20datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=508;
---
--- AUTO_INCREMENT for table `hcuigmcj188datainfo`
---
-ALTER TABLE `hcuigmcj188datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcuihmcj188datainfo`
---
-ALTER TABLE `hcuihmcj188datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcuipmcj188datainfo`
---
-ALTER TABLE `hcuipmcj188datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcuiwmcj188datainfo`
---
-ALTER TABLE `hcuiwmcj188datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hculightstrbh1750datainfo`
---
-ALTER TABLE `hculightstrbh1750datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
---
--- AUTO_INCREMENT for table `hculightstrdatainfo`
---
-ALTER TABLE `hculightstrdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcunoisedatainfo`
---
-ALTER TABLE `hcunoisedatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=60;
---
--- AUTO_INCREMENT for table `hcupm25bmpd300datainfo`
---
-ALTER TABLE `hcupm25bmpd300datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcupm25datainfo`
---
-ALTER TABLE `hcupm25datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcupm25sharpdatainfo`
---
-ALTER TABLE `hcupm25sharpdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcusysalarminfo`
---
-ALTER TABLE `hcusysalarminfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4186;
---
--- AUTO_INCREMENT for table `hcusyspmglobaldatainfo`
---
-ALTER TABLE `hcusyspmglobaldatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3990;
---
--- AUTO_INCREMENT for table `hcutempbmp180datainfo`
---
-ALTER TABLE `hcutempbmp180datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=702;
---
--- AUTO_INCREMENT for table `hcutempdatainfo`
---
-ALTER TABLE `hcutempdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=897;
---
--- AUTO_INCREMENT for table `hcutempdht11datainfo`
---
-ALTER TABLE `hcutempdht11datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=713;
---
--- AUTO_INCREMENT for table `hcutempmth01datainfo`
---
-ALTER TABLE `hcutempmth01datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcutemprht03datainfo`
---
-ALTER TABLE `hcutemprht03datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcutempsht20datainfo`
---
-ALTER TABLE `hcutempsht20datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=504;
---
--- AUTO_INCREMENT for table `hcutoxicgasdatainfo`
---
-ALTER TABLE `hcutoxicgasdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `hcutoxicgasmq135datainfo`
---
-ALTER TABLE `hcutoxicgasmq135datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
---
--- AUTO_INCREMENT for table `hcutoxicgaszp01vocdatainfo`
---
-ALTER TABLE `hcutoxicgaszp01vocdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
---
--- AUTO_INCREMENT for table `hcuwinddirdatainfo`
---
-ALTER TABLE `hcuwinddirdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=652;
---
--- AUTO_INCREMENT for table `hcuwindspddatainfo`
---
-ALTER TABLE `hcuwindspddatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=443;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

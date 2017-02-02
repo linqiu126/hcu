@@ -12,10 +12,18 @@ PRJ_BFSC待完成或者回答的问题：
 // 简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
 //上位机HUITPXML、HUITPJASON支持
 //上位机VM初始化简化
-//上位机启动时自身标识的改进
+//上位机启动时自身标识的改进，软件模块标识
 //上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 //上位机Layui模块化前端UI框架 => http://www.layui.com/
 //上位机frp内网穿透工具 => https://github.com/fatedier/frp
+
+
+//= ZJL, 2017 Feb.2, CURRENT_SW_DELIVERY 142 =>BFSC项目
+=有关数据表单中hcusysengpar的模块是否激活，目前的未激活采用了0（NULL），而并非2（DEACTIVE） ，包括DBICOM和数据表单在内，全部改进完成。
+=清理了VMDA之前来自于IHU中继承来的消息，涉及到COMMSG.H/VMLAYER.H，以及DBCOM数据库表单。
+=统一引用FsmTask[]，为了方便进入task管理的FuncHandler，并统一增加Hcu前缀，就是为了减少全局重复的概率
+
+
 
 
 //= ZJL, 2017 Feb.2, CURRENT_SW_DELIVERY 141 =>BFSC项目

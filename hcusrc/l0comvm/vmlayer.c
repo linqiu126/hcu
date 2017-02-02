@@ -20,6 +20,87 @@ extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 //请确保，该全局字符串的定义跟Task_Id的顺序保持完全一致，不然后面的显示内容会出现差错
 //请服从最长长度TASK_NAME_MAX_LENGTH的定义，不然Debug/Trace打印出的信息也会出错
 
+//任务初始化配置参数
+//从极致优化内存的角度，这里浪费了2个TASK对应的内存空间（MIN=0/MAX=n+1)，但它却极大的改善了程序编写的效率，值得浪费！！！
+StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
+{
+	//TASK_ID,    				状态控制					状态机入口 						//注释
+	{TASK_ID_MIN, 				"MIN", 					NULL},							//Starting
+	{TASK_ID_HCUMAIN,    		"HCUMAIN",      		NULL},
+	{TASK_ID_HCUVM,      		"HCUVM",        		NULL},
+	{TASK_ID_TRACE,      		"TRACE",        		NULL},
+	{TASK_ID_CONFIG,     		"CONFIG",       		NULL},
+/*	{TASK_ID_TIMER,      		"TIMER",        		&HcuFsmTimer},
+	{TASK_ID_MMC,        		"MMC",          		NULL},
+	{TASK_ID_GPIO,       		"GPIO",         		&HcuFsmGpio},
+	{TASK_ID_I2C,        		"I2C",          		&HcuFsmI2c},
+	{TASK_ID_SPI,        		"SPI",         		 	&HcuFsmSpi},
+	{TASK_ID_PWM,        		"PWM",          		&HcuFsmPwm},
+	{TASK_ID_ADC,        		"ADC",          		&HcuFsmAdc},
+	{TASK_ID_SWITCH,     		"SWITCH",       		&HcuFsmSwitch},
+	{TASK_ID_RELAY,      		"RELAY",        		&HcuFsmRelay},
+	{TASK_ID_MOTOR,      		"MOTOR",        		&HcuFsmMotor},
+	{TASK_ID_GPRS,       		"GRPS",         		&HcuFsmGprs},
+	{TASK_ID_SPS232,     		"SPS232",       		&HcuFsmSps232},
+	{TASK_ID_SPS485,     		"SPS485",       		&HcuFsmSps485},
+	{TASK_ID_BLE,        		"BLE",          		&HcuFsmBle},
+	{TASK_ID_ETHERNET,   		"ETHERNET",     		&HcuFsmEthernet},
+	{TASK_ID_WIFI,       		"WIFI",         		&HcuFsmWifi},
+	{TASK_ID_USBNET,     		"USBNET",       		&HcuFsmUsbnet},
+	{TASK_ID_3G4G,       		"3G4G",         		&HcuFsm3g4g},
+	{TASK_ID_HARDDISK,   		"HARDDISK",     		NULL},
+	{TASK_ID_CAMERA,     		"CAMERA",       		NULL},
+	{TASK_ID_MICROPHONE, 		"MICROPHONE",   		&HcuFsmMicrophone},
+	{TASK_ID_FLASH,      		"FLASH",        		NULL},
+	{TASK_ID_GPS,        		"GPS",          		&HcuFsmGps},
+	{TASK_ID_LCD,        		"LCD",          		&HcuFsmLcd},
+	{TASK_ID_LED,        		"LED",          		&HcuFsmLed},
+	{TASK_ID_HWINV,      		"HWINV",        		&HcuFsmHwinv},
+	{TASK_ID_SPSVIRGO,   		"SPSVIRGO",     		&HcuFsmSpsvirgo},
+	{TASK_ID_CLOUDVELA,  		"CLOUDVELA",    		&HcuFsmCloudvela},
+	{TASK_ID_MODBUS,     		"MODBUS",       		&HcuFsmModbus},
+	{TASK_ID_AVORION,    		"AVORION",      		&HcuFsmAvorion},
+	{TASK_ID_I2CBUSLIBRA,		"I2CBUSLIBRA",  		&HcuFsmI2cbuslibra},
+	{TASK_ID_SPIBUSARIES,		"SPIBUSARIES",  		&HcuFsmSpibusaries},
+	{TASK_ID_NBIOTCJ188, 		"NBIOTCJ188",   		&HcuFsmNbiotcj188},
+	{TASK_ID_NBIOTQG376, 		"NBIOTQG376",   		&HcuFsmNbiotqg376},
+	{TASK_ID_HSMMP,      		"HSMMP",        		&HcuFsmHsmmp},
+	{TASK_ID_EMC,        		"EMC",          		&HcuFsmEmc},
+	{TASK_ID_HUMID,      		"HUMID",        		&HcuFsmHumid},
+	{TASK_ID_PM25,       		"PM25",         		&HcuFsmPm25},
+	{TASK_ID_TEMP,       		"TEMP",         		&HcuFsmTemp},
+	{TASK_ID_WINDDIR,    		"WINDDIR",      		&HcuFsmWinddir},
+	{TASK_ID_WINDSPD,    		"WINDSPD",      		&HcuFsmWindspd},
+	{TASK_ID_NOISE,      		"NOISE",        		&HcuFsmNoise},
+	{TASK_ID_AIRPRS,     		"AIRPRS",       		&HcuFsmAirprs},
+	{TASK_ID_CO1,        		"CO1",          		&HcuFsmCo1},
+	{TASK_ID_LIGHTSTR,   		"LIGHTSTR",     		&HcuFsmLightstr},
+	{TASK_ID_ALCOHOL,    		"ALCOHOL",      		&HcuFsmAlcohol},
+	{TASK_ID_HCHO,       		"HCHO",         		&HcuFsmHcho},
+	{TASK_ID_TOXICGAS,   		"TOXICGAS",     		&HcuFsmToxicgas},
+	{TASK_ID_IWM,        		"IWM",          		&HcuFsmIwm},
+	{TASK_ID_IHM,        		"IHM",          		&HcuFsmIhm},
+	{TASK_ID_IGM,        		"IGM",          		&HcuFsmIgm},
+	{TASK_ID_IPM,        		"IPM",          		&HcuFsmIpm},
+	{TASK_ID_SVRCON,     		"SVRCON",       		&HcuFsmSvrcon},
+	{TASK_ID_SYSPM,      		"SYSPM",        		&HcuFsmSyspm},
+	{TASK_ID_PM25SHARP,  		"PM25SHARP",    		&HcuFsmPm25sharp},
+	{TASK_ID_CANITFLEO,  		"CANITFLEO",    		&HcuFsmCanitfleo},
+	{TASK_ID_COM_BOTTOM, 		"COM_BOTTOM",   		NULL},
+	{TASK_ID_L3AQYCG10,  		"L3AQYCG10",    		&HcuFsmL3aqycg10},
+	{TASK_ID_L3AQYCG20,  		"L3AQYCG20",    		&HcuFsmL3aqycg20},
+	{TASK_ID_L3TBSWRG30, 		"L3TBSWRG30",   		&HcuFsmL3tbswrg30},
+	{TASK_ID_L3GQYBG40,  		"L3GQYBG40",    		&HcuFsmL3gqybg40},
+	{TASK_ID_L3CXILC,    		"L3CXILC",      		&HcuFsmL3cxilc},
+	{TASK_ID_L3CXGLACM,  		"L3CXGLACM",    		&HcuFsmL3cxglacm},
+	{TASK_ID_L3NBLPM,    		"L3NBLPM",      		&HcuFsmL3nblpm},
+	{TASK_ID_L3NBHPM,    		"L3NBHPM",      		&HcuFsmL3nbhpm},
+	{TASK_ID_L3BFSC,     		"L3BFSC",       		&HcuFsmL3bfsc},
+	{TASK_ID_BFSCUICOMM, 		"BFSCUICOMM",   		&HcuFsmBfscuicomm},
+	{TASK_ID_L3OPWLOTDR, 		"L3OPWLOTDR",   		&HcuFsmL3opwlotdr}, */
+	{TASK_ID_MAX,				"MAX", 					NULL},							//Ending
+};
+
 //TRACE针对的模块和消息都没有分项目进行，所以模块和消息必须统一编码，不能分为不同的项目
 //但这种方式在支持更多的项目的情况下，将造成任务模块爆炸崩溃，所以TRACE针对那一部分的消息均采用特殊处理
 char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU] ={
@@ -296,48 +377,6 @@ char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK] ={
 		"MSG_ID_IPM_NBIOTQG376_DATA_RESP",
 		"MSG_ID_IPM_NBIOTQG376_CONTROL_FB",
 
-		//从前一个IHU项目中继承过来，以下消息其实暂时均未使用，留待以后删除
-		//AirSync message
-		"MSG_ID_AIRSYNC_INIT",
-		"MSG_ID_AIRSYNC_BLE_CONNNECTD",
-		"MSG_ID_AIRSYNC_AUTH_REQ",
-		"MSG_ID_AIRSYNC_AUTH_RESP",
-		"MSG_ID_AIRSYNC_INIT_REQ",
-		"MSG_ID_AIRSYNC_INIT_RESP",
-		"MSG_ID_AIRSYNC_CONNECT_READY",
-		"MSG_ID_AIRSYNC_DATA_PUSH",
-		"MSG_ID_AIRSYNC_DATA_REQ",
-		"MSG_ID_AIRSYNC_DATA_RESP",
-		"MSG_ID_AIRSYNC_AUTH_WAIT_TIMER",
-		"MSG_ID_AIRSYNC_DISCONNECT_TIGGER_L3",
-		"MSG_ID_AIRSYNC_SEND_BLE_DATA_TIMER",
-
-		//WxApp message
-		"MSG_ID_WXAPP_3MIN_TIMEOUT",
-		"MSG_ID_WXAPP_5SECOND_TIMEOUT",
-		"MSG_ID_WXAPP_DATA_REQ_EMC",
-		"MSG_ID_WXAPP_PERIOD_REPORT_EMC_TRIGGER",
-		"MSG_ID_WXAPP_DATA_REQ_TIME_SYNC",
-		"MSG_ID_WXAPP_EQUIPMENT_INFO_SYNC",
-		"MSG_ID_WXAPP_MODBUS_CONNECT_READY", //trigger for MODBUS connection ready
-		"MSG_ID_WXAPP_MODBUS_DATA_PUSH", //send push command to MODBUS
-		"MSG_ID_WXAPP_MODBUS_DISCONNECT", //send for modbus
-
-		//Modbus message
-		"MSG_ID_MODBUS_10MIN_TIMEOUT",
-		"MSG_ID_MODBUS_5SECOND_TIMEOUT", //
-		"MSG_ID_MODBUS_PERIOD_REPORT_PM1025_TRIGGER",  //TIMR FOR internal process
-		"MSG_ID_MODBUS_PERIOD_REPORT_WIND_SPEED_TRIGGER",  //TIMR FOR internal process
-		"MSG_ID_MODBUS_PERIOD_REPORT_WIND_DIR_TRIGGER",  //TIMR FOR internal process
-		"MSG_ID_MODBUS_PERIOD_REPORT_TEMPERATURE_TRIGGER",  //TIMR FOR internal process
-		"MSG_ID_MODBUS_PERIOD_REPORT_HUMIDITY_TRIGGER",  //TIMR FOR internal process
-		"MSG_ID_MODBUS_DATA_REQ_PM1025_REPORT",  //Send to AIRSYNC directly
-		"MSG_ID_MODBUS_DATA_REQ_WIND_SPEED_REPORT",  //Send to AIRSYNC directly
-		"MSG_ID_MODBUS_DATA_REQ_WIND_DIR_REPORT",  //Send to AIRSYNC directly
-		"MSG_ID_MODBUS_DATA_REQ_TEMPERATURE_REPORT",  //Send to AIRSYNC directly
-		"MSG_ID_MODBUS_DATA_REQ_HUMIDITY_REPORT",  //Send to AIRSYNC directly
-		"MSG_ID_MODBUS_UART1_FRAME_TIMEOUT",  //TIMR FOR UART1 Frame construction
-
 		//for alarm & pm report added by ZSC
 		"MSG_ID_COM_ALARM_REPORT",
 		"MSG_ID_COM_PM_REPORT",
@@ -405,16 +444,13 @@ void hcu_vm_system_init(void)
 	memset(&zHcuCurrentProcessInfo, 0, sizeof(HcuCurrentTaskTag_t));
 	memset(zHcuRunErrCnt, 0, sizeof(UINT32)*(TASK_ID_MAX-TASK_ID_MIN+1));
 
-
-
 	//TrACE INIT
 	TraceInit();
 
 	//Init Fsm
 	FsmInit();
 
-
-
+	return;
 }
 
 /**************************************************************************************
