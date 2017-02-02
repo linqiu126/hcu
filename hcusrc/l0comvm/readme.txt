@@ -8,8 +8,6 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 12个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
 ==> 发送给后台统计报告
 
-//BFSC项目待改进内容
-//上位机复杂的L3状态机进行受控保护，确保从错误中进行恢复 => 使用优化的高级方法！！！
 //上位机func handler的优化 
 // 简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
 //上位机HUITPXML、HUITPJASON支持
@@ -21,7 +19,8 @@ PRJ_BFSC待完成或者回答的问题：
 
 
 //= ZJL, 2017 Feb.2, CURRENT_SW_DELIVERY 141 =>BFSC项目
-=改进#error编译选项，放出#else选项，确保多项目的安全
+=改进分项目情况下的#error编译选项，显著标定#else选项，确保多项目选择的安全
+//上位机复杂的L3状态机进行受控保护，确保从错误中进行恢复 => 使用优化的高级方法！！！
 
 
 
@@ -47,19 +46,15 @@ PRJ_BFSC待完成或者回答的问题：
 = 改变HCU inventory report 机制（由命令行触发变为定期上报：因为在用的DB可能升级变化）
 = HCU inventory中增加本地数据库版本信息报告
 
-
 //= ZSC, 2016 DEC.29, CURRENT_SW_DELIVERY 134
 = 编译告警清除
 = DB中增加socketsrvadd 和 socketsvrhbtimer
 
-
 //= ZSC, 2016 DEC.27, CURRENT_SW_DELIVERY 133
 = 为hcu升级增加软件版本检查
 
-
 //= ZSC, 2016 DEC.7, CURRENT_SW_DELIVERY 132 
 = bug fix:Curl是否在链接状态都要处理 socket收到的server端来的消息，HCU要去除Curl全换成socket通信方式,待完成
-
 
 //= ZSC, 2016 DEC.4, CURRENT_SW_DELIVERY 131 =>G20项目/BFSC
 = add application layer heart beat check for socket
@@ -74,12 +69,10 @@ PRJ_BFSC待完成或者回答的问题：
 = CAN函数测试程序上线
 = 继续完善CAN的操控
 
-
 //= ZSC/ZJL, 2016 DEC.1, CURRENT_SW_DELIVERY 129 =>BFSC项目
 = 周期性读取完成
 = 从后台来的控制命令，启动和停止，命令执行链路完成。CANITFLEO中的具体命令下发以及得到反馈，待完善。
 = CLOUDVELA相应的命令也完成了pack/unpack
-
 
 //= ZSC/ZJL, 2016 NOV.30, CURRENT_SW_DELIVERY 128 =>BFSC项目/G2项目
 = 完善Rasperry上的G20编译环境

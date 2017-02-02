@@ -102,15 +102,12 @@ OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_error_scan_process(void);
 OPSTAT func_l3bfsc_time_out_period_read_process(void);
-
+void func_l3bfsc_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
 
 //高级定义，简化程序的可读性
-#define HCU_ERROR_PRINT_L3BFSC	zHcuRunErrCnt[TASK_ID_L3BFSC]++; HcuErrorPrint
-//验证新技巧，还未用上
-#define HCU_ERROR_PRINT_L3BFSC1(arg...)	do{zHcuRunErrCnt[TASK_ID_L3BFSC]++;  HcuErrorPrint(##arg);  return FAILURE;}while(0)
-//高级定义，简化程序的可读性=>状态机需要考虑回复
-#define HCU_ERROR_PRINT_L3BFSC2 zHcuRunErrCnt[TASK_ID_L3BFSC]++; func_bfsc_stm_main_recovery_from_fault(); HcuErrorPrint
-
+#define HCU_ERROR_PRINT_L3BFSC(...)	do{zHcuRunErrCnt[TASK_ID_L3BFSC]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+#define HCU_ERROR_PRINT_L3BFSC_RECOVERY(...) do{zHcuRunErrCnt[TASK_ID_L3BFSC]++; func_l3bfsc_stm_main_recovery_from_fault(); HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+//#define HCU_ERROR_PRINT_L3BFSC	zHcuRunErrCnt[TASK_ID_L3BFSC]++; HcuErrorPrint
 
 
 #endif /* L3APP_BFSC_H_ */
