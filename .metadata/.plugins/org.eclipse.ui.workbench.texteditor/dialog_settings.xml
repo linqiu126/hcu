@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="zHcuTaskNameList" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="zHcuTaskNameList"/>
-			<item value="zHcuTaskInfo.taskName"/>
-			<item value="zHcuTaskInfo.taskName[taskid]"/>
-			<item value="zHcuTaskInfo.taskName[TASK_ID_HWINV]"/>
-			<item value="zHcuTaskInfo.taskName[task_id]"/>
-			<item value="zHcuTaskInfo.taskName[TASK_ID_TIMER]"/>
-			<item value="zHcuTaskInfo.taskName[TASK_ID_I2CBUSLIBRA]"/>
-			<item value="zHcuTaskInfo.taskName[TASK_ID_ETHERNET]"/>
+			<item value="g40"/>
+			<item value="HcuFsmL3tbswrg30"/>
+			<item value="func_l3tbswrg30_int_init"/>
+			<item value="dtdr"/>
+			<item value="func_l3opwldtdr_int_init"/>
+			<item value="l3qgybg40"/>
+			<item value="L3QGYBG40"/>
+			<item value="L23"/>
 		</list>
 		<list key="replacehistory">
+			<item value="g30"/>
+			<item value="otdr"/>
+			<item value="l3gqybg40"/>
+			<item value="L3GQYBG40"/>
 			<item value="zHcuTaskInfo[taskid].taskName"/>
 			<item value="zHcuTaskInfo[TASK_ID_HWINV].taskName"/>
 			<item value="zHcuTaskInfo[task_id].taskName"/>
 			<item value="zHcuTaskInfo[TASK_ID_TIMER].taskName"/>
-			<item value="zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].taskName"/>
-			<item value="zHcuTaskInfo[TASK_ID_ETHERNET].taskName"/>
-			<item value="zHcuTaskInfo[src_id].taskName"/>
-			<item value="zHcuTaskInfo[TASK_ID_HSMMP].taskName"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

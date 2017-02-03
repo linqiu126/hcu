@@ -9,6 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/l4bi/subdir.mk
+-include src/l3appctrl/subdir.mk
 -include src/l3app/subdir.mk
 -include src/l2frame/subdir.mk
 -include src/l1hwopt/usb_adc/subdir.mk
@@ -48,19 +49,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: PrjAqycG20
+all: PrjOpwlOtdr
 
 # Tool invocations
-PrjAqycG20: $(OBJS) $(USER_OBJS)
+PrjOpwlOtdr: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjAqycG20" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjOpwlOtdr" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(OBJS)$(C_UPPER_DEPS)$(CXX_DEPS)$(C_DEPS)$(CPP_DEPS) PrjAqycG20
+	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(OBJS)$(C_UPPER_DEPS)$(CXX_DEPS)$(C_DEPS)$(CPP_DEPS) PrjOpwlOtdr
 	-@echo ' '
 
 .PHONY: all clean dependents

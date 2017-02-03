@@ -17,30 +17,30 @@
 /*
 ** FSM of the L3OPWLOTDR
 */
-FsmStateItem_t HcuFsmL3opwldtdr[] =
+FsmStateItem_t HcuFsmL3opwlotdr[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
 	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
 	//如果没有必要进行初始化，可以设置为NULL
-	{MSG_ID_ENTRY,       						FSM_STATE_ENTRY,            			fsm_l3opwldtdr_task_entry}, //Starting
+	{MSG_ID_ENTRY,       						FSM_STATE_ENTRY,            			fsm_l3opwlotdr_task_entry}, //Starting
 
 	//System level initialization, only controlled by HCU-MAIN
-    {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            				fsm_l3opwldtdr_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            				fsm_l3opwldtdr_restart},
+    {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            				fsm_l3opwlotdr_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            				fsm_l3opwlotdr_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       					FSM_STATE_L3OPWLOTDR_INITED,            		fsm_l3opwldtdr_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_L3OPWLOTDR_INITED,            		fsm_l3opwldtdr_restart},
+    {MSG_ID_COM_INIT,       					FSM_STATE_L3OPWLOTDR_INITED,            		fsm_l3opwlotdr_init},
+    {MSG_ID_COM_RESTART,						FSM_STATE_L3OPWLOTDR_INITED,            		fsm_l3opwlotdr_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3OPWLOTDR_INITED,            		fsm_com_do_nothing},
 
 	//Normal working status
-    {MSG_ID_COM_RESTART,        				FSM_STATE_L3OPWLOTDR_ACTIVED,            		fsm_l3opwldtdr_restart},
+    {MSG_ID_COM_RESTART,        				FSM_STATE_L3OPWLOTDR_ACTIVED,            		fsm_l3opwlotdr_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3OPWLOTDR_ACTIVED,            		fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_L3OPWLOTDR_ACTIVED,       			fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_L3OPWLOTDR_ACTIVED,       			fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3OPWLOTDR_ACTIVED,          			fsm_l3opwldtdr_time_out},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3OPWLOTDR_ACTIVED,          			fsm_l3opwlotdr_time_out},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -51,16 +51,16 @@ extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
-OPSTAT fsm_l3opwldtdr_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3opwlotdr_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
 	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
 	if (FsmSetState(TASK_ID_L3OPWLOTDR, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("L3OPWLOTDR: Error Set FSM State at fsm_l3opwldtdr_task_entry\n");}
+		HcuErrorPrint("L3OPWLOTDR: Error Set FSM State at fsm_l3opwlotdr_task_entry\n");}
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3opwldtdr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3opwlotdr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 
@@ -75,7 +75,7 @@ OPSTAT fsm_l3opwldtdr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_L3OPWLOTDR, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("L3OPWLOTDR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_L3OPWLOTDR], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("L3OPWLOTDR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3OPWLOTDR].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -87,7 +87,7 @@ OPSTAT fsm_l3opwldtdr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//初始化硬件接口
-	if (func_l3opwldtdr_int_init() == FAILURE){
+	if (func_l3opwlotdr_int_init() == FAILURE){
 		HcuErrorPrint("L3OPWLOTDR: Error initialize interface!\n");
 		return FAILURE;
 	}
@@ -117,21 +117,21 @@ OPSTAT fsm_l3opwldtdr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3opwldtdr_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3opwlotdr_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("L3OPWLOTDR: Internal error counter reach DEAD level, SW-RESTART soon!\n");
 	zHcuGlobalCounter.restartCnt++;
-	fsm_l3opwldtdr_init(0, 0, NULL, 0);
+	fsm_l3opwlotdr_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
 
-OPSTAT func_l3opwldtdr_int_init(void)
+OPSTAT func_l3opwlotdr_int_init(void)
 {
 	return SUCCESS;
 }
 
 //暂时啥都不干，定时到达后，还不明确是否需要支持定时工作
-OPSTAT fsm_l3opwldtdr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3opwlotdr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret;
 
@@ -155,7 +155,7 @@ OPSTAT fsm_l3opwldtdr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_L3OPWLOTDR, TASK_ID_L3OPWLOTDR, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_L3OPWLOTDR]++;
-			HcuErrorPrint("L3OPWLOTDR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_L3OPWLOTDR], zHcuTaskInfo.taskName[TASK_ID_L3OPWLOTDR]);
+			HcuErrorPrint("L3OPWLOTDR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3OPWLOTDR].taskName, zHcuTaskInfo[TASK_ID_L3OPWLOTDR].taskName);
 			return FAILURE;
 		}
 	}

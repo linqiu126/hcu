@@ -16,8 +16,7 @@ PRJ_BFSC待完成或者回答的问题：
 
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 144 =>BFSC项目
 =去掉zHcuTaskNameList[]数组，改用zHcuTaskInfo[i].taskName
-
-
+= 改动量较大，且编译过所有项目任务
 
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 143 =>BFSC项目
 =进程启动模式的定义优化

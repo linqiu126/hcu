@@ -24,16 +24,16 @@ enum FSM_STATE_L3TBSWRG30
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmL3tbswrg40[];
+extern FsmStateItem_t HcuFsmL3tbswrg30[];
 
 //API
-extern OPSTAT fsm_l3tbswrg40_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3tbswrg40_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3tbswrg40_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3tbswrg40_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3tbswrg30_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3tbswrg30_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3tbswrg30_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3tbswrg30_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
-OPSTAT func_l3tbswrg40_int_init(void);
+OPSTAT func_l3tbswrg30_int_init(void);
 
 
 

@@ -25,7 +25,8 @@ C_SRCS += \
 /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c \
 /home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c \
 /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c \
-/home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c 
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c 
 
 OBJS += \
 ./src/l1hwopt/adc.o \
@@ -49,7 +50,8 @@ OBJS += \
 ./src/l1hwopt/spsapi.o \
 ./src/l1hwopt/switch.o \
 ./src/l1hwopt/usbnet.o \
-./src/l1hwopt/wifi.o 
+./src/l1hwopt/wifi.o \
+./src/l1hwopt/zeegbe.o 
 
 C_DEPS += \
 ./src/l1hwopt/adc.d \
@@ -73,7 +75,8 @@ C_DEPS += \
 ./src/l1hwopt/spsapi.d \
 ./src/l1hwopt/switch.d \
 ./src/l1hwopt/usbnet.d \
-./src/l1hwopt/wifi.d 
+./src/l1hwopt/wifi.d \
+./src/l1hwopt/zeegbe.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -225,6 +228,13 @@ src/l1hwopt/usbnet.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c
 	@echo ' '
 
 src/l1hwopt/wifi.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross GCC Compiler'
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/l1hwopt/zeegbe.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

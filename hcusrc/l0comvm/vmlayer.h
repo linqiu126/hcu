@@ -397,7 +397,7 @@ extern FsmStateItem_t HcuFsmCanitfleo[];                         //状态机
 extern FsmStateItem_t HcuFsmL3aqycg10[];                         //状态机
 extern FsmStateItem_t HcuFsmL3aqycg20[];                         //状态机
 extern FsmStateItem_t HcuFsmL3tbswrg30[];                        //状态机
-extern FsmStateItem_t HcuFsmL3gqybg40[];                         //状态机
+extern FsmStateItem_t HcuFsmLgqgybg40[];                         //状态机
 extern FsmStateItem_t HcuFsmL3cxilc[];                           //状态机
 extern FsmStateItem_t HcuFsmL3cxglacm[];                         //状态机
 extern FsmStateItem_t HcuFsmL3nblpm[];                           //状态机
