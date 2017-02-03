@@ -192,7 +192,7 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 				if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_SEND) strcpy(svrconState, "INIT_SEND");
 				else if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK) strcpy(svrconState, "INIT_WAIT_FB");
 				else if  (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK) strcpy(svrconState, "INIT_FB");
-				else strcpy(svrconState, "INIT_INVLID");
+				else strcpy(svrconState, "INIT_INVALID");
 				if ((zHcuTaskInfo[i].pnpState!=HCU_TASK_PNP_ON) || (zHcuSvrConTaskInitInfo[i].active != SVRCON_TASK_ACTIVE) || (zHcuSvrConTaskInitInfo[i].state != SVRCON_TASK_INIT_FEEDBACK)){
 				HcuDebugPrint("SVRCON: Task PNP[%d, %s], Init State[%d, %s], Active State[%d, %s] of Task[%2x, %s], Init result is [%s]!\n", \
 						zHcuTaskInfo[i].pnpState, zHcuTaskInfo[i].pnpState==HCU_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\
@@ -209,7 +209,7 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 				if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_SEND) strcpy(svrconState, "INIT_SEND");
 				else if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK) strcpy(svrconState, "INIT_WAIT_FB");
 				else if  (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK) strcpy(svrconState, "INIT_FB");
-				else strcpy(svrconState, "INIT_INVLID");
+				else strcpy(svrconState, "INIT_INVALID");
 				if ((zHcuTaskInfo[i].pnpState==HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK)){
 					HcuDebugPrint("SVRCON: Task PNP[%d, %s], Init State[%d, %s], Active State[%d, %s] of Task[%2x, %s], Init result is [%s]!\n", \
 							zHcuTaskInfo[i].pnpState, zHcuTaskInfo[i].pnpState==HCU_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\

@@ -146,7 +146,7 @@ UINT32 hcu_sps485_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8
 	int ret=0;
 	ret = hcu_spsapi_SerialPortSetVtimeVmin(sp, vTime, vMin);
 	if (ret == FAILURE){
-		HcuErrorPrint("SPS485: Serial port set vTime vMin error!");
+		HcuErrorPrint("SPS485: Serial port set vTime vMin error!\n");
 		zHcuRunErrCnt[TASK_ID_SPS485]++;
 		return FAILURE;
 	}
