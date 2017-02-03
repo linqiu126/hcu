@@ -138,6 +138,7 @@ char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU] ={
 	"SWITCH",
 	"RELAY",
 	"MOTOR",
+	"ZEEGBE",
 	"GRPS",
 	"SPS232",
 	"SPS485",
@@ -528,10 +529,6 @@ OPSTAT hcu_vm_application_task_env_init(void)
 			break;
 		}
 		if ((zHcuGlobalTaskInputConfig[item].taskInputId <= TASK_ID_MIN) || (zHcuGlobalTaskInputConfig[item].taskInputId > TASK_ID_MAX)){
-			HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, task input configuration error!\n");
-			return FAILURE;
-		}
-		if (zHcuGlobalTaskInputConfig[item].fsmFuncEntry == NULL){
 			HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, task input configuration error!\n");
 			return FAILURE;
 		}
@@ -1834,7 +1831,7 @@ void hcu_vm_working_mode_double_start(void)
 }
 
 //多进程模式
-void hcu_vm_working_mode_multipy(void)
+void hcu_vm_working_mode_multipy_start(void)
 {
 	int pid = 0;
 
@@ -1866,18 +1863,22 @@ void hcu_vm_working_mode_multipy(void)
 //单进程模式入口程序组，当前的工作模式！！！
 void hcu_vm_process_single_mainapp_entry(void)
 {
+	//创建队列环境
 	hcu_vm_task_create_hcumain_env();
+	//创建所有任务
     hcu_vm_task_create_all();
+    //先启动TIMER和SVRCON任务，然后让SVRCON任务发送初始化消息给其它所有任务
 	hcu_vm_task_send_init_to_timer();
 	hcu_vm_task_send_init_to_svrcon();
 
-	//wait for ever
+	//进入循环状态，发送心跳消息
 	while (1){
-		hcu_sleep(60); //可以设置为5秒的定时，甚至更长
-		//hcu_usleep(100);
+		//可以设置为5秒的定时，甚至更长
+		hcu_sleep(60);
 		hcu_vm_task_send_hb_to_svrcon();
 	}
 
+	//如果出现问题，将退出并删除所有的任务和队列
 	hcu_vm_task_delete_all_and_queue();
 
 	return;
@@ -1886,23 +1887,24 @@ void hcu_vm_process_single_mainapp_entry(void)
 //双进程模式入口程序组
 void hcu_vm_process_double_mainapp_entry(void)
 {
+	//创建队列环境
 	hcu_vm_task_create_hcumain_env();
-    hcu_vm_task_create_all_but_avorion();
 
-	//hcu_sleep(2);
-    //hcu_msgque_resync();
+	//创建所有任务
+    hcu_vm_task_create_all_but_avorion();
 	hcu_sleep(2);
 
+	//先启动TIMER和SVRCON任务，然后让SVRCON任务发送初始化消息给其它所有任务
 	hcu_vm_task_send_init_to_timer();
 	hcu_vm_task_send_init_to_svrcon();
 
-	//wait for ever
+	//进入循环状态，发送心跳消息
 	while (1){
 		hcu_sleep(160);
-		//hcu_usleep(100);
 		hcu_vm_task_send_hb_to_svrcon();
 	}
 
+	//如果出现问题，将退出并删除所有的任务和队列
 	hcu_vm_task_delete_all_and_queue();
 
 	return;
@@ -1912,20 +1914,17 @@ void hcu_vm_process_create_sensor_avorion_only(void)
 {
 	//Create task Avorion environments/24
 	hcu_vm_system_task_init_call(TASK_ID_AVORION, HcuFsmAvorion);
-
-    //hcu_sleep(2);
-    //hcu_msgque_resync();
-
 	HcuDebugPrint("HCU-MAIN: Init completed, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
 			zHcuCurrentProcessInfo.curProcId, zHcuCurrentProcessInfo.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
 
-	//wait for ever
+	//进入循环状态，发送心跳消息
 	while (1){
 		hcu_sleep(1); //1S减少信号中断的概率
 		//hcu_usleep(100);
 		//HcuDebugPrint("HCUMAIN: PS_23_AVORION test!\n");
 	}
 
+	//如果出现问题，将退出并删除所有的任务和队列
 	hcu_vm_task_delete_all_and_queue();
 
 	return;
@@ -1937,16 +1936,15 @@ void hcu_vm_process_multipy_entry_supervisor(void)
 {
 	int ret = 0;
 
+	//创建队列环境
 	hcu_vm_task_create_hcumain_env();
 
-    //hcu_sleep(2);
-    //hcu_msgque_resync();
+	//先启动TIMER和SVRCON任务，然后让SVRCON任务发送初始化消息给其它所有任务
     hcu_sleep(2);
-
 	hcu_vm_task_send_init_to_timer();
 	hcu_vm_task_send_init_to_svrcon();
 
-	//wait for ever
+	//进入循环状态，发送心跳消息
 	while (1){
 		hcu_sleep(160);
 		hcu_vm_task_send_hb_to_svrcon();
@@ -1980,6 +1978,7 @@ void hcu_vm_process_multipy_entry_supervisor(void)
 
 	}
 
+	//如果出现问题，将退出并删除所有的任务和队列
 	hcu_vm_task_delete_all_and_queue();
 
 	return;
@@ -1987,21 +1986,19 @@ void hcu_vm_process_multipy_entry_supervisor(void)
 
 void hcu_vm_process_multipy_mainapp_entry(void)
 {
+	//创建队列环境
     hcu_vm_task_create_all_but_avorion();
-
-	//hcu_sleep(2);
-    //hcu_msgque_resync();
-
 	HcuDebugPrint("HCU-MAIN: Init completed, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
 			zHcuCurrentProcessInfo.curProcId, zHcuCurrentProcessInfo.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
 
-	//wait for ever
+	//进入循环状态，发送心跳消息
 	while (1){
 		hcu_sleep(1); //1S减少信号中断的概率
 		//hcu_usleep(100);
 		//HcuDebugPrint("HCUMAIN: PS_3_MAINAPP test!\n");
 	}
 
+	//如果出现问题，将退出并删除所有的任务和队列
 	hcu_vm_task_delete_all_and_queue();
 
 	return;
@@ -2012,195 +2009,6 @@ void hcu_vm_process_multipy_mainapp_entry(void)
 //目前系统启动暂时就是使用了这种方式，并没有采用其他多进程的方式
 void hcu_vm_task_create_all(void)
 {
-//	//Create task Timer environments /2
-//	hcu_vm_system_task_init_call(TASK_ID_TIMER, FsmTimer);
-//
-//	//Create task MMC environments /3
-//	hcu_vm_system_task_init_call(TASK_ID_MMC, FsmMmc);
-//
-//	//Create task HWINV environments /4
-//	hcu_vm_system_task_init_call(TASK_ID_HWINV, FsmHwinv);
-//
-//	//Create task SvnCont environments /5
-//	hcu_vm_system_task_init_call(TASK_ID_SVRCON, FsmSvrCon);
-//
-//	//Create task CloudCont environments /6
-//	hcu_vm_system_task_init_call(TASK_ID_CLOUDVELA, FsmCloudvela);
-//
-//	//Create task Modbus environments /7
-//	hcu_vm_system_task_init_call(TASK_ID_MODBUS, FsmModbus);
-//
-//	//Create task Nbiotcj188 environments
-//	hcu_vm_system_task_init_call(TASK_ID_NBIOTCJ188, FsmNbiotcj188);
-//
-//	//Create task Nbiotqg376 environments
-//	hcu_vm_system_task_init_call(TASK_ID_NBIOTQG376, FsmNbiotqg376);
-//
-//	//Create task Canitfleo environments
-//	hcu_vm_system_task_init_call(TASK_ID_CANITFLEO, FsmCanitfleo);
-//
-//	//Create task EMC environments/8
-//	hcu_vm_system_task_init_call(TASK_ID_EMC, FsmEmc);
-//
-//	//Create task PM25 environments/9
-//	hcu_vm_system_task_init_call(TASK_ID_PM25, FsmPm25);
-//
-//	//Create task WindDir environments/10
-//	hcu_vm_system_task_init_call(TASK_ID_WINDDIR, FsmWinddir);
-//
-//	//Create task WindSpeed environments/11
-//	hcu_vm_system_task_init_call(TASK_ID_WINDSPD, FsmWindspd);
-//
-//	//Create task Temperature environments/12
-//	hcu_vm_system_task_init_call(TASK_ID_TEMP, FsmTemp);
-//
-//	//Create task Humidity environments/13
-//	hcu_vm_system_task_init_call(TASK_ID_HUMID, FsmHumid);
-//
-//	//Create task Hsmmp environments/14
-//	hcu_vm_system_task_init_call(TASK_ID_HSMMP, FsmHsmmp);
-//
-//	//Create task Noise environments/15
-//	hcu_vm_system_task_init_call(TASK_ID_NOISE, FsmNoise);
-//
-//	//Create task Ethernet environments/16
-//	hcu_vm_system_task_init_call(TASK_ID_ETHERNET, FsmEthernet);
-//
-//	//Create task WIFI environments/17
-//	hcu_vm_system_task_init_call(TASK_ID_WIFI, FsmWifi);
-//
-//	//Create task USBNET environments/18
-//	hcu_vm_system_task_init_call(TASK_ID_USBNET, FsmUsbnet);
-//
-//	//Create task 3G4G environments/19
-//	hcu_vm_system_task_init_call(TASK_ID_3G4G, Fsm3g4g);
-//
-//	//Create task SPS232 environments/20
-//	hcu_vm_system_task_init_call(TASK_ID_SPS232, FsmSps232);
-//
-//	//Create task SPS485 environments/21
-//	hcu_vm_system_task_init_call(TASK_ID_SPS485, FsmSps485);
-//
-//	//Create task BLE environments/22
-//	hcu_vm_system_task_init_call(TASK_ID_BLE, FsmBle);
-//
-//	//Create task Audio environments/23
-//	hcu_vm_system_task_init_call(TASK_ID_SPSVIRGO, FsmSpsvirgo);
-//
-//	//Create task Avorion environments/24
-//	hcu_vm_system_task_init_call(TASK_ID_AVORION, FsmAvorion);
-//
-//	//Create task GPS environments/25
-//	hcu_vm_system_task_init_call(TASK_ID_GPS, FsmGps);
-//
-//	//Create task LCD environments/26
-//	hcu_vm_system_task_init_call(TASK_ID_LCD, FsmLcd);
-//
-//	//Create task LCD environments/26.1
-//	hcu_vm_system_task_init_call(TASK_ID_LED, FsmLed);
-//
-//	//Create task Camera environments/27
-//	hcu_vm_system_task_init_call(TASK_ID_CAMERA, FsmCamera);
-//
-//	//Create task Microphone environments/28
-//	hcu_vm_system_task_init_call(TASK_ID_MICROPHONE, FsmMicrophone);
-//
-//	//Create task GPIO environments/29
-//	hcu_vm_system_task_init_call(TASK_ID_GPIO, FsmGpio);
-//
-//	//Create task I2C environments/30
-//	hcu_vm_system_task_init_call(TASK_ID_I2C, FsmI2c);
-//
-//	//Create task SPI environments/31
-//	hcu_vm_system_task_init_call(TASK_ID_SPI, FsmSpi);
-//
-//	//Create task PWM environments/32
-//	hcu_vm_system_task_init_call(TASK_ID_PWM, FsmPwm);
-//
-//	//Create task ADC environments/33
-//	hcu_vm_system_task_init_call(TASK_ID_ADC, FsmAdc);
-//
-//	//Create task SWITCH environments/34
-//	hcu_vm_system_task_init_call(TASK_ID_SWITCH, FsmSwitch);
-//
-//	//Create task RELAY environments/35
-//	hcu_vm_system_task_init_call(TASK_ID_RELAY, FsmRelay);
-//
-//	//Create task MOTOR environments/36
-//	hcu_vm_system_task_init_call(TASK_ID_MOTOR, FsmMotor);
-//
-//	//Create task SYSPM environments/37
-//	hcu_vm_system_task_init_call(TASK_ID_SYSPM, FsmSyspm);
-//
-//	//Create task AirPress environments/38
-//	hcu_vm_system_task_init_call(TASK_ID_AIRPRS, FsmAirprs);
-//
-//	//Create task CO1 environments/39
-//	hcu_vm_system_task_init_call(TASK_ID_CO1, FsmCo1);
-//
-//	//Create task LightStrenght environments/40
-//	hcu_vm_system_task_init_call(TASK_ID_LIGHTSTR, FsmLightstr);
-//
-//	//Create task Alcohol environments/41
-//	hcu_vm_system_task_init_call(TASK_ID_ALCOHOL, FsmAlcohol);
-//
-//	//Create task HCHO environments/42
-//	hcu_vm_system_task_init_call(TASK_ID_HCHO, FsmHcho);
-//
-//	//Create task ToxicGas environments/43
-//	hcu_vm_system_task_init_call(TASK_ID_TOXICGAS, FsmToxicgas);
-//
-//	//Create task Pm25Sharp environments/44
-//	hcu_vm_system_task_init_call(TASK_ID_PM25SHARP, FsmPm25Sharp);
-//
-//	//Create task I2cbuslibra environments/45
-//	hcu_vm_system_task_init_call(TASK_ID_I2CBUSLIBRA, FsmI2cbuslibra);
-//
-//	//Create task Spibusaries environments/46
-//	hcu_vm_system_task_init_call(TASK_ID_SPIBUSARIES, FsmSpibusaries);
-//
-//	//Create task Iwm environments/47
-//	hcu_vm_system_task_init_call(TASK_ID_IWM, FsmIwm);
-//
-//	//Create task Ihm environments/48
-//	hcu_vm_system_task_init_call(TASK_ID_IHM, FsmIhm);
-//
-//	//Create task Igm environments/49
-//	hcu_vm_system_task_init_call(TASK_ID_IGM, FsmIgm);
-//
-//	//Create task Ipm environments/50
-//	hcu_vm_system_task_init_call(TASK_ID_IPM, FsmIpm);
-//
-//	//不通过数据库配置的参数区域
-//#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3AQYCG10, FsmL3aqycg10);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3AQYCG20, FsmL3aqycg20);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3TBSWRG30, FsmL3tbswrg30);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3GQYBG40, FsmL3gqybg40);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3CXILC, FsmL3cxilc);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3CXGLACM, FsmL3cxglacm);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3NBLPM, FsmL3nblpm);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3NBHPM, FsmL3nbhpm);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3BFSC, FsmL3bfsc);
-//	hcu_vm_system_task_init_call(TASK_ID_BFSCUICOMM, FsmBfscuicomm);
-//#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-//	hcu_vm_system_task_init_call(TASK_ID_L3OPWLOTDR, FsmL3opwlotdr);
-//
-////小技巧，不要这部分，以便加强编译检查
-//#else
-//	#error Un-correct constant definition
-//#endif
-
 	FsmStateItem_t *p;
 	int task_id = 0;
 
@@ -2208,103 +2016,26 @@ void hcu_vm_task_create_all(void)
 		p = (FsmStateItem_t *)zHcuTaskInfo[task_id].taskFuncEntry;
 		if ((p != NULL) && (zHcuTaskInfo[task_id].pnpState == HCU_TASK_PNP_ON)){
 			hcu_vm_system_task_init_call(task_id, p);
-			hcu_vm_send_init_msg_to_app_task(task_id);
 		}
 	}
 }
 
 void hcu_vm_task_create_all_but_avorion(void)
 {
-//	//Create task Timer environments /2
-//	hcu_vm_system_task_init_call(TASK_ID_TIMER, FsmTimer);
-//
-//	//Create task MMC environments /3
-//	hcu_vm_system_task_init_call(TASK_ID_MMC, FsmMmc);
-//
-//	//Create task HWINV environments /4
-//	hcu_vm_system_task_init_call(TASK_ID_HWINV, FsmHwinv);
-//
-//	//Create task SvnCont environments /5
-//	hcu_vm_system_task_init_call(TASK_ID_SVRCON, FsmSvrCon);
-//
-//	//Create task CloudCont environments /6
-//	hcu_vm_system_task_init_call(TASK_ID_CLOUDVELA, FsmCloudvela);
-//
-//	//Create task Modbus environments /7
-//	hcu_vm_system_task_init_call(TASK_ID_MODBUS, FsmModbus);
-//
-//	//Create task EMC environments/8
-//	hcu_vm_system_task_init_call(TASK_ID_EMC, FsmEmc);
-//
-//	//Create task PM25 environments/9
-//	hcu_vm_system_task_init_call(TASK_ID_PM25, FsmPm25);
-//
-//	//Create task WindDir environments/10
-//	hcu_vm_system_task_init_call(TASK_ID_WINDDIR, FsmWinddir);
-//
-//	//Create task WindSpeed environments/11
-//	hcu_vm_system_task_init_call(TASK_ID_WINDSPD, FsmWindspd);
-//
-//	//Create task Temperature environments/12
-//	hcu_vm_system_task_init_call(TASK_ID_TEMP, FsmTemp);
-//
-//	//Create task Humidity environments/13
-//	hcu_vm_system_task_init_call(TASK_ID_HUMID, FsmHumid);
-//
-//	//Create task Hsmmp environments/14
-//	hcu_vm_system_task_init_call(TASK_ID_HSMMP, FsmHsmmp);
-//
-//	//Create task Noise environments/15
-//	hcu_vm_system_task_init_call(TASK_ID_NOISE, FsmNoise);
-//
-//	//Create task Ethernet environments/16
-//	hcu_vm_system_task_init_call(TASK_ID_ETHERNET, FsmEthernet);
-//
-//	//Create task WIFI environments/17
-//	hcu_vm_system_task_init_call(TASK_ID_WIFI, FsmWifi);
-//
-//	//Create task USBNET environments/18
-//	hcu_vm_system_task_init_call(TASK_ID_USBNET, FsmUsbnet);
-//
-//	//Create task 3G4G environments/19
-//	hcu_vm_system_task_init_call(TASK_ID_3G4G, Fsm3g4g);
-//
-//	//Create task SPS232 environments/20
-//	hcu_vm_system_task_init_call(TASK_ID_SPS232, FsmSps232);
-//
-//	//Create task SPS485 environments/21
-//	hcu_vm_system_task_init_call(TASK_ID_SPS485, FsmSps485);
-//
-//	//Create task BLE environments/22
-//	hcu_vm_system_task_init_call(TASK_ID_BLE, FsmBle);
-//
-//	//Create task Audio environments/23
-//	hcu_vm_system_task_init_call(TASK_ID_SPSVIRGO, FsmSpsvirgo);
-//
-//	//Create task GPS environments/25
-//	hcu_vm_system_task_init_call(TASK_ID_GPS, FsmGps);
-//
-//	//Create task LCD environments/26
-//	hcu_vm_system_task_init_call(TASK_ID_LCD, FsmLcd);
-//
-//	//Create task LCD environments/26.1
-//	hcu_vm_system_task_init_call(TASK_ID_LED, FsmLed);
-//
-//	//Create task Camera environments/27
-//	hcu_vm_system_task_init_call(TASK_ID_CAMERA, FsmCamera);
-//
-//	//Create task Microphone environments/28
-//	hcu_vm_system_task_init_call(TASK_ID_MICROPHONE, FsmMicrophone);
-//
-//	/*
-//	if (ret == FAILURE){
-//		HcuErrorPrint("HCU-MAIN: Create task failure in the middle!\n");
-//	}else if (ret == SUCCESS){
-//		HcuDebugPrint("HCU-MAIN: Create all task successful, congratulation!\n");
-//	}*/
+	FsmStateItem_t *p;
+	int task_id = 0;
+
+	for (task_id = TASK_ID_MIN + 1; task_id < TASK_ID_MAX; task_id++){
+		p = (FsmStateItem_t *)zHcuTaskInfo[task_id].taskFuncEntry;
+		if ((p != NULL) && (zHcuTaskInfo[task_id].pnpState == HCU_TASK_PNP_ON) && (task_id != TASK_ID_AVORION)){
+			hcu_vm_system_task_init_call(task_id, p);
+		}
+	}
+
+
 }
 
-UINT32 hcu_vm_system_task_init_call(UINT32 task_id, FsmStateItem_t *p)
+OPSTAT hcu_vm_system_task_init_call(UINT32 task_id, FsmStateItem_t *p)
 {
 	int ret = 0;
 	if (zHcuTaskInfo[task_id].pnpState != HCU_TASK_PNP_ON){
@@ -2530,153 +2261,111 @@ void hcu_vm_task_delete_except_timer_and_hcumain(void)
 	return;
 }
 
-//All child task and Queue creation
-UINT32 hcu_vm_system_task_init(void)
-{
-	int ret=0;
-	int taskId = 0;
-	//一个不成功，就应该返回，如果不提前返回，纯粹是为了测试
-	//Create HCU-Main Queid /1  该队列创建，纯粹是为了测试，以后需要删掉
-	taskId = TASK_ID_HCUMAIN;
-	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskNameList[taskId]);
-   	ret = hcu_msgque_create(taskId);
-    if (ret == FAILURE){
-    	HcuErrorPrint("HCU-MAIN: create queue [%s] un-successfully, program exit.\n", zHcuTaskNameList[taskId]);
-    	return FAILURE;
-    }else{HcuDebugPrint("HCU-MAIN: create queue zHcuTaskNameList[%s] successfully.\n", zHcuTaskNameList[taskId]);}
+////All child task and Queue creation
+//UINT32 hcu_vm_system_task_init(void)
+//{
+//	int ret=0;
+//	int taskId = 0;
+//	//一个不成功，就应该返回，如果不提前返回，纯粹是为了测试
+//	//Create HCU-Main Queid /1  该队列创建，纯粹是为了测试，以后需要删掉
+//	taskId = TASK_ID_HCUMAIN;
+//	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskNameList[taskId]);
+//   	ret = hcu_msgque_create(taskId);
+//    if (ret == FAILURE){
+//    	HcuErrorPrint("HCU-MAIN: create queue [%s] un-successfully, program exit.\n", zHcuTaskNameList[taskId]);
+//    	return FAILURE;
+//    }else{HcuDebugPrint("HCU-MAIN: create queue zHcuTaskNameList[%s] successfully.\n", zHcuTaskNameList[taskId]);}
+//
+////	   //Create task Timer environments /2
+////	    hcu_vm_system_task_init_call(TASK_ID_TIMER, FsmTimer);
+////
+////	    //Create task Timer environments /3
+////	    hcu_vm_system_task_init_call(TASK_ID_MMC, FsmMmc);
+////
+////	    //Create task Timer environments /4
+////	    hcu_vm_system_task_init_call(TASK_ID_HWINV, FsmHwinv);
+////
+////	    //Create task SvnCont environments /5
+////	    hcu_vm_system_task_init_call(TASK_ID_SVRCON, FsmSvrCon);
+////
+////	    //Create task CloudCont environments /6
+////	    hcu_vm_system_task_init_call(TASK_ID_CLOUDVELA, FsmCloudvela);
+////
+////	    //Create task Modbus environments /7
+////	    hcu_vm_system_task_init_call(TASK_ID_MODBUS, FsmModbus);
+////
+////	    //Create task EMC environments/8
+////	    hcu_vm_system_task_init_call(TASK_ID_EMC, FsmEmc);
+////
+////	    //Create task PM25 environments/9
+////	    hcu_vm_system_task_init_call(TASK_ID_PM25, FsmPm25);
+////
+////	    //Create task WindDir environments/10
+////	    hcu_vm_system_task_init_call(TASK_ID_WINDDIR, FsmWinddir);
+////
+////	    //Create task WindSpeed environments/11
+////	    hcu_vm_system_task_init_call(TASK_ID_WINDSPD, FsmWindspd);
+////
+////	    //Create task Temperature environments/12
+////	    hcu_vm_system_task_init_call(TASK_ID_TEMP, FsmTemp);
+////
+////	    //Create task Humidity environments/13
+////	    hcu_vm_system_task_init_call(TASK_ID_HUMID, FsmHumid);
+////
+////	    //Create task Hsmmp environments/14
+////	    hcu_vm_system_task_init_call(TASK_ID_HSMMP, FsmHsmmp);
+////
+////	    //Create task Noise environments/15
+////	    hcu_vm_system_task_init_call(TASK_ID_NOISE, FsmNoise);
+////
+////	    //Create task Ethernet environments/16
+////	    hcu_vm_system_task_init_call(TASK_ID_ETHERNET, FsmEthernet);
+////
+////	    //Create task WIFI environments/17
+////	    hcu_vm_system_task_init_call(TASK_ID_WIFI, FsmWifi);
+////
+////	    //Create task USBNET environments/18
+////	    hcu_vm_system_task_init_call(TASK_ID_USBNET, FsmUsbnet);
+////
+////	    //Create task 3G4G environments/19
+////	    hcu_vm_system_task_init_call(TASK_ID_3G4G, Fsm3g4g);
+////
+////	    //Create task SPS232 environments/20
+////	    hcu_vm_system_task_init_call(TASK_ID_SPS232, FsmSps232);
+////
+////	    //Create task SPS485 environments/21
+////	    hcu_vm_system_task_init_call(TASK_ID_SPS485, FsmSps485);
+////
+////	    //Create task BLE environments/22
+////	    hcu_vm_system_task_init_call(TASK_ID_BLE, FsmBle);
+////
+////	    //Create task Audio environments/23
+////	    hcu_vm_system_task_init_call(TASK_ID_SPSVIRGO, FsmSpsvirgo);
+////
+////	    //Create task Avorion environments/24
+////	    hcu_vm_system_task_init_call(TASK_ID_AVORION, FsmAvorion);
+////
+////	    //Create task GPS environments/25
+////	    hcu_vm_system_task_init_call(TASK_ID_GPS, FsmGps);
+////
+////	    //Create task LCD environments/26
+////	    hcu_vm_system_task_init_call(TASK_ID_LCD, FsmLcd);
+////
+////	    //Create task LCD environments/26.1
+////	    hcu_vm_system_task_init_call(TASK_ID_LED, FsmLed);
+////
+////	    //Create task CAMERA environments/27
+////	    hcu_vm_system_task_init_call(TASK_ID_CAMERA, FsmCamera);
+////
+////		//Create task Microphone environments/28
+////		hcu_vm_system_task_init_call(TASK_ID_MICROPHONE, FsmMicrophone);
+////
+////		//Create task Pm25Sharp environments/28
+////		hcu_vm_system_task_init_call(TASK_ID_PM25SHARP, FsmPm25Sharp);
+//
+//    return SUCCESS;
+//}
 
-//	   //Create task Timer environments /2
-//	    hcu_vm_system_task_init_call(TASK_ID_TIMER, FsmTimer);
-//
-//	    //Create task Timer environments /3
-//	    hcu_vm_system_task_init_call(TASK_ID_MMC, FsmMmc);
-//
-//	    //Create task Timer environments /4
-//	    hcu_vm_system_task_init_call(TASK_ID_HWINV, FsmHwinv);
-//
-//	    //Create task SvnCont environments /5
-//	    hcu_vm_system_task_init_call(TASK_ID_SVRCON, FsmSvrCon);
-//
-//	    //Create task CloudCont environments /6
-//	    hcu_vm_system_task_init_call(TASK_ID_CLOUDVELA, FsmCloudvela);
-//
-//	    //Create task Modbus environments /7
-//	    hcu_vm_system_task_init_call(TASK_ID_MODBUS, FsmModbus);
-//
-//	    //Create task EMC environments/8
-//	    hcu_vm_system_task_init_call(TASK_ID_EMC, FsmEmc);
-//
-//	    //Create task PM25 environments/9
-//	    hcu_vm_system_task_init_call(TASK_ID_PM25, FsmPm25);
-//
-//	    //Create task WindDir environments/10
-//	    hcu_vm_system_task_init_call(TASK_ID_WINDDIR, FsmWinddir);
-//
-//	    //Create task WindSpeed environments/11
-//	    hcu_vm_system_task_init_call(TASK_ID_WINDSPD, FsmWindspd);
-//
-//	    //Create task Temperature environments/12
-//	    hcu_vm_system_task_init_call(TASK_ID_TEMP, FsmTemp);
-//
-//	    //Create task Humidity environments/13
-//	    hcu_vm_system_task_init_call(TASK_ID_HUMID, FsmHumid);
-//
-//	    //Create task Hsmmp environments/14
-//	    hcu_vm_system_task_init_call(TASK_ID_HSMMP, FsmHsmmp);
-//
-//	    //Create task Noise environments/15
-//	    hcu_vm_system_task_init_call(TASK_ID_NOISE, FsmNoise);
-//
-//	    //Create task Ethernet environments/16
-//	    hcu_vm_system_task_init_call(TASK_ID_ETHERNET, FsmEthernet);
-//
-//	    //Create task WIFI environments/17
-//	    hcu_vm_system_task_init_call(TASK_ID_WIFI, FsmWifi);
-//
-//	    //Create task USBNET environments/18
-//	    hcu_vm_system_task_init_call(TASK_ID_USBNET, FsmUsbnet);
-//
-//	    //Create task 3G4G environments/19
-//	    hcu_vm_system_task_init_call(TASK_ID_3G4G, Fsm3g4g);
-//
-//	    //Create task SPS232 environments/20
-//	    hcu_vm_system_task_init_call(TASK_ID_SPS232, FsmSps232);
-//
-//	    //Create task SPS485 environments/21
-//	    hcu_vm_system_task_init_call(TASK_ID_SPS485, FsmSps485);
-//
-//	    //Create task BLE environments/22
-//	    hcu_vm_system_task_init_call(TASK_ID_BLE, FsmBle);
-//
-//	    //Create task Audio environments/23
-//	    hcu_vm_system_task_init_call(TASK_ID_SPSVIRGO, FsmSpsvirgo);
-//
-//	    //Create task Avorion environments/24
-//	    hcu_vm_system_task_init_call(TASK_ID_AVORION, FsmAvorion);
-//
-//	    //Create task GPS environments/25
-//	    hcu_vm_system_task_init_call(TASK_ID_GPS, FsmGps);
-//
-//	    //Create task LCD environments/26
-//	    hcu_vm_system_task_init_call(TASK_ID_LCD, FsmLcd);
-//
-//	    //Create task LCD environments/26.1
-//	    hcu_vm_system_task_init_call(TASK_ID_LED, FsmLed);
-//
-//	    //Create task CAMERA environments/27
-//	    hcu_vm_system_task_init_call(TASK_ID_CAMERA, FsmCamera);
-//
-//		//Create task Microphone environments/28
-//		hcu_vm_system_task_init_call(TASK_ID_MICROPHONE, FsmMicrophone);
-//
-//		//Create task Pm25Sharp environments/28
-//		hcu_vm_system_task_init_call(TASK_ID_PM25SHARP, FsmPm25Sharp);
-
-    return SUCCESS;
-}
-
-
-/*
-//test function area, to be removed afterwards
-int i=0;
-msg_struct_com_debug_t debug1;
-for (i=0;i<5;i++){
-	memset(&debug1, 0, sizeof(msg_struct_com_debug_t));
-	debug1.testid = i;
-	strcpy(&(debug1.testinfo[0]),"My test!");
-	//debug1.testinfo[] = "My test!";
-	debug1.length = sizeof(msg_struct_com_debug_t);
-	ret = hcu_message_send(MSG_ID_COM_DEBUG_TEST, TASK_ID_SVRCON, TASK_ID_HCUMAIN, &debug1, debug1.length);
-	if (ret == FAILURE){
-		HcuDebugPrint("HCU-MAIN: Send message error!\n");
-	}else{
-		HcuDebugPrint("HCU-MAIN: Send message successful, testid = %d\n", debug1.testid);
-	}
-	hcu_sleep(1);
-}
-*/
-
-OPSTAT hcu_vm_send_init_msg_to_app_task(UINT32 dest_id)
-{
-	int ret = 0;
-	msg_struct_com_init_t snd;
-
-	//入参检查
-	if ((dest_id <= TASK_ID_MIN) || (dest_id >= TASK_ID_MAX)){
-		HcuErrorPrint("HCU-VM: Error on task_id, dest_id=%d!!!\n", dest_id);
-		return FAILURE;
-	}
-
-	//发送初始化消息给目标任务，以便初始化所有任务模块
-	memset(&snd, 0, sizeof(msg_struct_com_init_t));
-	snd.length = sizeof(msg_struct_com_init_t);
-	ret = hcu_message_send(MSG_ID_COM_INIT, dest_id, TASK_ID_SVRCON, &snd, snd.length);
-	if (ret == FAILURE){
-		HcuErrorPrint("HCU-VM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_SVRCON].taskName, zHcuTaskInfo[dest_id].taskName);
-	}
-
-	return ret;
-}
 
 int hcu_vm_main_entry(void)
 {
@@ -2723,7 +2412,7 @@ int hcu_vm_main_entry(void)
 	}
 	//多进程方式
 	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_TRIPPLE){
-		hcu_vm_working_mode_multipy();
+		hcu_vm_working_mode_multipy_start();
 	}
 	//差错启动模式
 	else{

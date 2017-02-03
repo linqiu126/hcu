@@ -2,63 +2,29 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-<<<<<<< HEAD
-		<item value="pnpState" key="selection"/>
-		<item value="false" key="casesensitive"/>
-=======
 		<item value="hcu_vm_working_mode_single_start" key="selection"/>
 		<item value="true" key="casesensitive"/>
->>>>>>> feature
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-<<<<<<< HEAD
-			<item value="swTaskActive"/>
-			<item value="zeegbe"/>
-			<item value="timer"/>
-			<item value="hcu_vm_system_init"/>
-			<item value="hcu_vm_app_system_init"/>
-			<item value="UINT16"/>
-			<item value="taskid"/>
-			<item value="app"/>
-		</list>
-		<list key="replacehistory">
-			<item value="pnpState"/>
-			<item value="hcu_vm_application_task_env_init"/>
-			<item value="FAILURE"/>
-			<item value="HCU-VM"/>
-			<item value="hcu"/>
-			<item value="Hcu"/>
-			<item value="HCU"/>
-			<item value="hcu_hwinv_read_mac_address"/>
-=======
-			<item value="hcu_vm_working_mode_single"/>
-			<item value="hcu_vm_application_task_env_init"/>
-			<item value="mo"/>
-			<item value="moto"/>
-			<item value="LCD"/>
-			<item value="Lcd"/>
-			<item value="lcd"/>
-			<item value="HCU_CLOUDVELA_HTTP_ADDRESS_TEST"/>
-		</list>
-		<list key="replacehistory">
 			<item value="hcu_vm_working_mode_single_start"/>
-			<item value="ZEEGBE"/>
-			<item value="Zeegbe"/>
-			<item value="zeegbe"/>
-			<item value="#define HCU_PROCESS_WORK_MODE_CURRENT HCU_WORK_MODE_PROCESS_SINGLE"/>
-			<item value=" HCU_WORK_MODE_PROCESS_SINGLE "/>
-			<item value=" "/>
-			<item value="HCU_TASK_PNP_ON"/>
->>>>>>> feature
+			<item value="hcu_vm_process_single_mainapp_entry"/>
+			<item value="dbi_HcuTraceModuleCtr_inqury"/>
+			<item value="hcu_vm_system_task_init_call"/>
+			<item value="hcu_vm_system_task_init"/>
+			<item value="zHcuSvrConTaskInitInfo"/>
+			<item value="hcu_vm_send_init_msg_to_app_task"/>
+			<item value="hcu_vm_task_delete_all_and_queue"/>
+		</list>
+		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="309" key="DIALOG_WIDTH"/>
+		<item value="303" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="925" key="DIALOG_X_ORIGIN"/>
-		<item value="205" key="DIALOG_Y_ORIGIN"/>
+		<item value="424" key="DIALOG_HEIGHT"/>
+		<item value="1172" key="DIALOG_X_ORIGIN"/>
+		<item value="184" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

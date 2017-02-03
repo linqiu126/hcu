@@ -622,20 +622,10 @@ OPSTAT hcu_hwinv_read_mac_address(void)
 	int sock = 0;
 	//memset(&zHcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
 	sock = socket(AF_INET,SOCK_STREAM,0);
-	if(sock < 0)
-	{
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		HcuErrorPrint("HWINV: error sock when get mac address!\n");
-		return FAILURE;
-	}
+	if(sock < 0) HCU_ERROR_PRINT_HWINV("HWINV: error sock when get mac address!\n");
 
 	strcpy(ifreq.ifr_name,"eth0");
-	if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0)
-	{
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		HcuErrorPrint("HWINV: error ioctl when get mac address!\n");
-		return FAILURE;
-	}
+	if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0) HCU_ERROR_PRINT_HWINV("HWINV: error ioctl when get mac address!\n");
 
 	int j = 0;
 	for(j = 0; j < 6; j++){

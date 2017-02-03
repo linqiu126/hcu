@@ -66,5 +66,6 @@ extern OPSTAT fsm_svrcon_heart_beat(UINT32 dest_id, UINT32 src_id, void * param_
 extern OPSTAT fsm_svrcon_heart_beat_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 BOOL func_svrcon_init_caculate_all_fb(void);
 void func_svrcon_heart_beat_send_out(UINT32 taskid);
+OPSTAT hcu_vm_send_init_msg_to_app_task(UINT32 dest_id);
 
 #endif /* L3APP_SVRCON_H_ */

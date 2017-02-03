@@ -422,7 +422,7 @@ OPSTAT hcu_vm_application_task_env_init();
 //不同WORK MODE下进程的启动函数
 void hcu_vm_working_mode_single_start(void);
 void hcu_vm_working_mode_double_start(void);
-void hcu_vm_working_mode_multipy(void);
+void hcu_vm_working_mode_multipy_start(void);
 //进程启动函数主入口
 void hcu_vm_process_single_mainapp_entry(void);
 //对于双进程及多进程模式，还需要再仔细考量，目前暂不推荐使用，而且也没有经过仔细测试
@@ -430,10 +430,9 @@ void hcu_vm_process_double_mainapp_entry(void);
 void hcu_vm_process_multipy_mainapp_entry(void);
 void hcu_vm_process_create_sensor_avorion_only(void);
 void hcu_vm_process_multipy_entry_supervisor(void);
-
 //VM本地函数
-UINT32 hcu_vm_system_task_init(void);
-UINT32 hcu_vm_system_task_init_call(UINT32 task_id, FsmStateItem_t *p);
+//UINT32 hcu_vm_system_task_init(void);
+OPSTAT hcu_vm_system_task_init_call(UINT32 task_id, FsmStateItem_t *p);
 void hcu_vm_task_send_init_to_timer(void);
 void hcu_vm_task_send_init_to_avorion(void);
 void hcu_vm_task_send_init_to_svrcon(void);
@@ -445,8 +444,6 @@ void hcu_vm_task_delete_all_and_queue(void);
 void hcu_vm_task_delete_except_avorion_and_hcumain(void);
 void hcu_vm_task_delete_except_timer_and_hcumain(void);
 void hcu_vm_task_delete_except_svrcon_and_hcumain(void);
-OPSTAT hcu_vm_send_init_msg_to_app_task(UINT32 dest_id);
-
 
 
 #endif /* L0COMVM_VMLAYER_H_ */
