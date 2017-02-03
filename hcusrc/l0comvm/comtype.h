@@ -48,6 +48,9 @@ typedef UINT32         OPSTAT;
 #define 	TRUE 		1
 #define 	FALSE 		0
 
+/* For thread creation */
+typedef void *(*CALLBACK)(void *);
+
 /*
 ** Definition of invalid values used in the project.
 */

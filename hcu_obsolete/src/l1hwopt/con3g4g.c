@@ -342,7 +342,7 @@ UINT32 UsbUmtsPppdStart()
 		{
 			HcuDebugPrint("UsbUmtsPppdStart: GPRS & PPP started successfully, return SUCCESS.\n");
 			/* refresh system information for network interface checking */
-			HcuGetSysInfo(&gSysInfo);
+			HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
 			HcuDebugPrint("UsbUmtsPppdStart: refresh system information complete.\n");
 			IsNetItfExist("ppp0");
 
@@ -359,7 +359,7 @@ UINT32 UsbUmtsPppdStart()
 			zHcuRunErrCnt[TASK_ID_3G4G]++;
 			HcuDebugPrint("UsbUmtsPppdStart: GPRS & PPP started failure, return FAILURE.\n");
 			/* refresh system information for network interface checking */
-			HcuGetSysInfo(&gSysInfo);
+			HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
 			HcuDebugPrint("UsbUmtsPppdStart: refresh system information complete.\n");
 
 			/* usleep for 15 sec, to let console know the result */
@@ -398,7 +398,7 @@ UINT32 UsbUmtsPppdSwShutdown()
 	HcuDebugPrint("UsbUmtsPppdSwShutdown: pppd process cleaned to free serial port for GPRS model.\n");
 
 	/* refresh system information for network interface checking */
-	HcuGetSysInfo(&gSysInfo);
+	HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
 	HcuDebugPrint("UsbUmtsPppdSwShutdown: refresh system information complete.\n");
 
 	return SUCCESS;

@@ -182,7 +182,7 @@ typedef struct WedSensors
 {
 	UINT32 NumOfActiveSensors;
 	WedSensorProperty_t Sensor[HCU_MAX_NUM_OF_WED];
-} WedSensors_t;
+} HcuComMsgWedSensors_t;
 
 typedef struct MeasurePerSensor
 {
@@ -239,7 +239,7 @@ typedef struct HCUMeasureBehavior
 	/* max counter when network is down before another socket connection tried */
 	UINT32 MaxCounterTicksNetworkDown;
 
-} HcuMeasureBehavior_t;
+} HcuComMsgMeasureBehavior_t;
 
 /*
  * HCU ZB interface

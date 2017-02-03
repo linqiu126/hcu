@@ -64,7 +64,7 @@ extern OPSTAT hcu_3g_data_send();
  *
  */
 
-extern SysInfo_t gSysInfo;
+extern HcuComMsgSysInfo_t zHcuHwinvGlobalSysInfo;
 enum USB_UMTS_PPP_CARD_TYPE
 {
 	USB_UMTS_PPP_CARD_TYPE_ZET_MF190 = 0x00, //Starting point

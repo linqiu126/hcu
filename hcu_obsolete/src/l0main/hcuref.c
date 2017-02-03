@@ -30,14 +30,14 @@ SocketPort_t gSocketPort = {"10.0.0.19", 6000, 0, NULL, };
  */
 
 /* Zigbee Sensors Nodes */
-WedSensors_t gZbSensors;
+HcuComMsgWedSensors_t gZbSensors;
 
 /* Sensor Measurement Result */
 SensorsMeasurementsTable_t gSMT;
 
 /* Measuremnet Bahavior */
 /* Default 0.2s, 1 char, 100ms, 800ms, 2, 10 */
-HcuMeasureBehavior_t gHcuMeasureBehavior = {2, 0, 100, 1500, 2, 0, 2, 30, 0, 0, 0, 0, 0};
+HcuComMsgMeasureBehavior_t gHcuMeasureBehavior = {2, 0, 100, 1500, 2, 0, 2, 30, 0, 0, 0, 0, 0};
 
 /*Init PollingLoop Behavior*/
 PollingLoopBehavior_t PollingLoopBehavior = {0, 0, 0, 1};
@@ -90,7 +90,7 @@ UINT8 TraceWillBeDisplayed = HCU_LOGIC_TRUE;
 static pthread_t HcuMainLoopThreadId;
 
 /* System Information */
-extern SysInfo_t gSysInfo;
+extern SysInfo_t zHcuHwinvGlobalSysInfo;
 
 /* GPRS module checking MAX time */
 GprsPppdConf_t gGprsPppdConf;
@@ -166,8 +166,8 @@ UINT32 IsBindStatusInd(UINT8 *f);
 void MsgProcBindStatusInd(UINT8 *f);
 void HcuResetZigbee();
 void WaitZbStartUp();
-UINT32 FindNextPoolingIndex(WedSensors_t *wss, PollingLoopBehavior_t *plb);
-void SensorPolling(SerialPortCom_t *sp, WedSensors_t *wss, SensorsMeasurementsTable_t *smt, HcuMeasureBehavior_t *wmb, PollingLoopBehavior_t *plb);
+UINT32 FindNextPoolingIndex(HcuComMsgWedSensors_t *wss, PollingLoopBehavior_t *plb);
+void SensorPolling(SerialPortCom_t *sp, HcuComMsgWedSensors_t *wss, SensorsMeasurementsTable_t *smt, HcuComMsgMeasureBehavior_t *wmb, PollingLoopBehavior_t *plb);
 void BuildDataReq(UINT8 *zbCmd, char *sensorCmd,UINT32 NumOfSensor);
 //UINT32 AnalyzePollingResult( UINT32 idxPollingLoop, UINT32 idxSensor, UINT32 idxMeasure, char *CmdReceivedOverSerial, UINT32 len, char **validCmdString);
 UINT32 ZbCmdProssing(UINT8 *CmdString, UINT32 LenOfCmd);
@@ -1148,7 +1148,7 @@ UINT32 InitGlobleVarialbles()
 {
 	/* Zigbee Sensor Nodes */
 	/* WedSensorProperty_t gZbSensorNodes[HCU_MAX_NUM_OF_WED]; */
-	bzero(&gZbSensors, sizeof(WedSensors_t));
+	bzero(&gZbSensors, sizeof(HcuComMsgWedSensors_t));
 
 	/* Sensor Measurement Result */
 	/* SensorMeasurement_t gSensorMeasureResult[HCU_MAX_NUM_OF_WED][WED_MAX_NUM_OF_MEASURE]; */
@@ -1221,7 +1221,7 @@ UINT32 InitGlobleVarialbles()
 /*
  * Polling Sensors
  */
-void SensorPolling(SerialPortCom_t *sp, WedSensors_t *wss, SensorsMeasurementsTable_t *smt, HcuMeasureBehavior_t *wmb, PollingLoopBehavior_t *plb)
+void SensorPolling(SerialPortCom_t *sp, HcuComMsgWedSensors_t *wss, SensorsMeasurementsTable_t *smt, HcuComMsgMeasureBehavior_t *wmb, PollingLoopBehavior_t *plb)
 {
 
 	UINT16	fd = sp->fd;
@@ -1369,7 +1369,7 @@ void SensorPolling(SerialPortCom_t *sp, WedSensors_t *wss, SensorsMeasurementsTa
  * To find the next Sensor and Measure to Pool *
  *
  */
-UINT32 FindNextPoolingIndex(WedSensors_t *wss, PollingLoopBehavior_t *plb)
+UINT32 FindNextPoolingIndex(HcuComMsgWedSensors_t *wss, PollingLoopBehavior_t *plb)
 {
 	//#define		HCU_MAX_NUM_OF_WED	 			16
 	//#define		WED_MAX_NUM_OF_MEASURE			7
@@ -1595,7 +1595,7 @@ void PrintHwSwInfo()
 	/* !!! !!! !!! !!! */
 	//UINT32 ret = 0;
 
-	memset(&gSysInfo, 0xFF, sizeof(SysInfo_t));
+	memset(&zHcuHwinvGlobalSysInfo, 0xFF, sizeof(SysInfo_t));
 
 	HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
 	HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
@@ -1613,7 +1613,7 @@ void PrintHwSwInfo()
 
 	HcuDebugPrint(" == SYSINFO ==\n"); /* prints !!!Hello World!!! */
 
-	HcuGetSysInfo(&gSysInfo, TRUE);
+	HcuGetSysInfo(&zHcuHwinvGlobalSysInfo, TRUE);
 	/* !!! !!! !!! !!! */
 }
 

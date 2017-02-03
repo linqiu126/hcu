@@ -193,7 +193,7 @@ typedef struct HcuHwinvCo2Element
 //All in one
 typedef struct HcuHwinvCtrlTable
 {
-	SysInfo_t 						sysInfo;
+	HcuComMsgSysInfo_t 				sysInfo;
 	HcuHwinvFlashElement_t 			flash;
 	HcuHwinvRtcElement_t 			rtc;
 	HcuHwinvMemoryElement_t 		memroy;

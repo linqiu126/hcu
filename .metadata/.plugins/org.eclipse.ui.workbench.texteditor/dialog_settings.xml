@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="//SENSOR" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="g40"/>
-			<item value="HcuFsmL3tbswrg30"/>
-			<item value="func_l3tbswrg30_int_init"/>
-			<item value="dtdr"/>
-			<item value="func_l3opwldtdr_int_init"/>
-			<item value="l3qgybg40"/>
-			<item value="L3QGYBG40"/>
-			<item value="L23"/>
+			<item value="//sensor"/>
+			<item value="MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD"/>
+			<item value="MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX"/>
+			<item value="MSG_ID_NBIOTQG376_IPM_DATA_REQ"/>
+			<item value="MSG_ID_IWM_NBIOTCJ188_DATA_RESP"/>
+			<item value="MSG_ID_NBIOTCJ188_IWM_DATA_REQ"/>
+			<item value="MSG_ID_IWM_NBIOTCJ188_DATA_REQ"/>
+			<item value="MSG_ID_HSMMP_AVORION_DATA_READ"/>
 		</list>
 		<list key="replacehistory">
 			<item value="g30"/>

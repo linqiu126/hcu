@@ -26,13 +26,13 @@ void ApartAddress(char *temp, char *stringAdd1, char *stringAdd2);
  */
 SerialPortCom_t gSerialPortZb;
 SerialPortCom_t gSerialPortGprs;
-SocketPort_t gSocketPort;
-HcuMeasureBehavior_t gHcuMeasureBehavior;
-WedSensors_t gZbSensors;
+HcuComMsgSocketPort_t gSocketPort;
+HcuComMsgMeasureBehavior_t gHcuMeasureBehavior;
+HcuComMsgWedSensors_t gZbSensors;
 UINT8 gFcsEnable;
 UINT8 gUseGprsOrNot;
 INT32  outputOnCrt;
 UINT8 TraceWillBeDisplayed;
-MsgSeverDataSegHeader_t gMsgSeverDataSegHeader;
+HcuMsgSeverDataSegHeader_t gMsgSeverDataSegHeader;
 
 #endif /* L0SERVICE_CONFIGXML_H_ */

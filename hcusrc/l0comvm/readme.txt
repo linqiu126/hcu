@@ -14,12 +14,9 @@ PRJ_BFSC待完成或者回答的问题：
 
 
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 145 =>BFSC项目
-
-
-
-
-
-
+=清理Commsg.h中的无效消息结构
+=将Commsg.h中的消息进行必要的注释并归类
+=改动量较大
 
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 144 =>BFSC项目
 =去掉zHcuTaskNameList[]数组，改用zHcuTaskInfo[i].taskName

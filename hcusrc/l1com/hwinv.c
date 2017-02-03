@@ -55,7 +55,7 @@ zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
 HcuInventoryInfo_t zHcuInventoryInfo; //软件及数据库版本
 
 // System Information
-SysInfo_t gSysInfo;
+HcuComMsgSysInfo_t zHcuHwinvGlobalSysInfo;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose

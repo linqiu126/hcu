@@ -18,17 +18,19 @@
 //定义TASK对应的名字
 //!!!!!!!!!!!!!!!!ATTENTION!!!!!!!!!!!!!!!!
 //Whenever the Task Id is changed, QueID and vmlayer.c/zHcuTaskNameList array should be updated, otherwise error will happen!!!
-//不是任务的任务，比如TRACE/CONFIG/3G/GPIO等等，留待清理，简化任务列表
 /*
  *
  *   【增加任务】，必须同时修改四个地方：
  *   - HCU_TASK_NAME_ID
  *   - HCU_TASK_QUEUE_ID
- *   - zHcuTaskNameList
+ *   - zHcuGlobalTaskInputConfig
+ *   - 将新模块包含在hcu.c中
  *   - 还要DBICOM中去修改ModuleTrace的数据，不然通过L3UI界面进行控制TRACE也会出错，并备份数据库
  *   - 如果需要完美表现，还得最终需要升级L3UI的CRUD，不然相应的工具会出错
  *
  */
+//由于内存不是太大的问题，这里将所有任务全部平铺直叙在一起，以简化不同项目的设置问题
+//采用这种技巧的，还有MessageQueue，MessageId等内容，全部采用U32的方式
 enum HCU_TASK_NAME_ID
 {
 	TASK_ID_MIN = 0,
