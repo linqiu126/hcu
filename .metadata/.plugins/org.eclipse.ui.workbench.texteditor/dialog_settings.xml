@@ -2,12 +2,18 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
 		<item value="pnpState" key="selection"/>
 		<item value="false" key="casesensitive"/>
+=======
+		<item value="hcu_vm_working_mode_single_start" key="selection"/>
+		<item value="true" key="casesensitive"/>
+>>>>>>> feature
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
 			<item value="swTaskActive"/>
 			<item value="zeegbe"/>
 			<item value="timer"/>
@@ -26,6 +32,26 @@
 			<item value="Hcu"/>
 			<item value="HCU"/>
 			<item value="hcu_hwinv_read_mac_address"/>
+=======
+			<item value="hcu_vm_working_mode_single"/>
+			<item value="hcu_vm_application_task_env_init"/>
+			<item value="mo"/>
+			<item value="moto"/>
+			<item value="LCD"/>
+			<item value="Lcd"/>
+			<item value="lcd"/>
+			<item value="HCU_CLOUDVELA_HTTP_ADDRESS_TEST"/>
+		</list>
+		<list key="replacehistory">
+			<item value="hcu_vm_working_mode_single_start"/>
+			<item value="ZEEGBE"/>
+			<item value="Zeegbe"/>
+			<item value="zeegbe"/>
+			<item value="#define HCU_PROCESS_WORK_MODE_CURRENT HCU_WORK_MODE_PROCESS_SINGLE"/>
+			<item value=" HCU_WORK_MODE_PROCESS_SINGLE "/>
+			<item value=" "/>
+			<item value="HCU_TASK_PNP_ON"/>
+>>>>>>> feature
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
