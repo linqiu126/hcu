@@ -40,6 +40,7 @@ StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 	{TASK_ID_SWITCH,     		"SWITCH",       		&HcuFsmSwitch},
 	{TASK_ID_RELAY,      		"RELAY",        		&HcuFsmRelay},
 	{TASK_ID_MOTOR,      		"MOTOR",        		&HcuFsmMotor},
+	{TASK_ID_ZEEGBE,      		"ZEEGBE",        		&HcuFsmZeegbe},
 	{TASK_ID_GPRS,       		"GRPS",         		NULL},
 	{TASK_ID_SPS232,     		"SPS232",       		&HcuFsmSps232},
 	{TASK_ID_SPS485,     		"SPS485",       		&HcuFsmSps485},
@@ -483,8 +484,7 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	zHcuTaskInfo[TASK_ID_GPS].pnpState = zHcuSysEngPar.comm.commHwBoardGps;
 	zHcuTaskInfo[TASK_ID_LCD].pnpState = zHcuSysEngPar.comm.commHwBoardLcd;
 	zHcuTaskInfo[TASK_ID_LED].pnpState = zHcuSysEngPar.comm.commHwBoardLed;
-	//Zeegbee任务暂时不存在
-	//zHcuTaskInfo[TASK_ID_ZEEGBE].pnpState = zHcuSysEngPar.comm.commHwBoardZeegbe;
+	zHcuTaskInfo[TASK_ID_ZEEGBE].pnpState = zHcuSysEngPar.comm.commHwBoardZeegbe;
 	zHcuTaskInfo[TASK_ID_FLASH].pnpState = zHcuSysEngPar.comm.commHwBoardFlash;
 	zHcuTaskInfo[TASK_ID_MODBUS].pnpState = zHcuSysEngPar.comm.commFrameModbus;
 	zHcuTaskInfo[TASK_ID_SPSVIRGO].pnpState = zHcuSysEngPar.comm.commFrameSpsvirgo;
@@ -521,6 +521,7 @@ OPSTAT hcu_vm_application_task_env_init(void)
 		return FAILURE;
 	}
 	strcpy(zHcuTaskInfo[TASK_ID_MIN].taskName, zHcuGlobalTaskInputConfig[0].taskInputName);
+
 	//以TASK_ID_MAX为终止条目
 	for(item=1; item < MAX_TASK_NUM_IN_ONE_HCU; item++){
 		if(zHcuGlobalTaskInputConfig[item].taskInputId == TASK_ID_MAX){
@@ -1805,7 +1806,7 @@ UINT16 hcu_CRC_16(unsigned char *data,int len)
 }
 
 //单进程模式，当前的工作模式！！！
-void hcu_vm_working_mode_single(void)
+void hcu_vm_working_mode_single_start(void)
 {
 	zHcuCurrentProcessInfo.curProcId = getpid();
 	strcpy(zHcuCurrentProcessInfo.curProcName, "PS_MAINAPP");
@@ -1813,7 +1814,7 @@ void hcu_vm_working_mode_single(void)
 }
 
 //双进程模式
-void hcu_vm_working_mode_double(void)
+void hcu_vm_working_mode_double_start(void)
 {
 	int pid = 0;
 
@@ -2714,11 +2715,11 @@ int hcu_vm_main_entry(void)
 
 	//单进程方式，当前的工作模式！！！
 	if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_SINGLE){
-		hcu_vm_working_mode_single();
+		hcu_vm_working_mode_single_start();
 	}
 	//双进程方式
 	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_DOUBLE){
-		hcu_vm_working_mode_double();
+		hcu_vm_working_mode_double_start();
 	}
 	//多进程方式
 	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_TRIPPLE){

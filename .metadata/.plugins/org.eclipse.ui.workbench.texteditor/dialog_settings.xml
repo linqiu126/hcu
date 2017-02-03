@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="hcu_vm_working_mode_single_start" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="hcu_vm_working_mode_single"/>
+			<item value="hcu_vm_application_task_env_init"/>
+			<item value="mo"/>
+			<item value="moto"/>
+			<item value="LCD"/>
+			<item value="Lcd"/>
+			<item value="lcd"/>
 			<item value="HCU_CLOUDVELA_HTTP_ADDRESS_TEST"/>
-			<item value="aaa"/>
-			<item value="#define HCU_PROCESS_WORK_MODE_CURRENT 1 //1=单进程 2=双进程 3=三进程，4=多进程, OTHERS=无效"/>
-			<item value=" 1 "/>
-			<item value="HCU_COMM_HW_BOARD_ON"/>
-			<item value="TF card"/>
-			<item value="HCU_COMM_BACK_HAWL_CON HCU_TASK_PNP_ON //0=NULL, 1=ETHERNET, 2=WIFI, 3=3G4G, 4=USBNET, 5/OTHERS=INVALID"/>
-			<item value=" //1=ON, 0/OTHERS=OFF"/>
 		</list>
 		<list key="replacehistory">
+			<item value="hcu_vm_working_mode_single_start"/>
+			<item value="ZEEGBE"/>
+			<item value="Zeegbe"/>
+			<item value="zeegbe"/>
 			<item value="#define HCU_PROCESS_WORK_MODE_CURRENT HCU_WORK_MODE_PROCESS_SINGLE"/>
 			<item value=" HCU_WORK_MODE_PROCESS_SINGLE "/>
 			<item value=" "/>
 			<item value="HCU_TASK_PNP_ON"/>
-			<item value="HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH"/>
-			<item value="HCU_CLOUDVELA_BH_PHY_LINK_ETH"/>
-			<item value=" HCU_TASK_PNP_OFF "/>
-			<item value=" HCU_TASK_PNP_ON "/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

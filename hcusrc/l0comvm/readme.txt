@@ -16,10 +16,10 @@ PRJ_BFSC待完成或者回答的问题：
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 143 =>BFSC项目
 =进程启动模式的定义优化
 =上位机func handler的优化 
-//上位机VM初始化简化
-// 简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
-
-
+=上位机VM初始化简化
+=简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
+=增加Zeegbe模块，保持跟工程参数配置的一致性
+=去掉ZTaskName[]数组
 
 
 //= ZJL, 2017 Feb.2, CURRENT_SW_DELIVERY 142 =>BFSC项目

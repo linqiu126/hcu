@@ -46,6 +46,7 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_SWITCH, //开关量
 	TASK_ID_RELAY,  //继电器
 	TASK_ID_MOTOR,  //马达
+	TASK_ID_ZEEGBE,
 	TASK_ID_GPRS,
 	TASK_ID_SPS232,
 	TASK_ID_SPS485,
@@ -125,6 +126,7 @@ enum HCU_TASK_QUEUE_ID
 	TASK_QUE_ID_SWITCH, //开关量
 	TASK_QUE_ID_RELAY,  //继电器
 	TASK_QUE_ID_MOTOR,  //马达
+	TASK_QUE_ID_ZEEGBE,
 	TASK_QUE_ID_GRPS,
 	TASK_QUE_ID_SPS232,
 	TASK_QUE_ID_SPS485,
@@ -345,6 +347,7 @@ extern FsmStateItem_t HcuFsmAdc[];                               //状态机
 extern FsmStateItem_t HcuFsmSwitch[];                            //状态机
 extern FsmStateItem_t HcuFsmRelay[];                             //状态机
 extern FsmStateItem_t HcuFsmMotor[];                             //状态机
+extern FsmStateItem_t HcuFsmZeegbe[];                            //状态机
 extern FsmStateItem_t HcuFsmGprs[];                              //状态机
 extern FsmStateItem_t HcuFsmSps232[];                            //状态机
 extern FsmStateItem_t HcuFsmSps485[];                            //状态机
@@ -417,8 +420,8 @@ extern int hcu_vm_main_entry(void);
 OPSTAT hcu_vm_system_init(void);  //系统级别的初始化
 OPSTAT hcu_vm_application_task_env_init();
 //不同WORK MODE下进程的启动函数
-void hcu_vm_working_mode_single(void);
-void hcu_vm_working_mode_double(void);
+void hcu_vm_working_mode_single_start(void);
+void hcu_vm_working_mode_double_start(void);
 void hcu_vm_working_mode_multipy(void);
 //进程启动函数主入口
 void hcu_vm_process_single_mainapp_entry(void);

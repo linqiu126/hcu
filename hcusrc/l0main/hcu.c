@@ -40,6 +40,7 @@
 #include "../l1hwopt/switch.h"
 #include "../l1hwopt/relay.h"
 #include "../l1hwopt/motor.h"
+#include "../l1hwopt/zeegbe.h"
 
 #include "../l2frame/spsvirgo.h"
 #include "../l2frame/modbus.h"
