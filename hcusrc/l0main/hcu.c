@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
 			return EXIT_SUCCESS;
 		}
 	}else{
-		hcu_vm_main();
+		hcu_vm_main_entry();
 	}
 	return EXIT_SUCCESS;
 }

@@ -114,15 +114,6 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		HcuDebugPrint("HWINV: Enter FSM_STATE_HWINV_ACTIVED status, Keeping refresh here!\n");
 	}
 
-	//设置并读取数据库中的工程配置参数
-	//这里的原则是：读取数据库中的工程参数，如果读取出错或者配置的参数超过检查范围，则直接使用SYSCONF.H中定义的缺省工程参数，以防止应用崩溃
-	//放弃这里的读取，直接从HCU.c初始化时读取，这样更为安全。
-/*	if (hcu_hwinv_read_engineering_data_into_mem() == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		HcuErrorPrint("HWINV: Not set all engineering data correctly!\n");
-		return FAILURE;
-	}*/
-
 	//进入等待反馈状态
 	while(1){
 		func_hwinv_scan_all();
@@ -332,64 +323,43 @@ OPSTAT func_hwinv_global_par_init(void)
 
 void func_hwinv_copy_right(void)
 {
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("**                                                                **\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("**              Home and Car Unisystem (HCU)                      **\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("**            Octopus Wireless Communications Co. Ltd.            **\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("**                          Version 1.0                           **\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("**                                                                **\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint(" == SYSINFO ==\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint("SW Build: %s, %s\n", __DATE__, __TIME__); /* prints !!!Hello World!!! */
-		HcuDebugPrint("HW Build: P01\n"); /* prints !!!Hello World!!! */
-		HcuDebugPrint(" == SYSINFO ==\n"); /* prints !!!Hello World!!! */
-	}
+	HCU_DEBUG_PRINT_FAT("********************************************************************\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("********************************************************************\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("**                                                                **\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("**              Home and Car Unisystem (HCU)                      **\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("**            Octopus Wireless Communications Co. Ltd.            **\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("**                          Version 1.0                           **\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("**                                                                **\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("********************************************************************\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("********************************************************************\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT(" == SYSINFO ==\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("SW Build: %s, %s\n", __DATE__, __TIME__); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT("HW Build: P01\n"); /* prints !!!Hello World!!! */
+	HCU_DEBUG_PRINT_FAT(" == SYSINFO ==\n"); /* prints !!!Hello World!!! */
 }
 
 //将工程参数从数据库中读出来并存入内存，该函数只是在初始化时做一次，并没有随时进行
 OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 {
 	int ret = 0;
-	//测试成功！！！
-	/*sensor_emc_data_element_t emcData;
-	memset(&emcData, 0, sizeof(sensor_emc_data_element_t));
-	emcData.equipid = 22;
-	emcData.timeStamp = 33;
-	emcData.emcValue = 44;
-	emcData.gps.gpsx = 55;
-	emcData.gps.gpsy = 66;
-	emcData.gps.gpsz = 77;
-	emcData.onOffLineFlag = 1;
-	if (dbi_HcuEmcDataInfo_save(&emcData) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		HcuErrorPrint("HWINV: Can not save data into database!\n");
-	}*/
-
 	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTablet_t));
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
 
 	//第一部分/zHcuSysEngPar总共三步分
 	if (ret == SUCCESS){
-
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-
-			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.cloud.cloudBhHcuName);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.emcReqTimer = %d\n", zHcuSysEngPar.timer.emcReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.humidReqTimer = %d\n", zHcuSysEngPar.timer.humidReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.pm25ReqTimer = %d\n", zHcuSysEngPar.timer.pm25ReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.tempreqtimer = %d\n", zHcuSysEngPar.timer.tempReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.winddirreqtimer = %d\n", zHcuSysEngPar.timer.winddirReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.windspdreqtimer = %d\n", zHcuSysEngPar.timer.windspdReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.noisereqtimer = %d\n", zHcuSysEngPar.timer.noiseReqTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cloudSocketHbTimer = %d\n", zHcuSysEngPar.timer.cloudSocketHbTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.timer.cloudvelaHbTimer = %d\n", zHcuSysEngPar.timer.cloudvelaHbTimer);
-			HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.cloudSocketSrvAdd = %s\n", zHcuSysEngPar.cloud.cloudSocketSrvAdd);
-			HcuDebugPrint("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
-			HcuDebugPrint("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
-		}
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.emcReqTimer = %d\n", zHcuSysEngPar.timer.emcReqTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.humidReqTimer = %d\n", zHcuSysEngPar.timer.humidReqTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.pm25ReqTimer = %d\n", zHcuSysEngPar.timer.pm25ReqTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.tempreqtimer = %d\n", zHcuSysEngPar.timer.tempReqTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.winddirreqtimer = %d\n", zHcuSysEngPar.timer.winddirReqTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.windspdreqtimer = %d\n", zHcuSysEngPar.timer.windspdReqTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.noisereqtimer = %d\n", zHcuSysEngPar.timer.noiseReqTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.cloudSocketHbTimer = %d\n", zHcuSysEngPar.timer.cloudSocketHbTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.timer.cloudvelaHbTimer = %d\n", zHcuSysEngPar.timer.cloudvelaHbTimer);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.cloud.cloudSocketSrvAdd = %s\n", zHcuSysEngPar.cloud.cloudSocketSrvAdd);
+		HCU_DEBUG_PRINT_NOR("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
+		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 	}
 
 	//第二部分/zHcuSysEngPar总共三步分
@@ -522,31 +492,20 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.debugMode = HCU_TRACE_DEBUG_ON;
 		//TRACE部分
 		zHcuSysEngPar.traceMode = HCU_TRACE_MSG_ON;
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("HWINV: Set basic engineering data correctly from SYSTEM DEFAULT parameters!\n");
-		}
+		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from SYSTEM DEFAULT parameters!\n");
 	}
 
 	//读取HcuTraceModuleCtr表单到系统内存中
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);
-	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		HcuErrorPrint("HWINV: Read Trace Module Control DB error!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("HWINV: Set Trace Moduble based engineering data correctly from DATABASE parameters!\n");
-	}
-
-	memset(&zHcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
+	if (ret == FAILURE)
+		HCU_ERROR_PRINT_HWINV("HWINV: Read Trace Module Control DB error!\n");
+	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Moduble based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuDbVersion表单到系统内存中
+	memset(&zHcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
 	ret = dbi_HcuDbVersion_inqury(&zHcuInventoryInfo);
-	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		HcuErrorPrint("HWINV: Read HCUDB version DB error!\n");
-		return FAILURE;
-	}
+	if (ret == FAILURE)
+		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
 
 	//从TASK_ID_COM_BOTTOM开始，固定配置TRACE选项
 	int i=0;
@@ -562,14 +521,9 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 
 	//读取HcuTraceMsgCtr表单到系统内存中
 	ret = dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar);
-	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		HcuErrorPrint("HWINV: Read Trace Message Control DB error!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
-	}
+	if (ret == FAILURE)
+		HCU_ERROR_PRINT_HWINV("HWINV: Read Trace Message Control DB error!\n");
+	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
 
 	//从MSG_ID_COM_BOTTOM开始，不通过数据库配置的参数区域
 	for (i=MSG_ID_COM_BOTTOM; i< (MSG_ID_COM_MAX+1); i++){
@@ -614,52 +568,54 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 
 //小技巧，不要这部分，以便加强编译检查
 #else
+	#error Un-correct constant definition
 #endif
+
+    //返回
+	return SUCCESS;
+}
+
+//创建服务器和软件下载等存储目录结构
+//未来需要改进的内容：预留固定空间，循环写，防止运行过程中硬件满的错误出现
+OPSTAT hcu_hwinv_create_storage_dir_env(void)
+{
+	int ret = 0;
 
     //create video server directory by Shanchun
 	ret = hcu_create_multi_dir(zHcuSysEngPar.videoSev.hcuVideoServerDir);
-
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
-	}
-	else
-	{
-		HcuDebugPrint("HWINV: Create successfully for video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
+	}else{
+		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
 	}
 
     //create HCU SW download/active/backup local directory by Shanchun
 	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwDownloadDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW download local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
-	}
-	else
-	{
-		HcuDebugPrint("HWINV: Create successfully for HCU SW download local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
+	}else{
+		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW download local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
 	}
 
 	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwActiveDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW active local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
-	}
-	else
-	{
-		HcuDebugPrint("HWINV: Create successfully for HCU SW active local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
+	}else{
+		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW active local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
 	}
 
 	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwBackupDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW backup local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
-	}
-	else
-	{
-		HcuDebugPrint("HWINV: Create successfully for HCU SW backup local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
+	}else{
+		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW backup local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
 	}
 
     //返回
 	return SUCCESS;
 }
 
-OPSTAT hcu_hwinv_read_macaddress(void)
+OPSTAT hcu_hwinv_read_mac_address(void)
 {
 	/////////////////////////////////////////////////////////////////////////
     struct ifreq ifreq;
@@ -690,7 +646,6 @@ OPSTAT hcu_hwinv_read_macaddress(void)
 
     //返回
 	return SUCCESS;
-
 }
 
 void func_hwinv_scan_all(void)
@@ -1340,14 +1295,14 @@ void func_hwinv_scan_message_queue(void)
 	UINT32 taskid;
 	for (taskid = TASK_ID_MIN; taskid < TASK_ID_MAX; taskid++){
 		//扫描其messageQue，看看是否满，如果是，意味着故障
-		if ((taskid != TASK_ID_HWINV) && (zHcuTaskInfo[taskid].swTaskActive == HCU_TASK_SW_ACTIVE) && (zHcuTaskInfo[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
+		if ((taskid != TASK_ID_HWINV) && (zHcuTaskInfo[taskid].pnpState == HCU_TASK_PNP_ON) && (zHcuTaskInfo[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
 		{
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuTaskNameList[taskid]);
 			}
 			//重新启动该任务
 			hcu_task_delete(taskid);
-			hcu_system_task_init_call(taskid, zHcuTaskInfo[taskid].fsmPtr);
+			hcu_vm_system_task_init_call(taskid, zHcuTaskInfo[taskid].fsmPtr);
 			zHcuTaskInfo[taskid].QueFullFlag = HCU_TASK_QUEUE_FULL_FALSE;
 
 			//再发送init消息给该模块，以便启动改模块

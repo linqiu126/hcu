@@ -286,7 +286,8 @@ extern OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 extern OPSTAT fsm_hwinv_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT func_hwinv_global_par_init(void);
 extern OPSTAT hcu_hwinv_read_engineering_data_into_mem(void);
-extern OPSTAT hcu_hwinv_read_macaddress(void);
+extern OPSTAT hcu_hwinv_create_storage_dir_env(void);
+extern OPSTAT hcu_hwinv_read_mac_address(void);
 extern void func_hwinv_copy_right(void);
 extern void func_hwinv_scan_all(void);
 extern void func_hwinv_scan_date();
@@ -388,6 +389,7 @@ extern OPSTAT dbi_HcuIpmQg376DataInfo_delete_3monold(UINT32 days);
 //create video server directory by Shanchun
 UINT32 hcu_create_multi_dir(const char *path);
 
-
+//高级定义，简化程序的可读性
+#define HCU_ERROR_PRINT_HWINV(...)	do{zHcuRunErrCnt[TASK_ID_HWINV]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 #endif /* L1COM_HWINV_H_ */
