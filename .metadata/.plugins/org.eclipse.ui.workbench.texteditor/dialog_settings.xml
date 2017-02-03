@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="pnpState" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HCU_CLOUDVELA_HTTP_ADDRESS_TEST"/>
-			<item value="aaa"/>
-			<item value="#define HCU_PROCESS_WORK_MODE_CURRENT 1 //1=单进程 2=双进程 3=三进程，4=多进程, OTHERS=无效"/>
-			<item value=" 1 "/>
-			<item value="HCU_COMM_HW_BOARD_ON"/>
-			<item value="TF card"/>
-			<item value="HCU_COMM_BACK_HAWL_CON HCU_TASK_PNP_ON //0=NULL, 1=ETHERNET, 2=WIFI, 3=3G4G, 4=USBNET, 5/OTHERS=INVALID"/>
-			<item value=" //1=ON, 0/OTHERS=OFF"/>
+			<item value="swTaskActive"/>
+			<item value="zeegbe"/>
+			<item value="timer"/>
+			<item value="hcu_vm_system_init"/>
+			<item value="hcu_vm_app_system_init"/>
+			<item value="UINT16"/>
+			<item value="taskid"/>
+			<item value="app"/>
 		</list>
 		<list key="replacehistory">
-			<item value="#define HCU_PROCESS_WORK_MODE_CURRENT HCU_WORK_MODE_PROCESS_SINGLE"/>
-			<item value=" HCU_WORK_MODE_PROCESS_SINGLE "/>
-			<item value=" "/>
-			<item value="HCU_TASK_PNP_ON"/>
-			<item value="HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH"/>
-			<item value="HCU_CLOUDVELA_BH_PHY_LINK_ETH"/>
-			<item value=" HCU_TASK_PNP_OFF "/>
-			<item value=" HCU_TASK_PNP_ON "/>
+			<item value="pnpState"/>
+			<item value="hcu_vm_application_task_env_init"/>
+			<item value="FAILURE"/>
+			<item value="HCU-VM"/>
+			<item value="hcu"/>
+			<item value="Hcu"/>
+			<item value="HCU"/>
+			<item value="hcu_hwinv_read_mac_address"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1127" key="DIALOG_X_ORIGIN"/>
-		<item value="344" key="DIALOG_Y_ORIGIN"/>
+		<item value="925" key="DIALOG_X_ORIGIN"/>
+		<item value="205" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
