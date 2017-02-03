@@ -25,7 +25,7 @@ enum FSM_STATE_IGM
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmIgm[];
+extern FsmStateItem_t HcuFsmIgm[];
 
 //API
 extern OPSTAT fsm_igm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

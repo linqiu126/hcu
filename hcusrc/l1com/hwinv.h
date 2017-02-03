@@ -276,7 +276,7 @@ typedef struct zHcuTimeDateTable
 
 //Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
-extern FsmStateItem_t FsmHwinv[];
+extern FsmStateItem_t HcuFsmHwinv[];
 extern HcuHwinvCtrlTable_t zHcuHwinvTable;
 extern zHcuTimeDateTable_t zCurTimeDate;
 

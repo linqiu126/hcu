@@ -32,7 +32,7 @@ enum FSM_STATE_PM25SHARP
 #define SENSOR_PM25_RPI_SHARP_PRESENT SENSOR_PM25_SHARP_RPI_PRESENT_TRUE
 */
 //Global variables
-extern FsmStateItem_t FsmPm25Sharp[];
+extern FsmStateItem_t HcuFsmPm25sharp[];
 //extern GpsPosInfo_t zHcuGpsPosInfo;
 
 //API

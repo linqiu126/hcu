@@ -25,7 +25,7 @@ enum FSM_STATE_LED
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmLed[];
+extern FsmStateItem_t HcuFsmLed[];
 
 //GPIO Based LED and Output Wave Gennerator, 简称GALOWAG / Galowag
 //总控表结构 //暂时只能支持秒级计数器

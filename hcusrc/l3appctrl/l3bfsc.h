@@ -73,7 +73,7 @@ enum FSM_STATE_L3BFSC
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmL3bfsc[];
+extern FsmStateItem_t HcuFsmL3bfsc[];
 
 //API
 extern OPSTAT fsm_l3bfsc_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

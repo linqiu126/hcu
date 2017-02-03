@@ -33,7 +33,7 @@ enum FSM_STATE_PM25
 #define SENSOR_PM25_RPI_SHARP_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
 
 //Global variables
-extern FsmStateItem_t FsmPm25[];
+extern FsmStateItem_t HcuFsmPm25[];
 
 extern sensor_modbus_opertion_general_t zPM25ConfigData; // by Shanchun for sensor config data
 

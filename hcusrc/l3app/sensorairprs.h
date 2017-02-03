@@ -28,7 +28,7 @@ enum FSM_STATE_AIRPRS
 #define SENSOR_AIRPRS_RPI_BMP180_PRESENT SENSOR_AIRPRS_RPI_PRESENT_TRUE
 
 //Global variables
-extern FsmStateItem_t FsmAirprs[];
+extern FsmStateItem_t HcuFsmAirprs[];
 
 //API
 extern OPSTAT fsm_airprs_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

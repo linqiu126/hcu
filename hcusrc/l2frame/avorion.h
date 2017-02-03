@@ -26,7 +26,7 @@ enum FSM_STATE_AVORION
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmAvorion[];
+extern FsmStateItem_t HcuFsmAvorion[];
 
 
 //决定输出视频格式的选择

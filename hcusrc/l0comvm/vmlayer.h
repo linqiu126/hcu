@@ -206,6 +206,7 @@ typedef struct FsmStateItem
 typedef struct HcuTaskTag
 {
 	UINT32 TaskId;
+	UINT8  pnpState;
 	UINT8  hwPlugin;
 	UINT8  hwActive;
 	UINT8  swTaskActive;
@@ -213,9 +214,10 @@ typedef struct HcuTaskTag
 	pthread_t ThrId;
 	INT32  QueId;
 	UINT8  state;
-	char   TaskName[TASK_NAME_MAX_LENGTH];
+	char   taskName[TASK_NAME_MAX_LENGTH];
 	FsmStateItem_t *fsmPtr;
 	UINT8 QueFullFlag;
+	void*  taskFuncEntry;
 }HcuTaskTag_t;
 #define HCU_TASK_SW_NULL 0
 #define HCU_TASK_SW_ACTIVE 1
@@ -308,6 +310,7 @@ extern OPSTAT msgid_to_string(UINT32 id, char *string);
 extern OPSTAT hcu_timer_polling(time_t sec, UINT32 nsec, void *handler());
 extern OPSTAT hcu_timer_set(UINT32 timerid, UINT32 taskid, UINT32 delay);
 extern OPSTAT hcu_timer_clear(UINT32 timerid, UINT32 taskid);
+extern int hcu_vm_main(void);
 extern void hcu_sleep(UINT32 second);
 extern void hcu_usleep(UINT32 usecond);  //resulution 10^(-6)s = 1 microsecond
 //UNIX下时钟函数非常丰富，这里不再做任何抽象化，上层应用可以直接调用系统库函数进行使用和处理
@@ -324,7 +327,6 @@ extern UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *p
 extern UINT32 FsmProcessingLaunch(void);
 extern OPSTAT FsmSetState(UINT32 task_id, UINT8 newState);
 extern UINT8  FsmGetState(UINT32 task_id);
-
 extern OPSTAT fsm_com_do_nothing(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
@@ -413,5 +415,34 @@ extern FsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
 #define HCU_DEBUG_PRINT_IPT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE) HcuDebugPrint
 #define HCU_DEBUG_PRINT_CRT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE) HcuDebugPrint
 #define HCU_DEBUG_PRINT_FAT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE) HcuDebugPrint
+
+//移植并来自HCU主入口模块
+void hcu_working_mode_single(void);
+void hcu_working_mode_double(void);
+void hcu_working_mode_multipy(void);
+
+void hcu_process_1_mainapp_single(void);
+void hcu_process_2_mainapp_double(void);
+void hcu_process_23_sensor_avorion(void);
+void hcu_process_3_entry_supervisor(void);
+void hcu_process_3_mainapp_multipy(void);
+
+void  hcu_app_system_init();
+UINT32 hcu_system_task_init(void);
+UINT32 hcu_system_task_init_call(UINT32 task_id, FsmStateItem_t *p);
+void hcu_task_send_init_to_timer(void);
+void hcu_task_send_init_to_avorion(void);
+void hcu_task_send_init_to_svrcon(void);
+void hcu_task_send_hb_to_svrcon(void);
+
+void hcu_task_create_all(void);
+void hcu_task_create_all_but_avorion(void);
+void hcu_task_create_hcumain_env(void);
+
+void hcu_task_delete_all_and_queue(void);
+void hcu_task_delete_except_avorion_and_hcumain(void);
+void hcu_task_delete_except_timer_and_hcumain(void);
+void hcu_task_delete_except_svrcon_and_hcumain(void);
+OPSTAT hcu_vm_send_init_msg_to_app_task(UINT16 dest_id);
 
 #endif /* L0COMVM_VMLAYER_H_ */

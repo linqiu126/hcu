@@ -28,7 +28,7 @@ enum FSM_STATE_WINDDIR
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmWinddir[];
+extern FsmStateItem_t HcuFsmWinddir[];
 
 typedef struct SensorWinddirInfo
 {

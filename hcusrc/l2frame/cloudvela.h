@@ -27,7 +27,7 @@ enum FSM_STATE_CLOUDVELA
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmCloudvela[];
+extern FsmStateItem_t HcuFsmCloudvela[];
 extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 extern CloudvelaTable_t zHcuCloudvelaTable;
 extern CURL *zHcuCloudCurlPtr;

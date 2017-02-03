@@ -24,7 +24,7 @@ enum FSM_STATE_CO1
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmCo1[];
+extern FsmStateItem_t HcuFsmCo1[];
 
 //API
 extern OPSTAT fsm_co1_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

@@ -28,7 +28,7 @@ enum FSM_STATE_LIGHTSTR
 #define SENSOR_LIGHTSTR_RPI_BH1750_PRESENT SENSOR_LIGHTSTR_RPI_PRESENT_TRUE
 
 //Global variables
-extern FsmStateItem_t FsmLightstr[];
+extern FsmStateItem_t HcuFsmLightstr[];
 
 //API
 extern OPSTAT fsm_lightstr_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

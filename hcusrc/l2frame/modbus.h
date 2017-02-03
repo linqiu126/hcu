@@ -26,7 +26,7 @@ enum FSM_STATE_MODBUS
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmModbus[];
+extern FsmStateItem_t HcuFsmModbus[];
 extern GpsPosInfo_t zHcuGpsPosInfo;
 extern sensor_modbus_opertion_general_t zPM25ConfigData; //by Shanchun for sensor config data
 

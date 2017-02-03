@@ -28,7 +28,7 @@ enum FSM_STATE_TEMP
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmTemp[];
+extern FsmStateItem_t HcuFsmTemp[];
 
 typedef struct SensorTempInfo
 {

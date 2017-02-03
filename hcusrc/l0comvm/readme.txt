@@ -5,26 +5,30 @@
 
 PRJ_BFSC待完成或者回答的问题：
 ==> 从BFSCUICOMM模块定时扫描，送回UI界面的结果给L3BFSC模块：机制是定时扫描数据库，还是有类似于ISR中断的钩子？
-==> 12个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
+==> 16个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
 ==> 发送给后台统计报告
 
-//上位机func handler的优化 
-// 简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
 //上位机HUITPXML、HUITPJASON支持
-//上位机VM初始化简化
 //上位机启动时自身标识的改进，软件模块标识
 //上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 //上位机Layui模块化前端UI框架 => http://www.layui.com/
 //上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 143 =>BFSC项目
+=上位机func handler的优化 
+//上位机VM初始化简化
+// 简化VM的初始化过程和配置过程，包括Heart-Beat及任务创建的简化过程
+
+
+
+
 //= ZJL, 2017 Feb.2, CURRENT_SW_DELIVERY 142 =>BFSC项目
 =有关数据表单中hcusysengpar的模块是否激活，目前的未激活采用了0（NULL），而并非2（DEACTIVE） ，包括DBICOM和数据表单在内，全部改进完成。
 =清理了VMDA之前来自于IHU中继承来的消息，涉及到COMMSG.H/VMLAYER.H，以及DBCOM数据库表单。
 =统一引用FsmTask[]，为了方便进入task管理的FuncHandler，并统一增加Hcu前缀，就是为了减少全局重复的概率
-
-
-
+= 引入统一任务初始化变量，并改善每一个任务模块的状态机初始化表名字
+= 改造HCU的启动过程，全部移植到VM中来，降低HCU启动过程的复杂度，将完善的启动过程全部纳入到VM的管理过程中来。
 
 //= ZJL, 2017 Feb.2, CURRENT_SW_DELIVERY 141 =>BFSC项目
 =改进分项目情况下的#error编译选项，显著标定#else选项，确保多项目选择的安全

@@ -24,7 +24,7 @@ enum FSM_STATE_SPS485
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmSps485[];
+extern FsmStateItem_t HcuFsmSps485[];
 extern SerialPortCom_t gSerialPortMobus;
 
 //API

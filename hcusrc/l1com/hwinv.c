@@ -19,7 +19,7 @@
 /*
 ** FSM of the HWINV
 */
-FsmStateItem_t FsmHwinv[] =
+FsmStateItem_t HcuFsmHwinv[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -683,32 +683,10 @@ OPSTAT hcu_hwinv_read_macaddress(void)
 
 	int j = 0;
 	for(j = 0; j < 6; j++){
-		/*
-		while(ifreq.ifr_hwaddr.sa_data[j] != 0)
-		{
-			if( (ifreq.ifr_hwaddr.sa_data[j]>='A') && (ifreq.ifr_hwaddr.sa_data[j]<='Z') )
-				ifreq.ifr_hwaddr.sa_data[j] += 32;
-
-		}
-		*/
-		sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", (unsigned char)ifreq.ifr_hwaddr.sa_data[j]);
+		sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
 	}
 	zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
-	HcuDebugPrint("HWINV: eth0 MAC address= %s\n\n", zHcuInventoryInfo.hw_mac);
-/*
-	int i =0;
-	for(i = 0; i < 17; i++){
-
-		while(zHcuInventoryInfo.hw_mac[i] != 0)
-		{
-			if( (zHcuInventoryInfo.hw_mac[i] >= 'A') && (zHcuInventoryInfo.hw_mac[i] <= 'Z') )
-				zHcuInventoryInfo.hw_mac[i] += 32;
-
-		}
-
-		//sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", (unsigned char)ifreq.ifr_hwaddr.sa_data[j]);
-	}
-*/
+	HCU_DEBUG_PRINT_INF("HWINV: eth0 MAC address= %s\n\n", zHcuInventoryInfo.hw_mac);
 
     //返回
 	return SUCCESS;
