@@ -73,7 +73,7 @@ OPSTAT fsm_lightstr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_LIGHTSTR, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("LIGHTSTR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_LIGHTSTR], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("LIGHTSTR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_LIGHTSTR], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -173,7 +173,7 @@ OPSTAT fsm_lightstr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_LIGHTSTR, TASK_ID_LIGHTSTR, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_LIGHTSTR]++;
-			HcuErrorPrint("LIGHTSTR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_LIGHTSTR], zHcuTaskNameList[TASK_ID_LIGHTSTR]);
+			HcuErrorPrint("LIGHTSTR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_LIGHTSTR], zHcuTaskInfo.taskName[TASK_ID_LIGHTSTR]);
 			return FAILURE;
 		}
 	}

@@ -71,7 +71,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_BFSCUICOMM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_BFSCUICOMM], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_BFSCUICOMM].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -119,7 +119,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_BFSCUICOMM]++;
-		HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_BFSCUICOMM], zHcuTaskNameList[TASK_ID_L3BFSC]);
+		HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_BFSCUICOMM].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 		return FAILURE;
 	}
 
@@ -165,7 +165,7 @@ OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_BFSCUICOMM, TASK_ID_BFSCUICOMM, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_BFSCUICOMM]++;
-			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_BFSCUICOMM], zHcuTaskNameList[TASK_ID_BFSCUICOMM]);
+			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_BFSCUICOMM].taskName, zHcuTaskInfo[TASK_ID_BFSCUICOMM].taskName);
 			return FAILURE;
 		}
 	}

@@ -100,7 +100,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_NOISE, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NOISE], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -193,7 +193,7 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_NOISE, TASK_ID_NOISE, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_NOISE]);
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NOISE], zHcuTaskInfo.taskName[TASK_ID_NOISE]);
 			return FAILURE;
 		}
 	}
@@ -302,7 +302,7 @@ void func_noise_time_out_read_data_from_modbus(void)
 		ret = hcu_message_send(MSG_ID_NOISE_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_MODBUS]);
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NOISE], zHcuTaskInfo.taskName[TASK_ID_MODBUS]);
 			return;
 		}
 
@@ -371,12 +371,12 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 		ret = hcu_message_send(MSG_ID_NOISE_SPSVIRGO_DATA_READ, TASK_ID_SPSVIRGO, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_SPSVIRGO]);
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NOISE], zHcuTaskInfo.taskName[TASK_ID_SPSVIRGO]);
 			return;
 		}
 		else
 		{
-			HcuDebugPrint("NOISE: Send message suceed, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_SPSVIRGO]);
+			HcuDebugPrint("NOISE: Send message suceed, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NOISE], zHcuTaskInfo.taskName[TASK_ID_SPSVIRGO]);
 		}
 
 		//启动一次性定时器
@@ -524,7 +524,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NOISE], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 			return FAILURE;
 		}
 
@@ -728,7 +728,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NOISE], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NOISE], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 			return FAILURE;
 		}
 

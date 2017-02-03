@@ -120,85 +120,6 @@ StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 	{TASK_ID_MAX,				"MAX", 					NULL},							//Ending
 };
 
-//TRACE针对的模块和消息都没有分项目进行，所以模块和消息必须统一编码，不能分为不同的项目
-//但这种方式在支持更多的项目的情况下，将造成任务模块爆炸崩溃，所以TRACE针对那一部分的消息均采用特殊处理
-char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU] ={
-	"MIN",
-	"HCUMAIN",
-	"HCUVM",
-	"TRACE",
-	"CONFIG",
-	"TIMER",
-	"MMC",
-	"GPIO",
-	"I2C",
-	"SPI",
-	"PWM",
-	"ADC",
-	"SWITCH",
-	"RELAY",
-	"MOTOR",
-	"ZEEGBE",
-	"GRPS",
-	"SPS232",
-	"SPS485",
-	"BLE",
-	"ETHERNET",
-	"WIFI",
-	"USBNET",
-	"3G4G",
-	"HARDDISK",
-	"CAMERA",
-	"MICROPHONE",
-	"FLASH",
-	"GPS",
-	"LCD",
-	"LED",
-	"HWINV",
-	"SPSVIRGO",
-	"CLOUDVELA",
-	"MODBUS",
-	"AVORION",
-	"I2CBUSLIBRA",
-	"SPIBUSARIES",
-	"NBIOTCJ188",
-	"NBIOTQG376",
-	"HSMMP",
-	"EMC",
-	"HUMID",
-	"PM25",
-	"TEMP",
-	"WINDDIR",
-	"WINDSPD",
-	"NOISE",
-	"AIRPRS",
-	"CO1",
-	"LIGHTSTR",
-	"ALCOHOL",
-	"HCHO",
-	"TOXICGAS",
-	"IWM",
-	"IHM",
-	"IGM",
-	"IPM",
-	"SVRCON",
-	"SYSPM",
-	"PM25SHARP",
-	"CANITFLEO",
-	"COM_BOTTOM",
-	"L3AQYCG10",
-	"L3AQYCG20",
-	"L3TBSWRG30",
-	"L3GQYBG40",
-	"L3CXILC",
-	"L3CXGLACM",
-	"L3NBLPM",
-	"L3NBHPM",
-	"L3BFSC",
-	"BFSCUICOMM",
-	"L3OPWLOTDR",
-	"MAX",
-	"NULL"};
 //任务状态机FSM全局控制表，占用内存的大户！！！
 FsmTable_t zHcuFsmTable;
 
@@ -807,7 +728,7 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
 		return FAILURE;
 	}
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-		HcuDebugPrint("HCU-VM: FsmAddNew Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskNameList[task_id]);
+		HcuDebugPrint("HCU-VM: FsmAddNew Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
 	}
 
     //Create Queid
@@ -818,7 +739,7 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
     	return FAILURE;
     }
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-	    HcuDebugPrint("HCU-VM: hcu_msgque_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskNameList[task_id]);
+	    HcuDebugPrint("HCU-VM: hcu_msgque_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
 	}
 
     //Create task and make it running for ever
@@ -829,11 +750,11 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
     	return FAILURE;
     }
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-	    HcuDebugPrint("HCU-VM: hcu_task_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskNameList[task_id]);
+	    HcuDebugPrint("HCU-VM: hcu_task_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
 	}
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
-		HcuDebugPrint("HCU-VM: Whole task environment setup successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskNameList[task_id]);
+		HcuDebugPrint("HCU-VM: Whole task environment setup successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
 	}
 
 	return SUCCESS;
@@ -893,7 +814,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	ret = msgsnd(hcu_msgque_inquery(dest_id), msg, (sizeof(HcuMsgSruct_t)-sizeof(long)), IPC_NOWAIT);
 	free(msg);
 	if ( ret < 0 ) {
-		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuTaskNameList[dest_id]);
+		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuTaskInfo[dest_id].taskName);
 		zHcuTaskInfo[dest_id].QueFullFlag = HCU_TASK_QUEUE_FULL_TRUE;
 		return FAILURE;
 	}
@@ -1251,8 +1172,8 @@ UINT32 taskid_to_string(UINT32 id, char *string)
 	}
 	char tmp[TASK_NAME_MAX_LENGTH-2]="";
 	strcpy(string, "[");
-	if (strlen(zHcuTaskNameList[id])>0){
-		strncpy(tmp, zHcuTaskNameList[id], TASK_NAME_MAX_LENGTH-3);
+	if (strlen(zHcuTaskInfo[id].taskName)>0){
+		strncpy(tmp, zHcuTaskInfo[id].taskName, TASK_NAME_MAX_LENGTH-3);
 		strcat(string, tmp);
 	}else{
 		strcat(string, "TASK_ID_XXX");
@@ -1445,7 +1366,7 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE)
 	{
-		HcuDebugPrint("HCU-VM: FsmAddNew: task_id = 0x%x [%s], src_id= %x, dest_id= %X\n", task_id, zHcuTaskNameList[task_id], 0, 0);
+		HcuDebugPrint("HCU-VM: FsmAddNew: task_id = 0x%x [%s], src_id= %x, dest_id= %X\n", task_id, zHcuTaskInfo[task_id].taskName, 0, 0);
 		HcuDebugPrint("HCU-VM: After add this one, Total (%d) FSM in the table.\n", zHcuFsmTable.numOfFsmCtrlTable);
 	}
 
@@ -1644,7 +1565,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 
 	//未来可以提升到IPT层面
 	HCU_DEBUG_PRINT_INF("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
-				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskNameList[dest_id], mid, zHcuMsgNameList[mid], src_id, zHcuTaskNameList[src_id]);
+				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskInfo[dest_id].taskName, mid, zHcuMsgNameList[mid], src_id, zHcuTaskInfo[src_id].taskName);
 
 	/*
 	** Call the state function.
@@ -1666,7 +1587,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 			//Free memory, here do nothing.
 		}
 		HcuErrorPrint("HCU-VM: Receive invalid msg(%x)[%s] in state(%d) of task(0x%x)[%s]\n",
-			mid, zHcuMsgNameList[mid], state, dest_id, zHcuTaskNameList[dest_id]);
+			mid, zHcuMsgNameList[mid], state, dest_id, zHcuTaskInfo[dest_id].taskName);
 		return FAILURE;
 	}
 
@@ -1727,7 +1648,7 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	msg_struct_com_heart_beat_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_com_heart_beat_t));
 	if ((param_ptr == NULL) || (param_len > sizeof(msg_struct_com_heart_beat_t))){
-		HcuErrorPrint("%s: Receive heart beat message error!\n", zHcuTaskNameList[dest_id]);
+		HcuErrorPrint("%s: Receive heart beat message error!\n", zHcuTaskInfo[dest_id].taskName);
 		return FAILURE;
 	}
 	//优化的结果，可以不用拷贝，暂时没有意义
@@ -1743,7 +1664,7 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = hcu_message_send(MSG_ID_COM_RESTART, dest_id, dest_id, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[dest_id]++;
-			HcuErrorPrint("%s: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[dest_id], zHcuTaskNameList[dest_id], zHcuTaskNameList[dest_id]);
+			HcuErrorPrint("%s: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -1757,7 +1678,7 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = hcu_message_send(MSG_ID_COM_HEART_BEAT_FB, src_id, dest_id, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[dest_id]++;
-			HcuErrorPrint("%s: Send message error, TASK[%s] to TASK[%s]!\n", zHcuTaskNameList[dest_id], zHcuTaskNameList[dest_id], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("%s: Send message error, TASK[%s] to TASK[%s]!\n", zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -2039,13 +1960,13 @@ OPSTAT hcu_vm_system_task_init_call(UINT32 task_id, FsmStateItem_t *p)
 {
 	int ret = 0;
 	if (zHcuTaskInfo[task_id].pnpState != HCU_TASK_PNP_ON){
-		HcuErrorPrint("HCU-MAIN: no need create this task [%s]!\n", zHcuTaskNameList[task_id]);
+		HcuErrorPrint("HCU-MAIN: no need create this task [%s]!\n", zHcuTaskInfo[task_id].taskName);
 		return FAILURE;
 	}
-	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskNameList[task_id]);
+	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskInfo[task_id].taskName);
 	ret = hcu_task_create_and_run(task_id, p);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: create task env [%s] un-successfully, program exit.\n", zHcuTaskNameList[task_id]);
+		HcuErrorPrint("HCU-MAIN: create task env [%s] un-successfully, program exit.\n", zHcuTaskInfo[task_id].taskName);
 		return FAILURE;
 	}
 
@@ -2063,13 +1984,13 @@ void hcu_vm_task_create_hcumain_env(void)
 	//一个不成功，就应该返回，如果不提前返回，纯粹是为了测试
 	//Create HCU-Main Queid /1  该队列创建，纯粹是为了测试，以后需要删掉
 	taskId = TASK_ID_HCUMAIN;
-	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskNameList[taskId]);
+	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskInfo[taskId].taskName);
    	ret = hcu_msgque_create(taskId);
     if (ret == FAILURE){
-    	HcuErrorPrint("HCU-MAIN: create queue [%s] un-successfully, program exit.\n", zHcuTaskNameList[taskId]);
+    	HcuErrorPrint("HCU-MAIN: create queue [%s] un-successfully, program exit.\n", zHcuTaskInfo[taskId].taskName);
     	return;
     }else{
-    	HcuDebugPrint("HCU-MAIN: create queue zHcuTaskNameList[%s] successfully.\n", zHcuTaskNameList[taskId]);
+    	HcuDebugPrint("HCU-MAIN: create queue Task Name[%s] successfully.\n", zHcuTaskInfo[taskId].taskName);
     }
     return;
 }
@@ -2084,7 +2005,7 @@ void hcu_vm_task_send_init_to_timer(void)
 	snd.length = sizeof(msg_struct_com_init_t);
 	ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_TIMER, TASK_ID_HCUMAIN, &snd, snd.length);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HCUMAIN], zHcuTaskNameList[TASK_ID_TIMER]);
+		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HCUMAIN].taskName, zHcuTaskInfo[TASK_ID_TIMER].taskName);
 	}
 
 	//Wait for TIMER task feedback
@@ -2123,7 +2044,7 @@ void hcu_vm_task_send_init_to_avorion(void)
 	snd.length = sizeof(msg_struct_com_init_t);
 	ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_AVORION, TASK_ID_HCUMAIN, &snd, snd.length);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HCUMAIN], zHcuTaskNameList[TASK_ID_AVORION]);
+		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HCUMAIN].taskName, zHcuTaskInfo[TASK_ID_AVORION].taskName);
 	}
 
 	//Wait for AVORION task feedback
@@ -2162,7 +2083,7 @@ void hcu_vm_task_send_init_to_svrcon(void)
 	snd.length = sizeof(msg_struct_com_init_t);
 	ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_SVRCON, TASK_ID_HCUMAIN, &snd, snd.length);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HCUMAIN], zHcuTaskNameList[TASK_ID_SVRCON]);
+		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HCUMAIN].taskName, zHcuTaskInfo[TASK_ID_SVRCON].taskName);
 	}
 
 	//Wait for SVRCON feedback
@@ -2202,7 +2123,7 @@ void hcu_vm_task_send_hb_to_svrcon(void)
 	snd.length = sizeof(msg_struct_com_heart_beat_t);
 	ret = hcu_message_send(MSG_ID_COM_HEART_BEAT, TASK_ID_SVRCON, TASK_ID_HCUMAIN, &snd, snd.length);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HCUMAIN], zHcuTaskNameList[TASK_ID_SVRCON]);
+		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HCUMAIN].taskName, zHcuTaskInfo[TASK_ID_SVRCON].taskName);
 	}
 	return;
 }
@@ -2260,112 +2181,6 @@ void hcu_vm_task_delete_except_timer_and_hcumain(void)
 	}
 	return;
 }
-
-////All child task and Queue creation
-//UINT32 hcu_vm_system_task_init(void)
-//{
-//	int ret=0;
-//	int taskId = 0;
-//	//一个不成功，就应该返回，如果不提前返回，纯粹是为了测试
-//	//Create HCU-Main Queid /1  该队列创建，纯粹是为了测试，以后需要删掉
-//	taskId = TASK_ID_HCUMAIN;
-//	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskNameList[taskId]);
-//   	ret = hcu_msgque_create(taskId);
-//    if (ret == FAILURE){
-//    	HcuErrorPrint("HCU-MAIN: create queue [%s] un-successfully, program exit.\n", zHcuTaskNameList[taskId]);
-//    	return FAILURE;
-//    }else{HcuDebugPrint("HCU-MAIN: create queue zHcuTaskNameList[%s] successfully.\n", zHcuTaskNameList[taskId]);}
-//
-////	   //Create task Timer environments /2
-////	    hcu_vm_system_task_init_call(TASK_ID_TIMER, FsmTimer);
-////
-////	    //Create task Timer environments /3
-////	    hcu_vm_system_task_init_call(TASK_ID_MMC, FsmMmc);
-////
-////	    //Create task Timer environments /4
-////	    hcu_vm_system_task_init_call(TASK_ID_HWINV, FsmHwinv);
-////
-////	    //Create task SvnCont environments /5
-////	    hcu_vm_system_task_init_call(TASK_ID_SVRCON, FsmSvrCon);
-////
-////	    //Create task CloudCont environments /6
-////	    hcu_vm_system_task_init_call(TASK_ID_CLOUDVELA, FsmCloudvela);
-////
-////	    //Create task Modbus environments /7
-////	    hcu_vm_system_task_init_call(TASK_ID_MODBUS, FsmModbus);
-////
-////	    //Create task EMC environments/8
-////	    hcu_vm_system_task_init_call(TASK_ID_EMC, FsmEmc);
-////
-////	    //Create task PM25 environments/9
-////	    hcu_vm_system_task_init_call(TASK_ID_PM25, FsmPm25);
-////
-////	    //Create task WindDir environments/10
-////	    hcu_vm_system_task_init_call(TASK_ID_WINDDIR, FsmWinddir);
-////
-////	    //Create task WindSpeed environments/11
-////	    hcu_vm_system_task_init_call(TASK_ID_WINDSPD, FsmWindspd);
-////
-////	    //Create task Temperature environments/12
-////	    hcu_vm_system_task_init_call(TASK_ID_TEMP, FsmTemp);
-////
-////	    //Create task Humidity environments/13
-////	    hcu_vm_system_task_init_call(TASK_ID_HUMID, FsmHumid);
-////
-////	    //Create task Hsmmp environments/14
-////	    hcu_vm_system_task_init_call(TASK_ID_HSMMP, FsmHsmmp);
-////
-////	    //Create task Noise environments/15
-////	    hcu_vm_system_task_init_call(TASK_ID_NOISE, FsmNoise);
-////
-////	    //Create task Ethernet environments/16
-////	    hcu_vm_system_task_init_call(TASK_ID_ETHERNET, FsmEthernet);
-////
-////	    //Create task WIFI environments/17
-////	    hcu_vm_system_task_init_call(TASK_ID_WIFI, FsmWifi);
-////
-////	    //Create task USBNET environments/18
-////	    hcu_vm_system_task_init_call(TASK_ID_USBNET, FsmUsbnet);
-////
-////	    //Create task 3G4G environments/19
-////	    hcu_vm_system_task_init_call(TASK_ID_3G4G, Fsm3g4g);
-////
-////	    //Create task SPS232 environments/20
-////	    hcu_vm_system_task_init_call(TASK_ID_SPS232, FsmSps232);
-////
-////	    //Create task SPS485 environments/21
-////	    hcu_vm_system_task_init_call(TASK_ID_SPS485, FsmSps485);
-////
-////	    //Create task BLE environments/22
-////	    hcu_vm_system_task_init_call(TASK_ID_BLE, FsmBle);
-////
-////	    //Create task Audio environments/23
-////	    hcu_vm_system_task_init_call(TASK_ID_SPSVIRGO, FsmSpsvirgo);
-////
-////	    //Create task Avorion environments/24
-////	    hcu_vm_system_task_init_call(TASK_ID_AVORION, FsmAvorion);
-////
-////	    //Create task GPS environments/25
-////	    hcu_vm_system_task_init_call(TASK_ID_GPS, FsmGps);
-////
-////	    //Create task LCD environments/26
-////	    hcu_vm_system_task_init_call(TASK_ID_LCD, FsmLcd);
-////
-////	    //Create task LCD environments/26.1
-////	    hcu_vm_system_task_init_call(TASK_ID_LED, FsmLed);
-////
-////	    //Create task CAMERA environments/27
-////	    hcu_vm_system_task_init_call(TASK_ID_CAMERA, FsmCamera);
-////
-////		//Create task Microphone environments/28
-////		hcu_vm_system_task_init_call(TASK_ID_MICROPHONE, FsmMicrophone);
-////
-////		//Create task Pm25Sharp environments/28
-////		hcu_vm_system_task_init_call(TASK_ID_PM25SHARP, FsmPm25Sharp);
-//
-//    return SUCCESS;
-//}
-
 
 int hcu_vm_main_entry(void)
 {

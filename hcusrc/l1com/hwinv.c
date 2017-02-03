@@ -83,7 +83,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HWINV, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -511,7 +511,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	int i=0;
 	for (i=TASK_ID_COM_BOTTOM; i< (TASK_ID_MAX+1); i++){
 		zHcuSysEngPar.traceList.mod[i].moduleId = i;
-		strcpy(zHcuSysEngPar.traceList.mod[i].moduleName, zHcuTaskNameList[i]);
+		strcpy(zHcuSysEngPar.traceList.mod[i].moduleName, zHcuTaskInfo[i].taskName);
 		zHcuSysEngPar.traceList.mod[i].moduleCtrFlag = 1;
 		zHcuSysEngPar.traceList.mod[i].moduleFromAllow = 1;
 		zHcuSysEngPar.traceList.mod[i].moduleFromRestrict = 1;
@@ -899,7 +899,7 @@ void func_hwinv_scan_ethernet(void)
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
@@ -918,7 +918,7 @@ void func_hwinv_scan_ethernet(void)
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
@@ -944,7 +944,7 @@ void func_hwinv_scan_usbnet(void)
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
@@ -963,7 +963,7 @@ void func_hwinv_scan_usbnet(void)
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
@@ -989,7 +989,7 @@ void func_hwinv_scan_wifi(void)
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
@@ -1008,7 +1008,7 @@ void func_hwinv_scan_wifi(void)
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
@@ -1034,7 +1034,7 @@ void func_hwinv_scan_3g4g(void)
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
@@ -1053,7 +1053,7 @@ void func_hwinv_scan_3g4g(void)
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HWINV], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HWINV].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
@@ -1288,7 +1288,7 @@ void func_hwinv_scan_message_queue(void)
 		if ((taskid != TASK_ID_HWINV) && (zHcuTaskInfo[taskid].pnpState == HCU_TASK_PNP_ON) && (zHcuTaskInfo[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
 		{
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuTaskNameList[taskid]);
+				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuTaskInfo[taskid].taskName);
 			}
 			//重新启动该任务
 			hcu_task_delete(taskid);

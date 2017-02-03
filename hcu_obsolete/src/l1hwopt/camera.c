@@ -70,7 +70,7 @@ OPSTAT fsm_camera_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CAMERA, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CAMERA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CAMERA], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("CAMERA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_CAMERA], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}

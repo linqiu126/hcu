@@ -85,7 +85,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_ETHERNET, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_ETHERNET], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -205,7 +205,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_ETHERNET]);
+			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_ETHERNET], zHcuTaskInfo.taskName[TASK_ID_ETHERNET]);
 			return FAILURE;
 		}
 		return FAILURE;
@@ -315,7 +315,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_ETHERNET], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 				//return FAILURE;
 			}
 
@@ -452,7 +452,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_ETHERNET], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 				return FAILURE;
 			}
 		}//end of send data

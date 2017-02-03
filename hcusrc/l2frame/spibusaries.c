@@ -80,7 +80,7 @@ OPSTAT fsm_spibusaries_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPIBUSARIES, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("SPIBUSARIES: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPIBUSARIES], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("SPIBUSARIES: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_SPIBUSARIES].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}

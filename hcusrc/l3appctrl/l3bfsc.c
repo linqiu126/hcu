@@ -119,7 +119,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_L3BFSC, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -240,7 +240,7 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_L3BFSC, TASK_ID_L3BFSC, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_L3BFSC]);
+			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 		}
 	}
 
@@ -337,7 +337,7 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 		snd.sensorid = rcv.sensorid;
 		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 		if (ret == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 		}
 
 		//保留状态不变
@@ -520,7 +520,7 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 	}
 
 	//状态不转移
@@ -555,7 +555,7 @@ OPSTAT fsm_l3bfsc_canitf_general_cmd_resp(UINT32 dest_id, UINT32 src_id, void * 
 	snd.timestamp = time(0);
 	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 	}
 
 	//状态不转移
@@ -633,7 +633,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		snd0.sensorid = rcv.sensorid;
 		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd0, snd0.length);
 		if (ret == FAILURE) {
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 		}
 
 		//设置新状态
@@ -667,7 +667,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				memcpy(snd1.sensorBitmap, zHcuL3BfscGenCtrlTable.wsBitmap, HCU_BFSC_SENSOR_WS_NBR_MAX);
 				ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_GIVE_UP, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd1, snd1.length);
 				if (ret == FAILURE){
-					HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+					HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 				}
 
 				//测试打印
@@ -706,7 +706,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			snd2.combnbr = zHcuL3BfscGenCtrlTable.wsValueNbrTtt;
 			ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_COMB_OUT, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd2, snd2.length);
 			if (ret == FAILURE){
-				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 			}
 
 			//测试打印
@@ -819,7 +819,7 @@ OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * 
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 	}
 
 	//状态不转移
@@ -864,7 +864,7 @@ OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * 
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_INIT_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 	}
 
 	//启动定时器
@@ -982,7 +982,7 @@ OPSTAT func_l3bfsc_time_out_ws_init_req_process(void)
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_INIT_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 	}
 
 	//返回
@@ -1008,7 +1008,7 @@ OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void)
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 	}
 
 	//设置新状态
@@ -1039,7 +1039,7 @@ OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void)
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 	}
 
 	//设置新状态
@@ -1065,7 +1065,7 @@ OPSTAT func_l3bfsc_time_out_error_scan_process(void)
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 	}
 
 	//返回
@@ -1086,7 +1086,7 @@ OPSTAT func_l3bfsc_time_out_period_read_process(void)
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_READ_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3BFSC], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3BFSC].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 	}
 
 	//返回

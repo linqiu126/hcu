@@ -703,7 +703,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTablet_t *engPar)
 		}
 		engPar->traceList.mod[moduleId].moduleId = moduleId;
 		if(sqlRow[index]) strncpy(engPar->traceList.mod[moduleId].moduleName, sqlRow[index++], TASK_NAME_MAX_LENGTH-1);
-		if (strcmp(engPar->traceList.mod[moduleId].moduleName, zHcuTaskNameList[moduleId])){
+		if (strcmp(engPar->traceList.mod[moduleId].moduleName, zHcuTaskInfo.taskName[moduleId])){
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("DBICOM: Error Module name populated!\n");
 			}

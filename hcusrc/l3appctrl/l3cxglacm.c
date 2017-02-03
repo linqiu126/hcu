@@ -75,7 +75,7 @@ OPSTAT fsm_l3cxglacm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_L3CXGLACM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("L3CXGLACM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3CXGLACM], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("L3CXGLACM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_L3CXGLACM], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -155,7 +155,7 @@ OPSTAT fsm_l3cxglacm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_L3CXGLACM, TASK_ID_L3CXGLACM, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_L3CXGLACM]++;
-			HcuErrorPrint("L3CXGLACM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_L3CXGLACM], zHcuTaskNameList[TASK_ID_L3CXGLACM]);
+			HcuErrorPrint("L3CXGLACM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_L3CXGLACM], zHcuTaskInfo.taskName[TASK_ID_L3CXGLACM]);
 			return FAILURE;
 		}
 	}

@@ -99,7 +99,7 @@ OPSTAT fsm_pm25_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_PM25, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -183,7 +183,7 @@ OPSTAT fsm_pm25_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_PM25, TASK_ID_PM25, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_PM25]++;
-			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[TASK_ID_PM25]);
+			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
 			return FAILURE;
 		}
 	}
@@ -249,7 +249,7 @@ void func_pm25_time_out_read_data_from_modbus(void)
 		ret = hcu_message_send(MSG_ID_PM25_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_PM25, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_PM25]++;
-			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[TASK_ID_MODBUS]);
+			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25].taskName, zHcuTaskInfo[TASK_ID_MODBUS].taskName);
 			return;
 		}
 
@@ -435,7 +435,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		ret = hcu_message_send(MSG_ID_PM25_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_PM25]++;
-			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
 
@@ -595,7 +595,7 @@ OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * para
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_PM25, TASK_ID_PM25, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_PM25]++;
-			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[TASK_ID_PM25]);
+			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
 			return FAILURE;
 		}
 	}
@@ -671,7 +671,7 @@ OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * para
 		ret = hcu_message_send(MSG_ID_PM25_MODBUS_CONTROL_CMD, TASK_ID_MODBUS, TASK_ID_PM25, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_PM25]++;
-			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[TASK_ID_MODBUS]);
+			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25].taskName, zHcuTaskInfo[TASK_ID_MODBUS].taskName);
 			return FAILURE;
 		}
 
@@ -904,7 +904,7 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 	ret = hcu_message_send(MSG_ID_PM25_CLOUDVELA_CONTROL_FB, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_PM25]++;
-		HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+		HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 		return FAILURE;
 	}
 

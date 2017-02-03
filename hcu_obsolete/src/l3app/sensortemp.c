@@ -97,7 +97,7 @@ OPSTAT fsm_temp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_TEMP, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TEMP], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TEMP], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -179,7 +179,7 @@ OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_PM25, TASK_ID_PM25, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_TEMP]++;
-			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TEMP], zHcuTaskNameList[TASK_ID_TEMP]);
+			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TEMP], zHcuTaskInfo.taskName[TASK_ID_TEMP]);
 			return FAILURE;
 		}
 	}
@@ -257,7 +257,7 @@ void func_temp_time_out_read_data_from_modbus(void)
 		ret = hcu_message_send(MSG_ID_TEMP_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_TEMP, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_TEMP]++;
-			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TEMP], zHcuTaskNameList[TASK_ID_MODBUS]);
+			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TEMP], zHcuTaskInfo.taskName[TASK_ID_MODBUS]);
 			return;
 		}
 
@@ -325,7 +325,7 @@ void func_temp_time_out_read_data_from_spibusaries(void)
 		ret = hcu_message_send(MSG_ID_TEMP_SPIBUSARIES_DATA_READ, TASK_ID_SPIBUSARIES, TASK_ID_TEMP, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_TEMP]++;
-			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TEMP], zHcuTaskNameList[TASK_ID_SPIBUSARIES]);
+			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TEMP], zHcuTaskInfo.taskName[TASK_ID_SPIBUSARIES]);
 			return;
 		}
 
@@ -505,7 +505,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		ret = hcu_message_send(MSG_ID_TEMP_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_TEMP, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_TEMP]++;
-			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TEMP], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TEMP], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 			return FAILURE;
 		}
 

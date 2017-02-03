@@ -66,7 +66,7 @@ OPSTAT fsm_3g4g_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_3G4G, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("3G4G: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_3G4G], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("3G4G: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_3G4G].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}

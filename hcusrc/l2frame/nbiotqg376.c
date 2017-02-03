@@ -84,7 +84,7 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_NBIOTQG376, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("NBIOTQG376: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTQG376], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("NBIOTQG376: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NBIOTQG376].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -163,7 +163,7 @@ OPSTAT fsm_nbiotqg376_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_NBIOTQG376, TASK_ID_NBIOTQG376, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
-			HcuErrorPrint("NBIOTQG376: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTQG376], zHcuTaskNameList[TASK_ID_NBIOTQG376]);
+			HcuErrorPrint("NBIOTQG376: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NBIOTQG376].taskName, zHcuTaskInfo[TASK_ID_NBIOTQG376].taskName);
 			return FAILURE;
 		}
 	}

@@ -91,7 +91,7 @@ OPSTAT fsm_winddir_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_WINDDIR, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("WINDDIR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WINDDIR], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("WINDDIR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDDIR], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -173,7 +173,7 @@ OPSTAT fsm_winddir_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_WINDDIR, TASK_ID_WINDDIR, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_WINDDIR]++;
-			HcuErrorPrint("WINDDIR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WINDDIR], zHcuTaskNameList[TASK_ID_WINDDIR]);
+			HcuErrorPrint("WINDDIR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDDIR], zHcuTaskInfo.taskName[TASK_ID_WINDDIR]);
 			return FAILURE;
 		}
 	}
@@ -234,7 +234,7 @@ void func_winddir_time_out_read_data_from_modbus(void)
 		ret = hcu_message_send(MSG_ID_WINDDIR_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_WINDDIR, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_WINDDIR]++;
-			HcuErrorPrint("WINDDIR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WINDDIR], zHcuTaskNameList[TASK_ID_MODBUS]);
+			HcuErrorPrint("WINDDIR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDDIR], zHcuTaskInfo.taskName[TASK_ID_MODBUS]);
 			return;
 		}
 
@@ -413,7 +413,7 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		ret = hcu_message_send(MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_WINDDIR, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_WINDDIR]++;
-			HcuErrorPrint("WINDDIR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WINDDIR], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("WINDDIR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDDIR], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 			return FAILURE;
 		}
 

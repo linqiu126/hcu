@@ -90,7 +90,7 @@ OPSTAT fsm_windspd_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_WINDSPD, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WINDSPD], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDSPD], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -172,7 +172,7 @@ OPSTAT fsm_windspd_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_WINDSPD, TASK_ID_WINDSPD, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WINDSPD], zHcuTaskNameList[TASK_ID_WINDSPD]);
+			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDSPD], zHcuTaskInfo.taskName[TASK_ID_WINDSPD]);
 			return FAILURE;
 		}
 	}
@@ -233,7 +233,7 @@ void func_windspd_time_out_read_data_from_modbus(void)
 		ret = hcu_message_send(MSG_ID_WINDSPD_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_WINDSPD, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WINDSPD], zHcuTaskNameList[TASK_ID_MODBUS]);
+			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDSPD], zHcuTaskInfo.taskName[TASK_ID_MODBUS]);
 			return;
 		}
 
@@ -412,7 +412,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		ret = hcu_message_send(MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_WINDSPD, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WINDSPD], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDSPD], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 			return FAILURE;
 		}
 

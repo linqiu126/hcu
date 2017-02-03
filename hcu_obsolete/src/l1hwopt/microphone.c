@@ -65,7 +65,7 @@ OPSTAT fsm_microphone_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MICROPHONE, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("MICROPHONE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MICROPHONE], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("MICROPHONE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_MICROPHONE], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}

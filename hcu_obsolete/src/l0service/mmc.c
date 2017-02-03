@@ -60,7 +60,7 @@ OPSTAT fsm_mmc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MMC, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("MMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MMC], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("MMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_MMC], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}

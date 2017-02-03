@@ -144,7 +144,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CLOUDVELA, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -224,7 +224,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_CLOUDVELA, TASK_ID_CLOUDVELA, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
 	}
@@ -1455,14 +1455,14 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 {
 	//参数检查
 	if ((param_len <=0) || (param_len >MAX_HCU_MSG_BODY_LENGTH)){
-		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuTaskNameList[src_id]);
+		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	if (param_ptr == NULL){
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuTaskNameList[src_id]);
+		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 		return FAILURE;
 	}
 
@@ -1477,7 +1477,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	msg_struct_com_cloudvela_data_rx_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_com_cloudvela_data_rx_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_cloudvela_data_rx_t))){
-		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
@@ -1486,7 +1486,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	rcv.length = param_len;
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
+		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskInfo[src_id].taskName);
 		//int i;
 		//for(i =0; i<rcv.length; i++) HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskNameList[src_id]);
 	}
@@ -1496,7 +1496,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	{
 		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -1506,7 +1506,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	{
 		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -2112,14 +2112,14 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 {
 	//参数检查
 	if ((param_len <=0) || (param_len >MAX_HCU_MSG_BODY_LENGTH)){
-		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuTaskNameList[src_id]);
+		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	if (param_ptr == NULL){
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuTaskNameList[src_id]);
+		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 		return FAILURE;
 	}
 
@@ -2127,7 +2127,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	msg_struct_com_cloudvela_data_rx_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_com_cloudvela_data_rx_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_cloudvela_data_rx_t))){
-		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
@@ -2136,7 +2136,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	rcv.length = param_len;
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskNameList[src_id]);
+		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskInfo[src_id].taskName);
 	}
 
 	//如果是XML自定义格式
@@ -2144,7 +2144,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	{
 		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -2154,7 +2154,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	{
 		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}

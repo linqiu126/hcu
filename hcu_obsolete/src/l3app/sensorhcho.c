@@ -73,7 +73,7 @@ OPSTAT fsm_hcho_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HCHO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HCHO], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HCHO], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -173,7 +173,7 @@ OPSTAT fsm_hcho_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_HCHO, TASK_ID_HCHO, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_HCHO]++;
-			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HCHO], zHcuTaskNameList[TASK_ID_HCHO]);
+			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HCHO], zHcuTaskInfo.taskName[TASK_ID_HCHO]);
 			return FAILURE;
 		}
 	}

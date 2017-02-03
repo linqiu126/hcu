@@ -95,7 +95,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HSMMP, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HSMMP], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HSMMP].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -170,7 +170,7 @@ OPSTAT fsm_hsmmp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_HSMMP, TASK_ID_HSMMP, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_HSMMP]++;
-			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HSMMP], zHcuTaskNameList[TASK_ID_HSMMP]);
+			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HSMMP].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 			return FAILURE;
 		}
 	}
@@ -373,7 +373,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			ret = hcu_message_send(MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP, TASK_ID_CLOUDVELA, TASK_ID_HSMMP, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_HSMMP]++;
-				HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HSMMP], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HSMMP].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -519,7 +519,7 @@ OPSTAT func_hsmmp_time_out_period(void)
 	ret = hcu_message_send(MSG_ID_HSMMP_AVORION_DATA_READ, TASK_ID_AVORION, TASK_ID_HSMMP, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HSMMP], zHcuTaskNameList[TASK_ID_AVORION]);
+		HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HSMMP].taskName, zHcuTaskInfo[TASK_ID_AVORION].taskName);
 		return FAILURE;
 	}
 
@@ -548,7 +548,7 @@ OPSTAT func_hsmmp_time_out_wait_for_cammera_fb(void)
 	ret = hcu_message_send(MSG_ID_HSMMP_AVORION_STOP, TASK_ID_AVORION, TASK_ID_HSMMP, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HSMMP], zHcuTaskNameList[TASK_ID_AVORION]);
+		HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HSMMP].taskName, zHcuTaskInfo[TASK_ID_AVORION].taskName);
 		return FAILURE;
 	}
 

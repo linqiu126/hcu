@@ -80,7 +80,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_ETHERNET, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ETHERNET].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -187,7 +187,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ETHERNET].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 			}
 
 		}
@@ -284,7 +284,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 			//发送数据给CLOUDCONT
 			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
 			if (ret == FAILURE)
-				HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ETHERNET].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 		}//end of send data
 		//这里放zHcuGlobalCounter.CloudDataTimeOutCnt的计数器，Not sure是否是最好的地方，再探究
 		else{
@@ -360,7 +360,7 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length);
 		if (ret == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_ETHERNET], zHcuTaskNameList[TASK_ID_ETHERNET]);
+			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ETHERNET].taskName, zHcuTaskInfo[TASK_ID_ETHERNET].taskName);
 		return FAILURE;
 	}
 	else

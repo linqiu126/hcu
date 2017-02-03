@@ -64,7 +64,7 @@ OPSTAT fsm_timer_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_TIMER, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TIMER], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TIMER], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -299,7 +299,7 @@ OPSTAT fsm_timer_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_SVRCON, TASK_ID_TIMER, &snd0, snd0.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_TIMER]++;
-		HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TIMER], zHcuTaskNameList[TASK_ID_SVRCON]);
+		HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TIMER], zHcuTaskInfo.taskName[TASK_ID_SVRCON]);
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -344,7 +344,7 @@ void func_timer_routine(int signo)
 					ret = hcu_message_send(MSG_ID_COM_TIME_OUT, zHcuTimerTable.timer1s[i].taskId, TASK_ID_TIMER, &snd, snd.length);
 					if (ret == FAILURE){
 						zHcuRunErrCnt[TASK_ID_TIMER]++;
-						HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TIMER], zHcuTaskNameList[zHcuTimerTable.timer1s[i].taskId]);
+						HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TIMER], zHcuTaskInfo.taskName[zHcuTimerTable.timer1s[i].taskId]);
 						return;
 					}
 				}//Elapse <= 0, timeout reach
@@ -504,7 +504,7 @@ void func_timer_routine_handler_1s(union sigval v)
 				ret = hcu_message_send(MSG_ID_COM_TIME_OUT, zHcuTimerTable.timer1s[i].taskId, TASK_ID_TIMER, &snd, snd.length);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_TIMER]++;
-					HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TIMER], zHcuTaskNameList[zHcuTimerTable.timer1s[i].taskId]);
+					HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TIMER], zHcuTaskInfo.taskName[zHcuTimerTable.timer1s[i].taskId]);
 					return;
 				}
 			}//Elapse <= 0, timeout reach
@@ -557,7 +557,7 @@ void func_timer_routine_handler_10ms(union sigval v)
 				ret = hcu_message_send(MSG_ID_COM_TIME_OUT, zHcuTimerTable.timer10ms[i].taskId, TASK_ID_TIMER, &snd, snd.length);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_TIMER]++;
-					HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TIMER], zHcuTaskNameList[zHcuTimerTable.timer10ms[i].taskId]);
+					HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TIMER], zHcuTaskInfo.taskName[zHcuTimerTable.timer10ms[i].taskId]);
 					return;
 				}
 			}//Elapse <= 0, timeout reach
@@ -609,7 +609,7 @@ void func_timer_routine_handler_1ms(union sigval v)
 				ret = hcu_message_send(MSG_ID_COM_TIME_OUT, zHcuTimerTable.timer1ms[i].taskId, TASK_ID_TIMER, &snd, snd.length);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_TIMER]++;
-					HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TIMER], zHcuTaskNameList[zHcuTimerTable.timer1ms[i].taskId]);
+					HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_TIMER], zHcuTaskInfo.taskName[zHcuTimerTable.timer1ms[i].taskId]);
 					return;
 				}
 			}//Elapse <= 0, timeout reach
@@ -628,7 +628,7 @@ OPSTAT hcu_timer_start(UINT32 task_id, UINT32 timer_id, UINT32 t_dur, UINT8 t_ty
 {
 	//检查task_id是否合法
 	if ((task_id < TASK_ID_MIN) || (task_id > TASK_ID_MAX)){
-		HcuErrorPrint("TIMER: Error on timer start src_id =%d [%s]!!!\n", task_id, zHcuTaskNameList[task_id]);
+		HcuErrorPrint("TIMER: Error on timer start src_id =%d [%s]!!!\n", task_id, zHcuTaskInfo.taskName[task_id]);
 		zHcuRunErrCnt[TASK_ID_TIMER]++;
 		return FAILURE;
 	}
@@ -705,7 +705,7 @@ OPSTAT hcu_timer_stop(UINT32 task_id, UINT32 timer_id, UINT8 t_res)
 {
 	//检查task_id是否合法
 	if ((task_id < TASK_ID_MIN) || (task_id > TASK_ID_MAX)){
-		HcuErrorPrint("TIMER: Error on timer stop src_id =%d [%s]!!!\n", task_id, zHcuTaskNameList[task_id]);
+		HcuErrorPrint("TIMER: Error on timer stop src_id =%d [%s]!!!\n", task_id, zHcuTaskInfo.taskName[task_id]);
 		zHcuRunErrCnt[TASK_ID_TIMER]++;
 		return FAILURE;
 	}

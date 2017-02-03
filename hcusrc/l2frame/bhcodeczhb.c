@@ -1442,7 +1442,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_EMC_CONTROL_CMD, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_EMC]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_EMC].taskName);
 			return FAILURE;
 		}
 	}//End of EMC传感器任务
@@ -1467,7 +1467,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_TEMP]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_TEMP].taskName);
 			return FAILURE;
 		}
 	}//End of TEMP传感器任务
@@ -1492,7 +1492,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd2, snd2.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_HUMID]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_HUMID].taskName);
 			return FAILURE;
 		}
 	}
@@ -1524,7 +1524,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd4, snd4.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_WINDSPD]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_WINDSPD].taskName);
 			return FAILURE;
 		}
 	}//End of WINDSPD传感器任务
@@ -1549,7 +1549,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd5, snd5.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_WINDDIR]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_WINDDIR].taskName);
 			return FAILURE;
 		}
 	}//End of WINDDIR传感器任务
@@ -1574,7 +1574,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_PM25_CONTROL_CMD, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd6, snd6.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_PM25]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
 			return FAILURE;
 		}
 	}//End of PM25传感器任务
@@ -1599,7 +1599,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd7, snd7.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_NOISE]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_NOISE].taskName);
 			return FAILURE;
 		}
 	}//End of NOISE传感器任务
@@ -1624,7 +1624,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd8, snd8.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_HSMMP]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 			return FAILURE;
 		}
 	}//End of HSMMP传感器任务

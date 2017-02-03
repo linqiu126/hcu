@@ -63,7 +63,7 @@ OPSTAT fsm_pwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_PWM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("PWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PWM], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("PWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PWM].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}

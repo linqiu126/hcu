@@ -78,7 +78,7 @@ OPSTAT fsm_spsvirgo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPSVIRGO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPSVIRGO], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SPSVIRGO], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -225,7 +225,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SPSVIRGO, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPSVIRGO], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SPSVIRGO], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 				return FAILURE;
 			}
 			return FAILURE;
@@ -350,7 +350,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	ret = hcu_message_send(MSG_ID_SPSVIRGO_NOISE_DATA_REPORT, TASK_ID_NOISE, TASK_ID_SPSVIRGO, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPSVIRGO], zHcuTaskNameList[TASK_ID_NOISE]);
+		HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SPSVIRGO], zHcuTaskInfo.taskName[TASK_ID_NOISE]);
 		return FAILURE;
 	}
 

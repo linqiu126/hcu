@@ -2,29 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcu_vm_working_mode_single_start" key="selection"/>
+		<item value="zHcuTaskNameList" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="hcu_vm_working_mode_single_start"/>
-			<item value="hcu_vm_process_single_mainapp_entry"/>
-			<item value="dbi_HcuTraceModuleCtr_inqury"/>
-			<item value="hcu_vm_system_task_init_call"/>
-			<item value="hcu_vm_system_task_init"/>
-			<item value="zHcuSvrConTaskInitInfo"/>
-			<item value="hcu_vm_send_init_msg_to_app_task"/>
-			<item value="hcu_vm_task_delete_all_and_queue"/>
+			<item value="zHcuTaskNameList"/>
+			<item value="zHcuTaskInfo.taskName"/>
+			<item value="zHcuTaskInfo.taskName[taskid]"/>
+			<item value="zHcuTaskInfo.taskName[TASK_ID_HWINV]"/>
+			<item value="zHcuTaskInfo.taskName[task_id]"/>
+			<item value="zHcuTaskInfo.taskName[TASK_ID_TIMER]"/>
+			<item value="zHcuTaskInfo.taskName[TASK_ID_I2CBUSLIBRA]"/>
+			<item value="zHcuTaskInfo.taskName[TASK_ID_ETHERNET]"/>
 		</list>
 		<list key="replacehistory">
+			<item value="zHcuTaskInfo[taskid].taskName"/>
+			<item value="zHcuTaskInfo[TASK_ID_HWINV].taskName"/>
+			<item value="zHcuTaskInfo[task_id].taskName"/>
+			<item value="zHcuTaskInfo[TASK_ID_TIMER].taskName"/>
+			<item value="zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].taskName"/>
+			<item value="zHcuTaskInfo[TASK_ID_ETHERNET].taskName"/>
+			<item value="zHcuTaskInfo[src_id].taskName"/>
+			<item value="zHcuTaskInfo[TASK_ID_HSMMP].taskName"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="303" key="DIALOG_WIDTH"/>
+		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="424" key="DIALOG_HEIGHT"/>
-		<item value="1172" key="DIALOG_X_ORIGIN"/>
-		<item value="184" key="DIALOG_Y_ORIGIN"/>
+		<item value="425" key="DIALOG_HEIGHT"/>
+		<item value="1180" key="DIALOG_X_ORIGIN"/>
+		<item value="434" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

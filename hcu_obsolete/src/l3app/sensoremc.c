@@ -91,7 +91,7 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_EMC, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_EMC], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_EMC], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -175,7 +175,7 @@ OPSTAT fsm_emc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_EMC, TASK_ID_EMC, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_EMC], zHcuTaskNameList[TASK_ID_EMC]);
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_EMC], zHcuTaskInfo.taskName[TASK_ID_EMC]);
 			return FAILURE;
 		}
 	}
@@ -236,7 +236,7 @@ void func_emc_time_out_read_data_from_modbus(void)
 		ret = hcu_message_send(MSG_ID_EMC_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_EMC, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_EMC], zHcuTaskNameList[TASK_ID_MODBUS]);
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_EMC], zHcuTaskInfo.taskName[TASK_ID_MODBUS]);
 			return;
 		}
 
@@ -425,7 +425,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 		ret = hcu_message_send(MSG_ID_EMC_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_EMC, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_EMC], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_EMC], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 			return FAILURE;
 		}
 

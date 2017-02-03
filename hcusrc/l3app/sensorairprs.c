@@ -74,7 +74,7 @@ OPSTAT fsm_airprs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_AIRPRS, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("AIRPRS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_AIRPRS], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("AIRPRS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_AIRPRS].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -174,7 +174,7 @@ OPSTAT fsm_airprs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_AIRPRS, TASK_ID_AIRPRS, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_AIRPRS]++;
-			HcuErrorPrint("AIRPRS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_AIRPRS], zHcuTaskNameList[TASK_ID_AIRPRS]);
+			HcuErrorPrint("AIRPRS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_AIRPRS].taskName, zHcuTaskInfo[TASK_ID_AIRPRS].taskName);
 			return FAILURE;
 		}
 	}

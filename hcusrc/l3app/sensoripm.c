@@ -76,7 +76,7 @@ OPSTAT fsm_ipm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_IPM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("IPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_IPM], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("IPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_IPM].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -177,7 +177,7 @@ OPSTAT fsm_ipm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_IPM, TASK_ID_IPM, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_IPM]++;
-			HcuErrorPrint("IPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_IPM], zHcuTaskNameList[TASK_ID_IPM]);
+			HcuErrorPrint("IPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_IPM].taskName, zHcuTaskInfo[TASK_ID_IPM].taskName);
 			return FAILURE;
 		}
 	}
@@ -440,7 +440,7 @@ OPSTAT fsm_ipm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	ret = hcu_message_send(MSG_ID_IPM_NBIOTCJ188_DATA_RESP, TASK_ID_NBIOTCJ188, TASK_ID_IPM, &ipmResp, ipmResp.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_IPM]++;
-		HcuErrorPrint("IPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_IPM], zHcuTaskNameList[TASK_ID_NBIOTCJ188]);
+		HcuErrorPrint("IPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_IPM].taskName, zHcuTaskInfo[TASK_ID_NBIOTCJ188].taskName);
 		return FAILURE;
 	}
 

@@ -15,7 +15,7 @@ PRJ_BFSC待完成或者回答的问题：
 
 
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 144 =>BFSC项目
-=去掉ZTaskName[]数组
+=去掉zHcuTaskNameList[]数组，改用zHcuTaskInfo[i].taskName
 
 
 

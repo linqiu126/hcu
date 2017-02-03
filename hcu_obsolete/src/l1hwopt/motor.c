@@ -63,7 +63,7 @@ OPSTAT fsm_motor_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MOTOR, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("MOTOR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MOTOR], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("MOTOR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_MOTOR], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}

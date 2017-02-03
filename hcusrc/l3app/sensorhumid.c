@@ -95,7 +95,7 @@ OPSTAT fsm_humid_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HUMID, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("HUMID: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HUMID], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("HUMID: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HUMID].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -177,7 +177,7 @@ OPSTAT fsm_humid_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_HUMID, TASK_ID_HUMID, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_HUMID]++;
-			HcuErrorPrint("HUMID: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HUMID], zHcuTaskNameList[TASK_ID_HUMID]);
+			HcuErrorPrint("HUMID: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HUMID].taskName, zHcuTaskInfo[TASK_ID_HUMID].taskName);
 			return FAILURE;
 		}
 	}
@@ -247,7 +247,7 @@ void func_humid_time_out_read_data_from_modbus(void)
 		ret = hcu_message_send(MSG_ID_HUMID_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_HUMID, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_HUMID]++;
-			HcuErrorPrint("HUMID: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HUMID], zHcuTaskNameList[TASK_ID_MODBUS]);
+			HcuErrorPrint("HUMID: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HUMID].taskName, zHcuTaskInfo[TASK_ID_MODBUS].taskName);
 			return;
 		}
 
@@ -426,7 +426,7 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		ret = hcu_message_send(MSG_ID_HUMID_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_HUMID, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_HUMID]++;
-			HcuErrorPrint("HUMID: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HUMID], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+			HcuErrorPrint("HUMID: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HUMID].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
 

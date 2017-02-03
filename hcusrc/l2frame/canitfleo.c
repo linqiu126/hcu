@@ -117,7 +117,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CANITFLEO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -211,7 +211,7 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_CANITFLEO]);
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
 			return FAILURE;
 		}
 	}
@@ -294,7 +294,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 		ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_INIT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 			return FAILURE;
 		}
 	}
@@ -350,7 +350,7 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 		ret = hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 			return FAILURE;
 		}
 	}
@@ -370,7 +370,7 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 				ret = hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 				if (ret == FAILURE){
 					zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-					HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+					HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 					return FAILURE;
 				}
 			}
@@ -412,7 +412,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 			ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 				return FAILURE;
 			}
 		}
@@ -454,7 +454,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 			ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 				return FAILURE;
 			}
 		}
@@ -528,7 +528,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_READ_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 		return FAILURE;
 	}
 #endif
@@ -621,7 +621,7 @@ OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void 
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 		return FAILURE;
 	}
 #endif
@@ -684,7 +684,7 @@ void func_canitfleo_working_scan_process(void)
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CANITFLEO], zHcuTaskNameList[TASK_ID_L3BFSC]);
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
 		return;
 	}
 #endif

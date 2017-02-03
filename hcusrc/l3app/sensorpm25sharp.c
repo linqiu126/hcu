@@ -75,7 +75,7 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_PM25SHARP, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("PM25SHARP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25SHARP], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("PM25SHARP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25SHARP].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -176,7 +176,7 @@ OPSTAT fsm_pm25sharp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_PM25SHARP, TASK_ID_PM25SHARP, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
-			HcuErrorPrint("PM25SHARP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25SHARP], zHcuTaskNameList[TASK_ID_PM25SHARP]);
+			HcuErrorPrint("PM25SHARP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_PM25SHARP].taskName, zHcuTaskInfo[TASK_ID_PM25SHARP].taskName);
 			return FAILURE;
 		}
 	}

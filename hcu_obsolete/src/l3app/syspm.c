@@ -73,7 +73,7 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SYSPM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SYSPM], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SYSPM], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -174,7 +174,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_SYSPM, TASK_ID_SYSPM, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_SYSPM]++;
-			HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SYSPM], zHcuTaskNameList[TASK_ID_SYSPM]);
+			HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SYSPM], zHcuTaskInfo.taskName[TASK_ID_SYSPM]);
 			return FAILURE;
 		}
 	}
@@ -212,7 +212,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			ret = hcu_message_send(MSG_ID_COM_PM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_SYSPM]++;
-				HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SYSPM], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SYSPM], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
 				return FAILURE;
 			}
 

@@ -90,7 +90,7 @@ OPSTAT fsm_nbiotcj188_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_NBIOTCJ188, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NBIOTCJ188], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -169,7 +169,7 @@ OPSTAT fsm_nbiotcj188_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_NBIOTCJ188, TASK_ID_NBIOTCJ188, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_NBIOTCJ188]);
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NBIOTCJ188], zHcuTaskInfo.taskName[TASK_ID_NBIOTCJ188]);
 			return FAILURE;
 		}
 	}
@@ -714,7 +714,7 @@ OPSTAT fsm_nbiotcj188_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * par
 	//如果需要通过这里进行消息解码的格式区分，也可以通过全局变量进行区分
 	if (func_nbiotcj188_dl_msg_unpack(&buf) == FAILURE){
 		zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-		HcuErrorPrint("NBIOTCJ188: Unpack receive message error from [%s] module!\n", zHcuTaskNameList[src_id]);
+		HcuErrorPrint("NBIOTCJ188: Unpack receive message error from [%s] module!\n", zHcuTaskInfo.taskName[src_id]);
 		return FAILURE;
 	}
 
@@ -1941,7 +1941,7 @@ OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf)
 		ret = hcu_message_send(MSG_ID_NBIOTCJ188_IWM_DATA_REQ, TASK_ID_IWM, TASK_ID_NBIOTCJ188, &snd1, snd1.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_IWM]);
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NBIOTCJ188], zHcuTaskInfo.taskName[TASK_ID_IWM]);
 			return FAILURE;
 		}
 	}//IWM
@@ -1951,7 +1951,7 @@ OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf)
 		ret = hcu_message_send(MSG_ID_NBIOTCJ188_IHM_DATA_REQ, TASK_ID_IHM, TASK_ID_NBIOTCJ188, &snd2, snd2.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_IHM]);
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NBIOTCJ188], zHcuTaskInfo.taskName[TASK_ID_IHM]);
 			return FAILURE;
 		}
 	}//IHM
@@ -1961,7 +1961,7 @@ OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf)
 		ret = hcu_message_send(MSG_ID_NBIOTCJ188_IGM_DATA_REQ, TASK_ID_IGM, TASK_ID_NBIOTCJ188, &snd3, snd3.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_IGM]);
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NBIOTCJ188], zHcuTaskInfo.taskName[TASK_ID_IGM]);
 			return FAILURE;
 		}
 	}//IGM
@@ -1971,7 +1971,7 @@ OPSTAT func_nbiotcj188_dl_msg_unpack(CloudDataSendBuf_t *buf)
 		ret = hcu_message_send(MSG_ID_NBIOTCJ188_IPM_DATA_REQ, TASK_ID_IPM, TASK_ID_NBIOTCJ188, &snd4, snd4.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_NBIOTCJ188]++;
-			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_NBIOTCJ188], zHcuTaskNameList[TASK_ID_IPM]);
+			HcuErrorPrint("NBIOTCJ188: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_NBIOTCJ188], zHcuTaskInfo.taskName[TASK_ID_IPM]);
 			return FAILURE;
 		}
 	}//IPM

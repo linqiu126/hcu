@@ -71,7 +71,7 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_I2C, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("I2C: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_I2C], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("I2C: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_I2C].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}

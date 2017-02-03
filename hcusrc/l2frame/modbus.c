@@ -114,7 +114,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MODBUS, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -302,7 +302,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	ret = hcu_message_send(MSG_ID_MODBUS_EMC_DATA_REPORT, TASK_ID_EMC, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_EMC]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_EMC].taskName);
 		return FAILURE;
 	}
 
@@ -374,7 +374,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -426,7 +426,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -527,7 +527,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	ret = hcu_message_send(MSG_ID_MODBUS_PM25_DATA_REPORT, TASK_ID_PM25, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_PM25]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
 		return FAILURE;
 	}
 
@@ -595,7 +595,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -648,7 +648,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -747,7 +747,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	ret = hcu_message_send(MSG_ID_MODBUS_WINDDIR_DATA_REPORT, TASK_ID_WINDDIR, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_WINDDIR]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_WINDDIR].taskName);
 		return FAILURE;
 	}
 
@@ -815,7 +815,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -869,7 +869,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -970,7 +970,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	ret = hcu_message_send(MSG_ID_MODBUS_WINDSPD_DATA_REPORT, TASK_ID_WINDSPD, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_WINDSPD]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_WINDSPD].taskName);
 		return FAILURE;
 	}
 
@@ -1040,7 +1040,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -1098,7 +1098,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -1200,7 +1200,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	ret = hcu_message_send(MSG_ID_MODBUS_TEMP_DATA_REPORT, TASK_ID_TEMP, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_TEMP]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_TEMP].taskName);
 		return FAILURE;
 	}
 
@@ -1271,7 +1271,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -1327,7 +1327,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -1428,7 +1428,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	ret = hcu_message_send(MSG_ID_MODBUS_HUMID_DATA_REPORT, TASK_ID_HUMID, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_HUMID]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_HUMID].taskName);
 		return FAILURE;
 	}
 
@@ -1511,7 +1511,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -1564,7 +1564,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -1663,7 +1663,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	ret = hcu_message_send(MSG_ID_MODBUS_NOISE_DATA_REPORT, TASK_ID_NOISE, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_NOISE]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_NOISE].taskName);
 		return FAILURE;
 	}
 
@@ -3223,7 +3223,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	ret = hcu_message_send(MSG_ID_MODBUS_PM25_CONTROL_FB, TASK_ID_PM25, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_PM25]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
 		return FAILURE;
 	}
 

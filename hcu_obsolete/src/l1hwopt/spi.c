@@ -68,7 +68,7 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPI, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("SPI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPI], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("SPI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SPI], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}

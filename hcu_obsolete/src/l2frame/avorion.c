@@ -121,7 +121,7 @@ OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_AVORION, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("AVORION: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_AVORION], zHcuTaskNameList[src_id]);
+			HcuErrorPrint("AVORION: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_AVORION], zHcuTaskInfo.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -270,7 +270,7 @@ OPSTAT fsm_avorion_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	ret = hcu_message_send(MSG_ID_AVORION_HSMMP_DATA_READ_FB, TASK_ID_HSMMP, TASK_ID_AVORION, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_AVORION]++;
-		HcuErrorPrint("AVORION: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_AVORION], zHcuTaskNameList[TASK_ID_HSMMP]);
+		HcuErrorPrint("AVORION: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_AVORION], zHcuTaskInfo.taskName[TASK_ID_HSMMP]);
 		return FAILURE;
 	}
 
