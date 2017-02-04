@@ -17,10 +17,8 @@ UINT32 zHcuRunErrCnt[MAX_TASK_NUM_IN_ONE_HCU];
 HcuGlobalCounter_t zHcuGlobalCounter;  //定义全局计数器COUNTER
 HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
-//请确保，该全局字符串的定义跟Task_Id的顺序保持完全一致，不然后面的显示内容会出现差错
-//请服从最长长度TASK_NAME_MAX_LENGTH的定义，不然Debug/Trace打印出的信息也会出错
-
 //任务初始化配置参数
+//请确保，该全局字符串的定义跟Task_Id的顺序保持完全一致，不然后面的显示内容会出现差错， 请服从最长长度TASK_NAME_MAX_LENGTH的定义，不然Debug/Trace打印出的信息也会出错
 //从极致优化内存的角度，这里浪费了2个TASK对应的内存空间（MIN=0/MAX=n+1)，但它却极大的改善了程序编写的效率，值得浪费！！！
 StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 {
@@ -365,7 +363,8 @@ char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK] ={
 OPSTAT hcu_vm_system_init(void)
 {
 	//INIT HCU itself
-	HcuDebugPrint("HCU-VM: CURRENT_PRJ=[%s], HW_TYPE=[%d], HW_MODULE=[%d], SW_REL=[%d], SW_DELIVER=[%d].\n", HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, HCU_CURRENT_HW_TYPE, HCU_CURRENT_HW_MODULE, HCU_CURRENT_SW_RELEASE, HCU_CURRENT_SW_DELIVERY);
+	HcuDebugPrint("HCU-VM: User task starting, compiled load Info: CURRENT_PRJ=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[%d], SW_REL=[%d], SW_DELIVER=[%d].\n", \
+			HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, HCU_HARDWARE_PRODUCT_CAT_TYPE, HCU_CURRENT_HW_TYPE, HCU_CURRENT_SW_RELEASE, HCU_CURRENT_SW_DELIVERY);
 	HcuDebugPrint("HCU-VM: BXXH(TM) HCU(c) Application Layer start and initialized, build at %s, %s.\n", __DATE__, __TIME__);
 
 	//初始化全局变量TASK_ID/QUE_ID/TASK_STAT

@@ -9,14 +9,11 @@
 #define L0COMVM_SYSVERSION_H_
 
 //硬件版本定义及状态
-#define HCU_CURRENT_HW_TYPE 2 // 1 = WEMC, 2 = HCU, 3 = WIFI_EMC
-#define HCU_CURRENT_HW_MODULE 4 // 0 = NULL, 1 = Samsung 6410, 2 = FSL, 3 = Feilinx 335D, 4 = RaspberryPi 3B
+#define HCU_CURRENT_HW_TYPE 5// HARDWARE PEM，表征PEM5
 
 //SW version control, for internal usage
 #define HCU_CURRENT_SW_RELEASE 1 //R01 = 0x01 (XQ.HCU.SW.R01.456)
-
-
-#define HCU_CURRENT_SW_DELIVERY 146 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
+#define HCU_CURRENT_SW_DELIVERY 147 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
 
 
 //= ZJL, 2015 Nov.1, CURRENT_SW_DELIVERY 1
@@ -160,7 +157,7 @@
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 144 =>BFSC项目
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 145 =>BFSC项目
 //= ZJL, 2017 Feb.4, CURRENT_SW_DELIVERY 146 =>BFSC项目
-
+//= ZJL, 2017 Feb.4, CURRENT_SW_DELIVERY 147 =>BFSC项目
 
 
 

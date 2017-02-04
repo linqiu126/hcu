@@ -64,7 +64,7 @@
 //全局统一定义
 //系统任务级
 #define MAX_TASK_NUM_IN_ONE_HCU 100  //需要根据系统中实际多少任务模块来决定，从70改为100，不然随着新模块的加入，已经不够了
-#define TASK_NAME_MAX_LENGTH 15  //从12改为15
+#define TASK_NAME_MAX_LENGTH 15  //从12改为15，确保任务模块名字的安全
 //系统消息级
 //maxmum state number and msg number in one task, no instance concept
 #define HCU_TASK_QUEUE_ID_START 1024
