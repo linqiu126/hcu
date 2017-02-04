@@ -10,11 +10,6 @@
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
 
-#include <string.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 
 /*
 ** FSM of the HWINV
@@ -49,7 +44,7 @@ FsmStateItem_t HcuFsmHwinv[] =
  */
 
 //Global variables
-HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 HcuHwinvCtrlTable_t zHcuHwinvTable; //硬件列表
 zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
 HcuInventoryInfo_t zHcuInventoryInfo; //软件及数据库版本
@@ -342,7 +337,6 @@ void func_hwinv_copy_right(void)
 OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 {
 	int ret = 0;
-	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTablet_t));
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
 
 	//第一部分/zHcuSysEngPar总共三步分

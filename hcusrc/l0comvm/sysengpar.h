@@ -157,6 +157,7 @@ typedef struct SysEngParElementSensor
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 //小技巧，不要这部分，以便加强编译检查
 #else
+	#error Un-correct constant definition
 #endif
 }SysEngParElementSensorTimer_t;
 
@@ -196,7 +197,6 @@ typedef struct SysEngParElementHcuSwDownload
 	char  hcuSwDownloadDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
 	char  hcuSwActiveDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
 	char  hcuSwBackupDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
-
 }SysEngParElementHcuSwDownload_t;
 
 //本地视频服务器的地址
@@ -286,8 +286,28 @@ typedef struct SysEngParElementProgramCodeDefineFix
 	UINT8 test;
 //小技巧，不要这部分，以便加强编译检查
 #else
+	#error Un-correct constant definition
 #endif
 }SysEngParElementProgramCodeDefineFix_t;
+
+//通用硬件固定位置的标签存储内容，由工厂生产过程中烧录器写入
+//该结构必然跟各个物理器件的定义一致，不然会导致读取失败
+#pragma pack (1) //强制1字节对齐
+typedef struct SysEngParElementHwBurnPhyIdAddr
+{
+	char  	equLable[20];
+	UINT16 	hwType;
+	UINT16 	hwPemId;
+	UINT16 	swRelId;
+	UINT16 	swVerId;
+	UINT16 	swAppCheckSum;
+	UINT8  	swUpgradeFlag;
+	UINT8 	swUpgPollId;
+	UINT8   cipherKey[16];
+	UINT8 	rsv[16];
+}SysEngParElementHwBurnPhyIdAddr_t;
+#pragma pack () //取消字节对其
+#define HCU_HW_BURN_PHY_ID_BLOCK_LEN sizeof(SysEngParElementHwBurnPhyIdAddr_t)
 
 //工程参数总控制表
 #define SYS_ENG_PAR_PRJ_NAME_LEN 100  //保持跟数据库的一致性
@@ -306,6 +326,7 @@ typedef struct HcuSysEngParTable
 	SysEngParElementTrace_t traceList;
 	SysEngParElementLocalUi_t localUI;
 	SysEngParElementProgramCodeDefineFix_t codeDefineFix;
+	SysEngParElementHwBurnPhyIdAddr_t hwBurnId;
 }HcuSysEngParTablet_t;
 
 

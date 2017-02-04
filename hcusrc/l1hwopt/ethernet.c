@@ -9,20 +9,6 @@
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
 
-//Adding by Shanchun for socket handling
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
-
-
 /*
 ** FSM of the ETHERNET
 */

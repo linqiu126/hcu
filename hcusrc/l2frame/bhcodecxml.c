@@ -2368,10 +2368,10 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 	//根据OptId操作字进行进一步的分解
 	if ((optId == L3PO_hcuinventory_req)){
 		    optId = L3PO_hcuinventory_report;
-			hcuInventoryInfo.hw_type = CURRENT_HW_TYPE;
-			hcuInventoryInfo.hw_version = CURRENT_HW_MODULE;
-			hcuInventoryInfo.sw_delivery = CURRENT_SW_RELEASE;
-			hcuInventoryInfo.sw_release = CURRENT_SW_DELIVERY;
+			hcuInventoryInfo.hw_type = zHcuSysEngPar.hwBurnId.hwType;
+			hcuInventoryInfo.hw_version = zHcuSysEngPar.hwBurnId.hwPemId;
+			hcuInventoryInfo.sw_delivery = zHcuSysEngPar.hwBurnId.swRelId;
+			hcuInventoryInfo.sw_release = zHcuSysEngPar.hwBurnId.swVerId;
 
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);

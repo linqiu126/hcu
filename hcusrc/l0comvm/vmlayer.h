@@ -188,7 +188,7 @@ enum HCU_TASK_QUEUE_ID
 	TASK_QUE_ID_BFSCUICOMM,
 	TASK_QUE_ID_L3OPWLOTDR,
 	TASK_QUE_ID_MAX,
-	TASK_QUE_ID_NULL = 0xFFFFFFFF,
+	TASK_QUE_ID_INVALID = 0xFFFFFFFF,
 }; //end of HCU_TASK_QUEUE_ID
 
 
@@ -209,16 +209,16 @@ typedef struct FsmStateItem
 
 typedef struct HcuTaskTag
 {
-	UINT32 TaskId;
-	UINT8  pnpState;
-	INT32  processId;
-	pthread_t ThrId;
-	INT32  QueId;
-	UINT8  state;
-	char   taskName[TASK_NAME_MAX_LENGTH];
+	UINT32 		TaskId;
+	UINT8  		pnpState;
+	INT32  		processId;
+	pthread_t 	ThrId;
+	INT32  		QueId;
+	UINT8  		state;
+	char   		taskName[TASK_NAME_MAX_LENGTH];
 	FsmStateItem_t *fsmPtr;
-	UINT8 QueFullFlag;
-	void*  taskFuncEntry;
+	UINT8 		QueFullFlag;
+	void*  		taskFuncEntry;
 }HcuTaskTag_t;
 #define HCU_TASK_QUEUE_FULL_NULL 0
 #define HCU_TASK_QUEUE_FULL_TRUE 1
@@ -288,52 +288,6 @@ typedef struct HcuGlobalCounter
 	UINT32 disk_occupy;
 }HcuGlobalCounter_t;
 extern HcuGlobalCounter_t zHcuGlobalCounter;
-
-//Global VM layer basic API and functions
-extern void hcu_sw_restart(void);  //软件状态机初始化, TBD
-extern OPSTAT hcu_task_create(UINT32 task_id, void *(*task_func)(void *), void *arg, int prio);
-extern OPSTAT hcu_task_delete(UINT32 task_id);
-extern OPSTAT hcu_msgque_create(UINT32 task_id);
-extern OPSTAT hcu_msgque_delete(UINT32 task_id);
-UINT32 hcu_msgque_inquery(UINT32 task_id);
-extern OPSTAT hcu_msgque_resync(void);
-extern OPSTAT hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem);
-extern OPSTAT hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len); //message send
-extern OPSTAT hcu_message_rcv(UINT32 dest_id, HcuMsgSruct_t *msg);
-extern UINT32 hcu_message_rcv_no_wait(UINT32 dest_id, HcuMsgSruct_t *msg);
-extern OPSTAT taskid_to_string(UINT32 id, char *string);
-extern OPSTAT msgid_to_string(UINT32 id, char *string);
-extern OPSTAT hcu_timer_polling(time_t sec, UINT32 nsec, void *handler());
-extern OPSTAT hcu_timer_set(UINT32 timerid, UINT32 taskid, UINT32 delay);
-extern OPSTAT hcu_timer_clear(UINT32 timerid, UINT32 taskid);
-extern void hcu_sleep(UINT32 second);
-extern void hcu_usleep(UINT32 usecond);  //resulution 10^(-6)s = 1 microsecond
-//UNIX下时钟函数非常丰富，这里不再做任何抽象化，上层应用可以直接调用系统库函数进行使用和处理
-extern UINT16 hcu_CRC_16(unsigned char *data,int len);
-//高级错误打印方式
-#define HCU_ERROR_PRINT_TASK(taskid, ...)	do{zHcuRunErrCnt[taskid]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
-
-
-/*FSM related APIs */
-extern UINT32 FsmInit(void);
-extern UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem);
-extern UINT32 FsmRemove(UINT32 task_id);
-extern UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len);
-extern UINT32 FsmProcessingLaunch(void);
-extern OPSTAT FsmSetState(UINT32 task_id, UINT8 newState);
-extern UINT8  FsmGetState(UINT32 task_id);
-extern OPSTAT fsm_com_do_nothing(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-
-//Extern APIs
-extern int msgget(key_t key, int msgflg);
-extern int msgctl(int msqid, int cmd, struct msqid_ds *buf);
-extern int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
-extern ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
-extern OPSTAT hcu_hwinv_read_engineering_data_into_mem(void);
-extern OPSTAT hcu_hwinv_create_storage_dir_env(void);
-extern OPSTAT hcu_hwinv_read_mac_address(void);
-
 
 //统一定义，不会影响编译
 extern FsmStateItem_t HcuFsmHcuvm[];                             //状态机
@@ -408,13 +362,41 @@ extern FsmStateItem_t HcuFsmL3bfsc[];                            //状态机
 extern FsmStateItem_t HcuFsmBfscuicomm[];                        //状态机
 extern FsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
 
+//全局工程参数控制表
+extern HcuSysEngParTablet_t zHcuSysEngPar;
 
-//高级定义，简化程序的可读性
-#define HCU_DEBUG_PRINT_INF		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE) HcuDebugPrint
-#define HCU_DEBUG_PRINT_NOR		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE) HcuDebugPrint
-#define HCU_DEBUG_PRINT_IPT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE) HcuDebugPrint
-#define HCU_DEBUG_PRINT_CRT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE) HcuDebugPrint
-#define HCU_DEBUG_PRINT_FAT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE) HcuDebugPrint
+//Global VM layer basic API and functions
+extern void hcu_sw_restart(void);  //软件状态机初始化, TBD
+extern OPSTAT hcu_task_create(UINT32 task_id, void *(*task_func)(void *), void *arg, int prio);
+extern OPSTAT hcu_task_delete(UINT32 task_id);
+extern OPSTAT hcu_msgque_create(UINT32 task_id);
+extern OPSTAT hcu_msgque_delete(UINT32 task_id);
+UINT32 hcu_msgque_inquery(UINT32 task_id);
+extern OPSTAT hcu_msgque_resync(void);
+extern OPSTAT hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem);
+extern OPSTAT hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len); //message send
+extern OPSTAT hcu_message_rcv(UINT32 dest_id, HcuMsgSruct_t *msg);
+extern UINT32 hcu_message_rcv_no_wait(UINT32 dest_id, HcuMsgSruct_t *msg);
+extern OPSTAT taskid_to_string(UINT32 id, char *string);
+extern OPSTAT msgid_to_string(UINT32 id, char *string);
+extern OPSTAT hcu_timer_polling(time_t sec, UINT32 nsec, void *handler());
+extern OPSTAT hcu_timer_set(UINT32 timerid, UINT32 taskid, UINT32 delay);
+extern OPSTAT hcu_timer_clear(UINT32 timerid, UINT32 taskid);
+extern void hcu_sleep(UINT32 second);
+extern void hcu_usleep(UINT32 usecond);  //resulution 10^(-6)s = 1 microsecond
+//UNIX下时钟函数非常丰富，这里不再做任何抽象化，上层应用可以直接调用系统库函数进行使用和处理
+extern UINT16 hcu_CRC_16(unsigned char *data,int len);
+
+/*FSM related APIs */
+extern UINT32 FsmInit(void);
+extern UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem);
+extern UINT32 FsmRemove(UINT32 task_id);
+extern UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len);
+extern UINT32 FsmProcessingLaunch(void);
+extern OPSTAT FsmSetState(UINT32 task_id, UINT8 newState);
+extern UINT8  FsmGetState(UINT32 task_id);
+extern OPSTAT fsm_com_do_nothing(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //移植并来自HCU主入口模块
 extern int hcu_vm_main_entry(void);
@@ -433,7 +415,6 @@ void hcu_vm_process_multipy_mainapp_entry(void);
 void hcu_vm_process_create_sensor_avorion_only(void);
 void hcu_vm_process_multipy_entry_supervisor(void);
 //VM本地函数
-//UINT32 hcu_vm_system_task_init(void);
 OPSTAT hcu_vm_system_task_init_call(UINT32 task_id, FsmStateItem_t *p);
 void hcu_vm_task_send_init_to_timer(void);
 void hcu_vm_task_send_init_to_avorion(void);
@@ -446,6 +427,34 @@ void hcu_vm_task_delete_all_and_queue(void);
 void hcu_vm_task_delete_except_avorion_and_hcumain(void);
 void hcu_vm_task_delete_except_timer_and_hcumain(void);
 void hcu_vm_task_delete_except_svrcon_and_hcumain(void);
+
+//获取系统设备唯一标示区的数据。由于敏感性，这块数据不能做成工程参数配置方式，而必须采用工厂烧录方式
+OPSTAT hcu_vm_get_phy_burn_block_data(void);
+
+
+
+//外部参考API, Extern APIs
+extern int msgget(key_t key, int msgflg);
+extern int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+extern int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
+extern ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
+extern OPSTAT hcu_hwinv_read_engineering_data_into_mem(void);
+extern OPSTAT hcu_hwinv_create_storage_dir_env(void);
+extern OPSTAT hcu_hwinv_read_mac_address(void);
+
+//高级错误打印方式
+#define HCU_ERROR_PRINT_TASK(taskid, ...)	do{zHcuRunErrCnt[taskid]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+
+//高级定义，简化程序的可读性
+#define HCU_DEBUG_PRINT_INF		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_NOR		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_IPT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_CRT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_FAT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE) HcuDebugPrint
+
+
+
+
 
 
 #endif /* L0COMVM_VMLAYER_H_ */

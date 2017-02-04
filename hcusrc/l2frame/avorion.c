@@ -16,13 +16,6 @@
 #include <SDL2/SDL.h>
 #endif //AVORION_MONITOR_RECT_SDL2_OPEN_OR_NOT
 
-#include "libavutil/mathematics.h"
-#include "libavformat/avformat.h"
-#include "libavcodec/avcodec.h"
-#include "libavutil/avutil.h"
-#include "libavutil/opt.h"
-#include "libavutil/pixdesc.h"
-
 /*
 FIX: H.264 in some container format (FLV, MP4, MKV etc.) need
 "h264_mp4toannexb" bitstream filter (BSF)

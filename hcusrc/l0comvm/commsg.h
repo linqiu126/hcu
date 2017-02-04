@@ -8,9 +8,10 @@
 #ifndef L0COMVM_COMMSG_H_
 #define L0COMVM_COMMSG_H_
 
+//Local Include
 #include "../l0comvm/comtype.h"
 #include "../l0comvm/sysdim.h"
-
+//Basic Lib
 #include <stdio.h>
 #include <stdlib.h>
 #include <netdb.h>
@@ -23,7 +24,6 @@
 #include <pthread.h>
 #include <signal.h>
 #include <unistd.h>
-#include <string.h>
 #include <termios.h>
 #include <fcntl.h>
 #include <dirent.h>
@@ -32,7 +32,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <math.h>
-
+//Network Lib
 #include <sys/socket.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
@@ -44,25 +44,20 @@
 #include <sys/time.h>
 #include <sys/msg.h>
 #include <sys/reboot.h>
-
 #include <libxml/xmlmemory.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <libxml/xmlstring.h>
 #include <linux/netdevice.h>
-
+#include <netinet/tcp.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
 #include <asm/types.h>
-
 //V4L2视频捕获
 #include <linux/videodev2.h>
 //#include <jpeglib.h> //jpeg
-
 //CURL
 #include <curl/curl.h>
-
 //ffmpeg库
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
@@ -72,49 +67,49 @@
 #include <libavutil/avconfig.h>
 #include <libavutil/opt.h>
 #include <libavutil/imgutils.h>
+#include <libavutil/avutil.h>
+#include <libavutil/opt.h>
+#include <libavutil/pixdesc.h>
 //#include <SDL/SDL.h>
 //#include <SDL/SDL_thread.h>
+//I2C
+#include <linux/i2c-dev.h>
+//CAN
+#include <linux/can.h>
+#include <linux/can/raw.h>
+//文件删去
+#include <sys/vfs.h>
 
 //Local MYSQL DB
 //MYC split into x86 and arm, for mysql the header file location saved in different directory
 #ifdef TARGET_LINUX_ARM
-#include <mysql.h>
+	#include <mysql.h>
 #endif
-
 #ifdef TARGET_LINUX_X86
-#include <mysql/mysql.h>
+	#include <mysql/mysql.h>
 #endif
-
 #ifdef TARGET_RASPBERRY_PI3B
-#include <mysql/mysql.h>
+	#include <mysql/mysql.h>
 #endif
 
 //sqlite3 DB
 #include <sqlite3.h>
-
 #ifdef TARGET_RASPBERRY_PI3B
-#include <wiringPi.h>
-//GPIO
-
-//Serial port
-#include <wiringSerial.h>
-#include <termios.h>
-//I2C
-#include <wiringPiI2C.h>
-//SPI
-#include <wiringPiSPI.h>
-//Software driving tone
-#include <softTone.h>
-//PWM
-#include <softPwm.h>
+	#include <wiringPi.h>
+	//GPIO
+	//Serial port
+	#include <wiringSerial.h>
+	#include <termios.h>
+	//I2C
+	#include <wiringPiI2C.h>
+	//SPI
+	#include <wiringPiSPI.h>
+	//Software driving tone
+	#include <softTone.h>
+	//PWM
+	#include <softPwm.h>
 #endif
 
-//I2C
-#include <linux/i2c-dev.h>
-
-//CAN
-#include <linux/can.h>
-#include <linux/can/raw.h>
 
 //2. 公共消息结构体定义
 //Under normal case, 1024Byte shall be enough for internal message communication purpose.

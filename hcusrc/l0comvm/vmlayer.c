@@ -15,7 +15,7 @@ HcuCurrentTaskTag_t zHcuCurrentProcessInfo;
 //记录所有任务模块工作差错的次数，以便适当处理
 UINT32 zHcuRunErrCnt[MAX_TASK_NUM_IN_ONE_HCU];
 HcuGlobalCounter_t zHcuGlobalCounter;  //定义全局计数器COUNTER
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
 //请确保，该全局字符串的定义跟Task_Id的顺序保持完全一致，不然后面的显示内容会出现差错
 //请服从最长长度TASK_NAME_MAX_LENGTH的定义，不然Debug/Trace打印出的信息也会出错
@@ -365,7 +365,7 @@ char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK] ={
 OPSTAT hcu_vm_system_init(void)
 {
 	//INIT HCU itself
-	HcuDebugPrint("HCU-VM: CURRENT_PRJ=[%s], HW_TYPE=[%d], HW_MODULE=[%d], SW_REL=[%d], SW_DELIVER=[%d].\n", HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, CURRENT_HW_TYPE, CURRENT_HW_MODULE, CURRENT_SW_RELEASE, CURRENT_SW_DELIVERY);
+	HcuDebugPrint("HCU-VM: CURRENT_PRJ=[%s], HW_TYPE=[%d], HW_MODULE=[%d], SW_REL=[%d], SW_DELIVER=[%d].\n", HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, HCU_CURRENT_HW_TYPE, HCU_CURRENT_HW_MODULE, HCU_CURRENT_SW_RELEASE, HCU_CURRENT_SW_DELIVERY);
 	HcuDebugPrint("HCU-VM: BXXH(TM) HCU(c) Application Layer start and initialized, build at %s, %s.\n", __DATE__, __TIME__);
 
 	//初始化全局变量TASK_ID/QUE_ID/TASK_STAT
@@ -1594,9 +1594,6 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
     return SUCCESS;
 }
 
-
-
-
 OPSTAT FsmSetState(UINT32 task_id, UINT8 newState)
 {
 	//Checking task_id range
@@ -2190,6 +2187,12 @@ int hcu_vm_main_entry(void)
 		return EXIT_SUCCESS;
 	}
 
+	//系统硬件标识区初始化：这里先写入硬件参数，然后再进行工程参数的处理过程
+	if (hcu_vm_get_phy_burn_block_data() == FAILURE){
+		HcuDebugPrint("HCU-MAIN: Init system hardware physical burn ID block error!\n");
+		return EXIT_SUCCESS;
+	}
+
 	//从数据库或者系统缺省配置中，读取系统配置的工程参数
 	if (hcu_hwinv_read_engineering_data_into_mem() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Read database or system init parameters into memory error!\n");
@@ -2235,6 +2238,47 @@ int hcu_vm_main_entry(void)
 	}
 
 	return EXIT_SUCCESS;
+}
+
+//需要单独设计一种的存储设备敏感数据的方式
+OPSTAT hcu_vm_get_phy_burn_block_data(void)
+{
+	//初始化
+	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTablet_t));
+
+	//硬件烧录区域，系统唯一标识部分，后面程序中访问到这些系统参数都必须从这个地方读取
+	//具体读取的过程，目前暂时空白，因为还未决定使用哪种方式来存储这个敏感信息
+	//hcu_phy_id_get((UINT8*)&(zHcuSysEngPar.hwBurnId));
+
+	//对硬件类型进行相同性检查，如果不一致，必然发生了生产性错误，或者硬件搞错，或者Factory Load用错，应该严重警告
+	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_YES) && (zHcuSysEngPar.hwBurnId.hwType != HCU_HARDWARE_PRODUCT_CAT_TYPE)){
+		HcuErrorPrint("HCU-VM: Fatal error, using wrong hardware type or factory load!!!\n");
+		return FAILURE;
+	}
+	//由于硬件部分并没有真正起作用，所以暂时需要从系统定义区重复写入，一旦批量生产这部分可以去掉
+	if (HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_NO){
+		strncpy(zHcuSysEngPar.hwBurnId.equLable, HCU_CLOUDVELA_BH_HCU_NAME, (sizeof(HCU_CLOUDVELA_BH_HCU_NAME)<sizeof(zHcuSysEngPar.hwBurnId.equLable))?(sizeof(HCU_CLOUDVELA_BH_HCU_NAME)):(sizeof(zHcuSysEngPar.hwBurnId.equLable)));
+		zHcuSysEngPar.hwBurnId.hwType  = HCU_HARDWARE_PRODUCT_CAT_TYPE;
+		zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_TYPE; //PEM小型号
+		zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
+		zHcuSysEngPar.hwBurnId.swVerId = HCU_CURRENT_SW_DELIVERY;
+		zHcuSysEngPar.hwBurnId.swAppCheckSum = 0;
+		zHcuSysEngPar.hwBurnId.swUpgradeFlag = HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET;
+		zHcuSysEngPar.hwBurnId.swUpgPollId = HCU_HARDWARE_BURN_ID_FW_UPGRADE_METHOD_UART_GPRS;
+		//cipherKey[16];
+	}
+
+	//初始化之后的系统标识信息
+	HcuDebugPrint("HCU-VM: Initialized Hardware Burn Physical Id/Address: CURRENT_PRJ=[%s], HW_LABLE=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[0x%x], SW_RELEASE_VER=[%d.%d], FW_UPGRADE_FLAG=[%d].\n", \
+			HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, \
+		zHcuSysEngPar.hwBurnId.equLable, \
+		zHcuSysEngPar.hwBurnId.hwType, \
+		zHcuSysEngPar.hwBurnId.hwPemId, \
+		zHcuSysEngPar.hwBurnId.swRelId, \
+		zHcuSysEngPar.hwBurnId.swVerId, \
+		zHcuSysEngPar.hwBurnId.swUpgradeFlag);
+
+	return SUCCESS;
 }
 
 

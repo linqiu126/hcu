@@ -12,19 +12,6 @@
 #include "../l0comvm/vmlayer.h"
 #include "../l0service/sysinfo.h"
 
-
-//by shanchun for disk size and file removal
-#include <sys/vfs.h>
-
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-
-
-
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01
@@ -275,7 +262,6 @@ typedef struct zHcuTimeDateTable
 }zHcuTimeDateTable_t;
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 extern FsmStateItem_t HcuFsmHwinv[];
 extern HcuHwinvCtrlTable_t zHcuHwinvTable;
 extern zHcuTimeDateTable_t zCurTimeDate;

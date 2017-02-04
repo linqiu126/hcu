@@ -582,10 +582,10 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 	cmdId = L3CI_hcu_inventory;
 	backType = L3CI_cmdid_back_type_period;
     optId = L3PO_hcuinventory_report;
-    zHcuInventoryInfo.hw_type = CURRENT_HW_TYPE;
-    zHcuInventoryInfo.hw_version = CURRENT_HW_MODULE;
-    zHcuInventoryInfo.sw_release = CURRENT_SW_RELEASE;
-    zHcuInventoryInfo.sw_delivery = CURRENT_SW_DELIVERY;
+    zHcuInventoryInfo.hw_type = zHcuSysEngPar.hwBurnId.hwType;
+    zHcuInventoryInfo.hw_version = zHcuSysEngPar.hwBurnId.hwPemId;
+    zHcuInventoryInfo.sw_release = zHcuSysEngPar.hwBurnId.swRelId;
+    zHcuInventoryInfo.sw_delivery = zHcuSysEngPar.hwBurnId.swVerId;
 
 	// send resp msg to cloud
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){

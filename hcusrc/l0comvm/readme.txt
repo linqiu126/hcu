@@ -11,7 +11,15 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
+==> 设备物理地址的配置方式? 待定
+ 》》 初步想使用脚本的方式，而不使用数据库工参配置，就是为了安全，因为这一块就不需要被配置，而是工厂出来后就定下来了
+》》 也就是说，这块配置信息应该成为基础平台的一部分，交给UBOOT来搞定，这里只负责读取即可。
 
+//= ZJL, 2017 Feb.4, CURRENT_SW_DELIVERY 146 =>BFSC项目
+=工程参数化设备物理标识区
+=为每一个项目建立单独的设备标识，标识码来自于HUITP协议定义
+=完善物理烧录区域的处理过程
+=DBI操作API的归一化
 
 //= ZJL, 2017 Feb.3, CURRENT_SW_DELIVERY 145 =>BFSC项目
 =清理Commsg.h中的无效消息结构

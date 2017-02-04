@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 	if(argv[1] != 0)
 	{
 		if (!strcmp(argv[1],"version")){
-			printf("%d\n",CURRENT_SW_DELIVERY);
+			printf("%d\n", HCU_CURRENT_SW_DELIVERY);
 			return EXIT_SUCCESS;
 		}
 	}else{

@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="&lt;netinet/tcp.h&gt;" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="INVLID"/>
-			<item value="//sensor"/>
-			<item value="MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD"/>
-			<item value="MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX"/>
-			<item value="MSG_ID_NBIOTQG376_IPM_DATA_REQ"/>
-			<item value="MSG_ID_IWM_NBIOTCJ188_DATA_RESP"/>
-			<item value="MSG_ID_NBIOTCJ188_IWM_DATA_REQ"/>
-			<item value="MSG_ID_IWM_NBIOTCJ188_DATA_REQ"/>
+			<item value="&lt;netinet/tcp.h&gt;"/>
+			<item value="&lt;arpa/inet.h&gt;"/>
+			<item value="&lt;sys/types.h&gt;"/>
+			<item value="&lt;netinet/in.h&gt;"/>
+			<item value="&lt;sys/socket.h&gt;"/>
+			<item value="&lt;netdb.h&gt;"/>
+			<item value="&lt;errno.h&gt;"/>
+			<item value="libavutil/avutil.h"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH"/>
+			<item value="HCU"/>
+			<item value="hcu"/>
+			<item value="Hcu"/>
+			<item value="0x0201"/>
 			<item value="g30"/>
 			<item value="otdr"/>
 			<item value="l3gqybg40"/>
-			<item value="L3GQYBG40"/>
-			<item value="zHcuTaskInfo[taskid].taskName"/>
-			<item value="zHcuTaskInfo[TASK_ID_HWINV].taskName"/>
-			<item value="zHcuTaskInfo[task_id].taskName"/>
-			<item value="zHcuTaskInfo[TASK_ID_TIMER].taskName"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
