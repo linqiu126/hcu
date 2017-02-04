@@ -576,7 +576,7 @@ OPSTAT hcu_hwinv_create_storage_dir_env(void)
 	int ret = 0;
 
     //create video server directory by Shanchun
-	ret = hcu_create_multi_dir(zHcuSysEngPar.videoSev.hcuVideoServerDir);
+	ret = hcu_hwinv_create_multi_dir(zHcuSysEngPar.videoSev.hcuVideoServerDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
 	}else{
@@ -584,21 +584,21 @@ OPSTAT hcu_hwinv_create_storage_dir_env(void)
 	}
 
     //create HCU SW download/active/backup local directory by Shanchun
-	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwDownloadDir);
+	ret = hcu_hwinv_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwDownloadDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW download local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
 	}else{
 		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW download local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwDownloadDir);
 	}
 
-	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwActiveDir);
+	ret = hcu_hwinv_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwActiveDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW active local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
 	}else{
 		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW active local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwActiveDir);
 	}
 
-	ret = hcu_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwBackupDir);
+	ret = hcu_hwinv_create_multi_dir(zHcuSysEngPar.swDownload.hcuSwBackupDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW backup local directory: %s\n", zHcuSysEngPar.swDownload.hcuSwBackupDir);
 	}else{
@@ -1353,7 +1353,7 @@ UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen)
 }
 
 //create video server directory by Shanchun
-UINT32 hcu_create_multi_dir(const char *path)
+UINT32 hcu_hwinv_create_multi_dir(const char *path)
 {
         int i, len;
 

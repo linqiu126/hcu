@@ -11,6 +11,8 @@
 #include "../l0main/hcu.h"
 #include "../l0comvm/vmlayer.h"
 #include "../l0service/sysinfo.h"
+#include "../l0dbi/l0dbi_inc.h"
+
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -315,6 +317,7 @@ extern void func_hwinv_scan_ipm(void);
 extern void func_hwinv_scan_pm25sharp(void);
 extern void func_hwinv_scan_local_ui();
 extern void func_hwinv_scan_message_queue(void);
+extern UINT32 hcu_hwinv_create_multi_dir(const char *path); //create video server directory by Shanchun
 
 //extern OPSTAT func_hwinv_scan_disksize(void);//for disk size checking by shanchun
 extern OPSTAT hcu_is_dir(const char *path);//check if it is directory
@@ -324,56 +327,7 @@ extern void hcu_get_file_path(const char *path, const char *file_name, char *fil
 extern void hcu_delete_file(const char *path);//file delete
 
 //External APIs
-extern UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen);
-extern OPSTAT dbi_HcuEmcDataInfo_save(sensor_emc_data_element_t *emcData);
-extern OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname);
-extern OPSTAT dbi_HcuEmcDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuPm25DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuPm25SharpDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuPm25Bmpd300DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuWinddirDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuWindspdDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuHumidDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuHumidDht11DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuHumidSht20DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuHumidRht03DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuHumidMth01DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTempDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTempDht11DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTempSht20DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTempRht03DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTempMth01DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuNoiseDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuHsmmpDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTablet_t *engPar);
-extern OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTablet_t *engPar);
-extern OPSTAT dbi_HcuSpErrcntDataInfo_save(void);
-extern OPSTAT dbi_HcuSpErrcntDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuAirprsDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuCo1DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuLightstrDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuAlcoholDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuHchoDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuToxicgasDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuSyspmGlobalDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuLightstrBh1750DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuAirprsBmp180DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuToxicgasMq135DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuIwmCj188DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuIhmCj188DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuIgmCj188DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuIpmCj188DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuIpmQg376DataInfo_delete_3monold(UINT32 days);
 
-//create video server directory by Shanchun
-UINT32 hcu_create_multi_dir(const char *path);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_HWINV(...)	do{zHcuRunErrCnt[TASK_ID_HWINV]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

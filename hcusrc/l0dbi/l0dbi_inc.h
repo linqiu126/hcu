@@ -1,27 +1,35 @@
 /*
- * dbicom.h
+ * l0dbi_inc.h
  *
  *  Created on: 2016年1月5日
  *      Author: hitpony
  */
 
-#ifndef L0DBI_DBICOM_H_
-#define L0DBI_DBICOM_H_
+#ifndef L0DBI_INC_H_
+#define L0DBI_INC_H_
 
-#include "../l0comvm/vmlayer.h"
+#include "../l0dbi/dbicom.h"
 
-#define DBI_MAX_SQL_INQUERY_STRING_LENGTH 1000
+#include "../l0dbi/dbiairprs.h"
+#include "../l0dbi/dbialcohol.h"
+#include "../l0dbi/dbico1.h"
+#include "../l0dbi/dbiemc.h"
+#include "../l0dbi/dbihcho.h"
+#include "../l0dbi/dbihsmmp.h"
+#include "../l0dbi/dbihumid.h"
+#include "../l0dbi/dbiigm.h"
+#include "../l0dbi/dbiihm.h"
+#include "../l0dbi/dbiipm.h"
+#include "../l0dbi/dbiiwm.h"
+#include "../l0dbi/dbilightstr.h"
+#include "../l0dbi/dbinbiot.h"
+#include "../l0dbi/dbinoise.h"
+#include "../l0dbi/dbipm25.h"
+#include "../l0dbi/dbisysperfm.h"
+#include "../l0dbi/dbitemp.h"
+#include "../l0dbi/dbitoxicgas.h"
+#include "../l0dbi/dbiwinddir.h"
+#include "../l0dbi/dbiwindspd.h"
 
-extern void dbi_display_header(MYSQL_RES *resPtr);
-extern void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow);
-extern OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname);
-extern OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTablet_t *engPar);
-extern OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTablet_t *engPar);
-extern OPSTAT dbi_HcuDbVersion_inqury(HcuInventoryInfo_t *hcuInv);
 
-
-//引用外部API
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
-extern HcuInventoryInfo_t zHcuInventoryInfo;
-
-#endif /* L0DBI_DBICOM_H_ */
+#endif /* L0DBI_INC_H_ */

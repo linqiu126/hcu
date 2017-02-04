@@ -806,7 +806,38 @@ typedef struct  sensor_toxicgas_zp01voc_data_element //
 	UINT32 timeStamp;
 }sensor_toxicgas_zp01voc_data_element_t;
 
-
+//L2 and L3 module used GPS information, defined structure here
+typedef struct hcuStrDataTime
+{
+	UINT32 hour;
+	UINT32 minute;
+	UINT32 second;
+	UINT32 day;
+	UINT32 month;
+	UINT32 year;
+}hcuStrDateTime_t;
+typedef struct GpsPosInfo
+{
+	hcuStrDateTime_t D; //UTC日期时间
+	CHAR status;
+	UINT32 gpsX; //纬度
+	CHAR EW;
+	UINT32 gpsY; //经度
+	CHAR NS;
+	UINT32 gpsZ;
+	UINT32 speed; //速度
+	UINT32 resistence; //反映多少个GPS模块扫描周期一直没有数值的情况
+}GpsPosInfo_t;
+typedef struct  HcuInventoryInfo
+{
+	//UINT8 hw_uuid[6];
+	UINT8 hw_mac[32];
+	UINT8 hw_type;
+	UINT16 hw_version;
+	UINT8 sw_release;
+	UINT16 sw_delivery;
+	UINT16 db_delivery;
+}HcuInventoryInfo_t;
 
 
 /***************************************************************************************************************

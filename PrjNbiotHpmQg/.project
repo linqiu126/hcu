@@ -356,6 +356,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/dbiwindspd.h</locationURI>
 		</link>
 		<link>
+			<name>src/l0dbi/l0dbi_inc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/l0dbi_inc.h</locationURI>
+		</link>
+		<link>
 			<name>src/l0dbi/sqlite.txt</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0dbi/sqlite.txt</locationURI>
