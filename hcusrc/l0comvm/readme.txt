@@ -6,8 +6,7 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 从BFSCUICOMM模块定时扫描，送回UI界面的结果给L3BFSC模块：机制是定时扫描数据库，还是有类似于ISR中断的钩子？
 ==> 16个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
 ==> 发送给后台统计报告
-==> 上位机、HUITPJASON支持
-==> 上位机启动时自身标识的改进，软件模块标识
+==> 上位机HUITPJASON支持
 ==> 上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
@@ -15,15 +14,22 @@ PRJ_BFSC待完成或者回答的问题：
  》》 初步想使用脚本的方式，而不使用数据库工参配置，就是为了安全，因为这一块就不需要被配置，而是工厂出来后就定下来了
 》》 也就是说，这块配置信息应该成为基础平台的一部分，交给UBOOT来搞定，这里只负责读取即可。
 
+
+
+//= ZJL, 2017 Feb.5, CURRENT_SW_DELIVERY 148=>BFSC项目
+
+
+
 //= ZJL, 2017 Feb.4, CURRENT_SW_DELIVERY 147=>BFSC项目
 =优化TASK NAME
 =增加l2codec目录结构，将xml/zhb编解码函数移动到该目录，简化目录结构
-=集成HUITPXML
+=集成HUITPXML，完成垃圾集成，未来再进行详细的完善
 
 //= ZJL, 2017 Feb.4, CURRENT_SW_DELIVERY 146 =>BFSC项目
 =工程参数化设备物理标识区
 =为每一个项目建立单独的设备标识，标识码来自于HUITP协议定义
 =完善物理烧录区域的处理过程
+=上位机启动时自身标识的改进，软件模块标识
 =DBI操作API的归一化，并改善所有项目
 =去掉HW_MODULE，只保留PEM信息，记录当前硬件的最新硬件状态，也就是当前硬件最新采用了哪个PEM版本。
 
