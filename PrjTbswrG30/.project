@@ -71,6 +71,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>src/l2codec</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>src/l2frame</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -756,6 +761,41 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l1hwopt/zeegbe.h</locationURI>
 		</link>
 		<link>
+			<name>src/l2codec/bhcodecxml.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/bhcodecxml.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/bhcodecxml.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/bhcodecxml.h</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/bhcodeczhb.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/bhcodeczhb.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/bhcodeczhb.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/bhcodeczhb.h</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/huitp.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huitp.h</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/huixmlcodec.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huixmlcodec.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/huixmlcodec.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huixmlcodec.h</locationURI>
+		</link>
+		<link>
 			<name>src/l2frame/avorion.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/avorion.c</locationURI>
@@ -766,26 +806,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/avorion.h</locationURI>
 		</link>
 		<link>
-			<name>src/l2frame/bhcodecxml.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/bhcodecxml.c</locationURI>
-		</link>
-		<link>
-			<name>src/l2frame/bhcodecxml.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/bhcodecxml.h</locationURI>
-		</link>
-		<link>
-			<name>src/l2frame/bhcodeczhb.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/bhcodeczhb.c</locationURI>
-		</link>
-		<link>
-			<name>src/l2frame/bhcodeczhb.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/bhcodeczhb.h</locationURI>
-		</link>
-		<link>
 			<name>src/l2frame/canitfleo.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canitfleo.c</locationURI>
@@ -794,6 +814,16 @@
 			<name>src/l2frame/canitfleo.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canitfleo.h</locationURI>
+		</link>
+		<link>
+			<name>src/l2frame/canlib.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canlib.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2frame/canlib.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canlib.h</locationURI>
 		</link>
 		<link>
 			<name>src/l2frame/cloudvela.c</name>

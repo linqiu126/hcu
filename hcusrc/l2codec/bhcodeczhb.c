@@ -8,10 +8,10 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l1com/hwinv.h"
-#include "bhcodeczhb.h"
+#include "../l2codec/bhcodeczhb.h"
 
 #include "../l1com/l1comdef.h"
-#include "cloudvela.h"
+#include "../l2frame/cloudvela.h"
 
 //Task Global variables
 extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表

@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
 --
 
 INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `moduletoallow`, `moduletorestrict`, `modulefromallow`, `modulefromrestrict`) VALUES
-(0, 'MIN', 1, 1, 1, 1, 1),
+(0, 'TASKMIN', 1, 1, 1, 1, 1),
 (1, 'HCUMAIN', 1, 1, 1, 1, 1),
 (2, 'HCUVM', 1, 1, 1, 1, 1),
 (3, 'TRACE', 1, 1, 1, 1, 1),
@@ -210,7 +210,7 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (13, 'RELAY', 1, 1, 1, 1, 1),
 (14, 'MOTOR', 1, 1, 1, 1, 1),
 (15, 'ZEEGBE', 1, 1, 1, 1, 1),
-(16, 'GRPS', 1, 1, 1, 1, 1),
+(16, 'GPRS', 1, 1, 1, 1, 1),
 (17, 'SPS232', 1, 1, 1, 1, 1),
 (18, 'SPS485', 1, 1, 1, 1, 1),
 (19, 'BLE', 1, 1, 1, 1, 1),
@@ -257,7 +257,7 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (60, 'PM25SHARP', 1, 1, 1, 1, 1),
 (61, 'CANITFLEO', 1, 1, 1, 1, 1),
 (62, 'COM_BOTTOM', 1, 1, 1, 1, 1),
-(63, 'MAX', 1, 1, 1, 1, 1);
+(63, 'TASKMAX', 1, 1, 1, 1, 1);
 
 //消息TRACE只针对公共消息，项目专用模块不在数据库中pop
 //HcuTraceMsgCtr数据表格式

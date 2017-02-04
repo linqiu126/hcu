@@ -13,6 +13,7 @@ RM := rm -rf
 -include src/l3appctrl/subdir.mk
 -include src/l3app/subdir.mk
 -include src/l2frame/subdir.mk
+-include src/l2codec/subdir.mk
 -include src/l1hwopt/usb_adc/subdir.mk
 -include src/l1hwopt/subdir.mk
 -include src/l1com/subdir.mk

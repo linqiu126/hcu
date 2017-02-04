@@ -20,10 +20,11 @@ HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 //任务初始化配置参数
 //请确保，该全局字符串的定义跟Task_Id的顺序保持完全一致，不然后面的显示内容会出现差错， 请服从最长长度TASK_NAME_MAX_LENGTH的定义，不然Debug/Trace打印出的信息也会出错
 //从极致优化内存的角度，这里浪费了2个TASK对应的内存空间（MIN=0/MAX=n+1)，但它却极大的改善了程序编写的效率，值得浪费！！！
+//NULL条目保留，是为了初始化TASK NAME这一属性
 StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 {
 	//TASK_ID,    				状态控制					状态机入口 						//注释
-	{TASK_ID_MIN, 				"MIN", 					NULL},							//Starting
+	{TASK_ID_MIN, 				"TASKMIN", 				NULL},							//Starting
 	{TASK_ID_HCUMAIN,    		"HCUMAIN",      		NULL},
 	{TASK_ID_HCUVM,      		"HCUVM",        		NULL},
 	{TASK_ID_TRACE,      		"TRACE",        		NULL},
@@ -39,7 +40,7 @@ StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 	{TASK_ID_RELAY,      		"RELAY",        		&HcuFsmRelay},
 	{TASK_ID_MOTOR,      		"MOTOR",        		&HcuFsmMotor},
 	{TASK_ID_ZEEGBE,      		"ZEEGBE",        		&HcuFsmZeegbe},
-	{TASK_ID_GPRS,       		"GRPS",         		NULL},
+	{TASK_ID_GPRS,       		"GPRS",         		NULL},
 	{TASK_ID_SPS232,     		"SPS232",       		&HcuFsmSps232},
 	{TASK_ID_SPS485,     		"SPS485",       		&HcuFsmSps485},
 	{TASK_ID_BLE,        		"BLE",          		&HcuFsmBle},
@@ -86,6 +87,17 @@ StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 	{TASK_ID_PM25SHARP,  		"PM25SHARP",    		&HcuFsmPm25sharp},
 	{TASK_ID_CANITFLEO,  		"CANITFLEO",    		&HcuFsmCanitfleo},
 	{TASK_ID_COM_BOTTOM, 		"COM_BOTTOM",   		NULL},
+	{TASK_ID_L3AQYCG10,  		"L3AQYCG10",    		NULL},
+	{TASK_ID_L3AQYCG20,  		"L3AQYCG20",    		NULL},
+	{TASK_ID_L3TBSWRG30, 		"L3TBSWRG30",   		NULL},
+	{TASK_ID_L3GQYBG40,  		"L3GQYBG40",    		NULL},
+	{TASK_ID_L3CXILC,    		"L3CXILC",      		NULL},
+	{TASK_ID_L3CXGLACM,  		"L3CXGLACM",    		NULL},
+	{TASK_ID_L3NBLPM,    		"L3NBLPM",      		NULL},
+	{TASK_ID_L3NBHPM,    		"L3NBHPM",      		NULL},
+	{TASK_ID_L3BFSC,     		"L3BFSC",       		NULL},
+	{TASK_ID_BFSCUICOMM, 		"BFSCUICOMM",   		NULL},
+	{TASK_ID_L3OPWLOTDR, 		"L3OPWLOTDR",   		NULL},
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
@@ -115,7 +127,7 @@ StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 	#error Un-correct constant definition
 #endif
 
-	{TASK_ID_MAX,				"MAX", 					NULL},							//Ending
+	{TASK_ID_MAX,				"TASKMAX", 				NULL},							//Ending
 };
 
 //任务状态机FSM全局控制表，占用内存的大户！！！
@@ -622,11 +634,7 @@ UINT32 hcu_msgque_create(UINT32 task_id)
 	//Checking msgQid exiting or not, if YES, just DELETE.
 	msgQid=msgget(msgKey, IPC_EXCL);  /*检查消息队列是否存在*/
 	if (msgQid>=0){
-		//HcuErrorPrint("HCU-VM: Existing Queue id error, input Key = %d\n", msgKey);
-		//直接使用已有的QUEID，而不是重新创建
-		//zHcuTaskInfo[task_id].QueId = msgQid;
-		//return SUCCESS;
-		//删除消息队列
+		//直接使用已有的QUEID，而不是重新创建, 删除消息队列
 		if (msgctl(msgQid, IPC_RMID, NULL) == FAILURE){
 			HcuErrorPrint("HCU-VM: Remove Queue error!\n");
 			return FAILURE;
@@ -726,9 +734,7 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
 		HcuErrorPrint("HCU-VM: Init state machine FsmAddNew error, taskid = %d\n", task_id);
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-		HcuDebugPrint("HCU-VM: FsmAddNew Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
-	}
+	HCU_DEBUG_PRINT_CRT("HCU-VM: FsmAddNew Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
 
     //Create Queid
    	ret = hcu_msgque_create(task_id);
@@ -737,9 +743,7 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
     	HcuErrorPrint("HCU-VM: Create queue unsuccessfully, taskId = %d\n", task_id);
     	return FAILURE;
     }
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-	    HcuDebugPrint("HCU-VM: hcu_msgque_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
-	}
+    HCU_DEBUG_PRINT_CRT("HCU-VM: hcu_msgque_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
 
     //Create task and make it running for ever
     ret = hcu_task_create(task_id, (CALLBACK)FsmProcessingLaunch, (void *)NULL, HCU_THREAD_PRIO);
@@ -748,13 +752,8 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
     	HcuErrorPrint("HCU-VM: Create task un-successfully, taskid = %d\n", task_id);
     	return FAILURE;
     }
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-	    HcuDebugPrint("HCU-VM: hcu_task_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
-	}
-
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
-		HcuDebugPrint("HCU-VM: Whole task environment setup successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
-	}
+    HCU_DEBUG_PRINT_CRT("HCU-VM: hcu_task_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
+    HCU_DEBUG_PRINT_IPT("HCU-VM: Whole task environment setup successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
 
 	return SUCCESS;
 }
@@ -1265,9 +1264,7 @@ UINT32 FsmInit(void)
 	}
 	zHcuFsmTable.currentTaskId = TASK_ID_INVALID;
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("HCU-VM: Maxium (%d) process supported.\n", MAX_TASK_NUM_IN_ONE_HCU);
-	}
+	HCU_DEBUG_PRINT_FAT("HCU-VM: Maxium (%d) process supported.\n", MAX_TASK_NUM_IN_ONE_HCU);
 
     return SUCCESS;
 }
@@ -1293,9 +1290,7 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 	UINT32 msgid;
 	UINT32 item, itemNo, i, j;
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("HCU-VM: >>Register new FSM. TaskId:(%d), pFsm(0x%x)\n", task_id, pFsmStateItem);
-	}
+	HCU_DEBUG_PRINT_NOR("HCU-VM: >>Register new FSM. TaskId:(%d), pFsm(0x%x)\n", task_id, pFsmStateItem);
 	/*
 	** Check the array of the state machine.
 	*/
@@ -1363,11 +1358,8 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 	*/
 	zHcuFsmTable.numOfFsmCtrlTable ++;
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE)
-	{
-		HcuDebugPrint("HCU-VM: FsmAddNew: task_id = 0x%x [%s], src_id= %x, dest_id= %X\n", task_id, zHcuTaskInfo[task_id].taskName, 0, 0);
-		HcuDebugPrint("HCU-VM: After add this one, Total (%d) FSM in the table.\n", zHcuFsmTable.numOfFsmCtrlTable);
-	}
+	HCU_DEBUG_PRINT_NOR("HCU-VM: FsmAddNew: task_id = 0x%x [%s], src_id= %x, dest_id= %X\n", task_id, zHcuTaskInfo[task_id].taskName, 0, 0);
+	HCU_DEBUG_PRINT_NOR("HCU-VM: After add this one, Total (%d) FSM in the table.\n", zHcuFsmTable.numOfFsmCtrlTable);
 
 	/*
 	** Save the state machine info.
@@ -1469,7 +1461,7 @@ UINT32 FsmProcessingLaunch(void)
 	if (zHcuFsmTable.pFsmCtrlTable[task_id].pFsmArray[FSM_STATE_ENTRY][MSG_ID_ENTRY].stateFunc != NULL){
 		(zHcuFsmTable.pFsmCtrlTable[task_id].pFsmArray[FSM_STATE_ENTRY][MSG_ID_ENTRY].stateFunc)(task_id, 0, NULL, 0);
 	}else{
-		HcuDebugPrint("HCU-VM: Task (ID=%d) get no init entry fetched!\n", task_id);
+		HCU_DEBUG_PRINT_NOR("HCU-VM: Task (ID=%d) get no init entry fetched!\n", task_id);
 	}
 
 	//Loop for ever
@@ -1563,7 +1555,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 	}
 
 	//未来可以提升到IPT层面
-	HCU_DEBUG_PRINT_INF("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
+	HCU_DEBUG_PRINT_NOR("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
 				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskInfo[dest_id].taskName, mid, zHcuMsgNameList[mid], src_id, zHcuTaskInfo[src_id].taskName);
 
 	/*
@@ -1658,11 +1650,8 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, dest_id, dest_id, &snd0, snd0.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[dest_id]++;
-			HcuErrorPrint("%s: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName);
-			return FAILURE;
-		}
+		if (ret == FAILURE)
+			HCU_ERROR_PRINT_TASK(dest_id, "%s: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName);
 	}
 
 	//发送消息
@@ -1672,11 +1661,8 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		memset(&snd, 0, sizeof(msg_struct_com_heart_beat_fb_t));
 		snd.length = sizeof(msg_struct_com_heart_beat_fb_t);
 		ret = hcu_message_send(MSG_ID_COM_HEART_BEAT_FB, src_id, dest_id, &snd, snd.length);
-		if (ret == FAILURE){
-			zHcuRunErrCnt[dest_id]++;
-			HcuErrorPrint("%s: Send message error, TASK[%s] to TASK[%s]!\n", zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[src_id].taskName);
-			return FAILURE;
-		}
+		if (ret == FAILURE)
+			HCU_ERROR_PRINT_TASK(dest_id, "%s: Send message error, TASK[%s] to TASK[%s]!\n", zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[src_id].taskName);
 	}
 	//也可能是调用关系，故而直接采用SRC_ID=0的方式，这种情况原则上也允许
 

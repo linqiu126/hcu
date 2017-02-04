@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 03, 2017 at 03:09 PM
+-- Generation Time: Feb 04, 2017 at 11:39 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -16407,7 +16407,7 @@ CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
 --
 
 INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `moduletoallow`, `moduletorestrict`, `modulefromallow`, `modulefromrestrict`) VALUES
-(0, 'MIN', 1, 1, 1, 1, 1),
+(0, 'TASKMIN', 1, 1, 1, 1, 1),
 (1, 'HCUMAIN', 1, 1, 1, 1, 1),
 (2, 'HCUVM', 1, 1, 1, 1, 1),
 (3, 'TRACE', 1, 1, 1, 1, 1),
@@ -16423,7 +16423,7 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (13, 'RELAY', 1, 1, 1, 1, 1),
 (14, 'MOTOR', 1, 1, 1, 1, 1),
 (15, 'ZEEGBE', 1, 1, 1, 1, 1),
-(16, 'GRPS', 1, 1, 1, 1, 1),
+(16, 'GPRS', 1, 1, 1, 1, 1),
 (17, 'SPS232', 1, 1, 1, 1, 1),
 (18, 'SPS485', 1, 1, 1, 1, 1),
 (19, 'BLE', 1, 1, 1, 1, 1),
@@ -16470,7 +16470,7 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (60, 'PM25SHARP', 1, 1, 1, 1, 1),
 (61, 'CANITFLEO', 1, 1, 1, 1, 1),
 (62, 'COM_BOTTOM', 1, 1, 1, 1, 1),
-(63, 'MAX', 1, 1, 1, 1, 1);
+(63, 'TASKMAX', 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 

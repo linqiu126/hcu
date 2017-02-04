@@ -6,7 +6,7 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 从BFSCUICOMM模块定时扫描，送回UI界面的结果给L3BFSC模块：机制是定时扫描数据库，还是有类似于ISR中断的钩子？
 ==> 16个组合秤的状态，所有状态存入本地全局表，并存入数据库表单，以便跟界面进行交互。这个还需要跟UI界面的工作方式相关
 ==> 发送给后台统计报告
-==> 上位机HUITPXML、HUITPJASON支持
+==> 上位机、HUITPJASON支持
 ==> 上位机启动时自身标识的改进，软件模块标识
 ==> 上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
@@ -16,7 +16,9 @@ PRJ_BFSC待完成或者回答的问题：
 》》 也就是说，这块配置信息应该成为基础平台的一部分，交给UBOOT来搞定，这里只负责读取即可。
 
 //= ZJL, 2017 Feb.4, CURRENT_SW_DELIVERY 147=>BFSC项目
-
+=优化TASK NAME
+=增加l2codec目录结构，将xml/zhb编解码函数移动到该目录，简化目录结构
+=集成HUITPXML
 
 //= ZJL, 2017 Feb.4, CURRENT_SW_DELIVERY 146 =>BFSC项目
 =工程参数化设备物理标识区

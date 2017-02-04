@@ -10,21 +10,7 @@
 #include "../l1com/hwinv.h"
 #include "../l0webser/ftp.h"
 #include "../l0comvm/sysversion.h"
-
-#include "cloudvela.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-
-#include <netinet/tcp.h>
+#include "../l2frame/cloudvela.h"
 
 /*
 ** FSM of the CLOUDVELA
