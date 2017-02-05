@@ -10,6 +10,7 @@
 
 #include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
+#include "../l0service/timer.h"
 
 typedef struct L3BfscSensorWsInfo
 {

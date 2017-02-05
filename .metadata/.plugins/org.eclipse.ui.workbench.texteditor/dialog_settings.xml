@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="read" key="selection"/>
+		<item value="TIMER_ID_1S_L3BFSC_PERIOD_READ" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="TIMER_ID_1S_L3BFSC_PERIOD_READ"/>
 			<item value="hcu_vm_read_phy_boot_cfg"/>
 			<item value="read"/>
 			<item value="fread"/>
@@ -15,7 +16,6 @@
 			<item value="fopen"/>
 			<item value="elif"/>
 			<item value="HCU_DEBUG"/>
-			<item value="HCU_HARDWARE_MASSIVE_PRODUTION_SET"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_G801_BFSC_SH001"/>

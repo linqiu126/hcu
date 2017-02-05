@@ -160,20 +160,14 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	UINT8 j=0;
 	UINT32 k=0, t=0;
 	UINT32 kUp = 0;
-	//UINT32 tLow=0;
 	UINT32 tUp = 0, Index=0;
-	//UINT32 total = 0;
 	for (j=0; j<HCU_BFSC_SENSOR_WS_NBR_MAX; j++){
 		kUp = pow(2, HCU_BFSC_SENSOR_WS_NBR_MAX-j-1);
 		for (k=0; k< kUp; k++){
-			//tLow = k*pow(2, j+1);
 			tUp = pow(2, j);
 			for (t=0; t<tUp; t++){
-				//Index = j*zHcuSearchSpaceTotalNbr + k*pow(2, j+1) + t + tLow;
 				Index = j + (k * pow(2, j+1) + t) * HCU_BFSC_SENSOR_WS_NBR_MAX;
 				*(zHcuSearchCoefficientPointer + Index) = 1;
-				//total++;
-				//HCU_DEBUG_PRINT_INF("L3BFSC: Total set [%d], index = [%d]\n", total, Index);
 			}
 		}
 	}
@@ -188,7 +182,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 			strcat(targetStr, tStr);
 		}
 		strcat(targetStr, "]\n");
-		HCU_DEBUG_PRINT_INF(targetStr);
+		//HCU_DEBUG_PRINT_INF(targetStr);
 	}
 
 	//启动周期性定时器：这个定时器是为了定时汇报12个传感器的测量数量
@@ -248,12 +242,6 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	if ((rcv.timeId == TIMER_ID_1S_L3BFSC_PERIOD_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		//保护周期读数的优先级，强制抢占状态，并简化问题
 		//在这个较为复杂的状态机中，这里的简单状态判定不适用，暂时去掉
-		/*if (FsmGetState(TASK_ID_L3BFSC) != FSM_STATE_L3BFSC_ACTIVED){
-			ret = FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED);
-			if (ret == FAILURE){
-				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
-			}//FsmSetState
-		}*/
 		//周期性读取，只能在FSM_STATE_L3BFSC_OOS_SCAN下，否则不允许上报。如果不在此状态，直接返回，但此时不认为是差错
 		if (FsmGetState(TASK_ID_L3BFSC) != FSM_STATE_L3BFSC_OOS_SCAN){
 			zHcuRunErrCnt[TASK_ID_L3BFSC]++;
