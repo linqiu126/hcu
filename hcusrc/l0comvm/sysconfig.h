@@ -95,6 +95,8 @@
 #define HCU_HARDWARE_BURN_ID_FW_UPGRADE_METHOD_ETH_DIRECT 7
 #define HCU_HARDWARE_BURN_ID_FW_UPGRADE_METHOD_SPI_DIRECT 8
 #define HCU_HARDWARE_BURN_ID_FW_UPGRADE_METHOD_SPI_ETH 9
+#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_METHOD_WIRELESS 10
+#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_METHOD_ACTIVE_CONNECT 11
 #define HCU_HARDWARE_BURN_ID_FW_UPGRADE_METHOD_INVALID 0xFF
 
 
@@ -351,6 +353,9 @@
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
 
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+
 
 
 //打开所有模块，为了测试性能
@@ -550,6 +555,9 @@
 
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
+
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
 
 //基于G1/335D的AQYC
@@ -752,6 +760,9 @@
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
 
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+
 
 //基于G2/树莓派的AQYC
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
@@ -950,6 +961,9 @@
 
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
+
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
 
 //数采仪
@@ -1152,6 +1166,9 @@
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
 
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+
 
 //挂墙仪表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
@@ -1351,6 +1368,9 @@
 
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
+
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
 
 
@@ -1553,6 +1573,9 @@
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
 
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+
 
 //CHUNXU格力空调模块
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
@@ -1752,6 +1775,9 @@
 
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
+
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
 
 //CHUNXU低功耗抄表
@@ -1953,6 +1979,10 @@
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
 
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+
+
 //CHUNXU中等功耗抄表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
@@ -2151,6 +2181,11 @@
 
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
+
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+
+
 
 //波峰组合秤上位机
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -2358,6 +2393,11 @@
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
 
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+
+
+
 //奥普维尔的OTDR仪表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
@@ -2556,6 +2596,11 @@
 
 	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
+
+	//定义hcuboot.cfg文件
+	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+
+
 
 //小技巧，不要这部分，以便加强编译检查
 #else

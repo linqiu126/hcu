@@ -17,7 +17,12 @@ UINT32 zHcuRunErrCnt[MAX_TASK_NUM_IN_ONE_HCU];
 HcuGlobalCounter_t zHcuGlobalCounter;  //定义全局计数器COUNTER
 HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
-//任务初始化配置参数
+/*
+ *
+ *   任务初始化配置参数
+ *
+ */
+
 //请确保，该全局字符串的定义跟Task_Id的顺序保持完全一致，不然后面的显示内容会出现差错， 请服从最长长度TASK_NAME_MAX_LENGTH的定义，不然Debug/Trace打印出的信息也会出错
 //从极致优化内存的角度，这里浪费了2个TASK对应的内存空间（MIN=0/MAX=n+1)，但它却极大的改善了程序编写的效率，值得浪费！！！
 //NULL条目保留，是为了初始化TASK NAME这一属性
@@ -370,6 +375,52 @@ char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK] ={
 		"NULL"
 };
 
+//启动区XML关键字定义
+StrHcuPhyBootCfg_t zHcuXmlBootPhyCfgHead[] = {
+		{0,   	"<xml>", 				    "</xml>"},
+		{20,  	"<equLable>",               "</equLable>"},
+		{2,		"<hwType>",                 "</hwType>"},
+		{2,		"<hwPemId>",                "</hwPemId>"},
+		{2,		"<swRelId>",                "</swRelId>"},
+		{2,		"<swVerId>",                "</swVerId>"},
+		{1,		"<swUpgradeFlag>",          "</swUpgradeFlag>"},
+		{1,		"<swUpgPollId>",            "</swUpgPollId>"},
+		{1,		"<bootIndex>",              "</bootIndex>"},
+		{1,		"<bootAreaMax>",            "</bootAreaMax>"},
+		{4,		"<facLoadAddr>",            "</facLoadAddr>"},
+		{2,		"<facLoadSwRel>",           "</facLoadSwRel>"},
+		{2,		"<facLoadSwVer>",           "</facLoadSwVer>"},
+		{2,		"<facLoadCheckSum>",        "</facLoadCheckSum>"},
+		{2,		"<facLoadValid>",           "</facLoadValid>"},
+		{4,		"<spare2>",                 "</spare2>"},
+		{4,		"<bootLoad1Addr>",          "</bootLoad1Addr>"},
+		{2,		"<bootLoad1RelId>",         "</bootLoad1RelId>"},
+		{2,		"<bootLoad1VerId>",         "</bootLoad1VerId>"},
+		{2,		"<bootLoad1CheckSum>",      "</bootLoad1CheckSum>"},
+		{2,		"<bootLoad1Valid>",         "</bootLoad1Valid>"},
+		{4,		"<spare3>",                 "</spare3>"},
+		{4,		"<bootLoad2Addr>",          "</bootLoad2Addr>"},
+		{2,		"<bootLoad2RelId>",         "</bootLoad2RelId>"},
+		{2,		"<bootLoad2VerId>",         "</bootLoad2VerId>"},
+		{2,		"<bootLoad2CheckSum>",      "</bootLoad2CheckSum>"},
+		{2,		"<bootLoad2Valid>",         "</bootLoad2Valid>"},
+		{4,		"<spare4>",                 "</spare4>"},
+		{4,		"<bootLoad3Addr>",          "</bootLoad3Addr>"},
+		{2,		"<bootLoad3RelId>",         "</bootLoad3RelId>"},
+		{2,		"<bootLoad3VerId>",         "</bootLoad3VerId>"},
+		{2,		"<bootLoad3CheckSum>",      "</bootLoad3CheckSum>"},
+		{2,		"<bootLoad3Valid>",         "</bootLoad3Valid>"},
+		{4,		"<spare5>",                 "</spare5>"},
+		{8,		"<cipherKey>",              "</cipherKey>"},
+		{8,		"<rsv>",                    "</rsv>"}
+};
+
+
+/*
+ *
+ *   核心API函数
+ *
+ */
 
 //INIT the whole system
 OPSTAT hcu_vm_system_init(void)
@@ -398,6 +449,9 @@ OPSTAT hcu_vm_system_init(void)
 
 	//Init Fsm
 	FsmInit();
+
+	//初始化工参
+	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTablet_t));
 
 	return SUCCESS;
 }
@@ -2178,21 +2232,16 @@ int hcu_vm_main_entry(void)
 		return EXIT_SUCCESS;
 	}
 
-	//系统硬件标识区初始化：这里先写入硬件参数，然后再进行工程参数的处理过程
-	if (hcu_vm_get_phy_burn_block_data() == FAILURE){
-		HcuDebugPrint("HCU-MAIN: Init system hardware physical burn ID block error!\n");
-		return EXIT_SUCCESS;
-	}
-
 	//从数据库或者系统缺省配置中，读取系统配置的工程参数
 	if (hcu_hwinv_read_engineering_data_into_mem() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Read database or system init parameters into memory error!\n");
 		return EXIT_SUCCESS;
 	}
 
-	//处理物理硬件区域信息
-	if (hcu_vm_handle_phy_burn_block_configuration() == FAILURE){
-		HcuDebugPrint("HCU-MAIN: Handle physical burn block info error!\n");
+	//系统硬件标识区初始化：必须先读取工参，然后再使用物理地址，因为物理信息很可能覆盖工参，所以必须放在后面处理
+	//物理地址具备更高的优先级
+	if (hcu_vm_get_phy_burn_block_data() == FAILURE){
+		HcuDebugPrint("HCU-MAIN: Init system hardware physical burn ID block error!\n");
 		return EXIT_SUCCESS;
 	}
 
@@ -2240,12 +2289,14 @@ int hcu_vm_main_entry(void)
 //需要单独设计一种的存储设备敏感数据的方式
 OPSTAT hcu_vm_get_phy_burn_block_data(void)
 {
-	//初始化
-	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTablet_t));
-
+	int ret = 0;
 	//硬件烧录区域，系统唯一标识部分，后面程序中访问到这些系统参数都必须从这个地方读取
 	//具体读取的过程，目前暂时空白，因为还未决定使用哪种方式来存储这个敏感信息
-	//hcu_phy_id_get((UINT8*)&(zHcuSysEngPar.hwBurnId));
+	ret = hcu_vm_read_phy_boot_cfg();
+	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_YES) && (ret == FAILURE)){
+		HcuErrorPrint("HCU-VM: Massive production phase but not yet pop physical boot configuration!\n");
+		return FAILURE;
+	}
 
 	//对硬件类型进行相同性检查，如果不一致，必然发生了生产性错误，或者硬件搞错，或者Factory Load用错，应该严重警告
 	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_YES) && (zHcuSysEngPar.hwBurnId.hwType != HCU_HARDWARE_PRODUCT_CAT_TYPE)){
@@ -2259,10 +2310,14 @@ OPSTAT hcu_vm_get_phy_burn_block_data(void)
 		zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_TYPE; //PEM小型号
 		zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
 		zHcuSysEngPar.hwBurnId.swVerId = HCU_CURRENT_SW_DELIVERY;
-		zHcuSysEngPar.hwBurnId.swAppCheckSum = 0;
 		zHcuSysEngPar.hwBurnId.swUpgradeFlag = HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET;
 		zHcuSysEngPar.hwBurnId.swUpgPollId = HCU_HARDWARE_BURN_ID_FW_UPGRADE_METHOD_UART_GPRS;
 		//cipherKey[16];
+	}
+
+	//物理地址配置具备更高的优先级
+	if (strlen(zHcuSysEngPar.hwBurnId.equLable) != 0){
+		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, zHcuSysEngPar.hwBurnId.equLable);
 	}
 
 	//初始化之后的系统标识信息
@@ -2278,14 +2333,155 @@ OPSTAT hcu_vm_get_phy_burn_block_data(void)
 	return SUCCESS;
 }
 
-OPSTAT hcu_vm_handle_phy_burn_block_configuration(void)
+
+OPSTAT hcu_vm_read_phy_boot_cfg(void)
 {
-	//物理地址配置具备更高的优先级
-	if (strlen(zHcuSysEngPar.hwBurnId.equLable) != 0){
-		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, zHcuSysEngPar.hwBurnId.equLable);
+	//int fHandler = 0;
+	FILE *fp;
+	int bytes_read = 0, len = 0, index =0;
+	int file_len=0;
+	char *pRecord;
+
+//	//打开源文件
+//	if((fHandler=open(HCU_HARDWARE_PHY_BOOT_CFG_FILE, O_RDWR))==-1){
+//	  HcuErrorPrint("HCU-VM: Open %s Error!\n", HCU_HARDWARE_PHY_BOOT_CFG_FILE);
+//	  return FAILURE;
+//	}
+//
+//	//测得文件大小
+//	file_len= lseek(fHandler, 0L, SEEK_END);  //文件总长度
+//	close(fHandler);
+
+	//打开源文件
+	if((fp=fopen(HCU_HARDWARE_PHY_BOOT_CFG_FILE, "rt+"))== NULL){
+		HcuErrorPrint("HCU-VM: Open %s Error!\n", HCU_HARDWARE_PHY_BOOT_CFG_FILE);
+		return FAILURE;
 	}
+
+	//测得文件大小
+	//curpos = ftell(fp);
+	fseek(fp, 0L, SEEK_END);
+	file_len = ftell(fp);
+	fseek(fp, 0L, SEEK_SET);
+	if (file_len <=0){
+		HcuErrorPrint("HCU-VM: Not file content!\n");
+		fclose(fp);
+		return FAILURE;
+	}
+
+	//读取文件
+	pRecord = malloc(file_len);
+	if (pRecord==NULL){
+		HcuErrorPrint("HCU-VM: Allocate memory fail!\n");
+		return FAILURE;
+	}
+	bytes_read=fread(pRecord, 1, file_len, fp);
+	if (bytes_read != file_len){
+		HcuErrorPrint("HCU-VM: Read file fail, byte_read = %d, file_len = %d!\n", bytes_read, file_len);
+		free(pRecord);
+		fclose(fp);
+		return FAILURE;
+	}
+
+	char *p1, *p2;
+	//按照zHcuXmlBootPhyCfgHead处理
+	index = 0;
+	p1 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].left);
+	p2 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].right);
+	if ((p1==NULL) || (p2==NULL) || (p1>=p2)){
+		  HcuErrorPrint("HCU-VM: Read file fail!\n");
+		  free(pRecord);
+		  fclose(fp);
+		  return FAILURE;
+	}
+
+	//equLable
+	index++;
+	p1 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].left);
+	p2 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].right);
+	len = p2 - p1 - strlen(zHcuXmlBootPhyCfgHead[index].left);
+	if ((p1!=NULL) && (p2!=NULL) &&  (len>0)){
+		p1 = p1+strlen(zHcuXmlBootPhyCfgHead[index].left);
+		strncpy(zHcuSysEngPar.hwBurnId.equLable, p1, len<sizeof(zHcuSysEngPar.hwBurnId.equLable)?len:sizeof(zHcuSysEngPar.hwBurnId.equLable));
+	}
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwType));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwPemId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swRelId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swVerId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swUpgradeFlag));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swUpgPollId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootIndex));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootAreaMax));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadAddr));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadSwRel));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadSwVer));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadCheckSum));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadValid));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare2));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1Addr));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1RelId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1VerId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1CheckSum));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1Valid));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare3));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2Addr));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2RelId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2VerId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2CheckSum));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2Valid));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare4));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3Addr));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3RelId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3VerId));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3CheckSum));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3Valid));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare5));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.cipherKey[0]));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.cipherKey[8]));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.rsv[0]));
+	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.rsv[8]));
+
+	//关闭文件
+	free(pRecord);
+	fclose(fp);
+
 	return SUCCESS;
 }
 
 
+void hcu_vm_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target)
+{
+	char *p1, *p2;
+	int len =0;
+	char s[10];
+	UINT64 res = 0;
+	UINT8 res1 = 0;
+	UINT16 res2 = 0;
+	UINT32 res3 = 0;
+
+	p1 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].left);
+	p2 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].right);
+	len = p2 - p1 - strlen(zHcuXmlBootPhyCfgHead[index].left);
+	if ((p1!=NULL) && (p2!=NULL) && (len>0)){
+		p1 = p1+strlen(zHcuXmlBootPhyCfgHead[index].left);
+		memset(s, 0, sizeof(s));
+		strncpy(s, p1, len<sizeof(s)?len:sizeof(s));
+		res = strtoul(s, NULL, 10);
+		if (zHcuXmlBootPhyCfgHead[index].level==1){
+			res1 = res & 0xFF;
+			memcpy(target, &res1, 1);
+		}
+		else if (zHcuXmlBootPhyCfgHead[index].level==2){
+			res2 = res & 0xFFFF;
+			memcpy(target, &res2, 2);
+		}
+		else if (zHcuXmlBootPhyCfgHead[index].level==4){
+			res3 = res & 0xFFFFFFFF;
+			memcpy(target, &res3, 4);
+		}
+		else if (zHcuXmlBootPhyCfgHead[index].level==8){
+			memcpy(target, &res, 8);
+		}
+	}
+}
 

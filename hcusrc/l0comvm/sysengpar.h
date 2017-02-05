@@ -291,8 +291,6 @@ typedef struct SysEngParElementProgramCodeDefineFix
 }SysEngParElementProgramCodeDefineFix_t;
 
 //通用硬件固定位置的标签存储内容，由工厂生产过程中烧录器写入
-//该结构必然跟各个物理器件的定义一致，不然会导致读取失败
-#pragma pack (1) //强制1字节对齐
 typedef struct SysEngParElementHwBurnPhyIdAddr
 {
 	char  	equLable[20];
@@ -300,14 +298,37 @@ typedef struct SysEngParElementHwBurnPhyIdAddr
 	UINT16 	hwPemId;
 	UINT16 	swRelId;
 	UINT16 	swVerId;
-	UINT16 	swAppCheckSum;
 	UINT8  	swUpgradeFlag;
 	UINT8 	swUpgPollId;
+	UINT8 	bootIndex;
+	UINT8 	bootAreaMax;   //32
+	UINT32  facLoadAddr;
+	UINT16	facLoadSwRel;
+	UINT16	facLoadSwVer;
+	UINT16 	facLoadCheckSum;
+	UINT16  facLoadValid;
+	UINT32	spare2;
+	UINT32  bootLoad1Addr;
+	UINT16 	bootLoad1RelId;
+	UINT16 	bootLoad1VerId;
+	UINT16 	bootLoad1CheckSum;
+	UINT16  bootLoad1Valid;
+	UINT32	spare3;   //32
+	UINT32  bootLoad2Addr;
+	UINT16 	bootLoad2RelId;
+	UINT16 	bootLoad2VerId;
+	UINT16 	bootLoad2CheckSum;
+	UINT16  bootLoad2Valid;
+	UINT32	spare4;
+	UINT32  bootLoad3Addr;
+	UINT16 	bootLoad3RelId;
+	UINT16 	bootLoad3VerId;
+	UINT16 	bootLoad3CheckSum;
+	UINT16  bootLoad3Valid;
+	UINT32  spare5;       //32
 	UINT8   cipherKey[16];
-	UINT8 	rsv[16];
+	UINT8 	rsv[16];   //32
 }SysEngParElementHwBurnPhyIdAddr_t;
-#pragma pack () //取消字节对其
-#define HCU_HW_BURN_PHY_ID_BLOCK_LEN sizeof(SysEngParElementHwBurnPhyIdAddr_t)
 
 //工程参数总控制表
 #define SYS_ENG_PAR_PRJ_NAME_LEN 100  //保持跟数据库的一致性

@@ -19,8 +19,9 @@ PRJ_BFSC待完成或者回答的问题：
 //= ZJL, 2017 Feb.5, CURRENT_SW_DELIVERY 148=>BFSC项目
 = 按照HCU NAME命名规则改进，将SysParEng中有关自身名字的长度从12改为20个
 =改进strcpy为strncpy
-= 
-
+=改进启动区的结构
+=读取hcuboot.cfg区域，完善了处理过程
+=该文件处于/var/www目录下，采用sysconfig.h进行配置，可按照项目进行修改的。
 
 //= ZJL, 2017 Feb.4, CURRENT_SW_DELIVERY 147=>BFSC项目
 =优化TASK NAME

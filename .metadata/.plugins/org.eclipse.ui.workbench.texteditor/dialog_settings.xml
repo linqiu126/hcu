@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HCU_PRJ_BFSC_CBU" key="selection"/>
+		<item value="read" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HCU_PRJ_BFSC_CBU"/>
-			<item value="HCU_PRJ_AQYCG10_335D"/>
-			<item value="12"/>
-			<item value="HCU_CLOUDVELA_BH_HCU_NAME"/>
-			<item value="HCU_CL_0499"/>
-			<item value="HCU_G201_"/>
-			<item value="HCU_G201_AQYC_SH001"/>
-			<item value="HCU_G201_AQYC_A0001"/>
+			<item value="hcu_vm_read_phy_boot_cfg"/>
+			<item value="read"/>
+			<item value="fread"/>
+			<item value="open"/>
+			<item value="fopen"/>
+			<item value="elif"/>
+			<item value="HCU_DEBUG"/>
+			<item value="HCU_HARDWARE_MASSIVE_PRODUTION_SET"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_G801_BFSC_SH001"/>

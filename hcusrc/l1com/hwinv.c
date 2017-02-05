@@ -1339,16 +1339,15 @@ UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen)
 	//测得文件大小
 	UINT32 file_len=0;
 	file_len= lseek(fHandler, 0L, SEEK_END);  //文件总长度
-	lseek(fHandler, 0L, SEEK_SET); //移动文件到尾部开头
-	lseek(fHandler, 0L, SEEK_END); //移动文件到尾部尾部
+	lseek(fHandler, 0L, SEEK_SET); //移动文件到开头
+	lseek(fHandler, 0L, SEEK_END); //移动文件到尾部
 
 	//写入文件内容
 	write(fHandler, dataBuffer, dataLen);
 	close(fHandler);
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("HWINV: Save record into hd-disk successful, Orginal file Len =%d, add len = %d!\n", file_len, dataLen);
-	}
+	HCU_DEBUG_PRINT_INF("HWINV: Save record into hd-disk successful, Orginal file Len =%d, add len = %d!\n", file_len, dataLen);
+
 	return SUCCESS;
 }
 

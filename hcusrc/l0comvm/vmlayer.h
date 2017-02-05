@@ -289,6 +289,14 @@ typedef struct HcuGlobalCounter
 }HcuGlobalCounter_t;
 extern HcuGlobalCounter_t zHcuGlobalCounter;
 
+//物理BOOT区域结构
+typedef struct StrHcuPhyBootCfg
+{
+	UINT8 level;
+	char left[30];
+	char right[30];
+}StrHcuPhyBootCfg_t;
+
 //统一定义，不会影响编译
 extern FsmStateItem_t HcuFsmHcuvm[];                             //状态机
 extern FsmStateItem_t HcuFsmTrace[];                             //状态机
@@ -430,8 +438,8 @@ void hcu_vm_task_delete_except_svrcon_and_hcumain(void);
 
 //获取系统设备唯一标示区的数据。由于敏感性，这块数据不能做成工程参数配置方式，而必须采用工厂烧录方式
 OPSTAT hcu_vm_get_phy_burn_block_data(void);
-OPSTAT hcu_vm_handle_phy_burn_block_configuration(void);
-
+OPSTAT hcu_vm_read_phy_boot_cfg(void);
+void hcu_vm_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target);
 
 //外部参考API, Extern APIs
 extern int msgget(key_t key, int msgflg);
@@ -451,9 +459,6 @@ extern OPSTAT hcu_hwinv_read_mac_address(void);
 #define HCU_DEBUG_PRINT_IPT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE) HcuDebugPrint
 #define HCU_DEBUG_PRINT_CRT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE) HcuDebugPrint
 #define HCU_DEBUG_PRINT_FAT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE) HcuDebugPrint
-
-
-
 
 
 
