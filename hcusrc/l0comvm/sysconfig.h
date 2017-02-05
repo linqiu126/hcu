@@ -325,7 +325,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -524,7 +524,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G201_TEST_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -723,7 +723,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -923,7 +923,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G201_AQYC_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -1123,7 +1123,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G301_TBSW_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -1324,7 +1324,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G401_GQYB_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -1525,7 +1525,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G211_ILCX_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -1725,7 +1725,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G221_GLAM_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -1925,7 +1925,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G231_NBLP_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -2124,7 +2124,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G241_NBHP_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -2323,7 +2323,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G801_BFSC_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -2529,7 +2529,7 @@
 
 	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
-	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_SH_0301"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G711_OTDR_SH001"     //DEVICE NAME
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -2549,7 +2549,7 @@
 	#define HCU_L3OPWLOTDR_TIMER_DURATION_PERIOD_READ 600
 
 	//CURRENT HW PRODUCT CATELOG
-	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0701
+	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0711
 
 	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO

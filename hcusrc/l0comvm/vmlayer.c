@@ -406,7 +406,7 @@ OPSTAT hcu_vm_system_init(void)
 //HCU local init for whole application
 OPSTAT hcu_vm_application_task_env_init(void)
 {
-	int item = 0;
+	int i = 0, item = 0;
 	UINT32 taskid = 0;
 
 	//先从工程参数中读取配置信息到任务表
@@ -483,6 +483,12 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	for (taskid = TASK_ID_MIN; taskid <= TASK_ID_MAX; taskid++){
 		//如果初始化表中是NULL，则不能启动该任务
 		if(zHcuTaskInfo[taskid].taskFuncEntry == NULL) zHcuTaskInfo[taskid].pnpState = HCU_TASK_PNP_OFF;
+	}
+
+	//从TASK_ID_COM_BOTTOM开始，固定配置TRACE选项。
+	//本来放在hcu_hwinv_read_engineering_data_into_mem中，但由于初始化顺序，那时TaskInfo还未初始化，只能先放在这里，会更为安全
+	for (i=TASK_ID_COM_BOTTOM; i< (TASK_ID_MAX+1); i++){
+		strcpy(zHcuSysEngPar.traceList.mod[i].moduleName, zHcuTaskInfo[i].taskName);
 	}
 
 	//返回
@@ -2184,6 +2190,12 @@ int hcu_vm_main_entry(void)
 		return EXIT_SUCCESS;
 	}
 
+	//处理物理硬件区域信息
+	if (hcu_vm_handle_phy_burn_block_configuration() == FAILURE){
+		HcuDebugPrint("HCU-MAIN: Handle physical burn block info error!\n");
+		return EXIT_SUCCESS;
+	}
+
 	//创建目录存储环境
 	if (hcu_hwinv_create_storage_dir_env() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Create storage directory environment error!\n");
@@ -2265,5 +2277,15 @@ OPSTAT hcu_vm_get_phy_burn_block_data(void)
 
 	return SUCCESS;
 }
+
+OPSTAT hcu_vm_handle_phy_burn_block_configuration(void)
+{
+	//物理地址配置具备更高的优先级
+	if (strlen(zHcuSysEngPar.hwBurnId.equLable) != 0){
+		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, zHcuSysEngPar.hwBurnId.equLable);
+	}
+	return SUCCESS;
+}
+
 
 

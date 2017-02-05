@@ -664,3 +664,1439 @@ Invoking: Cross G++ Linker
 g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/bhcodecxml.o ./src/l2codec/bhcodeczhb.o ./src/l2codec/huixmlcodec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
 Finished building target: PrjBfsc
  
+10:45:15 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l4bi/aiqiyc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l4bi/aiqiyc.d" -MT"src/l4bi/aiqiyc.o" -o "src/l4bi/aiqiyc.o" "/home/hitpony/workspace/hcu/hcusrc/l4bi/aiqiyc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l4bi/aiqiyc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3uiconnect/bfscuicomm.d" -MT"src/l3uiconnect/bfscuicomm.o" -o "src/l3uiconnect/bfscuicomm.o" "/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/hsmmp.d" -MT"src/l3app/hsmmp.o" -o "src/l3app/hsmmp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorairprs.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorairprs.d" -MT"src/l3app/sensorairprs.o" -o "src/l3app/sensorairprs.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorairprs.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorairprs.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoralcohol.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensoralcohol.d" -MT"src/l3app/sensoralcohol.o" -o "src/l3app/sensoralcohol.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoralcohol.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoralcohol.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorco1.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorco1.d" -MT"src/l3app/sensorco1.o" -o "src/l3app/sensorco1.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorco1.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorco1.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensoremc.d" -MT"src/l3app/sensoremc.o" -o "src/l3app/sensoremc.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhcho.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorhcho.d" -MT"src/l3app/sensorhcho.o" -o "src/l3app/sensorhcho.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorhcho.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhcho.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorhumid.d" -MT"src/l3app/sensorhumid.o" -o "src/l3app/sensorhumid.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorigm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorigm.d" -MT"src/l3app/sensorigm.o" -o "src/l3app/sensorigm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorigm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorigm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorihm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorihm.d" -MT"src/l3app/sensorihm.o" -o "src/l3app/sensorihm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorihm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorihm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoripm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensoripm.d" -MT"src/l3app/sensoripm.o" -o "src/l3app/sensoripm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoripm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoripm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoriwm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensoriwm.d" -MT"src/l3app/sensoriwm.o" -o "src/l3app/sensoriwm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoriwm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoriwm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorlightstr.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorlightstr.d" -MT"src/l3app/sensorlightstr.o" -o "src/l3app/sensorlightstr.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorlightstr.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorlightstr.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensornoise.d" -MT"src/l3app/sensornoise.o" -o "src/l3app/sensornoise.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorpm25.d" -MT"src/l3app/sensorpm25.o" -o "src/l3app/sensorpm25.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorpm25sharp.d" -MT"src/l3app/sensorpm25sharp.o" -o "src/l3app/sensorpm25sharp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c"
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c: In function ‘func_pm25sharp_read_data’:
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c:231:2: warning: implicit declaration of function ‘hcu_sps485_serial_port_get’ [-Wimplicit-function-declaration]
+  nread = hcu_sps485_serial_port_get(&gSerialPortForPm25Sharp, &received_single_byte, 1);
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensortemp.d" -MT"src/l3app/sensortemp.o" -o "src/l3app/sensortemp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortoxicgas.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensortoxicgas.d" -MT"src/l3app/sensortoxicgas.o" -o "src/l3app/sensortoxicgas.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensortoxicgas.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortoxicgas.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorwinddir.d" -MT"src/l3app/sensorwinddir.o" -o "src/l3app/sensorwinddir.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorwindspd.d" -MT"src/l3app/sensorwindspd.o" -o "src/l3app/sensorwindspd.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/svrcon.d" -MT"src/l3app/svrcon.o" -o "src/l3app/svrcon.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c"
+/home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c: In function ‘fsm_svrcon_init’:
+/home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c:162:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/syspm.d" -MT"src/l3app/syspm.o" -o "src/l3app/syspm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/avorion.d" -MT"src/l2frame/avorion.o" -o "src/l2frame/avorion.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c"
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c: In function ‘func_avorion_ffmpeg_capture_and_save’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1147:2: warning: ‘avpicture_get_size’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4910) [-Wdeprecated-declarations]
+  numBytesAvorion = avpicture_get_size(AVORION_STREAM_PIX_FMT_DEFAULT, pCodecCtxAvorion->width, pCodecCtxAvorion->height);  //PIX_FMT_YUV420P
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1151:2: warning: ‘avpicture_fill’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4895) [-Wdeprecated-declarations]
+  avpicture_fill((AVPicture *)pFrameYUVmid, bufferAvorion, AVORION_STREAM_PIX_FMT_DEFAULT, pCodecCtxAvorion->width, pCodecCtxAvorion->height); //PIX_FMT_YUV420P
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1309:5: warning: ‘avpicture_get_size’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4910) [-Wdeprecated-declarations]
+     picture_size = avpicture_get_size(pCodecCtxOutput->pix_fmt, pCodecCtxOutput->width, pCodecCtxOutput->height);
+     ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1315:5: warning: ‘avpicture_fill’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4895) [-Wdeprecated-declarations]
+     avpicture_fill((AVPicture *)pFrameOutput, bufferOutput, pCodecCtxOutput->pix_fmt, pCodecCtxOutput->width, pCodecCtxOutput->height);
+     ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1480:7: warning: ‘av_free_packet’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4052) [-Wdeprecated-declarations]
+       if (packetOutput !=NULL) av_free_packet(packetOutput);
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1491:4: warning: ‘av_free_packet’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4052) [-Wdeprecated-declarations]
+    if (packetAvorion !=NULL) av_free_packet(packetAvorion);
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1710:3: warning: ‘av_free_packet’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4052) [-Wdeprecated-declarations]
+   av_free_packet(&pkt);
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1560:9: warning: variable ‘cur_pts_v’ set but not used [-Wunused-but-set-variable]
+  double cur_pts_v=0;
+         ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1318:26: warning: ignoring return value of ‘avformat_write_header’, declared with attribute warn_unused_result [-Wunused-result]
+     avformat_write_header(pFormatCtxOutput, NULL);
+                          ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: In function ‘fsm_canitfleo_l3bfsc_general_cmd_req’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:549:6: warning: unused variable ‘weight’ [-Wunused-variable]
+  int weight;
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: At top level:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:37:14: warning: ‘cmdlinename’ defined but not used [-Wunused-variable]
+ static char *cmdlinename[MAXSOCK];
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:38:14: warning: ‘dropcnt’ defined but not used [-Wunused-variable]
+ static __u32 dropcnt[MAXSOCK];
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:39:14: warning: ‘last_dropcnt’ defined but not used [-Wunused-variable]
+ static __u32 last_dropcnt[MAXSOCK];
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:40:13: warning: ‘devname’ defined but not used [-Wunused-variable]
+ static char devname[MAXIFNAMES][IFNAMSIZ+1];
+             ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:41:13: warning: ‘dindex’ defined but not used [-Wunused-variable]
+ static int  dindex[MAXIFNAMES];
+             ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:42:13: warning: ‘max_devname_len’ defined but not used [-Wunused-variable]
+ static int  max_devname_len; /* to prevent frazzled device name output */
+             ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:35:12: warning: array ‘col_off’ assumed to have one element [enabled by default]
+ const char col_off []; //ATTRESET;
+            ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/cloudvela.d" -MT"src/l2frame/cloudvela.o" -o "src/l2frame/cloudvela.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/i2cbuslibra.d" -MT"src/l2frame/i2cbuslibra.o" -o "src/l2frame/i2cbuslibra.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/modbus.d" -MT"src/l2frame/modbus.o" -o "src/l2frame/modbus.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotcj188.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/nbiotcj188.d" -MT"src/l2frame/nbiotcj188.o" -o "src/l2frame/nbiotcj188.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotcj188.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotcj188.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotqg376.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/nbiotqg376.d" -MT"src/l2frame/nbiotqg376.o" -o "src/l2frame/nbiotqg376.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotqg376.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotqg376.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/spibusaries.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/spibusaries.d" -MT"src/l2frame/spibusaries.o" -o "src/l2frame/spibusaries.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/spibusaries.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/spibusaries.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/spsvirgo.d" -MT"src/l2frame/spsvirgo.o" -o "src/l2frame/spsvirgo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodecxml.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2codec/bhcodecxml.d" -MT"src/l2codec/bhcodecxml.o" -o "src/l2codec/bhcodecxml.o" "/home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodecxml.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodecxml.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodeczhb.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2codec/bhcodeczhb.d" -MT"src/l2codec/bhcodeczhb.o" -o "src/l2codec/bhcodeczhb.o" "/home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodeczhb.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodeczhb.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2codec/huixmlcodec.d" -MT"src/l2codec/huixmlcodec.o" -o "src/l2codec/huixmlcodec.o" "/home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/adc.d" -MT"src/l1hwopt/adc.o" -o "src/l1hwopt/adc.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/apigprs.d" -MT"src/l1hwopt/apigprs.o" -o "src/l1hwopt/apigprs.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c"
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c: In function ‘GprsPppdStart’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:257:2: warning: implicit declaration of function ‘IsGprsPppdOk’ [-Wimplicit-function-declaration]
+  ret = IsGprsPppdOk();
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:266:2: warning: implicit declaration of function ‘HcuGetSysInfo’ [-Wimplicit-function-declaration]
+  HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c: In function ‘GprsHwReset’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:293:4: warning: implicit declaration of function ‘GpioPortOp’ [-Wimplicit-function-declaration]
+    GpioPortOp(gpc->HwResetPortOp1);
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c: In function ‘GprsPppdSwShutdown’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:426:2: warning: implicit declaration of function ‘IsNetItfExist’ [-Wimplicit-function-declaration]
+  ret = IsNetItfExist("ppp0");
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:434:2: warning: implicit declaration of function ‘KillPppdProcess’ [-Wimplicit-function-declaration]
+  KillPppdProcess();
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ble.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/ble.d" -MT"src/l1hwopt/ble.o" -o "src/l1hwopt/ble.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/ble.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ble.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/camera.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/camera.d" -MT"src/l1hwopt/camera.o" -o "src/l1hwopt/camera.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/camera.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/camera.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/con3g4g.d" -MT"src/l1hwopt/con3g4g.o" -o "src/l1hwopt/con3g4g.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c"
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c: In function ‘UsbUmtsPppdStart’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c:255:3: warning: implicit declaration of function ‘IsGprsPppdOk’ [-Wimplicit-function-declaration]
+   ret = IsGprsPppdOk();
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c:345:4: warning: implicit declaration of function ‘HcuGetSysInfo’ [-Wimplicit-function-declaration]
+    HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c:347:4: warning: implicit declaration of function ‘IsNetItfExist’ [-Wimplicit-function-declaration]
+    IsNetItfExist("ppp0");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c: In function ‘UsbUmtsPppdSwShutdown’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c:397:2: warning: implicit declaration of function ‘KillPppdProcess’ [-Wimplicit-function-declaration]
+  KillPppdProcess();
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/ethernet.d" -MT"src/l1hwopt/ethernet.o" -o "src/l1hwopt/ethernet.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/gpio.d" -MT"src/l1hwopt/gpio.o" -o "src/l1hwopt/gpio.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c"
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c:428:13: warning: ‘print_n’ defined but not used [-Wunused-function]
+ static void print_n(const char *name, int last)
+             ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c:598:13: warning: ‘dump_all’ defined but not used [-Wunused-function]
+ static void dump_all(void)
+             ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/gps.d" -MT"src/l1hwopt/gps.o" -o "src/l1hwopt/gps.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c"
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c: In function ‘fsm_gps_init’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c:110:2: warning: implicit declaration of function ‘hcu_sps485_serial_init’ [-Wimplicit-function-declaration]
+  ret = hcu_sps485_serial_init(&gSerialPortForGPS);
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/i2c.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/i2c.d" -MT"src/l1hwopt/i2c.o" -o "src/l1hwopt/i2c.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/i2c.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/i2c.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/lcd.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/lcd.d" -MT"src/l1hwopt/lcd.o" -o "src/l1hwopt/lcd.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/lcd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/lcd.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/led.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/led.d" -MT"src/l1hwopt/led.o" -o "src/l1hwopt/led.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/led.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/led.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/microphone.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/microphone.d" -MT"src/l1hwopt/microphone.o" -o "src/l1hwopt/microphone.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/microphone.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/microphone.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/motor.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/motor.d" -MT"src/l1hwopt/motor.o" -o "src/l1hwopt/motor.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/motor.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/motor.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/pwm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/pwm.d" -MT"src/l1hwopt/pwm.o" -o "src/l1hwopt/pwm.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/pwm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/pwm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/relay.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/relay.d" -MT"src/l1hwopt/relay.o" -o "src/l1hwopt/relay.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/relay.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/relay.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spi.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/spi.d" -MT"src/l1hwopt/spi.o" -o "src/l1hwopt/spi.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/spi.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spi.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps232.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/sps232.d" -MT"src/l1hwopt/sps232.o" -o "src/l1hwopt/sps232.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps232.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps232.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps485.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/sps485.d" -MT"src/l1hwopt/sps485.o" -o "src/l1hwopt/sps485.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps485.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps485.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/spsapi.d" -MT"src/l1hwopt/spsapi.o" -o "src/l1hwopt/spsapi.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/switch.d" -MT"src/l1hwopt/switch.o" -o "src/l1hwopt/switch.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/usbnet.d" -MT"src/l1hwopt/usbnet.o" -o "src/l1hwopt/usbnet.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/wifi.d" -MT"src/l1hwopt/wifi.o" -o "src/l1hwopt/wifi.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/zeegbe.d" -MT"src/l1hwopt/zeegbe.o" -o "src/l1hwopt/zeegbe.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1com/hwinv.d" -MT"src/l1com/hwinv.o" -o "src/l1com/hwinv.o" "/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c"
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘hcu_hwinv_read_mac_address’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:626:3: warning: pointer targets in passing argument 1 of ‘sprintf’ differ in signedness [-Wpointer-sign]
+   sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:15:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/stdio.h:364:12: note: expected ‘char * __restrict__’ but argument is of type ‘UINT8 *’
+ extern int sprintf (char *__restrict __s,
+            ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:628:2: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+  zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/string.h:399:15: note: expected ‘const char *’ but argument is of type ‘UINT8 *’
+ extern size_t strlen (const char *__s)
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘func_hwinv_scan_db’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:1188:3: warning: implicit declaration of function ‘dbi_HcuHchoZe08ch2oDataInfo_delete_3monold’ [-Wimplicit-function-declaration]
+   if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+   ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0webser/ftp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0webser/ftp.d" -MT"src/l0webser/ftp.o" -o "src/l0webser/ftp.o" "/home/hitpony/workspace/hcu/hcusrc/l0webser/ftp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0webser/ftp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/configxml.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/configxml.d" -MT"src/l0service/configxml.o" -o "src/l0service/configxml.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/configxml.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/configxml.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/mmc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/mmc.d" -MT"src/l0service/mmc.o" -o "src/l0service/mmc.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/mmc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/mmc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/sysinfo.d" -MT"src/l0service/sysinfo.o" -o "src/l0service/sysinfo.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c"
+/home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c: In function ‘strstr_Wrapper’:
+/home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c:44:9: warning: implicit declaration of function ‘strcasestr’ [-Wimplicit-function-declaration]
+         return (int) strcasestr(haystack, needle);
+         ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/timer.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/timer.d" -MT"src/l0service/timer.o" -o "src/l0service/timer.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/timer.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/timer.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/trace.d" -MT"src/l0service/trace.o" -o "src/l0service/trace.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c"
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c: In function ‘ErrorTracePrintf’:
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:108:15: warning: assignment makes pointer from integer without a cast [enabled by default]
+   if((fHandler=open("./hcuerr.log", O_RDWR|O_CREAT)) < 0){
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:111:3: warning: passing argument 1 of ‘lseek’ makes integer from pointer without a cast [enabled by default]
+   lseek(fHandler, 0L, SEEK_END); //移动文件到尾部
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/../l0comvm/commsg.h:26:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/trace.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:8:
+/usr/include/unistd.h:334:16: note: expected ‘int’ but argument is of type ‘struct FILE *’
+ extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
+                ^
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:112:3: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   write(fHandler, gpuTraceBuffer, strlen(gpuTraceBuffer));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/trace.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:8:
+/usr/include/string.h:399:15: note: expected ‘const char *’ but argument is of type ‘INT8 *’
+ extern size_t strlen (const char *__s)
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:112:3: warning: passing argument 1 of ‘write’ makes integer from pointer without a cast [enabled by default]
+   write(fHandler, gpuTraceBuffer, strlen(gpuTraceBuffer));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/../l0comvm/commsg.h:26:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/trace.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:8:
+/usr/include/unistd.h:366:16: note: expected ‘int’ but argument is of type ‘struct FILE *’
+ extern ssize_t write (int __fd, const void *__buf, size_t __n) __wur;
+                ^
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:113:3: warning: passing argument 1 of ‘close’ makes integer from pointer without a cast [enabled by default]
+   close(fHandler);
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/../l0comvm/commsg.h:26:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/trace.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:8:
+/usr/include/unistd.h:353:12: note: expected ‘int’ but argument is of type ‘struct FILE *’
+ extern int close (int __fd);
+            ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiairprs.d" -MT"src/l0dbi/dbiairprs.o" -o "src/l0dbi/dbiairprs.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbialcohol.d" -MT"src/l0dbi/dbialcohol.o" -o "src/l0dbi/dbialcohol.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbico1.d" -MT"src/l0dbi/dbico1.o" -o "src/l0dbi/dbico1.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbicom.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbicom.d" -MT"src/l0dbi/dbicom.o" -o "src/l0dbi/dbicom.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbicom.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbicom.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiemc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiemc.d" -MT"src/l0dbi/dbiemc.o" -o "src/l0dbi/dbiemc.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiemc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiemc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihcho.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbihcho.d" -MT"src/l0dbi/dbihcho.o" -o "src/l0dbi/dbihcho.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihcho.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihcho.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihsmmp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbihsmmp.d" -MT"src/l0dbi/dbihsmmp.o" -o "src/l0dbi/dbihsmmp.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihsmmp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihsmmp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihumid.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbihumid.d" -MT"src/l0dbi/dbihumid.o" -o "src/l0dbi/dbihumid.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihumid.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihumid.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiigm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiigm.d" -MT"src/l0dbi/dbiigm.o" -o "src/l0dbi/dbiigm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiigm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiigm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiihm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiihm.d" -MT"src/l0dbi/dbiihm.o" -o "src/l0dbi/dbiihm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiihm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiihm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiipm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiipm.d" -MT"src/l0dbi/dbiipm.o" -o "src/l0dbi/dbiipm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiipm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiipm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiiwm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiiwm.d" -MT"src/l0dbi/dbiiwm.o" -o "src/l0dbi/dbiiwm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiiwm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiiwm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbilightstr.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbilightstr.d" -MT"src/l0dbi/dbilightstr.o" -o "src/l0dbi/dbilightstr.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbilightstr.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbilightstr.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinbiot.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbinbiot.d" -MT"src/l0dbi/dbinbiot.o" -o "src/l0dbi/dbinbiot.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinbiot.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinbiot.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinoise.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbinoise.d" -MT"src/l0dbi/dbinoise.o" -o "src/l0dbi/dbinoise.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinoise.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinoise.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbipm25.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbipm25.d" -MT"src/l0dbi/dbipm25.o" -o "src/l0dbi/dbipm25.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbipm25.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbipm25.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbisysperfm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbisysperfm.d" -MT"src/l0dbi/dbisysperfm.o" -o "src/l0dbi/dbisysperfm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbisysperfm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbisysperfm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitemp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbitemp.d" -MT"src/l0dbi/dbitemp.o" -o "src/l0dbi/dbitemp.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitemp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitemp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitoxicgas.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbitoxicgas.d" -MT"src/l0dbi/dbitoxicgas.o" -o "src/l0dbi/dbitoxicgas.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitoxicgas.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitoxicgas.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwinddir.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiwinddir.d" -MT"src/l0dbi/dbiwinddir.o" -o "src/l0dbi/dbiwinddir.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwinddir.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwinddir.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiwindspd.d" -MT"src/l0dbi/dbiwindspd.o" -o "src/l0dbi/dbiwindspd.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0comvm/vmlayer.d" -MT"src/l0comvm/vmlayer.o" -o "src/l0comvm/vmlayer.o" "/home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/bhcodecxml.o ./src/l2codec/bhcodeczhb.o ./src/l2codec/huixmlcodec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+10:53:01 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1com/hwinv.d" -MT"src/l1com/hwinv.o" -o "src/l1com/hwinv.o" "/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c"
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘hcu_hwinv_read_engineering_data_into_mem’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:459:3: error: too many arguments to function ‘strcpy’
+   strcpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddLocal))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddLocal)));
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:460:3: error: too many arguments to function ‘strcpy’
+   strcpy(zHcuSysEngPar.cloud.cloudSocketSrvAdd, HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT, (sizeof(HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT)<sizeof(zHcuSysEngPar.cloud.cloudSocketSrvAdd))?(sizeof(HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.cloudSocketSrvAdd)));
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:461:3: error: too many arguments to function ‘strcpy’
+   strcpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_CLOUDVELA_HTTP_ADDRESS_SAE, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_SAE)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddSae))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_SAE)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddSae)));
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:462:3: error: too many arguments to function ‘strcpy’
+   strcpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_CLOUDVELA_HTTP_ADDRESS_JD, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_JD)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddJd))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_JD)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddJd)));
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:463:3: error: too many arguments to function ‘strcpy’
+   strcpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddWechat))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddWechat)));
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:464:3: error: too many arguments to function ‘strcpy’
+   strcpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_BH_SERVER_NAME, (sizeof(HCU_CLOUDVELA_BH_SERVER_NAME)<sizeof(zHcuSysEngPar.cloud.cloudBhServerName))?(sizeof(HCU_CLOUDVELA_BH_SERVER_NAME)):(sizeof(zHcuSysEngPar.cloud.cloudBhServerName)));
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘hcu_hwinv_read_mac_address’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:626:3: warning: pointer targets in passing argument 1 of ‘sprintf’ differ in signedness [-Wpointer-sign]
+   sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:15:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/stdio.h:364:12: note: expected ‘char * __restrict__’ but argument is of type ‘UINT8 *’
+ extern int sprintf (char *__restrict __s,
+            ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:628:2: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+  zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/string.h:399:15: note: expected ‘const char *’ but argument is of type ‘UINT8 *’
+ extern size_t strlen (const char *__s)
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘func_hwinv_scan_db’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:1188:3: warning: implicit declaration of function ‘dbi_HcuHchoZe08ch2oDataInfo_delete_3monold’ [-Wimplicit-function-declaration]
+   if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+   ^
+make: *** [src/l1com/hwinv.o] 错误 1
+10:53:30 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1com/hwinv.d" -MT"src/l1com/hwinv.o" -o "src/l1com/hwinv.o" "/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c"
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘hcu_hwinv_read_mac_address’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:626:3: warning: pointer targets in passing argument 1 of ‘sprintf’ differ in signedness [-Wpointer-sign]
+   sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:15:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/stdio.h:364:12: note: expected ‘char * __restrict__’ but argument is of type ‘UINT8 *’
+ extern int sprintf (char *__restrict __s,
+            ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:628:2: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+  zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/string.h:399:15: note: expected ‘const char *’ but argument is of type ‘UINT8 *’
+ extern size_t strlen (const char *__s)
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘func_hwinv_scan_db’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:1188:3: warning: implicit declaration of function ‘dbi_HcuHchoZe08ch2oDataInfo_delete_3monold’ [-Wimplicit-function-declaration]
+   if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+   ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/bhcodecxml.o ./src/l2codec/bhcodeczhb.o ./src/l2codec/huixmlcodec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+11:00:22 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1com/hwinv.d" -MT"src/l1com/hwinv.o" -o "src/l1com/hwinv.o" "/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c"
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘hcu_hwinv_read_mac_address’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:626:3: warning: pointer targets in passing argument 1 of ‘sprintf’ differ in signedness [-Wpointer-sign]
+   sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:15:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/stdio.h:364:12: note: expected ‘char * __restrict__’ but argument is of type ‘UINT8 *’
+ extern int sprintf (char *__restrict __s,
+            ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:628:2: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+  zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/string.h:399:15: note: expected ‘const char *’ but argument is of type ‘UINT8 *’
+ extern size_t strlen (const char *__s)
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘func_hwinv_scan_db’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:1188:3: warning: implicit declaration of function ‘dbi_HcuHchoZe08ch2oDataInfo_delete_3monold’ [-Wimplicit-function-declaration]
+   if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+   ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/bhcodecxml.o ./src/l2codec/bhcodeczhb.o ./src/l2codec/huixmlcodec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+11:10:22 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1com/hwinv.d" -MT"src/l1com/hwinv.o" -o "src/l1com/hwinv.o" "/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c"
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘hcu_hwinv_read_mac_address’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:626:3: warning: pointer targets in passing argument 1 of ‘sprintf’ differ in signedness [-Wpointer-sign]
+   sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:15:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/stdio.h:364:12: note: expected ‘char * __restrict__’ but argument is of type ‘UINT8 *’
+ extern int sprintf (char *__restrict __s,
+            ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:628:2: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+  zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/string.h:399:15: note: expected ‘const char *’ but argument is of type ‘UINT8 *’
+ extern size_t strlen (const char *__s)
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘func_hwinv_scan_db’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:1188:3: warning: implicit declaration of function ‘dbi_HcuHchoZe08ch2oDataInfo_delete_3monold’ [-Wimplicit-function-declaration]
+   if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+   ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0comvm/vmlayer.d" -MT"src/l0comvm/vmlayer.o" -o "src/l0comvm/vmlayer.o" "/home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/bhcodecxml.o ./src/l2codec/bhcodeczhb.o ./src/l2codec/huixmlcodec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+11:20:51 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l4bi/aiqiyc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l4bi/aiqiyc.d" -MT"src/l4bi/aiqiyc.o" -o "src/l4bi/aiqiyc.o" "/home/hitpony/workspace/hcu/hcusrc/l4bi/aiqiyc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l4bi/aiqiyc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3uiconnect/bfscuicomm.d" -MT"src/l3uiconnect/bfscuicomm.o" -o "src/l3uiconnect/bfscuicomm.o" "/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/hsmmp.d" -MT"src/l3app/hsmmp.o" -o "src/l3app/hsmmp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorairprs.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorairprs.d" -MT"src/l3app/sensorairprs.o" -o "src/l3app/sensorairprs.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorairprs.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorairprs.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoralcohol.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensoralcohol.d" -MT"src/l3app/sensoralcohol.o" -o "src/l3app/sensoralcohol.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoralcohol.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoralcohol.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorco1.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorco1.d" -MT"src/l3app/sensorco1.o" -o "src/l3app/sensorco1.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorco1.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorco1.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensoremc.d" -MT"src/l3app/sensoremc.o" -o "src/l3app/sensoremc.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhcho.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorhcho.d" -MT"src/l3app/sensorhcho.o" -o "src/l3app/sensorhcho.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorhcho.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhcho.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorhumid.d" -MT"src/l3app/sensorhumid.o" -o "src/l3app/sensorhumid.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorigm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorigm.d" -MT"src/l3app/sensorigm.o" -o "src/l3app/sensorigm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorigm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorigm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorihm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorihm.d" -MT"src/l3app/sensorihm.o" -o "src/l3app/sensorihm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorihm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorihm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoripm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensoripm.d" -MT"src/l3app/sensoripm.o" -o "src/l3app/sensoripm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoripm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoripm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoriwm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensoriwm.d" -MT"src/l3app/sensoriwm.o" -o "src/l3app/sensoriwm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoriwm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoriwm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorlightstr.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorlightstr.d" -MT"src/l3app/sensorlightstr.o" -o "src/l3app/sensorlightstr.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorlightstr.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorlightstr.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensornoise.d" -MT"src/l3app/sensornoise.o" -o "src/l3app/sensornoise.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorpm25.d" -MT"src/l3app/sensorpm25.o" -o "src/l3app/sensorpm25.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorpm25sharp.d" -MT"src/l3app/sensorpm25sharp.o" -o "src/l3app/sensorpm25sharp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c"
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c: In function ‘func_pm25sharp_read_data’:
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c:231:2: warning: implicit declaration of function ‘hcu_sps485_serial_port_get’ [-Wimplicit-function-declaration]
+  nread = hcu_sps485_serial_port_get(&gSerialPortForPm25Sharp, &received_single_byte, 1);
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensortemp.d" -MT"src/l3app/sensortemp.o" -o "src/l3app/sensortemp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortoxicgas.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensortoxicgas.d" -MT"src/l3app/sensortoxicgas.o" -o "src/l3app/sensortoxicgas.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensortoxicgas.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortoxicgas.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorwinddir.d" -MT"src/l3app/sensorwinddir.o" -o "src/l3app/sensorwinddir.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/sensorwindspd.d" -MT"src/l3app/sensorwindspd.o" -o "src/l3app/sensorwindspd.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/svrcon.d" -MT"src/l3app/svrcon.o" -o "src/l3app/svrcon.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c"
+/home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c: In function ‘fsm_svrcon_init’:
+/home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c:162:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3app/syspm.d" -MT"src/l3app/syspm.o" -o "src/l3app/syspm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/avorion.d" -MT"src/l2frame/avorion.o" -o "src/l2frame/avorion.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c"
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c: In function ‘func_avorion_ffmpeg_capture_and_save’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1147:2: warning: ‘avpicture_get_size’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4910) [-Wdeprecated-declarations]
+  numBytesAvorion = avpicture_get_size(AVORION_STREAM_PIX_FMT_DEFAULT, pCodecCtxAvorion->width, pCodecCtxAvorion->height);  //PIX_FMT_YUV420P
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1151:2: warning: ‘avpicture_fill’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4895) [-Wdeprecated-declarations]
+  avpicture_fill((AVPicture *)pFrameYUVmid, bufferAvorion, AVORION_STREAM_PIX_FMT_DEFAULT, pCodecCtxAvorion->width, pCodecCtxAvorion->height); //PIX_FMT_YUV420P
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1309:5: warning: ‘avpicture_get_size’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4910) [-Wdeprecated-declarations]
+     picture_size = avpicture_get_size(pCodecCtxOutput->pix_fmt, pCodecCtxOutput->width, pCodecCtxOutput->height);
+     ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1315:5: warning: ‘avpicture_fill’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4895) [-Wdeprecated-declarations]
+     avpicture_fill((AVPicture *)pFrameOutput, bufferOutput, pCodecCtxOutput->pix_fmt, pCodecCtxOutput->width, pCodecCtxOutput->height);
+     ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1480:7: warning: ‘av_free_packet’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4052) [-Wdeprecated-declarations]
+       if (packetOutput !=NULL) av_free_packet(packetOutput);
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1491:4: warning: ‘av_free_packet’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4052) [-Wdeprecated-declarations]
+    if (packetAvorion !=NULL) av_free_packet(packetAvorion);
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1710:3: warning: ‘av_free_packet’ is deprecated (declared at /root/ffmpeg_build/include/libavcodec/avcodec.h:4052) [-Wdeprecated-declarations]
+   av_free_packet(&pkt);
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1560:9: warning: variable ‘cur_pts_v’ set but not used [-Wunused-but-set-variable]
+  double cur_pts_v=0;
+         ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c:1318:26: warning: ignoring return value of ‘avformat_write_header’, declared with attribute warn_unused_result [-Wunused-result]
+     avformat_write_header(pFormatCtxOutput, NULL);
+                          ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: In function ‘fsm_canitfleo_l3bfsc_general_cmd_req’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:549:6: warning: unused variable ‘weight’ [-Wunused-variable]
+  int weight;
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c: At top level:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:37:14: warning: ‘cmdlinename’ defined but not used [-Wunused-variable]
+ static char *cmdlinename[MAXSOCK];
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:38:14: warning: ‘dropcnt’ defined but not used [-Wunused-variable]
+ static __u32 dropcnt[MAXSOCK];
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:39:14: warning: ‘last_dropcnt’ defined but not used [-Wunused-variable]
+ static __u32 last_dropcnt[MAXSOCK];
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:40:13: warning: ‘devname’ defined but not used [-Wunused-variable]
+ static char devname[MAXIFNAMES][IFNAMSIZ+1];
+             ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:41:13: warning: ‘dindex’ defined but not used [-Wunused-variable]
+ static int  dindex[MAXIFNAMES];
+             ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:42:13: warning: ‘max_devname_len’ defined but not used [-Wunused-variable]
+ static int  max_devname_len; /* to prevent frazzled device name output */
+             ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:35:12: warning: array ‘col_off’ assumed to have one element [enabled by default]
+ const char col_off []; //ATTRESET;
+            ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/cloudvela.d" -MT"src/l2frame/cloudvela.o" -o "src/l2frame/cloudvela.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/i2cbuslibra.d" -MT"src/l2frame/i2cbuslibra.o" -o "src/l2frame/i2cbuslibra.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/modbus.d" -MT"src/l2frame/modbus.o" -o "src/l2frame/modbus.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotcj188.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/nbiotcj188.d" -MT"src/l2frame/nbiotcj188.o" -o "src/l2frame/nbiotcj188.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotcj188.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotcj188.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotqg376.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/nbiotqg376.d" -MT"src/l2frame/nbiotqg376.o" -o "src/l2frame/nbiotqg376.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotqg376.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/nbiotqg376.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/spibusaries.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/spibusaries.d" -MT"src/l2frame/spibusaries.o" -o "src/l2frame/spibusaries.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/spibusaries.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/spibusaries.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/spsvirgo.d" -MT"src/l2frame/spsvirgo.o" -o "src/l2frame/spsvirgo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodecxml.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2codec/bhcodecxml.d" -MT"src/l2codec/bhcodecxml.o" -o "src/l2codec/bhcodecxml.o" "/home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodecxml.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodecxml.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodeczhb.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2codec/bhcodeczhb.d" -MT"src/l2codec/bhcodeczhb.o" -o "src/l2codec/bhcodeczhb.o" "/home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodeczhb.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2codec/bhcodeczhb.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2codec/huixmlcodec.d" -MT"src/l2codec/huixmlcodec.o" -o "src/l2codec/huixmlcodec.o" "/home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/adc.d" -MT"src/l1hwopt/adc.o" -o "src/l1hwopt/adc.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/apigprs.d" -MT"src/l1hwopt/apigprs.o" -o "src/l1hwopt/apigprs.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c"
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c: In function ‘GprsPppdStart’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:257:2: warning: implicit declaration of function ‘IsGprsPppdOk’ [-Wimplicit-function-declaration]
+  ret = IsGprsPppdOk();
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:266:2: warning: implicit declaration of function ‘HcuGetSysInfo’ [-Wimplicit-function-declaration]
+  HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c: In function ‘GprsHwReset’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:293:4: warning: implicit declaration of function ‘GpioPortOp’ [-Wimplicit-function-declaration]
+    GpioPortOp(gpc->HwResetPortOp1);
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c: In function ‘GprsPppdSwShutdown’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:426:2: warning: implicit declaration of function ‘IsNetItfExist’ [-Wimplicit-function-declaration]
+  ret = IsNetItfExist("ppp0");
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c:434:2: warning: implicit declaration of function ‘KillPppdProcess’ [-Wimplicit-function-declaration]
+  KillPppdProcess();
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ble.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/ble.d" -MT"src/l1hwopt/ble.o" -o "src/l1hwopt/ble.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/ble.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ble.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/camera.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/camera.d" -MT"src/l1hwopt/camera.o" -o "src/l1hwopt/camera.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/camera.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/camera.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/con3g4g.d" -MT"src/l1hwopt/con3g4g.o" -o "src/l1hwopt/con3g4g.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c"
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c: In function ‘UsbUmtsPppdStart’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c:255:3: warning: implicit declaration of function ‘IsGprsPppdOk’ [-Wimplicit-function-declaration]
+   ret = IsGprsPppdOk();
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c:345:4: warning: implicit declaration of function ‘HcuGetSysInfo’ [-Wimplicit-function-declaration]
+    HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c:347:4: warning: implicit declaration of function ‘IsNetItfExist’ [-Wimplicit-function-declaration]
+    IsNetItfExist("ppp0");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c: In function ‘UsbUmtsPppdSwShutdown’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c:397:2: warning: implicit declaration of function ‘KillPppdProcess’ [-Wimplicit-function-declaration]
+  KillPppdProcess();
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/ethernet.d" -MT"src/l1hwopt/ethernet.o" -o "src/l1hwopt/ethernet.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/gpio.d" -MT"src/l1hwopt/gpio.o" -o "src/l1hwopt/gpio.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c"
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c:428:13: warning: ‘print_n’ defined but not used [-Wunused-function]
+ static void print_n(const char *name, int last)
+             ^
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c:598:13: warning: ‘dump_all’ defined but not used [-Wunused-function]
+ static void dump_all(void)
+             ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/gps.d" -MT"src/l1hwopt/gps.o" -o "src/l1hwopt/gps.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c"
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c: In function ‘fsm_gps_init’:
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c:110:2: warning: implicit declaration of function ‘hcu_sps485_serial_init’ [-Wimplicit-function-declaration]
+  ret = hcu_sps485_serial_init(&gSerialPortForGPS);
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/i2c.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/i2c.d" -MT"src/l1hwopt/i2c.o" -o "src/l1hwopt/i2c.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/i2c.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/i2c.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/lcd.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/lcd.d" -MT"src/l1hwopt/lcd.o" -o "src/l1hwopt/lcd.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/lcd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/lcd.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/led.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/led.d" -MT"src/l1hwopt/led.o" -o "src/l1hwopt/led.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/led.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/led.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/microphone.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/microphone.d" -MT"src/l1hwopt/microphone.o" -o "src/l1hwopt/microphone.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/microphone.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/microphone.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/motor.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/motor.d" -MT"src/l1hwopt/motor.o" -o "src/l1hwopt/motor.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/motor.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/motor.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/pwm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/pwm.d" -MT"src/l1hwopt/pwm.o" -o "src/l1hwopt/pwm.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/pwm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/pwm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/relay.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/relay.d" -MT"src/l1hwopt/relay.o" -o "src/l1hwopt/relay.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/relay.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/relay.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spi.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/spi.d" -MT"src/l1hwopt/spi.o" -o "src/l1hwopt/spi.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/spi.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spi.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps232.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/sps232.d" -MT"src/l1hwopt/sps232.o" -o "src/l1hwopt/sps232.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps232.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps232.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps485.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/sps485.d" -MT"src/l1hwopt/sps485.o" -o "src/l1hwopt/sps485.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps485.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps485.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/spsapi.d" -MT"src/l1hwopt/spsapi.o" -o "src/l1hwopt/spsapi.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/switch.d" -MT"src/l1hwopt/switch.o" -o "src/l1hwopt/switch.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/usbnet.d" -MT"src/l1hwopt/usbnet.o" -o "src/l1hwopt/usbnet.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/wifi.d" -MT"src/l1hwopt/wifi.o" -o "src/l1hwopt/wifi.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1hwopt/zeegbe.d" -MT"src/l1hwopt/zeegbe.o" -o "src/l1hwopt/zeegbe.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l1com/hwinv.d" -MT"src/l1com/hwinv.o" -o "src/l1com/hwinv.o" "/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c"
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘hcu_hwinv_read_mac_address’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:626:3: warning: pointer targets in passing argument 1 of ‘sprintf’ differ in signedness [-Wpointer-sign]
+   sprintf(zHcuInventoryInfo.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:15:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/stdio.h:364:12: note: expected ‘char * __restrict__’ but argument is of type ‘UINT8 *’
+ extern int sprintf (char *__restrict __s,
+            ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:628:2: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+  zHcuInventoryInfo.hw_mac[strlen(zHcuInventoryInfo.hw_mac) - 1] = 0;
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/../l0main/hcu.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/../l1com/hwinv.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:8:
+/usr/include/string.h:399:15: note: expected ‘const char *’ but argument is of type ‘UINT8 *’
+ extern size_t strlen (const char *__s)
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c: In function ‘func_hwinv_scan_db’:
+/home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c:1188:3: warning: implicit declaration of function ‘dbi_HcuHchoZe08ch2oDataInfo_delete_3monold’ [-Wimplicit-function-declaration]
+   if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+   ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1com/hwinv.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0webser/ftp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0webser/ftp.d" -MT"src/l0webser/ftp.o" -o "src/l0webser/ftp.o" "/home/hitpony/workspace/hcu/hcusrc/l0webser/ftp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0webser/ftp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/configxml.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/configxml.d" -MT"src/l0service/configxml.o" -o "src/l0service/configxml.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/configxml.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/configxml.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/mmc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/mmc.d" -MT"src/l0service/mmc.o" -o "src/l0service/mmc.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/mmc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/mmc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/sysinfo.d" -MT"src/l0service/sysinfo.o" -o "src/l0service/sysinfo.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c"
+/home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c: In function ‘strstr_Wrapper’:
+/home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c:44:9: warning: implicit declaration of function ‘strcasestr’ [-Wimplicit-function-declaration]
+         return (int) strcasestr(haystack, needle);
+         ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/timer.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/timer.d" -MT"src/l0service/timer.o" -o "src/l0service/timer.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/timer.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/timer.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0service/trace.d" -MT"src/l0service/trace.o" -o "src/l0service/trace.o" "/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c"
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c: In function ‘ErrorTracePrintf’:
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:108:15: warning: assignment makes pointer from integer without a cast [enabled by default]
+   if((fHandler=open("./hcuerr.log", O_RDWR|O_CREAT)) < 0){
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:111:3: warning: passing argument 1 of ‘lseek’ makes integer from pointer without a cast [enabled by default]
+   lseek(fHandler, 0L, SEEK_END); //移动文件到尾部
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/../l0comvm/commsg.h:26:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/trace.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:8:
+/usr/include/unistd.h:334:16: note: expected ‘int’ but argument is of type ‘struct FILE *’
+ extern __off_t lseek (int __fd, __off_t __offset, int __whence) __THROW;
+                ^
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:112:3: warning: pointer targets in passing argument 1 of ‘strlen’ differ in signedness [-Wpointer-sign]
+   write(fHandler, gpuTraceBuffer, strlen(gpuTraceBuffer));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/trace.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:8:
+/usr/include/string.h:399:15: note: expected ‘const char *’ but argument is of type ‘INT8 *’
+ extern size_t strlen (const char *__s)
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:112:3: warning: passing argument 1 of ‘write’ makes integer from pointer without a cast [enabled by default]
+   write(fHandler, gpuTraceBuffer, strlen(gpuTraceBuffer));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/../l0comvm/commsg.h:26:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/trace.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:8:
+/usr/include/unistd.h:366:16: note: expected ‘int’ but argument is of type ‘struct FILE *’
+ extern ssize_t write (int __fd, const void *__buf, size_t __n) __wur;
+                ^
+/home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:113:3: warning: passing argument 1 of ‘close’ makes integer from pointer without a cast [enabled by default]
+   close(fHandler);
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/../l0comvm/commsg.h:26:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/../l0service/trace.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c:8:
+/usr/include/unistd.h:353:12: note: expected ‘int’ but argument is of type ‘struct FILE *’
+ extern int close (int __fd);
+            ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiairprs.d" -MT"src/l0dbi/dbiairprs.o" -o "src/l0dbi/dbiairprs.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbialcohol.d" -MT"src/l0dbi/dbialcohol.o" -o "src/l0dbi/dbialcohol.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbico1.d" -MT"src/l0dbi/dbico1.o" -o "src/l0dbi/dbico1.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbicom.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbicom.d" -MT"src/l0dbi/dbicom.o" -o "src/l0dbi/dbicom.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbicom.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbicom.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiemc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiemc.d" -MT"src/l0dbi/dbiemc.o" -o "src/l0dbi/dbiemc.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiemc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiemc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihcho.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbihcho.d" -MT"src/l0dbi/dbihcho.o" -o "src/l0dbi/dbihcho.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihcho.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihcho.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihsmmp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbihsmmp.d" -MT"src/l0dbi/dbihsmmp.o" -o "src/l0dbi/dbihsmmp.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihsmmp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihsmmp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihumid.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbihumid.d" -MT"src/l0dbi/dbihumid.o" -o "src/l0dbi/dbihumid.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihumid.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbihumid.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiigm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiigm.d" -MT"src/l0dbi/dbiigm.o" -o "src/l0dbi/dbiigm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiigm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiigm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiihm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiihm.d" -MT"src/l0dbi/dbiihm.o" -o "src/l0dbi/dbiihm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiihm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiihm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiipm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiipm.d" -MT"src/l0dbi/dbiipm.o" -o "src/l0dbi/dbiipm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiipm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiipm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiiwm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiiwm.d" -MT"src/l0dbi/dbiiwm.o" -o "src/l0dbi/dbiiwm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiiwm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiiwm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbilightstr.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbilightstr.d" -MT"src/l0dbi/dbilightstr.o" -o "src/l0dbi/dbilightstr.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbilightstr.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbilightstr.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinbiot.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbinbiot.d" -MT"src/l0dbi/dbinbiot.o" -o "src/l0dbi/dbinbiot.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinbiot.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinbiot.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinoise.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbinoise.d" -MT"src/l0dbi/dbinoise.o" -o "src/l0dbi/dbinoise.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinoise.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbinoise.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbipm25.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbipm25.d" -MT"src/l0dbi/dbipm25.o" -o "src/l0dbi/dbipm25.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbipm25.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbipm25.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbisysperfm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbisysperfm.d" -MT"src/l0dbi/dbisysperfm.o" -o "src/l0dbi/dbisysperfm.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbisysperfm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbisysperfm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitemp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbitemp.d" -MT"src/l0dbi/dbitemp.o" -o "src/l0dbi/dbitemp.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitemp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitemp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitoxicgas.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbitoxicgas.d" -MT"src/l0dbi/dbitoxicgas.o" -o "src/l0dbi/dbitoxicgas.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitoxicgas.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbitoxicgas.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwinddir.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiwinddir.d" -MT"src/l0dbi/dbiwinddir.o" -o "src/l0dbi/dbiwinddir.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwinddir.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwinddir.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0dbi/dbiwindspd.d" -MT"src/l0dbi/dbiwindspd.o" -o "src/l0dbi/dbiwindspd.o" "/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiwindspd.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0comvm/vmlayer.d" -MT"src/l0comvm/vmlayer.o" -o "src/l0comvm/vmlayer.o" "/home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/bhcodecxml.o ./src/l2codec/bhcodeczhb.o ./src/l2codec/huixmlcodec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lusb -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 

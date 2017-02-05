@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="&lt;netinet/tcp.h&gt;" key="selection"/>
+		<item value="HCU_PRJ_BFSC_CBU" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="&lt;netinet/tcp.h&gt;"/>
-			<item value="&lt;arpa/inet.h&gt;"/>
-			<item value="&lt;sys/types.h&gt;"/>
-			<item value="&lt;netinet/in.h&gt;"/>
-			<item value="&lt;sys/socket.h&gt;"/>
-			<item value="&lt;netdb.h&gt;"/>
-			<item value="IHU"/>
-			<item value="Ihu"/>
+			<item value="HCU_PRJ_BFSC_CBU"/>
+			<item value="HCU_PRJ_AQYCG10_335D"/>
+			<item value="12"/>
+			<item value="HCU_CLOUDVELA_BH_HCU_NAME"/>
+			<item value="HCU_CL_0499"/>
+			<item value="HCU_G201_"/>
+			<item value="HCU_G201_AQYC_SH001"/>
+			<item value="HCU_G201_AQYC_A0001"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_G801_BFSC_SH001"/>
+			<item value="HCU_G201_AQYC_SH001"/>
+			<item value="HCU_G201_AQYC_S001"/>
+			<item value="HCU_G201_AQYC_A0001"/>
 			<item value="HCU"/>
 			<item value="Hcu"/>
 			<item value="hcu"/>
 			<item value="HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH"/>
-			<item value="0x0201"/>
-			<item value="g30"/>
-			<item value="otdr"/>
-			<item value="l3gqybg40"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

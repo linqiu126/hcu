@@ -430,7 +430,7 @@ void hcu_vm_task_delete_except_svrcon_and_hcumain(void);
 
 //获取系统设备唯一标示区的数据。由于敏感性，这块数据不能做成工程参数配置方式，而必须采用工厂烧录方式
 OPSTAT hcu_vm_get_phy_burn_block_data(void);
-
+OPSTAT hcu_vm_handle_phy_burn_block_configuration(void);
 
 
 //外部参考API, Extern APIs

@@ -172,7 +172,7 @@ typedef struct SysEngParElementSeriesPort
 
 //后台服务器地址部分
 #define SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN 256
-#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME 12
+#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME 20
 typedef struct SysEngParElementCloudvela
 {
 	char  cloudHttpAddLocal[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];

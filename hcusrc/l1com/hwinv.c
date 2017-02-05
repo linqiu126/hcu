@@ -456,32 +456,32 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		//zHcuSysEngPar.serialport.BautRate = HCU_SERIESPORT_BAUTRATE_DEFAULT;
 
 		//后台部分
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL);
-		strcpy(zHcuSysEngPar.cloud.cloudSocketSrvAdd, HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_CLOUDVELA_HTTP_ADDRESS_SAE);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_CLOUDVELA_HTTP_ADDRESS_JD);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT);
-		strcpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_BH_SERVER_NAME);
-		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_CLOUDVELA_BH_HCU_NAME);
+		strncpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddLocal))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddLocal)));
+		strncpy(zHcuSysEngPar.cloud.cloudSocketSrvAdd, HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT, (sizeof(HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT)<sizeof(zHcuSysEngPar.cloud.cloudSocketSrvAdd))?(sizeof(HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.cloudSocketSrvAdd)));
+		strncpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_CLOUDVELA_HTTP_ADDRESS_SAE, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_SAE)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddSae))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_SAE)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddSae)));
+		strncpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_CLOUDVELA_HTTP_ADDRESS_JD, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_JD)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddJd))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_JD)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddJd)));
+		strncpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddWechat))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddWechat)));
+		strncpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_BH_SERVER_NAME, (sizeof(HCU_CLOUDVELA_BH_SERVER_NAME)<sizeof(zHcuSysEngPar.cloud.cloudBhServerName))?(sizeof(HCU_CLOUDVELA_BH_SERVER_NAME)):(sizeof(zHcuSysEngPar.cloud.cloudBhServerName)));
+		strncpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_CLOUDVELA_BH_HCU_NAME, (sizeof(HCU_CLOUDVELA_BH_HCU_NAME)<sizeof(zHcuSysEngPar.cloud.cloudBhHcuName))?(sizeof(HCU_CLOUDVELA_BH_HCU_NAME)):(sizeof(zHcuSysEngPar.cloud.cloudBhHcuName)));
 		zHcuSysEngPar.cloud.cloudBhItfFrameStd = HCU_CLOUDVELA_BH_INTERFACE_STANDARD;
 
 		//for HCU SW FTP by shanchun
-		strcpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_CLOUDVELA_FTP_ADDRESS);
-		strcpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_CLOUDVELA_FTP_USER);
-		strcpy(zHcuSysEngPar.cloud.cloudFtpPwd, HCU_CLOUDVELA_FTP_PWD);
+		strncpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_CLOUDVELA_FTP_ADDRESS, (sizeof(HCU_CLOUDVELA_FTP_ADDRESS)<sizeof(zHcuSysEngPar.cloud.cloudFtpAdd))?(sizeof(HCU_CLOUDVELA_FTP_ADDRESS)):(sizeof(zHcuSysEngPar.cloud.cloudFtpAdd)));
+		strncpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_CLOUDVELA_FTP_USER, (sizeof(HCU_CLOUDVELA_FTP_USER)<sizeof(zHcuSysEngPar.cloud.cloudFtpUser))?(sizeof(HCU_CLOUDVELA_FTP_USER)):(sizeof(zHcuSysEngPar.cloud.cloudFtpUser)));
+		strncpy(zHcuSysEngPar.cloud.cloudFtpPwd, HCU_CLOUDVELA_FTP_PWD, (sizeof(HCU_CLOUDVELA_FTP_PWD)<sizeof(zHcuSysEngPar.cloud.cloudFtpPwd))?(sizeof(HCU_CLOUDVELA_FTP_PWD)):(sizeof(zHcuSysEngPar.cloud.cloudFtpPwd)));
 
 		//for HCU video FTP upload by shanchun
-		strcpy(zHcuSysEngPar.cloud.cloudFtpUserVideo, HCU_CLOUDVELA_FTP_USER);
-		strcpy(zHcuSysEngPar.cloud.cloudFtpPwdVideo, HCU_CLOUDVELA_FTP_PWD);
+		strncpy(zHcuSysEngPar.cloud.cloudFtpUserVideo, HCU_CLOUDVELA_FTP_USER, (sizeof(HCU_CLOUDVELA_FTP_USER)<sizeof(zHcuSysEngPar.cloud.cloudFtpUserVideo))?(sizeof(HCU_CLOUDVELA_FTP_USER)):(sizeof(zHcuSysEngPar.cloud.cloudFtpUserVideo)));
+		strncpy(zHcuSysEngPar.cloud.cloudFtpPwdVideo, HCU_CLOUDVELA_FTP_PWD, (sizeof(HCU_CLOUDVELA_FTP_PWD)<sizeof(zHcuSysEngPar.cloud.cloudFtpPwdVideo))?(sizeof(HCU_CLOUDVELA_FTP_PWD)):(sizeof(zHcuSysEngPar.cloud.cloudFtpPwdVideo)));
 
 		//local SW storage address
-		strcpy(zHcuSysEngPar.swDownload.hcuSwDownloadDir, HCU_SW_DOWNLOAD_DIR_DEFAULT);
-		strcpy(zHcuSysEngPar.swDownload.hcuSwActiveDir, HCU_SW_ACTIVE_DIR_DEFAULT);
-		strcpy(zHcuSysEngPar.swDownload.hcuSwBackupDir, HCU_SW_BACKUP_DIR_DEFAULT);
+		strncpy(zHcuSysEngPar.swDownload.hcuSwDownloadDir, HCU_SW_DOWNLOAD_DIR_DEFAULT, (sizeof(HCU_SW_DOWNLOAD_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swDownload.hcuSwDownloadDir))?(sizeof(HCU_SW_DOWNLOAD_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swDownload.hcuSwDownloadDir)));
+		strncpy(zHcuSysEngPar.swDownload.hcuSwActiveDir, HCU_SW_ACTIVE_DIR_DEFAULT, (sizeof(HCU_SW_ACTIVE_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swDownload.hcuSwActiveDir))?(sizeof(HCU_SW_ACTIVE_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swDownload.hcuSwActiveDir)));
+		strncpy(zHcuSysEngPar.swDownload.hcuSwBackupDir, HCU_SW_BACKUP_DIR_DEFAULT, (sizeof(HCU_SW_BACKUP_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swDownload.hcuSwBackupDir))?(sizeof(HCU_SW_BACKUP_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swDownload.hcuSwBackupDir)));
 
 		//视频服务器部分
-		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT);
-		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT);
+		strncpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT, (sizeof(HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT)<sizeof(zHcuSysEngPar.videoSev.hcuVideoServerDir))?(sizeof(HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.videoSev.hcuVideoServerDir)));
+		strncpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT, (sizeof(HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT)<sizeof(zHcuSysEngPar.videoSev.hcuVideoServerHttp))?(sizeof(HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT)):(sizeof(zHcuSysEngPar.videoSev.hcuVideoServerHttp)));
 		//DEBUG部分
 		zHcuSysEngPar.debugMode = HCU_TRACE_DEBUG_ON;
 		//TRACE部分
@@ -501,11 +501,11 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
 
-	//从TASK_ID_COM_BOTTOM开始，固定配置TRACE选项
 	int i=0;
+	//从TASK_ID_COM_BOTTOM开始，固定配置TRACE选项。
 	for (i=TASK_ID_COM_BOTTOM; i< (TASK_ID_MAX+1); i++){
 		zHcuSysEngPar.traceList.mod[i].moduleId = i;
-		strcpy(zHcuSysEngPar.traceList.mod[i].moduleName, zHcuTaskInfo[i].taskName);
+		//此时，其实TaskInfo还没有初始化，所以暂时不能从TaskInfo中获取有价值信息，所以TaskName还不能得到，直接放在hcu_vm_application_task_env_init中了
 		zHcuSysEngPar.traceList.mod[i].moduleCtrFlag = 1;
 		zHcuSysEngPar.traceList.mod[i].moduleFromAllow = 1;
 		zHcuSysEngPar.traceList.mod[i].moduleFromRestrict = 1;
