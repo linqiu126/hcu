@@ -12,11 +12,11 @@
  */
  
 #include "huixmlcodec.h"
-
+#include "../l0service/trace.h"
 
 //Task Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-/*
+
 //XML自定义标准的编码函数方式
 //inputLen：这是包括MsgHead在内的所有缓冲区长度，正常情况下=sizeof(StrMsg_HUITP_MSGID_uni_general_message_t)，或者IE_BODY+4
 OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output)
@@ -31,116 +31,117 @@ OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId,
 	{
 		HcuDebugPrint("HUITPXML: InputLen=%d, InputPar=%d, MaxLen=%d, size2=%d\n", inputLen, inputPar, (MAX_HCU_MSG_BUF_LENGTH_CLOUD - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		HcuErrorPrint("HUITPXML: Error input pointer or message length!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	if (output == NULL)
 	{
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("HUITPXML: Error CloudDataSendBuf_t pointer!\n");
-		return HCU_FAILURE;
+		return FAILURE;
 	}
 	
 	//准备输出缓冲区
 	memset(output, 0, sizeof(CloudDataSendBuf_t));
 
 	//格式固定区域
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_TO_USER_L);
-	strcat(output->buf, zHcuSysEngPar.cloud.cloudBhServerName);
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_TO_USER_R);
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L);
-	strcat(output->buf, zHcuSysEngPar.hwBurnId.equLable);
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_FROM_USER_R);
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_TO_USER_L);
+	strcat(output->curBuf, zHcuSysEngPar.cloud.cloudBhServerName);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_TO_USER_R);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L);
+	strcat(output->curBuf, zHcuSysEngPar.hwBurnId.equLable);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_FROM_USER_R);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L);
 	//time(0)：取得RTC时间的方式，通过跟BSP相连，得到解决了
-	UINT32 timeStamp = hcu_l1hd_rtc_get_current_unix_time();
-  sprintf(s, "%d", timeStamp);
-	strcat(output->buf, s);
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_R);
+	UINT32 timeStamp = time(0);
+	sprintf(s, "%d", timeStamp);
+	strcat(output->curBuf, s);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_R);
 	
 	//Message Type content
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L);
-	if      (msgType == HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID) strcat(output->buf, HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_STRING);
-	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_ID) strcat(output->buf, HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_STRING);
-	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID) strcat(output->buf, HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_STRING);
-	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_ID) strcat(output->buf, HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_STRING);
-	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID) strcat(output->buf, HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING);
-	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID) strcat(output->buf, HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L);
+	if      (msgType == HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_STRING);
+	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_STRING);
+	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_STRING);
+	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_STRING);
+	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING);
+	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING);
 	else {
 		HcuErrorPrint("HUITPXML: Error Message Type input!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_R);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_R);
 	
 	//Content starting
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_CONTENT_L);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_CONTENT_L);
 
 	//筛选出变长的消息结构，独立进行处理，剩下的统一处理
 	//已经将CCL项目都改为了定长消息结构，所以原则上对于消息的挪动已经不需要了。
 	//如果遇到确实需要改变长度的地方，则采用补0的方式即可，长度域表示实际长度，数据域中的实际长度有效，多余的则无效
-	switch(msgId)
-	{
-		//这个消息已经改为定长了，空余位置补0
-		case HUITP_MSGID_uni_ccl_lock_report:
-			if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_lock_report structure!\n");
-				return HCU_FAILURE;
-			}
-			else if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER){
-				//需要将缓冲区进行一定程度的移动
-				//由于UINT8  lockState[HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER]处于最后一块，所以还是不需要采取任何行动
-				//注意inputLen跟着系统配置的HCU_CCL_SENSOR_LOCK_NUMBER_MAX走，而非跟着HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER走
-
-				//以上是之前的讲法，现在已经将该消息认定为定长，长度就是HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER。如果HCU_CCL_SENSOR_LOCK_NUMBER_MAX
-				//更小，则后续的参数填写0或者FF均可
-			}
-			break;
-		
-		//这个消息同上已经改为定长了，空余位置补0
-		case HUITP_MSGID_uni_ccl_door_report:
-			if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_door_report structure!\n");
-				return HCU_FAILURE;
-			}
-			else if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
-				//需要将缓冲区进行一定程度的移动
-				//由于UINT8  lockState[HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER]处于最后一块，所以还是不需要采取任何行动
-				//注意inputLen跟着系统配置的HCU_CCL_SENSOR_LOCK_NUMBER_MAX走，而非跟着HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER走
-			}	
-			break;
-		
-		//这个消息由于上述IE改为了定长，所以这里也改为了定长，。不需要再挪动，空余位置补0
-		case HUITP_MSGID_uni_ccl_state_report:
-			if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_state_report structure!\n");
-				return HCU_FAILURE;
-			}
-			else if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
-				//需要将缓冲区进行一定程度的移动
-				//UINT8 tt[HUITP_MSG_BUF_BODY_ONLY_MAX_LEN];
-				//将StrIe_HUITP_IEID_uni_ccl_door_state_t移上来
-				//memset(tt, 0, sizeof(tt));
-				//memcpy(tt, inputPar+4+sizeof(StrIe_HUITP_IEID_uni_com_report_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t), HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
-				//memcpy(inputPar+4+sizeof(StrIe_HUITP_IEID_uni_com_report_t)+HCU_CCL_SENSOR_LOCK_NUMBER_MAX, tt, HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
-				////将剩下的移上来
-				//memset(tt, 0, sizeof(tt));
-				//memcpy(tt, inputPar+4+sizeof(StrIe_HUITP_IEID_uni_com_report_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_door_state_t), \
-				//	inputLen-4-sizeof(StrIe_HUITP_IEID_uni_com_report_t)-2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
-				//memcpy(inputPar+4+sizeof(StrIe_HUITP_IEID_uni_com_report_t)+ 2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX, tt, \
-				//	inputLen-4-sizeof(StrIe_HUITP_IEID_uni_com_report_t)-2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
-				////移动之后，将末尾清0
-				//memset(inputPar+inputLen, 0, (HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER + HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER - 2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX));
-			}
-			break;
-			
-		default:
-			break;
-	}
+	//变长的处理技巧，这里只是一个从IHU拿来的例子。本规范暂时不考虑变长，都采用系统固定定义的长度来进行编解码，以简化整个过程
+//	switch(msgId)
+//	{
+//		//这个消息已经改为定长了，空余位置补0
+//		case HUITP_MSGID_uni_ccl_lock_report:
+//			if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER){
+//				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+//				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_lock_report structure!\n");
+//				return FAILURE;
+//			}
+//			else if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER){
+//				//需要将缓冲区进行一定程度的移动
+//				//由于UINT8  lockState[HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER]处于最后一块，所以还是不需要采取任何行动
+//				//注意inputLen跟着系统配置的HCU_CCL_SENSOR_LOCK_NUMBER_MAX走，而非跟着HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER走
+//
+//				//以上是之前的讲法，现在已经将该消息认定为定长，长度就是HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER。如果HCU_CCL_SENSOR_LOCK_NUMBER_MAX
+//				//更小，则后续的参数填写0或者FF均可
+//			}
+//			break;
+//
+//		//这个消息同上已经改为定长了，空余位置补0
+//		case HUITP_MSGID_uni_ccl_door_report:
+//			if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER){
+//				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+//				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_door_report structure!\n");
+//				return FAILURE;
+//			}
+//			else if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
+//				//需要将缓冲区进行一定程度的移动
+//				//由于UINT8  lockState[HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER]处于最后一块，所以还是不需要采取任何行动
+//				//注意inputLen跟着系统配置的HCU_CCL_SENSOR_LOCK_NUMBER_MAX走，而非跟着HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER走
+//			}
+//			break;
+//
+//		//这个消息由于上述IE改为了定长，所以这里也改为了定长，。不需要再挪动，空余位置补0
+//		case HUITP_MSGID_uni_ccl_state_report:
+//			if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
+//				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+//				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_state_report structure!\n");
+//				return FAILURE;
+//			}
+//			else if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
+//				//需要将缓冲区进行一定程度的移动
+//				//UINT8 tt[HUITP_MSG_BUF_BODY_ONLY_MAX_LEN];
+//				//将StrIe_HUITP_IEID_uni_ccl_door_state_t移上来
+//				//memset(tt, 0, sizeof(tt));
+//				//memcpy(tt, inputPar+4+sizeof(StrIe_HUITP_IEID_uni_com_report_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t), HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
+//				//memcpy(inputPar+4+sizeof(StrIe_HUITP_IEID_uni_com_report_t)+HCU_CCL_SENSOR_LOCK_NUMBER_MAX, tt, HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
+//				////将剩下的移上来
+//				//memset(tt, 0, sizeof(tt));
+//				//memcpy(tt, inputPar+4+sizeof(StrIe_HUITP_IEID_uni_com_report_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_door_state_t), \
+//				//	inputLen-4-sizeof(StrIe_HUITP_IEID_uni_com_report_t)-2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
+//				//memcpy(inputPar+4+sizeof(StrIe_HUITP_IEID_uni_com_report_t)+ 2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX, tt, \
+//				//	inputLen-4-sizeof(StrIe_HUITP_IEID_uni_com_report_t)-2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
+//				////移动之后，将末尾清0
+//				//memset(inputPar+inputLen, 0, (HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER + HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER - 2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX));
+//			}
+//			break;
+//
+//		default:
+//			break;
+//	}
 	
 	//准备接龙字符串成为一整串
 	memset(s, 0, sizeof(s));
@@ -156,28 +157,28 @@ OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId,
 		strcat(s, tmp);
 	}
 	if ((strlen(s) < 4) || (strlen(s) > (MAX_HCU_MSG_BUF_LENGTH_CLOUD - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN))){
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("HUITPXML: No data to be pack or too long length of data content %d!\n", strlen(s));
-		return HCU_FAILURE;
+		return FAILURE;
 	}
 	//消息BODY的长度已经在msgLen中，不需要再填入，已经由上层在生成消息的时候填好了，所以这里不再需要再行统计
-	strcat(output->buf, s);	
+	strcat(output->curBuf, s);
 
 	//Finish content part
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_CONTENT_R);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_CONTENT_R);
 	
 	//固定尾部分
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L);
-	if (funcFlag == NULL) strcat(output->buf, "0");
-	else strcat(output->buf, funcFlag);
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_R);
-	strcat(output->buf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_R);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L);
+	if (funcFlag == NULL) strcat(output->curBuf, "0");
+	else strcat(output->curBuf, funcFlag);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_R);
+	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_R);
 
 	//存入返回参量中：这个长度用于控制输出的字符串
-	output->bufferLen = strlen(output->buf);
+	output->curLen = strlen(output->curBuf);
 
 	//返回
-	return HCU_SUCCESS;
+	return SUCCESS;
 }
 
 //解码接收到的消息
@@ -199,14 +200,14 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	//检查参数
 	if (rcv == NULL){
 		HcuErrorPrint("HUITPXML: Received message error, invalid received data buffer!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	//控制命令不带XML格式头，接收的内容以裸控制命令，所以必须是偶数字节
 	if ((rcv->length > MAX_HCU_MSG_BUF_LENGTH_CLOUD) || (rcv->length < 8)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid data length by XML content format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	
 	//寻找<xml>的头部
@@ -215,8 +216,8 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L))>= pIndexT2) || (dif > MAX_HCU_MSG_BUF_LENGTH_CLOUD)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head xml format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	
 	//寻找<ToUserName>
@@ -225,15 +226,15 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_TO_USER_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_TO_USER_L))>= pIndexT2) || (dif > HCU_FILE_NAME_LENGTH_MAX)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head ToUserName format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	memset(msgToUser, 0, sizeof(msgToUser));
 	strncpy(msgToUser, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_TO_USER_L), dif);
 	if (strcmp(msgToUser, zHcuSysEngPar.hwBurnId.equLable) !=0){
 		HcuErrorPrint("HUITPXML: Received message error, invalid toUser field!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	
 	//寻找<fromUserName>
@@ -242,15 +243,15 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L))>= pIndexT2) || (dif > HCU_FILE_NAME_LENGTH_MAX)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head fromUser format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	memset(msgFromUser, 0, sizeof(msgFromUser));
 	strncpy(msgFromUser, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L), dif);
 	if (strcmp(msgFromUser, zHcuSysEngPar.cloud.cloudBhServerName) !=0){
 		HcuErrorPrint("HUITPXML: Received message error, invalid fromUser field!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}	
 	
 	//寻找<CreateTime>
@@ -259,8 +260,8 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L))>= pIndexT2) || (dif > HUITP_MSG_HUIXML_CONTSANT_CREATE_TIME_MAX_LEN)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head CreateTime format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	memset(msgTmp, 0, sizeof(msgTmp));
 	strncpy(msgTmp, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L), dif);
@@ -274,8 +275,8 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L))>= pIndexT2) || (dif > HCU_FILE_NAME_LENGTH_MAX)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head msgType format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	memset(msgTmp, 0, sizeof(msgTmp));
 	strncpy(msgTmp, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L), dif);
@@ -287,8 +288,8 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	else if (strcmp(msgTmp, HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING) ==0) msgType = HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID;
 	else{
 		HcuErrorPrint("HUITPXML: Received message error, invalid head msgType format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	//暂时不用，存下即可，以后再完善	
 	if (msgType == HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID){}
@@ -299,8 +300,8 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L))>= pIndexT2) || (dif > HCU_FILE_NAME_LENGTH_MAX)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head funcFlag format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	memset(msgFuncFlag, 0, sizeof(msgFuncFlag));
 	strncpy(msgFuncFlag, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L), dif);
@@ -314,8 +315,8 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_CONTENT_L))>= pIndexT2) ||\
 		(dif > HUITP_MSG_BUF_WITH_HEAD_MAX_LEN) || (dif != ((dif/2)*2))){
 		HcuErrorPrint("HUITPXML: Received message error, invalid content format!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	memset(msgContent, 0, sizeof(msgContent));
 	strncpy(msgContent, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_CONTENT_L), dif);
@@ -332,13 +333,13 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	//如果接收到的消息不是目标消息，一样会放弃解码
 	if ((msgId < HUITP_MSGID_uni_min) || (msgId > HUITP_MSGID_uni_max) || ((expectMsgId != -1) && (msgId != expectMsgId))){
 		HcuErrorPrint("HUITPXML: Invalid received content data msgId info!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	if (msgLen > (MAX_HCU_MSG_BUF_LENGTH_CLOUD - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2){
 		HcuErrorPrint("HUITPXML: Invalid received content data msgLen info!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		return HCU_FAILURE;
+		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
 	}
 	index = index + 4;
 	
@@ -360,124 +361,123 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	//筛选出变长的消息结构，独立进行处理，剩下的统一处理
 	//由于将所有变长消息都改善为定长消息，方式就是以系统定义的消息为基本格式，不够的地方补0
 	//这样这部分挪动工作将不再需要。考虑未来可能还会需要，暂时保留这部分代码，但实际上并没有起作用
-	switch(msgId)
-	{
-		//解码接收不可能收到这个消息，这里只是展示处理技巧
-		//该消息已经改善为定长消息了
-		case HUITP_MSGID_uni_ccl_lock_resp:
-			if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_lock_report structure!\n");
-				return HCU_FAILURE;
-			}
-			else if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER){
-				//需要将缓冲区进行一定程度的移动
-				//由于UINT8  lockState[HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER]处于最后一块，所以还是不需要采取任何行动
-				//注意跟着系统配置的HCU_CCL_SENSOR_LOCK_NUMBER_MAX走，而非跟着HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER走
-//				if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_resp_t) - 4 - (HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER - HCU_CCL_SENSOR_LOCK_NUMBER_MAX))){
-//					zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-//					HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-//					return HCU_FAILURE;
-//				}
-//				pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_resp_t) - 4);
-			}		
-			break;
-			
-		//解码接收不可能收到这个消息，这里只是展示处理技巧
-		//该消息已经改善为定长消息了
-		case HUITP_MSGID_uni_ccl_door_resp:
-			if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_door_report structure!\n");
-				return HCU_FAILURE;
-			}
-			else if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
-				//需要将缓冲区进行一定程度的移动
-				//由于UINT8  lockState[HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER]处于最后一块，所以还是不需要采取任何行动
-				//注意跟着系统配置的HCU_CCL_SENSOR_LOCK_NUMBER_MAX走，而非跟着HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER走
-//				if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_door_resp_t) - 4 - (HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER - HCU_CCL_SENSOR_LOCK_NUMBER_MAX))){
-//					zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-//					HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-//					return HCU_FAILURE;
-//				}
-//				pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_ccl_door_resp_t) - 4);			
-			}
-			break;
-			
-		//该消息已经改善为定长消息了
-		case HUITP_MSGID_uni_ccl_state_resp:
-			if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_state_report structure!\n");
-				return HCU_FAILURE;
-			}
-			else if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
-				//需要将缓冲区进行一定程度的移动
-				//将剩下的移上来
-//				UINT8 tt[HUITP_MSG_BUF_BODY_ONLY_MAX_LEN];
-//				if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_resp_t) - 4 - (HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER + HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER - 2 * HCU_CCL_SENSOR_LOCK_NUMBER_MAX))){
-//					zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-//					HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-//					return HCU_FAILURE;
-//				}
-//				//通过tt过度，不然有可能拷贝会自己覆盖自己
-//				memset(tt, 0, sizeof(tt));
-//				memcpy(tt, &pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+ 2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX,\
-//					sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_resp_t)-4-sizeof(StrIe_HUITP_IEID_uni_com_resp_t)-sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t) - sizeof(StrIe_HUITP_IEID_uni_ccl_door_state_t));
-//				memcpy(&pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_door_state_t), tt, \
-//					sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_resp_t)-4-sizeof(StrIe_HUITP_IEID_uni_com_resp_t)-sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t) - sizeof(StrIe_HUITP_IEID_uni_ccl_door_state_t));
+//	switch(msgId)
+//	{
+//		//解码接收不可能收到这个消息，这里只是展示处理技巧
+//		//该消息已经改善为定长消息了
+//		case HUITP_MSGID_uni_ccl_lock_resp:
+//			if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER){
+//				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+//				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_lock_report structure!\n");
+//				return FAILURE;
+//			}
+//			else if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER){
+//				//需要将缓冲区进行一定程度的移动
+//				//由于UINT8  lockState[HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER]处于最后一块，所以还是不需要采取任何行动
+//				//注意跟着系统配置的HCU_CCL_SENSOR_LOCK_NUMBER_MAX走，而非跟着HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER走
+////				if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_resp_t) - 4 - (HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER - HCU_CCL_SENSOR_LOCK_NUMBER_MAX))){
+////					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+////					HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
+////					return FAILURE;
+////				}
+////				pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_resp_t) - 4);
+//			}
+//			break;
+//
+//		//解码接收不可能收到这个消息，这里只是展示处理技巧
+//		//该消息已经改善为定长消息了
+//		case HUITP_MSGID_uni_ccl_door_resp:
+//			if (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER){
+//				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+//				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_door_report structure!\n");
+//				return FAILURE;
+//			}
+//			else if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
+//				//需要将缓冲区进行一定程度的移动
+//				//由于UINT8  lockState[HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER]处于最后一块，所以还是不需要采取任何行动
+//				//注意跟着系统配置的HCU_CCL_SENSOR_LOCK_NUMBER_MAX走，而非跟着HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER走
+////				if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_door_resp_t) - 4 - (HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER - HCU_CCL_SENSOR_LOCK_NUMBER_MAX))){
+////					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+////					HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
+////					return FAILURE;
+////				}
+////				pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_ccl_door_resp_t) - 4);
+//			}
+//			break;
+//
+//		//该消息已经改善为定长消息了
+//		case HUITP_MSGID_uni_ccl_state_resp:
+//			if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX > HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
+//				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+//				HcuErrorPrint("HUITPXML: Error defination on max len of MSGID = HUITP_MSGID_uni_ccl_state_report structure!\n");
+//				return FAILURE;
+//			}
+//			else if ((HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER) || (HCU_CCL_SENSOR_LOCK_NUMBER_MAX < HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER)){
+//				//需要将缓冲区进行一定程度的移动
+//				//将剩下的移上来
+////				UINT8 tt[HUITP_MSG_BUF_BODY_ONLY_MAX_LEN];
+////				if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_resp_t) - 4 - (HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER + HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER - 2 * HCU_CCL_SENSOR_LOCK_NUMBER_MAX))){
+////					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+////					HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
+////					return FAILURE;
+////				}
+////				//通过tt过度，不然有可能拷贝会自己覆盖自己
+////				memset(tt, 0, sizeof(tt));
+////				memcpy(tt, &pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+ 2*HCU_CCL_SENSOR_LOCK_NUMBER_MAX,\
+////					sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_resp_t)-4-sizeof(StrIe_HUITP_IEID_uni_com_resp_t)-sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t) - sizeof(StrIe_HUITP_IEID_uni_ccl_door_state_t));
+////				memcpy(&pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_door_state_t), tt, \
+////					sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_resp_t)-4-sizeof(StrIe_HUITP_IEID_uni_com_resp_t)-sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t) - sizeof(StrIe_HUITP_IEID_uni_ccl_door_state_t));
+////
+////				//将StrIe_HUITP_IEID_uni_ccl_door_state_t移下去
+////				memset(tt, 0, sizeof(tt));
+////				memcpy(tt, &pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+HCU_CCL_SENSOR_LOCK_NUMBER_MAX, HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
+////				memcpy(&pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t), tt, HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
+////				//将LOCK_IE/DOOR_IE空余部分清0
+////				memset(&pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+HCU_CCL_SENSOR_LOCK_NUMBER_MAX, 0, \
+////					HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER - HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
+////				memset(&pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t)+HCU_CCL_SENSOR_LOCK_NUMBER_MAX, 0, \
+////					HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER - HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
+////				pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_resp_t) - 4);
+//			}
+//			break;
 //			
-//				//将StrIe_HUITP_IEID_uni_ccl_door_state_t移下去
-//				memset(tt, 0, sizeof(tt));
-//				memcpy(tt, &pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+HCU_CCL_SENSOR_LOCK_NUMBER_MAX, HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
-//				memcpy(&pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t), tt, HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
-//				//将LOCK_IE/DOOR_IE空余部分清0
-//				memset(&pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+HCU_CCL_SENSOR_LOCK_NUMBER_MAX, 0, \
-//					HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER - HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
-//				memset(&pMsgBuf+4+sizeof(StrIe_HUITP_IEID_uni_com_resp_t)+sizeof(StrIe_HUITP_IEID_uni_ccl_lock_state_t)+HCU_CCL_SENSOR_LOCK_NUMBER_MAX, 0, \
-//					HUITP_IEID_UNI_CCL_DOOR_MAX_NUMBER - HCU_CCL_SENSOR_LOCK_NUMBER_MAX);
-//				pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_resp_t) - 4);					
-			}
-			break;
-			
-		//该消息已经改善为定长消息了	
-		case HUITP_MSGID_uni_sw_package_req:
-			//因为只有一个边长IE，且IE正好处于最后一个结构部分，所以不需要干啥
-			//将消息长度恢复到消息结构长度，以便下面统一处理
-//			pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t) - 4);
-			break;
-		
-		//该消息已经改善为定长消息了
-		case HUITP_MSGID_uni_sw_package_confirm:
-			//因为只有一个边长IE，且IE正好处于最后一个结构部分，所以不需要干啥
-			//将消息长度恢复到消息结构长度，以便下面统一处理
-//			pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t) - 4);
-		
-			break;
-		
-		default:
-			break;
-	}
+//		//该消息已经改善为定长消息了
+//		case HUITP_MSGID_uni_sw_package_req:
+//			//因为只有一个边长IE，且IE正好处于最后一个结构部分，所以不需要干啥
+//			//将消息长度恢复到消息结构长度，以便下面统一处理
+////			pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t) - 4);
+//			break;
+//
+//		//该消息已经改善为定长消息了
+//		case HUITP_MSGID_uni_sw_package_confirm:
+//			//因为只有一个边长IE，且IE正好处于最后一个结构部分，所以不需要干啥
+//			//将消息长度恢复到消息结构长度，以便下面统一处理
+////			pMsgBuf.msgLen = HUITP_ENDIAN_EXG16(sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t) - 4);
+//
+//			break;
+//
+//		default:
+//			break;
+//	}
 	
 	//假设一切正常
-	ret = HCU_SUCCESS;
+	ret = SUCCESS;
 	
 	//再来进行消息的统一处理
 	switch(msgId)
 	{
-#if (HCU_WORKING_PROJECT_NAME_UNIQUE_CURRENT_ID == HCU_WORKING_PROJECT_NAME_UNIQUE_STM32_CCL_ID)
 		//心跳请求
 		case HUITP_MSGID_uni_heart_beat_req:
 		{
 			StrMsg_HUITP_MSGID_uni_heart_beat_req_t *snd1;
-			memset(snd1, 0, sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_req_t));
+			//memset(snd1, 0, sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_req_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
+				return FAILURE;
 			}
 			snd1 = (StrMsg_HUITP_MSGID_uni_heart_beat_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_heart_beat_req_received_handle(snd1);
+			ret = func_cloudvela_msg_heart_beat_req_received_handle(snd1);
 		}
 			break;
 
@@ -485,460 +485,79 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 		case HUITP_MSGID_uni_heart_beat_confirm:
 		{
 			StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *snd2;
-			memset(snd2, 0, sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t));
+			//memset(snd2, 0, sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
+				return FAILURE;
 			}
 			snd2 = (StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_heart_beat_confirm_received_handle(snd2);			
-		}
-			break;
-		
-		case HUITP_MSGID_uni_ccl_lock_req:	
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_lock_req_t *snd3;
-			memset(snd3, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd3 = (StrMsg_HUITP_MSGID_uni_ccl_lock_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_lock_req_received_handle(snd3);	
-		}
-			break;
-			
-		case HUITP_MSGID_uni_ccl_lock_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_lock_confirm_t *snd4;
-			memset(snd4, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd4 = (StrMsg_HUITP_MSGID_uni_ccl_lock_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_lock_confirm_received_handle(snd4);
-		}
-			break;
-			
-		case HUITP_MSGID_uni_ccl_lock_auth_resp:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_lock_auth_resp_t *snd5;
-			memset(snd5, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_auth_resp_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_auth_resp_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd5 = (StrMsg_HUITP_MSGID_uni_ccl_lock_auth_resp_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_lock_auth_resp_received_handle(snd5);			
-		}
-			break;
-			
-		case HUITP_MSGID_uni_ccl_door_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_door_req_t *snd6;
-			memset(snd6, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_door_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_door_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd6 = (StrMsg_HUITP_MSGID_uni_ccl_door_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_door_req_received_handle(snd6);			
-		}
-			break;
-		
-		case HUITP_MSGID_uni_ccl_door_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_door_confirm_t *snd7;
-			memset(snd7, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_door_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_door_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd7 = (StrMsg_HUITP_MSGID_uni_ccl_door_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_door_confirm_received_handle(snd7);						
-		}
-			break;
-				
-		case HUITP_MSGID_uni_ccl_rfid_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_rfid_req_t *snd8;
-			memset(snd8, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_rfid_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_rfid_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd8 = (StrMsg_HUITP_MSGID_uni_ccl_rfid_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_rfid_req_received_handle(snd8);						
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_rfid_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_rfid_confirm_t *snd9;
-			memset(snd9, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_rfid_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_rfid_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd9 = (StrMsg_HUITP_MSGID_uni_ccl_rfid_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_rfid_confirm_received_handle(snd9);						
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_ble_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_ble_req_t *snd10;
-			memset(snd10, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_ble_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_ble_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd10 = (StrMsg_HUITP_MSGID_uni_ccl_ble_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_ble_req_received_handle(snd10);					
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_ble_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_ble_confirm_t *snd11;
-			memset(snd11, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_ble_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_ble_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd11 = (StrMsg_HUITP_MSGID_uni_ccl_ble_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_ble_confirm_received_handle(snd11);						
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_gprs_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_gprs_req_t *snd12;
-			memset(snd12, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_gprs_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_gprs_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd12 = (StrMsg_HUITP_MSGID_uni_ccl_gprs_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_gprs_req_received_handle(snd12);						
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_gprs_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_gprs_confirm_t *snd13;
-			memset(snd13, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_gprs_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_gprs_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd13 = (StrMsg_HUITP_MSGID_uni_ccl_gprs_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_gprs_confirm_received_handle(snd13);						
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_battery_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_battery_req_t *snd14;
-			memset(snd14, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_battery_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_battery_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd14 = (StrMsg_HUITP_MSGID_uni_ccl_battery_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_battery_req_received_handle(snd14);							
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_battery_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_battery_confirm_t *snd15;
-			memset(snd15, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_battery_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_battery_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd15 = (StrMsg_HUITP_MSGID_uni_ccl_battery_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_battery_confirm_received_handle(snd15);								
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_shake_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_shake_req_t *snd16;
-			memset(snd16, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_shake_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_shake_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd16 = (StrMsg_HUITP_MSGID_uni_ccl_shake_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_shake_req_received_handle(snd16);					
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_shake_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_shake_confirm_t *snd17;
-			memset(snd17, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_shake_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_shake_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd17 = (StrMsg_HUITP_MSGID_uni_ccl_shake_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_shake_confirm_received_handle(snd17);							
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_smoke_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_smoke_req_t *snd18;
-			memset(snd18, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_smoke_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_smoke_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd18 = (StrMsg_HUITP_MSGID_uni_ccl_smoke_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_smoke_req_received_handle(snd18);								
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_smoke_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_smoke_confirm_t *snd19;
-			memset(snd19, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_smoke_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_smoke_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd19 = (StrMsg_HUITP_MSGID_uni_ccl_smoke_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_smoke_confirm_received_handle(snd19);						
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_water_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_water_req_t *snd20;
-			memset(snd20, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_water_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_water_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd20 = (StrMsg_HUITP_MSGID_uni_ccl_water_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_water_req_received_handle(snd20);				
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_water_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_water_confirm_t *snd21;
-			memset(snd21, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_water_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_water_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd21 = (StrMsg_HUITP_MSGID_uni_ccl_water_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_water_confirm_received_handle(snd21);							
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_temp_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_temp_req_t *snd22;
-			memset(snd22, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_temp_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_temp_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd22 = (StrMsg_HUITP_MSGID_uni_ccl_temp_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_temp_req_received_handle(snd22);				
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_temp_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_temp_confirm_t *snd23;
-			memset(snd23, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_temp_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_temp_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd23 = (StrMsg_HUITP_MSGID_uni_ccl_temp_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_temp_confirm_received_handle(snd23);							
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_humid_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_humid_req_t *snd24;
-			memset(snd24, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_humid_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_humid_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd24 = (StrMsg_HUITP_MSGID_uni_ccl_humid_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_humid_req_received_handle(snd24);						
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_humid_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_humid_confirm_t *snd25;
-			memset(snd25, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_humid_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_humid_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd25 = (StrMsg_HUITP_MSGID_uni_ccl_humid_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_humid_confirm_received_handle(snd25);								
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_fall_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_fall_req_t *snd26;
-			memset(snd26, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_fall_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_fall_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd26 = (StrMsg_HUITP_MSGID_uni_ccl_fall_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_fall_req_received_handle(snd26);						
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_fall_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_fall_confirm_t *snd27;
-			memset(snd27, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_fall_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_fall_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd27 = (StrMsg_HUITP_MSGID_uni_ccl_fall_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_fall_confirm_received_handle(snd27);
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_state_req:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_state_req_t *snd28;
-			memset(snd28, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_req_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd28 = (StrMsg_HUITP_MSGID_uni_ccl_state_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_state_req_received_handle(snd28);			
-		}
-			break;
-
-		case HUITP_MSGID_uni_ccl_state_confirm:
-		{
-			StrMsg_HUITP_MSGID_uni_ccl_state_confirm_t *snd29;
-			memset(snd29, 0, sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_confirm_t));
-			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ccl_state_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
-			}
-			snd29 = (StrMsg_HUITP_MSGID_uni_ccl_state_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_ccl_state_confirm_received_handle(snd29);						
+			ret = func_cloudvela_msg_heart_beat_confirm_received_handle(snd2);
 		}
 			break;
 
 		case HUITP_MSGID_uni_inventory_req:			
 		{
 			StrMsg_HUITP_MSGID_uni_inventory_req_t *snd30;
-			memset(snd30, 0, sizeof(StrMsg_HUITP_MSGID_uni_inventory_req_t));
+			//memset(snd30, 0, sizeof(StrMsg_HUITP_MSGID_uni_inventory_req_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
+				return FAILURE;
 			}
 			snd30 = (StrMsg_HUITP_MSGID_uni_inventory_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_inventory_req_received_handle(snd30);			
+			ret = func_cloudvela_msg_inventory_req_received_handle(snd30);
 		}
 			break;
 
 		case HUITP_MSGID_uni_inventory_confirm:
 		{
 			StrMsg_HUITP_MSGID_uni_inventory_confirm_t *snd31;
-			memset(snd31, 0, sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t));
+			//memset(snd31, 0, sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
+				return FAILURE;
 			}
 			snd31 = (StrMsg_HUITP_MSGID_uni_inventory_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_inventory_confirm_received_handle(snd31);					
+			ret = func_cloudvela_msg_inventory_confirm_received_handle(snd31);
 		}
 			break;		
 
 		case HUITP_MSGID_uni_sw_package_req:
 		{
 			StrMsg_HUITP_MSGID_uni_sw_package_req_t *snd32;
-			memset(snd32, 0, sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t));
+			//memset(snd32, 0, sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
+				return FAILURE;
 			}
 			snd32 = (StrMsg_HUITP_MSGID_uni_sw_package_req_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_sw_package_req_received_handle(snd32);							
+			ret = func_cloudvela_msg_sw_package_req_received_handle(snd32);
 		}
 			break;		
 
 		case HUITP_MSGID_uni_sw_package_confirm:
 		{
 			StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *snd33;
-			memset(snd33, 0, sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t));
+			//memset(snd33, 0, sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
-				return HCU_FAILURE;
+				return FAILURE;
 			}
 			snd33 = (StrMsg_HUITP_MSGID_uni_sw_package_confirm_t*)(&pMsgBuf);
-			ret = func_cloud_spsvirgo_ccl_msg_sw_package_confirm_received_handle(snd33);						
+			ret = func_cloudvela_msg_sw_package_confirm_received_handle(snd33);
 		}
 			break;
 		
-#endif
-		
 		default:
 		{
-			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("HUITPXML: Receive unknown message id and not able to process!\n");
-			return HCU_FAILURE;
-		}
-			//break;
+			return FAILURE;
+		}//break;
 	}
 	
 	//返回
@@ -951,7 +570,7 @@ void func_cloud_standard_xml_generate_message_test_data(void)
 	UINT16 msgProcLen = 0;
 	StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 	CloudDataSendBuf_t pMsgOutput;
-	
+/*
 	//Auth Ind
 	StrMsg_HUITP_MSGID_uni_ccl_lock_auth_inq_t pMsgProc1;
 	msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_ccl_lock_auth_inq_t);
@@ -1121,11 +740,11 @@ void func_cloud_standard_xml_generate_message_test_data(void)
 	memcpy(&pMsgInput, &pMsgProc4, msgProcLen);
 	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	func_cloud_standard_xml_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_ccl_state_confirm, &pMsgInput, msgProcLen, &pMsgOutput);
-	HcuDebugPrint("HUITPXML: StateType=%d, StateConfirm=[%s]\n", pMsgProc4.reportType.event, pMsgOutput.buf);
+	HcuDebugPrint("HUITPXML: StateType=%d, StateConfirm=[%s]\n", pMsgProc4.reportType.event, pMsgOutput.buf);*/
 	
 }
 
-*/
+
 
 
 

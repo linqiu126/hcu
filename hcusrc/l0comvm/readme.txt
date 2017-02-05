@@ -14,9 +14,7 @@ PRJ_BFSC待完成或者回答的问题：
 
 //= ZJL, 2017 Feb.5, CURRENT_SW_DELIVERY 149=>BFSC项目
 =修正SysParEng的定义，结构定义名字合理化
-=继续完善HUITP协议
-
-
+=继续完善HUITP协议：初步移植并集成好，待完善具体的消息体样例
 
 //= ZJL, 2017 Feb.5, CURRENT_SW_DELIVERY 148=>BFSC项目
 = 按照HCU NAME命名规则改进，将SysParEng中有关自身名字的长度从12改为20个

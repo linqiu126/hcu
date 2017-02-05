@@ -2253,3 +2253,35 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	return FAILURE;
 }
 
+OPSTAT func_cloudvela_msg_heart_beat_req_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_req_t *rcv)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_cloudvela_msg_heart_beat_confirm_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *rcv)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_cloudvela_msg_inventory_req_received_handle(StrMsg_HUITP_MSGID_uni_inventory_req_t *rcv)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_cloudvela_msg_inventory_confirm_received_handle(StrMsg_HUITP_MSGID_uni_inventory_confirm_t *rcv)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_cloudvela_msg_sw_package_req_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_req_t *rcv)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_cloudvela_msg_sw_package_confirm_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *rcv)
+{
+	return SUCCESS;
+}
+
+
+

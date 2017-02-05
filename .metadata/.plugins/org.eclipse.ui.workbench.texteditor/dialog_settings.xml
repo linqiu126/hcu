@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HcuSysEngParTable_t" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HcuSysEngParTable_t"/>
-			<item value="zHcuSysEngPar"/>
-			<item value="func_cloud_standard_xml_unpack"/>
-			<item value="TIMER_ID_1S_L3BFSC_PERIOD_READ"/>
-			<item value="hcu_vm_read_phy_boot_cfg"/>
-			<item value="read"/>
-			<item value="fread"/>
-			<item value="open"/>
+			<item value="func_cloudvela_msg_ccl_lock_req_received_handle’"/>
+			<item value="HcuDebugPrint"/>
+			<item value="zHcuRunErrCnt[TASK_ID_SPSVIRGO]"/>
+			<item value="TASK_ID_SPSVIRGO"/>
+			<item value="HCU_SUCCESS"/>
+			<item value="output-&gt;buf"/>
+			<item value="HCU_FAILURE"/>
+			<item value="HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN"/>
 		</list>
 		<list key="replacehistory">
+			<item value="zHcuRunErrCnt[TASK_ID_CLOUDVELA]"/>
+			<item value="TASK_ID_CLOUDVELA"/>
+			<item value="SUCCESS"/>
+			<item value="output-&gt;curBuf"/>
+			<item value="FAILURE"/>
 			<item value="HCU_G801_BFSC_SH001"/>
 			<item value="HCU_G201_AQYC_SH001"/>
 			<item value="HCU_G201_AQYC_S001"/>
-			<item value="HCU_G201_AQYC_A0001"/>
-			<item value="HCU"/>
-			<item value="Hcu"/>
-			<item value="hcu"/>
-			<item value="HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

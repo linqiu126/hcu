@@ -35,16 +35,6 @@ extern CloudvelaTable_t zHcuCloudvelaTable;
 extern CURL *zHcuCloudCurlPtr;
 extern GpsPosInfo_t zHcuGpsPosInfo;//for test by shanchun
 
-//Added by Shanchun for CMD command
-//extern UINT8 CMDShortTimerFlag;
-//extern UINT8 CMDLongTimerFlag;
-//extern UINT32 CMDPollingNoCommandNum;
-
-//#define CLOUDVELA_TIMER_DURATION_PERIOD_HEART_BEAT 600  //in second
-//#define CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-//#define CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-//#define CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-
 //FSM API
 extern OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -104,7 +94,14 @@ extern OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 extern OPSTAT hcu_cloudvela_http_link_init(void);
 extern size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);
 
-//char* func_cloudvela_get_file_path(char *file, char *buf, int count);
+//Message Handler
+extern OPSTAT func_cloudvela_msg_heart_beat_req_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_req_t *rcv);
+extern OPSTAT func_cloudvela_msg_heart_beat_confirm_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *rcv);
+extern OPSTAT func_cloudvela_msg_inventory_req_received_handle(StrMsg_HUITP_MSGID_uni_inventory_req_t *rcv);
+extern OPSTAT func_cloudvela_msg_inventory_confirm_received_handle(StrMsg_HUITP_MSGID_uni_inventory_confirm_t *rcv);
+extern OPSTAT func_cloudvela_msg_sw_package_req_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_req_t *rcv);
+extern OPSTAT func_cloudvela_msg_sw_package_confirm_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *rcv);
+
 
 //引用外部函数
 extern UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen);
