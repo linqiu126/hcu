@@ -20,6 +20,6 @@ extern OPSTAT dbi_NbiotQG376CntPcfContext_ser_inqury(char *add, INT8 cntpcf);
 extern OPSTAT dbi_NbiotQG376CntPcfContext_ser_increase(char *add);
 
 //引用外部API
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 #endif /* L0DBI_DBINBIOT_H_ */

@@ -97,7 +97,7 @@ CloudvelaTable_t zHcuCloudvelaTable;
 //CURL *zHcuCloudCurlPtrRx;
 
 //Task Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 //Added by Shanchun for CMD command
 UINT8 CMDShortTimerFlag;

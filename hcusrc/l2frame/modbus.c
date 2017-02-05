@@ -75,7 +75,7 @@ FsmStateItem_t HcuFsmModbus[] =
 };
 
 //extern global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 extern SerialPortCom_t gSerialPortMobus;
 
 //Task level global variables，该任务是单入的，所以两个传感器同时操作是不可以的

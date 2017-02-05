@@ -15,7 +15,7 @@ HcuCurrentTaskTag_t zHcuCurrentProcessInfo;
 //记录所有任务模块工作差错的次数，以便适当处理
 UINT32 zHcuRunErrCnt[MAX_TASK_NUM_IN_ONE_HCU];
 HcuGlobalCounter_t zHcuGlobalCounter;  //定义全局计数器COUNTER
-HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 /*
  *
@@ -451,7 +451,7 @@ OPSTAT hcu_vm_system_init(void)
 	FsmInit();
 
 	//初始化工参
-	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTablet_t));
+	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTable_t));
 
 	return SUCCESS;
 }

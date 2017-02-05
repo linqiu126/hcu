@@ -56,7 +56,7 @@ FsmStateItem_t HcuFsmTemp[] =
 };
 
 //Task Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 SensorTempInfo_t zSensorTempInfo[MAX_NUM_OF_SENSOR_TEMP_INSTALLED];
 UINT8 currentSensorTempId;
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区

@@ -53,7 +53,7 @@ FsmStateItem_t FsmSvrCon[] =
 };
 
 //Global Varilables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 //Local shared variables, to store all task inti status
 HcuSvrConTaskInitInfo_t zHcuSvrConTaskInitInfo[MAX_TASK_NUM_IN_ONE_HCU]; //存储所有初始化任务的状态信息

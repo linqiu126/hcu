@@ -13,6 +13,7 @@ PRJ_BFSC待完成或者回答的问题：
 
 
 //= ZJL, 2017 Feb.5, CURRENT_SW_DELIVERY 149=>BFSC项目
+=修正SysParEng的定义，结构定义名字合理化
 =继续完善HUITP协议
 
 

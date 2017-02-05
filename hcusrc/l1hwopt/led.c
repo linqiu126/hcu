@@ -37,7 +37,6 @@ FsmStateItem_t HcuFsmLed[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
 //Galowag总控表：以秒为单位
 //具体的闪烁图案，需要通过ON/OFF/CYCLE自行定义，初始化就在这里提前初始化写好

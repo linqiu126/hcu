@@ -36,7 +36,7 @@ FsmStateItem_t FsmI2c[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 float zHcuI2cTempSht20;
 float zHcuI2cHumidSht20;
 float zHcuI2cLightstrBh1750;

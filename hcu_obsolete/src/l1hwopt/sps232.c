@@ -36,7 +36,7 @@ FsmStateItem_t FsmSps232[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 //For Serial Port Init
 SerialPortCom_t gSerialPortForSPS232;
 

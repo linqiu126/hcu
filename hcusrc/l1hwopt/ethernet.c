@@ -36,7 +36,6 @@ FsmStateItem_t HcuFsmEthernet[] =
 };
 
 //Global Variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 int zHcuEthConClientFd = 0;
 int socket_connected = FALSE;
 

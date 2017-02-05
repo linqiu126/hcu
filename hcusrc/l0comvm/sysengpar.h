@@ -348,7 +348,7 @@ typedef struct HcuSysEngParTable
 	SysEngParElementLocalUi_t localUI;
 	SysEngParElementProgramCodeDefineFix_t codeDefineFix;
 	SysEngParElementHwBurnPhyIdAddr_t hwBurnId;
-}HcuSysEngParTablet_t;
+}HcuSysEngParTable_t;
 
 
 //就SYSTEM PERFORMANCE中zHcuRunErrCnt参数表达的错误计数器，进行定期存储数据库，并通过界面展示出来，以方便调测与监控

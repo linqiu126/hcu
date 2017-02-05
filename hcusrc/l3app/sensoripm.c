@@ -48,7 +48,7 @@ FsmStateItem_t HcuFsmIpm[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose

@@ -26,34 +26,34 @@
 #define HUITP_MSG_HUIFRAME_HEAD_MAX_LEN 4 //固定长度，采用SUM(CONTENT)的方式进行校验
 #define HUITP_MSG_HUIFRAME_TOTAL_BUF_MAX_LEN HUITP_MSG_HUIFRAME_HEAD_MAX_LEN + HUITP_MSG_BUF_WITH_HEAD_MAX_LEN //这个是16进制BYTE方式
 //HUIXML固定头部常量定义
-#define HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L  					"<xml>"
-#define HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_R  					"</xml>"
-#define HUITP_MSG_HUIXML_CONSTANT_TO_USER_L  						"<ToUserName><![CDATA["
-#define HUITP_MSG_HUIXML_CONSTANT_TO_USER_R  						"]]></ToUserName>"
-#define HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L  					"<FromUserName><![CDATA["
-#define HUITP_MSG_HUIXML_CONSTANT_FROM_USER_R  					"]]></FromUserName>"
-#define HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L  				"<CreateTime>"
-#define HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_R  				"</CreateTime>"
-#define HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L  					"<MsgType><![CDATA["
-#define HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_R  					"]]></MsgType>"
-#define HUITP_MSG_HUIXML_CONSTANT_CONTENT_L  						"<Content><![CDATA["
-#define HUITP_MSG_HUIXML_CONSTANT_CONTENT_R  						"]]></Content>"
-#define HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L  					"<FuncFlag>"
-#define HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_R  					"</FuncFlag>"
+#define HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L  	"<xml>"
+#define HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_R  	"</xml>"
+#define HUITP_MSG_HUIXML_CONSTANT_TO_USER_L  	"<ToUserName><![CDATA["
+#define HUITP_MSG_HUIXML_CONSTANT_TO_USER_R  	"]]></ToUserName>"
+#define HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L  	"<FromUserName><![CDATA["
+#define HUITP_MSG_HUIXML_CONSTANT_FROM_USER_R  	"]]></FromUserName>"
+#define HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L "<CreateTime>"
+#define HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_R "</CreateTime>"
+#define HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L  	"<MsgType><![CDATA["
+#define HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_R  	"]]></MsgType>"
+#define HUITP_MSG_HUIXML_CONSTANT_CONTENT_L  	"<Content><![CDATA["
+#define HUITP_MSG_HUIXML_CONSTANT_CONTENT_R  	"]]></Content>"
+#define HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L  	"<FuncFlag>"
+#define HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_R  	"</FuncFlag>"
 #define HUITP_MSG_HUIXML_CONTSANT_CREATE_TIME_MAX_LEN		16 //以10进制存储的时间戳，最长长度
 //HUIXML MsgType定义
-#define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID 			1 
+#define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID 		1
 #define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_STRING  	"hcu_text"  //"hcu_text"
-#define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_ID 			2
+#define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_ID 		2
 #define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_STRING  "hcu_command" //"hcu_command"
-#define HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID 					3
-#define HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_STRING 			"hcu_heart_beat"   //"hcu_heart_beat"  //心跳协议，里面的数据内容是空的
-#define HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_ID 						4
-#define HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_STRING 				"hcu_biz_itg"  //业务智能 hcu_biz_inteligence
-#define HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID 				5
-#define HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING 		"hcu_alarm"  //for alarm report
-#define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID 					6
-#define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING 			"hcu_pm"  //for pm report
+#define HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID 			3
+#define HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_STRING 		"hcu_heart_beat"   //"hcu_heart_beat"  //心跳协议，里面的数据内容是空的
+#define HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_ID 			4
+#define HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_STRING 		"hcu_biz_itg"  //业务智能 hcu_biz_inteligence
+#define HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID 		5
+#define HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING 	"hcu_alarm"  //for alarm report
+#define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID 			6
+#define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING 		"hcu_pm"  //for pm report
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8276,5 +8276,5 @@ typedef struct StrMsg_HUITP_MSGID_uni_heart_beat_confirm
 //无效
 //HUITP_MSGID_uni_null                             = 0xFF,	
 
-#pragma pack () //取消字节对其
+#pragma pack () //取消字节对齐
 #endif /* _HUITP_H_ */

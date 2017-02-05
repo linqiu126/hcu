@@ -36,7 +36,7 @@ FsmStateItem_t FsmGpio[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 float zHcuGpioTempDht11;
 float zHcuGpioHumidDht11;
 float zHcuGpioToxicgasMq135;

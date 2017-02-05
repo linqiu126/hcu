@@ -44,7 +44,7 @@ FsmStateItem_t HcuFsmHwinv[] =
  */
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 HcuHwinvCtrlTable_t zHcuHwinvTable; //硬件列表
 zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
 HcuInventoryInfo_t zHcuInventoryInfo; //软件及数据库版本

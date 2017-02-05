@@ -14,7 +14,7 @@
 #include "../l2frame/cloudvela.h"
 
 //Task Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码

@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="TIMER_ID_1S_L3BFSC_PERIOD_READ" key="selection"/>
+		<item value="HcuSysEngParTable_t" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HcuSysEngParTable_t"/>
+			<item value="zHcuSysEngPar"/>
+			<item value="func_cloud_standard_xml_unpack"/>
 			<item value="TIMER_ID_1S_L3BFSC_PERIOD_READ"/>
 			<item value="hcu_vm_read_phy_boot_cfg"/>
 			<item value="read"/>
 			<item value="fread"/>
 			<item value="open"/>
-			<item value="fopen"/>
-			<item value="elif"/>
-			<item value="HCU_DEBUG"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_G801_BFSC_SH001"/>

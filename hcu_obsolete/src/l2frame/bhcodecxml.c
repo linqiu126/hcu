@@ -12,7 +12,7 @@
 #include "cloudvela.h"
 
 //Task Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 //Added by Shanchun for CMD command
 extern UINT8 CMDShortTimerFlag;
 extern UINT8 CMDLongTimerFlag;

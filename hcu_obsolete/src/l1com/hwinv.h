@@ -277,7 +277,7 @@ typedef struct zHcuTimeDateTable
 }zHcuTimeDateTable_t;
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 extern FsmStateItem_t FsmHwinv[];
 extern HcuHwinvCtrlTable_t zHcuHwinvTable;
 extern zHcuTimeDateTable_t zCurTimeDate;
@@ -340,7 +340,7 @@ extern void hcu_delete_file(const char *path);//file delete
 //External APIs
 extern UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen);
 extern OPSTAT dbi_HcuEmcDataInfo_save(sensor_emc_data_element_t *emcData);
-extern OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname);
+extern OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTable_t *engPar, char *prjname);
 extern OPSTAT dbi_HcuEmcDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuPm25DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuPm25SharpDataInfo_delete_3monold(UINT32 days);
@@ -361,8 +361,8 @@ extern OPSTAT dbi_HcuTempMth01DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuNoiseDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuHsmmpDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
-extern OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTablet_t *engPar);
-extern OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTablet_t *engPar);
+extern OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar);
+extern OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar);
 extern OPSTAT dbi_HcuSpErrcntDataInfo_save(void);
 extern OPSTAT dbi_HcuSpErrcntDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuAirprsDataInfo_delete_3monold(UINT32 days);

@@ -371,7 +371,7 @@ extern FsmStateItem_t HcuFsmBfscuicomm[];                        //状态机
 extern FsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
 
 //全局工程参数控制表
-extern HcuSysEngParTablet_t zHcuSysEngPar;
+extern HcuSysEngParTable_t zHcuSysEngPar;
 
 //Global VM layer basic API and functions
 extern void hcu_sw_restart(void);  //软件状态机初始化, TBD

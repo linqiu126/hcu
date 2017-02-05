@@ -36,7 +36,6 @@ FsmStateItem_t HcuFsmSps485[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 
 //SerialPort_t gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
 SerialPortCom_t gSerialPortMobus;

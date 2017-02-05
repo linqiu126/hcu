@@ -64,7 +64,7 @@ FsmStateItem_t FsmHsmmp[] =
 };
 
 //Global Variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 extern zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
 
 //用于描述发送到后台，多少次才发送一次

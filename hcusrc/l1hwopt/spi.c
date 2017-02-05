@@ -36,7 +36,6 @@ FsmStateItem_t HcuFsmSpi[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 float zHcuSpiTempRht03;
 float zHcuSpiHumidRht03;
 float zHcuSpiTempMth01;

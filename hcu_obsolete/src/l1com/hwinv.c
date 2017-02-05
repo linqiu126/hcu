@@ -42,7 +42,7 @@ FsmStateItem_t FsmHwinv[] =
  */
 
 //Global variables
-HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 HcuHwinvCtrlTable_t zHcuHwinvTable; //硬件列表
 zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
 
@@ -360,7 +360,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		HcuErrorPrint("HWINV: Can not save data into database!\n");
 	}*/
 
-	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTablet_t));
+	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTable_t));
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
 
 	if (ret == SUCCESS){

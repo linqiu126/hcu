@@ -44,7 +44,7 @@ FsmStateItem_t HcuFsmAlcohol[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 extern float zHcuGpioAlcoholMq3alco;
 
 //Main Entry

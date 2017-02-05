@@ -42,7 +42,7 @@ FsmStateItem_t FsmSpsvirgo[] =
 
 //extern global variables
 extern GpsPosInfo_t zHcuGpsPosInfo;
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 //extern SerialPortCom_t gSerialPortForSPS232;
 extern SerialPortCom_t gSerialPortMobus;

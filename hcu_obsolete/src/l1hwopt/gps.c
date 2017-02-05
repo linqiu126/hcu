@@ -37,7 +37,7 @@ FsmStateItem_t FsmGps[] =
 
 //Global variables
 GpsPosInfo_t zHcuGpsPosInfo;
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 //For Serial Port Init
 //SerialPort_t gSerialPortForGPS = {zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port

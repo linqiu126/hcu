@@ -404,7 +404,7 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 
 //查询满足条件的第一条记录
 //deviceid是入参，指针为出参
-OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname)
+OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTable_t *engPar, char *prjname)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;
@@ -626,7 +626,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTablet_t *engPar, char *prjname)
 
 
 //查询所有基于模块控制的TRACE记录，并存入全局控制变量
-OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTablet_t *engPar)
+OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;
@@ -707,7 +707,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTablet_t *engPar)
 }
 
 //查询所有基于模块控制的TRACE记录，并存入全局控制变量
-OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTablet_t *engPar)
+OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;

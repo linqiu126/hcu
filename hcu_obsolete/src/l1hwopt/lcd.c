@@ -36,7 +36,7 @@ FsmStateItem_t FsmLcd[] =
 };
 
 //Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 
 //Main Entry

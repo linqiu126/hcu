@@ -13,10 +13,10 @@
  
 #include "huixmlcodec.h"
 
-/*
+
 //Task Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-
+/*
 //XML自定义标准的编码函数方式
 //inputLen：这是包括MsgHead在内的所有缓冲区长度，正常情况下=sizeof(StrMsg_HUITP_MSGID_uni_general_message_t)，或者IE_BODY+4
 OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output)
@@ -183,7 +183,7 @@ OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId,
 //解码接收到的消息
 //该消息以CHAR为单位，从纯CDATA模式修改为<xml>格式，所以需要加入这个内容
 //expectMsgId是接收消息解码时带入的目标函数，如果设置为-1则意味着忽略这个判定条件
-OPSTAT func_cloud_standard_xml_unpack(msg_struct_ccl_com_cloud_data_rx_t *rcv, int expectMsgId)
+OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
 {
 	UINT32 index=0, msgId=0, msgLen=0;
 	char tmp[5] = "";

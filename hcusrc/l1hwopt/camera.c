@@ -36,7 +36,6 @@ FsmStateItem_t HcuFsmCamera[] =
 };
 
 //Global virables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
 HcuBufferType_t *zHcuCameraUsrBuf;
 static UINT32 zHcuCameraNbuffer;
 

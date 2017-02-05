@@ -96,7 +96,7 @@ HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 CloudvelaTable_t zHcuCloudvelaTable;
 
 //Task Global variables
-extern HcuSysEngParTablet_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 extern HcuInventoryInfo_t zHcuInventoryInfo;
 extern int zHcuEthConClientFd;
 extern int socket_connected;

@@ -20,9 +20,9 @@
 /*
 //XML message pack/unpack
 extern OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output);
-extern OPSTAT func_cloud_standard_xml_unpack(msg_struct_ccl_com_cloud_data_rx_t *rcv, int expectMsgId);
+extern OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId);
 extern void   func_cloud_standard_xml_generate_message_test_data(void);
-*/
+
 
 //大小端变换宏定义
 #define HUITP_CURRENT_PROCESSOR_ENDIAN_SMALL 1
