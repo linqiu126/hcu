@@ -11,6 +11,8 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+//= ZJL, 2017 Feb.6, CURRENT_SW_DELIVERY 150=>BFSC项目
+=
 
 //= ZJL, 2017 Feb.5, CURRENT_SW_DELIVERY 149=>BFSC项目
 =修正SysParEng的定义，结构定义名字合理化
