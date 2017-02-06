@@ -17,7 +17,7 @@
 
 //定义TASK对应的名字
 //!!!!!!!!!!!!!!!!ATTENTION!!!!!!!!!!!!!!!!
-//Whenever the Task Id is changed, QueID and vmlayer.c/zHcuTaskNameList array should be updated, otherwise error will happen!!!
+//Whenever the Task Id is changed, QueID and vmlayer.c array should be updated, otherwise error will happen!!!
 /*
  *
  *   【增加任务】，必须同时修改四个地方：
@@ -95,7 +95,6 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_SYSPM,  //性能统计
 	TASK_ID_PM25SHARP,  //for pm25sharp sensor by shanchun
 	TASK_ID_CANITFLEO,
-	TASK_ID_COM_BOTTOM, //统一的任务定义结束
 	TASK_ID_L3AQYCG10,
 	TASK_ID_L3AQYCG20,
 	TASK_ID_L3TBSWRG30,
@@ -266,11 +265,18 @@ typedef struct StrHcuGlobalTaskInputConfig
 extern StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[];
 
 //消息初始化的数据表单
+typedef struct StrHcuGlobalMsgIdCfg
+{
+	UINT32 msgId;
+	char   msgName[MSG_NAME_MAX_LENGTH];
+	UINT8 traceCtrFlag;
+	UINT8 traceMsgAllowFlag;
+	UINT8 traceMsgRestrictFlag;
+}StrHcuGlobalMsgIdCfg_t;
+extern StrHcuGlobalMsgIdCfg_t zHcuMsgNameList[];  //MAX_MSGID_NUM_IN_ONE_TASK
 
 //Global variables 全局变量声明的好例子，不能加Static/Const等等修饰性，除非的确不改动
 extern HcuTaskTag_t zHcuTaskInfo[MAX_TASK_NUM_IN_ONE_HCU];
-extern char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU];
-extern char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK];
 extern HcuCurrentTaskTag_t zHcuCurrentProcessInfo;
 
 //任务模块RESTART的一些全局定义

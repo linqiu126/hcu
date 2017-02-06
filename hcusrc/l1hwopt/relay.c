@@ -105,7 +105,7 @@ OPSTAT fsm_relay_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 			ret = hcu_message_send(MSG_ID_RELAY_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_RELAY, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_RELAY]++;
-				HcuErrorPrint("RELAY: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_RELAY], zHcuTaskNameList[TASK_ID_HSMMP]);
+				HcuErrorPrint("RELAY: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_RELAY].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 				return FAILURE;
 			}
 		}

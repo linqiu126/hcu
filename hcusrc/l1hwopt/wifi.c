@@ -110,7 +110,7 @@ OPSTAT fsm_wifi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 			ret = hcu_message_send(MSG_ID_WIFI_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_WIFI, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_WIFI]++;
-				HcuErrorPrint("WIFI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_WIFI], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("WIFI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_WIFI].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}

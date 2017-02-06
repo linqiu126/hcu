@@ -123,7 +123,7 @@ OPSTAT fsm_co1_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 			ret = hcu_message_send(MSG_ID_CO1_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_CO1, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_CO1]++;
-				HcuErrorPrint("CO1: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CO1], zHcuTaskNameList[TASK_ID_HSMMP]);
+				HcuErrorPrint("CO1: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CO1].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 				return FAILURE;
 			}
 		}

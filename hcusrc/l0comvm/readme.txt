@@ -11,11 +11,17 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+==>清理全局表，简化全局表单的控制/初始化等内容
+
+
 //= ZJL, 2017 Feb.6, CURRENT_SW_DELIVERY 150=>BFSC项目
 =改进HUITP中对MsgType的定义，跟老旧xml/zhb完全区分开来
 =改进zHcuGlobalTaskInputConfig的初始化内容，简化模块的TRACE改造设置过程
 =改进zHcuMsgNameList的初始化内容，简化模块的TRACE改造设置过程
-
+= 挖掘出MySQL中INSERT和UPDATE，以及REPLACE的关系。对于可能潜在有冲突的地方，需要尽可能使用SQL语句本身的能力去做，而非大量通过函数API再行处理
+=因为智能初始化，去掉了TASK_ID_COM_BOTTOM
+=因为智能初始化，去掉了MSG_ID_COM_BOTTOM
+=Trace数据表单重新备份到dbi文件中去了。以后这两部分在量产之前，采用自动初始化的方式进行，降低增加消息和模块的复杂度及工作量。
 
 //= ZJL, 2017 Feb.5, CURRENT_SW_DELIVERY 149=>BFSC项目
 =修正SysParEng的定义，结构定义名字合理化

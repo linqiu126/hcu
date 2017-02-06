@@ -170,8 +170,8 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`,
 ('HCU_PRJ_TEST_MODE', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G201_TEST_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
 
 
-//模块TRACE只针对公共模块，项目专用模块不在数据库中pop
 //HcuTraceModuleCtr数据表格式
+//该数据表单将支持智能初始化
 -- --------------------------------------------------------
 
 --
@@ -194,11 +194,11 @@ CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
 --
 
 INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `moduletoallow`, `moduletorestrict`, `modulefromallow`, `modulefromrestrict`) VALUES
-(0, 'TASKMIN', 1, 1, 1, 1, 1),
-(1, 'HCUMAIN', 1, 1, 1, 1, 1),
-(2, 'HCUVM', 1, 1, 1, 1, 1),
-(3, 'TRACE', 1, 1, 1, 1, 1),
-(4, 'CONFIG', 1, 1, 1, 1, 1),
+(0, 'TASKMIN', 0, 0, 0, 0, 0),
+(1, 'HCUMAIN', 0, 0, 0, 0, 0),
+(2, 'HCUVM', 0, 0, 0, 0, 0),
+(3, 'TRACE', 0, 0, 0, 0, 0),
+(4, 'CONFIG', 0, 0, 0, 0, 0),
 (5, 'TIMER', 1, 1, 1, 1, 1),
 (6, 'MMC', 1, 1, 1, 1, 1),
 (7, 'GPIO', 1, 1, 1, 1, 1),
@@ -256,13 +256,25 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (59, 'SYSPM', 1, 1, 1, 1, 1),
 (60, 'PM25SHARP', 1, 1, 1, 1, 1),
 (61, 'CANITFLEO', 1, 1, 1, 1, 1),
-(62, 'COM_BOTTOM', 1, 1, 1, 1, 1),
-(63, 'TASKMAX', 1, 1, 1, 1, 1);
+(62, 'L3AQYCG10', 1, 1, 1, 1, 1),
+(63, 'L3AQYCG20', 1, 1, 1, 1, 1),
+(64, 'L3TBSWRG30', 1, 1, 1, 1, 1),
+(65, 'L3GQYBG40', 1, 1, 1, 1, 1),
+(66, 'L3CXILC', 1, 1, 1, 1, 1),
+(67, 'L3CXGLACM', 1, 1, 1, 1, 1),
+(68, 'L3NBLPM', 1, 1, 1, 1, 1),
+(69, 'L3NBHPM', 1, 1, 1, 1, 1),
+(70, 'L3BFSC', 1, 1, 1, 1, 1),
+(71, 'BFSCUICOMM', 1, 1, 1, 1, 1),
+(72, 'L3OPWLOTDR', 1, 1, 1, 1, 1),
+(73, 'TASKMAX', 0, 0, 0, 0, 0);
 
-//消息TRACE只针对公共消息，项目专用模块不在数据库中pop
 //HcuTraceMsgCtr数据表格式
-//如果MSG_NAME_MAX_LENGTH改变，这里也需要改变
-//MESSAGE的消息数量有任何改动，需要更新这里，否则会出错！
+//该数据表单将支持智能初始化
+
+--
+-- Table structure for table `hcutracemsgctr`
+--
 
 CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
   `msgid` int(2) NOT NULL,
@@ -273,115 +285,119 @@ CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
   PRIMARY KEY (`msgid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `hcutracemsgctr`
+--
+
 INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msgrestrict`) VALUES
-(  0, 'MSG_ID_COM_MIN', 1, 1, 1),
-(  1, 'MSG_ID_COM_INIT', 1, 1, 1),
-(  2, 'MSG_ID_COM_INIT_FEEDBACK', 1, 1, 1),
-(  3, 'MSG_ID_COM_RESTART', 1, 1, 1),
-(  4, 'MSG_ID_COM_STOP', 1, 1, 1),
-(  5, 'MSG_ID_COM_COMPLETE', 1, 1, 1),
-(  6, 'MSG_ID_COM_TIME_OUT', 1, 1, 1),
-(  7, 'MSG_ID_COM_DEBUG_TEST', 1, 1, 1),
-(  8, 'MSG_ID_COM_HEART_BEAT', 1, 1, 1),
-(  9, 'MSG_ID_COM_HEART_BEAT_FB', 1, 1, 1),
-( 10, 'MSG_ID_COM_PROCESS_REBOOT', 1, 1, 1),
-( 11, 'MSG_ID_ETHERNET_CLOUDVELA_DATA_RX', 1, 1, 1),
-( 12, 'MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX', 1, 1, 1),
-( 13, 'MSG_ID_ETHERNET_NBIOTQG376_DATA_RX', 1, 1, 1),
-( 14, 'MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX', 1, 1, 1),
-( 15, 'MSG_ID_WIFI_CLOUDVELA_DATA_RX', 1, 1, 1),
-( 16, 'MSG_ID_USBNET_CLOUDVELA_DATA_RX', 1, 1, 1),
-( 17, 'MSG_ID_3G4G_CLOUDVELA_DATA_RX', 1, 1, 1),
-( 18, 'MSG_ID_SPS232_MODBUS_DATA_RX', 1, 1, 1),
-( 19, 'MSG_ID_SPS485_MODBUS_DATA_RX', 1, 1, 1),
-( 20, 'MSG_ID_SPSVIRGO_HSMMP_DATA_RX', 1, 1, 1),
-( 21, 'MSG_ID_SPSVIRGO_NOISE_DATA_REPORT', 1, 1, 1),
-( 22, 'MSG_ID_SPSVIRGO_NOISE_CONTROL_FB', 1, 1, 1),
-( 23, 'MSG_ID_AVORION_HSMMP_DATA_READ_FB', 1, 1, 1),
-( 24, 'MSG_ID_AVORION_HSMMP_DATA_RX', 1, 1, 1),
-( 25, 'MSG_ID_BLE_HSMMP_DATA_RX', 1, 1, 1),
-( 26, 'MSG_ID_BLE_MODBUS_DATA_RX', 1, 1, 1),
-( 27, 'MSG_ID_LCD_AVORION_DATA_RX', 1, 1, 1),
-( 28, 'MSG_ID_CAMERA_AVORION_DATA_RX', 1, 1, 1),
-( 29, 'MSG_ID_MICROPHONE_AVORION_DATA_RX', 1, 1, 1),
-( 30, 'MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG', 1, 1, 1),
-( 31, 'MSG_ID_CLOUDVELA_EMC_DATA_REQ', 1, 1, 1),
-( 32, 'MSG_ID_CLOUDVELA_EMC_CONTROL_CMD', 1, 1, 1),
-( 33, 'MSG_ID_CLOUDVELA_PM25_DATA_REQ', 1, 1, 1),
-( 34, 'MSG_ID_CLOUDVELA_PM25_CONTROL_CMD', 1, 1, 1),
-( 35, 'MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ', 1, 1, 1),
-( 36, 'MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD', 1, 1, 1),
-( 37, 'MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ', 1, 1, 1),
-( 38, 'MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD', 1, 1, 1),
-( 39, 'MSG_ID_CLOUDVELA_TEMP_DATA_REQ', 1, 1, 1),
-( 40, 'MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD', 1, 1, 1),
-( 41, 'MSG_ID_CLOUDVELA_HUMID_DATA_REQ', 1, 1, 1),
-( 42, 'MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD', 1, 1, 1),
-( 43, 'MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD', 1, 1, 1),
-( 44, 'MSG_ID_CLOUDVELA_NOISE_DATA_REQ', 1, 1, 1),
-( 45, 'MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD', 1, 1, 1),
-( 46, 'MSG_ID_NBIOTCJ188_IWM_DATA_REQ', 1, 1, 1),
-( 47, 'MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD', 1, 1, 1),
-( 48, 'MSG_ID_NBIOTCJ188_IHM_DATA_REQ', 1, 1, 1),
-( 49, 'MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD', 1, 1, 1),
-( 50, 'MSG_ID_NBIOTCJ188_IGM_DATA_REQ', 1, 1, 1),
-( 51, 'MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD', 1, 1, 1),
-( 52, 'MSG_ID_NBIOTCJ188_IPM_DATA_REQ', 1, 1, 1),
-( 53, 'MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD', 1, 1, 1),
-( 54, 'MSG_ID_NBIOTQG376_IPM_DATA_REQ', 1, 1, 1),
-( 55, 'MSG_ID_NBIOTQG376_IPM_CONTROL_CMD', 1, 1, 1),
-( 56, 'MSG_ID_MODBUS_EMC_DATA_REPORT', 1, 1, 1),
-( 57, 'MSG_ID_MODBUS_EMC_CONTROL_FB', 1, 1, 1),
-( 58, 'MSG_ID_MODBUS_PM25_DATA_REPORT', 1, 1, 1),
-( 59, 'MSG_ID_MODBUS_PM25_CONTROL_FB', 1, 1, 1),
-( 60, 'MSG_ID_MODBUS_WINDDIR_DATA_REPORT', 1, 1, 1),
-( 61, 'MSG_ID_MODBUS_WINDDIR_CONTROL_FB', 1, 1, 1),
-( 62, 'MSG_ID_MODBUS_WINDSPD_DATA_REPORT', 1, 1, 1),
-( 63, 'MSG_ID_MODBUS_WINDSPD_CONTROL_FB', 1, 1, 1),
-( 64, 'MSG_ID_MODBUS_TEMP_DATA_REPORT', 1, 1, 1),
-( 65, 'MSG_ID_MODBUS_TEMP_CONTROL_FB', 1, 1, 1),
-( 66, 'MSG_ID_MODBUS_HUMID_DATA_REPORT', 1, 1, 1),
-( 67, 'MSG_ID_MODBUS_HUMID_CONTROL_FB', 1, 1, 1),
-( 68, 'MSG_ID_MODBUS_NOISE_DATA_REPORT', 1, 1, 1),
-( 69, 'MSG_ID_MODBUS_NOISE_CONTROL_FB', 1, 1, 1),
-( 70, 'MSG_ID_EMC_MODBUS_DATA_READ', 1, 1, 1),
-( 71, 'MSG_ID_EMC_CLOUDVELA_DATA_RESP', 1, 1, 1),
-( 72, 'MSG_ID_EMC_MODBUS_CONTROL_CMD', 1, 1, 1),
-( 73, 'MSG_ID_EMC_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-( 74, 'MSG_ID_PM25_MODBUS_DATA_READ', 1, 1, 1),
-( 75, 'MSG_ID_PM25_CLOUDVELA_DATA_RESP', 1, 1, 1),
-( 76, 'MSG_ID_PM25_MODBUS_CONTROL_CMD', 1, 1, 1),
-( 77, 'MSG_ID_PM25_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-( 78, 'MSG_ID_WINDDIR_MODBUS_DATA_READ', 1, 1, 1),
-( 79, 'MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP', 1, 1, 1),
-( 80, 'MSG_ID_WINDDIR_MODBUS_CONTROL_CMD', 1, 1, 1),
-( 81, 'MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-( 82, 'MSG_ID_WINDSPD_MODBUS_DATA_READ', 1, 1, 1),
-( 83, 'MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP', 1, 1, 1),
-( 84, 'MSG_ID_WINDSPD_MODBUS_CONTROL_CMD', 1, 1, 1),
-( 85, 'MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-( 86, 'MSG_ID_TEMP_MODBUS_DATA_READ', 1, 1, 1),
-( 87, 'MSG_ID_TEMP_SPIBUSARIES_DATA_READ', 1, 1, 1),
-( 88, 'MSG_ID_TEMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
-( 89, 'MSG_ID_TEMP_MODBUS_CONTROL_CMD', 1, 1, 1),
-( 90, 'MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD', 1, 1, 1),
-( 91, 'MSG_ID_TEMP_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-( 92, 'MSG_ID_HUMID_MODBUS_DATA_READ', 1, 1, 1),
-( 93, 'MSG_ID_HUMID_CLOUDVELA_DATA_RESP', 1, 1, 1),
-( 94, 'MSG_ID_HUMID_MODBUS_CONTROL_CMD', 1, 1, 1),
-( 95, 'MSG_ID_HUMID_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-( 96, 'MSG_ID_HSMMP_AVORION_DATA_READ', 1, 1, 1),
-( 97, 'MSG_ID_HSMMP_AVORION_STOP', 1, 1, 1),
-( 98, 'MSG_ID_HSMMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
-( 99, 'MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-( 100, 'MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP', 1, 1, 1),
-( 101, 'MSG_ID_NOISE_SPSVIRGO_DATA_READ', 1, 1, 1),
-( 102, 'MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD', 1, 1, 1),
-( 103, 'MSG_ID_NOISE_SPSVIRGO_STOP', 1, 1, 1),
-( 104, 'MSG_ID_NOISE_CLOUDVELA_DATA_RESP', 1, 1, 1),
-( 105, 'MSG_ID_NOISE_CLOUDVELA_CONTROL_FB', 1, 1, 1),
-( 106, 'MSG_ID_NOISE_MODBUS_DATA_READ', 1, 1, 1),
-( 107, 'MSG_ID_NOISE_MODBUS_CONTROL_CMD', 1, 1, 1),
+(0, 'MSG_ID_COM_MIN', 0, 0, 0),
+(1, 'MSG_ID_COM_INIT', 1, 1, 1),
+(2, 'MSG_ID_COM_INIT_FEEDBACK', 1, 1, 1),
+(3, 'MSG_ID_COM_RESTART', 1, 1, 1),
+(4, 'MSG_ID_COM_STOP', 1, 1, 1),
+(5, 'MSG_ID_COM_COMPLETE', 1, 1, 1),
+(6, 'MSG_ID_COM_TIME_OUT', 1, 1, 1),
+(7, 'MSG_ID_COM_DEBUG_TEST', 1, 1, 1),
+(8, 'MSG_ID_COM_HEART_BEAT', 1, 1, 1),
+(9, 'MSG_ID_COM_HEART_BEAT_FB', 1, 1, 1),
+(10, 'MSG_ID_COM_PROCESS_REBOOT', 1, 1, 1),
+(11, 'MSG_ID_ETHERNET_CLOUDVELA_DATA_RX', 1, 1, 1),
+(12, 'MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX', 1, 1, 1),
+(13, 'MSG_ID_ETHERNET_NBIOTQG376_DATA_RX', 1, 1, 1),
+(14, 'MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX', 1, 1, 1),
+(15, 'MSG_ID_WIFI_CLOUDVELA_DATA_RX', 1, 1, 1),
+(16, 'MSG_ID_USBNET_CLOUDVELA_DATA_RX', 1, 1, 1),
+(17, 'MSG_ID_3G4G_CLOUDVELA_DATA_RX', 1, 1, 1),
+(18, 'MSG_ID_SPS232_MODBUS_DATA_RX', 1, 1, 1),
+(19, 'MSG_ID_SPS485_MODBUS_DATA_RX', 1, 1, 1),
+(20, 'MSG_ID_SPSVIRGO_HSMMP_DATA_RX', 1, 1, 1),
+(21, 'MSG_ID_SPSVIRGO_NOISE_DATA_REPORT', 1, 1, 1),
+(22, 'MSG_ID_SPSVIRGO_NOISE_CONTROL_FB', 1, 1, 1),
+(23, 'MSG_ID_AVORION_HSMMP_DATA_READ_FB', 1, 1, 1),
+(24, 'MSG_ID_AVORION_HSMMP_DATA_RX', 1, 1, 1),
+(25, 'MSG_ID_BLE_HSMMP_DATA_RX', 1, 1, 1),
+(26, 'MSG_ID_BLE_MODBUS_DATA_RX', 1, 1, 1),
+(27, 'MSG_ID_LCD_AVORION_DATA_RX', 1, 1, 1),
+(28, 'MSG_ID_CAMERA_AVORION_DATA_RX', 1, 1, 1),
+(29, 'MSG_ID_MICROPHONE_AVORION_DATA_RX', 1, 1, 1),
+(30, 'MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG', 1, 1, 1),
+(31, 'MSG_ID_CLOUDVELA_EMC_DATA_REQ', 1, 1, 1),
+(32, 'MSG_ID_CLOUDVELA_EMC_CONTROL_CMD', 1, 1, 1),
+(33, 'MSG_ID_CLOUDVELA_PM25_DATA_REQ', 1, 1, 1),
+(34, 'MSG_ID_CLOUDVELA_PM25_CONTROL_CMD', 1, 1, 1),
+(35, 'MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ', 1, 1, 1),
+(36, 'MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD', 1, 1, 1),
+(37, 'MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ', 1, 1, 1),
+(38, 'MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD', 1, 1, 1),
+(39, 'MSG_ID_CLOUDVELA_TEMP_DATA_REQ', 1, 1, 1),
+(40, 'MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD', 1, 1, 1),
+(41, 'MSG_ID_CLOUDVELA_HUMID_DATA_REQ', 1, 1, 1),
+(42, 'MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD', 1, 1, 1),
+(43, 'MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD', 1, 1, 1),
+(44, 'MSG_ID_CLOUDVELA_NOISE_DATA_REQ', 1, 1, 1),
+(45, 'MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD', 1, 1, 1),
+(46, 'MSG_ID_NBIOTCJ188_IWM_DATA_REQ', 1, 1, 1),
+(47, 'MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD', 1, 1, 1),
+(48, 'MSG_ID_NBIOTCJ188_IHM_DATA_REQ', 1, 1, 1),
+(49, 'MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD', 1, 1, 1),
+(50, 'MSG_ID_NBIOTCJ188_IGM_DATA_REQ', 1, 1, 1),
+(51, 'MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD', 1, 1, 1),
+(52, 'MSG_ID_NBIOTCJ188_IPM_DATA_REQ', 1, 1, 1),
+(53, 'MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD', 1, 1, 1),
+(54, 'MSG_ID_NBIOTQG376_IPM_DATA_REQ', 1, 1, 1),
+(55, 'MSG_ID_NBIOTQG376_IPM_CONTROL_CMD', 1, 1, 1),
+(56, 'MSG_ID_MODBUS_EMC_DATA_REPORT', 1, 1, 1),
+(57, 'MSG_ID_MODBUS_EMC_CONTROL_FB', 1, 1, 1),
+(58, 'MSG_ID_MODBUS_PM25_DATA_REPORT', 1, 1, 1),
+(59, 'MSG_ID_MODBUS_PM25_CONTROL_FB', 1, 1, 1),
+(60, 'MSG_ID_MODBUS_WINDDIR_DATA_REPORT', 1, 1, 1),
+(61, 'MSG_ID_MODBUS_WINDDIR_CONTROL_FB', 1, 1, 1),
+(62, 'MSG_ID_MODBUS_WINDSPD_DATA_REPORT', 1, 1, 1),
+(63, 'MSG_ID_MODBUS_WINDSPD_CONTROL_FB', 1, 1, 1),
+(64, 'MSG_ID_MODBUS_TEMP_DATA_REPORT', 1, 1, 1),
+(65, 'MSG_ID_MODBUS_TEMP_CONTROL_FB', 1, 1, 1),
+(66, 'MSG_ID_MODBUS_HUMID_DATA_REPORT', 1, 1, 1),
+(67, 'MSG_ID_MODBUS_HUMID_CONTROL_FB', 1, 1, 1),
+(68, 'MSG_ID_MODBUS_NOISE_DATA_REPORT', 1, 1, 1),
+(69, 'MSG_ID_MODBUS_NOISE_CONTROL_FB', 1, 1, 1),
+(70, 'MSG_ID_EMC_MODBUS_DATA_READ', 1, 1, 1),
+(71, 'MSG_ID_EMC_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(72, 'MSG_ID_EMC_MODBUS_CONTROL_CMD', 1, 1, 1),
+(73, 'MSG_ID_EMC_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(74, 'MSG_ID_PM25_MODBUS_DATA_READ', 1, 1, 1),
+(75, 'MSG_ID_PM25_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(76, 'MSG_ID_PM25_MODBUS_CONTROL_CMD', 1, 1, 1),
+(77, 'MSG_ID_PM25_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(78, 'MSG_ID_WINDDIR_MODBUS_DATA_READ', 1, 1, 1),
+(79, 'MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(80, 'MSG_ID_WINDDIR_MODBUS_CONTROL_CMD', 1, 1, 1),
+(81, 'MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(82, 'MSG_ID_WINDSPD_MODBUS_DATA_READ', 1, 1, 1),
+(83, 'MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(84, 'MSG_ID_WINDSPD_MODBUS_CONTROL_CMD', 1, 1, 1),
+(85, 'MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(86, 'MSG_ID_TEMP_MODBUS_DATA_READ', 1, 1, 1),
+(87, 'MSG_ID_TEMP_SPIBUSARIES_DATA_READ', 1, 1, 1),
+(88, 'MSG_ID_TEMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(89, 'MSG_ID_TEMP_MODBUS_CONTROL_CMD', 1, 1, 1),
+(90, 'MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD', 1, 1, 1),
+(91, 'MSG_ID_TEMP_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(92, 'MSG_ID_HUMID_MODBUS_DATA_READ', 1, 1, 1),
+(93, 'MSG_ID_HUMID_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(94, 'MSG_ID_HUMID_MODBUS_CONTROL_CMD', 1, 1, 1),
+(95, 'MSG_ID_HUMID_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(96, 'MSG_ID_HSMMP_AVORION_DATA_READ', 1, 1, 1),
+(97, 'MSG_ID_HSMMP_AVORION_STOP', 1, 1, 1),
+(98, 'MSG_ID_HSMMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(99, 'MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(100, 'MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP', 1, 1, 1),
+(101, 'MSG_ID_NOISE_SPSVIRGO_DATA_READ', 1, 1, 1),
+(102, 'MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD', 1, 1, 1),
+(103, 'MSG_ID_NOISE_SPSVIRGO_STOP', 1, 1, 1),
+(104, 'MSG_ID_NOISE_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(105, 'MSG_ID_NOISE_CLOUDVELA_CONTROL_FB', 1, 1, 1),
+(106, 'MSG_ID_NOISE_MODBUS_DATA_READ', 1, 1, 1),
+(107, 'MSG_ID_NOISE_MODBUS_CONTROL_CMD', 1, 1, 1),
 (108, 'MSG_ID_IWM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
 (109, 'MSG_ID_IWM_NBIOTCJ188_CONTROL_FB', 1, 1, 1),
 (110, 'MSG_ID_IHM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
@@ -395,8 +411,26 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (118, 'MSG_ID_COM_ALARM_REPORT', 1, 1, 1),
 (119, 'MSG_ID_COM_PM_REPORT', 1, 1, 1),
 (120, 'MSG_ID_CANITFLEO_DATA_REPORT', 1, 1, 1),
-(121, 'MSG_ID_COM_BOTTOM', 1, 1, 1),
-(122, 'MSG_ID_COM_MAX', 1, 1, 1);
+(121, 'MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ', 1, 1, 1),
+(122, 'MSG_ID_L3BFSC_CAN_WS_COMB_OUT', 1, 1, 1),
+(123, 'MSG_ID_L3BFSC_CAN_WS_GIVE_UP', 1, 1, 1),
+(124, 'MSG_ID_L3BFSC_UICOMM_CMD_RESP', 1, 1, 1),
+(125, 'MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP', 1, 1, 1),
+(126, 'MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(127, 'MSG_ID_L3BFSC_CAN_WS_INIT_REQ', 1, 1, 1),
+(128, 'MSG_ID_L3BFSC_CAN_WS_READ_REQ', 1, 1, 1),
+(129, 'MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ', 1, 1, 1),
+(130, 'MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP', 1, 1, 1),
+(131, 'MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT', 1, 1, 1),
+(132, 'MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB', 1, 1, 1),
+(133, 'MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB', 1, 1, 1),
+(134, 'MSG_ID_CAN_L3BFSC_WS_INIT_FB', 1, 1, 1),
+(135, 'MSG_ID_CAN_L3BFSC_WS_READ_RESP', 1, 1, 1),
+(136, 'MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP', 1, 1, 1),
+(137, 'MSG_ID_UICOMM_L3BFSC_CMD_REQ', 1, 1, 1),
+(138, 'MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT', 1, 1, 1),
+(139, 'MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ', 1, 1, 1),
+(140, 'MSG_ID_COM_MAX', 0, 0, 0);
 
 
 */
@@ -684,20 +718,18 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar)
 		    return FAILURE;
 		}
 
-		//超过TASK_ID_COM_BOTTOM的数值不再拷贝到工程参数区域
-		if (moduleId < TASK_ID_COM_BOTTOM){
-			engPar->traceList.mod[moduleId].moduleId = moduleId;
-			if(sqlRow[index]) strncpy(engPar->traceList.mod[moduleId].moduleName, sqlRow[index++], TASK_NAME_MAX_LENGTH-1);
-			//不能再做比较，这个比较必须到后期再做
-			if ((strlen(zHcuTaskInfo[moduleId].taskName) != 0) && (strcmp(engPar->traceList.mod[moduleId].moduleName, zHcuTaskInfo[moduleId].taskName)!=FALSE)){
-				HCU_DEBUG_PRINT_CRT("DBICOM: Error Module name populated!\n");
-			}
-			if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-			if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleToAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-			if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleToRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-			if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleFromAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-			if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleFromRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		engPar->traceList.mod[moduleId].moduleId = moduleId;
+		if(sqlRow[index]) strncpy(engPar->traceList.mod[moduleId].moduleName, sqlRow[index++], TASK_NAME_MAX_LENGTH-1);
+		//不能再做比较，这个比较必须到后期再做
+		if ((strlen(zHcuTaskInfo[moduleId].taskName) != 0) && (strcmp(engPar->traceList.mod[moduleId].moduleName, zHcuTaskInfo[moduleId].taskName)!=FALSE)){
+			HCU_DEBUG_PRINT_CRT("DBICOM: Error Module name populated!\n");
 		}
+		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleToAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleToRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleFromAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleFromRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+
 	}
 
 	//释放记录集
@@ -707,7 +739,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar)
 }
 
 //根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
-OPSTAT dbi_HcuTraceModuleCtr_init_table_by_vmlayer(void)
+OPSTAT dbi_HcuTraceModuleCtr_intelligence_init(void)
 {
 	MYSQL *sqlHandler;
     int result = 0, item = 0;
@@ -848,19 +880,16 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar)
 		    return FAILURE;
 		}
 
-		//超过MSG_ID_COM_BOTTOM的变量，不再拷贝到工程参数区域
-		if (msgId < MSG_ID_COM_BOTTOM){
-			engPar->traceList.msg[msgId].msgId = msgId;
-			if(sqlRow[index]) strncpy(engPar->traceList.msg[msgId].msgName, sqlRow[index++], MSG_NAME_MAX_LENGTH-1);
-			if (strcmp(engPar->traceList.msg[msgId].msgName, zHcuMsgNameList[msgId])){
-				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-					HcuDebugPrint("DBICOM: Error Message name populated, MsgId = %d, engPar->traceList.msg = [%s], zHcuMsgNameList = [%s]!\n", msgId, engPar->traceList.msg[msgId].msgName, zHcuMsgNameList[msgId]);
-				}
+		engPar->traceList.msg[msgId].msgId = msgId;
+		if(sqlRow[index]) strncpy(engPar->traceList.msg[msgId].msgName, sqlRow[index++], MSG_NAME_MAX_LENGTH-1);
+		if (strcmp(engPar->traceList.msg[msgId].msgName, zHcuMsgNameList[msgId].msgName)){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+				HcuDebugPrint("DBICOM: Error Message name populated, MsgId = %d, engPar->traceList.msg = [%s], zHcuMsgNameList = [%s]!\n", msgId, engPar->traceList.msg[msgId].msgName, zHcuMsgNameList[msgId].msgName);
 			}
-			if(sqlRow[index]) engPar->traceList.msg[msgId].msgCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-			if(sqlRow[index]) engPar->traceList.msg[msgId].msgAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-			if(sqlRow[index]) engPar->traceList.msg[msgId].msgRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		}
+		if(sqlRow[index]) engPar->traceList.msg[msgId].msgCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.msg[msgId].msgAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.msg[msgId].msgRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 	}
 
 	//释放记录集
@@ -868,6 +897,87 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar)
     mysql_close(sqlHandler);
     return SUCCESS;
 }
+
+//根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
+OPSTAT dbi_HcuTraceMsgCtr_intelligence_init(void)
+{
+	MYSQL *sqlHandler;
+	int result = 0, item = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//清除表格已有数据
+    sprintf(strsql, "TRUNCATE table `hcutracemsgctr`");
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: Delete data error: %s, result = %d\n", mysql_error(sqlHandler), result);
+        return FAILURE;
+	}
+
+	//读取VM中模块初始化表单内容
+	//扫描输入表单，起始必须是MSG_ID_COM_MIN条目
+	if (zHcuMsgNameList[0].msgId != MSG_ID_COM_MIN){
+		HcuErrorPrint("DBICOM: Initialize HCU-VM failure, message input configuration error!\n");
+		return FAILURE;
+	}
+	//扫描输入表单，以MSG_ID_COM_MAX为终止条目
+	for(item=1; item < MAX_MSGID_NUM_IN_ONE_TASK; item++){
+		if(zHcuGlobalTaskInputConfig[item].taskInputId == TASK_ID_MAX){
+			break;
+		}
+		if ((zHcuMsgNameList[item].msgId <= MSG_ID_COM_MIN) || (zHcuMsgNameList[item].msgId > MSG_ID_COM_MAX)){
+			HcuErrorPrint("DBICOM: Initialize HCU-VM failure, message input configuration error!\n");
+			return FAILURE;
+		}
+	}
+
+	//从任务配置输入区域读取参数到系统任务表，一旦遇到MSG_ID_COM_MAX就终止
+	item = 0;
+	while(zHcuMsgNameList[item].msgId != MSG_ID_COM_MAX){
+		//REPLACE新的数据
+	    sprintf(strsql, "REPLACE INTO `hcutracemsgctr` (msgid, msgname, msgctrflag, msgallow, msgrestrict) VALUES \
+	    		('%d', '%s', '%d', '%d', '%d')", zHcuMsgNameList[item].msgId, zHcuMsgNameList[item].msgName, \
+				zHcuMsgNameList[item].traceCtrFlag, zHcuMsgNameList[item].traceMsgAllowFlag, zHcuMsgNameList[item].traceMsgRestrictFlag);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		item++;
+	}
+	//最后一项必定是MSG_ID_COM_MAX
+    sprintf(strsql, "REPLACE INTO `hcutracemsgctr` (msgid, msgname, msgctrflag, msgallow, msgrestrict) VALUES \
+    		('%d', '%s', '%d', '%d', '%d')", zHcuMsgNameList[item].msgId, zHcuMsgNameList[item].msgName, \
+			zHcuMsgNameList[item].traceCtrFlag, zHcuMsgNameList[item].traceMsgAllowFlag, zHcuMsgNameList[item].traceMsgRestrictFlag);	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: INSERT data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
 
 //公共处理函数
 void dbi_display_header(MYSQL_RES *resPtr)

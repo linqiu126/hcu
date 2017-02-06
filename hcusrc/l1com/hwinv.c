@@ -493,7 +493,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Trace Module Control DB error!\n");
-	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Moduble based engineering data correctly from DATABASE parameters!\n");
+	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Module based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuDbVersion表单到系统内存中
 	memset(&zHcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
@@ -501,32 +501,11 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
 
-	int i=0;
-	//从TASK_ID_COM_BOTTOM开始，固定配置TRACE选项。
-	for (i=TASK_ID_COM_BOTTOM; i< (TASK_ID_MAX+1); i++){
-		zHcuSysEngPar.traceList.mod[i].moduleId = i;
-		//此时，其实TaskInfo还没有初始化，所以暂时不能从TaskInfo中获取有价值信息，所以TaskName还不能得到，直接放在hcu_vm_application_task_env_init中了
-		zHcuSysEngPar.traceList.mod[i].moduleCtrFlag = 1;
-		zHcuSysEngPar.traceList.mod[i].moduleFromAllow = 1;
-		zHcuSysEngPar.traceList.mod[i].moduleFromRestrict = 1;
-		zHcuSysEngPar.traceList.mod[i].moduleToAllow = 1;
-		zHcuSysEngPar.traceList.mod[i].moduleToRestrict = 1;
-	}
-
 	//读取HcuTraceMsgCtr表单到系统内存中
 	ret = dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Trace Message Control DB error!\n");
 	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
-
-	//从MSG_ID_COM_BOTTOM开始，不通过数据库配置的参数区域
-	for (i=MSG_ID_COM_BOTTOM; i< (MSG_ID_COM_MAX+1); i++){
-		zHcuSysEngPar.traceList.msg[i].msgId = i;
-		strcpy(zHcuSysEngPar.traceList.msg[i].msgName, zHcuMsgNameList[i]);
-		zHcuSysEngPar.traceList.msg[i].msgCtrFlag = 1;
-		zHcuSysEngPar.traceList.msg[i].msgAllow = 1;
-		zHcuSysEngPar.traceList.msg[i].msgRestrict = 1;
-	}
 
 	//第三部分/zHcuSysEngPar总共三步分
 	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决

@@ -121,7 +121,7 @@ OPSTAT fsm_spsvirgo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			snd.length = sizeof(msg_struct_spsvirgo_hsmmp_data_rx_t);
 			ret = hcu_message_send(MSG_ID_SPSVIRGO_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_SPSVIRGO, &snd, snd.length);
 			if (ret == FAILURE){
-				HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPSVIRGO], zHcuTaskNameList[TASK_ID_HSMMP]);
+				HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_SPSVIRGO].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 				return FAILURE;
 			}
 		}

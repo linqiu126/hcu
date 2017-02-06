@@ -383,7 +383,7 @@ void func_timer_routine(int signo)
 					ret = hcu_message_send(MSG_ID_COM_TIME_OUT, zHcuTimerTable.timer10ms[i].taskId, TASK_ID_TIMER, &snd, snd.length);
 					if (ret == FAILURE){
 						zHcuRunErrCnt[TASK_ID_TIMER]++;
-						HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TIMER], zHcuTaskNameList[zHcuTimerTable.timer10ms[i].taskId]);
+						HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_TIMER].taskName, zHcuTaskInfo[zHcuTimerTable.timer10ms[i].taskId].taskName);
 						return;}
 				}//Elapse <= 0, timeout reach
 			//START status
@@ -422,7 +422,7 @@ void func_timer_routine(int signo)
 					ret = hcu_message_send(MSG_ID_COM_TIME_OUT, zHcuTimerTable.timer1ms[i].taskId, TASK_ID_TIMER, &snd, snd.length);
 					if (ret == FAILURE){
 						zHcuRunErrCnt[TASK_ID_TIMER]++;
-						HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TIMER], zHcuTaskNameList[zHcuTimerTable.timer1ms[i].taskId]);
+						HcuErrorPrint("TIMER: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_TIMER].taskName, zHcuTaskInfo[zHcuTimerTable.timer1ms[i].taskId].taskName);
 						return;}
 				}//Elapse <= 0, timeout reach
 			//START status

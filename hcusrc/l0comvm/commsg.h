@@ -447,10 +447,6 @@ enum HCU_INTER_TASK_MSG_ID
 	//CANITF
 	MSG_ID_CANITFLEO_DATA_REPORT,
 
-	//BOTTOM
-	MSG_ID_COM_BOTTOM, //公共消息最底部
-	//////////////////////////////////////////////////////////////////////////////////
-
 	//L3BFSC
 	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
 	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料

@@ -125,7 +125,7 @@ OPSTAT fsm_ihm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 			ret = hcu_message_send(MSG_ID_IHM_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_IHM, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_IHM]++;
-				HcuErrorPrint("IHM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_IHM], zHcuTaskNameList[TASK_ID_HSMMP]);
+				HcuErrorPrint("IHM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_IHM].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 				return FAILURE;
 			}
 		}

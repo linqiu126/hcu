@@ -110,7 +110,7 @@ OPSTAT fsm_usbnet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 			ret = hcu_message_send(MSG_ID_USBNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_USBNET, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_USBNET]++;
-				HcuErrorPrint("USBNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_USBNET], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("USBNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_USBNET].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}

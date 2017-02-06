@@ -113,7 +113,7 @@ OPSTAT fsm_camera_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 			ret = hcu_message_send(MSG_ID_CAMERA_AVORION_DATA_RX, TASK_ID_AVORION, TASK_ID_CAMERA, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_CAMERA]++;
-				HcuErrorPrint("CAMERA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CAMERA], zHcuTaskNameList[TASK_ID_AVORION]);
+				HcuErrorPrint("CAMERA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CAMERA].taskName, zHcuTaskInfo[TASK_ID_AVORION].taskName);
 				return FAILURE;
 			}
 		}

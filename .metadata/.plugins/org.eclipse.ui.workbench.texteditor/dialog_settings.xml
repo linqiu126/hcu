@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="hcu_vm_application_task_env_init" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="func_cloudvela_msg_ccl_lock_req_received_handle’"/>
-			<item value="HcuDebugPrint"/>
-			<item value="zHcuRunErrCnt[TASK_ID_SPSVIRGO]"/>
-			<item value="TASK_ID_SPSVIRGO"/>
-			<item value="HCU_SUCCESS"/>
-			<item value="output-&gt;buf"/>
-			<item value="HCU_FAILURE"/>
-			<item value="HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN"/>
+			<item value="hcu_vm_application_task_env_init"/>
+			<item value="hcutracemsgctr"/>
+			<item value="update"/>
+			<item value="UPDATE"/>
+			<item value="item"/>
+			<item value="elif"/>
+			<item value="hcutracemodulectr"/>
+			<item value="zHcuGlobalTaskInputConfig"/>
 		</list>
 		<list key="replacehistory">
+			<item value="huitp_text"/>
 			<item value="zHcuRunErrCnt[TASK_ID_CLOUDVELA]"/>
 			<item value="TASK_ID_CLOUDVELA"/>
 			<item value="SUCCESS"/>
@@ -25,14 +26,13 @@
 			<item value="FAILURE"/>
 			<item value="HCU_G801_BFSC_SH001"/>
 			<item value="HCU_G201_AQYC_SH001"/>
-			<item value="HCU_G201_AQYC_S001"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1155" key="DIALOG_X_ORIGIN"/>
-		<item value="282" key="DIALOG_Y_ORIGIN"/>
+		<item value="1091" key="DIALOG_X_ORIGIN"/>
+		<item value="301" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

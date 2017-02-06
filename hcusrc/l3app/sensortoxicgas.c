@@ -125,7 +125,7 @@ OPSTAT fsm_toxicgas_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			ret = hcu_message_send(MSG_ID_TOXICGAS_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_TOXICGAS, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_TOXICGAS]++;
-				HcuErrorPrint("TOXICGAS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_TOXICGAS], zHcuTaskNameList[TASK_ID_HSMMP]);
+				HcuErrorPrint("TOXICGAS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_TOXICGAS].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 				return FAILURE;
 			}
 		}

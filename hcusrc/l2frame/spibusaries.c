@@ -123,7 +123,7 @@ OPSTAT fsm_spibusaries_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 			ret = hcu_message_send(MSG_ID_SPIBUSARIES_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_SPIBUSARIES, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_SPIBUSARIES]++;
-				HcuErrorPrint("SPIBUSARIES: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SPIBUSARIES], zHcuTaskNameList[TASK_ID_HSMMP]);
+				HcuErrorPrint("SPIBUSARIES: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_SPIBUSARIES].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 				return FAILURE;
 			}
 		}
@@ -302,7 +302,7 @@ OPSTAT fsm_spibusaries_temp_data_read(UINT32 dest_id, UINT32 src_id, void * para
 	ret = hcu_message_send(MSG_ID_MODBUS_TEMP_DATA_REPORT, TASK_ID_TEMP, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_MODBUS], zHcuTaskNameList[TASK_ID_TEMP]);
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_TEMP].taskName);
 		return FAILURE;
 	}
 	*/

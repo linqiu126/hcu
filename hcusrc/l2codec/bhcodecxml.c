@@ -2281,7 +2281,7 @@ OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_CLOUDVELA], zHcuTaskNameList[TASK_ID_NOISE]);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_NOISE].taskName);
 			return FAILURE;
 		}*/
 	}

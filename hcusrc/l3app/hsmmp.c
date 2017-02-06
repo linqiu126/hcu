@@ -477,7 +477,7 @@ OPSTAT func_hsmmp_time_out_period(void)
 		ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_AVORION, TASK_ID_HSMMP, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuRunErrCnt[TASK_ID_HSMMP]++;
-			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_HSMMP], zHcuTaskNameList[TASK_ID_AVORION]);
+			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HSMMP].taskName, zHcuTaskInfo[TASK_ID_AVORION].taskName);
 			return FAILURE;
 		}
 		return SUCCESS;*/

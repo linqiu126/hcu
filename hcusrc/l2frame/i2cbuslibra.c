@@ -114,7 +114,7 @@ OPSTAT fsm_i2cbuslibra_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 			ret = hcu_message_send(MSG_ID_I2CBUSLIBRA_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_I2CBUSLIBRA, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuRunErrCnt[TASK_ID_I2CBUSLIBRA]++;
-				HcuErrorPrint("I2CBUSLIBRA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_I2CBUSLIBRA], zHcuTaskNameList[TASK_ID_HSMMP]);
+				HcuErrorPrint("I2CBUSLIBRA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].taskName, zHcuTaskInfo[TASK_ID_HSMMP].taskName);
 				return FAILURE;
 			}
 		}
