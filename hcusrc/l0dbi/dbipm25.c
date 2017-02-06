@@ -262,7 +262,7 @@ OPSTAT dbi_HcuPm25ConfigData_update(UINT8 optId, sensor_modbus_opertion_general_
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: INSERT data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIPM25: UPDATE data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 

@@ -257,7 +257,15 @@ typedef struct StrHcuGlobalTaskInputConfig
 	UINT8 taskInputId;
 	char  taskInputName[TASK_NAME_MAX_LENGTH];
 	void* fsmFuncEntry;
+	UINT8 traceCtrFlag;
+	UINT8 traceModToAllowFlag;
+	UINT8 traceModToRestrictFlag;
+	UINT8 traceModFromAllowFlag;
+	UINT8 traceModFromRestrictFlag;
 }StrHcuGlobalTaskInputConfig_t;
+extern StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[];
+
+//消息初始化的数据表单
 
 //Global variables 全局变量声明的好例子，不能加Static/Const等等修饰性，除非的确不改动
 extern HcuTaskTag_t zHcuTaskInfo[MAX_TASK_NUM_IN_ONE_HCU];

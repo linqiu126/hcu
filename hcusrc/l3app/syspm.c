@@ -116,28 +116,6 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SYSPM: Enter FSM_STATE_SYSPM_ACTIVED status, Keeping refresh here!\n");
 	}
-	/*
-
-	//进入阻塞式接收数据状态，然后继续发送
-	while(1){
-		//接收数据
-		int dataLen=0;
-		if (dataLen > 1){
-			//发送数据给HSMMP
-			msg_struct_syspm_hsmmp_data_rx_t snd;
-			memset(&snd, 0, sizeof(msg_struct_syspm_hsmmp_data_rx_t));
-			snd.length = sizeof(msg_struct_syspm_hsmmp_data_rx_t);
-			ret = hcu_message_send(MSG_ID_SYSPM_HSMMP_DATA_RX, TASK_ID_HSMMP, TASK_ID_SYSPM, &snd, snd.length);
-			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_SYSPM]++;
-				HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_SYSPM], zHcuTaskNameList[TASK_ID_HSMMP]);
-				return FAILURE;
-			}
-		}
-
-		hcu_sleep(5);
-	}
-	*/
 
 	return SUCCESS;
 }

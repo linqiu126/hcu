@@ -180,7 +180,7 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`,
 
 CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
   `moduleid` int(2) NOT NULL,
-  `modulename` char(12) NOT NULL,
+  `modulename` char(15) NOT NULL,
   `modulectrflag` int(1) NOT NULL,
   `moduletoallow` int(1) NOT NULL,
   `moduletorestrict` int(1) NOT NULL,
@@ -706,6 +706,89 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar)
     return SUCCESS;
 }
 
+//根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
+OPSTAT dbi_HcuTraceModuleCtr_init_table_by_vmlayer(void)
+{
+	MYSQL *sqlHandler;
+    int result = 0, item = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//清除表格已有数据
+    sprintf(strsql, "TRUNCATE table `hcutracemodulectr`");
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: Delete data error: %s, result = %d\n", mysql_error(sqlHandler), result);
+        return FAILURE;
+	}
+
+	//读取VM中模块初始化表单内容
+	//扫描输入表单，起始必须是TASK_ID_MIN条目
+	if (zHcuGlobalTaskInputConfig[0].taskInputId != TASK_ID_MIN){
+		HcuErrorPrint("DBICOM: Initialize HCU-VM failure, task input configuration error!\n");
+		return FAILURE;
+	}
+	//扫描输入表单，以TASK_ID_MAX为终止条目
+	for(item=1; item < MAX_TASK_NUM_IN_ONE_HCU; item++){
+		if(zHcuGlobalTaskInputConfig[item].taskInputId == TASK_ID_MAX){
+			break;
+		}
+		if ((zHcuGlobalTaskInputConfig[item].taskInputId <= TASK_ID_MIN) || (zHcuGlobalTaskInputConfig[item].taskInputId > TASK_ID_MAX)){
+			HcuErrorPrint("DBICOM: Initialize HCU-VM failure, task input configuration error!\n");
+			return FAILURE;
+		}
+	}
+
+	//从任务配置输入区域读取参数到系统任务表，一旦遇到TASK_ID_MAX就终止
+	item = 0;
+	while(zHcuGlobalTaskInputConfig[item].taskInputId != TASK_ID_MAX){
+		//REPLACE新的数据
+	    sprintf(strsql, "REPLACE INTO `hcutracemodulectr` (moduleid, modulename, modulectrflag, moduletoallow, moduletorestrict, modulefromallow, modulefromrestrict) VALUES \
+	    		('%d', '%s', '%d', '%d', '%d', '%d', '%d')", zHcuGlobalTaskInputConfig[item].taskInputId, zHcuGlobalTaskInputConfig[item].taskInputName, \
+				zHcuGlobalTaskInputConfig[item].traceCtrFlag, zHcuGlobalTaskInputConfig[item].traceModToAllowFlag, zHcuGlobalTaskInputConfig[item].traceModToRestrictFlag, \
+				zHcuGlobalTaskInputConfig[item].traceModFromAllowFlag, zHcuGlobalTaskInputConfig[item].traceModFromRestrictFlag);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		item++;
+	}
+	//最后一项必定是TASK_ID_MAX
+    sprintf(strsql, "REPLACE INTO `hcutracemodulectr` (moduleid, modulename, modulectrflag, moduletoallow, moduletorestrict, modulefromallow, modulefromrestrict) VALUES \
+    		('%d', '%s', '%d', '%d', '%d', '%d', '%d')", zHcuGlobalTaskInputConfig[item].taskInputId, zHcuGlobalTaskInputConfig[item].taskInputName, \
+			zHcuGlobalTaskInputConfig[item].traceCtrFlag, zHcuGlobalTaskInputConfig[item].traceModToAllowFlag, zHcuGlobalTaskInputConfig[item].traceModToRestrictFlag, \
+			zHcuGlobalTaskInputConfig[item].traceModFromAllowFlag, zHcuGlobalTaskInputConfig[item].traceModFromRestrictFlag);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: INSERT data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+
 //查询所有基于模块控制的TRACE记录，并存入全局控制变量
 OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar)
 {
@@ -900,6 +983,24 @@ OPSTAT dbi_HcuDbVersion_inqury(HcuInventoryInfo_t *hcuInv)
     mysql_close(sqlHandler);
     return SUCCESS;
 }
+
+/*///////////////////////////////////////UPDATE的用法，还未验证好/////////////////////////////////
+//更新数据 UPDATE Person SET Address = 'Zhongshan 23', City = 'Nanjing' WHERE LastName = 'Wilson'
+sprintf(strsql, "UPDATE `hcutracemodulectr` SET `modulectrflag` = '%d', `moduletoallow` = '%d', `moduletorestrict` = '%d', `modulefromallow` = '%d', modulefromrestrict = '%d' (WHERE `hcutracemodulectr`.`moduleid` = '%d')", \
+		zHcuGlobalTaskInputConfig[item].traceCtrFlag, zHcuGlobalTaskInputConfig[item].traceModToAllowFlag, zHcuGlobalTaskInputConfig[item].traceModToRestrictFlag, \
+		zHcuGlobalTaskInputConfig[item].traceModFromAllowFlag, zHcuGlobalTaskInputConfig[item].traceModFromRestrictFlag, zHcuGlobalTaskInputConfig[item].taskInputId);
+result = mysql_query(sqlHandler, strsql);
+if(result){
+	mysql_close(sqlHandler);
+	HcuErrorPrint("DBICOM: UPDATE data error: Result = %d, %s, Input=[%s], Index = %d, taskid = %d, taskName=%s\n", result, mysql_error(sqlHandler), strsql, item, zHcuGlobalTaskInputConfig[item].taskInputId, zHcuGlobalTaskInputConfig[item].taskInputName);
+    return FAILURE;
+}
+*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 
 

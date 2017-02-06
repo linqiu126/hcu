@@ -116,7 +116,7 @@ OPSTAT dbi_HcuHsmmpDataInfo_inqury_1st_record(UINT32 deviceid, sensor_hsmmp_data
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIHSMMP: INSET data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIHSMMP: Inqury data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 

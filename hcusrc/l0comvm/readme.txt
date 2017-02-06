@@ -12,7 +12,10 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 //= ZJL, 2017 Feb.6, CURRENT_SW_DELIVERY 150=>BFSC项目
-=
+=改进HUITP中对MsgType的定义，跟老旧xml/zhb完全区分开来
+=改进zHcuGlobalTaskInputConfig的初始化内容，简化模块的TRACE改造设置过程
+=改进zHcuMsgNameList的初始化内容，简化模块的TRACE改造设置过程
+
 
 //= ZJL, 2017 Feb.5, CURRENT_SW_DELIVERY 149=>BFSC项目
 =修正SysParEng的定义，结构定义名字合理化

@@ -44,17 +44,17 @@
 #define HUITP_MSG_HUIXML_CONTSANT_CREATE_TIME_MAX_LEN		16 //以10进制存储的时间戳，最长长度
 //HUIXML MsgType定义
 #define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID 		1
-#define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_STRING  	"hcu_text"  //"hcu_text"
+#define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_STRING  	"huitp_text"
 #define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_ID 		2
-#define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_STRING  "hcu_command" //"hcu_command"
+#define HUITP_MSG_HUIXML_MSGTYPE_DEVICE_CONTROL_STRING  "huitp_command"
 #define HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID 			3
-#define HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_STRING 		"hcu_heart_beat"   //"hcu_heart_beat"  //心跳协议，里面的数据内容是空的
+#define HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_STRING 		"huitp_heart_beat" //心跳协议，里面的数据内容是空的
 #define HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_ID 			4
-#define HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_STRING 		"hcu_biz_itg"  //业务智能 hcu_biz_inteligence
+#define HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_STRING 		"huitp_biz_itg"  //业务智能 hcu_biz_inteligence
 #define HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID 		5
-#define HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING 	"hcu_alarm"  //for alarm report
+#define HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING 	"huitp_alarm"  //for alarm report
 #define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID 			6
-#define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING 		"hcu_pm"  //for pm report
+#define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING 		"huitp_pm"  //for pm report
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -714,14 +714,17 @@ typedef enum
 
   //组合秤BFSC
 	HUITP_MSGID_uni_bfsc_comb_scale_min              = 0x3B00, 
-	HUITP_MSGID_uni_bfsc_comb_scale_req              = 0x3B00, 
+	HUITP_MSGID_uni_bfsc_comb_scale_req              = 0x3B00, //称重事件请求
 	HUITP_MSGID_uni_bfsc_comb_scale_resp             = 0x3B80, 
-	HUITP_MSGID_uni_bfsc_comb_scale_report           = 0x3B81, 
+	HUITP_MSGID_uni_bfsc_comb_scale_report           = 0x3B81, //称重事件汇报
 	HUITP_MSGID_uni_bfsc_comb_scale_confirm          = 0x3B01, 
 	HUITP_MSGID_uni_bfsc_comb_scale_cmd_start_req    = 0x3B02, 
 	HUITP_MSGID_uni_bfsc_comb_scale_cmd_start_resp   = 0x3B82, 
 	HUITP_MSGID_uni_bfsc_comb_scale_cmd_stop_req     = 0x3B03, 
 	HUITP_MSGID_uni_bfsc_comb_scale_cmd_stop_resp    = 0x3B83, 
+	//等待完善的消息
+	HUITP_MSGID_uni_bfsc_statistic_report            = 0x3B84, //综合统计汇报
+	HUITP_MSGID_uni_bfsc_statistic_confirm           = 0x3B04,
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
 
   //云控锁-锁-旧系统兼容

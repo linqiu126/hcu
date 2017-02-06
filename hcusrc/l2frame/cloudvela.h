@@ -14,6 +14,7 @@
 #include "../l2codec/bhcodeczhb.h"
 #include "../l2codec/huitp.h"
 #include "../l2codec/huixmlcodec.h"
+#include "../l0dbi/l0dbi_inc.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -119,5 +120,9 @@ extern OPSTAT hcu_wifi_phy_link_disconnect(void);
 extern OPSTAT hcu_3g4g_phy_link_disconnect(void);
 extern void CheckCRCModBus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
 extern void func_hwinv_scan_date(void);
+
+
+//高级定义，简化程序的可读性
+#define HCU_ERROR_PRINT_CLOUDVELA(...)	do{zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 #endif /* L2FRAME_CLOUDVELA_H_ */

@@ -28,111 +28,111 @@ HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 //NULL条目保留，是为了初始化TASK NAME这一属性
 StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 {
-	//TASK_ID,    				状态控制					状态机入口 						//注释
-	{TASK_ID_MIN, 				"TASKMIN", 				NULL},							//Starting
-	{TASK_ID_HCUMAIN,    		"HCUMAIN",      		NULL},
-	{TASK_ID_HCUVM,      		"HCUVM",        		NULL},
-	{TASK_ID_TRACE,      		"TRACE",        		NULL},
-	{TASK_ID_CONFIG,     		"CONFIG",       		NULL},
-	{TASK_ID_TIMER,      		"TIMER",        		&HcuFsmTimer},
-	{TASK_ID_MMC,        		"MMC",          		NULL},
-	{TASK_ID_GPIO,       		"GPIO",         		&HcuFsmGpio},
-	{TASK_ID_I2C,        		"I2C",          		&HcuFsmI2c},
-	{TASK_ID_SPI,        		"SPI",         		 	&HcuFsmSpi},
-	{TASK_ID_PWM,        		"PWM",          		&HcuFsmPwm},
-	{TASK_ID_ADC,        		"ADC",          		&HcuFsmAdc},
-	{TASK_ID_SWITCH,     		"SWITCH",       		&HcuFsmSwitch},
-	{TASK_ID_RELAY,      		"RELAY",        		&HcuFsmRelay},
-	{TASK_ID_MOTOR,      		"MOTOR",        		&HcuFsmMotor},
-	{TASK_ID_ZEEGBE,      		"ZEEGBE",        		&HcuFsmZeegbe},
-	{TASK_ID_GPRS,       		"GPRS",         		NULL},
-	{TASK_ID_SPS232,     		"SPS232",       		&HcuFsmSps232},
-	{TASK_ID_SPS485,     		"SPS485",       		&HcuFsmSps485},
-	{TASK_ID_BLE,        		"BLE",          		&HcuFsmBle},
-	{TASK_ID_ETHERNET,   		"ETHERNET",     		&HcuFsmEthernet},
-	{TASK_ID_WIFI,       		"WIFI",         		&HcuFsmWifi},
-	{TASK_ID_USBNET,     		"USBNET",       		&HcuFsmUsbnet},
-	{TASK_ID_3G4G,       		"3G4G",         		&HcuFsm3g4g},
-	{TASK_ID_HARDDISK,   		"HARDDISK",     		NULL},
-	{TASK_ID_CAMERA,     		"CAMERA",       		NULL},
-	{TASK_ID_MICROPHONE, 		"MICROPHONE",   		&HcuFsmMicrophone},
-	{TASK_ID_FLASH,      		"FLASH",        		NULL},
-	{TASK_ID_GPS,        		"GPS",          		&HcuFsmGps},
-	{TASK_ID_LCD,        		"LCD",          		&HcuFsmLcd},
-	{TASK_ID_LED,        		"LED",          		&HcuFsmLed},
-	{TASK_ID_HWINV,      		"HWINV",        		&HcuFsmHwinv},
-	{TASK_ID_SPSVIRGO,   		"SPSVIRGO",     		&HcuFsmSpsvirgo},
-	{TASK_ID_CLOUDVELA,  		"CLOUDVELA",    		&HcuFsmCloudvela},
-	{TASK_ID_MODBUS,     		"MODBUS",       		&HcuFsmModbus},
-	{TASK_ID_AVORION,    		"AVORION",      		&HcuFsmAvorion},
-	{TASK_ID_I2CBUSLIBRA,		"I2CBUSLIBRA",  		&HcuFsmI2cbuslibra},
-	{TASK_ID_SPIBUSARIES,		"SPIBUSARIES",  		&HcuFsmSpibusaries},
-	{TASK_ID_NBIOTCJ188, 		"NBIOTCJ188",   		&HcuFsmNbiotcj188},
-	{TASK_ID_NBIOTQG376, 		"NBIOTQG376",   		&HcuFsmNbiotqg376},
-	{TASK_ID_HSMMP,      		"HSMMP",        		&HcuFsmHsmmp},
-	{TASK_ID_EMC,        		"EMC",          		&HcuFsmEmc},
-	{TASK_ID_HUMID,      		"HUMID",        		&HcuFsmHumid},
-	{TASK_ID_PM25,       		"PM25",         		&HcuFsmPm25},
-	{TASK_ID_TEMP,       		"TEMP",         		&HcuFsmTemp},
-	{TASK_ID_WINDDIR,    		"WINDDIR",      		&HcuFsmWinddir},
-	{TASK_ID_WINDSPD,    		"WINDSPD",      		&HcuFsmWindspd},
-	{TASK_ID_NOISE,      		"NOISE",        		&HcuFsmNoise},
-	{TASK_ID_AIRPRS,     		"AIRPRS",       		&HcuFsmAirprs},
-	{TASK_ID_CO1,        		"CO1",          		&HcuFsmCo1},
-	{TASK_ID_LIGHTSTR,   		"LIGHTSTR",     		&HcuFsmLightstr},
-	{TASK_ID_ALCOHOL,    		"ALCOHOL",      		&HcuFsmAlcohol},
-	{TASK_ID_HCHO,       		"HCHO",         		&HcuFsmHcho},
-	{TASK_ID_TOXICGAS,   		"TOXICGAS",     		&HcuFsmToxicgas},
-	{TASK_ID_IWM,        		"IWM",          		&HcuFsmIwm},
-	{TASK_ID_IHM,        		"IHM",          		&HcuFsmIhm},
-	{TASK_ID_IGM,        		"IGM",          		&HcuFsmIgm},
-	{TASK_ID_IPM,        		"IPM",          		&HcuFsmIpm},
-	{TASK_ID_SVRCON,     		"SVRCON",       		&HcuFsmSvrcon},
-	{TASK_ID_SYSPM,      		"SYSPM",        		&HcuFsmSyspm},
-	{TASK_ID_PM25SHARP,  		"PM25SHARP",    		&HcuFsmPm25sharp},
-	{TASK_ID_CANITFLEO,  		"CANITFLEO",    		&HcuFsmCanitfleo},
-	{TASK_ID_COM_BOTTOM, 		"COM_BOTTOM",   		NULL},
-	{TASK_ID_L3AQYCG10,  		"L3AQYCG10",    		NULL},
-	{TASK_ID_L3AQYCG20,  		"L3AQYCG20",    		NULL},
-	{TASK_ID_L3TBSWRG30, 		"L3TBSWRG30",   		NULL},
-	{TASK_ID_L3GQYBG40,  		"L3GQYBG40",    		NULL},
-	{TASK_ID_L3CXILC,    		"L3CXILC",      		NULL},
-	{TASK_ID_L3CXGLACM,  		"L3CXGLACM",    		NULL},
-	{TASK_ID_L3NBLPM,    		"L3NBLPM",      		NULL},
-	{TASK_ID_L3NBHPM,    		"L3NBHPM",      		NULL},
-	{TASK_ID_L3BFSC,     		"L3BFSC",       		NULL},
-	{TASK_ID_BFSCUICOMM, 		"BFSCUICOMM",   		NULL},
-	{TASK_ID_L3OPWLOTDR, 		"L3OPWLOTDR",   		NULL},
+  //TASK_ID,              状态控制             状态机入口                 TRACE标志位                   注释
+  {TASK_ID_MIN,           "TASKMIN",          NULL,                    0, 0, 0, 0, 0},              //Starting
+  {TASK_ID_HCUMAIN,       "HCUMAIN",          NULL,                    0, 0, 0, 0, 0},
+  {TASK_ID_HCUVM,         "HCUVM",            NULL,                    0, 0, 0, 0, 0},
+  {TASK_ID_TRACE,         "TRACE",            NULL,                    0, 0, 0, 0, 0},
+  {TASK_ID_CONFIG,        "CONFIG",           NULL,                    0, 0, 0, 0, 0},
+  {TASK_ID_TIMER,         "TIMER",            &HcuFsmTimer,            1, 1, 1, 1, 1},
+  {TASK_ID_MMC,           "MMC",              NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_GPIO,          "GPIO",             &HcuFsmGpio,             1, 1, 1, 1, 1},
+  {TASK_ID_I2C,           "I2C",              &HcuFsmI2c,              1, 1, 1, 1, 1},
+  {TASK_ID_SPI,           "SPI",              &HcuFsmSpi,              1, 1, 1, 1, 1},
+  {TASK_ID_PWM,           "PWM",              &HcuFsmPwm,              1, 1, 1, 1, 1},
+  {TASK_ID_ADC,           "ADC",              &HcuFsmAdc,              1, 1, 1, 1, 1},
+  {TASK_ID_SWITCH,        "SWITCH",           &HcuFsmSwitch,           1, 1, 1, 1, 1},
+  {TASK_ID_RELAY,         "RELAY",            &HcuFsmRelay,            1, 1, 1, 1, 1},
+  {TASK_ID_MOTOR,         "MOTOR",            &HcuFsmMotor,            1, 1, 1, 1, 1},
+  {TASK_ID_ZEEGBE,        "ZEEGBE",           &HcuFsmZeegbe,           1, 1, 1, 1, 1},
+  {TASK_ID_GPRS,          "GPRS",             NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           1, 1, 1, 1, 1},
+  {TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           1, 1, 1, 1, 1},
+  {TASK_ID_BLE,           "BLE",              &HcuFsmBle,              1, 1, 1, 1, 1},
+  {TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         1, 1, 1, 1, 1},
+  {TASK_ID_WIFI,          "WIFI",             &HcuFsmWifi,             1, 1, 1, 1, 1},
+  {TASK_ID_USBNET,        "USBNET",           &HcuFsmUsbnet,           1, 1, 1, 1, 1},
+  {TASK_ID_3G4G,          "3G4G",             &HcuFsm3g4g,             1, 1, 1, 1, 1},
+  {TASK_ID_HARDDISK,      "HARDDISK",         NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_CAMERA,        "CAMERA",           NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_MICROPHONE,    "MICROPHONE",       &HcuFsmMicrophone,       1, 1, 1, 1, 1},
+  {TASK_ID_FLASH,         "FLASH",            NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_GPS,           "GPS",              &HcuFsmGps,              1, 1, 1, 1, 1},
+  {TASK_ID_LCD,           "LCD",              &HcuFsmLcd,              1, 1, 1, 1, 1},
+  {TASK_ID_LED,           "LED",              &HcuFsmLed,              1, 1, 1, 1, 1},
+  {TASK_ID_HWINV,         "HWINV",            &HcuFsmHwinv,            1, 1, 1, 1, 1},
+  {TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         1, 1, 1, 1, 1},
+  {TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        1, 1, 1, 1, 1},
+  {TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           1, 1, 1, 1, 1},
+  {TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          1, 1, 1, 1, 1},
+  {TASK_ID_I2CBUSLIBRA,   "I2CBUSLIBRA",      &HcuFsmI2cbuslibra,      1, 1, 1, 1, 1},
+  {TASK_ID_SPIBUSARIES,   "SPIBUSARIES",      &HcuFsmSpibusaries,      1, 1, 1, 1, 1},
+  {TASK_ID_NBIOTCJ188,    "NBIOTCJ188",       &HcuFsmNbiotcj188,       1, 1, 1, 1, 1},
+  {TASK_ID_NBIOTQG376,    "NBIOTQG376",       &HcuFsmNbiotqg376,       1, 1, 1, 1, 1},
+  {TASK_ID_HSMMP,         "HSMMP",            &HcuFsmHsmmp,            1, 1, 1, 1, 1},
+  {TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              1, 1, 1, 1, 1},
+  {TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            1, 1, 1, 1, 1},
+  {TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             1, 1, 1, 1, 1},
+  {TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             1, 1, 1, 1, 1},
+  {TASK_ID_WINDDIR,       "WINDDIR",          &HcuFsmWinddir,          1, 1, 1, 1, 1},
+  {TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          1, 1, 1, 1, 1},
+  {TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            1, 1, 1, 1, 1},
+  {TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           1, 1, 1, 1, 1},
+  {TASK_ID_CO1,           "CO1",              &HcuFsmCo1,              1, 1, 1, 1, 1},
+  {TASK_ID_LIGHTSTR,      "LIGHTSTR",         &HcuFsmLightstr,         1, 1, 1, 1, 1},
+  {TASK_ID_ALCOHOL,       "ALCOHOL",          &HcuFsmAlcohol,          1, 1, 1, 1, 1},
+  {TASK_ID_HCHO,          "HCHO",             &HcuFsmHcho,             1, 1, 1, 1, 1},
+  {TASK_ID_TOXICGAS,      "TOXICGAS",         &HcuFsmToxicgas,         1, 1, 1, 1, 1},
+  {TASK_ID_IWM,           "IWM",              &HcuFsmIwm,              1, 1, 1, 1, 1},
+  {TASK_ID_IHM,           "IHM",              &HcuFsmIhm,              1, 1, 1, 1, 1},
+  {TASK_ID_IGM,           "IGM",              &HcuFsmIgm,              1, 1, 1, 1, 1},
+  {TASK_ID_IPM,           "IPM",              &HcuFsmIpm,              1, 1, 1, 1, 1},
+  {TASK_ID_SVRCON,        "SVRCON",           &HcuFsmSvrcon,           1, 1, 1, 1, 1},
+  {TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            1, 1, 1, 1, 1},
+  {TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        1, 1, 1, 1, 1},
+  {TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        1, 1, 1, 1, 1},
+  {TASK_ID_COM_BOTTOM,    "COM_BOTTOM",       NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3AQYCG10,     "L3AQYCG10",        NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3AQYCG20,     "L3AQYCG20",        NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3GQYBG40,     "L3GQYBG40",        NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3CXILC,       "L3CXILC",          NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3CXGLACM,     "L3CXGLACM",        NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3NBLPM,       "L3NBLPM",          NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3NBHPM,       "L3NBHPM",          NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3BFSC,        "L3BFSC",           NULL,                    0, 0, 0, 0, 0},
+  {TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       NULL,                    1, 1, 1, 1, 1},
+  {TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       NULL,                    1, 1, 1, 1, 1},
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-	{TASK_ID_L3AQYCG10,  		"L3AQYCG10",    		&HcuFsmL3aqycg10},
+  {TASK_ID_L3AQYCG10,     "L3AQYCG10",        &HcuFsmL3aqycg10,        1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-	{TASK_ID_L3AQYCG20,  		"L3AQYCG20",    		&HcuFsmL3aqycg20},
+  {TASK_ID_L3AQYCG20,     "L3AQYCG20",        &HcuFsmL3aqycg20,        1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-	{TASK_ID_L3TBSWRG30, 		"L3TBSWRG30",   		&HcuFsmL3tbswrg30},
+  {TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       &HcuFsmL3tbswrg30,       1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-	{TASK_ID_L3GQYBG40,  		"L3GQYBG40",    		&HcuFsmLgqgybg40},
+  {TASK_ID_L3GQYBG40,     "L3GQYBG40",        &HcuFsmLgqgybg40,        1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-	{TASK_ID_L3CXILC,    		"L3CXILC",      		&HcuFsmL3cxilc},
+  {TASK_ID_L3CXILC,       "L3CXILC",          &HcuFsmL3cxilc,          1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-	{TASK_ID_L3CXGLACM,  		"L3CXGLACM",    		&HcuFsmL3cxglacm},
+  {TASK_ID_L3CXGLACM,     "L3CXGLACM",        &HcuFsmL3cxglacm,        1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-	{TASK_ID_L3NBLPM,    		"L3NBLPM",      		&HcuFsmL3nblpm},
+  {TASK_ID_L3NBLPM,       "L3NBLPM",          &HcuFsmL3nblpm,          1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-	{TASK_ID_L3NBHPM,    		"L3NBHPM",      		&HcuFsmL3nbhpm},
+  {TASK_ID_L3NBHPM,       "L3NBHPM",          &HcuFsmL3nbhpm,          1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	{TASK_ID_L3BFSC,     		"L3BFSC",       		&HcuFsmL3bfsc},
-	{TASK_ID_BFSCUICOMM, 		"BFSCUICOMM",   		&HcuFsmBfscuicomm},
+  {TASK_ID_L3BFSC,        "L3BFSC",           &HcuFsmL3bfsc,           1, 1, 1, 1, 1},
+  {TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       &HcuFsmBfscuicomm,       1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-	{TASK_ID_L3OPWLOTDR, 		"L3OPWLOTDR",   		&HcuFsmL3opwlotdr},
+  {TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       &HcuFsmL3opwlotdr,       1, 1, 1, 1, 1},
 //小技巧，不要这部分，以便加强编译检查
 #else
-	#error Un-correct constant definition
+  #error Un-correct constant definition
 #endif
 
-	{TASK_ID_MAX,				"TASKMAX", 				NULL},							//Ending
+  {TASK_ID_MAX,       "TASKMAX",        NULL,                          0, 0, 0, 0, 0},                  //Ending
 };
 
 //任务状态机FSM全局控制表，占用内存的大户！！！
@@ -992,7 +992,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)){
+			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
@@ -1001,7 +1001,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE)){
+			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
@@ -1010,7 +1010,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)
+			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
@@ -1020,7 +1020,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)
+			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict != TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
@@ -1030,7 +1030,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)
+			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromAllow == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
@@ -1040,7 +1040,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE)
+			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromRestrict != TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
@@ -1050,7 +1050,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)
+			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromAllow == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
@@ -1061,7 +1061,7 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			taskid_to_string(dest_id, s1);
 			taskid_to_string(src_id, s2);
 			msgid_to_string(msg_id, s3);
-			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE)
+			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict != TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromRestrict != TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
@@ -2231,6 +2231,22 @@ int hcu_vm_main_entry(void)
 		HcuDebugPrint("HCU-MAIN: Init system level environment error!\n");
 		return EXIT_SUCCESS;
 	}
+
+	//将MODULE TRACE初始化表单存入数据库，降低研发工作复杂度
+	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_NO) && (HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET == HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES)){
+		if (dbi_HcuTraceModuleCtr_init_table_by_vmlayer() == FAILURE){
+			HcuDebugPrint("HCU-MAIN: Init Module Trace set error!\n");
+			return EXIT_SUCCESS;
+		}
+	}
+
+	/*//将MSG TRACE初始化表单存入数据库，降低研发工作复杂度
+	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_NO) && (HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET == HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES)){
+		if (dbi_HcuTraceModuleCtr_init_table_by_vmlayer() == FAILURE){
+			HcuDebugPrint("HCU-MAIN: Init Module Trace set error!\n");
+			return EXIT_SUCCESS;
+		}
+	}*/
 
 	//从数据库或者系统缺省配置中，读取系统配置的工程参数
 	if (hcu_hwinv_read_engineering_data_into_mem() == FAILURE){
