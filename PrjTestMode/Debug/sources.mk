@@ -31,6 +31,7 @@ src/l0webser \
 src/l1com \
 src/l1hwopt \
 src/l1hwopt/usb_adc \
+src/l2codec \
 src/l2frame \
 src/l3app \
 src/l4bi \

@@ -12,11 +12,14 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 152=>BFSC项目
+=回归所有项目的编译
+
+
 //= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 151=>BFSC项目
-==>清理全局表，简化全局表单的控制/初始化等内容
-
-
-
+=清理全局表，简化全局表单的控制/初始化等内容
+=改造量太大，形成单独的版本
+=验证过BFSC/G20项目
 
 //= ZJL, 2017 Feb.6, CURRENT_SW_DELIVERY 150=>BFSC项目
 =改进HUITP中对MsgType的定义，跟老旧xml/zhb完全区分开来

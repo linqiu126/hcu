@@ -5,9 +5,8 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 /home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c \
-/home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodecxml.c \
-/home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodeczhb.c \
 /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c \
+/home/hitpony/workspace/hcu/hcusrc/l2frame/canlib.c \
 /home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c \
 /home/hitpony/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c \
 /home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c \
@@ -18,9 +17,8 @@ C_SRCS += \
 
 OBJS += \
 ./src/l2frame/avorion.o \
-./src/l2frame/bhcodecxml.o \
-./src/l2frame/bhcodeczhb.o \
 ./src/l2frame/canitfleo.o \
+./src/l2frame/canlib.o \
 ./src/l2frame/cloudvela.o \
 ./src/l2frame/i2cbuslibra.o \
 ./src/l2frame/modbus.o \
@@ -31,9 +29,8 @@ OBJS += \
 
 C_DEPS += \
 ./src/l2frame/avorion.d \
-./src/l2frame/bhcodecxml.d \
-./src/l2frame/bhcodeczhb.d \
 ./src/l2frame/canitfleo.d \
+./src/l2frame/canlib.d \
 ./src/l2frame/cloudvela.d \
 ./src/l2frame/i2cbuslibra.d \
 ./src/l2frame/modbus.d \
@@ -51,21 +48,14 @@ src/l2frame/avorion.o: /home/hitpony/workspace/hcu/hcusrc/l2frame/avorion.c
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/bhcodecxml.o: /home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodecxml.c
-	@echo 'Building file: $<'
-	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
-src/l2frame/bhcodeczhb.o: /home/hitpony/workspace/hcu/hcusrc/l2frame/bhcodeczhb.c
-	@echo 'Building file: $<'
-	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
 src/l2frame/canitfleo.o: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross GCC Compiler'
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/l2frame/canlib.o: /home/hitpony/workspace/hcu/hcusrc/l2frame/canlib.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

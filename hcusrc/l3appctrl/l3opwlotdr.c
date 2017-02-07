@@ -75,7 +75,7 @@ OPSTAT fsm_l3opwlotdr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_L3OPWLOTDR, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("L3OPWLOTDR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun[TASK_ID_L3OPWLOTDR].taskName, zHcuSysCrlTab.taskRun[src_id].taskName);
+			HcuErrorPrint("L3OPWLOTDR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3OPWLOTDR].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -155,7 +155,7 @@ OPSTAT fsm_l3opwlotdr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_L3OPWLOTDR, TASK_ID_L3OPWLOTDR, &snd0, snd0.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3OPWLOTDR]++;
-			HcuErrorPrint("L3OPWLOTDR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun[TASK_ID_L3OPWLOTDR].taskName, zHcuSysCrlTab.taskRun[TASK_ID_L3OPWLOTDR].taskName);
+			HcuErrorPrint("L3OPWLOTDR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3OPWLOTDR].taskName, zHcuVmCtrTab.task[TASK_ID_L3OPWLOTDR].taskName);
 			return FAILURE;
 		}
 	}

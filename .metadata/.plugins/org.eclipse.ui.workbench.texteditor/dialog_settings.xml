@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="vm_working_mode_multipy" key="selection"/>
+		<item value="zHcuVmCtrTab.task" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="zHcuSysCrlTab.taskRun"/>
+			<item value="zHcuSysCtrTab"/>
+			<item value="zHcuSysCtrTab.taskRun"/>
+			<item value="zHcuSysCrlTab"/>
 			<item value="vm_working_mode_multipy"/>
 			<item value="hcu_vm_working_mode_single"/>
 			<item value="read_mac_address"/>
 			<item value="create_storage_dir_env"/>
-			<item value="hcu_vm_system_ctr_table_init"/>
-			<item value="intelligence_init"/>
-			<item value="translate_phy_boot_cfg_into_mem"/>
-			<item value="read_phy_boot_cfg"/>
 		</list>
 		<list key="replacehistory">
+			<item value="zHcuVmCtrTab.task"/>
+			<item value="zHcuVmCtrTab"/>
+			<item value="zHcuSysCtrTab.task"/>
+			<item value="zHcuSysCtrTab"/>
 			<item value="zHcuVmCtrTab.hwinv.sysInfo"/>
 			<item value="zHcuSysStaPm.statisCnt"/>
 			<item value="zHcuSysStaPm."/>
 			<item value="zHcuSysStaPm.taskRunErrCnt"/>
-			<item value="zHcuSysStaPm。"/>
-			<item value="zHcuVmCtrTab"/>
-			<item value="zHcuSysCtrTab.task"/>
-			<item value="task"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
