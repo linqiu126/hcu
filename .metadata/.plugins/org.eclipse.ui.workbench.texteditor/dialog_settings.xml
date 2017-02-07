@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="zHcuVmCtrTab.task" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="dbi_HcuTraceModuleCtr_engpar_intelligence_init"/>
+			<item value="HcuFsmTable_t"/>
 			<item value="zHcuSysCrlTab.taskRun"/>
 			<item value="zHcuSysCtrTab"/>
 			<item value="zHcuSysCtrTab.taskRun"/>
 			<item value="zHcuSysCrlTab"/>
 			<item value="vm_working_mode_multipy"/>
 			<item value="hcu_vm_working_mode_single"/>
-			<item value="read_mac_address"/>
-			<item value="create_storage_dir_env"/>
 		</list>
 		<list key="replacehistory">
 			<item value="zHcuVmCtrTab.task"/>

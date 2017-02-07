@@ -604,7 +604,7 @@ extern HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[];
 
 /*
  *
- *   三大表单之二： 系统工参表StrHcuSysEngPar_t定义区
+ *   三大表单之二： 系统工参表HcuSysEngPar_t定义区
  *
  *
 */
@@ -779,7 +779,8 @@ extern ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgf
 extern OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void);
 extern OPSTAT hcu_hwinv_engpar_create_storage_dir_env(void);
 extern OPSTAT hcu_hwinv_engpar_read_mac_address(void);
-
+extern OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void);
+extern OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void);
 
 /*
  *
