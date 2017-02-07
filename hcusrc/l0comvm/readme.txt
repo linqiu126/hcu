@@ -14,7 +14,7 @@ PRJ_BFSC待完成或者回答的问题：
 
 //= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 152=>BFSC项目
 =回归所有项目的编译
-=MessageTrace的ctrlFlag是否起作用了？
+=MessageTrace的ctrlFlag起作用了 
 
 //= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 151=>BFSC项目
 =清理全局表，简化全局表单的控制/初始化等内容

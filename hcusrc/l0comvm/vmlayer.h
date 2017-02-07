@@ -592,7 +592,7 @@ typedef struct HcuVmCtrTaskStaticCfg
 {
 	const UINT8 taskInputId;
 	const char  taskInputName[TASK_NAME_MAX_LENGTH];
-	const void* fsmFuncEntry;
+	      void* fsmFuncEntry;
 	const UINT8 traceCtrFlag;
 	const UINT8 traceModToAllowFlag;
 	const UINT8 traceModToRestrictFlag;
