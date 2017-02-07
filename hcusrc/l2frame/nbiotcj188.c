@@ -62,7 +62,6 @@ HcuFsmStateItem_t HcuFsmNbiotcj188[] =
 };
 
 //Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose

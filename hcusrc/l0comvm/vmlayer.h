@@ -80,18 +80,19 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_WINDDIR,
 	TASK_ID_WINDSPD,
 	TASK_ID_NOISE,
-	TASK_ID_AIRPRS,  //气压
-	TASK_ID_CO1,     //一氧化碳
-	TASK_ID_LIGHTSTR,//光照
-	TASK_ID_ALCOHOL, //酒精
-	TASK_ID_HCHO,    //甲醛
-	TASK_ID_TOXICGAS,//有毒气体
-	TASK_ID_IWM,  //智能水表
-	TASK_ID_IHM,  //智能热表
-	TASK_ID_IGM,  //智能煤气表
-	TASK_ID_IPM,  //智能电表
+	TASK_ID_AIRPRS,  	//气压
+	TASK_ID_CO1,     	//一氧化碳
+	TASK_ID_LIGHTSTR,	//光照
+	TASK_ID_ALCOHOL, 	//酒精
+	TASK_ID_HCHO,    	//甲醛
+	TASK_ID_TOXICGAS,	//有毒气体
+	TASK_ID_IWM,  		//智能水表
+	TASK_ID_IHM,  		//智能热表
+	TASK_ID_IGM,  		//智能煤气表
+	TASK_ID_IPM,  		//智能电表
 	TASK_ID_SVRCON,
-	TASK_ID_SYSPM,  //性能统计
+	TASK_ID_SYSPM,    	//性能统计
+	TASK_ID_SYSSWM,  	//软件管理
 	TASK_ID_PM25SHARP,  //for pm25sharp sensor by shanchun
 	TASK_ID_CANITFLEO,
 	TASK_ID_L3AQYCG10,
@@ -159,19 +160,20 @@ enum HCU_TASK_QUEUE_ID
 	TASK_QUE_ID_WINDDIR,
 	TASK_QUE_ID_WINDSPD,
 	TASK_QUE_ID_NOISE,
-	TASK_QUE_ID_AIRPRS,  //气压
-	TASK_QUE_ID_CO1,     //一氧化碳
-	TASK_QUE_ID_LIGHTSTR,//光照
-	TASK_QUE_ID_ALCOHOL, //酒精
-	TASK_QUE_ID_HCHO,    //甲醛
-	TASK_QUE_ID_TOXICGAS,//有毒气体
-	TASK_QUE_ID_IWM,  //智能水表
-	TASK_QUE_ID_IHM,  //智能热表
-	TASK_QUE_ID_IGM,  //智能煤气表
-	TASK_QUE_ID_IPM,  //智能电表
+	TASK_QUE_ID_AIRPRS,  	//气压
+	TASK_QUE_ID_CO1,     	//一氧化碳
+	TASK_QUE_ID_LIGHTSTR,	//光照
+	TASK_QUE_ID_ALCOHOL, 	//酒精
+	TASK_QUE_ID_HCHO,    	//甲醛
+	TASK_QUE_ID_TOXICGAS,	//有毒气体
+	TASK_QUE_ID_IWM,  		//智能水表
+	TASK_QUE_ID_IHM,  		//智能热表
+	TASK_QUE_ID_IGM, 		//智能煤气表
+	TASK_QUE_ID_IPM, 		//智能电表
 	TASK_QUE_ID_SVRCON,
 	TASK_QUE_ID_SYSPM,
-	TASK_QUE_ID_PM25SHARP, //for pm25sharp sensor by shanchun
+	TASK_QUE_IID_SYSSWM,  	//软件管理
+	TASK_QUE_ID_PM25SHARP, 	//for pm25sharp sensor by shanchun
 	TASK_QUE_ID_CANITFLEO,
 	TASK_QUE_ID_COM_BOTTOM,
 	TASK_QUE_ID_L3AQYCG10,
@@ -573,6 +575,7 @@ extern HcuFsmStateItem_t HcuFsmIgm[];                               //状态机
 extern HcuFsmStateItem_t HcuFsmIpm[];                               //状态机
 extern HcuFsmStateItem_t HcuFsmSvrcon[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmSyspm[];                             //状态机
+extern HcuFsmStateItem_t HcuFsmSysswm[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmPm25sharp[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmCanitfleo[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmL3aqycg10[];                         //状态机

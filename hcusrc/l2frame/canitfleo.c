@@ -85,9 +85,7 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 };
 
 //Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 UINT32 HcuSensorIdRoundBing;
-
 UINT32 can_socket_id; //MYC
 
 //Main Entry

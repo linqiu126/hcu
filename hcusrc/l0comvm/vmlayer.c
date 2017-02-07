@@ -91,6 +91,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_IPM,           "IPM",              &HcuFsmIpm,              1, 1, 1, 1, 1},
 	{TASK_ID_SVRCON,        "SVRCON",           &HcuFsmSvrcon,           1, 1, 1, 1, 1},
 	{TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            1, 1, 1, 1, 1},
+	{TASK_ID_SYSSWM,        "SYSSWM",           &HcuFsmSysswm,           1, 1, 1, 1, 1},
 	{TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        1, 1, 1, 1, 1},
 	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        1, 1, 1, 1, 1},
 //基础任务END
@@ -420,6 +421,14 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	zHcuVmCtrTab.task[TASK_ID_LED].pnpState = zHcuSysEngPar.comm.commHwBoardLed;
 	zHcuVmCtrTab.task[TASK_ID_ZEEGBE].pnpState = zHcuSysEngPar.comm.commHwBoardZeegbe;
 	zHcuVmCtrTab.task[TASK_ID_FLASH].pnpState = zHcuSysEngPar.comm.commHwBoardFlash;
+	zHcuVmCtrTab.task[TASK_ID_GPIO].pnpState = zHcuSysEngPar.comm.commFrontGpio;
+	zHcuVmCtrTab.task[TASK_ID_I2C].pnpState = zHcuSysEngPar.comm.commFrontI2c;
+	zHcuVmCtrTab.task[TASK_ID_SPI].pnpState = zHcuSysEngPar.comm.commFrontSpi;
+	zHcuVmCtrTab.task[TASK_ID_PWM].pnpState = zHcuSysEngPar.comm.commFrontPwm;
+	zHcuVmCtrTab.task[TASK_ID_ADC].pnpState = zHcuSysEngPar.comm.commFrontAdc;
+	zHcuVmCtrTab.task[TASK_ID_SWITCH].pnpState = zHcuSysEngPar.comm.commFrontSwitch;
+	zHcuVmCtrTab.task[TASK_ID_RELAY].pnpState = zHcuSysEngPar.comm.commFrontRelay;
+	zHcuVmCtrTab.task[TASK_ID_MOTOR].pnpState = zHcuSysEngPar.comm.commFrontMotor;
 	zHcuVmCtrTab.task[TASK_ID_MODBUS].pnpState = zHcuSysEngPar.comm.commFrameModbus;
 	zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].pnpState = zHcuSysEngPar.comm.commFrameSpsvirgo;
 	zHcuVmCtrTab.task[TASK_ID_AVORION].pnpState = zHcuSysEngPar.comm.commFrameAvorion;
@@ -442,6 +451,12 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	zHcuVmCtrTab.task[TASK_ID_NOISE].pnpState = zHcuSysEngPar.comm.commFrontSensorNoise;
 	zHcuVmCtrTab.task[TASK_ID_HSMMP].pnpState = zHcuSysEngPar.comm.commFrontSensorHsmmp;
 	zHcuVmCtrTab.task[TASK_ID_PM25SHARP].pnpState = zHcuSysEngPar.comm.commFrontSensorPm25Sharp;
+	zHcuVmCtrTab.task[TASK_ID_AIRPRS].pnpState = zHcuSysEngPar.comm.commFrontSensorAirprs;
+	zHcuVmCtrTab.task[TASK_ID_CO1].pnpState = zHcuSysEngPar.comm.commFrontSensorCo1;
+	zHcuVmCtrTab.task[TASK_ID_LIGHTSTR].pnpState = zHcuSysEngPar.comm.commFrontSensorLightstr;
+	zHcuVmCtrTab.task[TASK_ID_ALCOHOL].pnpState = zHcuSysEngPar.comm.commFrontSensorAlcohol;
+	zHcuVmCtrTab.task[TASK_ID_HCHO].pnpState = zHcuSysEngPar.comm.commFrontSensorHcho;
+	zHcuVmCtrTab.task[TASK_ID_TOXICGAS].pnpState = zHcuSysEngPar.comm.commFrontSensorToxicgas;
 	zHcuVmCtrTab.task[TASK_ID_IWM].pnpState = zHcuSysEngPar.comm.commFrontSensorIwm;
 	zHcuVmCtrTab.task[TASK_ID_IHM].pnpState = zHcuSysEngPar.comm.commFrontSensorIhm;
 	zHcuVmCtrTab.task[TASK_ID_IGM].pnpState = zHcuSysEngPar.comm.commFrontSensorIgm;
@@ -471,7 +486,9 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	item = 0;
 	while(zHcuVmCtrTaskStaticCfg[item].taskInputId != TASK_ID_MAX){
 		taskid = zHcuVmCtrTaskStaticCfg[item].taskInputId;
-		//系统工程参数对于任务的启动具备更高的优先级
+		//系统工程参数对于任务的启动具备更高的优先级。如果系统工参没有配置，则缺省就是启动该模块。
+		//这个是使用了静态配置表的方式，而且后面还OVERWRITE前面的，这种技巧可以在分项目中灵活配置。一般在公共区放置无效任务模块，在分项目区单独控制开启与否。
+		//其实，任务的启动与否，一般由项目性质决定，并不需要工参进行控制，以后可以考虑去掉对任务模块启动与否的工参配置能力。
 		if (zHcuVmCtrTab.task[taskid].pnpState == HCU_TASK_PNP_INIT) zHcuVmCtrTab.task[taskid].pnpState = HCU_TASK_PNP_ON;
 		strcpy(zHcuVmCtrTab.task[taskid].taskName, zHcuVmCtrTaskStaticCfg[item].taskInputName);
 		zHcuVmCtrTab.task[taskid].taskFuncEntry = zHcuVmCtrTaskStaticCfg[item].fsmFuncEntry;

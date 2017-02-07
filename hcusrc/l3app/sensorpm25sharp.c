@@ -42,8 +42,6 @@ HcuFsmStateItem_t HcuFsmPm25sharp[] =
 };
 
 //Global variables
-//GpsPosInfo_t zHcuGpsPosInfo;
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //For Serial Port Init
 SerialPortCom_t gSerialPortForPm25Sharp;

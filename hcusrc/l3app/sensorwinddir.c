@@ -55,7 +55,6 @@ HcuFsmStateItem_t HcuFsmWinddir[] =
 };
 
 //Task Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 SensorWinddirInfo_t zSensorWinddirInfo[MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED];
 UINT8 currentSensorWinddirId;
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区

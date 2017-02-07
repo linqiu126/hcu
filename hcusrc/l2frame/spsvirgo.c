@@ -43,15 +43,11 @@ HcuFsmStateItem_t HcuFsmSpsvirgo[] =
 
 //extern global variables
 extern GpsPosInfo_t zHcuGpsPosInfo;
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //extern SerialPortCom_t gSerialPortForSPS232;
 extern SerialPortCom_t gSerialPortMobus;
-
-
 UINT32 currentSensorEqpId;  //当前正在工作的传感器
 SerialSpsMsgBuf_t currentSpsBuf;
-
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose

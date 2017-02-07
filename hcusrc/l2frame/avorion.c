@@ -73,9 +73,6 @@ HcuFsmStateItem_t HcuFsmAvorion[] =
 };
 
 //extern global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
-
-//Global variables for static capture，未采用
 
 //视频全局控制变量，采用
 UINT32 zHcuAvorionFrameTotalNum = 0;

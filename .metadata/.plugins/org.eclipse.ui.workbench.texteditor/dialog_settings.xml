@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Trace" key="selection"/>
+		<item value="ADC" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="ADC"/>
+			<item value="CO1"/>
+			<item value="Co1"/>
+			<item value="co1"/>
 			<item value="Trace"/>
 			<item value="dbi_HcuTraceModuleCtr_engpar_intelligence_init"/>
 			<item value="HcuFsmTable_t"/>
 			<item value="zHcuSysCrlTab.taskRun"/>
-			<item value="zHcuSysCtrTab"/>
-			<item value="zHcuSysCtrTab.taskRun"/>
-			<item value="zHcuSysCrlTab"/>
-			<item value="vm_working_mode_multipy"/>
 		</list>
 		<list key="replacehistory">
+			<item value="SYSSWM"/>
+			<item value="Sysswm"/>
+			<item value="sysswm"/>
 			<item value="zHcuVmCtrTab.task"/>
 			<item value="zHcuVmCtrTab"/>
 			<item value="zHcuSysCtrTab.task"/>
 			<item value="zHcuSysCtrTab"/>
 			<item value="zHcuVmCtrTab.hwinv.sysInfo"/>
-			<item value="zHcuSysStaPm.statisCnt"/>
-			<item value="zHcuSysStaPm."/>
-			<item value="zHcuSysStaPm.taskRunErrCnt"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

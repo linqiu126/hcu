@@ -57,7 +57,6 @@ HcuFsmStateItem_t HcuFsmPm25[] =
 };
 
 //Task Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 SensorPm25Info_t zSensorPm25Info[MAX_NUM_OF_SENSOR_PM25_INSTALLED];
 UINT8 currentSensorPm25Id;
 

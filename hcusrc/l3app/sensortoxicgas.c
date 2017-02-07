@@ -44,7 +44,6 @@ HcuFsmStateItem_t HcuFsmToxicgas[] =
 };
 
 //Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 extern float zHcuGpioToxicgasMq135;
 extern float zHcuGpioToxicgasZp01voc;
 

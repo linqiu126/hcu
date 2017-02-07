@@ -73,6 +73,7 @@
 #include "../l3app/sensoripm.h"
 #include "../l3app/sensorpm25sharp.h"
 #include "../l3app/syspm.h"
+#include "../l3app/sysswm.h"
 
 //不同任务模块的包含关系
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)

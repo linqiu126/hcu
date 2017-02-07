@@ -48,8 +48,6 @@ HcuFsmStateItem_t HcuFsmSpibusaries[] =
 };
 
 //Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
-
 UINT32 currentSensorEqpId;  //当前正在工作的传感器
 SPIBusariesMsgBuf_t currentSPIBuf;
 

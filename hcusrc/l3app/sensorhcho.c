@@ -44,7 +44,6 @@ HcuFsmStateItem_t HcuFsmHcho[] =
 };
 
 //Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 extern float zHcuSps232HchoZe08ch2o;
 
 //Main Entry
