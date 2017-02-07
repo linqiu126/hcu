@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcu_vm_application_task_env_init" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="vm_working_mode_multipy" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="hcu_vm_application_task_env_init"/>
-			<item value="hcutracemsgctr"/>
-			<item value="update"/>
-			<item value="UPDATE"/>
-			<item value="item"/>
-			<item value="elif"/>
-			<item value="hcutracemodulectr"/>
-			<item value="zHcuGlobalTaskInputConfig"/>
+			<item value="vm_working_mode_multipy"/>
+			<item value="hcu_vm_working_mode_single"/>
+			<item value="read_mac_address"/>
+			<item value="create_storage_dir_env"/>
+			<item value="hcu_vm_system_ctr_table_init"/>
+			<item value="intelligence_init"/>
+			<item value="translate_phy_boot_cfg_into_mem"/>
+			<item value="read_phy_boot_cfg"/>
 		</list>
 		<list key="replacehistory">
-			<item value="huitp_text"/>
-			<item value="zHcuRunErrCnt[TASK_ID_CLOUDVELA]"/>
-			<item value="TASK_ID_CLOUDVELA"/>
-			<item value="SUCCESS"/>
-			<item value="output-&gt;curBuf"/>
-			<item value="FAILURE"/>
-			<item value="HCU_G801_BFSC_SH001"/>
-			<item value="HCU_G201_AQYC_SH001"/>
+			<item value="zHcuVmCtrTab.hwinv.sysInfo"/>
+			<item value="zHcuSysStaPm.statisCnt"/>
+			<item value="zHcuSysStaPm."/>
+			<item value="zHcuSysStaPm.taskRunErrCnt"/>
+			<item value="zHcuSysStaPm。"/>
+			<item value="zHcuVmCtrTab"/>
+			<item value="zHcuSysCtrTab.task"/>
+			<item value="task"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1091" key="DIALOG_X_ORIGIN"/>
-		<item value="301" key="DIALOG_Y_ORIGIN"/>
+		<item value="1058" key="DIALOG_X_ORIGIN"/>
+		<item value="116" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

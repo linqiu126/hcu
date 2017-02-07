@@ -24,7 +24,7 @@ enum FSM_STATE_LED
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmLed[];
+extern HcuFsmStateItem_t FsmLed[];
 
 //Local variables
 #define RPI_LED_PIN_VCC 2  //5V

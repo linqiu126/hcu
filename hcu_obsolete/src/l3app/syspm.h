@@ -24,7 +24,7 @@ enum FSM_STATE_SYSPM
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmSyspm[];
+extern HcuFsmStateItem_t FsmSyspm[];
 
 //API
 extern OPSTAT fsm_syspm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

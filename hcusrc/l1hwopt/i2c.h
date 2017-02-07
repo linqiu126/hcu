@@ -23,7 +23,7 @@ enum FSM_STATE_I2C
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmI2c[];
+extern HcuFsmStateItem_t HcuFsmI2c[];
 extern float zHcuI2cTempSht20;
 extern float zHcuI2cHumidSht20;
 extern float zHcuI2cLightstrBh1750;

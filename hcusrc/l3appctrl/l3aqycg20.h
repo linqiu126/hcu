@@ -24,7 +24,7 @@ enum FSM_STATE_L3AQYCG20
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmL3aqycg20[];
+extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 
 //API
 extern OPSTAT fsm_l3aqycg20_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

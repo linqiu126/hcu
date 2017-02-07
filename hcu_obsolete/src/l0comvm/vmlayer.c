@@ -11,7 +11,7 @@
 
 //全局变量，存储所有任务的状态信息，以便后面后面使用
 HcuTaskTag_t zHcuTaskInfo[MAX_TASK_NUM_IN_ONE_HCU];
-HcuCurrentTaskTag_t zHcuCurrentProcessInfo;
+HcuCurrentTaskTag_t zHcuSysCtrTab.curProc;
 //记录所有任务模块工作差错的次数，以便适当处理
 UINT32 zHcuRunErrCnt[MAX_TASK_NUM_IN_ONE_HCU];
 HcuGlobalCounter_t zHcuGlobalCounter;  //定义全局计数器COUNTER
@@ -84,11 +84,11 @@ char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU] ={
 	"MAX",
 	"NULL"};
 //任务状态机FSM全局控制表，占用内存的大户！！！
-FsmTable_t zHcuFsmTable;
+HcuFsmTable_t zHcuFsmTable;
 
 //消息ID的定义全局表，方便TRACE函数使用
 //请服从MSG_NAME_MAX_LENGTH的最长定义，不然出错
-char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK] ={
+char *zHcuSysEngTrcModCtrStaticCfg[MAX_MSGID_NUM_IN_ONE_TASK] ={
 		"MSG_ID_COM_MIN",
 		"MSG_ID_COM_INIT",
 		"MSG_ID_COM_INIT_FEEDBACK",
@@ -352,7 +352,7 @@ void hcu_vm_system_init(void)
 		zHcuTaskInfo[i].TaskId = i;
 		strcpy(zHcuTaskInfo[i].TaskName, zHcuTaskNameList[i]);
 	}
-	memset(&zHcuCurrentProcessInfo, 0, sizeof(HcuCurrentTaskTag_t));
+	memset(&zHcuSysCtrTab.curProc, 0, sizeof(HcuCurrentTaskTag_t));
 	memset(zHcuRunErrCnt, 0, sizeof(UINT32)*(TASK_ID_MAX-TASK_ID_MIN+1));
 
 	//TrACE INIT
@@ -597,7 +597,7 @@ UINT32 hcu_msgque_resync(void)
 }
 
 //聚合创建任务，消息队列，并直接让其开始运行
-UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
+UINT32 hcu_task_create_and_run(UINT32 task_id, HcuFsmStateItem_t* pFsmStateItem)
 {
 	OPSTAT ret = 0;
 
@@ -1080,8 +1080,8 @@ UINT32 msgid_to_string(UINT32 id, char *string)
 	}
 	char tmp[MSG_NAME_MAX_LENGTH-2]="";
 	strcpy(string, "[");
-	if (strlen(zHcuMsgNameList[id])>0){
-		strncpy(tmp, zHcuMsgNameList[id], MSG_NAME_MAX_LENGTH-3);
+	if (strlen(zHcuSysEngTrcModCtrStaticCfg[id])>0){
+		strncpy(tmp, zHcuSysEngTrcModCtrStaticCfg[id], MSG_NAME_MAX_LENGTH-3);
 		strcat(string, tmp);
 	}else{
 		strcat(string, "MSG_ID_XXX");
@@ -1399,7 +1399,7 @@ UINT32 FsmInit(void)
 **------------------------------------------------------------------------------
 ** Return value : SUCCESS OR FAILURE
 *******************************************************************************/
-UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
+UINT32 FsmAddNew(UINT32 task_id, HcuFsmStateItem_t* pFsmStateItem )
 {
 	OPSTAT ret;
 	UINT32 state;
@@ -1677,7 +1677,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE)
 	{
 		HcuDebugPrint("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
-				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskNameList[dest_id], mid, zHcuMsgNameList[mid], src_id, zHcuTaskNameList[src_id]);
+				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskNameList[dest_id], mid, zHcuSysEngTrcModCtrStaticCfg[mid], src_id, zHcuTaskNameList[src_id]);
 	}
 
 	/*
@@ -1700,7 +1700,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 			//Free memory, here do nothing.
 		}
 		HcuErrorPrint("HCU-VM: Receive invalid msg(%x)[%s] in state(%d) of task(0x%x)[%s]\n",
-			mid, zHcuMsgNameList[mid], state, dest_id, zHcuTaskNameList[dest_id]);
+			mid, zHcuSysEngTrcModCtrStaticCfg[mid], state, dest_id, zHcuTaskNameList[dest_id]);
 		return FAILURE;
 	}
 

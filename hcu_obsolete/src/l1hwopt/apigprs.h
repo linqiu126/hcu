@@ -36,7 +36,7 @@ typedef struct GprsPppdConf
 #define 	HCU_GPRS_PPPD_WAIT_SEC			30
 
 /* System Information */
-HcuComSysInfo_t zHcuHwinvGlobalSysInfo;
+HcuComSysInfo_t zHcuVmCtrTab.sysInfo;
 SerialPortCom_t gSerialPortGprs;
 GprsPppdConf_t gGprsPppdConf;
 /*

@@ -12,7 +12,7 @@
 /*
 ** FSM of the MMC
 */
-FsmStateItem_t FsmMmc[] =
+HcuFsmStateItem_t FsmMmc[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -60,7 +60,7 @@ OPSTAT fsm_mmc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MMC, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("MMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_MMC], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("MMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_MMC], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -72,11 +72,11 @@ OPSTAT fsm_mmc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	}
 
 	//INIT this task global variables
-	zHcuRunErrCnt[TASK_ID_MMC] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_MMC] = 0;
 
 	//进入等待反馈状态
 	if (FsmSetState(TASK_ID_MMC, FSM_STATE_MMC_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MMC]++;
 		HcuErrorPrint("MMC: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -90,7 +90,7 @@ OPSTAT fsm_mmc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 OPSTAT fsm_mmc_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("MMC: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_mmc_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

@@ -14,15 +14,14 @@
 
 extern void dbi_display_header(MYSQL_RES *resPtr);
 extern void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow);
-extern OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTable_t *engPar, char *prjname);
-extern OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar);
-extern OPSTAT dbi_HcuTraceModuleCtr_intelligence_init(void);
-extern OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar);
-extern OPSTAT dbi_HcuTraceMsgCtr_intelligence_init(void);
-extern OPSTAT dbi_HcuDbVersion_inqury(HcuInventoryInfo_t *hcuInv);
+extern OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname);
+extern OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTab_t *engPar);
+extern OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void);
+extern OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar);
+extern OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void);
+extern OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv);
 
 //引用外部API
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-extern HcuInventoryInfo_t zHcuInventoryInfo;
+
 
 #endif /* L0DBI_DBICOM_H_ */

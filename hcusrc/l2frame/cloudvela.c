@@ -15,7 +15,7 @@
 /*
 ** FSM of the CLOUDVELA
 */
-FsmStateItem_t HcuFsmCloudvela[] =
+HcuFsmStateItem_t HcuFsmCloudvela[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -96,8 +96,6 @@ HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 CloudvelaTable_t zHcuCloudvelaTable;
 
 //Task Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-extern HcuInventoryInfo_t zHcuInventoryInfo;
 extern int zHcuEthConClientFd;
 extern int socket_connected;
 
@@ -130,7 +128,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CLOUDVELA, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -149,12 +147,12 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//zHcuMemStorageBuf其实还是一个全局变量，但因为这个模块用的多，故而在这里定义
 	memset(&zHcuMemStorageBuf, 0, sizeof(HcuDiscDataSampleStorage_t));
 	memset(&zHcuCloudvelaTable, 0, sizeof(CloudvelaTable_t));
-	zHcuRunErrCnt[TASK_ID_CLOUDVELA] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.cloudvelaHbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
 		return FAILURE;
 	}
@@ -162,7 +160,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//For sw&db version report
 	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_SW_DB_VERSION_REPORT, zHcuSysEngPar.timer.dbVerReportTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
 		return FAILURE;
 	}
@@ -170,7 +168,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_init\n");
 		return FAILURE;
 	}
@@ -181,7 +179,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 OPSTAT fsm_cloudvela_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("CLOUDVELA: Internal error counter reach CRITICAL/DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_cloudvela_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -195,22 +193,22 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("CLOUDVELA: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_CLOUDVELA]是否超限
-	if (zHcuRunErrCnt[TASK_ID_CLOUDVELA] > HCU_RUN_ERROR_LEVEL_3_CRITICAL){
+	//钩子在此处，检查zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]是否超限
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] > HCU_RUN_ERROR_LEVEL_3_CRITICAL){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA] = zHcuRunErrCnt[TASK_ID_CLOUDVELA] - HCU_RUN_ERROR_LEVEL_3_CRITICAL;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] - HCU_RUN_ERROR_LEVEL_3_CRITICAL;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_CLOUDVELA, TASK_ID_CLOUDVELA, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
 	}
@@ -246,10 +244,10 @@ OPSTAT func_cloudvela_time_out_period(void)
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
 		//if (func_cloudvela_http_conn_setup() == SUCCESS){
 		if (socket_connected == TRUE && func_cloudvela_socket_conn_setup() == SUCCESS){
-			zHcuGlobalCounter.cloudVelaConnCnt++;
+			zHcuSysStaPm.statisCnt.cloudVelaConnCnt++;
 			//State Transfer to FSM_STATE_CLOUDVELA_ONLINE
 			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error Set FSM State!\n");
 				return FAILURE;
 			}
@@ -259,7 +257,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 			if (zHcuMemStorageBuf.offlineNbr>0){
 				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.cloudvelaHbBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error start timer!\n");
 					return FAILURE;
 				}
@@ -271,18 +269,18 @@ OPSTAT func_cloudvela_time_out_period(void)
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			}
-			zHcuGlobalCounter.cloudVelaConnFailCnt++;
+			zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt++;
 		}
 	}
 
 	//在线状态，则检查
 	else if(FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 		if (func_cloudvela_heart_beat_check() == FAILURE){
-			zHcuGlobalCounter.cloudVelaDiscCnt++;
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.statisCnt.cloudVelaDiscCnt++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
 			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error Set FSM State!\n");
 				return FAILURE;
 			}
@@ -296,20 +294,20 @@ OPSTAT func_cloudvela_time_out_period(void)
 
 			//如果当前是3G4G
 			if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
-					((zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
-							(zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
-							(zHcuHwinvTable.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
+					((zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
+							(zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
+							(zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
 				//如果还没有试图重连过
 				if ((zHcuCloudvelaTable.ethConTry == 0) || (zHcuCloudvelaTable.usbnetConTry == 0) || (zHcuCloudvelaTable.wifiConTry == 0)){
 					//Disconnect current 3g4g connection!!!
 					if (hcu_3g4g_phy_link_disconnect() == FAILURE){
-						zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 						HcuErrorPrint("CLOUDVELA: Error disconnect 3G4G link!\n");
 						return FAILURE;
 					}
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE){
-						zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 						HcuErrorPrint("CLOUDVELA: Error set FSM status!\n");
 						return FAILURE;
 					}
@@ -320,18 +318,18 @@ OPSTAT func_cloudvela_time_out_period(void)
 			}
 			//如果当前是WIFI
 			else if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
-				((zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
-						(zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
+				((zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
+						(zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
 				if ((zHcuCloudvelaTable.ethConTry == 0) || (zHcuCloudvelaTable.usbnetConTry == 0)){
 					//Disconnect current wifi connection!!!
 					if (hcu_wifi_phy_link_disconnect() == FAILURE){
-						zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 						HcuErrorPrint("CLOUDVELA: Error disconnect WIFI link!\n");
 						return FAILURE;
 					}
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE){
-						zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 						HcuErrorPrint("CLOUDVELA: Error set FSM status!\n");
 						return FAILURE;
 					}
@@ -342,17 +340,17 @@ OPSTAT func_cloudvela_time_out_period(void)
 			}
 			//如果当前是USBNET
 			else if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
-					(zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE)){
+					(zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE)){
 				if (zHcuCloudvelaTable.ethConTry == 0){
 					//Disconnect current usbnet connection!!!
 					if (hcu_usbnet_phy_link_disconnect() == FAILURE){
-						zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 						HcuErrorPrint("CLOUDVELA: Error disconnect USBNET link!\n");
 						return FAILURE;
 					}
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE){
-						zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 						HcuErrorPrint("CLOUDVELA: Error set FSM status!\n");
 						return FAILURE;
 					}
@@ -368,7 +366,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 			if (zHcuMemStorageBuf.offlineNbr>0){
 				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.cloudvelaHbBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error start timer!\n");
 					return FAILURE;
 				}
@@ -379,7 +377,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 	//既不在线，也不离线，强制转移到离线状态以便下次恢复，这种情况很难得，一般不会跑到这儿来，这种情况通常发生在初始化期间或者状态机胡乱的情况下
 	else{
 		if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error Set FSM State!\n");
 			return FAILURE;
 		}
@@ -401,7 +399,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		zHcuMemStorageBuf.offlineNbr = 0;
 		ret = hcu_timer_stop(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error stop timer!\n");
 			return FAILURE;
 		}
@@ -412,7 +410,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	 if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
 		ret = hcu_timer_stop(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error stop timer!\n");
 			return FAILURE;
 		}
@@ -423,7 +421,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
 	ret = hcu_read_from_storage_mem(&record);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuDebugPrint("CLOUDVELA: No any more off-line data shall be sent to CLOUD!\n");
 		return SUCCESS;
 	}
@@ -436,7 +434,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	//RECORD数据参数检查，这里只做最为基本的检查，
 	if ((record.equipid <=0) || (record.timestamp<=0) || (record.sensortype <=0) ||(record.onOffLine != DISC_DATA_SAMPLE_OFFLINE)){
 		HcuErrorPrint("CLOUDVELA: Invalid record read from MEM-DISC, dropped!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -450,7 +448,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	case L3CI_emc:
 		if (func_cloudvela_huanbao_emc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_emc_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.emcValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: EMC pack message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		break;
@@ -458,7 +456,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	case L3CI_pm25:
 		if (func_cloudvela_huanbao_pm25_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_pm25_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.pm1d0Value, record.pm2d5Value, record.pm10Value, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: PM25 pack message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		break;
@@ -466,7 +464,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	case L3CI_windspd:
 		if (func_cloudvela_huanbao_winddir_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_windspd_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.windspdValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: WINDSPD pack message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		break;
@@ -474,7 +472,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	case L3CI_winddir:
 		if (func_cloudvela_huanbao_windspd_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_winddir_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.winddirValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: WINDDIR pack message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		break;
@@ -482,7 +480,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	case L3CI_temp:
 		if (func_cloudvela_huanbao_temp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_temp_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.tempValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: TEMP pack message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		break;
@@ -490,7 +488,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	case L3CI_humid:
 		if (func_cloudvela_huanbao_humid_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_humid_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.humidValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: HUMID pack message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		break;
@@ -498,7 +496,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	case L3CI_noise:
 		if (func_cloudvela_huanbao_noise_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_noise_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.noiseValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: NOISE pack message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		break;
@@ -506,14 +504,14 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	case L3CI_hsmmp:
 		if (func_cloudvela_huanbao_hsmmp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_hsmmp_upload_req, L3CI_cmdid_back_type_period, record.equipid, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, record.hsmmpLink, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: HSMMP pack message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 		break;
 
 	default:
 		HcuErrorPrint("CLOUDVELA: Not known sensor type MEM storage data found!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		//break;
 	}
 
@@ -521,7 +519,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send off-line data to back cloud error!\n");
 			return FAILURE;
 		}
@@ -541,7 +539,7 @@ OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
 		if(zHcuEthConClientFd < 0){
 				HcuErrorPrint("CLOUDVELA: socket id is not valid!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 		}
 	}
@@ -550,7 +548,7 @@ OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
 	if (send(zHcuEthConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen)
 	{
 		HcuErrorPrint("CLOUDVELA: Socket disconnected & Mismatch in number of send bytes!\n\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 	}
 	else
 	{
@@ -568,10 +566,10 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 	cmdId = L3CI_hcu_inventory;
 	backType = L3CI_cmdid_back_type_period;
     optId = L3PO_hcuinventory_report;
-    zHcuInventoryInfo.hw_type = zHcuSysEngPar.hwBurnId.hwType;
-    zHcuInventoryInfo.hw_version = zHcuSysEngPar.hwBurnId.hwPemId;
-    zHcuInventoryInfo.sw_release = zHcuSysEngPar.hwBurnId.swRelId;
-    zHcuInventoryInfo.sw_delivery = zHcuSysEngPar.hwBurnId.swVerId;
+    zHcuSysEngPar.swDbInvInfo.hw_type = zHcuSysEngPar.hwBurnId.hwType;
+    zHcuSysEngPar.swDbInvInfo.hw_version = zHcuSysEngPar.hwBurnId.hwPemId;
+    zHcuSysEngPar.swDbInvInfo.sw_release = zHcuSysEngPar.hwBurnId.swRelId;
+    zHcuSysEngPar.swDbInvInfo.sw_delivery = zHcuSysEngPar.hwBurnId.swVerId;
 
 	// send resp msg to cloud
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -579,16 +577,16 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 		CloudDataSendBuf_t buf;
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 		//打包数据
-		if (FAILURE == func_cloudvela_huanbao_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &zHcuInventoryInfo, &buf))
+		if (FAILURE == func_cloudvela_huanbao_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &zHcuSysEngPar.swDbInvInfo, &buf))
 		{
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			//return FAILURE;
 		}
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Online state, send HCU Inventory Resp to cloud failure!\n");
 			return FAILURE;
 		}
@@ -608,7 +606,7 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 	memset(&rcv, 0, sizeof(msg_struct_emc_cloudvela_data_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_emc_cloudvela_data_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive EMC message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -616,7 +614,7 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 	//参数检查
 	if ((rcv.emc.equipid <= 0) || (rcv.usercmdid != L3CI_emc) || (rcv.emc.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -630,20 +628,20 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 		if (func_cloudvela_huanbao_emc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
 				rcv.emc.equipid, rcv.emc.dataFormat, rcv.emc.emcValue, rcv.emc.gps.gpsx, rcv.emc.gps.gpsy, rcv.emc.gps.gpsz, rcv.emc.gps.ns, rcv.emc.gps.ew, rcv.emc.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}else{
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get EMC by ONLINE, but back off line so quick!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -662,7 +660,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_data_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_data_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive PM25_RESP message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -670,7 +668,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	//参数检查
 	if ((rcv.pm25.equipid <= 0) || (rcv.usercmdid != L3CI_pm25) || (rcv.pm25.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -685,19 +683,19 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pm1d0Value, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
 				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get PM25 by ONLINE, but back off line so quick!");
 		return FAILURE;
 	}
@@ -718,7 +716,7 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	memset(&rcv, 0, sizeof(msg_struct_winddir_cloudvela_data_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_winddir_cloudvela_data_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive WIND_DIR_RESP message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -726,7 +724,7 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	//参数检查
 	if ((rcv.winddir.equipid <= 0) || (rcv.usercmdid != L3CI_winddir) || (rcv.winddir.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -740,19 +738,19 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		if (func_cloudvela_huanbao_winddir_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.winddir.equipid,
 				rcv.winddir.dataFormat, rcv.winddir.winddirValue, rcv.winddir.gps.gpsx, rcv.winddir.gps.gpsy, rcv.winddir.gps.gpsz, rcv.winddir.gps.ns, rcv.winddir.gps.ew, rcv.winddir.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get WINDDIR by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -772,7 +770,7 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	memset(&rcv, 0, sizeof(msg_struct_windspd_cloudvela_data_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_windspd_cloudvela_data_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive WINDSPD message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -780,7 +778,7 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	//参数检查
 	if ((rcv.windspd.equipid <= 0) || (rcv.usercmdid != L3CI_windspd) || (rcv.windspd.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -794,19 +792,19 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		if (func_cloudvela_huanbao_windspd_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.windspd.equipid,
 				rcv.windspd.dataFormat, rcv.windspd.windspdValue, rcv.windspd.gps.gpsx, rcv.windspd.gps.gpsy, rcv.windspd.gps.gpsz, rcv.windspd.gps.ns, rcv.windspd.gps.ew, rcv.windspd.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get WINDSPD by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -826,7 +824,7 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&rcv, 0, sizeof(msg_struct_temp_cloudvela_data_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_cloudvela_data_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive TEMPERATURE message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -834,7 +832,7 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	//参数检查
 	if ((rcv.temp.equipid <= 0) || (rcv.usercmdid != L3CI_temp) || (rcv.temp.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -848,19 +846,19 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		if (func_cloudvela_huanbao_temp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.temp.equipid,
 				rcv.temp.dataFormat, rcv.temp.tempValue, rcv.temp.gps.gpsx, rcv.temp.gps.gpsy, rcv.temp.gps.gpsz, rcv.temp.gps.ns, rcv.temp.gps.ew, rcv.temp.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get TEMPERATURE by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -880,7 +878,7 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	memset(&rcv, 0, sizeof(msg_struct_humid_cloudvela_data_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_humid_cloudvela_data_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive HUMIDITY message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -888,7 +886,7 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	//参数检查
 	if ((rcv.humid.equipid <= 0) || (rcv.usercmdid != L3CI_humid) || (rcv.humid.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -902,19 +900,19 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		if (func_cloudvela_huanbao_humid_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.humid.equipid,
 				rcv.humid.dataFormat, rcv.humid.humidValue, rcv.humid.gps.gpsx, rcv.humid.gps.gpsy, rcv.humid.gps.gpsz, rcv.humid.gps.ns, rcv.humid.gps.ew, rcv.humid.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get HUMIDITY by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -934,7 +932,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	memset(&rcv, 0, sizeof(msg_struct_noise_cloudvela_data_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_cloudvela_data_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive NOISE message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -942,7 +940,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	//参数检查
 	if ((rcv.noise.equipid <= 0) || (rcv.usercmdid != L3CI_noise) || (rcv.noise.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -956,19 +954,19 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		if (func_cloudvela_huanbao_noise_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.noise.equipid,
 				rcv.noise.dataFormat, rcv.noise.noiseValue, rcv.noise.gps.gpsx, rcv.noise.gps.gpsy, rcv.noise.gps.gpsz, rcv.noise.gps.ns, rcv.noise.gps.ew, rcv.noise.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -996,7 +994,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_data_link_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_data_link_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive HSMMP message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -1004,7 +1002,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 	//检查参数
 	if ((rcv.link.linkName == NULL) || ((strlen(rcv.link.linkName) > HCU_FILE_NAME_LENGTH_MAX))){
 		HcuErrorPrint("HSMMP: Error parameter message received!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1018,19 +1016,19 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 		if (func_cloudvela_huanbao_hsmmp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
 				rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, rcv.link.linkName, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get HSMMP by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -1069,13 +1067,13 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	//检查任务模块状态
 	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_OFFLINE){
 		HcuErrorPrint("CLOUDVELA: Error task status, can not setup new connection with cloud!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	//第一次初始化，或者重新初始化全局HTTP-CURL链路
 	if (hcu_cloudvela_http_link_init() == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("ETHERNET: Init Curl Http link failure!\n");
 		return FAILURE;
 	}
@@ -1083,11 +1081,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	//调用后台模块提供的函数，进行连接建立
 	//第一优先级：连接ETHERNET
 	//当前的情况下，ETHERNET物理链路的确啥都不干，只是回复成功，未来可以挂载更多的物理链路处理过程在其中
-	if (zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+	if (zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 		ret = hcu_ethernet_phy_link_setup();
 	}
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		zHcuCloudvelaTable.ethConTry++;
 	}
 	if (ret == SUCCESS){
@@ -1097,11 +1095,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 
 	//第二优先级：连接USBNET
-	if (zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+	if (zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 		ret = hcu_usbnet_phy_link_setup();
 	}
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		zHcuCloudvelaTable.usbnetConTry++;
 	}
 	if (ret == SUCCESS){
@@ -1111,11 +1109,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 
 	//第三优先级：连接WIFI
-	if (zHcuHwinvTable.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+	if (zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 		ret = hcu_wifi_phy_link_setup();
 	}
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		zHcuCloudvelaTable.wifiConTry++;
 	}
 	if (ret == SUCCESS){
@@ -1125,12 +1123,12 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 
 	//第四优先级：连接3G4G
-	if (zHcuHwinvTable.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+	if (zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 		ret = hcu_3g4g_phy_link_setup();
 
 	}
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		zHcuCloudvelaTable.g3g4ConTry++;
 	}
 	if (ret == SUCCESS){
@@ -1146,7 +1144,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
 	}
-	zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 	return FAILURE;
 }
 
@@ -1171,7 +1169,7 @@ OPSTAT func_cloudvela_heart_beat_check(void)
 
 		//打包数据
 		if (func_cloudvela_huanbao_heart_beat_msg_pack(&buf) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
@@ -1179,12 +1177,12 @@ OPSTAT func_cloudvela_heart_beat_check(void)
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send HEART_BEAT to cloud, get by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -1209,7 +1207,7 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 
 		//打包数据
 		if (func_cloudvela_huanbao_cmd_control_msg_pack(&buf) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
@@ -1224,12 +1222,12 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Can not send CMD CONTROL CHECK to cloud due to offline status!\n");
 		return FAILURE;
 	}
@@ -1251,12 +1249,12 @@ OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 	//先检查输入数据的合法性，以下三项必须填写，其它的无所谓
 	if (((record->sensortype)<=0) || ((record->timestamp)<=0)){
 		HcuErrorPrint("CLOUDVELA: Error input of data save to memory, on Sensor type or Time stamp!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	if (((record->onOffLine) != DISC_DATA_SAMPLE_ONLINE) && ((record->onOffLine) != DISC_DATA_SAMPLE_OFFLINE)){
 		HcuErrorPrint("CLOUDVELA: Error input of data save to memory, on on/off line attribute!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1312,7 +1310,7 @@ OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 	//先检查输入数据的合法性，以下三项必须填写，其它的无所谓
 	//总控数量优先
 	if (totalNbr <=0 ){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1347,7 +1345,7 @@ OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 	//所以没有读到数据的情形，也得当正常情形来看待，而不能当出错，不然处理方式就不对
 	if (flag == FALSE){
 		HcuDebugPrint("CLOUDVELA: Data read nothing, rdCnt=%d, totalNbr = %d, offNbr=%d\n", readCnt, totalNbr, zHcuMemStorageBuf.offlineNbr);
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1382,7 +1380,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	//参数检查
 	if ((buf->curLen <=0) || (buf->curLen >MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error message length to send back for cloud!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1390,34 +1388,34 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		if (hcu_ethernet_date_send(buf) == FAILURE){
 		//if (hcu_ethernet_socket_date_send(buf) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
 	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET){
 		if (hcu_usbnet_data_send(buf) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
 	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI){
 		if (hcu_wifi_data_send(buf) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
 	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G){
 		if (hcu_3g4g_data_send(buf) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}
 	else {
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error status of physical layer link for data send!\n");
 		return FAILURE;
 	}
@@ -1441,20 +1439,20 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 {
 	//参数检查
 	if ((param_len <=0) || (param_len >MAX_HCU_MSG_BODY_LENGTH)){
-		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	if (param_ptr == NULL){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 		return FAILURE;
 	}
 
 	//连接态
 	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -1463,8 +1461,8 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	msg_struct_com_cloudvela_data_rx_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_com_cloudvela_data_rx_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_cloudvela_data_rx_t))){
-		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1472,7 +1470,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	rcv.length = param_len;
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskInfo[src_id].taskName);
+		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
 		//int i;
 		//for(i =0; i<rcv.length; i++) HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskInfo[src_id].taskName);
 	}
@@ -1481,8 +1479,8 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
 	{
 		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -1491,8 +1489,8 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
 	{
 		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -1500,7 +1498,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	//非法格式
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
 		return FAILURE;
 	}
@@ -1512,7 +1510,7 @@ OPSTAT fsm_cloudvela_usbnet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 {
 	//连接态
 	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -1524,7 +1522,7 @@ OPSTAT fsm_cloudvela_wifi_data_rx(UINT32 dest_id, UINT32 src_id, void * param_pt
 {
 	//连接态
 	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -1536,7 +1534,7 @@ OPSTAT fsm_cloudvela_3g4g_data_rx(UINT32 dest_id, UINT32 src_id, void * param_pt
 {
 	//连接态
 	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -1554,7 +1552,7 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
 	memset(&rcv, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t))){
 		HcuErrorPrint("CLOUDVELA: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -1564,7 +1562,7 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
 	else if ((rcv.wifiStatChg == HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.wifiStatChg == HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.wifiConTry = 0;
 	else if ((rcv.g3g4StatChg == HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.g3g4StatChg == HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.g3g4ConTry = 0;
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Message received with error content!\n");
 		return FAILURE;
 	}
@@ -1606,20 +1604,20 @@ OPSTAT func_cloudvela_heart_beat_received_handle(void)
 	//FSM状态检查
 	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_ONLINE){
 		HcuErrorPrint("CLOUDVELA: FSM State error, taking care of potential risk!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	//HW状态检查，心跳的意义
-	if ((zHcuHwinvTable.ethernet.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE) && (zHcuHwinvTable.usbnet.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE)\
-			&&(zHcuHwinvTable.wifi.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE) && (zHcuHwinvTable.g3g4.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE)){
+	if ((zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE) && (zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE)\
+			&&(zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE) && (zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE)){
 		if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Set FSM state error!\n");
 			return FAILURE;
 		}
 		HcuErrorPrint("CLOUDVELA: Hardware ETH/USBNET/WIFI/3G4G connection state error, taking care of potential risk!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1741,7 +1739,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_control_fb_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_control_fb_t))){
 		HcuErrorPrint("CLOUDVELA: Receive PM25_CMD_RESP message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -1749,7 +1747,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	//参数检查
 	if ((rcv.opt.equId <= 0) || (rcv.cmdId != L3CI_pm25)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 /*
@@ -1764,19 +1762,19 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 				rcv.pm25.equipid, rcv.pm25.pm1d0Value, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
 				rcv.pm25.gps.gpsz, rcv.pm25.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get PM25 by ONLINE, but back off line so quick!");
 		return FAILURE;
 	}
@@ -1808,19 +1806,19 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 				rcv.opt.equId, rcv.opt.powerOnOff, rcv.opt.interSample, rcv.opt.meausTimes, rcv.opt.newEquId, rcv.opt.workCycle, &buf) == FAILURE)
 		{
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get PM25 by ONLINE, but back off line so quick!");
 		return FAILURE;
 	}
@@ -1874,7 +1872,7 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 	memset(&rcv, 0, sizeof(msg_struct_alarm_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_alarm_report_t))){
 		HcuErrorPrint("CLOUDVELA: Receive Alarm message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -1882,13 +1880,13 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 	//参数检查
 	if ((rcv.equID <= 0) || (rcv.usercmdid != L3CI_alarm) || (rcv.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	if(dbi_HcuSysAlarmInfo_save(&rcv) == FAILURE)
 	{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Can not save data into database!\n");
 	}
 
@@ -1902,19 +1900,19 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		if (func_cloudvela_huanbao_alarm_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get ALARM by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -1935,7 +1933,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	memset(&rcv, 0, sizeof(msg_struct_pm_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm_report_t))){
 		HcuErrorPrint("CLOUDVELA: Receive PM message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -1943,7 +1941,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	//参数检查
 	if ((rcv.usercmdid != L3CI_performance) || (rcv.timeStamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1957,19 +1955,19 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		//打包数据
 		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.CloudVelaConnCnt, rcv.CloudVelaConnFailCnt, rcv.CloudVelaDiscCnt, rcv.SocketDiscCnt, rcv.TaskRestartCnt, rcv.cpu_occupy, rcv.mem_occupy, rcv.disk_occupy, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get PM by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -1990,7 +1988,7 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t))){
 		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -1998,7 +1996,7 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 	//参数检查
 	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2012,19 +2010,19 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
 				rcv.dataFormat, rcv.modbusVal, 0, NULL, rcv.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -2046,7 +2044,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_report_t))){
 		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -2054,7 +2052,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 	//参数检查
 	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2068,19 +2066,19 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
 				rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -2098,14 +2096,14 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 {
 	//参数检查
 	if ((param_len <=0) || (param_len >MAX_HCU_MSG_BODY_LENGTH)){
-		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	if (param_ptr == NULL){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 		return FAILURE;
 	}
 
@@ -2113,8 +2111,8 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	msg_struct_com_cloudvela_data_rx_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_com_cloudvela_data_rx_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_cloudvela_data_rx_t))){
-		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2122,15 +2120,15 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	rcv.length = param_len;
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuTaskInfo[src_id].taskName);
+		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
 	}
 
 	//如果是XML自定义格式
 	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
 	{
 		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -2139,8 +2137,8 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
 	{
 		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuTaskInfo[src_id].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -2148,7 +2146,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	//非法格式
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
 		return FAILURE;
 	}
@@ -2179,18 +2177,18 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	//检查任务模块状态
 	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_OFFLINE){
 		HcuErrorPrint("CLOUDVELA: Error task status, can not setup new connection with cloud!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	//调用后台模块提供的函数，进行连接建立
 	//第一优先级：连接ETHERNET
 	//当前的情况下，ETHERNET物理链路的确啥都不干，只是回复成功，未来可以挂载更多的物理链路处理过程在其中
-	if (zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+	if (zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 		ret = hcu_ethernet_phy_link_setup();
 	}
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		zHcuCloudvelaTable.ethConTry++;
 	}
 	if (ret == SUCCESS){
@@ -2200,11 +2198,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 
 	//第二优先级：连接USBNET
-	if (zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+	if (zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 		ret = hcu_usbnet_phy_link_setup();
 	}
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		zHcuCloudvelaTable.usbnetConTry++;
 	}
 	if (ret == SUCCESS){
@@ -2214,11 +2212,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 
 	//第三优先级：连接WIFI
-	if (zHcuHwinvTable.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+	if (zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 		ret = hcu_wifi_phy_link_setup();
 	}
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		zHcuCloudvelaTable.wifiConTry++;
 	}
 	if (ret == SUCCESS){
@@ -2228,12 +2226,12 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 
 	//第四优先级：连接3G4G
-	if (zHcuHwinvTable.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+	if (zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 		ret = hcu_3g4g_phy_link_setup();
 
 	}
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		zHcuCloudvelaTable.g3g4ConTry++;
 	}
 	if (ret == SUCCESS){
@@ -2249,7 +2247,7 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
 	}
-	zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 	return FAILURE;
 }
 

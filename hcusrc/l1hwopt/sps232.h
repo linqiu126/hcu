@@ -24,7 +24,7 @@ enum FSM_STATE_SPS232
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmSps232[];
+extern HcuFsmStateItem_t HcuFsmSps232[];
 extern float zHcuSps232Pm25Sharp;
 extern float zHcuSps232HchoZe08ch2o;
 

@@ -17,7 +17,7 @@
 /*
 ** FSM of the L3NBHPM
 */
-FsmStateItem_t HcuFsmL3nbhpm[] =
+HcuFsmStateItem_t HcuFsmL3nbhpm[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -47,7 +47,7 @@ FsmStateItem_t HcuFsmL3nbhpm[] =
 };
 
 //Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -75,7 +75,7 @@ OPSTAT fsm_l3nbhpm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_L3NBHPM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("L3NBHPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3NBHPM].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("L3NBHPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun[TASK_ID_L3NBHPM].taskName, zHcuSysCrlTab.taskRun[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -93,19 +93,19 @@ OPSTAT fsm_l3nbhpm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_L3NBHPM] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM] = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_L3NBHPM, TIMER_ID_1S_L3NBHPM_PERIOD_READ, HCU_L3NBHPM_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_L3NBHPM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM]++;
 		HcuErrorPrint("L3NBHPM: Error start period timer!\n");
 		return FAILURE;
 	}
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3NBHPM, FSM_STATE_L3NBHPM_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_L3NBHPM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM]++;
 		HcuErrorPrint("L3NBHPM: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -120,7 +120,7 @@ OPSTAT fsm_l3nbhpm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 OPSTAT fsm_l3nbhpm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("L3NBHPM: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_l3nbhpm_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -140,22 +140,22 @@ OPSTAT fsm_l3nbhpm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("L3NBHPM: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_L3NBHPM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_L3NBHPM]是否超限
-	if (zHcuRunErrCnt[TASK_ID_L3NBHPM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_L3NBHPM] = zHcuRunErrCnt[TASK_ID_L3NBHPM] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_L3NBHPM, TASK_ID_L3NBHPM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_L3NBHPM]++;
-			HcuErrorPrint("L3NBHPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_L3NBHPM].taskName, zHcuTaskInfo[TASK_ID_L3NBHPM].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM]++;
+			HcuErrorPrint("L3NBHPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun[TASK_ID_L3NBHPM].taskName, zHcuSysCrlTab.taskRun[TASK_ID_L3NBHPM].taskName);
 			return FAILURE;
 		}
 	}
@@ -166,7 +166,7 @@ OPSTAT fsm_l3nbhpm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 		if (FsmGetState(TASK_ID_L3NBHPM) != FSM_STATE_L3NBHPM_ACTIVED){
 			ret = FsmSetState(TASK_ID_L3NBHPM, FSM_STATE_L3NBHPM_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_L3NBHPM]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3NBHPM]++;
 				HcuErrorPrint("L3NBHPM: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState

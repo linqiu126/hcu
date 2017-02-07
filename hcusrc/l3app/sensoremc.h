@@ -28,7 +28,7 @@ enum FSM_STATE_EMC
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmEmc[];
+extern HcuFsmStateItem_t HcuFsmEmc[];
 
 typedef struct SensorEmcInfo
 {

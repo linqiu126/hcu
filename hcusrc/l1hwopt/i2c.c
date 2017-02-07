@@ -12,7 +12,7 @@
 /*
 ** FSM of the I2C
 */
-FsmStateItem_t HcuFsmI2c[] =
+HcuFsmStateItem_t HcuFsmI2c[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -70,7 +70,7 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_I2C, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("I2C: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_I2C].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("I2C: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_I2C].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -88,7 +88,7 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_I2C] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C] = 0;
 	zHcuI2cTempSht20 = HCU_SENSOR_VALUE_NULL;
 	zHcuI2cHumidSht20 = HCU_SENSOR_VALUE_NULL;
 	zHcuI2cLightstrBh1750 = HCU_SENSOR_VALUE_NULL;
@@ -99,7 +99,7 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_I2C, FSM_STATE_I2C_ACTIVIED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_I2C]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 		HcuErrorPrint("I2C: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -141,7 +141,7 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 OPSTAT fsm_i2c_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("I2C: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_i2c_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -164,7 +164,7 @@ OPSTAT func_i2c_read_data_sht20(void)
 
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_SHT20))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
-		zHcuRunErrCnt[TASK_ID_I2C]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 		return FAILURE;
 	}
 
@@ -213,14 +213,14 @@ OPSTAT func_i2c_read_data_bh1750(void)
 	if(fd<0)
 	{
 		HcuErrorPrint("I2C: err open file:%s\n", strerror(errno));
-		zHcuRunErrCnt[TASK_ID_I2C]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 		return FAILURE;
 	}
 	//控制寄存器对应的设备
 	if(ioctl(fd, I2C_SLAVE, RPI_I2C_ADDR_BH1750)<0 )
 	{
 		HcuErrorPrint("I2C: ioctl error : %s\n", strerror(errno));
-		zHcuRunErrCnt[TASK_ID_I2C]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 		close(fd);
 		return FAILURE;
 	}
@@ -229,14 +229,14 @@ OPSTAT func_i2c_read_data_bh1750(void)
 	if(write(fd, &val,1)<0)
 	{
 		//HcuErrorPrint("I2C: write 0x01 err\n");
-		zHcuRunErrCnt[TASK_ID_I2C]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 	}
 
 	val=0x10;
 	if(write(fd, &val,1)<0)
 	{
 		//HcuErrorPrint("I2C: write 0x10 err\n");
-		zHcuRunErrCnt[TASK_ID_I2C]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 	}
 
 	int i=0;
@@ -255,7 +255,7 @@ OPSTAT func_i2c_read_data_bh1750(void)
 		else
 		{
 			HcuErrorPrint("I2C: read light error\n");
-			zHcuRunErrCnt[TASK_ID_I2C]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 			close(fd);
 			return FAILURE;
 		}
@@ -287,7 +287,7 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	float coef;
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMP180))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
-		zHcuRunErrCnt[TASK_ID_I2C]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 		return FAILURE;
 	}
 
@@ -384,7 +384,7 @@ OPSTAT func_i2c_read_data_bmpd300(void)
 	float pm25Sum;
 	if((fd=wiringPiI2CSetup(RPI_I2C_ADDR_BMPD300))<0){
 		HcuDebugPrint("I2C: can't find i2c!!\n");
-		zHcuRunErrCnt[TASK_ID_I2C]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C]++;
 		return FAILURE;
 	}
 

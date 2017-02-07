@@ -90,7 +90,7 @@ UINT8 TraceWillBeDisplayed = HCU_LOGIC_TRUE;
 static pthread_t HcuMainLoopThreadId;
 
 /* System Information */
-extern SysInfo_t zHcuHwinvGlobalSysInfo;
+extern SysInfo_t zHcuVmCtrTab.sysInfo;
 
 /* GPRS module checking MAX time */
 GprsPppdConf_t gGprsPppdConf;
@@ -1595,7 +1595,7 @@ void PrintHwSwInfo()
 	/* !!! !!! !!! !!! */
 	//UINT32 ret = 0;
 
-	memset(&zHcuHwinvGlobalSysInfo, 0xFF, sizeof(SysInfo_t));
+	memset(&zHcuVmCtrTab.sysInfo, 0xFF, sizeof(SysInfo_t));
 
 	HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
 	HcuDebugPrint("********************************************************************\n"); /* prints !!!Hello World!!! */
@@ -1613,7 +1613,7 @@ void PrintHwSwInfo()
 
 	HcuDebugPrint(" == SYSINFO ==\n"); /* prints !!!Hello World!!! */
 
-	HcuGetSysInfo(&zHcuHwinvGlobalSysInfo, TRUE);
+	HcuGetSysInfo(&zHcuVmCtrTab.sysInfo, TRUE);
 	/* !!! !!! !!! !!! */
 }
 

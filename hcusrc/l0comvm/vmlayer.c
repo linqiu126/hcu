@@ -14,12 +14,9 @@
  *
  */
 
-HcuTaskTag_t 		zHcuTaskInfo[MAX_TASK_NUM_IN_ONE_HCU];  	//任务总控表
-HcuCurrentTaskTag_t zHcuCurrentProcessInfo;     				//记录当前进程信息
-UINT32 				zHcuRunErrCnt[MAX_TASK_NUM_IN_ONE_HCU];   	//记录所有任务模块工作差错的次数，以便适当处理
-HcuGlobalCounter_t 	zHcuGlobalCounter;  						//定义全局计数器COUNTER
-HcuSysEngParTable_t zHcuSysEngPar; 								//全局工程参数控制表
-
+HcuVmCtrTab_t 		zHcuVmCtrTab;  		//全局系统总控表
+HcuSysEngParTab_t 	zHcuSysEngPar; 		//全局工程参数控制表
+HcuSysStaPm_t		zHcuSysStaPm;		//全局性能统计表
 
 /*
  *
@@ -30,7 +27,7 @@ HcuSysEngParTable_t zHcuSysEngPar; 								//全局工程参数控制表
 //请确保，该全局字符串的定义跟Task_Id的顺序保持完全一致，不然后面的显示内容会出现差错， 请服从最长长度TASK_NAME_MAX_LENGTH的定义，不然Debug/Trace打印出的信息也会出错
 //从极致优化内存的角度，这里浪费了2个TASK对应的内存空间（MIN=0/MAX=n+1)，但它却极大的改善了程序编写的效率，值得浪费！！！
 //NULL条目保留，是为了初始化TASK NAME这一属性
-StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
+HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 {
 	//TASK_ID,              状态控制             状态机入口                 TRACE标志位                   注释
 	{TASK_ID_MIN,           "TASKMIN",          NULL,                    0, 0, 0, 0, 0},              //Starting
@@ -140,12 +137,9 @@ StrHcuGlobalTaskInputConfig_t zHcuGlobalTaskInputConfig[] =
 	{TASK_ID_MAX,       "TASKMAX",              NULL,                    0, 0, 0, 0, 0},                  //Ending
 };
 
-//任务状态机FSM全局控制表，占用内存的大户！！！
-FsmTable_t zHcuFsmTable;
-
 //消息ID的定义全局表，方便TRACE函数使用
 //请服从MSG_NAME_MAX_LENGTH的最长定义，不然出错
-StrHcuGlobalMsgIdCfg_t zHcuMsgNameList[] ={
+HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	//MSG_ID                                      MsgName                                       TRACE_FLAG   注释
 	{MSG_ID_COM_MIN,                              "MSG_ID_COM_MIN",                             0, 0, 0},    //STARTING
 	{MSG_ID_COM_INIT,                             "MSG_ID_COM_INIT",                            1, 1, 1},
@@ -327,7 +321,7 @@ StrHcuGlobalMsgIdCfg_t zHcuMsgNameList[] ={
 };
 
 //启动区XML关键字定义
-StrHcuPhyBootCfg_t zHcuXmlBootPhyCfgHead[] = {
+HcuSysEngPhyBootCfg_t zHcuSysEngPhyBootCfg[] = {
 	{0,   	"<xml>", 				    "</xml>"},
 	{20,  	"<equLable>",               "</equLable>"},
 	{2,		"<hwType>",                 "</hwType>"},
@@ -374,35 +368,37 @@ StrHcuPhyBootCfg_t zHcuXmlBootPhyCfgHead[] = {
  */
 
 //INIT the whole system
-OPSTAT hcu_vm_system_init(void)
+OPSTAT hcu_vm_system_ctr_table_init(void)
 {
+	int i=0;
+
 	//INIT HCU itself
 	HcuDebugPrint("HCU-VM: User task starting, compiled load Info: CURRENT_PRJ=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[%d], SW_REL=[%d], SW_DELIVER=[%d].\n", \
 			HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, HCU_HARDWARE_PRODUCT_CAT_TYPE, HCU_CURRENT_HW_TYPE, HCU_CURRENT_SW_RELEASE, HCU_CURRENT_SW_DELIVERY);
 	HcuDebugPrint("HCU-VM: BXXH(TM) HCU(c) Application Layer start and initialized, build at %s, %s.\n", __DATE__, __TIME__);
 
-	//初始化全局变量TASK_ID/QUE_ID/TASK_STAT
+	//初始化全局总控表(1)
 	if (TASK_ID_MAX > MAX_TASK_NUM_IN_ONE_HCU){
 		HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, configuration of MAX_TASK_NUM_IN_ONE_HCU error!\n");
 		return FAILURE;
 	}
-	memset(zHcuTaskInfo, 0, sizeof(zHcuTaskInfo));
-	int i=0;
+	memset(&zHcuVmCtrTab, 0, sizeof(HcuVmCtrTab_t));
 	for (i=TASK_ID_MIN; i<TASK_ID_MAX; i++){
-		zHcuTaskInfo[i].TaskId = i;
-		zHcuTaskInfo[i].pnpState = HCU_TASK_PNP_INIT;
+		zHcuVmCtrTab.task[i].TaskId = i;
+		zHcuVmCtrTab.task[i].pnpState = HCU_TASK_PNP_INIT;
 	}
-	memset(&zHcuCurrentProcessInfo, 0, sizeof(HcuCurrentTaskTag_t));
-	memset(zHcuRunErrCnt, 0, sizeof(UINT32)*(TASK_ID_MAX-TASK_ID_MIN+1));
+
+	//初始化全局工参表(2)
+	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTab_t));
+
+	//初始化全局统计性能表(3)
+	memset(&zHcuSysStaPm, 0, sizeof(HcuSysStaPm_t));
 
 	//TrACE INIT
 	TraceInit();
 
 	//Init Fsm
 	FsmInit();
-
-	//初始化工参
-	memset(&zHcuSysEngPar, 0, sizeof(HcuSysEngParTable_t));
 
 	return SUCCESS;
 }
@@ -415,57 +411,57 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	UINT32 taskid = 0;
 
 	//先从工程参数中读取配置信息到任务表
-	zHcuTaskInfo[TASK_ID_ETHERNET].pnpState = zHcuSysEngPar.comm.commHwBoardEthernet;
-	zHcuTaskInfo[TASK_ID_USBNET].pnpState = zHcuSysEngPar.comm.commHwBoardUsbnet;
-	zHcuTaskInfo[TASK_ID_WIFI].pnpState = zHcuSysEngPar.comm.commHwBoardWifi;
-	zHcuTaskInfo[TASK_ID_3G4G].pnpState = zHcuSysEngPar.comm.commHwBoard3g4g;
-	zHcuTaskInfo[TASK_ID_GPS].pnpState = zHcuSysEngPar.comm.commHwBoardGps;
-	zHcuTaskInfo[TASK_ID_LCD].pnpState = zHcuSysEngPar.comm.commHwBoardLcd;
-	zHcuTaskInfo[TASK_ID_LED].pnpState = zHcuSysEngPar.comm.commHwBoardLed;
-	zHcuTaskInfo[TASK_ID_ZEEGBE].pnpState = zHcuSysEngPar.comm.commHwBoardZeegbe;
-	zHcuTaskInfo[TASK_ID_FLASH].pnpState = zHcuSysEngPar.comm.commHwBoardFlash;
-	zHcuTaskInfo[TASK_ID_MODBUS].pnpState = zHcuSysEngPar.comm.commFrameModbus;
-	zHcuTaskInfo[TASK_ID_SPSVIRGO].pnpState = zHcuSysEngPar.comm.commFrameSpsvirgo;
-	zHcuTaskInfo[TASK_ID_AVORION].pnpState = zHcuSysEngPar.comm.commFrameAvorion;
-	zHcuTaskInfo[TASK_ID_CLOUDVELA].pnpState = zHcuSysEngPar.comm.commFrameCloudvela;
-	zHcuTaskInfo[TASK_ID_I2CBUSLIBRA].pnpState = zHcuSysEngPar.comm.commFrameI2cbuslibra;
-	zHcuTaskInfo[TASK_ID_SPIBUSARIES].pnpState = zHcuSysEngPar.comm.commFrameSpibusaries;
-	zHcuTaskInfo[TASK_ID_NBIOTCJ188].pnpState = zHcuSysEngPar.comm.commFrameNbiotcj188;
-	zHcuTaskInfo[TASK_ID_NBIOTQG376].pnpState = zHcuSysEngPar.comm.commFrameNbiotqg376;
-	zHcuTaskInfo[TASK_ID_SPS485].pnpState = zHcuSysEngPar.comm.commFrontSps485;
-	zHcuTaskInfo[TASK_ID_SPS232].pnpState = zHcuSysEngPar.comm.commFrontSps232;
-	zHcuTaskInfo[TASK_ID_MICROPHONE].pnpState = zHcuSysEngPar.comm.commFrontMicrophone;
-	zHcuTaskInfo[TASK_ID_CAMERA].pnpState = zHcuSysEngPar.comm.commFrontCamera;
-	zHcuTaskInfo[TASK_ID_BLE].pnpState = zHcuSysEngPar.comm.commFrontBle;
-	zHcuTaskInfo[TASK_ID_EMC].pnpState = zHcuSysEngPar.comm.commFrontSensorEmc;
-	zHcuTaskInfo[TASK_ID_PM25].pnpState = zHcuSysEngPar.comm.commFrontSensorPm25;
-	zHcuTaskInfo[TASK_ID_TEMP].pnpState = zHcuSysEngPar.comm.commFrontSensorTemp;
-	zHcuTaskInfo[TASK_ID_HUMID].pnpState = zHcuSysEngPar.comm.commFrontSensorHumid;
-	zHcuTaskInfo[TASK_ID_WINDDIR].pnpState = zHcuSysEngPar.comm.commFrontSensorWinddir;
-	zHcuTaskInfo[TASK_ID_WINDSPD].pnpState = zHcuSysEngPar.comm.commFrontSensorWindspd;
-	zHcuTaskInfo[TASK_ID_NOISE].pnpState = zHcuSysEngPar.comm.commFrontSensorNoise;
-	zHcuTaskInfo[TASK_ID_HSMMP].pnpState = zHcuSysEngPar.comm.commFrontSensorHsmmp;
-	zHcuTaskInfo[TASK_ID_PM25SHARP].pnpState = zHcuSysEngPar.comm.commFrontSensorPm25Sharp;
-	zHcuTaskInfo[TASK_ID_IWM].pnpState = zHcuSysEngPar.comm.commFrontSensorIwm;
-	zHcuTaskInfo[TASK_ID_IHM].pnpState = zHcuSysEngPar.comm.commFrontSensorIhm;
-	zHcuTaskInfo[TASK_ID_IGM].pnpState = zHcuSysEngPar.comm.commFrontSensorIgm;
-	zHcuTaskInfo[TASK_ID_IPM].pnpState = zHcuSysEngPar.comm.commFrontSensorIpm;
-	zHcuTaskInfo[TASK_ID_CANITFLEO].pnpState = zHcuSysEngPar.comm.commFrontCanitf;
+	zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState = zHcuSysEngPar.comm.commHwBoardEthernet;
+	zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState = zHcuSysEngPar.comm.commHwBoardUsbnet;
+	zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState = zHcuSysEngPar.comm.commHwBoardWifi;
+	zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState = zHcuSysEngPar.comm.commHwBoard3g4g;
+	zHcuVmCtrTab.task[TASK_ID_GPS].pnpState = zHcuSysEngPar.comm.commHwBoardGps;
+	zHcuVmCtrTab.task[TASK_ID_LCD].pnpState = zHcuSysEngPar.comm.commHwBoardLcd;
+	zHcuVmCtrTab.task[TASK_ID_LED].pnpState = zHcuSysEngPar.comm.commHwBoardLed;
+	zHcuVmCtrTab.task[TASK_ID_ZEEGBE].pnpState = zHcuSysEngPar.comm.commHwBoardZeegbe;
+	zHcuVmCtrTab.task[TASK_ID_FLASH].pnpState = zHcuSysEngPar.comm.commHwBoardFlash;
+	zHcuVmCtrTab.task[TASK_ID_MODBUS].pnpState = zHcuSysEngPar.comm.commFrameModbus;
+	zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].pnpState = zHcuSysEngPar.comm.commFrameSpsvirgo;
+	zHcuVmCtrTab.task[TASK_ID_AVORION].pnpState = zHcuSysEngPar.comm.commFrameAvorion;
+	zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].pnpState = zHcuSysEngPar.comm.commFrameCloudvela;
+	zHcuVmCtrTab.task[TASK_ID_I2CBUSLIBRA].pnpState = zHcuSysEngPar.comm.commFrameI2cbuslibra;
+	zHcuVmCtrTab.task[TASK_ID_SPIBUSARIES].pnpState = zHcuSysEngPar.comm.commFrameSpibusaries;
+	zHcuVmCtrTab.task[TASK_ID_NBIOTCJ188].pnpState = zHcuSysEngPar.comm.commFrameNbiotcj188;
+	zHcuVmCtrTab.task[TASK_ID_NBIOTQG376].pnpState = zHcuSysEngPar.comm.commFrameNbiotqg376;
+	zHcuVmCtrTab.task[TASK_ID_SPS485].pnpState = zHcuSysEngPar.comm.commFrontSps485;
+	zHcuVmCtrTab.task[TASK_ID_SPS232].pnpState = zHcuSysEngPar.comm.commFrontSps232;
+	zHcuVmCtrTab.task[TASK_ID_MICROPHONE].pnpState = zHcuSysEngPar.comm.commFrontMicrophone;
+	zHcuVmCtrTab.task[TASK_ID_CAMERA].pnpState = zHcuSysEngPar.comm.commFrontCamera;
+	zHcuVmCtrTab.task[TASK_ID_BLE].pnpState = zHcuSysEngPar.comm.commFrontBle;
+	zHcuVmCtrTab.task[TASK_ID_EMC].pnpState = zHcuSysEngPar.comm.commFrontSensorEmc;
+	zHcuVmCtrTab.task[TASK_ID_PM25].pnpState = zHcuSysEngPar.comm.commFrontSensorPm25;
+	zHcuVmCtrTab.task[TASK_ID_TEMP].pnpState = zHcuSysEngPar.comm.commFrontSensorTemp;
+	zHcuVmCtrTab.task[TASK_ID_HUMID].pnpState = zHcuSysEngPar.comm.commFrontSensorHumid;
+	zHcuVmCtrTab.task[TASK_ID_WINDDIR].pnpState = zHcuSysEngPar.comm.commFrontSensorWinddir;
+	zHcuVmCtrTab.task[TASK_ID_WINDSPD].pnpState = zHcuSysEngPar.comm.commFrontSensorWindspd;
+	zHcuVmCtrTab.task[TASK_ID_NOISE].pnpState = zHcuSysEngPar.comm.commFrontSensorNoise;
+	zHcuVmCtrTab.task[TASK_ID_HSMMP].pnpState = zHcuSysEngPar.comm.commFrontSensorHsmmp;
+	zHcuVmCtrTab.task[TASK_ID_PM25SHARP].pnpState = zHcuSysEngPar.comm.commFrontSensorPm25Sharp;
+	zHcuVmCtrTab.task[TASK_ID_IWM].pnpState = zHcuSysEngPar.comm.commFrontSensorIwm;
+	zHcuVmCtrTab.task[TASK_ID_IHM].pnpState = zHcuSysEngPar.comm.commFrontSensorIhm;
+	zHcuVmCtrTab.task[TASK_ID_IGM].pnpState = zHcuSysEngPar.comm.commFrontSensorIgm;
+	zHcuVmCtrTab.task[TASK_ID_IPM].pnpState = zHcuSysEngPar.comm.commFrontSensorIpm;
+	zHcuVmCtrTab.task[TASK_ID_CANITFLEO].pnpState = zHcuSysEngPar.comm.commFrontCanitf;
 
 	//扫描任务输入配置表
 	//起始必须是TASK_ID_MIN条目
-	if (zHcuGlobalTaskInputConfig[0].taskInputId != TASK_ID_MIN){
+	if (zHcuVmCtrTaskStaticCfg[0].taskInputId != TASK_ID_MIN){
 		HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, task input configuration error!\n");
 		return FAILURE;
 	}
-	strcpy(zHcuTaskInfo[TASK_ID_MIN].taskName, zHcuGlobalTaskInputConfig[0].taskInputName);
+	strcpy(zHcuVmCtrTab.task[TASK_ID_MIN].taskName, zHcuVmCtrTaskStaticCfg[0].taskInputName);
 
 	//以TASK_ID_MAX为终止条目
 	for(item=1; item < MAX_TASK_NUM_IN_ONE_HCU; item++){
-		if(zHcuGlobalTaskInputConfig[item].taskInputId == TASK_ID_MAX){
+		if(zHcuVmCtrTaskStaticCfg[item].taskInputId == TASK_ID_MAX){
 			break;
 		}
-		if ((zHcuGlobalTaskInputConfig[item].taskInputId <= TASK_ID_MIN) || (zHcuGlobalTaskInputConfig[item].taskInputId > TASK_ID_MAX)){
+		if ((zHcuVmCtrTaskStaticCfg[item].taskInputId <= TASK_ID_MIN) || (zHcuVmCtrTaskStaticCfg[item].taskInputId > TASK_ID_MAX)){
 			HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, task input configuration error!\n");
 			return FAILURE;
 		}
@@ -473,21 +469,21 @@ OPSTAT hcu_vm_application_task_env_init(void)
 
 	//从任务配置输入区域读取参数到系统任务表，一旦遇到TASK_ID_MAX就终止
 	item = 0;
-	while(zHcuGlobalTaskInputConfig[item].taskInputId != TASK_ID_MAX){
-		taskid = zHcuGlobalTaskInputConfig[item].taskInputId;
+	while(zHcuVmCtrTaskStaticCfg[item].taskInputId != TASK_ID_MAX){
+		taskid = zHcuVmCtrTaskStaticCfg[item].taskInputId;
 		//系统工程参数对于任务的启动具备更高的优先级
-		if (zHcuTaskInfo[taskid].pnpState == HCU_TASK_PNP_INIT) zHcuTaskInfo[taskid].pnpState = HCU_TASK_PNP_ON;
-		strcpy(zHcuTaskInfo[taskid].taskName, zHcuGlobalTaskInputConfig[item].taskInputName);
-		zHcuTaskInfo[taskid].taskFuncEntry = zHcuGlobalTaskInputConfig[item].fsmFuncEntry;
+		if (zHcuVmCtrTab.task[taskid].pnpState == HCU_TASK_PNP_INIT) zHcuVmCtrTab.task[taskid].pnpState = HCU_TASK_PNP_ON;
+		strcpy(zHcuVmCtrTab.task[taskid].taskName, zHcuVmCtrTaskStaticCfg[item].taskInputName);
+		zHcuVmCtrTab.task[taskid].taskFuncEntry = zHcuVmCtrTaskStaticCfg[item].fsmFuncEntry;
 		item++;
 	}
 	//最后一项必定是TASK_ID_MAX
-	strcpy(zHcuTaskInfo[TASK_ID_MAX].taskName, zHcuGlobalTaskInputConfig[item].taskInputName);
+	strcpy(zHcuVmCtrTab.task[TASK_ID_MAX].taskName, zHcuVmCtrTaskStaticCfg[item].taskInputName);
 
 	//检查所有启动任务的合法性
 	for (taskid = TASK_ID_MIN; taskid <= TASK_ID_MAX; taskid++){
 		//如果初始化表中是NULL，则不能启动该任务
-		if(zHcuTaskInfo[taskid].taskFuncEntry == NULL) zHcuTaskInfo[taskid].pnpState = HCU_TASK_PNP_OFF;
+		if(zHcuVmCtrTab.task[taskid].taskFuncEntry == NULL) zHcuVmCtrTab.task[taskid].pnpState = HCU_TASK_PNP_OFF;
 	}
 
 	//返回
@@ -556,17 +552,17 @@ UINT32 hcu_task_create(UINT32 task_id, void *(*task_func)(void *), void *arg, in
 	//As FsmProcessLaunch has to transfer task_id in, we will use global variance of zHcuFsmTable.currentTaskId
 	//So task_id has to store into there
 	//Wonderful mechanism!!!
-	if (zHcuFsmTable.currentTaskId != TASK_ID_INVALID){
+	if (zHcuVmCtrTab.fsm.currentTaskId != TASK_ID_INVALID){
 		hcu_sleep(1);
 	}
-	if (zHcuFsmTable.currentTaskId != TASK_ID_INVALID){
+	if (zHcuVmCtrTab.fsm.currentTaskId != TASK_ID_INVALID){
 		HcuErrorPrint("HCU-VM: Task_id not yet read by running process, new task create failure!\n");
 		return FAILURE;
 	}
-	zHcuFsmTable.currentTaskId = task_id;
+	zHcuVmCtrTab.fsm.currentTaskId = task_id;
 
 	// creation of the task
-	err=pthread_create(&(zHcuTaskInfo[task_id].ThrId), &attr, (void *(*)(void*))(task_func), (void*)arg);
+	err=pthread_create(&(zHcuVmCtrTab.task[task_id].ThrId), &attr, (void *(*)(void*))(task_func), (void*)arg);
 	if(err != 0)
 	{
 		HcuDebugPrint("HCU-VM: pthread_create() nok!! err=%d, errno=%d, %s\n", err, errno, strerror(err));
@@ -574,8 +570,8 @@ UINT32 hcu_task_create(UINT32 task_id, void *(*task_func)(void *), void *arg, in
 	}
 
 	//zHcuTaskInfo[task_id].TaskName to be added in another way, TBD
-	zHcuTaskInfo[task_id].TaskId = task_id;
-	zHcuTaskInfo[task_id].processId = getpid(); //进程号存入
+	zHcuVmCtrTab.task[task_id].TaskId = task_id;
+	zHcuVmCtrTab.task[task_id].processId = getpid(); //进程号存入
 	HcuDebugPrint("HCU-VM: pthread_create() OK ...\n");
 	/* ERRORS
 	       EAGAIN Insufficient resources to create another thread, or a system-imposed limit on the number of threads was encountered.  The latter case may occur in two ways: the RLIMIT_NPROC soft  resource  limit
@@ -599,7 +595,7 @@ UINT32 hcu_task_delete(UINT32 task_id)
 	}
 
 	//Not exist
-	if (zHcuTaskInfo[task_id].ThrId ==0){return FAILURE;}
+	if (zHcuVmCtrTab.task[task_id].ThrId ==0){return FAILURE;}
 
 	//只是清理掉FSM中的信息
 	FsmRemove(task_id);
@@ -652,7 +648,7 @@ UINT32 hcu_msgque_create(UINT32 task_id)
 		HcuErrorPrint("HCU-VM: Failed to create msg-queue | errno=%d [%s]\n", errno, strerror(errno));
 		return FAILURE;
 	}
-	zHcuTaskInfo[task_id].QueId = msgQid;
+	zHcuVmCtrTab.task[task_id].QueId = msgQid;
 	return SUCCESS;
 }
 
@@ -667,12 +663,12 @@ UINT32 hcu_msgque_delete(UINT32 task_id)
 
 	//Not exist
 	//特殊情况下，msgqid=0也是可能的，这种情形，需要再仔细考虑
-	if (zHcuTaskInfo[task_id].QueId == 0) {return FAILURE;}
+	if (zHcuVmCtrTab.task[task_id].QueId == 0) {return FAILURE;}
 
 	//Delete queue
-	msgctl(zHcuTaskInfo[task_id].QueId, IPC_RMID, NULL); //删除消息队列
+	msgctl(zHcuVmCtrTab.task[task_id].QueId, IPC_RMID, NULL); //删除消息队列
 
-	zHcuTaskInfo[task_id].QueId =0;
+	zHcuVmCtrTab.task[task_id].QueId =0;
 	return SUCCESS;
 }
 
@@ -714,8 +710,8 @@ UINT32 hcu_msgque_resync(void)
 		//这里，不在本进程中的任务模块，只有最为基本的消息队列和Task_ID，其它信息一律不存在
 		msgQid=msgget(msgKey, IPC_EXCL);  /*检查消息队列是否存在*/
 		if (msgQid>=0){
-			zHcuTaskInfo[task_id].QueId = msgQid;
-			zHcuTaskInfo[task_id].TaskId = task_id;
+			zHcuVmCtrTab.task[task_id].QueId = msgQid;
+			zHcuVmCtrTab.task[task_id].TaskId = task_id;
 		}
 	}//For loop
 
@@ -723,7 +719,7 @@ UINT32 hcu_msgque_resync(void)
 }
 
 //聚合创建任务，消息队列，并直接让其开始运行
-UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
+UINT32 hcu_task_create_and_run(UINT32 task_id, HcuFsmStateItem_t* pFsmStateItem)
 {
 	OPSTAT ret = 0;
 
@@ -739,7 +735,7 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
 		HcuErrorPrint("HCU-VM: Init state machine FsmAddNew error, taskid = %d\n", task_id);
 		return FAILURE;
 	}
-	HCU_DEBUG_PRINT_CRT("HCU-VM: FsmAddNew Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
+	HCU_DEBUG_PRINT_CRT("HCU-VM: FsmAddNew Successful, taskId = 0x%x [%s].\n", task_id, zHcuVmCtrTab.task[task_id].taskName);
 
     //Create Queid
    	ret = hcu_msgque_create(task_id);
@@ -748,7 +744,7 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
     	HcuErrorPrint("HCU-VM: Create queue unsuccessfully, taskId = %d\n", task_id);
     	return FAILURE;
     }
-    HCU_DEBUG_PRINT_CRT("HCU-VM: hcu_msgque_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
+    HCU_DEBUG_PRINT_CRT("HCU-VM: hcu_msgque_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuVmCtrTab.task[task_id].taskName);
 
     //Create task and make it running for ever
     ret = hcu_task_create(task_id, (CALLBACK)FsmProcessingLaunch, (void *)NULL, HCU_THREAD_PRIO);
@@ -757,8 +753,8 @@ UINT32 hcu_task_create_and_run(UINT32 task_id, FsmStateItem_t* pFsmStateItem)
     	HcuErrorPrint("HCU-VM: Create task un-successfully, taskid = %d\n", task_id);
     	return FAILURE;
     }
-    HCU_DEBUG_PRINT_CRT("HCU-VM: hcu_task_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
-    HCU_DEBUG_PRINT_IPT("HCU-VM: Whole task environment setup successful, taskId = 0x%x [%s].\n", task_id, zHcuTaskInfo[task_id].taskName);
+    HCU_DEBUG_PRINT_CRT("HCU-VM: hcu_task_create Successful, taskId = 0x%x [%s].\n", task_id, zHcuVmCtrTab.task[task_id].taskName);
+    HCU_DEBUG_PRINT_IPT("HCU-VM: Whole task environment setup successful, taskId = 0x%x [%s].\n", task_id, zHcuVmCtrTab.task[task_id].taskName);
 
 	return SUCCESS;
 }
@@ -817,8 +813,8 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	ret = msgsnd(hcu_msgque_inquery(dest_id), msg, (sizeof(HcuMsgSruct_t)-sizeof(long)), IPC_NOWAIT);
 	free(msg);
 	if ( ret < 0 ) {
-		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuTaskInfo[dest_id].taskName);
-		zHcuTaskInfo[dest_id].QueFullFlag = HCU_TASK_QUEUE_FULL_TRUE;
+		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuVmCtrTab.task[dest_id].taskName);
+		zHcuVmCtrTab.task[dest_id].QueFullFlag = HCU_TASK_QUEUE_FULL_TRUE;
 		return FAILURE;
 	}
 
@@ -1124,7 +1120,7 @@ UINT32 hcu_message_rcv(UINT32 dest_id, HcuMsgSruct_t *msg)
 		return EINTR;
 	if ( ret < 0 ) {
 		HcuErrorPrint("HCU-VM: msgrcv() receive msg failed, Qid=%d, msg=%08X, errno=%d[%s]\n",
-				zHcuTaskInfo[dest_id].QueId, msg, errno, strerror(errno));
+				zHcuVmCtrTab.task[dest_id].QueId, msg, errno, strerror(errno));
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -1175,8 +1171,8 @@ UINT32 taskid_to_string(UINT32 id, char *string)
 	}
 	char tmp[TASK_NAME_MAX_LENGTH-2]="";
 	strcpy(string, "[");
-	if (strlen(zHcuTaskInfo[id].taskName)>0){
-		strncpy(tmp, zHcuTaskInfo[id].taskName, TASK_NAME_MAX_LENGTH-3);
+	if (strlen(zHcuVmCtrTab.task[id].taskName)>0){
+		strncpy(tmp, zHcuVmCtrTab.task[id].taskName, TASK_NAME_MAX_LENGTH-3);
 		strcat(string, tmp);
 	}else{
 		strcat(string, "TASK_ID_XXX");
@@ -1195,8 +1191,8 @@ UINT32 msgid_to_string(UINT32 id, char *string)
 	}
 	char tmp[MSG_NAME_MAX_LENGTH-2]="";
 	strcpy(string, "[");
-	if (strlen(zHcuMsgNameList[id].msgName)>0){
-		strncpy(tmp, zHcuMsgNameList[id].msgName, MSG_NAME_MAX_LENGTH-3);
+	if (strlen(zHcuSysEngTrcMsgCtrStaticCfg[id].msgName)>0){
+		strncpy(tmp, zHcuSysEngTrcMsgCtrStaticCfg[id].msgName, MSG_NAME_MAX_LENGTH-3);
 		strcat(string, tmp);
 	}else{
 		strcat(string, "MSG_ID_XXX");
@@ -1261,13 +1257,13 @@ UINT32 FsmInit(void)
 {
 	UINT32 i;
 	HcuDebugPrint("HCU-VM: >>Start init FSM.\n");
-	zHcuFsmTable.numOfFsmCtrlTable = 0;
+	zHcuVmCtrTab.fsm.numOfFsmCtrlTable = 0;
 	for(i=0; i<MAX_TASK_NUM_IN_ONE_HCU; i++)
 	{
-		zHcuFsmTable.pFsmCtrlTable[i].taskId = TASK_ID_INVALID;
-		zHcuFsmTable.pFsmCtrlTable[i].numOfFsmArrayElement = 0;
+		zHcuVmCtrTab.fsm.pFsmCtrlTable[i].taskId = TASK_ID_INVALID;
+		zHcuVmCtrTab.fsm.pFsmCtrlTable[i].numOfFsmArrayElement = 0;
 	}
-	zHcuFsmTable.currentTaskId = TASK_ID_INVALID;
+	zHcuVmCtrTab.fsm.currentTaskId = TASK_ID_INVALID;
 
 	HCU_DEBUG_PRINT_FAT("HCU-VM: Maxium (%d) process supported.\n", MAX_TASK_NUM_IN_ONE_HCU);
 
@@ -1288,7 +1284,7 @@ UINT32 FsmInit(void)
 **------------------------------------------------------------------------------
 ** Return value : SUCCESS OR FAILURE
 *******************************************************************************/
-UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
+UINT32 FsmAddNew(UINT32 task_id, HcuFsmStateItem_t* pFsmStateItem )
 {
 	OPSTAT ret;
 	UINT32 state;
@@ -1309,7 +1305,7 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 		HcuErrorPrint("HCU-VM: The task_ID is invalid.\n");
 		return FAILURE;
 	}
-	if( zHcuFsmTable.pFsmCtrlTable[task_id].taskId != TASK_ID_INVALID )
+	if( zHcuVmCtrTab.fsm.pFsmCtrlTable[task_id].taskId != TASK_ID_INVALID )
 	{
 		HcuErrorPrint("HCU-VM: This task_id has been already inited.\n");
 		return FAILURE;
@@ -1355,26 +1351,26 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 		HcuErrorPrint("HCU-VM: Invalid FSM machine -- Can not find the end of the FSM.\n");
 		return FAILURE;
 	}
-	zHcuFsmTable.pFsmCtrlTable[task_id].numOfFsmArrayElement = item-1; //有效STATE-MSG条目数，不包括START/END两条
+	zHcuVmCtrTab.fsm.pFsmCtrlTable[task_id].numOfFsmArrayElement = item-1; //有效STATE-MSG条目数，不包括START/END两条
 
 	/*
 	**  Insert this new fsm item into fsm table.
 	**  The position in the fsm table is based on the task_id.
 	*/
-	zHcuFsmTable.numOfFsmCtrlTable ++;
+	zHcuVmCtrTab.fsm.numOfFsmCtrlTable ++;
 
-	HCU_DEBUG_PRINT_NOR("HCU-VM: FsmAddNew: task_id = 0x%x [%s], src_id= %x, dest_id= %X\n", task_id, zHcuTaskInfo[task_id].taskName, 0, 0);
-	HCU_DEBUG_PRINT_NOR("HCU-VM: After add this one, Total (%d) FSM in the table.\n", zHcuFsmTable.numOfFsmCtrlTable);
+	HCU_DEBUG_PRINT_NOR("HCU-VM: FsmAddNew: task_id = 0x%x [%s], src_id= %x, dest_id= %X\n", task_id, zHcuVmCtrTab.task[task_id].taskName, 0, 0);
+	HCU_DEBUG_PRINT_NOR("HCU-VM: After add this one, Total (%d) FSM in the table.\n", zHcuVmCtrTab.fsm.numOfFsmCtrlTable);
 
 	/*
 	** Save the state machine info.
 	*/
-	zHcuFsmTable.pFsmCtrlTable[task_id].taskId = task_id;
+	zHcuVmCtrTab.fsm.pFsmCtrlTable[task_id].taskId = task_id;
 	for(i=0; i<MAX_STATE_NUM_IN_ONE_TASK; i++)
 	{
 		for(j=0; j<MAX_MSGID_NUM_IN_ONE_TASK; j++)
 		{
-			zHcuFsmTable.pFsmCtrlTable[task_id].pFsmArray[i][j].stateFunc = NULL;
+			zHcuVmCtrTab.fsm.pFsmCtrlTable[task_id].pFsmArray[i][j].stateFunc = NULL;
 		}
 	}
 
@@ -1389,7 +1385,7 @@ UINT32 FsmAddNew(UINT32 task_id, FsmStateItem_t* pFsmStateItem )
 			return FAILURE;
 		}
 		msgid = pFsmStateItem[itemNo].msg_id & MASK_MSGID_NUM_IN_ONE_TASK;
-		zHcuFsmTable.pFsmCtrlTable[task_id].pFsmArray[state][msgid].stateFunc = pFsmStateItem[itemNo].stateFunc;
+		zHcuVmCtrTab.fsm.pFsmCtrlTable[task_id].pFsmArray[state][msgid].stateFunc = pFsmStateItem[itemNo].stateFunc;
 	}
 
 	/*
@@ -1425,7 +1421,7 @@ UINT32 FsmRemove(UINT32 task_id)
 	}
 
 	//设置无效
-	zHcuFsmTable.pFsmCtrlTable[task_id].taskId = TASK_ID_INVALID;
+	zHcuVmCtrTab.fsm.pFsmCtrlTable[task_id].taskId = TASK_ID_INVALID;
 
     return SUCCESS;
 }
@@ -1450,8 +1446,8 @@ UINT32 FsmProcessingLaunch(void)
 	HcuMsgSruct_t rcv;
 	UINT32 task_id = 0; //Get current working task_id
 
-	task_id = zHcuFsmTable.currentTaskId;
-	zHcuFsmTable.currentTaskId = TASK_ID_INVALID;
+	task_id = zHcuVmCtrTab.fsm.currentTaskId;
+	zHcuVmCtrTab.fsm.currentTaskId = TASK_ID_INVALID;
 	/*
 	** Check the task_id
 	*/
@@ -1463,8 +1459,8 @@ UINT32 FsmProcessingLaunch(void)
 	/*
 	** Run each task entry API, give each task a chance to init any specific information
 	*/
-	if (zHcuFsmTable.pFsmCtrlTable[task_id].pFsmArray[FSM_STATE_ENTRY][MSG_ID_ENTRY].stateFunc != NULL){
-		(zHcuFsmTable.pFsmCtrlTable[task_id].pFsmArray[FSM_STATE_ENTRY][MSG_ID_ENTRY].stateFunc)(task_id, 0, NULL, 0);
+	if (zHcuVmCtrTab.fsm.pFsmCtrlTable[task_id].pFsmArray[FSM_STATE_ENTRY][MSG_ID_ENTRY].stateFunc != NULL){
+		(zHcuVmCtrTab.fsm.pFsmCtrlTable[task_id].pFsmArray[FSM_STATE_ENTRY][MSG_ID_ENTRY].stateFunc)(task_id, 0, NULL, 0);
 	}else{
 		HCU_DEBUG_PRINT_NOR("HCU-VM: Task (ID=%d) get no init entry fetched!\n", task_id);
 	}
@@ -1540,7 +1536,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 	** Search for the dest_id task state
 	*/
 
-	if( zHcuFsmTable.pFsmCtrlTable[dest_id].taskId != dest_id )
+	if( zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].taskId != dest_id )
 	{
 		HcuErrorPrint("HCU-VM: The destination process does not exist.\n");
 		return FAILURE;
@@ -1561,14 +1557,14 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 
 	//未来可以提升到IPT层面
 	HCU_DEBUG_PRINT_NOR("HCU-VM: Call state function(0x%x) in state(%d) of task(0x%x)[%s] for msg(0x%x)[%s], and from task(0x%x)[%s]\n",
-				zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuTaskInfo[dest_id].taskName, mid, zHcuMsgNameList[mid].msgName, src_id, zHcuTaskInfo[src_id].taskName);
+				zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc, state, dest_id, zHcuVmCtrTab.task[dest_id].taskName, mid, zHcuSysEngTrcMsgCtrStaticCfg[mid].msgName, src_id, zHcuVmCtrTab.task[src_id].taskName);
 
 	/*
 	** Call the state function.
 	*/
-	if(zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc != NULL)
+	if(zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc != NULL)
 	{
-		ret = (zHcuFsmTable.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc)
+		ret = (zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc)
 			(dest_id, src_id, param_ptr, param_len);
 		if( FAILURE == ret)
 		{
@@ -1583,7 +1579,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 			//Free memory, here do nothing.
 		}
 		HcuErrorPrint("HCU-VM: Receive invalid msg(%x)[%s] in state(%d) of task(0x%x)[%s]\n",
-			mid, zHcuMsgNameList[mid].msgName, state, dest_id, zHcuTaskInfo[dest_id].taskName);
+			mid, zHcuSysEngTrcMsgCtrStaticCfg[mid].msgName, state, dest_id, zHcuVmCtrTab.task[dest_id].taskName);
 		return FAILURE;
 	}
 
@@ -1604,7 +1600,7 @@ OPSTAT FsmSetState(UINT32 task_id, UINT8 newState)
 		return FAILURE;
 	}
 
-	zHcuTaskInfo[task_id].state = newState;
+	zHcuVmCtrTab.task[task_id].state = newState;
 	return SUCCESS;
 }
 
@@ -1621,8 +1617,8 @@ UINT8  FsmGetState(UINT32 task_id)
 	/*
 	** Check the state info
 	*/
-	if (zHcuTaskInfo[task_id].state <= MAX_STATE_NUM_IN_ONE_TASK){
-		return zHcuTaskInfo[task_id].state;
+	if (zHcuVmCtrTab.task[task_id].state <= MAX_STATE_NUM_IN_ONE_TASK){
+		return zHcuVmCtrTab.task[task_id].state;
 	}else{
 		return FSM_STATE_INVALID;
 	}
@@ -1641,22 +1637,22 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	msg_struct_com_heart_beat_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_com_heart_beat_t));
 	if ((param_ptr == NULL) || (param_len > sizeof(msg_struct_com_heart_beat_t))){
-		HcuErrorPrint("%s: Receive heart beat message error!\n", zHcuTaskInfo[dest_id].taskName);
+		HcuErrorPrint("%s: Receive heart beat message error!\n", zHcuVmCtrTab.task[dest_id].taskName);
 		return FAILURE;
 	}
 	//优化的结果，可以不用拷贝，暂时没有意义
 	//memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[dest_id]是否超限
-	if (zHcuRunErrCnt[dest_id] > HCU_RUN_ERROR_LEVEL_4_DEAD){
+	if (zHcuSysStaPm.taskRunErrCnt[dest_id] > HCU_RUN_ERROR_LEVEL_4_DEAD){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[dest_id] = zHcuRunErrCnt[dest_id] - HCU_RUN_ERROR_LEVEL_4_DEAD;
+		zHcuSysStaPm.taskRunErrCnt[dest_id] = zHcuSysStaPm.taskRunErrCnt[dest_id] - HCU_RUN_ERROR_LEVEL_4_DEAD;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, dest_id, dest_id, &snd0, snd0.length);
 		if (ret == FAILURE)
-			HCU_ERROR_PRINT_TASK(dest_id, "%s: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName);
+			HCU_ERROR_PRINT_TASK(dest_id, "%s: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[dest_id].taskName, zHcuVmCtrTab.task[dest_id].taskName, zHcuVmCtrTab.task[dest_id].taskName);
 	}
 
 	//发送消息
@@ -1667,7 +1663,7 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		snd.length = sizeof(msg_struct_com_heart_beat_fb_t);
 		ret = hcu_message_send(MSG_ID_COM_HEART_BEAT_FB, src_id, dest_id, &snd, snd.length);
 		if (ret == FAILURE)
-			HCU_ERROR_PRINT_TASK(dest_id, "%s: Send message error, TASK[%s] to TASK[%s]!\n", zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[dest_id].taskName, zHcuTaskInfo[src_id].taskName);
+			HCU_ERROR_PRINT_TASK(dest_id, "%s: Send message error, TASK[%s] to TASK[%s]!\n", zHcuVmCtrTab.task[dest_id].taskName, zHcuVmCtrTab.task[dest_id].taskName, zHcuVmCtrTab.task[src_id].taskName);
 	}
 	//也可能是调用关系，故而直接采用SRC_ID=0的方式，这种情况原则上也允许
 
@@ -1711,15 +1707,15 @@ UINT16 hcu_CRC_16(unsigned char *data,int len)
 }
 
 //单进程模式，当前的工作模式！！！
-void hcu_vm_working_mode_single_start(void)
+void hcu_vm_working_mode_single_process_start(void)
 {
-	zHcuCurrentProcessInfo.curProcId = getpid();
-	strcpy(zHcuCurrentProcessInfo.curProcName, "PS_MAINAPP");
+	zHcuVmCtrTab.process.curProcId = getpid();
+	strcpy(zHcuVmCtrTab.process.curProcName, "PS_MAINAPP");
 	hcu_vm_process_single_mainapp_entry();
 }
 
 //双进程模式
-void hcu_vm_working_mode_double_start(void)
+void hcu_vm_working_mode_double_process_start(void)
 {
 	int pid = 0;
 
@@ -1728,18 +1724,18 @@ void hcu_vm_working_mode_double_start(void)
 		HcuErrorPrint("HCU: Create process error!\n");
 		return;
 	} else if(pid == 0){
-		zHcuCurrentProcessInfo.curProcId = getpid();
-		strcpy(zHcuCurrentProcessInfo.curProcName, "PS_MAINAPP");
+		zHcuVmCtrTab.process.curProcId = getpid();
+		strcpy(zHcuVmCtrTab.process.curProcName, "PS_MAINAPP");
 		hcu_vm_process_double_mainapp_entry();
 	} else{
-		zHcuCurrentProcessInfo.curProcId = getpid();
-		strcpy(zHcuCurrentProcessInfo.curProcName, "PS_AVORION");
+		zHcuVmCtrTab.process.curProcId = getpid();
+		strcpy(zHcuVmCtrTab.process.curProcName, "PS_AVORION");
 		hcu_vm_process_create_sensor_avorion_only();
 	}
 }
 
 //多进程模式
-void hcu_vm_working_mode_multipy_start(void)
+void hcu_vm_working_mode_multipy_process_start(void)
 {
 	int pid = 0;
 
@@ -1748,8 +1744,8 @@ void hcu_vm_working_mode_multipy_start(void)
 		HcuErrorPrint("HCU: Create process error!\n");
 		return;
 	} else if(pid == 0){
-		zHcuCurrentProcessInfo.curProcId = getpid();
-		strcpy(zHcuCurrentProcessInfo.curProcName, "PS_SUPVOR");
+		zHcuVmCtrTab.process.curProcId = getpid();
+		strcpy(zHcuVmCtrTab.process.curProcName, "PS_SUPVOR");
 		hcu_vm_process_multipy_entry_supervisor();
 	} else{
 	    pid = fork();
@@ -1757,12 +1753,12 @@ void hcu_vm_working_mode_multipy_start(void)
 			HcuErrorPrint("HCU: Create process error!\n");
 			return;
 		} else if(pid == 0){
-			zHcuCurrentProcessInfo.curProcId = getpid();
-			strcpy(zHcuCurrentProcessInfo.curProcName, "PS_MAINAPP");
+			zHcuVmCtrTab.process.curProcId = getpid();
+			strcpy(zHcuVmCtrTab.process.curProcName, "PS_MAINAPP");
 			hcu_vm_process_multipy_mainapp_entry();
 		} else{
-			zHcuCurrentProcessInfo.curProcId = getpid();
-			strcpy(zHcuCurrentProcessInfo.curProcName, "PS_AVORION");
+			zHcuVmCtrTab.process.curProcId = getpid();
+			strcpy(zHcuVmCtrTab.process.curProcName, "PS_AVORION");
 			hcu_vm_process_create_sensor_avorion_only();
 		}
 	}
@@ -1823,7 +1819,7 @@ void hcu_vm_process_create_sensor_avorion_only(void)
 	//Create task Avorion environments/24
 	hcu_vm_system_task_init_call(TASK_ID_AVORION, HcuFsmAvorion);
 	HcuDebugPrint("HCU-MAIN: Init completed, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
-			zHcuCurrentProcessInfo.curProcId, zHcuCurrentProcessInfo.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
+			zHcuVmCtrTab.process.curProcId, zHcuVmCtrTab.process.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
 
 	//进入循环状态，发送心跳消息
 	while (1){
@@ -1864,12 +1860,12 @@ void hcu_vm_process_multipy_entry_supervisor(void)
 		if (ret > 0){
 			if ((rcv.msgType == MSG_ID_COM_PROCESS_REBOOT) && (rcv.src_id == TASK_ID_SVRCON)){
 				HcuDebugPrint("HCU-MAIN: Reboot process start, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
-						zHcuCurrentProcessInfo.curProcId, zHcuCurrentProcessInfo.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
+						zHcuVmCtrTab.process.curProcId, zHcuVmCtrTab.process.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
 				int pid = 0;
 				pid = fork();
 				if (pid > 0){
-					zHcuCurrentProcessInfo.curProcId = getpid();
-					strcpy(zHcuCurrentProcessInfo.curProcName, "PS_AVORION");
+					zHcuVmCtrTab.process.curProcId = getpid();
+					strcpy(zHcuVmCtrTab.process.curProcName, "PS_AVORION");
 					hcu_vm_process_create_sensor_avorion_only();
 				}else if (pid == 0){
 					hcu_sleep(2);
@@ -1897,7 +1893,7 @@ void hcu_vm_process_multipy_mainapp_entry(void)
 	//创建队列环境
     hcu_vm_task_create_all_but_avorion();
 	HcuDebugPrint("HCU-MAIN: Init completed, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
-			zHcuCurrentProcessInfo.curProcId, zHcuCurrentProcessInfo.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
+			zHcuVmCtrTab.process.curProcId, zHcuVmCtrTab.process.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
 
 	//进入循环状态，发送心跳消息
 	while (1){
@@ -1917,12 +1913,12 @@ void hcu_vm_process_multipy_mainapp_entry(void)
 //目前系统启动暂时就是使用了这种方式，并没有采用其他多进程的方式
 void hcu_vm_task_create_all(void)
 {
-	FsmStateItem_t *p;
+	HcuFsmStateItem_t *p;
 	int task_id = 0;
 
 	for (task_id = TASK_ID_MIN + 1; task_id < TASK_ID_MAX; task_id++){
-		p = (FsmStateItem_t *)zHcuTaskInfo[task_id].taskFuncEntry;
-		if ((p != NULL) && (zHcuTaskInfo[task_id].pnpState == HCU_TASK_PNP_ON)){
+		p = (HcuFsmStateItem_t *)zHcuVmCtrTab.task[task_id].taskFuncEntry;
+		if ((p != NULL) && (zHcuVmCtrTab.task[task_id].pnpState == HCU_TASK_PNP_ON)){
 			hcu_vm_system_task_init_call(task_id, p);
 		}
 	}
@@ -1930,12 +1926,12 @@ void hcu_vm_task_create_all(void)
 
 void hcu_vm_task_create_all_but_avorion(void)
 {
-	FsmStateItem_t *p;
+	HcuFsmStateItem_t *p;
 	int task_id = 0;
 
 	for (task_id = TASK_ID_MIN + 1; task_id < TASK_ID_MAX; task_id++){
-		p = (FsmStateItem_t *)zHcuTaskInfo[task_id].taskFuncEntry;
-		if ((p != NULL) && (zHcuTaskInfo[task_id].pnpState == HCU_TASK_PNP_ON) && (task_id != TASK_ID_AVORION)){
+		p = (HcuFsmStateItem_t *)zHcuVmCtrTab.task[task_id].taskFuncEntry;
+		if ((p != NULL) && (zHcuVmCtrTab.task[task_id].pnpState == HCU_TASK_PNP_ON) && (task_id != TASK_ID_AVORION)){
 			hcu_vm_system_task_init_call(task_id, p);
 		}
 	}
@@ -1943,22 +1939,22 @@ void hcu_vm_task_create_all_but_avorion(void)
 
 }
 
-OPSTAT hcu_vm_system_task_init_call(UINT32 task_id, FsmStateItem_t *p)
+OPSTAT hcu_vm_system_task_init_call(UINT32 task_id, HcuFsmStateItem_t *p)
 {
 	int ret = 0;
-	if (zHcuTaskInfo[task_id].pnpState != HCU_TASK_PNP_ON){
-		HcuErrorPrint("HCU-MAIN: no need create this task [%s]!\n", zHcuTaskInfo[task_id].taskName);
+	if (zHcuVmCtrTab.task[task_id].pnpState != HCU_TASK_PNP_ON){
+		HcuErrorPrint("HCU-MAIN: no need create this task [%s]!\n", zHcuVmCtrTab.task[task_id].taskName);
 		return FAILURE;
 	}
-	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskInfo[task_id].taskName);
+	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuVmCtrTab.task[task_id].taskName);
 	ret = hcu_task_create_and_run(task_id, p);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: create task env [%s] un-successfully, program exit.\n", zHcuTaskInfo[task_id].taskName);
+		HcuErrorPrint("HCU-MAIN: create task env [%s] un-successfully, program exit.\n", zHcuVmCtrTab.task[task_id].taskName);
 		return FAILURE;
 	}
 
 	//将该任务执行时对应的状态转移机指针存入，以供以后扫描时使用
-	zHcuTaskInfo[task_id].fsmPtr = p;
+	zHcuVmCtrTab.task[task_id].fsmPtr = p;
 	return SUCCESS;
 }
 
@@ -1971,13 +1967,13 @@ void hcu_vm_task_create_hcumain_env(void)
 	//一个不成功，就应该返回，如果不提前返回，纯粹是为了测试
 	//Create HCU-Main Queid /1  该队列创建，纯粹是为了测试，以后需要删掉
 	taskId = TASK_ID_HCUMAIN;
-	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuTaskInfo[taskId].taskName);
+	HcuDebugPrint("HCU-MAIN: Staring to create task [%s] related environments...\n", zHcuVmCtrTab.task[taskId].taskName);
    	ret = hcu_msgque_create(taskId);
     if (ret == FAILURE){
-    	HcuErrorPrint("HCU-MAIN: create queue [%s] un-successfully, program exit.\n", zHcuTaskInfo[taskId].taskName);
+    	HcuErrorPrint("HCU-MAIN: create queue [%s] un-successfully, program exit.\n", zHcuVmCtrTab.task[taskId].taskName);
     	return;
     }else{
-    	HcuDebugPrint("HCU-MAIN: create queue Task Name[%s] successfully.\n", zHcuTaskInfo[taskId].taskName);
+    	HcuDebugPrint("HCU-MAIN: create queue Task Name[%s] successfully.\n", zHcuVmCtrTab.task[taskId].taskName);
     }
     return;
 }
@@ -1992,7 +1988,7 @@ void hcu_vm_task_send_init_to_timer(void)
 	snd.length = sizeof(msg_struct_com_init_t);
 	ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_TIMER, TASK_ID_HCUMAIN, &snd, snd.length);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HCUMAIN].taskName, zHcuTaskInfo[TASK_ID_TIMER].taskName);
+		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HCUMAIN].taskName, zHcuVmCtrTab.task[TASK_ID_TIMER].taskName);
 	}
 
 	//Wait for TIMER task feedback
@@ -2031,7 +2027,7 @@ void hcu_vm_task_send_init_to_avorion(void)
 	snd.length = sizeof(msg_struct_com_init_t);
 	ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_AVORION, TASK_ID_HCUMAIN, &snd, snd.length);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HCUMAIN].taskName, zHcuTaskInfo[TASK_ID_AVORION].taskName);
+		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HCUMAIN].taskName, zHcuVmCtrTab.task[TASK_ID_AVORION].taskName);
 	}
 
 	//Wait for AVORION task feedback
@@ -2070,7 +2066,7 @@ void hcu_vm_task_send_init_to_svrcon(void)
 	snd.length = sizeof(msg_struct_com_init_t);
 	ret = hcu_message_send(MSG_ID_COM_INIT, TASK_ID_SVRCON, TASK_ID_HCUMAIN, &snd, snd.length);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HCUMAIN].taskName, zHcuTaskInfo[TASK_ID_SVRCON].taskName);
+		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HCUMAIN].taskName, zHcuVmCtrTab.task[TASK_ID_SVRCON].taskName);
 	}
 
 	//Wait for SVRCON feedback
@@ -2090,7 +2086,7 @@ void hcu_vm_task_send_init_to_svrcon(void)
 		}else{
 			if ((rcv.msgType == MSG_ID_COM_INIT_FEEDBACK) && (rcv.src_id == TASK_ID_SVRCON)){
 				HcuDebugPrint("HCU-MAIN: Init completed, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
-						zHcuCurrentProcessInfo.curProcId, zHcuCurrentProcessInfo.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
+						zHcuVmCtrTab.process.curProcId, zHcuVmCtrTab.process.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
 				break;
 			}else{
 				HcuErrorPrint("HCU-MAIN: Error! Not right message received!\n");
@@ -2110,7 +2106,7 @@ void hcu_vm_task_send_hb_to_svrcon(void)
 	snd.length = sizeof(msg_struct_com_heart_beat_t);
 	ret = hcu_message_send(MSG_ID_COM_HEART_BEAT, TASK_ID_SVRCON, TASK_ID_HCUMAIN, &snd, snd.length);
 	if (ret == FAILURE){
-		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_HCUMAIN].taskName, zHcuTaskInfo[TASK_ID_SVRCON].taskName);
+		HcuErrorPrint("HCU-MAIN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HCUMAIN].taskName, zHcuVmCtrTab.task[TASK_ID_SVRCON].taskName);
 	}
 	return;
 }
@@ -2172,14 +2168,14 @@ void hcu_vm_task_delete_except_timer_and_hcumain(void)
 int hcu_vm_main_entry(void)
 {
 	//系统状态初始化
-	if (hcu_vm_system_init() == FAILURE){
+	if (hcu_vm_system_ctr_table_init() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Init system level environment error!\n");
 		return EXIT_SUCCESS;
 	}
 
 	//智能初始化：将MODULE TRACE初始化表单存入数据库，降低研发工作复杂度
 	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_NO) && (HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET == HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES)){
-		if (dbi_HcuTraceModuleCtr_intelligence_init() == FAILURE){
+		if (dbi_HcuTraceModuleCtr_engpar_intelligence_init() == FAILURE){
 			HcuDebugPrint("HCU-MAIN: Init Module Trace set error!\n");
 			return EXIT_SUCCESS;
 		}
@@ -2187,33 +2183,33 @@ int hcu_vm_main_entry(void)
 
 	//智能初始化：将MSG TRACE初始化表单存入数据库，降低研发工作复杂度
 	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_NO) && (HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET == HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES)){
-		if (dbi_HcuTraceMsgCtr_intelligence_init() == FAILURE){
+		if (dbi_HcuTraceMsgCtr_engpar_intelligence_init() == FAILURE){
 			HcuDebugPrint("HCU-MAIN: Init Message Trace set error!\n");
 			return EXIT_SUCCESS;
 		}
 	}
 
 	//从数据库或者系统缺省配置中，读取系统配置的工程参数
-	if (hcu_hwinv_read_engineering_data_into_mem() == FAILURE){
+	if (hcu_hwinv_engpar_read_pop_data_into_mem() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Read database or system init parameters into memory error!\n");
 		return EXIT_SUCCESS;
 	}
 
 	//智能初始化：FuncHandler方式对物理配置信息进行分析
 	//系统硬件标识区初始化：必须先读取工参，然后再使用物理地址，因为物理信息很可能覆盖工参，所以必须放在后面处理，物理地址具备更高的优先级
-	if (hcu_vm_get_phy_burn_block_data() == FAILURE){
+	if (hcu_vm_engpar_get_phy_burn_block_data() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Init system hardware physical burn ID block error!\n");
 		return EXIT_SUCCESS;
 	}
 
 	//创建目录存储环境：这个任务需要移到下载任务模块的初始化之中
-	if (hcu_hwinv_create_storage_dir_env() == FAILURE){
+	if (hcu_hwinv_engpar_create_storage_dir_env() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Create storage directory environment error!\n");
 		return EXIT_SUCCESS;
 	}
 
 	//读取宿主机eth0 Mac地址
-	if (hcu_hwinv_read_mac_address() == FAILURE){
+	if (hcu_hwinv_engpar_read_mac_address() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Read MAC address error!\n");
 		return EXIT_SUCCESS;
 	}
@@ -2230,15 +2226,15 @@ int hcu_vm_main_entry(void)
 
 	//单进程方式，当前的工作模式！！！
 	if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_SINGLE){
-		hcu_vm_working_mode_single_start();
+		hcu_vm_working_mode_single_process_start();
 	}
 	//双进程方式
 	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_DOUBLE){
-		hcu_vm_working_mode_double_start();
+		hcu_vm_working_mode_double_process_start();
 	}
 	//多进程方式
 	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_TRIPPLE){
-		hcu_vm_working_mode_multipy_start();
+		hcu_vm_working_mode_multipy_process_start();
 	}
 	//差错启动模式
 	else{
@@ -2249,12 +2245,12 @@ int hcu_vm_main_entry(void)
 }
 
 //需要单独设计一种的存储设备敏感数据的方式
-OPSTAT hcu_vm_get_phy_burn_block_data(void)
+OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 {
 	int ret = 0;
 	//硬件烧录区域，系统唯一标识部分，后面程序中访问到这些系统参数都必须从这个地方读取
 	//具体读取的过程，目前暂时空白，因为还未决定使用哪种方式来存储这个敏感信息
-	ret = hcu_vm_read_phy_boot_cfg();
+	ret = hcu_vm_engpar_read_phy_boot_cfg();
 	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_YES) && (ret == FAILURE)){
 		HcuErrorPrint("HCU-VM: Massive production phase but not yet pop physical boot configuration!\n");
 		return FAILURE;
@@ -2296,23 +2292,13 @@ OPSTAT hcu_vm_get_phy_burn_block_data(void)
 }
 
 
-OPSTAT hcu_vm_read_phy_boot_cfg(void)
+OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 {
 	//int fHandler = 0;
 	FILE *fp;
 	int bytes_read = 0, len = 0, index =0;
 	int file_len=0;
 	char *pRecord;
-
-//	//打开源文件
-//	if((fHandler=open(HCU_HARDWARE_PHY_BOOT_CFG_FILE, O_RDWR))==-1){
-//	  HcuErrorPrint("HCU-VM: Open %s Error!\n", HCU_HARDWARE_PHY_BOOT_CFG_FILE);
-//	  return FAILURE;
-//	}
-//
-//	//测得文件大小
-//	file_len= lseek(fHandler, 0L, SEEK_END);  //文件总长度
-//	close(fHandler);
 
 	//打开源文件
 	if((fp=fopen(HCU_HARDWARE_PHY_BOOT_CFG_FILE, "rt+"))== NULL){
@@ -2348,8 +2334,8 @@ OPSTAT hcu_vm_read_phy_boot_cfg(void)
 	char *p1, *p2;
 	//按照zHcuXmlBootPhyCfgHead处理
 	index = 0;
-	p1 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].left);
-	p2 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].right);
+	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
+	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
 	if ((p1==NULL) || (p2==NULL) || (p1>=p2)){
 		  HcuErrorPrint("HCU-VM: Read file fail!\n");
 		  free(pRecord);
@@ -2359,49 +2345,49 @@ OPSTAT hcu_vm_read_phy_boot_cfg(void)
 
 	//equLable
 	index++;
-	p1 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].left);
-	p2 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].right);
-	len = p2 - p1 - strlen(zHcuXmlBootPhyCfgHead[index].left);
+	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
+	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
+	len = p2 - p1 - strlen(zHcuSysEngPhyBootCfg[index].left);
 	if ((p1!=NULL) && (p2!=NULL) &&  (len>0)){
-		p1 = p1+strlen(zHcuXmlBootPhyCfgHead[index].left);
+		p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
 		strncpy(zHcuSysEngPar.hwBurnId.equLable, p1, len<sizeof(zHcuSysEngPar.hwBurnId.equLable)?len:sizeof(zHcuSysEngPar.hwBurnId.equLable));
 	}
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwType));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwPemId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swRelId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swVerId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swUpgradeFlag));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swUpgPollId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootIndex));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootAreaMax));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadAddr));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadSwRel));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadSwVer));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadCheckSum));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadValid));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare2));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1Addr));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1RelId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1VerId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1CheckSum));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1Valid));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare3));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2Addr));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2RelId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2VerId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2CheckSum));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2Valid));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare4));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3Addr));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3RelId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3VerId));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3CheckSum));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3Valid));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare5));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.cipherKey[0]));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.cipherKey[8]));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.rsv[0]));
-	hcu_vm_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.rsv[8]));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwType));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwPemId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swRelId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swVerId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swUpgradeFlag));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swUpgPollId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootIndex));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootAreaMax));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadAddr));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadSwRel));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadSwVer));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadCheckSum));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.facLoadValid));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare2));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1Addr));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1RelId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1VerId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1CheckSum));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad1Valid));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare3));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2Addr));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2RelId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2VerId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2CheckSum));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad2Valid));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare4));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3Addr));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3RelId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3VerId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3CheckSum));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootLoad3Valid));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.spare5));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.cipherKey[0]));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.cipherKey[8]));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.rsv[0]));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.rsv[8]));
 
 	//关闭文件
 	free(pRecord);
@@ -2411,7 +2397,7 @@ OPSTAT hcu_vm_read_phy_boot_cfg(void)
 }
 
 
-void hcu_vm_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target)
+void hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target)
 {
 	char *p1, *p2;
 	int len =0;
@@ -2421,27 +2407,27 @@ void hcu_vm_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *tar
 	UINT16 res2 = 0;
 	UINT32 res3 = 0;
 
-	p1 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].left);
-	p2 = strstr(pRecord, zHcuXmlBootPhyCfgHead[index].right);
-	len = p2 - p1 - strlen(zHcuXmlBootPhyCfgHead[index].left);
+	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
+	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
+	len = p2 - p1 - strlen(zHcuSysEngPhyBootCfg[index].left);
 	if ((p1!=NULL) && (p2!=NULL) && (len>0)){
-		p1 = p1+strlen(zHcuXmlBootPhyCfgHead[index].left);
+		p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
 		memset(s, 0, sizeof(s));
 		strncpy(s, p1, len<sizeof(s)?len:sizeof(s));
 		res = strtoul(s, NULL, 10);
-		if (zHcuXmlBootPhyCfgHead[index].level==1){
+		if (zHcuSysEngPhyBootCfg[index].level==1){
 			res1 = res & 0xFF;
 			memcpy(target, &res1, 1);
 		}
-		else if (zHcuXmlBootPhyCfgHead[index].level==2){
+		else if (zHcuSysEngPhyBootCfg[index].level==2){
 			res2 = res & 0xFFFF;
 			memcpy(target, &res2, 2);
 		}
-		else if (zHcuXmlBootPhyCfgHead[index].level==4){
+		else if (zHcuSysEngPhyBootCfg[index].level==4){
 			res3 = res & 0xFFFFFFFF;
 			memcpy(target, &res3, 4);
 		}
-		else if (zHcuXmlBootPhyCfgHead[index].level==8){
+		else if (zHcuSysEngPhyBootCfg[index].level==8){
 			memcpy(target, &res, 8);
 		}
 	}

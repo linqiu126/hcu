@@ -22,7 +22,7 @@ void hcu_process_3_mainapp_multipy(void);
 
 void  hcu_app_system_init();
 UINT32 hcu_system_task_init(void);
-UINT32 hcu_system_task_init_call(UINT32 task_id, FsmStateItem_t *p);
+UINT32 hcu_system_task_init_call(UINT32 task_id, HcuFsmStateItem_t *p);
 void hcu_task_send_init_to_timer(void);
 void hcu_task_send_init_to_avorion(void);
 void hcu_task_send_init_to_svrcon(void);
@@ -38,6 +38,6 @@ void hcu_task_delete_except_timer_and_hcumain(void);
 void hcu_task_delete_except_svrcon_and_hcumain(void);
 
 //Global variables
-extern HcuCurrentTaskTag_t zHcuCurrentProcessInfo;
+extern HcuCurrentTaskTag_t zHcuSysCtrTab.curProc;
 
 #endif /* HCU_H_ */

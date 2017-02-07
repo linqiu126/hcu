@@ -23,7 +23,7 @@ enum FSM_STATE_PWM
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmPwm[];
+extern HcuFsmStateItem_t HcuFsmPwm[];
 
 //Local variables
 #define RPI_PWM_PIN_VCC 2  //5V

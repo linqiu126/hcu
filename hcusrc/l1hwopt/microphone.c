@@ -12,7 +12,7 @@
 /*
 ** FSM of the MICROPHONE
 */
-FsmStateItem_t HcuFsmMicrophone[] =
+HcuFsmStateItem_t HcuFsmMicrophone[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -64,7 +64,7 @@ OPSTAT fsm_microphone_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MICROPHONE, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("MICROPHONE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MICROPHONE].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("MICROPHONE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MICROPHONE].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -82,11 +82,11 @@ OPSTAT fsm_microphone_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//Global variables
-	zHcuRunErrCnt[TASK_ID_MICROPHONE] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_MICROPHONE] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_MICROPHONE, FSM_STATE_MICROPHONE_ACTIVIED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MICROPHONE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MICROPHONE]++;
 		HcuErrorPrint("MICROPHONE: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -122,7 +122,7 @@ OPSTAT fsm_microphone_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 OPSTAT fsm_microphone_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("MICROPHONE: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_microphone_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

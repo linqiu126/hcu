@@ -14,7 +14,7 @@
 /*
 ** FSM of the NBIOTQG376
 */
-FsmStateItem_t HcuFsmNbiotqg376[] =
+HcuFsmStateItem_t HcuFsmNbiotqg376[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -56,7 +56,7 @@ FsmStateItem_t HcuFsmNbiotqg376[] =
 };
 
 //Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -84,7 +84,7 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_NBIOTQG376, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("NBIOTQG376: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NBIOTQG376].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("NBIOTQG376: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NBIOTQG376].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -102,19 +102,19 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_NBIOTQG376] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376] = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_NBIOTQG376, TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.nbiotqg376HbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 		HcuErrorPrint("NBIOTQG376: Error start timer!\n");
 		return FAILURE;
 	}
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 		HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -128,7 +128,7 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 OPSTAT fsm_nbiotqg376_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("NBIOTQG376: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_nbiotqg376_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -148,22 +148,22 @@ OPSTAT fsm_nbiotqg376_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("NBIOTQG376: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_NBIOTQG376]是否超限
-	if (zHcuRunErrCnt[TASK_ID_NBIOTQG376] > HCU_RUN_ERROR_LEVEL_3_CRITICAL){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376] > HCU_RUN_ERROR_LEVEL_3_CRITICAL){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_NBIOTQG376] = zHcuRunErrCnt[TASK_ID_NBIOTQG376] - HCU_RUN_ERROR_LEVEL_3_CRITICAL;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376] - HCU_RUN_ERROR_LEVEL_3_CRITICAL;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_NBIOTQG376, TASK_ID_NBIOTQG376, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
-			HcuErrorPrint("NBIOTQG376: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NBIOTQG376].taskName, zHcuTaskInfo[TASK_ID_NBIOTQG376].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
+			HcuErrorPrint("NBIOTQG376: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NBIOTQG376].taskName, zHcuVmCtrTab.task[TASK_ID_NBIOTQG376].taskName);
 			return FAILURE;
 		}
 	}
@@ -205,7 +205,7 @@ OPSTAT func_nbiotqg376_time_out_period(void)
 		if (hcu_ethernet_socket_link_setup() == SUCCESS){
 			//State Transfer to FSM_STATE_NBIOTQG376_ONLINE
 			if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_ONLINE) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 				HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
 				return FAILURE;
 			}
@@ -223,10 +223,10 @@ OPSTAT func_nbiotqg376_time_out_period(void)
 	//在线状态，则检查
 	else if(FsmGetState(TASK_ID_NBIOTQG376) == FSM_STATE_NBIOTQG376_ONLINE){
 		if (func_nbiotqg376_heart_beat_check() == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 			//State Transfer to FSM_STATE_NBIOTQG376_OFFLINE
 			if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 				HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
 				return FAILURE;
 			}
@@ -240,7 +240,7 @@ OPSTAT func_nbiotqg376_time_out_period(void)
 	//既不在线，也不离线，强制转移到离线状态以便下次恢复，这种情况很难得，一般不会跑到这儿来，这种情况通常发生在初始化期间或者状态机胡乱的情况下
 	else{
 		if (FsmSetState(TASK_ID_NBIOTQG376, FSM_STATE_NBIOTQG376_OFFLINE) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 			HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
 			return FAILURE;
 		}
@@ -262,7 +262,7 @@ OPSTAT func_nbiotqg376_heart_beat_check(void)
 
 		//打包数据
 		if (func_nbiotqg376_heart_beat_msg_pack(&buf) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 			HcuErrorPrint("NBIOTQG376: Package message error!\n");
 			return FAILURE;
 		}
@@ -270,12 +270,12 @@ OPSTAT func_nbiotqg376_heart_beat_check(void)
 		//Send out
 		ret = func_nbiotqg376_send_data_to_cloud(&buf);
 		if ( ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 			HcuErrorPrint("NBIOTQG376: Error send data to back-cloud!\n");
 			return FAILURE;
 		}
 	}else{
-		zHcuRunErrCnt[TASK_ID_NBIOTQG376]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 		HcuErrorPrint("NBIOTQG376: Error send HEART_BEAT to cloud, get by ONLINE, but back off line so quick!\n");
 		return FAILURE;
 	}
@@ -300,13 +300,13 @@ OPSTAT func_nbiotqg376_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	//参数检查
 	if ((buf->curLen <=0) || (buf->curLen >MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error message length to send back for cloud!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	//这里只考虑ETHERNET一种网络配置情况，其它的不考虑
 	if (hcu_ethernet_socket_date_send(buf) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 		return FAILURE;
 	}

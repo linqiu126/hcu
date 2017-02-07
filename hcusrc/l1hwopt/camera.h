@@ -41,7 +41,7 @@ typedef struct HcuBufferType
 
 
 //Global variables
-extern FsmStateItem_t HcuFsmCamera[];
+extern HcuFsmStateItem_t HcuFsmCamera[];
 
 //API
 extern OPSTAT fsm_camera_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

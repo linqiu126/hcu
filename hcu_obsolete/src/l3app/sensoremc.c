@@ -14,7 +14,7 @@
 /*
 ** FSM of the EMC
 */
-FsmStateItem_t FsmEmc[] =
+HcuFsmStateItem_t FsmEmc[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -91,7 +91,7 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_EMC, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_EMC], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_EMC], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -108,7 +108,7 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	//Task global variables init.
 	memset(zSensorEmcInfo, 0, sizeof(SensorEmcInfo_t));
 	currentSensorEmcId = 0;
-	zHcuRunErrCnt[TASK_ID_EMC] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC] = 0;
 	//目前暂时只有一个EMC传感器，但程序的框架可以支持无数个传感器
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
 	for (i=0;i<MAX_NUM_OF_SENSOR_EMC_INSTALLED;i++){
@@ -128,7 +128,7 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_EMC, TIMER_ID_1S_EMC_PERIOD_READ, zHcuSysEngPar.timer.emcReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		HcuErrorPrint("EMC: Error start timer!\n");
 		return FAILURE;
 	}
@@ -136,7 +136,7 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	//State Transfer to FSM_STATE_EMC_ACTIVED
 	ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		HcuErrorPrint("EMC: Error Set FSM State at fsm_emc_init\n");
 		return FAILURE;
 	}
@@ -146,7 +146,7 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 OPSTAT fsm_emc_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("EMC: Internal error counter reach MAJOR level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_emc_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -160,22 +160,22 @@ OPSTAT fsm_emc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("EMC: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_EMC]是否超限
-	if (zHcuRunErrCnt[TASK_ID_EMC] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_EMC] = zHcuRunErrCnt[TASK_ID_EMC] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_EMC, TASK_ID_EMC, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_EMC], zHcuTaskInfo.taskName[TASK_ID_EMC]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_EMC], zHcuSysCrlTab.taskRun.taskName[TASK_ID_EMC]);
 			return FAILURE;
 		}
 	}
@@ -186,7 +186,7 @@ OPSTAT fsm_emc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 		if (FsmGetState(TASK_ID_EMC) != FSM_STATE_EMC_ACTIVED){
 			ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_EMC]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 				HcuErrorPrint("EMC: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
@@ -235,15 +235,15 @@ void func_emc_time_out_read_data_from_modbus(void)
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
 		ret = hcu_message_send(MSG_ID_EMC_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_EMC, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_EMC], zHcuTaskInfo.taskName[TASK_ID_MODBUS]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_EMC], zHcuSysCrlTab.taskRun.taskName[TASK_ID_MODBUS]);
 			return;
 		}
 
 		//启动一次性定时器
 		ret = hcu_timer_start(TASK_ID_EMC, TIMER_ID_1S_EMC_MODBUS_FB, zHcuSysEngPar.timer.emcReqTimerFB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_EMC]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 			HcuErrorPrint("EMC: Error start timer!\n");
 			return;
 		}
@@ -259,7 +259,7 @@ void func_emc_time_out_read_data_from_modbus(void)
 		//State Transfer to FSM_STATE_EMC_OPT_WFFB
 		ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_OPT_WFFB);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_EMC]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 			HcuErrorPrint("EMC: Error Set FSM State!\n");
 			return;
 		}//FsmSetState
@@ -302,7 +302,7 @@ void func_emc_time_out_processing_no_rsponse(void)
 	//State Transfer to FSM_STATE_EMC_ACTIVE
 	ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		HcuErrorPrint("EMC: Error Set FSM State!\n");
 		return;
 	}//FsmSetState
@@ -322,7 +322,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 	memset(&rcv, 0, sizeof(msg_struct_modbus_emc_data_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_emc_data_report_t))){
 		HcuErrorPrint("EMC: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -332,7 +332,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 	//停止定时器
 	ret = hcu_timer_stop(TASK_ID_EMC, TIMER_ID_1S_EMC_MODBUS_FB, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		HcuErrorPrint("EMC: Error stop timer!\n");
 		return FAILURE;
 	}
@@ -359,7 +359,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_EMC]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 					HcuErrorPrint("EMC: Can not save data into memory buffer, might par error!\n");
 				}
 			}
@@ -368,7 +368,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_EMC]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 					HcuErrorPrint("EMC: Can not save data into hard disk!\n");
 				}
 			}
@@ -392,13 +392,13 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 				emcData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuEmcDataInfo_save(&emcData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_EMC]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 					HcuErrorPrint("EMC: Can not save data into database!\n");
 				}
 			}
 		}//周期模式
 		else{
-				zHcuRunErrCnt[TASK_ID_EMC]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 				HcuErrorPrint("EMC: Offline but instance or other control message received!\n");
 			}
 	}
@@ -424,8 +424,8 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 		snd.emc.gps.ns = rcv.emc.gps.ns;
 		ret = hcu_message_send(MSG_ID_EMC_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_EMC, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_EMC], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_EMC], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 			return FAILURE;
 		}
 
@@ -450,7 +450,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_EMC]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 					HcuErrorPrint("EMC: Can not save data into memory buffer, might par error!\n");
 				}
 			}
@@ -459,7 +459,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_EMC]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 					HcuErrorPrint("EMC: Can not save data into hard disk!\n");
 				}
 			}
@@ -480,7 +480,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 				emcData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuEmcDataInfo_save(&emcData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_EMC]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 					HcuErrorPrint("EMC: Can not save data into database!\n");
 				}
 			}
@@ -491,7 +491,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 	//差错情形
 	else{
 		HcuErrorPrint("EMC: Wrong state of CLOUDVELA when data need send out!\n");
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
 		//If this shall work normally, it is too much for each sensor STM process!
 		return FAILURE;
@@ -514,7 +514,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 	//State Transfer to FSM_STATE_EMC_ACTIVE
 	ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		HcuErrorPrint("EMC: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -532,7 +532,7 @@ OPSTAT fsm_emc_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_pt
 	memset(&rcv, 0, sizeof(msg_struct_cloudvela_emc_data_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_emc_data_req_t))){
 		HcuErrorPrint("EMC: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_EMC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);

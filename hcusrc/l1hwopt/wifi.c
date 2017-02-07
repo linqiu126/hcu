@@ -12,7 +12,7 @@
 /*
 ** FSM of the WIFI
 */
-FsmStateItem_t HcuFsmWifi[] =
+HcuFsmStateItem_t HcuFsmWifi[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -67,7 +67,7 @@ OPSTAT fsm_wifi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_WIFI, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("WIFI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_WIFI].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("WIFI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_WIFI].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -85,11 +85,11 @@ OPSTAT fsm_wifi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	}
 
 	//Global variables
-	zHcuRunErrCnt[TASK_ID_WIFI] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_WIFI] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_WIFI, FSM_STATE_WIFI_RECEIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_WIFI]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WIFI]++;
 		HcuErrorPrint("WIFI: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -109,8 +109,8 @@ OPSTAT fsm_wifi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 			snd.length = sizeof(msg_struct_wifi_cloudvela_data_rx_t);
 			ret = hcu_message_send(MSG_ID_WIFI_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_WIFI, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_WIFI]++;
-				HcuErrorPrint("WIFI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_WIFI].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_WIFI]++;
+				HcuErrorPrint("WIFI: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_WIFI].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -125,7 +125,7 @@ OPSTAT fsm_wifi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 OPSTAT fsm_wifi_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("WIFI: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_wifi_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

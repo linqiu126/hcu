@@ -11,7 +11,7 @@
 /*
 ** FSM of the MOTOR
 */
-FsmStateItem_t HcuFsmMotor[] =
+HcuFsmStateItem_t HcuFsmMotor[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -62,7 +62,7 @@ OPSTAT fsm_motor_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MOTOR, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("MOTOR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MOTOR].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("MOTOR: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MOTOR].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -80,11 +80,11 @@ OPSTAT fsm_motor_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_MOTOR] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_MOTOR] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_MOTOR, FSM_STATE_MOTOR_ACTIVIED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MOTOR]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MOTOR]++;
 		HcuErrorPrint("MOTOR: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -120,7 +120,7 @@ OPSTAT fsm_motor_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 OPSTAT fsm_motor_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("MOTOR: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_motor_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

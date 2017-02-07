@@ -438,7 +438,7 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 
 //查询满足条件的第一条记录
 //deviceid是入参，指针为出参
-OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTable_t *engPar, char *prjname)
+OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;
@@ -660,7 +660,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTable_t *engPar, char *prjname)
 
 
 //查询所有基于模块控制的TRACE记录，并存入全局控制变量
-OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar)
+OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTab_t *engPar)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;
@@ -721,7 +721,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar)
 		engPar->traceList.mod[moduleId].moduleId = moduleId;
 		if(sqlRow[index]) strncpy(engPar->traceList.mod[moduleId].moduleName, sqlRow[index++], TASK_NAME_MAX_LENGTH-1);
 		//不能再做比较，这个比较必须到后期再做
-		if ((strlen(zHcuTaskInfo[moduleId].taskName) != 0) && (strcmp(engPar->traceList.mod[moduleId].moduleName, zHcuTaskInfo[moduleId].taskName)!=FALSE)){
+		if ((strlen(zHcuVmCtrTab.task[moduleId].taskName) != 0) && (strcmp(engPar->traceList.mod[moduleId].moduleName, zHcuVmCtrTab.task[moduleId].taskName)!=FALSE)){
 			HCU_DEBUG_PRINT_CRT("DBICOM: Error Module name populated!\n");
 		}
 		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
@@ -739,7 +739,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar)
 }
 
 //根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
-OPSTAT dbi_HcuTraceModuleCtr_intelligence_init(void)
+OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void)
 {
 	MYSQL *sqlHandler;
     int result = 0, item = 0;
@@ -772,16 +772,16 @@ OPSTAT dbi_HcuTraceModuleCtr_intelligence_init(void)
 
 	//读取VM中模块初始化表单内容
 	//扫描输入表单，起始必须是TASK_ID_MIN条目
-	if (zHcuGlobalTaskInputConfig[0].taskInputId != TASK_ID_MIN){
+	if (zHcuVmCtrTaskStaticCfg[0].taskInputId != TASK_ID_MIN){
 		HcuErrorPrint("DBICOM: Initialize HCU-VM failure, task input configuration error!\n");
 		return FAILURE;
 	}
 	//扫描输入表单，以TASK_ID_MAX为终止条目
 	for(item=1; item < MAX_TASK_NUM_IN_ONE_HCU; item++){
-		if(zHcuGlobalTaskInputConfig[item].taskInputId == TASK_ID_MAX){
+		if(zHcuVmCtrTaskStaticCfg[item].taskInputId == TASK_ID_MAX){
 			break;
 		}
-		if ((zHcuGlobalTaskInputConfig[item].taskInputId <= TASK_ID_MIN) || (zHcuGlobalTaskInputConfig[item].taskInputId > TASK_ID_MAX)){
+		if ((zHcuVmCtrTaskStaticCfg[item].taskInputId <= TASK_ID_MIN) || (zHcuVmCtrTaskStaticCfg[item].taskInputId > TASK_ID_MAX)){
 			HcuErrorPrint("DBICOM: Initialize HCU-VM failure, task input configuration error!\n");
 			return FAILURE;
 		}
@@ -789,12 +789,12 @@ OPSTAT dbi_HcuTraceModuleCtr_intelligence_init(void)
 
 	//从任务配置输入区域读取参数到系统任务表，一旦遇到TASK_ID_MAX就终止
 	item = 0;
-	while(zHcuGlobalTaskInputConfig[item].taskInputId != TASK_ID_MAX){
+	while(zHcuVmCtrTaskStaticCfg[item].taskInputId != TASK_ID_MAX){
 		//REPLACE新的数据
 	    sprintf(strsql, "REPLACE INTO `hcutracemodulectr` (moduleid, modulename, modulectrflag, moduletoallow, moduletorestrict, modulefromallow, modulefromrestrict) VALUES \
-	    		('%d', '%s', '%d', '%d', '%d', '%d', '%d')", zHcuGlobalTaskInputConfig[item].taskInputId, zHcuGlobalTaskInputConfig[item].taskInputName, \
-				zHcuGlobalTaskInputConfig[item].traceCtrFlag, zHcuGlobalTaskInputConfig[item].traceModToAllowFlag, zHcuGlobalTaskInputConfig[item].traceModToRestrictFlag, \
-				zHcuGlobalTaskInputConfig[item].traceModFromAllowFlag, zHcuGlobalTaskInputConfig[item].traceModFromRestrictFlag);
+	    		('%d', '%s', '%d', '%d', '%d', '%d', '%d')", zHcuVmCtrTaskStaticCfg[item].taskInputId, zHcuVmCtrTaskStaticCfg[item].taskInputName, \
+				zHcuVmCtrTaskStaticCfg[item].traceCtrFlag, zHcuVmCtrTaskStaticCfg[item].traceModToAllowFlag, zHcuVmCtrTaskStaticCfg[item].traceModToRestrictFlag, \
+				zHcuVmCtrTaskStaticCfg[item].traceModFromAllowFlag, zHcuVmCtrTaskStaticCfg[item].traceModFromRestrictFlag);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
@@ -805,9 +805,9 @@ OPSTAT dbi_HcuTraceModuleCtr_intelligence_init(void)
 	}
 	//最后一项必定是TASK_ID_MAX
     sprintf(strsql, "REPLACE INTO `hcutracemodulectr` (moduleid, modulename, modulectrflag, moduletoallow, moduletorestrict, modulefromallow, modulefromrestrict) VALUES \
-    		('%d', '%s', '%d', '%d', '%d', '%d', '%d')", zHcuGlobalTaskInputConfig[item].taskInputId, zHcuGlobalTaskInputConfig[item].taskInputName, \
-			zHcuGlobalTaskInputConfig[item].traceCtrFlag, zHcuGlobalTaskInputConfig[item].traceModToAllowFlag, zHcuGlobalTaskInputConfig[item].traceModToRestrictFlag, \
-			zHcuGlobalTaskInputConfig[item].traceModFromAllowFlag, zHcuGlobalTaskInputConfig[item].traceModFromRestrictFlag);
+    		('%d', '%s', '%d', '%d', '%d', '%d', '%d')", zHcuVmCtrTaskStaticCfg[item].taskInputId, zHcuVmCtrTaskStaticCfg[item].taskInputName, \
+			zHcuVmCtrTaskStaticCfg[item].traceCtrFlag, zHcuVmCtrTaskStaticCfg[item].traceModToAllowFlag, zHcuVmCtrTaskStaticCfg[item].traceModToRestrictFlag, \
+			zHcuVmCtrTaskStaticCfg[item].traceModFromAllowFlag, zHcuVmCtrTaskStaticCfg[item].traceModFromRestrictFlag);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -822,7 +822,7 @@ OPSTAT dbi_HcuTraceModuleCtr_intelligence_init(void)
 
 
 //查询所有基于模块控制的TRACE记录，并存入全局控制变量
-OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar)
+OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;
@@ -882,9 +882,9 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar)
 
 		engPar->traceList.msg[msgId].msgId = msgId;
 		if(sqlRow[index]) strncpy(engPar->traceList.msg[msgId].msgName, sqlRow[index++], MSG_NAME_MAX_LENGTH-1);
-		if (strcmp(engPar->traceList.msg[msgId].msgName, zHcuMsgNameList[msgId].msgName)){
+		if (strcmp(engPar->traceList.msg[msgId].msgName, zHcuSysEngTrcMsgCtrStaticCfg[msgId].msgName)){
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-				HcuDebugPrint("DBICOM: Error Message name populated, MsgId = %d, engPar->traceList.msg = [%s], zHcuMsgNameList = [%s]!\n", msgId, engPar->traceList.msg[msgId].msgName, zHcuMsgNameList[msgId].msgName);
+				HcuDebugPrint("DBICOM: Error Message name populated, MsgId = %d, engPar->traceList.msg = [%s], zHcuMsgNameList = [%s]!\n", msgId, engPar->traceList.msg[msgId].msgName, zHcuSysEngTrcMsgCtrStaticCfg[msgId].msgName);
 			}
 		}
 		if(sqlRow[index]) engPar->traceList.msg[msgId].msgCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
@@ -899,7 +899,7 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar)
 }
 
 //根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
-OPSTAT dbi_HcuTraceMsgCtr_intelligence_init(void)
+OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void)
 {
 	MYSQL *sqlHandler;
 	int result = 0, item = 0;
@@ -932,16 +932,16 @@ OPSTAT dbi_HcuTraceMsgCtr_intelligence_init(void)
 
 	//读取VM中模块初始化表单内容
 	//扫描输入表单，起始必须是MSG_ID_COM_MIN条目
-	if (zHcuMsgNameList[0].msgId != MSG_ID_COM_MIN){
+	if (zHcuSysEngTrcMsgCtrStaticCfg[0].msgId != MSG_ID_COM_MIN){
 		HcuErrorPrint("DBICOM: Initialize HCU-VM failure, message input configuration error!\n");
 		return FAILURE;
 	}
 	//扫描输入表单，以MSG_ID_COM_MAX为终止条目
 	for(item=1; item < MAX_MSGID_NUM_IN_ONE_TASK; item++){
-		if(zHcuGlobalTaskInputConfig[item].taskInputId == TASK_ID_MAX){
+		if(zHcuSysEngTrcMsgCtrStaticCfg[item].msgId == MSG_ID_COM_MAX){
 			break;
 		}
-		if ((zHcuMsgNameList[item].msgId <= MSG_ID_COM_MIN) || (zHcuMsgNameList[item].msgId > MSG_ID_COM_MAX)){
+		if ((zHcuSysEngTrcMsgCtrStaticCfg[item].msgId <= MSG_ID_COM_MIN) || (zHcuSysEngTrcMsgCtrStaticCfg[item].msgId > MSG_ID_COM_MAX)){
 			HcuErrorPrint("DBICOM: Initialize HCU-VM failure, message input configuration error!\n");
 			return FAILURE;
 		}
@@ -949,11 +949,11 @@ OPSTAT dbi_HcuTraceMsgCtr_intelligence_init(void)
 
 	//从任务配置输入区域读取参数到系统任务表，一旦遇到MSG_ID_COM_MAX就终止
 	item = 0;
-	while(zHcuMsgNameList[item].msgId != MSG_ID_COM_MAX){
+	while(zHcuSysEngTrcMsgCtrStaticCfg[item].msgId != MSG_ID_COM_MAX){
 		//REPLACE新的数据
 	    sprintf(strsql, "REPLACE INTO `hcutracemsgctr` (msgid, msgname, msgctrflag, msgallow, msgrestrict) VALUES \
-	    		('%d', '%s', '%d', '%d', '%d')", zHcuMsgNameList[item].msgId, zHcuMsgNameList[item].msgName, \
-				zHcuMsgNameList[item].traceCtrFlag, zHcuMsgNameList[item].traceMsgAllowFlag, zHcuMsgNameList[item].traceMsgRestrictFlag);
+	    		('%d', '%s', '%d', '%d', '%d')", zHcuSysEngTrcMsgCtrStaticCfg[item].msgId, zHcuSysEngTrcMsgCtrStaticCfg[item].msgName, \
+				zHcuSysEngTrcMsgCtrStaticCfg[item].traceCtrFlag, zHcuSysEngTrcMsgCtrStaticCfg[item].traceMsgAllowFlag, zHcuSysEngTrcMsgCtrStaticCfg[item].traceMsgRestrictFlag);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
@@ -964,8 +964,8 @@ OPSTAT dbi_HcuTraceMsgCtr_intelligence_init(void)
 	}
 	//最后一项必定是MSG_ID_COM_MAX
     sprintf(strsql, "REPLACE INTO `hcutracemsgctr` (msgid, msgname, msgctrflag, msgallow, msgrestrict) VALUES \
-    		('%d', '%s', '%d', '%d', '%d')", zHcuMsgNameList[item].msgId, zHcuMsgNameList[item].msgName, \
-			zHcuMsgNameList[item].traceCtrFlag, zHcuMsgNameList[item].traceMsgAllowFlag, zHcuMsgNameList[item].traceMsgRestrictFlag);	result = mysql_query(sqlHandler, strsql);
+    		('%d', '%s', '%d', '%d', '%d')", zHcuSysEngTrcMsgCtrStaticCfg[item].msgId, zHcuSysEngTrcMsgCtrStaticCfg[item].msgName, \
+			zHcuSysEngTrcMsgCtrStaticCfg[item].traceCtrFlag, zHcuSysEngTrcMsgCtrStaticCfg[item].traceMsgAllowFlag, zHcuSysEngTrcMsgCtrStaticCfg[item].traceMsgRestrictFlag);	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: INSERT data error: %s\n", mysql_error(sqlHandler));
@@ -1035,7 +1035,7 @@ void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow)
 }
 
 //查询当前HCU使用的数据库版本号
-OPSTAT dbi_HcuDbVersion_inqury(HcuInventoryInfo_t *hcuInv)
+OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;

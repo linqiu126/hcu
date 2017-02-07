@@ -26,7 +26,7 @@ enum FSM_STATE_3G4G
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t Fsm3g4g[];
+extern HcuFsmStateItem_t Fsm3g4g[];
 
 //API
 extern OPSTAT fsm_3g4g_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -64,7 +64,7 @@ extern OPSTAT hcu_3g_data_send();
  *
  */
 
-extern SysInfo_t zHcuHwinvGlobalSysInfo;
+extern SysInfo_t zHcuVmCtrTab.sysInfo;
 enum USB_UMTS_PPP_CARD_TYPE
 {
 	USB_UMTS_PPP_CARD_TYPE_ZET_MF190 = 0x00, //Starting point

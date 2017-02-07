@@ -11,7 +11,7 @@
 /*
 ** FSM of the RELAY
 */
-FsmStateItem_t FsmRelay[] =
+HcuFsmStateItem_t FsmRelay[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -63,7 +63,7 @@ OPSTAT fsm_relay_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_RELAY, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("RELAY: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_RELAY], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("RELAY: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_RELAY], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -81,11 +81,11 @@ OPSTAT fsm_relay_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_RELAY] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_RELAY] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_RELAY, FSM_STATE_RELAY_ACTIVIED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_RELAY]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_RELAY]++;
 		HcuErrorPrint("RELAY: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -121,7 +121,7 @@ OPSTAT fsm_relay_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 OPSTAT fsm_relay_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("RELAY: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_relay_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

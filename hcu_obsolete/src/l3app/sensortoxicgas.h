@@ -31,7 +31,7 @@ extern OPSTAT func_toxicgas_time_out_read_data_from_mq135(void);
 extern OPSTAT func_toxicgas_time_out_read_data_from_zp01voc(void);
 
 //Global variables
-extern FsmStateItem_t FsmToxicgas[];
+extern HcuFsmStateItem_t FsmToxicgas[];
 
 //API
 extern OPSTAT fsm_toxicgas_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

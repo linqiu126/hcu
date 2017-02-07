@@ -52,7 +52,7 @@ typedef struct PmCpuTempInfo         //定义一个cpu temp的结构体
 */
 
 //Global variables
-extern FsmStateItem_t HcuFsmSyspm[];
+extern HcuFsmStateItem_t HcuFsmSyspm[];
 
 //API
 extern OPSTAT fsm_syspm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

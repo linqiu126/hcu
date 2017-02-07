@@ -226,7 +226,7 @@ typedef struct HcuComMsgSysInfo
 	SysHwInfo_t hw;
 	SysOsInfo_t os;
 	SysNetworkInfo_t net;
-}HcuComMsgSysInfo_t;
+}HcuSysOsNetInfo_t;
 #define		NB_NANOS_IN_ONE_SECOND			1000000000	//number of nanos in one second
 #define 	NB_NANOS_IN_ONE_MS          	1000000     //number of nanos secondes in 1 ms
 #define 	NB_MICROS_IN_ONE_SECOND        	1000000     //number of micros secondes in 1 second
@@ -825,17 +825,27 @@ typedef struct GpsPosInfo
 	UINT32 speed; //速度
 	UINT32 resistence; //反映多少个GPS模块扫描周期一直没有数值的情况
 }GpsPosInfo_t;
-typedef struct  HcuInventoryInfo
+//就SYSTEM PERFORMANCE中zHcuRunErrCnt参数表达的错误计数器，进行定期存储数据库，并通过界面展示出来，以方便调测与监控
+typedef struct  sp_errcnt_data_element //
 {
-	//UINT8 hw_uuid[6];
-	UINT8 hw_mac[32];
-	UINT8 hw_type;
-	UINT16 hw_version;
-	UINT8 sw_release;
-	UINT16 sw_delivery;
-	UINT16 db_delivery;
-}HcuInventoryInfo_t;
-
+	UINT32 sid;
+	UINT32 taskHcuvmEC;
+	UINT32 taskHwinvEC;
+	UINT32 taskModbusEC;
+	UINT32 taskCloudvelaEC;
+	UINT32 taskAvorionEC;
+	UINT32 taskSpsvirgoEC;
+	UINT32 taskHsmmpEC;
+	UINT32 taskEmcEC;
+	UINT32 taskPm25EC;
+	UINT32 taskWinddirEC;
+	UINT32 taskWindspdEC;
+	UINT32 taskTempEC;
+	UINT32 taskHumidEC;
+	UINT32 taskNoiseEC;
+	UINT32 taskPm25SharpEC; //by shanchun
+	UINT32 timeStamp;
+}sp_errcnt_data_element_t;
 
 /***************************************************************************************************************
  *                                                                                                             *

@@ -12,7 +12,7 @@
 /*
 ** FSM of the ETHERNET
 */
-FsmStateItem_t HcuFsmEthernet[] =
+HcuFsmStateItem_t HcuFsmEthernet[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -65,7 +65,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_ETHERNET, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ETHERNET].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -77,11 +77,11 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_ETHERNET] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET] = 0;
 
 	//初始化参数
 	if (func_ethernet_int_init() == FAILURE){
-		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 		HcuErrorPrint("ETHERNET: Error initialize interface!\n");
 		return FAILURE;
 	}
@@ -122,7 +122,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 		if(idata <= 0){
 			HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
-			zHcuGlobalCounter.SocketDiscCnt++;
+			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
 			socket_connected = FALSE;
 			//return FAILURE;
 
@@ -131,7 +131,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 			if(zHcuEthConClientFd < 0){
 				HcuErrorPrint("ETHERNET: Can not create socket!\n");
-				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 				//return FAILURE;
 			}
 
@@ -146,7 +146,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			if( connect(zHcuEthConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 			{
 				HcuErrorPrint("ETHERNET: Socket can not connect!\n");
-				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 				socket_connected = FALSE;
 			}
 			else
@@ -155,7 +155,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 				echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
 				if (send(zHcuEthConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
 					HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
-					zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 				}
 				else{
 					socket_connected = TRUE;
@@ -171,8 +171,8 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			//ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
 			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_ETHERNET]++;
-				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ETHERNET].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
+				HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 			}
 
 		}
@@ -190,7 +190,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 OPSTAT fsm_ethernet_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("ETHERNET: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_ethernet_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -258,7 +258,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuErrorPrint("ETHERNET: curl_easy_perform() failed: %s\n", curl_easy_strerror(curlRes));
 			}
-			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 			return FAILURE;
 		}else{
 			HCU_DEBUG_PRINT_INF("ETHERNET: Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
@@ -269,11 +269,11 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 			//发送数据给CLOUDCONT
 			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
 			if (ret == FAILURE)
-				HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ETHERNET].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 		}//end of send data
 		//这里放zHcuGlobalCounter.CloudDataTimeOutCnt的计数器，Not sure是否是最好的地方，再探究
 		else{
-			zHcuGlobalCounter.CloudDataTimeOutCnt++;
+			zHcuSysStaPm.statisCnt.CloudDataTimeOutCnt++;
 		}
 
 	}//End of working condition
@@ -336,7 +336,7 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	if( connect(zHcuEthConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 	{
 		HcuErrorPrint("ETHERNET: Socket can not connect!\n");
-		zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 		socket_connected = FALSE;
 		//to restart this task
 		hcu_usleep(HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV * 10);
@@ -345,7 +345,7 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length);
 		if (ret == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ETHERNET].taskName, zHcuTaskInfo[TASK_ID_ETHERNET].taskName);
+			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName);
 		return FAILURE;
 	}
 	else
@@ -354,7 +354,7 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 		echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
 		if (send(zHcuEthConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
 			HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
-			zHcuRunErrCnt[TASK_ID_ETHERNET]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 		}
 		else{
 			socket_connected = TRUE;

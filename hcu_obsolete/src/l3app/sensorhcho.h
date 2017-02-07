@@ -29,7 +29,7 @@ enum FSM_STATE_HCHO
 extern OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void);
 
 //Global variables
-extern FsmStateItem_t FsmHcho[];
+extern HcuFsmStateItem_t FsmHcho[];
 
 //API
 extern OPSTAT fsm_hcho_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

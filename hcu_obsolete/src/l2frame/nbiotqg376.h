@@ -26,7 +26,7 @@ enum FSM_STATE_NBIOTQG376
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmNbiotqg376[];
+extern HcuFsmStateItem_t FsmNbiotqg376[];
 
 //API
 extern OPSTAT fsm_nbiotqg376_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

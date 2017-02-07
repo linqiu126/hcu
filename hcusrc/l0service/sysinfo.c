@@ -136,7 +136,7 @@ void diep(char *s)
 }
 
 //mode用来控制是否需要打印输出
-OPSTAT HcuGetSysInfo(HcuComMsgSysInfo_t *si, bool mode)
+OPSTAT HcuGetSysInfo(HcuSysOsNetInfo_t *si, bool mode)
 {
     /* HW CPU Information */
     FILE *cmdline = fopen("/proc/cpuinfo", "rb");

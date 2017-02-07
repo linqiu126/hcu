@@ -74,7 +74,7 @@ enum FSM_STATE_L3BFSC
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmL3bfsc[];
+extern HcuFsmStateItem_t HcuFsmL3bfsc[];
 
 //API
 extern OPSTAT fsm_l3bfsc_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -106,9 +106,9 @@ OPSTAT func_l3bfsc_time_out_period_read_process(void);
 void func_l3bfsc_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
 
 //高级定义，简化程序的可读性
-#define HCU_ERROR_PRINT_L3BFSC(...)	do{zHcuRunErrCnt[TASK_ID_L3BFSC]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
-#define HCU_ERROR_PRINT_L3BFSC_RECOVERY(...) do{zHcuRunErrCnt[TASK_ID_L3BFSC]++; func_l3bfsc_stm_main_recovery_from_fault(); HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
-//#define HCU_ERROR_PRINT_L3BFSC	zHcuRunErrCnt[TASK_ID_L3BFSC]++; HcuErrorPrint
+#define HCU_ERROR_PRINT_L3BFSC(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFSC]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+#define HCU_ERROR_PRINT_L3BFSC_RECOVERY(...) do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFSC]++; func_l3bfsc_stm_main_recovery_from_fault(); HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+//#define HCU_ERROR_PRINT_L3BFSC	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFSC]++; HcuErrorPrint
 
 
 #endif /* L3APP_BFSC_H_ */

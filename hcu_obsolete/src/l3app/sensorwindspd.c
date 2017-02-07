@@ -13,7 +13,7 @@
 /*
 ** FSM of the WINDSPD
 */
-FsmStateItem_t FsmWindspd[] =
+HcuFsmStateItem_t FsmWindspd[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -90,7 +90,7 @@ OPSTAT fsm_windspd_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_WINDSPD, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDSPD], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_WINDSPD], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -107,7 +107,7 @@ OPSTAT fsm_windspd_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	//Task global variables init.
 	memset(zSensorWindspdInfo, 0, sizeof(SensorWindspdInfo_t));
 	currentSensorWindspdId = 0;
-	zHcuRunErrCnt[TASK_ID_WINDSPD] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD] = 0;
 	//目前暂时只有一个WINDSPD传感器，但程序的框架可以支持无数个传感器
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
 	for (i=0;i<MAX_NUM_OF_SENSOR_WINDSPD_INSTALLED;i++){
@@ -125,7 +125,7 @@ OPSTAT fsm_windspd_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_PERIOD_READ, zHcuSysEngPar.timer.windspdReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		HcuErrorPrint("WINDSPD: Error start timer!\n");
 		return FAILURE;
 	}
@@ -133,7 +133,7 @@ OPSTAT fsm_windspd_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	//State Transfer to FSM_STATE_WINDSPD_ACTIVED
 	ret = FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		HcuErrorPrint("WINDSPD: Error Set FSM State at fsm_windspd_init\n");
 		return FAILURE;
 	}
@@ -143,7 +143,7 @@ OPSTAT fsm_windspd_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 OPSTAT fsm_windspd_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("WINDSPD: Internal error counter reach MAJOR level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_windspd_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -157,22 +157,22 @@ OPSTAT fsm_windspd_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("WINDSPD: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_WINDSPD]是否超限
-	if (zHcuRunErrCnt[TASK_ID_WINDSPD] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_WINDSPD] = zHcuRunErrCnt[TASK_ID_WINDSPD] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_WINDSPD, TASK_ID_WINDSPD, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDSPD], zHcuTaskInfo.taskName[TASK_ID_WINDSPD]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
+			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_WINDSPD], zHcuSysCrlTab.taskRun.taskName[TASK_ID_WINDSPD]);
 			return FAILURE;
 		}
 	}
@@ -183,7 +183,7 @@ OPSTAT fsm_windspd_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 		if (FsmGetState(TASK_ID_WINDSPD) != FSM_STATE_WINDSPD_ACTIVED){
 			ret = FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 				HcuErrorPrint("WINDSPD: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
@@ -232,15 +232,15 @@ void func_windspd_time_out_read_data_from_modbus(void)
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
 		ret = hcu_message_send(MSG_ID_WINDSPD_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_WINDSPD, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDSPD], zHcuTaskInfo.taskName[TASK_ID_MODBUS]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
+			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_WINDSPD], zHcuSysCrlTab.taskRun.taskName[TASK_ID_MODBUS]);
 			return;
 		}
 
 		//启动一次性定时器
 		ret = hcu_timer_start(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_MODBUS_FB, zHcuSysEngPar.timer.windspdReqTimer, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 			HcuErrorPrint("WINDSPD: Error start timer!\n");
 			return;
 		}
@@ -252,7 +252,7 @@ void func_windspd_time_out_read_data_from_modbus(void)
 		//State Transfer to FSM_STATE_WINDSPD_OPT_WFFB
 		ret = FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_OPT_WFFB);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 			HcuErrorPrint("WINDSPD: Error Set FSM State!\n");
 			return;
 		}//FsmSetState
@@ -292,7 +292,7 @@ void func_windspd_time_out_processing_no_rsponse(void)
 	//State Transfer to FSM_STATE_WINDSPD_ACTIVE
 	ret = FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		HcuErrorPrint("WINDSPD: Error Set FSM State!\n");
 		return;
 	}//FsmSetState
@@ -312,7 +312,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 	memset(&rcv, 0, sizeof(msg_struct_modbus_windspd_data_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_windspd_data_report_t))){
 		HcuErrorPrint("WINDSPD: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -322,7 +322,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 	//停止定时器
 	ret = hcu_timer_stop(TASK_ID_WINDSPD, TIMER_ID_1S_WINDSPD_MODBUS_FB, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		HcuErrorPrint("WINDSPD: Error stop timer!\n");
 		return FAILURE;
 	}
@@ -349,7 +349,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 					HcuErrorPrint("WINDSPD: Can not save data into memory buffer, might par error!\n");
 				}
 			}
@@ -358,7 +358,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 					HcuErrorPrint("WINDSPD: Can not save data into hard disk!\n");
 				}
 			}
@@ -379,13 +379,13 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 				windspdData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuWindspdDataInfo_save(&windspdData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 					HcuErrorPrint("WINDSPD: Can not save data into database!\n");
 				}
 			}
 		}//周期模式
 		else{
-				zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 				HcuErrorPrint("WINDSPD: Offline but instance or other control message received!\n");
 			}
 	}
@@ -411,8 +411,8 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		snd.windspd.gps.ns = rcv.windspd.gps.ns;
 		ret = hcu_message_send(MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_WINDSPD, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_WINDSPD], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
+			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_WINDSPD], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 			return FAILURE;
 		}
 
@@ -437,7 +437,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 					HcuErrorPrint("WINDSPD: Can not save data into memory buffer, might par error!\n");
 				}
 			}
@@ -446,7 +446,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 					HcuErrorPrint("WINDSPD: Can not save data into hard disk!\n");
 				}
 			}
@@ -467,7 +467,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 				windspdData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuWindspdDataInfo_save(&windspdData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 					HcuErrorPrint("WINDSPD: Can not save data into database!\n");
 				}
 			}
@@ -478,7 +478,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 	//差错情形
 	else{
 		HcuErrorPrint("WINDSPD: Wrong state of CLOUDVELA when data need send out!\n");
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
 		//If this shall work normally, it is too much for each sensor STM process!
 		return FAILURE;
@@ -501,7 +501,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 	//State Transfer to FSM_STATE_WINDSPD_ACTIVE
 	ret = FsmSetState(TASK_ID_WINDSPD, FSM_STATE_WINDSPD_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		HcuErrorPrint("WINDSPD: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -519,7 +519,7 @@ OPSTAT fsm_windspd_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * para
 	memset(&rcv, 0, sizeof(msg_struct_cloudvela_windspd_data_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_windspd_data_req_t))){
 		HcuErrorPrint("WINDSPD: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_WINDSPD]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);

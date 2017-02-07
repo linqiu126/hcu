@@ -12,7 +12,7 @@
 #include "../l2frame/cloudvela.h"
 
 //Task Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 //Added by Shanchun for CMD command
 //extern UINT8 CMDShortTimerFlag;
 //extern UINT8 CMDLongTimerFlag;
@@ -26,11 +26,11 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//参数检查，其它参数无所谓
 	if (xmlFormat == NULL){
 		HcuErrorPrint("CLOUDVELA: Error CloudBhItfDevReportStdXml_t pointer!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	if (buf == NULL){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error CloudDataSendBuf_t pointer!\n");
 		return FAILURE;
 	}
@@ -57,11 +57,11 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 
 
 	UINT32 timeStamp = time(0);//by Shanchun: report local time to align with unpack method in Cloud
-    sprintf(zCurTimeDate.sSec, "%d", timeStamp);
+    sprintf(zHcuVmCtrTab.clock.sSec, "%d", timeStamp);
 	//HcuDebugPrint("%s\n", zCurTimeDate.sSec);
 
 	//func_hwinv_scan_date(); //更新时间戳
-	strcpy(xmlFormat->CreateTime, zCurTimeDate.sSec);
+	strcpy(xmlFormat->CreateTime, zHcuVmCtrTab.clock.sSec);
 
 	//MsgType参数，必须由调用函数填入，因为它才能知晓这是什么样的内容体
 	//strcpy(xmlFormat->MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT);
@@ -239,7 +239,7 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	//if ((len < 0) || ((len % 2) != 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
 	if ((len < 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: No data to be pack or too long length of data content %d!!!\n", len);
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -278,7 +278,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	//检查参数
 	if (rcv == NULL){
 		HcuErrorPrint("CLOUDVELA: Invalid received data buffer!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//控制命令不带XML格式头，接收的内容以裸控制命令，所以必须是偶数字节
@@ -391,7 +391,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		case L3CI_heart_beat:
 
 			if (func_cloudvela_standard_xml_heart_beat_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of heart beat!\n");
 				return FAILURE;
 			}
@@ -402,7 +402,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		case L3CI_emc:
 
 			if (func_cloudvela_standard_xml_emc_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of EMC!\n");
 				return FAILURE;
 			}
@@ -410,7 +410,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_pm25:
 			if (func_cloudvela_standard_xml_pm25_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of PM25!\n");
 				return FAILURE;
 			}
@@ -418,7 +418,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_winddir:
 			if (func_cloudvela_standard_xml_winddir_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of WINDDIR!\n");
 				return FAILURE;
 			}
@@ -426,7 +426,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_windspd:
 			if (func_cloudvela_standard_xml_windspd_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of WINDSPD!\n");
 				return FAILURE;
 			}
@@ -434,7 +434,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_temp:
 			if (func_cloudvela_standard_xml_temp_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of TEMP!\n");
 				return FAILURE;
 			}
@@ -442,7 +442,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_humid:
 			if (func_cloudvela_standard_xml_humid_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message HUMID!\n");
 				return FAILURE;
 			}
@@ -450,7 +450,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_noise:
 			if (func_cloudvela_standard_xml_noise_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of NOISE!\n");
 				return FAILURE;
 			}
@@ -461,7 +461,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 			case L3CI_bfsc_comb_scale:
 				if (func_cloudvela_standard_xml_bfsc_msg_unpack(rcv) == FAILURE){
-					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error unpack receiving message of HSMMP!\n");
 					return FAILURE;
 				}
@@ -471,7 +471,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_hsmmp:
 			if (func_cloudvela_standard_xml_hsmmp_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of HSMMP!\n");
 				return FAILURE;
 			}
@@ -479,7 +479,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_hcu_inventory:
 			if (func_cloudvela_standard_xml_hcuinventory_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of SW INVENTORY!\n");
 				return FAILURE;
 			}
@@ -487,14 +487,14 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 		case L3CI_sw_package:
 			if (func_cloudvela_standard_xml_swpackage_msg_unpack(rcv) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of SW PACKAGE!\n");
 				return FAILURE;
 			}
 			break;
 
 		default:
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Receive cloud data error with CmdId = %d\n", cmdId);
 			return FAILURE;
 
@@ -520,7 +520,7 @@ OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvel
 	index = index + 2;
 	if ((len<0) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -528,14 +528,14 @@ OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvel
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length, received length != embeded length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
 	//没有了其它的字段，所以长度=0就对了
 	if (len != 0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length, HearT_beat frame, Len!=0!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -543,7 +543,7 @@ OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvel
 
 	//也许会有其它潜在的状态转移困惑，所以这里的ONLINE状态只是为了做一定的检查，防止出现各种奇怪现象，而不是为了设置状态
 	if (func_cloudvela_heart_beat_received_handle() == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Heart_beat processing error!\n");
 		return FAILURE;
 	}
@@ -567,14 +567,14 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -586,7 +586,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 	len = len-1;
 	if ((it <= L3PO_emc_min) || (it >= L3PO_emc_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	optId = it;
@@ -594,7 +594,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 	//设备号，1BYTE
 	if (len <=0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(st, 0, sizeof(st));
@@ -621,7 +621,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 		//如果想测试，可以先把这里的严格检查放开，以方便测试
 		if (len != 0 ){
 			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -629,8 +629,8 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 		snd.length = sizeof(msg_struct_cloudvela_emc_data_req_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_EMC_DATA_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_EMC].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
 			return FAILURE;
 		}
 	}
@@ -663,7 +663,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -682,7 +682,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -701,7 +701,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -720,7 +720,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -739,7 +739,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -750,7 +750,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 			//读取命令，不应该再跟任何字节了
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -759,8 +759,8 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 		snd1.length = sizeof(msg_struct_cloudvela_emc_control_cmd_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_EMC_CONTROL_CMD, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_EMC].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
 			return FAILURE;
 		}
 
@@ -768,7 +768,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -792,14 +792,14 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -811,7 +811,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 	len = len-1;
 	if ((it <= L3PO_pm25_min) || (it >= L3PO_pm25_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	optId = it;
@@ -819,7 +819,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 	//设备号，1BYTE
 	if (len <=0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(st, 0, sizeof(st));
@@ -845,7 +845,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 		//这里的格式是，CLOUD->HCU读取PM3:  25 02(len) 01(opt) 01(equ)
 		if (len != 0 ){
 			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -853,8 +853,8 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 		snd.length = sizeof(msg_struct_cloudvela_pm25_data_req_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_PM25_DATA_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
 			return FAILURE;
 		}
 	}
@@ -886,7 +886,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -904,7 +904,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -922,7 +922,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -940,7 +940,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -958,7 +958,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -970,7 +970,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 			//读取命令，不应该再跟任何字节了
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -979,8 +979,8 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 		snd1.length = sizeof(msg_struct_cloudvela_pm25_control_cmd_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_PM25_CONTROL_CMD, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
 			return FAILURE;
 		}
 
@@ -988,7 +988,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -1011,14 +1011,14 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1037,7 +1037,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 	//设备号，1BYTE
 	if (len <=0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(st, 0, sizeof(st));
@@ -1063,7 +1063,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 		//这里的格式是，CLOUD->HCU读取PM3:  25 02(len) 01(opt) 01(equ)
 		if (len != 0 ){
 			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -1071,8 +1071,8 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 		snd.length = sizeof(msg_struct_cloudvela_winddir_data_req_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_WINDDIR].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
 			return FAILURE;
 		}
 	}
@@ -1105,7 +1105,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1124,7 +1124,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1143,7 +1143,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1162,7 +1162,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1181,7 +1181,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1192,7 +1192,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 			//读取命令，不应该再跟任何字节了
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1201,8 +1201,8 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 		snd1.length = sizeof(msg_struct_cloudvela_winddir_control_cmd_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_WINDDIR].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
 			return FAILURE;
 		}
 
@@ -1210,7 +1210,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -1233,14 +1233,14 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1252,7 +1252,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 	len = len-1;
 	if ((it <= L3PO_windspd_min) || (it >= L3PO_windspd_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	optId = it;
@@ -1260,7 +1260,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 	//设备号，1BYTE
 	if (len <=0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(st, 0, sizeof(st));
@@ -1286,7 +1286,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 		//这里的格式是，CLOUD->HCU读取PM3:  25 02(len) 01(opt) 01(equ)
 		if (len != 0 ){
 			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -1294,8 +1294,8 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 		snd.length = sizeof(msg_struct_cloudvela_windspd_data_req_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_WINDSPD].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
 			return FAILURE;
 		}
 	}
@@ -1328,7 +1328,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1347,7 +1347,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1366,7 +1366,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1385,7 +1385,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1404,7 +1404,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1415,7 +1415,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 			//读取命令，不应该再跟任何字节了
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1424,8 +1424,8 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 		snd1.length = sizeof(msg_struct_cloudvela_windspd_control_cmd_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_WINDSPD].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
 			return FAILURE;
 		}
 
@@ -1433,7 +1433,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -1456,14 +1456,14 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1475,7 +1475,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 	len = len-1;
 	if ((it <= L3PO_temp_min) || (it >= L3PO_temp_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	optId = it;
@@ -1483,7 +1483,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 	//设备号，1BYTE
 	if (len <=0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(st, 0, sizeof(st));
@@ -1509,7 +1509,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 		//这里的格式是，CLOUD->HCU读取PM3:  25 02(len) 01(opt) 01(equ)
 		if (len != 0 ){
 			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -1517,8 +1517,8 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 		snd.length = sizeof(msg_struct_cloudvela_temp_data_req_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_TEMP_DATA_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_TEMP].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
 			return FAILURE;
 		}
 	}
@@ -1551,7 +1551,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1570,7 +1570,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1589,7 +1589,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1608,7 +1608,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1627,7 +1627,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1638,7 +1638,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 			//读取命令，不应该再跟任何字节了
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1647,8 +1647,8 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 		snd1.length = sizeof(msg_struct_cloudvela_temp_control_cmd_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_TEMP].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
 			return FAILURE;
 		}
 
@@ -1656,7 +1656,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -1678,14 +1678,14 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1697,7 +1697,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 	len = len-1;
 	if ((it <= L3PO_humid_min) || (it >= L3PO_humid_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	optId = it;
@@ -1705,7 +1705,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 	//设备号，1BYTE
 	if (len <=0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(st, 0, sizeof(st));
@@ -1731,7 +1731,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 		//这里的格式是，CLOUD->HCU读取PM3:  25 02(len) 01(opt) 01(equ)
 		if (len != 0 ){
 			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -1739,8 +1739,8 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 		snd.length = sizeof(msg_struct_cloudvela_humid_data_req_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_HUMID_DATA_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_HUMID].taskName);
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 	}
@@ -1773,7 +1773,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1792,7 +1792,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1811,7 +1811,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1830,7 +1830,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1849,7 +1849,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1860,7 +1860,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 			//读取命令，不应该再跟任何字节了
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -1869,8 +1869,8 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 		snd1.length = sizeof(msg_struct_cloudvela_humid_control_cmd_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_HUMID].taskName);
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -1878,7 +1878,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -1900,14 +1900,14 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -1919,7 +1919,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 	len = len-1;
 	if ((it <= L3PO_noise_min) || (it >= L3PO_noise_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	optId = it;
@@ -1927,7 +1927,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 	//设备号，1BYTE
 	if (len <=0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(st, 0, sizeof(st));
@@ -1953,7 +1953,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 		//这里的格式是，CLOUD->HCU读取PM3:  25 02(len) 01(opt) 01(equ)
 		if (len != 0 ){
 			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -1961,8 +1961,8 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 		snd.length = sizeof(msg_struct_cloudvela_noise_data_req_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_NOISE_DATA_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_NOISE].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
 			return FAILURE;
 		}
 	}
@@ -1995,7 +1995,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -2014,7 +2014,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -2033,7 +2033,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -2052,7 +2052,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -2071,7 +2071,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -2082,7 +2082,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 			//读取命令，不应该再跟任何字节了
 			if (len != 0 ){
 				HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				return FAILURE;
 			}
 		}
@@ -2091,8 +2091,8 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 		snd1.length = sizeof(msg_struct_cloudvela_noise_control_cmd_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_NOISE].taskName);
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -2100,7 +2100,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -2123,7 +2123,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2135,7 +2135,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 	len = len-1;
 	if ((optId <= L3PO_hsmmp_min) || (optId >= L3PO_hsmmp_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2173,7 +2173,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 			if (FAILURE == func_cloudvela_huanbao_av_upload_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, avUpload, st, &buf))
 			{
 				HcuErrorPrint("CLOUDVELA: Package message error!\n");
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				//return FAILURE;
 			}
 			//Send out
@@ -2183,7 +2183,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 				//return FAILURE;
 			}
 			else{
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Online state, send AV Upload Resp to cloud failure!\n");
 				return FAILURE;
 			}
@@ -2192,7 +2192,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -2217,14 +2217,14 @@ OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
 	it = len*2 + 4;
 	if (it != rcv->length){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2236,7 +2236,7 @@ OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data
 	len = len-1;
 	if ((it <= L3PO_bfsc_min) || (it >= L3PO_bfsc_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	optId = it;
@@ -2244,7 +2244,7 @@ OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data
 	//设备号，1BYTE
 	if (len <=0){
 		HcuErrorPrint("CLOUDVELA: Error unpack on equipment Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(st, 0, sizeof(st));
@@ -2300,7 +2300,7 @@ OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data
 		//如果是START/STOP命令，则结束了
 		if (len != 0 ){
 			HcuErrorPrint("CLOUDVELA: Error unpack on message length!\n");
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -2308,8 +2308,8 @@ OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data
 		snd1.length = sizeof(msg_struct_cloudvela_l3bfsc_cmd_req_t);
 		ret = hcu_message_send(MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
 
@@ -2317,7 +2317,7 @@ OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -2333,9 +2333,9 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, ret=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
-	HcuInventoryInfo_t hcuInventoryInfo;
+	SysEngParElementSwInvInfo_t hcuInventoryInfo;
 
-	memset(&hcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
+	memset(&hcuInventoryInfo, 0, sizeof(SysEngParElementSwInvInfo_t));
 
 
 	//命令字
@@ -2349,7 +2349,7 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2361,7 +2361,7 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 	len = len-1;
 	if ((optId <= L3PO_hcuinventory_min) || (optId >= L3PO_hcuinventory_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2393,13 +2393,13 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 				if (FAILURE == func_cloudvela_huanbao_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &hcuInventoryInfo, &buf))
 				{
 					HcuErrorPrint("CLOUDVELA: Package message error!\n");
-					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					//return FAILURE;
 				}
 				//Send out
 				ret = func_cloudvela_send_data_to_cloud(&buf);
 				if ( ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Online state, send HCU Inventory Resp to cloud failure!\n");
 					return FAILURE;
 				}
@@ -2412,7 +2412,7 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}
@@ -2438,7 +2438,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	index = index + 2;
 	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//确保长度域是完全一致的
@@ -2459,7 +2459,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	len = len-1;
 	if ((optId <= L3PO_swdownload_min) || (optId >= L3PO_swdownload_max)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on operation Id!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 
@@ -2496,13 +2496,13 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 				if (FAILURE == func_cloudvela_huanbao_sw_download_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, swDownload, &buf))
 				{
 					HcuErrorPrint("CLOUDVELA: Package message error!\n");
-					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					//return FAILURE;
 				}
 				//Send out
 				ret = func_cloudvela_send_data_to_cloud(&buf);
 				if ( ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Package message error!\n");
 					//return FAILURE;
 				}
@@ -2510,7 +2510,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 			}
 
 			else{
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error send HCU SW Download Success Resp to cloud!");
 				return FAILURE;
 			}
@@ -2568,13 +2568,13 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 					if (func_cloudvela_huanbao_sw_download_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, swDownload, &buf) == FAILURE)
 					{
 						HcuErrorPrint("CLOUDVELA: Package message error!\n");
-						zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 						//return FAILURE;
 					}
 					//Send out
 					ret = func_cloudvela_send_data_to_cloud(&buf);
 					if ( ret == FAILURE){
-						zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 						HcuErrorPrint("CLOUDVELA: Package message error!\n");
 						//return FAILURE;
 					}
@@ -2582,7 +2582,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 				}
 
 				else{
-					zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error send HCU SW Download Failure Resp to cloud!");
 					return FAILURE;
 				}
@@ -2597,7 +2597,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 
 
 	else{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error unpack on operational Id!\n");
 		return FAILURE;
 	}

@@ -45,7 +45,7 @@ FIX:AAC in some container format (FLV, MP4, MKV etc.) need
 /*
 ** FSM of the AVORION
 */
-FsmStateItem_t FsmAvorion[] =
+HcuFsmStateItem_t FsmAvorion[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -121,7 +121,7 @@ OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_AVORION, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("AVORION: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_AVORION], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("AVORION: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_AVORION], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -139,7 +139,7 @@ OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_AVORION] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION] = 0;
 	zHcuAvorionFrameTotalNum = 0;
 	zHcuAvorionRefreshRate = 0;
 	zHcuAvorionRefreshThreadExitFlag = 0;
@@ -149,7 +149,7 @@ OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_AVORION, FSM_STATE_AVORION_RECEIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		HcuErrorPrint("AVORION: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -180,7 +180,7 @@ OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 OPSTAT fsm_avorion_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("AVORION: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_avorion_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -202,7 +202,7 @@ OPSTAT fsm_avorion_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	memset(&rcv, 0, sizeof(msg_struct_hsmmp_avorion_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_avorion_data_read_t))){
 		HcuErrorPrint("AVORION: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -210,27 +210,27 @@ OPSTAT fsm_avorion_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	//检查参数
 	if ((rcv.fileType != FILE_OPERATION_TYPE_AVORION_H264) && (rcv.fileType != FILE_OPERATION_TYPE_AVORION_AVI) && (rcv.fileType != FILE_OPERATION_TYPE_AVORION_MKV)){
 		HcuErrorPrint("AVORION: Receive error file type!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	if ((rcv.captureDur > AVORION_WOKRING_DURATION_MAX) || (rcv.captureDur <=0)){
 		HcuErrorPrint("AVORION: Receive error working duration!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	if ((rcv.refreshRate > AVORION_WORKING_REFRSH_RATE_MAX) || (rcv.refreshRate < AVORION_WORKING_REFRSH_RATE_MIN)){
 		HcuErrorPrint("AVORION: Receive error working refresh rate!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	if ((rcv.boolBackCloud != TRUE) && (rcv.boolBackCloud != FALSE)){
 		HcuErrorPrint("AVORION: Receive error working back type!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	if ((rcv.fDirName ==NULL) || (rcv.fName == NULL) || (rcv.tmpFname == NULL)){
 		HcuErrorPrint("AVORION: Receive error file dir or name!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 
@@ -243,7 +243,7 @@ OPSTAT fsm_avorion_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	printf("AVORION: TotalFrame=%d, RefreshRate=%d, FileType=%d, Fdir=[%s], Fname=[%s], tmpFile=[%s]\n", zHcuAvorionFrameTotalNum, zHcuAvorionRefreshRate,
 			rcv.fileType, rcv.fDirName, rcv.fName, rcv.tmpFname);
 	if (func_avorion_ffmpeg_capture_and_save(rcv.fileType, rcv.fDirName, rcv.tmpFname) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		HcuErrorPrint("AVORION: Error capture frame main loop function!\n");
 		return FAILURE;
 	}
@@ -269,8 +269,8 @@ OPSTAT fsm_avorion_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 
 	ret = hcu_message_send(MSG_ID_AVORION_HSMMP_DATA_READ_FB, TASK_ID_HSMMP, TASK_ID_AVORION, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
-		HcuErrorPrint("AVORION: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_AVORION], zHcuTaskInfo.taskName[TASK_ID_HSMMP]);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
+		HcuErrorPrint("AVORION: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_AVORION], zHcuSysCrlTab.taskRun.taskName[TASK_ID_HSMMP]);
 		return FAILURE;
 	}
 
@@ -398,7 +398,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	ifmt=av_find_input_format("video4linux2");
     if(avformat_open_input(&pFormatCtxAvorion, HCU_DEFAULT_DEVICE_USB_AVORION0, ifmt, NULL)!=0){
         HcuErrorPrint("AVORION: Couldn't open input stream.\n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
 	//负责为pFormatCtx->streams填上正确的信息,pFormatCtx->streams仅仅是一组大小为pFormatCtx->nb_streams的指针
@@ -414,7 +414,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	//从文件的头部，检查文件中的流的信息
 	if (avformat_find_stream_info(pFormatCtxAvorion, NULL) < 0){
 		HcuErrorPrint("AVORION: Couldn't find stream information.\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Couldn't find stream information
 	}
 	// Find the first video stream
@@ -429,7 +429,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	}
 	if (videoStreamAvorion == -1){
         HcuErrorPrint("AVORION: Couldn't find a video stream.\n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Didn't find a video stream
 	}
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -446,13 +446,13 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	pCodecAvorion = avcodec_find_decoder(pCodecCtxAvorion->codec_id);
 	if (pCodecAvorion == NULL) {
 		HcuErrorPrint(strerror(errno), "AVORION: Unsupported codec!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Codec not found
 	}
 	// Open codec
 	if (avcodec_open2(pCodecCtxAvorion, pCodecAvorion, NULL) < 0){
         HcuErrorPrint("AVORION: Could not open codec.\n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Could not open codec
 	}
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -469,7 +469,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	pFrameYUVmid = av_frame_alloc(); //avcodec_alloc_frame();
 	if ((pFrameYUVmid == NULL) || (pFrameAvorion == NULL)){
 		HcuErrorPrint("AVORION: Not support frame allocation!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	// 计算AVCodeContext缓冲区的大小和申请空间
@@ -493,7 +493,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER))
 	{
 		HcuErrorPrint(stderr, "AVORION: Could not initialize SDL - %s/n", SDL_GetError());
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	//初始化输出屏幕并设置视频模式
@@ -502,7 +502,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	if (!screen)
 	{
 		HcuErrorPrint(stderr, "AVORION: could not set video mode - exiting/n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	//初始化输出视频格式
@@ -527,7 +527,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER))
 		{
 			HcuErrorPrint("AVORION: Could not initialize SDL - %s/n", SDL_GetError());
-			zHcuRunErrCnt[TASK_ID_AVORION]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 			return FAILURE;
 		}
 		//初始化输出屏幕并设置视频模式
@@ -536,7 +536,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		if (!screen)
 		{
 			HcuErrorPrint("AVORION: could not set video mode - exiting: %s/n", SDL_GetError());
-			zHcuRunErrCnt[TASK_ID_AVORION]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 			return FAILURE;
 		}
 		//初始化输出视频格式
@@ -561,7 +561,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	filePtrOutputYUVmid = fopen(ftout, "wb+");
     if (filePtrOutputYUVmid == NULL){
     	HcuErrorPrint("AVORION: Cann't open temp-mid output file!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     //视频取景框的设定：负责得到视频分辨率，色彩控件变换时的上下文句柄, 获取渲染的句柄
@@ -575,7 +575,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     SDL_Thread *video_tid = SDL_CreateThread((SDL_ThreadFunction)func_avorion_refresh_thread, NULL, NULL);
     if (video_tid == NULL){
     	HcuErrorPrint("AVORION: Cann't create thread!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -592,7 +592,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     ofmt = av_guess_format(NULL, fdir, NULL);
     if (ofmt == NULL){
         HcuErrorPrint("AVORION: Failed to guess file format! \n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     pFormatCtxOutput->oformat = ofmt;
@@ -606,14 +606,14 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     //Open output file, 并赋予给输出流容量
     if (avio_open(&pFormatCtxOutput->pb, fdir, AVIO_FLAG_READ_WRITE) < 0){
         HcuErrorPrint("AVORION: Failed to open output file! \n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     //视频输出流
     video_st_output = avformat_new_stream(pFormatCtxOutput, 0);
     if (video_st_output==NULL){
     	HcuErrorPrint("AVORION: Failed to create video output stream! \n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     video_st_output->time_base.num = 1;
@@ -672,11 +672,11 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     pCodecOutput = avcodec_find_encoder(pCodecCtxOutput->codec_id);
     if (!pCodecOutput){
         HcuErrorPrint("AVORION: Can not find encoder! \n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     if (avcodec_open2(pCodecCtxOutput, pCodecOutput, &param) < 0){
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         HcuErrorPrint("AVORION: Failed to open encoder! \n");
         return FAILURE;
     }
@@ -688,7 +688,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     pFrameOutput = av_frame_alloc();
     if (pFrameOutput == NULL){
         HcuErrorPrint("AVORION: Failed to allocate frame! \n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     pFrameOutput->width = pCodecCtxOutput->width;
@@ -750,7 +750,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     				if(ret < 0)
                     {
                         HcuErrorPrint("AVORION: Decode Error.\n");
-                        zHcuRunErrCnt[TASK_ID_AVORION]++;
+                        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
                         return FAILURE;
                     }
     				if (frameFinishedAvorion)
@@ -822,7 +822,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
                         {
                             if (fread(bufferOutput, 1, y_size*3/2, in_file) <= 0){
                                 HcuErrorPrint("Failed to read raw data! \n");
-                                zHcuRunErrCnt[TASK_ID_AVORION]++;
+                                zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
                                 return FAILURE;
                             }else if(feof(in_file)){
                                 break;
@@ -853,7 +853,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
                         ret = avcodec_encode_video2(pCodecCtxOutput, packetOutput, pFrameOutput, &got_package);
                         if(ret < 0){
                             HcuErrorPrint("AVORION: Failed to encode! \n");
-                            zHcuRunErrCnt[TASK_ID_AVORION]++;
+                            zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
                             return FAILURE;
                         }
                         //HcuDebugPrint("AVORION: avcodec_encode_video2 done.\n");
@@ -867,7 +867,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
                         	packetOutput->stream_index = video_st_output->index;
                             ret = av_write_frame(pFormatCtxOutput, packetOutput);
                             if (ret == FAILURE){
-                            	zHcuRunErrCnt[TASK_ID_AVORION]++;
+                            	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
                             	HcuErrorPrint("AVORION: Failed to write into file!\n");
                             	return FAILURE;
                             }
@@ -911,7 +911,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     ret = func_avorion_flush_encoder(pFormatCtxOutput,0);
     if (ret < 0) {
         HcuErrorPrint("AVORION: Flushing encoder failed\n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     //Write file trailer
@@ -1074,7 +1074,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	ifmt=av_find_input_format("video4linux2");
     if(avformat_open_input(&pFormatCtxAvorion, HCU_DEFAULT_DEVICE_USB_CAMERA0, ifmt, NULL)!=0){
         HcuErrorPrint("AVORION: Couldn't open input stream.\n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
 	//负责为pFormatCtx->streams填上正确的信息,pFormatCtx->streams仅仅是一组大小为pFormatCtx->nb_streams的指针
@@ -1090,7 +1090,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	//从文件的头部，检查文件中的流的信息
 	if (avformat_find_stream_info(pFormatCtxAvorion, NULL) < 0){
 		HcuErrorPrint("AVORION: Couldn't find stream information.\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Couldn't find stream information
 	}
 	// Find the first video stream
@@ -1105,7 +1105,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	}
 	if (videoStreamAvorion == -1){
         HcuErrorPrint("AVORION: Couldn't find a video stream.\n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Didn't find a video stream
 	}
     if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -1122,13 +1122,13 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	pCodecAvorion = avcodec_find_decoder(pCodecCtxAvorion->codec_id);
 	if (pCodecAvorion == NULL) {
 		HcuErrorPrint(strerror(errno), "AVORION: Unsupported codec!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Codec not found
 	}
 	// Open codec
 	if (avcodec_open2(pCodecCtxAvorion, pCodecAvorion, NULL) < 0){
         HcuErrorPrint("AVORION: Could not open codec.\n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Could not open codec
 	}
     if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -1145,7 +1145,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	pFrameYUVmid = av_frame_alloc(); //avcodec_alloc_frame();
 	if ((pFrameYUVmid == NULL) || (pFrameAvorion == NULL)){
 		HcuErrorPrint("AVORION: Not support frame allocation!\n");
-		zHcuRunErrCnt[TASK_ID_AVORION]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 	// 计算AVCodeContext缓冲区的大小和申请空间
@@ -1181,7 +1181,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	filePtrOutputYUVmid = fopen(ftout, "wb+");
     if (filePtrOutputYUVmid == NULL){
     	HcuErrorPrint("AVORION: Cann't open temp-mid output file!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     //视频取景框的设定：负责得到视频分辨率，色彩控件变换时的上下文句柄, 获取渲染的句柄
@@ -1206,7 +1206,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     ofmt = av_guess_format(NULL, fdir, NULL);
     if (ofmt == NULL){
         HcuErrorPrint("AVORION: Failed to guess file format! \n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     pFormatCtxOutput->oformat = ofmt;
@@ -1220,14 +1220,14 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     //Open output file, 并赋予给输出流容量
     if (avio_open(&pFormatCtxOutput->pb, fdir, AVIO_FLAG_READ_WRITE) < 0){
         HcuErrorPrint("AVORION: Failed to open output file! \n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     //视频输出流
     video_st_output = avformat_new_stream(pFormatCtxOutput, 0);
     if (video_st_output==NULL){
     	HcuErrorPrint("AVORION: Failed to create video output stream! \n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     video_st_output->time_base.num = 1;
@@ -1286,11 +1286,11 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     pCodecOutput = avcodec_find_encoder(pCodecCtxOutput->codec_id);
     if (!pCodecOutput){
         HcuErrorPrint("AVORION: Can not find encoder! \n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     if (avcodec_open2(pCodecCtxOutput, pCodecOutput, &param) < 0){
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         HcuErrorPrint("AVORION: Failed to open encoder! \n");
         return FAILURE;
     }
@@ -1302,7 +1302,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     pFrameOutput = av_frame_alloc();
     if (pFrameOutput == NULL){
         HcuErrorPrint("AVORION: Failed to allocate frame! \n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     pFrameOutput->width = pCodecCtxOutput->width;
@@ -1375,7 +1375,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 				if(ret < 0)
 				{
 					HcuErrorPrint("AVORION: Decode Error.\n");
-					zHcuRunErrCnt[TASK_ID_AVORION]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 					return FAILURE;
 				}
 				if (frameFinishedAvorion)
@@ -1433,7 +1433,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 					{
 						if (fread(bufferOutput, 1, y_size*3/2, in_file) <= 0){
 							HcuErrorPrint("Failed to read raw data! \n");
-							zHcuRunErrCnt[TASK_ID_AVORION]++;
+							zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 							return FAILURE;
 						}else if(feof(in_file)){
 							break;
@@ -1464,7 +1464,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 					ret = avcodec_encode_video2(pCodecCtxOutput, packetOutput, pFrameOutput, &got_package);
 					if(ret < 0){
 						HcuErrorPrint("AVORION: Failed to encode! \n");
-						zHcuRunErrCnt[TASK_ID_AVORION]++;
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 						return FAILURE;
 					}
 					//HcuDebugPrint("AVORION: avcodec_encode_video2 done.\n");
@@ -1478,7 +1478,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 						packetOutput->stream_index = video_st_output->index;
 						ret = av_write_frame(pFormatCtxOutput, packetOutput);
 						if (ret == FAILURE){
-							zHcuRunErrCnt[TASK_ID_AVORION]++;
+							zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 							HcuErrorPrint("AVORION: Failed to write into file!\n");
 							return FAILURE;
 						}
@@ -1514,7 +1514,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     ret = func_avorion_flush_encoder(pFormatCtxOutput,0);
     if (ret < 0) {
         HcuErrorPrint("AVORION: Flushing encoder failed\n");
-        zHcuRunErrCnt[TASK_ID_AVORION]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
     //Write file trailer
@@ -1577,12 +1577,12 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	//Input
 	if ((ret = avformat_open_input(&ifmt_ctx_v, fdir, 0, 0)) < 0) {
     	HcuErrorPrint("AVORION: Could not open input file!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		goto end;
 	}
 	if ((ret = avformat_find_stream_info(ifmt_ctx_v, 0)) < 0) {
     	HcuErrorPrint("AVORION: Failed to retrieve input stream information!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		goto end;
 	}
 
@@ -1594,7 +1594,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	avformat_alloc_output_context2(&ofmt_ctx, NULL, NULL, out_filename);
 	if (!ofmt_ctx) {
     	HcuErrorPrint("AVORION: Could not create output context!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		ret = AVERROR_UNKNOWN;
 		goto end;
 	}
@@ -1608,7 +1608,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		videoindex_v=i;
 		if (!out_stream) {
 	    	HcuErrorPrint("AVORION: Failed allocating output stream!\n");
-	    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+	    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 			ret = AVERROR_UNKNOWN;
 			goto end;
 		}
@@ -1616,7 +1616,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		//Copy the settings of AVCodecContext
 		if (avcodec_copy_context(out_stream->codec, in_stream->codec) < 0) {
 	    	HcuErrorPrint("AVORION: Failed to copy context from input to output stream codec context!\n");
-	    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+	    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 			goto end;
 		}
 		out_stream->codec->codec_tag = 0;
@@ -1633,14 +1633,14 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	if (!(Ofmt->flags & AVFMT_NOFILE)) {
 		if (avio_open(&ofmt_ctx->pb, out_filename, AVIO_FLAG_WRITE) < 0) {
 	    	HcuErrorPrint("AVORION: Could not open output file '%s'\n", out_filename);
-	    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+	    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 			goto end;
 		}
 	}
 	//Write file header
 	if (avformat_write_header(ofmt_ctx, NULL) < 0) {
     	HcuErrorPrint("AVORION: Error occurred when opening output file!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		goto end;
 	}
 
@@ -1709,7 +1709,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		//Write
 		if (av_interleaved_write_frame(ofmt_ctx, &pkt) < 0) {
 	    	HcuErrorPrint("AVORION: Error muxing packet!\n");
-	    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+	    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 			break;
 		}
 		av_free_packet(&pkt);
@@ -1734,7 +1734,7 @@ end:
 	avformat_free_context(ofmt_ctx);
 	if (ret < 0 && ret != AVERROR_EOF) {
     	HcuErrorPrint("AVORION: Error occurred!\n");
-    	zHcuRunErrCnt[TASK_ID_AVORION]++;
+    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE;
 	}
 

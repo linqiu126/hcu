@@ -26,7 +26,7 @@ enum FSM_STATE_SVRCON
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmSvrcon[];
+extern HcuFsmStateItem_t HcuFsmSvrcon[];
 
 typedef struct HcuSvrConTimer
 {

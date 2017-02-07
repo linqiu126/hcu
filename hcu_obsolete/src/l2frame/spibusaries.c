@@ -14,7 +14,7 @@
 /*
 ** FSM of the SPIBUSARIES
 */
-FsmStateItem_t FsmSpibusaries[] =
+HcuFsmStateItem_t FsmSpibusaries[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -80,7 +80,7 @@ OPSTAT fsm_spibusaries_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPIBUSARIES, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("SPIBUSARIES: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SPIBUSARIES], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("SPIBUSARIES: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_SPIBUSARIES], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -98,11 +98,11 @@ OPSTAT fsm_spibusaries_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_SPIBUSARIES] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPIBUSARIES] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPIBUSARIES, FSM_STATE_SPIBUSARIES_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_SPIBUSARIES]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPIBUSARIES]++;
 		HcuErrorPrint("SPIBUSARIES: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -138,7 +138,7 @@ OPSTAT fsm_spibusaries_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 OPSTAT fsm_spibusaries_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("SPIBUSARIES: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_spibusaries_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -159,7 +159,7 @@ OPSTAT fsm_spibusaries_temp_data_read(UINT32 dest_id, UINT32 src_id, void * para
 	memset(&rcv, 0, sizeof(msg_struct_temp_spibusaries_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_spibusaries_data_read_t))){
 		HcuErrorPrint("SPIBUSARIES: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_SPIBUSARIES]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPIBUSARIES]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -167,7 +167,7 @@ OPSTAT fsm_spibusaries_temp_data_read(UINT32 dest_id, UINT32 src_id, void * para
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_temp)){
-		zHcuRunErrCnt[TASK_ID_SPIBUSARIES]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPIBUSARIES]++;
 		return FAILURE;
 	}
 
@@ -178,7 +178,7 @@ OPSTAT fsm_spibusaries_temp_data_read(UINT32 dest_id, UINT32 src_id, void * para
 	ret = func_spibusaries_temp_msg_pack(&rcv, &currentSPIBuf);
 	if (ret == FAILURE){
 		HcuErrorPrint("SPIBUSARIES: Error pack message!\n");
-		zHcuRunErrCnt[TASK_ID_SPIBUSARIES]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPIBUSARIES]++;
 		return FAILURE;
 	}
 	/*

@@ -25,7 +25,7 @@ enum FSM_STATE_SPSVIRGO
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmSpsvirgo[];
+extern HcuFsmStateItem_t FsmSpsvirgo[];
 extern GpsPosInfo_t zHcuGpsPosInfo;
 
 

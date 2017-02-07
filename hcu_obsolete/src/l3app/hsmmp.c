@@ -19,7 +19,7 @@
 /*
 ** FSM of the HSMMP
 */
-FsmStateItem_t FsmHsmmp[] =
+HcuFsmStateItem_t FsmHsmmp[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -65,7 +65,7 @@ FsmStateItem_t FsmHsmmp[] =
 
 //Global Variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-extern zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
+extern HcuTimeDateTable_t zHcuVmCtrTab.clock;   //时间更新表
 
 //用于描述发送到后台，多少次才发送一次
 UINT32 zHcuHsmmpSendSaeCnt = 0;
@@ -97,7 +97,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HSMMP, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HSMMP], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HSMMP], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -114,7 +114,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 	//Task global variables init.
 	zHcuHsmmpSendSaeCnt = 0;
-	zHcuRunErrCnt[TASK_ID_HSMMP] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP] = 0;
 
 	//等待随机长度的时长，一分钟/60秒之类，然后再开始干活，以便减少所有传感器相互碰撞的几率，让所有任务分布更加平均
 	i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
@@ -124,7 +124,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ, zHcuSysEngPar.timer.hsmmpReqTimer,
 			TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		HcuErrorPrint("HSMMP: Error start timer!\n");
 		return FAILURE;
 	}
@@ -132,7 +132,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//设置状态机到目标状态
 	//State Transfer to FSM_STATE_HSMMP_ACTIVED
 	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -143,7 +143,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 OPSTAT fsm_hsmmp_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("HSMMP: Internal error counter reach MAJOR level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_hsmmp_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -157,22 +157,22 @@ OPSTAT fsm_hsmmp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("HSMMP: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_HSMMP]是否超限
-	if (zHcuRunErrCnt[TASK_ID_HSMMP] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_HSMMP] = zHcuRunErrCnt[TASK_ID_HSMMP] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_HSMMP, TASK_ID_HSMMP, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_HSMMP]++;
-			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HSMMP], zHcuTaskInfo.taskName[TASK_ID_HSMMP]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HSMMP], zHcuSysCrlTab.taskRun.taskName[TASK_ID_HSMMP]);
 			return FAILURE;
 		}
 	}
@@ -225,7 +225,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 	//检查状态
 	if (FsmGetState(TASK_ID_HSMMP) != FSM_STATE_HSMMP_ACTIVED_WFFB){
 		if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_HSMMP]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 			return FAILURE;
 		}
@@ -239,31 +239,31 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 	memset(&rcv, 0, sizeof(msg_struct_avorion_hsmmp_data_read_fb_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_avorion_hsmmp_data_read_fb_t))){
 		HcuErrorPrint("HSMMP: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//检查参数
 	if ((rcv.boolBackCloud != TRUE) && (rcv.boolBackCloud != FALSE)){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		HcuErrorPrint("HSMMP: Error boolBackCloud parameter message received!\n");
 		return FAILURE;
 	}
 	if ((rcv.hsmmp.hsmmpFname == NULL) || ((strlen(rcv.hsmmp.hsmmpFname) > HCU_FILE_NAME_LENGTH_MAX))){
 		HcuErrorPrint("HSMMP: Error hsmmpFname parameter message received!\n");
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		return FAILURE;
 	}
 	if ((rcv.hsmmp.hsmmpFdir == NULL) || ((strlen(rcv.hsmmp.hsmmpFdir) > HCU_FILE_NAME_LENGTH_MAX))){
 		HcuErrorPrint("HSMMP: Error hsmmpFdir parameter message received!\n");
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		return FAILURE;
 	}
 	//停止定时器
 	ret = hcu_timer_stop(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_AVORION_FB, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		HcuErrorPrint("HSMMP: Error stop timer!\n");
 		return FAILURE;
 	}
@@ -275,7 +275,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 		//if (symlink(rcv.hsmmp.hsmmpFname, newpath) < 0){
 		if (symlink(rcv.hsmmp.hsmmpFdir, newpath) < 0){
 			HcuErrorPrint("HSMMP: Error create soft link for log avorion file!\n");
-			zHcuRunErrCnt[TASK_ID_HSMMP]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 			return FAILURE;
 		}
 		//重置为HTTP地址
@@ -309,7 +309,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_HSMMP]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 					HcuErrorPrint("HSMMP: Can not save data into memory buffer, might par error!\n");
 				}
 			}
@@ -318,7 +318,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_HSMMP]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 					HcuErrorPrint("HSMMP: Can not save data into hard disk!\n");
 				}
 			}
@@ -342,7 +342,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				//printf("HSMMP: hsmmpFdir = %s, hsmmpFname = %s, hsmmpLink = %s\n", hsmmpData.hsmmpFdir, hsmmpData.hsmmpFname, hsmmpData.hsmmpLink);
 				ret = dbi_HcuHsmmpDataInfo_save(&hsmmpData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_HSMMP]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 					HcuErrorPrint("HSMMP: Can not save data into database!\n");
 				}
 			}
@@ -374,8 +374,8 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			//snd.cn =
 			ret = hcu_message_send(MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP, TASK_ID_CLOUDVELA, TASK_ID_HSMMP, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HSMMP]++;
-				HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HSMMP], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+				HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HSMMP], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return FAILURE;
 			}
 
@@ -399,7 +399,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_HSMMP]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 					HcuErrorPrint("HSMMP: Can not save data into memory buffer, might par error!\n");
 				}
 			}
@@ -408,7 +408,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_HSMMP]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 					HcuErrorPrint("HSMMP: Can not save data into hard disk!\n");
 				}
 			}
@@ -430,7 +430,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				hsmmpData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuHsmmpDataInfo_save(&hsmmpData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_HSMMP]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 					HcuErrorPrint("HSMMP: Can not save data into database!\n");
 				}
 			}
@@ -440,14 +440,14 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 		//差错情形
 		else{
 			HcuErrorPrint("HSMMP: Wrong state of CLOUDVELA when data need send out!\n");
-			zHcuRunErrCnt[TASK_ID_HSMMP]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 			return FAILURE;
 		}
 	}
 
 	//设置新状态
 	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -463,7 +463,7 @@ OPSTAT func_hsmmp_time_out_period(void)
 	//判定状态机是否可以发送，如果不在ACTIVE状态，意味着一定有啥差错，强行恢复工作状态，等待下一次机会
 	if (FsmGetState(TASK_ID_HSMMP) != FSM_STATE_HSMMP_ACTIVED){
 		if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-			zHcuRunErrCnt[TASK_ID_HSMMP]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 			return FAILURE;
 		}
@@ -495,18 +495,18 @@ OPSTAT func_hsmmp_time_out_period(void)
 	snd.timeStampStart = time(0);
 	strcpy(snd.tmpFname, "output.yuv");
 
-    if ((snd.fileType == FILE_OPERATION_TYPE_AVORION_H264) && (strlen(zCurTimeDate.curAvorionFdH264) < HCU_FILE_NAME_LENGTH_MAX)){
-    	strcpy(snd.fDirName, zCurTimeDate.curAvorionFdH264);
-    	strcpy(snd.fName, zCurTimeDate.curAvorionFnameH264);
-    }else if((snd.fileType == FILE_OPERATION_TYPE_AVORION_AVI) && (strlen(zCurTimeDate.curAvorionFdAvi) < HCU_FILE_NAME_LENGTH_MAX)){
-    	strcpy(snd.fDirName, zCurTimeDate.curAvorionFdAvi);
-    	strcpy(snd.fName, zCurTimeDate.curAvorionFnameAvi);
-    }else if((snd.fileType == FILE_OPERATION_TYPE_AVORION_MKV) && (strlen(zCurTimeDate.curAvorionFdMkv) < HCU_FILE_NAME_LENGTH_MAX)){
-    	strcpy(snd.fDirName, zCurTimeDate.curAvorionFdMkv);
-    	strcpy(snd.fName, zCurTimeDate.curAvorionFnameMkv);
+    if ((snd.fileType == FILE_OPERATION_TYPE_AVORION_H264) && (strlen(zHcuVmCtrTab.clock.curAvorionFdH264) < HCU_FILE_NAME_LENGTH_MAX)){
+    	strcpy(snd.fDirName, zHcuVmCtrTab.clock.curAvorionFdH264);
+    	strcpy(snd.fName, zHcuVmCtrTab.clock.curAvorionFnameH264);
+    }else if((snd.fileType == FILE_OPERATION_TYPE_AVORION_AVI) && (strlen(zHcuVmCtrTab.clock.curAvorionFdAvi) < HCU_FILE_NAME_LENGTH_MAX)){
+    	strcpy(snd.fDirName, zHcuVmCtrTab.clock.curAvorionFdAvi);
+    	strcpy(snd.fName, zHcuVmCtrTab.clock.curAvorionFnameAvi);
+    }else if((snd.fileType == FILE_OPERATION_TYPE_AVORION_MKV) && (strlen(zHcuVmCtrTab.clock.curAvorionFdMkv) < HCU_FILE_NAME_LENGTH_MAX)){
+    	strcpy(snd.fDirName, zHcuVmCtrTab.clock.curAvorionFdMkv);
+    	strcpy(snd.fName, zHcuVmCtrTab.clock.curAvorionFnameMkv);
     }else{
         HcuErrorPrint("AVORION: Not set save file type correctly.\n");
-        zHcuRunErrCnt[TASK_ID_HSMMP]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
         return FAILURE;
     }
 	//发送后台的控制器，目前暂时是以10次回送一次的方式，未来可以由服务器后台控制
@@ -520,14 +520,14 @@ OPSTAT func_hsmmp_time_out_period(void)
 	snd.length = sizeof(msg_struct_hsmmp_avorion_data_read_t);
 	ret = hcu_message_send(MSG_ID_HSMMP_AVORION_DATA_READ, TASK_ID_AVORION, TASK_ID_HSMMP, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HSMMP], zHcuTaskInfo.taskName[TASK_ID_AVORION]);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+		HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HSMMP], zHcuSysCrlTab.taskRun.taskName[TASK_ID_AVORION]);
 		return FAILURE;
 	}
 
 	//设置新状态
 	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED_WFFB) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -549,14 +549,14 @@ OPSTAT func_hsmmp_time_out_wait_for_cammera_fb(void)
 	snd.length = sizeof(msg_struct_hsmmp_avorion_stop_t);
 	ret = hcu_message_send(MSG_ID_HSMMP_AVORION_STOP, TASK_ID_AVORION, TASK_ID_HSMMP, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
-		HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HSMMP], zHcuTaskInfo.taskName[TASK_ID_AVORION]);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+		HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HSMMP], zHcuSysCrlTab.taskRun.taskName[TASK_ID_AVORION]);
 		return FAILURE;
 	}
 
 	//恢复状态机
 	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HSMMP]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 		return FAILURE;
 	}

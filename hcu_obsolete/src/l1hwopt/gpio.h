@@ -23,7 +23,7 @@ enum FSM_STATE_GPIO
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmGpio[];
+extern HcuFsmStateItem_t FsmGpio[];
 extern float zHcuGpioTempDht11;
 extern float zHcuGpioHumidDht11;
 extern float zHcuGpioToxicgasMq135;

@@ -15,7 +15,7 @@
 /*
 ** FSM of the SPSVIRGO
 */
-FsmStateItem_t FsmSpsvirgo[] =
+HcuFsmStateItem_t FsmSpsvirgo[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -78,7 +78,7 @@ OPSTAT fsm_spsvirgo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPSVIRGO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SPSVIRGO], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_SPSVIRGO], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -96,11 +96,11 @@ OPSTAT fsm_spsvirgo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_SPSVIRGO] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPSVIRGO, FSM_STATE_SPSVIRGO_RECEIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 		HcuErrorPrint("SPSVIRGO: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -134,7 +134,7 @@ OPSTAT fsm_spsvirgo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 OPSTAT fsm_spsvirgo_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("SPSVIRGO: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_spsvirgo_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -159,7 +159,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&rcv, 0, sizeof(msg_struct_noise_spsvirgo_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_spsvirgo_data_read_t))){
 		HcuErrorPrint("SPSVIRGO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -168,7 +168,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_noise)){
 		HcuErrorPrint("SPSVIRGO: Receive message with cmdId or EqpId error!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 		return FAILURE;
 	}
 
@@ -181,7 +181,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 		if (func_microphone_noise_apower_value_read(snd.noise.noiseValue) == FAILURE){
 			HcuErrorPrint("SPSVIRGO: Receive message with noiseValue error!\n");
-			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 		}
 	}
 
@@ -208,7 +208,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 		if (FAILURE == ret)
 		{
-			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Error send command to serials port!\n");
 
 			//for alarm report added by ZSC
@@ -224,8 +224,8 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SPSVIRGO, &snd, snd.length);//route to L3 or direct to cloudvela, TBD
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SPSVIRGO], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_SPSVIRGO], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return FAILURE;
 			}
 			return FAILURE;
@@ -251,7 +251,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		}
 		else
 		{
-			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Can not read data from serial port, return of read %d \n", ret);
 			return FAILURE;
 		}
@@ -279,7 +279,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		}
 		else
 		{
-			zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Error unpack message!\n");
 			return FAILURE;
 		}
@@ -288,7 +288,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	else
 	{
 		HcuErrorPrint("SPSVIRGO: Select wrong par error for SPSVIRGO_ACTIVE_CHOICE_NOISE_FINAL!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 		return FAILURE;
 	}
 
@@ -336,7 +336,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		break;
 	default:
 		HcuErrorPrint("SPSVIRGO: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 		return FAILURE;
 		break;
 	}
@@ -349,8 +349,8 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	ret = hcu_message_send(MSG_ID_SPSVIRGO_NOISE_DATA_REPORT, TASK_ID_NOISE, TASK_ID_SPSVIRGO, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_SPSVIRGO]++;
-		HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_SPSVIRGO], zHcuTaskInfo.taskName[TASK_ID_NOISE]);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
+		HcuErrorPrint("SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_SPSVIRGO], zHcuSysCrlTab.taskRun.taskName[TASK_ID_NOISE]);
 		return FAILURE;
 	}
 

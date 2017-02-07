@@ -30,7 +30,7 @@ enum FSM_STATE_CLOUDVELA
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmCloudvela[];
+extern HcuFsmStateItem_t HcuFsmCloudvela[];
 extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 extern CloudvelaTable_t zHcuCloudvelaTable;
 extern CURL *zHcuCloudCurlPtr;
@@ -123,6 +123,6 @@ extern void func_hwinv_scan_date(void);
 
 
 //高级定义，简化程序的可读性
-#define HCU_ERROR_PRINT_CLOUDVELA(...)	do{zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+#define HCU_ERROR_PRINT_CLOUDVELA(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 #endif /* L2FRAME_CLOUDVELA_H_ */

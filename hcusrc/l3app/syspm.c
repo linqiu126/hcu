@@ -18,7 +18,7 @@
 /*
 ** FSM of the SYSPM
 */
-FsmStateItem_t HcuFsmSyspm[] =
+HcuFsmStateItem_t HcuFsmSyspm[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -48,9 +48,6 @@ FsmStateItem_t HcuFsmSyspm[] =
 };
 
 //Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-extern HcuGlobalCounter_t zHcuGlobalCounter; //PM counter
-
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -78,7 +75,7 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SYSPM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_SYSPM].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -96,20 +93,20 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_SYSPM] = 0;
-	memset(&zHcuGlobalCounter, 0, sizeof(HcuGlobalCounter_t));
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM] = 0;
+	memset(&zHcuSysStaPm.statisCnt, 0, sizeof(HcuGlobalCounter_t));
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_SYSPM, TIMER_ID_1S_SYSPM_PERIOD_WORKING, zHcuSysEngPar.timer.syspmWorkingTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_SYSPM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
 		HcuErrorPrint("SYSPM: Error start period timer!\n");
 		return FAILURE;
 	}
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SYSPM, FSM_STATE_SYSPM_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_SYSPM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
 		HcuErrorPrint("SYSPM: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -123,7 +120,7 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 OPSTAT fsm_syspm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("SYSPM: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_syspm_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -142,22 +139,22 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("SYSPM: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_SYSPM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_SYSPM]是否超限
-	if (zHcuRunErrCnt[TASK_ID_SYSPM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_SYSPM] = zHcuRunErrCnt[TASK_ID_SYSPM] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_SYSPM, TASK_ID_SYSPM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_SYSPM]++;
-			HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_SYSPM].taskName, zHcuTaskInfo[TASK_ID_SYSPM].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
+			HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 			return FAILURE;
 		}
 	}
@@ -168,21 +165,21 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		if (FsmGetState(TASK_ID_SYSPM) != FSM_STATE_SYSPM_ACTIVED){
 			ret = FsmSetState(TASK_ID_SYSPM, FSM_STATE_SYSPM_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_SYSPM]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
 				HcuErrorPrint("SYSPM: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
 		}
 
 		//拷贝zHcuRunErrCnt到目标全局变量中
-		memcpy(&zHcuGlobalCounter.errCnt[0], &zHcuRunErrCnt[0], (sizeof(UINT32)*MAX_TASK_NUM_IN_ONE_HCU));
+		memcpy(&zHcuSysStaPm.statisCnt.errCnt[0], &zHcuSysStaPm.taskRunErrCnt[0], (sizeof(UINT32)*MAX_TASK_NUM_IN_ONE_HCU));
 		//检查COUNTER的情况，并生成相应的事件。这里暂时空着
 
 		func_syspm_cal_cpu_mem_disk_occupy();
 		func_syspm_get_cpu_temp();
 
 		//存储事件到数据库中，形成报告
-		if (dbi_HcuSyspmGlobalDataInfo_save() == FAILURE) zHcuRunErrCnt[TASK_ID_SYSPM]++;
+		if (dbi_HcuSyspmGlobalDataInfo_save() == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
 
 		//PM report to Cloud added by ZSC
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -194,14 +191,14 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			snd.useroptid = L3PO_hcupm_report;
 			snd.cmdIdBackType = L3CI_cmdid_back_type_period;
 			snd.timeStamp = time(0);
-			snd.CloudVelaConnCnt = zHcuGlobalCounter.cloudVelaConnCnt;
-			snd.CloudVelaConnFailCnt = zHcuGlobalCounter.cloudVelaConnFailCnt;
-			snd.CloudVelaDiscCnt = zHcuGlobalCounter.cloudVelaDiscCnt;
-			snd.SocketDiscCnt = zHcuGlobalCounter.SocketDiscCnt;
-			snd.TaskRestartCnt = zHcuGlobalCounter.restartCnt;
-			snd.cpu_occupy = zHcuGlobalCounter.cpu_occupy;
-			snd.mem_occupy = zHcuGlobalCounter.mem_occupy;
-			snd.disk_occupy = zHcuGlobalCounter.disk_occupy;
+			snd.CloudVelaConnCnt = zHcuSysStaPm.statisCnt.cloudVelaConnCnt;
+			snd.CloudVelaConnFailCnt = zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt;
+			snd.CloudVelaDiscCnt = zHcuSysStaPm.statisCnt.cloudVelaDiscCnt;
+			snd.SocketDiscCnt = zHcuSysStaPm.statisCnt.SocketDiscCnt;
+			snd.TaskRestartCnt = zHcuSysStaPm.statisCnt.restartCnt;
+			snd.cpu_occupy = zHcuSysStaPm.statisCnt.cpu_occupy;
+			snd.mem_occupy = zHcuSysStaPm.statisCnt.mem_occupy;
+			snd.disk_occupy = zHcuSysStaPm.statisCnt.disk_occupy;
 
 			/*
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
@@ -221,10 +218,10 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 
 			ret = hcu_message_send(MSG_ID_COM_PM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length);
-			memset(&zHcuGlobalCounter, 0, sizeof(zHcuGlobalCounter));
+			memset(&zHcuSysStaPm.statisCnt, 0, sizeof(zHcuSysStaPm.statisCnt));
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_SYSPM]++;
-				HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_SYSPM].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
+				HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -234,7 +231,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		//差错情形
 		else{
 			HcuErrorPrint("SYSPM: Wrong state of CLOUDVELA when data need send out!\n");
-			zHcuRunErrCnt[TASK_ID_SYSPM]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
 			return FAILURE;
 		}
 	}
@@ -311,10 +308,10 @@ void func_syspm_get_diskoccupy(void)
 
 	float r = (float)(mbTotalsize - mbFreedisk)*100/mbTotalsize;
 
-	zHcuGlobalCounter.disk_occupy = r;
+	zHcuSysStaPm.statisCnt.disk_occupy = r;
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("SYSPM: Disk total = %dMB, free=%dMB, usage/total ratio =%.2f%%, diskoccupy=%d\n", mbTotalsize, mbFreedisk,r, zHcuGlobalCounter.disk_occupy);
+		HcuDebugPrint("SYSPM: Disk total = %dMB, free=%dMB, usage/total ratio =%.2f%%, diskoccupy=%d\n", mbTotalsize, mbFreedisk,r, zHcuSysStaPm.statisCnt.disk_occupy);
 	}
 
 }
@@ -330,7 +327,7 @@ void func_syspm_cal_cpu_mem_disk_occupy(void)
     func_syspm_get_memoccupy ((PmMemOccupyInfo_t *)&mem_stat);
     //HcuDebugPrint("syspm:  mem_stat.total= %d, mem_stat.used = %d\n", mem_stat.total, mem_stat.used);
 
-    zHcuGlobalCounter.mem_occupy = mem_stat.used*100/mem_stat.total;
+    zHcuSysStaPm.statisCnt.mem_occupy = mem_stat.used*100/mem_stat.total;
 
     func_syspm_get_diskoccupy();
 
@@ -343,7 +340,7 @@ void func_syspm_cal_cpu_mem_disk_occupy(void)
     func_syspm_get_cpuoccupy((PmCpuOccupyInfo_t *)&cpu_stat2);
 
     //计算cpu使用率
-    zHcuGlobalCounter.cpu_occupy = func_syspm_cal_cpuoccupy ((PmCpuOccupyInfo_t *)&cpu_stat1, (PmCpuOccupyInfo_t *)&cpu_stat2);
+    zHcuSysStaPm.statisCnt.cpu_occupy = func_syspm_cal_cpuoccupy ((PmCpuOccupyInfo_t *)&cpu_stat1, (PmCpuOccupyInfo_t *)&cpu_stat2);
 
 }
 

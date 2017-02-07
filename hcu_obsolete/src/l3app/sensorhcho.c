@@ -14,7 +14,7 @@
 /*
 ** FSM of the HCHO
 */
-FsmStateItem_t FsmHcho[] =
+HcuFsmStateItem_t FsmHcho[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -73,7 +73,7 @@ OPSTAT fsm_hcho_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HCHO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HCHO], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HCHO], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -91,19 +91,19 @@ OPSTAT fsm_hcho_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_HCHO] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO] = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_HCHO, TIMER_ID_1S_HCHO_PERIOD_READ, zHcuSysEngPar.timer.hchoReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HCHO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO]++;
 		HcuErrorPrint("HCHO: Error start period timer!\n");
 		return FAILURE;
 	}
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_HCHO, FSM_STATE_HCHO_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HCHO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO]++;
 		HcuErrorPrint("HCHO: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -139,7 +139,7 @@ OPSTAT fsm_hcho_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 OPSTAT fsm_hcho_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("HCHO: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_hcho_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -158,22 +158,22 @@ OPSTAT fsm_hcho_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("HCHO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_HCHO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_HCHO]是否超限
-	if (zHcuRunErrCnt[TASK_ID_HCHO] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_HCHO] = zHcuRunErrCnt[TASK_ID_HCHO] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_HCHO, TASK_ID_HCHO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_HCHO]++;
-			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HCHO], zHcuTaskInfo.taskName[TASK_ID_HCHO]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO]++;
+			HcuErrorPrint("HCHO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HCHO], zHcuSysCrlTab.taskRun.taskName[TASK_ID_HCHO]);
 			return FAILURE;
 		}
 	}
@@ -184,7 +184,7 @@ OPSTAT fsm_hcho_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		if (FsmGetState(TASK_ID_HCHO) != FSM_STATE_HCHO_ACTIVED){
 			ret = FsmSetState(TASK_ID_HCHO, FSM_STATE_HCHO_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HCHO]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO]++;
 				HcuErrorPrint("HCHO: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
@@ -217,7 +217,7 @@ OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void)
 
 		ret = dbi_HcuHchoZe08ch2oDataInfo_save(&hchoData);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_HCHO]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO]++;
 			HcuErrorPrint("HCHO: Can not save HchoZe08ch2o data into database!\n");
 		}
 	}

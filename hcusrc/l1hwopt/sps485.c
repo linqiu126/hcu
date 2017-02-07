@@ -12,7 +12,7 @@
 /*
 ** FSM of the SPS485
 */
-FsmStateItem_t HcuFsmSps485[] =
+HcuFsmStateItem_t HcuFsmSps485[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -66,7 +66,7 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPS485, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("SPS485: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_SPS485].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("SPS485: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPS485].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -84,7 +84,7 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//Global variables
-	zHcuRunErrCnt[TASK_ID_SPS485] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485] = 0;
 
 	//为MODBUS初始化串口硬件端口
 	gSerialPortMobus.id = zHcuSysEngPar.serialport.SeriesPortForModbus;
@@ -99,7 +99,7 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
 	ret = hcu_sps485_serial_init(&gSerialPortMobus);
 	if (FAILURE == ret){
-		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
 		HcuErrorPrint("SPS485: Init Serial Port Failure, Exit.\n");
 	}
 	else{
@@ -115,7 +115,7 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPS485, FSM_STATE_SPS485_RECEIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
 		HcuErrorPrint("SPS485: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -129,7 +129,7 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 OPSTAT fsm_sps485_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("SPS485: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_sps485_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -146,7 +146,7 @@ UINT32 hcu_sps485_SerialPortSetVtimeVmin(SerialPortCom_t *sp, UINT8 vTime, UINT8
 	ret = hcu_spsapi_SerialPortSetVtimeVmin(sp, vTime, vMin);
 	if (ret == FAILURE){
 		HcuErrorPrint("SPS485: Serial port set vTime vMin error!\n");
-		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
 		return FAILURE;
 	}
 	return ret;
@@ -159,7 +159,7 @@ UINT32 hcu_sps485_serial_init(SerialPortCom_t *sp)
 	ret = hcu_spsapi_serial_init(sp);
 	if (ret == FAILURE){
 		HcuErrorPrint("Serial port init error!\n");
-		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
 		return FAILURE;
 	}
 
@@ -173,7 +173,7 @@ UINT32 hcu_sps485_serial_port_get(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Le
 	ret = hcu_spsapi_serial_port_get(sp, rcv_buf, Len);
 	if (ret == FAILURE){
 		HcuErrorPrint("SPS485: Serial port get data error!\n");
-		zHcuRunErrCnt[TASK_ID_SPS485]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
 		return FAILURE;
 	}
 
@@ -187,7 +187,7 @@ UINT32 hcu_sps485_serial_port_send(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 
 	ret = hcu_spsapi_serial_port_send(sp, send_buf, Len);
 	if ( ret == FAILURE){
         HcuErrorPrint("SPS485: Serial port send data error!\n");
-        zHcuRunErrCnt[TASK_ID_SPS485]++;
+        zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
         return FAILURE;
 	}
 

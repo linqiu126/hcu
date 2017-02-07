@@ -240,7 +240,7 @@ typedef struct HcuHwinvCtrlTable
 #define HCU_HARDDISK_TRESHOLD 10
 
 //时间全局变量
-typedef struct zHcuTimeDateTable
+typedef struct HcuTimeDateTable
 {
 	UINT16 year;
 	UINT8 mon;
@@ -274,13 +274,13 @@ typedef struct zHcuTimeDateTable
 	char curAvorionFnameH264[HCU_DIR_LENGTH_MAX];
 	char curAvorionFdMkv[HCU_DIR_LENGTH_MAX];
 	char curAvorionFnameMkv[HCU_DIR_LENGTH_MAX];
-}zHcuTimeDateTable_t;
+}HcuTimeDateTable_t;
 
 //Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-extern FsmStateItem_t FsmHwinv[];
-extern HcuHwinvCtrlTable_t zHcuHwinvTable;
-extern zHcuTimeDateTable_t zCurTimeDate;
+extern HcuFsmStateItem_t FsmHwinv[];
+extern HcuHwinvCtrlTable_t zHcuVmCtrTab.hwinv;
+extern HcuTimeDateTable_t zHcuVmCtrTab.clock;
 
 //API
 extern OPSTAT fsm_hwinv_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

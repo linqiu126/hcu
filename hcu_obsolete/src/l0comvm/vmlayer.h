@@ -210,27 +210,27 @@ typedef struct HcuCurrentTaskTag
 typedef struct FsmArrayElement
 {
 	OPSTAT (*stateFunc)(UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len);
-}FsmArrayElement_t;
+}HcuFsmArrayElement_t;
 
-typedef struct FsmCtrlTable
+typedef struct HcuFsmCtrlTable
 {
 	UINT32 numOfFsmArrayElement;  //每一个具体任务TASK中，定义了多少个STATE-MSGID映射表单
 	UINT32 taskId;
-	FsmArrayElement_t pFsmArray[MAX_STATE_NUM_IN_ONE_TASK][MAX_MSGID_NUM_IN_ONE_TASK];
+	HcuFsmArrayElement_t pFsmArray[MAX_STATE_NUM_IN_ONE_TASK][MAX_MSGID_NUM_IN_ONE_TASK];
 }FsmCtrlTable_t;
 
-typedef struct FsmTable
+typedef struct HcuFsmTable
 {
 	UINT32 numOfFsmCtrlTable;  //Number of running (Task + Instance)
 	UINT32 currentTaskId;  //transfer task_id to launched FSM machine, then useless
 	FsmCtrlTable_t  pFsmCtrlTable[MAX_TASK_NUM_IN_ONE_HCU];
-}FsmTable_t;
+}HcuFsmTable_t;
 
 //Global variables 全局变量声明的好例子，不能加Static/Const等等修饰性，除非的确不改动
 extern HcuTaskTag_t zHcuTaskInfo[MAX_TASK_NUM_IN_ONE_HCU];
 extern char *zHcuTaskNameList[MAX_TASK_NUM_IN_ONE_HCU];
-extern char *zHcuMsgNameList[MAX_MSGID_NUM_IN_ONE_TASK];
-extern HcuCurrentTaskTag_t zHcuCurrentProcessInfo;
+extern char *zHcuSysEngTrcModCtrStaticCfg[MAX_MSGID_NUM_IN_ONE_TASK];
+extern HcuCurrentTaskTag_t zHcuSysCtrTab.curProc;
 
 //任务模块RESTART的一些全局定义
 #define HCU_RUN_ERROR_LEVEL_0_WARNING 10

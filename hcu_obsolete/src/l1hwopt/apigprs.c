@@ -263,7 +263,7 @@ UINT32 GprsPppdStart(GprsPppdConf_t *gpc)
 
 	HcuDebugPrint("GprsPppStart: pppd successful, ret = %d.\n", ret);
 	HcuDebugPrint("GprsPppStart: refresh system information ...\n", ret);
-	ret = HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+	ret = HcuGetSysInfo(&zHcuVmCtrTab.sysInfo);
 
 	return SUCCESS;
 
@@ -435,7 +435,7 @@ void GprsPppdSwShutdown()
 	HcuDebugPrint("GprsPppdShutdown: pppd process cleaned to free serial port for GPRS model.\n");
 
 	/* refred system information for network interface checking */
-	HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+	HcuGetSysInfo(&zHcuVmCtrTab.sysInfo);
 	HcuDebugPrint("GprsPppdShutdown: refresh system information complete.\n");
 
 }

@@ -14,7 +14,7 @@
 /*
 ** FSM of the NOISE
 */
-FsmStateItem_t HcuFsmNoise[] =
+HcuFsmStateItem_t HcuFsmNoise[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -64,7 +64,7 @@ FsmStateItem_t HcuFsmNoise[] =
 };
 
 //Task Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 SensorNoiseInfo_t zSensorNoiseInfo[MAX_NUM_OF_SENSOR_NOISE_INSTALLED];
 UINT8 currentSensorNoiseId;
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
@@ -100,7 +100,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_NOISE, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NOISE].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -117,7 +117,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//Task global variables init.
 	memset(zSensorNoiseInfo, 0, sizeof(SensorNoiseInfo_t));
 	currentSensorNoiseId = 0;
-	zHcuRunErrCnt[TASK_ID_NOISE] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE] = 0;
 	//目前暂时只有一个NOISE传感器，但程序的框架可以支持无数个传感器
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
 	for (i=0;i<MAX_NUM_OF_SENSOR_NOISE_INSTALLED;i++){
@@ -146,7 +146,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_PERIOD_READ, zHcuSysEngPar.timer.noiseReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		HcuErrorPrint("NOISE: Error start timer!\n");
 		return FAILURE;
 	}
@@ -154,7 +154,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//State Transfer to FSM_STATE_NOISE_ACTIVED
 	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		HcuErrorPrint("NOISE: Error Set FSM State at fsm_noise_init\n");
 		return FAILURE;
 	}
@@ -164,7 +164,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 OPSTAT fsm_noise_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("NOISE: Internal error counter reach MAJOR level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_noise_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -178,22 +178,22 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("NOISE: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_NOISE]是否超限
-	if (zHcuRunErrCnt[TASK_ID_NOISE] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_NOISE] = zHcuRunErrCnt[TASK_ID_NOISE] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_NOISE, TASK_ID_NOISE, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NOISE].taskName, zHcuTaskInfo[TASK_ID_NOISE].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
 			return FAILURE;
 		}
 	}
@@ -204,7 +204,7 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		if (FsmGetState(TASK_ID_NOISE) != FSM_STATE_NOISE_ACTIVED){
 			ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_NOISE]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 				HcuErrorPrint("NOISE: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
@@ -261,7 +261,7 @@ void func_noise_time_out_processing_no_rsponse(void)
 	//State Transfer to FSM_STATE_NOISE_ACTIVE
 	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		HcuErrorPrint("NOISE: Error Set FSM State!\n");
 		return;
 	}//FsmSetState
@@ -301,15 +301,15 @@ void func_noise_time_out_read_data_from_modbus(void)
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
 		ret = hcu_message_send(MSG_ID_NOISE_MODBUS_DATA_READ, TASK_ID_MODBUS, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NOISE].taskName, zHcuTaskInfo[TASK_ID_MODBUS].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName);
 			return;
 		}
 
 		//启动一次性定时器
 		ret = hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_MODBUS_FB, zHcuSysEngPar.timer.humidReqTimerFB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 			HcuErrorPrint("NOISE: Error start timer!\n");
 			return;
 		}
@@ -321,7 +321,7 @@ void func_noise_time_out_read_data_from_modbus(void)
 		//State Transfer to FSM_STATE_NOISE_OPT_WFFB
 		ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_MODBUS_WFFB);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 			HcuErrorPrint("NOISE: Error Set FSM State!\n");
 			return;
 		}//FsmSetState
@@ -370,19 +370,19 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
 		ret = hcu_message_send(MSG_ID_NOISE_SPSVIRGO_DATA_READ, TASK_ID_SPSVIRGO, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NOISE].taskName, zHcuTaskInfo[TASK_ID_SPSVIRGO].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName);
 			return;
 		}
 		else
 		{
-			HcuDebugPrint("NOISE: Send message suceed, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NOISE].taskName, zHcuTaskInfo[TASK_ID_SPSVIRGO].taskName);
+			HcuDebugPrint("NOISE: Send message suceed, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName);
 		}
 
 		//启动一次性定时器
 		ret = hcu_timer_start(TASK_ID_NOISE, TIMER_ID_1S_NOISE_SPSVIRGO_FB, NOISE_TIMER_DURATION_SPSVIRGO_FB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 			HcuErrorPrint("NOISE: Error start timer!\n");
 			return;
 		}
@@ -394,7 +394,7 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 		//State Transfer to FSM_STATE_NOISE_OPT_WFFB
 		ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_SPSVIRGO_WFFB);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 			HcuErrorPrint("NOISE: Error Set FSM State!\n");
 			return;
 		}//FsmSetState
@@ -424,7 +424,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	memset(&rcv, 0, sizeof(msg_struct_modbus_noise_data_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_noise_data_report_t))){
 		HcuErrorPrint("NOISE: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -434,7 +434,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	//停止定时器
 	ret = hcu_timer_stop(TASK_ID_NOISE, TIMER_ID_1S_NOISE_MODBUS_FB, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		HcuErrorPrint("NOISE: Error stop timer!\n");
 		return FAILURE;
 	}
@@ -461,7 +461,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_NOISE]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 					HcuErrorPrint("NOISE: Can not save data into memory buffer, might par error!\n");
 				}
 			}
@@ -470,7 +470,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_NOISE]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 					HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
 				}
 			}
@@ -491,13 +491,13 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				noiseData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_NOISE]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 					HcuErrorPrint("NOISE: Can not save data into database!\n");
 				}
 			}
 		}//周期模式
 		else{
-				zHcuRunErrCnt[TASK_ID_NOISE]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 				HcuErrorPrint("NOISE: Offline but instance or other control message received!\n");
 			}
 	}
@@ -523,8 +523,8 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		snd.noise.gps.ns = rcv.noise.gps.ns;
 		ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NOISE].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
 
@@ -549,7 +549,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_NOISE]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 					HcuErrorPrint("NOISE: Can not save data into memory buffer, might par error!\n");
 				}
 			}
@@ -558,7 +558,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_NOISE]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 					HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
 				}
 			}
@@ -579,7 +579,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				noiseData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_NOISE]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 					HcuErrorPrint("NOISE: Can not save data into database!\n");
 				}
 			}
@@ -590,7 +590,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	//差错情形
 	else{
 		HcuErrorPrint("NOISE: Wrong state of CLOUDVELA when data need send out!\n");
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
 		//If this shall work normally, it is too much for each sensor STM process!
 		return FAILURE;
@@ -613,7 +613,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	//State Transfer to FSM_STATE_NOISE_ACTIVE
 	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		HcuErrorPrint("NOISE: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -635,7 +635,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 	memset(&rcv, 0, sizeof(msg_struct_spsvirgo_noise_data_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spsvirgo_noise_data_report_t))){
 		HcuErrorPrint("NOISE: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -645,7 +645,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 	//停止定时器
 	ret = hcu_timer_stop(TASK_ID_NOISE, TIMER_ID_1S_NOISE_SPSVIRGO_FB, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		HcuErrorPrint("NOISE: Error stop timer!\n");
 		return FAILURE;
 	}
@@ -669,13 +669,13 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			record.ns = rcv.noise.gps.ns;
 			ret = hcu_save_to_storage_mem(&record);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_NOISE]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 				HcuErrorPrint("NOISE: Can not save data into memory buffer, might par error!\n");
 			}
 			//RECORD存入硬盘
 			ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_NOISE]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 				HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
 			}
 			//RECORD还要存入数据库
@@ -695,13 +695,13 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 				noiseData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_NOISE]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 					HcuErrorPrint("NOISE: Can not save data into database!\n");
 				}
 			}
 		}//周期模式
 		else{
-				zHcuRunErrCnt[TASK_ID_NOISE]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 				HcuErrorPrint("NOISE: Offline but instance or other control message received!\n");
 			}
 	}
@@ -727,8 +727,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		snd.noise.gps.ns = rcv.noise.gps.ns;
 		ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_NOISE].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
 
@@ -750,13 +750,13 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			record.ns = rcv.noise.gps.ns;
 			ret = hcu_save_to_storage_mem(&record);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_NOISE]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 				HcuErrorPrint("NOISE: Can not save data into memory buffer, might par error!\n");
 			}
 			//RECORD存入硬盘
 			ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_NOISE]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 				HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
 			}
 			//RECORD还要存入数据库
@@ -776,7 +776,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 				noiseData.onOffLineFlag = record.onOffLine;
 				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_NOISE]++;
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 					HcuErrorPrint("NOISE: Can not save data into database!\n");
 				}
 			}
@@ -787,7 +787,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 	//差错情形
 	else{
 		HcuErrorPrint("NOISE: Wrong state of CLOUDVELA when data need send out!\n");
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		//CLOUDCOUNT not normal, here Sensor might work normally, to be further check!
 		//If this shall work normally, it is too much for each sensor STM process!
 		return FAILURE;
@@ -810,7 +810,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 	//State Transfer to FSM_STATE_NOISE_ACTIVE
 	ret = FsmSetState(TASK_ID_NOISE, FSM_STATE_NOISE_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		HcuErrorPrint("NOISE: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -828,7 +828,7 @@ OPSTAT fsm_noise_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&rcv, 0, sizeof(msg_struct_cloudvela_noise_data_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_noise_data_req_t))){
 		HcuErrorPrint("NOISE: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_NOISE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);

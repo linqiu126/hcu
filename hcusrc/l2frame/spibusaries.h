@@ -41,7 +41,7 @@ typedef struct SPIBusariesMsgBuf
 }SPIBusariesMsgBuf_t; // to update for SPIBUSARIES later
 
 //Global variables
-extern FsmStateItem_t HcuFsmSpibusaries[];
+extern HcuFsmStateItem_t HcuFsmSpibusaries[];
 
 
 

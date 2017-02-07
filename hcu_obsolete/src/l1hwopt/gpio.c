@@ -12,7 +12,7 @@
 /*
 ** FSM of the GPIO
 */
-FsmStateItem_t FsmGpio[] =
+HcuFsmStateItem_t FsmGpio[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -69,7 +69,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_GPIO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("GPIO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_GPIO], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("GPIO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_GPIO], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -87,7 +87,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_GPIO] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_GPIO] = 0;
 	zHcuGpioTempDht11 = HCU_SENSOR_VALUE_NULL;
 	zHcuGpioHumidDht11 = HCU_SENSOR_VALUE_NULL;
 	zHcuGpioToxicgasMq135 = HCU_SENSOR_VALUE_NULL;
@@ -96,7 +96,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_GPIO, FSM_STATE_GPIO_ACTIVIED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_GPIO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_GPIO]++;
 		HcuErrorPrint("GPIO: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -138,7 +138,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 OPSTAT fsm_gpio_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("GPIO: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_gpio_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -352,7 +352,7 @@ OPSTAT func_gpio_read_data_zp01voc(void)
 	    else if ((toxicgasA == 1) && (toxicgasB == 1)) toxicgas = 3;  //重度污染空气
 	    else{
 	    	HcuErrorPrint("GPIO: Read taxicgas sensor ZP01VOC A/B data pin error, A=%d, B=%d\n", toxicgasA, toxicgasB);
-	    	zHcuRunErrCnt[TASK_ID_GPIO]++;
+	    	zHcuSysStaPm.taskRunErrCnt[TASK_ID_GPIO]++;
 	    	toxicgas = 0;
 	    	return FAILURE;
 	    }

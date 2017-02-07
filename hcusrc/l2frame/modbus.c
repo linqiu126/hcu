@@ -15,7 +15,7 @@
 /*
 ** FSM of the MODBUS
 */
-FsmStateItem_t HcuFsmModbus[] =
+HcuFsmStateItem_t HcuFsmModbus[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -75,7 +75,7 @@ FsmStateItem_t HcuFsmModbus[] =
 };
 
 //extern global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 extern SerialPortCom_t gSerialPortMobus;
 
 //Task level global variables，该任务是单入的，所以两个传感器同时操作是不可以的
@@ -114,7 +114,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MODBUS, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -132,7 +132,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Init global variables
 	currentSensorEqpId = 0;
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	zHcuRunErrCnt[TASK_ID_MODBUS] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS] = 0;
 
 	//这部分代码移到SPS485模块中去了，以便层次化程序结构
 	//初始化硬件端口
@@ -172,7 +172,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//基本上不设置状态机，所有操作均为同步式，这样就不需要状态机了
 	ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_ACTIVED);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error Set FSM State at fsm_modbus_init!\n");
 		return FAILURE;
 	}
@@ -183,7 +183,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 OPSTAT fsm_modbus_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("MODBUS: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_modbus_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -197,7 +197,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	memset(&rcv, 0, sizeof(msg_struct_emc_modbus_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_emc_modbus_data_read_t))){
 		HcuErrorPrint("MODBUS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -205,7 +205,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_emc)){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -215,7 +215,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 	ret = func_modbus_emc_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
@@ -237,7 +237,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	UINT8 sample[] = {0x05,0x03,0x02,0x12,0x34,0x44,0xF3};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
 	if (func_modbus_emc_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
@@ -252,7 +252,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	//检查下equipmentId，确保没重入
 	if (snd.emc.equipid != currentSensorEqpId){
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	//将读取的数据回送给传感器控制器
@@ -282,7 +282,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 		break;
 	default:
 		HcuErrorPrint("MODBUS: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -301,8 +301,8 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_EMC_DATA_REPORT, TASK_ID_EMC, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_EMC].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
 		return FAILURE;
 	}
 
@@ -322,7 +322,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	memset(&rcv, 0, sizeof(msg_struct_pm25_modbus_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_modbus_data_read_t))){
 		HcuErrorPrint("MODBUS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -330,7 +330,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_pm25)){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -340,7 +340,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 	ret = func_modbus_pm25_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
@@ -353,7 +353,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	if (FAILURE == ret)
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
 		msg_struct_alarm_report_t snd;
@@ -373,8 +373,8 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -406,7 +406,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	else
 	{
 		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d\n", ret);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 
 		msg_struct_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
@@ -425,8 +425,8 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -454,14 +454,14 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	currentModbusBuf.curLen = ret;
 	if (func_modbus_pm25_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查下equipmentId，确保没重入
 	if (snd.pm25.equipid != currentSensorEqpId){
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -511,7 +511,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		break;
 	default:
 		HcuErrorPrint("MODBUS: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -526,8 +526,8 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_PM25_DATA_REPORT, TASK_ID_PM25, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
 		return FAILURE;
 	}
 
@@ -544,7 +544,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&rcv, 0, sizeof(msg_struct_winddir_modbus_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_winddir_modbus_data_read_t))){
 		HcuErrorPrint("MODBUS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -552,7 +552,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_winddir)){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -563,7 +563,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	ret = func_modbus_winddir_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
 		HcuErrorPrint("MODBUS: Error pack message!\n");//route to L3 or direct to cloudvela, TBD
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -574,7 +574,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	if (FAILURE == ret)
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
 		msg_struct_alarm_report_t snd;
@@ -594,8 +594,8 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -627,7 +627,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	else
 	{
 		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 
 
 		msg_struct_alarm_report_t snd;
@@ -647,8 +647,8 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -675,7 +675,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	currentModbusBuf.curLen =ret;
 	if (func_modbus_winddir_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
@@ -683,7 +683,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	//检查下equipmentId，确保没重入
 	if (snd.winddir.equipid != currentSensorEqpId){
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	//将读取的数据回送给传感器控制器
@@ -731,7 +731,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		break;
 	default:
 		HcuErrorPrint("MODBUS: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -746,8 +746,8 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_WINDDIR_DATA_REPORT, TASK_ID_WINDDIR, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_WINDDIR].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
 		return FAILURE;
 	}
 
@@ -764,7 +764,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&rcv, 0, sizeof(msg_struct_windspd_modbus_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_windspd_modbus_data_read_t))){
 		HcuErrorPrint("MODBUS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -772,7 +772,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_windspd)){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -783,7 +783,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	ret = func_modbus_windspd_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
 		HcuErrorPrint("MODBUS: Error pack message!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -794,7 +794,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	if (FAILURE == ret)
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
 		msg_struct_alarm_report_t snd;
@@ -814,8 +814,8 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -848,7 +848,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n",  ret);
 
 		msg_struct_alarm_report_t snd;
@@ -868,8 +868,8 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -898,7 +898,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	currentModbusBuf.curLen = ret;
 	if (func_modbus_windspd_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
@@ -906,7 +906,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	//检查下equipmentId，确保没重入
 	if (snd.windspd.equipid != currentSensorEqpId){
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	//将读取的数据回送给传感器控制器
@@ -954,7 +954,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		break;
 	default:
 		HcuErrorPrint("MODBUS: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -969,8 +969,8 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_WINDSPD_DATA_REPORT, TASK_ID_WINDSPD, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_WINDSPD].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
 		return FAILURE;
 	}
 
@@ -987,7 +987,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	memset(&rcv, 0, sizeof(msg_struct_temp_modbus_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_modbus_data_read_t))){
 		HcuErrorPrint("MODBUS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -995,7 +995,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_temp)){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -1006,7 +1006,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	ret = func_modbus_temp_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
 		HcuErrorPrint("MODBUS: Error pack message!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -1018,7 +1018,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	if (FAILURE == ret)
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
 		msg_struct_alarm_report_t snd;
@@ -1039,8 +1039,8 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -1076,7 +1076,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	}
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 
 		msg_struct_alarm_report_t snd;
@@ -1097,8 +1097,8 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -1128,7 +1128,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	currentModbusBuf.curLen = ret;
 	if (func_modbus_temp_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
@@ -1136,7 +1136,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//检查下equipmentId，确保没重入
 	if (snd.temp.equipid != currentSensorEqpId){
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	//将读取的数据回送给传感器控制器
@@ -1184,7 +1184,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		break;
 	default:
 		HcuErrorPrint("MODBUS: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -1199,8 +1199,8 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_TEMP_DATA_REPORT, TASK_ID_TEMP, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_TEMP].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
 		return FAILURE;
 	}
 
@@ -1218,7 +1218,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	memset(&rcv, 0, sizeof(msg_struct_humid_modbus_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_humid_modbus_data_read_t))){
 		HcuErrorPrint("MODBUS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -1226,7 +1226,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_humid)){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -1237,7 +1237,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	ret = func_modbus_humid_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
 		HcuErrorPrint("MODBUS: Error pack message!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
@@ -1249,7 +1249,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	if (FAILURE == ret)
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
 		msg_struct_alarm_report_t snd;
@@ -1270,8 +1270,8 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -1304,7 +1304,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 
 
@@ -1326,8 +1326,8 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 
@@ -1355,14 +1355,14 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	currentModbusBuf.curLen = ret;
 	if (func_modbus_humid_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
 
 	//检查下equipmentId，确保没重入
 	if (snd.humid.equipid != currentSensorEqpId){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
 		return FAILURE;
 	}
@@ -1411,7 +1411,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		break;
 	default:
 		HcuErrorPrint("MODBUS: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -1427,8 +1427,8 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_HUMID_DATA_REPORT, TASK_ID_HUMID, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_HUMID].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
 		return FAILURE;
 	}
 
@@ -1446,7 +1446,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	memset(&rcv, 0, sizeof(msg_struct_noise_modbus_data_read_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_modbus_data_read_t))){
 		HcuErrorPrint("MODBUS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -1454,7 +1454,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_noise)){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -1466,7 +1466,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	ret = func_modbus_noise_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
 		HcuErrorPrint("MODBUS: Error pack message!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -1490,7 +1490,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	if (FAILURE == ret)
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 		msg_struct_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
@@ -1510,8 +1510,8 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -1542,7 +1542,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 
 		msg_struct_alarm_report_t snd;
@@ -1563,8 +1563,8 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_MODBUS, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_CLOUDVELA].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 				return FAILURE;
 			}
 		}
@@ -1591,14 +1591,14 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	currentModbusBuf.curLen = ret;
 	if (func_modbus_noise_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
 
 	//检查下equipmentId，确保没重入
 	if (snd.noise.equipid != currentSensorEqpId){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
 		return FAILURE;
 	}
@@ -1647,7 +1647,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		break;
 	default:
 		HcuErrorPrint("MODBUS: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -1662,8 +1662,8 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_NOISE_DATA_REPORT, TASK_ID_NOISE, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_NOISE].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
 		return FAILURE;
 	}
 
@@ -1677,7 +1677,7 @@ OPSTAT func_modbus_emc_msg_pack(msg_struct_emc_modbus_data_read_t *inMsg, Serial
 	//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
 	//取得设备地址
 	if (inMsg->equId > 0xFF){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	outMsg->curBuf[outMsg->curLen] = (UINT8)(inMsg->equId & 0x0FF);
@@ -1736,7 +1736,7 @@ OPSTAT func_modbus_emc_msg_pack(msg_struct_emc_modbus_data_read_t *inMsg, Serial
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg pack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -1760,14 +1760,14 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->emc.equipid = buf->curBuf[index];
@@ -1776,7 +1776,7 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 	//检查功能码=03
 	if (buf->curBuf[index] != EMC_MODBUS_GENERIC_FUNC_DATA_INQUERY){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	index++;
@@ -1787,7 +1787,7 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 	CheckCRCModBus(buf->curBuf, buf->curLen-2, &crc16_gen);
 	if (crc16_orin != crc16_gen){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -1798,7 +1798,7 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 		index++;
 		if (len != EMC_LENGTH_OF_REG *2){
 			HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
-			zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
 		t0 = buf->curBuf[index++];
@@ -1843,7 +1843,7 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg unpack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -1856,7 +1856,7 @@ OPSTAT func_modbus_pm25_msg_pack(msg_struct_pm25_modbus_data_read_t *inMsg, Seri
 	//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
 	//取得设备地址
 	if (inMsg->equId > 0xFF){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	outMsg->curBuf[outMsg->curLen] = (UINT8)(inMsg->equId & 0x0FF);
@@ -1915,7 +1915,7 @@ OPSTAT func_modbus_pm25_msg_pack(msg_struct_pm25_modbus_data_read_t *inMsg, Seri
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg pack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -1940,14 +1940,14 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->pm25.equipid = buf->curBuf[index];
@@ -1956,7 +1956,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 	//检查功能码=03
 	if (buf->curBuf[index] != PM25_MODBUS_GENERIC_FUNC_DATA_INQUERY){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	index++;
@@ -1967,7 +1967,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 	CheckCRCModBus(buf->curBuf, buf->curLen-2, &crc16_gen);
 	if (crc16_orin != crc16_gen){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -1978,7 +1978,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 		index++;
 		if (len != PM25_LENGTH_OF_REG *2){
 			HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
-			zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
 		t0 = buf->curBuf[index++];
@@ -2045,7 +2045,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg unpack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2058,7 +2058,7 @@ OPSTAT func_modbus_winddir_msg_pack(msg_struct_winddir_modbus_data_read_t *inMsg
 	//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
 	//取得设备地址
 	if (inMsg->equId > 0xFF){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	outMsg->curBuf[outMsg->curLen] = (UINT8)(inMsg->equId & 0x0FF);
@@ -2117,7 +2117,7 @@ OPSTAT func_modbus_winddir_msg_pack(msg_struct_winddir_modbus_data_read_t *inMsg
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg pack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2141,14 +2141,14 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->winddir.equipid = buf->curBuf[index];
@@ -2157,7 +2157,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	//检查功能码=03
 	if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	index++;
@@ -2168,7 +2168,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	CheckCRCModBus(buf->curBuf, buf->curLen-2, &crc16_gen);
 	if (crc16_orin != crc16_gen){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -2178,7 +2178,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 		len = buf->curBuf[index];
 		index++;
 		if (len != WINDDIR_LENGTH_OF_REG *2){
-			zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
 			return FAILURE;
 		}
@@ -2224,7 +2224,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg unpack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2237,7 +2237,7 @@ OPSTAT func_modbus_windspd_msg_pack(msg_struct_windspd_modbus_data_read_t *inMsg
 	//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
 	//取得设备地址
 	if (inMsg->equId > 0xFF){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	outMsg->curBuf[outMsg->curLen] = (UINT8)(inMsg->equId & 0x0FF);
@@ -2296,7 +2296,7 @@ OPSTAT func_modbus_windspd_msg_pack(msg_struct_windspd_modbus_data_read_t *inMsg
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg pack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2320,14 +2320,14 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->windspd.equipid = buf->curBuf[index];
@@ -2336,7 +2336,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	//检查功能码=03
 	if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	index++;
@@ -2347,7 +2347,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	CheckCRCModBus(buf->curBuf, buf->curLen-2, &crc16_gen);
 	if (crc16_orin != crc16_gen){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -2358,7 +2358,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 		index++;
 		if (len != WINDSPD_LENGTH_OF_REG *2){
 			HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
-			zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
 		t0 = buf->curBuf[index++];
@@ -2403,7 +2403,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg unpack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2416,7 +2416,7 @@ OPSTAT func_modbus_temp_msg_pack(msg_struct_temp_modbus_data_read_t *inMsg, Seri
 	//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
 	//取得设备地址
 	if (inMsg->equId > 0xFF){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	outMsg->curBuf[outMsg->curLen] = (UINT8)(inMsg->equId & 0x0FF);
@@ -2475,7 +2475,7 @@ OPSTAT func_modbus_temp_msg_pack(msg_struct_temp_modbus_data_read_t *inMsg, Seri
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg pack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2499,14 +2499,14 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->temp.equipid = buf->curBuf[index];
@@ -2515,7 +2515,7 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 	//检查功能码=03
 	if (buf->curBuf[index] != TEMP_MODBUS_GENERIC_FUNC_DATA_INQUERY){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	index++;
@@ -2526,7 +2526,7 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 	CheckCRCModBus(buf->curBuf, buf->curLen-2, &crc16_gen);
 	if (crc16_orin != crc16_gen){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -2537,7 +2537,7 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 		index++;
 		if (len != TEMP_LENGTH_OF_REG *2){
 			HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
-			zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
 		t0 = buf->curBuf[index++];  //前两个数据是温度，后面的2个数据是湿度
@@ -2582,7 +2582,7 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg unpack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2595,7 +2595,7 @@ OPSTAT func_modbus_humid_msg_pack(msg_struct_humid_modbus_data_read_t *inMsg, Se
 	//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
 	//取得设备地址
 	if (inMsg->equId > 0xFF){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	outMsg->curBuf[outMsg->curLen] = (UINT8)(inMsg->equId & 0x0FF);
@@ -2654,7 +2654,7 @@ OPSTAT func_modbus_humid_msg_pack(msg_struct_humid_modbus_data_read_t *inMsg, Se
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg pack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2678,14 +2678,14 @@ OPSTAT func_modbus_humid_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_humid_
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->humid.equipid = buf->curBuf[index];
@@ -2694,7 +2694,7 @@ OPSTAT func_modbus_humid_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_humid_
 	//检查功能码=03
 	if (buf->curBuf[index] != HUMID_MODBUS_GENERIC_FUNC_DATA_INQUERY){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	index++;
@@ -2705,7 +2705,7 @@ OPSTAT func_modbus_humid_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_humid_
 	CheckCRCModBus(buf->curBuf, buf->curLen-2, &crc16_gen);
 	if (crc16_orin != crc16_gen){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -2716,7 +2716,7 @@ OPSTAT func_modbus_humid_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_humid_
 		index++;
 		if (len != HUMID_LENGTH_OF_REG *2){
 			HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
-			zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
 		index = index+2;  //前两个数据是温度，后面的2个数据是湿度
@@ -2762,7 +2762,7 @@ OPSTAT func_modbus_humid_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_humid_
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg unpack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2775,7 +2775,7 @@ OPSTAT func_modbus_noise_msg_pack(msg_struct_noise_modbus_data_read_t *inMsg, Se
 	//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
 	//取得设备地址
 	if (inMsg->equId > 0xFF){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	outMsg->curBuf[outMsg->curLen] = (UINT8)(inMsg->equId & 0x0FF);
@@ -2834,7 +2834,7 @@ OPSTAT func_modbus_noise_msg_pack(msg_struct_noise_modbus_data_read_t *inMsg, Se
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg pack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -2858,14 +2858,14 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->noise.equipid = buf->curBuf[index];
@@ -2874,7 +2874,7 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 	//检查功能码=03
 	if (buf->curBuf[index] != NOISE_MODBUS_GENERIC_FUNC_DATA_INQUERY){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	index++;
@@ -2885,7 +2885,7 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 	CheckCRCModBus(buf->curBuf, buf->curLen-2, &crc16_gen);
 	if (crc16_orin != crc16_gen){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -2896,7 +2896,7 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 		index++;
 		if (len != NOISE_LENGTH_OF_REG *2){
 			HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
-			zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
 		//T0-T4的四个寄存器数据顺序是串行的，跟PM25不太一样，故而这里只是顺序加总
@@ -2946,7 +2946,7 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg unpack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -3076,7 +3076,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	memset(&rcv, 0, sizeof(msg_struct_pm25_modbus_control_cmd_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_modbus_control_cmd_t))){
 		HcuErrorPrint("MODBUS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -3085,7 +3085,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 
 	//Equipment Id can not be 0
 	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_pm25)){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -3095,7 +3095,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 	ret = func_modbus_pm25_cmd_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
@@ -3107,7 +3107,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 
 	if (FAILURE == ret)
 	{
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 	}
 
@@ -3130,7 +3130,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	else
 	{
 	  HcuDebugPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
-	  zHcuRunErrCnt[TASK_ID_MODBUS]++;
+	  zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 	  return FAILURE;
 	}
 
@@ -3151,14 +3151,14 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	//if (func_modbus_pm25_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 	if (func_modbus_pm25_cmd_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查下equipmentId，确保没重入
 	if (snd.opt.equId != currentSensorEqpId){
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	//将读取的数据回送给传感器控制器
@@ -3205,7 +3205,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 		break;
 	default:
 		HcuErrorPrint("MODBUS: Error operation code received!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -3222,8 +3222,8 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_PM25_CONTROL_FB, TASK_ID_PM25, TASK_ID_MODBUS, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
-		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_MODBUS].taskName, zHcuTaskInfo[TASK_ID_PM25].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
 		return FAILURE;
 	}
 
@@ -3266,7 +3266,7 @@ OPSTAT func_modbus_pm25_cmd_pack(msg_struct_pm25_modbus_control_cmd_t *inMsg, Se
 	//参数不再做详细的检查，因为上层调用者已经做过严格的检查了
 	//取得设备地址
 	if (inMsg->opt.equId > 0xFF){
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	outMsg->curBuf[outMsg->curLen] = (UINT8)(inMsg->opt.equId & 0x0FF);
@@ -3415,7 +3415,7 @@ OPSTAT func_modbus_pm25_cmd_pack(msg_struct_pm25_modbus_control_cmd_t *inMsg, Se
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg pack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}
@@ -3440,14 +3440,14 @@ OPSTAT func_modbus_pm25_cmd_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
 		HcuErrorPrint("MODBUS: Receive PM25 control command feedback error with length = %d\n", buf->curLen);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->opt.equId){
 		HcuErrorPrint("MODBUS: Receive PM25 control command feedback error with EquId = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->opt.equId = buf->curBuf[index];
@@ -3457,7 +3457,7 @@ OPSTAT func_modbus_pm25_cmd_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 	if ((buf->curBuf[index] != PM25_MODBUS_GENERIC_FUNC_DATA_SET) && (buf->curBuf[index] != PM25_MODBUS_GENERIC_FUNC_DATA_INQUERY)){
 		HcuErrorPrint("MODBUS: Receive PM25 control command feedback error with func code = %d\n", buf->curBuf[index]);
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -3469,7 +3469,7 @@ OPSTAT func_modbus_pm25_cmd_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 	CheckCRCModBus(buf->curBuf, buf->curLen-2, &crc16_gen);
 	if (crc16_orin != crc16_gen){
 		HcuErrorPrint("MODBUS: Receive PM25 control command feedback error with CRC16 check!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 
@@ -3539,7 +3539,7 @@ OPSTAT func_modbus_pm25_cmd_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 	default:
 		HcuErrorPrint("MODBUS: Error cmId par received during msg unpack!\n");
-		zHcuRunErrCnt[TASK_ID_MODBUS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 		break;
 	}

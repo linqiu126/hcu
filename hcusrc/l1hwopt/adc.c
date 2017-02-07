@@ -12,7 +12,7 @@
 /*
 ** FSM of the ADC
 */
-FsmStateItem_t HcuFsmAdc[] =
+HcuFsmStateItem_t HcuFsmAdc[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -63,7 +63,7 @@ OPSTAT fsm_adc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_ADC, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("ADC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_ADC].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("ADC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ADC].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -81,11 +81,11 @@ OPSTAT fsm_adc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_ADC] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_ADC] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_ADC, FSM_STATE_ADC_ACTIVIED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_ADC]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ADC]++;
 		HcuErrorPrint("ADC: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -121,7 +121,7 @@ OPSTAT fsm_adc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 OPSTAT fsm_adc_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("ADC: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_adc_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

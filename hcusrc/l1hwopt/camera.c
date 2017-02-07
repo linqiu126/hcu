@@ -12,7 +12,7 @@
 /*
 ** FSM of the CAMERA
 */
-FsmStateItem_t HcuFsmCamera[] =
+HcuFsmStateItem_t HcuFsmCamera[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -69,7 +69,7 @@ OPSTAT fsm_camera_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CAMERA, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CAMERA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CAMERA].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("CAMERA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CAMERA].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -87,11 +87,11 @@ OPSTAT fsm_camera_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//Global variables
-	zHcuRunErrCnt[TASK_ID_CAMERA] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_CAMERA, FSM_STATE_CAMERA_ACTIVIED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -128,7 +128,7 @@ OPSTAT fsm_camera_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 OPSTAT fsm_camera_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("CAMERA: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_camera_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -145,61 +145,61 @@ OPSTAT func_camera_static_frame_capture(void)
 	//打开设备
 	fd = func_camera_open_device();
 	if (fd == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Open device error!\n");
 		return FAILURE;
 	}
 	//初始化设备
 	if (func_camera_init_device(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Initialize device error!\n");
 		return FAILURE;
 	}
 	//检查和设置取景框
 	if (func_camera_check_scale(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Check scale error!\n");
 		return FAILURE;
 	}
 	//检查和设置输入输出设备
 	if (func_camera_check_input_output(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Check input/output error!\n");
 		return FAILURE;
 	}
 	//检查和设置输入输出设备
 	if (func_camera_check_standard(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Check standard error!\n");
 		return FAILURE;
 	}
 	//初始化内存交换缓冲区
 	if (func_camera_init_mmap(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Initialize MMAP error!\n");
 		return FAILURE;
 	}
 	//启动捕获
 	if (func_camera_start_capture(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Start capture error!\n");
 		return FAILURE;
 	}
 	//进入主循环
 	if (func_camera_mainloop(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Enter main loop of capture error!\n");
 		return FAILURE;
 	}
 	//停止捕获
 	if (func_camera_stop_capture(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Stop capture error!\n");
 		return FAILURE;
 	}
 	//关闭设备
 	if (func_camera_close_device(fd) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		HcuErrorPrint("CAMERA: Close device error!\n");
 		return FAILURE;
 	}
@@ -229,7 +229,7 @@ INT32 func_camera_open_device(void)
 	fd = open(HCU_DEFAULT_DEVICE_USB_CAMERA0, O_RDONLY, 0);
 	if(fd < 0){
 		HcuErrorPrint("CAMERA: FILE_VIDEO error, %d!\n", HCU_DEFAULT_DEVICE_USB_CAMERA);
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	return fd;
@@ -435,7 +435,7 @@ OPSTAT func_camera_init_device(UINT32 fd)
 	ret = ioctl(fd, VIDIOC_QUERYCAP, &cap);
 	if(ret < 0){
 		HcuErrorPrint("CAMERA: Fail to ioctl VIDEO_QUERYCAP!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	HcuDebugPrint("CAMERA: Driver Name=%s, Card Name=%s, Bus info=%s, Driver Version=%u.%u.%u\n", cap.driver, cap.card, cap.bus_info,
@@ -445,7 +445,7 @@ OPSTAT func_camera_init_device(UINT32 fd)
 	if(!(cap.capabilities & V4L2_BUF_TYPE_VIDEO_CAPTURE))
 	{
 		HcuErrorPrint("CAMERA: The Current device is not a video capture device!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}else{
 		HcuDebugPrint("CAMERA: Support V4L2 capture -> V4L2_BUF_TYPE_VIDEO_CAPTURE!\n");
@@ -455,7 +455,7 @@ OPSTAT func_camera_init_device(UINT32 fd)
 	if(!(cap.capabilities & V4L2_CAP_STREAMING))
 	{
 		HcuErrorPrint("CAMERA: The Current device does not support streaming i/o!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}else{
 		HcuDebugPrint("CAMERA: Support V4L2 capture -> V4L2_CAP_STREAMING!\n");
@@ -470,7 +470,7 @@ OPSTAT func_camera_init_device(UINT32 fd)
 	if (ioctl(fd, VIDIOC_S_FMT, &tv_fmt)< 0) {
 		HcuErrorPrint("CAMERA: Setting capture parameter error -> VIDIOC_S_FMT!\n");
 		close(fd);
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}else{
 		HcuDebugPrint("CAMERA: Setting capture parameter successful -> VIDIOC_S_FMT!\n");
@@ -519,7 +519,7 @@ OPSTAT func_camera_check_scale(UINT32 fd)
 	fmt.type=V4L2_BUF_TYPE_VIDEO_CAPTURE;
 	if (ioctl(fd, VIDIOC_G_FMT, &fmt) == -1){
 		HcuErrorPrint("CAMERA: Check VIDIOC_G_FMT error!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}else{
 		HcuDebugPrint("CAMERA: Set scale, Data format width = %d, height = %d\n", fmt.fmt.pix.width,fmt.fmt.pix.height);
@@ -603,7 +603,7 @@ OPSTAT func_camera_check_input_output(UINT32 fd)
 	//首先获得当前输入的 index,注意只是 index，要获得具体的信息，就的调用列举操作
 	if (ioctl(fd, VIDIOC_G_INPUT, &input.index) == -1) {
 		HcuErrorPrint("CAMERA: VIDIOC_G_INPUT error!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	HcuDebugPrint("CAMERA: Current input index = %d\n", input.index);
@@ -611,7 +611,7 @@ OPSTAT func_camera_check_input_output(UINT32 fd)
 	//调用列举操作，获得 input.index 对应的输入的具体信息
 	if (-1 == ioctl(fd, VIDIOC_ENUMINPUT, &input)) {
 		HcuErrorPrint("CAMERA: Check input/output error -> VIDIOC_ENUM_INPUT error!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}else{
 		HcuDebugPrint("CAMERA: Current input [%s] supports.\n", input.name);
@@ -632,7 +632,7 @@ OPSTAT func_camera_check_input_output(UINT32 fd)
 	HcuDebugPrint("CAMERA: err No = %d, [%s] Standard Index = %d\n", errno, strerror(errno), standard.index);
 	if (errno != EINVAL || standard.index == 0) {
 		HcuErrorPrint("CAMERA: Checking standard name error -> VIDIOC_ENUMSTD error!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 		return SUCCESS;
@@ -674,7 +674,7 @@ OPSTAT func_camera_check_standard(UINT32 fd)
 	// or it falls under the USB exception, and VIDIOC_G_STD returning EINVAL
 	// is no error.
 		HcuErrorPrint("CAMERA: Checking standard -> VIDIOC_G_STD error!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 
@@ -696,7 +696,7 @@ OPSTAT func_camera_check_standard(UINT32 fd)
 	/* EINVAL indicates the end of the enumeration, which cannot be empty unless this device falls under the USB exception. */
 	if (errno == EINVAL || standard.index == 0) {
 		HcuErrorPrint("CAMERA: VIDIOC_ENUMSTD error!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 
@@ -771,7 +771,7 @@ OPSTAT func_camera_init_mmap(UINT32 fd)
 
 	if(ioctl(fd,VIDIOC_REQBUFS,&reqbufs) == -1){
 		HcuErrorPrint("CAMERA: Fail to ioctl 'VIDIOC_REQBUFS'!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 
@@ -782,7 +782,7 @@ OPSTAT func_camera_init_mmap(UINT32 fd)
 	zHcuCameraUsrBuf = calloc(reqbufs.count, sizeof(zHcuCameraUsrBuf));
 	if(zHcuCameraUsrBuf == NULL){
 		HcuErrorPrint("CAMERA: Out of memory!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 
@@ -805,7 +805,7 @@ OPSTAT func_camera_init_mmap(UINT32 fd)
 		if( ioctl(fd, VIDIOC_QUERYBUF, &buf) == -1)
 		{
 			HcuErrorPrint("CAMERA: Fail to ioctl,  VIDIOC_QUERYBUF!\n");
-			zHcuRunErrCnt[TASK_ID_CAMERA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 			return FAILURE;
 		}
 
@@ -823,7 +823,7 @@ OPSTAT func_camera_init_mmap(UINT32 fd)
 		if(zHcuCameraUsrBuf[zHcuCameraNbuffer].start == MAP_FAILED)
 		{
 			HcuErrorPrint("CAMERA: Fail to mmap!\n");
-			zHcuRunErrCnt[TASK_ID_CAMERA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 			return FAILURE;
 		}
 	}
@@ -854,7 +854,7 @@ OPSTAT func_camera_start_capture(UINT32 fd)
 		//把四个缓冲帧放入队列，并启动数据流
 		if(-1 == ioctl(fd, VIDIOC_QBUF, &buf)){  //将内存BUF置换进去
 			HcuErrorPrint("CAMERA: Fail to ioctl 'VIDIOC_QBUF'!\n");
-			zHcuRunErrCnt[TASK_ID_CAMERA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 			return FAILURE;
 		}
 	}
@@ -864,7 +864,7 @@ OPSTAT func_camera_start_capture(UINT32 fd)
 	if(-1 == ioctl(fd, VIDIOC_STREAMON, &type)){
 		close(fd);
 		HcuErrorPrint("CAMERA: VIDIOC_STREAMON!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -880,7 +880,7 @@ OPSTAT func_camera_process_image(void *addr, UINT32 length)
 	HcuDebugPrint(image_name, JPG, num++);
 	if((fp = fopen(image_name, "w")) == NULL){
 		HcuErrorPrint("CAMERA: Fail to fopen!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	fwrite(addr, length, 1, fp);
@@ -901,7 +901,7 @@ UINT32 func_camera_read_frame(UINT32 fd)
 	//put cache from queue
 	if(-1 == ioctl(fd, VIDIOC_DQBUF,&buf)){   //将内存BUF置换出来
 		HcuErrorPrint("CAMERA: Fail to ioctl 'VIDIOC_DQBUF'!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	assert(buf.index < zHcuCameraNbuffer);
@@ -910,7 +910,7 @@ UINT32 func_camera_read_frame(UINT32 fd)
 	func_camera_process_image(zHcuCameraUsrBuf[buf.index].start, zHcuCameraUsrBuf[buf.index].length);
 	if(-1 == ioctl(fd, VIDIOC_QBUF,&buf)){   //将内存BUF置换进去
 		HcuErrorPrint("CAMERA: Fail to ioctl 'VIDIOC_QBUF'!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	return 1;
@@ -942,14 +942,14 @@ OPSTAT func_camera_mainloop(UINT32 fd)
 				if(EINTR == errno)
 					continue;
 				HcuErrorPrint("CAMERA: Fail to select!\n");
-				zHcuRunErrCnt[TASK_ID_CAMERA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 				return FAILURE;
 			}
 
 			if(0 == r)
 			{
 				HcuErrorPrint("CAMERA: select Timeout!\n");
-				zHcuRunErrCnt[TASK_ID_CAMERA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 				return FAILURE;
 			}
 
@@ -968,7 +968,7 @@ OPSTAT func_camera_stop_capture(UINT32 fd)
 	if(-1 == ioctl(fd,VIDIOC_STREAMOFF,&type))
 	{
 		HcuErrorPrint("CAMERA: Fail to ioctl 'VIDIOC_STREAMOFF'!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -982,7 +982,7 @@ OPSTAT func_camera_close_device(UINT32 fd)
 	{
 		if(-1 == munmap(zHcuCameraUsrBuf[i].start, zHcuCameraUsrBuf[i].length)){
 			HcuErrorPrint("CAMERA: Close avorion error!\n");
-			zHcuRunErrCnt[TASK_ID_CAMERA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 			return FAILURE;
 		}
 	}
@@ -991,7 +991,7 @@ OPSTAT func_camera_close_device(UINT32 fd)
 	if(-1 == close(fd))
 	{
 		HcuErrorPrint("CAMERA: Fail to close fd!\n");
-		zHcuRunErrCnt[TASK_ID_CAMERA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CAMERA]++;
 		return FAILURE;
 	}
 	return SUCCESS;

@@ -82,13 +82,13 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void)
     		taskairprsec, taskco1ec, tasklightstrec, taskalcoholec, taskhchoec, tasktoxicgasec,\
     		restartcnt, cloudvelaconncnt, cloudvelaconnfailcnt, cloudveladisccnt, clouddatatimeoutcnt, socketdisccnt, cpuoccupy, memoccupy, diskoccupy, timestamp) VALUES \
     		('%d', '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",\
-    		zHcuGlobalCounter.errCnt[TASK_ID_HCUVM], zHcuGlobalCounter.errCnt[TASK_ID_HWINV], zHcuGlobalCounter.errCnt[TASK_ID_SYSPM],zHcuGlobalCounter.errCnt[TASK_ID_MODBUS],\
-    		zHcuGlobalCounter.errCnt[TASK_ID_CLOUDVELA], zHcuGlobalCounter.errCnt[TASK_ID_AVORION], zHcuGlobalCounter.errCnt[TASK_ID_SPSVIRGO], zHcuGlobalCounter.errCnt[TASK_ID_HSMMP],\
-			zHcuGlobalCounter.errCnt[TASK_ID_EMC], zHcuGlobalCounter.errCnt[TASK_ID_PM25], zHcuGlobalCounter.errCnt[TASK_ID_WINDDIR], zHcuGlobalCounter.errCnt[TASK_ID_WINDSPD], \
-			zHcuGlobalCounter.errCnt[TASK_ID_TEMP], zHcuGlobalCounter.errCnt[TASK_ID_HUMID], zHcuGlobalCounter.errCnt[TASK_ID_NOISE],\
-    		zHcuGlobalCounter.errCnt[TASK_ID_AIRPRS], zHcuGlobalCounter.errCnt[TASK_ID_CO1], zHcuGlobalCounter.errCnt[TASK_ID_LIGHTSTR], zHcuGlobalCounter.errCnt[TASK_ID_ALCOHOL], zHcuGlobalCounter.errCnt[TASK_ID_HCHO], zHcuGlobalCounter.errCnt[TASK_ID_TOXICGAS],\
-    		zHcuGlobalCounter.restartCnt, zHcuGlobalCounter.cloudVelaConnCnt, zHcuGlobalCounter.cloudVelaConnFailCnt, zHcuGlobalCounter.cloudVelaDiscCnt, zHcuGlobalCounter.CloudDataTimeOutCnt, zHcuGlobalCounter.SocketDiscCnt, \
-			zHcuGlobalCounter.cpu_occupy, zHcuGlobalCounter.mem_occupy, zHcuGlobalCounter.disk_occupy, (UINT32)time(NULL));
+    		zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HCUVM], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HWINV], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_SYSPM],zHcuSysStaPm.statisCnt.errCnt[TASK_ID_MODBUS],\
+    		zHcuSysStaPm.statisCnt.errCnt[TASK_ID_CLOUDVELA], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_AVORION], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_SPSVIRGO], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HSMMP],\
+			zHcuSysStaPm.statisCnt.errCnt[TASK_ID_EMC], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_PM25], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_WINDDIR], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_WINDSPD], \
+			zHcuSysStaPm.statisCnt.errCnt[TASK_ID_TEMP], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HUMID], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_NOISE],\
+    		zHcuSysStaPm.statisCnt.errCnt[TASK_ID_AIRPRS], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_CO1], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_LIGHTSTR], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_ALCOHOL], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HCHO], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_TOXICGAS],\
+    		zHcuSysStaPm.statisCnt.restartCnt, zHcuSysStaPm.statisCnt.cloudVelaConnCnt, zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt, zHcuSysStaPm.statisCnt.cloudVelaDiscCnt, zHcuSysStaPm.statisCnt.CloudDataTimeOutCnt, zHcuSysStaPm.statisCnt.SocketDiscCnt, \
+			zHcuSysStaPm.statisCnt.cpu_occupy, zHcuSysStaPm.statisCnt.mem_occupy, zHcuSysStaPm.statisCnt.disk_occupy, (UINT32)time(NULL));
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

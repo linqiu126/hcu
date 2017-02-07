@@ -14,7 +14,7 @@
 /*
 ** FSM of the I2CBUSLIBRA
 */
-FsmStateItem_t FsmI2cbuslibra[] =
+HcuFsmStateItem_t FsmI2cbuslibra[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -71,7 +71,7 @@ OPSTAT fsm_i2cbuslibra_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_I2CBUSLIBRA, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("I2CBUSLIBRA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_I2CBUSLIBRA], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("I2CBUSLIBRA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_I2CBUSLIBRA], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -89,11 +89,11 @@ OPSTAT fsm_i2cbuslibra_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_I2CBUSLIBRA] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2CBUSLIBRA] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_I2CBUSLIBRA, FSM_STATE_I2CBUSLIBRA_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_I2CBUSLIBRA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2CBUSLIBRA]++;
 		HcuErrorPrint("I2CBUSLIBRA: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -129,7 +129,7 @@ OPSTAT fsm_i2cbuslibra_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 OPSTAT fsm_i2cbuslibra_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("I2CBUSLIBRA: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_i2cbuslibra_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

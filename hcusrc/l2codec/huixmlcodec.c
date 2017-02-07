@@ -15,7 +15,7 @@
 #include "../l0service/trace.h"
 
 //Task Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //XML自定义标准的编码函数方式
 //inputLen：这是包括MsgHead在内的所有缓冲区长度，正常情况下=sizeof(StrMsg_HUITP_MSGID_uni_general_message_t)，或者IE_BODY+4
@@ -31,12 +31,12 @@ OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId,
 	{
 		HcuDebugPrint("HUITPXML: InputLen=%d, InputPar=%d, MaxLen=%d, size2=%d\n", inputLen, inputPar, (MAX_HCU_MSG_BUF_LENGTH_CLOUD - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		HcuErrorPrint("HUITPXML: Error input pointer or message length!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	if (output == NULL)
 	{
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("HUITPXML: Error CloudDataSendBuf_t pointer!\n");
 		return FAILURE;
 	}
@@ -69,7 +69,7 @@ OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId,
 	else if (msgType == HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING);
 	else {
 		HcuErrorPrint("HUITPXML: Error Message Type input!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_R);
@@ -157,7 +157,7 @@ OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId,
 		strcat(s, tmp);
 	}
 	if ((strlen(s) < 4) || (strlen(s) > (MAX_HCU_MSG_BUF_LENGTH_CLOUD - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN))){
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("HUITPXML: No data to be pack or too long length of data content %d!\n", strlen(s));
 		return FAILURE;
 	}
@@ -200,13 +200,13 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	//检查参数
 	if (rcv == NULL){
 		HcuErrorPrint("HUITPXML: Received message error, invalid received data buffer!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//控制命令不带XML格式头，接收的内容以裸控制命令，所以必须是偶数字节
 	if ((rcv->length > MAX_HCU_MSG_BUF_LENGTH_CLOUD) || (rcv->length < 8)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid data length by XML content format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	
@@ -216,7 +216,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L))>= pIndexT2) || (dif > MAX_HCU_MSG_BUF_LENGTH_CLOUD)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head xml format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	
@@ -226,14 +226,14 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_TO_USER_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_TO_USER_L))>= pIndexT2) || (dif > HCU_FILE_NAME_LENGTH_MAX)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head ToUserName format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(msgToUser, 0, sizeof(msgToUser));
 	strncpy(msgToUser, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_TO_USER_L), dif);
 	if (strcmp(msgToUser, zHcuSysEngPar.hwBurnId.equLable) !=0){
 		HcuErrorPrint("HUITPXML: Received message error, invalid toUser field!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	
@@ -243,14 +243,14 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L))>= pIndexT2) || (dif > HCU_FILE_NAME_LENGTH_MAX)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head fromUser format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(msgFromUser, 0, sizeof(msgFromUser));
 	strncpy(msgFromUser, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L), dif);
 	if (strcmp(msgFromUser, zHcuSysEngPar.cloud.cloudBhServerName) !=0){
 		HcuErrorPrint("HUITPXML: Received message error, invalid fromUser field!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}	
 	
@@ -260,7 +260,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L))>= pIndexT2) || (dif > HUITP_MSG_HUIXML_CONTSANT_CREATE_TIME_MAX_LEN)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head CreateTime format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(msgTmp, 0, sizeof(msgTmp));
@@ -275,7 +275,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L))>= pIndexT2) || (dif > HCU_FILE_NAME_LENGTH_MAX)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head msgType format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(msgTmp, 0, sizeof(msgTmp));
@@ -288,7 +288,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	else if (strcmp(msgTmp, HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING) ==0) msgType = HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID;
 	else{
 		HcuErrorPrint("HUITPXML: Received message error, invalid head msgType format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	//暂时不用，存下即可，以后再完善	
@@ -300,7 +300,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_FUNC_FLAG_L))>= pIndexT2) || (dif > HCU_FILE_NAME_LENGTH_MAX)){
 		HcuErrorPrint("HUITPXML: Received message error, invalid head funcFlag format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(msgFuncFlag, 0, sizeof(msgFuncFlag));
@@ -315,7 +315,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_CONTENT_L))>= pIndexT2) ||\
 		(dif > HUITP_MSG_BUF_WITH_HEAD_MAX_LEN) || (dif != ((dif/2)*2))){
 		HcuErrorPrint("HUITPXML: Received message error, invalid content format!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	memset(msgContent, 0, sizeof(msgContent));
@@ -333,12 +333,12 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	//如果接收到的消息不是目标消息，一样会放弃解码
 	if ((msgId < HUITP_MSGID_uni_min) || (msgId > HUITP_MSGID_uni_max) || ((expectMsgId != -1) && (msgId != expectMsgId))){
 		HcuErrorPrint("HUITPXML: Invalid received content data msgId info!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	if (msgLen > (MAX_HCU_MSG_BUF_LENGTH_CLOUD - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2){
 		HcuErrorPrint("HUITPXML: Invalid received content data msgLen info!\n");
-		zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
 	}
 	index = index + 4;
@@ -472,7 +472,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 			StrMsg_HUITP_MSGID_uni_heart_beat_req_t *snd1;
 			//memset(snd1, 0, sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_req_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
 				return FAILURE;
 			}
@@ -487,7 +487,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 			StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *snd2;
 			//memset(snd2, 0, sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
 				return FAILURE;
 			}
@@ -501,7 +501,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 			StrMsg_HUITP_MSGID_uni_inventory_req_t *snd30;
 			//memset(snd30, 0, sizeof(StrMsg_HUITP_MSGID_uni_inventory_req_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
 				return FAILURE;
 			}
@@ -515,7 +515,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 			StrMsg_HUITP_MSGID_uni_inventory_confirm_t *snd31;
 			//memset(snd31, 0, sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
 				return FAILURE;
 			}
@@ -529,7 +529,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 			StrMsg_HUITP_MSGID_uni_sw_package_req_t *snd32;
 			//memset(snd32, 0, sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
 				return FAILURE;
 			}
@@ -543,7 +543,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 			StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *snd33;
 			//memset(snd33, 0, sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t));
 			if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t) - 4)){
-				zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("HUITPXML: Error unpack message on length!\n");
 				return FAILURE;
 			}
@@ -554,7 +554,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 		
 		default:
 		{
-			zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("HUITPXML: Receive unknown message id and not able to process!\n");
 			return FAILURE;
 		}//break;

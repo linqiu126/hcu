@@ -23,7 +23,7 @@ enum FSM_STATE_SPI
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmSpi[];
+extern HcuFsmStateItem_t HcuFsmSpi[];
 extern float zHcuSpiTempRht03;
 extern float zHcuSpiHumidRht03;
 extern float zHcuSpiTempMth01;

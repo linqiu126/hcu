@@ -11,7 +11,11 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+
+//= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 151=>BFSC项目
 ==>清理全局表，简化全局表单的控制/初始化等内容
+
+
 
 
 //= ZJL, 2017 Feb.6, CURRENT_SW_DELIVERY 150=>BFSC项目

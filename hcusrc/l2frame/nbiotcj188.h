@@ -26,7 +26,7 @@ enum FSM_STATE_NBIOTCJ188
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmNbiotcj188[];
+extern HcuFsmStateItem_t HcuFsmNbiotcj188[];
 
 #define HCU_NBIOT_CJ188_REAL_TIME_IN_REALITY 2016071301152001
 

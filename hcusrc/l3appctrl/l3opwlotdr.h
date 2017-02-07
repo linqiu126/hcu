@@ -24,7 +24,7 @@ enum FSM_STATE_L3OPWLOTDR
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmL3opwlotdr[];
+extern HcuFsmStateItem_t HcuFsmL3opwlotdr[];
 
 //API
 extern OPSTAT fsm_l3opwlotdr_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

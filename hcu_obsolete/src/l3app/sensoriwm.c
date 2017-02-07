@@ -14,7 +14,7 @@
 /*
 ** FSM of the IWM
 */
-FsmStateItem_t FsmIwm[] =
+HcuFsmStateItem_t FsmIwm[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -74,7 +74,7 @@ OPSTAT fsm_iwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_IWM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("IWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_IWM], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("IWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_IWM], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -92,19 +92,19 @@ OPSTAT fsm_iwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_IWM] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM] = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_IWM, TIMER_ID_1S_IWM_PERIOD_READ, zHcuSysEngPar.timer.iwmReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_IWM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
 		HcuErrorPrint("IWM: Error start period timer!\n");
 		return FAILURE;
 	}
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_IWM, FSM_STATE_IWM_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_IWM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
 		HcuErrorPrint("IWM: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -140,7 +140,7 @@ OPSTAT fsm_iwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 OPSTAT fsm_iwm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("IWM: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_iwm_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -160,22 +160,22 @@ OPSTAT fsm_iwm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("IWM: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_IWM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_IWM]是否超限
-	if (zHcuRunErrCnt[TASK_ID_IWM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_IWM] = zHcuRunErrCnt[TASK_ID_IWM] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_IWM, TASK_ID_IWM, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_IWM]++;
-			HcuErrorPrint("IWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_IWM], zHcuTaskInfo.taskName[TASK_ID_IWM]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
+			HcuErrorPrint("IWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_IWM], zHcuSysCrlTab.taskRun.taskName[TASK_ID_IWM]);
 			return FAILURE;
 		}
 	}
@@ -186,7 +186,7 @@ OPSTAT fsm_iwm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 		if (FsmGetState(TASK_ID_IWM) != FSM_STATE_IWM_ACTIVED){
 			ret = FsmSetState(TASK_ID_IWM, FSM_STATE_IWM_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_IWM]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
 				HcuErrorPrint("IWM: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
@@ -206,7 +206,7 @@ OPSTAT fsm_iwm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	memset(&rcv, 0, sizeof(msg_struct_nbiotcj188_iwm_data_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_nbiotcj188_iwm_data_req_t))){
 		HcuErrorPrint("IWM: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_IWM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -214,7 +214,7 @@ OPSTAT fsm_iwm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	//验证入参的正确性
 	if ((rcv.equtype < HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MIN) || (rcv.equtype > HCU_NBIOT_CJ188_T_TYPE_WATER_METER_MAX)){
 		HcuErrorPrint("IWM: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_IWM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
 		return FAILURE;
 	}
 
@@ -411,7 +411,7 @@ OPSTAT fsm_iwm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 	else{
 		HcuErrorPrint("IWM: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_IWM]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
 		return FAILURE;
 	}
 
@@ -428,7 +428,7 @@ OPSTAT fsm_iwm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 		iwmDbSave.billtodayaccuvolumeunit = iwmResp.billtodayaccuvolumeunit;
 		ret = dbi_HcuIwmCj188DataInfo_save(&iwmDbSave);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_IWM]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
 			HcuErrorPrint("IWM: Can not save data into database!\n");
 		}
 	}
@@ -437,8 +437,8 @@ OPSTAT fsm_iwm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	iwmResp.length = sizeof(msg_struct_iwm_nbiotcj188_data_resp_t);
 	ret = hcu_message_send(MSG_ID_IWM_NBIOTCJ188_DATA_RESP, TASK_ID_NBIOTCJ188, TASK_ID_IWM, &iwmResp, iwmResp.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_IWM]++;
-		HcuErrorPrint("IWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_IWM], zHcuTaskInfo.taskName[TASK_ID_NBIOTCJ188]);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM]++;
+		HcuErrorPrint("IWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_IWM], zHcuSysCrlTab.taskRun.taskName[TASK_ID_NBIOTCJ188]);
 		return FAILURE;
 	}
 

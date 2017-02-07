@@ -10,7 +10,7 @@
 #include "../l1com/l1comdef.h"
 
 //Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 /*
 ** Local static variables
 */

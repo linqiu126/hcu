@@ -28,7 +28,7 @@ enum FSM_STATE_HUMID
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmHumid[];
+extern HcuFsmStateItem_t FsmHumid[];
 
 typedef struct SensorHumidInfo
 {

@@ -14,7 +14,7 @@
 /*
 ** FSM of the AIRPRS
 */
-FsmStateItem_t HcuFsmAirprs[] =
+HcuFsmStateItem_t HcuFsmAirprs[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -44,7 +44,7 @@ FsmStateItem_t HcuFsmAirprs[] =
 };
 
 //Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 extern float zHcuI2cAirprsBmp180;
 extern float zHcuI2cAltitudeBmp180;
 
@@ -74,7 +74,7 @@ OPSTAT fsm_airprs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_AIRPRS, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("AIRPRS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_AIRPRS].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("AIRPRS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_AIRPRS].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -92,19 +92,19 @@ OPSTAT fsm_airprs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_AIRPRS] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS] = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_AIRPRS, TIMER_ID_1S_AIRPRS_PERIOD_READ, zHcuSysEngPar.timer.airprsReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_AIRPRS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
 		HcuErrorPrint("AIRPRS: Error start period timer!\n");
 		return FAILURE;
 	}
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_AIRPRS, FSM_STATE_AIRPRS_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_AIRPRS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
 		HcuErrorPrint("AIRPRS: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -140,7 +140,7 @@ OPSTAT fsm_airprs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 OPSTAT fsm_airprs_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("AIRPRS: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_airprs_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -159,22 +159,22 @@ OPSTAT fsm_airprs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("AIRPRS: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_AIRPRS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_AIRPRS]是否超限
-	if (zHcuRunErrCnt[TASK_ID_AIRPRS] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_AIRPRS] = zHcuRunErrCnt[TASK_ID_AIRPRS] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_AIRPRS, TASK_ID_AIRPRS, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_AIRPRS]++;
-			HcuErrorPrint("AIRPRS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_AIRPRS].taskName, zHcuTaskInfo[TASK_ID_AIRPRS].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
+			HcuErrorPrint("AIRPRS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_AIRPRS].taskName, zHcuVmCtrTab.task[TASK_ID_AIRPRS].taskName);
 			return FAILURE;
 		}
 	}
@@ -185,7 +185,7 @@ OPSTAT fsm_airprs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		if (FsmGetState(TASK_ID_AIRPRS) != FSM_STATE_AIRPRS_ACTIVED){
 			ret = FsmSetState(TASK_ID_AIRPRS, FSM_STATE_AIRPRS_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_AIRPRS]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
 				HcuErrorPrint("AIRPRS: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
@@ -219,7 +219,7 @@ OPSTAT func_airprs_time_out_read_data_from_bmp180(void)
 
 		ret = dbi_HcuAirprsBmp180DataInfo_save(&airprsData);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_AIRPRS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
 			HcuErrorPrint("AIRPRS: Can not save AirprsBmp180 data into database!\n");
 		}
 	}
@@ -236,7 +236,7 @@ OPSTAT func_airprs_time_out_read_data_from_bmp180(void)
 
 		ret = dbi_HcuAirprsAltitudeBmp180DataInfo_save(&altitudeData);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_AIRPRS]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_AIRPRS]++;
 			HcuErrorPrint("AIRPRS: Can not save AltitudeBmp180 data into database!\n");
 		}
 	}

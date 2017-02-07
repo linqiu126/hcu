@@ -24,7 +24,7 @@ enum FSM_STATE_I2CBUSLIBRA
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmI2cbuslibra[];
+extern HcuFsmStateItem_t FsmI2cbuslibra[];
 
 //API
 extern OPSTAT fsm_i2cbuslibra_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

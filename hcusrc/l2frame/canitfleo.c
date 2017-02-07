@@ -51,7 +51,7 @@ const char anichar[MAXANI] = {'|', '/', '-', '\\'};
 /*
 ** FSM of the CANITFLEO
 */
-FsmStateItem_t HcuFsmCanitfleo[] =
+HcuFsmStateItem_t HcuFsmCanitfleo[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -85,7 +85,7 @@ FsmStateItem_t HcuFsmCanitfleo[] =
 };
 
 //Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 UINT32 HcuSensorIdRoundBing;
 
 UINT32 can_socket_id; //MYC
@@ -117,7 +117,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CANITFLEO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -135,7 +135,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_CANITFLEO] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] = 0;
 	HcuSensorIdRoundBing = 0;
 
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
@@ -148,7 +148,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -163,7 +163,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 OPSTAT fsm_canitfleo_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("CANITFLEO: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_canitfleo_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -196,22 +196,22 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t))){
 		HcuErrorPrint("CANITFLEO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_CANITFLEO]是否超限
-	if (zHcuRunErrCnt[TASK_ID_CANITFLEO] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
 		//减少重复RESTART的概率
-		zHcuRunErrCnt[TASK_ID_CANITFLEO] = zHcuRunErrCnt[TASK_ID_CANITFLEO] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] - HCU_RUN_ERROR_LEVEL_2_MAJOR;
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
 		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd0, snd0.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_CANITFLEO].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 			return FAILURE;
 		}
 	}
@@ -222,7 +222,7 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
 			ret = FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 				HcuErrorPrint("CANITFLEO: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
@@ -237,7 +237,7 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
 			ret = FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 				HcuErrorPrint("CANITFLEO: Error Set FSM State!\n");
 				return FAILURE;
 			}//FsmSetState
@@ -259,7 +259,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_ws_init_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_ws_init_req_t))){
 		HcuErrorPrint("CANITFLEO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -272,7 +272,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 			//生成CAN命令
 			memset(&p, 0, sizeof(strHcuCanitfleoCmdFrame_t));
 			if (func_canitfleo_frame_encode(HCU_CANITFLEO_PREFIXH_ws_ctrl, HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, 0, &p) == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 				HcuErrorPrint("CANITFLEO: Generate CAN Frame error!\n");
 				return FAILURE;
 			}
@@ -293,8 +293,8 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 		hcu_usleep(10 + rand()%10);
 		ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_INIT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 			return FAILURE;
 		}
 	}
@@ -310,7 +310,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 	//启动定时器：更快的毫秒级定时器
 	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA, HCU_CANITFLEO_TIMER_10MS_SIM_DATA, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Error start timer!\n");
 		return FAILURE;
 	}
@@ -330,7 +330,7 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t))){
 		HcuErrorPrint("CANITFLEO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -349,8 +349,8 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 		snd.flag = 1;
 		ret = hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+			HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 			return FAILURE;
 		}
 	}
@@ -369,8 +369,8 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 				snd.flag = 1;
 				ret = hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-					HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
+					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+					HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 					return FAILURE;
 				}
 			}
@@ -390,7 +390,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_ws_comb_out_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_ws_comb_out_t))){
 		HcuErrorPrint("CANITFLEO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -411,8 +411,8 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 
 			ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 				return FAILURE;
 			}
 		}
@@ -433,7 +433,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_ws_give_up_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_ws_give_up_t))){
 		HcuErrorPrint("CANITFLEO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -453,8 +453,8 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 
 			ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+				HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 				return FAILURE;
 			}
 		}
@@ -480,7 +480,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_ws_read_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_ws_read_req_t))){
 		HcuErrorPrint("CANITFLEO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -527,8 +527,8 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	snd.length = sizeof(msg_struct_can_l3bfsc_ws_read_resp_t);
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_READ_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		return FAILURE;
 	}
 #endif
@@ -552,7 +552,7 @@ OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void 
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_general_cmd_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_can_general_cmd_req_t))){
 		HcuErrorPrint("CANITFLEO: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -620,8 +620,8 @@ OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void 
 	snd.length = sizeof(msg_struct_can_l3bfsc_general_cmd_resp_t);
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		return FAILURE;
 	}
 #endif
@@ -683,8 +683,8 @@ void func_canitfleo_working_scan_process(void)
 
 	ret = hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_CANITFLEO].taskName, zHcuTaskInfo[TASK_ID_L3BFSC].taskName);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		return;
 	}
 #endif
@@ -696,7 +696,7 @@ OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar,
 {
 	//先检查输入参数
 	if ((optid <= HCU_CANITFLEO_OPTID_min) || (optid >= HCU_CANITFLEO_OPTID_max) || (pframe == NULL)){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Input parameters error!\n");
 		return FAILURE;
 	}
@@ -770,7 +770,7 @@ OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar,
 		break;
 
 	default:
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Input parameters error!\n");
 		return FAILURE;
 		break;
@@ -785,21 +785,21 @@ OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 pref
 {
 	//入参检查
 	if (pframe == NULL){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Input parameters error!\n");
 		return FAILURE;
 	}
 
 	//检查最重要的参数
 	if ((pframe->bfscCmdPrefixH <= HCU_CANITFLEO_PREFIXH_min) || (pframe->bfscCmdPrefixH >= HCU_CANITFLEO_PREFIXH_max) || (pframe->bfscCmdPrefixL != HCU_CANITFLEO_CMD_PREFIXL) || (pframe->bfscCmdId != HCU_CANITFLEO_CMD_BFSC_ID)){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Frame header error!\n");
 		return FAILURE;
 	}
 	prefixcmdid= pframe->bfscCmdId;
 	optid = pframe->bfscOptId;
 	if ((optid <=HCU_CANITFLEO_OPTID_min) || (optid >=HCU_CANITFLEO_OPTID_max)){
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Encoding Canitf frame OptId error!\n");
 		return FAILURE;
 	}
@@ -852,7 +852,7 @@ OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 pref
 		break;
 
 	default:
-		zHcuRunErrCnt[TASK_ID_CANITFLEO]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Input parameters error!\n");
 		return FAILURE;
 		break;

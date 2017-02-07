@@ -132,7 +132,7 @@ typedef struct HcuTimerTable
 #define HCU_TIMER_CONFIG_START_RESOLUTION_1MS FALSE
 
 //Global variables
-extern FsmStateItem_t FsmTimer[];
+extern HcuFsmStateItem_t FsmTimer[];
 
 //API
 extern OPSTAT fsm_timer_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

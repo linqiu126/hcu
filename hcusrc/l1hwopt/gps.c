@@ -12,7 +12,7 @@
 /*
 ** FSM of the GPS
 */
-FsmStateItem_t HcuFsmGps[] =
+HcuFsmStateItem_t HcuFsmGps[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -71,7 +71,7 @@ OPSTAT fsm_gps_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_GPS, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("GPS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_GPS].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("GPS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_GPS].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -122,11 +122,11 @@ OPSTAT fsm_gps_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	HcuDebugPrint("GPS: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForGPS.vTime, gSerialPortForGPS.vMin);
 
 
-	zHcuRunErrCnt[TASK_ID_GPS] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_GPS] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_GPS, FSM_STATE_GPS_RECEIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_GPS]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_GPS]++;
 		HcuErrorPrint("GPS: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -185,7 +185,7 @@ OPSTAT fsm_gps_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 OPSTAT fsm_gps_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("GPS: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_gps_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

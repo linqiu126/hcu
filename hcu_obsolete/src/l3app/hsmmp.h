@@ -37,7 +37,7 @@ typedef struct dir
 
 
 //Global variables
-extern FsmStateItem_t FsmHsmmp[];
+extern HcuFsmStateItem_t FsmHsmmp[];
 extern GpsPosInfo_t zHcuGpsPosInfo;
 
 //定时器，控制摄像头工作周期及时长

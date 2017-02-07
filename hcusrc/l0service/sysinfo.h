@@ -10,11 +10,11 @@
 
 #include "../l0comvm/vmlayer.h"
 
-extern HcuComMsgSysInfo_t gSysInfo;
+extern HcuSysOsNetInfo_t gSysInfo;
 
 UINT32 IsGprsPppdOk();
 UINT32 IsNetItfExist(char *itfname);
 void KillPppdProcess();
-extern OPSTAT HcuGetSysInfo(HcuComMsgSysInfo_t *si, bool mode);
+extern OPSTAT HcuGetSysInfo(HcuSysOsNetInfo_t *si, bool mode);
 
 #endif /* L0SERVICE_SYSINFO_H_ */

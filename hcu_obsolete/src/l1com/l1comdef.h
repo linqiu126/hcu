@@ -759,7 +759,7 @@ typedef struct GpsPosInfo
 }GpsPosInfo_t;
 
 
-typedef struct  HcuInventoryInfo
+typedef struct  SysEngParElementSwInvInfo
 {
 	UINT8 hw_uuid[6];
 	UINT8 hw_type;
@@ -767,7 +767,7 @@ typedef struct  HcuInventoryInfo
 	UINT8 sw_release;
 	UINT16 sw_delivery;
 	UINT16 db_delivery;
-}HcuInventoryInfo_t;
+}SysEngParElementSwInvInfo_t;
 
 //Adding by Shanchun for socket handling
 #define HCU_CLOUDSRV_SOCKET_PORT 9501

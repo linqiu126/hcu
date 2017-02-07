@@ -25,7 +25,7 @@ enum FSM_STATE_ETHERNET
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t FsmEthernet[];
+extern HcuFsmStateItem_t FsmEthernet[];
 extern CURL *zHcuEthernetCurlPtr;
 
 //Local virables

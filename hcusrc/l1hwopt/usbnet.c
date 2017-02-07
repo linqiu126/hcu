@@ -12,7 +12,7 @@
 /*
 ** FSM of the USBNET
 */
-FsmStateItem_t HcuFsmUsbnet[] =
+HcuFsmStateItem_t HcuFsmUsbnet[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -36,7 +36,7 @@ FsmStateItem_t HcuFsmUsbnet[] =
 };
 
 //Global variables
-extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
+extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //extern CURL *zHcuCloudCurlPtr;
 //extern CloudvelaTable_t zHcuCloudvelaTable;
@@ -67,7 +67,7 @@ OPSTAT fsm_usbnet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_USBNET, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("USBNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_USBNET].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("USBNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_USBNET].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -85,11 +85,11 @@ OPSTAT fsm_usbnet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//Global variables
-	zHcuRunErrCnt[TASK_ID_USBNET] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_USBNET] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_USBNET, FSM_STATE_USBNET_RECEIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_USBNET]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_USBNET]++;
 		HcuErrorPrint("USBNET: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -125,7 +125,7 @@ OPSTAT fsm_usbnet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 OPSTAT fsm_usbnet_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("USBNET: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_usbnet_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

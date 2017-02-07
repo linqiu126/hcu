@@ -12,7 +12,7 @@
 /*
 ** FSM of the 3G4G
 */
-FsmStateItem_t HcuFsm3g4g[] =
+HcuFsmStateItem_t HcuFsm3g4g[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -65,7 +65,7 @@ OPSTAT fsm_3g4g_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_3G4G, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("3G4G: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_3G4G].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("3G4G: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_3G4G].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -83,11 +83,11 @@ OPSTAT fsm_3g4g_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	}
 
 	//Global variables
-	zHcuRunErrCnt[TASK_ID_3G4G] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_3G4G, FSM_STATE_3G4G_RECEIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("3G4G: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -124,7 +124,7 @@ OPSTAT fsm_3g4g_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 OPSTAT fsm_3g4g_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("3G4G: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_3g4g_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -236,7 +236,7 @@ UINT32 UsbUmtsPppdStart()
 	if(USB_UMTS_PPP_CARD_TYPE_MAX_INVALID == usbUmtsCardType)
 	{
 		HcuErrorPrint("UsbUmtsPppdStart: UsbUmtsPppInit() not called before, device not initialized, return FAILURE.\n");
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		return FAILURE;
 	}
 
@@ -276,7 +276,7 @@ UINT32 UsbUmtsPppdStart()
 
 			//system("ifconfig eth0 up");
 			//WipDebugPrint("GprsPppStart: [%s] up eth0 via [ifconfig eth0 up] ...\n", ret);
-			zHcuRunErrCnt[TASK_ID_3G4G]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 			return FAILURE;
 		}
 		else if (0 != system_call_result)
@@ -285,7 +285,7 @@ UINT32 UsbUmtsPppdStart()
 
 			//system("ifconfig eth0 up");
 			//WipDebugPrint("GprsPppStart: Bring up eth0 via [ifconfig eth0 down] ...\n", ret);
-			zHcuRunErrCnt[TASK_ID_3G4G]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 			return FAILURE;
 		}
 		HcuDebugPrint("UsbUmtsPppdStart: Step 1/2: call [%s] End. \r\n", gUsbUmtsPppControl._3g_test_start_ums[usbUmtsCardType]);
@@ -301,7 +301,7 @@ UINT32 UsbUmtsPppdStart()
 		ret = UsbUmtsCardInit("/dev/ttyUSB0");
 		if (FAILURE == ret)
 		{
-			zHcuRunErrCnt[TASK_ID_3G4G]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 			HcuErrorPrint("UsbUmtsPppdStart: GUsbUmtsCardInit() failed.\n");
 			return SUCCESS;
 		}
@@ -314,7 +314,7 @@ UINT32 UsbUmtsPppdStart()
 
 			//system("ifconfig eth0 up");
 			//WipDebugPrint("GprsPppStart: [%s] up eth0 via [ifconfig eth0 up] ...\n", ret);
-			zHcuRunErrCnt[TASK_ID_3G4G]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 			return FAILURE;
 		}
 		else if (0 != system_call_result)
@@ -323,7 +323,7 @@ UINT32 UsbUmtsPppdStart()
 
 			//system("ifconfig eth0 up");
 			//WipDebugPrint("GprsPppStart: Bring up eth0 via [ifconfig eth0 down] ...\n", ret);
-			zHcuRunErrCnt[TASK_ID_3G4G]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 			return FAILURE;
 		}
 		HcuDebugPrint("UsbUmtsPppdStart: Step 2/2: call [%s] End. \r\n", gUsbUmtsPppControl._3g_test_start_ppp[usbUmtsCardType]);
@@ -341,7 +341,7 @@ UINT32 UsbUmtsPppdStart()
 		{
 			HcuDebugPrint("UsbUmtsPppdStart: GPRS & PPP started successfully, return SUCCESS.\n");
 			/* refresh system information for network interface checking */
-			HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+			HcuGetSysInfo(&zHcuVmCtrTab.hwinv.sysInfo);
 			HcuDebugPrint("UsbUmtsPppdStart: refresh system information complete.\n");
 			IsNetItfExist("ppp0");
 
@@ -355,10 +355,10 @@ UINT32 UsbUmtsPppdStart()
 		}
 		else
 		{
-			zHcuRunErrCnt[TASK_ID_3G4G]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 			HcuDebugPrint("UsbUmtsPppdStart: GPRS & PPP started failure, return FAILURE.\n");
 			/* refresh system information for network interface checking */
-			HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+			HcuGetSysInfo(&zHcuVmCtrTab.hwinv.sysInfo);
 			HcuDebugPrint("UsbUmtsPppdStart: refresh system information complete.\n");
 
 			/* usleep for 15 sec, to let console know the result */
@@ -370,7 +370,7 @@ UINT32 UsbUmtsPppdStart()
 			/* If failed for the 1st time, try for 2nd time */
 			if(try >=2)
 			{
-				zHcuRunErrCnt[TASK_ID_3G4G]++;
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 				return FAILURE;
 			}
 		}
@@ -397,7 +397,7 @@ UINT32 UsbUmtsPppdSwShutdown()
 	HcuDebugPrint("UsbUmtsPppdSwShutdown: pppd process cleaned to free serial port for GPRS model.\n");
 
 	/* refresh system information for network interface checking */
-	HcuGetSysInfo(&zHcuHwinvGlobalSysInfo);
+	HcuGetSysInfo(&zHcuVmCtrTab.hwinv.sysInfo);
 	HcuDebugPrint("UsbUmtsPppdSwShutdown: refresh system information complete.\n");
 
 	return SUCCESS;
@@ -547,7 +547,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	if (HCU_INVALID_U16 == fd)
 	{
 		HcuErrorPrint("UsbUmtsCardInit: Can't Open usb port [%s]\n", devPath);
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		return FAILURE;
 	}
 
@@ -558,7 +558,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	ret = UsbUmtsAtCommand(fd, "AT\r", *out, &NumOfLine);
 	if (ret == FAILURE)
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, make sure BandRate is correct, via AT+IPR=<rate> firstly, usb Port closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -572,7 +572,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	{
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
 		spsapi_SerialPortClose(fd);
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		return FAILURE;
 	}
 
@@ -580,7 +580,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	ret = UsbUmtsAtCommand(fd, "AT+CGMR\r", *out, &NumOfLine);
 	if (ret == FAILURE)
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, Serial Port closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -592,7 +592,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	}
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -601,7 +601,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	ret = UsbUmtsAtCommand(fd, "AT+CPIN?\r", *out, &NumOfLine);
 	if (ret == FAILURE)
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -613,7 +613,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	}
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -624,7 +624,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 
 	if (ret == FAILURE)
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -636,7 +636,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	}
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -647,7 +647,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 
 	if (ret == FAILURE)
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS Modem is not ready, usb Port closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -665,7 +665,7 @@ UINT32 UsbUmtsCardInit(char *devPath)
 	}
 	else
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsCardInit: GPRS READ Realtime Clock failure, Usb Port COM%d closed ...\n");
 		spsapi_SerialPortClose(fd);
 		return FAILURE;
@@ -731,20 +731,20 @@ UINT32 UsbUmtsAtCommand(UINT16 fd, char *AtCmd, char *ReplyStr, int *ReplyCnt)
 	if(HCU_INVALID_U16 == fd)
 	{
 		HcuErrorPrint("UsbUmtsAtCommand: fd = 0xFFFF, usb port not openned, return.\n");
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		return FAILURE;
 	}
 
 	if(NULL == AtCmd)
 	{
 		HcuErrorPrint("UsbUmtsAtCommand: Input pointer AtCmd = NULL, return.\n");
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		return FAILURE;
 	}
 
 	if(NULL == ReplyStr)
 	{
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		HcuErrorPrint("UsbUmtsAtCommand: Output pointer ReplyStr = NULL, return.\n");
 		return FAILURE;
 	}
@@ -762,7 +762,7 @@ UINT32 UsbUmtsAtCommand(UINT16 fd, char *AtCmd, char *ReplyStr, int *ReplyCnt)
 	if (-1 == readlen)
 	{
 		HcuDebugPrint("UsbUmtsAtCommand: read usb port (fd = %d) failure...\n", fd);
-		zHcuRunErrCnt[TASK_ID_3G4G]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_3G4G]++;
 		return FAILURE;
 	}
 	buf[readlen] = 0;

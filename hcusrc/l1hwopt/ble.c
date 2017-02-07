@@ -11,7 +11,7 @@
 /*
 ** FSM of the BLE
 */
-FsmStateItem_t HcuFsmBle[] =
+HcuFsmStateItem_t HcuFsmBle[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -62,7 +62,7 @@ OPSTAT fsm_ble_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_BLE, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("BLE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo[TASK_ID_BLE].taskName, zHcuTaskInfo[src_id].taskName);
+			HcuErrorPrint("BLE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BLE].taskName, zHcuVmCtrTab.task[src_id].taskName);
 			return FAILURE;
 		}
 	}
@@ -80,11 +80,11 @@ OPSTAT fsm_ble_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	}
 
 	//Global Variables
-	zHcuRunErrCnt[TASK_ID_BLE] = 0;
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_BLE] = 0;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_BLE, FSM_STATE_BLE_ACTIVIED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_BLE]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_BLE]++;
 		HcuErrorPrint("BLE: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -120,7 +120,7 @@ OPSTAT fsm_ble_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 OPSTAT fsm_ble_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("BLE: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_ble_init(0, 0, NULL, 0);
 	return SUCCESS;
 }

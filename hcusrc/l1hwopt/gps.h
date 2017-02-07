@@ -26,7 +26,7 @@ enum FSM_STATE_GPS
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmGps[];
+extern HcuFsmStateItem_t HcuFsmGps[];
 extern GpsPosInfo_t zHcuGpsPosInfo;
 
 //API

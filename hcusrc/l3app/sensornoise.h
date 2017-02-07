@@ -29,7 +29,7 @@ enum FSM_STATE_NOISE
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern FsmStateItem_t HcuFsmNoise[];
+extern HcuFsmStateItem_t HcuFsmNoise[];
 
 typedef struct SensorNoiseInfo
 {

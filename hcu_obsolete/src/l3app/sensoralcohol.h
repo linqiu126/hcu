@@ -29,7 +29,7 @@ enum FSM_STATE_ALCOHOL
 extern OPSTAT func_alcohol_time_out_read_data_from_mq3alco(void);
 
 //Global variables
-extern FsmStateItem_t FsmAlcohol[];
+extern HcuFsmStateItem_t FsmAlcohol[];
 
 //API
 extern OPSTAT fsm_alcohol_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

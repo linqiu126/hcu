@@ -12,7 +12,7 @@
 /*
 ** FSM of the HWINV
 */
-FsmStateItem_t FsmHwinv[] =
+HcuFsmStateItem_t FsmHwinv[] =
 {
     //MessageId                 //State                   		 		//Function
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
@@ -43,8 +43,8 @@ FsmStateItem_t FsmHwinv[] =
 
 //Global variables
 HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-HcuHwinvCtrlTable_t zHcuHwinvTable; //硬件列表
-zHcuTimeDateTable_t zCurTimeDate;   //时间更新表
+HcuHwinvCtrlTable_t zHcuVmCtrTab.hwinv; //硬件列表
+HcuTimeDateTable_t zHcuVmCtrTab.clock;   //时间更新表
 
 // System Information
 SysInfo_t gSysInfo;
@@ -75,7 +75,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HWINV, &snd0, snd0.length);
 		if (ret == FAILURE){
-			HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[src_id]);
+			HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
 		}
 	}
@@ -98,7 +98,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_HWINV, FSM_STATE_HWINV_ACTIVED) == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		HcuErrorPrint("HWINV: Error Set FSM State!\n");
 		return FAILURE;
 	}
@@ -132,7 +132,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 OPSTAT fsm_hwinv_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	HcuErrorPrint("HWINV: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuGlobalCounter.restartCnt++;
+	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_hwinv_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
@@ -145,63 +145,63 @@ OPSTAT func_hwinv_global_par_init(void)
 	char stmp[HCU_DIR_LENGTH_MAX];
 
 	//赋初值
-	memset(&zHcuHwinvTable, 0xFF, sizeof(HcuHwinvCtrlTable_t));
-	memset(&zCurTimeDate, 0xFF, sizeof(zHcuTimeDateTable_t));
-	zHcuRunErrCnt[TASK_ID_HWINV] = 0;
+	memset(&zHcuVmCtrTab.hwinv, 0xFF, sizeof(HcuHwinvCtrlTable_t));
+	memset(&zHcuVmCtrTab.clock, 0xFF, sizeof(HcuTimeDateTable_t));
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV] = 0;
 
 	//初始本地时间
 	lt=time(NULL);
 	cu = localtime(&lt);
 	cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
-	zCurTimeDate.year = cu->tm_year;
-	zCurTimeDate.mon = cu->tm_mon;
-	zCurTimeDate.day = cu->tm_mday;
-	zCurTimeDate.hour = cu->tm_hour;
-	zCurTimeDate.min = cu->tm_min;
-	zCurTimeDate.sec = cu->tm_sec;
+	zHcuVmCtrTab.clock.year = cu->tm_year;
+	zHcuVmCtrTab.clock.mon = cu->tm_mon;
+	zHcuVmCtrTab.clock.day = cu->tm_mday;
+	zHcuVmCtrTab.clock.hour = cu->tm_hour;
+	zHcuVmCtrTab.clock.min = cu->tm_min;
+	zHcuVmCtrTab.clock.sec = cu->tm_sec;
 
 	//strftime(zCurDayString, 8, "%Y%m%d", cu);
 	//strftime(zCurHourString,10, "%Y%m%d%H", cu);
 	//strftime(zCurMinString, 12, "%Y%m%d%H%M", cu);
-	sprintf(zCurTimeDate.sYear, "%04d", (UINT16)(1900+cu->tm_year));
-	sprintf(zCurTimeDate.sMon,  "%04d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon);
-	sprintf(zCurTimeDate.sDay,  "%04d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday);
-	sprintf(zCurTimeDate.sHour, "%04d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour);
-	sprintf(zCurTimeDate.sMin,  "%04d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min);
-	sprintf(zCurTimeDate.sSec,  "%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
-	sprintf(zCurTimeDate.strYear, "./%04d", (UINT16)(1900+cu->tm_year));
-	sprintf(zCurTimeDate.strMon,  "./%04d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon);
-	sprintf(zCurTimeDate.strDay,  "./%04d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday);
-	sprintf(zCurTimeDate.strHour, "./%04d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour);
-	sprintf(zCurTimeDate.strMin,  "./%04d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min);
-	sprintf(zCurTimeDate.strSec,  "./%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
-	zCurTimeDate.grad = cu->tm_hour * 60 + cu->tm_min;
+	sprintf(zHcuVmCtrTab.clock.sYear, "%04d", (UINT16)(1900+cu->tm_year));
+	sprintf(zHcuVmCtrTab.clock.sMon,  "%04d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon);
+	sprintf(zHcuVmCtrTab.clock.sDay,  "%04d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday);
+	sprintf(zHcuVmCtrTab.clock.sHour, "%04d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour);
+	sprintf(zHcuVmCtrTab.clock.sMin,  "%04d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min);
+	sprintf(zHcuVmCtrTab.clock.sSec,  "%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+	sprintf(zHcuVmCtrTab.clock.strYear, "./%04d", (UINT16)(1900+cu->tm_year));
+	sprintf(zHcuVmCtrTab.clock.strMon,  "./%04d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon);
+	sprintf(zHcuVmCtrTab.clock.strDay,  "./%04d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday);
+	sprintf(zHcuVmCtrTab.clock.strHour, "./%04d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour);
+	sprintf(zHcuVmCtrTab.clock.strMin,  "./%04d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min);
+	sprintf(zHcuVmCtrTab.clock.strSec,  "./%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+	zHcuVmCtrTab.clock.grad = cu->tm_hour * 60 + cu->tm_min;
 
 	//获取当前工作目录，并存入全局表
-	if (getcwd(zCurTimeDate.curHcuDir, sizeof(zCurTimeDate.curHcuDir)-1) == NULL){
+	if (getcwd(zHcuVmCtrTab.clock.curHcuDir, sizeof(zHcuVmCtrTab.clock.curHcuDir)-1) == NULL){
 		HcuErrorPrint("HWINV: Error get current working directory!\n");
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		return FAILURE;
 	}
-	if (strlen(zCurTimeDate.curHcuDir) > (HCU_DIR_LENGTH_MAX - 30)){
-		strcpy(zCurTimeDate.curHcuDir, "/home"); //强行设置工作目录
+	if (strlen(zHcuVmCtrTab.clock.curHcuDir) > (HCU_DIR_LENGTH_MAX - 30)){
+		strcpy(zHcuVmCtrTab.clock.curHcuDir, "/home"); //强行设置工作目录
 		HcuErrorPrint("HWINV: Too deep working directory!\n");
 	}
 
 	//给curLogDir以及curYmDir赋值
-	strcpy(stmp, zCurTimeDate.curHcuDir);
+	strcpy(stmp, zHcuVmCtrTab.clock.curHcuDir);
 	strcat(stmp, HCU_RECORD_LOG_DIR_NAME_CLEAN);
-	strcpy(zCurTimeDate.curLogDir, stmp);
+	strcpy(zHcuVmCtrTab.clock.curLogDir, stmp);
 	strcat(stmp, "/");
-	strcat(stmp, zCurTimeDate.sMon);
-	strcpy(zCurTimeDate.curYmDir, stmp);
+	strcat(stmp, zHcuVmCtrTab.clock.sMon);
+	strcpy(zHcuVmCtrTab.clock.curYmDir, stmp);
 
 	//创建备份记录的基本工作目录，如果存在，就直接使用
-	dtmp = opendir(zCurTimeDate.curLogDir);
+	dtmp = opendir(zHcuVmCtrTab.clock.curLogDir);
 	if (dtmp == NULL){
 		if (mkdir(HCU_RECORD_LOG_DIR_NAME_LOCAL, 0755) == -1){
 			HcuErrorPrint("HWINV: Create directory error!\n");
-			zHcuRunErrCnt[TASK_ID_HWINV]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 			return FAILURE;
 		}
 		//成功就不打印提示了
@@ -211,15 +211,15 @@ OPSTAT func_hwinv_global_par_init(void)
 	}
 
 	//创建YYMM子目录
-	dtmp = opendir(zCurTimeDate.curYmDir);
+	dtmp = opendir(zHcuVmCtrTab.clock.curYmDir);
 	if (dtmp == NULL){
-		chdir(zCurTimeDate.curLogDir);
-		if (mkdir(zCurTimeDate.sMon, 0755) == -1){
+		chdir(zHcuVmCtrTab.clock.curLogDir);
+		if (mkdir(zHcuVmCtrTab.clock.sMon, 0755) == -1){
 			HcuErrorPrint("HWINV: Create directory error!\n");
-			zHcuRunErrCnt[TASK_ID_HWINV]++;
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 			return FAILURE;
 		}
-		chdir(zCurTimeDate.curHcuDir);
+		chdir(zHcuVmCtrTab.clock.curHcuDir);
 		//成功就不打印提示了
 	}else{
 		//HcuDebugPrint("HWINV: Dir exist!\n");
@@ -228,95 +228,95 @@ OPSTAT func_hwinv_global_par_init(void)
 
 	//创建文件名字
 	//Sensor是天级别
-	strcpy(stmp, zCurTimeDate.curYmDir);
+	strcpy(stmp, zHcuVmCtrTab.clock.curYmDir);
 	strcat(stmp, HCU_RECORD_FILE_NAME_SENSOR);
-	strcat(stmp, zCurTimeDate.sDay);
+	strcat(stmp, zHcuVmCtrTab.clock.sDay);
 	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND);
-	strcpy(zCurTimeDate.curSensorFd, stmp);
+	strcpy(zHcuVmCtrTab.clock.curSensorFd, stmp);
 
 	//Microphone是小时级别
-	strcpy(stmp, zCurTimeDate.curYmDir);
+	strcpy(stmp, zHcuVmCtrTab.clock.curYmDir);
 	strcat(stmp, HCU_RECORD_FILE_NAME_MICROPHONE);
-	strcat(stmp, zCurTimeDate.sHour);
+	strcat(stmp, zHcuVmCtrTab.clock.sHour);
 	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND);
-	strcpy(zCurTimeDate.curMicrophoneFd, stmp);
+	strcpy(zHcuVmCtrTab.clock.curMicrophoneFd, stmp);
 
 	//Avorion是分钟级别
-	strcpy(stmp, zCurTimeDate.curYmDir);
+	strcpy(stmp, zHcuVmCtrTab.clock.curYmDir);
 	//strcat(stmp, HCU_RECORD_FILE_NAME_AVORION);
 	strcat(stmp, "/");
 	strcat(stmp,zHcuSysEngPar.cloud.cloudBhHcuName);
 	strcat(stmp,"_");
 	strcat(stmp, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-	strcat(stmp, zCurTimeDate.sMin);
+	strcat(stmp, zHcuVmCtrTab.clock.sMin);
 	strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND_H264);
-	strcpy(zCurTimeDate.curAvorionFdH264, stmp);
+	strcpy(zHcuVmCtrTab.clock.curAvorionFdH264, stmp);
 	//HcuDebugPrint("HWINV: zCurTimeDate.curAvorionFdH264 %s!\n", zCurTimeDate.curAvorionFdH264);
 
-	strcpy(zCurTimeDate.curAvorionFdAvi, stmp);
-	strcat(zCurTimeDate.curAvorionFdAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-	strcpy(zCurTimeDate.curAvorionFdMkv, stmp);
-	strcat(zCurTimeDate.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
+	strcpy(zHcuVmCtrTab.clock.curAvorionFdAvi, stmp);
+	strcat(zHcuVmCtrTab.clock.curAvorionFdAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
+	strcpy(zHcuVmCtrTab.clock.curAvorionFdMkv, stmp);
+	strcat(zHcuVmCtrTab.clock.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 
 	//特殊的干净文件名字
-	strcpy(zCurTimeDate.curAvorionFnameH264,zHcuSysEngPar.cloud.cloudBhHcuName);
-	strcat(zCurTimeDate.curAvorionFnameH264,"_");
-	strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-	strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
-	strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
+	strcpy(zHcuVmCtrTab.clock.curAvorionFnameH264,zHcuSysEngPar.cloud.cloudBhHcuName);
+	strcat(zHcuVmCtrTab.clock.curAvorionFnameH264,"_");
+	strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+	strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, zHcuVmCtrTab.clock.sMin);
+	strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
 	//HcuDebugPrint("HWINV: zCurTimeDate.curAvorionFnameH264 %s!\n", zCurTimeDate.curAvorionFnameH264);
 
-	strcpy(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-	strcat(zCurTimeDate.curAvorionFnameAvi, zCurTimeDate.sMin);
-	strcat(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
+	strcpy(zHcuVmCtrTab.clock.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+	strcat(zHcuVmCtrTab.clock.curAvorionFnameAvi, zHcuVmCtrTab.clock.sMin);
+	strcat(zHcuVmCtrTab.clock.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
 
-	strcpy(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-	strcat(zCurTimeDate.curAvorionFnameMkv, zCurTimeDate.sMin);
-	strcat(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
+	strcpy(zHcuVmCtrTab.clock.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+	strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, zHcuVmCtrTab.clock.sMin);
+	strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 	//HcuDebugPrint("%s\n", zCurTimeDate.curSensorFd);
 	//HcuDebugPrint("%s\n", zCurTimeDate.curMicrophoneFd);
 	//HcuDebugPrint("%s\n", zCurTimeDate.curAvorionFd);
 
 
 	//初始化ETHERNET后台接口
-	zHcuHwinvTable.ethernet.hwBase.taskId = TASK_ID_ETHERNET;
-	zHcuHwinvTable.ethernet.hwBase.hwResistence = 0;
+	zHcuVmCtrTab.hwinv.ethernet.hwBase.taskId = TASK_ID_ETHERNET;
+	zHcuVmCtrTab.hwinv.ethernet.hwBase.hwResistence = 0;
 	if (HCU_COMM_HW_BOARD_ETHERNET == HCU_COMM_HW_BOARD_OFF)
-		zHcuHwinvTable.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
+		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
 	if ((HCU_COMM_HW_BOARD_ETHERNET == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_ETHERNET == NULL))
-		zHcuHwinvTable.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
+		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
 	if ((HCU_COMM_HW_BOARD_ETHERNET == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_ETHERNET != NULL))
-		zHcuHwinvTable.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
+		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化USBNET后台接口
-	zHcuHwinvTable.usbnet.hwBase.taskId = TASK_ID_USBNET;
-	zHcuHwinvTable.usbnet.hwBase.hwResistence = 0;
+	zHcuVmCtrTab.hwinv.usbnet.hwBase.taskId = TASK_ID_USBNET;
+	zHcuVmCtrTab.hwinv.usbnet.hwBase.hwResistence = 0;
 	if (HCU_COMM_HW_BOARD_USBNET == HCU_COMM_HW_BOARD_OFF)
-		zHcuHwinvTable.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
+		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
 	if ((HCU_COMM_HW_BOARD_USBNET == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_NET == NULL))
-		zHcuHwinvTable.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
+		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
 	if ((HCU_COMM_HW_BOARD_USBNET == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_NET != NULL))
-		zHcuHwinvTable.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
+		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化WIFI后台接口
-	zHcuHwinvTable.wifi.hwBase.taskId = TASK_ID_WIFI;
-	zHcuHwinvTable.wifi.hwBase.hwResistence = 0;
+	zHcuVmCtrTab.hwinv.wifi.hwBase.taskId = TASK_ID_WIFI;
+	zHcuVmCtrTab.hwinv.wifi.hwBase.hwResistence = 0;
 	if (HCU_COMM_HW_BOARD_WIFI == HCU_COMM_HW_BOARD_OFF)
-		zHcuHwinvTable.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
+		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
 	if ((HCU_COMM_HW_BOARD_WIFI == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI == NULL))
-		zHcuHwinvTable.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
+		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
 	if ((HCU_COMM_HW_BOARD_WIFI == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI != NULL))
-		zHcuHwinvTable.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
+		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化3G4G后台接口
-	zHcuHwinvTable.g3g4.hwBase.taskId = TASK_ID_3G4G;
-	zHcuHwinvTable.g3g4.hwBase.hwResistence = 0;
+	zHcuVmCtrTab.hwinv.g3g4.hwBase.taskId = TASK_ID_3G4G;
+	zHcuVmCtrTab.hwinv.g3g4.hwBase.hwResistence = 0;
 	if (HCU_COMM_HW_BOARD_3G4G == HCU_COMM_HW_BOARD_OFF)
-		zHcuHwinvTable.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
+		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
 	if ((HCU_COMM_HW_BOARD_3G4G == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G == NULL))
-		zHcuHwinvTable.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
+		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
 	if ((HCU_COMM_HW_BOARD_3G4G == HCU_COMM_HW_BOARD_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G != NULL))
-		zHcuHwinvTable.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
+		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 
 	return SUCCESS;
@@ -396,7 +396,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	//ret = FAILURE;
 	//如果出错，就使用SYSCONF.H中的DEFAULT参数赋值给这些全局变量
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		HcuErrorPrint("HWINV: Read error from system engineering parameter database!\n");
 		//通信部分
 		zHcuSysEngPar.comm.commBackHawlCon = HCU_COMM_BACK_HAWL_CON;
@@ -528,7 +528,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	//读取HcuTraceModuleCtr表单到系统内存中
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		HcuErrorPrint("HWINV: Read Trace Module Control DB error!\n");
 		return FAILURE;
 	}
@@ -539,7 +539,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 	//读取HcuTraceMsgCtr表单到系统内存中
 	ret = dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		HcuErrorPrint("HWINV: Read Trace Message Control DB error!\n");
 		return FAILURE;
 	}
@@ -668,46 +668,46 @@ void func_hwinv_scan_date(void)
 	cu->tm_mon = cu->tm_mon + 1;
 
 	//更新Current数据
-	if (cu->tm_min != zCurTimeDate.min){
+	if (cu->tm_min != zHcuVmCtrTab.clock.min){
 		//技巧：这里循环设置FLASE，遇到一次TRUE，则循环到下一轮后再被设置为FLASE，正好让其它SCAN模块有机会干活
 		//另外一个技巧是，回写只有一次，防止不断重复写入，从而提高效率
 		//因为该循环的周期可能会比较短，提高数据写入的效率，是有一定意义的
-		if (cu->tm_mon != zCurTimeDate.mon){
+		if (cu->tm_mon != zHcuVmCtrTab.clock.mon){
 			flagMon = TRUE;
-			zCurTimeDate.monChange = TRUE;
+			zHcuVmCtrTab.clock.monChange = TRUE;
 		}else{
-			if (zCurTimeDate.monChange != FALSE) zCurTimeDate.monChange = FALSE;
+			if (zHcuVmCtrTab.clock.monChange != FALSE) zHcuVmCtrTab.clock.monChange = FALSE;
 		}
-		if (cu->tm_mday != zCurTimeDate.day){
+		if (cu->tm_mday != zHcuVmCtrTab.clock.day){
 			flagDay = TRUE;
-			zCurTimeDate.dayChange = TRUE;
+			zHcuVmCtrTab.clock.dayChange = TRUE;
 		}else{
-			if (zCurTimeDate.dayChange != FALSE) zCurTimeDate.dayChange = FALSE;
+			if (zHcuVmCtrTab.clock.dayChange != FALSE) zHcuVmCtrTab.clock.dayChange = FALSE;
 		}
-		if (cu->tm_hour != zCurTimeDate.hour) flagHour = TRUE;
-		if (cu->tm_min != zCurTimeDate.min) flagMin = TRUE;
-		zCurTimeDate.year = cu->tm_year;
-		zCurTimeDate.mon = cu->tm_mon;
-		zCurTimeDate.day = cu->tm_mday;
-		zCurTimeDate.hour = cu->tm_hour;
-		zCurTimeDate.min = cu->tm_min;
-		zCurTimeDate.sec = cu->tm_min;
+		if (cu->tm_hour != zHcuVmCtrTab.clock.hour) flagHour = TRUE;
+		if (cu->tm_min != zHcuVmCtrTab.clock.min) flagMin = TRUE;
+		zHcuVmCtrTab.clock.year = cu->tm_year;
+		zHcuVmCtrTab.clock.mon = cu->tm_mon;
+		zHcuVmCtrTab.clock.day = cu->tm_mday;
+		zHcuVmCtrTab.clock.hour = cu->tm_hour;
+		zHcuVmCtrTab.clock.min = cu->tm_min;
+		zHcuVmCtrTab.clock.sec = cu->tm_min;
 		//strftime(zCurDayString, 8, "%Y%m%d", cu);
 		//strftime(zCurHourString,10, "%Y%m%d%H", cu);
 		//strftime(zCurMinString, 12, "%Y%m%d%H%M", cu);
-		sprintf(zCurTimeDate.sYear, "%04d", (UINT16)(1900+cu->tm_year));
-		sprintf(zCurTimeDate.sMon,  "%04d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon);
-		sprintf(zCurTimeDate.sDay,  "%04d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday);
-		sprintf(zCurTimeDate.sHour, "%04d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour);
-		sprintf(zCurTimeDate.sMin,  "%04d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min);
-		sprintf(zCurTimeDate.sSec,  "%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
-		sprintf(zCurTimeDate.strYear, "./%04d", (UINT16)(1900+cu->tm_year));
-		sprintf(zCurTimeDate.strMon,  "./%04d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon);
-		sprintf(zCurTimeDate.strDay,  "./%04d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday);
-		sprintf(zCurTimeDate.strHour, "./%04d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour);
-		sprintf(zCurTimeDate.strMin,  "./%04d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min);
-		sprintf(zCurTimeDate.strSec,  "./%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
-		zCurTimeDate.grad = cu->tm_hour * 60 + cu->tm_min;
+		sprintf(zHcuVmCtrTab.clock.sYear, "%04d", (UINT16)(1900+cu->tm_year));
+		sprintf(zHcuVmCtrTab.clock.sMon,  "%04d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon);
+		sprintf(zHcuVmCtrTab.clock.sDay,  "%04d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday);
+		sprintf(zHcuVmCtrTab.clock.sHour, "%04d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour);
+		sprintf(zHcuVmCtrTab.clock.sMin,  "%04d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min);
+		sprintf(zHcuVmCtrTab.clock.sSec,  "%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+		sprintf(zHcuVmCtrTab.clock.strYear, "./%04d", (UINT16)(1900+cu->tm_year));
+		sprintf(zHcuVmCtrTab.clock.strMon,  "./%04d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon);
+		sprintf(zHcuVmCtrTab.clock.strDay,  "./%04d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday);
+		sprintf(zHcuVmCtrTab.clock.strHour, "./%04d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour);
+		sprintf(zHcuVmCtrTab.clock.strMin,  "./%04d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min);
+		sprintf(zHcuVmCtrTab.clock.strSec,  "./%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+		zHcuVmCtrTab.clock.grad = cu->tm_hour * 60 + cu->tm_min;
 	}
 
 	/*
@@ -719,20 +719,20 @@ void func_hwinv_scan_date(void)
 
 	//创建YYMM子目录
 	if (flagMon == TRUE){
-		strcpy(stmp, zCurTimeDate.curLogDir);
+		strcpy(stmp, zHcuVmCtrTab.clock.curLogDir);
 		strcat(stmp, "/");
-		strcat(stmp, zCurTimeDate.sMon);
-		strcpy(zCurTimeDate.curYmDir, stmp);
+		strcat(stmp, zHcuVmCtrTab.clock.sMon);
+		strcpy(zHcuVmCtrTab.clock.curYmDir, stmp);
 
 		DIR *dtmp;
-		dtmp = opendir(zCurTimeDate.curYmDir);
+		dtmp = opendir(zHcuVmCtrTab.clock.curYmDir);
 		if (dtmp == NULL){
-			chdir(zCurTimeDate.curLogDir);
-			if (mkdir(zCurTimeDate.sMon, 0755) == -1){
+			chdir(zHcuVmCtrTab.clock.curLogDir);
+			if (mkdir(zHcuVmCtrTab.clock.sMon, 0755) == -1){
 				HcuErrorPrint("HWINV: Create directory error!\n");
 				return;
 			}
-			chdir(zCurTimeDate.curHcuDir);
+			chdir(zHcuVmCtrTab.clock.curHcuDir);
 			//成功就不打印提示了
 		}else{
 			//HcuDebugPrint("HWINV: Dir exist!\n");
@@ -743,51 +743,51 @@ void func_hwinv_scan_date(void)
 	//创建文件名字
 	//Sensor是天级别
 	if (flagDay == TRUE){
-		strcpy(stmp, zCurTimeDate.curYmDir);
+		strcpy(stmp, zHcuVmCtrTab.clock.curYmDir);
 		strcat(stmp, HCU_RECORD_FILE_NAME_SENSOR);
-		strcat(stmp, zCurTimeDate.sDay);
+		strcat(stmp, zHcuVmCtrTab.clock.sDay);
 		strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND);
-		strcpy(zCurTimeDate.curSensorFd, stmp);
+		strcpy(zHcuVmCtrTab.clock.curSensorFd, stmp);
 	}
 	//Microphone是小时级别
 	if (flagHour == TRUE){
-		strcpy(stmp, zCurTimeDate.curYmDir);
+		strcpy(stmp, zHcuVmCtrTab.clock.curYmDir);
 		strcat(stmp, HCU_RECORD_FILE_NAME_MICROPHONE);
-		strcat(stmp, zCurTimeDate.sHour);
+		strcat(stmp, zHcuVmCtrTab.clock.sHour);
 		strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND);
-		strcpy(zCurTimeDate.curMicrophoneFd, stmp);
+		strcpy(zHcuVmCtrTab.clock.curMicrophoneFd, stmp);
 	}
 	//Avorion是分钟级别
 	if (flagMin == TRUE){
-		strcpy(stmp, zCurTimeDate.curYmDir);
+		strcpy(stmp, zHcuVmCtrTab.clock.curYmDir);
 
 		strcat(stmp, "/");
 		strcat(stmp,zHcuSysEngPar.cloud.cloudBhHcuName);
 		strcat(stmp,"_");
 		strcat(stmp, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-		strcat(stmp, zCurTimeDate.sMin);
+		strcat(stmp, zHcuVmCtrTab.clock.sMin);
 		strcat(stmp, HCU_RECORD_FILE_NAME_EXTEND_H264);
-		strcpy(zCurTimeDate.curAvorionFdH264, stmp);
+		strcpy(zHcuVmCtrTab.clock.curAvorionFdH264, stmp);
 
-		strcpy(zCurTimeDate.curAvorionFdAvi, stmp);
-		strcat(zCurTimeDate.curAvorionFdAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
-		strcpy(zCurTimeDate.curAvorionFdMkv, stmp);
-		strcat(zCurTimeDate.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
+		strcpy(zHcuVmCtrTab.clock.curAvorionFdAvi, stmp);
+		strcat(zHcuVmCtrTab.clock.curAvorionFdAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
+		strcpy(zHcuVmCtrTab.clock.curAvorionFdMkv, stmp);
+		strcat(zHcuVmCtrTab.clock.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 
 		//特殊的干净文件名字
-		strcpy(zCurTimeDate.curAvorionFnameH264,zHcuSysEngPar.cloud.cloudBhHcuName);
-		strcat(zCurTimeDate.curAvorionFnameH264,"_");
-		strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-		strcat(zCurTimeDate.curAvorionFnameH264, zCurTimeDate.sMin);
-		strcat(zCurTimeDate.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
+		strcpy(zHcuVmCtrTab.clock.curAvorionFnameH264,zHcuSysEngPar.cloud.cloudBhHcuName);
+		strcat(zHcuVmCtrTab.clock.curAvorionFnameH264,"_");
+		strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+		strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, zHcuVmCtrTab.clock.sMin);
+		strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, HCU_RECORD_FILE_NAME_EXTEND_H264);
 
-		strcpy(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-		strcat(zCurTimeDate.curAvorionFnameAvi, zCurTimeDate.sMin);
-		strcat(zCurTimeDate.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
+		strcpy(zHcuVmCtrTab.clock.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+		strcat(zHcuVmCtrTab.clock.curAvorionFnameAvi, zHcuVmCtrTab.clock.sMin);
+		strcat(zHcuVmCtrTab.clock.curAvorionFnameAvi, HCU_RECORD_FILE_NAME_EXTEND_AVI);
 
-	    strcpy(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
-		strcat(zCurTimeDate.curAvorionFnameMkv, zCurTimeDate.sMin);
-		strcat(zCurTimeDate.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
+	    strcpy(zHcuVmCtrTab.clock.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
+		strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, zHcuVmCtrTab.clock.sMin);
+		strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 	}
 
 	//HcuDebugPrint("%s\n", zCurTimeDate.curSensorFd);
@@ -798,8 +798,8 @@ void func_hwinv_scan_date(void)
 
 void func_hwinv_scan_sysinfo(void)
 {
-	if (HcuGetSysInfo(&(zHcuHwinvTable.sysInfo), FALSE) != SUCCESS){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
+	if (HcuGetSysInfo(&(zHcuVmCtrTab.hwinv.sysInfo), FALSE) != SUCCESS){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		HcuErrorPrint("HWINV: Read system hardware info error!\n");
 	}
 }
@@ -837,7 +837,7 @@ void func_hwinv_scan_hard_disc(void)
 	{
 		//hcu_delete_file("/home/pi/workspace/hcu/RasberryPi/log");
 		HcuDebugPrint("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%, removing log file to free the disk\n\n\n",mbTotalsize,mbFreedisk,r);
-		hcu_delete_file(zCurTimeDate.curLogDir);
+		hcu_delete_file(zHcuVmCtrTab.clock.curLogDir);
 	}
 
 }
@@ -862,39 +862,39 @@ void func_hwinv_scan_ethernet(void)
 
 	//scan接口的硬件状态，以便更新状态字
 	if (ret == SUCCESS){
-		if(zHcuHwinvTable.ethernet.hwBase.hwResistence > 0){zHcuHwinvTable.ethernet.hwBase.hwResistence = 0;}
-		if (zHcuHwinvTable.ethernet.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		if(zHcuVmCtrTab.hwinv.ethernet.hwBase.hwResistence > 0){zHcuVmCtrTab.hwinv.ethernet.hwBase.hwResistence = 0;}
+		if (zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE){
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
 			snd.ethStatChg = HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
-			zHcuHwinvTable.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
+			zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 		}
 	}
 
 	else if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		zHcuHwinvTable.ethernet.hwBase.hwResistence++;
-		if (zHcuHwinvTable.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwResistence++;
+		if (zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
 			snd.ethStatChg = HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
-			zHcuHwinvTable.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
+			zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
 		}
 	}
 	//其它结果不管了
@@ -907,39 +907,39 @@ void func_hwinv_scan_usbnet(void)
 
 	//scan接口的硬件状态，以便更新状态字
 	if (ret == SUCCESS){
-		if(zHcuHwinvTable.usbnet.hwBase.hwResistence > 0){zHcuHwinvTable.usbnet.hwBase.hwResistence = 0;}
-		if (zHcuHwinvTable.usbnet.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		if(zHcuVmCtrTab.hwinv.usbnet.hwBase.hwResistence > 0){zHcuVmCtrTab.hwinv.usbnet.hwBase.hwResistence = 0;}
+		if (zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE){
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
 			snd.usbnetStatChg = HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
-			zHcuHwinvTable.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
+			zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 		}
 	}
 
 	else if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		zHcuHwinvTable.usbnet.hwBase.hwResistence++;
-		if (zHcuHwinvTable.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwResistence++;
+		if (zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
 			snd.usbnetStatChg = HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
-			zHcuHwinvTable.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
+			zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
 		}
 	}
 	//其它结果不管了
@@ -952,39 +952,39 @@ void func_hwinv_scan_wifi(void)
 
 	//scan接口的硬件状态，以便更新状态字
 	if (ret == SUCCESS){
-		if(zHcuHwinvTable.wifi.hwBase.hwResistence > 0){zHcuHwinvTable.wifi.hwBase.hwResistence = 0;}
-		if (zHcuHwinvTable.wifi.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		if(zHcuVmCtrTab.hwinv.wifi.hwBase.hwResistence > 0){zHcuVmCtrTab.hwinv.wifi.hwBase.hwResistence = 0;}
+		if (zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE){
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
 			snd.wifiStatChg = HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
-			zHcuHwinvTable.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
+			zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 		}
 	}
 
 	else if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		zHcuHwinvTable.wifi.hwBase.hwResistence++;
-		if (zHcuHwinvTable.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		zHcuVmCtrTab.hwinv.wifi.hwBase.hwResistence++;
+		if (zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
 			snd.wifiStatChg = HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
-			zHcuHwinvTable.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
+			zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
 		}
 	}
 	//其它结果不管了
@@ -997,39 +997,39 @@ void func_hwinv_scan_3g4g(void)
 
 	//scan接口的硬件状态，以便更新状态字
 	if (ret == SUCCESS){
-		if(zHcuHwinvTable.g3g4.hwBase.hwResistence > 0){zHcuHwinvTable.g3g4.hwBase.hwResistence = 0;}
-		if (zHcuHwinvTable.g3g4.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		if(zHcuVmCtrTab.hwinv.g3g4.hwBase.hwResistence > 0){zHcuVmCtrTab.hwinv.g3g4.hwBase.hwResistence = 0;}
+		if (zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus != HCU_HWINV_STATUS_INSTALL_ACTIVE){
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
 			snd.g3g4StatChg = HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
-			zHcuHwinvTable.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
+			zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 		}
 	}
 
 	else if (ret == FAILURE){
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
-		zHcuHwinvTable.g3g4.hwBase.hwResistence++;
-		if (zHcuHwinvTable.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwResistence++;
+		if (zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
 			snd.g3g4StatChg = HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuRunErrCnt[TASK_ID_HWINV]++;
-				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskInfo.taskName[TASK_ID_HWINV], zHcuTaskInfo.taskName[TASK_ID_CLOUDVELA]);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+				HcuErrorPrint("HWINV: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_HWINV], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);
 				return;
 			}
 			//放在里面，为了提高效率：状态不改变，不用修改控制表的数据
-			zHcuHwinvTable.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
+			zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
 		}
 	}
 	//其它结果不管了
@@ -1066,27 +1066,27 @@ void func_hwinv_scan_dir(void)
 	UINT32 days = 0;
 	UINT32 target = 0;
 	UINT32 targetYear = 0, targetMon = 0;
-	if (zCurTimeDate.monChange == TRUE){
+	if (zHcuVmCtrTab.clock.monChange == TRUE){
 		//最小保护
 		days = HCU_DATA_SAVE_DURATION_IN_DAYS;
 		if (days < HCU_DATA_SAVE_DURATION_MIN_IN_DAYS) days = HCU_DATA_SAVE_DURATION_MIN_IN_DAYS;
 		//算出保留存储的月数
 		monNbr = (UINT32)((days-1) / 30) + 1;
-		if (zCurTimeDate.mon > monNbr){
-			targetMon = zCurTimeDate.mon - monNbr;
-			targetYear = zCurTimeDate.year + 1900;
-		}else if (zCurTimeDate.mon <= monNbr){
-			targetMon = zCurTimeDate.mon + 12 - monNbr;
-			targetYear = zCurTimeDate.year + 1900 - 1;
+		if (zHcuVmCtrTab.clock.mon > monNbr){
+			targetMon = zHcuVmCtrTab.clock.mon - monNbr;
+			targetYear = zHcuVmCtrTab.clock.year + 1900;
+		}else if (zHcuVmCtrTab.clock.mon <= monNbr){
+			targetMon = zHcuVmCtrTab.clock.mon + 12 - monNbr;
+			targetYear = zHcuVmCtrTab.clock.year + 1900 - 1;
 		}
 		target = targetYear * 100 + targetMon;
 
 		//去log目录中
 		//chdir(zCurTimeDate.curLogDir);
-		DIR *dirp = opendir(zCurTimeDate.curLogDir);
+		DIR *dirp = opendir(zHcuVmCtrTab.clock.curLogDir);
 		if(!dirp) {
 			HcuErrorPrint("HWINV: Open Log directory error!\n");
-			chdir(zCurTimeDate.curHcuDir);
+			chdir(zHcuVmCtrTab.clock.curHcuDir);
 			return;
 		}
 
@@ -1104,14 +1104,14 @@ void func_hwinv_scan_dir(void)
 			if (tmp <target){
 				//初始化目录变量
 				strcpy(fullpath, "");
-				sprintf(fullpath, "rm %s/%s", zCurTimeDate.curLogDir, dir->d_name); //获取全局路径
+				sprintf(fullpath, "rm %s/%s", zHcuVmCtrTab.clock.curLogDir, dir->d_name); //获取全局路径
 				strcat(fullpath, "/*");
 				//使用UNLINK/REMOVE函数，均搞不定，所以这里直接使用了系统命令，暂时搞定了
 				if (system(fullpath) == -1){
 					HcuErrorPrint("HWINV: Can not remove subdir [%s] all files!\n", fullpath);
 				}
 				strcpy(fullpath, "");
-				sprintf(fullpath, "%s/%s", zCurTimeDate.curLogDir, dir->d_name); //获取全局路径
+				sprintf(fullpath, "%s/%s", zHcuVmCtrTab.clock.curLogDir, dir->d_name); //获取全局路径
 				if (remove(fullpath) == -1){
 					HcuErrorPrint("HWINV: Can not remove subdir= [%s]!\n", fullpath);
 				}
@@ -1135,44 +1135,44 @@ void func_hwinv_scan_db(void)
 {
 	//删除90天以上的旧数据
 	//先用变天的标示位来判断，以提高效率，不然每一次扫描都无效的要访问一次数据库，过于频繁
-	if (zCurTimeDate.dayChange == TRUE){
-		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidDht11DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempDht11DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuCo1DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIwmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIhmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIgmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuRunErrCnt[TASK_ID_HWINV]++;
+	if (zHcuVmCtrTab.clock.dayChange == TRUE){
+		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidDht11DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempDht11DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuCo1DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIwmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIhmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIgmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 	}
 }
 
@@ -1257,15 +1257,15 @@ void func_hwinv_scan_message_queue(void)
 	UINT32 taskid;
 	for (taskid = TASK_ID_MIN; taskid < TASK_ID_MAX; taskid++){
 		//扫描其messageQue，看看是否满，如果是，意味着故障
-		if ((taskid != TASK_ID_HWINV) && (zHcuTaskInfo[taskid].swTaskActive == HCU_TASK_SW_ACTIVE) && (zHcuTaskInfo[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
+		if ((taskid != TASK_ID_HWINV) && (zHcuSysCrlTab.taskRun[taskid].swTaskActive == HCU_TASK_SW_ACTIVE) && (zHcuSysCrlTab.taskRun[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
 		{
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuTaskInfo.taskName[taskid]);
+				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuSysCrlTab.taskRun.taskName[taskid]);
 			}
 			//重新启动该任务
 			hcu_task_delete(taskid);
-			hcu_system_task_init_call(taskid, zHcuTaskInfo[taskid].fsmPtr);
-			zHcuTaskInfo[taskid].QueFullFlag = HCU_TASK_QUEUE_FULL_FALSE;
+			hcu_system_task_init_call(taskid, zHcuSysCrlTab.taskRun[taskid].fsmPtr);
+			zHcuSysCrlTab.taskRun[taskid].QueFullFlag = HCU_TASK_QUEUE_FULL_FALSE;
 
 			//再发送init消息给该模块，以便启动改模块
 			msg_struct_com_init_t snd;
@@ -1287,30 +1287,30 @@ UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen)
 	//判断入参
 	if ((dataBuffer == NULL) || (dataLen > FILE_LENGTH_RECORD_MAX)){
 	  HcuErrorPrint("HWINV: Input parameter error!\n");
-	  zHcuRunErrCnt[TASK_ID_HWINV]++;
+	  zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 	  return FAILURE;
 	}
 
 	if (fId == FILE_OPERATION_TYPE_SENSOR){
-		strcpy(fname, zCurTimeDate.curSensorFd);
+		strcpy(fname, zHcuVmCtrTab.clock.curSensorFd);
 	}else if (fId == FILE_OPERATION_TYPE_SPSVIRGO){
-		strcpy(fname, zCurTimeDate.curMicrophoneFd);
+		strcpy(fname, zHcuVmCtrTab.clock.curMicrophoneFd);
 	}else if (fId == FILE_OPERATION_TYPE_AVORION_AVI){
-		strcpy(fname, zCurTimeDate.curAvorionFdAvi);
+		strcpy(fname, zHcuVmCtrTab.clock.curAvorionFdAvi);
 	}else if (fId == FILE_OPERATION_TYPE_AVORION_H264){
-		strcpy(fname, zCurTimeDate.curAvorionFdH264);
+		strcpy(fname, zHcuVmCtrTab.clock.curAvorionFdH264);
 	}else if (fId == FILE_OPERATION_TYPE_AVORION_MKV){
-		strcpy(fname, zCurTimeDate.curAvorionFdMkv);
+		strcpy(fname, zHcuVmCtrTab.clock.curAvorionFdMkv);
 	}else{
 		HcuErrorPrint("HWINV: Error Operation File type!\n");
-		zHcuRunErrCnt[TASK_ID_HWINV]++;
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		return FAILURE;
 	}
 
 	//打开源文件
 	if((fHandler=open(fname, O_RDWR|O_CREAT))==-1){
 	  HcuErrorPrint("HWINV: Open %s Error!\n", fname);
-	  zHcuRunErrCnt[TASK_ID_HWINV]++;
+	  zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 	  return FAILURE;
 	}
 
