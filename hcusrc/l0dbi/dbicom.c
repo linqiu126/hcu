@@ -541,6 +541,8 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 //该数据表单将支持智能初始化
 -- --------------------------------------------------------
 
+-- --------------------------------------------------------
+
 --
 -- Table structure for table `hcusysengtimer`
 --
@@ -554,7 +556,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusysengtimer`
+-- Table structure for table `hcusysengtimer`
 --
 
 INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`) VALUES
@@ -605,15 +607,24 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (44, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 15),
 (45, 'TID_1S_L3BFSC_PERIOD_ERROR_SCAN', 1, 60),
 (46, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 600),
-(47, 'TID_1S_MAX', 1, 0),
-(48, 'TID_10MS_MIN', 2, 0),
-(49, 'TID_10MS_SVRCON_TEST', 2, 10000),
-(50, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 200),
-(51, 'TID_10MS_MAX', 2, 0),
-(52, 'TID_1MS_MIN', 3, 0),
-(53, 'TID_1MS_SVRCON_TEST', 3, 100),
-(54, 'TID_1MS_MAX', 3, 0),
-(55, 'TID_MAX', 1, 0);
+(47, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
+(48, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
+(49, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
+(50, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
+(51, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
+(52, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
+(53, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
+(54, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
+(55, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
+(56, 'TID_1S_MAX', 1, 0),
+(57, 'TID_10MS_MIN', 2, 0),
+(58, 'TID_10MS_SVRCON_TEST', 2, 10000),
+(59, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 200),
+(60, 'TID_10MS_MAX', 2, 0),
+(61, 'TID_1MS_MIN', 3, 0),
+(62, 'TID_1MS_SVRCON_TEST', 3, 100),
+(63, 'TID_1MS_MAX', 3, 0),
+(64, 'TID_MAX', 1, 0);
 
 
 */
