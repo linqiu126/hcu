@@ -1106,6 +1106,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3app/syspm.h</locationURI>
 		</link>
 		<link>
+			<name>src/l3app/sysswm.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3app/sysswm.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3app/sysswm.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3app/sysswm.h</locationURI>
+		</link>
+		<link>
 			<name>src/l3appctrl/l3nbhpm.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3nbhpm.c</locationURI>

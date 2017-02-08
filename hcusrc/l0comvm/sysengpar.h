@@ -30,10 +30,16 @@ typedef struct SysEngParElementDb
 	UINT8 hcuDbPort;
 }SysEngParElementDbi_t;
 
-
-//Timer setting for sensor data req by Shanchun
-typedef struct SysEngParElementSensor
+//定时器长度定义
+typedef struct SysEngParElementTimUnit
 {
+	INT32 id;
+	UINT8 gradunarity;
+	char name[TIMER_NAME_MAX_LENGTH];
+}SysEngParElementTimUnit_t;
+typedef struct SysEngParElementSensorTimer
+{
+	SysEngParElementTimUnit_t array[MAX_TIMER_NUM_IN_ONE_HCU];
 	INT32 emcReqTimer;
 	INT32 emcReqTimerFB;
 	INT32 humidReqTimer;
@@ -73,23 +79,6 @@ typedef struct SysEngParElementSensor
 	INT32 pm25sharpReqTimer;
 	INT32 syspmWorkingTimer;
 	INT32 canitfWorkingTimer;
-	//不通过数据库配置的参数区域
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-//小技巧，不要这部分，以便加强编译检查
-#else
-	#error Un-correct constant definition
-#endif
 }SysEngParElementSensorTimer_t;
 
 //Series port config by Shanchun

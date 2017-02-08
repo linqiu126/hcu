@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="zHcuVmCtrTaskStaticCfg" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="HCU_L3BFSC_TIMER_DURATION_PERIOD_READ" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="zHcuVmCtrTaskStaticCfg"/>
-			<item value="TASK_ID_MIN"/>
-			<item value="item"/>
-			<item value="printf"/>
-			<item value="zHcuVmCtrTab"/>
-			<item value="HCU_TASK_PNP_OFF"/>
+			<item value="HCU_L3BFSC_TIMER_DURATION_PERIOD_READ"/>
+			<item value="zHcuSysEngPar.timer.cloudSocketHbTimer"/>
+			<item value="TIMER_ID_1S_CLOUDVELA_PERIOD_SW_DB_VERSION_REPORT"/>
+			<item value="#define TIMER_NAME_MAX_LENGTH 30"/>
+			<item value="SysEngParElementSensorTimer_t"/>
 			<item value="TASK_ID_MAX"/>
-			<item value="HCU_TASK_PNP_ON"/>
+			<item value="zHcuVmCtrTaskStaticCfg"/>
+			<item value="MAX_MSGID_NUM_IN_ONE_TASK"/>
 		</list>
 		<list key="replacehistory">
+			<item value="#define TIMER_NAME_MAX_LENGTH 40"/>
 			<item value="SYSSWM"/>
 			<item value="Sysswm"/>
 			<item value="sysswm"/>
@@ -25,7 +26,6 @@
 			<item value="zHcuVmCtrTab"/>
 			<item value="zHcuSysCtrTab.task"/>
 			<item value="zHcuSysCtrTab"/>
-			<item value="zHcuVmCtrTab.hwinv.sysInfo"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

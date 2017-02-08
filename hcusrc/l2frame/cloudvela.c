@@ -158,7 +158,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//For sw&db version report
-	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_SW_DB_VERSION_REPORT, zHcuSysEngPar.timer.dbVerReportTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP, zHcuSysEngPar.timer.dbVerReportTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -224,7 +224,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	}
 
 	//for sw&db version report
-	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_SW_DB_VERSION_REPORT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_period_for_sw_db_report();
 	}
 

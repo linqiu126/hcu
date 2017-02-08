@@ -17,6 +17,9 @@ PRJ_BFSC待完成或者回答的问题：
 =完善任务模块的启动初始化过程，以及TIMER的配置过程，提高智能化程度，降低研发复杂度和配置工作量
 =去掉工参中对模块是否激活的控制
 = 完成TASK启动中有关pnpFlag的设置
+= 给所有项目增加SYSSWM模块
+= 清理所有模块对于SYSCOFIG.H中对模块启动的配置
+=三种TIMERID统一编址改进
 
 
 //= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 152=>BFSC项目

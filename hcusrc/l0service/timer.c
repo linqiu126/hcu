@@ -648,20 +648,20 @@ OPSTAT hcu_timer_start(UINT32 task_id, UINT32 timer_id, UINT32 t_dur, UINT8 t_ty
 
 	//检查t_resolution & timer_id 是否合法
 	if (t_res == TIMER_RESOLUTION_1S){
-		if ((timer_id > MAX_TIMER_NUM_IN_ONE_HCU_1S) || (timer_id <0)){
+		if ((timer_id > TIMER_ID_1S_MAX) || (timer_id < TIMER_ID_1S_MIN)){
 			HcuErrorPrint("TIMER: Error on timer start 1S timerId!!!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER]++;
 			return FAILURE;
 		}
 	}else if (t_res == TIMER_RESOLUTION_10MS){
-		if ((timer_id > MAX_TIMER_NUM_IN_ONE_HCU_10MS) || (timer_id <0)){
+		if ((timer_id > TIMER_ID_10MS_MAX) || (timer_id < TIMER_ID_10MS_MIN)){
 			HcuErrorPrint("TIMER: Error on timer start 10MS timerId!!!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER]++;
 			return FAILURE;
 		}
 	}
 	else if (t_res == TIMER_RESOLUTION_1MS){
-		if ((timer_id > MAX_TIMER_NUM_IN_ONE_HCU_1MS) || (timer_id <0)){
+		if ((timer_id > TIMER_ID_1MS_MAX) || (timer_id < TIMER_ID_1MS_MIN)){
 			HcuErrorPrint("TIMER: Error on timer start 1MS timerId!!!\n");
 			return FAILURE;
 		}
@@ -674,27 +674,27 @@ OPSTAT hcu_timer_start(UINT32 task_id, UINT32 timer_id, UINT32 t_dur, UINT8 t_ty
 
 	//设置进全局数据表单
 	if (t_res == TIMER_RESOLUTION_1S){
-		zHcuTimerTable.timer1s[timer_id].taskId = task_id;
-		zHcuTimerTable.timer1s[timer_id].timerId = timer_id;
-		zHcuTimerTable.timer1s[timer_id].tDuration = t_dur;
-		zHcuTimerTable.timer1s[timer_id].timerType = t_type;
-		zHcuTimerTable.timer1s[timer_id].timerRes = TIMER_RESOLUTION_1S;
-		zHcuTimerTable.timer1s[timer_id].status = TIMER_STATUS_START;
+		zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].taskId = task_id;
+		zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].timerId = timer_id;
+		zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].tDuration = t_dur;
+		zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].timerType = t_type;
+		zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].timerRes = TIMER_RESOLUTION_1S;
+		zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].status = TIMER_STATUS_START;
 	}
 	else if (t_res == TIMER_RESOLUTION_10MS){
-		zHcuTimerTable.timer10ms[timer_id].taskId = task_id;
-		zHcuTimerTable.timer10ms[timer_id].timerId = timer_id;
-		zHcuTimerTable.timer10ms[timer_id].tDuration = t_dur;
-		zHcuTimerTable.timer10ms[timer_id].timerType = t_type;
-		zHcuTimerTable.timer10ms[timer_id].timerRes = TIMER_RESOLUTION_10MS;
-		zHcuTimerTable.timer10ms[timer_id].status = TIMER_STATUS_START;
+		zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].taskId = task_id;
+		zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].timerId = timer_id;
+		zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].tDuration = t_dur;
+		zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].timerType = t_type;
+		zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].timerRes = TIMER_RESOLUTION_10MS;
+		zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].status = TIMER_STATUS_START;
 	}else if (t_res == TIMER_RESOLUTION_1MS){
-		zHcuTimerTable.timer1ms[timer_id].taskId = task_id;
-		zHcuTimerTable.timer1ms[timer_id].timerId = timer_id;
-		zHcuTimerTable.timer1ms[timer_id].tDuration = t_dur;
-		zHcuTimerTable.timer1ms[timer_id].timerType = t_type;
-		zHcuTimerTable.timer1ms[timer_id].timerRes = TIMER_RESOLUTION_1MS;
-		zHcuTimerTable.timer1ms[timer_id].status = TIMER_STATUS_START;
+		zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].taskId = task_id;
+		zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].timerId = timer_id;
+		zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].tDuration = t_dur;
+		zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].timerType = t_type;
+		zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].timerRes = TIMER_RESOLUTION_1MS;
+		zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].status = TIMER_STATUS_START;
 	}
 
 	return SUCCESS;
@@ -711,19 +711,19 @@ OPSTAT hcu_timer_stop(UINT32 task_id, UINT32 timer_id, UINT8 t_res)
 
 	//检查t_resolution & timer_id 是否合法
 	if (t_res == TIMER_RESOLUTION_1S){
-		if ((timer_id > MAX_TIMER_NUM_IN_ONE_HCU_1S) || (timer_id <0)){
+		if ((timer_id > TIMER_ID_1S_MAX) || (timer_id < TIMER_ID_1S_MIN)){
 			HcuErrorPrint("TIMER: Error on timer stop 1S timerId!!!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER]++;
 			return FAILURE;
 		}
 	}else if (t_res == TIMER_RESOLUTION_10MS){
-		if ((timer_id > MAX_TIMER_NUM_IN_ONE_HCU_10MS) || (timer_id <0)){
+		if ((timer_id > TIMER_ID_10MS_MAX) || (timer_id < TIMER_ID_10MS_MIN)){
 			HcuErrorPrint("TIMER: Error on timer stop 10MS timerId!!!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER]++;
 			return FAILURE;
 		}
 	}else if (t_res == TIMER_RESOLUTION_1MS){
-		if ((timer_id > MAX_TIMER_NUM_IN_ONE_HCU_1MS) || (timer_id <0)){
+		if ((timer_id > TIMER_ID_1MS_MAX) || (timer_id < TIMER_ID_1MS_MIN)){
 			HcuErrorPrint("TIMER: Error on timer stop 1MS timerId!!!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER]++;
 			return FAILURE;
@@ -736,22 +736,22 @@ OPSTAT hcu_timer_stop(UINT32 task_id, UINT32 timer_id, UINT8 t_res)
 
 	//设置进全局数据表单
 	if (t_res == TIMER_RESOLUTION_1S){
-		if ((zHcuTimerTable.timer1s[timer_id].taskId == task_id) && (zHcuTimerTable.timer1s[timer_id].timerId == timer_id)){
-			zHcuTimerTable.timer1s[timer_id].status = TIMER_STATUS_STOP;
+		if ((zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].taskId == task_id) && (zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].timerId == timer_id)){
+			zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].status = TIMER_STATUS_STOP;
 		}else{
-			zHcuTimerTable.timer1s[timer_id].status = TIMER_STATUS_DEACTIVE;
+			zHcuTimerTable.timer1s[timer_id-TIMER_ID_1S_MIN].status = TIMER_STATUS_DEACTIVE;
 		}
 	}else if (t_res == TIMER_RESOLUTION_10MS){
-		if ((zHcuTimerTable.timer10ms[timer_id].taskId == task_id) && (zHcuTimerTable.timer10ms[timer_id].timerId == timer_id)){
-			zHcuTimerTable.timer10ms[timer_id].status = TIMER_STATUS_STOP;
+		if ((zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].taskId == task_id) && (zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].timerId == timer_id)){
+			zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].status = TIMER_STATUS_STOP;
 		}else{
-			zHcuTimerTable.timer10ms[timer_id].status = TIMER_STATUS_DEACTIVE;
+			zHcuTimerTable.timer10ms[timer_id-TIMER_ID_10MS_MIN].status = TIMER_STATUS_DEACTIVE;
 		}
 	}else if (t_res == TIMER_RESOLUTION_1MS){
-		if ((zHcuTimerTable.timer1ms[timer_id].taskId == task_id) && (zHcuTimerTable.timer1ms[timer_id].timerId == timer_id)){
-			zHcuTimerTable.timer1ms[timer_id].status = TIMER_STATUS_STOP;
+		if ((zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].taskId == task_id) && (zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].timerId == timer_id)){
+			zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].status = TIMER_STATUS_STOP;
 		}else{
-			zHcuTimerTable.timer1ms[timer_id].status = TIMER_STATUS_DEACTIVE;
+			zHcuTimerTable.timer1ms[timer_id-TIMER_ID_1MS_MIN].status = TIMER_STATUS_DEACTIVE;
 		}
 	}
 	return SUCCESS;

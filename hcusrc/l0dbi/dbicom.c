@@ -277,8 +277,6 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 //该数据表单将支持智能初始化
 -- --------------------------------------------------------
 
--- --------------------------------------------------------
-
 --
 -- Table structure for table `hcutracemodulectr`
 --
@@ -537,6 +535,37 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (138, 'MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT', 1, 1, 1),
 (139, 'MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ', 1, 1, 1),
 (140, 'MSG_ID_COM_MAX', 0, 0, 0);
+
+
+//hcusysengtimer数据表格式
+//该数据表单将支持智能初始化
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcusysengtimer`
+--
+
+CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
+  `timerid` int(2) NOT NULL,
+  `timername` char(30) NOT NULL,
+  `granularity` int(1) NOT NULL,
+  `duration` int(1) NOT NULL,
+  PRIMARY KEY (`timerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcusysengtimer`
+--
+
+INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`) VALUES
+(0, 'TIMERMIN', 1, 1),
+(1, 'TIMER_ID_111', 1, 1),
+(2, 'TIMERMAX', 1, 1);
+
+
+
+
+
 
 
 */
@@ -830,8 +859,8 @@ OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void)
 		HcuErrorPrint("DBICOM: Initialize HCU-VM failure, task input configuration error!\n");
 		return FAILURE;
 	}
-	//扫描输入表单，以TASK_ID_MAX为终止条目
-	for(item=1; item < MAX_TASK_NUM_IN_ONE_HCU; item++){
+	//扫描输入表单，以TASK_ID_MAX为终止条目：2倍配置项最多
+	for(item=1; item < (2*MAX_TASK_NUM_IN_ONE_HCU); item++){
 		if(zHcuVmCtrTaskStaticCfg[item].taskInputId == TASK_ID_MAX){
 			break;
 		}
@@ -990,8 +1019,8 @@ OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void)
 		HcuErrorPrint("DBICOM: Initialize HCU-VM failure, message input configuration error!\n");
 		return FAILURE;
 	}
-	//扫描输入表单，以MSG_ID_COM_MAX为终止条目
-	for(item=1; item < MAX_MSGID_NUM_IN_ONE_TASK; item++){
+	//扫描输入表单，以MSG_ID_COM_MAX为终止条目：2倍配置项最多
+	for(item=1; item < (2*MAX_MSGID_NUM_IN_ONE_TASK); item++){
 		if(zHcuSysEngTrcMsgCtrStaticCfg[item].msgId == MSG_ID_COM_MAX){
 			break;
 		}
