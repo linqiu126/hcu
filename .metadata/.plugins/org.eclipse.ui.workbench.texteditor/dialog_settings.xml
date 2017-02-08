@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="ADC" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="zHcuVmCtrTaskStaticCfg" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="ADC"/>
-			<item value="CO1"/>
-			<item value="Co1"/>
-			<item value="co1"/>
-			<item value="Trace"/>
-			<item value="dbi_HcuTraceModuleCtr_engpar_intelligence_init"/>
-			<item value="HcuFsmTable_t"/>
-			<item value="zHcuSysCrlTab.taskRun"/>
+			<item value="zHcuVmCtrTaskStaticCfg"/>
+			<item value="TASK_ID_MIN"/>
+			<item value="item"/>
+			<item value="printf"/>
+			<item value="zHcuVmCtrTab"/>
+			<item value="HCU_TASK_PNP_OFF"/>
+			<item value="TASK_ID_MAX"/>
+			<item value="HCU_TASK_PNP_ON"/>
 		</list>
 		<list key="replacehistory">
 			<item value="SYSSWM"/>
@@ -32,7 +32,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1058" key="DIALOG_X_ORIGIN"/>
-		<item value="116" key="DIALOG_Y_ORIGIN"/>
+		<item value="1126" key="DIALOG_X_ORIGIN"/>
+		<item value="373" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

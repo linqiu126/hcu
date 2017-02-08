@@ -29,113 +29,262 @@ HcuSysStaPm_t		zHcuSysStaPm;		//全局性能统计表
 //NULL条目保留，是为了初始化TASK NAME这一属性
 HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 {
-	//TASK_ID,              状态控制             状态机入口                 TRACE标志位                   注释
-	{TASK_ID_MIN,           "TASKMIN",          NULL,                    1, 1, 1, 1, 1},              //Starting
-//基础任务STARTING：由SYSCONFIG.H中的开关决定是否启动
-	{TASK_ID_HCUMAIN,       "HCUMAIN",          NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_HCUVM,         "HCUVM",            NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_TRACE,         "TRACE",            NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_CONFIG,        "CONFIG",           NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_TIMER,         "TIMER",            &HcuFsmTimer,            1, 1, 1, 1, 1},
-	{TASK_ID_MMC,           "MMC",              NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_GPIO,          "GPIO",             &HcuFsmGpio,             1, 1, 1, 1, 1},
-	{TASK_ID_I2C,           "I2C",              &HcuFsmI2c,              1, 1, 1, 1, 1},
-	{TASK_ID_SPI,           "SPI",              &HcuFsmSpi,              1, 1, 1, 1, 1},
-	{TASK_ID_PWM,           "PWM",              &HcuFsmPwm,              1, 1, 1, 1, 1},
-	{TASK_ID_ADC,           "ADC",              &HcuFsmAdc,              1, 1, 1, 1, 1},
-	{TASK_ID_SWITCH,        "SWITCH",           &HcuFsmSwitch,           1, 1, 1, 1, 1},
-	{TASK_ID_RELAY,         "RELAY",            &HcuFsmRelay,            1, 1, 1, 1, 1},
-	{TASK_ID_MOTOR,         "MOTOR",            &HcuFsmMotor,            1, 1, 1, 1, 1},
-	{TASK_ID_ZEEGBE,        "ZEEGBE",           &HcuFsmZeegbe,           1, 1, 1, 1, 1},
-	{TASK_ID_GPRS,          "GPRS",             NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           1, 1, 1, 1, 1},
-	{TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           1, 1, 1, 1, 1},
-	{TASK_ID_BLE,           "BLE",              &HcuFsmBle,              1, 1, 1, 1, 1},
-	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         1, 1, 1, 1, 1},
-	{TASK_ID_WIFI,          "WIFI",             &HcuFsmWifi,             1, 1, 1, 1, 1},
-	{TASK_ID_USBNET,        "USBNET",           &HcuFsmUsbnet,           1, 1, 1, 1, 1},
-	{TASK_ID_3G4G,          "3G4G",             &HcuFsm3g4g,             1, 1, 1, 1, 1},
-	{TASK_ID_HARDDISK,      "HARDDISK",         NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_CAMERA,        "CAMERA",           NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_MICROPHONE,    "MICROPHONE",       &HcuFsmMicrophone,       1, 1, 1, 1, 1},
-	{TASK_ID_FLASH,         "FLASH",            NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_GPS,           "GPS",              &HcuFsmGps,              1, 1, 1, 1, 1},
-	{TASK_ID_LCD,           "LCD",              &HcuFsmLcd,              1, 1, 1, 1, 1},
-	{TASK_ID_LED,           "LED",              &HcuFsmLed,              1, 1, 1, 1, 1},
-	{TASK_ID_HWINV,         "HWINV",            &HcuFsmHwinv,            1, 1, 1, 1, 1},
-	{TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         1, 1, 1, 1, 1},
-	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        1, 1, 1, 1, 1},
-	{TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           1, 1, 1, 1, 1},
-	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          1, 1, 1, 1, 1},
-	{TASK_ID_I2CBUSLIBRA,   "I2CBUSLIBRA",      &HcuFsmI2cbuslibra,      1, 1, 1, 1, 1},
-	{TASK_ID_SPIBUSARIES,   "SPIBUSARIES",      &HcuFsmSpibusaries,      1, 1, 1, 1, 1},
-	{TASK_ID_NBIOTCJ188,    "NBIOTCJ188",       &HcuFsmNbiotcj188,       1, 1, 1, 1, 1},
-	{TASK_ID_NBIOTQG376,    "NBIOTQG376",       &HcuFsmNbiotqg376,       1, 1, 1, 1, 1},
-	{TASK_ID_HSMMP,         "HSMMP",            &HcuFsmHsmmp,            1, 1, 1, 1, 1},
-	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              1, 1, 1, 1, 1},
-	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            1, 1, 1, 1, 1},
-	{TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             1, 1, 1, 1, 1},
-	{TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             1, 1, 1, 1, 1},
-	{TASK_ID_WINDDIR,       "WINDDIR",          &HcuFsmWinddir,          1, 1, 1, 1, 1},
-	{TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          1, 1, 1, 1, 1},
-	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            1, 1, 1, 1, 1},
-	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           1, 1, 1, 1, 1},
-	{TASK_ID_CO1,           "CO1",              &HcuFsmCo1,              1, 1, 1, 1, 1},
-	{TASK_ID_LIGHTSTR,      "LIGHTSTR",         &HcuFsmLightstr,         1, 1, 1, 1, 1},
-	{TASK_ID_ALCOHOL,       "ALCOHOL",          &HcuFsmAlcohol,          1, 1, 1, 1, 1},
-	{TASK_ID_HCHO,          "HCHO",             &HcuFsmHcho,             1, 1, 1, 1, 1},
-	{TASK_ID_TOXICGAS,      "TOXICGAS",         &HcuFsmToxicgas,         1, 1, 1, 1, 1},
-	{TASK_ID_IWM,           "IWM",              &HcuFsmIwm,              1, 1, 1, 1, 1},
-	{TASK_ID_IHM,           "IHM",              &HcuFsmIhm,              1, 1, 1, 1, 1},
-	{TASK_ID_IGM,           "IGM",              &HcuFsmIgm,              1, 1, 1, 1, 1},
-	{TASK_ID_IPM,           "IPM",              &HcuFsmIpm,              1, 1, 1, 1, 1},
-	{TASK_ID_SVRCON,        "SVRCON",           &HcuFsmSvrcon,           1, 1, 1, 1, 1},
-	{TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            1, 1, 1, 1, 1},
-	{TASK_ID_SYSSWM,        "SYSSWM",           &HcuFsmSysswm,           1, 1, 1, 1, 1},
-	{TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        1, 1, 1, 1, 1},
-	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        1, 1, 1, 1, 1},
-//基础任务END
-//分项目任务STARTING：不要动，需要将任务全部初始化好，并且设置入口为NULL。在分项目中再配置是否真启动
-	{TASK_ID_L3AQYCG10,     "L3AQYCG10",        NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3GQYBG40,     "L3GQYBG40",        NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3CXILC,       "L3CXILC",          NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3CXGLACM,     "L3CXGLACM",        NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3NBLPM,       "L3NBLPM",          NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3NBHPM,       "L3NBHPM",          NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3BFSC,        "L3BFSC",           NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       NULL,                    1, 1, 1, 1, 1},
-	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       NULL,                    1, 1, 1, 1, 1},
-//分项目任务END
+	//TASK_ID,              状态控制             状态机入口                 控制启动              TRACE标志位       注释
+	//START所有项目任务初始化清单：不要动，需要将任务全部初始化好，并且设置入口为NULL。在分项目中再配置是否真启动
+	{TASK_ID_MIN,           "TASKMIN",          NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1}, //Starting
+	{TASK_ID_HCUMAIN,       "HCUMAIN",          NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HCUVM,         "HCUVM",            NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_TRACE,         "TRACE",            NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CONFIG,        "CONFIG",           NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_TIMER,         "TIMER",            &HcuFsmTimer,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_MMC,           "MMC",              NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_GPIO,          "GPIO",             &HcuFsmGpio,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_I2C,           "I2C",              &HcuFsmI2c,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPI,           "SPI",              &HcuFsmSpi,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_PWM,           "PWM",              &HcuFsmPwm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ADC,           "ADC",              &HcuFsmAdc,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SWITCH,        "SWITCH",           &HcuFsmSwitch,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_RELAY,         "RELAY",            &HcuFsmRelay,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_MOTOR,         "MOTOR",            &HcuFsmMotor,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ZEEGBE,        "ZEEGBE",           &HcuFsmZeegbe,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_GPRS,          "GPRS",             NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_BLE,           "BLE",              &HcuFsmBle,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_WIFI,          "WIFI",             &HcuFsmWifi,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_USBNET,        "USBNET",           &HcuFsmUsbnet,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_3G4G,          "3G4G",             &HcuFsm3g4g,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HARDDISK,      "HARDDISK",         NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CAMERA,        "CAMERA",           NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_MICROPHONE,    "MICROPHONE",       &HcuFsmMicrophone,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_FLASH,         "FLASH",            NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_GPS,           "GPS",              &HcuFsmGps,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_LCD,           "LCD",              &HcuFsmLcd,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_LED,           "LED",              &HcuFsmLed,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HWINV,         "HWINV",            &HcuFsmHwinv,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_I2CBUSLIBRA,   "I2CBUSLIBRA",      &HcuFsmI2cbuslibra,      HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPIBUSARIES,   "SPIBUSARIES",      &HcuFsmSpibusaries,      HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_NBIOTCJ188,    "NBIOTCJ188",       &HcuFsmNbiotcj188,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_NBIOTQG376,    "NBIOTQG376",       &HcuFsmNbiotqg376,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HSMMP,         "HSMMP",            &HcuFsmHsmmp,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_WINDDIR,       "WINDDIR",          &HcuFsmWinddir,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CO1,           "CO1",              &HcuFsmCo1,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_LIGHTSTR,      "LIGHTSTR",         &HcuFsmLightstr,         HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ALCOHOL,       "ALCOHOL",          &HcuFsmAlcohol,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HCHO,          "HCHO",             &HcuFsmHcho,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_TOXICGAS,      "TOXICGAS",         &HcuFsmToxicgas,         HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IWM,           "IWM",              &HcuFsmIwm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IHM,           "IHM",              &HcuFsmIhm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IGM,           "IGM",              &HcuFsmIgm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IPM,           "IPM",              &HcuFsmIpm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SVRCON,        "SVRCON",           &HcuFsmSvrcon,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SYSSWM,        "SYSSWM",           &HcuFsmSysswm,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3AQYCG10,     "L3AQYCG10",        NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3GQYBG40,     "L3GQYBG40",        NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3CXILC,       "L3CXILC",          NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3CXGLACM,     "L3CXGLACM",        NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3NBLPM,       "L3NBLPM",          NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3NBHPM,       "L3NBHPM",          NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3BFSC,        "L3BFSC",           NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+//END所有项目任务初始化清单
+//START所有项目中必然启动的清单
+	{TASK_ID_TIMER,         "TIMER",            &HcuFsmTimer,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SVRCON,        "SVRCON",           &HcuFsmSvrcon,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HWINV,         "HWINV",            &HcuFsmHwinv,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SYSSWM,        "SYSSWM",           &HcuFsmSysswm,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+//END所有项目中必然启动的清单
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+	{TASK_ID_GPIO,          "GPIO",             &HcuFsmGpio,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_I2C,           "I2C",              &HcuFsmI2c,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SPI,           "SPI",              &HcuFsmSpi,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_PWM,           "PWM",              &HcuFsmPwm,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_ADC,           "ADC",              &HcuFsmAdc,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SWITCH,        "SWITCH",           &HcuFsmSwitch,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_RELAY,         "RELAY",            &HcuFsmRelay,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_MOTOR,         "MOTOR",            &HcuFsmMotor,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_ZEEGBE,        "ZEEGBE",           &HcuFsmZeegbe,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_BLE,           "BLE",              &HcuFsmBle,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_WIFI,          "WIFI",             &HcuFsmWifi,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_USBNET,        "USBNET",           &HcuFsmUsbnet,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_3G4G,          "3G4G",             &HcuFsm3g4g,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_MICROPHONE,    "MICROPHONE",       &HcuFsmMicrophone,       HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_GPS,           "GPS",              &HcuFsmGps,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_LCD,           "LCD",              &HcuFsmLcd,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_LED,           "LED",              &HcuFsmLed,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_I2CBUSLIBRA,   "I2CBUSLIBRA",      &HcuFsmI2cbuslibra,      HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SPIBUSARIES,   "SPIBUSARIES",      &HcuFsmSpibusaries,      HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_NBIOTCJ188,    "NBIOTCJ188",       &HcuFsmNbiotcj188,       HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_NBIOTQG376,    "NBIOTQG376",       &HcuFsmNbiotqg376,       HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HSMMP,         "HSMMP",            &HcuFsmHsmmp,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_WINDDIR,       "WINDDIR",          &HcuFsmWinddir,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CO1,           "CO1",              &HcuFsmCo1,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_LIGHTSTR,      "LIGHTSTR",         &HcuFsmLightstr,         HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_ALCOHOL,       "ALCOHOL",          &HcuFsmAlcohol,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HCHO,          "HCHO",             &HcuFsmHcho,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_TOXICGAS,      "TOXICGAS",         &HcuFsmToxicgas,         HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_IWM,           "IWM",              &HcuFsmIwm,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_IHM,           "IHM",              &HcuFsmIhm,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_IGM,           "IGM",              &HcuFsmIgm,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_IPM,           "IPM",              &HcuFsmIpm,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-	{TASK_ID_L3AQYCG10,     "L3AQYCG10",        &HcuFsmL3aqycg10,        1, 1, 1, 1, 1},
+	{TASK_ID_L3AQYCG10,     "L3AQYCG10",        &HcuFsmL3aqycg10,        HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        &HcuFsmL3aqycg20,        1, 1, 1, 1, 1},
+	{TASK_ID_GPIO,          "GPIO",             &HcuFsmGpio,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_I2C,           "I2C",              &HcuFsmI2c,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPI,           "SPI",              &HcuFsmSpi,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_PWM,           "PWM",              &HcuFsmPwm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ADC,           "ADC",              &HcuFsmAdc,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SWITCH,        "SWITCH",           &HcuFsmSwitch,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_RELAY,         "RELAY",            &HcuFsmRelay,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_MOTOR,         "MOTOR",            &HcuFsmMotor,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ZEEGBE,        "ZEEGBE",           &HcuFsmZeegbe,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_BLE,           "BLE",              &HcuFsmBle,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_WIFI,          "WIFI",             &HcuFsmWifi,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_USBNET,        "USBNET",           &HcuFsmUsbnet,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_3G4G,          "3G4G",             &HcuFsm3g4g,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_MICROPHONE,    "MICROPHONE",       &HcuFsmMicrophone,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_GPS,           "GPS",              &HcuFsmGps,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_LCD,           "LCD",              &HcuFsmLcd,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_LED,           "LED",              &HcuFsmLed,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_I2CBUSLIBRA,   "I2CBUSLIBRA",      &HcuFsmI2cbuslibra,      HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPIBUSARIES,   "SPIBUSARIES",      &HcuFsmSpibusaries,      HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_NBIOTCJ188,    "NBIOTCJ188",       &HcuFsmNbiotcj188,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_NBIOTQG376,    "NBIOTQG376",       &HcuFsmNbiotqg376,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HSMMP,         "HSMMP",            &HcuFsmHsmmp,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_WINDDIR,       "WINDDIR",          &HcuFsmWinddir,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CO1,           "CO1",              &HcuFsmCo1,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_LIGHTSTR,      "LIGHTSTR",         &HcuFsmLightstr,         HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ALCOHOL,       "ALCOHOL",          &HcuFsmAlcohol,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HCHO,          "HCHO",             &HcuFsmHcho,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_TOXICGAS,      "TOXICGAS",         &HcuFsmToxicgas,         HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IWM,           "IWM",              &HcuFsmIwm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IHM,           "IHM",              &HcuFsmIhm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IGM,           "IGM",              &HcuFsmIgm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IPM,           "IPM",              &HcuFsmIpm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        &HcuFsmL3aqycg20,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-	{TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       &HcuFsmL3tbswrg30,       1, 1, 1, 1, 1},
+	{TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       &HcuFsmL3tbswrg30,       HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-	{TASK_ID_L3GQYBG40,     "L3GQYBG40",        &HcuFsmLgqgybg40,        1, 1, 1, 1, 1},
+	{TASK_ID_L3GQYBG40,     "L3GQYBG40",        &HcuFsmLgqgybg40,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-	{TASK_ID_L3CXILC,       "L3CXILC",          &HcuFsmL3cxilc,          1, 1, 1, 1, 1},
+	{TASK_ID_L3CXILC,       "L3CXILC",          &HcuFsmL3cxilc,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-	{TASK_ID_L3CXGLACM,     "L3CXGLACM",        &HcuFsmL3cxglacm,        1, 1, 1, 1, 1},
+	{TASK_ID_L3CXGLACM,     "L3CXGLACM",        &HcuFsmL3cxglacm,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-	{TASK_ID_L3NBLPM,       "L3NBLPM",          &HcuFsmL3nblpm,          1, 1, 1, 1, 1},
+	{TASK_ID_L3NBLPM,       "L3NBLPM",          &HcuFsmL3nblpm,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-	{TASK_ID_L3NBHPM,       "L3NBHPM",          &HcuFsmL3nbhpm,          1, 1, 1, 1, 1},
+	{TASK_ID_L3NBHPM,       "L3NBHPM",          &HcuFsmL3nbhpm,          HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	{TASK_ID_L3BFSC,        "L3BFSC",           &HcuFsmL3bfsc,           1, 1, 1, 1, 1},
-	{TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       &HcuFsmBfscuicomm,       1, 1, 1, 1, 1},
+	{TASK_ID_GPIO,          "GPIO",             &HcuFsmGpio,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_I2C,           "I2C",              &HcuFsmI2c,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPI,           "SPI",              &HcuFsmSpi,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_PWM,           "PWM",              &HcuFsmPwm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ADC,           "ADC",              &HcuFsmAdc,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SWITCH,        "SWITCH",           &HcuFsmSwitch,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_RELAY,         "RELAY",            &HcuFsmRelay,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_MOTOR,         "MOTOR",            &HcuFsmMotor,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ZEEGBE,        "ZEEGBE",           &HcuFsmZeegbe,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_BLE,           "BLE",              &HcuFsmBle,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_WIFI,          "WIFI",             &HcuFsmWifi,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_USBNET,        "USBNET",           &HcuFsmUsbnet,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_3G4G,          "3G4G",             &HcuFsm3g4g,             HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_MICROPHONE,    "MICROPHONE",       &HcuFsmMicrophone,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_GPS,           "GPS",              &HcuFsmGps,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_LCD,           "LCD",              &HcuFsmLcd,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_LED,           "LED",              &HcuFsmLed,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_I2CBUSLIBRA,   "I2CBUSLIBRA",      &HcuFsmI2cbuslibra,      HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_SPIBUSARIES,   "SPIBUSARIES",      &HcuFsmSpibusaries,      HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_NBIOTCJ188,    "NBIOTCJ188",       &HcuFsmNbiotcj188,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_NBIOTQG376,    "NBIOTQG376",       &HcuFsmNbiotqg376,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HSMMP,         "HSMMP",            &HcuFsmHsmmp,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_WINDDIR,       "WINDDIR",          &HcuFsmWinddir,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CO1,           "CO1",              &HcuFsmCo1,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_LIGHTSTR,      "LIGHTSTR",         &HcuFsmLightstr,         HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_ALCOHOL,       "ALCOHOL",          &HcuFsmAlcohol,          HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HCHO,          "HCHO",             &HcuFsmHcho,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_TOXICGAS,      "TOXICGAS",         &HcuFsmToxicgas,         HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IWM,           "IWM",              &HcuFsmIwm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IHM,           "IHM",              &HcuFsmIhm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IGM,           "IGM",              &HcuFsmIgm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_IPM,           "IPM",              &HcuFsmIpm,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_L3BFSC,        "L3BFSC",           &HcuFsmL3bfsc,           HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       &HcuFsmBfscuicomm,       HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       &HcuFsmL3opwlotdr,       1, 1, 1, 1, 1},
+	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       &HcuFsmL3opwlotdr,       HCU_TASK_PNP_ON,     1, 1, 1, 1, 1},
 //小技巧，不要这部分，以便加强编译检查
 #else
 	#error Un-correct constant definition
 #endif
-	{TASK_ID_MAX,       "TASKMAX",              NULL,                    1, 1, 1, 1, 1},                  //Ending
+	{TASK_ID_MAX,       "TASKMAX",              NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},   //Ending
 };
 
 //消息ID的定义全局表，方便TRACE函数使用
@@ -411,58 +560,6 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	int item = 0;
 	UINT32 taskid = 0;
 
-	//先从工程参数中读取配置信息到任务表
-	zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState = zHcuSysEngPar.comm.commHwBoardEthernet;
-	zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState = zHcuSysEngPar.comm.commHwBoardUsbnet;
-	zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState = zHcuSysEngPar.comm.commHwBoardWifi;
-	zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState = zHcuSysEngPar.comm.commHwBoard3g4g;
-	zHcuVmCtrTab.task[TASK_ID_GPS].pnpState = zHcuSysEngPar.comm.commHwBoardGps;
-	zHcuVmCtrTab.task[TASK_ID_LCD].pnpState = zHcuSysEngPar.comm.commHwBoardLcd;
-	zHcuVmCtrTab.task[TASK_ID_LED].pnpState = zHcuSysEngPar.comm.commHwBoardLed;
-	zHcuVmCtrTab.task[TASK_ID_ZEEGBE].pnpState = zHcuSysEngPar.comm.commHwBoardZeegbe;
-	zHcuVmCtrTab.task[TASK_ID_FLASH].pnpState = zHcuSysEngPar.comm.commHwBoardFlash;
-	zHcuVmCtrTab.task[TASK_ID_GPIO].pnpState = zHcuSysEngPar.comm.commFrontGpio;
-	zHcuVmCtrTab.task[TASK_ID_I2C].pnpState = zHcuSysEngPar.comm.commFrontI2c;
-	zHcuVmCtrTab.task[TASK_ID_SPI].pnpState = zHcuSysEngPar.comm.commFrontSpi;
-	zHcuVmCtrTab.task[TASK_ID_PWM].pnpState = zHcuSysEngPar.comm.commFrontPwm;
-	zHcuVmCtrTab.task[TASK_ID_ADC].pnpState = zHcuSysEngPar.comm.commFrontAdc;
-	zHcuVmCtrTab.task[TASK_ID_SWITCH].pnpState = zHcuSysEngPar.comm.commFrontSwitch;
-	zHcuVmCtrTab.task[TASK_ID_RELAY].pnpState = zHcuSysEngPar.comm.commFrontRelay;
-	zHcuVmCtrTab.task[TASK_ID_MOTOR].pnpState = zHcuSysEngPar.comm.commFrontMotor;
-	zHcuVmCtrTab.task[TASK_ID_MODBUS].pnpState = zHcuSysEngPar.comm.commFrameModbus;
-	zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].pnpState = zHcuSysEngPar.comm.commFrameSpsvirgo;
-	zHcuVmCtrTab.task[TASK_ID_AVORION].pnpState = zHcuSysEngPar.comm.commFrameAvorion;
-	zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].pnpState = zHcuSysEngPar.comm.commFrameCloudvela;
-	zHcuVmCtrTab.task[TASK_ID_I2CBUSLIBRA].pnpState = zHcuSysEngPar.comm.commFrameI2cbuslibra;
-	zHcuVmCtrTab.task[TASK_ID_SPIBUSARIES].pnpState = zHcuSysEngPar.comm.commFrameSpibusaries;
-	zHcuVmCtrTab.task[TASK_ID_NBIOTCJ188].pnpState = zHcuSysEngPar.comm.commFrameNbiotcj188;
-	zHcuVmCtrTab.task[TASK_ID_NBIOTQG376].pnpState = zHcuSysEngPar.comm.commFrameNbiotqg376;
-	zHcuVmCtrTab.task[TASK_ID_SPS485].pnpState = zHcuSysEngPar.comm.commFrontSps485;
-	zHcuVmCtrTab.task[TASK_ID_SPS232].pnpState = zHcuSysEngPar.comm.commFrontSps232;
-	zHcuVmCtrTab.task[TASK_ID_MICROPHONE].pnpState = zHcuSysEngPar.comm.commFrontMicrophone;
-	zHcuVmCtrTab.task[TASK_ID_CAMERA].pnpState = zHcuSysEngPar.comm.commFrontCamera;
-	zHcuVmCtrTab.task[TASK_ID_BLE].pnpState = zHcuSysEngPar.comm.commFrontBle;
-	zHcuVmCtrTab.task[TASK_ID_EMC].pnpState = zHcuSysEngPar.comm.commFrontSensorEmc;
-	zHcuVmCtrTab.task[TASK_ID_PM25].pnpState = zHcuSysEngPar.comm.commFrontSensorPm25;
-	zHcuVmCtrTab.task[TASK_ID_TEMP].pnpState = zHcuSysEngPar.comm.commFrontSensorTemp;
-	zHcuVmCtrTab.task[TASK_ID_HUMID].pnpState = zHcuSysEngPar.comm.commFrontSensorHumid;
-	zHcuVmCtrTab.task[TASK_ID_WINDDIR].pnpState = zHcuSysEngPar.comm.commFrontSensorWinddir;
-	zHcuVmCtrTab.task[TASK_ID_WINDSPD].pnpState = zHcuSysEngPar.comm.commFrontSensorWindspd;
-	zHcuVmCtrTab.task[TASK_ID_NOISE].pnpState = zHcuSysEngPar.comm.commFrontSensorNoise;
-	zHcuVmCtrTab.task[TASK_ID_HSMMP].pnpState = zHcuSysEngPar.comm.commFrontSensorHsmmp;
-	zHcuVmCtrTab.task[TASK_ID_PM25SHARP].pnpState = zHcuSysEngPar.comm.commFrontSensorPm25Sharp;
-	zHcuVmCtrTab.task[TASK_ID_AIRPRS].pnpState = zHcuSysEngPar.comm.commFrontSensorAirprs;
-	zHcuVmCtrTab.task[TASK_ID_CO1].pnpState = zHcuSysEngPar.comm.commFrontSensorCo1;
-	zHcuVmCtrTab.task[TASK_ID_LIGHTSTR].pnpState = zHcuSysEngPar.comm.commFrontSensorLightstr;
-	zHcuVmCtrTab.task[TASK_ID_ALCOHOL].pnpState = zHcuSysEngPar.comm.commFrontSensorAlcohol;
-	zHcuVmCtrTab.task[TASK_ID_HCHO].pnpState = zHcuSysEngPar.comm.commFrontSensorHcho;
-	zHcuVmCtrTab.task[TASK_ID_TOXICGAS].pnpState = zHcuSysEngPar.comm.commFrontSensorToxicgas;
-	zHcuVmCtrTab.task[TASK_ID_IWM].pnpState = zHcuSysEngPar.comm.commFrontSensorIwm;
-	zHcuVmCtrTab.task[TASK_ID_IHM].pnpState = zHcuSysEngPar.comm.commFrontSensorIhm;
-	zHcuVmCtrTab.task[TASK_ID_IGM].pnpState = zHcuSysEngPar.comm.commFrontSensorIgm;
-	zHcuVmCtrTab.task[TASK_ID_IPM].pnpState = zHcuSysEngPar.comm.commFrontSensorIpm;
-	zHcuVmCtrTab.task[TASK_ID_CANITFLEO].pnpState = zHcuSysEngPar.comm.commFrontCanitf;
-
 	//扫描任务输入配置表
 	//起始必须是TASK_ID_MIN条目
 	if (zHcuVmCtrTaskStaticCfg[0].taskInputId != TASK_ID_MIN){
@@ -471,10 +568,14 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	}
 	strcpy(zHcuVmCtrTab.task[TASK_ID_MIN].taskName, zHcuVmCtrTaskStaticCfg[0].taskInputName);
 
-	//以TASK_ID_MAX为终止条目
-	for(item=1; item < MAX_TASK_NUM_IN_ONE_HCU; item++){
+	//以TASK_ID_MAX为终止条目：最大为2倍，因为初始化表单中出现了两次，一次赋基础，一次控制激活与否
+	for(item=1; item <= (2*MAX_TASK_NUM_IN_ONE_HCU); item++){
 		if(zHcuVmCtrTaskStaticCfg[item].taskInputId == TASK_ID_MAX){
 			break;
+		}
+		if ((zHcuVmCtrTaskStaticCfg[item].pnpFlag != HCU_TASK_PNP_ON) && (zHcuVmCtrTaskStaticCfg[item].pnpFlag != HCU_TASK_PNP_OFF)){
+			HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, task input configuration error!\n");
+			return FAILURE;
 		}
 		if ((zHcuVmCtrTaskStaticCfg[item].taskInputId <= TASK_ID_MIN) || (zHcuVmCtrTaskStaticCfg[item].taskInputId > TASK_ID_MAX)){
 			HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, task input configuration error!\n");
@@ -486,10 +587,8 @@ OPSTAT hcu_vm_application_task_env_init(void)
 	item = 0;
 	while(zHcuVmCtrTaskStaticCfg[item].taskInputId != TASK_ID_MAX){
 		taskid = zHcuVmCtrTaskStaticCfg[item].taskInputId;
-		//系统工程参数对于任务的启动具备更高的优先级。如果系统工参没有配置，则缺省就是启动该模块。
 		//这个是使用了静态配置表的方式，而且后面还OVERWRITE前面的，这种技巧可以在分项目中灵活配置。一般在公共区放置无效任务模块，在分项目区单独控制开启与否。
-		//其实，任务的启动与否，一般由项目性质决定，并不需要工参进行控制，以后可以考虑去掉对任务模块启动与否的工参配置能力。
-		if (zHcuVmCtrTab.task[taskid].pnpState == HCU_TASK_PNP_INIT) zHcuVmCtrTab.task[taskid].pnpState = HCU_TASK_PNP_ON;
+		zHcuVmCtrTab.task[taskid].pnpState = zHcuVmCtrTaskStaticCfg[item].pnpFlag;
 		strcpy(zHcuVmCtrTab.task[taskid].taskName, zHcuVmCtrTaskStaticCfg[item].taskInputName);
 		zHcuVmCtrTab.task[taskid].taskFuncEntry = zHcuVmCtrTaskStaticCfg[item].fsmFuncEntry;
 		item++;
@@ -1800,7 +1899,7 @@ void hcu_vm_working_mode_multipy_process_start(void)
 //单进程模式入口程序组，当前的工作模式！！！
 void hcu_vm_process_single_mainapp_entry(void)
 {
-	//创建队列环境
+	//创建HCUMAIN环境
 	hcu_vm_task_create_hcumain_env();
 	//创建所有任务
     hcu_vm_task_create_all();
@@ -1824,7 +1923,7 @@ void hcu_vm_process_single_mainapp_entry(void)
 //双进程模式入口程序组
 void hcu_vm_process_double_mainapp_entry(void)
 {
-	//创建队列环境
+	//创建HCUMAIN环境
 	hcu_vm_task_create_hcumain_env();
 
 	//创建所有任务
@@ -1873,7 +1972,7 @@ void hcu_vm_process_multipy_entry_supervisor(void)
 {
 	int ret = 0;
 
-	//创建队列环境
+	//创建HCUMAIN环境
 	hcu_vm_task_create_hcumain_env();
 
 	//先启动TIMER和SVRCON任务，然后让SVRCON任务发送初始化消息给其它所有任务

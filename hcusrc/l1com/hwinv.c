@@ -259,49 +259,46 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcpy(zHcuVmCtrTab.clock.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, zHcuVmCtrTab.clock.sMin);
 	strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
-	//HcuDebugPrint("%s\n", zCurTimeDate.curSensorFd);
-	//HcuDebugPrint("%s\n", zCurTimeDate.curMicrophoneFd);
-	//HcuDebugPrint("%s\n", zCurTimeDate.curAvorionFd);
 
 
 	//初始化ETHERNET后台接口
 	zHcuVmCtrTab.hwinv.ethernet.hwBase.taskId = TASK_ID_ETHERNET;
 	zHcuVmCtrTab.hwinv.ethernet.hwBase.hwResistence = 0;
-	if (HCU_COMM_HW_BOARD_ETHERNET != HCU_TASK_PNP_ON)
+	if (zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState != HCU_TASK_PNP_ON)
 		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((HCU_COMM_HW_BOARD_ETHERNET == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_ETHERNET == NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_ETHERNET == NULL))
 		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((HCU_COMM_HW_BOARD_ETHERNET == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_ETHERNET != NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_ETHERNET != NULL))
 		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化USBNET后台接口
 	zHcuVmCtrTab.hwinv.usbnet.hwBase.taskId = TASK_ID_USBNET;
 	zHcuVmCtrTab.hwinv.usbnet.hwBase.hwResistence = 0;
-	if (HCU_COMM_HW_BOARD_USBNET != HCU_TASK_PNP_ON)
+	if (zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState != HCU_TASK_PNP_ON)
 		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((HCU_COMM_HW_BOARD_USBNET == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_NET == NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_NET == NULL))
 		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((HCU_COMM_HW_BOARD_USBNET == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_NET != NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_NET != NULL))
 		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化WIFI后台接口
 	zHcuVmCtrTab.hwinv.wifi.hwBase.taskId = TASK_ID_WIFI;
 	zHcuVmCtrTab.hwinv.wifi.hwBase.hwResistence = 0;
-	if (HCU_COMM_HW_BOARD_WIFI != HCU_TASK_PNP_ON)
+	if (zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState != HCU_TASK_PNP_ON)
 		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((HCU_COMM_HW_BOARD_WIFI == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI == NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI == NULL))
 		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((HCU_COMM_HW_BOARD_WIFI == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI != NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI != NULL))
 		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化3G4G后台接口
 	zHcuVmCtrTab.hwinv.g3g4.hwBase.taskId = TASK_ID_3G4G;
 	zHcuVmCtrTab.hwinv.g3g4.hwBase.hwResistence = 0;
-	if (HCU_COMM_HW_BOARD_3G4G != HCU_TASK_PNP_ON)
+	if (zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState != HCU_TASK_PNP_ON)
 		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((HCU_COMM_HW_BOARD_3G4G == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G == NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G == NULL))
 		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((HCU_COMM_HW_BOARD_3G4G == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G != NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G != NULL))
 		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 
@@ -356,42 +353,6 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		HcuErrorPrint("HWINV: Read error from system engineering parameter database!\n");
 		//通信部分
 		zHcuSysEngPar.comm.commBackHawlCon = HCU_COMM_BACK_HAWL_CON;
-		zHcuSysEngPar.comm.commHwBoardEthernet = HCU_COMM_HW_BOARD_ETHERNET;
-		zHcuSysEngPar.comm.commHwBoardUsbnet = HCU_COMM_HW_BOARD_USBNET;
-		zHcuSysEngPar.comm.commHwBoardWifi = HCU_COMM_HW_BOARD_WIFI;
-		zHcuSysEngPar.comm.commHwBoard3g4g = HCU_COMM_HW_BOARD_3G4G;
-		zHcuSysEngPar.comm.commHwBoardGps = HCU_COMM_HW_BOARD_GPS;
-		zHcuSysEngPar.comm.commHwBoardLcd = HCU_COMM_HW_BOARD_LCD;
-		zHcuSysEngPar.comm.commHwBoardLed = HCU_COMM_HW_BOARD_LED;
-		zHcuSysEngPar.comm.commHwBoardZeegbe = HCU_COMM_HW_BOARD_ZEEGBE;
-		zHcuSysEngPar.comm.commHwBoardFlash = HCU_COMM_HW_BOARD_FLASH;
-		zHcuSysEngPar.comm.commFrameModbus = HCU_COMM_FRONT_MODBUS;
-		zHcuSysEngPar.comm.commFrameSpsvirgo = HCU_COMM_FRONT_SPSVIRGO;
-		zHcuSysEngPar.comm.commFrameAvorion = HCU_COMM_FRONT_AVORION;
-		zHcuSysEngPar.comm.commFrameCloudvela = HCU_COMM_FRONT_CLOUDVELA;
-		zHcuSysEngPar.comm.commFrameI2cbuslibra = HCU_COMM_FRONT_I2CBUSLIBRA;
-		zHcuSysEngPar.comm.commFrameSpibusaries = HCU_COMM_FRONT_SPIBUSARIES;
-		zHcuSysEngPar.comm.commFrameNbiotcj188 = HCU_COMM_FRONT_NBIOTCJ188;
-		zHcuSysEngPar.comm.commFrameNbiotqg376 = HCU_COMM_FRONT_NBIOTQG376;
-		zHcuSysEngPar.comm.commFrontSps485 = HCU_COMM_FRONT_SPS485;
-		zHcuSysEngPar.comm.commFrontSps232 = HCU_COMM_FRONT_SPS232;
-		zHcuSysEngPar.comm.commFrontMicrophone = HCU_COMM_FRONT_MICROPHONE;
-		zHcuSysEngPar.comm.commFrontCamera = HCU_COMM_FRONT_CAMERA;
-		zHcuSysEngPar.comm.commFrontBle = HCU_COMM_FRONT_BLE;
-		zHcuSysEngPar.comm.commFrontSensorEmc = HCU_COMM_FRONT_SENSOR_EMC;
-		zHcuSysEngPar.comm.commFrontSensorPm25 = HCU_COMM_FRONT_SENSOR_PM25;
-		zHcuSysEngPar.comm.commFrontSensorTemp = HCU_COMM_FRONT_SENSOR_TEMP;
-		zHcuSysEngPar.comm.commFrontSensorHumid = HCU_COMM_FRONT_SENSOR_HUMID;
-		zHcuSysEngPar.comm.commFrontSensorWinddir = HCU_COMM_FRONT_SENSOR_WINDDIR;
-		zHcuSysEngPar.comm.commFrontSensorWindspd = HCU_COMM_FRONT_SENSOR_WINDSPD;
-		zHcuSysEngPar.comm.commFrontSensorNoise = HCU_COMM_FRONT_SENSOR_NOISE;
-		zHcuSysEngPar.comm.commFrontSensorHsmmp = HCU_COMM_FRONT_SENSOR_HSMMP;
-		zHcuSysEngPar.comm.commFrontSensorPm25Sharp = HCU_COMM_FRONT_SENSOR_PM25SHARP;
-		zHcuSysEngPar.comm.commFrontSensorIwm = HCU_COMM_FRONT_SENSOR_IWM;
-		zHcuSysEngPar.comm.commFrontSensorIhm = HCU_COMM_FRONT_SENSOR_IHM;
-		zHcuSysEngPar.comm.commFrontSensorIgm = HCU_COMM_FRONT_SENSOR_IGM;
-		zHcuSysEngPar.comm.commFrontSensorIpm = HCU_COMM_FRONT_SENSOR_IPM;
-		zHcuSysEngPar.comm.commFrontCanitf = HCU_COMM_FRONT_CANITF;
 
 		//数据库部分
 		strcpy(zHcuSysEngPar.dbi.hcuDbHost, HCU_DB_HOST_DEFAULT);

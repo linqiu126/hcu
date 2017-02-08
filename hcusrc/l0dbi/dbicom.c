@@ -18,6 +18,7 @@
 // HcuSysEngPar
 /*
 
+//删掉模块控制激活之前的工参配置表单，放在这里留在备份
 -- --------------------------------------------------------
 
 --
@@ -159,7 +160,7 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`,
 ('HCU_PRJ_AQYCG10_335D', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_AQYCG20_RASBERRY', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 120, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 900, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G201_AQYC_SH001', 1, 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_AQYC_OBSOLETE', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_BFSC_CBU', 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFSC_CBU', 1, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_CXGLACM', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G221_GLAM_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_CXILC', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G211_ILCX_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_GQYBG40', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G401_GQYB_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
@@ -169,9 +170,113 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`,
 ('HCU_PRJ_TBSWRG30', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G301_TBSW_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_TEST_MODE', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G201_TEST_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
 
+//删掉模块控制激活之后的工参配置表单
+--
+-- Table structure for table `hcusysengpar`
+--
+
+CREATE TABLE IF NOT EXISTS `hcusysengpar` (
+  `prjname` char(100) NOT NULL,
+  `commbackhawlcon` int(1) NOT NULL,
+  `hcudbhost` char(20) NOT NULL,
+  `hcudbuser` char(20) NOT NULL,
+  `hcudbpsw` char(20) NOT NULL,
+  `hcudbname` char(20) NOT NULL,
+  `hcudbport` int(1) NOT NULL,
+  `emcreqtimer` int(1) NOT NULL,
+  `emcreqtimerfb` int(1) NOT NULL,
+  `humidreqtimer` int(1) NOT NULL,
+  `humidreqtimerfb` int(1) NOT NULL,
+  `noisereqtimer` int(1) NOT NULL,
+  `noisereqtimerfb` int(1) NOT NULL,
+  `pm25reqtimer` int(1) NOT NULL,
+  `pm25reqtimerfb` int(1) NOT NULL,
+  `tempreqtimer` int(1) NOT NULL,
+  `tempreqtimerfb` int(1) NOT NULL,
+  `winddirreqtimer` int(1) NOT NULL,
+  `winddirreqtimerfb` int(1) NOT NULL,
+  `windspdreqtimer` int(1) NOT NULL,
+  `windspdreqtimerfb` int(1) NOT NULL,
+  `cloudvelahbtimer` int(1) NOT NULL,
+  `cloudvelahbbacktimer` int(1) NOT NULL,
+  `nbiotcj188hbtimer` int(1) NOT NULL,
+  `nbiotcj188hbbacktimer` int(1) NOT NULL,
+  `nbiotqg376hbtimer` int(1) NOT NULL,
+  `nbiotqg376hbbacktimer` int(1) NOT NULL,
+  `cloudsockethbtimer` int(1) NOT NULL,
+  `dbverreporttimer` int(1) NOT NULL,
+  `hsmmpreqtimer` int(1) NOT NULL,
+  `hsmmpcapduration` int(1) NOT NULL,
+  `hsmmpcapdurationfb` int(11) NOT NULL,
+  `hsmmprefrate` int(1) NOT NULL,
+  `airprsreqtimer` int(1) NOT NULL,
+  `co1reqtimer` int(1) NOT NULL,
+  `lightstrreqtimer` int(1) NOT NULL,
+  `alcoholreqtimer` int(1) NOT NULL,
+  `hchoreqtimer` int(1) NOT NULL,
+  `toxicgasreqtimer` int(1) NOT NULL,
+  `iwmreqtimer` int(1) NOT NULL,
+  `ihmreqtimer` int(1) NOT NULL,
+  `igmreqtimer` int(1) NOT NULL,
+  `ipmreqtimer` int(1) NOT NULL,
+  `pm25sharpreqtimer` int(1) NOT NULL,
+  `syspmworkingtimer` int(1) NOT NULL,
+  `canitfworkingtimer` int(1) NOT NULL,
+  `seriesportformodbus` int(1) NOT NULL,
+  `seriesportforgps` int(1) NOT NULL,
+  `seriesportforpm25sharp` int(1) NOT NULL,
+  `cloudhttpaddlocal` char(200) NOT NULL,
+  `cloudsocketsvradd` char(200) NOT NULL,
+  `cloudhttpaddsae` char(200) NOT NULL,
+  `cloudhttpaddjd` char(200) NOT NULL,
+  `cloudhttpaddwechat` char(200) NOT NULL,
+  `cloudbhservername` char(12) NOT NULL,
+  `cloudbhhcuname` char(20) NOT NULL,
+  `cloudbhitfframestd` int(1) NOT NULL,
+  `cloudftpadd` char(64) NOT NULL,
+  `cloudftpuser` char(12) NOT NULL,
+  `cloudftppwd` char(12) NOT NULL,
+  `cloudftppwdvideo` char(12) NOT NULL,
+  `cloudftpuservideo` char(12) NOT NULL,
+  `hcuswdownloaddir` char(64) NOT NULL,
+  `hcuswactivedir` char(64) NOT NULL,
+  `hcuswbackupdir` char(64) NOT NULL,
+  `hcuvideoserverdir` char(64) NOT NULL,
+  `hcuvideoserverhttp` char(64) NOT NULL,
+  `debugmode` int(1) NOT NULL,
+  `tracemode` int(1) NOT NULL,
+  `browselautostartupflag` int(1) NOT NULL,
+  `browselprog` char(20) NOT NULL,
+  `browselstartupaddress` char(128) NOT NULL,
+  `browselworkingoption` char(128) NOT NULL,
+  PRIMARY KEY (`prjname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcusysengpar`
+--
+
+INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `cloudvelahbtimer`, `cloudvelahbbacktimer`, `nbiotcj188hbtimer`, `nbiotcj188hbbacktimer`, `nbiotqg376hbtimer`, `nbiotqg376hbbacktimer`, `cloudsockethbtimer`, `dbverreporttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `iwmreqtimer`, `ihmreqtimer`, `igmreqtimer`, `ipmreqtimer`, `pm25sharpreqtimer`, `syspmworkingtimer`, `canitfworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudsocketsvradd`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
+('HCU_PRJ_AQYCG10_335D',     1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 120, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 900, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G201_AQYC_SH001', 1, 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYC_OBSOLETE',    1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFSC_CBU',         1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXGLACM',          1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G221_GLAM_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXILC',            1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G211_ILCX_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_GQYBG40',          1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G401_GQYB_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_HPM_QG',     1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_LPM_CJ',     1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G231_NBLP_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_OPWL_OTDR',        1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G711_OTDR_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TBSWRG30',         1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G301_TBSW_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TEST_MODE',        1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G201_TEST_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
+
+
+
 
 //HcuTraceModuleCtr数据表格式
 //该数据表单将支持智能初始化
+-- --------------------------------------------------------
+
 -- --------------------------------------------------------
 
 --
@@ -194,11 +299,11 @@ CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
 --
 
 INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `moduletoallow`, `moduletorestrict`, `modulefromallow`, `modulefromrestrict`) VALUES
-(0, 'TASKMIN', 0, 0, 0, 0, 0),
-(1, 'HCUMAIN', 0, 0, 0, 0, 0),
-(2, 'HCUVM', 0, 0, 0, 0, 0),
-(3, 'TRACE', 0, 0, 0, 0, 0),
-(4, 'CONFIG', 0, 0, 0, 0, 0),
+(0, 'TASKMIN', 1, 1, 1, 1, 1),
+(1, 'HCUMAIN', 1, 1, 1, 1, 1),
+(2, 'HCUVM', 1, 1, 1, 1, 1),
+(3, 'TRACE', 1, 1, 1, 1, 1),
+(4, 'CONFIG', 1, 1, 1, 1, 1),
 (5, 'TIMER', 1, 1, 1, 1, 1),
 (6, 'MMC', 1, 1, 1, 1, 1),
 (7, 'GPIO', 1, 1, 1, 1, 1),
@@ -254,20 +359,21 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (57, 'IPM', 1, 1, 1, 1, 1),
 (58, 'SVRCON', 1, 1, 1, 1, 1),
 (59, 'SYSPM', 1, 1, 1, 1, 1),
-(60, 'PM25SHARP', 1, 1, 1, 1, 1),
-(61, 'CANITFLEO', 1, 1, 1, 1, 1),
-(62, 'L3AQYCG10', 1, 1, 1, 1, 1),
-(63, 'L3AQYCG20', 1, 1, 1, 1, 1),
-(64, 'L3TBSWRG30', 1, 1, 1, 1, 1),
-(65, 'L3GQYBG40', 1, 1, 1, 1, 1),
-(66, 'L3CXILC', 1, 1, 1, 1, 1),
-(67, 'L3CXGLACM', 1, 1, 1, 1, 1),
-(68, 'L3NBLPM', 1, 1, 1, 1, 1),
-(69, 'L3NBHPM', 1, 1, 1, 1, 1),
-(70, 'L3BFSC', 1, 1, 1, 1, 1),
-(71, 'BFSCUICOMM', 1, 1, 1, 1, 1),
-(72, 'L3OPWLOTDR', 1, 1, 1, 1, 1),
-(73, 'TASKMAX', 0, 0, 0, 0, 0);
+(60, 'SYSSWM', 1, 1, 1, 1, 1),
+(61, 'PM25SHARP', 1, 1, 1, 1, 1),
+(62, 'CANITFLEO', 1, 1, 1, 1, 1),
+(63, 'L3AQYCG10', 1, 1, 1, 1, 1),
+(64, 'L3AQYCG20', 1, 1, 1, 1, 1),
+(65, 'L3TBSWRG30', 1, 1, 1, 1, 1),
+(66, 'L3GQYBG40', 1, 1, 1, 1, 1),
+(67, 'L3CXILC', 1, 1, 1, 1, 1),
+(68, 'L3CXGLACM', 1, 1, 1, 1, 1),
+(69, 'L3NBLPM', 1, 1, 1, 1, 1),
+(70, 'L3NBHPM', 1, 1, 1, 1, 1),
+(71, 'L3BFSC', 1, 1, 1, 1, 1),
+(72, 'BFSCUICOMM', 1, 1, 1, 1, 1),
+(73, 'L3OPWLOTDR', 1, 1, 1, 1, 1),
+(74, 'TASKMAX', 1, 1, 1, 1, 1);
 
 //HcuTraceMsgCtr数据表格式
 //该数据表单将支持智能初始化
@@ -499,60 +605,8 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		index = 0;
 		//项目名称
 		if(sqlRow[index]) strncpy(engPar->prjname, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);
-		//通信部分
+		//通信部分=》模块和通信机制的选择，留给了VM任务启动初始化静态配置部分，不再这里进行工参干预，以提高研发效率
 		if(sqlRow[index]) engPar->comm.commBackHawlCon = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		//printf("engPar->comm.commBackHawlCon = %d, index = %d\n", engPar->comm.commBackHawlCon, index);
-		if(sqlRow[index]) engPar->comm.commHwBoardEthernet = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commHwBoardUsbnet = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commHwBoardWifi = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commHwBoard3g4g = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commHwBoardGps = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commHwBoardLcd = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commHwBoardLed = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commHwBoardZeegbe = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commHwBoardFlash = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrameModbus = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrameSpsvirgo = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrameAvorion = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrameCloudvela = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrameI2cbuslibra = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrameSpibusaries = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrameNbiotcj188 = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrameNbiotqg376 = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		//printf("engPar->comm.commFrameCloudvela = %d\n", engPar->comm.commFrameCloudvela);
-		if(sqlRow[index]) engPar->comm.commFrontSps485 = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSps232 = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontMicrophone = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontCamera = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontBle = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontGpio = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontI2c = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSpi = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontPwm = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontAdc = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSwitch = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontRelay = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontMotor = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorEmc = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorPm25 = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorTemp = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorHumid = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorWinddir = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorWindspd = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorNoise = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorHsmmp = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorAirprs = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorCo1 = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorLightstr = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorAlcohol = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorHcho = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorToxicgas = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorIwm = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorIhm = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorIgm = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorIpm = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontSensorPm25Sharp = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->comm.commFrontCanitf = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
 		//数据库部分
 		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbHost, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);

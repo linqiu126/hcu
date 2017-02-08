@@ -14,7 +14,9 @@ PRJ_BFSC待完成或者回答的问题：
 //= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 153=>BFSC项目
 = 修正任务启动中一部分任务忘记从工参数据表获取的问题
 = 增加了SYSSWM软件管理模块，准备用于软件下载等功能
-
+=完善任务模块的启动初始化过程，以及TIMER的配置过程，提高智能化程度，降低研发复杂度和配置工作量
+=去掉工参中对模块是否激活的控制
+= 完成TASK启动中有关pnpFlag的设置
 
 
 //= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 152=>BFSC项目
