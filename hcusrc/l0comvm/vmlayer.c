@@ -31,7 +31,7 @@ HcuSysStaPm_t		zHcuSysStaPm;		//全局性能统计表
 HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 {
 	//TASK_ID,              状态控制             状态机入口                 控制启动              TRACE标志位       注释
-	//START所有项目任务初始化清单：不要动，需要将任务全部初始化好，并且设置入口为NULL。在分项目中再配置是否真启动
+	//START FLAG: 所有项目任务初始化清单：不要动，需要将任务全部初始化好，并且设置入口为NULL。在分项目中再配置是否真启动
 	{TASK_ID_MIN,           "TASKMIN",          NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1}, //Starting
 	{TASK_ID_HCUMAIN,       "HCUMAIN",          NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_HCUVM,         "HCUVM",            NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
@@ -218,6 +218,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 //请服从MSG_NAME_MAX_LENGTH的最长定义，不然出错
 HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	//MSG_ID                                      MsgName                                       TRACE_FLAG   注释
+	//START FLAG
 	{MSG_ID_COM_MIN,                              "MSG_ID_COM_MIN",                             0, 0, 0},    //STARTING
 	{MSG_ID_COM_INIT,                             "MSG_ID_COM_INIT",                            1, 1, 1},
 	{MSG_ID_COM_INIT_FEEDBACK,                    "MSG_ID_COM_INIT_FEEDBACK",                   1, 1, 1},
@@ -394,6 +395,7 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,       "MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT",      1, 1, 1},
 	//CLOUDVELA
 	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,             "MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ",            1, 1, 1},
+	//END FLAG
 	{MSG_ID_COM_MAX,                              "MSG_ID_COM_MAX",                             0, 0, 0},    //Ending
 };
 
@@ -401,87 +403,96 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 //请服从TIMER_NAME_MAX_LENGTH的最长长度，否则出错
 //设置的技巧是：基础部分不要动，配置不一样的，请单独在分项目中，再设置一遍
 HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
-	//TIMER_ID                                       定时器名字                                 定时长度       精度                      注释
-	//STARING公共基础部分，不要删除，新的定时器，需要在此增加，确保完整性。各个项目重复的定时器且不同数值部分，可以再分项目中第二次进行设置，后一次设置的数据将覆盖前一次的数值
-	{TIMER_ID_MIN,                                   "TID_MIN",                                0,           TIMER_RESOLUTION_1S},    //STARTING
-	{TIMER_ID_1S_MIN,                                "TID_1S_MIN",                             0,           TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_SVRCON_INIT_FB,                     "TID_1S_SVRCON_INIT_FB",                  10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_LED_GALOWAG_SCAN,                   "TID_1S_LED_GALOWAG_SCAN",                1,           TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_EMC_MODBUS_FB,                      "TID_1S_EMC_MODBUS_FB",                   10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_PM25_PERIOD_READ,                   "TID_1S_PM25_PERIOD_READ",                600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_PM25_MODBUS_FB,                     "TID_1S_PM25_MODBUS_FB",                  10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDDIR_PERIOD_READ,                "TID_1S_WINDDIR_PERIOD_READ",             600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDDIR_MODBUS_FB,                  "TID_1S_WINDDIR_MODBUS_FB",               10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDSPD_PERIOD_READ,                "TID_1S_WINDSPD_PERIOD_READ",             600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDSPD_MODBUS_FB,                  "TID_1S_WINDSPD_MODBUS_FB",               10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_TEMP_PERIOD_READ,                   "TID_1S_TEMP_PERIOD_READ",                600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_TEMP_FB,                            "TID_1S_TEMP_FB",                         10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HUMID_PERIOD_READ,                  "TID_1S_HUMID_PERIOD_READ",               600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HUMID_MODBUS_FB,                    "TID_1S_HUMID_MODBUS_FB",                 10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_PERIOD_READ,                  "TID_1S_NOISE_PERIOD_READ",               600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_MODBUS_FB,                    "TID_1S_NOISE_MODBUS_FB",                 10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_SPSVIRGO_FB,                  "TID_1S_NOISE_SPSVIRGO_FB",               10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ,          "TID_1S_HSMMP_PERIOD_AVORION_READ",       600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HSMMP_AVORION_FB,                   "TID_1S_HSMMP_AVORION_FB",                10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT,   "TID_1S_CLOUDVELA_PERIOD_LINK_HBT",       60,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK,           "TID_1S_CLOUDVELA_SEND_DATA_BACK",        10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP,         "TID_1S_CLOUDVELA_PRD_SWDB_VER_REP",      900,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NBIOTCJ188_PERIOD_LINK_HEART_BEAT,  "TID_1S_NBIOTCJ188_PERIOD_LINK_HBT",      600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NBIOTCJ188_SEND_DATA_BACK,          "TID_1S_NBIOTCJ188_SEND_DATA_BACK",       10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT,  "TID_1S_NBIOTQG376_PERIOD_LINK_HBT",      600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NBIOTQG376_SEND_DATA_BACK,          "TID_1S_NBIOTQG376_SEND_DATA_BACK",       10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_AIRPRS_PERIOD_READ,                 "TID_1S_AIRPRS_PERIOD_READ",              600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_CO1_PERIOD_READ,                    "TID_1S_CO1_PERIOD_READ",                 600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_LIGHTSTR_PERIOD_READ,               "TID_1S_LIGHTSTR_PERIOD_READ",            600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_ALCOHOL_PERIOD_READ,                "TID_1S_ALCOHOL_PERIOD_READ",             600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HCHO_PERIOD_READ,                   "TID_1S_HCHO_PERIOD_READ",                600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_TOXICGAS_PERIOD_READ,               "TID_1S_TOXICGAS_PERIOD_READ",            600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_PM25SHARP_PERIOD_READ,              "TID_1S_PM25SHARP_PERIOD_READ",           600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_IWM_PERIOD_READ,                    "TID_1S_IWM_PERIOD_READ",                 600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_IHM_PERIOD_READ,                    "TID_1S_IHM_PERIOD_READ",                 600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_IGM_PERIOD_READ,                    "TID_1S_IGM_PERIOD_READ",                 600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_IPM_PERIOD_READ,                    "TID_1S_IPM_PERIOD_READ",                 600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_PERIOD_READ,                 "TID_1S_L3BFSC_PERIOD_READ",              10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_INIT_FB_WAIT,                "TID_1S_L3BFSC_INIT_FB_WAIT",             15,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_TTT_WAIT_FB,                 "TID_1S_L3BFSC_TTT_WAIT_FB",              15,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,                 "TID_1S_L3BFSC_TGU_WAIT_FB",              15,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN,           "TID_1S_L3BFSC_PERIOD_ERROR_SCAN",        60,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_MAX,                                "TID_1S_MAX",                             0,           TIMER_RESOLUTION_1S},
-	{TIMER_ID_10MS_MIN,                              "TID_10MS_MIN",                           0,           TIMER_RESOLUTION_10MS},
-	{TIMER_ID_10MS_SVRCON_TEST,                      "TID_10MS_SVRCON_TEST",                   10000,       TIMER_RESOLUTION_10MS},
-	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     20,          TIMER_RESOLUTION_10MS},
-	{TIMER_ID_10MS_MAX,                              "TID_10MS_MAX",                           0,           TIMER_RESOLUTION_10MS},
-	{TIMER_ID_1MS_MIN,                               "TID_1MS_MIN",                            0,           TIMER_RESOLUTION_1MS},
-	{TIMER_ID_1MS_SVRCON_TEST,                       "TID_1MS_SVRCON_TEST",                    100,         TIMER_RESOLUTION_1MS},
+	//TIMER_ID                                       定时器名字                                 定时长度   精度                      注释
+	//STARING FLAG: 公共基础部分，不要删除，新的定时器，需要在此增加，确保完整性。各个项目重复的定时器且不同数值部分，可以再分项目中第二次进行设置，后一次设置的数据将覆盖前一次的数值
+	{TIMER_ID_MIN,                                   "TID_MIN",                                0,       TIMER_RESOLUTION_1S},    //STARTING
+	{TIMER_ID_1S_MIN,                                "TID_1S_MIN",                             0,       TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_SVRCON_INIT_FB,                     "TID_1S_SVRCON_INIT_FB",                  10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_LED_GALOWAG_SCAN,                   "TID_1S_LED_GALOWAG_SCAN",                1,       TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_EMC_MODBUS_FB,                      "TID_1S_EMC_MODBUS_FB",                   10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_PM25_PERIOD_READ,                   "TID_1S_PM25_PERIOD_READ",                600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_PM25_MODBUS_FB,                     "TID_1S_PM25_MODBUS_FB",                  10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDDIR_PERIOD_READ,                "TID_1S_WINDDIR_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDDIR_MODBUS_FB,                  "TID_1S_WINDDIR_MODBUS_FB",               10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDSPD_PERIOD_READ,                "TID_1S_WINDSPD_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDSPD_MODBUS_FB,                  "TID_1S_WINDSPD_MODBUS_FB",               10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_TEMP_PERIOD_READ,                   "TID_1S_TEMP_PERIOD_READ",                600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_TEMP_FB,                            "TID_1S_TEMP_FB",                         10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HUMID_PERIOD_READ,                  "TID_1S_HUMID_PERIOD_READ",               600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HUMID_MODBUS_FB,                    "TID_1S_HUMID_MODBUS_FB",                 10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NOISE_PERIOD_READ,                  "TID_1S_NOISE_PERIOD_READ",               600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NOISE_MODBUS_FB,                    "TID_1S_NOISE_MODBUS_FB",                 10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NOISE_SPSVIRGO_FB,                  "TID_1S_NOISE_SPSVIRGO_FB",               10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ,          "TID_1S_HSMMP_PERIOD_AVORION_READ",       600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HSMMP_AVORION_FB,                   "TID_1S_HSMMP_AVORION_FB",                10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT,   "TID_1S_CLOUDVELA_PERIOD_LINK_HBT",       60,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK,           "TID_1S_CLOUDVELA_SEND_DATA_BACK",        10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP,         "TID_1S_CLOUDVELA_PRD_SWDB_VER_REP",      900,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NBIOTCJ188_PERIOD_LINK_HEART_BEAT,  "TID_1S_NBIOTCJ188_PERIOD_LINK_HBT",      600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NBIOTCJ188_SEND_DATA_BACK,          "TID_1S_NBIOTCJ188_SEND_DATA_BACK",       10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT,  "TID_1S_NBIOTQG376_PERIOD_LINK_HBT",      600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NBIOTQG376_SEND_DATA_BACK,          "TID_1S_NBIOTQG376_SEND_DATA_BACK",       10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_AIRPRS_PERIOD_READ,                 "TID_1S_AIRPRS_PERIOD_READ",              600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CO1_PERIOD_READ,                    "TID_1S_CO1_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_LIGHTSTR_PERIOD_READ,               "TID_1S_LIGHTSTR_PERIOD_READ",            600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_ALCOHOL_PERIOD_READ,                "TID_1S_ALCOHOL_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HCHO_PERIOD_READ,                   "TID_1S_HCHO_PERIOD_READ",                600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_TOXICGAS_PERIOD_READ,               "TID_1S_TOXICGAS_PERIOD_READ",            600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_PM25SHARP_PERIOD_READ,              "TID_1S_PM25SHARP_PERIOD_READ",           600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_IWM_PERIOD_READ,                    "TID_1S_IWM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_IHM_PERIOD_READ,                    "TID_1S_IHM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_IGM_PERIOD_READ,                    "TID_1S_IGM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_IPM_PERIOD_READ,                    "TID_1S_IPM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            3600,    TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_PERIOD_READ,                 "TID_1S_L3BFSC_PERIOD_READ",              10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_INIT_FB_WAIT,                "TID_1S_L3BFSC_INIT_FB_WAIT",             15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_TTT_WAIT_FB,                 "TID_1S_L3BFSC_TTT_WAIT_FB",              15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,                 "TID_1S_L3BFSC_TGU_WAIT_FB",              15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN,           "TID_1S_L3BFSC_PERIOD_ERROR_SCAN",        60,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3AQYCG10_PERIOD_READ,              "TID_1S_L3AQYCG10_PERIOD_READ",           600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3AQYCG20_PERIOD_READ,              "TID_1S_L3AQYCG20_PERIOD_READ",           600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3TBSWRG30_PERIOD_READ,             "TID_1S_L3TBSWRG30_PERIOD_READ",          600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3GQYBG40_PERIOD_READ,              "TID_1S_L3GQYBG40_PERIOD_READ",           600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3CXGLACM_PERIOD_READ,              "TID_1S_L3CXGLACM_PERIOD_READ",           600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3CXILC_PERIOD_READ,                "TID_1S_L3CXILC_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3NBHPM_PERIOD_READ,                "TID_1S_L3NBHPM_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3NBLPM_PERIOD_READ,                "TID_1S_L3NBLPM_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3OPWLOTDR_PERIOD_READ,             "TID_1S_L3OPWLOTDR_PERIOD_READ",          600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_MAX,                                "TID_1S_MAX",                             0,       TIMER_RESOLUTION_1S},
+	{TIMER_ID_10MS_MIN,                              "TID_10MS_MIN",                           0,       TIMER_RESOLUTION_10MS},
+	{TIMER_ID_10MS_SVRCON_TEST,                      "TID_10MS_SVRCON_TEST",                   10000,   TIMER_RESOLUTION_10MS},
+	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     20,      TIMER_RESOLUTION_10MS},
+	{TIMER_ID_10MS_MAX,                              "TID_10MS_MAX",                           0,       TIMER_RESOLUTION_10MS},
+	{TIMER_ID_1MS_MIN,                               "TID_1MS_MIN",                            0,       TIMER_RESOLUTION_1MS},
+	{TIMER_ID_1MS_SVRCON_TEST,                       "TID_1MS_SVRCON_TEST",                    100,     TIMER_RESOLUTION_1MS},
+	{TIMER_ID_1MS_MAX,                               "TID_1MS_MAX",                            0,       TIMER_RESOLUTION_1MS},
 	//END公共基础部分
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 120,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_EMC_MODBUS_FB,                      "TID_1S_EMC_MODBUS_FB",                   10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_PM25_PERIOD_READ,                   "TID_1S_PM25_PERIOD_READ",                120,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_PM25_MODBUS_FB,                     "TID_1S_PM25_MODBUS_FB",                  10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDDIR_PERIOD_READ,                "TID_1S_WINDDIR_PERIOD_READ",             120,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDDIR_MODBUS_FB,                  "TID_1S_WINDDIR_MODBUS_FB",               10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDSPD_PERIOD_READ,                "TID_1S_WINDSPD_PERIOD_READ",             120,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDSPD_MODBUS_FB,                  "TID_1S_WINDSPD_MODBUS_FB",               10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_TEMP_PERIOD_READ,                   "TID_1S_TEMP_PERIOD_READ",                120,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_TEMP_FB,                            "TID_1S_TEMP_FB",                         10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HUMID_PERIOD_READ,                  "TID_1S_HUMID_PERIOD_READ",               120,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HUMID_MODBUS_FB,                    "TID_1S_HUMID_MODBUS_FB",                 10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_PERIOD_READ,                  "TID_1S_NOISE_PERIOD_READ",               120,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_MODBUS_FB,                    "TID_1S_NOISE_MODBUS_FB",                 10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_NOISE_SPSVIRGO_FB,                  "TID_1S_NOISE_SPSVIRGO_FB",               10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ,          "TID_1S_HSMMP_PERIOD_AVORION_READ",       120,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HSMMP_AVORION_FB,                   "TID_1S_HSMMP_AVORION_FB",                10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT,   "TID_1S_CLOUDVELA_PERIOD_LINK_HBT",       60,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK,           "TID_1S_CLOUDVELA_SEND_DATA_BACK",        10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP,         "TID_1S_CLOUDVELA_PRD_SWDB_VER_REP",      900,         TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 120,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_EMC_MODBUS_FB,                      "TID_1S_EMC_MODBUS_FB",                   10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_PM25_PERIOD_READ,                   "TID_1S_PM25_PERIOD_READ",                120,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_PM25_MODBUS_FB,                     "TID_1S_PM25_MODBUS_FB",                  10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDDIR_PERIOD_READ,                "TID_1S_WINDDIR_PERIOD_READ",             100,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDDIR_MODBUS_FB,                  "TID_1S_WINDDIR_MODBUS_FB",               10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDSPD_PERIOD_READ,                "TID_1S_WINDSPD_PERIOD_READ",             110,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDSPD_MODBUS_FB,                  "TID_1S_WINDSPD_MODBUS_FB",               10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_TEMP_PERIOD_READ,                   "TID_1S_TEMP_PERIOD_READ",                120,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_TEMP_FB,                            "TID_1S_TEMP_FB",                         10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HUMID_PERIOD_READ,                  "TID_1S_HUMID_PERIOD_READ",               120,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HUMID_MODBUS_FB,                    "TID_1S_HUMID_MODBUS_FB",                 10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NOISE_PERIOD_READ,                  "TID_1S_NOISE_PERIOD_READ",               100,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NOISE_MODBUS_FB,                    "TID_1S_NOISE_MODBUS_FB",                 10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_NOISE_SPSVIRGO_FB,                  "TID_1S_NOISE_SPSVIRGO_FB",               10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ,          "TID_1S_HSMMP_PERIOD_AVORION_READ",       120,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HSMMP_AVORION_FB,                   "TID_1S_HSMMP_AVORION_FB",                10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP,         "TID_1S_CLOUDVELA_PRD_SWDB_VER_REP",      900,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            600,     TIMER_RESOLUTION_1S},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
@@ -489,21 +500,21 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_PERIOD_READ,                 "TID_1S_L3BFSC_PERIOD_READ",              10,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_INIT_FB_WAIT,                "TID_1S_L3BFSC_INIT_FB_WAIT",             15,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_TTT_WAIT_FB,                 "TID_1S_L3BFSC_TTT_WAIT_FB",              15,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,                 "TID_1S_L3BFSC_TGU_WAIT_FB",              15,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN,           "TID_1S_L3BFSC_PERIOD_ERROR_SCAN",        60,          TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          600,         TIMER_RESOLUTION_1S},
-	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     200,         TIMER_RESOLUTION_10MS},
+	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 100,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_PERIOD_READ,                 "TID_1S_L3BFSC_PERIOD_READ",              10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_INIT_FB_WAIT,                "TID_1S_L3BFSC_INIT_FB_WAIT",             15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_TTT_WAIT_FB,                 "TID_1S_L3BFSC_TTT_WAIT_FB",              15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,                 "TID_1S_L3BFSC_TGU_WAIT_FB",              15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN,           "TID_1S_L3BFSC_PERIOD_ERROR_SCAN",        60,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     200,     TIMER_RESOLUTION_10MS},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 #else
 	#error Un-correct constant definition
 #endif
-	{TIMER_ID_1MS_MAX,                               "TID_1MS_MAX",                            0,           TIMER_RESOLUTION_1MS},
-	//END
-	{TIMER_ID_MAX,                                   "TID_MAX",                                0,           TIMER_RESOLUTION_1S},     //END
+	//END FLAG
+	{TIMER_ID_MAX,                                   "TID_MAX",                                0,       TIMER_RESOLUTION_1S},     //END
 };
 
 //启动区XML关键字定义
@@ -2359,6 +2370,14 @@ int hcu_vm_main_entry(void)
 		}
 	}
 
+	//智能初始化：将TIMER初始化表单存入数据库，降低研发工作复杂度
+	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_NO) && (HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET == HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES)){
+		if (dbi_HcuSysEngTimer_engpar_intelligence_init() == FAILURE){
+			HcuDebugPrint("HCU-MAIN: Init Timer set error!\n");
+			return EXIT_SUCCESS;
+		}
+	}
+
 	//从数据库或者系统缺省配置中，读取系统配置的工程参数
 	if (hcu_hwinv_engpar_read_pop_data_into_mem() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Read database or system init parameters into memory error!\n");
@@ -2461,7 +2480,7 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 	return SUCCESS;
 }
 
-
+//读取物理烧录信息
 OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 {
 	//int fHandler = 0;
@@ -2566,7 +2585,7 @@ OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 	return SUCCESS;
 }
 
-
+//翻译信息
 void hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target)
 {
 	char *p1, *p2;
@@ -2601,5 +2620,42 @@ void hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UIN
 			memcpy(target, &res, 8);
 		}
 	}
+}
+
+//搜索TASK静态表中的TASKID，找到行号
+UINT16 hcu_vm_search_task_static_cfg_table_of_row(int taskid)
+{
+	int i = 0;
+	while(zHcuVmCtrTaskStaticCfg[i].taskInputId != TASK_ID_MAX){
+		if(zHcuVmCtrTaskStaticCfg[i].taskInputId == taskid)
+			return i;
+		i++;
+	}
+	return i; //退出来的肯定是TASK_ID_MAX行
+}
+
+
+//搜索MSG静态表中的MSGID，找到行号
+UINT16 hcu_vm_search_msg_static_cfg_table_of_row(int msgid)
+{
+	int i = 0;
+	while(zHcuSysEngTrcMsgCtrStaticCfg[i].msgId != MSG_ID_COM_MAX){
+		if(zHcuSysEngTrcMsgCtrStaticCfg[i].msgId == msgid)
+			return i;
+		i++;
+	}
+	return i; //退出来的肯定是MSG_ID_COM_MAX行
+}
+
+//搜索TIMER静态表中的TIMERID，找到行号
+UINT16 hcu_vm_search_timer_static_cfg_table_of_row(int timerid)
+{
+	int i = 0;
+	while(zHcuSysEngTimerStaticCfg[i].timerId != TIMER_ID_MAX){
+		if(zHcuSysEngTimerStaticCfg[i].timerId == timerid)
+			return i;
+		i++;
+	}
+	return i; //退出来的肯定是TIMER_ID_MAX行
 }
 

@@ -11,6 +11,11 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+//= ZJL, 2017 Feb.8, CURRENT_SW_DELIVERY 154=>BFSC项目
+=解决了TIMERID初始化的问题，下一步就是将系统中所有的旧TIMERID全部清除掉
+= 待解决SYSCONFIG.H中特定TIMER部分
+=所有项目回归编译完成
+
 //= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 153=>BFSC项目
 = 修正任务启动中一部分任务忘记从工参数据表获取的问题
 = 增加了SYSSWM软件管理模块，准备用于软件下载等功能
@@ -20,7 +25,6 @@ PRJ_BFSC待完成或者回答的问题：
 = 给所有项目增加SYSSWM模块
 = 清理所有模块对于SYSCOFIG.H中对模块启动的配置
 =三种TIMERID统一编址改进
-
 
 //= ZJL, 2017 Feb.7, CURRENT_SW_DELIVERY 152=>BFSC项目
 =回归所有项目的编译

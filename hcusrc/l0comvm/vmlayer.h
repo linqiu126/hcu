@@ -593,7 +593,7 @@ extern HcuFsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
 //任务配置的基础配置信息
 typedef struct HcuVmCtrTaskStaticCfg
 {
-	const UINT8 taskInputId;
+	const UINT16 taskInputId;
 	const char  taskInputName[TASK_NAME_MAX_LENGTH];
 	      void* fsmFuncEntry;
 	const UINT8 pnpFlag;
@@ -668,6 +668,15 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,
 	TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN,
 	TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,
+	TIMER_ID_1S_L3AQYCG10_PERIOD_READ,
+	TIMER_ID_1S_L3AQYCG20_PERIOD_READ,
+	TIMER_ID_1S_L3TBSWRG30_PERIOD_READ,
+	TIMER_ID_1S_L3GQYBG40_PERIOD_READ,
+	TIMER_ID_1S_L3CXGLACM_PERIOD_READ,
+	TIMER_ID_1S_L3CXILC_PERIOD_READ,
+	TIMER_ID_1S_L3NBHPM_PERIOD_READ,
+	TIMER_ID_1S_L3NBLPM_PERIOD_READ,
+	TIMER_ID_1S_L3OPWLOTDR_PERIOD_READ,
 	TIMER_ID_1S_MAX,
 	TIMER_ID_10MS_MIN,
 	TIMER_ID_10MS_SVRCON_TEST,
@@ -678,6 +687,10 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1MS_MAX,
 	TIMER_ID_MAX,
 };
+//是否激活不同精度定时器的配置项，如果各项目不太一样，可以分项目配置开关
+#define HCU_TIMER_CONFIG_START_RESOLUTION_1S TRUE
+#define HCU_TIMER_CONFIG_START_RESOLUTION_10MS TRUE
+#define HCU_TIMER_CONFIG_START_RESOLUTION_1MS FALSE
 
 //全局工程参数控制表
 extern HcuSysEngParTab_t zHcuSysEngPar;
@@ -842,7 +855,9 @@ void hcu_vm_task_delete_except_svrcon_and_hcumain(void);
 OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void);
 OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void);
 void   hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target);
-
+extern UINT16 hcu_vm_search_task_static_cfg_table_of_row(int taskid);
+extern UINT16 hcu_vm_search_msg_static_cfg_table_of_row(int msgid);
+extern UINT16 hcu_vm_search_timer_static_cfg_table_of_row(int timerid);
 
 /*
  *
@@ -861,6 +876,8 @@ extern OPSTAT hcu_hwinv_engpar_create_storage_dir_env(void);
 extern OPSTAT hcu_hwinv_engpar_read_mac_address(void);
 extern OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void);
 extern OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void);
+extern OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void);
+
 
 /*
  *

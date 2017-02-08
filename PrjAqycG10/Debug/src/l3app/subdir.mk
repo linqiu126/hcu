@@ -24,7 +24,8 @@ C_SRCS += \
 /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c \
 /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c \
 /home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c \
-/home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c 
+/home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c \
+/home/hitpony/workspace/hcu/hcusrc/l3app/sysswm.c 
 
 OBJS += \
 ./src/l3app/hsmmp.o \
@@ -47,7 +48,8 @@ OBJS += \
 ./src/l3app/sensorwinddir.o \
 ./src/l3app/sensorwindspd.o \
 ./src/l3app/svrcon.o \
-./src/l3app/syspm.o 
+./src/l3app/syspm.o \
+./src/l3app/sysswm.o 
 
 C_DEPS += \
 ./src/l3app/hsmmp.d \
@@ -70,7 +72,8 @@ C_DEPS += \
 ./src/l3app/sensorwinddir.d \
 ./src/l3app/sensorwindspd.d \
 ./src/l3app/svrcon.d \
-./src/l3app/syspm.d 
+./src/l3app/syspm.d \
+./src/l3app/sysswm.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -215,6 +218,13 @@ src/l3app/svrcon.o: /home/hitpony/workspace/hcu/hcusrc/l3app/svrcon.c
 	@echo ' '
 
 src/l3app/syspm.o: /home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross GCC Compiler'
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/l3app/sysswm.o: /home/hitpony/workspace/hcu/hcusrc/l3app/sysswm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

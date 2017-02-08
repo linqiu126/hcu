@@ -547,7 +547,7 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 
 CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
   `timerid` int(2) NOT NULL,
-  `timername` char(30) NOT NULL,
+  `timername` char(40) NOT NULL,
   `granularity` int(1) NOT NULL,
   `duration` int(1) NOT NULL,
   PRIMARY KEY (`timerid`)
@@ -558,14 +558,62 @@ CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
 --
 
 INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`) VALUES
-(0, 'TIMERMIN', 1, 1),
-(1, 'TIMER_ID_111', 1, 1),
-(2, 'TIMERMAX', 1, 1);
-
-
-
-
-
+(0, 'TID_MIN', 1, 0),
+(1, 'TID_1S_MIN', 1, 0),
+(2, 'TID_1S_SVRCON_INIT_FB', 1, 10),
+(3, 'TID_1S_LED_GALOWAG_SCAN', 1, 1),
+(4, 'TID_1S_EMC_PERIOD_READ', 1, 100),
+(5, 'TID_1S_EMC_MODBUS_FB', 1, 10),
+(6, 'TID_1S_PM25_PERIOD_READ', 1, 600),
+(7, 'TID_1S_PM25_MODBUS_FB', 1, 10),
+(8, 'TID_1S_WINDDIR_PERIOD_READ', 1, 600),
+(9, 'TID_1S_WINDDIR_MODBUS_FB', 1, 10),
+(10, 'TID_1S_WINDSPD_PERIOD_READ', 1, 600),
+(11, 'TID_1S_WINDSPD_MODBUS_FB', 1, 10),
+(12, 'TID_1S_TEMP_PERIOD_READ', 1, 600),
+(13, 'TID_1S_TEMP_FB', 1, 10),
+(14, 'TID_1S_HUMID_PERIOD_READ', 1, 600),
+(15, 'TID_1S_HUMID_MODBUS_FB', 1, 10),
+(16, 'TID_1S_NOISE_PERIOD_READ', 1, 600),
+(17, 'TID_1S_NOISE_MODBUS_FB', 1, 10),
+(18, 'TID_1S_NOISE_SPSVIRGO_FB', 1, 10),
+(19, 'TID_1S_HSMMP_PERIOD_AVORION_READ', 1, 600),
+(20, 'TID_1S_HSMMP_AVORION_FB', 1, 10),
+(21, 'TID_1S_CLOUDVELA_PERIOD_LINK_HBT', 1, 60),
+(22, 'TID_1S_CLOUDVELA_SEND_DATA_BACK', 1, 10),
+(23, 'TID_1S_CLOUDVELA_PRD_SWDB_VER_REP', 1, 900),
+(24, 'TID_1S_NBIOTCJ188_PERIOD_LINK_HBT', 1, 600),
+(25, 'TID_1S_NBIOTCJ188_SEND_DATA_BACK', 1, 10),
+(26, 'TID_1S_NBIOTQG376_PERIOD_LINK_HBT', 1, 600),
+(27, 'TID_1S_NBIOTQG376_SEND_DATA_BACK', 1, 10),
+(28, 'TID_1S_AIRPRS_PERIOD_READ', 1, 600),
+(29, 'TID_1S_CO1_PERIOD_READ', 1, 600),
+(30, 'TID_1S_LIGHTSTR_PERIOD_READ', 1, 600),
+(31, 'TID_1S_ALCOHOL_PERIOD_READ', 1, 600),
+(32, 'TID_1S_HCHO_PERIOD_READ', 1, 600),
+(33, 'TID_1S_TOXICGAS_PERIOD_READ', 1, 600),
+(34, 'TID_1S_PM25SHARP_PERIOD_READ', 1, 600),
+(35, 'TID_1S_IWM_PERIOD_READ', 1, 600),
+(36, 'TID_1S_IHM_PERIOD_READ', 1, 600),
+(37, 'TID_1S_IGM_PERIOD_READ', 1, 600),
+(38, 'TID_1S_IPM_PERIOD_READ', 1, 600),
+(39, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 3600),
+(40, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
+(41, 'TID_1S_L3BFSC_PERIOD_READ', 1, 10),
+(42, 'TID_1S_L3BFSC_INIT_FB_WAIT', 1, 15),
+(43, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 15),
+(44, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 15),
+(45, 'TID_1S_L3BFSC_PERIOD_ERROR_SCAN', 1, 60),
+(46, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 600),
+(47, 'TID_1S_MAX', 1, 0),
+(48, 'TID_10MS_MIN', 2, 0),
+(49, 'TID_10MS_SVRCON_TEST', 2, 10000),
+(50, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 200),
+(51, 'TID_10MS_MAX', 2, 0),
+(52, 'TID_1MS_MIN', 3, 0),
+(53, 'TID_1MS_SVRCON_TEST', 3, 100),
+(54, 'TID_1MS_MAX', 3, 0),
+(55, 'TID_MAX', 1, 0);
 
 
 */
@@ -791,27 +839,29 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTab_t *engPar)
 	//循环读取所有的记录
 	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
 	{
-		UINT16 moduleId = 0;
+		UINT16 taskid = 0;
 		int index = 0;
-		if(sqlRow[index]) moduleId = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if (moduleId >= MAX_TASK_NUM_IN_ONE_HCU){
-			HcuErrorPrint("DBICOM: Error ModuleID populated, very dangerous to crash whole system! ModueId = %d\n", moduleId);
+		int tableRow = 0;
+		if(sqlRow[index]) taskid = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if (taskid >= MAX_TASK_NUM_IN_ONE_HCU){
+			HcuErrorPrint("DBICOM: Error ModuleID populated, very dangerous to crash whole system! ModueId = %d\n", taskid);
 			mysql_free_result(resPtr);
 		    mysql_close(sqlHandler);
 		    return FAILURE;
 		}
 
-		engPar->traceList.mod[moduleId].moduleId = moduleId;
-		if(sqlRow[index]) strncpy(engPar->traceList.mod[moduleId].moduleName, sqlRow[index++], TASK_NAME_MAX_LENGTH-1);
+		engPar->traceList.mod[taskid].moduleId = taskid;
+		tableRow = hcu_vm_search_task_static_cfg_table_of_row(taskid);
+		if(sqlRow[index]) strncpy(engPar->traceList.mod[taskid].moduleName, sqlRow[index++], TASK_NAME_MAX_LENGTH-1);
 		//不能再做比较，这个比较必须到后期再做
-		if ((strlen(zHcuVmCtrTab.task[moduleId].taskName) != 0) && (strcmp(engPar->traceList.mod[moduleId].moduleName, zHcuVmCtrTab.task[moduleId].taskName)!=FALSE)){
-			HCU_DEBUG_PRINT_CRT("DBICOM: Error Module name populated!\n");
+		if (strcmp(engPar->traceList.mod[taskid].moduleName, zHcuVmCtrTaskStaticCfg[tableRow].taskInputName)){
+			HCU_DEBUG_PRINT_CRT("DBICOM: Error Module name populated, taskid=%d, Input/sysEngPar=[%s], StaticTable=[%s], tableRow=%d.\n", taskid, engPar->traceList.mod[taskid].moduleName, zHcuVmCtrTab.task[tableRow].taskName, tableRow);
 		}
-		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleToAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleToRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleFromAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->traceList.mod[moduleId].moduleFromRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[taskid].moduleCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[taskid].moduleToAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[taskid].moduleToRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[taskid].moduleFromAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.mod[taskid].moduleFromRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
 	}
 
@@ -953,26 +1003,28 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar)
 	//循环读取所有的记录
 	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
 	{
-		UINT16 msgId = 0;
+		UINT16 mid = 0;
 		int index = 0;
-		if(sqlRow[index]) msgId = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if (msgId >= MAX_MSGID_NUM_IN_ONE_TASK){
-			HcuErrorPrint("DBICOM: Error MsgID populated, very dangerous to crash whole system! MsgID = %d\n", msgId);
+		int tableRow = 0;
+		if(sqlRow[index]) mid = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if (mid >= MAX_MSGID_NUM_IN_ONE_TASK){
+			HcuErrorPrint("DBICOM: Error MsgID populated, very dangerous to crash whole system! MsgID = %d\n", mid);
 			mysql_free_result(resPtr);
 		    mysql_close(sqlHandler);
 		    return FAILURE;
 		}
 
-		engPar->traceList.msg[msgId].msgId = msgId;
-		if(sqlRow[index]) strncpy(engPar->traceList.msg[msgId].msgName, sqlRow[index++], MSG_NAME_MAX_LENGTH-1);
-		if (strcmp(engPar->traceList.msg[msgId].msgName, zHcuSysEngTrcMsgCtrStaticCfg[msgId].msgName)){
+		engPar->traceList.msg[mid].msgId = mid;
+		tableRow = hcu_vm_search_msg_static_cfg_table_of_row(mid);
+		if(sqlRow[index]) strncpy(engPar->traceList.msg[mid].msgName, sqlRow[index++], MSG_NAME_MAX_LENGTH-1);
+		if (strcmp(engPar->traceList.msg[mid].msgName, zHcuSysEngTrcMsgCtrStaticCfg[tableRow].msgName)){
 			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-				HcuDebugPrint("DBICOM: Error Message name populated, MsgId = %d, engPar->traceList.msg = [%s], zHcuMsgNameList = [%s]!\n", msgId, engPar->traceList.msg[msgId].msgName, zHcuSysEngTrcMsgCtrStaticCfg[msgId].msgName);
+				HcuDebugPrint("DBICOM: Error Message name populated, MsgId = %d, engPar->traceList.msg = [%s], zHcuMsgNameList = [%s]!\n", mid, engPar->traceList.msg[mid].msgName, zHcuSysEngTrcMsgCtrStaticCfg[tableRow].msgName);
 			}
 		}
-		if(sqlRow[index]) engPar->traceList.msg[msgId].msgCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->traceList.msg[msgId].msgAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) engPar->traceList.msg[msgId].msgRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.msg[mid].msgCtrFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.msg[mid].msgAllow = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->traceList.msg[mid].msgRestrict = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 	}
 
 	//释放记录集
@@ -1168,7 +1220,7 @@ OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv)
 	}
 	else{
 		int index = 0;
-		if(sqlRow[index]) hcuInv->db_delivery = (UINT16)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) hcuInv->db_delivery = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 	}
 
 	//释放记录集
@@ -1176,6 +1228,169 @@ OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv)
     mysql_close(sqlHandler);
     return SUCCESS;
 }
+
+//查询所有基于模块控制的TRACE记录，并存入全局控制变量
+OPSTAT dbi_HcuSysEngTimer_inqury(HcuSysEngParTab_t *engPar)
+{
+	MYSQL *sqlHandler;
+	MYSQL_RES *resPtr;
+	MYSQL_ROW sqlRow;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (engPar == NULL){
+    	HcuErrorPrint("DBICOM: Input parameter NULL pointer!\n");
+        return FAILURE;
+    }
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//获取数据
+    sprintf(strsql, "SELECT * FROM `hcusysengtimer` WHERE 1");
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: Inqury data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//查具体的结果
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+	//循环读取所有的记录
+	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
+	{
+		UINT16 tid = 0;
+		int index = 0;
+		int tableRow = 0;
+		if(sqlRow[index]) tid = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if (tid >= MAX_TIMER_NUM_IN_ONE_HCU){
+			HcuErrorPrint("DBICOM: Error TimerId populated, very dangerous to crash whole system! TimerId = %d\n", tid);
+			mysql_free_result(resPtr);
+		    mysql_close(sqlHandler);
+		    return FAILURE;
+		}
+
+		engPar->timer.array[tid].id = tid;
+		tableRow = hcu_vm_search_timer_static_cfg_table_of_row(tid);
+		if(sqlRow[index]) strncpy(engPar->timer.array[tid].name, sqlRow[index++], TIMER_NAME_MAX_LENGTH-1);
+		if (strcmp(engPar->timer.array[tid].name, zHcuSysEngTimerStaticCfg[tableRow].timerName)){
+			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+				HcuDebugPrint("DBICOM: Error Timer name populated, TimerId = %d, engPar->traceList.msg = [%s], Input Table or DB = [%s]!\n",\
+						tid, engPar->timer.array[tid].name, zHcuSysEngTimerStaticCfg[tableRow].timerName);
+			}
+		}
+		if(sqlRow[index]) engPar->timer.array[tid].gradunarity = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->timer.array[tid].dur = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void)
+{
+	MYSQL *sqlHandler;
+	int result = 0, item = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//清除表格已有数据
+    sprintf(strsql, "TRUNCATE table `hcusysengtimer`");
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: Delete data error: %s, result = %d\n", mysql_error(sqlHandler), result);
+        return FAILURE;
+	}
+
+	//读取VM中模块初始化表单内容
+	//扫描输入表单，起始必须是TIMER_ID_MIN条目
+	if (zHcuSysEngTimerStaticCfg[0].timerId != TIMER_ID_MIN){
+		HcuErrorPrint("DBICOM: Initialize HCU-VM failure, timer input configuration error!\n");
+		return FAILURE;
+	}
+	//扫描输入表单，以TIMER_ID_MAX为终止条目：2倍配置项最多
+	for(item=1; item < (2*MAX_TIMER_NUM_IN_ONE_HCU); item++){
+		if(zHcuSysEngTimerStaticCfg[item].timerId == TIMER_ID_MAX){
+			break;
+		}
+		if ((zHcuSysEngTimerStaticCfg[item].timerId <= TIMER_ID_MIN) || (zHcuSysEngTimerStaticCfg[item].timerId > TIMER_ID_MAX)){
+			HcuErrorPrint("DBICOM: Initialize HCU-VM failure, timer input configuration error!\n");
+			return FAILURE;
+		}
+	}
+
+	//从任务配置输入区域读取参数到系统任务表，一旦遇到TIMER_ID_MAX就终止
+	item = 0;
+	while(zHcuSysEngTimerStaticCfg[item].timerId != TIMER_ID_MAX){
+		//REPLACE新的数据
+	    sprintf(strsql, "REPLACE INTO `hcusysengtimer` (timerid, timername, granularity, duration) VALUES \
+	    		('%d', '%s', '%d', '%d')", zHcuSysEngTimerStaticCfg[item].timerId, zHcuSysEngTimerStaticCfg[item].timerName, \
+				zHcuSysEngTimerStaticCfg[item].timerGranularity, zHcuSysEngTimerStaticCfg[item].timerDur);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		item++;
+	}
+	//最后一项必定是TIMER_ID_MAX
+    sprintf(strsql, "REPLACE INTO `hcusysengtimer` (timerid, timername, granularity, duration) VALUES \
+    		('%d', '%s', '%d', '%d')", zHcuSysEngTimerStaticCfg[item].timerId, zHcuSysEngTimerStaticCfg[item].timerName, \
+			zHcuSysEngTimerStaticCfg[item].timerGranularity, zHcuSysEngTimerStaticCfg[item].timerDur);
+    	result = mysql_query(sqlHandler, strsql);
+    	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: INSERT data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+
+
+
+
 
 /*///////////////////////////////////////UPDATE的用法，还未验证好/////////////////////////////////
 //更新数据 UPDATE Person SET Address = 'Zhongshan 23', City = 'Nanjing' WHERE LastName = 'Wilson'

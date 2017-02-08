@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 08, 2017 at 12:40 AM
+-- Generation Time: Feb 08, 2017 at 11:01 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `gpsz` int(4) NOT NULL,
   `onofflineflag` int(2) NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9560 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9575 ;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -4758,7 +4758,22 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 (9556, 5, 1484730568, 1, 4744, 'E', 0, 'N', 0, 0, 2),
 (9557, 5, 1484730668, 1, 4987, 'E', 0, 'N', 0, 0, 2),
 (9558, 5, 1484730768, 1, 4996, 'E', 0, 'N', 0, 0, 2),
-(9559, 5, 1484730868, 1, 5165, 'E', 0, 'N', 0, 0, 2);
+(9559, 5, 1484730868, 1, 5165, 'E', 0, 'N', 0, 0, 2),
+(9560, 5, 1486529402, 1, 4827, 'E', 0, 'N', 0, 0, 2),
+(9561, 5, 1486529502, 1, 4858, 'E', 0, 'N', 0, 0, 2),
+(9562, 5, 1486529602, 1, 4830, 'E', 0, 'N', 0, 0, 2),
+(9563, 5, 1486529702, 1, 4973, 'E', 0, 'N', 0, 0, 2),
+(9564, 5, 1486529802, 1, 5468, 'E', 0, 'N', 0, 0, 2),
+(9565, 5, 1486529902, 1, 5336, 'E', 0, 'N', 0, 0, 2),
+(9566, 5, 1486530002, 1, 5038, 'E', 0, 'N', 0, 0, 2),
+(9567, 5, 1486530102, 1, 4946, 'E', 0, 'N', 0, 0, 2),
+(9568, 5, 1486530202, 1, 5431, 'E', 0, 'N', 0, 0, 2),
+(9569, 5, 1486530302, 1, 4879, 'E', 0, 'N', 0, 0, 2),
+(9570, 5, 1486530402, 1, 5375, 'E', 0, 'N', 0, 0, 2),
+(9571, 5, 1486530502, 1, 5039, 'E', 0, 'N', 0, 0, 2),
+(9572, 5, 1486530602, 1, 5574, 'E', 0, 'N', 0, 0, 2),
+(9573, 5, 1486530702, 1, 5097, 'E', 0, 'N', 0, 0, 2),
+(9574, 5, 1486530804, 1, 5088, 'E', 0, 'N', 0, 0, 2);
 
 -- --------------------------------------------------------
 
@@ -10471,56 +10486,6 @@ INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `ala
 CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `prjname` char(100) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
-  `commhwboardethernet` int(1) NOT NULL,
-  `commhwboardusbnet` int(1) NOT NULL,
-  `commhwboardwifi` int(1) NOT NULL,
-  `commhwboard3g4g` int(1) NOT NULL,
-  `commhwboardgps` int(1) NOT NULL,
-  `commhwboardlcd` int(1) NOT NULL,
-  `commhwboardled` int(1) NOT NULL,
-  `commhwboardzeegbe` int(1) NOT NULL,
-  `commhwboardflash` int(1) NOT NULL,
-  `commframemodbus` int(1) NOT NULL,
-  `commframespsvirgo` int(1) NOT NULL,
-  `commframeavorion` int(1) NOT NULL,
-  `commframecloudvela` int(1) NOT NULL,
-  `commframei2cbuslibra` int(1) NOT NULL,
-  `commframespibusaries` int(1) NOT NULL,
-  `commframenbiotcj188` int(1) NOT NULL,
-  `commframenbiotqg376` int(1) NOT NULL,
-  `commfrontsps485` int(1) NOT NULL,
-  `commfrontsps232` int(1) NOT NULL,
-  `commfrontmicrophone` int(1) NOT NULL,
-  `commfrontcamera` int(1) NOT NULL,
-  `commfrontble` int(1) NOT NULL,
-  `commfrontgpio` int(1) NOT NULL,
-  `commfronti2c` int(1) NOT NULL,
-  `commfrontspi` int(1) NOT NULL,
-  `commfrontpwm` int(1) NOT NULL,
-  `commfrontadc` int(1) NOT NULL,
-  `commfrontswitch` int(1) NOT NULL,
-  `commfrontrelay` int(1) NOT NULL,
-  `commfrontmotor` int(1) NOT NULL,
-  `commfrontsensoremc` int(1) NOT NULL,
-  `commfrontsensorpm25` int(1) NOT NULL,
-  `commfrontsensortemp` int(1) NOT NULL,
-  `commfrontsensorhumid` int(1) NOT NULL,
-  `commfrontsensorwinddir` int(1) NOT NULL,
-  `commfrontsensorwindspd` int(1) NOT NULL,
-  `commfrontsensornoise` int(1) NOT NULL,
-  `commfrontsensorhsmmp` int(1) NOT NULL,
-  `commfrontsensorairprs` int(1) NOT NULL,
-  `commfrontsensorco1` int(1) NOT NULL,
-  `commfrontsensorlightstr` int(1) NOT NULL,
-  `commfrontsensoralcohol` int(1) NOT NULL,
-  `commfrontsensorhcho` int(1) NOT NULL,
-  `commfrontsensortoxicgas` int(1) NOT NULL,
-  `commfrontsensoriwm` int(1) NOT NULL,
-  `commfrontsensorihm` int(1) NOT NULL,
-  `commfrontsensorigm` int(1) NOT NULL,
-  `commfrontsensoripm` int(1) NOT NULL,
-  `commfrontsensorpm25sharp` int(1) NOT NULL,
-  `commfrontcanitf` int(1) NOT NULL,
   `hcudbhost` char(20) NOT NULL,
   `hcudbuser` char(20) NOT NULL,
   `hcudbpsw` char(20) NOT NULL,
@@ -10599,19 +10564,95 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 -- Dumping data for table `hcusysengpar`
 --
 
-INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `commhwboardethernet`, `commhwboardusbnet`, `commhwboardwifi`, `commhwboard3g4g`, `commhwboardgps`, `commhwboardlcd`, `commhwboardled`, `commhwboardzeegbe`, `commhwboardflash`, `commframemodbus`, `commframespsvirgo`, `commframeavorion`, `commframecloudvela`, `commframei2cbuslibra`, `commframespibusaries`, `commframenbiotcj188`, `commframenbiotqg376`, `commfrontsps485`, `commfrontsps232`, `commfrontmicrophone`, `commfrontcamera`, `commfrontble`, `commfrontgpio`, `commfronti2c`, `commfrontspi`, `commfrontpwm`, `commfrontadc`, `commfrontswitch`, `commfrontrelay`, `commfrontmotor`, `commfrontsensoremc`, `commfrontsensorpm25`, `commfrontsensortemp`, `commfrontsensorhumid`, `commfrontsensorwinddir`, `commfrontsensorwindspd`, `commfrontsensornoise`, `commfrontsensorhsmmp`, `commfrontsensorairprs`, `commfrontsensorco1`, `commfrontsensorlightstr`, `commfrontsensoralcohol`, `commfrontsensorhcho`, `commfrontsensortoxicgas`, `commfrontsensoriwm`, `commfrontsensorihm`, `commfrontsensorigm`, `commfrontsensoripm`, `commfrontsensorpm25sharp`, `commfrontcanitf`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `cloudvelahbtimer`, `cloudvelahbbacktimer`, `nbiotcj188hbtimer`, `nbiotcj188hbbacktimer`, `nbiotqg376hbtimer`, `nbiotqg376hbbacktimer`, `cloudsockethbtimer`, `dbverreporttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `iwmreqtimer`, `ihmreqtimer`, `igmreqtimer`, `ipmreqtimer`, `pm25sharpreqtimer`, `syspmworkingtimer`, `canitfworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudsocketsvradd`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
-('HCU_PRJ_AQYCG10_335D', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_AQYCG20_RASBERRY', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 120, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 900, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G201_AQYC_SH001', 1, 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_AQYC_OBSOLETE', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_BFSC_CBU', 1, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_CXGLACM', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G221_GLAM_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_CXILC', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G211_ILCX_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_GQYBG40', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G401_GQYB_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_NBIOT_HPM_QG', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_NBIOT_LPM_CJ', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G231_NBLP_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_OPWL_OTDR', 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G711_OTDR_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_TBSWRG30', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G301_TBSW_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_TEST_MODE', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G201_TEST_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
+INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `emcreqtimer`, `emcreqtimerfb`, `humidreqtimer`, `humidreqtimerfb`, `noisereqtimer`, `noisereqtimerfb`, `pm25reqtimer`, `pm25reqtimerfb`, `tempreqtimer`, `tempreqtimerfb`, `winddirreqtimer`, `winddirreqtimerfb`, `windspdreqtimer`, `windspdreqtimerfb`, `cloudvelahbtimer`, `cloudvelahbbacktimer`, `nbiotcj188hbtimer`, `nbiotcj188hbbacktimer`, `nbiotqg376hbtimer`, `nbiotqg376hbbacktimer`, `cloudsockethbtimer`, `dbverreporttimer`, `hsmmpreqtimer`, `hsmmpcapduration`, `hsmmpcapdurationfb`, `hsmmprefrate`, `airprsreqtimer`, `co1reqtimer`, `lightstrreqtimer`, `alcoholreqtimer`, `hchoreqtimer`, `toxicgasreqtimer`, `iwmreqtimer`, `ihmreqtimer`, `igmreqtimer`, `ipmreqtimer`, `pm25sharpreqtimer`, `syspmworkingtimer`, `canitfworkingtimer`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudsocketsvradd`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
+('HCU_PRJ_AQYCG10_335D', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 120, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 900, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G201_AQYC_SH001', 1, 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYC_OBSOLETE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 15, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXGLACM', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G221_GLAM_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXILC', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G211_ILCX_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_GQYBG40', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G401_GQYB_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_HPM_QG', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_LPM_CJ', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G231_NBLP_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_OPWL_OTDR', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 100, 10, 120, 10, 100, 10, 600, 10, 120, 10, 100, 10, 110, 10, 60, 10, 600, 10, 600, 10, 6000, 5, 600, 10, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G711_OTDR_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TBSWRG30', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G301_TBSW_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TEST_MODE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 60, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 600, 10, 70, 5, 200, 2, 12, 20, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 600, 3600, 10, 3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G201_TEST_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcusysengtimer`
+--
+
+CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
+  `timerid` int(2) NOT NULL,
+  `timername` char(40) NOT NULL,
+  `granularity` int(1) NOT NULL,
+  `duration` int(1) NOT NULL,
+  PRIMARY KEY (`timerid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcusysengtimer`
+--
+
+INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`) VALUES
+(0, 'TID_MIN', 1, 0),
+(1, 'TID_1S_MIN', 1, 0),
+(2, 'TID_1S_SVRCON_INIT_FB', 1, 10),
+(3, 'TID_1S_LED_GALOWAG_SCAN', 1, 1),
+(4, 'TID_1S_EMC_PERIOD_READ', 1, 100),
+(5, 'TID_1S_EMC_MODBUS_FB', 1, 10),
+(6, 'TID_1S_PM25_PERIOD_READ', 1, 600),
+(7, 'TID_1S_PM25_MODBUS_FB', 1, 10),
+(8, 'TID_1S_WINDDIR_PERIOD_READ', 1, 600),
+(9, 'TID_1S_WINDDIR_MODBUS_FB', 1, 10),
+(10, 'TID_1S_WINDSPD_PERIOD_READ', 1, 600),
+(11, 'TID_1S_WINDSPD_MODBUS_FB', 1, 10),
+(12, 'TID_1S_TEMP_PERIOD_READ', 1, 600),
+(13, 'TID_1S_TEMP_FB', 1, 10),
+(14, 'TID_1S_HUMID_PERIOD_READ', 1, 600),
+(15, 'TID_1S_HUMID_MODBUS_FB', 1, 10),
+(16, 'TID_1S_NOISE_PERIOD_READ', 1, 600),
+(17, 'TID_1S_NOISE_MODBUS_FB', 1, 10),
+(18, 'TID_1S_NOISE_SPSVIRGO_FB', 1, 10),
+(19, 'TID_1S_HSMMP_PERIOD_AVORION_READ', 1, 600),
+(20, 'TID_1S_HSMMP_AVORION_FB', 1, 10),
+(21, 'TID_1S_CLOUDVELA_PERIOD_LINK_HBT', 1, 60),
+(22, 'TID_1S_CLOUDVELA_SEND_DATA_BACK', 1, 10),
+(23, 'TID_1S_CLOUDVELA_PRD_SWDB_VER_REP', 1, 900),
+(24, 'TID_1S_NBIOTCJ188_PERIOD_LINK_HBT', 1, 600),
+(25, 'TID_1S_NBIOTCJ188_SEND_DATA_BACK', 1, 10),
+(26, 'TID_1S_NBIOTQG376_PERIOD_LINK_HBT', 1, 600),
+(27, 'TID_1S_NBIOTQG376_SEND_DATA_BACK', 1, 10),
+(28, 'TID_1S_AIRPRS_PERIOD_READ', 1, 600),
+(29, 'TID_1S_CO1_PERIOD_READ', 1, 600),
+(30, 'TID_1S_LIGHTSTR_PERIOD_READ', 1, 600),
+(31, 'TID_1S_ALCOHOL_PERIOD_READ', 1, 600),
+(32, 'TID_1S_HCHO_PERIOD_READ', 1, 600),
+(33, 'TID_1S_TOXICGAS_PERIOD_READ', 1, 600),
+(34, 'TID_1S_PM25SHARP_PERIOD_READ', 1, 600),
+(35, 'TID_1S_IWM_PERIOD_READ', 1, 600),
+(36, 'TID_1S_IHM_PERIOD_READ', 1, 600),
+(37, 'TID_1S_IGM_PERIOD_READ', 1, 600),
+(38, 'TID_1S_IPM_PERIOD_READ', 1, 600),
+(39, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 3600),
+(40, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
+(41, 'TID_1S_L3BFSC_PERIOD_READ', 1, 10),
+(42, 'TID_1S_L3BFSC_INIT_FB_WAIT', 1, 15),
+(43, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 15),
+(44, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 15),
+(45, 'TID_1S_L3BFSC_PERIOD_ERROR_SCAN', 1, 60),
+(46, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 600),
+(47, 'TID_1S_MAX', 1, 0),
+(48, 'TID_10MS_MIN', 2, 0),
+(49, 'TID_10MS_SVRCON_TEST', 2, 10000),
+(50, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 200),
+(51, 'TID_10MS_MAX', 2, 0),
+(52, 'TID_1MS_MIN', 3, 0),
+(53, 'TID_1MS_SVRCON_TEST', 3, 100),
+(54, 'TID_1MS_MAX', 3, 0),
+(55, 'TID_MAX', 1, 0);
 
 -- --------------------------------------------------------
 

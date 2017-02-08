@@ -33,9 +33,10 @@ typedef struct SysEngParElementDb
 //定时器长度定义
 typedef struct SysEngParElementTimUnit
 {
-	INT32 id;
-	UINT8 gradunarity;
-	char name[TIMER_NAME_MAX_LENGTH];
+	INT16	id;
+	char 	name[TIMER_NAME_MAX_LENGTH];
+	UINT8 	gradunarity;
+	UINT32 	dur;
 }SysEngParElementTimUnit_t;
 typedef struct SysEngParElementSensorTimer
 {

@@ -68,10 +68,6 @@ typedef struct HcuTimerTable
 #define TIMER_TYPE_PERIOD 2
 #define TIMER_TYPE_INVALID 0xFF
 
-#define HCU_TIMER_CONFIG_START_RESOLUTION_1S TRUE
-#define HCU_TIMER_CONFIG_START_RESOLUTION_10MS TRUE
-#define HCU_TIMER_CONFIG_START_RESOLUTION_1MS FALSE
-
 //Global variables
 extern HcuFsmStateItem_t HcuFsmTimer[];
 

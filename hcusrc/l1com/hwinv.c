@@ -448,16 +448,22 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Trace Module Control DB error!\n");
 	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Module based engineering data correctly from DATABASE parameters!\n");
 
-	//读取HcuDbVersion表单到系统内存中
-	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.swDbInvInfo);
-	if (ret == FAILURE)
-		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
-
 	//读取HcuTraceMsgCtr表单到系统内存中
 	ret = dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Trace Message Control DB error!\n");
 	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
+
+	//读取HcuSysEngTimer表单到系统内存中
+	ret = dbi_HcuSysEngTimer_inqury(&zHcuSysEngPar);
+	if (ret == FAILURE)
+		HCU_ERROR_PRINT_HWINV("HWINV: Read Timer Control DB error!\n");
+	HCU_DEBUG_PRINT_NOR("HWINV: Set Timer based engineering data correctly from DATABASE parameters!\n");
+
+	//读取HcuDbVersion表单到系统内存中
+	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.swDbInvInfo);
+	if (ret == FAILURE)
+		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
 
 	//第三部分/zHcuSysEngPar总共三步分
 	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决

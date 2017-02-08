@@ -107,7 +107,7 @@ OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		return FAILURE;
 	}
 
-	//由于内存限制的原因，暂时去激活了方波信号的生成
+	//方波扫描输出
 	if (HCU_LED_GALOWAG_FUNC_SET == HCU_LED_GALOWAG_FUNC_ACTIVE){
 		//TIMER_ID_1S_LED_GALOWAG_SCAN，是为扫描方波信号的生成，标准的1秒为单位
 		ret = hcu_timer_start(TASK_ID_LED, TIMER_ID_1S_LED_GALOWAG_SCAN, 1, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);

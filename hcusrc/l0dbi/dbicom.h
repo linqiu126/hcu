@@ -20,6 +20,8 @@ extern OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void);
 extern OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar);
 extern OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void);
 extern OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv);
+extern OPSTAT dbi_HcuSysEngTimer_inqury(HcuSysEngParTab_t *engPar);
+extern OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void);
 
 //引用外部API
 
