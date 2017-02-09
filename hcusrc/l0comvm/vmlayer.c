@@ -575,8 +575,8 @@ OPSTAT hcu_vm_system_ctr_table_init(void)
 			HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, HCU_HARDWARE_PRODUCT_CAT_TYPE, HCU_CURRENT_HW_TYPE, HCU_CURRENT_SW_RELEASE, HCU_CURRENT_SW_DELIVERY);
 	HcuDebugPrint("HCU-VM: BXXH(TM) HCU(c) Application Layer start and initialized, build at %s, %s.\n", __DATE__, __TIME__);
 
-	//SYSTEM DIMENSION检查
-	if ((TASK_ID_MAX > MAX_TASK_NUM_IN_ONE_HCU) || (MSG_ID_COM_MAX > MAX_MSGID_NUM_IN_ONE_TASK) || (TIMER_ID_MAX > MAX_TIMER_NUM_IN_ONE_HCU)){
+	//SYSTEM DIMENSION检查（注意：边界是MAX_TASK_NUM_IN_ONE_HCU-1）
+	if ((TASK_ID_MAX >= MAX_TASK_NUM_IN_ONE_HCU) || (MSG_ID_COM_MAX >= MAX_MSGID_NUM_IN_ONE_TASK) || (TIMER_ID_MAX >= MAX_TIMER_NUM_IN_ONE_HCU)){
 		HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, configuration of system dimension error!\n");
 		return FAILURE;
 	}

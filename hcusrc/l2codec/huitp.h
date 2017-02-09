@@ -10,6 +10,12 @@
 #pragma pack (1) //强制1字节对齐
 #include "../l0comvm/vmlayer.h"
 
+/*
+ *
+ *  顺从并更新到技术规范《慧HUITP接口规范v1.4, LAST UPDATE@2007/2》
+ *
+ */
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //  HUITP公共定义常量
@@ -714,16 +720,15 @@ typedef enum
 
   //组合秤BFSC
 	HUITP_MSGID_uni_bfsc_comb_scale_min              = 0x3B00, 
-	HUITP_MSGID_uni_bfsc_comb_scale_req              = 0x3B00, //称重事件请求
+	HUITP_MSGID_uni_bfsc_comb_scale_req              = 0x3B00,
 	HUITP_MSGID_uni_bfsc_comb_scale_resp             = 0x3B80, 
-	HUITP_MSGID_uni_bfsc_comb_scale_report           = 0x3B81, //称重事件汇报
-	HUITP_MSGID_uni_bfsc_comb_scale_confirm          = 0x3B01, 
-	HUITP_MSGID_uni_bfsc_comb_scale_cmd_start_req    = 0x3B02, 
-	HUITP_MSGID_uni_bfsc_comb_scale_cmd_start_resp   = 0x3B82, 
-	HUITP_MSGID_uni_bfsc_comb_scale_cmd_stop_req     = 0x3B03, 
-	HUITP_MSGID_uni_bfsc_comb_scale_cmd_stop_resp    = 0x3B83, 
-	//等待完善的消息
-	HUITP_MSGID_uni_bfsc_statistic_report            = 0x3B84, //综合统计汇报
+	HUITP_MSGID_uni_bfsc_comb_scale_data_report      = 0x3B81,
+	HUITP_MSGID_uni_bfsc_comb_scale_data_confirm     = 0x3B01,
+	HUITP_MSGID_uni_bfsc_comb_scale_event_report     = 0x3B82,
+	HUITP_MSGID_uni_bfsc_comb_scale_event_confirm    = 0x3B02,
+	HUITP_MSGID_uni_bfsc_comb_scale_cmd_req          = 0x3B03,
+	HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp         = 0x3B83,
+	HUITP_MSGID_uni_bfsc_statistic_report            = 0x3B84,
 	HUITP_MSGID_uni_bfsc_statistic_confirm           = 0x3B04,
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
 
@@ -1229,7 +1234,7 @@ typedef enum
 	HUITP_IEID_uni_picture_value                    = 0x2F00,
 	HUITP_IEID_uni_picture_segment                  = 0x2F01,
 	HUITP_IEID_uni_picture_format                  	= 0x2F02,	
-	HUITP_IEID_uni_picture_body                  		= 0x2F03,	
+	HUITP_IEID_uni_picture_body                     = 0x2F03,
 	HUITP_IEID_uni_picture_max,
 
   //扬尘监控系统
@@ -1291,6 +1296,9 @@ typedef enum
 	HUITP_IEID_uni_bfsc_comb_scale_min              = 0x3B00, 
 	HUITP_IEID_uni_scale_weight_value               = 0x3B00,
 	HUITP_IEID_uni_scale_weight_cmd                 = 0x3B01,
+	HUITP_IEID_uni_scale_weight_cfg_par             = 0x3B02,
+	HUITP_IEID_uni_scale_weight_event               = 0x3B03,
+	HUITP_IEID_uni_scale_weight_statistic           = 0x3B04,
 	HUITP_IEID_uni_bfsc_comb_scale_max,
 
   //云控锁-锁-旧系统
@@ -2381,12 +2389,15 @@ typedef struct StrIe_HUITP_IEID_uni_transporter_value
 //组合秤BFSC
 //HUITP_IEID_uni_bfsc_comb_scale_min              = 0x3B00, 
 //HUITP_IEID_uni_scale_weight_value               = 0x3B00,
+#define HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX 20
 typedef struct StrIe_HUITP_IEID_uni_scale_weight_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 scaleWeightValue;
+	UINT8  scaleWeightCfgNbrMax;  //系统配置的称重传感器最大数
+	UINT32 scaleWeightUsedBitmap;  //汇报哪些称重传感器对应的数据
+	UINT16 scaleWeightValue[HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX];
 }StrIe_HUITP_IEID_uni_scale_weight_value_t;
 
 //HUITP_IEID_uni_scale_weight_cmd                 = 0x3B01,
@@ -2402,6 +2413,30 @@ typedef struct StrIe_HUITP_IEID_uni_scale_weight_cmd
 #define HUITP_IEID_UNI_BFSC_SCALE_WEIGHT_REVERSE 3
 #define HUITP_IEID_UNI_BFSC_SCALE_WEIGHT_CONTINUE 4
 #define HUITP_IEID_UNI_BFSC_SCALE_WEIGHT_INVALID 0xFF
+
+//HUITP_IEID_uni_scale_weight_cfg_par             = 0x3B02,
+typedef struct StrIe_HUITP_IEID_uni_scale_weight_cfg_par
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT16 scaleWeightCmd;
+}StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t;
+
+//HUITP_IEID_uni_scale_weight_event               = 0x3B03,
+typedef struct StrIe_HUITP_IEID_uni_scale_weight_event
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT16 scaleWeightCmd;
+}StrIe_HUITP_IEID_uni_scale_weight_event_t;
+
+//HUITP_IEID_uni_scale_weight_statistic           = 0x3B04,
+typedef struct StrIe_HUITP_IEID_uni_scale_weight_statistic
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT16 scaleWeightCmd;
+}StrIe_HUITP_IEID_uni_scale_weight_statistic_t;
 
 //HUITP_IEID_uni_bfsc_comb_scale_max,
 

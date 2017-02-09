@@ -13,7 +13,8 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 
 //= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 156=>BFSC项目
-
+= 编译技术保证系统BFSC中配置的秤盘数量小于HUITP的传输能力
+=尝试增加公共FSM状态，简化程序设计
 
 //= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 155=>BFSC项目
 =清理完成所有TIMERID资料，包括各个项目的内容

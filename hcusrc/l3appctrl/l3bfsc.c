@@ -138,6 +138,9 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFSC] = 0;
+	#if (HCU_BFSC_SENSOR_WS_NBR_MAX > HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX)
+		#error L3BFSC module level configuration number error!
+	#endif
 
 	//秤盘数据表单控制表初始化
 	memset(&zHcuL3BfscGenCtrlTable, 0, sizeof(L3BfscGenCtrlTable_t));
