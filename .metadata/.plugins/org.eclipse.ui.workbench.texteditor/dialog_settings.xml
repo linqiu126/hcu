@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="FSM" key="selection"/>
+		<item value="TASK_ID_MAX" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="FSM"/>
+			<item value="MAX_TASK_NUM_IN_ONE_HCU"/>
 			<item value="TASK_ID_MAX"/>
+			<item value="FSM"/>
 			<item value="TASK_ID_MIN"/>
 			<item value="zHcuVmCtrTaskStaticCfg"/>
 			<item value="0x3B"/>
 			<item value="SCALE_WEI"/>
 			<item value=" 0x3B"/>
-			<item value="to_string"/>
 		</list>
 		<list key="replacehistory">
 			<item value="//定义后台SW_SWM的地址"/>
