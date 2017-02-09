@@ -25,30 +25,25 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 
 	//System level initialization
     {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            				fsm_cloudvela_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            				fsm_cloudvela_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
     {MSG_ID_COM_INIT,       					FSM_STATE_CLOUDVELA_INITED,            	fsm_cloudvela_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_CLOUDVELA_INITED,            	fsm_cloudvela_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_CLOUDVELA_INITED,            	fsm_com_do_nothing},
 
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       				FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       					FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       			FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            			fsm_cloudvela_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          				fsm_cloudvela_time_out},
+
     //Offline working, 定时重新启动链路，但不接受任何L3消息
-    {MSG_ID_COM_RESTART,        				FSM_STATE_CLOUDVELA_OFFLINE,            fsm_cloudvela_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_CLOUDVELA_OFFLINE,            fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_CLOUDVELA_OFFLINE,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_CLOUDVELA_OFFLINE,       		fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_CLOUDVELA_OFFLINE,            fsm_cloudvela_time_out},
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 			fsm_cloudvela_hwinv_phy_status_chg},
 	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_OFFLINE, 			fsm_cloudvela_socket_data_rx},
 
-
     //Online working， 定时检查链路，并安排离线数据的及时上传
-    {MSG_ID_COM_RESTART,        				FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_CLOUDVELA_ONLINE,     		fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_CLOUDVELA_ONLINE,     		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_CLOUDVELA_ONLINE,     		fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_time_out},
 	{MSG_ID_EMC_CLOUDVELA_DATA_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_emc_data_resp},
 	{MSG_ID_EMC_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_emc_contrl_fb},
 	{MSG_ID_PM25_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_pm25_data_resp},

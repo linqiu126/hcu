@@ -205,7 +205,7 @@ enum HCU_TASK_QUEUE_ID
 */
 #define FSM_STATE_ENTRY  	0x00
 #define FSM_STATE_IDLE  	0x01
-#define FSM_STATE_COMMON  	0xFD
+#define FSM_STATE_COMMON  	0x02
 #define FSM_STATE_END   	0xFE
 #define FSM_STATE_INVALID 	0xFF
 //状态机表

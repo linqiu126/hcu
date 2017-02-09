@@ -24,12 +24,18 @@ HcuFsmStateItem_t HcuFsmHwinv[] =
 
 	//System level initialization, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_hwinv_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_hwinv_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
+
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       	FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,		FSM_STATE_COMMON,            			fsm_hwinv_restart},
+	{MSG_ID_COM_TIME_OUT,       FSM_STATE_COMMON,          				fsm_com_do_nothing},
 
     //Task level initialization
 	//在激活状态下，已经进入死循环，这些消息，暂时没啥用，也接收不到，所以也不能由其它任务发送而来，小心处理
-    {MSG_ID_COM_RESTART,        FSM_STATE_HWINV_ACTIVED,            	fsm_hwinv_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_HWINV_ACTIVED,            	fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_HWINV_ACTIVED,       			fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_HWINV_ACTIVED,       			fsm_com_do_nothing},

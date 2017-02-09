@@ -61,18 +61,21 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 
 	//System level initialization, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       				FSM_STATE_IDLE,            					fsm_canitfleo_init},
-    {MSG_ID_COM_RESTART,					FSM_STATE_IDLE,            					fsm_canitfleo_restart},
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_IDLE,            					fsm_com_do_nothing},
 
 	//Task level initialization
     {MSG_ID_COM_INIT,       				FSM_STATE_CANITFLEO_INITED,            		fsm_canitfleo_init},
-    {MSG_ID_COM_RESTART,					FSM_STATE_CANITFLEO_INITED,            		fsm_canitfleo_restart},
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_CANITFLEO_INITED,            		fsm_com_do_nothing},
 
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_canitfleo_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_canitfleo_timeout},
+
     //Normal task status
-    {MSG_ID_COM_RESTART,        			FSM_STATE_CANITFLEO_ACTIVED,            	fsm_canitfleo_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_CANITFLEO_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,      				FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_timeout},
 	{MSG_ID_L3BFSC_CAN_WS_INIT_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_init_req},  //称重传感器初始化
 	{MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,   FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_error_inq_cmd_req},  //发送指令
 	{MSG_ID_L3BFSC_CAN_WS_COMB_OUT,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_comb_out},  //组合指令

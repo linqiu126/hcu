@@ -24,20 +24,21 @@ HcuFsmStateItem_t HcuFsmIpm[] =
 
 	//System level initialization, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            				fsm_ipm_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            				fsm_ipm_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       					FSM_STATE_IPM_INITIED,            		fsm_ipm_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_IPM_INITIED,            		fsm_ipm_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IPM_INITIED,            		fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_IPM_INITED,            		fsm_ipm_init},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IPM_INITED,            		fsm_com_do_nothing},
+
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       				FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       					FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       			FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            			fsm_ipm_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          				fsm_ipm_time_out},
 
 	//Normal working status
-    {MSG_ID_COM_RESTART,        				FSM_STATE_IPM_ACTIVED,            		fsm_ipm_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IPM_ACTIVED,            		fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_IPM_ACTIVED,       			fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_IPM_ACTIVED,       			fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_IPM_ACTIVED,          		fsm_ipm_time_out},
 	{MSG_ID_NBIOTCJ188_IPM_DATA_REQ,     		FSM_STATE_IPM_ACTIVED,      			fsm_ipm_nbiotcj188_data_req},
 	{MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotcj188_control_cmd},
 	{MSG_ID_NBIOTQG376_IPM_DATA_REQ,     		FSM_STATE_IPM_ACTIVED,      			fsm_ipm_nbiotqg376_data_req},

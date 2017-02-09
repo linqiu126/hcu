@@ -24,20 +24,19 @@ HcuFsmStateItem_t HcuFsmSpibusaries[] =
 
 	//System level initialization, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_spibusaries_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_spibusaries_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       	FSM_STATE_SPIBUSARIES_INITIED,            	fsm_spibusaries_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_SPIBUSARIES_INITIED,            	fsm_spibusaries_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_SPIBUSARIES_INITIED,            	fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       	FSM_STATE_SPIBUSARIES_INITED,            	fsm_spibusaries_init},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_SPIBUSARIES_INITED,            	fsm_com_do_nothing},
 
-    //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_SPIBUSARIES_ACTIVED,            	fsm_spibusaries_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_SPIBUSARIES_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_SPIBUSARIES_ACTIVED,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_SPIBUSARIES_ACTIVED,       		fsm_com_do_nothing},
-
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_spibusaries_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_com_do_nothing},
 
     //Active working mode, no state transfer
     {MSG_ID_TEMP_SPIBUSARIES_DATA_READ,   		FSM_STATE_SPIBUSARIES_ACTIVED,   fsm_spibusaries_temp_data_read},

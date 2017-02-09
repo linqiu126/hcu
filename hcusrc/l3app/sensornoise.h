@@ -17,9 +17,10 @@
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01
+//#define FSM_STATE_COMMON  	0x02
 enum FSM_STATE_NOISE
 {
-	FSM_STATE_NOISE_INITED = 0x02,
+	FSM_STATE_NOISE_INITED = FSM_STATE_COMMON + 1,
 	FSM_STATE_NOISE_ACTIVED,
 	FSM_STATE_NOISE_MODBUS_WFFB,  //Operational and wait for feedback from MODBUS，这个状态是单入的，不能重入
 	FSM_STATE_NOISE_SPSVIRGO_WFFB,  //Operational and wait for feedback from SPSVIRGO，这个状态是单入的，不能重入

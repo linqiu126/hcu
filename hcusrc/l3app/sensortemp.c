@@ -25,29 +25,25 @@ HcuFsmStateItem_t HcuFsmTemp[] =
 
 	//System level initialization
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_temp_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_temp_init},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
     {MSG_ID_COM_INIT,       	FSM_STATE_TEMP_INITED,            		fsm_temp_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_TEMP_INITED,            		fsm_temp_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_TEMP_INITED,            		fsm_com_do_nothing},
 
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_temp_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_temp_time_out},
+
     //Normal working status
-    {MSG_ID_COM_RESTART,        		FSM_STATE_TEMP_ACTIVED,          fsm_temp_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,			FSM_STATE_TEMP_ACTIVED,          fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,       		FSM_STATE_TEMP_ACTIVED,          fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_TEMP_ACTIVED,          fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_TEMP_ACTIVED,          fsm_temp_time_out},
 	{MSG_ID_CLOUDVELA_TEMP_DATA_REQ,    	FSM_STATE_TEMP_ACTIVED,      	 fsm_temp_cloudvela_data_req},
 	{MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,      FSM_STATE_TEMP_ACTIVED,         fsm_temp_cloudvela_control_cmd},
 
     //Wait for Modbus Feedback
-    {MSG_ID_COM_RESTART,        		FSM_STATE_TEMP_OPT_WFFB,         fsm_temp_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,			FSM_STATE_TEMP_OPT_WFFB,         fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,       		FSM_STATE_TEMP_OPT_WFFB,         fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_TEMP_OPT_WFFB,         fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_TEMP_OPT_WFFB,         fsm_temp_time_out},
 	{MSG_ID_MODBUS_TEMP_DATA_REPORT, 	FSM_STATE_TEMP_OPT_WFFB,         fsm_temp_data_report_from_modbus},
 	{MSG_ID_MODBUS_TEMP_CONTROL_FB,    	FSM_STATE_TEMP_OPT_WFFB,         fsm_temp_modbus_control_fb},
 

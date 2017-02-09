@@ -23,34 +23,30 @@ HcuFsmStateItem_t HcuFsmPm25[] =
 
 	//System level initialization
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_pm25_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_pm25_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
     {MSG_ID_COM_INIT,       	FSM_STATE_PM25_INITED,            		fsm_pm25_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_PM25_INITED,            		fsm_pm25_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_PM25_INITED,            		fsm_com_do_nothing},
 
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_pm25_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_pm25_time_out},
+
     //Normal working status
-    {MSG_ID_COM_RESTART,        		FSM_STATE_PM25_ACTIVED,          fsm_pm25_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,			FSM_STATE_PM25_ACTIVED,          fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,       		FSM_STATE_PM25_ACTIVED,          fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_PM25_ACTIVED,          fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_PM25_ACTIVED,          fsm_pm25_time_out},
-	{MSG_ID_CLOUDVELA_PM25_DATA_REQ,       	FSM_STATE_PM25_ACTIVED,          fsm_pm25_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,      FSM_STATE_PM25_ACTIVED,         fsm_pm25_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_PM25_DATA_REQ,       	FSM_STATE_PM25_ACTIVED,          	fsm_pm25_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,     FSM_STATE_PM25_ACTIVED,         	fsm_pm25_cloudvela_control_cmd},
 
     //Wait for Modbus Feedback
-    {MSG_ID_COM_RESTART,        		FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,			FSM_STATE_PM25_OPT_WFFB,         fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,       		FSM_STATE_PM25_OPT_WFFB,         fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_PM25_OPT_WFFB,         fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_time_out},
 	{MSG_ID_MODBUS_PM25_DATA_REPORT,    FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_data_report_from_modbus},
 	{MSG_ID_MODBUS_PM25_CONTROL_FB,     FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_modbus_control_fb},
 
 	//added by Shanchun to ensure not blocking the next command in cast no response from the last command
-	{MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,      FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_PM25_CONTROL_CMD, FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_cloudvela_control_cmd},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending

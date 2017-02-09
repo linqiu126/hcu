@@ -27,56 +27,47 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 
 	//System level initialization, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            					fsm_l3bfsc_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_IDLE,            					fsm_l3bfsc_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            					fsm_com_do_nothing},
 
 	//Task level initialization
     {MSG_ID_COM_INIT,       					FSM_STATE_L3BFSC_INITED,            		fsm_l3bfsc_init},
-    {MSG_ID_COM_RESTART,						FSM_STATE_L3BFSC_INITED,            		fsm_l3bfsc_restart},
     {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3BFSC_INITED,            		fsm_com_do_nothing},
 
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_COMMON,          					fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       				FSM_STATE_COMMON,          					fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       					FSM_STATE_COMMON,          					fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       			FSM_STATE_COMMON,          					fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            				fsm_l3bfsc_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          					fsm_l3bfsc_time_out},
+
 	//Normal working status：等待人工干预-登录触发
-    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_ACTIVED,            		fsm_l3bfsc_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3BFSC_ACTIVED,            		fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_ACTIVED,          			fsm_l3bfsc_time_out},
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_ACTIVED,          			fsm_l3bfsc_uicomm_cmd_req},
 	{MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,     FSM_STATE_L3BFSC_ACTIVED,          			fsm_l3bfsc_uicomm_param_set_result},
 
 	//人工配置状态：等待参数配置完成。完成后，发送MSG_ID_L3BFSC_CAN_WS_INIT_REQ，进入FSM_STATE_L3BFSC_WS_INIT
 	//任何状态下，允许人工界面强行发送重启命令（后台或者本地界面），BFSCUICOMM模块将发送MSG_ID_COM_RESTART，从而重启整个系统
 	//重启需要重新登录并初始化整个秤盘传感器
-    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OPR_CFG,            		fsm_l3bfsc_restart},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_time_out},
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_uicomm_cmd_req},
 	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       	FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_cloudvela_cmd_req},
 	{MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,     FSM_STATE_L3BFSC_OPR_CFG,          			fsm_l3bfsc_uicomm_param_set_result},
 
 	//等待下位机完成参数初始化：等待MSG_ID_CAN_L3FSC_WS_INIT_RESP，完成后进入FSM_STATE_L3BFSC_OOS_SCAN
-    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_WS_INIT,            		fsm_l3bfsc_restart},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_WS_INIT,          			fsm_l3bfsc_time_out},
 	{MSG_ID_CAN_L3BFSC_WS_INIT_FB,       		FSM_STATE_L3BFSC_WS_INIT,          			fsm_l3bfsc_canitf_ws_init_fb},
 
 	//进料组合态：等待正常的MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT，每一次进来均触发一次组合算法。结果无动作，或发送MSG_ID_L3BFSC_CAN_WS_COMB_OUT/MSG_ID_L3BFSC_CAN_WS_GIVE_UP
-    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_SCAN,            		fsm_l3bfsc_restart},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_time_out},
 	{MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,      FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_ws_new_ready_event},  //只能触发数据存储，不进入组合算法的执行
 	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       	FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_cloudvela_cmd_req},  //只有在最为常见的SCAN状态下才允许后台干预，否则太复杂
 	{MSG_ID_CAN_L3BFSC_WS_READ_RESP,       		FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_period_read_resp},  //只有在最为常见的SCAN状态下才允许定时上报，否则太复杂
 	{MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP,       	FSM_STATE_L3BFSC_OOS_SCAN,          		fsm_l3bfsc_canitf_general_cmd_resp},  //只有在最为常见的SCAN状态下才允许后台，否则太复杂
 
 	//出料流程态：单纯等待MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
-    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_TTT,            		fsm_l3bfsc_restart},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_time_out},
 	{MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,       	FSM_STATE_L3BFSC_OOS_TTT,          			fsm_l3bfsc_canitf_ws_comb_out_fb},
 
 	//放弃物料态：单纯等待MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
-    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_OOS_TGU,            		fsm_l3bfsc_restart},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_time_out},
 	{MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,       	FSM_STATE_L3BFSC_OOS_TGU,          			fsm_l3bfsc_canitf_ws_give_up_fb},
 
 	//数据差错，重新采样所有数据：收到MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT差错，发送MSG_ID_L3BFSC_CAN_CMD_REQ，等待传感器传回所有差错的重测值。结束以后进入FSM_STATE_L3BFSC_OOS_SCAN。
-    {MSG_ID_COM_RESTART,        				FSM_STATE_L3BFSC_ERROR_INQ,            		fsm_l3bfsc_restart},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_L3BFSC_ERROR_INQ,          		fsm_l3bfsc_time_out},
 	{MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,      FSM_STATE_L3BFSC_ERROR_INQ,          		fsm_l3bfsc_canitf_error_inq_cmd_resp},  //只能触发数据存储，不进入组合算法的执行
 
     //结束点，固定定义，不要改动

@@ -14,12 +14,13 @@
 #include "../l1com/l1comdef.h"
 
 
-
 //State definition
-
+//#define FSM_STATE_ENTRY  0x00
+//#define FSM_STATE_IDLE  0x01
+//#define FSM_STATE_COMMON  	0x02
 enum FSM_STATE_PM25SHARP
 {
-	FSM_STATE_PM25SHARP_INITED = 0x02,
+	FSM_STATE_PM25SHARP_INITED = FSM_STATE_COMMON + 1,
 	FSM_STATE_PM25SHARP_ACTIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_PM25SHARP_MAX,
 };

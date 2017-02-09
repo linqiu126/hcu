@@ -24,27 +24,26 @@ HcuFsmStateItem_t HcuFsmNbiotqg376[] =
 
 	//System level initialization, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_nbiotqg376_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_nbiotqg376_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       	FSM_STATE_NBIOTQG376_INITIED,            	fsm_nbiotqg376_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_NBIOTQG376_INITIED,            	fsm_nbiotqg376_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_NBIOTQG376_INITIED,            	fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       	FSM_STATE_NBIOTQG376_INITED,            	fsm_nbiotqg376_init},
+    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_NBIOTQG376_INITED,            	fsm_com_do_nothing},
+
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_nbiotqg376_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_nbiotqg376_time_out},
 
 	//Offline working, 定时重新启动链路，但不接受任何L3消息
-    {MSG_ID_COM_RESTART,        FSM_STATE_NBIOTQG376_OFFLINE,            	fsm_nbiotqg376_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_NBIOTQG376_OFFLINE,            	fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_NBIOTQG376_OFFLINE,       		fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_NBIOTQG376_OFFLINE,       		fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       FSM_STATE_NBIOTQG376_OFFLINE,            	fsm_nbiotqg376_time_out},
 
     //Online working， 定时检查链路，并安排离线数据的及时上传
-    {MSG_ID_COM_RESTART,        			FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_NBIOTQG376_ONLINE,	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     			FSM_STATE_NBIOTQG376_ONLINE,    fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  			FSM_STATE_NBIOTQG376_ONLINE,    fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_time_out},
 	{MSG_ID_IPM_NBIOTQG376_DATA_RESP,   	FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ipm_data_resp},
 	{MSG_ID_IPM_NBIOTQG376_CONTROL_FB,   	FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ipm_contrl_fb},
 

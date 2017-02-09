@@ -57,7 +57,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_USBNET,        "USBNET",           &HcuFsmUsbnet,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_3G4G,          "3G4G",             &HcuFsm3g4g,             HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_HARDDISK,      "HARDDISK",         NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
-	{TASK_ID_CAMERA,        "CAMERA",           NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CAMERA,        "CAMERA",           &HcuFsmCamera,           HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_MICROPHONE,    "MICROPHONE",       &HcuFsmMicrophone,       HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_FLASH,         "FLASH",            NULL,                    HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_GPS,           "GPS",              &HcuFsmGps,              HCU_TASK_PNP_OFF,    1, 1, 1, 1, 1},
@@ -1801,7 +1801,18 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 	/*
 	** Call the state function.
 	*/
-	if(zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc != NULL)
+	//Following FSM_STATE_COMMON state could contain any MSGID, as to avoid the restriction of message incoming
+	if(zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].pFsmArray[FSM_STATE_COMMON][mid].stateFunc != NULL)
+	{
+		ret = (zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].pFsmArray[FSM_STATE_COMMON][mid].stateFunc)
+			(dest_id, src_id, param_ptr, param_len);
+		if( FAILURE == ret)
+		{
+			HcuErrorPrint("HCU-VM: Internal error is found in the FSM_STATE_COMMON state function.\n");
+			return FAILURE;
+		}
+	}
+	else if(zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc != NULL)
 	{
 		ret = (zHcuVmCtrTab.fsm.pFsmCtrlTable[dest_id].pFsmArray[state][mid].stateFunc)
 			(dest_id, src_id, param_ptr, param_len);

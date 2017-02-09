@@ -48,14 +48,17 @@ HcuFsmStateItem_t HcuFsmAvorion[] =
 
 	//System level initialization, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_avorion_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_avorion_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_avorion_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_com_do_nothing},
+
     //Task level initialization
-    {MSG_ID_COM_RESTART,        		FSM_STATE_AVORION_RECEIVED,      fsm_avorion_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,			FSM_STATE_AVORION_RECEIVED,      fsm_com_do_nothing},
-    {MSG_ID_COM_HEART_BEAT,     		FSM_STATE_AVORION_RECEIVED,      fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  		FSM_STATE_AVORION_RECEIVED,      fsm_com_do_nothing},
     {MSG_ID_HSMMP_AVORION_DATA_READ,    FSM_STATE_AVORION_RECEIVED,      fsm_avorion_data_read},
     {MSG_ID_HSMMP_AVORION_STOP,     	FSM_STATE_AVORION_RECEIVED,      fsm_avorion_stop_work},
 	{MSG_ID_LCD_AVORION_DATA_RX,       	FSM_STATE_AVORION_RECEIVED,      fsm_avorion_lcd_data_rx},
@@ -63,7 +66,6 @@ HcuFsmStateItem_t HcuFsmAvorion[] =
 	{MSG_ID_MICROPHONE_AVORION_DATA_RX, FSM_STATE_AVORION_RECEIVED,      fsm_avorion_microphone_data_rx},
 
     //精细控制AV外设时，可以使用等待状态机，从而确保解码的单入性，防止相互之间的串扰和影响
-    {MSG_ID_COM_RESTART,        		FSM_STATE_AVORION_RECEIVED_WFFB,	fsm_avorion_restart},
     {MSG_ID_COM_INIT_FEEDBACK,			FSM_STATE_AVORION_RECEIVED_WFFB,    fsm_com_do_nothing},
     {MSG_ID_COM_HEART_BEAT,     		FSM_STATE_AVORION_RECEIVED_WFFB,   	fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_HEART_BEAT_FB,  		FSM_STATE_AVORION_RECEIVED_WFFB,    fsm_com_do_nothing},

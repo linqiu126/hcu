@@ -12,6 +12,29 @@
 #include "../l1com/l1comdef.h"
 #include "../l0service/timer.h"
 
+//State definition
+//#define FSM_STATE_ENTRY  0x00
+//#define FSM_STATE_IDLE  0x01
+//#define FSM_STATE_COMMON  	0x02
+enum FSM_STATE_L3BFSC
+{
+	FSM_STATE_L3BFSC_INITED = FSM_STATE_COMMON + 1,
+	FSM_STATE_L3BFSC_ACTIVED,
+	FSM_STATE_L3BFSC_OPR_CFG,  	//人工配置状态
+	FSM_STATE_L3BFSC_WS_INIT,  	//初始化下位机
+	FSM_STATE_L3BFSC_OOS_SCAN,  //进料组合态
+	FSM_STATE_L3BFSC_OOS_TTT,  	//出料流程态
+	FSM_STATE_L3BFSC_OOS_TGU,  	//放弃物料态
+	FSM_STATE_L3BFSC_ERROR_INQ, //数据差错，重新采样所有数据
+	FSM_STATE_L3BFSC_MAX,
+};
+//#define FSM_STATE_END   0xFE
+//#define FSM_STATE_INVALID 0xFF
+
+//Global variables
+extern HcuFsmStateItem_t HcuFsmL3bfsc[];
+
+
 typedef struct L3BfscSensorWsInfo
 {
 	UINT8  sensorWsId;
@@ -55,26 +78,6 @@ typedef struct L3BfscGenCtrlTable
 //#define HCU_L3BFSC_WHOLE_STATUS_TTT			3
 //#define HCU_L3BFSC_WHOLE_STATUS_TGU			4
 
-//State definition
-//#define FSM_STATE_ENTRY  0x00
-//#define FSM_STATE_IDLE  0x01
-enum FSM_STATE_L3BFSC
-{
-	FSM_STATE_L3BFSC_INITED = 0x02,
-	FSM_STATE_L3BFSC_ACTIVED,
-	FSM_STATE_L3BFSC_OPR_CFG,  	//人工配置状态
-	FSM_STATE_L3BFSC_WS_INIT,  	//初始化下位机
-	FSM_STATE_L3BFSC_OOS_SCAN,  //进料组合态
-	FSM_STATE_L3BFSC_OOS_TTT,  	//出料流程态
-	FSM_STATE_L3BFSC_OOS_TGU,  	//放弃物料态
-	FSM_STATE_L3BFSC_ERROR_INQ, //数据差错，重新采样所有数据
-	FSM_STATE_L3BFSC_MAX,
-};
-//#define FSM_STATE_END   0xFE
-//#define FSM_STATE_INVALID 0xFF
-
-//Global variables
-extern HcuFsmStateItem_t HcuFsmL3bfsc[];
 
 //API
 extern OPSTAT fsm_l3bfsc_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

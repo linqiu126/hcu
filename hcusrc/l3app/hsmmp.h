@@ -15,9 +15,10 @@
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01
+//#define FSM_STATE_COMMON  	0x02
 enum FSM_STATE_HSMMP
 {
-	FSM_STATE_HSMMP_INITED = 0x02,
+	FSM_STATE_HSMMP_INITED = FSM_STATE_COMMON + 1,
 	FSM_STATE_HSMMP_ACTIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_HSMMP_ACTIVED_WFFB,  //Operational and wait for feedback from MODBUS，这个状态是单入的，不能重入
 	FSM_STATE_HSMMP_MAX,

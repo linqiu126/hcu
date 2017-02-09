@@ -15,6 +15,7 @@ PRJ_BFSC待完成或者回答的问题：
 //= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 156=>BFSC项目
 = 编译技术保证系统BFSC中配置的秤盘数量小于HUITP的传输能力
 =尝试增加公共FSM状态，简化程序设计
+=VM-COMMON机制完成，增加一个FSM_STATE_COMMON，在此状态下，任何消息都可以进入
 
 //= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 155=>BFSC项目
 =清理完成所有TIMERID资料，包括各个项目的内容

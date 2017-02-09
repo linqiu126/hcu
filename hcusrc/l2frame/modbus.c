@@ -25,19 +25,21 @@ HcuFsmStateItem_t HcuFsmModbus[] =
 
 	//System level initialization
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_modbus_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_modbus_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
 	//Task level initialization
     {MSG_ID_COM_INIT,       	FSM_STATE_MODBUS_INITED,            	fsm_modbus_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_MODBUS_INITED,            	fsm_modbus_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_MODBUS_INITED,            	fsm_com_do_nothing},
 
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_modbus_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_com_do_nothing},
+
     //Active working mode, no state transfer
-    {MSG_ID_COM_RESTART,        			FSM_STATE_MODBUS_ACTIVED,   fsm_modbus_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_MODBUS_ACTIVED,   fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     			FSM_STATE_MODBUS_ACTIVED,   fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  			FSM_STATE_MODBUS_ACTIVED,   fsm_com_do_nothing},
     {MSG_ID_EMC_MODBUS_DATA_READ,       	FSM_STATE_MODBUS_ACTIVED,   fsm_modbus_emc_data_read},
 	{MSG_ID_EMC_MODBUS_CONTROL_CMD,      	FSM_STATE_MODBUS_ACTIVED,   fsm_modbus_emc_control_cmd},
     {MSG_ID_PM25_MODBUS_DATA_READ,       	FSM_STATE_MODBUS_ACTIVED,   fsm_modbus_pm25_data_read},

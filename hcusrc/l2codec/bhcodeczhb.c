@@ -773,7 +773,7 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			return FAILURE;
 		}
 		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("CLOUDVELA: NOISE XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+			HcuDebugPrint("CLOUDVELA: XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 

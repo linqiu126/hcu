@@ -17,6 +17,7 @@
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01
+//#define FSM_STATE_COMMON  	0x02
 enum FSM_STATE_EMC
 {
 	FSM_STATE_EMC_INITED = 0x02,

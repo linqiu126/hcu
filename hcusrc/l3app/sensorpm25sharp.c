@@ -27,15 +27,20 @@ HcuFsmStateItem_t HcuFsmPm25sharp[] =
 
 	//System level initialization, only controlled by HCU-MAIN
     {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_pm25sharp_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_pm25sharp_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
 
+	//ANY state entry
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_pm25sharp_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_pm25sharp_restart},
+
     //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_PM25SHARP_ACTIVED,            fsm_pm25sharp_restart},
     {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_PM25SHARP_ACTIVED,            fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_PM25SHARP_ACTIVED,       		fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_PM25SHARP_ACTIVED,       		fsm_com_do_nothing},
-	{MSG_ID_COM_TIME_OUT,       FSM_STATE_PM25SHARP_ACTIVED,          	fsm_pm25sharp_time_out},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
