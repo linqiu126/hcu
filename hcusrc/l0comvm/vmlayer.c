@@ -996,7 +996,8 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	 *  本TRACE功能，提供了多种工作模式
 	 *
 	 */
-	char s1[TASK_NAME_MAX_LENGTH+2]="", s2[TASK_NAME_MAX_LENGTH+2]="", s3[MSG_NAME_MAX_LENGTH]="";
+	char s1[TASK_NAME_MAX_LENGTH+2]="", s2[TASK_NAME_MAX_LENGTH+2]="", s3[MSG_NAME_MAX_LENGTH]="", s4[TIMER_NAME_MAX_LENGTH]="";
+	UINT32 tid = 0;
 	switch (zHcuSysEngPar.traceMode)
 	{
 		case HCU_TRACE_MSG_MODE_OFF:
@@ -1036,6 +1037,33 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((msg_id != MSG_ID_COM_TIME_OUT) && (msg_id != MSG_ID_COM_HEART_BEAT) && (msg_id != MSG_ID_COM_HEART_BEAT_FB)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+			}
+			break;
+
+		case HCU_TRACE_MSG_MODE_ALL_WITH_TIMERID:
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
+			if ((msg_id != MSG_ID_COM_TIME_OUT)){
+				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
+			}
+			else{
+				//结构中TIMERID正好是4字节
+				memcpy(&tid, param_ptr, 4);
+				hcu_vm_timerid_to_string(tid, s4);
+			  HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d, TID=%02X%s\n", msg_id, s3, dest_id, s1, src_id, s2, param_len, tid, s4);
+			}
+			break;
+
+		case HCU_TRACE_MSG_MODE_TIMERID_ONLY:
+			if (msg_id == MSG_ID_COM_TIME_OUT){
+				hcu_vm_taskid_to_string(dest_id, s1);
+				hcu_vm_taskid_to_string(src_id, s2);
+				hcu_vm_msgid_to_string(msg_id, s3);
+				//结构中TIMERID正好是4字节
+				memcpy(&tid, param_ptr, 4);
+				hcu_vm_timerid_to_string(tid, s4);
+				HcuDebugPrint("MSGTRC: MSGID=%02X%s,DID=%02X%s,SID=%02X%s,LEN=%d, TID=%02X%s\n", msg_id, s3, dest_id, s1, src_id, s2, param_len, tid, s4);
 			}
 			break;
 

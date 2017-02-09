@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcu_timer_start" key="selection"/>
+		<item value="hcu_vm_timer" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="hcu_vm_timer"/>
+			<item value="MSG_ID_COM_TIME_OUT"/>
+			<item value="TIME_OUT"/>
+			<item value="message_send"/>
 			<item value="hcu_timer_start"/>
 			<item value="hcu_start"/>
 			<item value="HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT"/>
 			<item value="//定义本地视频服务器"/>
-			<item value="HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT"/>
-			<item value="//定义后台SW_SWM的地址"/>
-			<item value="//定义后台CLOUD_FTP 的地址"/>
-			<item value="HCU_CLOUDVELA_BH_SERVER_NAME"/>
 		</list>
 		<list key="replacehistory">
 			<item value="//定义后台SW_SWM的地址"/>

@@ -12,6 +12,7 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 
+//= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 156=>BFSC项目
 
 
 //= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 155=>BFSC项目
@@ -23,6 +24,7 @@ PRJ_BFSC待完成或者回答的问题：
 =统一归一化所有的参数配置，组成类别，清理不合理配置，包括特定配置部分
 =基本上清理完毕。视频服务器/软件下载/烧录区/设备标签，待完善。
 =对于TimerName/ModName/MsgName的访问，必须访问工程参数表，不得访问静态表，因为静态表需要搜索，请注意！
+= 改进TIME_OUT消息的TRACE，现在可以支持打印TIMER_ID的模式以及信息
 
 //= ZJL, 2017 Feb.8, CURRENT_SW_DELIVERY 154=>BFSC项目
 =解决了TIMERID初始化的问题，下一步就是将系统中所有的旧TIMERID全部清除掉
