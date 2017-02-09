@@ -97,7 +97,8 @@ OPSTAT fsm_l3gqybg40_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3GQYBG40] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_L3GQYBG40, TIMER_ID_1S_L3GQYBG40_PERIOD_READ, HCU_L3GQYBG40_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_L3GQYBG40, TIMER_ID_1S_L3GQYBG40_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_L3GQYBG40_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3GQYBG40]++;
 		HcuErrorPrint("L3GQYBG40: Error start period timer!\n");

@@ -416,7 +416,7 @@ OPSTAT fsm_iwm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 
 	//准备存入本地数据库, RECORD还要存入数据库
-	if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
 	{
 		sensor_iwm_cj188_data_element_t iwmDbSave;
 		memset(&iwmDbSave, 0, sizeof(sensor_iwm_cj188_data_element_t));

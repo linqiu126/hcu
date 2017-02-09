@@ -40,11 +40,11 @@ extern GpsPosInfo_t zHcuGpsPosInfo;
 
 //定时器，控制摄像头工作周期及时长
 //#define HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-//#define HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
+#define HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
 //下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
 //比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
 //#define HSMMP_TIMER_DURATION_AVORION_FB HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-//#define HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
+#define HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
 
 //多少次回传后台一次，如果不想频繁回传，可以设置为10次
 #define HSMMP_SEND_BACK_MOD_BASE  1

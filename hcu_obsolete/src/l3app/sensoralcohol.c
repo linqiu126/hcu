@@ -207,7 +207,7 @@ OPSTAT func_alcohol_time_out_read_data_from_mq3alco(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioAlcoholMq3alco >= HCU_SENSOR_ALCOHOL_VALUE_MIN) && (zHcuGpioAlcoholMq3alco <= HCU_SENSOR_ALCOHOL_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioAlcoholMq3alco >= HCU_SENSOR_ALCOHOL_VALUE_MIN) && (zHcuGpioAlcoholMq3alco <= HCU_SENSOR_ALCOHOL_VALUE_MAX))
 	{
 		sensor_alcohol_mq3alco_data_element_t alcoholData;
 		memset(&alcoholData, 0, sizeof(sensor_alcohol_mq3alco_data_element_t));

@@ -41,45 +41,6 @@ typedef struct SysEngParElementTimUnit
 typedef struct SysEngParElementSensorTimer
 {
 	SysEngParElementTimUnit_t array[MAX_TIMER_NUM_IN_ONE_HCU];
-	INT32 emcReqTimer;
-	INT32 emcReqTimerFB;
-	INT32 humidReqTimer;
-	INT32 humidReqTimerFB;
-	INT32 noiseReqTimer;
-	INT32 noiseReqTimerFB;
-	INT32 pm25ReqTimer;
-	INT32 pm25ReqTimerFB;
-	INT32 tempReqTimer;
-	INT32 tempReqTimerFB;
-	INT32 winddirReqTimer;
-	INT32 winddirReqTimerFB;
-	INT32 windspdReqTimer;
-	INT32 windspdReqTimerFB;
-	INT32 cloudvelaHbTimer;
-	INT32 cloudvelaHbBackTimer;
-	INT32 nbiotcj188HbTimer;
-	INT32 nbiotcj188HbBackTimer;
-	INT32 nbiotqg376HbTimer;
-	INT32 nbiotqg376HbBackTimer;
-	INT32 cloudSocketHbTimer;
-	INT32 dbVerReportTimer;
-	INT32 hsmmpReqTimer;
-	INT32 hsmmpCapDuration;
-	INT32 hsmmpCapDurationFB;
-	INT32 hsmmpRefRate;
-	INT32 airprsReqTimer;
-	INT32 co1ReqTimer;
-	INT32 lightstrReqTimer;
-	INT32 alcoholReqTimer;
-	INT32 hchoReqTimer;
-	INT32 toxicgasReqTimer;
-	INT32 iwmReqTimer;
-	INT32 ihmReqTimer;
-	INT32 igmReqTimer;
-	INT32 ipmReqTimer;
-	INT32 pm25sharpReqTimer;
-	INT32 syspmWorkingTimer;
-	INT32 canitfWorkingTimer;
 }SysEngParElementSensorTimer_t;
 
 //Series port config by Shanchun
@@ -127,16 +88,6 @@ typedef struct SysEngParElementVideoServer
 	char  hcuVideoServerDir[SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN];
 	char  hcuVideoServerHttp[SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN];
 }SysEngParElementVideoServer_t;
-
-//Debug采用完全的等级方式，并通过按位操作，详细定义在sysconfig.h中，不应该重复定义，放在这里只是为了参考方便
-/*
-#define TRACE_DEBUG_ALL_OFF 0 //全关
-#define TRACE_DEBUG_INF_ON 1  //全开
-#define TRACE_DEBUG_NOR_ON 2  //普通级
-#define TRACE_DEBUG_IPT_ON 4  //重要级
-#define TRACE_DEBUG_CRT_ON 8  //关键级
-#define TRACE_DEBUG_FAT_ON 16 //致命级
-*/
 
 //TRACE采用黑白名单的方式
 //关系表单，采用INDEX索引的方式，引导到相应的配置表中，进行详细定义
@@ -272,7 +223,7 @@ typedef struct HcuSysEngParTab
 	SysEngParElementSensorTimer_t timer;//by Shanchun
 	SysEngParElementSeriesPort_t serialport;//by Shanchun
 	SysEngParElementCloudvela_t cloud;
-	SysEngParElementHcuSwDownload_t swDownload;//by Shanchun
+	SysEngParElementHcuSwDownload_t swm;//by Shanchun
 	SysEngParElementVideoServer_t videoSev;
 	UINT8 debugMode;
 	UINT8 traceMode;

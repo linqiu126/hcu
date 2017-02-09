@@ -445,7 +445,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTable_t *engPar, char *prjname)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -665,7 +665,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTable_t *engPar)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -743,7 +743,7 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTable_t *engPar)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");

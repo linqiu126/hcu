@@ -93,7 +93,8 @@ OPSTAT fsm_lightstr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_LIGHTSTR] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_LIGHTSTR, TIMER_ID_1S_LIGHTSTR_PERIOD_READ, zHcuSysEngPar.timer.lightstrReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_LIGHTSTR, TIMER_ID_1S_LIGHTSTR_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_LIGHTSTR_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_LIGHTSTR]++;
 		HcuErrorPrint("LIGHTSTR: Error start period timer!\n");
@@ -206,7 +207,7 @@ OPSTAT func_lightstr_time_out_read_data_from_bh1750(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cLightstrBh1750 >= HCU_SENSOR_LIGHTSTR_VALUE_MIN) && (zHcuI2cLightstrBh1750 <= HCU_SENSOR_LIGHTSTR_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cLightstrBh1750 >= HCU_SENSOR_LIGHTSTR_VALUE_MIN) && (zHcuI2cLightstrBh1750 <= HCU_SENSOR_LIGHTSTR_VALUE_MAX))
 	{
 		sensor_lightstr_bh1750_data_element_t lightstrData;
 		memset(&lightstrData, 0, sizeof(sensor_lightstr_bh1750_data_element_t));

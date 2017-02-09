@@ -123,7 +123,8 @@ OPSTAT fsm_winddir_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_WINDDIR, TIMER_ID_1S_WINDDIR_PERIOD_READ, zHcuSysEngPar.timer.winddirReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_WINDDIR, TIMER_ID_1S_WINDDIR_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_WINDDIR_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
 		HcuErrorPrint("WINDDIR: Error start timer!\n");
@@ -238,7 +239,8 @@ void func_winddir_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_WINDDIR, TIMER_ID_1S_WINDDIR_MODBUS_FB, zHcuSysEngPar.timer.winddirReqTimerFB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		ret = hcu_timer_start(TASK_ID_WINDDIR, TIMER_ID_1S_WINDDIR_MODBUS_FB, \
+				zHcuSysEngPar.timer.array[TIMER_ID_1S_WINDDIR_MODBUS_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
 			HcuErrorPrint("WINDDIR: Error start timer!\n");
@@ -345,7 +347,7 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			record.ew = rcv.winddir.gps.ew;
 			record.ns = rcv.winddir.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_MEM_SENSOR_SAVE_FLAG == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -354,7 +356,7 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_DISC_SENSOR_SAVE_FLAG == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -363,7 +365,7 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
 			{
 				sensor_winddir_data_element_t winddirData;
 				memset(&winddirData, 0, sizeof(sensor_winddir_data_element_t));
@@ -433,7 +435,7 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			record.ew = rcv.winddir.gps.ew;
 			record.ns = rcv.winddir.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_MEM_SENSOR_SAVE_FLAG == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -442,7 +444,7 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_DISC_SENSOR_SAVE_FLAG == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -451,7 +453,7 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
 			{
 				sensor_winddir_data_element_t winddirData;
 				memset(&winddirData, 0, sizeof(sensor_winddir_data_element_t));

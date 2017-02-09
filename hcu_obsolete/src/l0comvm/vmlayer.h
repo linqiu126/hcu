@@ -266,7 +266,7 @@ extern OPSTAT hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, voi
 extern OPSTAT hcu_message_rcv(UINT32 dest_id, HcuMsgSruct_t *msg);
 extern UINT32 hcu_message_rcv_no_wait(UINT32 dest_id, HcuMsgSruct_t *msg);
 extern OPSTAT taskid_to_string(UINT32 id, char *string);
-extern OPSTAT msgid_to_string(UINT32 id, char *string);
+extern OPSTAT hcu_vm_msgid_to_string(UINT32 id, char *string);
 extern OPSTAT hcu_timer_polling(time_t sec, UINT32 nsec, void *handler());
 extern OPSTAT hcu_timer_set(UINT32 timerid, UINT32 taskid, UINT32 delay);
 extern OPSTAT hcu_timer_clear(UINT32 timerid, UINT32 taskid);

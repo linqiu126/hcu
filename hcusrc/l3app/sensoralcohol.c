@@ -94,7 +94,8 @@ OPSTAT fsm_alcohol_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_ALCOHOL] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_ALCOHOL, TIMER_ID_1S_ALCOHOL_PERIOD_READ, zHcuSysEngPar.timer.alcoholReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_ALCOHOL, TIMER_ID_1S_ALCOHOL_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_ALCOHOL_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ALCOHOL]++;
 		HcuErrorPrint("ALCOHOL: Error start period timer!\n");
@@ -207,7 +208,7 @@ OPSTAT func_alcohol_time_out_read_data_from_mq3alco(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioAlcoholMq3alco >= HCU_SENSOR_ALCOHOL_VALUE_MIN) && (zHcuGpioAlcoholMq3alco <= HCU_SENSOR_ALCOHOL_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioAlcoholMq3alco >= HCU_SENSOR_ALCOHOL_VALUE_MIN) && (zHcuGpioAlcoholMq3alco <= HCU_SENSOR_ALCOHOL_VALUE_MAX))
 	{
 		sensor_alcohol_mq3alco_data_element_t alcoholData;
 		memset(&alcoholData, 0, sizeof(sensor_alcohol_mq3alco_data_element_t));

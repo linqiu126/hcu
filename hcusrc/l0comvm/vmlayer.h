@@ -634,7 +634,7 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_WINDSPD_PERIOD_READ,
 	TIMER_ID_1S_WINDSPD_MODBUS_FB,
 	TIMER_ID_1S_TEMP_PERIOD_READ,
-	TIMER_ID_1S_TEMP_FB,//update for SPIBUSARIES
+	TIMER_ID_1S_TEMP_FB,
 	TIMER_ID_1S_HUMID_PERIOD_READ,
 	TIMER_ID_1S_HUMID_MODBUS_FB,
 	TIMER_ID_1S_NOISE_PERIOD_READ,
@@ -661,7 +661,8 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_IGM_PERIOD_READ,
 	TIMER_ID_1S_IPM_PERIOD_READ,
 	TIMER_ID_1S_SYSPM_PERIOD_WORKING,
-	TIMER_ID_1S_CANITFLEO_WORKING_SCAN, // HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION，也可能会使用10ms TIMERID，待定
+	TIMER_ID_1S_SYSSWM_PERIOD_WORKING,
+	TIMER_ID_1S_CANITFLEO_WORKING_SCAN,
 	TIMER_ID_1S_L3BFSC_PERIOD_READ,
 	TIMER_ID_1S_L3BFSC_INIT_FB_WAIT,
 	TIMER_ID_1S_L3BFSC_TTT_WAIT_FB,
@@ -785,8 +786,9 @@ extern OPSTAT hcu_task_create_and_run(UINT32 task_id, HcuFsmStateItem_t* pFsmSta
 extern OPSTAT hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len); //message send
 extern OPSTAT hcu_message_rcv(UINT32 dest_id, HcuMsgSruct_t *msg);
 extern UINT32 hcu_message_rcv_no_wait(UINT32 dest_id, HcuMsgSruct_t *msg);
-extern OPSTAT taskid_to_string(UINT32 id, char *string);
-extern OPSTAT msgid_to_string(UINT32 id, char *string);
+extern OPSTAT hcu_vm_taskid_to_string(UINT32 id, char *string);
+extern OPSTAT hcu_vm_msgid_to_string(UINT32 id, char *string);
+extern OPSTAT hcu_vm_timerid_to_string(UINT32 id, char *string);
 extern OPSTAT hcu_timer_polling(time_t sec, UINT32 nsec, void *handler());
 extern OPSTAT hcu_timer_set(UINT32 timerid, UINT32 taskid, UINT32 delay);
 extern OPSTAT hcu_timer_clear(UINT32 timerid, UINT32 taskid);

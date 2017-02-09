@@ -116,7 +116,8 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//启动周期性定时器
 	/*
-	ret = hcu_timer_start(TASK_ID_PM25SHARP, TIMER_ID_1S_PM25SHARP_PERIOD_READ, zHcuSysEngPar.timer.pm25sharpReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_PM25SHARP, TIMER_ID_1S_PM25SHARP_PERIOD_READ,
+	zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25SHARP_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuRunErrCnt[TASK_ID_PM25SHARP]++;
 		HcuErrorPrint("PM25SHARP: Error start period timer!\n");
@@ -258,7 +259,7 @@ void func_pm25sharp_read_data(UINT32 fd)
 				  HcuDebugPrint("PM25SHARP: Last bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
 				  average_pm25 = sum_2s / counter;
 
-				  if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (average_pm25 >= HCU_SENSOR_PM25_VALUE_MIN) && (average_pm25 <= HCU_SENSOR_PM25_VALUE_MAX))
+				  if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (average_pm25 >= HCU_SENSOR_PM25_VALUE_MIN) && (average_pm25 <= HCU_SENSOR_PM25_VALUE_MAX))
 				  {
 					  memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
 					  pm25Data.equipid = 0;

@@ -445,6 +445,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_IGM_PERIOD_READ,                    "TID_1S_IGM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_IPM_PERIOD_READ,                    "TID_1S_IPM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            3600,    TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           3600,    TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_PERIOD_READ,                 "TID_1S_L3BFSC_PERIOD_READ",              10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_INIT_FB_WAIT,                "TID_1S_L3BFSC_INIT_FB_WAIT",             15,      TIMER_RESOLUTION_1S},
@@ -1005,43 +1006,43 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_ALL:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			break;
 
 		case HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if (msg_id != MSG_ID_COM_TIME_OUT){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
 		case HCU_TRACE_MSG_MODE_ALL_BUT_HEART_BEAT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((msg_id != MSG_ID_COM_HEART_BEAT) && (msg_id != MSG_ID_COM_HEART_BEAT_FB)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
 		case HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((msg_id != MSG_ID_COM_TIME_OUT) && (msg_id != MSG_ID_COM_HEART_BEAT) && (msg_id != MSG_ID_COM_HEART_BEAT_FB)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
 			}
 			break;
 
 		case HCU_TRACE_MSG_MODE_MOUDLE_TO_ALLOW:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleCtrFlag == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
@@ -1049,9 +1050,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_MOUDLE_TO_RESTRICT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict!= TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleCtrFlag == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
@@ -1059,9 +1060,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_MOUDLE_FROM_ALLOW:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleToAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleCtrFlag == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
@@ -1069,9 +1070,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_MOUDLE_FROM_RESTRICT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleToRestrict!= TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleCtrFlag == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
@@ -1079,9 +1080,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_MOUDLE_DOUBLE_ALLOW:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleToAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleCtrFlag == TRUE) && (zHcuSysEngPar.traceList.mod[dest_id].moduleCtrFlag == TRUE)){
@@ -1090,9 +1091,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_MOUDLE_DOUBLE_RESTRICT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleToRestrict != TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict != TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleCtrFlag == TRUE) && (zHcuSysEngPar.traceList.mod[dest_id].moduleCtrFlag == TRUE)){
@@ -1101,9 +1102,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_MSGID_ALLOW:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
@@ -1111,9 +1112,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_MSGID_RESTRICT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE)\
 					&& (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)){
 				HcuDebugPrint("MSGTRC: MSGID=0X%04X%s, DID=%02X%s, SID=%02X%s, LEN=%d.\n", msg_id, s3, dest_id, s1, src_id, s2, param_len);
@@ -1121,9 +1122,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_COMBINE_TO_ALLOW:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE) && (zHcuSysEngPar.traceList.mod[dest_id].moduleCtrFlag == TRUE)){
@@ -1132,9 +1133,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_COMBINE_TO_RESTRICT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict != TRUE)\
 					&& (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE) && (zHcuSysEngPar.traceList.mod[dest_id].moduleCtrFlag == TRUE)){
@@ -1143,9 +1144,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_COMBINE_FROM_ALLOW:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromAllow == TRUE)\
 					&& (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE) && (zHcuSysEngPar.traceList.mod[src_id].moduleCtrFlag == TRUE)){
@@ -1154,9 +1155,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_COMBINE_FROM_RESTRICT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE)\
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromRestrict != TRUE)\
 					&& (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE) && (zHcuSysEngPar.traceList.mod[src_id].moduleCtrFlag == TRUE)){
@@ -1165,9 +1166,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_COMBINE_DOUBLE_ALLOW:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgAllow == TRUE) && (zHcuSysEngPar.traceList.msg[msg_id].msgCtrFlag == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToAllow == TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromAllow == TRUE)\
@@ -1178,9 +1179,9 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 			break;
 
 		case HCU_TRACE_MSG_MODE_COMBINE_DOUBLE_RESTRICT:
-			taskid_to_string(dest_id, s1);
-			taskid_to_string(src_id, s2);
-			msgid_to_string(msg_id, s3);
+			hcu_vm_taskid_to_string(dest_id, s1);
+			hcu_vm_taskid_to_string(src_id, s2);
+			hcu_vm_msgid_to_string(msg_id, s3);
 			if ((zHcuSysEngPar.traceList.msg[msg_id].msgId == msg_id) && (zHcuSysEngPar.traceList.msg[msg_id].msgRestrict != TRUE) \
 					&& (zHcuSysEngPar.traceList.mod[dest_id].moduleId == dest_id) && (zHcuSysEngPar.traceList.mod[dest_id].moduleToRestrict != TRUE)
 					&& (zHcuSysEngPar.traceList.mod[src_id].moduleId == src_id) && (zHcuSysEngPar.traceList.mod[src_id].moduleFromRestrict != TRUE)\
@@ -1341,10 +1342,17 @@ UINT32 hcu_message_rcv_no_wait(UINT32 dest_id, HcuMsgSruct_t *msg)
 	return ret;
 }
 
+/*
+ *
+ *  访问TASKID/MSGID/TIMERID对应的NAME
+ *
+ *  最好从zHcuSysEngPar表中进行访问，因为zHcuVmCtrTab中只有激活任务的信息，对于未激活的任务，不见得都存在
+ *
+ */
+
 //TaskId transfer to string
-//待调试的函数，是否需要使用动态内存
-//正确的做法也许应该使用zHcuTaskInfo[id].TaskName这个信息来表达
-UINT32 taskid_to_string(UINT32 id, char *string)
+//输入的string参数，其内存地址空间和长度预留，是否足够
+UINT32 hcu_vm_taskid_to_string(UINT32 id, char *string)
 {
 	if ((id<TASK_ID_MIN) || (id>=TASK_ID_MAX)){
 		HcuErrorPrint("HCU-VM: Error task Id input!\n");
@@ -1352,8 +1360,8 @@ UINT32 taskid_to_string(UINT32 id, char *string)
 	}
 	char tmp[TASK_NAME_MAX_LENGTH-2]="";
 	strcpy(string, "[");
-	if (strlen(zHcuVmCtrTab.task[id].taskName)>0){
-		strncpy(tmp, zHcuVmCtrTab.task[id].taskName, TASK_NAME_MAX_LENGTH-3);
+	if (strlen(zHcuSysEngPar.traceList.mod[id].moduleName)>0){
+		strncpy(tmp, zHcuSysEngPar.traceList.mod[id].moduleName, TASK_NAME_MAX_LENGTH-3);
 		strcat(string, tmp);
 	}else{
 		strcat(string, "TASK_ID_XXX");
@@ -1364,16 +1372,16 @@ UINT32 taskid_to_string(UINT32 id, char *string)
 
 //MsgId transfer to string
 //输入的string参数，其内存地址空间和长度预留，是否足够
-UINT32 msgid_to_string(UINT32 id, char *string)
+UINT32 hcu_vm_msgid_to_string(UINT32 id, char *string)
 {
-	if (id <0 || id > MAX_MSGID_NUM_IN_ONE_TASK){
+	if (id <MSG_ID_COM_MIN || id >= MSG_ID_COM_MAX){
 		HcuErrorPrint("HCU-VM: Error Message Id input!\n");
 		return FAILURE;
 	}
 	char tmp[MSG_NAME_MAX_LENGTH-2]="";
 	strcpy(string, "[");
-	if (strlen(zHcuSysEngTrcMsgCtrStaticCfg[id].msgName)>0){
-		strncpy(tmp, zHcuSysEngTrcMsgCtrStaticCfg[id].msgName, MSG_NAME_MAX_LENGTH-3);
+	if (strlen(zHcuSysEngPar.traceList.msg[id].msgName)>0){
+		strncpy(tmp, zHcuSysEngPar.traceList.msg[id].msgName, MSG_NAME_MAX_LENGTH-3);
 		strcat(string, tmp);
 	}else{
 		strcat(string, "MSG_ID_XXX");
@@ -1382,6 +1390,28 @@ UINT32 msgid_to_string(UINT32 id, char *string)
 
 	return SUCCESS;
 }
+
+//TimerId transfer to string
+//输入的string参数，其内存地址空间和长度预留，是否足够
+UINT32 hcu_vm_timerid_to_string(UINT32 id, char *string)
+{
+	if (id <TIMER_ID_MIN || id >= TIMER_ID_MAX){
+		HcuErrorPrint("HCU-VM: Error Timer Id input!\n");
+		return FAILURE;
+	}
+	char tmp[TIMER_NAME_MAX_LENGTH-2]="";
+	strcpy(string, "[");
+	if (strlen(zHcuSysEngPar.timer.array[id].name)>0){
+		strncpy(tmp, zHcuSysEngPar.timer.array[id].name, TIMER_NAME_MAX_LENGTH-3);
+		strcat(string, tmp);
+	}else{
+		strcat(string, "TID_XXX");
+	}
+	strcat(string, "]");
+
+	return SUCCESS;
+}
+
 
 //API abstract
 //通过时钟问题的解决，这个问题终于解决了，原因就是SLEEP和SIGALM公用同一套信号量，导致相互冲突。时钟采用线程方式后，再也没有问题了
@@ -2626,6 +2656,10 @@ void hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UIN
 UINT16 hcu_vm_search_task_static_cfg_table_of_row(int taskid)
 {
 	int i = 0;
+
+	//为了加快效率，先探测是否属于全排列
+	if (zHcuVmCtrTaskStaticCfg[taskid].taskInputId == taskid) return taskid;
+	//不行再遍历
 	while(zHcuVmCtrTaskStaticCfg[i].taskInputId != TASK_ID_MAX){
 		if(zHcuVmCtrTaskStaticCfg[i].taskInputId == taskid)
 			return i;
@@ -2639,6 +2673,10 @@ UINT16 hcu_vm_search_task_static_cfg_table_of_row(int taskid)
 UINT16 hcu_vm_search_msg_static_cfg_table_of_row(int msgid)
 {
 	int i = 0;
+
+	//为了加快效率，先探测是否属于全排列
+	if (zHcuSysEngTrcMsgCtrStaticCfg[msgid].msgId == msgid) return msgid;
+	//不行再遍历
 	while(zHcuSysEngTrcMsgCtrStaticCfg[i].msgId != MSG_ID_COM_MAX){
 		if(zHcuSysEngTrcMsgCtrStaticCfg[i].msgId == msgid)
 			return i;
@@ -2651,6 +2689,10 @@ UINT16 hcu_vm_search_msg_static_cfg_table_of_row(int msgid)
 UINT16 hcu_vm_search_timer_static_cfg_table_of_row(int timerid)
 {
 	int i = 0;
+
+	//为了加快效率，先探测是否属于全排列
+	if (zHcuSysEngTimerStaticCfg[timerid].timerId == timerid) return timerid;
+	//不行再遍历
 	while(zHcuSysEngTimerStaticCfg[i].timerId != TIMER_ID_MAX){
 		if(zHcuSysEngTimerStaticCfg[i].timerId == timerid)
 			return i;

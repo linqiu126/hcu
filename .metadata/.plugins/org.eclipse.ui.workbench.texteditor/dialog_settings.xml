@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="&quot;TID" key="selection"/>
+		<item value="hcu_timer_start" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="&quot;TIMER_ID"/>
-			<item value="TIMER_ID"/>
-			<item value="TIMER_"/>
-			<item value="HCU_L3AQYCG20_TIMER_DURATION_PERIOD_READ"/>
-			<item value="elif"/>
-			<item value="zHcuSysEngTrcMsgCtrStaticCfg"/>
-			<item value="tracelist"/>
-			<item value="trace"/>
+			<item value="hcu_timer_start"/>
+			<item value="hcu_start"/>
+			<item value="HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT"/>
+			<item value="//定义本地视频服务器"/>
+			<item value="HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT"/>
+			<item value="//定义后台SW_SWM的地址"/>
+			<item value="//定义后台CLOUD_FTP 的地址"/>
+			<item value="HCU_CLOUDVELA_BH_SERVER_NAME"/>
 		</list>
 		<list key="replacehistory">
-			<item value="&quot;TID"/>
-			<item value="TID"/>
-			<item value="zHcuSysEngTimerStaticCfg"/>
-			<item value="#define TIMER_NAME_MAX_LENGTH 40"/>
-			<item value="SYSSWM"/>
-			<item value="Sysswm"/>
-			<item value="sysswm"/>
-			<item value="zHcuVmCtrTab.task"/>
+			<item value="//定义后台SW_SWM的地址"/>
+			<item value="//定义后台CLOUD_FTP 的地址"/>
+			<item value="//系统启动选项以及网络连接选项"/>
+			<item value="//传感器配置参数"/>
+			<item value="//批量生产标志信息，固件升级标识，以及物理烧录信息等"/>
+			<item value="//批量生产标志信息"/>
+			<item value="//本项目特定部分"/>
+			<item value="//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1126" key="DIALOG_X_ORIGIN"/>
-		<item value="373" key="DIALOG_Y_ORIGIN"/>
+		<item value="1164" key="DIALOG_X_ORIGIN"/>
+		<item value="377" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

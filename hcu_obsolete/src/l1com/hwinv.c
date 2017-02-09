@@ -437,11 +437,11 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.comm.commFrontSensorIpm = HCU_COMM_FRONT_SENSOR_IPM;
 
 		//数据库部分
-		strcpy(zHcuSysEngPar.dbi.hcuDbHost, HCU_DB_HOST_DEFAULT);
-		strcpy(zHcuSysEngPar.dbi.hcuDbUser, HCU_DB_USER_DEFAULT);
-		strcpy(zHcuSysEngPar.dbi.hcuDbPsw, HCU_DB_PSW_DEFAULT);
-		strcpy(zHcuSysEngPar.dbi.hcuDbName, HCU_DB_NAME_DEFAULT);
-		zHcuSysEngPar.dbi.hcuDbPort = HCU_DB_PORT_DEFAULT;
+		strcpy(zHcuSysEngPar.dbi.hcuDbHost, HCU_LOCAL_DB_HOST_DEFAULT);
+		strcpy(zHcuSysEngPar.dbi.hcuDbUser, HCU_LOCAL_DB_USER_DEFAULT);
+		strcpy(zHcuSysEngPar.dbi.hcuDbPsw, HCU_LOCAL_DB_PSW_DEFAULT);
+		strcpy(zHcuSysEngPar.dbi.hcuDbName, HCU_LOCAL_DB_NAME_DEFAULT);
+		zHcuSysEngPar.dbi.hcuDbPort = HCU_LOCAL_DB_PORT_DEFAULT;
 
 		// Sensor timer by Shanchun
 		zHcuSysEngPar.timer.emcReqTimer = HCU_EMC_TIMER_DURATION_PERIOD_READ;
@@ -484,9 +484,9 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		zHcuSysEngPar.timer.syspmWorkingTimer = HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING;
 
 		//Series Port config by Shanchun
-		zHcuSysEngPar.serialport.SeriesPortForModbus = HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT;
-		zHcuSysEngPar.serialport.SeriesPortForGPS = HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT;
-		zHcuSysEngPar.serialport.SeriesPortForPm25Sharp = HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT;
+		zHcuSysEngPar.serialport.SeriesPortForModbus = HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT;
+		zHcuSysEngPar.serialport.SeriesPortForGPS = HCU_SERIESPORT_NO_FOR_GPS_DEFAULT;
+		zHcuSysEngPar.serialport.SeriesPortForPm25Sharp = HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT;
 		//zHcuSysEngPar.serialport.BautRate = HCU_SERIESPORT_BAUTRATE_DEFAULT;
 
 		//后台部分
@@ -495,23 +495,23 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_CLOUDVELA_HTTP_ADDRESS_SAE);
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_CLOUDVELA_HTTP_ADDRESS_JD);
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT);
-		strcpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_BH_SERVER_NAME);
+		strcpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_HTTP_SERVER_NAME);
 		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_CLOUDVELA_BH_HCU_NAME);
 		zHcuSysEngPar.cloud.cloudBhItfFrameStd = HCU_CLOUDVELA_BH_INTERFACE_STANDARD;
 
 		//for HCU SW FTP by shanchun
-		strcpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_CLOUDVELA_FTP_ADDRESS);
-		strcpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_CLOUDVELA_FTP_USER);
-		strcpy(zHcuSysEngPar.cloud.cloudFtpPwd, HCU_CLOUDVELA_FTP_PWD);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_SWM_SERVER_FTP_ADDRESS);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_CLOUDVELA_SWM_FTP_USER);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpPwd, HCU_CLOUDVELA_SWM_FTP_PWD);
 
 		//for HCU video FTP upload by shanchun
-		strcpy(zHcuSysEngPar.cloud.cloudFtpUserVideo, HCU_CLOUDVELA_FTP_USER);
-		strcpy(zHcuSysEngPar.cloud.cloudFtpPwdVideo, HCU_CLOUDVELA_FTP_PWD);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpUserVideo, HCU_CLOUDVELA_SWM_FTP_USER);
+		strcpy(zHcuSysEngPar.cloud.cloudFtpPwdVideo, HCU_CLOUDVELA_SWM_FTP_PWD);
 
 		//local SW storage address
-		strcpy(zHcuSysEngPar.swDownload.hcuSwDownloadDir, HCU_SW_DOWNLOAD_DIR_DEFAULT);
-		strcpy(zHcuSysEngPar.swDownload.hcuSwActiveDir, HCU_SW_ACTIVE_DIR_DEFAULT);
-		strcpy(zHcuSysEngPar.swDownload.hcuSwBackupDir, HCU_SW_BACKUP_DIR_DEFAULT);
+		strcpy(zHcuSysEngPar.swDownload.hcuSwDownloadDir, HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT);
+		strcpy(zHcuSysEngPar.swDownload.hcuSwActiveDir, HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT);
+		strcpy(zHcuSysEngPar.swDownload.hcuSwBackupDir, HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT);
 
 		//视频服务器部分
 		strcpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT);
@@ -1068,8 +1068,8 @@ void func_hwinv_scan_dir(void)
 	UINT32 targetYear = 0, targetMon = 0;
 	if (zHcuVmCtrTab.clock.monChange == TRUE){
 		//最小保护
-		days = HCU_DATA_SAVE_DURATION_IN_DAYS;
-		if (days < HCU_DATA_SAVE_DURATION_MIN_IN_DAYS) days = HCU_DATA_SAVE_DURATION_MIN_IN_DAYS;
+		days = HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS;
+		if (days < HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS) days = HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS;
 		//算出保留存储的月数
 		monNbr = (UINT32)((days-1) / 30) + 1;
 		if (zHcuVmCtrTab.clock.mon > monNbr){
@@ -1136,43 +1136,43 @@ void func_hwinv_scan_db(void)
 	//删除90天以上的旧数据
 	//先用变天的标示位来判断，以提高效率，不然每一次扫描都无效的要访问一次数据库，过于频繁
 	if (zHcuVmCtrTab.clock.dayChange == TRUE){
-		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidDht11DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempDht11DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuCo1DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIwmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIhmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIgmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidDht11DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidSht20DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidRht03DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempDht11DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsBmp180DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuCo1DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIwmCj188DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIhmCj188DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIgmCj188DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 	}
 }
 

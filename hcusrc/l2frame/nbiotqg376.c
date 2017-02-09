@@ -104,7 +104,8 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_NBIOTQG376, TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.nbiotqg376HbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_NBIOTQG376, TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTQG376]++;
 		HcuErrorPrint("NBIOTQG376: Error start timer!\n");

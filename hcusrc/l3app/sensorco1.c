@@ -92,7 +92,8 @@ OPSTAT fsm_co1_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CO1] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_CO1, TIMER_ID_1S_CO1_PERIOD_READ, zHcuSysEngPar.timer.co1ReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_CO1, TIMER_ID_1S_CO1_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_CO1_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CO1]++;
 		HcuErrorPrint("CO1: Error start period timer!\n");

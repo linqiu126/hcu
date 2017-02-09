@@ -122,10 +122,9 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
 	hcu_sleep(i);
 
-	//HcuDebugPrint("EMC: zHcuSysEngPar.timer.emcReqTimer = %d\n", zHcuSysEngPar.timer.emcReqTimer);
-
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_EMC, TIMER_ID_1S_EMC_PERIOD_READ, zHcuSysEngPar.timer.emcReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_EMC, TIMER_ID_1S_EMC_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_EMC_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 		HcuErrorPrint("EMC: Error start timer!\n");
@@ -240,7 +239,8 @@ void func_emc_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
-		ret = hcu_timer_start(TASK_ID_EMC, TIMER_ID_1S_EMC_MODBUS_FB, zHcuSysEngPar.timer.emcReqTimerFB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		ret = hcu_timer_start(TASK_ID_EMC, TIMER_ID_1S_EMC_MODBUS_FB, \
+				zHcuSysEngPar.timer.array[TIMER_ID_1S_EMC_MODBUS_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
 			HcuErrorPrint("EMC: Error start timer!\n");
@@ -354,7 +354,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 			record.ew = rcv.emc.gps.ew;
 			record.ns = rcv.emc.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_MEM_SENSOR_SAVE_FLAG == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -363,7 +363,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_DISC_SENSOR_SAVE_FLAG == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -372,7 +372,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
 			{
 				sensor_emc_data_element_t emcData;
 				memset(&emcData, 0, sizeof(sensor_emc_data_element_t));
@@ -445,7 +445,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 			record.ew = rcv.emc.gps.ew;
 			record.ns = rcv.emc.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_MEM_SENSOR_SAVE_FLAG == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -454,7 +454,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_DISC_SENSOR_SAVE_FLAG == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -463,7 +463,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
 			{
 				sensor_emc_data_element_t emcData;
 				memset(&emcData, 0, sizeof(sensor_emc_data_element_t));

@@ -110,7 +110,8 @@ OPSTAT fsm_nbiotcj188_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTCJ188] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_NBIOTCJ188, TIMER_ID_1S_NBIOTCJ188_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.nbiotcj188HbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_NBIOTCJ188, TIMER_ID_1S_NBIOTCJ188_PERIOD_LINK_HEART_BEAT, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_NBIOTCJ188_PERIOD_LINK_HEART_BEAT].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		HcuErrorPrint("NBIOTCJ188: Error start timer!\n");

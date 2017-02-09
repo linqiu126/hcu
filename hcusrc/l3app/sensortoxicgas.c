@@ -94,7 +94,8 @@ OPSTAT fsm_toxicgas_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_TOXICGAS] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_TOXICGAS, TIMER_ID_1S_TOXICGAS_PERIOD_READ, zHcuSysEngPar.timer.toxicgasReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_TOXICGAS, TIMER_ID_1S_TOXICGAS_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_TOXICGAS_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_TOXICGAS]++;
 		HcuErrorPrint("TOXICGAS: Error start period timer!\n");
@@ -208,7 +209,7 @@ OPSTAT func_toxicgas_time_out_read_data_from_mq135(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioToxicgasMq135 >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuGpioToxicgasMq135 <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioToxicgasMq135 >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuGpioToxicgasMq135 <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
 	{
 		sensor_toxicgas_mq135_data_element_t toxicgasData;
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_mq135_data_element_t));
@@ -233,7 +234,7 @@ OPSTAT func_toxicgas_time_out_read_data_from_zp01voc(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioToxicgasZp01voc >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuGpioToxicgasZp01voc <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioToxicgasZp01voc >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuGpioToxicgasZp01voc <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
 	{
 		sensor_toxicgas_zp01voc_data_element_t toxicgasData;
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_zp01voc_data_element_t));

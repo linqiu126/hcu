@@ -186,7 +186,8 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//启动周期性定时器：这个定时器是为了定时汇报12个传感器的测量数量
-	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, HCU_L3BFSC_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");
 
@@ -313,7 +314,8 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 		zHcuL3BfscGenCtrlTable.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INVALID;
 
 		//启动周期性定时器
-		ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, HCU_L3BFSC_TIMER_DURATION_PERIOD_ERROR_SCAN, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, \
+				zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");
 		}
@@ -609,7 +611,8 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		zHcuL3BfscGenCtrlTable.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INVALID;
 
 		//启动周期性定时器
-		ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, HCU_L3BFSC_TIMER_DURATION_PERIOD_ERROR_SCAN, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, \
+				zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error start period timer!\n");
 		}
@@ -670,7 +673,8 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				HCU_DEBUG_PRINT_IPT(targetStr);
 
 				//启动定时器
-				ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_TGU_WAIT_FB, HCU_L3BFSC_TIMER_DURATION_TGU_WAIT_FB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+				ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_TGU_WAIT_FB, \
+						zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_TGU_WAIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
 					HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error start timer!\n");
 				}
@@ -710,7 +714,8 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 
 			//启动定时器
-			ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_TTT_WAIT_FB, HCU_L3BFSC_TIMER_DURATION_TTT_WAIT_FB, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+			ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_TTT_WAIT_FB, \
+					zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_TTT_WAIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 			if (ret == FAILURE){
 				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error start timer!\n");
 			}
@@ -856,7 +861,8 @@ OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * 
 	}
 
 	//启动定时器
-	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_INIT_FB_WAIT, HCU_L3BFSC_TIMER_DURATION_INIT_FB_WAIT, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_INIT_FB_WAIT, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_INIT_FB_WAIT].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start timer!\n");
 	}
@@ -982,7 +988,8 @@ OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void)
 	int ret = 0, i=0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, HCU_L3BFSC_TIMER_DURATION_PERIOD_ERROR_SCAN, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error start period timer!\n");
 	}
@@ -1013,7 +1020,8 @@ OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void)
 	int ret = 0, i=0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, HCU_L3BFSC_TIMER_DURATION_PERIOD_ERROR_SCAN, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error start period timer!\n");
 	}

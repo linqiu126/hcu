@@ -36,7 +36,7 @@
 
 #define HCU_DISC_SENSOR_SAVE_FLAG_YES 1
 #define HCU_DISC_SENSOR_SAVE_FLAG_NO 0 //and Others
-#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
+#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
 
 //项目名称，每个项目均为唯一，编译生成项，用于本项目选择启动配置数据库中的工参信息
 //注意这里是互斥性定义，不要弄的重复了
@@ -66,7 +66,7 @@
 //最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
 //部分保留数据可以改的更小，可以放在工参里另行定义
 #define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
+#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 //月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
 //月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
 //#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
@@ -384,10 +384,10 @@
 
 //本地数据库HCUDB
 #define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-#define HCU_DB_USER_DEFAULT "root"     	//连接数据库的用户名
-#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
+#define HCU_LOCAL_DB_USER_DEFAULT "root"     	//连接数据库的用户名
+#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 //Timer setting by Shanhun
 #define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
@@ -448,8 +448,8 @@
 #define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
 
 //Series Port config by Shanchun
-#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
+#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 2
+#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  1
 #define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
 #define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
 
@@ -461,14 +461,14 @@
 #define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
 
 //定义后台CLOUD  FTP 的地址
-#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
+#define  HCU_CLOUDVELA_SWM_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
 #define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
 #define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
 
 //local SW storage address for HCU SW upgrade by shanchun
-#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
 
 //系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
 #define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME

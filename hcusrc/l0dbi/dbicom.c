@@ -272,6 +272,68 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 
 
 
+//删掉定时器的工参配置表单，只保留最为基础的配置清单
+--
+-- Table structure for table `hcusysengpar`
+--
+
+CREATE TABLE IF NOT EXISTS `hcusysengpar` (
+  `prjname` char(100) NOT NULL,
+  `commbackhawlcon` int(1) NOT NULL,
+  `hcudbhost` char(20) NOT NULL,
+  `hcudbuser` char(20) NOT NULL,
+  `hcudbpsw` char(20) NOT NULL,
+  `hcudbname` char(20) NOT NULL,
+  `hcudbport` int(1) NOT NULL,
+  `seriesportformodbus` int(1) NOT NULL,
+  `seriesportforgps` int(1) NOT NULL,
+  `seriesportforpm25sharp` int(1) NOT NULL,
+  `cloudhttpaddlocal` char(200) NOT NULL,
+  `cloudsocketsvradd` char(200) NOT NULL,
+  `cloudhttpaddsae` char(200) NOT NULL,
+  `cloudhttpaddjd` char(200) NOT NULL,
+  `cloudhttpaddwechat` char(200) NOT NULL,
+  `cloudbhservername` char(12) NOT NULL,
+  `cloudbhhcuname` char(20) NOT NULL,
+  `cloudbhitfframestd` int(1) NOT NULL,
+  `cloudftpadd` char(64) NOT NULL,
+  `cloudftpuser` char(12) NOT NULL,
+  `cloudftppwd` char(12) NOT NULL,
+  `cloudftppwdvideo` char(12) NOT NULL,
+  `cloudftpuservideo` char(12) NOT NULL,
+  `hcuswdownloaddir` char(64) NOT NULL,
+  `hcuswactivedir` char(64) NOT NULL,
+  `hcuswbackupdir` char(64) NOT NULL,
+  `hcuvideoserverdir` char(64) NOT NULL,
+  `hcuvideoserverhttp` char(64) NOT NULL,
+  `debugmode` int(1) NOT NULL,
+  `tracemode` int(1) NOT NULL,
+  `browselautostartupflag` int(1) NOT NULL,
+  `browselprog` char(20) NOT NULL,
+  `browselstartupaddress` char(128) NOT NULL,
+  `browselworkingoption` char(128) NOT NULL,
+  PRIMARY KEY (`prjname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcusysengpar`
+--
+
+INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`,`seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `cloudhttpaddlocal`, `cloudsocketsvradd`, `cloudhttpaddsae`, `cloudhttpaddjd`, `cloudhttpaddwechat`, `cloudbhservername`, `cloudbhhcuname`, `cloudbhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
+('HCU_PRJ_AQYCG10_335D',     1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G201_AQYC_SH001', 1, 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYC_OBSOLETE',    1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFSC_CBU',         1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'HCU_G801_BFSC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXGLACM',          1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G221_GLAM_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXILC',            1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G211_ILCX_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_GQYBG40',          1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G401_GQYB_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_HPM_QG',     1, 'localhost', 'root', '123456', 'hcudb', 3306,  3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G241_NBHP_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_LPM_CJ',     1, 'localhost', 'root', '123456', 'hcudb', 3306,  3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G231_NBLP_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_OPWL_OTDR',        1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G711_OTDR_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TBSWRG30',         1, 'localhost', 'root', '123456', 'hcudb', 3306,  3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G301_TBSW_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TEST_MODE',        1, 'localhost', 'root', '123456', 'hcudb', 3306,  3, 1, 0, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'http://mfunhcu.sinaapp.com/jd/cloud_callback.php', 'http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php', 'AQ_HCU', 'HCU_G201_TEST_SH001', 1, 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
+
+
 
 //HcuTraceModuleCtr数据表格式
 //该数据表单将支持智能初始化
@@ -653,7 +715,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -687,9 +749,6 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 	}
 	else{
 		int index;  //.PRJNAME是INDEX=0的主键
-		/*for (index = 0; index < 43; index++){
-			printf("Field[%d]=%s\n", index, sqlRow[index]);
-		}*/
 		index = 0;
 		//项目名称
 		if(sqlRow[index]) strncpy(engPar->prjname, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);
@@ -703,57 +762,54 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbName, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);
 		if(sqlRow[index]) engPar->dbi.hcuDbPort = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
-		//Timer setting by Shanchun
-		if(sqlRow[index]) engPar->timer.emcReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.emcReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.humidReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.humidReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.noiseReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.noiseReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.pm25ReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.pm25ReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.tempReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.tempReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.winddirReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.winddirReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.windspdReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.windspdReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.cloudvelaHbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.cloudvelaHbBackTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.nbiotcj188HbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.nbiotcj188HbBackTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.nbiotqg376HbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.nbiotqg376HbBackTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.cloudSocketHbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.dbVerReportTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.hsmmpReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.hsmmpCapDuration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.hsmmpCapDurationFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.hsmmpRefRate = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.airprsReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.co1ReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.lightstrReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.alcoholReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.hchoReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.toxicgasReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.iwmReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.ihmReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.igmReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.ipmReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.pm25sharpReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.syspmWorkingTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if(sqlRow[index]) engPar->timer.canitfWorkingTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		//Timer setting by Shanchun
+//		if(sqlRow[index]) engPar->timer.emcReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.emcReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.humidReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.humidReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.noiseReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.noiseReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.pm25ReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.pm25ReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.tempReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.tempReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.winddirReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.winddirReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.windspdReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.windspdReqTimerFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.cloudvelaHbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.cloudvelaHbBackTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.nbiotcj188HbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.nbiotcj188HbBackTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.nbiotqg376HbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.nbiotqg376HbBackTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.cloudSocketHbTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.dbVerReportTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.hsmmpReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.hsmmpCapDuration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.hsmmpCapDurationFB = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.hsmmpRefRate = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.airprsReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.co1ReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.lightstrReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.alcoholReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.hchoReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.toxicgasReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.iwmReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.ihmReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.igmReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.ipmReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.pm25sharpReqTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.syspmWorkingTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if(sqlRow[index]) engPar->timer.canitfWorkingTimer = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 
-		//Series Port config by Shanchun
+		//Series Port
 		if(sqlRow[index]) engPar->serialport.SeriesPortForModbus = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		//if(sqlRow[index]) engPar->serialport.BautRateForModbusPort = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if(sqlRow[index]) engPar->serialport.SeriesPortForGPS = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if(sqlRow[index]) engPar->serialport.SeriesPortForPm25Sharp = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		//if(sqlRow[index]) engPar->serialport.BautRate = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
 		//后台链接部分
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddLocal, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
-		//printf("engPar->cloud.cloudHttpAddLocal = %s\n", engPar->cloud.cloudHttpAddLocal);
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudSocketSrvAdd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddSae, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddJd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
@@ -770,12 +826,9 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		//For HCU video upload
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUserVideo, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwdVideo, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
-
-
-		if(sqlRow[index]) strncpy(engPar->swDownload.hcuSwDownloadDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->swDownload.hcuSwActiveDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->swDownload.hcuSwBackupDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
-
+		if(sqlRow[index]) strncpy(engPar->swm.hcuSwDownloadDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->swm.hcuSwActiveDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->swm.hcuSwBackupDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
 
 		//视频服务器部分
 		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);
@@ -789,8 +842,6 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		if(sqlRow[index]) engPar->localUI.browselAutoStartUpFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselProg, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN-1);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselStartUpAddress, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN-1);
-		//Check segment position is right or not: [http://localhost/yii2basic/web/index.php]
-		//HcuDebugPrint("DBICOM: Pure test to cross-check whether it is the right position of segment, StartupAddress = [%s]!\n", engPar->localUI.browselStartUpAddress);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselWorkingOption, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN-1);
 	}
 
@@ -823,7 +874,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTab_t *engPar)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -898,7 +949,7 @@ OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -987,7 +1038,7 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1060,7 +1111,7 @@ OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1197,7 +1248,7 @@ OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1262,7 +1313,7 @@ OPSTAT dbi_HcuSysEngTimer_inqury(HcuSysEngParTab_t *engPar)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1334,7 +1385,7 @@ OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_DB_HOST_DEFAULT, HCU_DB_USER_DEFAULT, HCU_DB_PSW_DEFAULT, HCU_DB_NAME_DEFAULT, HCU_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");

@@ -164,11 +164,12 @@
 //老旧的AQYC项目
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
+	//系统启动选项以及网络连接选项
 	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
 	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
 	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
+	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
 	#define HCU_COMM_HW_BOARD_ETHERNET HCU_TASK_PNP_ON
 	#define HCU_COMM_HW_BOARD_USBNET HCU_TASK_PNP_ON
 	#define HCU_COMM_HW_BOARD_WIFI HCU_TASK_PNP_ON
@@ -220,24 +221,12 @@
 	#define HCU_COMM_FRONT_SENSOR_IPM HCU_TASK_PNP_OFF
 	#define HCU_COMM_FRONT_CANITF HCU_TASK_PNP_OFF
 
-	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
-
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -255,11 +244,13 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//Timer setting by Shanhun
 	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
@@ -307,60 +298,47 @@
 	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
 	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
 
-	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
-	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
-
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//Series Port config by Shanchun
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
+	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0201
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
@@ -369,30 +347,16 @@
 
 //打开所有模块，为了测试性能
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 	60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 		90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -410,145 +374,72 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
-
-	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
-	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G201_TEST_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//Series Port config by Shanchun
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
+	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
-
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0201
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
-
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 //基于G1/335D的AQYC
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -566,147 +457,73 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
-
-	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
-	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//Series Port config by Shanchun
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
+	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
-
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3AQYCG10_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0101
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 //基于G2/树莓派的AQYC
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -724,145 +541,73 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
-
-	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
-	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G201_AQYC_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//Series Port config by Shanchun
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
+	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3AQYCG20_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0201
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 //数采仪
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -880,147 +625,76 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
-
-	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
-	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G301_TBSW_SH001"     //DEVICE NAME
+	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
+
+	//Series Port config by Shanchun
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
+	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
-	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
-
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3TBSWRG30_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0301
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 //挂墙仪表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -1038,147 +712,74 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
-
-	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
-	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G401_GQYB_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//Series Port config by Shanchun
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
+	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3GQYBG40_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0401
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 
 //CHUNXU智能路灯
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -1196,147 +797,74 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
-
-	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
-	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE “http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php” //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G211_ILCX_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//Series Port config by Shanchun
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
+	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3CXILC_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0211
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 
 //CHUNXU格力空调模块
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
-	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
-	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
+	//系统启动选项以及网络连接选项
+	#define HCU_COMM_BACK_HAWL_CON 			HCU_CLOUDVELA_BH_PHY_LINK_ETH
+	#define HCU_PROCESS_WORK_MODE_CURRENT 	HCU_PROCESS_WORK_MODE_SINGLE
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET 		HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET 		HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET 		HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -1354,146 +882,73 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        	//连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         	//连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           		//缺省设置
 
 	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
 	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G221_GLAM_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3CXGLACM_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0221
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 //CHUNXU低功耗抄表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -1511,146 +966,73 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
 	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G231_NBLP_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3NBLPM_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0231
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 //CHUNXU中等功耗抄表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -1668,147 +1050,74 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
 	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G241_NBHP_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3NBHPM_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0241
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 
 //波峰组合秤上位机
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -1826,153 +1135,75 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 2
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
 	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G801_BFSC_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_HUITP_XML
 
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_NOR_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3BFSC_TIMER_DURATION_PERIOD_READ 10
-	#define HCU_L3BFSC_TIMER_DURATION_PERIOD_ERROR_SCAN 60
-	#define HCU_L3BFSC_TIMER_DURATION_INIT_FB_WAIT 15
-	#define HCU_L3BFSC_TIMER_DURATION_TTT_WAIT_FB 15
-	#define HCU_L3BFSC_TIMER_DURATION_TGU_WAIT_FB 15
-	#define HCU_BFSCUICOMM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CANITFLEO_TIMER_10MS_SIM_DATA 50000
-
-	#define HCU_BFSC_SENSOR_WS_NBR_MAX 16  //下位机总共有12个秤盘
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0801
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
+	//本项目特定部分
+	#define HCU_BFSC_SENSOR_WS_NBR_MAX 16  //下位机总共有12个秤盘
 
 //奥普维尔的OTDR仪表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
-	//可选项通信端口的全局定义，未来需要通过ConfigXml进一步优化
-	//定义后台连接网络的接口
-	//现在采用这种互斥的方式进行定义，以后需要等待HWINV进行PnP，确保多种接口即插即用，随时切换
-	//多种接口之间的优先级关系，则有程序任务自动决定：ETHERNET > WIFI > USB-OTG2 > 3G4G
-	//当前版本的做法是，多种接口均启动起来，但如何使用，由CLOUDCONT按照优先级和COMM_BACK_HAWL_CON定义唯一决定
+	//系统启动选项以及网络连接选项
 	#define HCU_COMM_BACK_HAWL_CON HCU_CLOUDVELA_BH_PHY_LINK_ETH
 	#define HCU_PROCESS_WORK_MODE_CURRENT HCU_PROCESS_WORK_MODE_SINGLE
-	#define HCU_DB_SENSOR_SAVE_FLAG HCU_DB_SENSOR_SAVE_FLAG_YES
-	#define HCU_MEM_SENSOR_SAVE_FLAG HCU_MEM_SENSOR_SAVE_FLAG_YES
-	#define HCU_DISC_SENSOR_SAVE_FLAG HCU_DISC_SENSOR_SAVE_FLAG_YES
 
-	//最少保留多久的数据，做成安全的全局变量，并不能随意通过工程参数改小
-	//部分保留数据可以改的更小，可以放在工参里另行定义
-	#define HCU_DATA_SAVE_DURATION_MIN_IN_DAYS 60
-	#define HCU_DATA_SAVE_DURATION_IN_DAYS 90
-	//月份的计算按照（[天数-1]/30）+1进行，还是很精妙的，这样就不用单独设置月份数据
-	//月份的意义是，定时扫描，确保多少个月以内，文件数据必须保留，因为文件数据目前是按照时间月份进行存储的。使用天数进行计算，容易出现错误
-	//#define HCU_DATA_SAVE_DURATION_IN_MONTHS 3
-
-	//选择使用的数据库
-	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
-	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
-
-	//底层传感器工作方式
+	//传感器配置参数
+	#define HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET HCU_DB_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET HCU_MEM_SENSOR_SAVE_FLAG_YES
+	#define HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET HCU_DISC_SENSOR_SAVE_FLAG_YES
+	#define HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS 60
+	#define HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS 90
 	#define HCU_SENSOR_PRESENT_DHT11 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_SHT20 HCU_SENSOR_PRESENT_YES
 	#define HCU_SENSOR_PRESENT_MQ135 HCU_SENSOR_PRESENT_YES
@@ -1990,118 +1221,59 @@
 	#define HCU_SENSOR_PRESENT_LED_LED2PIN HCU_SENSOR_PRESENT_YES
 
 	//本地数据库HCUDB
-	#define HCU_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
-	#define HCU_DB_USER_DEFAULT "root"     		//连接数据库的用户名
-	#define HCU_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
-	#define HCU_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
-	#define HCU_DB_PORT_DEFAULT 0           	//缺省设置
-
-	//Timer setting by Shanhun
-	#define HCU_EMC_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_EMC_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_HUMID_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HUMID_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_NOISE_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_NOISE_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_PM25_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_TEMP_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TEMP_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDDIR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDDIR_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_WINDSPD_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_WINDSPD_TIMER_DURATION_MODBUS_FB 3
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80 //in second
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_SOCKET_HEART_BEAT 600  //for cloud socket heart beat timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_LONG 600  //for cmd control long timer by Shanchun
-	#define HCU_CLOUDVELA_TIMER_DURATION_PERIOD_CMD_CONTROL_SHORT 5  //for cmd control short timer by Shanchun
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTCJ188_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_LINK_HEART_BEAT 600  //in second  //用于链路检测
-	#define HCU_NBIOTQG376_TIMER_DURATION_PERIOD_SEND_DATA_BACK 80
-	#define HCU_AIRPRS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_CO1_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_LIGHTSTR_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_ALCOHOL_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_HCHO_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_TOXICGAS_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_PM25SHARP_TIMER_DURATION_PERIOD_READ 60
-	#define HCU_IWM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IHM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IGM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_IPM_TIMER_DURATION_PERIOD_READ 600
-	#define HCU_SYSPM_TIMER_DURATION_PERIOD_WORKING 600
-	#define HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION 10
-	#define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
-
-	//定时器，控制摄像头工作周期及时长
-	#define HCU_HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
-	#define HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second
-	//下面的时间设置，必须是2.5%精度以上，不能设置为固定TIMEOUT时长，否则会出现逻辑错误
-	//比如，采样时间为1000秒，则超时 >= 1000*1.025 = 1025
-	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
-	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
-
-	//Series Port config by Shanchun
-	#define HCU_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 2
-	#define HCU_SERIESPORT_NUM_FOR_GPS_DEFAULT  1
-	#define HCU_SERIESPORT_NUM_FOR_PM25SHARP_DEFAULT  0
-	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+	#define HCU_DB_SELECTION HCU_DB_SELECTION_MYSQL
+	#define HCU_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
+	#define HCU_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
+	#define HCU_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
+	#define HCU_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
+	#define HCU_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
 	//定义后台CLOUD连接到本地及SAE的地址
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
+	#define HCU_CLOUDVELA_HTTP_ADDRESS_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
 	#define HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-
-	//定义后台CLOUD  FTP 的地址
-	#define  HCU_CLOUDVELA_FTP_ADDRESS "ftp://121.40.185.177" //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_USER "anonymous"    //for HCU SW FTP by shanchun
-	#define  HCU_CLOUDVELA_FTP_PWD "anonymous" //for HCU SW FTP by shanchun
-
-	//local SW storage address for HCU SW upgrade by shanchun
-	#define  HCU_SW_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SW_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SW_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
-
-	//系统定义的服务器以及本机名称，用于HCU与服务器之间的通信
-	#define HCU_CLOUDVELA_BH_SERVER_NAME "SAE_MFUNHCU"  //SERVER NAME
+	#define HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
+	#define HCU_CLOUDVELA_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
 	#define HCU_CLOUDVELA_BH_HCU_NAME "HCU_G711_OTDR_SH001"     //DEVICE NAME
-
-	//后台CLOUVELA选用的帧协议格式
-	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
 	#define HCU_CLOUDVELA_BH_INTERFACE_STANDARD HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML
 
+	//Series Port config by Shanchun
+	#define HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT 0
+	#define HCU_SERIESPORT_NO_FOR_GPS_DEFAULT  4
+	#define HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT  2
+	#define HCU_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//定义后台SW_SWM的地址
+	#define  HCU_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
+	#define  HCU_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
+	#define  HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
+	#define  HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+
 	//定义本地视频服务器
+	#define HCU_VIDEO_STREAM_SERVER_USER  "Avorion321"
+	#define HCU_VIDEO_STREAM_SERVER_PWD   "avorion"
 	#define HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT  "/var/www/html/avorion/"
 	#define HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT "http://192.168.1.232/avorion/"
-
-	#define HCU_CLOUDSRV_SOCKET_ADDRESS_DEFAULT "121.40.118.33"
 
 	//打印和TRACE开关
 	#define HCU_TRACE_DEBUG_ON HCU_TRACE_DEBUG_INF_ON //利用以上标示位，确定TRACE的级别
 	#define HCU_TRACE_MSG_ON HCU_TRACE_MSG_MODE_ALL_BUT_TIME_OUT_AND_HEART_BEAT
 
-	//特定部分
-	#define HCU_L3OPWLOTDR_TIMER_DURATION_PERIOD_READ 600
-
-	//CURRENT HW PRODUCT CATELOG
+	//批量生产标志信息，固件升级标识，以及物理烧录信息等
 	#define HCU_HARDWARE_PRODUCT_CAT_TYPE 0x0711
-
-	//定义是否进入批量生产，从而确定硬件标识从哪里读取
 	#define HCU_HARDWARE_MASSIVE_PRODUTION_SET HCU_HARDWARE_MASSIVE_PRODUTION_NO
-
-	//定义固件是否自动升级
 	#define HCU_HARDWARE_BURN_ID_FW_UPGRADE_SET HCU_HARDWARE_BURN_ID_FW_UPGRADE_YES_PATCH
-
-	//定义hcuboot.cfg文件
 	#define HCU_HARDWARE_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
 
-	//定义是否允许采用VM的初始化表单来初始化TRACE的数据库表单，目的是为了简化研发的工作量，提高效率
+	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MOD_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_MSG_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_TIMER_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
+	#define HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES
 
 
 

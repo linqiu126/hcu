@@ -207,7 +207,7 @@ OPSTAT func_lightstr_time_out_read_data_from_bh1750(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cLightstrBh1750 >= HCU_SENSOR_LIGHTSTR_VALUE_MIN) && (zHcuI2cLightstrBh1750 <= HCU_SENSOR_LIGHTSTR_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cLightstrBh1750 >= HCU_SENSOR_LIGHTSTR_VALUE_MIN) && (zHcuI2cLightstrBh1750 <= HCU_SENSOR_LIGHTSTR_VALUE_MAX))
 	{
 		sensor_lightstr_bh1750_data_element_t lightstrData;
 		memset(&lightstrData, 0, sizeof(sensor_lightstr_bh1750_data_element_t));

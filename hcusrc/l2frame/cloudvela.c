@@ -150,7 +150,8 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT, zHcuSysEngPar.timer.cloudvelaHbTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -158,7 +159,8 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//For sw&db version report
-	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP, zHcuSysEngPar.timer.dbVerReportTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -255,7 +257,8 @@ OPSTAT func_cloudvela_time_out_period(void)
 
 			//启动周期性短定时器，進行数据回传云平台
 			if (zHcuMemStorageBuf.offlineNbr>0){
-				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.cloudvelaHbBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, \
+						zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
 					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -364,7 +367,8 @@ OPSTAT func_cloudvela_time_out_period(void)
 
 			//然后再试图启动周期性短定时器，進行数据回传云平台
 			if (zHcuMemStorageBuf.offlineNbr>0){
-				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, zHcuSysEngPar.timer.cloudvelaHbBackTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, \
+						zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 				if (ret == FAILURE){
 					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 					HcuErrorPrint("CLOUDVELA: Error start timer!\n");
@@ -1649,7 +1653,7 @@ OPSTAT func_cloudvela_sw_download(char *filename)
 	HcuDebugPrint("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
 
 	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
-	strcat(ftp_opt.file, zHcuSysEngPar.swDownload.hcuSwDownloadDir);
+	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwDownloadDir);
 	strcat(ftp_opt.file, filename);
 	HcuDebugPrint("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
 

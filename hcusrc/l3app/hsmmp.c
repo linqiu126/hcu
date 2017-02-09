@@ -117,8 +117,8 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	hcu_sleep(i);
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ, zHcuSysEngPar.timer.hsmmpReqTimer,
-			TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		HcuErrorPrint("HSMMP: Error start timer!\n");
@@ -301,7 +301,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			record.ew = zHcuGpsPosInfo.EW;
 			record.ns = zHcuGpsPosInfo.NS;
 			//RECORD存入内存盘
-			if (HCU_MEM_SENSOR_SAVE_FLAG == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -310,7 +310,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_DISC_SENSOR_SAVE_FLAG == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -319,7 +319,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
 			{
 				sensor_hsmmp_data_element_t hsmmpData;
 				memset(&hsmmpData, 0, sizeof(sensor_hsmmp_data_element_t));
@@ -391,7 +391,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			record.ew = zHcuGpsPosInfo.EW;
 			record.ns = zHcuGpsPosInfo.NS;
 			//RECORD存入内存盘
-			if (HCU_MEM_SENSOR_SAVE_FLAG == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -400,7 +400,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_DISC_SENSOR_SAVE_FLAG == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -409,7 +409,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
 			{
 				sensor_hsmmp_data_element_t hsmmpData;
 				memset(&hsmmpData, 0, sizeof(sensor_hsmmp_data_element_t));
@@ -485,9 +485,9 @@ OPSTAT func_hsmmp_time_out_period(void)
 	msg_struct_hsmmp_avorion_data_read_t snd;
 	memset(&snd, 0, sizeof(msg_struct_hsmmp_avorion_data_read_t));
 	snd.equipid = HSMMP_EQUIPMENT_ID_DEFAULT; //虽然用处不大，对为了方便设备的存储和数据库操作，还是留着该域
-	snd.captureDur = zHcuSysEngPar.timer.hsmmpCapDuration;
+	snd.captureDur = HSMMP_AVORION_CAPTURE_DURATION_DEFAULT;
 	snd.fileType = FILE_OPERATION_TYPE_AVORION_H264;
-	snd.refreshRate = zHcuSysEngPar.timer.hsmmpRefRate;
+	snd.refreshRate = HSMMP_AVORION_REFRESH_RATE_DEFAULT;
 	snd.timeStampStart = time(0);
 	strcpy(snd.tmpFname, "output.yuv");
 

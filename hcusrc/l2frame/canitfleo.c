@@ -306,7 +306,8 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 	}*/
 
 	//启动定时器：更快的毫秒级定时器
-	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA, HCU_CANITFLEO_TIMER_10MS_SIM_DATA, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
+	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA, \
+			zHcuSysEngPar.timer.array[TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("CANITFLEO: Error start timer!\n");

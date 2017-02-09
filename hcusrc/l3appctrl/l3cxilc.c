@@ -96,7 +96,8 @@ OPSTAT fsm_l3cxilc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3CXILC] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_L3CXILC, TIMER_ID_1S_L3CXILC_PERIOD_READ, HCU_L3CXILC_TIMER_DURATION_PERIOD_READ, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_L3CXILC, TIMER_ID_1S_L3CXILC_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_L3CXILC_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3CXILC]++;
 		HcuErrorPrint("L3CXILC: Error start period timer!\n");

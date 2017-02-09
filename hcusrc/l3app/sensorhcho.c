@@ -93,7 +93,8 @@ OPSTAT fsm_hcho_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO] = 0;
 
 	//启动周期性定时器
-	ret = hcu_timer_start(TASK_ID_HCHO, TIMER_ID_1S_HCHO_PERIOD_READ, zHcuSysEngPar.timer.hchoReqTimer, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	ret = hcu_timer_start(TASK_ID_HCHO, TIMER_ID_1S_HCHO_PERIOD_READ, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_HCHO_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO]++;
 		HcuErrorPrint("HCHO: Error start period timer!\n");
@@ -205,7 +206,7 @@ OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_DB_SENSOR_SAVE_FLAG == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSps232HchoZe08ch2o >= HCU_SENSOR_HCHO_VALUE_MIN) && (zHcuSps232HchoZe08ch2o <= HCU_SENSOR_HCHO_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSps232HchoZe08ch2o >= HCU_SENSOR_HCHO_VALUE_MIN) && (zHcuSps232HchoZe08ch2o <= HCU_SENSOR_HCHO_VALUE_MAX))
 	{
 		sensor_hcho_ze08ch2o_data_element_t hchoData;
 		memset(&hchoData, 0, sizeof(sensor_hcho_ze08ch2o_data_element_t));

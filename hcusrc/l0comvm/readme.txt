@@ -10,6 +10,19 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
+==> 视频服务器/软件下载/烧录区/设备标签，待完善。
+
+
+
+//= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 155=>BFSC项目
+=清理完成所有TIMERID资料，包括各个项目的内容
+=去掉HWINV/DIBCOM中对SYSCONFIG中定时器宏定义的读取
+=增加量产标签，工程参数基础部分在研发阶段，允许从SYSCONFIG中读取，克制界面UI配置的数据。一旦该标签去激活，或者量产设置激活，则只能从数据库中读取
+=去掉数据库读取失败依然从缺省参数读取的机制。在实际运行中遇不到，而且让程序的扩展性和维护性变差。
+=统一的将外部UI中好的参数都POP到SYSCONFIG中，从而维护程序中参数到最新状态
+=统一归一化所有的参数配置，组成类别，清理不合理配置，包括特定配置部分
+=基本上清理完毕。视频服务器/软件下载/烧录区/设备标签，待完善。
+=对于TimerName/ModName/MsgName的访问，必须访问工程参数表，不得访问静态表，因为静态表需要搜索，请注意！
 
 //= ZJL, 2017 Feb.8, CURRENT_SW_DELIVERY 154=>BFSC项目
 =解决了TIMERID初始化的问题，下一步就是将系统中所有的旧TIMERID全部清除掉
