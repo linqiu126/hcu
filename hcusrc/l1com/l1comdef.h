@@ -31,9 +31,9 @@ typedef struct HcuDiscDataSampleStorageArray
 	UINT32 tempValue;
 	UINT32 humidValue;
 	UINT32 noiseValue;
-	char hsmmpFdir[HCU_FILE_NAME_LENGTH_MAX];
-	char hsmmpFname[HCU_FILE_NAME_LENGTH_MAX];
-	char hsmmpLink[HCU_FILE_NAME_LENGTH_MAX];
+	char hsmmpFdir[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char hsmmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char hsmmpLink[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	UINT32 equipid;
 	CHAR ns;
 	CHAR ew;
@@ -605,7 +605,7 @@ typedef struct CloudDataSendBuf
 {
 	UINT32 curLen;
 	//char的意义是，底层均为字符串，而不是十六进制数据
-	char curBuf[MAX_HCU_MSG_BUF_LENGTH];  //内部还包括格式化的参数部分，所以需要多加100个字节的长度
+	char curBuf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];  //内部还包括格式化的参数部分，所以需要多加100个字节的长度
 }CloudDataSendBuf_t;
 //在CLOUD模块中定义的公共数据Buffer结构体，必须放在这儿
 typedef struct CloudvelaTable
@@ -641,7 +641,7 @@ enum CloudBhMsgTypeEnum
 
 //XML格式定义
 //主体内容中，各个不同的字段完全按照这个优先级进行编码，解码时将由各种操作字的隐含必选关系进行解码，从而简化编码函数
-#define HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH HCU_FILE_NAME_LENGTH_MAX  //要传递HTTP名字会后台，只能扩大该域的长度
+#define HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH HCU_SYSDIM_FILE_NAME_LEN_MAX  //要传递HTTP名字会后台，只能扩大该域的长度
 typedef struct CloudBhItfDevReportStdXml
 {
 	char xml_l[6];
@@ -793,7 +793,7 @@ typedef struct CloudBhItfDevReportStdZhbData
 	char conTemp[5];   //2B HCU->SAE only
 	char conHumid[5];   //2B HCU->SAE only
 	char linkLen[5];    //2B
-	char linkName[HCU_FILE_NAME_LENGTH_MAX + 1]; //不定长的回传字符串，描述视频资源库HTTP地址
+	char linkName[HCU_SYSDIM_FILE_NAME_LEN_MAX + 1]; //不定长的回传字符串，描述视频资源库HTTP地址
 	char conNoise[9];   //4B HCU->SAE only
 	char conAirprs[5];   //2B HCU->SAE only
 }CloudBhItfDevReportStdZhbData_t;

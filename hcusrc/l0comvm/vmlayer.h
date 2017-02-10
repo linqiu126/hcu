@@ -109,88 +109,6 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_MAX,
 	TASK_ID_INVALID = 0xFFFFFFFF,
 }; //end of HCU_TASK_NAME_ID
-//定义TASK对应的MESSAGE_QUEUE的ID
-enum HCU_TASK_QUEUE_ID
-{
-	TASK_QUE_ID_MIN = HCU_TASK_QUEUE_ID_START,
-	TASK_QUE_ID_HCUMAIN,
-	TASK_QUE_ID_HCUVM,
-	TASK_QUE_ID_TRACE,
-	TASK_QUE_ID_CONFIG,
-	TASK_QUE_ID_TIMER,
-	TASK_QUE_ID_MMC, //Man Machine Communication
-	TASK_QUE_ID_GPIO,
-	TASK_QUE_ID_I2C,
-	TASK_QUE_ID_SPI,
-	TASK_QUE_ID_PWM,
-	TASK_QUE_ID_ADC,
-	TASK_QUE_ID_SWITCH, //开关量
-	TASK_QUE_ID_RELAY,  //继电器
-	TASK_QUE_ID_MOTOR,  //马达
-	TASK_QUE_ID_ZEEGBE,
-	TASK_QUE_ID_GRPS,
-	TASK_QUE_ID_SPS232,
-	TASK_QUE_ID_SPS485,
-	TASK_QUE_ID_BLE,
-	TASK_QUE_ID_ETHERNET,
-	TASK_QUE_ID_WIFI,
-	TASK_QUE_ID_USBNET,
-	TASK_QUE_ID_3G4G,
-	TASK_QUE_ID_HARDDISK,
-	TASK_QUE_ID_CAMERA,
-	TASK_QUE_ID_MICROPHONE,
-	TASK_QUE_ID_FLASH,
-	TASK_QUE_ID_GPS,
-	TASK_QUE_ID_LCD,
-	TASK_QUE_ID_LED,
-	TASK_QUE_ID_HWINV,
-	TASK_QUE_ID_SPSVIRGO,
-	TASK_QUE_ID_CLOUDVELA,
-	TASK_QUE_ID_MODBUS,
-	TASK_QUE_ID_AVORION,
-	TASK_QUE_ID_I2CBUSLIBRA,
-	TASK_QUE_ID_SPIBUSARIES,
-	TASK_QUE_ID_NBIOTCJ188,
-	TASK_QUE_ID_NBIOTQG376,
-	TASK_QUE_ID_HSMMP,
-	TASK_QUE_ID_EMC,
-	TASK_QUE_ID_HUMID,
-	TASK_QUE_ID_PM25,
-	TASK_QUE_ID_TEMP,
-	TASK_QUE_ID_WINDDIR,
-	TASK_QUE_ID_WINDSPD,
-	TASK_QUE_ID_NOISE,
-	TASK_QUE_ID_AIRPRS,  	//气压
-	TASK_QUE_ID_CO1,     	//一氧化碳
-	TASK_QUE_ID_LIGHTSTR,	//光照
-	TASK_QUE_ID_ALCOHOL, 	//酒精
-	TASK_QUE_ID_HCHO,    	//甲醛
-	TASK_QUE_ID_TOXICGAS,	//有毒气体
-	TASK_QUE_ID_IWM,  		//智能水表
-	TASK_QUE_ID_IHM,  		//智能热表
-	TASK_QUE_ID_IGM, 		//智能煤气表
-	TASK_QUE_ID_IPM, 		//智能电表
-	TASK_QUE_ID_SVRCON,
-	TASK_QUE_ID_SYSPM,
-	TASK_QUE_IID_SYSSWM,  	//软件管理
-	TASK_QUE_ID_PM25SHARP, 	//for pm25sharp sensor by shanchun
-	TASK_QUE_ID_CANITFLEO,
-	TASK_QUE_ID_COM_BOTTOM,
-	TASK_QUE_ID_L3AQYCG10,
-	TASK_QUE_ID_L3AQYCG20,
-	TASK_QUE_ID_L3TBSWRG40,
-	TASK_QUE_ID_L3GQYBG40,
-	TASK_QUE_ID_L3CXILC,
-	TASK_QUE_ID_L3CXGLACM,
-	TASK_QUE_ID_L3NBLPM,
-	TASK_QUE_ID_L3NBHPM,
-	TASK_QUE_ID_L3BFSC,
-	TASK_QUE_ID_BFSCUICOMM,
-	TASK_QUE_ID_L3OPWLOTDR,
-	TASK_QUE_ID_MAX,
-	TASK_QUE_ID_INVALID = 0xFFFFFFFF,
-}; //end of HCU_TASK_QUEUE_ID
-
 
 
 /*
@@ -225,14 +143,14 @@ typedef struct HcuFsmCtrlTable
 {
 	UINT32 numOfFsmArrayElement;  //每一个具体任务TASK中，定义了多少个STATE-MSGID映射表单
 	UINT32 taskId;
-	HcuFsmArrayElement_t pFsmArray[MAX_STATE_NUM_IN_ONE_TASK][MAX_MSGID_NUM_IN_ONE_TASK];
+	HcuFsmArrayElement_t pFsmArray[HCU_SYSDIM_TASK_STATE_NBR_MAX][HCU_SYSDIM_MSGID_NBR_MAX];
 }HcuFsmCtrlTable_t;
 //状态机总表
 typedef struct HcuFsmTable
 {
 	UINT32 numOfFsmCtrlTable;  //Number of running (Task + Instance)
 	UINT32 currentTaskId;  //transfer task_id to launched FSM machine, then useless
-	HcuFsmCtrlTable_t  pFsmCtrlTable[MAX_TASK_NUM_IN_ONE_HCU];
+	HcuFsmCtrlTable_t  pFsmCtrlTable[HCU_SYSDIM_TASK_NBR_MAX];
 }HcuFsmTable_t;
 //任务表
 typedef struct HcuTaskTag
@@ -243,7 +161,7 @@ typedef struct HcuTaskTag
 	pthread_t 	ThrId;
 	INT32  		QueId;
 	UINT8  		state;
-	char   		taskName[TASK_NAME_MAX_LENGTH];
+	char   		taskName[HCU_SYSDIM_TASK_NAME_LEN_MAX];
 	HcuFsmStateItem_t *fsmPtr;
 	UINT8 		QueFullFlag;
 	void*  		taskFuncEntry;
@@ -260,7 +178,7 @@ typedef struct HcuTaskTag
 typedef struct HcuCurrentTaskTag
 {
 	UINT32 curProcId;
-	char   curProcName[TASK_NAME_MAX_LENGTH];
+	char   curProcName[HCU_SYSDIM_TASK_NAME_LEN_MAX];
 }HcuCurrentTaskTag_t;
 
 /*
@@ -450,7 +368,7 @@ typedef struct HcuHwinvCtrlTable
 }HcuHwinvCtrlTable_t;
 
 #define FILE_LENGTH_RECORD_MAX 1024  			//一条存入文件的记录最长长度
-#define HCU_DIR_LENGTH_MAX 						HCU_FILE_NAME_LENGTH_MAX
+#define HCU_DIR_LENGTH_MAX 						HCU_SYSDIM_FILE_NAME_LEN_MAX
 #define HCU_RECORD_LOG_DIR_NAME_LOCAL			"./log"
 #define HCU_RECORD_LOG_DIR_NAME_CLEAN 			"/log"
 #define HCU_RECORD_FILE_NAME_SENSOR    			"/sensor"
@@ -509,7 +427,7 @@ typedef struct HcuTimeDateTable
 typedef struct HcuVmCtrTab
 {
 	HcuFsmTable_t  			fsm;
-	HcuTaskTag_t			task[MAX_TASK_NUM_IN_ONE_HCU];
+	HcuTaskTag_t			task[HCU_SYSDIM_TASK_NBR_MAX];
 	HcuCurrentTaskTag_t  	process;
 	HcuHwinvCtrlTable_t		hwinv;
 	HcuTimeDateTable_t		clock;
@@ -595,7 +513,7 @@ extern HcuFsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
 typedef struct HcuVmCtrTaskStaticCfg
 {
 	const UINT16 taskInputId;
-	const char  taskInputName[TASK_NAME_MAX_LENGTH];
+	const char  taskInputName[HCU_SYSDIM_TASK_NAME_LEN_MAX];
 	      void* fsmFuncEntry;
 	const UINT8 pnpFlag;
 	const UINT8 traceCtrFlag;
@@ -701,18 +619,18 @@ extern HcuSysEngParTab_t zHcuSysEngPar;
 typedef struct HcuSysEngTrcMsgCtrStaticCfg
 {
 	const UINT32 msgId;
-	const char   msgName[MSG_NAME_MAX_LENGTH];
+	const char   msgName[HCU_SYSDIM_MSGID_NAME_LEN_MAX];
 	const UINT8 traceCtrFlag;
 	const UINT8 traceMsgAllowFlag;
 	const UINT8 traceMsgRestrictFlag;
 }HcuSysEngTrcMsgCtrStaticCfg_t;
-extern HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[];  //MAX_MSGID_NUM_IN_ONE_TASK
+extern HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[];  //HCU_SYSDIM_MSGID_NBR_MAX
 
 //消息初始化的数据表单
 typedef struct HcuSysEngTimerStaticCfg
 {
 	const UINT32 timerId;
-	const char   timerName[TIMER_NAME_MAX_LENGTH];
+	const char   timerName[HCU_SYSDIM_TIMERID_NAME_LEN_MAX];
 	const INT32  timerDur;
 	const UINT8  timerGranularity;
 }HcuSysEngTimerStaticCfg_t;
@@ -743,7 +661,7 @@ typedef struct HcuSysEngPhyBootCfg
 //全局Counter，用于性能指标统计之用
 typedef struct HcuGlobalCounter
 {
-	UINT32 errCnt[MAX_TASK_NUM_IN_ONE_HCU];  //以每个任务为单位
+	UINT32 errCnt[HCU_SYSDIM_TASK_NBR_MAX];  //以每个任务为单位
 	UINT32 restartCnt;
 	UINT32 cloudVelaConnCnt;
 	UINT32 cloudVelaConnFailCnt;
@@ -760,7 +678,7 @@ extern HcuGlobalCounter_t zHcuGlobalCounter;
 typedef struct HcuSysStaPm
 {
 	HcuGlobalCounter_t 	statisCnt;
-	UINT32 				taskRunErrCnt[MAX_TASK_NUM_IN_ONE_HCU];
+	UINT32 				taskRunErrCnt[HCU_SYSDIM_TASK_NBR_MAX];
 }HcuSysStaPm_t;
 
 //全局性能统计表
@@ -893,11 +811,11 @@ extern OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void);
 #define HCU_ERROR_PRINT_TASK(taskid, ...)	do{zHcuSysStaPm.taskRunErrCnt[taskid]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 //高级定义，简化程序的可读性
-#define HCU_DEBUG_PRINT_INF		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE) HcuDebugPrint
-#define HCU_DEBUG_PRINT_NOR		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE) HcuDebugPrint
-#define HCU_DEBUG_PRINT_IPT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE) HcuDebugPrint
-#define HCU_DEBUG_PRINT_CRT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE) HcuDebugPrint
-#define HCU_DEBUG_PRINT_FAT		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_INF		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_NOR		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_IPT		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_CRT		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE) HcuDebugPrint
+#define HCU_DEBUG_PRINT_FAT		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE) HcuDebugPrint
 
 
 

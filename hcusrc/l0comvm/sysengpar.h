@@ -20,13 +20,13 @@ typedef struct SysEngParElementComm
 }SysEngParElementComm_t;
 
 //数据库部分
-#define SYS_ENG_PAR_ELEMENT_DB_LEN 20
+#define HCU_SYSENG_PAR_ELEMENT_DB_LEN 20
 typedef struct SysEngParElementDb
 {
-	char  hcuDbHost[SYS_ENG_PAR_ELEMENT_DB_LEN];
-	char  hcuDbUser[SYS_ENG_PAR_ELEMENT_DB_LEN];
-	char  hcuDbPsw[SYS_ENG_PAR_ELEMENT_DB_LEN];
-	char  hcuDbName[SYS_ENG_PAR_ELEMENT_DB_LEN];
+	char  hcuDbHost[HCU_SYSENG_PAR_ELEMENT_DB_LEN];
+	char  hcuDbUser[HCU_SYSENG_PAR_ELEMENT_DB_LEN];
+	char  hcuDbPsw[HCU_SYSENG_PAR_ELEMENT_DB_LEN];
+	char  hcuDbName[HCU_SYSENG_PAR_ELEMENT_DB_LEN];
 	UINT8 hcuDbPort;
 }SysEngParElementDbi_t;
 
@@ -34,17 +34,17 @@ typedef struct SysEngParElementDb
 typedef struct SysEngParElementTimUnit
 {
 	INT16	id;
-	char 	name[TIMER_NAME_MAX_LENGTH];
+	char 	name[HCU_SYSDIM_TIMERID_NAME_LEN_MAX];
 	UINT8 	gradunarity;
 	UINT32 	dur;
 }SysEngParElementTimUnit_t;
 typedef struct SysEngParElementSensorTimer
 {
-	SysEngParElementTimUnit_t array[MAX_TIMER_NUM_IN_ONE_HCU];
+	SysEngParElementTimUnit_t array[HCU_SYSDIM_TIMERID_NBR_MAX];
 }SysEngParElementSensorTimer_t;
 
 //Series port config by Shanchun
-#define SYS_ENG_PAR_ELEMENT_SERIESPORT_LEN 20
+#define HCU_SYSENG_PAR_ELEMENT_SERIESPORT_LEN 20
 typedef struct SysEngParElementSeriesPort
 {
 	UINT32 SeriesPortForModbus;
@@ -73,20 +73,20 @@ typedef struct SysEngParElementCloudvela
 }SysEngParElementCloudvela_t;
 
 //local SW storage address for HCU SW upgrade by shanchun
-#define SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN 64
+#define HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN 64
 typedef struct SysEngParElementHcuSwDownload
 {
-	char  hcuSwDownloadDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
-	char  hcuSwActiveDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
-	char  hcuSwBackupDir[SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
+	char  hcuSwDownloadDir[HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
+	char  hcuSwActiveDir[HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
+	char  hcuSwBackupDir[HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN];
 }SysEngParElementHcuSwDownload_t;
 
 //本地视频服务器的地址
-#define SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN 64
+#define HCU_SYSENG_PAR_ELEMENT_VIDEO_SERVER_LEN 64
 typedef struct SysEngParElementVideoServer
 {
-	char  hcuVideoServerDir[SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN];
-	char  hcuVideoServerHttp[SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN];
+	char  hcuVideoServerDir[HCU_SYSENG_PAR_ELEMENT_VIDEO_SERVER_LEN];
+	char  hcuVideoServerHttp[HCU_SYSENG_PAR_ELEMENT_VIDEO_SERVER_LEN];
 }SysEngParElementVideoServer_t;
 
 //TRACE采用黑白名单的方式
@@ -94,7 +94,7 @@ typedef struct SysEngParElementVideoServer
 typedef struct SysEngParElementTraceModule
 {
 	UINT16 moduleId;
-	char   moduleName[TASK_NAME_MAX_LENGTH];
+	char   moduleName[HCU_SYSDIM_TASK_NAME_LEN_MAX];
 	UINT8  moduleCtrFlag;
 	UINT8  moduleToAllow;
 	UINT8  moduleToRestrict;
@@ -104,28 +104,28 @@ typedef struct SysEngParElementTraceModule
 typedef struct SysEngParElementTraceMsg
 {
 	UINT16 msgId;
-	char   msgName[MSG_NAME_MAX_LENGTH];
+	char   msgName[HCU_SYSDIM_MSGID_NAME_LEN_MAX];
 	UINT8  msgCtrFlag;
 	UINT8  msgAllow;
 	UINT8  msgRestrict;
 }SysEngParElementTraceMsg_t;
 typedef struct SysEngParElementTrace
 {
-	SysEngParElementTraceModule_t mod[MAX_TASK_NUM_IN_ONE_HCU];
-	SysEngParElementTraceMsg_t msg[MAX_MSGID_NUM_IN_ONE_TASK];
+	SysEngParElementTraceModule_t mod[HCU_SYSDIM_TASK_NBR_MAX];
+	SysEngParElementTraceMsg_t msg[HCU_SYSDIM_MSGID_NBR_MAX];
 }SysEngParElementTrace_t;
 
 //本地界面firefox的自动启动
-#define SYS_ENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN 20
-#define SYS_ENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN 128
-#define SYS_ENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN 128
-#define SYS_ENG_PAR_ELEMENT_UI_MAX_LEN SYS_ENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN+SYS_ENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN+SYS_ENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN+10
+#define HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN 20
+#define HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN 128
+#define HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN 128
+#define HCU_SYSENG_PAR_ELEMENT_UI_MAX_LEN HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN+HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN+HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN+10
 typedef struct SysEngParElementLocalUi
 {
 	UINT8 browselAutoStartUpFlag;
-	char  browselProg[SYS_ENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN];
-	char  browselStartUpAddress[SYS_ENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN];
-	char  browselWorkingOption[SYS_ENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN];
+	char  browselProg[HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN];
+	char  browselStartUpAddress[HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN];
+	char  browselWorkingOption[HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN];
 }SysEngParElementLocalUi_t;
 
 //由程序指定的配置参数区，不用到数据库中进行配置，以降低项目工程的复杂度
@@ -214,10 +214,10 @@ typedef struct  SysEngParElementSwInvInfo
 }SysEngParElementSwInvInfo_t;
 
 //工程参数总控制表
-#define SYS_ENG_PAR_PRJ_NAME_LEN 100  //保持跟数据库的一致性
+#define HCU_SYSENG_PAR_PRJ_NAME_LEN 100  //保持跟数据库的一致性
 typedef struct HcuSysEngParTab
 {
-	char prjname[SYS_ENG_PAR_PRJ_NAME_LEN];
+	char prjname[HCU_SYSENG_PAR_PRJ_NAME_LEN];
 	SysEngParElementComm_t comm;
 	SysEngParElementDbi_t dbi;
 	SysEngParElementSensorTimer_t timer;//by Shanchun

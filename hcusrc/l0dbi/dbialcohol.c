@@ -105,7 +105,7 @@ OPSTAT dbi_HcuAlcoholDataInfo_save(sensor_alcohol_data_element_t *alcoholData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIALCOHOL: ALCOHOL data record save to DB!\n");
 	}
     return SUCCESS;
@@ -267,7 +267,7 @@ OPSTAT dbi_HcuAlcoholMq3alcoDataInfo_save(sensor_alcohol_mq3alco_data_element_t 
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIALCOHOL: ALCOHOL MQ3ALCO data record save to DB!\n");
 	}
     return SUCCESS;

@@ -114,24 +114,24 @@
 //2. 公共消息结构体定义
 //Under normal case, 1024Byte shall be enough for internal message communication purpose.
 //If not enough, need modify here to enlarge
-#define MAX_HCU_MSG_BUF_LENGTH MAX_HCU_MSG_BODY_LENGTH-16
-#define MAX_HCU_MSG_BUF_LENGTH_CLOUD MAX_HCU_MSG_BODY_LENGTH-4  //跟L2FRAME长度保持同步，都是比消息BUFFER小4字节，以便容纳进消息BODY之中
+#define HCU_SYSMSG_COM_MSG_BODY_LEN_MAX 	HCU_SYSDIM_MSG_BODY_LEN_MAX-16
+#define HCU_SYSMSG_BH_BUF_BODY_LEN_MAX 		HCU_SYSDIM_MSG_BODY_LEN_MAX-4  //跟L2FRAME长度保持同步，都是比消息BUFFER小4字节，以便容纳进消息BODY之中
 typedef struct HcuMsgSruct
 {
 	UINT32 msgType;
 	UINT32 dest_id;
 	UINT32 src_id;
 	UINT32 msgLen;
-	INT8 msgBody[MAX_HCU_MSG_BODY_LENGTH];
+	INT8 msgBody[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 }HcuMsgSruct_t;
-#define     HCU_THREAD_PRIO             	10          //priority of the main loop de 1 a 99 max
+#define HCU_SYSMSG_TASK_THREAD_PRIO             	10          //priority of the main loop de 1 a 99 max
 
 //3. 借用过来的消息及数据结构体定义
 /*
  * Type define for Socket
  */
-#define		HCU_MAX_NUM_OF_WED	 			16
-#define		HCU_MAX_LENGTH_CMD_SERIAL 		(256 + 4 + 1)*4 /* 4 for MsgHeader, 1 for FCS */
+#define		HCU_SYSMSG_MAX_NUM_OF_WED	 			16
+#define		HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL 		(256 + 4 + 1)*4 /* 4 for MsgHeader, 1 for FCS */
 
 typedef struct SocketPort
 {
@@ -161,7 +161,7 @@ typedef struct WedSensorProperty
 typedef struct HcuComMsgWedSensors
 {
 	UINT32 NumOfActiveSensors;
-	WedSensorProperty_t Sensor[HCU_MAX_NUM_OF_WED];
+	WedSensorProperty_t Sensor[HCU_SYSMSG_MAX_NUM_OF_WED];
 }HcuComMsgWedSensors_t;
 
 typedef struct HcuComMsgMeasureBehavior
@@ -197,26 +197,26 @@ typedef struct HcuMsgSeverDataSegHeader
 }HcuMsgSeverDataSegHeader_t;
 
 /* System Information */
-#define     MAX_SYS_INFO_STRING_LENGTH			128
-#define     MAX_SYS_INFO_INTERFACE_NUMBER		16
+#define     HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH			128
+#define     HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER		16
 typedef struct SysHwInfo
 {
-	char cpu_processor[MAX_SYS_INFO_STRING_LENGTH];
-	char cpu_vendor[MAX_SYS_INFO_STRING_LENGTH];
-	char cpu_modelname[MAX_SYS_INFO_STRING_LENGTH];
-	char cpu_mhz[MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_processor[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_vendor[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_modelname[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_mhz[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
 }SysHwInfo_t;
 
 typedef struct SysOsInfo
 {
-	char version_signature[MAX_SYS_INFO_STRING_LENGTH];
+	char version_signature[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
 }SysOsInfo_t;
 
 typedef struct SysNetworkInfo
 {
 	int itfnum;
-	char itfname[MAX_SYS_INFO_INTERFACE_NUMBER][MAX_SYS_INFO_STRING_LENGTH];
-	char itfip[MAX_SYS_INFO_INTERFACE_NUMBER][MAX_SYS_INFO_STRING_LENGTH];
+	char itfname[HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER][HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char itfip[HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER][HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
 	/* whether there is PPP */
 	pid_t ppppid;
 }SysNetworkInfo_t;
@@ -227,10 +227,10 @@ typedef struct HcuComMsgSysInfo
 	SysOsInfo_t os;
 	SysNetworkInfo_t net;
 }HcuSysOsNetInfo_t;
-#define		NB_NANOS_IN_ONE_SECOND			1000000000	//number of nanos in one second
-#define 	NB_NANOS_IN_ONE_MS          	1000000     //number of nanos secondes in 1 ms
-#define 	NB_MICROS_IN_ONE_SECOND        	1000000     //number of micros secondes in 1 second
-#define 	NB_MICROS_IN_ONE_MS    	     	1000	    //number of micros secondes in 1 ms
+#define		HCU_SYSMSG_NB_NANOS_IN_ONE_SECOND			1000000000	//number of nanos in one second
+#define 	HCU_SYSMSG_NB_NANOS_IN_ONE_MS          		1000000     //number of nanos secondes in 1 ms
+#define 	HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND        	1000000     //number of micros secondes in 1 second
+#define 	HCU_SYSMSG_NB_MICROS_IN_ONE_MS    	     	1000	    //number of micros secondes in 1 ms
 
 /**************************************************************************************
  *                                                                                    *
@@ -683,9 +683,9 @@ typedef struct  sensor_noise_data_element //
 typedef struct  sensor_hsmmp_data_element //
 {
 	UINT32 equipid;
-	char hsmmpFdir[HCU_FILE_NAME_LENGTH_MAX];
-	char hsmmpFname[HCU_FILE_NAME_LENGTH_MAX];
-	char hsmmpLink[HCU_FILE_NAME_LENGTH_MAX];
+	char hsmmpFdir[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char hsmmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char hsmmpLink[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
@@ -695,7 +695,7 @@ typedef struct sensor_hsmmp_link_element
 {
 	UINT32 equipid;
 	UINT32 linkLen;
-	char   linkName[HCU_FILE_NAME_LENGTH_MAX];
+	char   linkName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	com_gps_pos_t gps;
 	UINT32 timeStampStart;
 	UINT32 timeStampEnd;
@@ -929,10 +929,10 @@ typedef struct  msg_struct_com_process_reboot //
 	UINT32 length;
 }msg_struct_com_process_reboot_t;
 
-#define HWINV_PHY_STATUS_NULL 0
-#define HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE 1
-#define HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE 2
-#define HWINV_PHY_STATUS_INVALID 0xFF
+#define HCU_SYSMSG_HWINV_PHY_STATUS_NULL 0
+#define HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE 1
+#define HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE 2
+#define HCU_SYSMSG_HWINV_PHY_STATUS_INVALID 0xFF
 //MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,
 typedef struct  msg_struct_hwinv_cloudvela_phy_status_chg //
 {
@@ -948,14 +948,14 @@ typedef struct  msg_struct_hwinv_cloudvela_phy_status_chg //
 typedef struct  msg_struct_ethernet_cloudvela_data_rx //
 {
 	UINT32 length;
-	char buf[MAX_HCU_MSG_BUF_LENGTH];
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_ethernet_cloudvela_data_rx_t;
 
 //MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,
 typedef struct  msg_struct_ethernet_cloudvela_socket_data_rx //
 {
 	UINT32 length;
-	char buf[MAX_HCU_MSG_BUF_LENGTH];
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_ethernet_cloudvela_socket_data_rx_t;
 
 //MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD,//SPIBUSARIES
@@ -968,91 +968,91 @@ typedef struct  msg_struct_temp_spibusaries_control_cmd
 typedef struct  msg_struct_wifi_cloudvela_data_rx //
 {
 	UINT32 length;
-	char buf[MAX_HCU_MSG_BUF_LENGTH];
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_wifi_cloudvela_data_rx_t;
 
 //MSG_ID_USBNET_CLOUDVELA_DATA_RX,
 typedef struct  msg_struct_usbnet_cloudvela_data_rx //
 {
 	UINT32 length;
-	char buf[MAX_HCU_MSG_BUF_LENGTH];
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_usbnet_cloudvela_data_rx_t;
 
 //MSG_ID_3G4G_CLOUDVELA_DATA_RX,
 typedef struct  msg_struct_3g4g_cloudvela_data_rx //
 {
 	UINT32 length;
-	char buf[MAX_HCU_MSG_BUF_LENGTH];
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_3g4g_cloudvela_data_rx_t;
 
 //Used to common all different received data buffer
 typedef struct  msg_struct_com_cloudvela_data_rx //
 {
 	UINT32 length;
-	char buf[MAX_HCU_MSG_BUF_LENGTH];
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_com_cloudvela_data_rx_t;
 
 //MSG_ID_SPS232_MODBUS_DATA_RX,
 typedef struct  msg_struct_sps232_modbus_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_sps232_modbus_data_rx_t;
 
 //MSG_ID_SPS485_MODBUS_DATA_RX,
 typedef struct msg_struct_sps485_modbus_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_sps485_modbus_data_rx_t;
 
 //MSG_ID_SPSVIRGO_HSMMP_DATA_RX,
 typedef struct msg_struct_spsvirgo_hsmmp_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_spsvirgo_hsmmp_data_rx_t;
 
 //MSG_ID_AVORION_HSMMP_DATA_RX,
 typedef struct msg_struct_avorion_hsmmp_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_avorion_hsmmp_data_rx_t;
 
 //MSG_ID_BLE_HSMMP_DATA_RX,
 typedef struct msg_struct_ble_hsmmp_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_ble_hsmmp_data_rx_t;
 
 //MSG_ID_BLE_MODBUS_DATA_RX,
 typedef struct msg_struct_ble_modbus_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_ble_modbus_data_rx_t;
 
 //MSG_ID_LCD_AVORION_DATA_RX,
 typedef struct msg_struct_lcd_avorion_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_lcd_avorion_data_rx_t;
 
 //MSG_ID_CAMERA_AVORION_DATA_RX,
 typedef struct msg_struct_camera_avorion_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_camera_avorion_data_rx_t;
 
 //MSG_ID_MICROPHONE_AVORION_DATA_RX,
 typedef struct msg_struct_microphone_avorion_data_rx //
 {
 	UINT32 length;
-	UINT8 buf[MAX_HCU_MSG_BUF_LENGTH];
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_microphone_avorion_data_rx_t;
 
 //MSG_ID_CLOUDVELA_EMC_DATA_REQ,
@@ -1718,9 +1718,9 @@ typedef struct msg_struct_hsmmp_avorion_data_read //
 	UINT8  fileType; // FileOperationTypeEnum defined at L2COMDEF.h
 	UINT8  boolBackCloud; //指明是否需要将该数据发送到后台
 	UINT32 timeStampStart;
-	char   fDirName[HCU_FILE_NAME_LENGTH_MAX];
-	char   fName[HCU_FILE_NAME_LENGTH_MAX];
-	char   tmpFname[HCU_FILE_NAME_LENGTH_MAX];
+	char   fDirName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char   fName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char   tmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	UINT32 length;
 }msg_struct_hsmmp_avorion_data_read_t;
 
@@ -1881,7 +1881,7 @@ typedef struct  sensor_ipm_qg376_data_element //
 typedef struct  msg_struct_ethernet_nbiotcj188_data_rx //
 {
 	UINT32 length;
-	char buf[MAX_HCU_MSG_BUF_LENGTH];
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_ethernet_nbiotcj188_data_rx_t;
 
 //MSG_ID_NBIOTCJ188_IWM_DATA_REQ
@@ -2086,7 +2086,7 @@ typedef struct msg_struct_ipm_nbiotcj188_control_fb
 typedef struct  msg_struct_ethernet_nbiotqg376_data_rx //
 {
 	UINT32 length;
-	char buf[MAX_HCU_MSG_BUF_LENGTH];
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_ethernet_nbiotqg376_data_rx_t;
 
 //MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,
@@ -2233,12 +2233,12 @@ typedef struct msg_struct_canitfleo_data_report
 
 
 //L3BFSC
-#define HCU_L3BFSC_MAX_SENSOR_NBR 20
+#define HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR 20
 //MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,
 typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
 {
 	UINT8  sensorid;
-	UINT8  sensorBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_error_inq_cmd_req_t;
 
@@ -2246,14 +2246,14 @@ typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
 typedef struct msg_struct_l3bfsc_can_ws_comb_out
 {
 	UINT8  combnbr;
-	UINT8  sensorBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_comb_out_t;
 
 //MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   //放弃物料
 typedef struct msg_struct_l3bfsc_can_ws_give_up
 {
-	UINT8  sensorBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_give_up_t;
 
@@ -2287,7 +2287,7 @@ typedef struct msg_struct_l3bfsc_cloudvela_data_report
 	UINT8  optpar;
 	UINT8 dataFormat;
 	UINT8  sensorNbr;
-	UINT32 sensorWsValue[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 timestamp;
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_data_report_t;
@@ -2295,7 +2295,7 @@ typedef struct msg_struct_l3bfsc_cloudvela_data_report
 //MSG_ID_L3BFSC_CAN_WS_INIT_REQ
 typedef struct msg_struct_l3bfsc_can_ws_init_req
 {
-	UINT8  wsBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_init_req_t;
 
@@ -2303,7 +2303,7 @@ typedef struct msg_struct_l3bfsc_can_ws_init_req
 typedef struct msg_struct_l3bfsc_can_ws_read_req
 {
 	UINT8 sensorid;
-	UINT8  wsBitmap[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_read_req_t;
 
@@ -2361,7 +2361,7 @@ typedef struct msg_struct_can_l3bfsc_ws_init_fb
 //MSG_ID_CAN_L3BFSC_WS_READ_RESP
 typedef struct msg_struct_can_l3bfsc_ws_read_resp
 {
-	UINT32 sensorWsValue[HCU_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_read_resp_t;
 

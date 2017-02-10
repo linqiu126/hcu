@@ -106,7 +106,7 @@ OPSTAT dbi_HcuHchoDataInfo_save(sensor_hcho_data_element_t *hchoData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIHCHO: HCHO data record save to DB!\n");
 	}
     return SUCCESS;
@@ -268,7 +268,7 @@ OPSTAT dbi_HcuHchoZe08ch2oDataInfo_save(sensor_hcho_ze08ch2o_data_element_t *hch
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIHCHO: HCHO ZE08CH2O data record save to DB!\n");
 	}
     return SUCCESS;

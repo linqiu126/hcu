@@ -126,12 +126,12 @@ static char testString[] = "Hello, This is sent by HCU for test purpose ...";
 /*
  * Message Interaction with ZB and IP Server
  */
-static char CmdToSendOverSerial[HCU_MAX_LENGTH_CMD_SERIAL];
-static char CmdReceivedOverSerial[HCU_MAX_LENGTH_CMD_SERIAL];
+static char CmdToSendOverSerial[HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL];
+static char CmdReceivedOverSerial[HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL];
 static char CmdToSendOverTcp[HCU_MAX_LENGTH_CMD_TCP];
 static char CmdReceivedOverTcp[HCU_MAX_LENGTH_CMD_TCP];
 
-static char SumCmdReceivedOverSerial[HCU_MAX_LENGTH_CMD_SERIAL];
+static char SumCmdReceivedOverSerial[HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL];
 
 /*
 ##0258ST=31;CN=2011;PW=123456;MN=12345678901002;CP=&&DataTime=20121017001000;
@@ -1086,19 +1086,19 @@ void WaitZbStartUp()
 
 	UINT32 readlen = 0;
 	UINT32 i = 0;
-	UINT8 CmdStrTemp[HCU_MAX_LENGTH_CMD_SERIAL];
+	UINT8 CmdStrTemp[HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL];
 	LenCmdReceived = 0;
 	while(1)
 	{
-		bzero(CmdStrTemp, HCU_MAX_LENGTH_CMD_SERIAL);
-		if((readlen = read(gSerialPortZb.fd, CmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL)) > 0)
+		bzero(CmdStrTemp, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
+		if((readlen = read(gSerialPortZb.fd, CmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL)) > 0)
 		{
 			HcuDebugPrint("WaitZbStartUp: Read %d bytes from Serial.\n",readlen);
 			HcuDebugPrint("WaitZbStartUp: There is %d bytes(LenCmdReceived) received.\n", LenCmdReceived);
 
-			if(LenCmdReceived + readlen > HCU_MAX_LENGTH_CMD_SERIAL)
+			if(LenCmdReceived + readlen > HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL)
 			{
-				bzero(SumCmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+				bzero(SumCmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 				LenCmdReceived = 0;
 				readlen = 0;
 				HcuDebugPrint("WaitZbStartUp: SumCmdReceivedOverSerial is full, clear all contents to ZERO.\n");
@@ -1128,7 +1128,7 @@ void WaitZbStartUp()
 
 							HcuDebugPrint("WaitZbStartUp: Save contents(%d bytes) after COORD_START_IND Msg\n", LenCmdReceived);
 							memcpy(CmdStrTemp, SumCmdReceivedOverSerial + i + 5, LenCmdReceived);
-							bzero(SumCmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+							bzero(SumCmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 							memcpy(SumCmdReceivedOverSerial, CmdStrTemp, LenCmdReceived);
 
 							HcuDebugPrint("WaitZbStartUp: Complete.\n");
@@ -1198,18 +1198,18 @@ UINT32 InitGlobleVarialbles()
 	/* 00124B00 024F0D37 */
 	/* CBF9F301 004B1200 */
 
-	bzero(CmdToSendOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
-	bzero(CmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdToSendOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 	bzero(CmdToSendOverTcp, HCU_MAX_LENGTH_CMD_TCP);
 	bzero(CmdReceivedOverTcp, HCU_MAX_LENGTH_CMD_TCP);
 
-	bzero(SumCmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+	bzero(SumCmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 
 	/* TO DO */
 	/* In future, there maybe configuartion file to read */
 	/* Combined also the report after Zigbee Coordinator has setup the network */
-	bzero(CmdToSendOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
-	bzero(CmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdToSendOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 	bzero(CmdToSendOverTcp, HCU_MAX_LENGTH_CMD_TCP);
 	bzero(CmdReceivedOverTcp, HCU_MAX_LENGTH_CMD_TCP);
 
@@ -1228,8 +1228,8 @@ void SensorPolling(SerialPortCom_t *sp, HcuComMsgWedSensors_t *wss, SensorsMeasu
 	UINT32  delayBeforeRead = wmb->DelayBeforeRead; 			/* unit: ms */
 	//UINT32  delayAfterRead = wmb->DelayAfterRead; 			/* unit: ms */
 	UINT32	ReadLen;
-	UINT8	CmdStr[HCU_MAX_LENGTH_CMD_SERIAL];
-	UINT8	CmdStrTemp[HCU_MAX_LENGTH_CMD_SERIAL];
+	UINT8	CmdStr[HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL];
+	UINT8	CmdStrTemp[HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL];
 	UINT32 i;
 	UINT32 len = 0;
 	UINT8 *f = NULL;
@@ -1237,7 +1237,7 @@ void SensorPolling(SerialPortCom_t *sp, HcuComMsgWedSensors_t *wss, SensorsMeasu
 	/************************************************************************************************************/
 	/**** PART 1: Search for next pooling index and send command ************************************************/
 	/************************************************************************************************************/
-	bzero(CmdToSendOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdToSendOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 
 	if( 0!= wss->NumOfActiveSensors)
 	{
@@ -1267,22 +1267,22 @@ void SensorPolling(SerialPortCom_t *sp, HcuComMsgWedSensors_t *wss, SensorsMeasu
 	/************************************************************************************************************/
 	/*add the process to received cmd*/
 	/*zero the CmdROS's string*/
-	bzero(CmdStr, HCU_MAX_LENGTH_CMD_SERIAL);
-	bzero(CmdStrTemp, HCU_MAX_LENGTH_CMD_SERIAL);
-	bzero(CmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdStr, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdStrTemp, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 
 	/* Delay for a short period of time, in order to let the sensor to response */
 	usleep(delayBeforeRead * 1000);
 	HcuDebugPrint("SensorPolling: Just been delayed for %d(ms), in order to wait for sensor to response.\n", (delayBeforeRead));
 
-	if((ReadLen = read(fd, CmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL)) > 0)
+	if((ReadLen = read(fd, CmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL)) > 0)
 	{
 		HcuDebugPrint("SensorPolling: Get %d bytes from serial, and before this, already %d bytes saved.\n", ReadLen, LenCmdReceived);
 
 		/* !!!! Protection is needed, to AVOID EXCEED the max length of Buffer !!!!!! */
-		if(LenCmdReceived + ReadLen > HCU_MAX_LENGTH_CMD_SERIAL)
+		if(LenCmdReceived + ReadLen > HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL)
 		{
-			bzero(SumCmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+			bzero(SumCmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 			LenCmdReceived = 0;
 			ReadLen = 0;
 			HcuDebugPrint("SensorPolling: SumCmdReceivedOverSerial is full, clear all contents to ZERO.\n");
@@ -1344,7 +1344,7 @@ void SensorPolling(SerialPortCom_t *sp, HcuComMsgWedSensors_t *wss, SensorsMeasu
 				}
 
 				memcpy(CmdStrTemp, SumCmdReceivedOverSerial + i + (SumCmdReceivedOverSerial[i+1] + 5), LenCmdReceived);
-				bzero(SumCmdReceivedOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+				bzero(SumCmdReceivedOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 				memcpy(SumCmdReceivedOverSerial, CmdStrTemp, LenCmdReceived);
 				HcuDebugPrint("SensorPolling: There is still %d bytes left to scan in the receive buffer.\n", LenCmdReceived);
 
@@ -1398,7 +1398,7 @@ UINT32 FindNextPoolingIndex(HcuComMsgWedSensors_t *wss, PollingLoopBehavior_t *p
 	for(nextMeasureOneD = curMeasureOneD + 1;  ; nextMeasureOneD++)
 	{
 		/* Search back to Sensor 0, and Measure 0, Loop will be increased */
-		if (WED_MAX_NUM_OF_MEASURE * HCU_MAX_NUM_OF_WED == nextMeasureOneD)
+		if (WED_MAX_NUM_OF_MEASURE * HCU_SYSMSG_MAX_NUM_OF_WED == nextMeasureOneD)
 		{
 			nextMeasureOneD = 0;
 			plb->NumOfPoll++;
@@ -1450,8 +1450,8 @@ void BuildDataReq(UINT8 *zbCmd, char *sensorCmd, UINT32 NumOfSensor)
 		HcuErrorPrint("Invalid parameter for BuildDataReq(): NULL == zbCmd\n");
 		return;
 	}
-	bzero(zbCmd, HCU_MAX_LENGTH_CMD_SERIAL);//define the macro
-	if(LengthOfSendData > (HCU_MAX_LENGTH_CMD_SERIAL-2))
+	bzero(zbCmd, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);//define the macro
+	if(LengthOfSendData > (HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL-2))
 	{
 		HcuErrorPrint("The CMD we send is too long\n");
 		return;
@@ -1705,7 +1705,7 @@ void InitCmdNodeStatusInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 	//HcuDebugPrint("InitCmdNodeStatusInd: Start to search the local sensor table for the 64 bit address \n", Read16Address);
 
 	/* To ensure there is no duplicated 16bit address */
-	for(i = 0; i < HCU_MAX_NUM_OF_WED; i++)
+	for(i = 0; i < HCU_SYSMSG_MAX_NUM_OF_WED; i++)
 	{
 		if(gZbSensors.Sensor[i].NodeZbDynAddress == Read16Address)
 		{
@@ -1715,7 +1715,7 @@ void InitCmdNodeStatusInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 	}
 
 	/* start to search for 64bit address */
-	for(i = 0; i < HCU_MAX_NUM_OF_WED; i++)
+	for(i = 0; i < HCU_SYSMSG_MAX_NUM_OF_WED; i++)
 	{
 		if((gZbSensors.Sensor[i].NodeZbIeeeAddress[0] == Read64Address[0]) && (gZbSensors.Sensor[i].NodeZbIeeeAddress[1] == Read64Address[1]))
 		{
@@ -1752,7 +1752,7 @@ void InitCmdNodeStatusInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 		}
 	}
 
-	if(HCU_MAX_NUM_OF_WED == i)
+	if(HCU_SYSMSG_MAX_NUM_OF_WED == i)
 		HcuDebugPrint("InitCmdNodeStatusInd: 64 bits IEEE address [%08X %08X] not found in local Zigbee table, return.\n", Read64Address[0], Read64Address[1]);
 }
 /*
@@ -1773,7 +1773,7 @@ void InitCmdSensorRegInd(HcuZbMsgHeader_t gWt, UINT8 *f)
     Read16Address = f[5] + (f[4]<<8);
 	HcuDebugPrint("InitCmdSensorRegInd: SENSOR_REG_IND received 16 bits Dynamic Zigbee Address = %04X\n", Read16Address);
 
-	for(i=0; i < HCU_MAX_NUM_OF_WED; i++)
+	for(i=0; i < HCU_SYSMSG_MAX_NUM_OF_WED; i++)
 	{
 		if(gZbSensors.Sensor[i].NodeZbDynAddress == Read16Address)
 		{
@@ -1809,7 +1809,7 @@ void InitCmdSensorRegInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 		}
 	}
 
-	if(HCU_MAX_NUM_OF_WED == i)
+	if(HCU_SYSMSG_MAX_NUM_OF_WED == i)
 		HcuDebugPrint("InitCmdSensorRegInd: 16 bits address [%04X] not found, return.\n", Read16Address);
 }
 /*
@@ -1830,7 +1830,7 @@ void InitCmdSensorDeregInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 	Read16Address = f[5] + (f[4]<<8);
 	HcuDebugPrint("InitCmdSensorDeregInd: SENSOR_DEREG_IND received with 16 bits Dynamic Zigbee Address = %04X, start to search in local Zigbee table.\n", Read16Address);
 
-	for(i=0; i < HCU_MAX_NUM_OF_WED; i++)
+	for(i=0; i < HCU_SYSMSG_MAX_NUM_OF_WED; i++)
 	{
 		if(gZbSensors.Sensor[i].NodeZbDynAddress == Read16Address)
 		{
@@ -1868,7 +1868,7 @@ void InitCmdSensorDeregInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 		}
 	}
 
-	if(i == HCU_MAX_NUM_OF_WED)
+	if(i == HCU_SYSMSG_MAX_NUM_OF_WED)
 		HcuDebugPrint("InitCmdSensorDeregInd: 16 bits address [%04X] not found in local Zigbee table, return.\n", Read16Address);
 
 }
@@ -1878,7 +1878,7 @@ void InitCmdSensorDeregInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 void InitCmdAppDateInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 {
 	UINT16 Read16Address;
-	UINT8 Data[HCU_MAX_LENGTH_CMD_SERIAL];
+	UINT8 Data[HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL];
 	UINT32 i;
 
 	if (NULL == f)
@@ -1896,7 +1896,7 @@ void InitCmdAppDateInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 	Read16Address = f[5] + (f[4]<<8);
 	HcuDebugPrint("InitCmdAppDateInd: APP_DATA_IND with 16 bits Zigbee Address = %04X.\n", Read16Address);
 
-	for(i = 0; i < HCU_MAX_NUM_OF_WED; i++)
+	for(i = 0; i < HCU_SYSMSG_MAX_NUM_OF_WED; i++)
 	{
 		if((gZbSensors.Sensor[i].NodeZbDynAddress == Read16Address) && (gZbSensors.Sensor[i].NodeStatus == SENSOR_STATUS_DATA_CONN))
 		{
@@ -1915,7 +1915,7 @@ void InitCmdAppDateInd(HcuZbMsgHeader_t gWt, UINT8 *f)
 		}
 	}
 
-	if(HCU_MAX_NUM_OF_WED == i)
+	if(HCU_SYSMSG_MAX_NUM_OF_WED == i)
 		HcuDebugPrint("InitCmdAppDateInd: 16 bits address [%04X] not found in local Zigbee table, ignore.\n", Read16Address);
 	return;
 }
@@ -1924,7 +1924,7 @@ void InitCmdAppDateInd(HcuZbMsgHeader_t gWt, UINT8 *f)
  */
 void AnalyzeDataOfReceive(char *f, UINT32 DataNumOfWep, UINT32 NumberOfPoll)
 {
-	char m[HCU_MAX_LENGTH_CMD_SERIAL];
+	char m[HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL];
 	char *p = NULL;
 	char *startPoint = NULL;
 	char *endPoint = NULL;
@@ -2191,7 +2191,7 @@ void HcuResetZigbee()
 	/* Make Zb RST PIN to LOW, ZB RST Cable Connect to GPQ3 */
 	GpioPortOp("Q3=0");
 	GpioPortOp("M1=0");
-	usleep(NB_MICROS_IN_ONE_SECOND);
+	usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND);
 	/* Make Zb RST PIN to HIGH, ZB RST Cable Connect to GPQ3 */
 	GpioPortOp("Q3=1");
 	GpioPortOp("M1=1");
@@ -2330,7 +2330,7 @@ void OamMsgProcessSensorPolling(OamControlMsg_t *pOamMsg)
 		return;
 	}
 
-	if(pOamMsg->MsgBody[0] < HCU_MAX_NUM_OF_WED)
+	if(pOamMsg->MsgBody[0] < HCU_SYSMSG_MAX_NUM_OF_WED)
 	{
 		NumOfSensor = pOamMsg->MsgBody[0];
 	}
@@ -2351,7 +2351,7 @@ void OamMsgProcessSensorPolling(OamControlMsg_t *pOamMsg)
 	}
 
 	/* Start to send command */
-	bzero(CmdToSendOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+	bzero(CmdToSendOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 
 	/* Build the Data Req message */
 	BuildDataReq( (UINT8 *)CmdToSendOverSerial, gSensorCmd[NumOfMeasure], NumOfSensor);
@@ -2376,7 +2376,7 @@ void OamMsgProcessSensorPolling(OamControlMsg_t *pOamMsg)
 
 		if(0xFF != NumOfMeasure)
 		{
-			bzero(CmdToSendOverSerial, HCU_MAX_LENGTH_CMD_SERIAL);
+			bzero(CmdToSendOverSerial, HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL);
 
 			/* Build the Data Req message */
 			BuildDataReq( (UINT8 *)CmdToSendOverSerial, gSensorCmd[NumOfMeasure], NumOfSensor);

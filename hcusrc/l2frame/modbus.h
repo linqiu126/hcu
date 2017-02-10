@@ -34,7 +34,7 @@ extern sensor_modbus_opertion_general_t zPM25ConfigData; //by Shanchun for senso
 typedef struct SerialModbusMsgBuf
 {
 	UINT32 curLen;
-	UINT8  curBuf[MAX_HCU_MSG_BODY_LENGTH];
+	UINT8  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 }SerialModbusMsgBuf_t;
 
 

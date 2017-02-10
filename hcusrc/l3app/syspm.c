@@ -75,7 +75,7 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SYSPM, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -115,7 +115,7 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		HcuErrorPrint("SYSPM: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SYSPM: Enter FSM_STATE_SYSPM_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -177,7 +177,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		}
 
 		//拷贝zHcuRunErrCnt到目标全局变量中
-		memcpy(&zHcuSysStaPm.statisCnt.errCnt[0], &zHcuSysStaPm.taskRunErrCnt[0], (sizeof(UINT32)*MAX_TASK_NUM_IN_ONE_HCU));
+		memcpy(&zHcuSysStaPm.statisCnt.errCnt[0], &zHcuSysStaPm.taskRunErrCnt[0], (sizeof(UINT32)*HCU_SYSDIM_TASK_NBR_MAX));
 		//检查COUNTER的情况，并生成相应的事件。这里暂时空着
 
 		func_syspm_cal_cpu_mem_disk_occupy();
@@ -315,7 +315,7 @@ void func_syspm_get_diskoccupy(void)
 
 	zHcuSysStaPm.statisCnt.disk_occupy = r;
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SYSPM: Disk total = %dMB, free=%dMB, usage/total ratio =%.2f%%, diskoccupy=%d\n", mbTotalsize, mbFreedisk,r, zHcuSysStaPm.statisCnt.disk_occupy);
 	}
 

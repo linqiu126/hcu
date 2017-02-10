@@ -111,7 +111,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_L3BFSC, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -134,7 +134,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFSC] = 0;
-	#if (HCU_BFSC_SENSOR_WS_NBR_MAX > HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX)
+	#if ((HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX > HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX) || (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX > HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR))
 		#error L3BFSC module level configuration number error!
 	#endif
 

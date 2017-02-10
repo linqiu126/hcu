@@ -62,7 +62,7 @@ OPSTAT fsm_3g4g_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_3G4G, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -92,7 +92,7 @@ OPSTAT fsm_3g4g_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		HcuErrorPrint("3G4G: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("3G4G: Enter FSM_STATE_3G4G_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -264,7 +264,7 @@ UINT32 UsbUmtsPppdStart()
 		/* usleep for 5 sec */
 		for (i = 0; i < 5; i++)
 		{
-			usleep(NB_MICROS_IN_ONE_SECOND);
+			usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND);
 			HcuDebugPrint("UsbUmtsPppdStart: wait for pppd call gprs& to complete, delay %02d sec ...\n", i+1);
 		}
 
@@ -294,7 +294,7 @@ UINT32 UsbUmtsPppdStart()
 		/* usleep for 8 sec, wait for ttyUSB has been setup, this is a must */
 		for (i = 0; i < 8; i++)
 		{
-			usleep(NB_MICROS_IN_ONE_SECOND);
+			usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND);
 			HcuDebugPrint("UsbUmtsPppdStart: wait for pppd call gprs& to complete, delay %02d sec ...\n", i+1);
 		}
 
@@ -332,7 +332,7 @@ UINT32 UsbUmtsPppdStart()
 		/* usleep for 15 sec */
 		for (i = 0; i < 12; i++)
 		{
-			usleep(NB_MICROS_IN_ONE_SECOND);
+			usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND);
 			HcuDebugPrint("UsbUmtsPppdStart: wait for pppd call gprs& to complete, delay %02d sec ...\n", i+1);
 		}
 
@@ -349,7 +349,7 @@ UINT32 UsbUmtsPppdStart()
 			/* usleep for 15 sec, to let console know the result */
 			for (i = 0; i < 2; i++)
 			{
-				usleep(NB_MICROS_IN_ONE_SECOND);
+				usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND);
 			}
 
 			return SUCCESS;
@@ -365,7 +365,7 @@ UINT32 UsbUmtsPppdStart()
 			/* usleep for 15 sec, to let console know the result */
 			for (i = 0; i < 2; i++)
 			{
-				usleep(NB_MICROS_IN_ONE_SECOND);
+				usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND);
 			}
 
 			/* If failed for the 1st time, try for 2nd time */
@@ -755,7 +755,7 @@ UINT32 UsbUmtsAtCommand(UINT16 fd, char *AtCmd, char *ReplyStr, int *ReplyCnt)
 	len = write(fd, AtCmd, strlen(AtCmd));
 	HcuDebugPrint("UsbUmtsAtCommand: AT SEND: %s\n", AtCmd);
 
-	usleep(NB_MICROS_IN_ONE_SECOND * 2);
+	usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND * 2);
 	HcuDebugPrint("UsbUmtsAtCommand: Delayed 2 sec to get response ...\n");
 
 	/* Read All Reply */

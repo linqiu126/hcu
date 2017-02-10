@@ -61,7 +61,7 @@ OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_LED, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -91,7 +91,7 @@ OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		HcuErrorPrint("LED: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("LED: Enter FSM_STATE_LED_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -99,7 +99,7 @@ OPSTAT fsm_led_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	//进入循环工作模式
 	while(1){
 		conCounter = 0;
-		if (HCU_SENSOR_PRESENT_LED_LED2PIN == HCU_SENSOR_PRESENT_YES){
+		if (HCU_SYSCFG_SNR_PRESENT_LED_LED2PIN == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_led_write_data_led2pin();
 			hcu_sleep(RPI_LED_SENSOR_WRITE_GAP/workingCycle);
 			conCounter++;

@@ -108,7 +108,7 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		HcuErrorPrint("SYSPM: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SYSPM: Enter FSM_STATE_SYSPM_ACTIVED status, Keeping refresh here!\n");
 	}
 	/*

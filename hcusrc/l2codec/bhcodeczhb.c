@@ -29,7 +29,7 @@ OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -44,12 +44,12 @@ OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: HEART_BEAT Frame XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -63,7 +63,7 @@ OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: Heart Beat Frame ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -90,7 +90,7 @@ OPSTAT func_cloudvela_huanbao_cmd_control_msg_pack(CloudDataSendBuf_t *buf)
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -105,13 +105,13 @@ OPSTAT func_cloudvela_huanbao_cmd_control_msg_pack(CloudDataSendBuf_t *buf)
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: CMD CONTROL CHECK Frame XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
@@ -126,7 +126,7 @@ OPSTAT func_cloudvela_huanbao_cmd_control_msg_pack(CloudDataSendBuf_t *buf)
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: Heart Beat Frame ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 
@@ -154,7 +154,7 @@ OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -187,12 +187,12 @@ OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: EMC XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -206,7 +206,7 @@ OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: EMC ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -231,7 +231,7 @@ OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -266,12 +266,12 @@ OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: PM25 XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -285,7 +285,7 @@ OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: PM25 ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -310,7 +310,7 @@ OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -343,12 +343,12 @@ OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: WINDDIR XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -362,7 +362,7 @@ OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: WINDDIR ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -387,7 +387,7 @@ OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -420,12 +420,12 @@ OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: WINDSPD XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -439,7 +439,7 @@ OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: WINDSPD ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -465,7 +465,7 @@ OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -498,12 +498,12 @@ OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: TEMP XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -517,7 +517,7 @@ OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: TEMP ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -542,7 +542,7 @@ OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -575,12 +575,12 @@ OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: HUMID XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -594,7 +594,7 @@ OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: Humid ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -619,7 +619,7 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -652,12 +652,12 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: NOISE XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -671,7 +671,7 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: Noise ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -699,7 +699,7 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML) && ((optId == L3PO_bfsc_start_resp) || (optId == L3PO_bfsc_stop_resp)))
+	if ((zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML) && ((optId == L3PO_bfsc_start_resp) || (optId == L3PO_bfsc_stop_resp)))
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -727,12 +727,12 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: NOISE XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if ((zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML) && (optId == L3PO_bfsc_data_report))
+	else if ((zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML) && (optId == L3PO_bfsc_data_report))
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -772,7 +772,7 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -797,7 +797,7 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -836,12 +836,12 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: HSMMP XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -861,7 +861,7 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: HSMMP ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -891,7 +891,7 @@ OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -987,7 +987,7 @@ OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: PM25 XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -1034,7 +1034,7 @@ OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -1075,7 +1075,7 @@ OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: HCU sw download response XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -1100,7 +1100,7 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -1142,7 +1142,7 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: HCU sw inventory response XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -1166,7 +1166,7 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -1209,7 +1209,7 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: HCU video response XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
@@ -1242,7 +1242,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	char st[HCU_CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH] = "";
 
 	//检查参数 (固定包头为12个字符串)
-	if ((rcv == NULL) ||(rcv->length<=12) ||(rcv->length>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((rcv == NULL) ||(rcv->length<=12) ||(rcv->length>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Invalid received data buffer or length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1666,7 +1666,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 	len = strlen(zhbFormat->data.conAirprs) + strlen(zhbFormat->data.conEmc) + strlen(zhbFormat->data.conHumid) + strlen(zhbFormat->data.conPm10d)\
 			+ strlen(zhbFormat->data.conPm10d) + strlen(zhbFormat->data.conPm2d5) + strlen(zhbFormat->data.conTemp) + strlen(zhbFormat->data.conWinddir)\
 			+ strlen(zhbFormat->data.conWindspd);
-	if ((len < 0) || ((len % 2) != 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len < 0) || ((len % 2) != 0) || (len > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: No data to be pack or too long length of data content!!!\n");
 		return FAILURE;
@@ -1675,7 +1675,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 	//Len =0 就表示HEART_BEAT消息
 
 	//准备接龙字符串成为一整串
-	char s[MAX_HCU_MSG_BUF_LENGTH];
+	char s[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	memset(s, 0, sizeof(s));
 	char tmp[HCU_CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH];
 
@@ -1742,7 +1742,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 	sprintf(tmp, "%04d", 6666);
 	strcat(s, tmp);
 
-	char da[MAX_HCU_MSG_BUF_LENGTH];
+	char da[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	memset(da, 0, sizeof(da));
 
 	//数据区域, 气压
@@ -1819,7 +1819,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//纯粹项目内容的数据长度区域，暂时没有不同项目分界线，不然需要使用“;”进行分开表征
 	i = strlen(da);
-	if ((i<0) || (i> (MAX_HCU_MSG_BUF_LENGTH - strlen(s)) )){
+	if ((i<0) || (i> (HCU_SYSMSG_COM_MSG_BODY_LEN_MAX - strlen(s)) )){
 		HcuErrorPrint("CLOUDVELA: Too much data to be packed, exceed system limitation!!!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1827,7 +1827,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 	//继续接上数据去
 	strcat(s, da);
-	if(strlen(s) > MAX_HCU_MSG_BUF_LENGTH-12){
+	if(strlen(s) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX-12){
 		HcuErrorPrint("CLOUDVELA: Too much data to be packed, exceed system limitation!!!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1850,7 +1850,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 	strcat(buf->curBuf, zhbFormat->crc16);
 	strcat(buf->curBuf, zhbFormat->zhb_tail);
 	buf->curLen = strlen(buf->curBuf) + 4;
-	if(buf->curLen > MAX_HCU_MSG_BUF_LENGTH){
+	if(buf->curLen > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX){
 		HcuErrorPrint("CLOUDVELA: Too much data to be packed, exceed system limitation!!!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1871,7 +1871,7 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 u
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -1905,12 +1905,12 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 u
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		/*
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
@@ -1954,7 +1954,7 @@ extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UIN
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -1993,12 +1993,12 @@ extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UIN
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB){
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		/*
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;

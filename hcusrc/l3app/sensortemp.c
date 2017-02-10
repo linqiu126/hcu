@@ -88,7 +88,7 @@ OPSTAT fsm_temp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_TEMP, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -102,7 +102,7 @@ OPSTAT fsm_temp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		HcuErrorPrint("TEMP: Error Set FSM State at fsm_temp_init\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("TEMP: Enter FSM_STATE_TEMP_INITED status, everything goes well!\n");
 	}
 
@@ -457,7 +457,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.ew = rcv.temp.gps.ew;
 			record.ns = rcv.temp.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -466,7 +466,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -475,7 +475,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_temp_data_element_t tempData;
 				memset(&tempData, 0, sizeof(sensor_temp_data_element_t));
@@ -545,7 +545,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.ew = rcv.temp.gps.ew;
 			record.ns = rcv.temp.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -554,7 +554,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -563,7 +563,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_temp_data_element_t tempData;
 				memset(&tempData, 0, sizeof(sensor_temp_data_element_t));
@@ -668,7 +668,7 @@ OPSTAT func_temp_time_out_read_data_from_dht11(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuGpioTempDht11 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuGpioTempDht11 <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuGpioTempDht11 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuGpioTempDht11 <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_dht11_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_dht11_data_element_t));
@@ -692,7 +692,7 @@ OPSTAT func_temp_time_out_read_data_from_sht20(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cTempSht20 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuI2cTempSht20 <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuI2cTempSht20 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuI2cTempSht20 <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_sht20_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_sht20_data_element_t));
@@ -716,7 +716,7 @@ OPSTAT func_temp_time_out_read_data_from_rht03(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSpiTempRht03 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuSpiTempRht03 <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuSpiTempRht03 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuSpiTempRht03 <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_rht03_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_rht03_data_element_t));
@@ -740,7 +740,7 @@ OPSTAT func_temp_time_out_read_data_from_bmp180(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cTempBmp180 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuI2cTempBmp180 <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuI2cTempBmp180 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuI2cTempBmp180 <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_bmp180_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_bmp180_data_element_t));
@@ -764,7 +764,7 @@ OPSTAT func_temp_time_out_read_data_from_mth01(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSpiTempMth01 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuSpiTempMth01 <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuSpiTempMth01 >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuSpiTempMth01 <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_mth01_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_mth01_data_element_t));

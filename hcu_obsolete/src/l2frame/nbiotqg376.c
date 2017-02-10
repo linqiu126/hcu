@@ -80,7 +80,7 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_NBIOTQG376, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -118,7 +118,7 @@ OPSTAT fsm_nbiotqg376_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		HcuErrorPrint("NBIOTQG376: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("NBIOTQG376: Enter FSM_STATE_NBIOTQG376_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -214,7 +214,7 @@ OPSTAT func_nbiotqg376_time_out_period(void)
 		//如果是失败情况，并不返回错误，属于正常情况
 		//当链路不可用时，这个打印结果会非常频繁，放开比较好
 		else{
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE){
 				HcuDebugPrint("NBIOTQG376: Try to setup connection with back-cloud, but not success!\n");
 			}
 		}
@@ -281,7 +281,7 @@ OPSTAT func_nbiotqg376_heart_beat_check(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("NBIOTQG376: Online state, send HEART_BEAT message out to cloud success!\n");
 	}
 	//State no change

@@ -117,7 +117,7 @@ OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_AVORION, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -153,7 +153,7 @@ OPSTAT fsm_avorion_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 		HcuErrorPrint("AVORION: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("AVORION: Enter FSM_STATE_AVORION_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -247,7 +247,7 @@ OPSTAT fsm_avorion_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		HcuErrorPrint("AVORION: Error capture frame main loop function!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: fileNameBack=[%s]\n", rcv.fName);
 	}
 
@@ -378,7 +378,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	avformat_network_init();
     avdevice_register_all();
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step1 Global init success!\n");
 	}
 
@@ -403,7 +403,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     }
 	//负责为pFormatCtx->streams填上正确的信息,pFormatCtx->streams仅仅是一组大小为pFormatCtx->nb_streams的指针
 	//av_dump_format(pFormatCtxAvorion, 0, filename, 0);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step2 input avorion source context creation, pFormatCtxAvorion=0x%x\n", pFormatCtxAvorion);
 	}
 
@@ -432,7 +432,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Didn't find a video stream
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step3 input avorion source stream finding, videoStreamAvorion=%d\n", videoStreamAvorion);
 	}
 
@@ -455,7 +455,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Could not open codec
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step4 input avorion source decoder pCodecCtxAvorion=0x%x， pCodecAvorion=0x%x\n", pCodecCtxAvorion, pCodecAvorion);
 	}
 
@@ -480,7 +480,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	avpicture_fill((AVPicture *)pFrameYUVmid, bufferAvorion, AVORION_STREAM_PIX_FMT_DEFAULT, pCodecCtxAvorion->width, pCodecCtxAvorion->height); //PIX_FMT_YUV420P
 	//准备按照包为步长进行读取和处理
 	packetAvorion = (AVPacket *)av_malloc(sizeof(AVPacket));
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step5 Avorion/YUV malloc size=%d, bufferAvorion=0x%x， packetAvorion=0x%x\n", numBytesAvorion, bufferAvorion, packetAvorion);
 	}
 
@@ -513,7 +513,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	rect.w = pCodecCtxAvorion->width;
 	rect.h = pCodecCtxAvorion->height;
 	SDL_WM_SetCaption("BXXH FFMPEG MONITOR AVORION", NULL);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step6.0 SDL1.2 display generation, bmpSdlOutput=0x%x, screen width=%d, height=%d\n", bmpSdlOutput, rect.w, rect.h);
 	}
 
@@ -548,7 +548,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	    sdlRect.y = 0;
 	    sdlRect.w = pCodecCtxAvorion->width;
 	    sdlRect.h = pCodecCtxAvorion->height;
-	    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 	    	HcuDebugPrint("AVORION: Step6.5 SDL2.0 display generation, sdlTexture=0x%x, screen width=%d, height=%d\n", sdlTexture, sdlRect.w, sdlRect.h);
 	    }
 	}
@@ -578,7 +578,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     	zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
         return FAILURE;
     }
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step7 avorion capture scale set, pSwsCtxAvorion=0x%x\n", pSwsCtxAvorion);
     }
 
@@ -596,7 +596,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         return FAILURE;
     }
     pFormatCtxOutput->oformat = ofmt;
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.1 File output encoder FORMAT context generation , pFormatCtxOutput=0x%x, ofmt=0x%x\n", pFormatCtxOutput, ofmt);
     }
 
@@ -619,7 +619,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     video_st_output->time_base.num = 1;
     video_st_output->time_base.den = zHcuAvorionRefreshRate;
 
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.2 File output encoder stream creation , video_st_output=0x%x\n", video_st_output);
     }
 
@@ -636,7 +636,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     pCodecCtxOutput->time_base.den = zHcuAvorionRefreshRate;
     pCodecCtxOutput->bit_rate = 400000;
     pCodecCtxOutput->gop_size=250; // emit one intra frame every gop_size frames at most
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.3 File output encoder context , pCodecCtxOutput=0x%x, width=%d, height=%d, fresh rate=%d\n", pCodecCtxOutput, pCodecCtxOutput->width, pCodecCtxOutput->height, pCodecCtxOutput->time_base.den);
     }
 
@@ -680,7 +680,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         HcuErrorPrint("AVORION: Failed to open encoder! \n");
         return FAILURE;
     }
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.4 File output encoder create , pCodecOutput=0x%x\n", pCodecOutput);
     }
 
@@ -693,13 +693,13 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     }
     pFrameOutput->width = pCodecCtxOutput->width;
     pFrameOutput->height = pCodecCtxOutput->height;
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.5 File output encoder frame pFrameOutput=0x%x, width=%d, height=%d\n", pFrameOutput, pFrameOutput->width, pFrameOutput->height);
     }
 
     picture_size = avpicture_get_size(pCodecCtxOutput->pix_fmt, pCodecCtxOutput->width, pCodecCtxOutput->height);
     bufferOutput = (UINT8 *)av_malloc(picture_size);
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.6 File output encoder output malloc size=%d, bufferOutput=0x%x\n", picture_size, bufferOutput);
     }
 
@@ -719,7 +719,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     packetOutput = (AVPacket *)av_malloc(sizeof(AVPacket));
     //printf("Picture_size=%d, Avpackage = %d\n", picture_size, sizeof(AVPacket)*5);
     y_size = pCodecCtxAvorion->width * pCodecCtxAvorion->height;  //为了从文件中读取一帧一帧，所以计算出该大小
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.7 File output encoder package packetOutput=0x%x\n", packetOutput);
     }
 
@@ -728,13 +728,13 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	 *
 	 */
     //Event Loop
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE){
     	HcuDebugPrint("AVORION: Step9, TS measurement starting, EncodeCnt=%5d\n", zHcuEncodeFrameCnt);
     }
     while(1)
     {
     	SDL_WaitEvent(&event);
-        if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+        if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 			HcuDebugPrint("AVORION: Step9.0 starting to work, WaitEven coms!\n");
         }
     	if(event.type==AVORION_SFM_REFRESH_EVENT)
@@ -801,7 +801,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
                         	//Do nothing
                         }
                         //此处的打印，帮助调试文件写入的进度
-                        if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+                        if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 							HcuDebugPrint("AVORION: Step9.1 Success write to file, packetAvorion=0x%x\t,  AvorionFrameCnt=%5d\n", packetAvorion, zHcuAvorionFrameCnt);
                         }
 
@@ -861,7 +861,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
                         if (got_package==1){
                         	//这里的打印留着，对视频性能的影响极小，经过时间戳对比测试。反而是SDLDISPLAY部分，对系统性能影响较大
                         	zHcuEncodeFrameCnt++;
-                            if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+                            if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 								HcuDebugPrint("AVORION: Step9.2 Success to encode frame, packageOutput=0x%x\t, EncodeCnt=%5d\t, size=%5d\t, gotPackFlag=%d\n", packetOutput, zHcuEncodeFrameCnt, packetOutput->size, got_package);
                             }
                         	packetOutput->stream_index = video_st_output->index;
@@ -877,7 +877,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         			}//FrameFinished
     			}//==videoStream
     			else{
-                    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+                    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
     					HcuDebugPrint("AVORION: Step9.3 packetAvorion->stream_index != videoStreamAvorion\n");
                     }
     			}
@@ -887,7 +887,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     		}//av_read_frame
     		else{
                 //Exit Thread
-                if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+                if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
                 	HcuDebugPrint("AVORION: Step9.4 av_read_frame(pFormatCtxAvorion, packetAvorion) < 0\n");
                 }
     			zHcuAvorionRefreshThreadExitFlag=1;
@@ -895,7 +895,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     		}
     	} //End of SFM_REFRESH_EVENT
     	else if(event.type==SDL_QUIT){
-            if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+            if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
             	HcuDebugPrint("AVORION: Step9.5 event.type==SDL_QUIT, event.type = %d\n", event.type);
             }
     		zHcuAvorionRefreshThreadExitFlag = 1;
@@ -918,7 +918,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     av_write_trailer(pFormatCtxOutput);
 
     //通过前后两边的时间戳掐精度，100秒/2500帧的测试颗粒度上，大约在2.2%的水平，已经很不错了
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step10, TS measurement End, EncodeCnt=%5d\n", zHcuEncodeFrameCnt);
     }
 
@@ -1054,7 +1054,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	avformat_network_init();
     avdevice_register_all();
 
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step1 Global init success!\n");
     }
 
@@ -1079,7 +1079,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     }
 	//负责为pFormatCtx->streams填上正确的信息,pFormatCtx->streams仅仅是一组大小为pFormatCtx->nb_streams的指针
 	//av_dump_format(pFormatCtxAvorion, 0, filename, 0);
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
     	HcuDebugPrint("AVORION: Step2 input avorion source context creation, pFormatCtxAvorion=0x%x\n", pFormatCtxAvorion);
     }
 
@@ -1108,7 +1108,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Didn't find a video stream
 	}
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
     	HcuDebugPrint("AVORION: Step3 input avorion source stream finding, videoStreamAvorion=%d\n", videoStreamAvorion);
     }
 
@@ -1131,7 +1131,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         zHcuSysStaPm.taskRunErrCnt[TASK_ID_AVORION]++;
 		return FAILURE; // Could not open codec
 	}
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step4 input avorion source decoder pCodecCtxAvorion=0x%x， pCodecAvorion=0x%x\n", pCodecCtxAvorion, pCodecAvorion);
     }
 
@@ -1156,7 +1156,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	avpicture_fill((AVPicture *)pFrameYUVmid, bufferAvorion, AVORION_STREAM_PIX_FMT_DEFAULT, pCodecCtxAvorion->width, pCodecCtxAvorion->height); //PIX_FMT_YUV420P
 	//准备按照包为步长进行读取和处理
 	packetAvorion = (AVPacket *)av_malloc(sizeof(AVPacket));
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step5 Avorion/YUV malloc size=%d, bufferAvorion=0x%x， packetAvorion=0x%x\n", numBytesAvorion, bufferAvorion, packetAvorion);
     }
 
@@ -1192,7 +1192,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 			pCodecCtxAvorion->height,
 			AVORION_STREAM_PIX_FMT_DEFAULT,
 			SWS_BICUBIC, NULL, NULL, NULL);
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step7 avorion capture scale set, pSwsCtxAvorion=0x%x\n", pSwsCtxAvorion);
     }
 
@@ -1210,7 +1210,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         return FAILURE;
     }
     pFormatCtxOutput->oformat = ofmt;
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.1 File output encoder FORMAT context generation , pFormatCtxOutput=0x%x, ofmt=0x%x\n", pFormatCtxOutput, ofmt);
     }
 
@@ -1233,7 +1233,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     video_st_output->time_base.num = 1;
     video_st_output->time_base.den = zHcuAvorionRefreshRate;
 
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.2 File output encoder stream creation , video_st_output=0x%x\n", video_st_output);
     }
 
@@ -1250,7 +1250,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     pCodecCtxOutput->time_base.den = zHcuAvorionRefreshRate;
     pCodecCtxOutput->bit_rate = 400000;
     pCodecCtxOutput->gop_size=250; // emit one intra frame every gop_size frames at most
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.3 File output encoder context , pCodecCtxOutput=0x%x, width=%d, height=%d, fresh rate=%d\n", pCodecCtxOutput, pCodecCtxOutput->width, pCodecCtxOutput->height, pCodecCtxOutput->time_base.den);
     }
 
@@ -1294,7 +1294,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
         HcuErrorPrint("AVORION: Failed to open encoder! \n");
         return FAILURE;
     }
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.4 File output encoder create , pCodecOutput=0x%x\n", pCodecOutput);
     }
 
@@ -1307,13 +1307,13 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     }
     pFrameOutput->width = pCodecCtxOutput->width;
     pFrameOutput->height = pCodecCtxOutput->height;
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.5 File output encoder frame pFrameOutput=0x%x, width=%d, height=%d\n", pFrameOutput, pFrameOutput->width, pFrameOutput->height);
     }
 
     picture_size = avpicture_get_size(pCodecCtxOutput->pix_fmt, pCodecCtxOutput->width, pCodecCtxOutput->height);
     bufferOutput = (UINT8 *)av_malloc(picture_size);
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.6 File output encoder output malloc size=%d, bufferOutput=0x%x\n", picture_size, bufferOutput);
     }
 
@@ -1333,7 +1333,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     packetOutput = (AVPacket *)av_malloc(sizeof(AVPacket));
     //printf("Picture_size=%d, Avpackage = %d\n", picture_size, sizeof(AVPacket)*5);
     y_size = pCodecCtxAvorion->width * pCodecCtxAvorion->height;  //为了从文件中读取一帧一帧，所以计算出该大小
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("AVORION: Step8.7 File output encoder package packetOutput=0x%x\n", packetOutput);
     }
 
@@ -1342,7 +1342,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	 *
 	 */
     //Event Loop
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE){
     	HcuDebugPrint("AVORION: Step9, TS measurement starting, EncodeCnt=%5d\n", zHcuEncodeFrameCnt);
     }
 
@@ -1357,7 +1357,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 	{
 		zHcuAvorionFrameTotalNum = AVORION_STREAM_NB_FRAMES_MAX;
 	}
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
     	HcuDebugPrint("AVORION: Step9.0 starting to work, WaitEven comes!\n");
     }
 
@@ -1412,7 +1412,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 						//Do nothing
 					}
 					//此处的打印，帮助调试文件写入的进度
-				    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+				    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 						//HcuDebugPrint("AVORION: Step9.1 Success write to file, packetAvorion=0x%x\t,  AvorionFrameCnt=%5d\n", packetAvorion, zHcuAvorionFrameCnt);
 				    }
 
@@ -1472,7 +1472,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 					if (got_package==1){
 						//这里的打印留着，对视频性能的影响极小，经过时间戳对比测试。反而是SDLDISPLAY部分，对系统性能影响较大
 						zHcuEncodeFrameCnt++;
-					    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+					    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 							//HcuDebugPrint("AVORION: Step9.2 Success to encode frame, packageOutput=0x%x\t, EncodeCnt=%5d\t, size=%5d\t, gotPackFlag=%d\n", packetOutput, zHcuEncodeFrameCnt, packetOutput->size, got_package);
 					    }
 						packetOutput->stream_index = video_st_output->index;
@@ -1488,7 +1488,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 				}//FrameFinished
 			}//==videoStream
 			else{
-				 if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+				 if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 					 HcuDebugPrint("AVORION: Step9.3 packetAvorion->stream_index != videoStreamAvorion\n");
 				 }
 			}
@@ -1498,7 +1498,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		}//av_read_frame
 		else{
 			//Exit Thread
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 				HcuDebugPrint("AVORION: Step9.4 av_read_frame(pFormatCtxAvorion, packetAvorion) < 0\n");
 			}
 			zHcuAvorionRefreshThreadExitFlag=1;
@@ -1521,7 +1521,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
     av_write_trailer(pFormatCtxOutput);
 
     //通过前后两边的时间戳掐精度，100秒/2500帧的测试颗粒度上，大约在2.2%的水平，已经很不错了
-    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
+    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE){
     	HcuDebugPrint("AVORION: Step10, TS measurement End, EncodeCnt=%5d\n", zHcuEncodeFrameCnt);
     }
 
@@ -1703,7 +1703,7 @@ OPSTAT func_avorion_ffmpeg_capture_and_save(UINT8 fileType, char *fdir, char *ft
 		pkt.pos = -1;
 		pkt.stream_index=stream_index;
 
-	    if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
+	    if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE){
 	    	HcuDebugPrint("AVORION: Write 1 Packet. size:%5d\tpts:%lld\n", pkt.size,pkt.pts);
 	    }
 		//Write
@@ -1766,7 +1766,7 @@ INT32 func_avorion_flush_encoder(AVFormatContext *fmt_ctx,unsigned int stream_in
             break;
         }
         zHcuEncodeFrameCnt++;
-        if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+        if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 			HcuDebugPrint("Flush Encoder: Succeed to encode 1 frame!\t EncodeFrameCnt=%5d\t size=%5d\n", zHcuEncodeFrameCnt, enc_pkt.size);
         }
         /* mux encoded frame */

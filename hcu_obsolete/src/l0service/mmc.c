@@ -80,7 +80,7 @@ OPSTAT fsm_mmc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		HcuErrorPrint("MMC: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("MMC: Enter FSM_STATE_MMC_ACTIVED status, Keeping loop of signal sending here!\n");
 	}
 

@@ -147,7 +147,7 @@ OPSTAT HcuGetSysInfo(HcuSysOsNetInfo_t *si, bool mode)
     	if (mode == TRUE) HcuDebugPrint("SYSINFO: CPU: %s", arg);
     	if(strstr(arg, "Processor"))
     	{
-    		strncpy(si->hw.cpu_processor, arg, MAX_SYS_INFO_STRING_LENGTH-1);
+    		strncpy(si->hw.cpu_processor, arg, HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH-1);
     		if (mode == TRUE) HcuDebugPrint("SYSINFO: CPU: %s", arg);
     	}
     	free(arg);
@@ -160,7 +160,7 @@ OPSTAT HcuGetSysInfo(HcuSysOsNetInfo_t *si, bool mode)
     while(getline(&arg, &size, cmdline) != -1)
     {
     	if (mode == TRUE) HcuDebugPrint("SYSINFO: OS VERSION: %s", arg);
-    	strncpy(si->os.version_signature, arg, MAX_SYS_INFO_STRING_LENGTH-1);
+    	strncpy(si->os.version_signature, arg, HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH-1);
     	free(arg);
     	arg = NULL;
     }
@@ -228,9 +228,9 @@ OPSTAT HcuGetSysInfo(HcuSysOsNetInfo_t *si, bool mode)
             diep("inet_ntop");
 
         //printf("%s\t%s\n", ifreq[i].ifr_name, ip);
-        strcpy(si->net.itfname[i * MAX_SYS_INFO_STRING_LENGTH], ifreq[i].ifr_name);
-        strcpy(si->net.itfip[i * MAX_SYS_INFO_STRING_LENGTH], ip);
-        if (mode == TRUE) HcuDebugPrint("SYSINFO: NETWORK: [%s]\t\t[%s]\n", si->net.itfname[i * MAX_SYS_INFO_STRING_LENGTH], si->net.itfip[i * MAX_SYS_INFO_STRING_LENGTH]);
+        strcpy(si->net.itfname[i * HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH], ifreq[i].ifr_name);
+        strcpy(si->net.itfip[i * HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH], ip);
+        if (mode == TRUE) HcuDebugPrint("SYSINFO: NETWORK: [%s]\t\t[%s]\n", si->net.itfname[i * HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH], si->net.itfip[i * HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH]);
 
     }
     close(sock);

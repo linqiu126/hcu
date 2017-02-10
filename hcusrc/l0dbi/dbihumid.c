@@ -163,7 +163,7 @@ OPSTAT dbi_HcuHumidDataInfo_save(sensor_humid_data_element_t *humidData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIHUMID: HUMID data record save to DB!\n");
 	}
     return SUCCESS;
@@ -325,7 +325,7 @@ OPSTAT dbi_HcuHumidDht11DataInfo_save(sensor_humid_dht11_data_element_t *humidDa
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIHUMID: HUMID DHT11 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -413,7 +413,7 @@ OPSTAT dbi_HcuHumidSht20DataInfo_save(sensor_humid_sht20_data_element_t *humidDa
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIHUMID: HUMID SHT20 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -501,7 +501,7 @@ OPSTAT dbi_HcuHumidRht03DataInfo_save(sensor_humid_rht03_data_element_t *humidDa
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIHUMID: HUMID RHT03 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -589,7 +589,7 @@ OPSTAT dbi_HcuHumidMth01DataInfo_save(sensor_humid_mth01_data_element_t *humidDa
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIHUMID: HUMID MTH01 data record save to DB!\n");
 	}
     return SUCCESS;

@@ -223,7 +223,7 @@ typedef struct HcuHwinvCtrlTable
 }HcuHwinvCtrlTable_t;
 
 #define FILE_LENGTH_RECORD_MAX 1024  //一条存入文件的记录最长长度
-#define HCU_DIR_LENGTH_MAX HCU_FILE_NAME_LENGTH_MAX
+#define HCU_DIR_LENGTH_MAX HCU_SYSDIM_FILE_NAME_LEN_MAX
 #define HCU_RECORD_LOG_DIR_NAME_LOCAL			"./log"
 #define HCU_RECORD_LOG_DIR_NAME_CLEAN 			"/log"
 #define HCU_RECORD_FILE_NAME_SENSOR    			"/sensor"

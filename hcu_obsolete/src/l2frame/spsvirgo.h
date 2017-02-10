@@ -36,7 +36,7 @@ extern GpsPosInfo_t zHcuGpsPosInfo;
 typedef struct SerialSpsMsgBuf
 {
 	UINT32 curLen;
-	UINT8  curBuf[MAX_HCU_MSG_BODY_LENGTH];
+	UINT8  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 }SerialSpsMsgBuf_t;
 
 

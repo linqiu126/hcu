@@ -67,7 +67,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_ETHERNET, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -123,7 +123,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		//send(zHcuEthConClientFd,receiveBuffer.buf,receiveBuffer.length,0);
 		memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
 
-		idata = recv(zHcuEthConClientFd, &receiveBuffer.buf,MAX_HCU_MSG_BUF_LENGTH,0);
+		idata = recv(zHcuEthConClientFd, &receiveBuffer.buf,HCU_SYSMSG_COM_MSG_BODY_LEN_MAX,0);
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
@@ -261,7 +261,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 		curl_easy_cleanup(curl);
 
 		if(curlRes != CURLE_OK){
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuErrorPrint("ETHERNET: curl_easy_perform() failed: %s\n", curl_easy_strerror(curlRes));
 			}
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
@@ -380,7 +380,7 @@ OPSTAT hcu_ethernet_socket_link_disconnect(void)
 OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
 {
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		if(zHcuEthConClientFd < 0) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "CLOUDVELA: socket id is not valid!\n");
 	}
 

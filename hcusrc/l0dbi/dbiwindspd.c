@@ -86,7 +86,7 @@ OPSTAT dbi_HcuWindspdDataInfo_save(sensor_windspd_data_element_t *windspdData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIWINDSPD: WINDSPD data record save to DB!\n");
 	}
     return SUCCESS;

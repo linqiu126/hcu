@@ -182,7 +182,7 @@ OPSTAT dbi_HcuTempDataInfo_save(sensor_temp_data_element_t *tempData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITEMP: TEMP data record save to DB!\n");
 	}
     return SUCCESS;
@@ -344,7 +344,7 @@ OPSTAT dbi_HcuTempDht11DataInfo_save(sensor_temp_dht11_data_element_t *tempData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITEMP: TEMP DHT11 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -432,7 +432,7 @@ OPSTAT dbi_HcuTempSht20DataInfo_save(sensor_temp_sht20_data_element_t *tempData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITEMP: TEMP SHT20 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -520,7 +520,7 @@ OPSTAT dbi_HcuTempRht03DataInfo_save(sensor_temp_rht03_data_element_t *tempData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITEMP: TEMP RHT03 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -608,7 +608,7 @@ OPSTAT dbi_HcuTempBmp180DataInfo_save(sensor_temp_bmp180_data_element_t *tempDat
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITEMP: TEMP BMP180 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -696,7 +696,7 @@ OPSTAT dbi_HcuTempMth01DataInfo_save(sensor_temp_mth01_data_element_t *tempData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITEMP: TEMP MTH01 data record save to DB!\n");
 	}
     return SUCCESS;

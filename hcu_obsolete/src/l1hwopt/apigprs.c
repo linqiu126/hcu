@@ -245,13 +245,13 @@ UINT32 GprsPppdStart(GprsPppdConf_t *gpc)
 	/* usleep for 20 sec */
 	for (i = 0; i < (gpc->GprsPppdWaitSec); i++)
 	{
-		usleep(NB_MICROS_IN_ONE_SECOND);
+		usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND);
 		HcuDebugPrint("GprsPppStart: wait for pppd call gprs& to complete, delay %02d sec ...\n", i+1);
 	}
 
 	system("ifconfig eth0 up");
 	HcuDebugPrint("GprsPppStart: Bring up eth0 via [ifconfig eth0 up] ...\n", ret);
-	usleep(NB_MICROS_IN_ONE_SECOND);
+	usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND);
 
 	/* Check the GPRS and PPPD status */
 	ret = IsGprsPppdOk();
@@ -296,7 +296,7 @@ void GprsHwReset(GprsPppdConf_t *gpc)
 	}
 
 	HcuDebugPrint("GprsHwReset: delay %d msec ...\n", gpc->HwResetPortOp1DelayMsec);
-	usleep(NB_MICROS_IN_ONE_MS * gpc->HwResetPortOp1DelayMsec);
+	usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_MS * gpc->HwResetPortOp1DelayMsec);
 
 	HcuDebugPrint("GprsHwReset: GPIO PortOp %s.\n", gpc->HwResetPortOp2);
 	if (NULL != gpc->HwResetPortOp2)
@@ -309,7 +309,7 @@ void GprsHwReset(GprsPppdConf_t *gpc)
 	}
 
 	HcuDebugPrint("GprsHwReset: delay %d msec ...\n", gpc->HwResetPortOp2DelayMsec);
-	usleep(NB_MICROS_IN_ONE_MS * gpc->HwResetPortOp2DelayMsec);
+	usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_MS * gpc->HwResetPortOp2DelayMsec);
 	GpioPortOp("m0=1");
 
 	HcuDebugPrint("GprsHwReset: reset GPRS model via HW GPIO, complete.\n");
@@ -373,7 +373,7 @@ UINT32 GprsPppdSystemStartup(GprsPppdConf_t *gpc)
 			}
 		}
 
-		usleep(NB_MICROS_IN_ONE_SECOND * 10);
+		usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND * 10);
 	}
 
 	/* decide whether we need to start GPRS */
@@ -401,7 +401,7 @@ UINT32 GprsPppdSystemStartup(GprsPppdConf_t *gpc)
 			//return ret;
 		}
 
-		usleep(NB_MICROS_IN_ONE_SECOND * 10);
+		usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND * 10);
 	}
 
 	/* Check whether it is OK */
@@ -491,7 +491,7 @@ UINT32 AtCommand(SerialPortCom_t *pGprsSerialPortConfig, char *AtCmd, char *Repl
 	len = write(fd, AtCmd, strlen(AtCmd));
 	HcuDebugPrint("AtCommand: AT SEND: %s\n", AtCmd);
 
-	usleep(NB_MICROS_IN_ONE_SECOND * 2);
+	usleep(HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND * 2);
 	HcuDebugPrint("AtCommand: Delayed 2 sec to get response ...\n");
 
 	/* Read All Reply */

@@ -115,14 +115,14 @@
 //2. 公共消息结构体定义
 //Under normal case, 1024Byte shall be enough for internal message communication purpose.
 //If not enough, need modify here to enlarge
-#define MAX_HCU_MSG_BUF_LENGTH MAX_HCU_MSG_BODY_LENGTH-16
+#define MAX_HCU_MSG_BUF_LENGTH HCU_SYSDIM_MSG_BODY_LEN_MAX-16
 typedef struct HcuMsgSruct
 {
 	UINT32 msgType;
 	UINT32 dest_id;
 	UINT32 src_id;
 	UINT32 msgLen;
-	INT8 msgBody[MAX_HCU_MSG_BODY_LENGTH];
+	INT8 msgBody[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 }HcuMsgSruct_t;
 
 
@@ -140,9 +140,9 @@ typedef struct SocketPort
 	struct sockaddr_in ClientSocketAddress;
 } SocketPort_t;
 
-#define		HCU_MAX_NUM_OF_WED	 			16
+#define		HCU_SYSMSG_MAX_NUM_OF_WED	 			16
 #define		WED_MAX_NUM_OF_MEASURE			7
-#define		HCU_MAX_LENGTH_CMD_SERIAL 		(256 + 4 + 1)*4 /* 4 for MsgHeader, 1 for FCS */
+#define		HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL 		(256 + 4 + 1)*4 /* 4 for MsgHeader, 1 for FCS */
 #define		HCU_MAX_LENGTH_CMD_TCP 			1024
 
 #define		HCU_MAX_NUM_POLLING_LOOP		100
@@ -181,7 +181,7 @@ typedef struct WedSensorProperty
 typedef struct WedSensors
 {
 	UINT32 NumOfActiveSensors;
-	WedSensorProperty_t Sensor[HCU_MAX_NUM_OF_WED];
+	WedSensorProperty_t Sensor[HCU_SYSMSG_MAX_NUM_OF_WED];
 } HcuComMsgWedSensors_t;
 
 typedef struct MeasurePerSensor
@@ -213,7 +213,7 @@ typedef struct SensorsMeasurementsTable
 {
 	UINT32	activeTable;   /* copy 0 or copy 1 */
 	UINT32	curRecord;     /* 0 to HCU_MAX_NUM_RECORD - 1*/
-	MeasurePerSensor_t smt[NUM_OF_SMT_COPY][HCU_MAX_NUM_POLLING_LOOP][HCU_MAX_NUM_OF_WED];
+	MeasurePerSensor_t smt[NUM_OF_SMT_COPY][HCU_MAX_NUM_POLLING_LOOP][HCU_SYSMSG_MAX_NUM_OF_WED];
 	MeasureItem_t mi[NUM_OF_SMT_COPY][HCU_MAX_NUM_RECORD];
 } SensorsMeasurementsTable_t;
 
@@ -282,28 +282,28 @@ typedef struct MsgSeverDataSegHeader
 }MsgSeverDataSegHeader_t;
 
 /* System Information */
-#define     MAX_SYS_INFO_STRING_LENGTH			128
-#define     MAX_SYS_INFO_INTERFACE_NUMBER		16
+#define     HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH			128
+#define     HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER		16
 
 typedef struct SysHwInfo
 {
-	char cpu_processor[MAX_SYS_INFO_STRING_LENGTH];
-	char cpu_vendor[MAX_SYS_INFO_STRING_LENGTH];
-	char cpu_modelname[MAX_SYS_INFO_STRING_LENGTH];
-	char cpu_mhz[MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_processor[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_vendor[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_modelname[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_mhz[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
 }SysHwInfo_t;
 
 typedef struct SysOsInfo
 {
-	char version_signature[MAX_SYS_INFO_STRING_LENGTH];
+	char version_signature[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
 }SysOsInfo_t;
 
 typedef struct SysNetworkInfo
 {
 
 	int itfnum;
-	char itfname[MAX_SYS_INFO_INTERFACE_NUMBER][MAX_SYS_INFO_STRING_LENGTH];
-	char itfip[MAX_SYS_INFO_INTERFACE_NUMBER][MAX_SYS_INFO_STRING_LENGTH];
+	char itfname[HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER][HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char itfip[HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER][HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
 	/* whether there is PPP */
 	pid_t ppppid;
 
@@ -351,9 +351,9 @@ typedef void *(*CALLBACK)(void *);
 
 #define 	CLOCKID 						CLOCK_REALTIME
 #define 	THREAD_COM_TIMER_ID 			111
-#define		NB_NANOS_IN_ONE_SECOND			1000000000	//number of nanos in one second
-#define 	NB_NANOS_IN_ONE_MS          	1000000     //number of nanos secondes in 1 ms
-#define 	NB_MICROS_IN_ONE_SECOND        	1000000     //number of micros secondes in 1 second
+#define		HCU_SYSMSG_NB_NANOS_IN_ONE_SECOND			1000000000	//number of nanos in one second
+#define 	HCU_SYSMSG_NB_NANOS_IN_ONE_MS          	1000000     //number of nanos secondes in 1 ms
+#define 	HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND        	1000000     //number of micros secondes in 1 second
 #define 	NB_MICROS_IN_ONE_MS    	     	1000	    //number of micros secondes in 1 ms
 #define 	START_DELAY                 	4           //delay(in second) before the launcher starts (to have time for clock synchro)
 
@@ -848,9 +848,9 @@ typedef struct  sensor_noise_data_element //
 typedef struct  sensor_hsmmp_data_element //
 {
 	UINT32 equipid;
-	char hsmmpFdir[HCU_FILE_NAME_LENGTH_MAX];
-	char hsmmpFname[HCU_FILE_NAME_LENGTH_MAX];
-	char hsmmpLink[HCU_FILE_NAME_LENGTH_MAX];
+	char hsmmpFdir[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char hsmmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char hsmmpLink[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
@@ -860,7 +860,7 @@ typedef struct sensor_hsmmp_link_element
 {
 	UINT32 equipid;
 	UINT32 linkLen;
-	char   linkName[HCU_FILE_NAME_LENGTH_MAX];
+	char   linkName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	com_gps_pos_t gps;
 	UINT32 timeStampStart;
 	UINT32 timeStampEnd;
@@ -1041,10 +1041,10 @@ typedef struct  msg_struct_com_process_reboot //
 	UINT32 length;
 }msg_struct_com_process_reboot_t;
 
-#define HWINV_PHY_STATUS_NULL 0
-#define HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE 1
-#define HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE 2
-#define HWINV_PHY_STATUS_INVALID 0xFF
+#define HCU_SYSMSG_HWINV_PHY_STATUS_NULL 0
+#define HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE 1
+#define HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE 2
+#define HCU_SYSMSG_HWINV_PHY_STATUS_INVALID 0xFF
 typedef struct  msg_struct_hwinv_cloudvela_phy_status_chg //
 {
 	UINT8 ethStatChg;
@@ -1693,9 +1693,9 @@ typedef struct msg_struct_hsmmp_avorion_data_read //
 	UINT8  fileType; // FileOperationTypeEnum defined at L2COMDEF.h
 	UINT8  boolBackCloud; //指明是否需要将该数据发送到后台
 	UINT32 timeStampStart;
-	char   fDirName[HCU_FILE_NAME_LENGTH_MAX];
-	char   fName[HCU_FILE_NAME_LENGTH_MAX];
-	char   tmpFname[HCU_FILE_NAME_LENGTH_MAX];
+	char   fDirName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char   fName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char   tmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	UINT32 length;
 }msg_struct_hsmmp_avorion_data_read_t;
 typedef struct msg_struct_hsmmp_avorion_stop //

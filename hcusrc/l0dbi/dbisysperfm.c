@@ -98,7 +98,7 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBISP: System performance statistic data record save to DB!\n");
 	}
     return SUCCESS;
@@ -202,7 +202,7 @@ OPSTAT dbi_HcuSysAlarmInfo_save(msg_struct_alarm_report_t *alarmData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBISA: System alarm data record save to DB!\n");
 	}
     return SUCCESS;

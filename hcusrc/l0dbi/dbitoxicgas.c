@@ -124,7 +124,7 @@ OPSTAT dbi_HcuToxicgasDataInfo_save(sensor_toxicgas_data_element_t *toxicgasData
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITOXICGAS: TOXICGAS data record save to DB!\n");
 	}
     return SUCCESS;
@@ -286,7 +286,7 @@ OPSTAT dbi_HcuToxicgasMq135DataInfo_save(sensor_toxicgas_mq135_data_element_t *t
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITOXICGAS: TOXICGAS MQ135 data record save to DB!\n");
 	}
     return SUCCESS;
@@ -374,7 +374,7 @@ OPSTAT dbi_HcuToxicgasZp01vocDataInfo_save(sensor_toxicgas_zp01voc_data_element_
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBITOXICGAS: TOXICGAS ZP01VOC data record save to DB!\n");
 	}
     return SUCCESS;

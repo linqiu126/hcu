@@ -278,7 +278,7 @@ OPSTAT fsm_timer_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_TIMER]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("TIMER: Enter FSM_STATE_TIMER_ACTIVED status, Keeping loop of signal sending here!\n");
 	}
 

@@ -70,9 +70,9 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	if (strlen(xmlFormat->FuncFlag) <=0 )	sprintf(xmlFormat->FuncFlag, "%1d", 0);
 
 	//准备接龙字符串成为一整串
-	char s[MAX_HCU_MSG_BUF_LENGTH];
+	char s[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	memset(s, 0, sizeof(s));
-	char da[MAX_HCU_MSG_BUF_LENGTH];
+	char da[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	memset(da, 0, sizeof(da));
 	char tmp[3] = "";
 
@@ -203,7 +203,7 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 	int len = 0;
 	len = strlen(da);
 	//if ((len < 0) || ((len % 2) != 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
-	if ((len < 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len < 0) || (len > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: No data to be pack or too long length of data content %d!!!\n", len);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -458,7 +458,7 @@ OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvel
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<0) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<0) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -505,7 +505,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -730,7 +730,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -949,7 +949,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1171,7 +1171,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1394,7 +1394,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1616,7 +1616,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1838,7 +1838,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -2061,7 +2061,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -2096,7 +2096,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 		}
 
 
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 			HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 			HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
@@ -2161,7 +2161,7 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -2187,7 +2187,7 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 			hcuInventoryInfo.sw_delivery = CURRENT_SW_RELEASE;
 			hcuInventoryInfo.sw_release = CURRENT_SW_DELIVERY;
 
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 				HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 				HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
@@ -2250,7 +2250,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 	strncpy(st, &rcv->buf[index], 2);
 	len = strtoul(st, NULL, 16);
 	index = index + 2;
-	if ((len<1) ||(len>MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len<1) ||(len>HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error unpack on length!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -2291,7 +2291,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 			HcuDebugPrint("CLOUDVELA: HCU SW Download successful.\n");
 			swDownload = TRUE;
 
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 				HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 				HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
@@ -2330,7 +2330,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 			}
 
 			//结束
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Online state, send HCU SW Download Success Resp to cloud success!\n");
 			}
 
@@ -2364,7 +2364,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 
 				swDownload = FALSE;
 
-				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+				if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 					HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 					HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 					HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
@@ -2402,7 +2402,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 				}
 
 				//结束
-				if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+				if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 					HcuDebugPrint("CLOUDVELA: Online state, send HCU SW Download Failure Resp to cloud success!\n");
 				}
 

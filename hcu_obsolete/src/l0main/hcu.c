@@ -92,17 +92,17 @@ int main(void) {
 	HcuDebugPrint("HCU-MAIN: System level initialization starting...\n");
 
 	//单进程方式
-	if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_SINGLE){
+	if (HCU_SYSCFG_PROCESS_MODE_SET == HCU_SYSCFG_PROCESS_WORK_MODE_SINGLE){
 		hcu_working_mode_single();
 	}
 
 	//双进程方式
-	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_DOUBLE){
+	else if (HCU_SYSCFG_PROCESS_MODE_SET == HCU_SYSCFG_PROCESS_WORK_MODE_DOUBLE){
 		hcu_working_mode_double();
 	}
 
 	//多进程方式
-	else if (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_TRIPPLE){
+	else if (HCU_SYSCFG_PROCESS_MODE_SET == HCU_SYSCFG_PROCESS_WORK_MODE_TRIPPLE){
 		hcu_working_mode_multipy();
 	}
 
@@ -226,7 +226,7 @@ void hcu_process_23_sensor_avorion(void)
     //hcu_msgque_resync();
 
 	HcuDebugPrint("HCU-MAIN: Init completed, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
-			zHcuSysCtrTab.curProc.curProcId, zHcuSysCtrTab.curProc.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
+			zHcuSysCtrTab.curProc.curProcId, zHcuSysCtrTab.curProc.curProcName, HCU_SYSCFG_PROCESS_MODE_SET);
 
 	//wait for ever
 	while (1){
@@ -269,7 +269,7 @@ void hcu_process_3_entry_supervisor(void)
 		if (ret > 0){
 			if ((rcv.msgType == MSG_ID_COM_PROCESS_REBOOT) && (rcv.src_id == TASK_ID_SVRCON)){
 				HcuDebugPrint("HCU-MAIN: Reboot process start, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
-						zHcuSysCtrTab.curProc.curProcId, zHcuSysCtrTab.curProc.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
+						zHcuSysCtrTab.curProc.curProcId, zHcuSysCtrTab.curProc.curProcName, HCU_SYSCFG_PROCESS_MODE_SET);
 				int pid = 0;
 				pid = fork();
 				if (pid > 0){
@@ -304,7 +304,7 @@ void hcu_process_3_mainapp_multipy(void)
     //hcu_msgque_resync();
 
 	HcuDebugPrint("HCU-MAIN: Init completed, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
-			zHcuSysCtrTab.curProc.curProcId, zHcuSysCtrTab.curProc.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
+			zHcuSysCtrTab.curProc.curProcId, zHcuSysCtrTab.curProc.curProcName, HCU_SYSCFG_PROCESS_MODE_SET);
 
 	//wait for ever
 	while (1){
@@ -323,455 +323,455 @@ void hcu_app_system_init()
 {
 	//Checking sysconfig.h to see any task shall bet set active, or shall not start!
 	int i=0;
-	for (i=0; i<MAX_TASK_NUM_IN_ONE_HCU; i++){
-		zHcuSysCrlTab.taskRun[i].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[i].hwActive = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[i].swTaskActive = HCU_TASK_PNP_INVALID;
+	for (i=0; i<HCU_SYSDIM_TASK_NBR_MAX; i++){
+		zHcuSysCrlTab.taskRun[i].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[i].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[i].swTaskActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}
 	//肯定需要启动的任务模块
-	zHcuSysCrlTab.taskRun[TASK_ID_HCUMAIN].swTaskActive = HCU_TASK_PNP_OFF;
-	zHcuSysCrlTab.taskRun[TASK_ID_TIMER].swTaskActive = HCU_TASK_PNP_ON;
-	zHcuSysCrlTab.taskRun[TASK_ID_SVRCON].swTaskActive = HCU_TASK_PNP_ON;
-	zHcuSysCrlTab.taskRun[TASK_ID_MMC].swTaskActive = HCU_TASK_PNP_ON;
-	zHcuSysCrlTab.taskRun[TASK_ID_HWINV].swTaskActive = HCU_TASK_PNP_ON;
-	zHcuSysCrlTab.taskRun[TASK_ID_SYSPM].swTaskActive = HCU_TASK_PNP_ON;
+	zHcuSysCrlTab.taskRun[TASK_ID_HCUMAIN].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+	zHcuSysCrlTab.taskRun[TASK_ID_TIMER].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+	zHcuSysCrlTab.taskRun[TASK_ID_SVRCON].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+	zHcuSysCrlTab.taskRun[TASK_ID_MMC].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+	zHcuSysCrlTab.taskRun[TASK_ID_HWINV].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+	zHcuSysCrlTab.taskRun[TASK_ID_SYSPM].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
 
 	//Switch-case
 	//printf("zHcuSysEngPar.comm.commFrameCloudvela = %d\n", zHcuSysEngPar.comm.commFrameCloudvela);
 	if (zHcuSysEngPar.comm.commFrameCloudvela == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CLOUDVELA].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}
 
 	if (zHcuSysEngPar.comm.commFrameModbus == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_MODBUS].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}
 
 	if (zHcuSysEngPar.comm.commFrameAvorion == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_AVORION].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}
 	if (zHcuSysEngPar.comm.commFrameSpsvirgo == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPSVIRGO].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}
 	if (zHcuSysEngPar.comm.commFrameI2cbuslibra == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2CBUSLIBRA].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}
 	if (zHcuSysEngPar.comm.commFrameSpibusaries == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPIBUSARIES].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}
 	if (zHcuSysEngPar.comm.commFrameNbiotcj188 == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTCJ188].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}
 	if (zHcuSysEngPar.comm.commFrameNbiotqg376 == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].hwPlugin = HCU_TASK_PNP_INVALID;
-		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].hwActive = HCU_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].hwPlugin = HCU_SYSCFG_TASK_PNP_INVALID;
+		zHcuSysCrlTab.taskRun[TASK_ID_NBIOTQG376].hwActive = HCU_SYSCFG_TASK_PNP_INVALID;
 	}
 
 	if (zHcuSysEngPar.comm.commHwBoardGps == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_GPS].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_GPS].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_GPS].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPS].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPS].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPS].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_GPS].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_GPS].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_GPS].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPS].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPS].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPS].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commHwBoardLcd == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_LCD].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_LCD].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_LCD].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LCD].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LCD].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LCD].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_LCD].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_LCD].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_LCD].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LCD].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LCD].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LCD].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commHwBoardLed == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_LED].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_LED].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_LED].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LED].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LED].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LED].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_LED].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_LED].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_LED].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LED].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LED].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LED].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commHwBoardEthernet == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ETHERNET].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commHwBoardWifi == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WIFI].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commHwBoardUsbnet == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_USBNET].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commHwBoard3g4g == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_3G4G].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSps232 == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS232].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSps485 == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPS485].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontMicrophone == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_MICROPHONE].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontCamera == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_CAMERA].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontBle == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_BLE].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_BLE].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_BLE].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_BLE].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_BLE].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_BLE].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_BLE].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_BLE].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_BLE].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_BLE].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_BLE].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_BLE].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontGpio == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_GPIO].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontI2c == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_I2C].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_I2C].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_I2C].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2C].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2C].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2C].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_I2C].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_I2C].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_I2C].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2C].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2C].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_I2C].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSpi == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_SPI].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPI].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPI].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPI].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPI].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPI].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_SPI].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPI].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SPI].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPI].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPI].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SPI].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontPwm == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_PWM].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_PWM].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_PWM].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PWM].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PWM].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PWM].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_PWM].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_PWM].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_PWM].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PWM].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PWM].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PWM].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontAdc == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_ADC].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_ADC].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_ADC].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ADC].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ADC].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ADC].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_ADC].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_ADC].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_ADC].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ADC].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ADC].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ADC].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSwitch == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_SWITCH].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontRelay == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_RELAY].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontMotor == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_MOTOR].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorEmc == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_EMC].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_EMC].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_EMC].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_EMC].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_EMC].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_EMC].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_EMC].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_EMC].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_EMC].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_EMC].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_EMC].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_EMC].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorPm25 == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorTemp == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_TEMP].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorHumid == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HUMID].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorWinddir == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDDIR].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorWindspd == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_WINDSPD].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorHsmmp == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HSMMP].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorNoise == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_NOISE].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorAirprs == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_AIRPRS].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorCo1 == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_CO1].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_CO1].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_CO1].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CO1].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CO1].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_CO1].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_CO1].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_CO1].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_CO1].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_CO1].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_CO1].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_CO1].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorLightstr == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_LIGHTSTR].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorAlcohol == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_ALCOHOL].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorHcho == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_HCHO].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorToxicgas == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_TOXICGAS].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorIwm == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorIwm == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IWM].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorIhm == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_IHM].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IHM].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IHM].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IHM].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IHM].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IHM].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_IHM].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IHM].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IHM].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IHM].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IHM].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IHM].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorIgm == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_IGM].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IGM].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IGM].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IGM].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IGM].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IGM].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_IGM].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IGM].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IGM].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IGM].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IGM].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IGM].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorIpm == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_IPM].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IPM].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_IPM].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IPM].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IPM].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_IPM].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_IPM].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IPM].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_IPM].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IPM].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IPM].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_IPM].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}
 	if (zHcuSysEngPar.comm.commFrontSensorPm25Sharp == HCU_COMM_HW_BOARD_ON){
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].swTaskActive = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].hwPlugin = HCU_TASK_PNP_ON;
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].hwActive = HCU_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].swTaskActive = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].hwPlugin = HCU_SYSCFG_TASK_PNP_ON;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].hwActive = HCU_SYSCFG_TASK_PNP_ON;
 	}else{
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].swTaskActive = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].hwPlugin = HCU_TASK_PNP_OFF;
-		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].hwActive = HCU_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].swTaskActive = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].hwPlugin = HCU_SYSCFG_TASK_PNP_OFF;
+		zHcuSysCrlTab.taskRun[TASK_ID_PM25SHARP].hwActive = HCU_SYSCFG_TASK_PNP_OFF;
 	}//by shanchun
 	//Nothing
 }
@@ -1030,7 +1030,7 @@ void hcu_task_create_all_but_avorion(void)
 UINT32 hcu_system_task_init_call(UINT32 task_id, HcuFsmStateItem_t *p)
 {
 	int ret = 0;
-	if (zHcuSysCrlTab.taskRun[task_id].swTaskActive != HCU_TASK_PNP_ON){
+	if (zHcuSysCrlTab.taskRun[task_id].swTaskActive != HCU_SYSCFG_TASK_PNP_ON){
 		HcuErrorPrint("HCU-MAIN: no need create this task [%s]!\n", zHcuSysCrlTab.taskRun.taskName[task_id]);
 		return FAILURE;
 	}
@@ -1174,7 +1174,7 @@ void hcu_task_send_init_to_svrcon(void)
 		}else{
 			if ((rcv.msgType == MSG_ID_COM_INIT_FEEDBACK) && (rcv.src_id == TASK_ID_SVRCON)){
 				HcuDebugPrint("HCU-MAIN: Init completed, current process Id=%X[%s], Work Mode=%d, enter into SLEEP mode forever!\n",
-						zHcuSysCtrTab.curProc.curProcId, zHcuSysCtrTab.curProc.curProcName, HCU_PROCESS_WORK_MODE_CURRENT);
+						zHcuSysCtrTab.curProc.curProcId, zHcuSysCtrTab.curProc.curProcName, HCU_SYSCFG_PROCESS_MODE_SET);
 				break;
 			}else{
 				HcuErrorPrint("HCU-MAIN: Error! Not right message received!\n");

@@ -70,7 +70,7 @@ OPSTAT fsm_igm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_IGM, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -108,7 +108,7 @@ OPSTAT fsm_igm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 		HcuErrorPrint("IGM: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("IGM: Enter FSM_STATE_IGM_ACTIVED status, Keeping refresh here!\n");
 	}
 	/*
@@ -416,7 +416,7 @@ OPSTAT fsm_igm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 
 	//准备存入本地数据库, RECORD还要存入数据库
-	if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+	if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 	{
 		sensor_igm_cj188_data_element_t igmDbSave;
 		memset(&igmDbSave, 0, sizeof(sensor_igm_cj188_data_element_t));

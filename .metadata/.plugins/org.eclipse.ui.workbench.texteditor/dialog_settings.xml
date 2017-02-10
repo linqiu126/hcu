@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HCU_" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="#define" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HCU_"/>
-			<item value="msg_struct_uicomm_l3bfsc_param_set_result_t"/>
-			<item value="MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ"/>
-			<item value="MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ"/>
-			<item value="MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT"/>
-			<item value="MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM"/>
-			<item value="MSG_ID_CANITFLEO_DATA_REPORT"/>
-			<item value="MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ"/>
+			<item value="#define"/>
+			<item value="HWINV_PHY_STATUS_NULL"/>
+			<item value="HCU_THREAD_PRIO"/>
+			<item value="MAX_HCU_MSG_BUF_LENGTH"/>
+			<item value="MAX_HCU_MSG_BUF_LENGTH_CLOUD"/>
+			<item value="SYS_ENG_PAR_ELEMENT_DB_LEN"/>
+			<item value="NBR"/>
+			<item value="HCU_HARDWARE_PRODUCT_CAT_TYPE"/>
 		</list>
 		<list key="replacehistory">
-			<item value="//定义后台SW_SWM的地址"/>
-			<item value="//定义后台CLOUD_FTP 的地址"/>
-			<item value="//系统启动选项以及网络连接选项"/>
-			<item value="//传感器配置参数"/>
-			<item value="//批量生产标志信息，固件升级标识，以及物理烧录信息等"/>
-			<item value="//批量生产标志信息"/>
-			<item value="//本项目特定部分"/>
-			<item value="//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率"/>
+			<item value="HCU_SYSMSG_COM_MSG_BODY_LEN_MAX"/>
+			<item value="HCU_SYSMSG_BH_BUF_BODY_LEN_MAX"/>
+			<item value="MAX_HCU_MSG_BUF_LENGTH"/>
+			<item value="HCU_SYSCFG_HW_PRODUCT_CAT_TYPE"/>
+			<item value="HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH"/>
+			<item value=""/>
+			<item value="HCU_SYSDIM_TIMERID_NAME_LEN_MAX"/>
+			<item value="HCU_SYSDIM_TIMERID_NBR_MAX"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

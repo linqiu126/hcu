@@ -74,7 +74,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HWINV, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -105,7 +105,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		HcuErrorPrint("HWINV: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("HWINV: Enter FSM_STATE_HWINV_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -270,41 +270,41 @@ OPSTAT func_hwinv_global_par_init(void)
 	//初始化ETHERNET后台接口
 	zHcuVmCtrTab.hwinv.ethernet.hwBase.taskId = TASK_ID_ETHERNET;
 	zHcuVmCtrTab.hwinv.ethernet.hwBase.hwResistence = 0;
-	if (zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState != HCU_TASK_PNP_ON)
+	if (zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState != HCU_SYSCFG_TASK_PNP_ON)
 		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_ETHERNET == NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_ETHERNET == NULL))
 		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_ETHERNET != NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_ETHERNET].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_ETHERNET != NULL))
 		zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化USBNET后台接口
 	zHcuVmCtrTab.hwinv.usbnet.hwBase.taskId = TASK_ID_USBNET;
 	zHcuVmCtrTab.hwinv.usbnet.hwBase.hwResistence = 0;
-	if (zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState != HCU_TASK_PNP_ON)
+	if (zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState != HCU_SYSCFG_TASK_PNP_ON)
 		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_NET == NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_NET == NULL))
 		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_NET != NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_USBNET].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_NET != NULL))
 		zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化WIFI后台接口
 	zHcuVmCtrTab.hwinv.wifi.hwBase.taskId = TASK_ID_WIFI;
 	zHcuVmCtrTab.hwinv.wifi.hwBase.hwResistence = 0;
-	if (zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState != HCU_TASK_PNP_ON)
+	if (zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState != HCU_SYSCFG_TASK_PNP_ON)
 		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI == NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI == NULL))
 		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI != NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_WIFI].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_WIFI != NULL))
 		zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 	//初始化3G4G后台接口
 	zHcuVmCtrTab.hwinv.g3g4.hwBase.taskId = TASK_ID_3G4G;
 	zHcuVmCtrTab.hwinv.g3g4.hwBase.hwResistence = 0;
-	if (zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState != HCU_TASK_PNP_ON)
+	if (zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState != HCU_SYSCFG_TASK_PNP_ON)
 		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_NOT_INSTALL;
-	if ((zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G == NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G == NULL))
 		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_DEACTIVE;
-	if ((zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState == HCU_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G != NULL))
+	if ((zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G != NULL))
 		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
 
@@ -345,44 +345,44 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 
 	//第二部分/zHcuSysEngPar总共三步分
 	//满足独特条件，则使用SYSCONFIG.H覆盖工参核心数据
-	if ((HCU_HARDWARE_MASSIVE_PRODUTION_SET == HCU_HARDWARE_MASSIVE_PRODUTION_NO) && (HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_GENERAL_SET == HCU_TRACE_DB_SET_INIT_BY_VM_STATIC_TABLE_YES)){
+	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO) && (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_GENERAL_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES)){
 		//通信部分
-		zHcuSysEngPar.comm.commBackHawlCon = HCU_COMM_BACK_HAWL_CON;
+		zHcuSysEngPar.comm.commBackHawlCon = HCU_SYSCFG_COMM_BACK_HAWL_CON;
 		//数据库部分
-		strcpy(zHcuSysEngPar.dbi.hcuDbHost, HCU_LOCAL_DB_HOST_DEFAULT);
-		strcpy(zHcuSysEngPar.dbi.hcuDbUser, HCU_LOCAL_DB_USER_DEFAULT);
-		strcpy(zHcuSysEngPar.dbi.hcuDbPsw, HCU_LOCAL_DB_PSW_DEFAULT);
-		strcpy(zHcuSysEngPar.dbi.hcuDbName, HCU_LOCAL_DB_NAME_DEFAULT);
-		zHcuSysEngPar.dbi.hcuDbPort = HCU_LOCAL_DB_PORT_DEFAULT;
+		strcpy(zHcuSysEngPar.dbi.hcuDbHost, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT);
+		strcpy(zHcuSysEngPar.dbi.hcuDbUser, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT);
+		strcpy(zHcuSysEngPar.dbi.hcuDbPsw, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT);
+		strcpy(zHcuSysEngPar.dbi.hcuDbName, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT);
+		zHcuSysEngPar.dbi.hcuDbPort = HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT;
 		//Series Port config by Shanchun
-		zHcuSysEngPar.serialport.SeriesPortForModbus = HCU_SERIESPORT_NO_FOR_MODBUS_DEFAULT;
-		zHcuSysEngPar.serialport.SeriesPortForGPS = HCU_SERIESPORT_NO_FOR_GPS_DEFAULT;
-		zHcuSysEngPar.serialport.SeriesPortForPm25Sharp = HCU_SERIESPORT_NO_FOR_PM25SHARP_DEFAULT;
+		zHcuSysEngPar.serialport.SeriesPortForModbus = HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT;
+		zHcuSysEngPar.serialport.SeriesPortForGPS = HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT;
+		zHcuSysEngPar.serialport.SeriesPortForPm25Sharp = HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT;
 		//后台部分
-		strncpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddLocal))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_LOCAL)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddLocal)));
-		strncpy(zHcuSysEngPar.cloud.cloudSocketSrvAdd, HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT, (sizeof(HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT)<sizeof(zHcuSysEngPar.cloud.cloudSocketSrvAdd))?(sizeof(HCU_CLOUDVELA_SOCKET_ADDRESS_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.cloudSocketSrvAdd)));
-		strncpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_CLOUDVELA_HTTP_ADDRESS_SAE, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_SAE)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddSae))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_SAE)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddSae)));
-		strncpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_CLOUDVELA_HTTP_ADDRESS_JD, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_JD)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddJd))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_JD)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddJd)));
-		strncpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT, (sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddWechat))?(sizeof(HCU_CLOUDVELA_HTTP_ADDRESS_WECHAT)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddWechat)));
-		strncpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_BH_SERVER_NAME, (sizeof(HCU_CLOUDVELA_BH_SERVER_NAME)<sizeof(zHcuSysEngPar.cloud.cloudBhServerName))?(sizeof(HCU_CLOUDVELA_BH_SERVER_NAME)):(sizeof(zHcuSysEngPar.cloud.cloudBhServerName)));
-		strncpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_CLOUDVELA_BH_HCU_NAME, (sizeof(HCU_CLOUDVELA_BH_HCU_NAME)<sizeof(zHcuSysEngPar.cloud.cloudBhHcuName))?(sizeof(HCU_CLOUDVELA_BH_HCU_NAME)):(sizeof(zHcuSysEngPar.cloud.cloudBhHcuName)));
-		zHcuSysEngPar.cloud.cloudBhItfFrameStd = HCU_CLOUDVELA_BH_INTERFACE_STANDARD;
+		strncpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL, (sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddLocal))?(sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddLocal)));
+		strncpy(zHcuSysEngPar.cloud.cloudSocketSrvAdd, HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET, (sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET)<sizeof(zHcuSysEngPar.cloud.cloudSocketSrvAdd))?(sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET)):(sizeof(zHcuSysEngPar.cloud.cloudSocketSrvAdd)));
+		strncpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE, (sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddSae))?(sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddSae)));
+		strncpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_SYSCFG_CLOUD_HTTP_ADDR_JD, (sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_JD)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddJd))?(sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_JD)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddJd)));
+		strncpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT, (sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT)<sizeof(zHcuSysEngPar.cloud.cloudHttpAddWechat))?(sizeof(HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT)):(sizeof(zHcuSysEngPar.cloud.cloudHttpAddWechat)));
+		strncpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_SYSCFG_CLOUD_BH_SERVER_NAME, (sizeof(HCU_SYSCFG_CLOUD_BH_SERVER_NAME)<sizeof(zHcuSysEngPar.cloud.cloudBhServerName))?(sizeof(HCU_SYSCFG_CLOUD_BH_SERVER_NAME)):(sizeof(zHcuSysEngPar.cloud.cloudBhServerName)));
+		strncpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_SYSCFG_CLOUD_BH_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_BH_HCU_NAME)<sizeof(zHcuSysEngPar.cloud.cloudBhHcuName))?(sizeof(HCU_SYSCFG_CLOUD_BH_HCU_NAME)):(sizeof(zHcuSysEngPar.cloud.cloudBhHcuName)));
+		zHcuSysEngPar.cloud.cloudBhItfFrameStd = HCU_SYSCFG_CLOUD_BH_ITF_STD_SET;
 		//SWM_FTP service
-		strncpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_SWM_SERVER_FTP_ADDRESS, (sizeof(HCU_SWM_SERVER_FTP_ADDRESS)<sizeof(zHcuSysEngPar.cloud.cloudFtpAdd))?(sizeof(HCU_SWM_SERVER_FTP_ADDRESS)):(sizeof(zHcuSysEngPar.cloud.cloudFtpAdd)));
-		strncpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_SWM_SERVER_FTP_USER, (sizeof(HCU_SWM_SERVER_FTP_USER)<sizeof(zHcuSysEngPar.cloud.cloudFtpUser))?(sizeof(HCU_SWM_SERVER_FTP_USER)):(sizeof(zHcuSysEngPar.cloud.cloudFtpUser)));
-		strncpy(zHcuSysEngPar.cloud.cloudFtpPwd, HCU_SWM_SERVER_FTP_PWD, (sizeof(HCU_SWM_SERVER_FTP_PWD)<sizeof(zHcuSysEngPar.cloud.cloudFtpPwd))?(sizeof(HCU_SWM_SERVER_FTP_PWD)):(sizeof(zHcuSysEngPar.cloud.cloudFtpPwd)));
-		strncpy(zHcuSysEngPar.swm.hcuSwDownloadDir, HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT, (sizeof(HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwDownloadDir))?(sizeof(HCU_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwDownloadDir)));
-		strncpy(zHcuSysEngPar.swm.hcuSwActiveDir, HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT, (sizeof(HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwActiveDir))?(sizeof(HCU_SWM_LOCAL_ACTIVE_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwActiveDir)));
-		strncpy(zHcuSysEngPar.swm.hcuSwBackupDir, HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT, (sizeof(HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwBackupDir))?(sizeof(HCU_SWM_LOCAL_BACKUP_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwBackupDir)));
+		strncpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS, (sizeof(HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS)<sizeof(zHcuSysEngPar.cloud.cloudFtpAdd))?(sizeof(HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS)):(sizeof(zHcuSysEngPar.cloud.cloudFtpAdd)));
+		strncpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_SYSCFG_SWM_SERVER_FTP_USER, (sizeof(HCU_SYSCFG_SWM_SERVER_FTP_USER)<sizeof(zHcuSysEngPar.cloud.cloudFtpUser))?(sizeof(HCU_SYSCFG_SWM_SERVER_FTP_USER)):(sizeof(zHcuSysEngPar.cloud.cloudFtpUser)));
+		strncpy(zHcuSysEngPar.cloud.cloudFtpPwd, HCU_SYSCFG_SWM_SERVER_FTP_PWD, (sizeof(HCU_SYSCFG_SWM_SERVER_FTP_PWD)<sizeof(zHcuSysEngPar.cloud.cloudFtpPwd))?(sizeof(HCU_SYSCFG_SWM_SERVER_FTP_PWD)):(sizeof(zHcuSysEngPar.cloud.cloudFtpPwd)));
+		strncpy(zHcuSysEngPar.swm.hcuSwDownloadDir, HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT, (sizeof(HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwDownloadDir))?(sizeof(HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwDownloadDir)));
+		strncpy(zHcuSysEngPar.swm.hcuSwActiveDir, HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT, (sizeof(HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwActiveDir))?(sizeof(HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwActiveDir)));
+		strncpy(zHcuSysEngPar.swm.hcuSwBackupDir, HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT, (sizeof(HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT)<sizeof(zHcuSysEngPar.swm.hcuSwBackupDir))?(sizeof(HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.swm.hcuSwBackupDir)));
 		//for HCU video FTP upload by shanchun
-		strncpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT, (sizeof(HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT)<sizeof(zHcuSysEngPar.videoSev.hcuVideoServerDir))?(sizeof(HCU_VIDEO_STREAM_SERVER_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.videoSev.hcuVideoServerDir)));
-		strncpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT, (sizeof(HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT)<sizeof(zHcuSysEngPar.videoSev.hcuVideoServerHttp))?(sizeof(HCU_VIDEO_STREAM_SERVER_HTTP_DEFAULT)):(sizeof(zHcuSysEngPar.videoSev.hcuVideoServerHttp)));
-		strncpy(zHcuSysEngPar.cloud.cloudFtpUserVideo, HCU_VIDEO_STREAM_SERVER_USER, (sizeof(HCU_VIDEO_STREAM_SERVER_USER)<sizeof(zHcuSysEngPar.cloud.cloudFtpUserVideo))?(sizeof(HCU_VIDEO_STREAM_SERVER_USER)):(sizeof(zHcuSysEngPar.cloud.cloudFtpUserVideo)));
-		strncpy(zHcuSysEngPar.cloud.cloudFtpPwdVideo, HCU_VIDEO_STREAM_SERVER_PWD, (sizeof(HCU_VIDEO_STREAM_SERVER_PWD)<sizeof(zHcuSysEngPar.cloud.cloudFtpPwdVideo))?(sizeof(HCU_VIDEO_STREAM_SERVER_PWD)):(sizeof(zHcuSysEngPar.cloud.cloudFtpPwdVideo)));
+		strncpy(zHcuSysEngPar.videoSev.hcuVideoServerDir, HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT, (sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT)<sizeof(zHcuSysEngPar.videoSev.hcuVideoServerDir))?(sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_DIR_DEFAULT)):(sizeof(zHcuSysEngPar.videoSev.hcuVideoServerDir)));
+		strncpy(zHcuSysEngPar.videoSev.hcuVideoServerHttp, HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT, (sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT)<sizeof(zHcuSysEngPar.videoSev.hcuVideoServerHttp))?(sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_HTTP_DEFAULT)):(sizeof(zHcuSysEngPar.videoSev.hcuVideoServerHttp)));
+		strncpy(zHcuSysEngPar.cloud.cloudFtpUserVideo, HCU_SYSCFG_VIDEO_STREAM_SERVER_USER, (sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_USER)<sizeof(zHcuSysEngPar.cloud.cloudFtpUserVideo))?(sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_USER)):(sizeof(zHcuSysEngPar.cloud.cloudFtpUserVideo)));
+		strncpy(zHcuSysEngPar.cloud.cloudFtpPwdVideo, HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD, (sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD)<sizeof(zHcuSysEngPar.cloud.cloudFtpPwdVideo))?(sizeof(HCU_SYSCFG_VIDEO_STREAM_SERVER_PWD)):(sizeof(zHcuSysEngPar.cloud.cloudFtpPwdVideo)));
 		//DEBUG部分
-		zHcuSysEngPar.debugMode = HCU_TRACE_DEBUG_ON;
+		zHcuSysEngPar.debugMode = HCU_SYSCFG_TRACE_DEBUG_SET;
 		//TRACE部分
-		zHcuSysEngPar.traceMode = HCU_TRACE_MSG_ON;
+		zHcuSysEngPar.traceMode = HCU_SYSCFG_TRACE_MSG_SET;
 		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from SYSTEM DEFAULT parameters!\n");
 	}
 
@@ -419,7 +419,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
 	//启动FIREFOX等本地浏览器，挂墙仪表项目独有内容
-	char cmdStr[SYS_ENG_PAR_ELEMENT_UI_MAX_LEN] = "";
+	char cmdStr[HCU_SYSENG_PAR_ELEMENT_UI_MAX_LEN] = "";
 	//char outputStr[SYS_ENG_PAR_ELEMENT_UI_MAX_LEN] = "";
 	if ((zHcuSysEngPar.localUI.browselProg != NULL) && (zHcuSysEngPar.localUI.browselAutoStartUpFlag == TRUE)){
 		//判断firefox是否已经在运行，不是太正常，留待未来完善
@@ -768,7 +768,7 @@ void func_hwinv_scan_ethernet(void)
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
-			snd.ethStatChg = HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
+			snd.ethStatChg = HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -787,7 +787,7 @@ void func_hwinv_scan_ethernet(void)
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
-			snd.ethStatChg = HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
+			snd.ethStatChg = HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -813,7 +813,7 @@ void func_hwinv_scan_usbnet(void)
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
-			snd.usbnetStatChg = HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
+			snd.usbnetStatChg = HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -832,7 +832,7 @@ void func_hwinv_scan_usbnet(void)
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
-			snd.usbnetStatChg = HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
+			snd.usbnetStatChg = HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -858,7 +858,7 @@ void func_hwinv_scan_wifi(void)
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
-			snd.wifiStatChg = HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
+			snd.wifiStatChg = HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -877,7 +877,7 @@ void func_hwinv_scan_wifi(void)
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
-			snd.wifiStatChg = HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
+			snd.wifiStatChg = HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -903,7 +903,7 @@ void func_hwinv_scan_3g4g(void)
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
-			snd.g3g4StatChg = HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
+			snd.g3g4StatChg = HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -922,7 +922,7 @@ void func_hwinv_scan_3g4g(void)
 			//发送状态改变给CLOUD
 			memset(&snd, 0, sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t));
 			snd.length = sizeof(msg_struct_hwinv_cloudvela_phy_status_chg_t);
-			snd.g3g4StatChg = HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
+			snd.g3g4StatChg = HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE;
 			ret = hcu_message_send(MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG, TASK_ID_CLOUDVELA, TASK_ID_HWINV, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -954,7 +954,7 @@ void func_hwinv_scan_eng_par(void)
 	//这里先使用持续的动态刷新读取，未来可以再优化，降低进入的概率
 	if ((dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE) == SUCCESS) &&
 			(dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar) == SUCCESS) && (dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar) == SUCCESS)){
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 			HcuDebugPrint("HWINV: Retrieve all engineering data correctly from DATABASE parameters!\n");
 		}
 	}
@@ -969,8 +969,8 @@ void func_hwinv_scan_dir(void)
 	UINT32 targetYear = 0, targetMon = 0;
 	if (zHcuVmCtrTab.clock.monChange == TRUE){
 		//最小保护
-		days = HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS;
-		if (days < HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS) days = HCU_SNESOR_DATA_SAVE_DURATION_MIN_IN_DAYS;
+		days = HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS;
+		if (days < HCU_SYSCFG_SNR_DATA_SAVE_DURATION_MIN_IN_DAYS) days = HCU_SYSCFG_SNR_DATA_SAVE_DURATION_MIN_IN_DAYS;
 		//算出保留存储的月数
 		monNbr = (UINT32)((days-1) / 30) + 1;
 		if (zHcuVmCtrTab.clock.mon > monNbr){
@@ -1037,43 +1037,43 @@ void func_hwinv_scan_db(void)
 	//删除90天以上的旧数据
 	//先用变天的标示位来判断，以提高效率，不然每一次扫描都无效的要访问一次数据库，过于频繁
 	if (zHcuVmCtrTab.clock.dayChange == TRUE){
-		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidDht11DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidSht20DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHumidRht03DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempDht11DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsBmp180DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuCo1DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIwmCj188DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIhmCj188DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIgmCj188DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_SENSOR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuEmcDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25SharpDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuPm25Bmpd300DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuWinddirDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuWindspdDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidDht11DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidSht20DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHumidRht03DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempDht11DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempSht20DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempRht03DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempBmp180DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuTempMth01DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuNoiseDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHsmmpDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsBmp180DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAirprsAltitudeBmp180DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuCo1DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuLightstrDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuLightstrBh1750DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAlcoholDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuAlcoholMq3alcoDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHchoDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuHchoZe08ch2oDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasMq135DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuToxicgasZp01vocDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIwmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIhmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIgmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 	}
 }
 
@@ -1136,8 +1136,8 @@ void func_hwinv_scan_local_ui(void)
 	//启动FIREFOX等本地浏览器
 	//这里需要增加判断，判定firefox是否已经死亡，如果是的，才启动，不然就应该保持现状
 	//判定firefox工作，需要用到系统命令ps -ef | grep forefox
-	char cmdStr[SYS_ENG_PAR_ELEMENT_UI_MAX_LEN] = "";
-	char outputStr[SYS_ENG_PAR_ELEMENT_UI_MAX_LEN] = "";
+	char cmdStr[HCU_SYSENG_PAR_ELEMENT_UI_MAX_LEN] = "";
+	char outputStr[HCU_SYSENG_PAR_ELEMENT_UI_MAX_LEN] = "";
 	if ((zHcuSysEngPar.localUI.browselProg != NULL) && (zHcuSysEngPar.localUI.browselAutoStartUpFlag == TRUE)){
 		sprintf(cmdStr, "ps -all | grep %s > %s", zHcuSysEngPar.localUI.browselProg, outputStr);
 		system(cmdStr);
@@ -1158,9 +1158,9 @@ void func_hwinv_scan_message_queue(void)
 	UINT32 taskid;
 	for (taskid = TASK_ID_MIN; taskid < TASK_ID_MAX; taskid++){
 		//扫描其messageQue，看看是否满，如果是，意味着故障
-		if ((taskid != TASK_ID_HWINV) && (zHcuVmCtrTab.task[taskid].pnpState == HCU_TASK_PNP_ON) && (zHcuVmCtrTab.task[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
+		if ((taskid != TASK_ID_HWINV) && (zHcuVmCtrTab.task[taskid].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (zHcuVmCtrTab.task[taskid].QueFullFlag == HCU_TASK_QUEUE_FULL_TRUE))
 		{
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 				HcuDebugPrint("HWINV: Taskid = %d [%s] get full Queue, start to restart!\n", taskid, zHcuVmCtrTab.task[taskid].taskName);
 			}
 			//重新启动该任务

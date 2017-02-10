@@ -715,7 +715,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -751,15 +751,15 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		int index;  //.PRJNAME是INDEX=0的主键
 		index = 0;
 		//项目名称
-		if(sqlRow[index]) strncpy(engPar->prjname, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->prjname, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_DB_LEN-1);
 		//通信部分=》模块和通信机制的选择，留给了VM任务启动初始化静态配置部分，不再这里进行工参干预，以提高研发效率
 		if(sqlRow[index]) engPar->comm.commBackHawlCon = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
 		//数据库部分
-		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbHost, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbUser, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbPsw, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbName, sqlRow[index++], SYS_ENG_PAR_ELEMENT_DB_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbHost, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_DB_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbUser, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_DB_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbPsw, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_DB_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->dbi.hcuDbName, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_DB_LEN-1);
 		if(sqlRow[index]) engPar->dbi.hcuDbPort = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
 //		//Timer setting by Shanchun
@@ -826,13 +826,13 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		//For HCU video upload
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUserVideo, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwdVideo, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
-		if(sqlRow[index]) strncpy(engPar->swm.hcuSwDownloadDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->swm.hcuSwActiveDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->swm.hcuSwBackupDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->swm.hcuSwDownloadDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->swm.hcuSwActiveDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->swm.hcuSwBackupDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
 
 		//视频服务器部分
-		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerDir, sqlRow[index++], SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerHttp, sqlRow[index++], SYS_ENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerHttp, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);
 		//printf ("DBICOM: index = %d, hcuVideoServerHttp = %s\n", index, engPar->videoSev.hcuVideoServerHttp);
 		//调试部分
 		if(sqlRow[index]) engPar->debugMode = (UINT8)(atol(sqlRow[index++]) & 0xFF);
@@ -840,9 +840,9 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		if(sqlRow[index]) engPar->traceMode = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		//LocalUI本地界面启动部分
 		if(sqlRow[index]) engPar->localUI.browselAutoStartUpFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) strncpy(engPar->localUI.browselProg, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->localUI.browselStartUpAddress, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->localUI.browselWorkingOption, sqlRow[index++], SYS_ENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->localUI.browselProg, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->localUI.browselStartUpAddress, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->localUI.browselWorkingOption, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN-1);
 	}
 
 	//释放记录集
@@ -874,7 +874,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTab_t *engPar)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -905,7 +905,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTab_t *engPar)
 		int index = 0;
 		int tableRow = 0;
 		if(sqlRow[index]) taskid = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-		if (taskid >= MAX_TASK_NUM_IN_ONE_HCU){
+		if (taskid >= HCU_SYSDIM_TASK_NBR_MAX){
 			HcuErrorPrint("DBICOM: Error ModuleID populated, very dangerous to crash whole system! ModueId = %d\n", taskid);
 			mysql_free_result(resPtr);
 		    mysql_close(sqlHandler);
@@ -914,7 +914,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTab_t *engPar)
 
 		engPar->traceList.mod[taskid].moduleId = taskid;
 		tableRow = hcu_vm_search_task_static_cfg_table_of_row(taskid);
-		if(sqlRow[index]) strncpy(engPar->traceList.mod[taskid].moduleName, sqlRow[index++], TASK_NAME_MAX_LENGTH-1);
+		if(sqlRow[index]) strncpy(engPar->traceList.mod[taskid].moduleName, sqlRow[index++], HCU_SYSDIM_TASK_NAME_LEN_MAX-1);
 		//不能再做比较，这个比较必须到后期再做
 		if (strcmp(engPar->traceList.mod[taskid].moduleName, zHcuVmCtrTaskStaticCfg[tableRow].taskInputName)){
 			HCU_DEBUG_PRINT_CRT("DBICOM: Error Module name populated, taskid=%d, Input/sysEngPar=[%s], StaticTable=[%s], tableRow=%d.\n", taskid, engPar->traceList.mod[taskid].moduleName, zHcuVmCtrTab.task[tableRow].taskName, tableRow);
@@ -949,7 +949,7 @@ OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -972,7 +972,7 @@ OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void)
 		return FAILURE;
 	}
 	//扫描输入表单，以TASK_ID_MAX为终止条目：2倍配置项最多
-	for(item=1; item < (2*MAX_TASK_NUM_IN_ONE_HCU); item++){
+	for(item=1; item < (2*HCU_SYSDIM_TASK_NBR_MAX); item++){
 		if(zHcuVmCtrTaskStaticCfg[item].taskInputId == TASK_ID_MAX){
 			break;
 		}
@@ -1038,7 +1038,7 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1069,7 +1069,7 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar)
 		int index = 0;
 		int tableRow = 0;
 		if(sqlRow[index]) mid = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-		if (mid >= MAX_MSGID_NUM_IN_ONE_TASK){
+		if (mid >= HCU_SYSDIM_MSGID_NBR_MAX){
 			HcuErrorPrint("DBICOM: Error MsgID populated, very dangerous to crash whole system! MsgID = %d\n", mid);
 			mysql_free_result(resPtr);
 		    mysql_close(sqlHandler);
@@ -1078,9 +1078,9 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar)
 
 		engPar->traceList.msg[mid].msgId = mid;
 		tableRow = hcu_vm_search_msg_static_cfg_table_of_row(mid);
-		if(sqlRow[index]) strncpy(engPar->traceList.msg[mid].msgName, sqlRow[index++], MSG_NAME_MAX_LENGTH-1);
+		if(sqlRow[index]) strncpy(engPar->traceList.msg[mid].msgName, sqlRow[index++], HCU_SYSDIM_MSGID_NAME_LEN_MAX-1);
 		if (strcmp(engPar->traceList.msg[mid].msgName, zHcuSysEngTrcMsgCtrStaticCfg[tableRow].msgName)){
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("DBICOM: Error Message name populated, MsgId = %d, engPar->traceList.msg = [%s], zHcuMsgNameList = [%s]!\n", mid, engPar->traceList.msg[mid].msgName, zHcuSysEngTrcMsgCtrStaticCfg[tableRow].msgName);
 			}
 		}
@@ -1111,7 +1111,7 @@ OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1134,7 +1134,7 @@ OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void)
 		return FAILURE;
 	}
 	//扫描输入表单，以MSG_ID_COM_MAX为终止条目：2倍配置项最多
-	for(item=1; item < (2*MAX_MSGID_NUM_IN_ONE_TASK); item++){
+	for(item=1; item < (2*HCU_SYSDIM_MSGID_NBR_MAX); item++){
 		if(zHcuSysEngTrcMsgCtrStaticCfg[item].msgId == MSG_ID_COM_MAX){
 			break;
 		}
@@ -1248,7 +1248,7 @@ OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1313,7 +1313,7 @@ OPSTAT dbi_HcuSysEngTimer_inqury(HcuSysEngParTab_t *engPar)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1344,7 +1344,7 @@ OPSTAT dbi_HcuSysEngTimer_inqury(HcuSysEngParTab_t *engPar)
 		int index = 0;
 		int tableRow = 0;
 		if(sqlRow[index]) tid = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-		if (tid >= MAX_TIMER_NUM_IN_ONE_HCU){
+		if (tid >= HCU_SYSDIM_TIMERID_NBR_MAX){
 			HcuErrorPrint("DBICOM: Error TimerId populated, very dangerous to crash whole system! TimerId = %d\n", tid);
 			mysql_free_result(resPtr);
 		    mysql_close(sqlHandler);
@@ -1353,9 +1353,9 @@ OPSTAT dbi_HcuSysEngTimer_inqury(HcuSysEngParTab_t *engPar)
 
 		engPar->timer.array[tid].id = tid;
 		tableRow = hcu_vm_search_timer_static_cfg_table_of_row(tid);
-		if(sqlRow[index]) strncpy(engPar->timer.array[tid].name, sqlRow[index++], TIMER_NAME_MAX_LENGTH-1);
+		if(sqlRow[index]) strncpy(engPar->timer.array[tid].name, sqlRow[index++], HCU_SYSDIM_TIMERID_NAME_LEN_MAX-1);
 		if (strcmp(engPar->timer.array[tid].name, zHcuSysEngTimerStaticCfg[tableRow].timerName)){
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("DBICOM: Error Timer name populated, TimerId = %d, engPar->traceList.msg = [%s], Input Table or DB = [%s]!\n",\
 						tid, engPar->timer.array[tid].name, zHcuSysEngTimerStaticCfg[tableRow].timerName);
 			}
@@ -1385,7 +1385,7 @@ OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void)
     	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, HCU_LOCAL_DB_HOST_DEFAULT, HCU_LOCAL_DB_USER_DEFAULT, HCU_LOCAL_DB_PSW_DEFAULT, HCU_LOCAL_DB_NAME_DEFAULT, HCU_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
@@ -1408,7 +1408,7 @@ OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void)
 		return FAILURE;
 	}
 	//扫描输入表单，以TIMER_ID_MAX为终止条目：2倍配置项最多
-	for(item=1; item < (2*MAX_TIMER_NUM_IN_ONE_HCU); item++){
+	for(item=1; item < (2*HCU_SYSDIM_TIMERID_NBR_MAX); item++){
 		if(zHcuSysEngTimerStaticCfg[item].timerId == TIMER_ID_MAX){
 			break;
 		}

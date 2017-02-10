@@ -20,9 +20,9 @@ typedef enum FTP_STATE
 /*FTP OPERATIONS OPTIONS*/
 typedef struct FTP_OPT
 {
-	char url[HCU_FILE_NAME_LENGTH_MAX];		     /*url of ftp*/
-	char user_key[HCU_FILE_NAME_LENGTH_MAX];		 /*username:password*/
-	char file[HCU_FILE_NAME_LENGTH_MAX];		     /*filepath*/
+	char url[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*url of ftp*/
+	char user_key[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*username:password*/
+	char file[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*filepath*/
 }FTP_OPT;
 
 

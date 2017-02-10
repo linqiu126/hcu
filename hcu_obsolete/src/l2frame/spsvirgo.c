@@ -74,7 +74,7 @@ OPSTAT fsm_spsvirgo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_SPSVIRGO, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -104,7 +104,7 @@ OPSTAT fsm_spsvirgo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		HcuErrorPrint("SPSVIRGO: Error Set FSM State!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPSVIRGO: Enter FSM_STATE_SPSVIRGO_ACTIVED status, Keeping refresh here!\n");
 	}
 
@@ -199,7 +199,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		currentSpsBuf.curLen = 4;
 		UINT8 sample[] = {0x41,0x57,0x41,0x30};
 		memcpy(currentSpsBuf.curBuf, sample, currentSpsBuf.curLen);
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 			HcuDebugPrint("SPSVIRGO: Preparing send SPSVIRGO noise req data = %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
 		}
 
@@ -242,7 +242,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		//读取串口数据
 		//从相应的从设备中读取数据
 		memset(&currentSpsBuf, 0, sizeof(SerialSpsMsgBuf_t));
-		ret = hcu_spsapi_serial_port_get(&gSerialPortMobus, currentSpsBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentSpsBuf中
+		ret = hcu_spsapi_serial_port_get(&gSerialPortMobus, currentSpsBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentSpsBuf中
 		if (ret > 0)
 		{
 			HcuDebugPrint("SPSVIRGO: Len %d\n", ret);

@@ -36,7 +36,7 @@ typedef struct SPIBusariesMsgBuf
 	UINT8 start; //0xAA
 	UINT16 len; //0-1500
 	UINT8 checksum1;//加总头的结果
-	UINT8 msgBody[MAX_HCU_MSG_BODY_LENGTH];
+	UINT8 msgBody[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 	UINT8 checksum2;//加总消息体的结果
 }SPIBusariesMsgBuf_t; // to update for SPIBUSARIES later
 

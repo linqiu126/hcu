@@ -55,8 +55,8 @@ HcuFsmStateItem_t HcuFsmSvrcon[] =
 //Global Varilables
 
 //Local shared variables, to store all task inti status
-HcuSvrConTaskInitInfo_t zHcuSvrConTaskInitInfo[MAX_TASK_NUM_IN_ONE_HCU]; //存储所有初始化任务的状态信息
-UINT32 zSvrconHbCnt[MAX_TASK_NUM_IN_ONE_HCU];
+HcuSvrConTaskInitInfo_t zHcuSvrConTaskInitInfo[HCU_SYSDIM_TASK_NBR_MAX]; //存储所有初始化任务的状态信息
+UINT32 zSvrconHbCnt[HCU_SYSDIM_TASK_NBR_MAX];
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -98,8 +98,8 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//INIT this task global variables
-	memset(zHcuSvrConTaskInitInfo, 0, (sizeof(HcuSvrConTaskInitInfo_t) * MAX_TASK_NUM_IN_ONE_HCU));
-	memset(zSvrconHbCnt, 0, (sizeof(UINT32) * MAX_TASK_NUM_IN_ONE_HCU));
+	memset(zHcuSvrConTaskInitInfo, 0, (sizeof(HcuSvrConTaskInitInfo_t) * HCU_SYSDIM_TASK_NBR_MAX));
+	memset(zSvrconHbCnt, 0, (sizeof(UINT32) * HCU_SYSDIM_TASK_NBR_MAX));
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON] = 0;
 
 	//收到初始化消息后，进入初始化状态
@@ -122,7 +122,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSvrConTaskInitInfo[TASK_ID_TIMER].state = SVRCON_TASK_INIT_FEEDBACK;
 
 	for (task_id = TASK_ID_MIN + 1; task_id < TASK_ID_MAX; task_id++){
-		if ((zHcuVmCtrTab.task[task_id].pnpState == HCU_TASK_PNP_ON) && (task_id != TASK_ID_SVRCON) && (task_id != TASK_ID_TIMER)){
+		if ((zHcuVmCtrTab.task[task_id].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (task_id != TASK_ID_SVRCON) && (task_id != TASK_ID_TIMER)){
 			hcu_vm_send_init_msg_to_app_task(task_id);
 			zHcuSvrConTaskInitInfo[task_id].active = SVRCON_TASK_ACTIVE;
 			zHcuSvrConTaskInitInfo[task_id].state = SVRCON_TASK_INIT_WAIT_FOR_BACK;
@@ -131,7 +131,7 @@ OPSTAT fsm_svrcon_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//wiringPi only could be initialized once, so put here, i.s.o. setup once per task and then render errors.
 #ifdef TARGET_RASPBERRY_PI3B
-	if ((zHcuVmCtrTab.task[TASK_ID_GPIO].pnpState == HCU_TASK_PNP_ON) || (zHcuVmCtrTab.task[TASK_ID_I2C].pnpState == HCU_TASK_PNP_ON) || (zHcuVmCtrTab.task[TASK_ID_SPI].pnpState == HCU_TASK_PNP_ON))
+	if ((zHcuVmCtrTab.task[TASK_ID_GPIO].pnpState == HCU_SYSCFG_TASK_PNP_ON) || (zHcuVmCtrTab.task[TASK_ID_I2C].pnpState == HCU_SYSCFG_TASK_PNP_ON) || (zHcuVmCtrTab.task[TASK_ID_SPI].pnpState == HCU_SYSCFG_TASK_PNP_ON))
 	if (wiringPiSetup() == -1) {
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SVRCON]++;
 		HcuErrorPrint("SVRCON: Setup wiringPi failed!");
@@ -183,39 +183,39 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	char svrconState[15];
 	//检查所有的反馈是否都收到，不然维持状态不变
 	if (func_svrcon_init_caculate_all_fb() == TRUE){
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 			int i=0;
 			//打印不RUNNING的
-			for(i=0;i<MAX_TASK_NUM_IN_ONE_HCU;i++){
+			for(i=0;i<HCU_SYSDIM_TASK_NBR_MAX;i++){
 				//HcuDebugPrint("SVRCON:Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskInfo[i].taskName);
 				if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_SEND) strcpy(svrconState, "INIT_SEND");
 				else if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK) strcpy(svrconState, "INIT_WAIT_FB");
 				else if  (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK) strcpy(svrconState, "INIT_FB");
 				else strcpy(svrconState, "INIT_INVALID");
-				if ((zHcuVmCtrTab.task[i].pnpState!=HCU_TASK_PNP_ON) || (zHcuSvrConTaskInitInfo[i].active != SVRCON_TASK_ACTIVE) || (zHcuSvrConTaskInitInfo[i].state != SVRCON_TASK_INIT_FEEDBACK)){
+				if ((zHcuVmCtrTab.task[i].pnpState!=HCU_SYSCFG_TASK_PNP_ON) || (zHcuSvrConTaskInitInfo[i].active != SVRCON_TASK_ACTIVE) || (zHcuSvrConTaskInitInfo[i].state != SVRCON_TASK_INIT_FEEDBACK)){
 				HcuDebugPrint("SVRCON: Task PNP[%d, %s], Init State[%d, %s], Active State[%d, %s] of Task[%2x, %s], Init result is [%s]!\n", \
-						zHcuVmCtrTab.task[i].pnpState, zHcuVmCtrTab.task[i].pnpState==HCU_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\
+						zHcuVmCtrTab.task[i].pnpState, zHcuVmCtrTab.task[i].pnpState==HCU_SYSCFG_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\
 						zHcuSvrConTaskInitInfo[i].active, (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE)?"ACTIVE":"DEACTIVE",\
 						zHcuSvrConTaskInitInfo[i].state, svrconState,\
 						i, zHcuVmCtrTab.task[i].taskName,\
-						((zHcuVmCtrTab.task[i].pnpState==HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK))?"RUNNING":"NOT_RUN");
+						((zHcuVmCtrTab.task[i].pnpState==HCU_SYSCFG_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK))?"RUNNING":"NOT_RUN");
 				}
 
 			}//For
 			//打印RUNNING的
-			for(i=0;i<MAX_TASK_NUM_IN_ONE_HCU;i++){
+			for(i=0;i<HCU_SYSDIM_TASK_NBR_MAX;i++){
 				//HcuDebugPrint("SVRCON:Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskInfo[i].taskName);
 				if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_SEND) strcpy(svrconState, "INIT_SEND");
 				else if (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK) strcpy(svrconState, "INIT_WAIT_FB");
 				else if  (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK) strcpy(svrconState, "INIT_FB");
 				else strcpy(svrconState, "INIT_INVALID");
-				if ((zHcuVmCtrTab.task[i].pnpState==HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK)){
+				if ((zHcuVmCtrTab.task[i].pnpState==HCU_SYSCFG_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK)){
 					HcuDebugPrint("SVRCON: Task PNP[%d, %s], Init State[%d, %s], Active State[%d, %s] of Task[%2x, %s], Init result is [%s]!\n", \
-							zHcuVmCtrTab.task[i].pnpState, zHcuVmCtrTab.task[i].pnpState==HCU_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\
+							zHcuVmCtrTab.task[i].pnpState, zHcuVmCtrTab.task[i].pnpState==HCU_SYSCFG_TASK_PNP_ON?"PNP_ON":"PNP_OFF",\
 							zHcuSvrConTaskInitInfo[i].active, (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE)?"ACTIVE":"DEACTIVE",\
 							zHcuSvrConTaskInitInfo[i].state, svrconState,\
 							i, zHcuVmCtrTab.task[i].taskName,\
-							((zHcuVmCtrTab.task[i].pnpState==HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK))?"RUNNING":"NOT_RUN");
+							((zHcuVmCtrTab.task[i].pnpState==HCU_SYSCFG_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_FEEDBACK))?"RUNNING":"NOT_RUN");
 				}
 			}//For
 
@@ -234,7 +234,7 @@ OPSTAT fsm_svrcon_init_feed_back(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			return FAILURE;
 		}
 		//Enter active status, keep working
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("SVRCON: Enter FSM_STATE_SVRCON_ACTIVED status, Getting to SLEEP mode for a while!\n");
 		}
 	}//if (func_svrcon_init_caculate_all_fb() == TRUE)
@@ -248,7 +248,7 @@ BOOL func_svrcon_init_caculate_all_fb(void)
 
 	int i=0;
 	for(i=TASK_ID_MIN; i<TASK_ID_MAX; i++){
-		if ((zHcuVmCtrTab.task[i].pnpState == HCU_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK)){
+		if ((zHcuVmCtrTab.task[i].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (zHcuSvrConTaskInitInfo[i].active == SVRCON_TASK_ACTIVE) && (zHcuSvrConTaskInitInfo[i].state == SVRCON_TASK_INIT_WAIT_FOR_BACK)){
 			return FALSE;
 		}
 	}
@@ -279,9 +279,9 @@ OPSTAT fsm_svrcon_init_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	if ((rcv.timeId == TIMER_ID_1S_SVRCON_INIT_FB) && (rcv.timeRes == TIMER_RESOLUTION_1S)){
 		HcuErrorPrint("SVRCON: Error! Time out before receiving all tasks feedback, fatal error!\n");
 
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 			int i=0;
-			for(i=0;i<MAX_TASK_NUM_IN_ONE_HCU;i++){
+			for(i=0;i<HCU_SYSDIM_TASK_NBR_MAX;i++){
 				//HcuDebugPrint("SVRCON:Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuTaskInfo[i].taskName);
 				HcuDebugPrint("SVRCON:Task info: PNP[%d],  Task init info: State[%d] and Active[%d] of Task[%s]!\n",zHcuVmCtrTab.task[i].pnpState, zHcuSvrConTaskInitInfo[i].active,zHcuSvrConTaskInitInfo[i].state,zHcuVmCtrTab.task[i].taskName);
 			}
@@ -355,17 +355,17 @@ OPSTAT fsm_svrcon_heart_beat(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 
 	//循环处理所有模块的计数器，定时不能太短，否则负荷太大
 	//考虑各种方案，即使采用MSGQUE的方式来判断，还是不准确，最终选择手工发送选择任务的方式
-	if (zHcuVmCtrTab.task[TASK_ID_EMC].pnpState == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_EMC);
-	if (zHcuVmCtrTab.task[TASK_ID_PM25].pnpState == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_PM25);
-	if (zHcuVmCtrTab.task[TASK_ID_WINDDIR].pnpState == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_WINDDIR);
-	if (zHcuVmCtrTab.task[TASK_ID_WINDSPD].pnpState == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_WINDSPD);
-	if (zHcuVmCtrTab.task[TASK_ID_HUMID].pnpState == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_HUMID);
-	if (zHcuVmCtrTab.task[TASK_ID_TEMP].pnpState == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_TEMP);
-	if (zHcuVmCtrTab.task[TASK_ID_HSMMP].pnpState == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_HSMMP);
-	if (zHcuVmCtrTab.task[TASK_ID_NOISE].pnpState == HCU_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_NOISE);
+	if (zHcuVmCtrTab.task[TASK_ID_EMC].pnpState == HCU_SYSCFG_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_EMC);
+	if (zHcuVmCtrTab.task[TASK_ID_PM25].pnpState == HCU_SYSCFG_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_PM25);
+	if (zHcuVmCtrTab.task[TASK_ID_WINDDIR].pnpState == HCU_SYSCFG_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_WINDDIR);
+	if (zHcuVmCtrTab.task[TASK_ID_WINDSPD].pnpState == HCU_SYSCFG_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_WINDSPD);
+	if (zHcuVmCtrTab.task[TASK_ID_HUMID].pnpState == HCU_SYSCFG_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_HUMID);
+	if (zHcuVmCtrTab.task[TASK_ID_TEMP].pnpState == HCU_SYSCFG_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_TEMP);
+	if (zHcuVmCtrTab.task[TASK_ID_HSMMP].pnpState == HCU_SYSCFG_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_HSMMP);
+	if (zHcuVmCtrTab.task[TASK_ID_NOISE].pnpState == HCU_SYSCFG_TASK_PNP_ON) func_svrcon_heart_beat_send_out(TASK_ID_NOISE);
 
 	//这里只处理AVORION，未来可能会增加其它监控的进程级任务模块
-	if ((zSvrconHbCnt[TASK_ID_AVORION] > SVRCON_TIMEOUT_FOR_PROCESS_RESTART) && (HCU_PROCESS_WORK_MODE_CURRENT == HCU_PROCESS_WORK_MODE_TRIPPLE)){
+	if ((zSvrconHbCnt[TASK_ID_AVORION] > SVRCON_TIMEOUT_FOR_PROCESS_RESTART) && (HCU_SYSCFG_PROCESS_MODE_SET == HCU_SYSCFG_PROCESS_WORK_MODE_TRIPPLE)){
 		//发送重启命令给HCUMAIN去执行
 		msg_struct_com_process_reboot_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_process_reboot_t));

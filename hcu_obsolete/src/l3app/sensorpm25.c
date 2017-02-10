@@ -95,7 +95,7 @@ OPSTAT fsm_pm25_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_PM25, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -109,7 +109,7 @@ OPSTAT fsm_pm25_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		HcuErrorPrint("PM25: Error Set FSM State at fsm_pm25_init\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("PM25: Enter FSM_STATE_PM25_INITED status, everything goes well!\n");
 	}
 
@@ -364,7 +364,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.ew = rcv.pm25.gps.ew;
 			record.ns = rcv.pm25.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -373,7 +373,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -382,7 +382,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_pm25_data_element_t pm25Data;
 				memset(&pm25Data, 0, sizeof(sensor_pm25_data_element_t));
@@ -458,7 +458,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.ew = rcv.pm25.gps.ew;
 			record.ns = rcv.pm25.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -467,7 +467,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -476,7 +476,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_pm25_data_element_t pm25Data;
 				memset(&pm25Data, 0, sizeof(sensor_pm25_data_element_t));
@@ -581,7 +581,7 @@ OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * para
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 		HcuDebugPrint("PM25: receive data from cloudvela, data param_len=%d \n", param_len);
 	}
 
@@ -776,7 +776,7 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 			}
 			*/
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				//to discuss if save to local DB
 				/*
@@ -815,7 +815,7 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 		snd.cmdId = rcv.cmdId;
 		//snd.zhbUl //Shanchun: handle zhb??
 
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("PM25: switch control command optId = %d\n", rcv.optId);
 		}
 
@@ -888,7 +888,7 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 				break;
 		}
 
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("PM25: control command cmdId= %d\n", snd.cmdId);
 			HcuDebugPrint("PM25: control command optId= %d\n", snd.optId);
 			HcuDebugPrint("PM25: control command backType = %d\n", snd.backType);
@@ -943,7 +943,7 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 			}
 			*/
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				//ret = dbi_HcuPm25ConfigData_save(&zPM25ConfigData);
 				ret = dbi_HcuPm25ConfigData_update(rcv.optId, &zPM25ConfigData);
@@ -995,7 +995,7 @@ OPSTAT func_pm25_time_out_read_data_from_bmpd300(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuI2cPm25Bmpd300 >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuI2cPm25Bmpd300 <= HCU_SENSOR_PM25_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuI2cPm25Bmpd300 >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuI2cPm25Bmpd300 <= HCU_SENSOR_PM25_VALUE_MAX))
 	{
 		sensor_pm25_bmpd300_data_element_t pm25Data;
 		memset(&pm25Data, 0, sizeof(sensor_pm25_bmpd300_data_element_t));
@@ -1019,7 +1019,7 @@ OPSTAT func_pm25_time_out_read_data_from_sharp(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES) && (zHcuSps232Pm25Sharp >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuSps232Pm25Sharp <= HCU_SENSOR_PM25_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuSps232Pm25Sharp >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuSps232Pm25Sharp <= HCU_SENSOR_PM25_VALUE_MAX))
 	{
 		sensor_pm25_sharp_data_element_t pm25Data;
 		memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));

@@ -101,7 +101,7 @@ OPSTAT dbi_HcuIpmCj188DataInfo_save(sensor_ipm_cj188_data_element_t *ipmData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIIPM: CO1 data record save to DB!\n");
 	}
     return SUCCESS;

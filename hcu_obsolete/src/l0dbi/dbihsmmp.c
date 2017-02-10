@@ -75,7 +75,7 @@ OPSTAT dbi_HcuHsmmpDataInfo_save(sensor_hsmmp_data_element_t *hsmmpData)
 	}
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIHSMMP: HSMMP data record save to DB!\n");
 	}
     return SUCCESS;
@@ -139,9 +139,9 @@ OPSTAT dbi_HcuHsmmpDataInfo_inqury_1st_record(UINT32 deviceid, sensor_hsmmp_data
 	else{
 		UINT32 index = 2;
 		if (sqlRow[index]) hsmmpData->timeStamp = (UINT32)atol(sqlRow[index++]);
-		if (sqlRow[index]) strncpy(hsmmpData->hsmmpFdir, sqlRow[index++], HCU_FILE_NAME_LENGTH_MAX-1);
-		if (sqlRow[index]) strncpy(hsmmpData->hsmmpFname, sqlRow[index++], HCU_FILE_NAME_LENGTH_MAX-1);
-		if (sqlRow[index]) strncpy(hsmmpData->hsmmpLink, sqlRow[index++], HCU_FILE_NAME_LENGTH_MAX-1);
+		if (sqlRow[index]) strncpy(hsmmpData->hsmmpFdir, sqlRow[index++], HCU_SYSDIM_FILE_NAME_LEN_MAX-1);
+		if (sqlRow[index]) strncpy(hsmmpData->hsmmpFname, sqlRow[index++], HCU_SYSDIM_FILE_NAME_LEN_MAX-1);
+		if (sqlRow[index]) strncpy(hsmmpData->hsmmpLink, sqlRow[index++], HCU_SYSDIM_FILE_NAME_LEN_MAX-1);
 		if (sqlRow[index]) hsmmpData->gps.ew = (UINT32)atol(sqlRow[index++]);
 		if (sqlRow[index]) hsmmpData->gps.gpsx = (UINT32)atol(sqlRow[index++]);
 		if (sqlRow[index]) hsmmpData->gps.ns = (UINT32)atol(sqlRow[index++]);

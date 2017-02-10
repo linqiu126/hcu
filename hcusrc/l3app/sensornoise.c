@@ -86,7 +86,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_NOISE, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -100,7 +100,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		HcuErrorPrint("NOISE: Error Set FSM State at fsm_noise_init\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("NOISE: Enter FSM_STATE_NOISE_INITED status, everything goes well!\n");
 	}
 
@@ -449,7 +449,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			record.ew = rcv.noise.gps.ew;
 			record.ns = rcv.noise.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -458,7 +458,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -467,7 +467,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_noise_data_element_t noiseData;
 				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
@@ -537,7 +537,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			record.ew = rcv.noise.gps.ew;
 			record.ns = rcv.noise.gps.ns;
 			//RECORD存入内存盘
-			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -546,7 +546,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -555,7 +555,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_noise_data_element_t noiseData;
 				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
@@ -671,7 +671,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 				HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_noise_data_element_t noiseData;
 				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
@@ -752,7 +752,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 				HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_noise_data_element_t noiseData;
 				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));

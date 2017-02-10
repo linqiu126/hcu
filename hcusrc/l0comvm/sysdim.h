@@ -63,284 +63,282 @@
 
 //全局统一定义
 //系统任务级
-#define MAX_TASK_NUM_IN_ONE_HCU 100  //需要根据系统中实际多少任务模块来决定，从70改为100，不然随着新模块的加入，已经不够了
-#define TASK_NAME_MAX_LENGTH 15  //从12改为15，确保任务模块名字的安全
-//系统消息级
-//maxmum state number and msg number in one task, no instance concept
-#define HCU_TASK_QUEUE_ID_START 1024
-#define MAX_MSGID_NUM_IN_ONE_TASK 400 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多：从200改为400个
-#define MASK_MSGID_NUM_IN_ONE_TASK 511 //消息号段在同一个任务中必须连续到这个范围内：从255改为511个
-#define MAX_STATE_NUM_IN_ONE_TASK 12  //一个任务之中最多定义的状态数量：从8个改为12个
-#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+#define HCU_SYSDIM_TASK_NBR_MAX 100  //需要根据系统中实际多少任务模块来决定，从70改为100，不然随着新模块的加入，已经不够了
+#define HCU_SYSDIM_TASK_NAME_LEN_MAX 15  //从12改为15，确保任务模块名字的安全
+#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024  //maxmum state number and msg number in one task, no instance concept
+#define HCU_SYSDIM_TASK_STATE_NBR_MAX 12  //一个任务之中最多定义的状态数量：从8个改为12个
+#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 //消息长度
-#define MSG_NAME_MAX_LENGTH 70
-#define MAX_HCU_MSG_BODY_LENGTH 512 //MYC改为1500，就是为了ETHERNET数据段的最大长度。考虑到实时性，应该缩短。考虑到LINUX最大9K的单个任务QUEUE，应该缩短。
-#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+#define HCU_SYSDIM_MSGID_NBR_MAX 400 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多：从200改为400个
+#define HCU_SYSDIM_MSGID_MASK_SET 511 //消息号段在同一个任务中必须连续到这个范围内：从255改为511个
+#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+#define HCU_SYSDIM_MSG_BODY_LEN_MAX 512 //MYC改为1500，就是为了ETHERNET数据段的最大长度。考虑到实时性，应该缩短。考虑到LINUX最大9K的单个任务QUEUE，应该缩短。
+#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 //最大的定时器数量
-#define MAX_TIMER_NUM_IN_ONE_HCU 100
-#define TIMER_NAME_MAX_LENGTH 40
+#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 /*
 
 //分项目设置不同项目的全局性能参数
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	//系统任务级
-	#define MAX_TASK_NUM_IN_ONE_HCU 70  //需要根据系统中实际多少任务模块来决定
-	#define TASK_NAME_MAX_LENGTH 12
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
 	//系统消息级
 	//maxmum state number and msg number in one task, no instance concept
-	#define HCU_TASK_QUEUE_ID_START 1024
-	#define MAX_MSGID_NUM_IN_ONE_TASK 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
-	#define MASK_MSGID_NUM_IN_ONE_TASK 255 //消息号段在同一个任务中必须连续到这个范围内
-	#define MAX_STATE_NUM_IN_ONE_TASK 8  //一个任务之中最多定义的状态数量
-	#define MAX_FSM_STATE_ENTRY_NUM_IN_ONE_TASK 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
 	//消息长度
-	#define MSG_NAME_MAX_LENGTH 70
-	#define MAX_HCU_MSG_BODY_LENGTH 1500 //MYC
-	#define HCU_FILE_NAME_LENGTH_MAX 256 //MYC
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 	//最大的定时器数量
-	#define MAX_TIMER_NUM_IN_ONE_HCU 100
-	#define TIMER_NAME_MAX_LENGTH 40
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
 
 
 //小技巧，不要这部分，以便加强编译检查

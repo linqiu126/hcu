@@ -11,12 +11,12 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
-
+=>增加HUITP消息长度检查的#ifdef判定
 
 //= ZJL, 2017 Feb.10, CURRENT_SW_DELIVERY 157=>BFSC项目
 =完成BFSC HUITP的消息编写
-
-
+=去掉MSG QUEUE机制
+=清理HCU_SYSDIM, HCU_SYSCFG, HCU_SYSMSG全局常量命名机制，跟HUITP统一命名机制保持一致，改善程序可读性，降低出错的概率
 
 
 //= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 156=>BFSC项目

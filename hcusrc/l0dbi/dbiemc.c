@@ -90,7 +90,7 @@ OPSTAT dbi_HcuEmcDataInfo_save(sensor_emc_data_element_t *emcData)
 
 	//释放记录集
     mysql_close(sqlHandler);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBIEMC: EMC data record save to DB!\n");
 	}
     return SUCCESS;
@@ -467,7 +467,7 @@ int sqlite3_dbi_HcuEmcDataInfo_save(sensor_emc_data_element_t *emcData)
    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
    /* Open database */
-   rc = sqlite3_open(HCU_DB_SQLITE3_LOC_AND_FILE, &db);
+   rc = sqlite3_open(HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE, &db);
    if( rc ){
       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
       exit(0);

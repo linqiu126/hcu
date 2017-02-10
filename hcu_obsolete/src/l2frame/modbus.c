@@ -110,7 +110,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_MODBUS, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -125,7 +125,7 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Enter FSM_STATE_MODBUS_INITED status, everything goes well!\n");
 	}
 
@@ -219,7 +219,7 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus EMC req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -344,7 +344,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus PM25 req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -395,7 +395,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
@@ -534,7 +534,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Prepareing send modbus winddir req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -584,7 +584,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH); //获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX); //获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
@@ -721,7 +721,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus windspd req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -772,7 +772,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
@@ -909,7 +909,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus temp req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -1102,7 +1102,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus humid req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -1155,7 +1155,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 		 HcuDebugPrint("MODBUS: Len %d\n", ret);
@@ -1298,7 +1298,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send modbus noise req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -1356,7 +1356,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
-	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 		 HcuDebugPrint("MODBUS: Len %d\n", ret);
@@ -1549,7 +1549,7 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 	UINT32 len=0, t0=0, t1=0;
 
 	//检查长度
-	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
+	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
@@ -1729,7 +1729,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 	UINT32 len=0, t0=0, t1=0, t2=0, t3=0;
 
 	//检查长度
-	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
+	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
@@ -1930,7 +1930,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	UINT32 len=0, t0=0, t1=0;
 
 	//检查长度
-	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
+	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
@@ -2109,7 +2109,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	UINT32 len=0, t0=0, t1=0;
 
 	//检查长度
-	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
+	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
@@ -2288,7 +2288,7 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 	UINT32 len=0, t0=0, t1=0;
 
 	//检查长度
-	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
+	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
@@ -2467,7 +2467,7 @@ OPSTAT func_modbus_humid_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_humid_
 	UINT32 len=0, t0=0, t1=0;
 
 	//检查长度
-	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
+	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
@@ -2647,7 +2647,7 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 	UINT32 len=0, t0=0, t1=0, t2=0, t3=0;
 
 	//检查长度
-	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
+	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("MODBUS: Receive Modbus data error with length = %d\n", buf->curLen);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
@@ -2890,7 +2890,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 		HcuErrorPrint("MODBUS: Error pack message!\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("MODBUS: Preparing send PM25 control cmd = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -2912,7 +2912,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
-	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
+	ret = hcu_sps485_serial_port_get(&gSerialPortMobus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
 	 HcuDebugPrint("MODBUS: Len %d  \n", ret);
@@ -3001,7 +3001,7 @@ OPSTAT fsm_modbus_pm25_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_p
 		break;
 	}
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 
 		HcuDebugPrint("modbus: control command--switch= %d\n", snd.opt.powerOnOff);
 		HcuDebugPrint("modbus: control command--address= %d\n", snd.opt.newEquId);
@@ -3229,7 +3229,7 @@ OPSTAT func_modbus_pm25_cmd_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 	//UINT32 t0=0, t1=0, t2=0, t3=0;
 
 	//检查长度
-	if ((buf->curLen<=0) || (buf->curLen>MAX_HCU_MSG_BODY_LENGTH)){
+	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("MODBUS: Receive PM25 control command feedback error with length = %d\n", buf->curLen);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;

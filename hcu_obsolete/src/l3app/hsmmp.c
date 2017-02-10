@@ -93,7 +93,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
 		//hcu_usleep(rand()%DURATION_OF_INIT_FB_WAIT_MAX);
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HSMMP, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -108,7 +108,7 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("HSMMP: Enter FSM_STATE_HSMMP_INITED status, Keeping refresh here!\n");
 	}
 
@@ -218,7 +218,7 @@ OPSTAT fsm_hsmmp_avorion_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr
 OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret = 0;
-	char newpath[HCU_FILE_NAME_LENGTH_MAX]="";
+	char newpath[HCU_SYSDIM_FILE_NAME_LEN_MAX]="";
 	//这种申明方法，已经分配了完整的内存空间，不用再MALLOC单独申请内存了
 	HcuDiscDataSampleStorageArray_t record;
 
@@ -229,7 +229,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("AVORION: Recover to ACTIVED state during period timer out!\n");
 		}
 		return SUCCESS;
@@ -250,12 +250,12 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 		HcuErrorPrint("HSMMP: Error boolBackCloud parameter message received!\n");
 		return FAILURE;
 	}
-	if ((rcv.hsmmp.hsmmpFname == NULL) || ((strlen(rcv.hsmmp.hsmmpFname) > HCU_FILE_NAME_LENGTH_MAX))){
+	if ((rcv.hsmmp.hsmmpFname == NULL) || ((strlen(rcv.hsmmp.hsmmpFname) > HCU_SYSDIM_FILE_NAME_LEN_MAX))){
 		HcuErrorPrint("HSMMP: Error hsmmpFname parameter message received!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		return FAILURE;
 	}
-	if ((rcv.hsmmp.hsmmpFdir == NULL) || ((strlen(rcv.hsmmp.hsmmpFdir) > HCU_FILE_NAME_LENGTH_MAX))){
+	if ((rcv.hsmmp.hsmmpFdir == NULL) || ((strlen(rcv.hsmmp.hsmmpFdir) > HCU_SYSDIM_FILE_NAME_LEN_MAX))){
 		HcuErrorPrint("HSMMP: Error hsmmpFdir parameter message received!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 		return FAILURE;
@@ -305,7 +305,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			record.ew = zHcuGpsPosInfo.EW;
 			record.ns = zHcuGpsPosInfo.NS;
 			//RECORD存入内存盘
-			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -314,7 +314,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -323,7 +323,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_hsmmp_data_element_t hsmmpData;
 				memset(&hsmmpData, 0, sizeof(sensor_hsmmp_data_element_t));
@@ -395,7 +395,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			record.ew = zHcuGpsPosInfo.EW;
 			record.ns = zHcuGpsPosInfo.NS;
 			//RECORD存入内存盘
-			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_MEM_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_mem(&record);
 				if (ret == FAILURE){
@@ -404,7 +404,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				}
 			}
 			//RECORD存入硬盘
-			if (HCU_SENSOR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_DISC_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
 			{
 				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
 				if (ret == FAILURE){
@@ -413,7 +413,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				}
 			}
 			//RECORD还要存入数据库
-			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_DB_SENSOR_SAVE_FLAG_YES)
+			if (HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
 			{
 				sensor_hsmmp_data_element_t hsmmpData;
 				memset(&hsmmpData, 0, sizeof(sensor_hsmmp_data_element_t));
@@ -467,7 +467,7 @@ OPSTAT func_hsmmp_time_out_period(void)
 			HcuErrorPrint("HSMMP: Error Set FSM State!\n");
 			return FAILURE;
 		}
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 			HcuDebugPrint("AVORION: Recover to ACTIVED state during period timer out!\n");
 		}
 
@@ -495,13 +495,13 @@ OPSTAT func_hsmmp_time_out_period(void)
 	snd.timeStampStart = time(0);
 	strcpy(snd.tmpFname, "output.yuv");
 
-    if ((snd.fileType == FILE_OPERATION_TYPE_AVORION_H264) && (strlen(zHcuVmCtrTab.clock.curAvorionFdH264) < HCU_FILE_NAME_LENGTH_MAX)){
+    if ((snd.fileType == FILE_OPERATION_TYPE_AVORION_H264) && (strlen(zHcuVmCtrTab.clock.curAvorionFdH264) < HCU_SYSDIM_FILE_NAME_LEN_MAX)){
     	strcpy(snd.fDirName, zHcuVmCtrTab.clock.curAvorionFdH264);
     	strcpy(snd.fName, zHcuVmCtrTab.clock.curAvorionFnameH264);
-    }else if((snd.fileType == FILE_OPERATION_TYPE_AVORION_AVI) && (strlen(zHcuVmCtrTab.clock.curAvorionFdAvi) < HCU_FILE_NAME_LENGTH_MAX)){
+    }else if((snd.fileType == FILE_OPERATION_TYPE_AVORION_AVI) && (strlen(zHcuVmCtrTab.clock.curAvorionFdAvi) < HCU_SYSDIM_FILE_NAME_LEN_MAX)){
     	strcpy(snd.fDirName, zHcuVmCtrTab.clock.curAvorionFdAvi);
     	strcpy(snd.fName, zHcuVmCtrTab.clock.curAvorionFnameAvi);
-    }else if((snd.fileType == FILE_OPERATION_TYPE_AVORION_MKV) && (strlen(zHcuVmCtrTab.clock.curAvorionFdMkv) < HCU_FILE_NAME_LENGTH_MAX)){
+    }else if((snd.fileType == FILE_OPERATION_TYPE_AVORION_MKV) && (strlen(zHcuVmCtrTab.clock.curAvorionFdMkv) < HCU_SYSDIM_FILE_NAME_LEN_MAX)){
     	strcpy(snd.fDirName, zHcuVmCtrTab.clock.curAvorionFdMkv);
     	strcpy(snd.fName, zHcuVmCtrTab.clock.curAvorionFnameMkv);
     }else{

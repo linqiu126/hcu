@@ -119,7 +119,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		snd0.length = sizeof(msg_struct_com_init_feedback_t);
 
 		//to avoid all task send out the init fb msg at the same time which lead to msgque get stuck
-		hcu_usleep(dest_id*HCU_DURATION_OF_INIT_FB_WAIT_MAX);
+		hcu_usleep(dest_id*HCU_SYSCFG_DURATION_OF_INIT_FB_WAIT_MAX);
 
 		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_CLOUDVELA, &snd0, snd0.length);
 		if (ret == FAILURE){
@@ -134,7 +134,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_init\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Enter FSM_STATE_CLOUDVELA_INITED status, everything goes well!\n");
 	}
 
@@ -264,7 +264,7 @@ OPSTAT func_cloudvela_time_out_period(void)
 		//如果是失败情况，并不返回错误，属于正常情况
 		//当链路不可用时，这个打印结果会非常频繁，放开比较好
 		else{
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_IPT_ON) != FALSE){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_IPT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			}
 			zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt++;
@@ -525,7 +525,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Under online state, send off-line data to cloud success!\n");
 	}
 	//State no change
@@ -535,7 +535,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 
 OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
 {
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		if(zHcuEthConClientFd < 0){
 				HcuErrorPrint("CLOUDVELA: socket id is not valid!\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -645,7 +645,7 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period EMC to cloud success!\n");
 	}
 	//State no change
@@ -700,7 +700,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period PM25 to cloud success!\n");
 	}
 	//State no change
@@ -755,7 +755,7 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period WINDDIR to cloud success!\n");
 	}
 	//State no change
@@ -809,7 +809,7 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period WINDSPD to cloud success!\n");
 	}
 	//State no change
@@ -863,7 +863,7 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period TEMPERATURE to cloud success!\n");
 	}
 	//State no change
@@ -917,7 +917,7 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period HUMIDITY to cloud success!\n");
 	}
 	//State no change
@@ -971,7 +971,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period NOISE to cloud success!\n");
 	}
 	//State no change
@@ -999,7 +999,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 	memcpy(&rcv, param_ptr, param_len);
 
 	//检查参数
-	if ((rcv.link.linkName == NULL) || ((strlen(rcv.link.linkName) > HCU_FILE_NAME_LENGTH_MAX))){
+	if ((rcv.link.linkName == NULL) || ((strlen(rcv.link.linkName) > HCU_SYSDIM_FILE_NAME_LEN_MAX))){
 		HcuErrorPrint("HSMMP: Error parameter message received!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1033,7 +1033,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period HSMMP to cloud success!\n");
 	}
 	//State no change
@@ -1140,7 +1140,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	if ((rand()%10)>5)
 		return SUCCESS;
 	else*/
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
 	}
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1187,7 +1187,7 @@ OPSTAT func_cloudvela_heart_beat_check(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send HEART_BEAT message out to cloud success!\n");
 	}
 	//State no change
@@ -1212,7 +1212,7 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 		}
 
 		//for GPS test
-		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: NS is %c, latitude is %d, EW is %c, longitude is %d, Status is %c, speed is %d, high is %d.\n",
 					zHcuGpsPosInfo.NS, zHcuGpsPosInfo.gpsY, zHcuGpsPosInfo.EW, zHcuGpsPosInfo.gpsX, zHcuGpsPosInfo.status, zHcuGpsPosInfo.speed, zHcuGpsPosInfo.gpsZ);
 			HcuDebugPrint("CLOUDVELA: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuGpsPosInfo.D.year, zHcuGpsPosInfo.D.month, zHcuGpsPosInfo.D.day, zHcuGpsPosInfo.D.hour, zHcuGpsPosInfo.D.minute, zHcuGpsPosInfo.D.second);
@@ -1232,7 +1232,7 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send CMD CONTROL CHECK message out to cloud success!\n");
 	}
 	//State no change
@@ -1290,7 +1290,7 @@ OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 	zHcuMemStorageBuf.lastSid = sid;  //最新一个写入记录的SID数值
 
 	//Always successful, as the storage is a cycle buffer!
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Data record save to MEM-DISC, sid=%d, totalNbr=%d, offNbr=%d\n", sid, totalNbr, zHcuMemStorageBuf.offlineNbr);
 	}
 	return SUCCESS;
@@ -1348,7 +1348,7 @@ OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Data record read from MEM-DISC, rdCnt=%d, totalNbr = %d, offNbr=%d\n", readCnt, totalNbr, zHcuMemStorageBuf.offlineNbr);
 	}
 	return SUCCESS;
@@ -1377,7 +1377,7 @@ OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen)
 OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 {
 	//参数检查
-	if ((buf->curLen <=0) || (buf->curLen >MAX_HCU_MSG_BUF_LENGTH)){
+	if ((buf->curLen <=0) || (buf->curLen >HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error message length to send back for cloud!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1437,7 +1437,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//参数检查
-	if ((param_len <=0) || (param_len >MAX_HCU_MSG_BODY_LENGTH)){
+	if ((param_len <=0) || (param_len >HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -1468,14 +1468,14 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	memcpy(rcv.buf, param_ptr, param_len);
 	rcv.length = param_len;
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
 		//int i;
 		//for(i =0; i<rcv.length; i++) HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%c], from [%s] module\n", rcv.length,  rcv.buf[i], zHcuTaskInfo[src_id].taskName);
 	}
 
 	//如果是XML自定义格式
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1485,7 +1485,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1556,10 +1556,10 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	if ((rcv.ethStatChg == HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.ethStatChg == HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.ethConTry = 0;
-	else if ((rcv.usbnetStatChg == HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.usbnetStatChg == HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.usbnetConTry = 0;
-	else if ((rcv.wifiStatChg == HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.wifiStatChg == HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.wifiConTry = 0;
-	else if ((rcv.g3g4StatChg == HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.g3g4StatChg == HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.g3g4ConTry = 0;
+	if ((rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.ethConTry = 0;
+	else if ((rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.usbnetConTry = 0;
+	else if ((rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.wifiConTry = 0;
+	else if ((rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.g3g4ConTry = 0;
 	else{
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Message received with error content!\n");
@@ -1577,7 +1577,7 @@ size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, voi
 	//For test
 	//HcuDebugPrint("CLOUDVELA: hcu_cloudvela_write_callback receive data len = %d\n", realsize);
 	memset(mem, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
-	if(realsize > MAX_HCU_MSG_BUF_LENGTH)
+	if(realsize > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)
 	{
 		HcuErrorPrint("CLOUDVELA: No enough memory!\n");
 		return 0;
@@ -1620,7 +1620,7 @@ OPSTAT func_cloudvela_heart_beat_received_handle(void)
 		return FAILURE;
 	}
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Ack HEART_BEAT successful!\n");
 	}
 
@@ -1706,7 +1706,7 @@ OPSTAT func_cloudvela_av_upload(char *filename)
 	else
 	{
 		filepath[rslt] = '\0';
-		memset(ftp_opt.file,0,HCU_FILE_NAME_LENGTH_MAX);
+		memset(ftp_opt.file,0,HCU_SYSDIM_FILE_NAME_LEN_MAX);
 		strcpy(ftp_opt.file,filepath);
 
 	}
@@ -1823,7 +1823,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send PM25 Sensor Control CMD ACK to cloud success!\n");
 	}
 	//State no change
@@ -1917,7 +1917,7 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send alarm info to cloud success!\n");
 	}
 	//State no change
@@ -1972,7 +1972,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send PM info to cloud success!\n");
 	}
 	//State no change
@@ -2027,7 +2027,7 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
 	}
 
@@ -2083,7 +2083,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
 	}
 
@@ -2094,7 +2094,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//参数检查
-	if ((param_len <=0) || (param_len >MAX_HCU_MSG_BODY_LENGTH)){
+	if ((param_len <=0) || (param_len >HCU_SYSDIM_MSG_BODY_LEN_MAX)){
 		HcuErrorPrint("CLOUDVELA: Error message length received from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -2118,12 +2118,12 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	memcpy(rcv.buf, param_ptr, param_len);
 	rcv.length = param_len;
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
 	}
 
 	//如果是XML自定义格式
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_XML)
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -2133,7 +2133,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_CLOUDVELA_BH_INTERFACE_STANDARD_ZHB)
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -2243,7 +2243,7 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	if ((rand()%10)>5)
 		return SUCCESS;
 	else*/
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_NOR_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
 	}
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
