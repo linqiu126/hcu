@@ -263,6 +263,7 @@ enum HCU_INTER_TASK_MSG_ID
 	//Service Control message
 
 	//ETHERNET
+	//因为发送采用了API方式，接收采用了消息方式，所以这里只需要定义接收消息的格式，发送放在缓冲区中，定义在L1COMDEF.H中了
 	MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,
 	MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX,
 	MSG_ID_ETHERNET_NBIOTQG376_DATA_RX,
@@ -447,16 +448,27 @@ enum HCU_INTER_TASK_MSG_ID
 	//CANITF
 	MSG_ID_CANITFLEO_DATA_REPORT,
 
-	//L3BFSC
+	//BFSC/SCALE_WEIGHT组合秤
+	//CANITF部分
 	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
 	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
 	MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
-	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
-	MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,   	//后台命令反馈：启动/停止等等
-	MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,   	//将定时读到的数据送往后台
 	MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化
 	MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求
 	MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
+	//UICOMM部分
+	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
+	//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
+	MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
+	MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
+	MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,
+	MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,
+	MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,
+	MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
+	MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
+	MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
+	MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
 
 	//CANITFLEO
 	MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
@@ -470,10 +482,6 @@ enum HCU_INTER_TASK_MSG_ID
 	//BFSCUICOMM
 	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//本地界面请求
 	MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,  //本地界面设置结果
-
-	//CLOUDVELA
-	MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       	//后台命令请求：启动/停止等等
-
 
 	MSG_ID_COM_MAX, //Ending point
 
@@ -2164,9 +2172,65 @@ typedef struct msg_struct_canitfleo_data_report
 
 /**************************************************************************************
  *                                                                                    *
- *                            分类处理各个项目相关的消息结构                                     *
+ *                            分类处理各个项目相关的消息结构                                *
  *                                                                                    *
  *************************************************************************************/
+//BFSC/SCALE_WEIGHT组合秤
+//CANITF部分
+//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
+
+
+//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
+
+
+//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
+
+
+//MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化
+
+
+//MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求
+
+
+//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
+
+
+//UICOMM部分
+//MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
+
+
+//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
+//MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
+
+
+//MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
+
+
+//MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,
+
+
+//MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,
+
+
+//MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,
+
+
+//MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,
+
+
+//MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
+
+
+//MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
+
+
+//MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
+
+
+//MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
+
+
+
 
 //L3BFSC
 #define HCU_L3BFSC_MAX_SENSOR_NBR 20
@@ -2312,6 +2376,17 @@ typedef struct msg_struct_can_l3bfsc_general_cmd_resp
 	UINT32 length;
 }msg_struct_can_l3bfsc_general_cmd_resp_t;
 
+//CLOUDVELA
+//MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
+typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
+{
+	UINT8  cmdid;
+	UINT8  eqpid;
+	UINT8  optid;
+	UINT8  optopr;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_cmd_req_t;
 
 //BFSCUICOMM
 //MSG_ID_UICOMM_L3BFSC_CMD_REQ,
@@ -2332,17 +2407,6 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
 	UINT32 	length;
 }msg_struct_uicomm_l3bfsc_param_set_result_t;
 
-//CLOUDVELA
-//MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
-typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
-{
-	UINT8  cmdid;
-	UINT8  eqpid;
-	UINT8  optid;
-	UINT8  optopr;
-	UINT32 timestamp;
-	UINT32 length;
-}msg_struct_cloudvela_l3bfsc_cmd_req_t;
 
 
 #endif /* L0COMVM_COMMSG_H_ */

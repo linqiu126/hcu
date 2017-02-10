@@ -268,7 +268,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//生成命令分别发送命令给各个下位机
 	strHcuCanitfleoCmdFrame_t p;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		if (rcv.wsBitmap[i] ==1){
 			//生成CAN命令
 			memset(&p, 0, sizeof(strHcuCanitfleoCmdFrame_t));
@@ -283,7 +283,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//本来没有立即返回的结果，这里为了测试，立即返回所有12个秤盘的初始化结果
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		msg_struct_can_l3bfsc_ws_init_fb_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_init_fb_t));
 		snd.length = sizeof(msg_struct_can_l3bfsc_ws_init_fb_t);
@@ -341,7 +341,7 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 	//应该生成命令发送给下位机
 
 	//为了测试目的
-	if (rcv.sensorid < HCU_BFSC_SENSOR_WS_NBR_MAX){
+	if (rcv.sensorid < HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 		hcu_usleep(10 + rand()%10);
 		msg_struct_can_l3bfsc_error_inq_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t));
@@ -360,7 +360,7 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 	//独特的技巧，用于复用同一个消息结构
 	//使用了BITMAP的方式
 	else{
-		for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+		for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 			if (rcv.sensorBitmap[i] ==1){
 				hcu_usleep(10 + rand()%10);
 				msg_struct_can_l3bfsc_error_inq_cmd_resp_t snd;
@@ -403,7 +403,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//测试命令，发送结果给L3BFSC
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		if (rcv.sensorBitmap[i] == 1){
 			hcu_usleep(10 + rand()%10);
 			msg_struct_can_l3bfsc_ws_comb_out_fb_t snd;
@@ -445,7 +445,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * par
 	//等待返回命令
 
 	//测试命令，发送结果给L3BFSC
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		if (rcv.sensorBitmap[i] == 1){
 			hcu_usleep(10 + rand()%10);
 			msg_struct_can_l3bfsc_ws_give_up_fb_t snd;
@@ -518,7 +518,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	hcu_usleep(10 + rand()%10);
 	msg_struct_can_l3bfsc_ws_read_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_read_resp_t));
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		snd.sensorWsValue[i] = ++HcuSensorIdRoundBing;
 		if ( i == (canid & 0xF))    //MYC
 			snd.sensorWsValue[i] = weight;
@@ -676,7 +676,7 @@ void func_canitfleo_working_scan_process(void)
 	weight = canframe_hex[4] + (canframe_hex[5] << 8) + (canframe_hex[6] << 16) + (canframe_hex[7] << 24);
 	HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), canid =0x%X, buf = %s, weight = %d\r\n", (UINT32)canid, buf, weight);
 
-	snd.sensorid = rand() % HCU_BFSC_SENSOR_WS_NBR_MAX;
+	snd.sensorid = rand() % HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 	snd.sensorWsValue = 500 + (rand()%50);
 	if (snd.sensorid == (canid & 0xF))
 		snd.sensorWsValue = weight;

@@ -683,7 +683,7 @@ typedef struct CloudBhItfDevReportStdXml
 	//BFSC
 	char conBfsc[9];  //4B, 组合秤
 	char conBfscSensorNb[3];  //1B
-	char conBfscData[8 * HCU_BFSC_SENSOR_WS_NBR_MAX + 1]; //4B * HCU_BFSC_SENSOR_WS_NBR_MAX传感器数量
+	char conBfscData[8 * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + 1]; //4B * HCU_BFSC_SENSOR_WS_NBR_MAX传感器数量
 #endif
 
 	//Added by Shanchun for alarm report

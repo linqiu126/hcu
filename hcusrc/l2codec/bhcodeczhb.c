@@ -746,7 +746,7 @@ OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		//sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
 		//sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
 		sprintf(xmlFormat.conBfscSensorNb, "%02X", sensorNbr);
-		if (sensorNbr > HCU_BFSC_SENSOR_WS_NBR_MAX){
+		if (sensorNbr > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error， too large sensor numbers!\n");
 			return FAILURE;

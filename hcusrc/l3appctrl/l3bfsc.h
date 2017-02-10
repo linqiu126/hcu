@@ -58,13 +58,13 @@ typedef struct L3BfscGenCtrlTable
 	UINT8	minWsNbr;
 	UINT8	maxWsNbr;
 	//UINT8	currentStatus;
-	L3BfscSensorWsInfo_t	sensorWs[HCU_BFSC_SENSOR_WS_NBR_MAX];
+	L3BfscSensorWsInfo_t	sensorWs[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
 	UINT32 	wsRrSearchStart; //搜索算法从哪一个搜索系数开始
 	UINT8  	wsValueNbrFree;  	//空闲的0值秤盘数量
 	UINT8   wsValueNbrWeight;	//空闲有值的秤盘数量
 	UINT8 	wsValueNbrTtt;  	//待出料有值秤盘数量
 	UINT8 	wsValueNbrTgu;  	//待出料有值秤盘数量
-	UINT8 	wsBitmap[HCU_BFSC_SENSOR_WS_NBR_MAX];  //组合出的秤盘标示
+	UINT8 	wsBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];  //组合出的秤盘标示
 	UINT32	wsTotalncomingCnt;  		//总共称重和计料数量
 	UINT32	wsTotalCombSucTimes;  		//总共成功素搜到目标的次数
 	UINT32	wsTotalCombOutMatCnt;		//总共出料的数量

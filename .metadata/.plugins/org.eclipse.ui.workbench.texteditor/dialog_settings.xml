@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="0x3B" key="selection"/>
+		<item value="HCU_" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="0x3B"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_event_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_value_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_req_t"/>
-			<item value="StrIe_HUITP_IEID_uni_com_req_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_cmd_t"/>
-			<item value="HUITP_IEID_uni_scale_weight_req"/>
+			<item value="HCU_"/>
+			<item value="msg_struct_uicomm_l3bfsc_param_set_result_t"/>
+			<item value="MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ"/>
+			<item value="MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ"/>
+			<item value="MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT"/>
+			<item value="MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM"/>
+			<item value="MSG_ID_CANITFLEO_DATA_REPORT"/>
+			<item value="MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ"/>
 		</list>
 		<list key="replacehistory">
 			<item value="//定义后台SW_SWM的地址"/>

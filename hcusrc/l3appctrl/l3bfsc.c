@@ -141,18 +141,18 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//秤盘数据表单控制表初始化
 	memset(&zHcuL3BfscGenCtrlTable, 0, sizeof(L3BfscGenCtrlTable_t));
 	int i=0;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorWsId = i;
 	}
 	zHcuL3BfscGenCtrlTable.minWsNbr = 1;
-	zHcuL3BfscGenCtrlTable.minWsNbr = HCU_BFSC_SENSOR_WS_NBR_MAX;
+	zHcuL3BfscGenCtrlTable.minWsNbr = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 
 	//为搜索空间申请内存
-	zHcuSearchSpaceTotalNbr = pow(2, HCU_BFSC_SENSOR_WS_NBR_MAX);
-	zHcuSearchCoefficientPointer = malloc(zHcuSearchSpaceTotalNbr * HCU_BFSC_SENSOR_WS_NBR_MAX * sizeof(UINT8));
+	zHcuSearchSpaceTotalNbr = pow(2, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+	zHcuSearchCoefficientPointer = malloc(zHcuSearchSpaceTotalNbr * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX * sizeof(UINT8));
 	if (zHcuSearchCoefficientPointer == NULL)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Init parameter error!\n");
-	memset(zHcuSearchCoefficientPointer, 0, zHcuSearchSpaceTotalNbr * HCU_BFSC_SENSOR_WS_NBR_MAX  * sizeof(UINT8));
+	memset(zHcuSearchCoefficientPointer, 0, zHcuSearchSpaceTotalNbr * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX  * sizeof(UINT8));
 
 	//初始化搜索系数表
 	UINT8 *p = NULL;
@@ -160,12 +160,12 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	UINT32 k=0, t=0;
 	UINT32 kUp = 0;
 	UINT32 tUp = 0, Index=0;
-	for (j=0; j<HCU_BFSC_SENSOR_WS_NBR_MAX; j++){
-		kUp = pow(2, HCU_BFSC_SENSOR_WS_NBR_MAX-j-1);
+	for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
+		kUp = pow(2, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-j-1);
 		for (k=0; k< kUp; k++){
 			tUp = pow(2, j);
 			for (t=0; t<tUp; t++){
-				Index = j + (k * pow(2, j+1) + t) * HCU_BFSC_SENSOR_WS_NBR_MAX;
+				Index = j + (k * pow(2, j+1) + t) * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 				*(zHcuSearchCoefficientPointer + Index) = 1;
 			}
 		}
@@ -176,8 +176,8 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	for (i=0; i<zHcuSearchSpaceTotalNbr; i++){
 		//这个长度是按照HCU_BFSC_SENSOR_WS_NBR_MAX=12来固定设定的，如果改变，改参数打印函数需要从新改变，不然会导致程序死机
 		sprintf(targetStr, "L3BFSC: Matrix Table[%d]=[", i);
-		for (j=0; j<HCU_BFSC_SENSOR_WS_NBR_MAX; j++){
-			sprintf(tStr, "%d", *(p+HCU_BFSC_SENSOR_WS_NBR_MAX*i+j));
+		for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
+			sprintf(tStr, "%d", *(p+HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX*i+j));
 			strcat(targetStr, tStr);
 		}
 		strcat(targetStr, "]\n");
@@ -298,7 +298,7 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 	memcpy(&rcv, param_ptr, param_len);
 
 	//入参检查
-	if ((rcv.sensorid > HCU_BFSC_SENSOR_WS_NBR_MAX) || (rcv.sensorWsValue > (zHcuL3BfscGenCtrlTable.targetValue + zHcuL3BfscGenCtrlTable.targetUpLimit))){
+	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (zHcuL3BfscGenCtrlTable.targetValue + zHcuL3BfscGenCtrlTable.targetUpLimit))){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
 	}
 
@@ -348,7 +348,7 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 
 	//如果达到了条件，可以转移：这里的条件是TTT和TGU必须完成
 	func_l3bfsc_cacluate_sensor_ws_valid_value();
-	if ((zHcuL3BfscGenCtrlTable.wsValueNbrFree + zHcuL3BfscGenCtrlTable.wsValueNbrWeight) == HCU_BFSC_SENSOR_WS_NBR_MAX){
+	if ((zHcuL3BfscGenCtrlTable.wsValueNbrFree + zHcuL3BfscGenCtrlTable.wsValueNbrWeight) == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 		//停止周期定时器
 		ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
@@ -506,7 +506,7 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 	snd.optid = rcv.optid;
 	snd.optpar = rcv.optopr;
 	//这里如此设置，表示是为了全局所有的传感器
-	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
+	snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
@@ -568,7 +568,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	if ((rcv.sensorid > HCU_BFSC_SENSOR_WS_NBR_MAX) || (rcv.sensorWsValue > (zHcuL3BfscGenCtrlTable.targetValue + zHcuL3BfscGenCtrlTable.targetUpLimit))){
+	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (zHcuL3BfscGenCtrlTable.targetValue + zHcuL3BfscGenCtrlTable.targetUpLimit))){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 
@@ -580,7 +580,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		zHcuL3BfscGenCtrlTable.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
 		if (zHcuL3BfscGenCtrlTable.wsValueNbrFree>0) zHcuL3BfscGenCtrlTable.wsValueNbrFree--;
 		zHcuL3BfscGenCtrlTable.wsValueNbrWeight++;
-		zHcuL3BfscGenCtrlTable.wsValueNbrWeight = zHcuL3BfscGenCtrlTable.wsValueNbrWeight % (HCU_BFSC_SENSOR_WS_NBR_MAX + 1);
+		zHcuL3BfscGenCtrlTable.wsValueNbrWeight = zHcuL3BfscGenCtrlTable.wsValueNbrWeight % (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + 1);
 		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Normally status!\n");
 	}
 	//重复来临
@@ -593,7 +593,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		zHcuL3BfscGenCtrlTable.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
 		zHcuL3BfscGenCtrlTable.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
 		zHcuL3BfscGenCtrlTable.wsValueNbrWeight++;
-		zHcuL3BfscGenCtrlTable.wsValueNbrWeight = zHcuL3BfscGenCtrlTable.wsValueNbrWeight % (HCU_BFSC_SENSOR_WS_NBR_MAX + 1);
+		zHcuL3BfscGenCtrlTable.wsValueNbrWeight = zHcuL3BfscGenCtrlTable.wsValueNbrWeight % (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + 1);
 		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Error recover status!\n");
 	}
 	//错误来临：进入ERROR_INQ流程 (TTT/TGU或者其它状态）
@@ -645,7 +645,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//是否要进入搜索
 	if (zHcuL3BfscGenCtrlTable.wsValueNbrWeight >= zHcuL3BfscGenCtrlTable.minWsNbr){
 		if (func_l3bfsc_ws_sensor_search_combination() == -1){
-			if (zHcuL3BfscGenCtrlTable.wsValueNbrWeight == HCU_BFSC_SENSOR_WS_NBR_MAX){
+			if (zHcuL3BfscGenCtrlTable.wsValueNbrWeight == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 				//得到抛弃的传感器
 				func_l3bfsc_ws_sensor_search_give_up();
 
@@ -654,7 +654,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				msg_struct_l3bfsc_can_ws_give_up_t snd1;
 				memset(&snd1, 0, sizeof(msg_struct_l3bfsc_can_ws_give_up_t));
 				snd1.length = sizeof(msg_struct_l3bfsc_can_ws_give_up_t);
-				memcpy(snd1.sensorBitmap, zHcuL3BfscGenCtrlTable.wsBitmap, HCU_BFSC_SENSOR_WS_NBR_MAX);
+				memcpy(snd1.sensorBitmap, zHcuL3BfscGenCtrlTable.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
 				ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_GIVE_UP, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd1, snd1.length);
 				if (ret == FAILURE){
 					HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
@@ -664,7 +664,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				char targetStr[100];
 				char tStr[10];
 				sprintf(targetStr, "L3BFSC: Send out TGU_OUT bitmap [%d]=[", zHcuL3BfscGenCtrlTable.wsValueNbrTgu);
-				for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+				for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 					sprintf(tStr, "%d", *(zHcuL3BfscGenCtrlTable.wsBitmap+i));
 					strcat(targetStr, tStr);
 				}
@@ -693,7 +693,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			msg_struct_l3bfsc_can_ws_comb_out_t snd2;
 			memset(&snd2, 0, sizeof(msg_struct_l3bfsc_can_ws_comb_out_t));
 			snd2.length = sizeof(msg_struct_l3bfsc_can_ws_comb_out_t);
-			memcpy(snd2.sensorBitmap, zHcuL3BfscGenCtrlTable.wsBitmap, HCU_BFSC_SENSOR_WS_NBR_MAX);
+			memcpy(snd2.sensorBitmap, zHcuL3BfscGenCtrlTable.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
 			snd2.combnbr = zHcuL3BfscGenCtrlTable.wsValueNbrTtt;
 			ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_COMB_OUT, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd2, snd2.length);
 			if (ret == FAILURE){
@@ -704,7 +704,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			char targetStr[100];
 			char tStr[10];
 			sprintf(targetStr, "L3BFSC: Send out TTT_OUT bitmap [%d]=[", zHcuL3BfscGenCtrlTable.wsValueNbrTtt);
-			for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+			for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 				sprintf(tStr, "%d", *(zHcuL3BfscGenCtrlTable.wsBitmap+i));
 				strcat(targetStr, tStr);
 			}
@@ -748,7 +748,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	if (rcv.sensorid >= HCU_BFSC_SENSOR_WS_NBR_MAX){
+	if (rcv.sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
 	}
 
@@ -766,7 +766,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//判定是否是最后一个传感器返回
-	if (zHcuL3BfscGenCtrlTable.wsValueNbrFree == HCU_BFSC_SENSOR_WS_NBR_MAX){
+	if (zHcuL3BfscGenCtrlTable.wsValueNbrFree == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 		//停止定时器
 		ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_INIT_FB_WAIT, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
@@ -803,8 +803,8 @@ OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * 
 	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_data_report_t);
 	snd.cmdid = L3CI_bfsc_comb_scale;
 	snd.optid = L3PO_bfsc_data_report;
-	snd.sensorNbr = HCU_BFSC_SENSOR_WS_NBR_MAX;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	snd.sensorNbr = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		snd.sensorWsValue[i] = rcv.sensorWsValue[i];
 	}
 	snd.timestamp = time(0);
@@ -841,18 +841,18 @@ OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * 
 	zHcuL3BfscGenCtrlTable.targetValue = rcv.targetValue;
 	zHcuL3BfscGenCtrlTable.targetUpLimit = rcv.targetUpLimit;
 	if (rcv.minWsNbr < 1) zHcuL3BfscGenCtrlTable.minWsNbr = 1;
-	else if (rcv.minWsNbr > HCU_BFSC_SENSOR_WS_NBR_MAX) zHcuL3BfscGenCtrlTable.minWsNbr = rcv.minWsNbr % (HCU_BFSC_SENSOR_WS_NBR_MAX+1); //不能超过秤盘最大值
+	else if (rcv.minWsNbr > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) zHcuL3BfscGenCtrlTable.minWsNbr = rcv.minWsNbr % (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX+1); //不能超过秤盘最大值
 	else zHcuL3BfscGenCtrlTable.minWsNbr = rcv.minWsNbr;
 
 	if (rcv.maxWsNbr < 1) zHcuL3BfscGenCtrlTable.maxWsNbr = 1;
-	else if (rcv.minWsNbr > HCU_BFSC_SENSOR_WS_NBR_MAX) zHcuL3BfscGenCtrlTable.maxWsNbr = rcv.maxWsNbr % (HCU_BFSC_SENSOR_WS_NBR_MAX+1); //不能超过秤盘最大值
+	else if (rcv.minWsNbr > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) zHcuL3BfscGenCtrlTable.maxWsNbr = rcv.maxWsNbr % (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX+1); //不能超过秤盘最大值
 	else zHcuL3BfscGenCtrlTable.maxWsNbr = rcv.maxWsNbr;
 
 	//设置完成后，发送初始化命令给各个传感器
 	msg_struct_l3bfsc_can_ws_init_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_ws_init_req_t));
 	snd.length = sizeof(msg_struct_l3bfsc_can_ws_init_req_t);
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.wsBitmap[i] = 1;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++) snd.wsBitmap[i] = 1;
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_INIT_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
@@ -882,7 +882,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	UINT32 WsSensorStart = 0;
 	UINT32 i=0, j=0, t=0;
 	UINT32 result;
-	UINT8 resBitmap[HCU_BFSC_SENSOR_WS_NBR_MAX];
+	UINT8 resBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
 
 	//选取起始位置
 	WsSensorStart = zHcuL3BfscGenCtrlTable.wsRrSearchStart % zHcuSearchSpaceTotalNbr;
@@ -891,9 +891,9 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	for (i=WsSensorStart; i< (zHcuSearchSpaceTotalNbr + WsSensorStart); i++){
 		result = 0;
 		memset(resBitmap, 0, sizeof(resBitmap));
-		for (j=0; j<HCU_BFSC_SENSOR_WS_NBR_MAX; j++){
+		for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
 			if (zHcuL3BfscGenCtrlTable.sensorWs[j].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
-				t = ((i%zHcuSearchSpaceTotalNbr) * HCU_BFSC_SENSOR_WS_NBR_MAX + j);// % Cycle;
+				t = ((i%zHcuSearchSpaceTotalNbr) * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + j);// % Cycle;
 				result += zHcuL3BfscGenCtrlTable.sensorWs[j].sensorValue * (*(zHcuSearchCoefficientPointer + t));
 				if (*(zHcuSearchCoefficientPointer + t) == 1) resBitmap[j] = 1;
 			}
@@ -904,7 +904,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 			zHcuL3BfscGenCtrlTable.wsRrSearchStart = ((i+1) % zHcuSearchSpaceTotalNbr);
 			memcpy(zHcuL3BfscGenCtrlTable.wsBitmap, resBitmap, sizeof(resBitmap));
 			zHcuL3BfscGenCtrlTable.wsValueNbrTtt = 0;
-			for (j = 0; j<HCU_BFSC_SENSOR_WS_NBR_MAX; j++){
+			for (j = 0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
 				zHcuL3BfscGenCtrlTable.wsValueNbrTtt += zHcuL3BfscGenCtrlTable.wsBitmap[j];
 			}
 			i = i % zHcuSearchSpaceTotalNbr;
@@ -921,8 +921,8 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 void func_l3bfsc_ws_sensor_search_give_up(void)
 {
 	UINT32 i=0;
-	memset(zHcuL3BfscGenCtrlTable.wsBitmap, 0, HCU_BFSC_SENSOR_WS_NBR_MAX);
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	memset(zHcuL3BfscGenCtrlTable.wsBitmap, 0, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		if (((rand()%11) < 6) &&(zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB)){
 			zHcuL3BfscGenCtrlTable.wsBitmap[i]=1;
 			zHcuL3BfscGenCtrlTable.wsValueNbrTgu++;
@@ -935,7 +935,7 @@ void func_l3bfsc_ws_sensor_search_give_up(void)
 void func_l3bfsc_cacluate_sensor_ws_valid_value(void)
 {
 	int i=0, resFree = 0, resWeight=0, resTtt =0, resTgu = 0;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++)
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++)
 	{
 		if (zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY)
 			resFree++;
@@ -963,7 +963,7 @@ OPSTAT func_l3bfsc_time_out_ws_init_req_process(void)
 
 	//先清掉上一次可能回复的数量和状态
 	zHcuL3BfscGenCtrlTable.wsValueNbrFree = 0;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++){
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		zHcuL3BfscGenCtrlTable.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INVALID;
 	}
 
@@ -971,7 +971,7 @@ OPSTAT func_l3bfsc_time_out_ws_init_req_process(void)
 	msg_struct_l3bfsc_can_ws_init_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_ws_init_req_t));
 	snd.length = sizeof(msg_struct_l3bfsc_can_ws_init_req_t);
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.wsBitmap[i] = 1;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++) snd.wsBitmap[i] = 1;
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_INIT_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
@@ -997,8 +997,8 @@ OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void)
 	msg_struct_l3bfsc_can_error_inq_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
 	snd.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
-	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
+	snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
@@ -1029,8 +1029,8 @@ OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void)
 	msg_struct_l3bfsc_can_error_inq_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
 	snd.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
-	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
+	snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
@@ -1055,8 +1055,8 @@ OPSTAT func_l3bfsc_time_out_error_scan_process(void)
 	msg_struct_l3bfsc_can_error_inq_cmd_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t));
 	snd.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
-	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
+	snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++) snd.sensorBitmap[i] = 1;
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
@@ -1076,8 +1076,8 @@ OPSTAT func_l3bfsc_time_out_period_read_process(void)
 	msg_struct_l3bfsc_can_ws_read_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_ws_read_req_t));
 	snd.length = sizeof(msg_struct_l3bfsc_can_ws_read_req_t);
-	snd.sensorid = HCU_BFSC_SENSOR_WS_NBR_MAX;
-	for (i=0; i<HCU_BFSC_SENSOR_WS_NBR_MAX; i++) snd.wsBitmap[i] = 1;
+	snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++) snd.wsBitmap[i] = 1;
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_WS_READ_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
