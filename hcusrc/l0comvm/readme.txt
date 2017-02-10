@@ -12,6 +12,13 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 
+
+//= ZJL, 2017 Feb.10, CURRENT_SW_DELIVERY 157=>BFSC项目
+=完成BFSC HUITP的消息编写
+
+
+
+
 //= ZJL, 2017 Feb.9, CURRENT_SW_DELIVERY 156=>BFSC项目
 = 编译技术保证系统BFSC中配置的秤盘数量小于HUITP的传输能力
 =尝试增加公共FSM状态，简化程序设计
