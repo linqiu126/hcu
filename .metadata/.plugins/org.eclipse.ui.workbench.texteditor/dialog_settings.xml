@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="TIME_OUT" key="selection"/>
+		<item value="0x3B" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="time_out"/>
-			<item value="stop"/>
-			<item value="Camera"/>
-			<item value="TASK_ID_CAMERA"/>
-			<item value="CAMERA"/>
-			<item value="fsm_l3bfsc_restart"/>
-			<item value="fsm_l3bfsc_time_out"/>
-			<item value="MAX_TASK_NUM_IN_ONE_HCU"/>
+			<item value="0x3B"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_event_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_value_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_req_t"/>
+			<item value="StrIe_HUITP_IEID_uni_com_req_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_cmd_t"/>
+			<item value="HUITP_IEID_uni_scale_weight_req"/>
 		</list>
 		<list key="replacehistory">
 			<item value="//定义后台SW_SWM的地址"/>
