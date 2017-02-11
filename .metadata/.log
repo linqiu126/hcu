@@ -1798,15 +1798,26 @@ java.io.FileNotFoundException: /home/hitpony/workspace/hcu/.metadata/.plugins/or
 	at org.eclipse.core.internal.resources.Workspace.save(Workspace.java:2270)
 	at org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor$4.run(IDEWorkbenchAdvisor.java:453)
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+<<<<<<< HEAD
 !SESSION 2017-02-11 16:16:39.088 -----------------------------------------------
+=======
+!SESSION 2017-02-11 18:48:55.960 -----------------------------------------------
+>>>>>>> feature
 eclipse.buildId=4.5.1.M20150904-0015
 java.version=1.8.0_45
 java.vendor=Oracle Corporation
 BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=zh_CN
+<<<<<<< HEAD
 Framework arguments:  -product org.eclipse.epp.package.cpp.product
 Command-line arguments:  -os linux -ws gtk -arch x86 -product org.eclipse.epp.package.cpp.product
 
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:17:04.103
+=======
+Framework arguments:  -product org.eclipse.epp.package.cpp.product -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86 -product org.eclipse.epp.package.cpp.product -data file:/home/hitpony/workspace/hcu/ -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:56:22.039
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -1824,7 +1835,17 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:17:04.806
+=======
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:56:25.717
+!MESSAGE Indexed 'PrjAqycG10' (96 sources, 366 headers) in 11.1 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:56:48.986
+!MESSAGE Indexed 'hcu_obsolete' (91 sources, 353 headers) in 7.75 sec: 31,402 declarations; 114,146 references; 0 unresolved inclusions; 36 syntax errors; 9,987 unresolved names (6.4%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:57:14.121
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -1842,7 +1863,14 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:17:39.540
+=======
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:57:16.949
+!MESSAGE Indexed 'PrjAqycG20' (96 sources, 366 headers) in 8.03 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:57:35.950
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -1857,6 +1885,7 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
 	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
 	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+<<<<<<< HEAD
 	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
 	at org.eclipse.cdt.codan.internal.core.model.CodanMarkerProblemReporter.reconcileMarkers(CodanMarkerProblemReporter.java:185)
 	at org.eclipse.cdt.codan.internal.core.model.CodanMarkerProblemReporter.done(CodanMarkerProblemReporter.java:177)
@@ -1876,6 +1905,15 @@ java.lang.NullPointerException
 	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
 
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:17:41.866
+=======
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:57:38.837
+!MESSAGE Indexed 'PrjBfsc' (97 sources, 366 headers) in 8.57 sec: 37,454 declarations; 129,773 references; 0 unresolved inclusions; 0 syntax errors; 16 unresolved names (0.0096%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:57:54.717
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -1890,6 +1928,7 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
 	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
 	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+<<<<<<< HEAD
 	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
 	at org.eclipse.cdt.codan.internal.core.model.CodanMarkerProblemReporter.deleteProblems(CodanMarkerProblemReporter.java:114)
 	at org.eclipse.cdt.codan.internal.core.model.CodanMarkerProblemReporter.deleteProblems(CodanMarkerProblemReporter.java:276)
@@ -1910,6 +1949,15 @@ java.lang.NullPointerException
 	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
 
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:17:45.218
+=======
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:57:58.113
+!MESSAGE Indexed 'PrjCxGlacm' (96 sources, 366 headers) in 9.71 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:58:13.417
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -1924,6 +1972,7 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
 	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
 	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+<<<<<<< HEAD
 	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
 	at org.eclipse.cdt.codan.internal.core.model.CodanMarkerProblemReporter.reconcileMarkers(CodanMarkerProblemReporter.java:185)
 	at org.eclipse.cdt.codan.internal.core.model.CodanMarkerProblemReporter.done(CodanMarkerProblemReporter.java:177)
@@ -1943,6 +1992,15 @@ java.lang.NullPointerException
 	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
 
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:17:49.502
+=======
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:58:16.430
+!MESSAGE Indexed 'PrjCxIlc' (96 sources, 366 headers) in 9.1 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:58:25.738
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -1957,6 +2015,7 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
 	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
 	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+<<<<<<< HEAD
 	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
 	at org.eclipse.cdt.codan.internal.core.model.CodanMarkerProblemReporter.deleteProblems(CodanMarkerProblemReporter.java:114)
 	at org.eclipse.cdt.codan.internal.core.model.CodanMarkerProblemReporter.deleteProblems(CodanMarkerProblemReporter.java:276)
@@ -1977,6 +2036,15 @@ java.lang.NullPointerException
 	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:206)
 
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:17:50.506
+=======
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:58:28.663
+!MESSAGE Indexed 'PrjGqybG40' (96 sources, 366 headers) in 8.31 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 0 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:58:47.069
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -1991,6 +2059,7 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
 	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
 	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+<<<<<<< HEAD
 	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
 	at org.eclipse.ui.actions.WorkspaceModifyOperation.run(WorkspaceModifyOperation.java:130)
 	at org.eclipse.ui.internal.editors.text.WorkspaceOperationRunner.run(WorkspaceOperationRunner.java:75)
@@ -2221,6 +2290,14 @@ java.lang.StringIndexOutOfBoundsException: String index out of range: -7
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:08.413
+=======
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:58:50.002
+!MESSAGE Indexed 'PrjNbiotHpmQg' (96 sources, 366 headers) in 8.75 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:59:09.415
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -2235,11 +2312,88 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
 	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
 	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:59:12.234
+!MESSAGE Indexed 'PrjNbiotLpmCj' (96 sources, 366 headers) in 8.84 sec: 37,275 declarations; 127,298 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:59:32.347
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:59:35.467
+!MESSAGE Indexed 'PrjOpwlOtdr' (96 sources, 366 headers) in 10 sec: 37,275 declarations; 127,298 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:59:57.068
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:59:59.935
+!MESSAGE Indexed 'PrjTbswrG30' (96 sources, 366 headers) in 8.93 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:00:18.371
+>>>>>>> feature
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+<<<<<<< HEAD
 	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
 	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:16.548
+=======
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 19:00:21.115
+!MESSAGE Indexed 'PrjTestMode' (95 sources, 365 headers) in 8.93 sec: 37,219 declarations; 126,998 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 19:00:36.774
+!MESSAGE Indexed 'TestHellopWorld' (1 sources, 112 headers) in 0.665 sec: 2,848 declarations; 4,121 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:06.851
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -2258,7 +2412,11 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:18.519
+=======
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:08.727
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -2277,7 +2435,11 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:20.189
+=======
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:10.286
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -2296,7 +2458,11 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:25.048
+=======
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:15.202
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -2315,7 +2481,11 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:27.118
+=======
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:17.963
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -2334,7 +2504,11 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:34.281
+=======
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:24.144
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -2353,7 +2527,11 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:36.010
+=======
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:26.130
+>>>>>>> feature
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
 !STACK 0
 java.lang.NullPointerException
@@ -2372,7 +2550,11 @@ java.lang.NullPointerException
 	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2017-02-11 16:18:46.409
+=======
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2017-02-11 19:02:36.920
+>>>>>>> feature
 !MESSAGE String index out of range: -7
 !STACK 0
 java.lang.StringIndexOutOfBoundsException: String index out of range: -7
@@ -2427,7 +2609,11 @@ java.lang.StringIndexOutOfBoundsException: String index out of range: -7
 	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2017-02-11 16:18:46.415
+=======
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2017-02-11 19:02:36.928
+>>>>>>> feature
 !MESSAGE String index out of range: -7
 !STACK 0
 java.lang.StringIndexOutOfBoundsException: String index out of range: -7
@@ -2481,6 +2667,7 @@ java.lang.StringIndexOutOfBoundsException: String index out of range: -7
 	at org.eclipse.ui.actions.BuildAction$1.runInWorkspace(BuildAction.java:287)
 	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+<<<<<<< HEAD
 
 !ENTRY org.eclipse.core.resources 4 2 2017-02-11 16:18:46.692
 !MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
@@ -10498,3 +10685,5 @@ java.io.FileNotFoundException: /home/hitpony/workspace/hcu/.metadata/.plugins/or
 	at org.eclipse.core.internal.resources.Workspace.save(Workspace.java:2270)
 	at org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor$4.run(IDEWorkbenchAdvisor.java:453)
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+=======
+>>>>>>> feature
