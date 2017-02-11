@@ -1798,3 +1798,490 @@ java.io.FileNotFoundException: /home/hitpony/workspace/hcu/.metadata/.plugins/or
 	at org.eclipse.core.internal.resources.Workspace.save(Workspace.java:2270)
 	at org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor$4.run(IDEWorkbenchAdvisor.java:453)
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+!SESSION 2017-02-11 18:48:55.960 -----------------------------------------------
+eclipse.buildId=4.5.1.M20150904-0015
+java.version=1.8.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=zh_CN
+Framework arguments:  -product org.eclipse.epp.package.cpp.product -product org.eclipse.epp.package.cpp.product
+Command-line arguments:  -os linux -ws gtk -arch x86 -product org.eclipse.epp.package.cpp.product -data file:/home/hitpony/workspace/hcu/ -product org.eclipse.epp.package.cpp.product
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:56:22.039
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:56:25.717
+!MESSAGE Indexed 'PrjAqycG10' (96 sources, 366 headers) in 11.1 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:56:48.986
+!MESSAGE Indexed 'hcu_obsolete' (91 sources, 353 headers) in 7.75 sec: 31,402 declarations; 114,146 references; 0 unresolved inclusions; 36 syntax errors; 9,987 unresolved names (6.4%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:57:14.121
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:57:16.949
+!MESSAGE Indexed 'PrjAqycG20' (96 sources, 366 headers) in 8.03 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:57:35.950
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:57:38.837
+!MESSAGE Indexed 'PrjBfsc' (97 sources, 366 headers) in 8.57 sec: 37,454 declarations; 129,773 references; 0 unresolved inclusions; 0 syntax errors; 16 unresolved names (0.0096%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:57:54.717
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:57:58.113
+!MESSAGE Indexed 'PrjCxGlacm' (96 sources, 366 headers) in 9.71 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:58:13.417
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:58:16.430
+!MESSAGE Indexed 'PrjCxIlc' (96 sources, 366 headers) in 9.1 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:58:25.738
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:58:28.663
+!MESSAGE Indexed 'PrjGqybG40' (96 sources, 366 headers) in 8.31 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 0 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:58:47.069
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:58:50.002
+!MESSAGE Indexed 'PrjNbiotHpmQg' (96 sources, 366 headers) in 8.75 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:59:09.415
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:59:12.234
+!MESSAGE Indexed 'PrjNbiotLpmCj' (96 sources, 366 headers) in 8.84 sec: 37,275 declarations; 127,298 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:59:32.347
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:59:35.467
+!MESSAGE Indexed 'PrjOpwlOtdr' (96 sources, 366 headers) in 10 sec: 37,275 declarations; 127,298 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 18:59:57.068
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 18:59:59.935
+!MESSAGE Indexed 'PrjTbswrG30' (96 sources, 366 headers) in 8.93 sec: 37,275 declarations; 127,299 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:00:18.371
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:46)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 19:00:21.115
+!MESSAGE Indexed 'PrjTestMode' (95 sources, 365 headers) in 8.93 sec: 37,219 declarations; 126,998 references; 0 unresolved inclusions; 5 syntax errors; 16 unresolved names (0.0097%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2017-02-11 19:00:36.774
+!MESSAGE Indexed 'TestHellopWorld' (1 sources, 112 headers) in 0.665 sec: 2,848 declarations; 4,121 references; 0 unresolved inclusions; 0 syntax errors; 0 unresolved names (0%)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:06.851
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:08.727
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:10.286
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:15.202
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:17.963
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:24.144
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.resources 4 2 2017-02-11 19:02:26.130
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:379)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.checkLocalChanges(SystemTempFileListener.java:386)
+	at org.eclipse.rse.files.ui.resources.SystemTempFileListener.resourceChanged(SystemTempFileListener.java:218)
+	at org.eclipse.core.internal.events.NotificationManager$1.run(NotificationManager.java:299)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:289)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:152)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:373)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1470)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2250)
+	at org.eclipse.core.internal.events.NotificationManager$NotifyJob.run(NotificationManager.java:43)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2017-02-11 19:02:36.920
+!MESSAGE String index out of range: -7
+!STACK 0
+java.lang.StringIndexOutOfBoundsException: String index out of range: -7
+	at java.lang.String.substring(String.java:1919)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput$1LibFilter.accept(AdditionalInput.java:498)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput.findLibrary(AdditionalInput.java:532)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput.getDepLibs(AdditionalInput.java:467)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput.dependencyChanged(AdditionalInput.java:415)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput.needsRebuild(AdditionalInput.java:353)
+	at org.eclipse.cdt.managedbuilder.internal.core.InputType.needsRebuild(InputType.java:1674)
+	at org.eclipse.cdt.managedbuilder.internal.core.Tool.needsRebuild(Tool.java:3395)
+	at org.eclipse.cdt.managedbuilder.internal.core.ToolChain.needsRebuild(ToolChain.java:2043)
+	at org.eclipse.cdt.managedbuilder.internal.core.ToolChain.saveRebuildState(ToolChain.java:2073)
+	at org.eclipse.cdt.managedbuilder.internal.core.ToolChain.serialize(ToolChain.java:878)
+	at org.eclipse.cdt.managedbuilder.internal.core.FolderInfo.serialize(FolderInfo.java:393)
+	at org.eclipse.cdt.managedbuilder.internal.core.Configuration.serialize(Configuration.java:945)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.ConfigurationDataProvider.writeConfiguration(ConfigurationDataProvider.java:132)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.ConfigurationDataProvider.applyConfiguration(ConfigurationDataProvider.java:166)
+	at org.eclipse.cdt.internal.core.settings.model.CConfigurationDescriptionCache.applyData(CConfigurationDescriptionCache.java:187)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescription.applyDatas(CProjectDescription.java:216)
+	at org.eclipse.cdt.internal.core.settings.model.SetCProjectDescriptionOperation.executeOperation(SetCProjectDescriptionOperation.java:98)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.execute(CModelOperation.java:341)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.run(CModelOperation.java:607)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.runOperation(CModelOperation.java:638)
+	at org.eclipse.cdt.internal.core.settings.model.AbstractCProjectDescriptionStorage.setProjectDescription(AbstractCProjectDescriptionStorage.java:203)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionStorageManager.setProjectDescription(CProjectDescriptionStorageManager.java:149)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.setProjectDescription(CProjectDescriptionManager.java:885)
+	at org.eclipse.cdt.managedbuilder.internal.core.BuildSettingsUtil.checkApplyDescription(BuildSettingsUtil.java:211)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.updateCoreSettings(ManagedBuildManager.java:1574)
+	at org.eclipse.cdt.build.internal.core.scannerconfig.CfgDiscoveredPathManager$1.run(CfgDiscoveredPathManager.java:154)
+	at org.eclipse.cdt.internal.core.model.BatchOperation.executeOperation(BatchOperation.java:36)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.execute(CModelOperation.java:341)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.run(CModelOperation.java:607)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.cdt.core.model.CoreModel.run(CoreModel.java:1220)
+	at org.eclipse.cdt.core.model.CoreModel.run(CoreModel.java:1181)
+	at org.eclipse.cdt.build.internal.core.scannerconfig.CfgDiscoveredPathManager.updateCoreSettings(CfgDiscoveredPathManager.java:157)
+	at org.eclipse.cdt.build.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:125)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:734)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:205)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:245)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:300)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:303)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:359)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:382)
+	at org.eclipse.core.internal.resources.Workspace.buildInternal(Workspace.java:486)
+	at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:405)
+	at org.eclipse.ui.actions.BuildAction$1.runInWorkspace(BuildAction.java:287)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.cdt.managedbuilder.core 4 0 2017-02-11 19:02:36.928
+!MESSAGE String index out of range: -7
+!STACK 0
+java.lang.StringIndexOutOfBoundsException: String index out of range: -7
+	at java.lang.String.substring(String.java:1919)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput$1LibFilter.accept(AdditionalInput.java:498)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput.findLibrary(AdditionalInput.java:532)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput.getDepLibs(AdditionalInput.java:467)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput.dependencyChanged(AdditionalInput.java:415)
+	at org.eclipse.cdt.managedbuilder.internal.core.AdditionalInput.needsRebuild(AdditionalInput.java:353)
+	at org.eclipse.cdt.managedbuilder.internal.core.InputType.needsRebuild(InputType.java:1674)
+	at org.eclipse.cdt.managedbuilder.internal.core.Tool.needsRebuild(Tool.java:3395)
+	at org.eclipse.cdt.managedbuilder.internal.core.ToolChain.needsRebuild(ToolChain.java:2043)
+	at org.eclipse.cdt.managedbuilder.internal.core.ToolChain.saveRebuildState(ToolChain.java:2073)
+	at org.eclipse.cdt.managedbuilder.internal.core.ToolChain.serialize(ToolChain.java:878)
+	at org.eclipse.cdt.managedbuilder.internal.core.FolderInfo.serialize(FolderInfo.java:393)
+	at org.eclipse.cdt.managedbuilder.internal.core.Configuration.serialize(Configuration.java:945)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.ConfigurationDataProvider.writeConfiguration(ConfigurationDataProvider.java:132)
+	at org.eclipse.cdt.managedbuilder.internal.dataprovider.ConfigurationDataProvider.applyConfiguration(ConfigurationDataProvider.java:166)
+	at org.eclipse.cdt.internal.core.settings.model.CConfigurationDescriptionCache.applyData(CConfigurationDescriptionCache.java:187)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescription.applyDatas(CProjectDescription.java:216)
+	at org.eclipse.cdt.internal.core.settings.model.SetCProjectDescriptionOperation.executeOperation(SetCProjectDescriptionOperation.java:98)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.execute(CModelOperation.java:341)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.run(CModelOperation.java:607)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.runOperation(CModelOperation.java:638)
+	at org.eclipse.cdt.internal.core.settings.model.AbstractCProjectDescriptionStorage.setProjectDescription(AbstractCProjectDescriptionStorage.java:203)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionStorageManager.setProjectDescription(CProjectDescriptionStorageManager.java:149)
+	at org.eclipse.cdt.internal.core.settings.model.CProjectDescriptionManager.setProjectDescription(CProjectDescriptionManager.java:885)
+	at org.eclipse.cdt.managedbuilder.internal.core.BuildSettingsUtil.checkApplyDescription(BuildSettingsUtil.java:211)
+	at org.eclipse.cdt.managedbuilder.core.ManagedBuildManager.updateCoreSettings(ManagedBuildManager.java:1574)
+	at org.eclipse.cdt.build.internal.core.scannerconfig.CfgDiscoveredPathManager$1.run(CfgDiscoveredPathManager.java:154)
+	at org.eclipse.cdt.internal.core.model.BatchOperation.executeOperation(BatchOperation.java:36)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.execute(CModelOperation.java:341)
+	at org.eclipse.cdt.internal.core.model.CModelOperation.run(CModelOperation.java:607)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.cdt.core.model.CoreModel.run(CoreModel.java:1220)
+	at org.eclipse.cdt.core.model.CoreModel.run(CoreModel.java:1181)
+	at org.eclipse.cdt.build.internal.core.scannerconfig.CfgDiscoveredPathManager.updateCoreSettings(CfgDiscoveredPathManager.java:157)
+	at org.eclipse.cdt.build.core.scannerconfig.ScannerConfigBuilder.build(ScannerConfigBuilder.java:125)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:734)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:205)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:245)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:300)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:303)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:359)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:382)
+	at org.eclipse.core.internal.resources.Workspace.buildInternal(Workspace.java:486)
+	at org.eclipse.core.internal.resources.Workspace.build(Workspace.java:405)
+	at org.eclipse.ui.actions.BuildAction$1.runInWorkspace(BuildAction.java:287)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
