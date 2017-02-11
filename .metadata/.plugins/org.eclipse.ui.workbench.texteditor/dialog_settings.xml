@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="si[SENSOR_ID_GPIOTOXICGASZP01VOC]" key="selection"/>
+		<item value="msg_struct_l3bfsc_cloudvela_data_report_t" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="i2cTempSht20"/>
-			<item value="gpioToxicgasZp01voc"/>
-			<item value="gpioAlcoholMq3alco"/>
-			<item value="gpioToxicgasMq135"/>
-			<item value="gpioHumidDht11"/>
-			<item value="gpioTempDht11"/>
-			<item value="spsHchoZe08ch2o"/>
-			<item value="spsPm25Sharp"/>
+			<item value="msg_struct_l3bfsc_cloudvela_data_report_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_statistic_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_cmd_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_event_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_value_t"/>
+			<item value="0x3B"/>
+			<item value="0x3"/>
 		</list>
 		<list key="replacehistory">
 			<item value="si[SENSOR_ID_GPIOTOXICGASZP01VOC]"/>

@@ -823,6 +823,14 @@ typedef struct  sensor_toxicgas_zp01voc_data_element //
 }sensor_toxicgas_zp01voc_data_element_t;
 
 //BFSC的汇报数据内容
+#define IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX 20
+typedef struct msgie_struct_bh_com_head
+{
+	char  srcUser[IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX];
+	char  destUser[IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX];
+	UINT32 timeStamp;
+	UINT32 funcFlag;
+}msgie_struct_bh_com_head_t;
 typedef struct msgie_struct_bfsc_scale_weight_sta_element
 {
 	UINT32 combTimes;		//组合总次数
@@ -2163,10 +2171,6 @@ typedef struct msg_struct_canitfleo_data_report
  *                                                                                    *
  *************************************************************************************/
 //BFSC/SCALE_WEIGHT组合秤
-
-
-
-
 //MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
 #define HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR 20
 typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
@@ -2222,83 +2226,122 @@ typedef struct msg_struct_cloudvela_l3bfsc_data_req
 {
 	UINT8  baseReq;
 	UINT8  reqType;
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_cloudvela_l3bfsc_data_req_t;
+//reqType -> StrIe_HUITP_IEID_uni_scale_weight_req_t.reqType (HUITP.H)
 
 //MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
 typedef struct msg_struct_l3bfsc_cloudvela_data_resp
 {
-
+	UINT8  baseResp;
+	UINT8  type;			//数据汇报的类型
+	UINT8  dataFormat;
+	UINT8  snrCfgNbrMax;  	//系统配置的称重传感器最大数
+	UINT32 snrUsedBitmap;  	//汇报哪些称重传感器对应的数据
+	UINT32 snrValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	msgie_struct_bfsc_scale_weight_sta_element_t sta;
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_data_resp_t;
+//type -> StrIe_HUITP_IEID_uni_scale_weight_req_t.reqType (HUITP.H)
 
 //MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,
 typedef struct msg_struct_l3bfsc_cloudvela_data_report
 {
-	UINT8  cmdid;
-	UINT8  eqpid;
-	UINT8  optid;
-	UINT8  optpar;
+	UINT8  baseReport;
+	UINT8  type;			//数据汇报的类型
 	UINT8  dataFormat;
-	UINT8  sensorNbr;
-	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 timestamp;
+	UINT8  snrCfgNbrMax;  	//系统配置的称重传感器最大数
+	UINT32 snrUsedBitmap;  	//汇报哪些称重传感器对应的数据
+	UINT32 snrValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	msgie_struct_bfsc_scale_weight_sta_element_t sta;
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_data_report_t;
+//type -> StrIe_HUITP_IEID_uni_scale_weight_req_t.reqType (HUITP.H)
 
 //MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,
 typedef struct msg_struct_cloudvela_l3bfsc_data_confirm
 {
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_cloudvela_l3bfsc_data_confirm_t;
 
 //MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,
+#define HCU_SYSMSG_SCALE_WEIGHT_EVENT_USER_NAME_MAX_LEN 20
 typedef struct msg_struct_l3bfsc_cloudvela_event_report
 {
+	UINT8  baseReport;
+	UINT8  eventType;
+	UINT8  sensorId;
+	UINT16 eventValue;
+	char   userName[HCU_SYSMSG_SCALE_WEIGHT_EVENT_USER_NAME_MAX_LEN];
+	UINT16 cause;
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_event_report_t;
+//eventType -> StrIe_HUITP_IEID_uni_scale_weight_event_t.eventType (HUITP.H)
 
 //MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,
 typedef struct msg_struct_cloudvela_l3bfsc_event_confirm
 {
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_cloudvela_l3bfsc_event_confirm_t;
 
 //MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
 typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
 {
-	UINT8  cmdid;
-	UINT8  eqpid;
-	UINT8  optid;
-	UINT8  optopr;
-	UINT32 timestamp;
+	UINT8  baseReq;
+	UINT8  scaleWeightCmd;
+	UINT8  workMode;
+	UINT8  scaleWeightNbr;  		//配置数量
+	UINT32 staStartTime;  			//24小时之内，哪个时间作为统计的起点
+	UINT32 staReportDuration;     	//统计报告周期
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_cloudvela_l3bfsc_cmd_req_t;
+//scaleWeightCmd => StrIe_HUITP_IEID_uni_scale_weight_cmd_t.scaleWeightCmd (HUITP.H)
+//workMode=>  StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t(HUITP.H)
 
 //MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
 typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
 {
-	UINT8  cmdid;
-	UINT8  eqpid;
-	UINT8  optid;
-	UINT8  optpar;
-	UINT32 modbusVal;
-	UINT8 dataFormat;
-	UINT32 timestamp;
+	UINT8  baseResp;
+	UINT8  scaleWeightCmd;
+	UINT8  workMode;
+	UINT8  scaleWeightNbr;  		//配置数量
+	UINT32 staStartTime;  			//24小时之内，哪个时间作为统计的起点
+	UINT32 staReportDuration;     	//统计报告周期
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_cmd_resp_t;
+//scaleWeightCmd => StrIe_HUITP_IEID_uni_scale_weight_cmd_t.scaleWeightCmd (HUITP.H)
+//workMode=>  StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t(HUITP.H)
 
 //MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
 typedef struct msg_struct_l3bfsc_cloudvela_statistic_report
 {
+	UINT8  baseReport;
+	UINT8  staRepType;
+	UINT8  dataFormat;
+	msgie_struct_bfsc_scale_weight_sta_element_t sta;
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_statistic_report_t;
+//staRepType=> StrIe_HUITP_IEID_uni_scale_weight_statistic_t(HUITP.H)
 
 //MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
 typedef struct msg_struct_cloudvela_l3bfsc_statistic_confirm
 {
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
 }msg_struct_cloudvela_l3bfsc_statistic_confirm_t;
+
 
 
 //UICOMM部分

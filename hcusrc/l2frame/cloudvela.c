@@ -1993,11 +1993,11 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 	memcpy(&rcv, param_ptr, param_len);
 
 	//参数检查
-	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
+/*	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
 		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
-	}
+	}*/
 
 	//发送数据给后台
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -2006,12 +2006,12 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
+/*		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
 				rcv.dataFormat, rcv.modbusVal, 0, NULL, rcv.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
-		}
+		}*/
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
@@ -2049,11 +2049,11 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 	memcpy(&rcv, param_ptr, param_len);
 
 	//参数检查
-	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
-		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
+//	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
+//		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
+//		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+//		return FAILURE;
+//	}
 
 	//发送数据给后台
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -2062,12 +2062,12 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据：这里引用了比较高潮的技巧，将传感器数组传递到目标
-		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
-				rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			return FAILURE;
-		}
+//		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
+//				rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
+//			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+//			return FAILURE;
+//		}
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);

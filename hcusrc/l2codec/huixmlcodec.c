@@ -21,7 +21,7 @@ extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 #if ((HUITP_MSG_BUF_WITH_HEAD_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) || (HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) ||\
 		(HUITP_MSG_HUIXML_HEAD_IN_CHAR_VARIABLE_LEN <= 0) || (HUITP_MSG_HUIXML_TOTAL_BUF_IN_CHAR_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) ||\
 		(HUITP_MSG_HUIFRAME_TOTAL_BUF_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX))
-	#error HUITP protocal parameter setting!
+	#error HUITP protocal parameter setting error!
 #endif
 
 //XML自定义标准的编码函数方式

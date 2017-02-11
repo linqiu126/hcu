@@ -492,9 +492,9 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 	memcpy(&rcv, param_ptr, param_len);
-	if (rcv.cmdid != L3CI_bfsc_comb_scale){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
-	}
+//	if (rcv.cmdid != L3CI_bfsc_comb_scale){
+//		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
+//	}
 
 	//将命令发送到传感器下位机
 	msg_struct_l3bfsc_can_general_cmd_req_t snd;
@@ -502,12 +502,13 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 	snd.length = sizeof(msg_struct_l3bfsc_can_general_cmd_req_t);
 
 	//这里只支持一种启动和停止命令，其它的暂时不支持
-	if ((rcv.optid != L3PO_bfsc_start_cmd) && (rcv.optid != L3PO_bfsc_stop_cmd)){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Can not supported command coming from cloud!\n");
+	//if ((rcv.optid != L3PO_bfsc_start_cmd) && (rcv.optid != L3PO_bfsc_stop_cmd)){
+	if ((rcv.scaleWeightCmd != L3PO_bfsc_start_cmd) && (rcv.scaleWeightCmd != L3PO_bfsc_stop_cmd)){
+				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Can not supported command coming from cloud!\n");
 	}
 
-	snd.optid = rcv.optid;
-	snd.optpar = rcv.optopr;
+//	snd.optid = rcv.optid;
+//	snd.optpar = rcv.optopr;
 	//这里如此设置，表示是为了全局所有的传感器
 	snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
@@ -541,10 +542,10 @@ OPSTAT fsm_l3bfsc_canitf_general_cmd_resp(UINT32 dest_id, UINT32 src_id, void * 
 	msg_struct_l3bfsc_cloudvela_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t));
 	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t);
-	snd.optid = rcv.optid;
-	snd.optpar = rcv.optpar;
-	snd.modbusVal = rcv.modbusVal;
-	snd.timestamp = time(0);
+//	snd.optid = rcv.optid;
+//	snd.optpar = rcv.optpar;
+//	snd.modbusVal = rcv.modbusVal;
+	snd.comHead.timeStamp = time(0);
 	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -804,13 +805,13 @@ OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * 
 	msg_struct_l3bfsc_cloudvela_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
 	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_data_report_t);
-	snd.cmdid = L3CI_bfsc_comb_scale;
-	snd.optid = L3PO_bfsc_data_report;
-	snd.sensorNbr = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
+//	snd.cmdid = L3CI_bfsc_comb_scale;
+//	snd.optid = L3PO_bfsc_data_report;
+	snd.snrCfgNbrMax = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
-		snd.sensorWsValue[i] = rcv.sensorWsValue[i];
+		snd.snrValue[i] = rcv.sensorWsValue[i];
 	}
-	snd.timestamp = time(0);
+	snd.comHead.timeStamp = time(0);
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){

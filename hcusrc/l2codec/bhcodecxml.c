@@ -2112,6 +2112,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 
 }
 
+//等待删去该函数方式，将只使用HUITP而不再使用老旧XML格式
 OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -2203,9 +2204,9 @@ OPSTAT func_cloudvela_standard_xml_bfsc_msg_unpack(msg_struct_com_cloudvela_data
 		msg_struct_cloudvela_l3bfsc_cmd_req_t snd1;
 		memset(&snd1, 0, sizeof(msg_struct_cloudvela_l3bfsc_cmd_req_t));
 
-		snd1.cmdid = cmdId;
-		snd1.optid = optId;
-		snd1.eqpid = equId;
+//		snd1.cmdid = cmdId;
+//		snd1.optid = optId;
+//		snd1.eqpid = equId;
 
 		//这里的格式是，CLOUD->HCU 设置传感器开关: 3B 02(len) 02(opt) 01(equ)
 		//如果是START/STOP命令，则结束了

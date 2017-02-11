@@ -13,8 +13,7 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 
 //= ZJL, 2017 Feb.11, CURRENT_SW_DELIVERY 159=>BFSC项目
-
-
+＝完成HUITP和内部消息的编写，为打通后台工作逻辑框架打下基础
 
 
 //= ZJL, 2017 Feb.11, CURRENT_SW_DELIVERY 158=>BFSC项目

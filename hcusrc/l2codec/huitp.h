@@ -2441,7 +2441,7 @@ typedef struct StrIe_HUITP_IEID_uni_scale_weight_cmd
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 scaleWeightCmd;
+	UINT8  scaleWeightCmd;
 }StrIe_HUITP_IEID_uni_scale_weight_cmd_t;
 #define HUITP_IEID_UNI_SCALE_WEIGHT_CMD_NULL 0
 #define HUITP_IEID_UNI_SCALE_WEIGHT_CMD_START 1
