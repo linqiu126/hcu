@@ -514,7 +514,7 @@ typedef struct msgie_struct_com_gps_pos //
 	UINT32 gpsy;
 	UINT32 gpsz;
 }msgie_struct_com_gps_pos_t;
-typedef struct  msgie_struct_sensor_modbus_opertion_general //
+typedef struct  sensor_modbus_opertion_general //
 {
 	UINT32 equId;
 	UINT8  powerOnOff;

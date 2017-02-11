@@ -79,7 +79,7 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 //状态机中的一些遗留问题：
 //1. 什么是否允许后台查询或者发送命令？任何时候？这意味着状态机需要变得较为复杂了
 //2. 为了演示任务，定时读取
-//3. 启动１分钟定时，通过counter来决定清零报告
+//3. 启动１分钟定时，通过counter来决定报告的数据格式，然后将低级报告结构清零
 //4. 死机原因调查
 
 
@@ -137,6 +137,9 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	#if ((HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX > HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX) || (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX > HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR))
 		#error L3BFSC module level configuration number error!
 	#endif
+	//严格防止HUITP消息跟内部消息在关键结构上定义的不一致
+	if ((sizeof(StrIe_HUITP_IEID_uni_scale_weight_sta_element_t)) != (sizeof(msgie_struct_bfsc_scale_weight_sta_element_t)))
+	HCU_ERROR_PRINT_L3BFSC("L3BFSC: module message definition on statistic element error!\n");
 
 	//秤盘数据表单控制表初始化
 	memset(&zHcuL3BfscGenCtrlTable, 0, sizeof(L3BfscGenCtrlTable_t));

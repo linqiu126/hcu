@@ -11,8 +11,6 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
-=>增加HUITP消息长度检查的#ifdef判定
-
 
 //= ZJL, 2017 Feb.11, CURRENT_SW_DELIVERY 158=>BFSC项目
 = msgie_struct_gps_pos_info_t结构去掉了，合并到zHcuVmCtrTab.hwinv.gps中去了
@@ -22,6 +20,9 @@ PRJ_BFSC待完成或者回答的问题：
 = 对于底层硬件扫描的数据，比如传感器定时扫描出的内容，得需要考虑是否可以采用这种形式，而不是复杂的状态机控制模式
 =合并PM25Sharp / Hcho / 到zHcuVmCtrTab.codab共享数据区了，简化此类简易传感器的数据传递。其实原来的机制本来就是共享变量，但目前的做法更加可靠／通用和统一。
 =归一化传感器的配置，去掉SYSCONFIG.H对于传感器是否激活的配置
+=>增加HUITP消息长度检查的#ifdef判定
+=防止HUITP和内部消息在关键结构上定义的不一致，导致程序死机
+
 
 //= ZJL, 2017 Feb.10, CURRENT_SW_DELIVERY 157=>BFSC项目
 =完成BFSC HUITP的消息编写

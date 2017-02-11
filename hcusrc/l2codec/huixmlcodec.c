@@ -17,6 +17,13 @@
 //Task Global variables
 extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
+//使用编译器的功能，检查HUITP中设置的长度参数是否适合
+#if ((HUITP_MSG_BUF_WITH_HEAD_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) || (HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) ||\
+		(HUITP_MSG_HUIXML_HEAD_IN_CHAR_VARIABLE_LEN <= 0) || (HUITP_MSG_HUIXML_TOTAL_BUF_IN_CHAR_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) ||\
+		(HUITP_MSG_HUIFRAME_TOTAL_BUF_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX))
+	#error HUITP protocal parameter setting!
+#endif
+
 //XML自定义标准的编码函数方式
 //inputLen：这是包括MsgHead在内的所有缓冲区长度，正常情况下=sizeof(StrMsg_HUITP_MSGID_uni_general_message_t)，或者IE_BODY+4
 OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output)
