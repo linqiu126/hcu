@@ -42,9 +42,7 @@ HcuFsmStateItem_t HcuFsmSps485[] =
 };
 
 //Global variables
-
 //SerialPort_t gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
-SerialPortCom_t gSerialPortMobus;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -93,17 +91,17 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485] = 0;
 
 	//为MODBUS初始化串口硬件端口
-	gSerialPortMobus.id = zHcuSysEngPar.serialport.SeriesPortForModbus;
-	gSerialPortMobus.nSpeed = 9600;
-	gSerialPortMobus.nBits = 8;
-	gSerialPortMobus.nEvent = 'N';
-	gSerialPortMobus.nStop = 1;
-	gSerialPortMobus.fd = HCU_INVALID_U16;
-	gSerialPortMobus.vTime = HCU_INVALID_U8;
-	gSerialPortMobus.vMin = HCU_INVALID_U8;
-	gSerialPortMobus.c_lflag = 0;
+	zHcuVmCtrTab.hwinv.sps485.modbus.id = zHcuSysEngPar.serialport.SeriesPortForModbus;
+	zHcuVmCtrTab.hwinv.sps485.modbus.nSpeed = 9600;
+	zHcuVmCtrTab.hwinv.sps485.modbus.nBits = 8;
+	zHcuVmCtrTab.hwinv.sps485.modbus.nEvent = 'N';
+	zHcuVmCtrTab.hwinv.sps485.modbus.nStop = 1;
+	zHcuVmCtrTab.hwinv.sps485.modbus.fd = HCU_INVALID_U16;
+	zHcuVmCtrTab.hwinv.sps485.modbus.vTime = HCU_INVALID_U8;
+	zHcuVmCtrTab.hwinv.sps485.modbus.vMin = HCU_INVALID_U8;
+	zHcuVmCtrTab.hwinv.sps485.modbus.c_lflag = 0;
 	//gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
-	ret = hcu_sps485_serial_init(&gSerialPortMobus);
+	ret = hcu_sps485_serial_init(&zHcuVmCtrTab.hwinv.sps485.modbus);
 	if (FAILURE == ret){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
 		HcuErrorPrint("SPS485: Init Serial Port Failure, Exit.\n");
@@ -114,9 +112,9 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		}
 	}
 
-	hcu_sps485_SerialPortSetVtimeVmin(&gSerialPortMobus, 1, 20);
+	hcu_sps485_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps485.modbus, 1, 20);
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPS485: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortMobus.vTime, gSerialPortMobus.vMin);
+		HcuDebugPrint("SPS485: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  zHcuVmCtrTab.hwinv.sps485.modbus.vTime, zHcuVmCtrTab.hwinv.sps485.modbus.vMin);
 	}
 
 	//设置状态机到目标状态

@@ -41,7 +41,7 @@ extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 SerialPortCom_t gSerialPortForSPS232;
 
 float zHcuSps232Pm25Sharp;
-float zHcuSps232HchoZe08ch2o;
+float zHcuVmCtrTab.codab.HchoZe08ch2o.fVal;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -89,7 +89,7 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Global variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232] = 0;
 	zHcuSps232Pm25Sharp = HCU_SENSOR_VALUE_NULL;
-	zHcuSps232HchoZe08ch2o = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.HchoZe08ch2o.fVal = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPS232, FSM_STATE_SPS232_RECEIVED) == FAILURE){
@@ -267,9 +267,9 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 	}
 
 	//求平均
-	zHcuSps232HchoZe08ch2o = hchoSum / RPI_SPS232_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.HchoZe08ch2o.fVal = hchoSum / RPI_SPS232_READ_REPEAT_TIMES;
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPS232: Sensor ZE08CH2O Transformed float average read result HCHO = %6.2fppb, around %6.2fug/m3\n", zHcuSps232HchoZe08ch2o, zHcuSps232HchoZe08ch2o*1.295);
+		HcuDebugPrint("SPS232: Sensor ZE08CH2O Transformed float average read result HCHO = %6.2fppb, around %6.2fug/m3\n", zHcuVmCtrTab.codab.HchoZe08ch2o.fVal, zHcuVmCtrTab.codab.HchoZe08ch2o.fVal*1.295);
 	} //ppb转化为ug/m3，使用了1.295g/L的空气密度，只能算是近似。
 
 	return SUCCESS;

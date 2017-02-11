@@ -48,7 +48,7 @@ HcuFsmStateItem_t HcuFsmLightstr[] =
 };
 
 //Global variables
-extern float zHcuI2cLightstrBh1750;
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -211,14 +211,14 @@ OPSTAT func_lightstr_time_out_read_data_from_bh1750(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuI2cLightstrBh1750 >= HCU_SENSOR_LIGHTSTR_VALUE_MIN) && (zHcuI2cLightstrBh1750 <= HCU_SENSOR_LIGHTSTR_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.i2cLightstrBh1750.fVal >= HCU_SENSOR_LIGHTSTR_VALUE_MIN) && (zHcuVmCtrTab.codab.i2cLightstrBh1750.fVal <= HCU_SENSOR_LIGHTSTR_VALUE_MAX))
 	{
 		sensor_lightstr_bh1750_data_element_t lightstrData;
 		memset(&lightstrData, 0, sizeof(sensor_lightstr_bh1750_data_element_t));
 		lightstrData.equipid = 0;
 		lightstrData.timeStamp = time(0);
 		lightstrData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		lightstrData.lightstrValue = (int)(zHcuI2cLightstrBh1750*100);
+		lightstrData.lightstrValue = (int)(zHcuVmCtrTab.codab.i2cLightstrBh1750.fVal*100);
 
 		ret = dbi_HcuLightstrBh1750DataInfo_save(&lightstrData);
 		if (ret == FAILURE){

@@ -62,8 +62,8 @@ UINT8 currentSensorHumidId;
 //extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 extern float zHcuGpioHumidDht11;
 extern float zHcuI2cHumidSht20;
-extern float zHcuSpiHumidRht03;
-extern float zHcuSpiHumidMth01;
+extern float zHcuVmCtrTab.codab.spiHumidRht03.fVal;
+extern float zHcuVmCtrTab.codab.spiHumidMth01.fVal;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -619,14 +619,14 @@ OPSTAT func_humid_time_out_read_data_from_rht03(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuSpiHumidRht03 >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuSpiHumidRht03 <= HCU_SENSOR_HUMID_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.spiHumidRht03.fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.spiHumidRht03.fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_rht03_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_rht03_data_element_t));
 		humidData.equipid = 0;
 		humidData.timeStamp = time(0);
 		humidData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		humidData.humidValue = (int)(zHcuSpiHumidRht03*100);
+		humidData.humidValue = (int)(zHcuVmCtrTab.codab.spiHumidRht03.fVal*100);
 
 		ret = dbi_HcuHumidRht03DataInfo_save(&humidData);
 		if (ret == FAILURE){
@@ -643,14 +643,14 @@ OPSTAT func_humid_time_out_read_data_from_mth01(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuSpiHumidMth01 >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuSpiHumidMth01 <= HCU_SENSOR_HUMID_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.spiHumidMth01.fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.spiHumidMth01.fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_mth01_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_mth01_data_element_t));
 		humidData.equipid = 0;
 		humidData.timeStamp = time(0);
 		humidData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		humidData.humidValue = (int)(zHcuSpiHumidMth01*100);
+		humidData.humidValue = (int)(zHcuVmCtrTab.codab.spiHumidMth01.fVal*100);
 
 		ret = dbi_HcuHumidMth01DataInfo_save(&humidData);
 		if (ret == FAILURE){

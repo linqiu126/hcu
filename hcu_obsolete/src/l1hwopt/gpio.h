@@ -24,7 +24,7 @@ enum FSM_STATE_GPIO
 
 //Global variables
 extern HcuFsmStateItem_t FsmGpio[];
-extern float zHcuGpioTempDht11;
+extern float zHcuVmCtrTab.codab.gpioTempDht11.fVal;
 extern float zHcuGpioHumidDht11;
 extern float zHcuGpioToxicgasMq135;
 extern float zHcuGpioAlcoholMq3alco;

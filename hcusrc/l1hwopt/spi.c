@@ -42,10 +42,6 @@ HcuFsmStateItem_t HcuFsmSpi[] =
 };
 
 //Global variables
-float zHcuSpiTempRht03;
-float zHcuSpiHumidRht03;
-float zHcuSpiTempMth01;
-float zHcuSpiHumidMth01;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -92,10 +88,10 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPI] = 0;
-	zHcuSpiTempRht03 = HCU_SENSOR_VALUE_NULL;
-	zHcuSpiHumidRht03 = HCU_SENSOR_VALUE_NULL;
-	zHcuSpiTempMth01 = HCU_SENSOR_VALUE_NULL;
-	zHcuSpiHumidMth01 = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.spiTempRht03.fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.spiHumidRht03.fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.spiTempMth01.fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.spiHumidMth01.fVal = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPI, FSM_STATE_SPI_ACTIVIED) == FAILURE){
@@ -182,11 +178,13 @@ OPSTAT func_spi_read_data_mth01(void)
 	}
 
 	//求平均
-	zHcuSpiTempMth01 = tempSum / RPI_SPI_READ_REPEAT_TIMES;
-	zHcuSpiHumidMth01 = humidSum / RPI_SPI_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spiTempMth01.fVal = tempSum / RPI_SPI_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spiTempMth01.updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.spiHumidMth01.fVal = humidSum / RPI_SPI_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spiHumidMth01.updateTimeStamp = time(0);
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPI: Sensor MTH01 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuSpiTempMth01, zHcuSpiHumidMth01, RPI_SPI_PIN_MOSI);
+		HcuDebugPrint("SPI: Sensor MTH01 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuVmCtrTab.codab.spiTempMth01.fVal, zHcuVmCtrTab.codab.spiHumidMth01.fVal, RPI_SPI_PIN_MOSI);
 	}
 
 	return SUCCESS;
@@ -229,11 +227,13 @@ OPSTAT func_spi_read_data_rht03(void)
 	}
 
 	//求平均
-	zHcuSpiTempRht03 = tempSum / RPI_SPI_READ_REPEAT_TIMES;
-	zHcuSpiHumidRht03 = humidSum / RPI_SPI_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spiTempRht03.fVal = tempSum / RPI_SPI_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spiTempRht03.updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.spiHumidRht03.fVal = humidSum / RPI_SPI_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spiHumidRht03.updateTimeStamp = time(0);
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPI: Sensor RHT03 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuSpiTempRht03, zHcuSpiHumidRht03, RPI_SPI_PIN_MOSI);
+		HcuDebugPrint("SPI: Sensor RHT03 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuVmCtrTab.codab.spiTempRht03.fVal, zHcuVmCtrTab.codab.spiHumidRht03.fVal, RPI_SPI_PIN_MOSI);
 	}
 
 	return SUCCESS;

@@ -234,15 +234,33 @@ typedef struct HcuHwinvGpioElement
 	HcuHwinvBaseElement_t hwBase;
 	UINT32 number; //多少路GPIO
 }HcuHwinvGpioElement_t;
-typedef struct HcuHwinvSps232Element
+typedef struct SerialPortCom
+{
+	UINT32 id;			/* COM1=>0, COM1=>1, COM2=>2 ....  */
+	UINT32 nSpeed;		/* 1200, 2400, 4800, 4800, 9600, 19200, 38400, 57600, 115200 */
+	UINT16 nBits;		/* 7 or 8 */
+	UINT8 nEvent;		/* '0', 'N', 'E' */
+	UINT16 nStop;		/* 0, or 1 */
+	UINT32 fd;			/* file descriptor for com port */
+	UINT8 vTime;        /* */
+	UINT8 vMin;         /* */
+	UINT32 c_lflag;     /* ICANON : enable canonical input */
+}SerialPortCom_t;
+typedef struct HcuHwinvSps232ElementBase
 {
 	HcuHwinvBaseElement_t hwBase;
 	UINT32 portNbr;
+}HcuHwinvSps232ElementBase_t;
+typedef struct HcuHwinvSps232Element
+{
+	HcuHwinvSps232ElementBase_t port[8];
+	SerialPortCom_t sp;
 }HcuHwinvSps232Element_t;
 typedef struct HcuHwinvSps485Element
 {
 	HcuHwinvBaseElement_t hwBase;
 	UINT32 portNbr;
+	SerialPortCom_t modbus;
 }HcuHwinvSps485Element_t;
 typedef struct HcuHwinvEthernetElement
 {
@@ -365,7 +383,7 @@ typedef struct HcuHwinvCtrlTable
 	HcuHwinvMainBoardElement_t 		mainBoard;
 	HcuHwinvHardDiscElement_t 		hardDisc;
 	HcuHwinvGpioElement_t 			gpio;
-	HcuHwinvSps232Element_t 		sps232[4];
+	HcuHwinvSps232Element_t 		sps232;
 	HcuHwinvSps485Element_t			sps485;
 	HcuHwinvEthernetElement_t		ethernet;
 	HcuHwinvUsbElement_t			usbnet;
@@ -441,6 +459,41 @@ typedef struct HcuTimeDateTable
 	char curAvorionFnameMkv[HCU_DIR_LENGTH_MAX];
 }HcuTimeDateTable_t;
 
+/*
+ *   1.5 Convenience sensOr Data shAring Block [codab]
+*/
+//简易传感器共享数据区
+typedef struct HcuConvSensorDataElement
+{
+	UINT8  prenset;
+	UINT8  dataFormat;
+	float  fVal;
+	UINT32 uVal;
+	UINT32 updateTimeStamp;
+}HcuConvSensorDataElement_t;
+//简易传感器总表
+typedef struct HcuConvSensorDataShareBlockTable
+{
+	HcuConvSensorDataElement_t spsPm25Sharp;
+	HcuConvSensorDataElement_t spsHchoZe08ch2o;
+	HcuConvSensorDataElement_t gpioTempDht11;
+	HcuConvSensorDataElement_t gpioHumidDht11;
+	HcuConvSensorDataElement_t gpioToxicgasMq135;
+	HcuConvSensorDataElement_t gpioAlcoholMq3alco;
+	HcuConvSensorDataElement_t gpioToxicgasZp01voc;
+	HcuConvSensorDataElement_t i2cTempSht20;
+	HcuConvSensorDataElement_t i2cHumidSht20;
+	HcuConvSensorDataElement_t i2cLightstrBh1750;
+	HcuConvSensorDataElement_t i2cAirprsBmp180;
+	HcuConvSensorDataElement_t i2cTempBmp180;
+	HcuConvSensorDataElement_t i2cAltitudeBmp180;
+	HcuConvSensorDataElement_t i2cPm25Bmpd300;
+	HcuConvSensorDataElement_t spiTempRht03;
+	HcuConvSensorDataElement_t spiHumidRht03;
+	HcuConvSensorDataElement_t spiTempMth01;
+	HcuConvSensorDataElement_t spiHumidMth01;
+}HcuConvSensorDataShareBlockTable_t;
+
 //三表之一的系统总控表
 typedef struct HcuVmCtrTab
 {
@@ -449,6 +502,7 @@ typedef struct HcuVmCtrTab
 	HcuCurrentTaskTag_t  	process;
 	HcuHwinvCtrlTable_t		hwinv;
 	HcuTimeDateTable_t		clock;
+	HcuConvSensorDataShareBlockTable_t  codab;
 }HcuVmCtrTab_t;
 //系统总控表
 extern HcuVmCtrTab_t zHcuVmCtrTab;

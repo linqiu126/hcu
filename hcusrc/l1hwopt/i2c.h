@@ -25,13 +25,6 @@ enum FSM_STATE_I2C
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmI2c[];
-extern float zHcuI2cTempSht20;
-extern float zHcuI2cHumidSht20;
-extern float zHcuI2cLightstrBh1750;
-extern float zHcuI2cAirprsBmp180;
-extern float zHcuI2cTempBmp180;
-extern float zHcuI2cAltitudeBmp180; //通过气压计算出的海拔高度数据
-extern float zHcuI2cPm25Bmpd300;
 
 //Local definition
 #define RPI_I2C_PIN_VCC 17

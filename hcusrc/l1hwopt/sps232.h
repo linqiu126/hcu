@@ -26,8 +26,6 @@ enum FSM_STATE_SPS232
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmSps232[];
-extern float zHcuSps232Pm25Sharp;
-extern float zHcuSps232HchoZe08ch2o;
 
 
 #define RPI_SPS232_READ_REPEAT_TIMES 3

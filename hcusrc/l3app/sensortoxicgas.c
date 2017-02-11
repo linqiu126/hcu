@@ -48,8 +48,7 @@ HcuFsmStateItem_t HcuFsmToxicgas[] =
 };
 
 //Global variables
-extern float zHcuGpioToxicgasMq135;
-extern float zHcuGpioToxicgasZp01voc;
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -213,14 +212,14 @@ OPSTAT func_toxicgas_time_out_read_data_from_mq135(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuGpioToxicgasMq135 >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuGpioToxicgasMq135 <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.gpioToxicgasMq135.fVal >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuVmCtrTab.codab.gpioToxicgasMq135.fVal <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
 	{
 		sensor_toxicgas_mq135_data_element_t toxicgasData;
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_mq135_data_element_t));
 		toxicgasData.equipid = 0;
 		toxicgasData.timeStamp = time(0);
 		toxicgasData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-		toxicgasData.toxicgasValue = (int)(zHcuGpioToxicgasMq135);
+		toxicgasData.toxicgasValue = (int)(zHcuVmCtrTab.codab.gpioToxicgasMq135.fVal);
 
 		ret = dbi_HcuToxicgasMq135DataInfo_save(&toxicgasData);
 		if (ret == FAILURE){
@@ -238,14 +237,14 @@ OPSTAT func_toxicgas_time_out_read_data_from_zp01voc(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuGpioToxicgasZp01voc >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuGpioToxicgasZp01voc <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.gpioToxicgasZp01voc.fVal >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuVmCtrTab.codab.gpioToxicgasZp01voc.fVal <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
 	{
 		sensor_toxicgas_zp01voc_data_element_t toxicgasData;
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_zp01voc_data_element_t));
 		toxicgasData.equipid = 0;
 		toxicgasData.timeStamp = time(0);
 		toxicgasData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-		toxicgasData.toxicgasValue = (int)(zHcuGpioToxicgasZp01voc);
+		toxicgasData.toxicgasValue = (int)(zHcuVmCtrTab.codab.gpioToxicgasZp01voc.fVal);
 
 		ret = dbi_HcuToxicgasZp01vocDataInfo_save(&toxicgasData);
 		if (ret == FAILURE){

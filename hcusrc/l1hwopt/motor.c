@@ -32,7 +32,7 @@ HcuFsmStateItem_t HcuFsmMotor[] =
 	{MSG_ID_COM_TIME_OUT,       FSM_STATE_COMMON,          				fsm_com_do_nothing},
 
     //Task level initialization
-   {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_MOTOR_ACTIVIED,            		fsm_com_do_nothing},
+	{MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_MOTOR_ACTIVIED,            		fsm_com_do_nothing},
 	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_MOTOR_ACTIVIED,       			fsm_com_heart_beat_rcv},
 	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_MOTOR_ACTIVIED,       			fsm_com_do_nothing},
 

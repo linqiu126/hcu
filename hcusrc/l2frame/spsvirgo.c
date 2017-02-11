@@ -201,7 +201,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		}
 
 		//发送串口指令
-		ret = hcu_spsapi_serial_port_send(&gSerialPortMobus, currentSpsBuf.curBuf, currentSpsBuf.curLen);
+		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, currentSpsBuf.curLen);
 
 		if (FAILURE == ret)
 		{
@@ -252,7 +252,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		//读取串口数据
 		//从相应的从设备中读取数据
 		memset(&currentSpsBuf, 0, sizeof(SerialSpsMsgBuf_t));
-		ret = hcu_spsapi_serial_port_get(&gSerialPortMobus, currentSpsBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentSpsBuf中
+		ret = hcu_spsapi_serial_port_get(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentSpsBuf中
 		if (ret > 0)
 		{
 			HcuDebugPrint("SPSVIRGO: Len %d\n", ret);

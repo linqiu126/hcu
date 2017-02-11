@@ -25,10 +25,7 @@ enum FSM_STATE_SPI
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmSpi[];
-extern float zHcuSpiTempRht03;
-extern float zHcuSpiHumidRht03;
-extern float zHcuSpiTempMth01;
-extern float zHcuSpiHumidMth01;
+
 
 //Local definition
 #define RPI_SPI_PIN_VCC 19

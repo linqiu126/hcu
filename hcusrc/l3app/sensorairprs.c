@@ -48,9 +48,6 @@ HcuFsmStateItem_t HcuFsmAirprs[] =
 };
 
 //Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
-extern float zHcuI2cAirprsBmp180;
-extern float zHcuI2cAltitudeBmp180;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -213,14 +210,14 @@ OPSTAT func_airprs_time_out_read_data_from_bmp180(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuI2cAirprsBmp180 >= HCU_SENSOR_AIRPRS_VALUE_MIN) && (zHcuI2cAirprsBmp180 <= HCU_SENSOR_AIRPRS_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.i2cAirprsBmp180.fVal >= HCU_SENSOR_AIRPRS_VALUE_MIN) && (zHcuVmCtrTab.codab.i2cAirprsBmp180.fVal <= HCU_SENSOR_AIRPRS_VALUE_MAX))
 	{
 		sensor_airprs_bmp180_data_element_t airprsData;
 		memset(&airprsData, 0, sizeof(sensor_airprs_bmp180_data_element_t));
 		airprsData.equipid = 0;
 		airprsData.timeStamp = time(0);
 		airprsData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		airprsData.airprsValue = (int)(zHcuI2cAirprsBmp180*100);
+		airprsData.airprsValue = (int)(zHcuVmCtrTab.codab.i2cAirprsBmp180.fVal*100);
 
 		ret = dbi_HcuAirprsBmp180DataInfo_save(&airprsData);
 		if (ret == FAILURE){
@@ -230,14 +227,14 @@ OPSTAT func_airprs_time_out_read_data_from_bmp180(void)
 	}
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuI2cAltitudeBmp180 >= HCU_SENSOR_ALTITUDE_VALUE_MIN) && (zHcuI2cAltitudeBmp180 <= HCU_SENSOR_ALTITUDE_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal >= HCU_SENSOR_ALTITUDE_VALUE_MIN) && (zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal <= HCU_SENSOR_ALTITUDE_VALUE_MAX))
 	{
 		sensor_airprs_altitude_bmp180_data_element_t altitudeData;
 		memset(&altitudeData, 0, sizeof(sensor_airprs_altitude_bmp180_data_element_t));
 		altitudeData.equipid = 0;
 		altitudeData.timeStamp = time(0);
 		altitudeData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		altitudeData.altitudeValue = (int)(zHcuI2cAltitudeBmp180*100);
+		altitudeData.altitudeValue = (int)(zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal*100);
 
 		ret = dbi_HcuAirprsAltitudeBmp180DataInfo_save(&altitudeData);
 		if (ret == FAILURE){

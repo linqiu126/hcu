@@ -37,7 +37,7 @@ HcuFsmStateItem_t FsmGpio[] =
 
 //Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-float zHcuGpioTempDht11;
+float zHcuVmCtrTab.codab.gpioTempDht11.fVal;
 float zHcuGpioHumidDht11;
 float zHcuGpioToxicgasMq135;
 float zHcuGpioAlcoholMq3alco;
@@ -88,7 +88,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_GPIO] = 0;
-	zHcuGpioTempDht11 = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.gpioTempDht11.fVal = HCU_SENSOR_VALUE_NULL;
 	zHcuGpioHumidDht11 = HCU_SENSOR_VALUE_NULL;
 	zHcuGpioToxicgasMq135 = HCU_SENSOR_VALUE_NULL;
 	zHcuGpioAlcoholMq3alco = HCU_SENSOR_VALUE_NULL;
@@ -191,10 +191,10 @@ OPSTAT func_gpio_read_data_dht11(void)
     }
 
 	//求平均
-	zHcuGpioTempDht11 = tempSum / RPI_GPIO_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.gpioTempDht11.fVal = tempSum / RPI_GPIO_READ_REPEAT_TIMES;
 	zHcuGpioHumidDht11 = humidSum / RPI_GPIO_READ_REPEAT_TIMES;
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-    	HcuDebugPrint("GPIO: Sensor DHT11 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_GPIO#=%d\n", zHcuGpioTempDht11, zHcuGpioHumidDht11, RPI_GPIO_PIN_DHT11_DATA);
+    	HcuDebugPrint("GPIO: Sensor DHT11 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_GPIO#=%d\n", zHcuVmCtrTab.codab.gpioTempDht11.fVal, zHcuGpioHumidDht11, RPI_GPIO_PIN_DHT11_DATA);
 	}
 
     return SUCCESS;

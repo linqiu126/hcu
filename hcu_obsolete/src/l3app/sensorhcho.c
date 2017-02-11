@@ -45,7 +45,7 @@ HcuFsmStateItem_t FsmHcho[] =
 
 //Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-extern float zHcuSps232HchoZe08ch2o;
+extern float zHcuVmCtrTab.codab.HchoZe08ch2o.fVal;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -206,14 +206,14 @@ OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuSps232HchoZe08ch2o >= HCU_SENSOR_HCHO_VALUE_MIN) && (zHcuSps232HchoZe08ch2o <= HCU_SENSOR_HCHO_VALUE_MAX))
+	if ((HCU_SENSOR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.HchoZe08ch2o.fVal >= HCU_SENSOR_HCHO_VALUE_MIN) && (zHcuVmCtrTab.codab.HchoZe08ch2o.fVal <= HCU_SENSOR_HCHO_VALUE_MAX))
 	{
 		sensor_hcho_ze08ch2o_data_element_t hchoData;
 		memset(&hchoData, 0, sizeof(sensor_hcho_ze08ch2o_data_element_t));
 		hchoData.equipid = 0;
 		hchoData.timeStamp = time(0);
 		hchoData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		hchoData.hchoValue = (int)(zHcuSps232HchoZe08ch2o*100);
+		hchoData.hchoValue = (int)(zHcuVmCtrTab.codab.HchoZe08ch2o.fVal*100);
 
 		ret = dbi_HcuHchoZe08ch2oDataInfo_save(&hchoData);
 		if (ret == FAILURE){

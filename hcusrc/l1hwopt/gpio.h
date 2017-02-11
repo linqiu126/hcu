@@ -25,11 +25,6 @@ enum FSM_STATE_GPIO
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmGpio[];
-extern float zHcuGpioTempDht11;
-extern float zHcuGpioHumidDht11;
-extern float zHcuGpioToxicgasMq135;
-extern float zHcuGpioAlcoholMq3alco;
-extern float zHcuGpioToxicgasZp01voc;
 
 //Local definition
 #define RPI_GPIO_PIN_VCC 1

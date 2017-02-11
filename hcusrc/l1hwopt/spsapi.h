@@ -10,19 +10,6 @@
 
 #include "../l0comvm/vmlayer.h"
 
-typedef struct SerialPortCom
-{
-	UINT32 id;			/* COM1=>0, COM1=>1, COM2=>2 ....  */
-	UINT32 nSpeed;		/* 1200, 2400, 4800, 4800, 9600, 19200, 38400, 57600, 115200 */
-	UINT16 nBits;		/* 7 or 8 */
-	UINT8 nEvent;		/* '0', 'N', 'E' */
-	UINT16 nStop;		/* 0, or 1 */
-	UINT32 fd;			/* file descriptor for com port */
-	UINT8 vTime;        /* */
-	UINT8 vMin;         /* */
-	UINT32 c_lflag;     /* ICANON : enable canonical input */
-}SerialPortCom_t;
-
 #define SPSAPI_COM_PORT_0 	0x00
 #define SPSAPI_COM_PORT_1 	0x01
 #define SPSAPI_COM_PORT_2 	0x02

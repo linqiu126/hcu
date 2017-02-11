@@ -55,14 +55,7 @@ HcuFsmStateItem_t HcuFsmPm25[] =
 //Task Global variables
 SensorPm25Info_t zSensorPm25Info[MAX_NUM_OF_SENSOR_PM25_INSTALLED];
 UINT8 currentSensorPm25Id;
-
 sensor_modbus_opertion_general_t zPM25ConfigData;//Added by Shanchun to save sensor config data
-
-
-//暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
-//extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
-extern float zHcuI2cPm25Bmpd300;
-extern float zHcuSps232Pm25Sharp;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -992,14 +985,14 @@ OPSTAT func_pm25_time_out_read_data_from_bmpd300(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuI2cPm25Bmpd300 >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuI2cPm25Bmpd300 <= HCU_SENSOR_PM25_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal <= HCU_SENSOR_PM25_VALUE_MAX))
 	{
 		sensor_pm25_bmpd300_data_element_t pm25Data;
 		memset(&pm25Data, 0, sizeof(sensor_pm25_bmpd300_data_element_t));
 		pm25Data.equipid = 0;
 		pm25Data.timeStamp = time(0);
 		pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-		pm25Data.pm2d5Value = (int)(zHcuI2cPm25Bmpd300);
+		pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal);
 
 		ret = dbi_HcuPm25Bmpd300DataInfo_save(&pm25Data);
 		if (ret == FAILURE){
@@ -1016,14 +1009,14 @@ OPSTAT func_pm25_time_out_read_data_from_sharp(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuSps232Pm25Sharp >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuSps232Pm25Sharp <= HCU_SENSOR_PM25_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.spsPm25Sharp.fVal >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuVmCtrTab.codab.spsPm25Sharp.fVal <= HCU_SENSOR_PM25_VALUE_MAX))
 	{
 		sensor_pm25_sharp_data_element_t pm25Data;
 		memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
 		pm25Data.equipid = 0;
 		pm25Data.timeStamp = time(0);
 		pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		pm25Data.pm2d5Value = (int)(zHcuSps232Pm25Sharp*100);
+		pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.spsPm25Sharp.fVal*100);
 
 		ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
 		if (ret == FAILURE){

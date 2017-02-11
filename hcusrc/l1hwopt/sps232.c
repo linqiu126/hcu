@@ -43,11 +43,6 @@ HcuFsmStateItem_t HcuFsmSps232[] =
 
 //Global variables
 
-//For Serial Port Init
-SerialPortCom_t gSerialPortForSPS232;
-
-float zHcuSps232Pm25Sharp;
-float zHcuSps232HchoZe08ch2o;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -95,8 +90,8 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Global variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232] = 0;
-	zHcuSps232Pm25Sharp = HCU_SENSOR_VALUE_NULL;
-	zHcuSps232HchoZe08ch2o = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.spsPm25Sharp.fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.spsHchoZe08ch2o.fVal = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SPS232, FSM_STATE_SPS232_RECEIVED) == FAILURE){
@@ -147,20 +142,20 @@ OPSTAT fsm_sps232_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 OPSTAT func_sps232_int_init(void)
 {
 	//初始化硬件接口
-	gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-	if (HCU_SYSCFG_SNR_PRESENT_SHARP == HCU_SYSCFG_SENSOR_PRESENT_YES) gSerialPortForSPS232.nSpeed = 2400;
-	else gSerialPortForSPS232.nSpeed = 9600;
-	gSerialPortForSPS232.nBits = 8;
-	gSerialPortForSPS232.nEvent = 'N';
-	gSerialPortForSPS232.nStop = 1;
-	gSerialPortForSPS232.fd = HCU_INVALID_U16;
-	gSerialPortForSPS232.vTime = HCU_INVALID_U8;
-	gSerialPortForSPS232.vMin = HCU_INVALID_U8;
-	gSerialPortForSPS232.c_lflag = 0;
+	zHcuVmCtrTab.hwinv.sps232.sp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
+	if (HCU_SYSCFG_SNR_PRESENT_SHARP == HCU_SYSCFG_SENSOR_PRESENT_YES) zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 2400;
+	else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 9600;
+	zHcuVmCtrTab.hwinv.sps232.sp.nBits = 8;
+	zHcuVmCtrTab.hwinv.sps232.sp.nEvent = 'N';
+	zHcuVmCtrTab.hwinv.sps232.sp.nStop = 1;
+	zHcuVmCtrTab.hwinv.sps232.sp.fd = HCU_INVALID_U16;
+	zHcuVmCtrTab.hwinv.sps232.sp.vTime = HCU_INVALID_U8;
+	zHcuVmCtrTab.hwinv.sps232.sp.vMin = HCU_INVALID_U8;
+	zHcuVmCtrTab.hwinv.sps232.sp.c_lflag = 0;
 
 	int ret=0;
 
-	ret = hcu_spsapi_serial_init(&gSerialPortForSPS232);
+	ret = hcu_spsapi_serial_init(&zHcuVmCtrTab.hwinv.sps232.sp);
 	if (FAILURE == ret)
 	{
 		HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
@@ -172,9 +167,9 @@ OPSTAT func_sps232_int_init(void)
 		HcuDebugPrint("SPS232: Init Serial Port Success ...\n");
 	}
 
-	hcu_spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
+	hcu_spsapi_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps232.sp, 10, 5);
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForSPS232.vTime, gSerialPortForSPS232.vMin);
+		HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  zHcuVmCtrTab.hwinv.sps232.sp.vTime, zHcuVmCtrTab.hwinv.sps232.sp.vMin);
 	}
 
 	return SUCCESS;
@@ -193,24 +188,24 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 	//无限次工作模式打开，效率是比较低下的，但可以多个传感器可以一起兼容工作
 	if(RPI_SPS232_SENSOR_SINGLE_PRESENT != RPI_SPS232_SENSOR_SINGLE_PRESENT_TRUE){
 		//先关掉串口句柄
-		spsapi_SerialPortClose(gSerialPortForSPS232.fd);
+		spsapi_SerialPortClose(zHcuVmCtrTab.hwinv.sps232.sp.fd);
 		//初始化硬件接口
-		gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-		gSerialPortForSPS232.nSpeed = 9600;
-		gSerialPortForSPS232.nBits = 8;
-		gSerialPortForSPS232.nEvent = 'N';
-		gSerialPortForSPS232.nStop = 1;
-		gSerialPortForSPS232.fd = HCU_INVALID_U16;
-		gSerialPortForSPS232.vTime = HCU_INVALID_U8;
-		gSerialPortForSPS232.vMin = HCU_INVALID_U8;
-		gSerialPortForSPS232.c_lflag = 0;
-		if (hcu_spsapi_serial_init(&gSerialPortForSPS232) == FAILURE)
+		zHcuVmCtrTab.hwinv.sps232.sp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
+		zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 9600;
+		zHcuVmCtrTab.hwinv.sps232.sp.nBits = 8;
+		zHcuVmCtrTab.hwinv.sps232.sp.nEvent = 'N';
+		zHcuVmCtrTab.hwinv.sps232.sp.nStop = 1;
+		zHcuVmCtrTab.hwinv.sps232.sp.fd = HCU_INVALID_U16;
+		zHcuVmCtrTab.hwinv.sps232.sp.vTime = HCU_INVALID_U8;
+		zHcuVmCtrTab.hwinv.sps232.sp.vMin = HCU_INVALID_U8;
+		zHcuVmCtrTab.hwinv.sps232.sp.c_lflag = 0;
+		if (hcu_spsapi_serial_init(&zHcuVmCtrTab.hwinv.sps232.sp) == FAILURE)
 		{
 			HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
-		spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
+		spsapi_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps232.sp, 10, 5);
 		delay(60000);
 	}
 
@@ -219,7 +214,7 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 	for (readCount=0; readCount<RPI_SPS232_READ_REPEAT_TIMES; readCount++){
 		delay(100);
 		//读取数据
-		nread = hcu_spsapi_serial_port_get(&gSerialPortForSPS232, rb, (2*RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN));
+		nread = hcu_spsapi_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, rb, (2*RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN));
 		if (nread <=0)
 		{
 			HcuErrorPrint("SPS232: Sensor ZE08CH2O Read data error. nread=%d!\n", nread);
@@ -235,7 +230,7 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 			break;
 		}
 		if ((i==RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN) || ((rb[i+RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN]!= RPI_SPS232_SENSOR_ZE08CH2O_FRAME_HEAD1) && (rb[i+RPI_SPS232_SENSOR_ZE08CH2O_FRAME_LEN]!= RPI_SPS232_SENSOR_ZE08CH2O_FRAME_HEAD2))){
-			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame decode error, can not find frame header. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
+			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame decode error, can not find frame header. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", zHcuVmCtrTab.hwinv.sps232.sp.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
@@ -243,19 +238,19 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 		//计算校验和，判断是否是正确
 		checksum = func_sps232_check_sum_ze08ch2o(&rb[i+1], 7);
 		if (checksum != rb[i+8]){
-			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame checksum error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
+			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame checksum error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", zHcuVmCtrTab.hwinv.sps232.sp.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
 
 		//Header of CMMID / UNIT
 		if(rb[i+1] != RPI_SPS232_SENSOR_ZE08CH2O_REPORT_CMMID){
-			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame cmdid error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
+			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame cmdid error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", zHcuVmCtrTab.hwinv.sps232.sp.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
 		if(rb[i+2] != RPI_SPS232_SENSOR_ZE08CH2O_REPORT_UNIT){
-			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame UNIT error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
+			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame UNIT error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", zHcuVmCtrTab.hwinv.sps232.sp.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
@@ -264,7 +259,7 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 		hcho = ((rb[i+4]<<8)&0xFF00) + (rb[i+5]&0xFF);
 		hchoMax = ((rb[i+6]<<8)&0xFF00) + (rb[i+7]&0xFF);
 		if (hcho > hchoMax){
-			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame received too big data error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
+			HcuErrorPrint("SPS232: Sensor ZE08CH2O frame received too big data error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x!\n", zHcuVmCtrTab.hwinv.sps232.sp.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
@@ -274,9 +269,10 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 	}
 
 	//求平均
-	zHcuSps232HchoZe08ch2o = hchoSum / RPI_SPS232_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spsHchoZe08ch2o.fVal = hchoSum / RPI_SPS232_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spsHchoZe08ch2o.updateTimeStamp = time(0);
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPS232: Sensor ZE08CH2O Transformed float average read result HCHO = %6.2fppb, around %6.2fug/m3\n", zHcuSps232HchoZe08ch2o, zHcuSps232HchoZe08ch2o*1.295);
+		HcuDebugPrint("SPS232: Sensor ZE08CH2O Transformed float average read result HCHO = %6.2fppb, around %6.2fug/m3\n", zHcuVmCtrTab.codab.spsHchoZe08ch2o.fVal, zHcuVmCtrTab.codab.spsHchoZe08ch2o.fVal*1.295);
 	} //ppb转化为ug/m3，使用了1.295g/L的空气密度，只能算是近似。
 
 	return SUCCESS;
@@ -301,24 +297,24 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 	//无限次工作模式打开，效率是比较低下的，但可以多个传感器可以一起兼容工作
 	if(RPI_SPS232_SENSOR_SINGLE_PRESENT != RPI_SPS232_SENSOR_SINGLE_PRESENT_TRUE){
 		//先关掉串口句柄
-		spsapi_SerialPortClose(gSerialPortForSPS232.fd);
+		spsapi_SerialPortClose(zHcuVmCtrTab.hwinv.sps232.sp.fd);
 		//初始化硬件接口
-		gSerialPortForSPS232.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-		gSerialPortForSPS232.nSpeed = 2400;
-		gSerialPortForSPS232.nBits = 8;
-		gSerialPortForSPS232.nEvent = 'N';
-		gSerialPortForSPS232.nStop = 1;
-		gSerialPortForSPS232.fd = HCU_INVALID_U16;
-		gSerialPortForSPS232.vTime = HCU_INVALID_U8;
-		gSerialPortForSPS232.vMin = HCU_INVALID_U8;
-		gSerialPortForSPS232.c_lflag = 0;
-		if (hcu_spsapi_serial_init(&gSerialPortForSPS232) == FAILURE)
+		zHcuVmCtrTab.hwinv.sps232.sp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
+		zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 2400;
+		zHcuVmCtrTab.hwinv.sps232.sp.nBits = 8;
+		zHcuVmCtrTab.hwinv.sps232.sp.nEvent = 'N';
+		zHcuVmCtrTab.hwinv.sps232.sp.nStop = 1;
+		zHcuVmCtrTab.hwinv.sps232.sp.fd = HCU_INVALID_U16;
+		zHcuVmCtrTab.hwinv.sps232.sp.vTime = HCU_INVALID_U8;
+		zHcuVmCtrTab.hwinv.sps232.sp.vMin = HCU_INVALID_U8;
+		zHcuVmCtrTab.hwinv.sps232.sp.c_lflag = 0;
+		if (hcu_spsapi_serial_init(&zHcuVmCtrTab.hwinv.sps232.sp) == FAILURE)
 		{
 			HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
-		spsapi_SerialPortSetVtimeVmin(&gSerialPortForSPS232, 10, 5);
+		spsapi_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps232.sp, 10, 5);
 		delay(60000);
 	}
 
@@ -327,7 +323,7 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 	for (readCount=0; readCount<RPI_SPS232_READ_REPEAT_TIMES; readCount++){
 		delay(100);
 		//读取数据
-		nread = hcu_spsapi_serial_port_get(&gSerialPortForSPS232, rb, (2*RPI_SPS232_SENSOR_PM25SHARP_FRAME_LEN));
+		nread = hcu_spsapi_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, rb, (2*RPI_SPS232_SENSOR_PM25SHARP_FRAME_LEN));
 		if (nread <=0)
 		{
 			HcuErrorPrint("SPS232: Sensor PM25Sharp Read data error!\n");
@@ -343,7 +339,7 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 			break;
 		}
 		if ((i==RPI_SPS232_SENSOR_PM25SHARP_FRAME_LEN) || ((rb[i+RPI_SPS232_SENSOR_PM25SHARP_FRAME_LEN]!= RPI_SPS232_SENSOR_PM25SHARP_FRAME_TAIL1) && (rb[i+RPI_SPS232_SENSOR_PM25SHARP_FRAME_LEN]!= RPI_SPS232_SENSOR_PM25SHARP_FRAME_TAIL2))){
-			HcuErrorPrint("SPS232: Sensor PM25Sharp frame decode error, can not find frame header. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x!\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6]);
+			HcuErrorPrint("SPS232: Sensor PM25Sharp frame decode error, can not find frame header. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x!\n", zHcuVmCtrTab.hwinv.sps232.sp.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
@@ -351,7 +347,7 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 		//计算校验和，判断是否是正确
 		checksum = func_sps232_check_sum_pm25sharp(&rb[i+1], 4);
 		if (checksum != rb[i+8]){
-			HcuErrorPrint("SPS232: Sensor PM25Sharp frame checksum error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x!\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6]);
+			HcuErrorPrint("SPS232: Sensor PM25Sharp frame checksum error. Fd = %d, Receive buffer = %02x %02x %02x %02x %02x %02x %02x!\n", zHcuVmCtrTab.hwinv.sps232.sp.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
@@ -367,9 +363,10 @@ OPSTAT func_sps232_read_data_pm25sharp(void)
 	}
 
 	//求平均
-	zHcuSps232Pm25Sharp = pm25sharpSum / RPI_SPS232_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spsPm25Sharp.fVal = pm25sharpSum / RPI_SPS232_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.spsPm25Sharp.updateTimeStamp = time(0);
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("SPS232: Sensor PM25SHARP Transformed float average read result PM25= %6.2fug/m3\n", zHcuSps232Pm25Sharp);
+		HcuDebugPrint("SPS232: Sensor PM25SHARP Transformed float average read result PM25= %6.2fug/m3\n", zHcuVmCtrTab.codab.spsPm25Sharp.fVal);
 	}
 
 	return SUCCESS;
