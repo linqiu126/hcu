@@ -985,14 +985,14 @@ OPSTAT func_pm25_time_out_read_data_from_bmpd300(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal <= HCU_SENSOR_PM25_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal <= HCU_SENSOR_PM25_VALUE_MAX))
 	{
 		sensor_pm25_bmpd300_data_element_t pm25Data;
 		memset(&pm25Data, 0, sizeof(sensor_pm25_bmpd300_data_element_t));
 		pm25Data.equipid = 0;
 		pm25Data.timeStamp = time(0);
 		pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-		pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal);
+		pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal);
 
 		ret = dbi_HcuPm25Bmpd300DataInfo_save(&pm25Data);
 		if (ret == FAILURE){
@@ -1009,14 +1009,14 @@ OPSTAT func_pm25_time_out_read_data_from_sharp(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.spsPm25Sharp.fVal >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuVmCtrTab.codab.spsPm25Sharp.fVal <= HCU_SENSOR_PM25_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].fVal >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].fVal <= HCU_SENSOR_PM25_VALUE_MAX))
 	{
 		sensor_pm25_sharp_data_element_t pm25Data;
 		memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
 		pm25Data.equipid = 0;
 		pm25Data.timeStamp = time(0);
 		pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.spsPm25Sharp.fVal*100);
+		pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].fVal*100);
 
 		ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
 		if (ret == FAILURE){

@@ -210,14 +210,14 @@ OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.spsHchoZe08ch2o.fVal >= HCU_SENSOR_HCHO_VALUE_MIN) && (zHcuVmCtrTab.codab.spsHchoZe08ch2o.fVal <= HCU_SENSOR_HCHO_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].fVal >= HCU_SENSOR_HCHO_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].fVal <= HCU_SENSOR_HCHO_VALUE_MAX))
 	{
 		sensor_hcho_ze08ch2o_data_element_t hchoData;
 		memset(&hchoData, 0, sizeof(sensor_hcho_ze08ch2o_data_element_t));
 		hchoData.equipid = 0;
 		hchoData.timeStamp = time(0);
 		hchoData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		hchoData.hchoValue = (int)(zHcuVmCtrTab.codab.spsHchoZe08ch2o.fVal*100);
+		hchoData.hchoValue = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].fVal*100);
 
 		ret = dbi_HcuHchoZe08ch2oDataInfo_save(&hchoData);
 		if (ret == FAILURE){

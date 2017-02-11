@@ -210,14 +210,14 @@ OPSTAT func_alcohol_time_out_read_data_from_mq3alco(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.gpioAlcoholMq3alco.fVal >= HCU_SENSOR_ALCOHOL_VALUE_MIN) && (zHcuVmCtrTab.codab.gpioAlcoholMq3alco.fVal <= HCU_SENSOR_ALCOHOL_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOALCOHOLMQ3ALCO].fVal >= HCU_SENSOR_ALCOHOL_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOALCOHOLMQ3ALCO].fVal <= HCU_SENSOR_ALCOHOL_VALUE_MAX))
 	{
 		sensor_alcohol_mq3alco_data_element_t alcoholData;
 		memset(&alcoholData, 0, sizeof(sensor_alcohol_mq3alco_data_element_t));
 		alcoholData.equipid = 0;
 		alcoholData.timeStamp = time(0);
 		alcoholData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-		alcoholData.alcoholValue = (int)(zHcuVmCtrTab.codab.gpioAlcoholMq3alco.fVal);
+		alcoholData.alcoholValue = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOALCOHOLMQ3ALCO].fVal);
 
 		ret = dbi_HcuAlcoholMq3alcoDataInfo_save(&alcoholData);
 		if (ret == FAILURE){

@@ -503,24 +503,6 @@ typedef struct HcuConvSensorDataElement
 //简易传感器总表
 typedef struct HcuConvSensorDataShareBlockTable
 {
-	HcuConvSensorDataElement_t spsPm25Sharp;
-	HcuConvSensorDataElement_t spsHchoZe08ch2o;
-	HcuConvSensorDataElement_t gpioTempDht11;
-	HcuConvSensorDataElement_t gpioHumidDht11;
-	HcuConvSensorDataElement_t gpioToxicgasMq135;
-	HcuConvSensorDataElement_t gpioAlcoholMq3alco;
-	HcuConvSensorDataElement_t gpioToxicgasZp01voc;
-	HcuConvSensorDataElement_t i2cTempSht20;
-	HcuConvSensorDataElement_t i2cHumidSht20;
-	HcuConvSensorDataElement_t i2cLightstrBh1750;
-	HcuConvSensorDataElement_t i2cAirprsBmp180;
-	HcuConvSensorDataElement_t i2cTempBmp180;
-	HcuConvSensorDataElement_t i2cAltitudeBmp180;
-	HcuConvSensorDataElement_t i2cPm25Bmpd300;
-	HcuConvSensorDataElement_t spiTempRht03;
-	HcuConvSensorDataElement_t spiHumidRht03;
-	HcuConvSensorDataElement_t spiTempMth01;
-	HcuConvSensorDataElement_t spiHumidMth01;
 	HcuConvSensorDataElement_t si[HCU_SYSDIM_SENSOR_NBR_MAX];  //Sensor Index
 }HcuConvSensorDataShareBlockTable_t;
 

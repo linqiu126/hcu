@@ -661,14 +661,14 @@ OPSTAT func_temp_time_out_read_data_from_dht11(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.gpioTempDht11.fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.gpioTempDht11.fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_dht11_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_dht11_data_element_t));
 		tempData.equipid = 0;
 		tempData.timeStamp = time(0);
 		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		tempData.tempValue = (int)(zHcuVmCtrTab.codab.gpioTempDht11.fVal*100);
+		tempData.tempValue = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].fVal*100);
 
 		ret = dbi_HcuTempDht11DataInfo_save(&tempData);
 		if (ret == FAILURE){
@@ -685,14 +685,14 @@ OPSTAT func_temp_time_out_read_data_from_sht20(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.i2cTempSht20.fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.i2cTempSht20.fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_sht20_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_sht20_data_element_t));
 		tempData.equipid = 0;
 		tempData.timeStamp = time(0);
 		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		tempData.tempValue = (int)(zHcuVmCtrTab.codab.i2cTempSht20.fVal*100);
+		tempData.tempValue = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal*100);
 
 		ret = dbi_HcuTempSht20DataInfo_save(&tempData);
 		if (ret == FAILURE){
@@ -709,14 +709,14 @@ OPSTAT func_temp_time_out_read_data_from_rht03(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.spiTempRht03.fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.spiTempRht03.fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPRHT03].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPRHT03].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_rht03_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_rht03_data_element_t));
 		tempData.equipid = 0;
 		tempData.timeStamp = time(0);
 		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		tempData.tempValue = (int)(zHcuVmCtrTab.codab.spiTempRht03.fVal*100);
+		tempData.tempValue = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPRHT03].fVal*100);
 
 		ret = dbi_HcuTempRht03DataInfo_save(&tempData);
 		if (ret == FAILURE){
@@ -733,14 +733,14 @@ OPSTAT func_temp_time_out_read_data_from_bmp180(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.i2cTempBmp180.fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.i2cTempBmp180.fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_bmp180_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_bmp180_data_element_t));
 		tempData.equipid = 0;
 		tempData.timeStamp = time(0);
 		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		tempData.tempValue = (int)(zHcuVmCtrTab.codab.i2cTempBmp180.fVal*100);
+		tempData.tempValue = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal*100);
 
 		ret = dbi_HcuTempBmp180DataInfo_save(&tempData);
 		if (ret == FAILURE){
@@ -757,14 +757,14 @@ OPSTAT func_temp_time_out_read_data_from_mth01(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.spiTempMth01.fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.spiTempMth01.fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_mth01_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_mth01_data_element_t));
 		tempData.equipid = 0;
 		tempData.timeStamp = time(0);
 		tempData.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		tempData.tempValue = (int)(zHcuVmCtrTab.codab.spiTempMth01.fVal*100);
+		tempData.tempValue = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].fVal*100);
 
 		ret = dbi_HcuTempMth01DataInfo_save(&tempData);
 		if (ret == FAILURE){

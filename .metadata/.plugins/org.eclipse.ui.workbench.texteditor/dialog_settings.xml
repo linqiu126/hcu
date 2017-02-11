@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="sizeof" key="selection"/>
+		<item value="si[SENSOR_ID_GPIOTOXICGASZP01VOC]" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="sizeof"/>
-			<item value="msgie"/>
-			<item value="HUITP_IEID_uni_bfsc_comb_scale_min"/>
-			<item value="0x3B"/>
-			<item value="HUITP_MSGID_uni_bfsc_comb_scale_min"/>
-			<item value="TASK_ID_MAX"/>
-			<item value="HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS"/>
-			<item value="HCU_SYSCFG_SNR_PRESENT_LED_LED2PIN"/>
+			<item value="i2cTempSht20"/>
+			<item value="gpioToxicgasZp01voc"/>
+			<item value="gpioAlcoholMq3alco"/>
+			<item value="gpioToxicgasMq135"/>
+			<item value="gpioHumidDht11"/>
+			<item value="gpioTempDht11"/>
+			<item value="spsHchoZe08ch2o"/>
+			<item value="spsPm25Sharp"/>
 		</list>
 		<list key="replacehistory">
-			<item value="name"/>
-			<item value="codab.si"/>
-			<item value="zHcuVmCtrCodabStaticCfg"/>
-			<item value="SENSOR_ID_MAX"/>
-			<item value="SENSOR_ID_MIN"/>
-			<item value="zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal"/>
-			<item value="zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal"/>
-			<item value="zHcuVmCtrTab.codab.i2cTempBmp180.fVal"/>
+			<item value="si[SENSOR_ID_GPIOTOXICGASZP01VOC]"/>
+			<item value="si[SENSOR_ID_GPIOALCOHOLMQ3ALCO]"/>
+			<item value="si[SENSOR_ID_GPIOTOXICGASMQ135]"/>
+			<item value="si[SENSOR_ID_GPIOHUMIDDHT11]"/>
+			<item value="si[]"/>
+			<item value="si[SENSOR_ID_GPIOTEMPDHT11]"/>
+			<item value="si[SENSOR_ID_SPSHCHOZE08CH2O]"/>
+			<item value="si[SENSOR_ID_SPSPM25SHARP]"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

@@ -88,13 +88,13 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_I2C] = 0;
-	zHcuVmCtrTab.codab.i2cTempSht20.fVal = HCU_SENSOR_VALUE_NULL;
-	zHcuVmCtrTab.codab.i2cHumidSht20.fVal = HCU_SENSOR_VALUE_NULL;
-	zHcuVmCtrTab.codab.i2cLightstrBh1750.fVal = HCU_SENSOR_VALUE_NULL;
-	zHcuVmCtrTab.codab.i2cAirprsBmp180.fVal = HCU_SENSOR_VALUE_NULL;
-	zHcuVmCtrTab.codab.i2cTempBmp180.fVal = HCU_SENSOR_VALUE_NULL;
-	zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal = HCU_SENSOR_VALUE_NULL;
-	zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CHUMIDSHT20].fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CLIGHTSTRBH1750].fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CAIRPRSBMP180].fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CALTITUDEBMP180].fVal = HCU_SENSOR_VALUE_NULL;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal = HCU_SENSOR_VALUE_NULL;
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_I2C, FSM_STATE_I2C_ACTIVIED) == FAILURE){
@@ -185,12 +185,12 @@ OPSTAT func_i2c_read_data_sht20(void)
 	}
 
 	//求平均
-	zHcuVmCtrTab.codab.i2cTempSht20.fVal = tempSum / RPI_I2C_READ_REPEAT_TIMES;
-	zHcuVmCtrTab.codab.i2cTempSht20.updateTimeStamp = time(0);
-	zHcuVmCtrTab.codab.i2cHumidSht20.fVal = humidSum / RPI_I2C_READ_REPEAT_TIMES;
-	zHcuVmCtrTab.codab.i2cHumidSht20.updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal = tempSum / RPI_I2C_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CHUMIDSHT20].fVal = humidSum / RPI_I2C_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CHUMIDSHT20].updateTimeStamp = time(0);
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("I2C: Sensor SHT20 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_I2C_SDA#=%d\n", zHcuVmCtrTab.codab.i2cTempSht20.fVal, zHcuVmCtrTab.codab.i2cHumidSht20.fVal, RPI_I2C_PIN_SDA);
+		HcuDebugPrint("I2C: Sensor SHT20 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_I2C_SDA#=%d\n", zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal, zHcuVmCtrTab.codab.si[SENSOR_ID_I2CHUMIDSHT20].fVal, RPI_I2C_PIN_SDA);
 	}
 
 	return SUCCESS;
@@ -263,10 +263,10 @@ OPSTAT func_i2c_read_data_bh1750(void)
 		hcu_usleep(100000);//sleep 100ms
 	}
 	//输出结果到目标变量中
-	zHcuVmCtrTab.codab.i2cLightstrBh1750.fVal = flightSum / RPI_I2C_READ_REPEAT_TIMES;
-	zHcuVmCtrTab.codab.i2cLightstrBh1750.updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CLIGHTSTRBH1750].fVal = flightSum / RPI_I2C_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CLIGHTSTRBH1750].updateTimeStamp = time(0);
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("I2C: Sensor BH1750 Transformed average float result light = %6.2f lx, DATA_I2C_SDA#=%d\n", zHcuVmCtrTab.codab.i2cLightstrBh1750.fVal, RPI_I2C_PIN_SDA);
+		HcuDebugPrint("I2C: Sensor BH1750 Transformed average float result light = %6.2f lx, DATA_I2C_SDA#=%d\n", zHcuVmCtrTab.codab.si[SENSOR_ID_I2CLIGHTSTRBH1750].fVal, RPI_I2C_PIN_SDA);
 	}
 	close(fd);
 
@@ -337,8 +337,8 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	x2 = (mc << 11) / (x1 + md);
 	b5 = x1 + x2;
 	tempSum = ((b5 + 8) >> 4); //in 0.1degree
-	zHcuVmCtrTab.codab.i2cTempBmp180.fVal = tempSum / 10; //in 1 degree
-	zHcuVmCtrTab.codab.i2cTempBmp180.updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal = tempSum / 10; //in 1 degree
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].updateTimeStamp = time(0);
 
 	//计算真实气压
 	b6 = b5 - 4000;
@@ -361,15 +361,15 @@ OPSTAT func_i2c_read_data_bmp180(void)
 	x2 = (-7357 * p) >> 16;
 	p = p + ((x1 + x2 + 3791) << 4);
 
-	zHcuVmCtrTab.codab.i2cAirprsBmp180.fVal = p; //in Parsca
-	zHcuVmCtrTab.codab.i2cAirprsBmp180.updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CAIRPRSBMP180].fVal = p; //in Parsca
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CAIRPRSBMP180].updateTimeStamp = time(0);
 
 	//计算出海拔高度数据
 	coef = powf(((float)p/(float)RPI_I2C_SENSOR_BMP180_SEA_LEVEL_AIRPRESS), (float)(1.0/5.255));
-	zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal = 44330 * (1- coef);
-	zHcuVmCtrTab.codab.i2cAltitudeBmp180.updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CALTITUDEBMP180].fVal = 44330 * (1- coef);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CALTITUDEBMP180].updateTimeStamp = time(0);
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("I2C: Sensor BMP180 Transformed average float result Airprs=%6.2fPa, Temp=%6.2fC, Altitude = %6.2fm, DATA_I2C_SDA#=%d\n", zHcuVmCtrTab.codab.i2cAirprsBmp180.fVal, zHcuVmCtrTab.codab.i2cTempBmp180.fVal, zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal, RPI_I2C_PIN_SDA);
+		HcuDebugPrint("I2C: Sensor BMP180 Transformed average float result Airprs=%6.2fPa, Temp=%6.2fC, Altitude = %6.2fm, DATA_I2C_SDA#=%d\n", zHcuVmCtrTab.codab.si[SENSOR_ID_I2CAIRPRSBMP180].fVal, zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal, zHcuVmCtrTab.codab.si[SENSOR_ID_I2CALTITUDEBMP180].fVal, RPI_I2C_PIN_SDA);
 	}
 
 	return SUCCESS;
@@ -410,11 +410,11 @@ OPSTAT func_i2c_read_data_bmpd300(void)
 	}
 
 	//求平均
-	zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal = pm25Sum / RPI_I2C_READ_REPEAT_TIMES;
-	zHcuVmCtrTab.codab.i2cPm25Bmpd300.updateTimeStamp = time(0);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal = pm25Sum / RPI_I2C_READ_REPEAT_TIMES;
+	zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].updateTimeStamp = time(0);
 
 	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-		HcuDebugPrint("I2C: Sensor BMPD300 Transformed average float result Pm25=%6.2fmg/m3, DATA_I2C_SDA#=%d\n", zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal, RPI_I2C_PIN_SDA);
+		HcuDebugPrint("I2C: Sensor BMPD300 Transformed average float result Pm25=%6.2fmg/m3, DATA_I2C_SDA#=%d\n", zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal, RPI_I2C_PIN_SDA);
 	}
 
 	return SUCCESS;
