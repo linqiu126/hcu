@@ -104,15 +104,15 @@ OPSTAT fsm_spi_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	}
 
 	int workingCycle = 2;
-	//进入循环工作模式
+	//进入循环工作模式：也可以启定时器进行工作扫描
 	while(1){
 		conCounter = 0;
-		if (HCU_SYSCFG_SNR_PRESENT_MTH01 == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_spi_read_data_mth01();
 			hcu_sleep(RPI_SPI_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-		if (HCU_SYSCFG_SNR_PRESENT_RHT03 == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDRHT03].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_spi_read_data_rht03();
 			hcu_sleep(RPI_SPI_SENSOR_READ_GAP/workingCycle);
 			conCounter++;

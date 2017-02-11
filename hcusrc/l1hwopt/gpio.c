@@ -109,22 +109,22 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	//进入循环工作模式
 	while(1){
 		conCounter = 0;
-		if (HCU_SYSCFG_SNR_PRESENT_DHT11 == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_gpio_read_data_dht11();
 			hcu_sleep(RPI_GPIO_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-		if (HCU_SYSCFG_SNR_PRESENT_MQ135 == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASMQ135].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_gpio_read_data_mq135();
 			hcu_sleep(RPI_GPIO_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-		if (HCU_SYSCFG_SNR_PRESENT_MQ3ALCO == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOALCOHOLMQ3ALCO].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_gpio_read_data_mq3alco();
 			hcu_sleep(RPI_GPIO_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-		if (HCU_SYSCFG_SNR_PRESENT_ZP01VOC == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASZP01VOC].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_gpio_read_data_zp01voc();
 			hcu_sleep(RPI_GPIO_SENSOR_READ_GAP/workingCycle);
 			conCounter++;

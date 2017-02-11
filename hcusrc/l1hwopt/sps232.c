@@ -58,7 +58,7 @@ OPSTAT fsm_sps232_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-	//int conCounter=0;
+	int conCounter=0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -108,17 +108,16 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//这里等待，是为了保证外设在串口初始化后有足够的时间稳定，不然其读数不太正常
 	hcu_sleep(60);
-	//int workingCycle = 2;
-	//进入循环工作模式
-	/*
+	int workingCycle = 2;
+	//进入循环工作模式：或者采用定期器启动模式
 	while(1){
 		conCounter = 0;
-		if (HCU_SENSOR_PRESENT_ZE08CH2O == HCU_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_sps232_read_data_ze08ch2o();
 			hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-		if (HCU_SENSOR_PRESENT_SHARP == HCU_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_sps232_read_data_pm25sharp();
 			hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
@@ -126,7 +125,6 @@ OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		conCounter = workingCycle-conCounter;
 		hcu_sleep(RPI_SPS232_SENSOR_READ_GAP/workingCycle * conCounter);
 	}
-	*/
 
 	return SUCCESS;
 }
@@ -143,7 +141,7 @@ OPSTAT func_sps232_int_init(void)
 {
 	//初始化硬件接口
 	zHcuVmCtrTab.hwinv.sps232.sp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-	if (HCU_SYSCFG_SNR_PRESENT_SHARP == HCU_SYSCFG_SENSOR_PRESENT_YES) zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 2400;
+	if (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].present == HCU_SYSCFG_SENSOR_PRESENT_YES) zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 2400;
 	else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 9600;
 	zHcuVmCtrTab.hwinv.sps232.sp.nBits = 8;
 	zHcuVmCtrTab.hwinv.sps232.sp.nEvent = 'N';

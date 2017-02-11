@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="zHcuVmCtrTab.codab.spiHumidMth01.fVal" key="selection"/>
+		<item value="HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="zHcuVmCtrTab.codab.spiHumidMth01.fVal"/>
-			<item value="zHcuVmCtrTab.codab.spiTempMth01.fVal"/>
-			<item value="zHcuVmCtrTab.codab.spiHumidRht03.fVal"/>
-			<item value="zHcuVmCtrTab.codab.spiTempRht03.fVal"/>
-			<item value="zHcuI2cPm25Bmpd300"/>
-			<item value="zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal"/>
-			<item value="zHcuI2cAltitudeBmp180"/>
-			<item value="zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal"/>
+			<item value="HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS"/>
+			<item value="HCU_SYSCFG_SNR_PRESENT_LED_LED2PIN"/>
+			<item value="SENSOR_ID"/>
+			<item value="HCU_SYSCFG_SNR_PRESENT_MOTOR_SG90"/>
+			<item value="SENSOR"/>
+			<item value="taskName"/>
+			<item value="task"/>
+			<item value="zHcuVmCtrTaskStaticCfg"/>
 		</list>
 		<list key="replacehistory">
+			<item value="name"/>
+			<item value="codab.si"/>
+			<item value="zHcuVmCtrCodabStaticCfg"/>
+			<item value="SENSOR_ID_MAX"/>
+			<item value="SENSOR_ID_MIN"/>
 			<item value="zHcuVmCtrTab.codab.i2cPm25Bmpd300.fVal"/>
 			<item value="zHcuVmCtrTab.codab.i2cAltitudeBmp180.fVal"/>
 			<item value="zHcuVmCtrTab.codab.i2cTempBmp180.fVal"/>
-			<item value="zHcuVmCtrTab.codab.i2cAirprsBmp180.fVal"/>
-			<item value="zHcuVmCtrTab.codab.i2cLightstrBh1750.fVal"/>
-			<item value="zHcuVmCtrTab.codab.i2cHumidSht20.fVal"/>
-			<item value="zHcuVmCtrTab.codab.i2cTempSht20.fVal"/>
-			<item value="zHcuVmCtrTab.codab.gpioToxicgasZp01voc.fVal"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1215" key="DIALOG_X_ORIGIN"/>
-		<item value="359" key="DIALOG_Y_ORIGIN"/>
+		<item value="1159" key="DIALOG_X_ORIGIN"/>
+		<item value="42" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

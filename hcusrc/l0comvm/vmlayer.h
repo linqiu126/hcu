@@ -462,13 +462,42 @@ typedef struct HcuTimeDateTable
 /*
  *   1.5 Convenience sensOr Data shAring Block [codab]
 */
+enum HCU_SENSOR_NAME_ID
+{
+	SENSOR_ID_MIN = 0,
+	SENSOR_ID_SPSPM25SHARP,
+	SENSOR_ID_SPSHCHOZE08CH2O,
+	SENSOR_ID_GPIOTEMPDHT11,
+	SENSOR_ID_GPIOHUMIDDHT11,
+	SENSOR_ID_GPIOTOXICGASMQ135,
+	SENSOR_ID_GPIOALCOHOLMQ3ALCO,
+	SENSOR_ID_GPIOTOXICGASZP01VOC,
+	SENSOR_ID_I2CTEMPSHT20,
+	SENSOR_ID_I2CHUMIDSHT20,
+	SENSOR_ID_I2CLIGHTSTRBH1750,
+	SENSOR_ID_I2CAIRPRSBMP180,
+	SENSOR_ID_I2CTEMPBMP180,
+	SENSOR_ID_I2CALTITUDEBMP180,
+	SENSOR_ID_I2CPM25BMPD300,
+	SENSOR_ID_SPITEMPRHT03,
+	SENSOR_ID_SPIHUMIDRHT03,
+	SENSOR_ID_SPITEMPMTH01,
+	SENSOR_ID_SPIHUMIDMTH01,
+	SENSOR_ID_PWMMOTOSG90,
+	SENSOR_ID_PWMLED2PIN,
+	SENSOR_ID_LEDGPIO2PIN,
+	SENSOR_ID_MAX,
+	SENSOR_ID_INVALID = 0xFF,
+}; //end of HCU_SENSOR_NAME_ID
+
 //简易传感器共享数据区
 typedef struct HcuConvSensorDataElement
 {
-	UINT8  prenset;
+	UINT16 snrId;
+	UINT8  present;
+	char   name[HCU_SYSDIM_SENSOR_NAME_LEN_MAX];
 	UINT8  dataFormat;
 	float  fVal;
-	UINT32 uVal;
 	UINT32 updateTimeStamp;
 }HcuConvSensorDataElement_t;
 //简易传感器总表
@@ -492,6 +521,7 @@ typedef struct HcuConvSensorDataShareBlockTable
 	HcuConvSensorDataElement_t spiHumidRht03;
 	HcuConvSensorDataElement_t spiTempMth01;
 	HcuConvSensorDataElement_t spiHumidMth01;
+	HcuConvSensorDataElement_t si[HCU_SYSDIM_SENSOR_NBR_MAX];  //Sensor Index
 }HcuConvSensorDataShareBlockTable_t;
 
 //三表之一的系统总控表
@@ -595,6 +625,15 @@ typedef struct HcuVmCtrTaskStaticCfg
 	const UINT8 traceModFromRestrictFlag;
 }HcuVmCtrTaskStaticCfg_t;
 extern HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[];
+
+//传感器配置的基础配置信息
+typedef struct HcuVmCtrCodabStaticCfg
+{
+	const UINT16 sensorId;
+	const char   snrName[HCU_SYSDIM_SENSOR_NAME_LEN_MAX];
+	const UINT8  presentFlag;
+}HcuVmCtrCodabStaticCfg_t;
+extern HcuVmCtrCodabStaticCfg_t zHcuVmCtrCodabStaticCfg[];
 
 
 /*
@@ -847,6 +886,7 @@ void hcu_vm_task_delete_except_svrcon_and_hcumain(void);
 //获取系统设备唯一标示区的数据。由于敏感性，这块数据不能做成工程参数配置方式，而必须采用工厂烧录方式
 OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void);
 OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void);
+OPSTAT hcu_vm_ctrtab_read_sensor_init_cfg_into_mem(void);
 void   hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target);
 extern UINT16 hcu_vm_search_task_static_cfg_table_of_row(int taskid);
 extern UINT16 hcu_vm_search_msg_static_cfg_table_of_row(int msgid);

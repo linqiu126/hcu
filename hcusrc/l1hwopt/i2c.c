@@ -110,22 +110,22 @@ OPSTAT fsm_i2c_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	//进入循环工作模式
 	while(1){
 		conCounter = 0;
-		if (HCU_SYSCFG_SNR_PRESENT_BMP180 == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_i2c_read_data_bmp180();
 			hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-		if (HCU_SYSCFG_SNR_PRESENT_SHT20 == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_i2c_read_data_sht20();
 			hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-		if (HCU_SYSCFG_SNR_PRESENT_BH1750 == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CLIGHTSTRBH1750].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_i2c_read_data_bh1750();
 			hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle);
 			conCounter++;
 		}
-		if (HCU_SYSCFG_SNR_PRESENT_BMPD300 == HCU_SYSCFG_SENSOR_PRESENT_YES){
+		if (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].present == HCU_SYSCFG_SENSOR_PRESENT_YES){
 			func_i2c_read_data_bmpd300();
 			hcu_sleep(RPI_I2C_SENSOR_READ_GAP/workingCycle);
 			conCounter++;

@@ -563,6 +563,55 @@ HcuSysEngPhyBootCfg_t zHcuSysEngPhyBootCfg[] = {
 	{8,		"<rsv>",                    "</rsv>"}
 };
 
+//系统设备传感器配置表
+HcuVmCtrCodabStaticCfg_t zHcuVmCtrCodabStaticCfg[] = {
+	//START FLAG                        传感器名字                         是否配置激活
+	{SENSOR_ID_MIN,                     "SNR_MIN",                       HCU_SYSCFG_SENSOR_PRESENT_NO},
+	//正式的传感器列表
+	{SENSOR_ID_SPSPM25SHARP,            "SNR_spsPm25Sharp",              HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_SPSHCHOZE08CH2O,         "SNR_spsHchoZe08ch2o",           HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_GPIOTEMPDHT11,           "SNR_gpioTempDht11",             HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_GPIOHUMIDDHT11,          "SNR_gpioHumidDht11",            HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_GPIOTOXICGASMQ135,       "SNR_gpioToxicgasMq135",         HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_GPIOALCOHOLMQ3ALCO,      "SNR_gpioAlcoholMq3alco",        HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_GPIOTOXICGASZP01VOC,     "SNR_gpioToxicgasZp01voc",       HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_I2CTEMPSHT20,            "SNR_i2cTempSht20",              HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_I2CHUMIDSHT20,           "SNR_i2cHumidSht20",             HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_I2CLIGHTSTRBH1750,       "SNR_i2cLightstrBh1750",         HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_I2CAIRPRSBMP180,         "SNR_i2cAirprsBmp180",           HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_I2CTEMPBMP180,           "SNR_i2cTempBmp180",             HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_I2CALTITUDEBMP180,       "SNR_i2cAltitudeBmp180",         HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_I2CPM25BMPD300,          "SNR_i2cPm25Bmpd300",            HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_SPITEMPRHT03,            "SNR_spiTempRht03",              HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_SPIHUMIDRHT03,           "SNR_spiHumidRht03",             HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_SPITEMPMTH01,            "SNR_spiTempMth01",              HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_SPIHUMIDMTH01,           "SNR_spiHumidMth01",             HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_PWMMOTOSG90,             "SNR_pwmMotoSg90",               HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_PWMLED2PIN,              "SNR_pwmLed2Pin",                HCU_SYSCFG_SENSOR_PRESENT_NO},
+	{SENSOR_ID_LEDGPIO2PIN,             "SNR_ledGpio2Pin",               HCU_SYSCFG_SENSOR_PRESENT_NO},
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+	{SENSOR_ID_GPIOTEMPDHT11,           "SNR_gpioTempDht11",             HCU_SYSCFG_SENSOR_PRESENT_YES},
+	{SENSOR_ID_GPIOHUMIDDHT11,          "SNR_gpioHumidDht11",            HCU_SYSCFG_SENSOR_PRESENT_YES},
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	{SENSOR_ID_GPIOTEMPDHT11,           "SNR_gpioTempDht11",             HCU_SYSCFG_SENSOR_PRESENT_YES},
+	{SENSOR_ID_GPIOHUMIDDHT11,          "SNR_gpioHumidDht11",            HCU_SYSCFG_SENSOR_PRESENT_YES},
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+#else
+	#error Un-correct constant definition
+#endif
+	//END_FLAG
+	{SENSOR_ID_MAX,                     "SNR_MAX",                          HCU_SYSCFG_SENSOR_PRESENT_NO},
+};
+
 
 /*
  *
@@ -2439,6 +2488,13 @@ int hcu_vm_main_entry(void)
 		}
 	}
 
+	//智能初始化：将SENSORID初始化到系统中，而且还需要提供研发足够的灵活性
+	if (hcu_vm_ctrtab_read_sensor_init_cfg_into_mem() == FAILURE){
+		HcuDebugPrint("HCU-MAIN: Init Sensor set error!\n");
+		return EXIT_SUCCESS;
+	}
+	HcuDebugPrint("HCU-VM: Set basic sensor data correctly from SYSTEM DEFAULT parameters!\n");
+
 	//从数据库或者系统缺省配置中，读取系统配置的工程参数
 	if (hcu_hwinv_engpar_read_pop_data_into_mem() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Read database or system init parameters into memory error!\n");
@@ -2683,6 +2739,53 @@ void hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UIN
 	}
 }
 
+
+//读取传感器初始化表单
+OPSTAT hcu_vm_ctrtab_read_sensor_init_cfg_into_mem(void)
+{
+	int item = 0;
+	UINT32 snrid = 0;
+
+	//扫描传感器输入配置表
+	//起始必须是SENSOR_ID_MIN条目
+	if (zHcuVmCtrCodabStaticCfg[0].sensorId != SENSOR_ID_MIN){
+		HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, sensor input configuration error!\n");
+		return FAILURE;
+	}
+
+	//以SENSOR_ID_MAX为终止条目：最大为2倍，因为初始化表单中出现了两次，一次赋基础，一次控制激活与否
+	for(item=1; item <= (2*HCU_SYSDIM_SENSOR_NBR_MAX); item++){
+		if(zHcuVmCtrCodabStaticCfg[item].sensorId == SENSOR_ID_MAX){
+			break;
+		}
+		if ((zHcuVmCtrCodabStaticCfg[item].presentFlag != HCU_SYSCFG_SENSOR_PRESENT_YES) && (zHcuVmCtrCodabStaticCfg[item].presentFlag != HCU_SYSCFG_SENSOR_PRESENT_NO)){
+			HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, sensor input configuration error!\n");
+			return FAILURE;
+		}
+		if ((zHcuVmCtrCodabStaticCfg[item].sensorId <= SENSOR_ID_MIN) || (zHcuVmCtrCodabStaticCfg[item].sensorId > SENSOR_ID_MAX)){
+			HcuErrorPrint("HCU-VM: Initialize HCU-VM failure, sensor input configuration error!\n");
+			return FAILURE;
+		}
+	}
+
+	//从任务配置输入区域读取参数到传感器配置表，一旦遇到SENSOR_ID_MAX就终止
+	item = 0;
+	while(zHcuVmCtrCodabStaticCfg[item].sensorId != SENSOR_ID_MAX){
+		snrid = zHcuVmCtrCodabStaticCfg[item].sensorId;
+		//这个是使用了静态配置表的方式，而且后面还OVERWRITE前面的，这种技巧可以在分项目中灵活配置。一般在公共区放置无效任务模块，在分项目区单独控制开启与否。
+		zHcuVmCtrTab.codab.si[snrid].snrId = snrid;
+		strcpy(zHcuVmCtrTab.codab.si[snrid].name, zHcuVmCtrCodabStaticCfg[item].snrName);
+		zHcuVmCtrTab.codab.si[snrid].present = zHcuVmCtrCodabStaticCfg[item].presentFlag;
+		item++;
+	}
+	//最后一项必定是SENSOR_ID_MAX
+	zHcuVmCtrTab.codab.si[SENSOR_ID_MAX].snrId = SENSOR_ID_MAX;
+	strcpy(zHcuVmCtrTab.codab.si[SENSOR_ID_MAX].name, zHcuVmCtrCodabStaticCfg[item].snrName);
+	zHcuVmCtrTab.codab.si[SENSOR_ID_MAX].present = zHcuVmCtrCodabStaticCfg[item].presentFlag;
+
+	return SUCCESS;
+}
+
 //搜索TASK静态表中的TASKID，找到行号
 UINT16 hcu_vm_search_task_static_cfg_table_of_row(int taskid)
 {
@@ -2731,4 +2834,22 @@ UINT16 hcu_vm_search_timer_static_cfg_table_of_row(int timerid)
 	}
 	return i; //退出来的肯定是TIMER_ID_MAX行
 }
+
+//搜索SENSOR静态表中的SENSORID，找到行号
+UINT16 hcu_vm_search_sensor_static_cfg_table_of_row(int sndid)
+{
+	int i = 0;
+
+	//为了加快效率，先探测是否属于全排列
+	if (zHcuVmCtrCodabStaticCfg[sndid].sensorId == sndid) return sndid;
+	//不行再遍历
+	while(zHcuVmCtrCodabStaticCfg[i].sensorId != SENSOR_ID_MAX){
+		if(zHcuVmCtrCodabStaticCfg[i].sensorId == sndid)
+			return i;
+		i++;
+	}
+	return i; //退出来的肯定是SENSOR_ID_MAX行
+}
+
+
 
