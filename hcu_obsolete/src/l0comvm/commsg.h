@@ -667,7 +667,7 @@ typedef struct com_gps_pos //
 	char ns;
 	UINT32 gpsy;
 	UINT32 gpsz;
-}com_gps_pos_t;
+}msgie_struct_com_gps_pos_t;
 typedef struct  sensor_modbus_opertion_general //
 {
 	UINT32 equId;
@@ -701,7 +701,7 @@ typedef struct  sensor_emc_data_element //
 	UINT32 equipid;
 	UINT8  dataFormat;
 	UINT32 emcValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -713,7 +713,7 @@ typedef struct  sensor_pm25_data_element //
 	UINT32 pm1d0Value;
 	UINT32 pm2d5Value;
 	UINT32 pm10Value;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -737,7 +737,7 @@ typedef struct  sensor_winddir_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 winddirValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -747,7 +747,7 @@ typedef struct  sensor_windspd_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 windspdValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -757,7 +757,7 @@ typedef struct  sensor_temp_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 tempValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -802,7 +802,7 @@ typedef struct  sensor_humid_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 humidValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -840,7 +840,7 @@ typedef struct  sensor_noise_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 noiseValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -851,7 +851,7 @@ typedef struct  sensor_hsmmp_data_element //
 	char hsmmpFdir[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	char hsmmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	char hsmmpLink[HCU_SYSDIM_FILE_NAME_LEN_MAX];
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -861,7 +861,7 @@ typedef struct sensor_hsmmp_link_element
 	UINT32 equipid;
 	UINT32 linkLen;
 	char   linkName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStampStart;
 	UINT32 timeStampEnd;
 	UINT32 nTimes;
@@ -871,7 +871,7 @@ typedef struct  sensor_airprs_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 airprsValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -895,7 +895,7 @@ typedef struct  sensor_co1_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 co1Value;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -905,7 +905,7 @@ typedef struct  sensor_lightstr_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 lightstrValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -922,7 +922,7 @@ typedef struct  sensor_alcohol_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 alcoholValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -939,7 +939,7 @@ typedef struct  sensor_hcho_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 hchoValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -956,7 +956,7 @@ typedef struct  sensor_toxicgas_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 toxicgasValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;

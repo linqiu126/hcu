@@ -35,7 +35,6 @@ extern HcuFsmStateItem_t HcuFsmCloudvela[];
 extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 extern CloudvelaTable_t zHcuCloudvelaTable;
 extern CURL *zHcuCloudCurlPtr;
-extern GpsPosInfo_t zHcuGpsPosInfo;//for test by shanchun
 
 //FSM API
 extern OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

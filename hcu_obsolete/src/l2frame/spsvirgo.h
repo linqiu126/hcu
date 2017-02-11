@@ -26,7 +26,7 @@ enum FSM_STATE_SPSVIRGO
 
 //Global variables
 extern HcuFsmStateItem_t FsmSpsvirgo[];
-extern GpsPosInfo_t zHcuGpsPosInfo;
+extern GpsPosInfo_t zHcuVmCtrTab.hwinv.gps;
 
 
 #define SPSVIRGO_ACTIVE_CHOICE_NOISE_MICROPHONE 1

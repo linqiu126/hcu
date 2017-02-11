@@ -291,11 +291,11 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			strcpy(record.hsmmpFdir, rcv.hsmmp.hsmmpFdir);
 			strcpy(record.hsmmpFname, rcv.hsmmp.hsmmpFname);
 			strcpy(record.hsmmpLink, newpath); //都是以HCU_FILE_NAME_LENGTH_MAX长度为限
-			record.gpsx = zHcuGpsPosInfo.gpsX;
-			record.gpsy = zHcuGpsPosInfo.gpsY;
-			record.gpsz = zHcuGpsPosInfo.gpsZ;
-			record.ew = zHcuGpsPosInfo.EW;
-			record.ns = zHcuGpsPosInfo.NS;
+			record.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+			record.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+			record.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+			record.ew = zHcuVmCtrTab.hwinv.gps.EW;
+			record.ns = zHcuVmCtrTab.hwinv.gps.NS;
 			//RECORD存入内存盘
 			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{
@@ -349,11 +349,11 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			snd.link.linkLen = strlen(newpath);
 
 			//考虑到AVORION将放到外部单独进程中，GPS时钟无法共享，故而GPS数据的采集直接放到HSMMP模块中，而不放到传感器中
-			snd.link.gps.gpsx = zHcuGpsPosInfo.gpsX;
-			snd.link.gps.gpsy = zHcuGpsPosInfo.gpsY;
-			snd.link.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-			snd.link.gps.ew = zHcuGpsPosInfo.EW;
-			snd.link.gps.ns = zHcuGpsPosInfo.NS;
+			snd.link.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+			snd.link.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+			snd.link.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+			snd.link.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+			snd.link.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 			snd.link.timeStampStart = rcv.hsmmp.timeStamp;
 			snd.link.timeStampEnd = time(0);
 
@@ -381,11 +381,11 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			strcpy(record.hsmmpFdir, rcv.hsmmp.hsmmpFdir);
 			strcpy(record.hsmmpFname, rcv.hsmmp.hsmmpFname);
 			strcpy(record.hsmmpLink, newpath); //都是以HCU_FILE_NAME_LENGTH_MAX长度为限
-			record.gpsx = zHcuGpsPosInfo.gpsX;
-			record.gpsy = zHcuGpsPosInfo.gpsY;
-			record.gpsz = zHcuGpsPosInfo.gpsZ;
-			record.ew = zHcuGpsPosInfo.EW;
-			record.ns = zHcuGpsPosInfo.NS;
+			record.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+			record.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+			record.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+			record.ew = zHcuVmCtrTab.hwinv.gps.EW;
+			record.ns = zHcuVmCtrTab.hwinv.gps.NS;
 			//RECORD存入内存盘
 			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
 			{

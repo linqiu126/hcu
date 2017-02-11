@@ -1214,8 +1214,8 @@ OPSTAT func_cloudvela_cmd_control_check(void)
 		//for GPS test
 		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: NS is %c, latitude is %d, EW is %c, longitude is %d, Status is %c, speed is %d, high is %d.\n",
-					zHcuGpsPosInfo.NS, zHcuGpsPosInfo.gpsY, zHcuGpsPosInfo.EW, zHcuGpsPosInfo.gpsX, zHcuGpsPosInfo.status, zHcuGpsPosInfo.speed, zHcuGpsPosInfo.gpsZ);
-			HcuDebugPrint("CLOUDVELA: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuGpsPosInfo.D.year, zHcuGpsPosInfo.D.month, zHcuGpsPosInfo.D.day, zHcuGpsPosInfo.D.hour, zHcuGpsPosInfo.D.minute, zHcuGpsPosInfo.D.second);
+					zHcuVmCtrTab.hwinv.gps.NS, zHcuVmCtrTab.hwinv.gps.gpsY, zHcuVmCtrTab.hwinv.gps.EW, zHcuVmCtrTab.hwinv.gps.gpsX, zHcuVmCtrTab.hwinv.gps.status, zHcuVmCtrTab.hwinv.gps.speed, zHcuVmCtrTab.hwinv.gps.gpsZ);
+			HcuDebugPrint("CLOUDVELA: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuVmCtrTab.hwinv.gps.D.year, zHcuVmCtrTab.hwinv.gps.D.month, zHcuVmCtrTab.hwinv.gps.D.day, zHcuVmCtrTab.hwinv.gps.D.hour, zHcuVmCtrTab.hwinv.gps.D.minute, zHcuVmCtrTab.hwinv.gps.D.second);
 		}
 
 		//Send out

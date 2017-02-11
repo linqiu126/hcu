@@ -38,7 +38,7 @@ typedef struct dir
 
 //Global variables
 extern HcuFsmStateItem_t FsmHsmmp[];
-extern GpsPosInfo_t zHcuGpsPosInfo;
+extern GpsPosInfo_t zHcuVmCtrTab.hwinv.gps;
 
 //定时器，控制摄像头工作周期及时长
 //#define HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second

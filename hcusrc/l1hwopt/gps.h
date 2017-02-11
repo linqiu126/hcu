@@ -28,7 +28,6 @@ enum FSM_STATE_GPS
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmGps[];
-extern GpsPosInfo_t zHcuGpsPosInfo;
 
 //API
 extern OPSTAT fsm_gps_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

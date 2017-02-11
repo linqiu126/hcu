@@ -31,7 +31,7 @@ extern HcuFsmStateItem_t FsmCloudvela[];
 extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 extern CloudvelaTable_t zHcuCloudvelaTable;
 extern CURL *zHcuCloudCurlPtr;
-extern GpsPosInfo_t zHcuGpsPosInfo;//for test by shanchun
+extern msgie_struct_gps_pos_info_t zHcuVmCtrTab.hwinv.gps;//for test by shanchun
 
 //Added by Shanchun for CMD command
 extern UINT8 CMDShortTimerFlag;

@@ -36,7 +36,7 @@ HcuFsmStateItem_t FsmGps[] =
 };
 
 //Global variables
-GpsPosInfo_t zHcuGpsPosInfo;
+GpsPosInfo_t zHcuVmCtrTab.hwinv.gps;
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
 
 //For Serial Port Init
@@ -93,9 +93,9 @@ OPSTAT fsm_gps_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	*/
 
 	//初始化全局变量
-	memset(&zHcuGpsPosInfo, 0, sizeof(GpsPosInfo_t));
-	zHcuGpsPosInfo.EW = 'E';
-	zHcuGpsPosInfo.NS = 'N';
+	memset(&zHcuVmCtrTab.hwinv.gps, 0, sizeof(GpsPosInfo_t));
+	zHcuVmCtrTab.hwinv.gps.EW = 'E';
+	zHcuVmCtrTab.hwinv.gps.NS = 'N';
 
 	gSerialPortForGPS.id = zHcuSysEngPar.serialport.SeriesPortForGPS;
 	gSerialPortForGPS.nSpeed = HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT;
@@ -322,74 +322,74 @@ void func_gps_parse()
     if(c=='C')
     {
         //"GPRMC"
-    	zHcuGpsPosInfo.D.hour   =(GPS_BUF[ 7]-'0')*10+(GPS_BUF[ 8]-'0');
-    	zHcuGpsPosInfo.D.minute =(GPS_BUF[ 9]-'0')*10+(GPS_BUF[10]-'0');
-    	zHcuGpsPosInfo.D.second =(GPS_BUF[11]-'0')*10+(GPS_BUF[12]-'0');
+    	zHcuVmCtrTab.hwinv.gps.D.hour   =(GPS_BUF[ 7]-'0')*10+(GPS_BUF[ 8]-'0');
+    	zHcuVmCtrTab.hwinv.gps.D.minute =(GPS_BUF[ 9]-'0')*10+(GPS_BUF[10]-'0');
+    	zHcuVmCtrTab.hwinv.gps.D.second =(GPS_BUF[11]-'0')*10+(GPS_BUF[12]-'0');
         tmp = GetComma(9,GPS_BUF);
-        zHcuGpsPosInfo.D.day    =(GPS_BUF[tmp+0]-'0')*10+(GPS_BUF[tmp+1]-'0');
-        zHcuGpsPosInfo.D.month  =(GPS_BUF[tmp+2]-'0')*10+(GPS_BUF[tmp+3]-'0');
-        zHcuGpsPosInfo.D.year   =(GPS_BUF[tmp+4]-'0')*10+(GPS_BUF[tmp+5]-'0')+2000;
-        UTC2BTC(zHcuGpsPosInfo.D);
+        zHcuVmCtrTab.hwinv.gps.D.day    =(GPS_BUF[tmp+0]-'0')*10+(GPS_BUF[tmp+1]-'0');
+        zHcuVmCtrTab.hwinv.gps.D.month  =(GPS_BUF[tmp+2]-'0')*10+(GPS_BUF[tmp+3]-'0');
+        zHcuVmCtrTab.hwinv.gps.D.year   =(GPS_BUF[tmp+4]-'0')*10+(GPS_BUF[tmp+5]-'0')+2000;
+        UTC2BTC(zHcuVmCtrTab.hwinv.gps.D);
         //zHcuGpsPosInfo.D.hour = zHcuGpsPosInfo.D.hour +8;
-        zHcuGpsPosInfo.D.second++;
-        if(zHcuGpsPosInfo.D.second>59){
-        	zHcuGpsPosInfo.D.second=0;
-        	zHcuGpsPosInfo.D.minute++;
-            if(zHcuGpsPosInfo.D.minute>59){
-            	zHcuGpsPosInfo.D.minute=0;
-            	zHcuGpsPosInfo.D.hour++;
+        zHcuVmCtrTab.hwinv.gps.D.second++;
+        if(zHcuVmCtrTab.hwinv.gps.D.second>59){
+        	zHcuVmCtrTab.hwinv.gps.D.second=0;
+        	zHcuVmCtrTab.hwinv.gps.D.minute++;
+            if(zHcuVmCtrTab.hwinv.gps.D.minute>59){
+            	zHcuVmCtrTab.hwinv.gps.D.minute=0;
+            	zHcuVmCtrTab.hwinv.gps.D.hour++;
             }
         }
 
-        zHcuGpsPosInfo.D.hour += 8;
+        zHcuVmCtrTab.hwinv.gps.D.hour += 8;
 
-        if(zHcuGpsPosInfo.D.hour>23)
+        if(zHcuVmCtrTab.hwinv.gps.D.hour>23)
         {
-        	zHcuGpsPosInfo.D.hour-=24;
-        	zHcuGpsPosInfo.D.day+=1;
-            if(zHcuGpsPosInfo.D.month==2 ||
-            		zHcuGpsPosInfo.D.month==4 ||
-					zHcuGpsPosInfo.D.month==6 ||
-					zHcuGpsPosInfo.D.month==9 ||
-					zHcuGpsPosInfo.D.month==11 ){
-                if(zHcuGpsPosInfo.D.day>30){
-                	zHcuGpsPosInfo.D.day=1;
-                	zHcuGpsPosInfo.D.month++;
+        	zHcuVmCtrTab.hwinv.gps.D.hour-=24;
+        	zHcuVmCtrTab.hwinv.gps.D.day+=1;
+            if(zHcuVmCtrTab.hwinv.gps.D.month==2 ||
+            		zHcuVmCtrTab.hwinv.gps.D.month==4 ||
+					zHcuVmCtrTab.hwinv.gps.D.month==6 ||
+					zHcuVmCtrTab.hwinv.gps.D.month==9 ||
+					zHcuVmCtrTab.hwinv.gps.D.month==11 ){
+                if(zHcuVmCtrTab.hwinv.gps.D.day>30){
+                	zHcuVmCtrTab.hwinv.gps.D.day=1;
+                	zHcuVmCtrTab.hwinv.gps.D.month++;
                 }
             }
             else{
-                if(zHcuGpsPosInfo.D.day>31){
-                	zHcuGpsPosInfo.D.day=1;
-                	zHcuGpsPosInfo.D.month++;
+                if(zHcuVmCtrTab.hwinv.gps.D.day>31){
+                	zHcuVmCtrTab.hwinv.gps.D.day=1;
+                	zHcuVmCtrTab.hwinv.gps.D.month++;
                 }
             }
-            if(zHcuGpsPosInfo.D.year % 4 == 0 ){
-                if(zHcuGpsPosInfo.D.day > 29 && zHcuGpsPosInfo.D.month ==2){
-                	zHcuGpsPosInfo.D.day=1;
-                	zHcuGpsPosInfo.D.month++;
+            if(zHcuVmCtrTab.hwinv.gps.D.year % 4 == 0 ){
+                if(zHcuVmCtrTab.hwinv.gps.D.day > 29 && zHcuVmCtrTab.hwinv.gps.D.month ==2){
+                	zHcuVmCtrTab.hwinv.gps.D.day=1;
+                	zHcuVmCtrTab.hwinv.gps.D.month++;
                 }
             }
             else{
-                if(zHcuGpsPosInfo.D.day>28 && zHcuGpsPosInfo.D.month ==2){
-                	zHcuGpsPosInfo.D.day=1;
-                	zHcuGpsPosInfo.D.month++;
+                if(zHcuVmCtrTab.hwinv.gps.D.day>28 && zHcuVmCtrTab.hwinv.gps.D.month ==2){
+                	zHcuVmCtrTab.hwinv.gps.D.day=1;
+                	zHcuVmCtrTab.hwinv.gps.D.month++;
                 }
             }
-            if(zHcuGpsPosInfo.D.month>12){
-            	zHcuGpsPosInfo.D.month-=12;
-            	zHcuGpsPosInfo.D.year++;
+            if(zHcuVmCtrTab.hwinv.gps.D.month>12){
+            	zHcuVmCtrTab.hwinv.gps.D.month-=12;
+            	zHcuVmCtrTab.hwinv.gps.D.year++;
             }
         }
 
-        zHcuGpsPosInfo.status   = GPS_BUF[GetComma(2,GPS_BUF)];
+        zHcuVmCtrTab.hwinv.gps.status   = GPS_BUF[GetComma(2,GPS_BUF)];
         latitude = get_locate(get_double_number(&GPS_BUF[GetComma(3,GPS_BUF)]));
-        zHcuGpsPosInfo.gpsY = (UINT32)(latitude*100000);
-        zHcuGpsPosInfo.NS       = GPS_BUF[GetComma(4,GPS_BUF)];
+        zHcuVmCtrTab.hwinv.gps.gpsY = (UINT32)(latitude*100000);
+        zHcuVmCtrTab.hwinv.gps.NS       = GPS_BUF[GetComma(4,GPS_BUF)];
         longitude = get_locate(get_double_number(&GPS_BUF[GetComma(5,GPS_BUF)]));
-        zHcuGpsPosInfo.gpsX = (UINT32)(longitude*100000);
-        zHcuGpsPosInfo.EW       = GPS_BUF[GetComma(6,GPS_BUF)];
+        zHcuVmCtrTab.hwinv.gps.gpsX = (UINT32)(longitude*100000);
+        zHcuVmCtrTab.hwinv.gps.EW       = GPS_BUF[GetComma(6,GPS_BUF)];
         speed = get_double_number(&GPS_BUF[GetComma(7,GPS_BUF)]);
-        zHcuGpsPosInfo.speed = (UINT32)speed;
+        zHcuVmCtrTab.hwinv.gps.speed = (UINT32)speed;
 
     }
 
@@ -397,7 +397,7 @@ void func_gps_parse()
     {
         //"$GPGGA"
     	high = get_double_number(&GPS_BUF[GetComma(9,GPS_BUF)]);
-    	zHcuGpsPosInfo.gpsZ = (UINT32)high;
+    	zHcuVmCtrTab.hwinv.gps.gpsZ = (UINT32)high;
     }
  }
 
@@ -545,14 +545,14 @@ void func_gps_receive(UINT32 Gpsfd)
 void func_gps_print_info(void)
 {
 
-	HcuDebugPrint("GPS: NS is %c.\n", zHcuGpsPosInfo.NS);
-	HcuDebugPrint("GPS: latitude is %d.\n", zHcuGpsPosInfo.gpsY);
-	HcuDebugPrint("GPS: EW is %c.\n", zHcuGpsPosInfo.EW);
-	HcuDebugPrint("GPS: longitude is %d.\n", zHcuGpsPosInfo.gpsX);
-	HcuDebugPrint("GPS: Status is %c.\n", zHcuGpsPosInfo.status);
-	HcuDebugPrint("GPS: speed is %d.\n", zHcuGpsPosInfo.speed);
-	HcuDebugPrint("GPS: high is %d.\n\n\n", zHcuGpsPosInfo.gpsZ);
-	HcuDebugPrint("GPS: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuGpsPosInfo.D.year, zHcuGpsPosInfo.D.month, zHcuGpsPosInfo.D.day, zHcuGpsPosInfo.D.hour, zHcuGpsPosInfo.D.minute, zHcuGpsPosInfo.D.second);
+	HcuDebugPrint("GPS: NS is %c.\n", zHcuVmCtrTab.hwinv.gps.NS);
+	HcuDebugPrint("GPS: latitude is %d.\n", zHcuVmCtrTab.hwinv.gps.gpsY);
+	HcuDebugPrint("GPS: EW is %c.\n", zHcuVmCtrTab.hwinv.gps.EW);
+	HcuDebugPrint("GPS: longitude is %d.\n", zHcuVmCtrTab.hwinv.gps.gpsX);
+	HcuDebugPrint("GPS: Status is %c.\n", zHcuVmCtrTab.hwinv.gps.status);
+	HcuDebugPrint("GPS: speed is %d.\n", zHcuVmCtrTab.hwinv.gps.speed);
+	HcuDebugPrint("GPS: high is %d.\n\n\n", zHcuVmCtrTab.hwinv.gps.gpsZ);
+	HcuDebugPrint("GPS: year = %d, month = %d, day = %d, hour = %d, minute = %d, second = %d\n", zHcuVmCtrTab.hwinv.gps.D.year, zHcuVmCtrTab.hwinv.gps.D.month, zHcuVmCtrTab.hwinv.gps.D.day, zHcuVmCtrTab.hwinv.gps.D.hour, zHcuVmCtrTab.hwinv.gps.D.minute, zHcuVmCtrTab.hwinv.gps.D.second);
 
 }
 

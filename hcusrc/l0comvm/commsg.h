@@ -489,21 +489,32 @@ enum HCU_INTER_TASK_MSG_ID
 #define MSG_ID_END 0xFF  //跟MASK_MSGID_NUM_IN_ONE_TASK设置息息相关，不能随便改动
 #define MSG_ID_INVALID 0xFFFFFFFF
 
+/**************************************************************************************
+ *                                                                                    *
+ *            常量定义                                                                 *
+ *                                                                                    *
+ *************************************************************************************/
+#define HCU_SYSMSG_COMMON_ACTION_NULL 		0
+#define HCU_SYSMSG_COMMON_ACTION_YES 		1
+#define HCU_SYSMSG_COMMON_ACTION_NO 		2
+#define HCU_SYSMSG_COMMON_ACTION_INVALID 	0xFF
+
+
 
 /**************************************************************************************
  *                                                                                    *
  *            COMMON MESSAGE STRUCTURE                                                *
  *                                                                                    *
  *************************************************************************************/
-typedef struct com_gps_pos //
+typedef struct msgie_struct_com_gps_pos //
 {
 	char ew;
 	UINT32 gpsx;
 	char ns;
 	UINT32 gpsy;
 	UINT32 gpsz;
-}com_gps_pos_t;
-typedef struct  sensor_modbus_opertion_general //
+}msgie_struct_com_gps_pos_t;
+typedef struct  msgie_struct_sensor_modbus_opertion_general //
 {
 	UINT32 equId;
 	UINT8  powerOnOff;
@@ -536,7 +547,7 @@ typedef struct  sensor_emc_data_element //
 	UINT32 equipid;
 	UINT8  dataFormat;
 	UINT32 emcValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -548,7 +559,7 @@ typedef struct  sensor_pm25_data_element //
 	UINT32 pm1d0Value;
 	UINT32 pm2d5Value;
 	UINT32 pm10Value;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -572,7 +583,7 @@ typedef struct  sensor_winddir_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 winddirValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -582,7 +593,7 @@ typedef struct  sensor_windspd_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 windspdValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -592,7 +603,7 @@ typedef struct  sensor_temp_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 tempValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -637,7 +648,7 @@ typedef struct  sensor_humid_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 humidValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -675,7 +686,7 @@ typedef struct  sensor_noise_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 noiseValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -686,7 +697,7 @@ typedef struct  sensor_hsmmp_data_element //
 	char hsmmpFdir[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	char hsmmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	char hsmmpLink[HCU_SYSDIM_FILE_NAME_LEN_MAX];
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -696,7 +707,7 @@ typedef struct sensor_hsmmp_link_element
 	UINT32 equipid;
 	UINT32 linkLen;
 	char   linkName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStampStart;
 	UINT32 timeStampEnd;
 	UINT32 nTimes;
@@ -706,7 +717,7 @@ typedef struct  sensor_airprs_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 airprsValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -730,7 +741,7 @@ typedef struct  sensor_co1_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 co1Value;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -740,7 +751,7 @@ typedef struct  sensor_lightstr_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 lightstrValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -757,7 +768,7 @@ typedef struct  sensor_alcohol_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 alcoholValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -774,7 +785,7 @@ typedef struct  sensor_hcho_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 hchoValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -791,7 +802,7 @@ typedef struct  sensor_toxicgas_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 toxicgasValue;
-	com_gps_pos_t gps;
+	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
@@ -811,49 +822,25 @@ typedef struct  sensor_toxicgas_zp01voc_data_element //
 	UINT32 timeStamp;
 }sensor_toxicgas_zp01voc_data_element_t;
 
-//L2 and L3 module used GPS information, defined structure here
-typedef struct hcuStrDataTime
+//BFSC的汇报数据内容
+typedef struct msgie_struct_bfsc_scale_weight_sta_element
 {
-	UINT32 hour;
-	UINT32 minute;
-	UINT32 second;
-	UINT32 day;
-	UINT32 month;
-	UINT32 year;
-}hcuStrDateTime_t;
-typedef struct GpsPosInfo
-{
-	hcuStrDateTime_t D; //UTC日期时间
-	CHAR status;
-	UINT32 gpsX; //纬度
-	CHAR EW;
-	UINT32 gpsY; //经度
-	CHAR NS;
-	UINT32 gpsZ;
-	UINT32 speed; //速度
-	UINT32 resistence; //反映多少个GPS模块扫描周期一直没有数值的情况
-}GpsPosInfo_t;
-//就SYSTEM PERFORMANCE中zHcuRunErrCnt参数表达的错误计数器，进行定期存储数据库，并通过界面展示出来，以方便调测与监控
-typedef struct  sp_errcnt_data_element //
-{
-	UINT32 sid;
-	UINT32 taskHcuvmEC;
-	UINT32 taskHwinvEC;
-	UINT32 taskModbusEC;
-	UINT32 taskCloudvelaEC;
-	UINT32 taskAvorionEC;
-	UINT32 taskSpsvirgoEC;
-	UINT32 taskHsmmpEC;
-	UINT32 taskEmcEC;
-	UINT32 taskPm25EC;
-	UINT32 taskWinddirEC;
-	UINT32 taskWindspdEC;
-	UINT32 taskTempEC;
-	UINT32 taskHumidEC;
-	UINT32 taskNoiseEC;
-	UINT32 taskPm25SharpEC; //by shanchun
-	UINT32 timeStamp;
-}sp_errcnt_data_element_t;
+	UINT32 combTimes;		//组合总次数
+	UINT32 tttTimes;		//组合出料次数
+	UINT32 tgvTimes;		//组合放弃次数
+	UINT32 combMatNbr;  	//组合的物料数量
+	UINT32 tttMatNbr;		//组合出料的物料数量
+	UINT32 tgvMatNbr;		//组合放弃的物料数量
+	UINT32 combAvgSpeed;	//组合平均速度
+	UINT32 totalWeight;		//总共处理的物料总重量
+	UINT32 totalMatNbr;  	//总共处理的物料总数量
+	UINT32 totalWorkMin;	//连续工作的总分钟数
+	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
+	UINT32 errNbr;			//出错次数
+}msgie_struct_bfsc_scale_weight_sta_element_t;
+
+
+
 
 /***************************************************************************************************************
  *                                                                                                             *
@@ -2176,65 +2163,12 @@ typedef struct msg_struct_canitfleo_data_report
  *                                                                                    *
  *************************************************************************************/
 //BFSC/SCALE_WEIGHT组合秤
-//CANITF部分
+
+
+
+
 //MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
-
-
-//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
-
-
-//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
-
-
-//MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化
-
-
-//MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求
-
-
-//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
-
-
-//UICOMM部分
-//MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
-
-
-//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
-//MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
-
-
-//MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
-
-
-//MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,
-
-
-//MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,
-
-
-//MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,
-
-
-//MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,
-
-
-//MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
-
-
-//MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
-
-
-//MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
-
-
-//MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
-
-
-
-
-//L3BFSC
 #define HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR 20
-//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,
 typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
 {
 	UINT8  sensorid;
@@ -2242,7 +2176,7 @@ typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
 	UINT32 length;
 }msg_struct_l3bfsc_can_error_inq_cmd_req_t;
 
-//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  //出料
+//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
 typedef struct msg_struct_l3bfsc_can_ws_comb_out
 {
 	UINT8  combnbr;
@@ -2250,20 +2184,96 @@ typedef struct msg_struct_l3bfsc_can_ws_comb_out
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_comb_out_t;
 
-//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   //放弃物料
+//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
 typedef struct msg_struct_l3bfsc_can_ws_give_up
 {
 	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_ws_give_up_t;
 
-//MSG_ID_L3BFSC_UICOMM_CMD_RESP,
-typedef struct msg_struct_l3bfsc_uicomm_cmd_resp
+//MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化
+typedef struct msg_struct_l3bfsc_can_ws_init_req
+{
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_init_req_t;
+
+//MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求
+typedef struct msg_struct_l3bfsc_can_ws_read_req
+{
+	UINT8 sensorid;
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_read_req_t;
+
+//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
+typedef struct msg_struct_l3bfsc_can_general_cmd_req
+{
+	UINT8 sensorid;
+	UINT8 optid;
+	UINT8 optpar;
+	UINT32 modbusVal;
+	UINT32 length;
+}msg_struct_l3bfsc_can_general_cmd_req_t;
+
+//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
+//MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
+typedef struct msg_struct_cloudvela_l3bfsc_data_req
+{
+	UINT8  baseReq;
+	UINT8  reqType;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_data_req_t;
+
+//MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_l3bfsc_cloudvela_data_resp
+{
+
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_data_resp_t;
+
+//MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_l3bfsc_cloudvela_data_report
 {
 	UINT8  cmdid;
+	UINT8  eqpid;
+	UINT8  optid;
+	UINT8  optpar;
+	UINT8  dataFormat;
+	UINT8  sensorNbr;
+	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 timestamp;
 	UINT32 length;
-}msg_struct_l3bfsc_uicomm_cmd_resp_t;
+}msg_struct_l3bfsc_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfsc_data_confirm
+{
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_data_confirm_t;
+
+//MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,
+typedef struct msg_struct_l3bfsc_cloudvela_event_report
+{
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_event_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfsc_event_confirm
+{
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_event_confirm_t;
+
+//MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
+typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
+{
+	UINT8  cmdid;
+	UINT8  eqpid;
+	UINT8  optid;
+	UINT8  optopr;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_cmd_req_t;
 
 //MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
 typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
@@ -2278,44 +2288,27 @@ typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
 	UINT32 length;
 }msg_struct_l3bfsc_cloudvela_cmd_resp_t;
 
-//MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT
-typedef struct msg_struct_l3bfsc_cloudvela_data_report
+//MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
+typedef struct msg_struct_l3bfsc_cloudvela_statistic_report
+{
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_statistic_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfsc_statistic_confirm
+{
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_statistic_confirm_t;
+
+
+//UICOMM部分
+//MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
+typedef struct msg_struct_l3bfsc_uicomm_cmd_resp
 {
 	UINT8  cmdid;
-	UINT8  eqpid;
-	UINT8  optid;
-	UINT8  optpar;
-	UINT8 dataFormat;
-	UINT8  sensorNbr;
-	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 timestamp;
 	UINT32 length;
-}msg_struct_l3bfsc_cloudvela_data_report_t;
-
-//MSG_ID_L3BFSC_CAN_WS_INIT_REQ
-typedef struct msg_struct_l3bfsc_can_ws_init_req
-{
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_init_req_t;
-
-//MSG_ID_L3BFSC_CAN_WS_READ_REQ
-typedef struct msg_struct_l3bfsc_can_ws_read_req
-{
-	UINT8 sensorid;
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_read_req_t;
-
-//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ
-typedef struct msg_struct_l3bfsc_can_general_cmd_req
-{
-	UINT8 sensorid;
-	UINT8 optid;
-	UINT8 optpar;
-	UINT32 modbusVal;
-	UINT32 length;
-}msg_struct_l3bfsc_can_general_cmd_req_t;
+}msg_struct_l3bfsc_uicomm_cmd_resp_t;
 
 
 //CANITFLEO
@@ -2376,18 +2369,6 @@ typedef struct msg_struct_can_l3bfsc_general_cmd_resp
 	UINT32 length;
 }msg_struct_can_l3bfsc_general_cmd_resp_t;
 
-//CLOUDVELA
-//MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
-typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
-{
-	UINT8  cmdid;
-	UINT8  eqpid;
-	UINT8  optid;
-	UINT8  optopr;
-	UINT32 timestamp;
-	UINT32 length;
-}msg_struct_cloudvela_l3bfsc_cmd_req_t;
-
 //BFSCUICOMM
 //MSG_ID_UICOMM_L3BFSC_CMD_REQ,
 typedef struct msg_struct_uicomm_l3bfsc_cmd_req
@@ -2406,7 +2387,6 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
 	UINT8	maxWsNbr;
 	UINT32 	length;
 }msg_struct_uicomm_l3bfsc_param_set_result_t;
-
 
 
 #endif /* L0COMVM_COMMSG_H_ */

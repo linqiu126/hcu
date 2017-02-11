@@ -277,10 +277,28 @@ typedef struct HcuHwinvWifiElement
 	UINT8 ipv4Address[4];
 	UINT8 ipv6Address[8];
 }HcuHwinvWifiElement_t;
+typedef struct hcuStrDataTime
+{
+	UINT32 hour;
+	UINT32 minute;
+	UINT32 second;
+	UINT32 day;
+	UINT32 month;
+	UINT32 year;
+}hcuStrDateTime_t;
 typedef struct HcuHwinvGpsElement
 {
 	HcuHwinvBaseElement_t hwBase;
 	UINT8 tech; //1-GPS, 2-GLONOSS, 3-BEIDU, 4-GALINIO, 5-others
+	hcuStrDateTime_t D; //UTC日期时间
+	CHAR status;
+	UINT32 gpsX; //纬度
+	CHAR EW;
+	UINT32 gpsY; //经度
+	CHAR NS;
+	UINT32 gpsZ;
+	UINT32 speed; //速度
+	UINT32 resistence; //反映多少个GPS模块扫描周期一直没有数值的情况
 }HcuHwinvGpsElement_t;
 typedef struct HcuHwinvBleElement
 {

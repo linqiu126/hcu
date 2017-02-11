@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="#define" key="selection"/>
+		<item value="memset" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="#define"/>
-			<item value="HWINV_PHY_STATUS_NULL"/>
-			<item value="HCU_THREAD_PRIO"/>
-			<item value="MAX_HCU_MSG_BUF_LENGTH"/>
-			<item value="MAX_HCU_MSG_BUF_LENGTH_CLOUD"/>
-			<item value="SYS_ENG_PAR_ELEMENT_DB_LEN"/>
-			<item value="NBR"/>
-			<item value="HCU_HARDWARE_PRODUCT_CAT_TYPE"/>
+			<item value="memset"/>
+			<item value="gps"/>
+			<item value="GpsPosInfo_t"/>
+			<item value="msgie_struct_sensor_modbus_opertion_general_t"/>
+			<item value="sensor_modbus_opertion_general_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_req_t"/>
+			<item value="0x3B"/>
+			<item value="YES"/>
 		</list>
 		<list key="replacehistory">
+			<item value="sensor_modbus_opertion_general_t"/>
+			<item value="msgie_struct_sensor_modbus_opertion_general_t"/>
 			<item value="HCU_SYSMSG_COM_MSG_BODY_LEN_MAX"/>
 			<item value="HCU_SYSMSG_BH_BUF_BODY_LEN_MAX"/>
 			<item value="MAX_HCU_MSG_BUF_LENGTH"/>
 			<item value="HCU_SYSCFG_HW_PRODUCT_CAT_TYPE"/>
 			<item value="HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH"/>
 			<item value=""/>
-			<item value="HCU_SYSDIM_TIMERID_NAME_LEN_MAX"/>
-			<item value="HCU_SYSDIM_TIMERID_NBR_MAX"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1164" key="DIALOG_X_ORIGIN"/>
-		<item value="377" key="DIALOG_Y_ORIGIN"/>
+		<item value="795" key="DIALOG_X_ORIGIN"/>
+		<item value="140" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

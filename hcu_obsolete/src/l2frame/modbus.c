@@ -287,14 +287,14 @@ OPSTAT fsm_modbus_emc_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 		break;
 	}
 
-	snd.emc.gps.ew = zHcuGpsPosInfo.EW;
-	snd.emc.gps.ns = zHcuGpsPosInfo.NS;
+	snd.emc.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+	snd.emc.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 
-	HcuDebugPrint("MODBUS: EW = %c, gpsx = %d, NS = %c, gpsy = %d, gpsz = %d\n",zHcuGpsPosInfo.EW, zHcuGpsPosInfo.gpsX, zHcuGpsPosInfo.NS, zHcuGpsPosInfo.gpsY, zHcuGpsPosInfo.gpsZ);
+	HcuDebugPrint("MODBUS: EW = %c, gpsx = %d, NS = %c, gpsy = %d, gpsz = %d\n",zHcuVmCtrTab.hwinv.gps.EW, zHcuVmCtrTab.hwinv.gps.gpsX, zHcuVmCtrTab.hwinv.gps.NS, zHcuVmCtrTab.hwinv.gps.gpsY, zHcuVmCtrTab.hwinv.gps.gpsZ);
 
-	snd.emc.gps.gpsx = zHcuGpsPosInfo.gpsX;
-	snd.emc.gps.gpsy = zHcuGpsPosInfo.gpsY;
-	snd.emc.gps.gpsz = zHcuGpsPosInfo.gpsZ;
+	snd.emc.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+	snd.emc.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+	snd.emc.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
 	snd.emc.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 	snd.emc.emcValue = snd.emc.emcValue + (rand()%1000);
 
@@ -485,11 +485,11 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	}
 
 	snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-	snd.pm25.gps.gpsx = zHcuGpsPosInfo.gpsX;
-	snd.pm25.gps.gpsy = zHcuGpsPosInfo.gpsY;
-	snd.pm25.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-	snd.pm25.gps.ew = zHcuGpsPosInfo.EW;
-	snd.pm25.gps.ns = zHcuGpsPosInfo.NS;
+	snd.pm25.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+	snd.pm25.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+	snd.pm25.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+	snd.pm25.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+	snd.pm25.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_PM25_DATA_REPORT, TASK_ID_PM25, TASK_ID_MODBUS, &snd, snd.length);
@@ -672,11 +672,11 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	snd.winddir.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-	snd.winddir.gps.gpsx = zHcuGpsPosInfo.gpsX;
-	snd.winddir.gps.gpsy = zHcuGpsPosInfo.gpsY;
-	snd.winddir.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-	snd.winddir.gps.ew = zHcuGpsPosInfo.EW;
-	snd.winddir.gps.ns = zHcuGpsPosInfo.NS;
+	snd.winddir.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+	snd.winddir.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+	snd.winddir.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+	snd.winddir.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+	snd.winddir.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_WINDDIR_DATA_REPORT, TASK_ID_WINDDIR, TASK_ID_MODBUS, &snd, snd.length);
@@ -860,11 +860,11 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	snd.windspd.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-	snd.windspd.gps.gpsx = zHcuGpsPosInfo.gpsX;
-	snd.windspd.gps.gpsy = zHcuGpsPosInfo.gpsY;
-	snd.windspd.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-	snd.windspd.gps.ew = zHcuGpsPosInfo.EW;
-	snd.windspd.gps.ns = zHcuGpsPosInfo.NS;
+	snd.windspd.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+	snd.windspd.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+	snd.windspd.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+	snd.windspd.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+	snd.windspd.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_WINDSPD_DATA_REPORT, TASK_ID_WINDSPD, TASK_ID_MODBUS, &snd, snd.length);
@@ -1052,11 +1052,11 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	}
 
 	snd.temp.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-	snd.temp.gps.gpsx = zHcuGpsPosInfo.gpsX;
-	snd.temp.gps.gpsy = zHcuGpsPosInfo.gpsY;
-	snd.temp.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-	snd.temp.gps.ew = zHcuGpsPosInfo.EW;
-	snd.temp.gps.ns = zHcuGpsPosInfo.NS;
+	snd.temp.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+	snd.temp.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+	snd.temp.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+	snd.temp.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+	snd.temp.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_TEMP_DATA_REPORT, TASK_ID_TEMP, TASK_ID_MODBUS, &snd, snd.length);
@@ -1243,11 +1243,11 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 
 	snd.humid.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-	snd.humid.gps.gpsx = zHcuGpsPosInfo.gpsX;
-	snd.humid.gps.gpsy = zHcuGpsPosInfo.gpsY;
-	snd.humid.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-	snd.humid.gps.ew = zHcuGpsPosInfo.EW;
-	snd.humid.gps.ns = zHcuGpsPosInfo.NS;
+	snd.humid.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+	snd.humid.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+	snd.humid.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+	snd.humid.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+	snd.humid.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 
 
 	//Remaining data to be filled
@@ -1444,11 +1444,11 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 
 	snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-	snd.noise.gps.gpsx = zHcuGpsPosInfo.gpsX;
-	snd.noise.gps.gpsy = zHcuGpsPosInfo.gpsY;
-	snd.noise.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-	snd.noise.gps.ew = zHcuGpsPosInfo.EW;
-	snd.noise.gps.ns = zHcuGpsPosInfo.NS;
+	snd.noise.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+	snd.noise.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+	snd.noise.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+	snd.noise.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+	snd.noise.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 
 	//Remaining data to be filled
 	ret = hcu_message_send(MSG_ID_MODBUS_NOISE_DATA_REPORT, TASK_ID_NOISE, TASK_ID_MODBUS, &snd, snd.length);

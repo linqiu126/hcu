@@ -45,9 +45,6 @@ HcuFsmStateItem_t HcuFsmSpsvirgo[] =
 };
 
 //extern global variables
-extern GpsPosInfo_t zHcuGpsPosInfo;
-
-//extern SerialPortCom_t gSerialPortForSPS232;
 extern SerialPortCom_t gSerialPortMobus;
 UINT32 currentSensorEqpId;  //当前正在工作的传感器
 SerialSpsMsgBuf_t currentSpsBuf;
@@ -384,11 +381,11 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		break;
 	}
 	//snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-	snd.noise.gps.gpsx = zHcuGpsPosInfo.gpsX;
-	snd.noise.gps.gpsy = zHcuGpsPosInfo.gpsY;
-	snd.noise.gps.gpsz = zHcuGpsPosInfo.gpsZ;
-	snd.noise.gps.ew = zHcuGpsPosInfo.EW;
-	snd.noise.gps.ns = zHcuGpsPosInfo.NS;
+	snd.noise.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+	snd.noise.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+	snd.noise.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+	snd.noise.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+	snd.noise.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
 
 	ret = hcu_message_send(MSG_ID_SPSVIRGO_NOISE_DATA_REPORT, TASK_ID_NOISE, TASK_ID_SPSVIRGO, &snd, snd.length);
 	if (ret == FAILURE){
