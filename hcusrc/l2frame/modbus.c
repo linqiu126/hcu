@@ -375,16 +375,16 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 				HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-				return FAILURE;
+				//return FAILURE;
 			}
 		}
 		//差错情形
 		else{
 			HcuErrorPrint("MODBUS: Wrong state of CLOUDVELA when data need send out!\n");
 			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
-			return FAILURE;
+			//return FAILURE;
 		}
-		return FAILURE;
+		//return FAILURE;
 
 	}
 
@@ -397,6 +397,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+	/*
 	ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
@@ -439,19 +440,20 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	  return FAILURE;
 	}
+	*/
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_pm25_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
 
-	/*
+
 	//放点假数据进行测试
 	currentModbusBuf.curLen = 17;
 	UINT8 sample[] = {0x01,0x03,0x0C,0x01,0x02,0x03,0x04,0x11,0x12,0x13,0x14,
 			0x21,0x22,0x23,0x24,0xD4,0xB8};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
-	*/
 
-	currentModbusBuf.curLen = ret;
+
+	//currentModbusBuf.curLen = ret;
 	if (func_modbus_pm25_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
