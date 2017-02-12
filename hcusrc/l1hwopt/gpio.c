@@ -196,7 +196,7 @@ OPSTAT func_gpio_read_data_dht11(void)
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].updateTimeStamp = time(0);
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOHUMIDDHT11].fVal = humidSum / RPI_GPIO_READ_REPEAT_TIMES;
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOHUMIDDHT11].updateTimeStamp = time(0);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
     	HcuDebugPrint("GPIO: Sensor DHT11 Transformed float result Temp=%6.2fC, Humid=%6.2f\%, DATA_GPIO#=%d\n", zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].fVal, zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOHUMIDDHT11].fVal, RPI_GPIO_PIN_DHT11_DATA);
 	}
 
@@ -289,7 +289,7 @@ OPSTAT func_gpio_read_data_mq135(void)
 	//求平均
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASMQ135].fVal = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASMQ135].updateTimeStamp = time(0);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor MQ135 Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASMQ135].fVal, RPI_GPIO_PIN_MQ135_DATA);
 	}
 
@@ -321,7 +321,7 @@ OPSTAT func_gpio_read_data_mq3alco(void)
 	//求平均
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOALCOHOLMQ3ALCO].fVal = alcoholSum / RPI_GPIO_READ_REPEAT_TIMES;
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOALCOHOLMQ3ALCO].updateTimeStamp = time(0);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor MQ3ALCO Transformed float average read result pollution= %d[Times], DATA_GPIO#=%d\n", (int)zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOALCOHOLMQ3ALCO].fVal, RPI_GPIO_PIN_MQ3ALCO_DATA);
 	}
 
@@ -367,7 +367,7 @@ OPSTAT func_gpio_read_data_zp01voc(void)
 	//求平均
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASZP01VOC].fVal = toxicgasSum / RPI_GPIO_READ_REPEAT_TIMES;
 	zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASZP01VOC].updateTimeStamp = time(0);
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("GPIO: Sensor ZP01VOC Transformed float average read result pollution= %d[Times], DATA_GPIO_A#=%d, DATA_GPIO_B#=%d\n", (int)zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASZP01VOC].fVal, RPI_GPIO_PIN_ZP01VOC_DATA_A, RPI_GPIO_PIN_ZP01VOC_DATA_B);
 	}
 
