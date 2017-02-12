@@ -417,6 +417,9 @@ typedef struct HcuHwinvCtrlTable
 #define HCU_RECORD_FILE_NAME_EXTEND_AVI 		".avi"
 #define HCU_RECORD_FILE_NAME_EXTEND_H264 		".h264"
 #define HCU_RECORD_FILE_NAME_EXTEND_MKV			".mkv"
+#define HCU_RECORD_PHOTO_DIR_NAME_CLEAN 		"/var/www/html/pictures" //for HKvision
+#define HCU_RECORD_FILE_NAME_HK_CLEAN		"hk"
+#define HCU_RECORD_FILE_NAME_EXTEND_HK_PHOTO	".jpg"
 #define HCU_HARDDISK_TRESHOLD 10
 
 /*

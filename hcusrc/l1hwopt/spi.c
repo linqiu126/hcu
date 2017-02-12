@@ -183,7 +183,7 @@ OPSTAT func_spi_read_data_mth01(void)
 	zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDMTH01].fVal = humidSum / RPI_SPI_READ_REPEAT_TIMES;
 	zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDMTH01].updateTimeStamp = time(0);
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPI: Sensor MTH01 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].fVal, zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDMTH01].fVal, RPI_SPI_PIN_MOSI);
 	}
 
@@ -232,7 +232,7 @@ OPSTAT func_spi_read_data_rht03(void)
 	zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDRHT03].fVal = humidSum / RPI_SPI_READ_REPEAT_TIMES;
 	zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDRHT03].updateTimeStamp = time(0);
 
-	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("SPI: Sensor RHT03 Transformed average float result Temp=%6.2fC, Humid=%6.2f\%, DATA_SPI_MOSI#=%d\n", zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPRHT03].fVal, zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDRHT03].fVal, RPI_SPI_PIN_MOSI);
 	}
 
