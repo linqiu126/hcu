@@ -229,7 +229,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 	//定时长时钟进行链路检测的
 	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_cloudvela_time_out_period();
+		ret = func_cloudvela_time_out_period_long_duration();
 	}
 
 	//定时短时钟进行离线数据回送
@@ -253,7 +253,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 //在线状态下，zHcuCloudvelaTable.ethConTry的参数用于控制是否可能进入链路断掉-》重建的情形，该参数在尝试过后会+1,
 //但HWINV的状态逆转报告会导致它清零，从而具备再一次尝试的资格。这里还要照顾一种清醒：如果所有链路都没有建立起来，则自然需要不断的+1,也没有大问题
 //长周期定时器, 周期性心跳时钟处理机制
-OPSTAT func_cloudvela_time_out_period(void)
+OPSTAT func_cloudvela_time_out_period_long_duration(void)
 {
 	int ret = 0;
 

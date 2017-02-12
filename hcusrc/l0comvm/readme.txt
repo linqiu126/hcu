@@ -11,10 +11,13 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
+===>离线任务，移出CLOUDVELA，放到L3xxxxTASK中去
+
 
 
 //= ZJL, 2017 Feb.12, CURRENT_SW_DELIVERY 161=>BFSC项目
 ＝搭建好后台通信的消息处理框架，并采用#ifdef关联到L3BFSC项目，降低对其它项目的影响
+= 清理CLOUDVELA中的差错出错函数，归一化到统一宏定义模式，完成。
 
 //= ZSC, 2017 Feb.12, CURRENT_SW_DELIVERY 160=>AQYC项目
 ＝创建HKvision API

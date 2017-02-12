@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrIe_HUITP_IEID_uni_scale_weight_sta_element_t" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_sta_element_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_statistic_t"/>
-			<item value="StrMsg_HUITP_MSGID_uni_bfsc_statistic_report_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_cmd_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_event_t"/>
-			<item value="msg_struct_l3bfsc_cloudvela_event_report_t"/>
-			<item value="StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_report_t"/>
+			<item value="hcu_ethernet_date_send"/>
+			<item value="hcu_cloudvela_write_callback"/>
+			<item value="hcu_cloudvela_http_link_init"/>
+			<item value="func_cloudvela_send_data_to_cloud"/>
+			<item value="func_cloudvela_http_conn_setup"/>
+			<item value="HCU_ERROR_PRINT"/>
+			<item value="func_cloudvela_heart_beat_check"/>
+			<item value="func_cloudvela_time_out_link_hb_src_workmode"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_ERROR_PRINT_CLOUDVELA"/>
 			<item value="si[SENSOR_ID_GPIOTOXICGASZP01VOC]"/>
 			<item value="si[SENSOR_ID_GPIOALCOHOLMQ3ALCO]"/>
 			<item value="si[SENSOR_ID_GPIOTOXICGASMQ135]"/>
@@ -25,14 +26,13 @@
 			<item value="si[]"/>
 			<item value="si[SENSOR_ID_GPIOTEMPDHT11]"/>
 			<item value="si[SENSOR_ID_SPSHCHOZE08CH2O]"/>
-			<item value="si[SENSOR_ID_SPSPM25SHARP]"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1120" key="DIALOG_X_ORIGIN"/>
-		<item value="381" key="DIALOG_Y_ORIGIN"/>
+		<item value="1113" key="DIALOG_X_ORIGIN"/>
+		<item value="153" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

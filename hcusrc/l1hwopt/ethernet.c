@@ -206,88 +206,6 @@ OPSTAT func_ethernet_int_init(void)
 	return SUCCESS;
 }
 
-OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
-{
-	CURLcode curlRes;
-	int ret = 0;
-	CURL *curl;
-
-	//初始化MSGSEND参数
-	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
-	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
-
-	curl = curl_easy_init();
-
-	if (curl == NULL){
-		HcuErrorPrint("ETHERNET: Init CURL error!\n");
-	}else{
-		//打印测试
-		//HcuDebugPrint("ETHERNET: Enter data send status, to send data for back-cloud!\n");
-
-		//如果你想CURL报告每一件意外的事情，设置这个选项为一个非零值
-		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
-
-		//设置头，以便返回完整的信息
-		//curl_easy_setopt(curl, CURLOPT_HEADER, 0);
-
-		//也就是说，默认情况下libcurl完成一个任务以后，出于重用连接的考虑不会马上关闭如果没有新的TCP请求来重用这个连接，那么只能等到CLOSE_WAIT超时
-		//这个时间默认在7200秒甚至更高，太多的CLOSE_WAIT连接会导致性能问题。这里设置为0就是为了重用
-		//curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0);
-
-		//设置目标地址
-		curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddSae);
-		//curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddLocal);
-
-		//设置超时时长，做为发送API，这个设置绝对必要，不然会阻塞在这儿
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS);
-
-		//就是当多个线程都使用超时处理的时候，同时主线程中有sleep或是wait等操作。如果不设置这个选项，libcurl将会发信号打断这个wait从而导致程序退出。
-		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-
-		//设置发送数据的信息
-		curl_easy_setopt(curl, CURLOPT_POST, 1);
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buf->curBuf);
-
-		//设置回调函数
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, hcu_cloudvela_write_callback);
-
-		//设置接收buffer
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&receiveBuffer);
-
-		//实施调用
-		curlRes = curl_easy_perform(curl);
-
-		//Clean curl pointer
-		curl_easy_cleanup(curl);
-
-		if(curlRes != CURLE_OK){
-			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
-				HcuErrorPrint("ETHERNET: curl_easy_perform() failed: %s\n", curl_easy_strerror(curlRes));
-			}
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
-			return FAILURE;
-		}else{
-			HCU_DEBUG_PRINT_INF("ETHERNET: Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
-		}
-
-		//将数据发送给CLOUD，有关这个长度应该>0或者>1的问题，最后还是1，因为心跳握手帧只有二个字节的长度
-		if (receiveBuffer.length > 1){
-			//发送数据给CLOUDCONT
-			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
-			if (ret == FAILURE)
-				HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-		}//end of send data
-		//这里放zHcuGlobalCounter.CloudDataTimeOutCnt的计数器，Not sure是否是最好的地方，再探究
-		else{
-			zHcuSysStaPm.statisCnt.CloudDataTimeOutCnt++;
-		}
-
-	}//End of working condition
-
-	//返回
-	return SUCCESS;
-}
-
 OPSTAT hcu_ethernet_phy_link_setup(void)
 {
 	return SUCCESS;
@@ -394,6 +312,98 @@ OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
 	//返回
 	return SUCCESS;
 }
+
+/***************************************************************************************************************************
+ *
+ * 　CURL/ETHERNET函数暂时没有启用，因为HTTP/CURL方式不再激活使用
+ *
+ ***************************************************************************************************************************/
+OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
+{
+	CURLcode curlRes;
+	int ret = 0;
+	CURL *curl;
+
+	//初始化MSGSEND参数
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
+
+	curl = curl_easy_init();
+
+	if (curl == NULL){
+		HcuErrorPrint("ETHERNET: Init CURL error!\n");
+	}else{
+		//打印测试
+		//HcuDebugPrint("ETHERNET: Enter data send status, to send data for back-cloud!\n");
+
+		//如果你想CURL报告每一件意外的事情，设置这个选项为一个非零值
+		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
+
+		//设置头，以便返回完整的信息
+		//curl_easy_setopt(curl, CURLOPT_HEADER, 0);
+
+		//也就是说，默认情况下libcurl完成一个任务以后，出于重用连接的考虑不会马上关闭如果没有新的TCP请求来重用这个连接，那么只能等到CLOSE_WAIT超时
+		//这个时间默认在7200秒甚至更高，太多的CLOSE_WAIT连接会导致性能问题。这里设置为0就是为了重用
+		//curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0);
+
+		//设置目标地址
+		curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddSae);
+		//curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddLocal);
+
+		//设置超时时长，做为发送API，这个设置绝对必要，不然会阻塞在这儿
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS);
+
+		//就是当多个线程都使用超时处理的时候，同时主线程中有sleep或是wait等操作。如果不设置这个选项，libcurl将会发信号打断这个wait从而导致程序退出。
+		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
+
+		//设置发送数据的信息
+		curl_easy_setopt(curl, CURLOPT_POST, 1);
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buf->curBuf);
+
+		//设置回调函数
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, hcu_cloudvela_write_callback);
+
+		//设置接收buffer
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&receiveBuffer);
+
+		//实施调用
+		curlRes = curl_easy_perform(curl);
+
+		//Clean curl pointer
+		curl_easy_cleanup(curl);
+
+		if(curlRes != CURLE_OK){
+			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
+				HcuErrorPrint("ETHERNET: curl_easy_perform() failed: %s\n", curl_easy_strerror(curlRes));
+			}
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
+			return FAILURE;
+		}else{
+			HCU_DEBUG_PRINT_INF("ETHERNET: Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
+		}
+
+		//将数据发送给CLOUD，有关这个长度应该>0或者>1的问题，最后还是1，因为心跳握手帧只有二个字节的长度
+		if (receiveBuffer.length > 1){
+			//发送数据给CLOUDCONT
+			ret = hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length);
+			if (ret == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		}//end of send data
+		//这里放zHcuGlobalCounter.CloudDataTimeOutCnt的计数器，Not sure是否是最好的地方，再探究
+		else{
+			zHcuSysStaPm.statisCnt.CloudDataTimeOutCnt++;
+		}
+
+	}//End of working condition
+
+	//返回
+	return SUCCESS;
+}
+/***************************************************************************************************************************
+ *
+ * 　CURL/ETHERNET未启用函数END
+ *
+ ***************************************************************************************************************************/
 /*
 static int base64_encode(char *str, int str_len, char *encode, int encode_len){
     BIO *bmem,*b64;
