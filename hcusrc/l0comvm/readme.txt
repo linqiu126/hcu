@@ -12,6 +12,11 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 
+
+//= ZSC, 2017 Feb.12, CURRENT_SW_DELIVERY 160=>AQYC项目
+＝创建HKvision API
+＝实现PM25 门限值告警触发拍照及录像
+
 //= ZJL, 2017 Feb.11, CURRENT_SW_DELIVERY 159=>BFSC项目
 ＝完成HUITP和内部消息的编写，为打通后台工作逻辑框架打下基础
 
