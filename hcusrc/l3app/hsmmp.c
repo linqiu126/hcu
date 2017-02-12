@@ -746,11 +746,11 @@ OPSTAT hcu_hsmmp_photo_capture_start(const HKVisionOption_t HKVisionOption)
 
 	if(CURLE_OK == curlRes){
 		state = SUCCESS;
-		HcuDebugPrint("HSMMP: curl perform success [%d]\n\n", curlRes);
+		HcuDebugPrint("HSMMP: curl perform success [%d]\n\n\n\n", curlRes);
 	}
 	else{
 		state = FAILURE;
-		HcuDebugPrint("HSMMP: curl perform failure [%d]\n\n", curlRes);
+		HcuDebugPrint("HSMMP: curl perform failure [%d]\n\n\n\n", curlRes);
 	}
 
 	curl_easy_cleanup(curl);

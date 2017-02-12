@@ -644,13 +644,13 @@ void func_hwinv_scan_date(void)
 	 */
 
 	//创建YYMM子目录
+	DIR *dtmp;
 	if (flagMon == TRUE){
 		strcpy(stmp, zHcuVmCtrTab.clock.curLogDir);
 		strcat(stmp, "/");
 		strcat(stmp, zHcuVmCtrTab.clock.sMon);
 		strcpy(zHcuVmCtrTab.clock.curYmDir, stmp);
 
-		DIR *dtmp;
 		dtmp = opendir(zHcuVmCtrTab.clock.curYmDir);
 		if (dtmp == NULL){
 			chdir(zHcuVmCtrTab.clock.curLogDir);
@@ -716,10 +716,27 @@ void func_hwinv_scan_date(void)
 		strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 	}
 
-	//HcuDebugPrint("%s\n", zCurTimeDate.curSensorFd);
-	//HcuDebugPrint("%s\n", zCurTimeDate.curMicrophoneFd);
-	//HcuDebugPrint("%s\n", zCurTimeDate.curAvorionFd);
-	//No return
+	//For HKvision，给curPhotoDir赋值
+	strcpy(zHcuVmCtrTab.clock.curPhotoDir, HCU_RECORD_PHOTO_DIR_NAME_CLEAN);
+
+	//创建HKvision的照片存储目录，如果存在，就直接使用
+	dtmp = opendir(zHcuVmCtrTab.clock.curPhotoDir);
+	if (dtmp == NULL){
+		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0755) == -1){
+			HcuErrorPrint("HWINV: Create directory error!\n");
+			return ;
+		}
+	}else{
+		closedir(dtmp);
+	}
+
+	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.cloud.cloudBhHcuName);
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname,"_");
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_HK_CLEAN);
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname, zHcuVmCtrTab.clock.sSec);
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_EXTEND_HK_PHOTO);
+	HcuDebugPrint("HWINV: zCurTimeDate.curPhotoDir %s!\n", zHcuVmCtrTab.clock.curPhotoDir);
+	HcuDebugPrint("HWINV: zCurTimeDate.curHikvisionFname %s!\n\n", zHcuVmCtrTab.clock.curHikvisionFname);
 }
 
 void func_hwinv_scan_sysinfo(void)
