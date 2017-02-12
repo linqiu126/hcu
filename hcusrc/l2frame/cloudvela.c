@@ -12,6 +12,16 @@
 #include "../l0comvm/sysversion.h"
 #include "../l2frame/cloudvela.h"
 
+/************************************************************************************************************************
+ *
+ *  内外部消息命名规则
+ *
+ *  - DATA_REQ/DATA_RESP：表明是由后台发往前台的数据请求以及应答
+ *  - CMD_REQ/CMD_RESP, CTRL_CMD/CTRL_FB：表明是由后台发往前台的命令请求以及应答
+ *  - DATA_REPORT/DATA_CONFIRM：表明是由前台发往后台的数据汇报，以及回头的回应
+ *
+ *************************************************************************************************************************/
+
 /*
 ** FSM of the CLOUDVELA
 */
@@ -21,69 +31,74 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
 	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
 	//如果没有必要进行初始化，可以设置为NULL
-	{MSG_ID_ENTRY,       						FSM_STATE_ENTRY,            			fsm_cloudvela_task_entry}, //Starting
+	{MSG_ID_ENTRY,       						FSM_STATE_ENTRY,            		fsm_cloudvela_task_entry}, //Starting
 
 	//System level initialization
-    {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            				fsm_cloudvela_init},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            				fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_IDLE,            			fsm_cloudvela_init},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_IDLE,            			fsm_com_do_nothing},
 
 	//Task level initialization
-    {MSG_ID_COM_INIT,       					FSM_STATE_CLOUDVELA_INITED,            	fsm_cloudvela_init},
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_CLOUDVELA_INITED,            	fsm_com_do_nothing},
+    {MSG_ID_COM_INIT,       					FSM_STATE_CLOUDVELA_INITED,         fsm_cloudvela_init},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_CLOUDVELA_INITED,         fsm_com_do_nothing},
 
 	//ANY state entry
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_COMMON,          				fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,       				FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_STOP,       					FSM_STATE_COMMON,          				fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT_FB,       			FSM_STATE_COMMON,          				fsm_com_do_nothing},
-    {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            			fsm_cloudvela_restart},
-	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          				fsm_cloudvela_time_out},
+    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_COMMON,          			fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       				FSM_STATE_COMMON,          			fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       					FSM_STATE_COMMON,          			fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       			FSM_STATE_COMMON,          			fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            		fsm_cloudvela_restart},
+	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          			fsm_cloudvela_time_out},
 
     //Offline working, 定时重新启动链路，但不接受任何L3消息
-	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 			fsm_cloudvela_hwinv_phy_status_chg},
-	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_OFFLINE, 			fsm_cloudvela_socket_data_rx},
+	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
+	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_socket_data_rx},
 
-    //Online working， 定时检查链路，并安排离线数据的及时上传
-	{MSG_ID_EMC_CLOUDVELA_DATA_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_emc_data_resp},
-	{MSG_ID_EMC_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_emc_contrl_fb},
-	{MSG_ID_PM25_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_pm25_data_resp},
-	{MSG_ID_PM25_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_pm25_contrl_fb},
-	{MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP, 		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_winddir_data_resp},
-	{MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_winddir_contrl_fb},
-	{MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_windspd_data_resp},
-	{MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_windspd_contrl_fb},
-	{MSG_ID_TEMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_temp_data_resp},
-	{MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_temp_contrl_fb},
-	{MSG_ID_HUMID_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_humid_data_resp},
-	{MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_humid_contrl_fb},
-	{MSG_ID_NOISE_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_noise_data_resp},
-	{MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_noise_contrl_fb},
-	{MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_hsmmp_data_resp},
-	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_hsmmp_control_fb},
-	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_hsmmp_data_link_resp},
-	{MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_l3bfsc_cmd_resp},
-	{MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_l3bfsc_data_report},
-
-	//for alarm & pm report added by ZSC
-	{MSG_ID_COM_ALARM_REPORT,   				FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_alarm_report},
-	{MSG_ID_COM_PM_REPORT,   					FSM_STATE_CLOUDVELA_ONLINE, 			fsm_cloudvela_pm_report},
+	//HWINV发来了硬件状态的改变，一般是硬件重新插拔造成的PnP状态改变
+	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
 
 	//Online working， 从后台接收到数据和控制命令，四种均有可能，具体是哪一种起作用，将由HWINV定时扫描并解决互斥问题
 	//通过全局变量/本模块任务中心跳检测的共同作用，确定到底是哪一种通信接口在运行，确保不同后连接的PnP即插即用特性
 	//所有传感器接口（232/485/BLE/USB-CAMERA/I2S-AUDIO）均直接采用API发送，接受采用阻塞式任务框架
 	//所有后台接口（ETHERNET/WIFI/USB-OTG/3G4G）也是发送TX直接API，但RX采用阻塞式任务框架
 	//由于实质上四种接口的处理方式完全一样，现使用同一个函数，未来有变化再改变
-	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},
-	{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_usbnet_data_rx
-	{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_wifi_data_rx
-	{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_3g4g_data_rx
-	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_socket_data_rx},
+	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_data_rx},
+	{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_usbnet_data_rx
+	{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_wifi_data_rx
+	{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_3g4g_data_rx
+	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_socket_data_rx},
 
-	//HWINV发来了硬件状态的改变，一般是硬件重新插拔造成的PnP状态改变
-	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hwinv_phy_status_chg},
+    //Online working， 定时检查链路，并安排离线数据的及时上传
+	{MSG_ID_COM_ALARM_REPORT,   				FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_alarm_report},
+	{MSG_ID_COM_PM_REPORT,   					FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm_report},
+	{MSG_ID_EMC_CLOUDVELA_DATA_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_emc_data_resp},
+	{MSG_ID_EMC_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_emc_contrl_fb},
+	{MSG_ID_PM25_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25_data_resp},
+	{MSG_ID_PM25_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25_contrl_fb},
+	{MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP, 		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_winddir_data_resp},
+	{MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_winddir_contrl_fb},
+	{MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_windspd_data_resp},
+	{MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_windspd_contrl_fb},
+	{MSG_ID_TEMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_temp_data_resp},
+	{MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_temp_contrl_fb},
+	{MSG_ID_HUMID_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_humid_data_resp},
+	{MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_humid_contrl_fb},
+	{MSG_ID_NOISE_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_data_resp},
+	{MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_contrl_fb},
+	{MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_resp},
+	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_control_fb},
+	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_link_resp},
 
-    //结束点，固定定义，不要改动
-    {MSG_ID_END,            					FSM_STATE_END,             		NULL},  //Ending
+	//采用分项目控制方式，降低不同项目之间的关联，特别是海量MSGID-STATE这一表的内存压力
+	#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	{MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,         FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_data_resp},
+	{MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,       FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_data_report},
+	{MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,      FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_event_report},
+	{MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,          FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_cmd_resp},
+	{MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,  FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_statistic_report},
+	#endif
+
+	//结束点，固定定义，不要改动
+    {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
 };
 
 //Global variables
@@ -1979,118 +1994,6 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	return SUCCESS;
 }
 
-OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	int ret=0;
-	msg_struct_l3bfsc_cloudvela_cmd_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t))){
-		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	memcpy(&rcv, param_ptr, param_len);
-
-	//参数检查
-/*	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
-		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}*/
-
-	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-
-		//打包数据
-/*		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
-				rcv.dataFormat, rcv.modbusVal, 0, NULL, rcv.timestamp, &buf) == FAILURE){
-			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			return FAILURE;
-		}*/
-
-		//Send out
-		ret = func_cloudvela_send_data_to_cloud(&buf);
-		if ( ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error!\n");
-			return FAILURE;
-		}
-	}else{
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
-		return FAILURE;
-	}
-
-	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
-	}
-
-#endif
-	return SUCCESS;
-}
-
-OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	int ret=0;
-	msg_struct_l3bfsc_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_report_t))){
-		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-	memcpy(&rcv, param_ptr, param_len);
-
-	//参数检查
-//	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
-//		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-//		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-//		return FAILURE;
-//	}
-
-	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-
-		//打包数据：这里引用了比较高潮的技巧，将传感器数组传递到目标
-//		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
-//				rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
-//			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-//			return FAILURE;
-//		}
-
-		//Send out
-		ret = func_cloudvela_send_data_to_cloud(&buf);
-		if ( ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error!\n");
-			return FAILURE;
-		}
-	}else{
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
-		return FAILURE;
-	}
-
-	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
-	}
-
-#endif
-	return SUCCESS;
-}
-
 OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//参数检查
@@ -2280,5 +2183,132 @@ OPSTAT func_cloudvela_msg_sw_package_confirm_received_handle(StrMsg_HUITP_MSGID_
 	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_sw_package_confirm_t received!\n");
 }
 
+//BFSC项目的处理过程
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0;
+	msg_struct_l3bfsc_cloudvela_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_report_t))){
+		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+//	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
+//		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
+//		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+//		return FAILURE;
+//	}
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+		//打包数据：这里引用了比较高潮的技巧，将传感器数组传递到目标
+//		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
+//				rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
+//			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+//			return FAILURE;
+//		}
+
+		//Send out
+		ret = func_cloudvela_send_data_to_cloud(&buf);
+		if ( ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error!\n");
+			return FAILURE;
+		}
+	}else{
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
+	}
+
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0;
+	msg_struct_l3bfsc_cloudvela_cmd_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t))){
+		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+/*	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
+		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}*/
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+		//打包数据
+/*		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
+				rcv.dataFormat, rcv.modbusVal, 0, NULL, rcv.timestamp, &buf) == FAILURE){
+			HcuErrorPrint("CLOUDVELA: Package message error!\n");
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			return FAILURE;
+		}*/
+
+		//Send out
+		ret = func_cloudvela_send_data_to_cloud(&buf);
+		if ( ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+			HcuErrorPrint("CLOUDVELA: Send message error!\n");
+			return FAILURE;
+		}
+	}else{
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
+		return FAILURE;
+	}
+
+	//结束
+	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
+		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+#endif
 
 

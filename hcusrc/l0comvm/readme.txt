@@ -12,9 +12,13 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 
+
+//= ZJL, 2017 Feb.12, CURRENT_SW_DELIVERY 160=>BFSC项目
+＝搭建好后台通信的消息处理框架，并采用#ifdef关联到L3BFSC项目，降低对其它项目的影响
+
+
 //= ZJL, 2017 Feb.11, CURRENT_SW_DELIVERY 159=>BFSC项目
 ＝完成HUITP和内部消息的编写，为打通后台工作逻辑框架打下基础
-
 
 //= ZJL, 2017 Feb.11, CURRENT_SW_DELIVERY 158=>BFSC项目
 = msgie_struct_gps_pos_info_t结构去掉了，合并到zHcuVmCtrTab.hwinv.gps中去了

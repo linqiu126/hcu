@@ -90,11 +90,16 @@ extern OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, 
 extern OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_general_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+//CLOUDVELA后台通信部分
+extern OPSTAT fsm_l3bfsc_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_cloudvela_event_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_cloudvela_statistic_conmfirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_l3bfsc_int_init(void);

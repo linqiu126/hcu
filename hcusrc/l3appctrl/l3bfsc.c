@@ -40,6 +40,11 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       			FSM_STATE_COMMON,          			fsm_com_do_nothing},
     {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            		fsm_l3bfsc_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          			fsm_l3bfsc_time_out},
+	{MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,          FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,      FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_data_confirm},
+	{MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,     FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_event_confirm},
+	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,           FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_cmd_req},
+	{MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_statistic_conmfirm},
 
 	//Normal working status：等待人工干预-登录触发
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_cmd_req},
@@ -49,7 +54,6 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 	//任何状态下，允许人工界面强行发送重启命令（后台或者本地界面），BFSCUICOMM模块将发送MSG_ID_COM_RESTART，从而重启整个系统
 	//重启需要重新登录并初始化整个秤盘传感器
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_uicomm_cmd_req},
-	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       	FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_cloudvela_cmd_req},
 	{MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,     FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_uicomm_param_set_result},
 
 	//等待下位机完成参数初始化：等待MSG_ID_CAN_L3FSC_WS_INIT_RESP，完成后进入FSM_STATE_L3BFSC_OOS_SCAN
@@ -57,7 +61,6 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 
 	//进料组合态：等待正常的MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT，每一次进来均触发一次组合算法。结果无动作，或发送MSG_ID_L3BFSC_CAN_WS_COMB_OUT/MSG_ID_L3BFSC_CAN_WS_GIVE_UP
 	{MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,      FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_ws_new_ready_event},  //只能触发数据存储，不进入组合算法的执行
-	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,       	FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_cloudvela_cmd_req},  //只有在最为常见的SCAN状态下才允许后台干预，否则太复杂
 	{MSG_ID_CAN_L3BFSC_WS_READ_RESP,       		FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_period_read_resp},  //只有在最为常见的SCAN状态下才允许定时上报，否则太复杂
 	{MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP,       	FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_general_cmd_resp},  //只有在最为常见的SCAN状态下才允许后台，否则太复杂
 
@@ -74,8 +77,6 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
     {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
 };
 
-
-
 //状态机中的一些遗留问题：
 //1. 什么是否允许后台查询或者发送命令？任何时候？这意味着状态机需要变得较为复杂了
 //2. 为了演示任务，定时读取
@@ -90,6 +91,11 @@ UINT8 *zHcuSearchCoefficientPointer;
 UINT32 zHcuSearchSpaceTotalNbr = 0; //搜索的长度，12对应4096
 
 //Main Entry
+/***************************************************************************************************************************
+ *
+ * 　FSM初始化部分
+ *
+ ***************************************************************************************************************************/
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_l3bfsc_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -288,6 +294,11 @@ OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	return SUCCESS;
 }
 
+/***************************************************************************************************************************
+ *
+ * 　核心状态机处理过程
+ *
+ ***************************************************************************************************************************/
 //专门用于处理在差错状态下的状态查询
 OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -455,31 +466,30 @@ OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * par
 	return SUCCESS;
 }
 
-//从BFSCUICOMM来的消息和命令
-OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+/***************************************************************************************************************************
+ *
+ *  CLOUDVELA部分的消息处理
+ *
+ ***************************************************************************************************************************/
+//后台来的命令，发送到CANITFLEO模块，执行命令后，再返回给后台
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfsc_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-/*	HcuDiscDataSampleStorageArray_t record;
-
-	msg_struct_modbus_pm25_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
-	}
-	memcpy(&rcv, param_ptr, param_len);*/
-
-	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
-	//检查参数配置的合法性，目标值必须在一定的合理范围内，否则拒绝进入进料状态
-
-	//停止定时器
-
-
-	//返回
 	return SUCCESS;
 }
 
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfsc_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
-//后来来的命令，发送到CANITFLEO模块，执行命令后，再返回给后台
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfsc_cloudvela_event_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
 OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -524,6 +534,19 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfsc_cloudvela_statistic_conmfirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+
+
+/***************************************************************************************************************************
+ *
+ *  CANITF下位机传感器处理的结果
+ *
+ ***************************************************************************************************************************/
 //后台命令执行的结果
 OPSTAT fsm_l3bfsc_canitf_general_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -827,9 +850,33 @@ OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * 
 }
 
 
+/***************************************************************************************************************************
+ *
+ *  本地界面UI通信部分
+ *
+ ***************************************************************************************************************************/
+//从BFSCUICOMM来的消息和命令
+OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+/*	HcuDiscDataSampleStorageArray_t record;
+
+	msg_struct_modbus_pm25_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
+	}
+	memcpy(&rcv, param_ptr, param_len);*/
+
+	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+	//检查参数配置的合法性，目标值必须在一定的合理范围内，否则拒绝进入进料状态
+
+	//停止定时器
 
 
-
+	//返回
+	return SUCCESS;
+}
 
 OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -879,7 +926,11 @@ OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * 
 	return SUCCESS;
 }
 
-
+/***************************************************************************************************************************
+ *
+ * 　组合秤核心算法
+ *
+ ***************************************************************************************************************************/
 //系统参数的合法性检查，均在参数初始化中完成，后面不再检查
 INT32 func_l3bfsc_ws_sensor_search_combination(void)
 {
@@ -1092,6 +1143,11 @@ OPSTAT func_l3bfsc_time_out_period_read_process(void)
 	return SUCCESS;
 }
 
+/***************************************************************************************************************************
+ *
+ * 　高级简化技巧
+ *
+ ***************************************************************************************************************************/
 //由于错误，直接从差错中转入扫描状态
 //它提供了一种比RESTART更快更低级的方式，让L3状态机直接返回到扫描状态
 void func_l3bfsc_stm_main_recovery_from_fault(void)
