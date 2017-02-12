@@ -357,7 +357,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	strcat(HKVisionOption.file_video, "hkvideo.txt");
 
 	//判断如果PM2.5超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
-	if(rcv.pm25.pm2d5Value <= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD)
+	if(rcv.pm25.pm2d5Value >= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD)
 	{
 		if(FAILURE == hcu_hsmmp_photo_capture_start(HKVisionOption)){
 			HcuErrorPrint("PM25: Start HK photo capture error!\n\n");
@@ -408,7 +408,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
-	if(rcv.pm25.pm2d5Value <= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD && AlarmFlag == TRUE)
+	if(rcv.pm25.pm2d5Value >= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD && AlarmFlag == TRUE)
 	{
 		AlarmFlag = FALSE;
 
@@ -431,8 +431,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.alarmClearFlag = ALARM_CLEAR_FLAG_ON;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.pm25.equipid;
-		snd.alarmType = 0; //ALARM_TYPE_PM25_VALUE;
-		snd.alarmContent = 0; //ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
+		snd.alarmType = ALARM_TYPE_PM25_VALUE;
+		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
 		strcpy(snd.photofileName, HKVisionOption.file_photo);
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
