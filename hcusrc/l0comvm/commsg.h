@@ -1,0 +1,2435 @@
+/*
+ * commsg.h
+ *
+ *  Created on: 2016年1月3日
+ *      Author: test
+ */
+
+#ifndef L0COMVM_COMMSG_H_
+#define L0COMVM_COMMSG_H_
+
+//Local Include
+#include "../l0comvm/comtype.h"
+#include "../l0comvm/sysdim.h"
+//Basic Lib
+#include <stdio.h>
+#include <stdlib.h>
+#include <netdb.h>
+#include <stdarg.h>
+#include <errno.h>
+#include <assert.h>
+#include <string.h>
+#include <dirent.h>
+#include <time.h>
+#include <pthread.h>
+#include <signal.h>
+#include <unistd.h>
+#include <termios.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <ctype.h>
+#include <getopt.h>
+#include <limits.h>
+#include <locale.h>
+#include <math.h>
+//Network Lib
+#include <sys/socket.h>
+#include <sys/mman.h>
+#include <sys/resource.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <sys/ipc.h>
+#include <sys/time.h>
+#include <sys/msg.h>
+#include <sys/reboot.h>
+#include <libxml/xmlmemory.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xmlstring.h>
+#include <linux/netdevice.h>
+#include <netinet/tcp.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <asm/types.h>
+//V4L2视频捕获
+#include <linux/videodev2.h>
+//#include <jpeglib.h> //jpeg
+//CURL
+#include <curl/curl.h>
+//ffmpeg库
+#include <libavformat/avformat.h>
+#include <libavcodec/avcodec.h>
+#include <libswscale/swscale.h>
+#include <libavdevice/avdevice.h>
+#include <libavutil/mathematics.h>
+#include <libavutil/avconfig.h>
+#include <libavutil/opt.h>
+#include <libavutil/imgutils.h>
+#include <libavutil/avutil.h>
+#include <libavutil/opt.h>
+#include <libavutil/pixdesc.h>
+//#include <SDL/SDL.h>
+//#include <SDL/SDL_thread.h>
+//I2C
+#include <linux/i2c-dev.h>
+//CAN
+#include <linux/can.h>
+#include <linux/can/raw.h>
+//文件删去
+#include <sys/vfs.h>
+
+//Local MYSQL DB
+//MYC split into x86 and arm, for mysql the header file location saved in different directory
+#ifdef TARGET_LINUX_ARM
+	#include <mysql.h>
+#endif
+#ifdef TARGET_LINUX_X86
+	#include <mysql/mysql.h>
+#endif
+#ifdef TARGET_RASPBERRY_PI3B
+	#include <mysql/mysql.h>
+#endif
+
+//sqlite3 DB
+#include <sqlite3.h>
+#ifdef TARGET_RASPBERRY_PI3B
+	#include <wiringPi.h>
+	//GPIO
+	//Serial port
+	#include <wiringSerial.h>
+	#include <termios.h>
+	//I2C
+	#include <wiringPiI2C.h>
+	//SPI
+	#include <wiringPiSPI.h>
+	//Software driving tone
+	#include <softTone.h>
+	//PWM
+	#include <softPwm.h>
+#endif
+
+
+//2. 公共消息结构体定义
+//Under normal case, 1024Byte shall be enough for internal message communication purpose.
+//If not enough, need modify here to enlarge
+#define HCU_SYSMSG_COM_MSG_BODY_LEN_MAX 	HCU_SYSDIM_MSG_BODY_LEN_MAX-16
+#define HCU_SYSMSG_BH_BUF_BODY_LEN_MAX 		HCU_SYSDIM_MSG_BODY_LEN_MAX-4  //跟L2FRAME长度保持同步，都是比消息BUFFER小4字节，以便容纳进消息BODY之中
+typedef struct HcuMsgSruct
+{
+	UINT32 msgType;
+	UINT32 dest_id;
+	UINT32 src_id;
+	UINT32 msgLen;
+	INT8 msgBody[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+}HcuMsgSruct_t;
+#define HCU_SYSMSG_TASK_THREAD_PRIO             	10          //priority of the main loop de 1 a 99 max
+
+//3. 借用过来的消息及数据结构体定义
+/*
+ * Type define for Socket
+ */
+#define		HCU_SYSMSG_MAX_NUM_OF_WED	 			16
+#define		HCU_SYSMSG_MAX_LENGTH_CMD_SERIAL 		(256 + 4 + 1)*4 /* 4 for MsgHeader, 1 for FCS */
+
+typedef struct SocketPort
+{
+	char ServerIpAddress[16];
+	UINT16 ServerPort;
+	UINT16 SocketFd;
+	struct hostent *pHostName;
+	struct sockaddr_in ServerSocketAddress;
+	struct sockaddr_in ClientSocketAddress;
+}HcuComMsgSocketPort_t;
+
+/*
+ * WED Wireless End Point Properties
+ */
+typedef struct WedSensorProperty
+{
+	UINT16 NodeId;
+	UINT16 NodeZbDynAddress;
+	UINT32 NodeZbIeeeAddress[2]; /* ZigBee IEEE address */
+	UINT16 NodeStatus;
+	UINT32 NodeSensorType;
+}WedSensorProperty_t;
+
+/*
+ * WED All Sensors
+ */
+typedef struct HcuComMsgWedSensors
+{
+	UINT32 NumOfActiveSensors;
+	WedSensorProperty_t Sensor[HCU_SYSMSG_MAX_NUM_OF_WED];
+}HcuComMsgWedSensors_t;
+
+typedef struct HcuComMsgMeasureBehavior
+{
+	UINT8  SerialVtime;				/* Timeout if no char received, timeout = Vtime * 100ms */
+	UINT8  SerialVmin;				/* Number of char received before block read return */
+	UINT32 DelayBeforeRead;		 	/* unit: ms */
+	UINT32 DelayAfterRead; 			/* unit: ms */
+	time_t SerialPollItvlSec;		/* unit: s */
+	UINT32 SerialPollItvlnSec;		/* unit: nsec */
+	UINT32 NumOfPollingLoop;   		/*  */
+	UINT32 SocketInterval;
+	UINT32 socketCnt;/*  */
+	/* System Counter */
+	ULONG NumberOfFrameTotalRx;
+	ULONG NumberOfFrameValidRx;
+	ULONG NumberOfFrameTotalTx;
+	ULONG NumberOfTicksTriggerred;
+	/* max counter when network is down before another socket connection tried */
+	UINT32 MaxCounterTicksNetworkDown;
+}HcuComMsgMeasureBehavior_t;
+
+
+/* data header for msg send to sever */
+typedef struct HcuMsgSeverDataSegHeader
+{
+	UINT32 LenOfData;   /* ST=31;CN=2011;PW=123456;MN=12345678901002;CP=&&DataTime=2012101700100.....;CO-Rtd=0.00,CO-Flag=N;PMB-Rtd=0.00,PMB-Flag=N&& */
+	char ST[16];       /* ST: 31 */
+	char CN[16];       /* CN: 2011 */
+	char PW[16];       /* PW: 123456 */
+	char MN[16];       /* MN: 12345677654321 */
+	char DataTime[64];
+}HcuMsgSeverDataSegHeader_t;
+
+/* System Information */
+#define     HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH			128
+#define     HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER		16
+typedef struct SysHwInfo
+{
+	char cpu_processor[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_vendor[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_modelname[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char cpu_mhz[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+}SysHwInfo_t;
+
+typedef struct SysOsInfo
+{
+	char version_signature[HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+}SysOsInfo_t;
+
+typedef struct SysNetworkInfo
+{
+	int itfnum;
+	char itfname[HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER][HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	char itfip[HCU_SYSMSG_MAX_SYS_INFO_INTERFACE_NUMBER][HCU_SYSMSG_MAX_SYS_INFO_STRING_LENGTH];
+	/* whether there is PPP */
+	pid_t ppppid;
+}SysNetworkInfo_t;
+
+typedef struct HcuComMsgSysInfo
+{
+	SysHwInfo_t hw;
+	SysOsInfo_t os;
+	SysNetworkInfo_t net;
+}HcuSysOsNetInfo_t;
+#define		HCU_SYSMSG_NB_NANOS_IN_ONE_SECOND			1000000000	//number of nanos in one second
+#define 	HCU_SYSMSG_NB_NANOS_IN_ONE_MS          		1000000     //number of nanos secondes in 1 ms
+#define 	HCU_SYSMSG_NB_MICROS_IN_ONE_SECOND        	1000000     //number of micros secondes in 1 second
+#define 	HCU_SYSMSG_NB_MICROS_IN_ONE_MS    	     	1000	    //number of micros secondes in 1 ms
+
+/**************************************************************************************
+ *                                                                                    *
+ * 【增加消息】总共需要修改三个地方：
+ * - HCU_INTER_TASK_MSG_ID
+ * - 每定义一个新消息，请去修改vmlayer.c中的变量zHcuMsgNameList[]，不然TRACE会出现消息内容解析的错误
+ * - 还要去DBICOM模块中对应的MessageTrace机制一并修改，并备份数据库
+ * - 如果需要完美表现，还得最终需要升级L3UI的CRUD，不然相应的工具会出错                       *
+ *                                                                                    *
+ *************************************************************************************/
+//4. 新消息新程序结构体定义部分
+//复用下位机的消息定义
+#define MSG_ID_ENTRY 0
+enum HCU_INTER_TASK_MSG_ID
+{
+	//COMMOM message, KE_FIRST_MSG(TASK_AIRSYNC) as starting
+	MSG_ID_COM_MIN = 0x00, //Starting point
+	MSG_ID_COM_INIT,
+	MSG_ID_COM_INIT_FEEDBACK,
+	MSG_ID_COM_RESTART,  //L1->重新初始化上下文数据
+	MSG_ID_COM_STOP,
+	MSG_ID_COM_COMPLETE,
+	MSG_ID_COM_TIME_OUT,
+	MSG_ID_COM_DEBUG_TEST,
+	MSG_ID_COM_HEART_BEAT,
+	MSG_ID_COM_HEART_BEAT_FB,
+	MSG_ID_COM_PROCESS_REBOOT,  //L2->重新创建任务和进程, 包括装载数据。还有一种层次，是L3->重新RESET硬件
+
+
+	//Service Control message
+
+	//ETHERNET
+	//因为发送采用了API方式，接收采用了消息方式，所以这里只需要定义接收消息的格式，发送放在缓冲区中，定义在L1COMDEF.H中了
+	MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,
+	MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX,
+	MSG_ID_ETHERNET_NBIOTQG376_DATA_RX,
+	MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,
+
+	//WIFI
+	MSG_ID_WIFI_CLOUDVELA_DATA_RX,
+
+	//USBNET
+	MSG_ID_USBNET_CLOUDVELA_DATA_RX,
+
+	//3G4G
+	MSG_ID_3G4G_CLOUDVELA_DATA_RX,
+
+	//RS232
+	MSG_ID_SPS232_MODBUS_DATA_RX,
+
+	//RS485
+	MSG_ID_SPS485_MODBUS_DATA_RX,
+
+	//SPSVIRGO
+	MSG_ID_SPSVIRGO_HSMMP_DATA_RX,
+	MSG_ID_SPSVIRGO_NOISE_DATA_REPORT,
+	MSG_ID_SPSVIRGO_NOISE_CONTROL_FB,
+
+	//AVORION
+	MSG_ID_AVORION_HSMMP_DATA_READ_FB,
+	MSG_ID_AVORION_HSMMP_DATA_RX,
+
+	//BLE
+	MSG_ID_BLE_HSMMP_DATA_RX,
+	MSG_ID_BLE_MODBUS_DATA_RX,
+
+	//GPS
+
+	//LCD
+	MSG_ID_LCD_AVORION_DATA_RX,
+
+	//CAMERA
+	MSG_ID_CAMERA_AVORION_DATA_RX,
+
+	//MICROPHONE
+	MSG_ID_MICROPHONE_AVORION_DATA_RX,
+
+	//HWINV
+	MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,
+
+	//CloudConnection message
+	MSG_ID_CLOUDVELA_EMC_DATA_REQ,
+	MSG_ID_CLOUDVELA_EMC_CONTROL_CMD,
+
+	MSG_ID_CLOUDVELA_PM25_DATA_REQ,
+	MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,
+
+	MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,
+	MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD,
+
+	MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,
+	MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD,
+
+	MSG_ID_CLOUDVELA_TEMP_DATA_REQ,
+	MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,
+
+	MSG_ID_CLOUDVELA_HUMID_DATA_REQ,
+	MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD,
+
+	MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,
+
+	MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
+	MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD,
+
+	//NBIOT message
+	MSG_ID_NBIOTCJ188_IWM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IHM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IGM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IPM_DATA_REQ,
+	MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,
+	MSG_ID_NBIOTQG376_IPM_DATA_REQ,
+	MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,
+
+	//Modbus report
+	MSG_ID_MODBUS_EMC_DATA_REPORT,
+	MSG_ID_MODBUS_EMC_CONTROL_FB,
+
+	MSG_ID_MODBUS_PM25_DATA_REPORT,
+	MSG_ID_MODBUS_PM25_CONTROL_FB,
+
+	MSG_ID_MODBUS_WINDDIR_DATA_REPORT,
+	MSG_ID_MODBUS_WINDDIR_CONTROL_FB,
+
+	MSG_ID_MODBUS_WINDSPD_DATA_REPORT,
+	MSG_ID_MODBUS_WINDSPD_CONTROL_FB,
+
+	MSG_ID_MODBUS_TEMP_DATA_REPORT,
+	MSG_ID_MODBUS_TEMP_CONTROL_FB,
+
+	MSG_ID_MODBUS_HUMID_DATA_REPORT,
+	MSG_ID_MODBUS_HUMID_CONTROL_FB,
+
+	MSG_ID_MODBUS_NOISE_DATA_REPORT,
+	MSG_ID_MODBUS_NOISE_CONTROL_FB,
+
+	//EMC
+	MSG_ID_EMC_MODBUS_DATA_READ,
+	MSG_ID_EMC_CLOUDVELA_DATA_RESP,
+	MSG_ID_EMC_MODBUS_CONTROL_CMD,
+	MSG_ID_EMC_CLOUDVELA_CONTROL_FB,
+
+	//PM25 message
+	MSG_ID_PM25_MODBUS_DATA_READ,
+	MSG_ID_PM25_CLOUDVELA_DATA_RESP,
+	MSG_ID_PM25_MODBUS_CONTROL_CMD,
+	MSG_ID_PM25_CLOUDVELA_CONTROL_FB,
+
+	//WIND_DIRECTION message
+	MSG_ID_WINDDIR_MODBUS_DATA_READ,
+	MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP,
+	MSG_ID_WINDDIR_MODBUS_CONTROL_CMD,
+	MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,
+
+	//WIND_SPEED message
+	MSG_ID_WINDSPD_MODBUS_DATA_READ,
+	MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,
+	MSG_ID_WINDSPD_MODBUS_CONTROL_CMD,
+	MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,
+
+	//TEMPERATURE message
+	MSG_ID_TEMP_MODBUS_DATA_READ,
+	MSG_ID_TEMP_SPIBUSARIES_DATA_READ,//SPIBUSARIES
+	MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
+	MSG_ID_TEMP_MODBUS_CONTROL_CMD,
+	MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD,//SPIBUSARIES
+	MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,
+
+	//HUMIDITY message
+	MSG_ID_HUMID_MODBUS_DATA_READ,
+	MSG_ID_HUMID_CLOUDVELA_DATA_RESP,
+	MSG_ID_HUMID_MODBUS_CONTROL_CMD,
+	MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,
+
+	//HSMMP
+	MSG_ID_HSMMP_AVORION_DATA_READ,
+	MSG_ID_HSMMP_AVORION_STOP,
+	MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,
+	MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,
+	MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,
+
+	//NOISE
+	MSG_ID_NOISE_SPSVIRGO_DATA_READ,
+	MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD,
+	MSG_ID_NOISE_SPSVIRGO_STOP,
+	MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
+	MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,
+	MSG_ID_NOISE_MODBUS_DATA_READ,//0x67,103?
+	MSG_ID_NOISE_MODBUS_CONTROL_CMD,
+
+	//IWM
+	MSG_ID_IWM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IWM_NBIOTCJ188_CONTROL_FB,
+
+	//IHM
+	MSG_ID_IHM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IHM_NBIOTCJ188_CONTROL_FB,
+
+	//IGM
+	MSG_ID_IGM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IGM_NBIOTCJ188_CONTROL_FB,
+
+	//IPM
+	MSG_ID_IPM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,
+	MSG_ID_IPM_NBIOTQG376_DATA_RESP,
+	MSG_ID_IPM_NBIOTQG376_CONTROL_FB,
+
+	//for alarm & pm report added by ZSC
+	MSG_ID_COM_ALARM_REPORT,
+	MSG_ID_COM_PM_REPORT,
+
+	//CANITF
+	MSG_ID_CANITFLEO_DATA_REPORT,
+
+	//BFSC/SCALE_WEIGHT组合秤
+	//CANITF部分
+	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
+	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
+	MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
+	MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化
+	MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求
+	MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
+	//UICOMM部分
+	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
+	//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
+	MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
+	MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
+	MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,
+	MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,
+	MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,
+	MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
+	MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
+	MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
+	MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
+
+	//CANITFLEO
+	MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
+	MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  	//传感器新数据事件
+	MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  		//出料确认
+	MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   		//放弃物料确认
+	MSG_ID_CAN_L3BFSC_WS_INIT_FB,       	//传感器初始化确认
+	MSG_ID_CAN_L3BFSC_WS_READ_RESP,  		//所有传感器读取一次性读取确认
+	MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, 	//来自后台的控制命令反馈，只能在SCAN下工作
+
+	//BFSCUICOMM
+	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//本地界面请求
+	MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,  //本地界面设置结果
+
+	MSG_ID_COM_MAX, //Ending point
+
+}; //end of HCU_INTER_TASK_MSG_ID
+#define MSG_ID_END 0xFF  //跟MASK_MSGID_NUM_IN_ONE_TASK设置息息相关，不能随便改动
+#define MSG_ID_INVALID 0xFFFFFFFF
+
+/**************************************************************************************
+ *                                                                                    *
+ *            常量定义                                                                 *
+ *                                                                                    *
+ *************************************************************************************/
+#define HCU_SYSMSG_COMMON_ACTION_NULL 		0
+#define HCU_SYSMSG_COMMON_ACTION_YES 		1
+#define HCU_SYSMSG_COMMON_ACTION_NO 		2
+#define HCU_SYSMSG_COMMON_ACTION_INVALID 	0xFF
+
+
+
+/**************************************************************************************
+ *                                                                                    *
+ *            COMMON MESSAGE STRUCTURE                                                *
+ *                                                                                    *
+ *************************************************************************************/
+typedef struct msgie_struct_com_gps_pos //
+{
+	char ew;
+	UINT32 gpsx;
+	char ns;
+	UINT32 gpsy;
+	UINT32 gpsz;
+}msgie_struct_com_gps_pos_t;
+typedef struct  sensor_modbus_opertion_general //
+{
+	UINT32 equId;
+	UINT8  powerOnOff;
+	UINT32 newEquId;
+	UINT32 workCycle;
+	UINT32 interSample;
+	UINT32 meausTimes;
+}sensor_modbus_opertion_general_t;
+typedef struct sensor_zhb_transport_format_dl //
+{
+	char   qn[21]; //中环保标准，20c, QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求, 用于请求命令或通知命令
+	char   st[6];  //中环保标准，5c, ST=系统编号
+	char   cn[8];  //中环保标准，7c, 命令编号 CN
+	char   pw[7];  //中环保标准， 6c, PW=访问密码
+	char   mn[13]; //中环保标准， 12c, 设备唯一标识MN
+	UINT8  ansFlag;//中环保标准， 3c, 数据包是否拆分及应答标志 Flag，从云后台的接收方向
+}sensor_zhb_transport_format_dl_t;
+typedef struct  sensor_zhb_transport_format_ul //
+{
+	char   qn[21]; //中环保标准，20c, QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求, 用于请求命令或通知命令
+	char   st[6];  //中环保标准，5c, ST=系统编号
+	char   cn[8];  //中环保标准，7c, 命令编号 CN
+	char   pw[7];  //中环保标准， 6c, PW=访问密码
+	char   mn[13]; //中环保标准， 12c, 设备唯一标识MN
+	UINT32 pnmu;     //总包号，满足中环保标准要求
+	UINT32 pno;      //当前包号，满足中环保标准要求
+}sensor_zhb_transport_format_ul_t;
+typedef struct  sensor_emc_data_element //
+{
+	UINT32 equipid;
+	UINT8  dataFormat;
+	UINT32 emcValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_emc_data_element_t;
+typedef struct  sensor_pm25_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 pm1d0Value;
+	UINT32 pm2d5Value;
+	UINT32 pm10Value;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_pm25_data_element_t;
+typedef struct  sensor_pm25_sharp_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 pm2d5Value;
+	UINT32 timeStamp;
+}sensor_pm25_sharp_data_element_t;
+typedef struct  sensor_pm25_bmpd300_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 pm2d5Value;
+	UINT32 timeStamp;
+}sensor_pm25_bmpd300_data_element_t;
+typedef struct  sensor_winddir_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 winddirValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_winddir_data_element_t;
+typedef struct  sensor_windspd_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 windspdValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_windspd_data_element_t;
+typedef struct  sensor_temp_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_temp_data_element_t;
+typedef struct  sensor_temp_dht11_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_dht11_data_element_t;
+typedef struct  sensor_temp_sht20_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_sht20_data_element_t;
+typedef struct  sensor_temp_rht03_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_rht03_data_element_t;
+typedef struct  sensor_temp_mth01_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_mth01_data_element_t;
+typedef struct  sensor_temp_bmp180_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 tempValue;
+	UINT32 timeStamp;
+}sensor_temp_bmp180_data_element_t;
+typedef struct  sensor_humid_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_humid_data_element_t;
+typedef struct  sensor_humid_dht11_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	UINT32 timeStamp;
+}sensor_humid_dht11_data_element_t;
+typedef struct  sensor_humid_sht20_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	UINT32 timeStamp;
+}sensor_humid_sht20_data_element_t;
+typedef struct  sensor_humid_rht03_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	UINT32 timeStamp;
+}sensor_humid_rht03_data_element_t;
+typedef struct  sensor_humid_mth01_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 humidValue;
+	UINT32 timeStamp;
+}sensor_humid_mth01_data_element_t;
+typedef struct  sensor_noise_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 noiseValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_noise_data_element_t;
+typedef struct  sensor_hsmmp_data_element //
+{
+	UINT32 equipid;
+	char hsmmpFdir[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char hsmmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char hsmmpLink[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_hsmmp_data_element_t;
+typedef struct sensor_hsmmp_link_element
+{
+	UINT32 equipid;
+	UINT32 linkLen;
+	char   linkName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStampStart;
+	UINT32 timeStampEnd;
+	UINT32 nTimes;
+}sensor_hsmmp_link_element_t;
+typedef struct  sensor_airprs_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 airprsValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_airprs_data_element_t;
+typedef struct  sensor_airprs_bmp180_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 airprsValue;
+	UINT32 timeStamp;
+}sensor_airprs_bmp180_data_element_t;
+typedef struct  sensor_airprs_altitude_bmp180_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 altitudeValue;
+	UINT32 timeStamp;
+}sensor_airprs_altitude_bmp180_data_element_t;
+typedef struct  sensor_co1_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 co1Value;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_co1_data_element_t;
+typedef struct  sensor_lightstr_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 lightstrValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_lightstr_data_element_t;
+typedef struct  sensor_lightstr_bh1750_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 lightstrValue;
+	UINT32 timeStamp;
+}sensor_lightstr_bh1750_data_element_t;
+typedef struct  sensor_alcohol_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 alcoholValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_alcohol_data_element_t;
+typedef struct  sensor_alcohol_mq3alco_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 alcoholValue;
+	UINT32 timeStamp;
+}sensor_alcohol_mq3alco_data_element_t;
+typedef struct  sensor_hcho_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 hchoValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_hcho_data_element_t;
+typedef struct  sensor_hcho_ze08ch2o_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 hchoValue;
+	UINT32 timeStamp;
+}sensor_hcho_ze08ch2o_data_element_t;
+typedef struct  sensor_toxicgas_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 toxicgasValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_toxicgas_data_element_t;
+typedef struct  sensor_toxicgas_mq135_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 toxicgasValue;
+	UINT32 timeStamp;
+}sensor_toxicgas_mq135_data_element_t;
+typedef struct  sensor_toxicgas_zp01voc_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 toxicgasValue;
+	UINT32 timeStamp;
+}sensor_toxicgas_zp01voc_data_element_t;
+
+//BFSC的汇报数据内容
+#define IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX 20
+typedef struct msgie_struct_bh_com_head
+{
+	char  srcUser[IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX];
+	char  destUser[IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX];
+	UINT32 timeStamp;
+	UINT32 funcFlag;
+}msgie_struct_bh_com_head_t;
+typedef struct msgie_struct_bfsc_scale_weight_sta_element
+{
+	UINT32 combTimes;		//组合总次数
+	UINT32 tttTimes;		//组合出料次数
+	UINT32 tgvTimes;		//组合放弃次数
+	UINT32 combMatNbr;  	//组合的物料数量
+	UINT32 tttMatNbr;		//组合出料的物料数量
+	UINT32 tgvMatNbr;		//组合放弃的物料数量
+	UINT32 combAvgSpeed;	//组合平均速度
+	UINT32 totalWeight;		//总共处理的物料总重量
+	UINT32 totalMatNbr;  	//总共处理的物料总数量
+	UINT32 totalWorkMin;	//连续工作的总分钟数
+	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
+	UINT32 errNbr;			//出错次数
+}msgie_struct_bfsc_scale_weight_sta_element_t;
+
+
+
+
+/***************************************************************************************************************
+ *                                                                                                             *
+ *  消息结构定义                                                                                                 *
+ *                                                                                                             *
+ *  - 缺省消息都使用UINT32进行定义，在内存不是最重要的制约因素下，这种统一的方式，是为了更加不容易出错，不用在不同            *
+ *  - 长度的字型之间进行转换。如果遇到INT类型，直接强制转换即可，符号单独处理                                            *
+ *                                                                                                             *
+ **************************************************************************************************************/
+//message definition
+//	MSG_ID_COM_INIT,
+typedef struct msg_struct_com_init //
+{
+	UINT32 length;
+}msg_struct_com_init_t;
+
+//MSG_ID_COM_INIT_FEEDBACK,
+typedef struct msg_struct_com_init_feedback //
+{
+	UINT32 length;
+}msg_struct_com_init_feedback_t;
+
+//MSG_ID_COM_RESTART,  //L1->重新初始化上下文数据
+typedef struct  msg_struct_com_restart //
+{
+	UINT32 length;
+}msg_struct_com_restart_t;
+
+//MSG_ID_COM_STOP,
+typedef struct  msg_struct_com_stop //
+{
+	UINT32 length;
+}msg_struct_com_stop_t;
+
+//MSG_ID_COM_COMPLETE,
+typedef struct  msg_struct_com_complete //
+{
+	UINT32 length;
+}msg_struct_com_complete_t;
+
+//MSG_ID_COM_TIME_OUT,
+typedef struct  msg_struct_com_time_out //
+{
+	UINT32 timeId;
+	UINT8 timeRes;
+	UINT32 length;
+}msg_struct_com_time_out_t;
+
+//MSG_ID_COM_DEBUG_TEST,
+typedef struct  msg_struct_com_debug //
+{
+	UINT32 testid;
+	char testinfo[10];
+	UINT32 length;
+}msg_struct_com_debug_t;
+
+//MSG_ID_COM_HEART_BEAT,
+typedef struct  msg_struct_com_heart_beat //
+{
+	UINT32 length;
+}msg_struct_com_heart_beat_t;
+
+//MSG_ID_COM_HEART_BEAT_FB,
+typedef struct  msg_struct_com_heart_beat_fb //
+{
+	UINT32 length;
+}msg_struct_com_heart_beat_fb_t;
+
+//MSG_ID_COM_PROCESS_REBOOT,  //L2->重新创建任务和进程, 包括装载数据。还有一种层次，是L3->重新RESET硬件
+typedef struct  msg_struct_com_process_reboot //
+{
+	UINT32 taskId;
+	UINT32 length;
+}msg_struct_com_process_reboot_t;
+
+#define HCU_SYSMSG_HWINV_PHY_STATUS_NULL 0
+#define HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE 1
+#define HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE 2
+#define HCU_SYSMSG_HWINV_PHY_STATUS_INVALID 0xFF
+//MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,
+typedef struct  msg_struct_hwinv_cloudvela_phy_status_chg //
+{
+	UINT8 ethStatChg;
+	UINT8 usbnetStatChg;
+	UINT8 wifiStatChg;
+	UINT8 g3g4StatChg;
+	UINT32 length;
+}msg_struct_hwinv_cloudvela_phy_status_chg_t;
+
+//MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,
+//Rx data coming from CLOUD direction, shall be controller data, no need too much data traffic
+typedef struct  msg_struct_ethernet_cloudvela_data_rx //
+{
+	UINT32 length;
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_ethernet_cloudvela_data_rx_t;
+
+//MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,
+typedef struct  msg_struct_ethernet_cloudvela_socket_data_rx //
+{
+	UINT32 length;
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_ethernet_cloudvela_socket_data_rx_t;
+
+//MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD,//SPIBUSARIES
+typedef struct  msg_struct_temp_spibusaries_control_cmd
+{
+	UINT32 length;
+}msg_struct_temp_spibusaries_control_cmd_t;
+
+//MSG_ID_WIFI_CLOUDVELA_DATA_RX,
+typedef struct  msg_struct_wifi_cloudvela_data_rx //
+{
+	UINT32 length;
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_wifi_cloudvela_data_rx_t;
+
+//MSG_ID_USBNET_CLOUDVELA_DATA_RX,
+typedef struct  msg_struct_usbnet_cloudvela_data_rx //
+{
+	UINT32 length;
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_usbnet_cloudvela_data_rx_t;
+
+//MSG_ID_3G4G_CLOUDVELA_DATA_RX,
+typedef struct  msg_struct_3g4g_cloudvela_data_rx //
+{
+	UINT32 length;
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_3g4g_cloudvela_data_rx_t;
+
+//Used to common all different received data buffer
+typedef struct  msg_struct_com_cloudvela_data_rx //
+{
+	UINT32 length;
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_com_cloudvela_data_rx_t;
+
+//MSG_ID_SPS232_MODBUS_DATA_RX,
+typedef struct  msg_struct_sps232_modbus_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_sps232_modbus_data_rx_t;
+
+//MSG_ID_SPS485_MODBUS_DATA_RX,
+typedef struct msg_struct_sps485_modbus_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_sps485_modbus_data_rx_t;
+
+//MSG_ID_SPSVIRGO_HSMMP_DATA_RX,
+typedef struct msg_struct_spsvirgo_hsmmp_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_spsvirgo_hsmmp_data_rx_t;
+
+//MSG_ID_AVORION_HSMMP_DATA_RX,
+typedef struct msg_struct_avorion_hsmmp_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_avorion_hsmmp_data_rx_t;
+
+//MSG_ID_BLE_HSMMP_DATA_RX,
+typedef struct msg_struct_ble_hsmmp_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_ble_hsmmp_data_rx_t;
+
+//MSG_ID_BLE_MODBUS_DATA_RX,
+typedef struct msg_struct_ble_modbus_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_ble_modbus_data_rx_t;
+
+//MSG_ID_LCD_AVORION_DATA_RX,
+typedef struct msg_struct_lcd_avorion_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_lcd_avorion_data_rx_t;
+
+//MSG_ID_CAMERA_AVORION_DATA_RX,
+typedef struct msg_struct_camera_avorion_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_camera_avorion_data_rx_t;
+
+//MSG_ID_MICROPHONE_AVORION_DATA_RX,
+typedef struct msg_struct_microphone_avorion_data_rx //
+{
+	UINT32 length;
+	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_microphone_avorion_data_rx_t;
+
+//MSG_ID_CLOUDVELA_EMC_DATA_REQ,
+//Data request from Cloud to Sensors
+typedef struct  msg_struct_cloudvela_emc_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_emc_data_req_t;
+
+//MSG_ID_CLOUDVELA_PM25_DATA_REQ,
+typedef struct  msg_struct_cloudvela_pm25_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_pm25_data_req_t;
+
+//MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,
+typedef struct  msg_struct_cloudvela_winddir_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_winddir_data_req_t;
+
+//MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,
+typedef struct  msg_struct_cloudvela_windspd_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_windspd_data_req_t;
+
+//MSG_ID_CLOUDVELA_TEMP_DATA_REQ,
+typedef struct  msg_struct_cloudvela_temp_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_temp_data_req_t;
+
+//MSG_ID_CLOUDVELA_HUMID_DATA_REQ,
+typedef struct  msg_struct_cloudvela_humid_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_humid_data_req_t;
+
+//MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
+typedef struct  msg_struct_cloudvela_noise_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_noise_data_req_t;
+
+//MSG_ID_CLOUDVELA_EMC_CONTROL_CMD,
+typedef struct  msg_struct_cloudvela_emc_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_emc_control_cmd_t;
+
+//MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,
+typedef struct  msg_struct_cloudvela_pm25_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_pm25_control_cmd_t;
+
+//MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD,
+typedef struct  msg_struct_cloudvela_winddir_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_winddir_control_cmd_t;
+
+//MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD,
+typedef struct  msg_struct_cloudvela_windspd_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_windspd_control_cmd_t;
+
+//MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,
+typedef struct  msg_struct_cloudvela_temp_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_temp_control_cmd_t;
+
+//MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD,
+typedef struct  msg_struct_cloudvela_humid_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_humid_control_cmd_t;
+
+//MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD,
+typedef struct  msg_struct_cloudvela_noise_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_noise_control_cmd_t;
+
+//MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,
+typedef struct  msg_struct_cloudvela_hsmmp_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_hsmmp_control_cmd_t;
+
+//SENSOR Data request to MODBUS
+//MSG_ID_EMC_MODBUS_DATA_READ,
+typedef struct  msg_struct_emc_modbus_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_emc_modbus_data_read_t;
+
+//MSG_ID_PM25_MODBUS_DATA_READ,
+typedef struct  msg_struct_pm25_modbus_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_pm25_modbus_data_read_t;
+
+//MSG_ID_WINDDIR_MODBUS_DATA_READ,
+typedef struct  msg_struct_winddir_modbus_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_winddir_modbus_data_read_t;
+
+//MSG_ID_WINDSPD_MODBUS_DATA_READ,
+typedef struct  msg_struct_windspd_modbus_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_windspd_modbus_data_read_t;
+
+//MSG_ID_TEMP_MODBUS_DATA_READ,
+typedef struct  msg_struct_temp_modbus_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_temp_modbus_data_read_t;
+
+//MSG_ID_TEMP_SPIBUSARIES_DATA_READ,//SPIBUSARIES
+//for SPIBUSARIES
+typedef struct  msg_struct_temp_spibusaries_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_temp_spibusaries_data_read_t;
+
+//MSG_ID_HUMID_MODBUS_DATA_READ,
+typedef struct  msg_struct_humid_modbus_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_humid_modbus_data_read_t;
+
+//MSG_ID_NOISE_MODBUS_DATA_READ,//0x67,103?
+typedef struct  msg_struct_noise_modbus_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_noise_modbus_data_read_t;
+
+//MSG_ID_NOISE_SPSVIRGO_DATA_READ,
+typedef struct  msg_struct_noise_spsvirgo_data_read //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_noise_spsvirgo_data_read_t;
+
+//MSG_ID_EMC_MODBUS_CONTROL_CMD,
+typedef struct  msg_struct_emc_modbus_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_emc_modbus_control_cmd_t;
+
+//MSG_ID_PM25_MODBUS_CONTROL_CMD,
+typedef struct  msg_struct_pm25_modbus_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_pm25_modbus_control_cmd_t;
+
+//MSG_ID_WINDDIR_MODBUS_CONTROL_CMD,
+typedef struct  msg_struct_winddir_modbus_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_winddir_modbus_control_cmd_t;
+
+//MSG_ID_WINDSPD_MODBUS_CONTROL_CMD,
+typedef struct  msg_struct_windspd_modbus_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_windspd_modbus_control_cmd_t;
+
+//MSG_ID_TEMP_MODBUS_CONTROL_CMD,
+typedef struct  msg_struct_temp_modbus_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_temp_modbus_control_cmd_t;
+
+//MSG_ID_HUMID_MODBUS_CONTROL_CMD,
+typedef struct  msg_struct_humid_modbus_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_humid_modbus_control_cmd_t;
+
+//MSG_ID_NOISE_MODBUS_CONTROL_CMD,
+typedef struct  msg_struct_noise_modbus_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_noise_modbus_control_cmd_t;
+
+//MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD,
+typedef struct  msg_struct_noise_spsvirgo_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_noise_spsvirgo_control_cmd_t;
+
+//MSG_ID_MODBUS_EMC_DATA_REPORT,
+//Data Report message from Modbus
+typedef struct  msg_struct_modbus_emc_data_report //
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_emc_data_element_t emc;
+	UINT32 length;
+}msg_struct_modbus_emc_data_report_t;
+
+//MSG_ID_MODBUS_PM25_DATA_REPORT,
+typedef struct  msg_struct_modbus_pm25_data_report //
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_pm25_data_element_t pm25;
+	UINT32 length;
+}msg_struct_modbus_pm25_data_report_t;
+
+//MSG_ID_MODBUS_WINDDIR_DATA_REPORT,
+typedef struct msg_struct_modbus_winddir_data_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_winddir_data_element_t winddir;
+	UINT32 length;
+}msg_struct_modbus_winddir_data_report_t;
+
+//MSG_ID_MODBUS_WINDSPD_DATA_REPORT,
+typedef struct msg_struct_modbus_windspd_data_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_windspd_data_element_t windspd;
+	UINT32 length;
+}msg_struct_modbus_windspd_data_report_t;
+
+//MSG_ID_MODBUS_TEMP_DATA_REPORT,
+typedef struct msg_struct_modbus_temp_data_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_temp_data_element_t temp;
+	UINT32 length;
+}msg_struct_modbus_temp_data_report_t;
+
+//MSG_ID_MODBUS_HUMID_DATA_REPORT,
+typedef struct msg_struct_modbus_humid_data_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_humid_data_element_t humid;
+	UINT32 length;
+}msg_struct_modbus_humid_data_report_t;
+
+//MSG_ID_MODBUS_NOISE_DATA_REPORT,
+typedef struct msg_struct_modbus_noise_data_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_noise_data_element_t noise;
+	UINT32 length;
+}msg_struct_modbus_noise_data_report_t;
+
+//MSG_ID_SPSVIRGO_NOISE_DATA_REPORT,
+typedef struct msg_struct_spsvirgo_noise_data_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_noise_data_element_t noise;
+	UINT32 length;
+}msg_struct_spsvirgo_noise_data_report_t;
+
+//MSG_ID_MODBUS_EMC_CONTROL_FB,
+typedef struct msg_struct_modbus_emc_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_modbus_emc_control_fb_t;
+
+//MSG_ID_MODBUS_PM25_CONTROL_FB,
+typedef struct msg_struct_modbus_pm25_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_modbus_pm25_control_fb_t;
+
+//MSG_ID_MODBUS_WINDDIR_CONTROL_FB,
+typedef struct msg_struct_modbus_winddir_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_modbus_winddir_control_fb_t;
+
+//MSG_ID_MODBUS_WINDSPD_CONTROL_FB,
+typedef struct msg_struct_modbus_windspd_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_modbus_windspd_control_fb_t;
+
+//MSG_ID_MODBUS_TEMP_CONTROL_FB,
+typedef struct msg_struct_modbus_temp_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_modbus_temp_control_fb_t;
+
+//MSG_ID_MODBUS_HUMID_CONTROL_FB,
+typedef struct msg_struct_modbus_humid_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_modbus_humid_control_fb_t;
+
+//MSG_ID_MODBUS_NOISE_CONTROL_FB,
+typedef struct msg_struct_modbus_noise_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_modbus_noise_control_fb_t;
+
+//MSG_ID_SPSVIRGO_NOISE_CONTROL_FB,
+typedef struct msg_struct_spsvirgo_noise_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	UINT32 length;
+}msg_struct_spsvirgo_noise_control_fb_t;
+
+//MSG_ID_EMC_CLOUDVELA_DATA_RESP,
+//Data response message to Cloud
+typedef struct  msg_struct_emc_cloudvela_data_resp //
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_emc_data_element_t emc;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_emc_cloudvela_data_resp_t;
+
+//MSG_ID_PM25_CLOUDVELA_DATA_RESP,
+typedef struct  msg_struct_pm25_cloudvela_data_resp_t //
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_pm25_data_element_t pm25;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_pm25_cloudvela_data_resp_t;
+
+//MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_winddir_cloudvela_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_winddir_data_element_t winddir;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_winddir_cloudvela_data_resp_t;
+
+//MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_windspd_cloudvela_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_windspd_data_element_t windspd;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_windspd_cloudvela_data_resp_t;
+
+//MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_temp_cloudvela_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_temp_data_element_t temp;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_temp_cloudvela_data_resp_t;
+
+//MSG_ID_HUMID_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_humid_cloudvela_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_humid_data_element_t humid;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_humid_cloudvela_data_resp_t;
+
+//MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_noise_cloudvela_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_noise_data_element_t noise;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_noise_cloudvela_data_resp_t;
+
+//MSG_ID_EMC_CLOUDVELA_CONTROL_FB,
+typedef struct msg_struct_emc_cloudvela_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_emc_cloudvela_control_fb_t;
+
+//MSG_ID_PM25_CLOUDVELA_CONTROL_FB,
+typedef struct msg_struct_pm25_cloudvela_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_pm25_cloudvela_control_fb_t;
+
+//MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,
+typedef struct msg_struct_winddir_cloudvela_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_winddir_cloudvela_control_fb_t;
+
+//MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,
+typedef struct msg_struct_windspd_cloudvela_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_windspd_cloudvela_control_fb_t;
+
+//MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,
+typedef struct msg_struct_temp_cloudvela_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_temp_cloudvela_control_fb_t;
+
+//MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,
+typedef struct msg_struct_humid_cloudvela_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_humid_cloudvela_control_fb_t;
+
+//MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,
+typedef struct msg_struct_noise_cloudvela_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_noise_cloudvela_control_fb_t;
+
+//MSG_ID_HSMMP_AVORION_DATA_READ,
+typedef struct msg_struct_hsmmp_avorion_data_read //
+{
+	UINT32 equipid;
+	UINT32 captureDur; //抓取视频的时间长度
+	UINT32 refreshRate; //刷新率
+	UINT8  fileType; // FileOperationTypeEnum defined at L2COMDEF.h
+	UINT8  boolBackCloud; //指明是否需要将该数据发送到后台
+	UINT32 timeStampStart;
+	char   fDirName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char   fName[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	char   tmpFname[HCU_SYSDIM_FILE_NAME_LEN_MAX];
+	UINT32 length;
+}msg_struct_hsmmp_avorion_data_read_t;
+
+//MSG_ID_HSMMP_AVORION_STOP,
+typedef struct msg_struct_hsmmp_avorion_stop //
+{
+	UINT32 length;
+}msg_struct_hsmmp_avorion_stop_t;
+
+//MSG_ID_AVORION_HSMMP_DATA_READ_FB
+typedef struct msg_struct_avorion_hsmmp_data_read_fb //
+{
+	UINT8  boolBackCloud; //指明是否需要将该数据发送到后台
+	sensor_hsmmp_data_element_t hsmmp; //tmpFname暂时被hsmmpLink所替代
+	UINT32 length;
+}msg_struct_avorion_hsmmp_data_read_fb_t;
+
+//MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_hsmmp_cloudvela_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_hsmmp_link_element_t link;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_hsmmp_cloudvela_data_resp_t;
+
+//MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,
+typedef struct msg_struct_hsmmp_cloudvela_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_hsmmp_cloudvela_control_fb_t;
+
+//MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,
+typedef struct msg_struct_hsmmp_cloudvela_data_link_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_hsmmp_link_element_t link;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_hsmmp_cloudvela_data_link_resp_t;
+
+//MSG_ID_NOISE_SPSVIRGO_STOP,
+typedef struct msg_struct_noise_spsvirgo_stop //
+{
+	UINT32 length;
+}msg_struct_noise_spsvirgo_stop_t;
+
+
+/**************************************************************************************
+ *                                                                                    *
+ *  NBIOT CJ188消息结构                                                                *
+ *                                                                                    *
+ *  - 定义的逻辑是，每条消息都是全集消息，这样针对不同的命令字处理，由层3模块IWM在收到具体的      *
+ *    命令后，根据命令字进行分拣，这样大大降低这里消息定义的难度，并且增加其适应性，不会因为      *
+ *    不同的内容，导致消息完全不一样                                                      *
+ *                                                                                    *
+ *************************************************************************************/
+//智能表数据结构
+
+typedef struct  sensor_general_cj188_control_head //
+{
+	INT8  ctrlId;
+	INT16  d0d1Id;
+	INT8  ser;
+	UINT8  periodFlag; //指明是瞬时，还是周期性读数
+	UINT8 communicationFlag;  //反应通信是否异常的标示
+	char addr[15];
+	UINT32 timestamp;
+}sensor_general_cj188_control_head_t;
+typedef struct  sensor_general_cj188_data_element //
+{
+	float currentaccuvolume;   //当前累计流量
+	INT8 currentaccuvolumeunit;
+	float flowvolume;         //流量
+	INT8 flowvolumeunit;
+	INT8 lastmonth;
+	INT32 accumuworktime;     //累计工作时间
+	float supplywatertemp;    //供水温度
+	float backwatertemp;      //回水温度
+	char realtime[15];        //多申请一位， 实时时间
+	char st[5];               //多申请一位    状态
+	INT8 billtodaydate;       //结算日
+	INT8 readamountcurdate;   //抄表日
+	INT8 startdate;           //启动日
+	INT64 key;
+	float price1;
+	INT32 volume1;
+	float price2;
+	INT32 volume2;
+	float price3;
+	INT8 buycode;
+	float thisamount;    //本次金额
+	float accuamount;    //累计金额
+	float remainamount;   //剩余金额
+	INT8 keyver;
+	INT8 switchctrl;
+}sensor_general_cj188_data_element_t;
+
+//用于数据库的存入和交互
+typedef struct  sensor_iwm_cj188_data_element //
+{
+	char cj188address[15];  //多申请一位
+	UINT32 timestamp;
+	INT8 equtype;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwm;
+}sensor_iwm_cj188_data_element_t;
+typedef struct  sensor_igm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igm;
+}sensor_igm_cj188_data_element_t;
+typedef struct  sensor_ipm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t ipm;
+}sensor_ipm_cj188_data_element_t;
+typedef struct  sensor_ihm_cj188_data_element //
+{
+	char cj188address[14];
+	UINT32 timestamp;
+	INT8 equtype;
+	float heatpower;    //热功率
+	INT8 heatpowerunit;
+	float currentheat;   //当前热量
+	INT8 currentheatunit;
+	float billtodayheat;     //结算日热量
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihm;
+}sensor_ihm_cj188_data_element_t;
+typedef struct  sensor_ipm_qg376_data_element //
+{
+	char ipmaddress[14];
+	UINT32 timestamp;
+	INT8 equtype;
+}sensor_ipm_qg376_data_element_t;
+
+//为了四种仪表IWM/IHM/IGM/IPM定义的通用消息交互结构
+//MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX,
+typedef struct  msg_struct_ethernet_nbiotcj188_data_rx //
+{
+	UINT32 length;
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_ethernet_nbiotcj188_data_rx_t;
+
+//MSG_ID_NBIOTCJ188_IWM_DATA_REQ
+typedef struct  msg_struct_nbiotcj188_iwm_data_req //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t iwmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_iwm_data_req_t;
+
+//MSG_ID_NBIOTCJ188_IHM_DATA_REQ,
+typedef struct  msg_struct_nbiotcj188_ihm_data_req //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ihmHead;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_ihm_data_req_t;
+
+//MSG_ID_NBIOTCJ188_IGM_DATA_REQ,
+typedef struct  msg_struct_nbiotcj188_igm_data_req //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_igm_data_req_t;
+
+//MSG_ID_NBIOTCJ188_IPM_DATA_REQ,
+typedef struct  msg_struct_nbiotcj188_ipm_data_req //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ipmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t ipmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_ipm_data_req_t;
+
+//MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD,
+typedef struct  msg_struct_nbiotcj188_iwm_control_cmd //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t iwmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_iwm_control_cmd_t;
+
+//MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD,
+typedef struct  msg_struct_nbiotcj188_ihm_control_cmd //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ihmHead;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_ihm_control_cmd_t;
+
+//MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD,
+typedef struct  msg_struct_nbiotcj188_igm_control_cmd //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_igm_control_cmd_t;
+
+//MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,
+typedef struct  msg_struct_nbiotcj188_ipm_control_cmd //
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_nbiotcj188_ipm_control_cmd_t;
+
+//MSG_ID_IWM_NBIOTCJ188_DATA_RESP,
+typedef struct msg_struct_iwm_nbiotcj188_data_resp
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t iwmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwmData;
+	UINT32 length;
+}msg_struct_iwm_nbiotcj188_data_resp_t;
+
+//MSG_ID_IHM_NBIOTCJ188_DATA_RESP,
+typedef struct msg_struct_ihm_nbiotcj188_data_resp
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ihmHead;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihmData;
+	UINT32 length;
+}msg_struct_ihm_nbiotcj188_data_resp_t;
+
+//MSG_ID_IGM_NBIOTCJ188_DATA_RESP,
+typedef struct msg_struct_igm_nbiotcj188_data_resp
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_igm_nbiotcj188_data_resp_t;
+
+//MSG_ID_IPM_NBIOTCJ188_DATA_RESP,
+typedef struct msg_struct_ipm_nbiotcj188_data_resp
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ipmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t ipmData;
+	UINT32 length;
+}msg_struct_ipm_nbiotcj188_data_resp_t;
+
+//MSG_ID_IWM_NBIOTCJ188_CONTROL_FB,
+typedef struct msg_struct_iwm_nbiotcj188_control_fb
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t iwmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t iwmData;
+	UINT32 length;
+}msg_struct_iwm_nbiotcj188_control_fb_t;
+
+//MSG_ID_IHM_NBIOTCJ188_CONTROL_FB,
+typedef struct msg_struct_ihm_nbiotcj188_control_fb
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ihmHead;
+	float heatpower;
+	INT8 heatpowerunit;
+	float currentheat;
+	INT8 currentheatunit;
+	float billtodayheat;
+	INT8 billtodayheatunit;
+	sensor_general_cj188_data_element_t ihmData;
+	UINT32 length;
+}msg_struct_ihm_nbiotcj188_control_fb_t;
+
+//MSG_ID_IGM_NBIOTCJ188_CONTROL_FB,
+typedef struct msg_struct_igm_nbiotcj188_control_fb
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t igmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t igmData;
+	UINT32 length;
+}msg_struct_igm_nbiotcj188_control_fb_t;
+
+//MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,
+typedef struct msg_struct_ipm_nbiotcj188_control_fb
+{
+	INT8 equtype;
+	sensor_general_cj188_control_head_t ipmHead;
+	float billtodayaccuvolume;
+	INT8 billtodayaccuvolumeunit;
+	sensor_general_cj188_data_element_t ipmData;
+	UINT32 length;
+}msg_struct_ipm_nbiotcj188_control_fb_t;
+
+
+/**************************************************************************************
+ *                                                                                    *
+ *                            NBIOT QG376消息结构                                      *
+ *                                                                                    *
+ *************************************************************************************/
+//MSG_ID_ETHERNET_NBIOTQG376_DATA_RX,
+typedef struct  msg_struct_ethernet_nbiotqg376_data_rx //
+{
+	UINT32 length;
+	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+}msg_struct_ethernet_nbiotqg376_data_rx_t;
+
+//MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,
+typedef struct  msg_struct_nbiotqg376_ipm_control_cmd //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_nbiotqg376_ipm_control_cmd_t;
+
+//MSG_ID_IPM_NBIOTQG376_DATA_RESP,
+typedef struct msg_struct_ipm_nbiotqg376_data_resp
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 length;
+}msg_struct_ipm_nbiotqg376_data_resp_t;
+
+//MSG_ID_IPM_NBIOTQG376_CONTROL_FB,
+typedef struct msg_struct_ipm_nbiotqg376_control_fb
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	UINT32 length;
+}msg_struct_ipm_nbiotqg376_control_fb_t;
+
+//MSG_ID_NBIOTQG376_IPM_DATA_REQ,
+typedef struct  msg_struct_nbiotqg376_ipm_data_req //
+{
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	UINT32 length;
+}msg_struct_nbiotqg376_ipm_data_req_t;
+
+//MSG_ID_COM_ALARM_REPORT,
+//for alarm report added by ZSC
+typedef struct msg_struct_alarm_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType;
+	UINT8  alarmServerity;
+	UINT8  alarmClearFlag;
+	UINT8  equID;
+	UINT8 alarmType;
+	UINT32 alarmContent;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_alarm_report_t;
+
+//MSG_ID_COM_PM_REPORT,
+//for PM report added by ZSC
+typedef struct msg_struct_pm_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType;
+	UINT32 TaskRestartCnt;
+	UINT32 CloudVelaConnCnt;
+	UINT32 CloudVelaConnFailCnt;
+	UINT32 CloudVelaDiscCnt;
+	UINT32 SocketDiscCnt;
+	UINT32 cpu_occupy;
+	UINT32 mem_occupy;
+	UINT32 disk_occupy;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_pm_report_t;
+
+//MSG_ID_CANITFLEO_DATA_REPORT,
+typedef struct msg_struct_canitfleo_data_report
+{
+	UINT8  usercmdid;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_canitfleo_data_report_t;
+
+
+/**************************************************************************************
+ *                                                                                    *
+ *                            分类处理各个项目相关的消息结构                                *
+ *                                                                                    *
+ *************************************************************************************/
+//BFSC/SCALE_WEIGHT组合秤
+//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
+#define HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR 20
+typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
+{
+	UINT8  sensorid;
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_error_inq_cmd_req_t;
+
+//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
+typedef struct msg_struct_l3bfsc_can_ws_comb_out
+{
+	UINT8  combnbr;
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_comb_out_t;
+
+//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
+typedef struct msg_struct_l3bfsc_can_ws_give_up
+{
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_give_up_t;
+
+//MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化
+typedef struct msg_struct_l3bfsc_can_ws_init_req
+{
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_init_req_t;
+
+//MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求
+typedef struct msg_struct_l3bfsc_can_ws_read_req
+{
+	UINT8 sensorid;
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_read_req_t;
+
+//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
+typedef struct msg_struct_l3bfsc_can_general_cmd_req
+{
+	UINT8 sensorid;
+	UINT8 optid;
+	UINT8 optpar;
+	UINT32 modbusVal;
+	UINT32 length;
+}msg_struct_l3bfsc_can_general_cmd_req_t;
+
+//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
+//MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
+typedef struct msg_struct_cloudvela_l3bfsc_data_req
+{
+	UINT8  baseReq;
+	UINT8  reqType;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_data_req_t;
+//reqType -> StrIe_HUITP_IEID_uni_scale_weight_req_t.reqType (HUITP.H)
+
+//MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_l3bfsc_cloudvela_data_resp
+{
+	UINT8  baseResp;
+	UINT8  type;			//数据汇报的类型
+	UINT8  dataFormat;
+	UINT8  snrCfgNbrMax;  	//系统配置的称重传感器最大数
+	UINT32 snrUsedBitmap;  	//汇报哪些称重传感器对应的数据
+	UINT32 snrValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	msgie_struct_bfsc_scale_weight_sta_element_t sta;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_data_resp_t;
+//type -> StrIe_HUITP_IEID_uni_scale_weight_req_t.reqType (HUITP.H)
+
+//MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_l3bfsc_cloudvela_data_report
+{
+	UINT8  baseReport;
+	UINT8  type;			//数据汇报的类型
+	UINT8  dataFormat;
+	UINT8  snrCfgNbrMax;  	//系统配置的称重传感器最大数
+	UINT32 snrUsedBitmap;  	//汇报哪些称重传感器对应的数据
+	UINT32 snrValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	msgie_struct_bfsc_scale_weight_sta_element_t sta;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_data_report_t;
+//type -> StrIe_HUITP_IEID_uni_scale_weight_req_t.reqType (HUITP.H)
+
+//MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfsc_data_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_data_confirm_t;
+
+//MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,
+#define HCU_SYSMSG_SCALE_WEIGHT_EVENT_USER_NAME_MAX_LEN 20
+typedef struct msg_struct_l3bfsc_cloudvela_event_report
+{
+	UINT8  baseReport;
+	UINT8  eventType;
+	UINT8  sensorId;
+	UINT16 eventValue;
+	char   userName[HCU_SYSMSG_SCALE_WEIGHT_EVENT_USER_NAME_MAX_LEN];
+	UINT16 cause;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_event_report_t;
+//eventType -> StrIe_HUITP_IEID_uni_scale_weight_event_t.eventType (HUITP.H)
+
+//MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfsc_event_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_event_confirm_t;
+
+//MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
+typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
+{
+	UINT8  baseReq;
+	UINT8  scaleWeightCmd;
+	UINT8  workMode;
+	UINT8  scaleWeightNbr;  		//配置数量
+	UINT32 staStartTime;  			//24小时之内，哪个时间作为统计的起点
+	UINT32 staReportDuration;     	//统计报告周期
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_cmd_req_t;
+//scaleWeightCmd => StrIe_HUITP_IEID_uni_scale_weight_cmd_t.scaleWeightCmd (HUITP.H)
+//workMode=>  StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t(HUITP.H)
+
+//MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
+typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
+{
+	UINT8  baseResp;
+	UINT8  scaleWeightCmd;
+	UINT8  workMode;
+	UINT8  scaleWeightNbr;  		//配置数量
+	UINT32 staStartTime;  			//24小时之内，哪个时间作为统计的起点
+	UINT32 staReportDuration;     	//统计报告周期
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_cmd_resp_t;
+//scaleWeightCmd => StrIe_HUITP_IEID_uni_scale_weight_cmd_t.scaleWeightCmd (HUITP.H)
+//workMode=>  StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t(HUITP.H)
+
+//MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
+typedef struct msg_struct_l3bfsc_cloudvela_statistic_report
+{
+	UINT8  baseReport;
+	UINT8  staRepType;
+	UINT8  dataFormat;
+	msgie_struct_bfsc_scale_weight_sta_element_t sta;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfsc_cloudvela_statistic_report_t;
+//staRepType=> StrIe_HUITP_IEID_uni_scale_weight_statistic_t(HUITP.H)
+
+//MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfsc_statistic_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfsc_statistic_confirm_t;
+
+
+
+//UICOMM部分
+//MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
+typedef struct msg_struct_l3bfsc_uicomm_cmd_resp
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_l3bfsc_uicomm_cmd_resp_t;
+
+
+//CANITFLEO
+//MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,
+typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
+{
+	UINT8 sensorid;
+	UINT32 sensorWsValue;
+	UINT8 flag;
+	UINT32 length;
+}msg_struct_can_l3bfsc_error_inq_cmd_resp_t;
+
+//MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,
+typedef struct msg_struct_can_l3bfsc_new_ready_event
+{
+	UINT8  sensorid;
+	UINT32  sensorWsValue;
+	UINT32 length;
+}msg_struct_can_l3bfsc_new_ready_event_t;
+
+//MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,
+typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
+{
+	UINT8  sensorid;
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_comb_out_fb_t;
+
+//MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,
+typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
+{
+	UINT8  sensorid;
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_give_up_fb_t;
+
+//MSG_ID_CAN_L3BFSC_WS_INIT_FB,
+typedef struct msg_struct_can_l3bfsc_ws_init_fb
+{
+	UINT8  sensorid;
+	UINT8  initFlag;
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_init_fb_t;
+
+//MSG_ID_CAN_L3BFSC_WS_READ_RESP
+typedef struct msg_struct_can_l3bfsc_ws_read_resp
+{
+	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_read_resp_t;
+
+//MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP
+typedef struct msg_struct_can_l3bfsc_general_cmd_resp
+{
+	UINT8  sensorid;
+	UINT8  cmdid;
+	UINT8  optid;
+	UINT8  optpar;
+	UINT32 modbusVal;
+	UINT32 length;
+}msg_struct_can_l3bfsc_general_cmd_resp_t;
+
+//BFSCUICOMM
+//MSG_ID_UICOMM_L3BFSC_CMD_REQ,
+typedef struct msg_struct_uicomm_l3bfsc_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_uicomm_l3bfsc_cmd_req_t;
+
+//MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT
+typedef struct msg_struct_uicomm_l3bfsc_param_set_result
+{
+	UINT32  targetValue;
+	UINT32	targetUpLimit;
+	UINT8	minWsNbr;
+	UINT8	maxWsNbr;
+	UINT32 	length;
+}msg_struct_uicomm_l3bfsc_param_set_result_t;
+
+
+#endif /* L0COMVM_COMMSG_H_ */

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="false" key="isRegEx"/>
+		<item value="msg_struct_l3bfsc_cloudvela_data_report_t" key="selection"/>
+		<item value="true" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="true" key="wrap"/>
+		<item value="false" key="wholeword"/>
+		<list key="findhistory">
+			<item value="msg_struct_l3bfsc_cloudvela_data_report_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_statistic_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_cmd_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_event_t"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_value_t"/>
+			<item value="0x3B"/>
+			<item value="0x3"/>
+		</list>
+		<list key="replacehistory">
+			<item value="si[SENSOR_ID_GPIOTOXICGASZP01VOC]"/>
+			<item value="si[SENSOR_ID_GPIOALCOHOLMQ3ALCO]"/>
+			<item value="si[SENSOR_ID_GPIOTOXICGASMQ135]"/>
+			<item value="si[SENSOR_ID_GPIOHUMIDDHT11]"/>
+			<item value="si[]"/>
+			<item value="si[SENSOR_ID_GPIOTEMPDHT11]"/>
+			<item value="si[SENSOR_ID_SPSHCHOZE08CH2O]"/>
+			<item value="si[SENSOR_ID_SPSPM25SHARP]"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="309" key="DIALOG_WIDTH"/>
+		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="425" key="DIALOG_HEIGHT"/>
+		<item value="1159" key="DIALOG_X_ORIGIN"/>
+		<item value="42" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

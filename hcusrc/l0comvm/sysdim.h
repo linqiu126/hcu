@@ -1,0 +1,374 @@
+/*
+ * sysdim.h
+ *
+ *  Created on: 2016年1月12日
+ *      Author: hitpony
+ */
+
+#ifndef L0COMVM_SYSDIM_H_
+#define L0COMVM_SYSDIM_H_
+
+//项目名称，每个项目均为唯一，编译生成项，用于本项目选择启动配置数据库中的工参信息
+#define HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE 			"HCU_PRJ_AQYC_OBSOLETE"   	//老旧的AQYC项目
+#define HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID 		1
+#define HCU_WORKING_PROJECT_NAME_TEST_MODE				"HCU_PRJ_TEST_MODE"       	//打开所有模块，为了测试性能
+#define HCU_WORKING_PROJECT_NAME_TEST_MODE_ID 			2
+#define HCU_WORKING_PROJECT_NAME_AQYCG10_335D 			"HCU_PRJ_AQYCG10_335D"    	//基于G1/335D的AQYC
+#define HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID 		3
+#define HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY		"HCU_PRJ_AQYCG20_RASBERRY"  //基于G2/树莓派的AQYC
+#define HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID 	4
+#define HCU_WORKING_PROJECT_NAME_TBSWRG30				"HCU_PRJ_TBSWRG30"         	//数采仪
+#define HCU_WORKING_PROJECT_NAME_TBSWRG30_ID 			5
+#define HCU_WORKING_PROJECT_NAME_GQYBG40				"HCU_PRJ_GQYBG40"          	//挂墙仪表
+#define HCU_WORKING_PROJECT_NAME_GQYBG40_ID 			6
+#define HCU_WORKING_PROJECT_NAME_CXILC					"HCU_PRJ_CXILC"            	//CHUNXU智能路灯
+#define HCU_WORKING_PROJECT_NAME_CXILC_ID 				7
+#define HCU_WORKING_PROJECT_NAME_CXGLACM				"HCU_PRJ_CXGLACM"          	//CHUNXU格力空调模块
+#define HCU_WORKING_PROJECT_NAME_CXGLACM_ID 			8
+#define HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ			"HCU_PRJ_NBIOT_LPM_CJ"     	//CHUNXU低功耗抄表
+#define HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID 		9
+#define HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG			"HCU_PRJ_NBIOT_HPM_QG"     	//CHUNXU中等功耗抄表
+#define HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID 		10
+#define HCU_WORKING_PROJECT_NAME_BFSC_CBU				"HCU_PRJ_BFSC_CBU"         	//波峰组合秤上位机
+#define HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID 			11
+#define HCU_WORKING_PROJECT_NAME_OPWL_OTDR				"HCU_PRJ_OPWL_OTDR"        	//奥普维尔公司OTDR仪表
+#define HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID 			12
+
+//项目选择，这里需要选择唯一编译的项目ID
+//由于采用ECLIPSE项目工程工具，所有文件均采用目录控制法
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_AQYCG10_335D
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID
+#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_BFSC_CBU
+#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_CXILC
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_CXILC_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_CXGLACM
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_CXGLACM_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_GQYBG40
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_GQYBG40_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_OPWL_OTDR
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_TBSWRG30
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_TBSWRG30_ID
+//#define HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE     HCU_WORKING_PROJECT_NAME_TEST_MODE
+//#define HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE       HCU_WORKING_PROJECT_NAME_TEST_MODE_ID
+
+//全局统一定义
+//系统任务级
+#define HCU_SYSDIM_TASK_NBR_MAX 100  //需要根据系统中实际多少任务模块来决定，从70改为100，不然随着新模块的加入，已经不够了
+#define HCU_SYSDIM_TASK_NAME_LEN_MAX 15  //从12改为15，确保任务模块名字的安全
+#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024  //maxmum state number and msg number in one task, no instance concept
+#define HCU_SYSDIM_TASK_STATE_NBR_MAX 12  //一个任务之中最多定义的状态数量：从8个改为12个
+#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+//消息长度
+#define HCU_SYSDIM_MSGID_NBR_MAX 400 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多：从200改为400个
+#define HCU_SYSDIM_MSGID_MASK_SET 511 //消息号段在同一个任务中必须连续到这个范围内：从255改为511个
+#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+#define HCU_SYSDIM_MSG_BODY_LEN_MAX 512 //MYC改为1500，就是为了ETHERNET数据段的最大长度。考虑到实时性，应该缩短。考虑到LINUX最大9K的单个任务QUEUE，应该缩短。
+#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+//最大的定时器数量
+#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+//传感器名字
+#define HCU_SYSDIM_SENSOR_NBR_MAX 		30
+#define HCU_SYSDIM_SENSOR_NAME_LEN_MAX 	40
+
+
+/*
+
+//分项目设置不同项目的全局性能参数
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+	//系统任务级
+	#define HCU_SYSDIM_TASK_NBR_MAX 70  //需要根据系统中实际多少任务模块来决定
+	#define HCU_SYSDIM_TASK_NAME_LEN_MAX 12
+	//系统消息级
+	//maxmum state number and msg number in one task, no instance concept
+	#define HCU_SYSDIM_TASK_QUEUE_ID_START 1024
+	#define HCU_SYSDIM_MSGID_NBR_MAX 200 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多
+	#define HCU_SYSDIM_MSGID_MASK_SET 255 //消息号段在同一个任务中必须连续到这个范围内
+	#define HCU_SYSDIM_TASK_STATE_NBR_MAX 8  //一个任务之中最多定义的状态数量
+	#define HCU_SYSDIM_FSM_STATE_ENTRY_MAX 64   //一个任务之中，STATE-MSGID成对处理函数最多数量
+	//消息长度
+	#define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
+	#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC
+	#define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
+	//最大的定时器数量
+	#define HCU_SYSDIM_TIMERID_NBR_MAX 100
+	#define HCU_SYSDIM_TIMERID_NAME_LEN_MAX 40
+
+
+//小技巧，不要这部分，以便加强编译检查
+#else
+	#error Un-correct constant definition
+#endif
+
+
+//用于别的程序直接拷贝
+//不通过数据库配置的参数区域
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXGLACM_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+#else
+	#error Un-correct constant definition
+#endif
+*/
+
+
+#endif /* L0COMVM_SYSDIM_H_ */
