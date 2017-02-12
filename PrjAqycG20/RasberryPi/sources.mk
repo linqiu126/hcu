@@ -27,6 +27,7 @@ src/l4bi \
 src/l3appctrl \
 src/l3app \
 src/l2frame \
+src/l2codec \
 src/l1hwopt \
 src/l1hwopt/usb_adc \
 src/l1com \

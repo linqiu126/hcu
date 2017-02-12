@@ -33,6 +33,9 @@ enum FSM_STATE_PM25
 #define SENSOR_PM25_RPI_BMPD300_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
 #define SENSOR_PM25_RPI_SHARP_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
 
+//定义污染值门限值
+#define HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD 20
+
 //Global variables
 extern HcuFsmStateItem_t HcuFsmPm25[];
 
@@ -73,6 +76,12 @@ extern OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void
 extern OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT func_pm25_time_out_read_data_from_bmpd300(void);
 OPSTAT func_pm25_time_out_read_data_from_sharp(void);
+
+//For HKvision
+extern OPSTAT hcu_hsmmp_photo_capture_start(const HKVisionOption_t HKVisionOption);
+extern OPSTAT hcu_hsmmp_video_capture_start(const HKVisionOption_t HKVisionOption);
+extern OPSTAT hcu_hsmmp_video_capture_stop(const HKVisionOption_t HKVisionOption);
+extern void hcu_hsmmp_set_hkvision_option(void);
 
 //引用外部API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);

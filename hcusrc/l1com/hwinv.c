@@ -266,6 +266,31 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, zHcuVmCtrTab.clock.sMin);
 	strcat(zHcuVmCtrTab.clock.curAvorionFnameMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 
+	//For HIKVISION
+	//给curPhotoDir赋值
+	strcpy(zHcuVmCtrTab.clock.curPhotoDir, HCU_RECORD_PHOTO_DIR_NAME_CLEAN);
+
+	//创建备份记录的基本工作目录，如果存在，就直接使用
+	dtmp = opendir(zHcuVmCtrTab.clock.curPhotoDir);
+	if (dtmp == NULL){
+		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0755) == -1){
+			HcuErrorPrint("HWINV: Create directory error!\n");
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+			return FAILURE;
+		}
+		//成功就不打印提示了
+	}else{
+		//HcuDebugPrint("HWINV: Dir exist!\n");
+		closedir(dtmp);
+	}
+
+	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.cloud.cloudBhHcuName);
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname,"_");
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_HK_CLEAN);
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname, zHcuVmCtrTab.clock.sSec);
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_EXTEND_HK_PHOTO);
+	HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curPhotoDir %s!\n", zHcuVmCtrTab.clock.curPhotoDir);
+	HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curHikvisionFname %s!\n\n", zHcuVmCtrTab.clock.curHikvisionFname);
 
 	//初始化ETHERNET后台接口
 	zHcuVmCtrTab.hwinv.ethernet.hwBase.taskId = TASK_ID_ETHERNET;

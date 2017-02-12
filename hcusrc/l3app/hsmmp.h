@@ -63,6 +63,12 @@ extern OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void
 OPSTAT func_hsmmp_time_out_period(void);
 OPSTAT func_hsmmp_time_out_wait_for_cammera_fb(void);
 
+//API for HKvision
+extern OPSTAT hcu_hsmmp_photo_capture_start(const HKVisionOption_t HKVisionOption);
+extern OPSTAT hcu_hsmmp_video_capture_start(const HKVisionOption_t HKVisionOption);
+extern OPSTAT hcu_hsmmp_video_capture_stop(const HKVisionOption_t HKVisionOption);
+extern size_t hcu_hsmmp_write_data_callback(void *ptr, size_t size, size_t nmemb, FILE *stream);
+extern void hcu_hsmmp_set_hkvision_option(void);
 
 //引用外部函数
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);

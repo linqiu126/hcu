@@ -457,6 +457,8 @@ typedef struct HcuTimeDateTable
 	char curAvorionFnameH264[HCU_DIR_LENGTH_MAX];
 	char curAvorionFdMkv[HCU_DIR_LENGTH_MAX];
 	char curAvorionFnameMkv[HCU_DIR_LENGTH_MAX];
+	char curHikvisionFname[HCU_DIR_LENGTH_MAX]; //For HIKVISION
+	char curPhotoDir[HCU_DIR_LENGTH_MAX];
 }HcuTimeDateTable_t;
 
 /*
