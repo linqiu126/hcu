@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="/*" key="selection"/>
+		<item value="HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX"/>
+			<item value="hk"/>
 			<item value="/*"/>
 			<item value="HCU_RECORD_LOG_DIR_NAME_CLEAN"/>
 			<item value="HCU_RE"/>
 			<item value="PHOTO_DIR_NAME_CLEAN"/>
 			<item value="RECORD_PHOTO_DIR_NAME_CLEAN"/>
 			<item value="HCU_RECORD_PHOTO_DIR_NAME_CLEAN"/>
-			<item value="ALARM_TYPE_PM25_VALUE"/>
-			<item value="ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD"/>
 		</list>
 		<list key="replacehistory">
 			<item value="si[SENSOR_ID_GPIOTOXICGASZP01VOC]"/>
