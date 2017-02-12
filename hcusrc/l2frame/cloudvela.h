@@ -125,7 +125,7 @@ extern OPSTAT hcu_wifi_phy_link_disconnect(void);
 extern OPSTAT hcu_3g4g_phy_link_disconnect(void);
 extern void CheckCRCModBus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
 extern void func_hwinv_scan_date(void);
-
+extern OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_CLOUDVELA(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

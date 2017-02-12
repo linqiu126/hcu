@@ -867,9 +867,7 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 	}
 
 	else{
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
-		return FAILURE;
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
 	}
 
 	return SUCCESS;

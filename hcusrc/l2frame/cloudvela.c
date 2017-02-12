@@ -2187,6 +2187,76 @@ OPSTAT func_cloudvela_msg_sw_package_confirm_received_handle(StrMsg_HUITP_MSGID_
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	msg_struct_l3bfsc_cloudvela_data_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_resp_t))){
+		HcuErrorPrint("CLOUDVELA: Receive L3BFSC message error!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
+
+	//申明发送消息
+	CloudDataSendBuf_t pMsgOutput;
+
+	//分格式类型组装
+	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_resp_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_resp_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_bfsc_comb_scale_data_resp>>8)&0xFF;
+		pMsgProc.msgId.optId = HUITP_MSGID_uni_bfsc_comb_scale_data_resp&0xFF;
+		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+		//StrIe_HUITP_IEID_uni_com_resp_t
+		pMsgProc.baseResp.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_resp);
+		pMsgProc.baseResp.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_resp_t) - 4);
+		pMsgProc.baseResp.comResp = rcv.baseResp;
+		//StrIe_HUITP_IEID_uni_scale_weight_value_t
+		pMsgProc.respValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_scale_weight_value);
+		pMsgProc.respValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(HUITP_IEID_uni_scale_weight_value) - 4);
+		pMsgProc.respValue.type = rcv.type;
+		pMsgProc.respValue.dataFormat = rcv.dataFormat;
+		pMsgProc.respValue.snrCfgNbrMax = rcv.snrCfgNbrMax;
+		pMsgProc.respValue.snrUsedBitmap = rcv.snrUsedBitmap;
+		memcpy(pMsgProc.respValue.snrValue, rcv.snrValue, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+		//不能采取memcpy的方式，因为既有可能两边定义的结构不一致，更有可能pack()导致的sizeof()不一样
+		pMsgProc.respValue.sta.combTimes = rcv.sta.combTimes;
+		pMsgProc.respValue.sta.tttTimes = rcv.sta.tttTimes;
+		pMsgProc.respValue.sta.tgvTimes = rcv.sta.tgvTimes;
+		pMsgProc.respValue.sta.combMatNbr = rcv.sta.combMatNbr;
+		pMsgProc.respValue.sta.tttMatNbr = rcv.sta.tttMatNbr;
+		pMsgProc.respValue.sta.tgvMatNbr = rcv.sta.tgvMatNbr;
+		pMsgProc.respValue.sta.combAvgSpeed = rcv.sta.combAvgSpeed;
+		pMsgProc.respValue.sta.totalWeight = rcv.sta.totalWeight;
+		pMsgProc.respValue.sta.totalMatNbr = rcv.sta.totalMatNbr;
+		pMsgProc.respValue.sta.totalWorkMin = rcv.sta.totalWorkMin;
+		pMsgProc.respValue.sta.timeInUnix = rcv.sta.timeInUnix;
+		pMsgProc.respValue.sta.errNbr = rcv.sta.errNbr;
+
+		//Pack message
+		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
+		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
+		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
+		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+		if (func_cloud_standard_xml_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_data_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+	}
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+	else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+	}
+
+	//Send out
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+
+	//返回
 	return SUCCESS;
 }
 
@@ -2202,45 +2272,28 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	//参数检查
-//	if ((rcv.cmdid != L3CI_bfsc_comb_scale) || (rcv.timestamp <=0)){
-//		HcuErrorPrint("CLOUDVELA: Receive invalid data!\n");
-//		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-//		return FAILURE;
-//	}
-
 	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+	//初始化变量
+	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 
-		//打包数据：这里引用了比较高潮的技巧，将传感器数组传递到目标
-//		if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
-//				rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
-//			HcuErrorPrint("CLOUDVELA: Package message error!\n");
-//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-//			return FAILURE;
-//		}
-
-		//Send out
-		ret = func_cloudvela_send_data_to_cloud(&buf);
-		if ( ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Send message error!\n");
-			return FAILURE;
-		}
-	}else{
+	//打包数据：这里引用了比较高潮的技巧，将传感器数组传递到目标
+/*	if (func_cloudvela_huanbao_bfsc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.cmdid, rcv.optid, rcv.optpar, rcv.eqpid,
+			rcv.dataFormat, 0, rcv.sensorNbr, rcv.sensorWsValue, rcv.timestamp, &buf) == FAILURE){
+		HcuErrorPrint("CLOUDVELA: Package message error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Error send data to cloud, get NOISE by ONLINE, but back off line so quick!\n");
 		return FAILURE;
-	}
+	}*/
 
-	//结束
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Online state, send instance/period L3BFSC to cloud success!\n");
-	}
 
+
+
+
+
+
+	//Send out
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
 
 	return SUCCESS;
 }

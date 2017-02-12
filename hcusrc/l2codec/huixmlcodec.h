@@ -33,8 +33,8 @@ extern void   func_cloud_standard_xml_generate_message_test_data(void);
    #define HUITP_ENDIAN_EXG16(x) (x)
    #define HUITP_ENDIAN_EXG32(x) (x)
 #elif (HUITP_CURRENT_PROCESSOR_ENDIAN_SET == HUITP_CURRENT_PROCESSOR_ENDIAN_SMALL)
-   #define HUITP_ENDIAN_EXG16(x) (((x&0xFF00)>>8) | ((x&0x00FF)<<8))
-   #define HUITP_ENDIAN_EXG32(x) (((x&0xFF000000)>>24) | ((x&0x00FF0000)>>8) | ((x&0x0000FF00)<<8) | ((x&0x000000FF)<<24))
+   #define HUITP_ENDIAN_EXG16(x) ((((x)&0xFF00)>>8) | (((x)&0x00FF)<<8))
+   #define HUITP_ENDIAN_EXG32(x) ((((x)&0xFF000000)>>24) | (((x)&0x00FF0000)>>8) | (((x)&0x0000FF00)<<8) | (((x)&0x000000FF)<<24))
 #else
    #error Either BIG_ENDIAN or LITTLE_ENDIAN must be #defined, but not both.
 #endif
