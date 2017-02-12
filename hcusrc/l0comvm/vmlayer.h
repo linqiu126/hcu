@@ -407,8 +407,12 @@ typedef struct HcuHwinvCtrlTable
 #define HCU_DIR_LENGTH_MAX 						HCU_SYSDIM_FILE_NAME_LEN_MAX
 #define HCU_RECORD_LOG_DIR_NAME_LOCAL			"./log"
 #define HCU_RECORD_LOG_DIR_NAME_CLEAN 			"/log"
+#define HCU_RECORD_PHOTO_DIR_NAME               "./photo"
+#define HCU_RECORD_PHOTO_DIR_NAME_CLEAN         "/photo"
 #define HCU_RECORD_FILE_NAME_SENSOR    			"/sensor"
 #define HCU_RECORD_FILE_NAME_SENSOR_CLEAN   	"sensor"
+#define HCU_RECORD_FILE_NAME_HK                 "./hk"
+#define HCU_RECORD_FILE_NAME_HK_CLEAN           "/hk"
 #define HCU_RECORD_FILE_NAME_MICROPHONE    		"/microphone"
 #define HCU_RECORD_FILE_NAME_MICROPHONE_CLEAN	"microhpone"
 #define HCU_RECORD_FILE_NAME_AVORION    		"/av"
@@ -417,6 +421,8 @@ typedef struct HcuHwinvCtrlTable
 #define HCU_RECORD_FILE_NAME_EXTEND_AVI 		".avi"
 #define HCU_RECORD_FILE_NAME_EXTEND_H264 		".h264"
 #define HCU_RECORD_FILE_NAME_EXTEND_MKV			".mkv"
+#define HCU_RECORD_FILE_NAME_EXTEND_HK_PHOTO	".hk"
+
 #define HCU_HARDDISK_TRESHOLD 10
 
 /*

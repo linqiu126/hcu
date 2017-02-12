@@ -13,15 +13,12 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 
 
-<<<<<<< HEAD
-//= ZJL, 2017 Feb.12, CURRENT_SW_DELIVERY 160=>BFSC项目
+//= ZJL, 2017 Feb.12, CURRENT_SW_DELIVERY 161=>BFSC项目
 ＝搭建好后台通信的消息处理框架，并采用#ifdef关联到L3BFSC项目，降低对其它项目的影响
 
-=======
 //= ZSC, 2017 Feb.12, CURRENT_SW_DELIVERY 160=>AQYC项目
 ＝创建HKvision API
 ＝实现PM25 门限值告警触发拍照及录像
->>>>>>> 98b2fa2046cb0df13cdde08e26f19b9abfa1aa22
 
 //= ZJL, 2017 Feb.11, CURRENT_SW_DELIVERY 159=>BFSC项目
 ＝完成HUITP和内部消息的编写，为打通后台工作逻辑框架打下基础

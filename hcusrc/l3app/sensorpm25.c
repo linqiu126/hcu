@@ -386,8 +386,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.pm25.equipid;
-		snd.alarmType = ALARM_TYPE_PM25_VALUE;
-		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
+		snd.alarmType = 0; //ALARM_TYPE_PM25_VALUE;
+		snd.alarmContent = 0; //ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
 		strcpy(snd.photofileName, HKVisionOption.file_photo);
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
@@ -431,8 +431,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.alarmClearFlag = ALARM_CLEAR_FLAG_ON;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.pm25.equipid;
-		snd.alarmType = ALARM_TYPE_PM25_VALUE;
-		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
+		snd.alarmType = 0; //ALARM_TYPE_PM25_VALUE;
+		snd.alarmContent = 0; //ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
 		strcpy(snd.photofileName, HKVisionOption.file_photo);
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
