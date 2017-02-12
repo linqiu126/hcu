@@ -13,6 +13,7 @@
 #include "../l1com/hwinv.h"
 #include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
+#include <curl/curl.h>
 
 /*
 ** FSM of the HSMMP
@@ -553,5 +554,253 @@ OPSTAT func_hsmmp_time_out_wait_for_cammera_fb(void)
 		return FAILURE;
 	}
 	return SUCCESS;
+}
+
+
+/****************HKvision photo operation API******************/
+
+OPSTAT hcu_hsmmp_video_capture_start(const HKVisionOption_t HKVisionOption)
+{
+
+	OPSTAT state;
+
+	FILE *fp_write = fopen(HKVisionOption.file_video, "w");
+	if(NULL == fp_write)
+	{
+		HcuErrorPrint("HSMMP: Open file failed at %s\n\n", HKVisionOption.file_video);
+		return FAILURE;
+	}
+	else
+	{
+		HcuDebugPrint("HSMMP: Open file succeed at %s\n\n", HKVisionOption.file_video);
+		fclose(fp_write);
+
+	}
+
+    //获取要上传的文件指针
+    FILE* fp_read = fopen(HKVisionOption.file_video, "rb");
+	if(NULL == fp_read)
+	{
+		HcuErrorPrint("HSMMP: Open file failed at %s\n\n", HKVisionOption.file_video);
+		return FAILURE;
+	}
+	else
+	{
+		HcuDebugPrint("HSMMP: Open file succeed at %s\n\n", HKVisionOption.file_video);
+	}
+
+	curl_global_init(CURL_GLOBAL_ALL);
+	CURL *curl = curl_easy_init();
+	if(NULL == curl)
+	{
+		HcuErrorPrint("HSMMP: Init curl failed!\n");
+	    fclose(fp_read);
+	    curl_global_cleanup();
+	    curl_easy_cleanup(curl);
+		return FAILURE;
+	}
+
+    // 获取文件大小
+    fseek(fp_read, 0, 2);
+    int file_size = ftell(fp_read);
+    rewind(fp_read);
+
+    curl_easy_setopt(curl, CURLOPT_URL, HKVisionOption.url_video_start); //获取URL地址
+    curl_easy_setopt(curl, CURLOPT_USERPWD, HKVisionOption.user_key);
+    curl_easy_setopt(curl, CURLOPT_UPLOAD, 1); //告诉easy_handle是做上传操作
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, &hcu_hsmmp_write_data_callback); //调用重写的读文件流函数
+    curl_easy_setopt(curl, CURLOPT_READDATA, fp_read); //往read_file()函数中传入用户自定义的数据类型
+    curl_easy_setopt(curl, CURLOPT_INFILE, fp_read); //定位作为上传的输入文件
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1); //打印出具体http协议字段
+    //curl_easy_setopt(easy_handle, CURLOPT_HEADER, 1);
+    curl_easy_setopt(curl, CURLOPT_INFILESIZE, file_size); //上传的字节数
+
+	CURLcode curlRes = curl_easy_perform(curl);
+
+	if(CURLE_OK == curlRes){
+		state = SUCCESS;
+		HcuDebugPrint("HSMMP: curl perform success [%d]\n\n", curlRes);
+	}
+	else{
+		state = FAILURE;
+		HcuDebugPrint("HSMMP: curl perform failure [%d]\n\n", curlRes);
+	}
+
+	int HTTP_flag = 0;
+	curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, & HTTP_flag);
+	HcuDebugPrint("HSMMP: HTTP_flag is [%d]\n\n", HTTP_flag);
+
+	curl_easy_cleanup(curl);
+	curl_global_cleanup();
+
+	fclose(fp_read);
+	return state;
+
+}
+
+OPSTAT hcu_hsmmp_video_capture_stop(const HKVisionOption_t HKVisionOption)
+{
+	OPSTAT state;
+
+    //获取要上传的文件指针
+    FILE* fp = fopen(HKVisionOption.file_video, "rb");
+	if(NULL == fp)
+	{
+		HcuErrorPrint("HSMMP: Open file failed at %s\n\n", HKVisionOption.file_video);
+		return FAILURE;
+	}
+	else
+	{
+		HcuDebugPrint("HSMMP: Open file succeed at %s\n\n", HKVisionOption.file_video);
+	}
+
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+	CURL *curl = curl_easy_init();
+	if(NULL == curl)
+	{
+		HcuErrorPrint("HSMMP: Init curl failed!\n");
+	    fclose(fp);
+	    curl_global_cleanup();
+	    curl_easy_cleanup(curl);
+		return FAILURE;
+	}
+
+    // 获取文件大小
+    fseek(fp, 0, 2);
+    int file_size = ftell(fp);
+    rewind(fp);
+
+    curl_easy_setopt(curl, CURLOPT_URL, HKVisionOption.url_video_stop); //获取URL地址
+    curl_easy_setopt(curl, CURLOPT_USERPWD, HKVisionOption.user_key);
+    curl_easy_setopt(curl, CURLOPT_UPLOAD, 1); //告诉easy_handle是做上传操作
+    curl_easy_setopt(curl, CURLOPT_READFUNCTION, &hcu_hsmmp_write_data_callback); //调用重写的读文件流函数
+    curl_easy_setopt(curl, CURLOPT_READDATA, fp); //往read_file()函数中传入用户自定义的数据类型
+    curl_easy_setopt(curl, CURLOPT_INFILE, fp); //定位作为上传的输入文件
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1); //打印出具体http协议字段
+    //curl_easy_setopt(easy_handle, CURLOPT_HEADER, 1);
+    curl_easy_setopt(curl, CURLOPT_INFILESIZE, file_size); //上传的字节数
+
+	CURLcode curlRes = curl_easy_perform(curl);
+
+	if(CURLE_OK == curlRes){
+		state = SUCCESS;
+		HcuDebugPrint("HSMMP: curl perform success [%d]\n\n", curlRes);
+	}
+	else{
+		state = FAILURE;
+		HcuDebugPrint("HSMMP: curl perform failure [%d]\n\n", curlRes);
+	}
+
+	curl_easy_cleanup(curl);
+	curl_global_cleanup();
+
+	fclose(fp);
+	return state;
+
+}
+
+size_t hcu_hsmmp_write_data_callback(void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+	size_t writen = fwrite(ptr,size,nmemb,stream);
+	return writen;
+}
+
+OPSTAT hcu_hsmmp_photo_capture_start(const HKVisionOption_t HKVisionOption)
+{
+	OPSTAT state;
+
+	HcuDebugPrint("HSMMP: HKVisionOption.user_key: %s \n", HKVisionOption.user_key);
+	HcuDebugPrint("HSMMP: HKVisionOption.url_photo: %s \n", HKVisionOption.url_photo);
+	HcuDebugPrint("HSMMP: HKVisionOption.url_video_start: %s \n", HKVisionOption.url_video_start);
+	HcuDebugPrint("HSMMP: HKVisionOption.url_video_stop: %s \n", HKVisionOption.url_video_stop);
+	HcuDebugPrint("HSMMP: HKVisionOption.file_photo: %s \n", HKVisionOption.file_photo);
+	HcuDebugPrint("HSMMP: HKVisionOption.file_video: %s \n\n", HKVisionOption.file_video);
+
+	FILE *fp = fopen(HKVisionOption.file_photo, "w");
+	if(NULL == fp)
+	{
+		HcuErrorPrint("HSMMP: Open file failed at %s\n\n", HKVisionOption.file_photo);
+		return FAILURE;
+	}
+
+	else
+	{
+		HcuDebugPrint("HSMMP: Open file succeed at %s\n\n", HKVisionOption.file_photo);
+	}
+
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+	CURL *curl = curl_easy_init();
+	if(NULL == curl)
+	{
+		HcuErrorPrint("HSMMP: Init curl failed!\n");
+		return FAILURE;
+	}
+
+	curl_easy_setopt(curl, CURLOPT_URL, HKVisionOption.url_photo);
+	curl_easy_setopt(curl, CURLOPT_USERPWD, HKVisionOption.user_key);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, hcu_hsmmp_write_data_callback);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+	curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+
+	CURLcode curlRes = curl_easy_perform(curl);
+
+	if(CURLE_OK == curlRes){
+		state = SUCCESS;
+		HcuDebugPrint("HSMMP: curl perform success [%d]\n\n", curlRes);
+	}
+	else{
+		state = FAILURE;
+		HcuDebugPrint("HSMMP: curl perform failure [%d]\n\n", curlRes);
+	}
+
+	curl_easy_cleanup(curl);
+	curl_global_cleanup();
+
+	fclose(fp);
+	return state;
+}
+
+
+void hcu_hsmmp_set_hkvision_option(void)
+{
+
+/*
+	char usrtmp[3] = ":";
+	char usrtmp1[3] ="/";
+	strcat(HsmmpOption.user_key, "admin");
+	strcat(HsmmpOption.user_key, usrtmp);
+	strcat(HsmmpOption.user_key, "Bxxh!123");
+
+	//GET方法，开始拍照
+	// curl -u admin:'Bxxh!123' -X GET -o test.jpg http://192.168.111.64/Streaming/channels/1/picture
+	// curl -u admin:'Bxxh!123' -X GET -o test.jpg http://ngrok.hkrob.com:30101/Streaming/channels/1/picture
+
+	//PUT方法，开始录像
+	//curl -u admin:'Bxxh!123' -X PUT http://192.168.111.64/ISAPI/ContentMgmt/record/control/manual/start/tracks/1
+	//curl -u admin:'Bxxh!123' -X PUT http://ngrok.hkrob.com:30101/ISAPI/ContentMgmt/record/control/manual/start/tracks/1
+
+	//PUT方法，停止录像
+	//curl -u admin:'Bxxh!123' -X PUT http://192.168.111.64/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1
+	//curl -u admin:'Bxxh!123' -X PUT http://ngrok.hkrob.com:30101/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1
+	strcat(HsmmpOption.url_photo, "http://ngrok.hkrob.com:30101/Streaming/channels/1/picture");
+	strcat(HsmmpOption.url_video_start, "http://ngrok.hkrob.com:30101/ISAPI/ContentMgmt/record/control/manual/start/tracks/1");
+	strcat(HsmmpOption.url_video_stop, "http://ngrok.hkrob.com:30101/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1");
+
+	strcat(HsmmpOption.file_photo, zCurTimeDate.curPhotoDir);
+	strcat(HsmmpOption.file_photo, usrtmp1);
+	strcat(HsmmpOption.file_photo, zCurTimeDate.curHikvisionFname);
+
+	strcat(HsmmpOption.file_video, zCurTimeDate.curPhotoDir);
+	strcat(HsmmpOption.file_video, usrtmp1);
+	strcat(HsmmpOption.file_video, "temp.txt");
+
+	HcuDebugPrint("PM25: HsmmpOption.user_key: %s \n", HsmmpOption.user_key);
+	HcuDebugPrint("PM25: HsmmpOption.url_photo: %s \n", HsmmpOption.url_photo);
+	HcuDebugPrint("PM25: HsmmpOption.url_video_start: %s \n", HsmmpOption.url_video_start);
+	HcuDebugPrint("PM25: HsmmpOption.url_video_stop: %s \n", HsmmpOption.url_video_stop);
+	HcuDebugPrint("PM25: HsmmpOption.file_photo: %s \n", HsmmpOption.file_photo);
+	HcuDebugPrint("PM25: HsmmpOption.file_video: %s \n\n", HsmmpOption.file_video);
+*/
+
 }
 

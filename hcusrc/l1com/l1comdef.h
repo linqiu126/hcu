@@ -1193,7 +1193,16 @@ typedef enum
 }HcuCanitfleoOptParEnmu;
 //如果是32为量值数据，则采用little_endian_windows的风格，低位在前
 
-
+/*HKVISION OPERATIONS OPTIONS*/
+typedef struct HKVisionOption
+{
+	char url_photo[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*url of HKvision photo server*/
+	char url_video_start[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*url of HKvision video server*/
+	char url_video_stop[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*url of HKvision video server*/
+	char user_key[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*username:password*/
+	char file_photo[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*filepath*/
+	char file_video[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*filepath*/
+}HKVisionOption_t;
 
 
 #endif /* L1COM_L1COMDEF_H_ */

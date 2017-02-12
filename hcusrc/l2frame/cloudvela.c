@@ -1385,8 +1385,8 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 
 	//根据系统配置，决定使用那一种后台网络
 	if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
-		if (hcu_ethernet_date_send(buf) == FAILURE){
-		//if (hcu_ethernet_socket_date_send(buf) == FAILURE){
+		//if (hcu_ethernet_date_send(buf) == FAILURE){
+		if (hcu_ethernet_socket_date_send(buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;

@@ -55,6 +55,7 @@ HcuFsmStateItem_t HcuFsmPm25[] =
 //Task Global variables
 SensorPm25Info_t zSensorPm25Info[MAX_NUM_OF_SENSOR_PM25_INSTALLED];
 UINT8 currentSensorPm25Id;
+UINT32 AlarmFlag = FALSE;
 sensor_modbus_opertion_general_t zPM25ConfigData;//Added by Shanchun to save sensor config data
 
 //Main Entry
@@ -332,6 +333,121 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
 		HcuErrorPrint("PM25: Error stop timer!\n");
 		return FAILURE;
+	}
+
+	//For HKvision option setting
+	HKVisionOption_t HKVisionOption;
+	memset( (void *)&HKVisionOption, 0, sizeof(HKVisionOption_t));
+
+	strcat(HKVisionOption.user_key, "admin");
+	strcat(HKVisionOption.user_key, ":");
+	strcat(HKVisionOption.user_key, "Bxxh!123");
+
+	strcat(HKVisionOption.url_photo, "http://ngrok.hkrob.com:30101/Streaming/channels/1/picture");
+	strcat(HKVisionOption.url_video_start, "http://ngrok.hkrob.com:30101/ISAPI/ContentMgmt/record/control/manual/start/tracks/1");
+	strcat(HKVisionOption.url_video_stop, "http://ngrok.hkrob.com:30101/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1");
+
+
+	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curPhotoDir);
+	strcat(HKVisionOption.file_photo, "/");
+	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curHikvisionFname);
+
+	strcat(HKVisionOption.file_video, zHcuVmCtrTab.clock.curPhotoDir);
+	strcat(HKVisionOption.file_video, "/");
+	strcat(HKVisionOption.file_video, "hkvideo.txt");
+
+	//判断如果PM2.5超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
+	if(rcv.pm25.pm2d5Value <= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD)
+	{
+		if(FAILURE == hcu_hsmmp_photo_capture_start(HKVisionOption)){
+			HcuErrorPrint("PM25: Start HK photo capture error!\n\n\n\n");
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+		}
+
+		if(FALSE == AlarmFlag)
+		{
+			if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
+				HcuErrorPrint("PM25: Start HK video capture error!\n\n\n\n");
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+			}
+		}
+
+		AlarmFlag = TRUE;
+
+		//send alarm report
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.pm25.equipid;
+		snd.alarmType = ALARM_TYPE_PM25_VALUE;
+		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
+		strcpy(snd.photofileName, HKVisionOption.file_photo);
+
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+				//HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
+				HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+				return FAILURE;
+			}
+		}
+		//差错情形
+		else{
+			HcuErrorPrint("PM25: Wrong state of CLOUDVELA when data need send out!\n");
+			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+
+	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
+	if(rcv.pm25.pm2d5Value <= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD && AlarmFlag == TRUE)
+	{
+		AlarmFlag = FALSE;
+
+		ret = hcu_hsmmp_video_capture_stop(HKVisionOption);
+		if(FAILURE == ret)
+		{
+			HcuErrorPrint("PM25: Stop HK video capture error!\n\n");
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+		}
+
+		//send alarm clear report
+		msg_struct_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+
+		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.usercmdid = L3CI_alarm;
+		snd.useroptid = L3PO_hcualarm_report;
+		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+		snd.alarmServerity = ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = ALARM_CLEAR_FLAG_ON;
+		snd.timeStamp = time(0);
+		snd.equID = rcv.pm25.equipid;
+		snd.alarmType = ALARM_TYPE_PM25_VALUE;
+		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
+		strcpy(snd.photofileName, HKVisionOption.file_photo);
+
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
+			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+				HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+				return FAILURE;
+			}
+		}
+		//差错情形
+		else{
+			HcuErrorPrint("PM25: Wrong state of CLOUDVELA when data need send out!\n");
+			return FAILURE;
+		}
 	}
 
 	//离线模式
