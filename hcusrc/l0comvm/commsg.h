@@ -2133,6 +2133,7 @@ typedef struct msg_struct_alarm_report
 	UINT8  equID;
 	UINT8 alarmType;
 	UINT32 alarmContent;
+	char photofileName[HCU_SYSDIM_FILE_NAME_LEN_MAX];  //photo file name, only valid when PM25 exceed the threshold
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_alarm_report_t;

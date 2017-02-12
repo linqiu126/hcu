@@ -1897,7 +1897,7 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		//打包数据
 
-		if (func_cloudvela_huanbao_alarm_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.timeStamp, &buf) == FAILURE){
+		if (func_cloudvela_huanbao_alarm_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.photofileName, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
