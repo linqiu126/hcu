@@ -57,14 +57,17 @@ typedef struct SysEngParElementSeriesPort
 #define SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME 20
 typedef struct SysEngParElementCloudvela
 {
-	char  cloudHttpAddLocal[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  cloudSocketSrvAdd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  cloudHttpAddSae[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  cloudHttpAddJd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  cloudHttpAddWechat[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  cloudBhServerName[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
-	char  cloudBhHcuName[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
-	UINT8 cloudBhItfFrameStd;
+	char  svrAddrHttpLocal[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
+	char  hcuName[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
+	UINT8 bhItfFrameStd;
+	char  svrAddrHttpDefault[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
+	char  svrAddrSocketipDefault[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
+	char  svrNameDefault[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
+	UINT32 svrPortDefault;
+	char  svrAddrHttpHome[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
+	char  svrAddrSocketipHome[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
+	char  svrNameHome[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
+	UINT32 svrPortHome;
 	char  cloudFtpAdd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];//for HCU SW FTP by shanchun
 	char  cloudFtpUser[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
 	char  cloudFtpPwd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun

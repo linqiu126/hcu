@@ -47,10 +47,22 @@
 #define HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML 		4
 #define HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON 	5
 #define HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JDAPP 	6
-#define HCU_SYSCFG_CLOUD_BH_ITF_STD_WEIXIN		 	7
+#define HCU_SYSCFG_CLOUD_BH_ITF_STD_IOT_WEIXIN		7
 #define HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_WECHAT 	8
 #define HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_QQIOT 	9
 #define HCU_SYSCFG_CLOUD_BH_ITF_STD_INVALID 		0xFF
+
+//与后台接口对应的服务器侦听端口
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE 				9500
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_XML 				HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB 				HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_L2FRAME 		HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_L2FRAME
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML 			HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_JASON 		HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_JDAPP 		HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JDAPP
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_IOT_WEIXIN 		HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_IOT_WEIXIN
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_WECHAT 		HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_WECHAT
+#define HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_QQIOT 		HCU_SYSCFG_CLOUD_BH_ITF_PORT_BASE + HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_QQIOT
 
 //模块是否激活
 #define HCU_SYSCFG_TASK_PNP_NULL 		0
@@ -278,21 +290,28 @@
 	#define HCU_HSMMP_TIMER_DURATION_AVORION_FB HCU_HSMMP_AVORION_CAPTURE_DURATION_DEFAULT + 10    //通过AVORION的访问，得到结果的时长。这个时间必须大于摄像头干活的时长
 	#define HCU_HSMMP_AVORION_REFRESH_RATE_DEFAULT 25 //10 second
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
-
 	//Series Port config by Shanchun
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 0
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT  4
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -344,21 +363,28 @@
 	#define HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
 	#define HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G201_TEST_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
-
 	//Series Port config by Shanchun
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 0
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT  4
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G201_TEST_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -409,21 +435,28 @@
 	#define HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
 	#define HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
-
 	//Series Port config by Shanchun
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 0
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT  4
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -475,21 +508,28 @@
 	#define HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
 	#define HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G201_AQYC_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
-
 	//Series Port config by Shanchun
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 0
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT  4
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G201_AQYC_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -541,21 +581,28 @@
 	#define HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
 	#define HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G301_TBSW_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
-
 	//Series Port config by Shanchun
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 0
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT  4
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G301_TBSW_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -610,21 +657,28 @@
 	#define HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
 	#define HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G401_GQYB_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
-
 	//Series Port config by Shanchun
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 0
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT  4
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G401_GQYB_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -677,21 +731,28 @@
 	#define HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
 	#define HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE “http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php” //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G211_ILCX_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
-
 	//Series Port config by Shanchun
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 0
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT  4
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G211_ILCX_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -750,15 +811,22 @@
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G221_GLAM_SH001"     //DEVICE NAME
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G221_GLAM_SH001"     //DEVICE NAME
 	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -816,15 +884,22 @@
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G231_NBLP_SH001"     //DEVICE NAME
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G231_NBLP_SH001"     //DEVICE NAME
 	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -882,15 +957,22 @@
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G241_NBHP_SH001"     //DEVICE NAME
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G241_NBHP_SH001"     //DEVICE NAME
 	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -949,15 +1031,22 @@
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G801_BFSC_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME 						"HCU_G801_BFSC_SH001"  	//DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET 				HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
@@ -1011,21 +1100,28 @@
 	#define HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT "hcudb"         //连接的数据库名称HCU
 	#define HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT 0           	//缺省设置
 
-	//定义后台CLOUD连接到本地及SAE的地址
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL "http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php" //"http://mfunhcu.sinaapp.com/wechat/main/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_JD "http://mfunhcu.sinaapp.com/jd/cloud_callback.php" //"http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_jd.php"  //"http://mfunhcu.sinaapp.com/jd/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT "http://mfunhcu.sinaapp.com/l1mainentry/cloud_callback_wechat.php" //"http://mfunhcu.sinaapp.com/wechat/cloud_callback.php"
-	#define HCU_SYSCFG_CLOUD_HTTP_ADDR_SOCKET "121.40.118.33"
-	#define HCU_SYSCFG_CLOUD_BH_SERVER_NAME "XHZN_HCU"  //SERVER NAME
-	#define HCU_SYSCFG_CLOUD_BH_HCU_NAME "HCU_G711_OTDR_SH001"     //DEVICE NAME
-	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
-
 	//Series Port config by Shanchun
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT 0
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT  4
 	#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT  2
 	#define HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT 9600
+
+	//面对服务器，定义本地名字
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G711_OTDR_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_BH_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+
+	//定义主服务器后台CLOUD地址信息：允许工程配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
+
+	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
+	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
+	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
+	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun

@@ -52,8 +52,8 @@ OPSTAT func_cloudvela_stdxml_msg_pack(CloudBhItfDevReportStdXml_t *xmlFormat, Cl
 	strcpy(xmlFormat->FuncFlag_r, "</FuncFlag>");
 
 	//对于目前来说，数值固定内容
-	strcpy(xmlFormat->ToUserName, zHcuSysEngPar.cloud.cloudBhServerName);
-	strcpy(xmlFormat->FromUserName, zHcuSysEngPar.cloud.cloudBhHcuName);
+	strcpy(xmlFormat->ToUserName, zHcuSysEngPar.cloud.svrNameDefault);
+	strcpy(xmlFormat->FromUserName, zHcuSysEngPar.cloud.hcuName);
 
 
 	UINT32 timeStamp = time(0);//by Shanchun: report local time to align with unpack method in Cloud

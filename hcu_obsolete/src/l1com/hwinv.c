@@ -490,13 +490,13 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		//zHcuSysEngPar.serialport.BautRate = HCU_SERIESPORT_BAUTRATE_DEFAULT;
 
 		//后台部分
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_SYSCFG_CLOUD_HTTP_ADDR_LOCAL);
+		strcpy(zHcuSysEngPar.cloud.cloudHttpAddLocal, HCU_SYSCFG_CLOUD_HTTP_SVR_ADDR_LOCAL);
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddTest, HCU_CLOUDVELA_HTTP_ADDRESS_TEST);
-		strcpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE);
+		strcpy(zHcuSysEngPar.cloud.cloudHttpAddSae, HCU_SYSCFG_CLOUD_HTTP_SVR_ADDR_DEFAULT);
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddJd, HCU_SYSCFG_CLOUD_HTTP_ADDR_JD);
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT);
 		strcpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_HTTP_SERVER_NAME);
-		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_SYSCFG_CLOUD_BH_HCU_NAME);
+		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_SYSCFG_CLOUD_HCU_NAME);
 		zHcuSysEngPar.cloud.cloudBhItfFrameStd = HCU_SYSCFG_CLOUD_BH_ITF_STD_SET;
 
 		//for HCU SW FTP by shanchun

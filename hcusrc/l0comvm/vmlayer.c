@@ -2564,7 +2564,7 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 	}
 	//由于硬件部分并没有真正起作用，所以暂时需要从系统定义区重复写入，一旦批量生产这部分可以去掉
 	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO){
-		strncpy(zHcuSysEngPar.hwBurnId.equLable, HCU_SYSCFG_CLOUD_BH_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_BH_HCU_NAME)<sizeof(zHcuSysEngPar.hwBurnId.equLable))?(sizeof(HCU_SYSCFG_CLOUD_BH_HCU_NAME)):(sizeof(zHcuSysEngPar.hwBurnId.equLable)));
+		strncpy(zHcuSysEngPar.hwBurnId.equLable, HCU_SYSCFG_CLOUD_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)<sizeof(zHcuSysEngPar.hwBurnId.equLable))?(sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)):(sizeof(zHcuSysEngPar.hwBurnId.equLable)));
 		zHcuSysEngPar.hwBurnId.hwType  = HCU_SYSCFG_HW_PRODUCT_CAT_TYPE;
 		zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_TYPE; //PEM小型号
 		zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
@@ -2576,7 +2576,7 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 
 	//物理地址配置具备更高的优先级
 	if (strlen(zHcuSysEngPar.hwBurnId.equLable) != 0){
-		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, zHcuSysEngPar.hwBurnId.equLable);
+		strcpy(zHcuSysEngPar.cloud.hcuName, zHcuSysEngPar.hwBurnId.equLable);
 	}
 
 	//初始化之后的系统标识信息

@@ -13,6 +13,9 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 ===>离线任务，移出CLOUDVELA，放到L3xxxxTASK中去
 
+//= ZJL, 2017 Feb.13, CURRENT_SW_DELIVERY 164=>BFSC项目
+=清理JD/SAE等服务器地址，只保留最为必要的服务器配置项
+=同步清理了数据库，先做标签备份
 
 //= ZJL, 2017 Feb.13, CURRENT_SW_DELIVERY 163=>BFSC项目
 = 清理STDXML, STDZHB，以及HUITPXML的编解码格式函数的位置，统一化处理

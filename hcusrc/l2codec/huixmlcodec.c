@@ -53,7 +53,7 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT8 msgType, char *funcFlag, UINT16 ms
 	//格式固定区域
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_TO_USER_L);
-	strcat(output->curBuf, zHcuSysEngPar.cloud.cloudBhServerName);
+	strcat(output->curBuf, zHcuSysEngPar.cloud.svrNameDefault);
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_TO_USER_R);
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L);
 	strcat(output->curBuf, zHcuSysEngPar.hwBurnId.equLable);
@@ -254,7 +254,7 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}
 	memset(msgFromUser, 0, sizeof(msgFromUser));
 	strncpy(msgFromUser, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L), dif);
-	if (strcmp(msgFromUser, zHcuSysEngPar.cloud.cloudBhServerName) !=0){
+	if (strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameDefault) !=0){
 		HcuErrorPrint("HUITPXML: Received message error, invalid fromUser field!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;

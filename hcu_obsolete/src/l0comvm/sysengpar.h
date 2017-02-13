@@ -157,12 +157,12 @@ typedef struct SysEngParElementCloudvela
 {
 	char  cloudHttpAddLocal[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
 	char  cloudHttpAddTest[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  cloudHttpAddSae[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
+	char  svrAddrHttpDefault[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
 	char  cloudHttpAddJd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
 	char  cloudHttpAddWechat[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  cloudBhServerName[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
+	char  svrNameDefault[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
 	char  cloudBhHcuName[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
-	UINT8 cloudBhItfFrameStd;
+	UINT8 bhItfFrameStd;
 	char  cloudFtpAdd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];//for HCU SW FTP by shanchun
 	char  cloudFtpUser[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
 	char  cloudFtpPwd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun

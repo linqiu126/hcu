@@ -107,7 +107,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	struct sockaddr_in serveraddr;
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.cloudSocketSrvAdd);
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
 	serveraddr.sin_port = htons(HCU_CLOUDSRV_SOCKET_PORT);
 	UINT32 echolen;
 
@@ -159,14 +159,14 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			else
 			{
 				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n");
-				echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
-				if (send(gCloudvelaTaskContex.ethConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
+				echolen = strlen(zHcuSysEngPar.cloud.hcuName);
+				if (send(gCloudvelaTaskContex.ethConClientFd, zHcuSysEngPar.cloud.hcuName, echolen, 0) != echolen){
 					HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
 					zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 				}
 				else{
 					gCloudvelaTaskContex.socket_connected = TRUE;
-					HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
+					HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.hcuName);
 				}
 			}
 		}
@@ -239,7 +239,7 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	//serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	//temporarily use the element, to update DB later
-	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.cloudSocketSrvAdd);
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
 	serveraddr.sin_port = htons(HCU_CLOUDSRV_SOCKET_PORT);
 	UINT32 echolen;
 
@@ -276,8 +276,8 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	else
 	{
 		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected\n");
-		echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
-		if (send(gCloudvelaTaskContex.ethConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
+		echolen = strlen(zHcuSysEngPar.cloud.hcuName);
+		if (send(gCloudvelaTaskContex.ethConClientFd, zHcuSysEngPar.cloud.hcuName, echolen, 0) != echolen){
 			HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 		}
@@ -348,7 +348,7 @@ OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
 		//curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0);
 
 		//设置目标地址
-		curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddSae);
+		curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.svrAddrHttpDefault);
 		//curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddLocal);
 
 		//设置超时时长，做为发送API，这个设置绝对必要，不然会阻塞在这儿
