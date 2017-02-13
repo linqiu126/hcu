@@ -15,7 +15,6 @@
 #include "../l0service/trace.h"
 
 //Task Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //使用编译器的功能，检查HUITP中设置的长度参数是否适合
 #if ((HUITP_MSG_BUF_WITH_HEAD_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) || (HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) ||\
@@ -26,7 +25,7 @@ extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
 //XML自定义标准的编码函数方式
 //inputLen：这是包括MsgHead在内的所有缓冲区长度，正常情况下=sizeof(StrMsg_HUITP_MSGID_uni_general_message_t)，或者IE_BODY+4
-OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output)
+OPSTAT func_cloudvela_huitpxml_msg_pack(UINT8 msgType, char *funcFlag, UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output)
 {
 	//声明一个缓冲区长度，不能超越消息体内容的最长长度
 	char s[HCU_SYSMSG_BH_BUF_BODY_LEN_MAX - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN];
@@ -191,7 +190,7 @@ OPSTAT func_cloud_standard_xml_pack(UINT8 msgType, char *funcFlag, UINT16 msgId,
 //解码接收到的消息
 //该消息以CHAR为单位，从纯CDATA模式修改为<xml>格式，所以需要加入这个内容
 //expectMsgId是接收消息解码时带入的目标函数，如果设置为-1则意味着忽略这个判定条件
-OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
+OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
 {
 	UINT32 index=0, msgId=0, msgLen=0;
 	char tmp[5] = "";
@@ -484,7 +483,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 				return FAILURE;
 			}
 			snd1 = (StrMsg_HUITP_MSGID_uni_heart_beat_req_t*)(&pMsgBuf);
-			ret = func_cloudvela_msg_heart_beat_req_received_handle(snd1);
+			ret = func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(snd1);
 		}
 			break;
 
@@ -499,7 +498,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 				return FAILURE;
 			}
 			snd2 = (StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t*)(&pMsgBuf);
-			ret = func_cloudvela_msg_heart_beat_confirm_received_handle(snd2);
+			ret = func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(snd2);
 		}
 			break;
 
@@ -513,7 +512,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 				return FAILURE;
 			}
 			snd30 = (StrMsg_HUITP_MSGID_uni_inventory_req_t*)(&pMsgBuf);
-			ret = func_cloudvela_msg_inventory_req_received_handle(snd30);
+			ret = func_cloudvela_huitpxml_msg_inventory_req_received_handle(snd30);
 		}
 			break;
 
@@ -527,7 +526,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 				return FAILURE;
 			}
 			snd31 = (StrMsg_HUITP_MSGID_uni_inventory_confirm_t*)(&pMsgBuf);
-			ret = func_cloudvela_msg_inventory_confirm_received_handle(snd31);
+			ret = func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(snd31);
 		}
 			break;		
 
@@ -541,7 +540,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 				return FAILURE;
 			}
 			snd32 = (StrMsg_HUITP_MSGID_uni_sw_package_req_t*)(&pMsgBuf);
-			ret = func_cloudvela_msg_sw_package_req_received_handle(snd32);
+			ret = func_cloudvela_huitpxml_msg_sw_package_req_received_handle(snd32);
 		}
 			break;		
 
@@ -555,7 +554,7 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 				return FAILURE;
 			}
 			snd33 = (StrMsg_HUITP_MSGID_uni_sw_package_confirm_t*)(&pMsgBuf);
-			ret = func_cloudvela_msg_sw_package_confirm_received_handle(snd33);
+			ret = func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(snd33);
 		}
 			break;
 		
@@ -571,7 +570,39 @@ OPSTAT func_cloud_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, i
 	return ret;
 }
 
-void func_cloud_standard_xml_generate_message_test_data(void)
+OPSTAT func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_req_t *rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_heart_beat_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t received!\n");
+}
+
+
+OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MSGID_uni_inventory_req_t *rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_inventory_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUITP_MSGID_uni_inventory_confirm_t *rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_inventory_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_req_t *rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_sw_package_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_sw_package_confirm_t received!\n");
+}
+
+
+void func_cloudvela_huitpxml_msg_generate_test_data(void)
 {
 	int i = 0;
 	UINT16 msgProcLen = 0;

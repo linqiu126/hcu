@@ -8,9 +8,9 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l1com/hwinv.h"
-#include "../l0webser/ftp.h"
 #include "../l0comvm/sysversion.h"
 #include "../l2frame/cloudvela.h"
+#include "../l0webser/ftp.h"
 
 /************************************************************************************************************************
  *
@@ -102,7 +102,6 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 };
 
 //Global variables
-//HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 
 //Task Global variables
 HcuCloudvelaTaskContext_t gCloudvelaTaskContex;
@@ -226,7 +225,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 	//定时长时钟进行链路检测的
 	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_cloudvela_time_out_period_long_duration();
+		ret = func_cloudvela_hb_link_main_entry();
 	}
 
 	//for sw&db version report
@@ -234,19 +233,28 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = func_cloudvela_time_out_period_for_sw_db_report();
 	}
 
-	//这里的ret=FAILURE並不算严重，只不过造成状态机返回差错而已，并不会造成程序崩溃和数据混乱，所以只是程序的自我保护而已
 	return ret;
 }
 
+/***************************************************************************************************************************
+ *
+ *  CLOUDVELA链路协议
+ *
+ ***************************************************************************************************************************/
+//进入离线，具备两种方式：被动心跳检测到离线状态，主动断掉链路从而连到更高优先级的链路上
+//这两种情形下，都需要复位ConTable对应的状态，不然可能会导致物理接口模块处于不正常的接收状态
+//检测后台连接的有效性，是否还依然保持连接状态
+//心跳握手检测，搞不好就是一种新状态，这里得想办法做成一个立即返回的过程，不然状态机太复杂，上面的控制程序也不好处理
+//这里的发送接受，只是有SAE-CLOUD的反馈就算成功，如果在消息解码中再遇到问题，可以重新设置本模块的状态，比如强行进入离线等等
+//所以这里返回成功，以及相应的处理，只能是不完善的，因为发送和接收过程分离的，但99%情况下，这种机制是可以正常工作的
 //在线状态下，zHcuCloudvelaTable.ethConTry的参数用于控制是否可能进入链路断掉-》重建的情形，该参数在尝试过后会+1,
 //但HWINV的状态逆转报告会导致它清零，从而具备再一次尝试的资格。这里还要照顾一种清醒：如果所有链路都没有建立起来，则自然需要不断的+1,也没有大问题
 //长周期定时器, 周期性心跳时钟处理机制
-OPSTAT func_cloudvela_time_out_period_long_duration(void)
+OPSTAT func_cloudvela_hb_link_main_entry(void)
 {
 	//int ret = 0;
 
-	//检查链路状态
-	//离线，则再连接
+	//检查链路状态，离线，则再连接
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
 		if ((gCloudvelaTaskContex.socket_connected == TRUE) && (func_cloudvela_socket_conn_setup() == SUCCESS)){
 			zHcuSysStaPm.statisCnt.cloudVelaConnCnt++;
@@ -255,16 +263,15 @@ OPSTAT func_cloudvela_time_out_period_long_duration(void)
 			HCU_DEBUG_PRINT_NOR("CLOUDVELA: Connect state change, from OFFLINE to ONLINE!\n");
 		}
 		//如果是失败情况，并不返回错误，属于正常情况
-		//当链路不可用时，这个打印结果会非常频繁，放开比较好
 		else{
-			HCU_DEBUG_PRINT_IPT("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
+			HCU_DEBUG_PRINT_NOR("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt++;
 		}
 	}
 
 	//在线状态，则检查
 	else if(FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		if (func_cloudvela_heart_beat_check() == FAILURE){
+		if (func_cloudvela_hb_link_send_signal() == FAILURE){
 			zHcuSysStaPm.statisCnt.cloudVelaDiscCnt++;
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
@@ -331,39 +338,7 @@ OPSTAT func_cloudvela_time_out_period_long_duration(void)
 	return SUCCESS;
 }
 
-
-/***************************************************************************************************************************
- *
- *  CLOUDVELA链路协议
- *
- ***************************************************************************************************************************/
-//进入离线，具备两种方式：被动心跳检测到离线状态，主动断掉链路从而连到更高优先级的链路上
-//这两种情形下，都需要复位ConTable对应的状态，不然可能会导致物理接口模块处于不正常的接收状态
-//检测后台连接的有效性，是否还依然保持连接状态
-//心跳握手检测，搞不好就是一种新状态，这里得想办法做成一个立即返回的过程，不然状态机太复杂，上面的控制程序也不好处理
-//这里的发送接受，只是有SAE-CLOUD的反馈就算成功，如果在消息解码中再遇到问题，可以重新设置本模块的状态，比如强行进入离线等等
-//所以这里返回成功，以及相应的处理，只能是不完善的，因为发送和接收过程分离的，但99%情况下，这种机制是可以正常工作的
-OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
-{
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-		if(gCloudvelaTaskContex.ethConClientFd < 0) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: socket id is not valid!\n");
-	}
-
-	UINT32 echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
-	if (send(gCloudvelaTaskContex.ethConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen)
-	{
-		HcuErrorPrint("CLOUDVELA: Socket disconnected & Mismatch in number of send bytes!\n\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-	}
-	else
-	{
-		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Socket connected, send HEART_BEAT message to socket server success: %s!\n\n", zHcuSysEngPar.cloud.cloudBhHcuName);
-	}
-
-	return SUCCESS;
-}
-
-OPSTAT func_cloudvela_heart_beat_check(void)
+OPSTAT func_cloudvela_hb_link_send_signal(void)
 {
 	int ret = 0;
 
@@ -377,7 +352,7 @@ OPSTAT func_cloudvela_heart_beat_check(void)
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_heart_beat_msg_pack(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
 		//Send out
 		ret = func_cloudvela_send_data_to_cloud(&buf);
@@ -393,7 +368,7 @@ OPSTAT func_cloudvela_heart_beat_check(void)
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_heart_beat_received_handle(void)
+OPSTAT func_cloudvela_hb_link_rcv_signal_check(void)
 {
 	//FSM状态检查
 	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_ONLINE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: FSM State error, taking care of potential risk!\n");
@@ -410,19 +385,10 @@ OPSTAT func_cloudvela_heart_beat_received_handle(void)
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_msg_heart_beat_req_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_req_t *rcv)
-{
-	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_heart_beat_req_t received!\n");
-}
-
-OPSTAT func_cloudvela_msg_heart_beat_confirm_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *rcv)
-{
-	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t received!\n");
-}
 
 /***************************************************************************************************************************
  *
- *  软件下载控制与管理
+ *  各种协议下的公共处理API：链路处理／软件下载／控制与管理
  *
  ***************************************************************************************************************************/
 OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
@@ -444,7 +410,7 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 		CloudDataSendBuf_t buf;
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 		//打包数据
-		if (FAILURE == func_cloudvela_huanbao_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &zHcuSysEngPar.swDbInvInfo, &buf))
+		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &zHcuSysEngPar.swDbInvInfo, &buf))
 		{
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 		}
@@ -456,7 +422,6 @@ OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 
 	return SUCCESS;
 }
-
 
 OPSTAT func_cloudvela_sw_download(char *filename)
 {
@@ -570,12 +535,12 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 
 	//如果是XML自定义格式
 	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+		if (func_cloudvela_stdxml_msg_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 	}
 
 	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
 	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+		if (func_cloudvela_stdzhb_msg_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 	}
 
 	//非法格式
@@ -627,26 +592,33 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	rcv.length = param_len;
 	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
 
-	//如果是XML自定义格式
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
-	{
-		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
+	switch (zHcuSysEngPar.cloud.cloudBhItfFrameStd){
+	case HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML:
+		//不期望任何目标消息
+		if (func_cloudvela_huitpxml_msg_unpack(&rcv, -1) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 		}
-	}
+		break;
 
-	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
-	{
-		if (func_cloudvela_standard_zhb_unpack(&rcv) == FAILURE){
+	case HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON:
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		break;
+
+	case HCU_SYSCFG_CLOUD_BH_ITF_STD_XML:
+		if (func_cloudvela_stdxml_msg_unpack(&rcv) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 		}
-	}
+		break;
 
-	//非法格式
-	else
-	{
+	case HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB:
+		if (func_cloudvela_stdzhb_msg_unpack(&rcv) == FAILURE){
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+		}
+		break;
+
+	default:
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
+		break;
 	}
 
 	return SUCCESS;
@@ -671,56 +643,6 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
 	}
 	return SUCCESS;
 }
-
-OPSTAT func_cloudvela_av_upload(char *filename)
-{
-	FTP_OPT ftp_opt;
-
-	char usrtmp[3] = ":";
-
-	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
-
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUserVideo);
-	strcat(ftp_opt.user_key, usrtmp);
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwdVideo);
-	HCU_DEBUG_PRINT_INF("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
-
-	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
-	strcat(ftp_opt.url, filename);
-	HCU_DEBUG_PRINT_INF("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
-
-	strcat(ftp_opt.file, zHcuSysEngPar.videoSev.hcuVideoServerDir);
-	strcat(ftp_opt.file, filename);
-	HCU_DEBUG_PRINT_INF("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
-
-	char filepath[HCU_CLOUDVELA_PATH_MAX];
-	memset(filepath,0,HCU_CLOUDVELA_PATH_MAX);
-
-	int rslt = readlink(ftp_opt.file,filepath,HCU_CLOUDVELA_PATH_MAX-1);
-	if(rslt<0 || (rslt >=HCU_CLOUDVELA_PATH_MAX-1))
-	{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: read file path failure %d!\n", rslt);
-	}
-	else
-	{
-		filepath[rslt] = '\0';
-		memset(ftp_opt.file,0,HCU_SYSDIM_FILE_NAME_LEN_MAX);
-		strcpy(ftp_opt.file,filepath);
-
-	}
-	HCU_DEBUG_PRINT_INF("CLOUDVELA: AV file path: %s!\n", ftp_opt.file);
-
-	if(FTP_UPLOAD_SUCCESS == ftp_upload(ftp_opt)){
-		return SUCCESS;
-	}
-
-	else
-	{
-		return FAILURE;
-	}
-
-}
-
 
 
 /***************************************************************************************************************************
@@ -754,7 +676,7 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_alarm_msg_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.photofileName, rcv.timeStamp, &buf) == FAILURE)
+		if (func_cloudvela_stdzhb_msg_alarm_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.photofileName, rcv.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
 		//Send out
@@ -791,7 +713,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.CloudVelaConnCnt, rcv.CloudVelaConnFailCnt, rcv.CloudVelaDiscCnt, rcv.SocketDiscCnt, rcv.TaskRestartCnt, rcv.cpu_occupy, rcv.mem_occupy, rcv.disk_occupy, rcv.timeStamp, &buf) == FAILURE)
+		if (func_cloudvela_stdzhb_msg_pm_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.CloudVelaConnCnt, rcv.CloudVelaConnFailCnt, rcv.CloudVelaDiscCnt, rcv.SocketDiscCnt, rcv.TaskRestartCnt, rcv.cpu_occupy, rcv.mem_occupy, rcv.disk_occupy, rcv.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
 		//Send out
@@ -895,28 +817,6 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	return FAILURE;
 }
 
-OPSTAT func_cloudvela_msg_inventory_req_received_handle(StrMsg_HUITP_MSGID_uni_inventory_req_t *rcv)
-{
-	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_inventory_req_t received!\n");
-}
-
-OPSTAT func_cloudvela_msg_inventory_confirm_received_handle(StrMsg_HUITP_MSGID_uni_inventory_confirm_t *rcv)
-{
-	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_inventory_confirm_t received!\n");
-}
-
-OPSTAT func_cloudvela_msg_sw_package_req_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_req_t *rcv)
-{
-	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_sw_package_req_t received!\n");
-}
-
-OPSTAT func_cloudvela_msg_sw_package_confirm_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *rcv)
-{
-	HCU_ERROR_PRINT_CLOUDVELA("SPSVIRGO: Un-supported message but known message StrMsg_HUITP_MSGID_uni_sw_package_confirm_t received!\n");
-}
-
-
-
 
 /***************************************************************************************************************************
  *
@@ -943,7 +843,7 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_emc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
+		if (func_cloudvela_stdzhb_msg_emc_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
 				rcv.emc.equipid, rcv.emc.dataFormat, rcv.emc.emcValue, rcv.emc.gps.gpsx, rcv.emc.gps.gpsy, rcv.emc.gps.gpsz, rcv.emc.gps.ns, rcv.emc.gps.ew, rcv.emc.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -991,7 +891,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_pm25_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
+		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
 				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pm1d0Value, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
 				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
@@ -1028,9 +928,9 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 		CloudDataSendBuf_t buf;
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
-		//func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 powerOnOff, UINT32 interSample, UINT32 meausTimes, UINT32 newEquId, UINT32 workCycle,CloudDataSendBuf_t *buf)
+		//func_cloudvela_stdzhb_msg_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 powerOnOff, UINT32 interSample, UINT32 meausTimes, UINT32 newEquId, UINT32 workCycle,CloudDataSendBuf_t *buf)
 		//打包数据
-		if (func_cloudvela_huanbao_pm25_cmd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdId, rcv.optId, rcv.backType,
+		if (func_cloudvela_stdzhb_msg_pm25_cmd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdId, rcv.optId, rcv.backType,
 				rcv.opt.equId, rcv.opt.powerOnOff, rcv.opt.interSample, rcv.opt.meausTimes, rcv.opt.newEquId, rcv.opt.workCycle, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -1071,7 +971,7 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_winddir_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.winddir.equipid,
+		if (func_cloudvela_stdzhb_msg_winddir_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.winddir.equipid,
 				rcv.winddir.dataFormat, rcv.winddir.winddirValue, rcv.winddir.gps.gpsx, rcv.winddir.gps.gpsy, rcv.winddir.gps.gpsz, rcv.winddir.gps.ns, rcv.winddir.gps.ew, rcv.winddir.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -1118,7 +1018,7 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_windspd_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.windspd.equipid,
+		if (func_cloudvela_stdzhb_msg_windspd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.windspd.equipid,
 				rcv.windspd.dataFormat, rcv.windspd.windspdValue, rcv.windspd.gps.gpsx, rcv.windspd.gps.gpsy, rcv.windspd.gps.gpsz, rcv.windspd.gps.ns, rcv.windspd.gps.ew, rcv.windspd.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -1165,7 +1065,7 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_temp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.temp.equipid,
+		if (func_cloudvela_stdzhb_msg_temp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.temp.equipid,
 				rcv.temp.dataFormat, rcv.temp.tempValue, rcv.temp.gps.gpsx, rcv.temp.gps.gpsy, rcv.temp.gps.gpsz, rcv.temp.gps.ns, rcv.temp.gps.ew, rcv.temp.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -1213,7 +1113,7 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_humid_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.humid.equipid,
+		if (func_cloudvela_stdzhb_msg_humid_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.humid.equipid,
 				rcv.humid.dataFormat, rcv.humid.humidValue, rcv.humid.gps.gpsx, rcv.humid.gps.gpsy, rcv.humid.gps.gpsz, rcv.humid.gps.ns, rcv.humid.gps.ew, rcv.humid.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 		//Send out
@@ -1259,7 +1159,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_noise_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.noise.equipid,
+		if (func_cloudvela_stdzhb_msg_noise_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.noise.equipid,
 				rcv.noise.dataFormat, rcv.noise.noiseValue, rcv.noise.gps.gpsx, rcv.noise.gps.gpsy, rcv.noise.gps.gpsz, rcv.noise.gps.ns, rcv.noise.gps.ew, rcv.noise.timeStamp, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -1314,7 +1214,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_hsmmp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
+		if (func_cloudvela_stdzhb_msg_hsmmp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
 				rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, rcv.link.linkName, &buf) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -1398,7 +1298,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
 		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-		if (func_cloud_standard_xml_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_data_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_data_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
@@ -1476,7 +1376,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
 		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-		if (func_cloud_standard_xml_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_data_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_data_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
@@ -1541,7 +1441,7 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
 		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-		if (func_cloud_standard_xml_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_event_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_event_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
@@ -1606,7 +1506,7 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
 		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-		if (func_cloud_standard_xml_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
@@ -1678,7 +1578,7 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
 		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-		if (func_cloud_standard_xml_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID, NULL, HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
@@ -1704,8 +1604,6 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 }
 
 #endif  //(HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-
-
 
 /***************************************************************************************************************************
  *
@@ -1841,7 +1739,18 @@ size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, voi
  * 　不再使用的API，但由于其久经考验的程序价值，暂时放在这儿
  *
  ***************************************************************************************************************************/
-/*//存入数据到本地内存磁盘
+/*
+typedef struct HcuDiscDataSampleStorage
+{
+	UINT32 rdCnt;
+	UINT32 wrtCnt;
+	UINT32 recordNbr;
+	UINT32 offlineNbr;
+	UINT32 lastSid;
+	HcuDiscDataSampleStorageArray_t recordItem[DISC_DATA_SAMPLE_STORAGE_NBR_MAX];
+}HcuDiscDataSampleStorage_t;
+
+//存入数据到本地内存磁盘
 OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record)
 {
 	//int ret=0;

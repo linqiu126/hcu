@@ -229,7 +229,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 	//定时长时钟进行链路检测的
 	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_cloudvela_time_out_period_long_duration();
+		ret = func_cloudvela_hb_link_main_entry();
 	}
 
 	//定时短时钟进行离线数据回送
@@ -253,7 +253,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 //在线状态下，zHcuCloudvelaTable.ethConTry的参数用于控制是否可能进入链路断掉-》重建的情形，该参数在尝试过后会+1,
 //但HWINV的状态逆转报告会导致它清零，从而具备再一次尝试的资格。这里还要照顾一种清醒：如果所有链路都没有建立起来，则自然需要不断的+1,也没有大问题
 //长周期定时器, 周期性心跳时钟处理机制
-OPSTAT func_cloudvela_time_out_period_long_duration(void)
+OPSTAT func_cloudvela_hb_link_main_entry(void)
 {
 	int ret = 0;
 
@@ -291,7 +291,7 @@ OPSTAT func_cloudvela_time_out_period_long_duration(void)
 
 	//在线状态，则检查
 	else if(FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		if (func_cloudvela_heart_beat_check() == FAILURE){
+		if (func_cloudvela_hb_link_send_signal() == FAILURE){
 			zHcuSysStaPm.statisCnt.cloudVelaDiscCnt++;
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
@@ -488,7 +488,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		break;
 
 	case L3CI_pm25:
-		if (func_cloudvela_huanbao_pm25_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_pm25_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.pm1d0Value, record.pm2d5Value, record.pm10Value, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_pm25_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.pm1d0Value, record.pm2d5Value, record.pm10Value, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: PM25 pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -496,7 +496,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		break;
 
 	case L3CI_windspd:
-		if (func_cloudvela_huanbao_winddir_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_windspd_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.windspdValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_winddir_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_windspd_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.windspdValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: WINDSPD pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -504,7 +504,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		break;
 
 	case L3CI_winddir:
-		if (func_cloudvela_huanbao_windspd_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_winddir_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.winddirValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_windspd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_winddir_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.winddirValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: WINDDIR pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -512,7 +512,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		break;
 
 	case L3CI_temp:
-		if (func_cloudvela_huanbao_temp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_temp_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.tempValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_temp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_temp_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.tempValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: TEMP pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -520,7 +520,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		break;
 
 	case L3CI_humid:
-		if (func_cloudvela_huanbao_humid_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_humid_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.humidValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_humid_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_humid_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.humidValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: HUMID pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -528,7 +528,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		break;
 
 	case L3CI_noise:
-		if (func_cloudvela_huanbao_noise_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_noise_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.noiseValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_noise_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_noise_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.noiseValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: NOISE pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -536,7 +536,7 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 		break;
 
 	case L3CI_hsmmp:
-		if (func_cloudvela_huanbao_hsmmp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_hsmmp_upload_req, L3CI_cmdid_back_type_period, record.equipid, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, record.hsmmpLink, &buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_hsmmp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_hsmmp_upload_req, L3CI_cmdid_back_type_period, record.equipid, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, record.hsmmpLink, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: HSMMP pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -697,7 +697,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_pm25_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
+		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
 				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pm1d0Value, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
 				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
@@ -753,7 +753,7 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_winddir_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.winddir.equipid,
+		if (func_cloudvela_stdzhb_msg_winddir_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.winddir.equipid,
 				rcv.winddir.dataFormat, rcv.winddir.winddirValue, rcv.winddir.gps.gpsx, rcv.winddir.gps.gpsy, rcv.winddir.gps.gpsz, rcv.winddir.gps.ns, rcv.winddir.gps.ew, rcv.winddir.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -807,7 +807,7 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_windspd_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.windspd.equipid,
+		if (func_cloudvela_stdzhb_msg_windspd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.windspd.equipid,
 				rcv.windspd.dataFormat, rcv.windspd.windspdValue, rcv.windspd.gps.gpsx, rcv.windspd.gps.gpsy, rcv.windspd.gps.gpsz, rcv.windspd.gps.ns, rcv.windspd.gps.ew, rcv.windspd.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -861,7 +861,7 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_temp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.temp.equipid,
+		if (func_cloudvela_stdzhb_msg_temp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.temp.equipid,
 				rcv.temp.dataFormat, rcv.temp.tempValue, rcv.temp.gps.gpsx, rcv.temp.gps.gpsy, rcv.temp.gps.gpsz, rcv.temp.gps.ns, rcv.temp.gps.ew, rcv.temp.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -915,7 +915,7 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_humid_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.humid.equipid,
+		if (func_cloudvela_stdzhb_msg_humid_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.humid.equipid,
 				rcv.humid.dataFormat, rcv.humid.humidValue, rcv.humid.gps.gpsx, rcv.humid.gps.gpsy, rcv.humid.gps.gpsz, rcv.humid.gps.ns, rcv.humid.gps.ew, rcv.humid.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -969,7 +969,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_noise_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.noise.equipid,
+		if (func_cloudvela_stdzhb_msg_noise_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.noise.equipid,
 				rcv.noise.dataFormat, rcv.noise.noiseValue, rcv.noise.gps.gpsx, rcv.noise.gps.gpsy, rcv.noise.gps.gpsz, rcv.noise.gps.ns, rcv.noise.gps.ew, rcv.noise.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1031,7 +1031,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_hsmmp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
+		if (func_cloudvela_stdzhb_msg_hsmmp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
 				rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, rcv.link.linkName, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1180,7 +1180,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 //心跳握手检测，搞不好就是一种新状态，这里得想办法做成一个立即返回的过程，不然状态机太复杂，上面的控制程序也不好处理
 //这里的发送接受，只是有SAE-CLOUD的反馈就算成功，如果在消息解码中再遇到问题，可以重新设置本模块的状态，比如强行进入离线等等
 //所以这里返回成功，以及相应的处理，只能是不完善的，因为发送和接收过程分离的，但99%情况下，这种机制是可以正常工作的
-OPSTAT func_cloudvela_heart_beat_check(void)
+OPSTAT func_cloudvela_hb_link_send_signal(void)
 {
 	int ret = 0;
 
@@ -1543,7 +1543,7 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	//如果是XML自定义格式
 	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
-		if (func_cloudvela_standard_xml_unpack(&rcv) == FAILURE){
+		if (func_cloudvela_stdxml_msg_unpack(&rcv) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuSysCrlTab.taskRun.taskName[src_id]);
 			return FAILURE;
@@ -1678,7 +1678,7 @@ OPSTAT hcu_cloudvela_http_link_init(void)
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_heart_beat_received_handle(void)
+OPSTAT func_cloudvela_hb_link_rcv_signal_check(void)
 {
 	//FSM状态检查
 	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_ONLINE){
@@ -1879,7 +1879,7 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 
 		//func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 powerOnOff, UINT32 interSample, UINT32 meausTimes, UINT32 newEquId, UINT32 workCycle,CloudDataSendBuf_t *buf)
 		//打包数据
-		if (func_cloudvela_huanbao_pm25_cmd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdId, rcv.optId, rcv.backType,
+		if (func_cloudvela_stdzhb_msg_pm25_cmd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdId, rcv.optId, rcv.backType,
 				rcv.opt.equId, rcv.opt.powerOnOff, rcv.opt.interSample, rcv.opt.meausTimes, rcv.opt.newEquId, rcv.opt.workCycle, &buf) == FAILURE)
 		{
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
@@ -2030,7 +2030,7 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 
 		//打包数据
-		if (func_cloudvela_huanbao_pm_msg_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.PmRestartCnt, rcv.PmCloudVelaDiscCnt, rcv.PmSocketDiscCnt, rcv.timeStamp, &buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pm_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.PmRestartCnt, rcv.PmCloudVelaDiscCnt, rcv.PmSocketDiscCnt, rcv.timeStamp, &buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Package message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;

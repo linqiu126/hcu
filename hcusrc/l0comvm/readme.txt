@@ -14,6 +14,8 @@ PRJ_BFSC待完成或者回答的问题：
 ===>离线任务，移出CLOUDVELA，放到L3xxxxTASK中去
 
 
+//= ZJL, 2017 Feb.13, CURRENT_SW_DELIVERY 163=>BFSC项目
+= 清理STDXML, STDZHB，以及HUITPXML的编解码格式函数的位置，统一化处理
 
 //= ZJL, 2017 Feb.13, CURRENT_SW_DELIVERY 162=>BFSC项目
 = 移除离线数据发送功能，将它放到上层L3处理。同步清除MEMDISK离线存储功能。

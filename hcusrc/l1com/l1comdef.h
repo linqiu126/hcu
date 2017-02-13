@@ -43,15 +43,6 @@ typedef struct HcuDiscDataSampleStorageArray
 }HcuDiscDataSampleStorageArray_t;
 #define DISC_DATA_SAMPLE_ONLINE 1
 #define DISC_DATA_SAMPLE_OFFLINE 2
-typedef struct HcuDiscDataSampleStorage
-{
-	UINT32 rdCnt;
-	UINT32 wrtCnt;
-	UINT32 recordNbr;
-	UINT32 offlineNbr;
-	UINT32 lastSid;
-	HcuDiscDataSampleStorageArray_t recordItem[DISC_DATA_SAMPLE_STORAGE_NBR_MAX];
-}HcuDiscDataSampleStorage_t;
 
 //自定义，服从自定义XML规范
 //CLOUD<->HCU之间自行定义的命令字

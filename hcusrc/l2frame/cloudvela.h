@@ -73,36 +73,25 @@ extern OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, v
 extern OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
-//Local API
-OPSTAT func_cloudvela_http_conn_setup(void);
-OPSTAT func_cloudvela_heart_beat_check(void);
-OPSTAT func_cloudvela_time_out_period_long_duration(void);
-OPSTAT func_cloudvela_cmd_control_check(void);//for cmd control by Shanchun
-OPSTAT func_cloudvela_time_out_period_for_socket_heart(void);
-OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void);
+//Local API - Heart beat functions
+OPSTAT func_cloudvela_hb_link_main_entry(void);
+OPSTAT func_cloudvela_hb_link_send_signal(void);
+OPSTAT func_cloudvela_hb_link_rcv_signal_check(void);
+
+//Local API - Core Link functions
 OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf);
 OPSTAT func_cloudvela_socket_conn_setup(void);
 
-//Added by Shanchun for SW download, SW inventory, AV upload
-extern OPSTAT func_cloudvela_heart_beat_received_handle(void);
-extern OPSTAT func_cloudvela_sw_download(char *filename);
-extern OPSTAT func_cloudvela_av_upload(char *filename);
-
 //Global API
-extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);
-extern OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);
-extern OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record);
-extern OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record);
 extern OPSTAT hcu_cloudvela_http_link_init(void);
 extern size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);
 
-//Message Handler
-extern OPSTAT func_cloudvela_msg_heart_beat_req_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_req_t *rcv);
-extern OPSTAT func_cloudvela_msg_heart_beat_confirm_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *rcv);
-extern OPSTAT func_cloudvela_msg_inventory_req_received_handle(StrMsg_HUITP_MSGID_uni_inventory_req_t *rcv);
-extern OPSTAT func_cloudvela_msg_inventory_confirm_received_handle(StrMsg_HUITP_MSGID_uni_inventory_confirm_t *rcv);
-extern OPSTAT func_cloudvela_msg_sw_package_req_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_req_t *rcv);
-extern OPSTAT func_cloudvela_msg_sw_package_confirm_received_handle(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *rcv);
+//核心功能Message Handler
+OPSTAT func_cloudvela_sw_download(char *filename);
+OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void);
+
+//Supress API functions
+OPSTAT func_cloudvela_http_conn_setup(void);
 
 
 //引用外部函数

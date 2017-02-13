@@ -77,7 +77,7 @@ extern OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * para
 
 //Local API
 OPSTAT func_cloudvela_http_conn_setup(void);
-OPSTAT func_cloudvela_heart_beat_check(void);
+OPSTAT func_cloudvela_hb_link_send_signal(void);
 OPSTAT func_cloudvela_time_out_period(void);
 OPSTAT func_cloudvela_cmd_control_check(void);//for cmd control by Shanchun
 OPSTAT func_cloudvela_time_out_period_for_cmd_control(void);//for cmd control by Shanchun

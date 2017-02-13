@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES" key="selection"/>
+		<item value="JASON" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES"/>
-			<item value="HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET"/>
-			<item value="to_storage_mem"/>
-			<item value="hcu_save_to_storage_mem"/>
-			<item value="_storage_mem"/>
-			<item value="zHcuMemStorageBuf"/>
-			<item value="hcu_disk_write"/>
-			<item value="socket_connected"/>
+			<item value="JASON"/>
+			<item value="func_cloudvela_huanbao_pm_msg_pack"/>
+			<item value="func_cloudvela_huanbao_alarm_msg_pack"/>
+			<item value="func_cloudvela_huanbao_bfsc_msg_pack"/>
+			<item value="func_cloudvela_huanbao_hcu_inventory_pack"/>
+			<item value="func_cloudvela_huanbao_av_upload_pack"/>
+			<item value="func_cloudvela_huanbao_sw_download_pack"/>
+			<item value="func_cloudvela_huanbao_hsmmp_msg_pack"/>
 		</list>
 		<list key="replacehistory">
+			<item value="func_cloudvela_stdzhb_msg_alarm_pack"/>
+			<item value="func_cloudvela_stdzhb_msg_unpack"/>
+			<item value="func_cloudvela_stdzhb_msg_pm25_cmd_pack"/>
+			<item value="func_cloudvela_stdzhb_msg_pm25_pack"/>
+			<item value="func_cloudvela_stdzhb_msg_emc_pack"/>
+			<item value="func_cloudvela_stdzhb_msg_heart_beat_pack"/>
+			<item value="func_cloudvela_stdxml_msg_pack"/>
 			<item value="HCU_ERROR_PRINT_CLOUDVELA"/>
-			<item value="si[SENSOR_ID_GPIOTOXICGASZP01VOC]"/>
-			<item value="si[SENSOR_ID_GPIOALCOHOLMQ3ALCO]"/>
-			<item value="si[SENSOR_ID_GPIOTOXICGASMQ135]"/>
-			<item value="si[SENSOR_ID_GPIOHUMIDDHT11]"/>
-			<item value="si[]"/>
-			<item value="si[SENSOR_ID_GPIOTEMPDHT11]"/>
-			<item value="si[SENSOR_ID_SPSHCHOZE08CH2O]"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1115" key="DIALOG_X_ORIGIN"/>
-		<item value="406" key="DIALOG_Y_ORIGIN"/>
+		<item value="1050" key="DIALOG_X_ORIGIN"/>
+		<item value="277" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

@@ -10,9 +10,6 @@
 #include "../l1com/hwinv.h"
 #include "../l2codec/bhcodeczhb.h"
 
-#include "../l1com/l1comdef.h"
-#include "../l2frame/cloudvela.h"
-
 //Task Global variables
 extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
@@ -20,7 +17,7 @@ extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
 //INT8 tplFormat[] = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"; //send data for debug
-OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_heart_beat_pack(CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -39,7 +36,7 @@ OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
 		sprintf(xmlFormat.conCmdId, "%02X", L3CI_heart_beat & 0xFF);
 		strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -58,7 +55,7 @@ OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
 		//未来HEART_BEAT帧可能会定义独特的命令类型（char cn[8]; //CN=命令编号），现在暂时没有细节，所以采用数据长度=0表示心跳帧
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -66,70 +63,6 @@ OPSTAT func_cloudvela_huanbao_heart_beat_msg_pack(CloudDataSendBuf_t *buf)
 		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 			HcuDebugPrint("CLOUDVELA: Heart Beat Frame ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
 		}
-	}
-
-	else{
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
-		return FAILURE;
-	}
-
-	return SUCCESS;
-}
-
-
-//for cmd control by Shanchun
-//rcv输入参数，buf输出参数
-//INT8 tplFormat[] = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"; //send data for debug
-OPSTAT func_cloudvela_huanbao_cmd_control_msg_pack(CloudDataSendBuf_t *buf)
-{
-	//参数检查，其它参数无所谓
-	if (buf == NULL){
-		HcuErrorPrint("CLOUDVELA: Error CloudDataSendBuf_t pointer!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
-	{
-		//初始化变量
-		CloudBhItfDevReportStdXml_t xmlFormat;
-		memset(&xmlFormat, 0, sizeof(CloudBhItfDevReportStdXml_t));
-
-		//pack数据到临时字符串中, 将数据打印到关键的数值中
-		sprintf(xmlFormat.conCmdId, "%02X", L3CI_cmd_control & 0xFF);
-		strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
-			return FAILURE;
-		}
-		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("CLOUDVELA: CMD CONTROL CHECK Frame XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
-		}
-	}
-
-
-	else if (zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-
-		//初始化变量
-		CloudBhItfDevReportStdZhb_t zhbFormat;
-		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
-
-		//关键数据填入
-		//未来HEART_BEAT帧可能会定义独特的命令类型（char cn[8]; //CN=命令编号），现在暂时没有细节，所以采用数据长度=0表示心跳帧
-		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_HEART_BEAT);
-
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
-			return FAILURE;
-		}
-		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("CLOUDVELA: Heart Beat Frame ZHB Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
-		}
-
 	}
 
 	else{
@@ -145,7 +78,7 @@ OPSTAT func_cloudvela_huanbao_cmd_control_msg_pack(CloudDataSendBuf_t *buf)
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
 //INT8 tplFormat[] = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[%s]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"; //send data for debug
-OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 emcValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_emc_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 emcValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -182,7 +115,7 @@ OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -201,7 +134,7 @@ OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 		sprintf(zhbFormat.data.conEmc, "%04X", emcValue & 0xFFFF);
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -222,7 +155,7 @@ OPSTAT func_cloudvela_huanbao_emc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 pm1d0Value, UINT32 pm2d5Value, UINT32 pm10Value, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_pm25_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 pm1d0Value, UINT32 pm2d5Value, UINT32 pm10Value, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -261,7 +194,7 @@ OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -280,7 +213,7 @@ OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		sprintf(zhbFormat.data.conPm2d5, "%08X", pm2d5Value);
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -301,7 +234,7 @@ OPSTAT func_cloudvela_huanbao_pm25_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 winddirValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_winddir_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 winddirValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -338,7 +271,7 @@ OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -357,7 +290,7 @@ OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		sprintf(zhbFormat.data.conWinddir, "%04X", winddirValue & 0xFFFF);
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -378,7 +311,7 @@ OPSTAT func_cloudvela_huanbao_winddir_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 windspdValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_windspd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 windspdValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -415,7 +348,7 @@ OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -434,7 +367,7 @@ OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		sprintf(zhbFormat.data.conWindspd, "%04X", windspdValue & 0xFFFF);
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -456,7 +389,7 @@ OPSTAT func_cloudvela_huanbao_windspd_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 tempValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_temp_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 tempValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -493,7 +426,7 @@ OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -512,7 +445,7 @@ OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		sprintf(zhbFormat.data.conTemp, "%04X", tempValue & 0xFFFF);
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -533,7 +466,7 @@ OPSTAT func_cloudvela_huanbao_temp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 humidValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_humid_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 humidValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -570,7 +503,7 @@ OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -589,7 +522,7 @@ OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		sprintf(zhbFormat.data.conHumid, "%04X", humidValue & 0xFFFF);
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -610,7 +543,7 @@ OPSTAT func_cloudvela_huanbao_humid_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 noiseValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_noise_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 dataFormat, UINT32 noiseValue, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -647,7 +580,7 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -666,7 +599,7 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		sprintf(zhbFormat.data.conNoise, "%08X", noiseValue);
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -685,110 +618,10 @@ OPSTAT func_cloudvela_huanbao_noise_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 	return SUCCESS;
 }
 
-//rcv输入参数，buf输出参数
-//只支持XML格式
-OPSTAT func_cloudvela_huanbao_bfsc_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 optpar, UINT32 equipId, UINT8 dataFormat, UINT32 modbusValue, UINT8 sensorNbr, UINT32 *sensorValue, UINT32 timeStamp, CloudDataSendBuf_t *buf)
-{
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	int i=0;
-	char stemp[9];
-	//参数检查，其它参数无所谓
-	if (buf == NULL){
-		HcuErrorPrint("CLOUDVELA: Error CloudDataSendBuf_t pointer!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
-
-	if ((zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML) && ((optId == L3PO_bfsc_start_resp) || (optId == L3PO_bfsc_stop_resp)))
-	{
-		//初始化变量
-		CloudBhItfDevReportStdXml_t xmlFormat;
-		memset(&xmlFormat, 0, sizeof(CloudBhItfDevReportStdXml_t));
-
-		//pack数据到临时字符串中, 将数据打印到关键的数值中
-		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
-		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
-		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		//sprintf(xmlFormat.conBackType, "%02X", optpar & 0xFF);
-		//sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
-		//sprintf(xmlFormat.conBfsc, "%08X", modbusValue);
-		//sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
-		else {
-			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			return FAILURE;
-		}
-
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
-			return FAILURE;
-		}
-		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("CLOUDVELA: NOISE XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
-		}
-	}
-
-	else if ((zHcuSysEngPar.cloud.cloudBhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML) && (optId == L3PO_bfsc_data_report))
-	{
-		//初始化变量
-		CloudBhItfDevReportStdXml_t xmlFormat;
-		memset(&xmlFormat, 0, sizeof(CloudBhItfDevReportStdXml_t));
-
-		//pack数据到临时字符串中, 将数据打印到关键的数值中
-		sprintf(xmlFormat.conCmdId, "%02X", cmdId & 0xFF);
-		sprintf(xmlFormat.conOptId, "%02X", optId & 0xFF);
-		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
-		//sprintf(xmlFormat.conBackType, "%02X", optpar & 0xFF);
-		//sprintf(xmlFormat.conDataFormat, "%02X",  dataFormat & 0xFF);
-		//sprintf(xmlFormat.conEqpId, "%02X", equipId & 0xFF);
-		sprintf(xmlFormat.conBfscSensorNb, "%02X", sensorNbr);
-		if (sensorNbr > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Pack message error， too large sensor numbers!\n");
-			return FAILURE;
-		}
-		//这里应用了高级的技巧，是否可行，待测试
-		for (i=0; i<sensorNbr; i++){
-			//sprintf(xmlFormat.conBfscData[i*8], "%08X", (UINT32)*(sensorValue + 4*i));
-			memset(stemp, 0, sizeof(stemp));
-			sprintf(stemp, "%08X", (UINT32)*(sensorValue + i));
-			strcat(xmlFormat.conBfscData, stemp);
-		}
-		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_STRING);
-		else if (msgType == CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
-		else {
-			HcuErrorPrint("CLOUDVELA: Error Message Type input!\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			return FAILURE;
-		}
-
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
-			return FAILURE;
-		}
-		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
-			HcuDebugPrint("CLOUDVELA: XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
-		}
-	}
-
-	else{
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
-		return FAILURE;
-	}
-#endif
-	return SUCCESS;
-}
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, char *linkName, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_hsmmp_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew, UINT32 timeStamp, char *linkName, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -831,7 +664,7 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -856,7 +689,7 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 		strcpy(zhbFormat.data.linkName, linkName);
 		strcpy(zhbFormat.data.cn, HCU_CLOUDVELA_BH_ITF_STD_ZHB_CN_NORMAL_PKG);
 
-		if (func_cloudvela_standard_zhb_pack(&zhbFormat, buf) == FAILURE){
+		if (func_cloudvela_stdzhb_msg_pack(&zhbFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -880,7 +713,7 @@ OPSTAT func_cloudvela_huanbao_hsmmp_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 //rcv输入参数，buf输出参数
 
 //Adding by Shanchun for control cmd
-OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 powerOnOff, UINT32 interSample, UINT32 meausTimes, UINT32 newEquId, UINT32 workCycle,CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT8 powerOnOff, UINT32 interSample, UINT32 meausTimes, UINT32 newEquId, UINT32 workCycle,CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -980,7 +813,7 @@ OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -1023,7 +856,7 @@ OPSTAT func_cloudvela_huanbao_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 }
 
 //Adding by Shanchun for hcu sw download response
-OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 swDownload, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 swDownload, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1068,7 +901,7 @@ OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -1089,7 +922,7 @@ OPSTAT func_cloudvela_huanbao_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8
 
 
 //Adding by Shanchun for hcu sw inventory response
-OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, SysEngParElementSwInvInfo_t *hcuInventoryInfo, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, SysEngParElementSwInvInfo_t *hcuInventoryInfo, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1135,7 +968,7 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -1155,7 +988,7 @@ OPSTAT func_cloudvela_huanbao_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UIN
 }
 
 //Adding by Shanchun for hcu av upload response
-OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 avUpload, char *avFileName, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 avUpload, char *avFileName, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1202,7 +1035,7 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			return FAILURE;
@@ -1233,7 +1066,7 @@ OPSTAT func_cloudvela_huanbao_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 o
  *
  */
 
-OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=0;
 	UINT32 totalLen=0, it=0, ret=0;
@@ -1373,7 +1206,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	if (totalLen == 0){
 		//心跳接收的特殊处理
 		if (flag == 1){
-			if (func_cloudvela_heart_beat_received_handle() == FAILURE){
+			if (func_cloudvela_hb_link_rcv_signal_check() == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Heart_beat processing error!\n");
 				return FAILURE;
@@ -1643,7 +1476,7 @@ OPSTAT func_cloudvela_standard_zhb_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, CloudDataSendBuf_t *buf)
 {
 	int i=0;
 
@@ -1860,7 +1693,7 @@ OPSTAT func_cloudvela_standard_zhb_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, 
 
 //For alarm report
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT8 alarmType, UINT32 alarmContent, UINT8 equID, UINT8 alarmSeverity, UINT8 alarmClearFlag, char *avFileName, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_alarm_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT8 alarmType, UINT32 alarmContent, UINT8 equID, UINT8 alarmSeverity, UINT8 alarmClearFlag, char *avFileName, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1898,7 +1731,7 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 u
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;
@@ -1940,7 +1773,7 @@ OPSTAT func_cloudvela_huanbao_alarm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 u
 
 //For performance report
 //rcv输入参数，buf输出参数
-extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT32 cloudVelaConnCnt, UINT32 cloudVelaConnFailCnt, UINT32 cloudVelaDiscCnt, UINT32 SocketDiscCnt, UINT32 TaskRestartCnt, UINT32 cpu_occupy, UINT32 mem_occupy, UINT32 disk_occupy, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+extern OPSTAT func_cloudvela_stdzhb_msg_pm_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT32 cloudVelaConnCnt, UINT32 cloudVelaConnFailCnt, UINT32 cloudVelaDiscCnt, UINT32 SocketDiscCnt, UINT32 TaskRestartCnt, UINT32 cpu_occupy, UINT32 mem_occupy, UINT32 disk_occupy, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1983,7 +1816,7 @@ extern OPSTAT func_cloudvela_huanbao_pm_msg_pack(UINT8 msgType, UINT8 cmdId, UIN
 			return FAILURE;
 		}
 
-		if (func_cloudvela_standard_xml_pack(&xmlFormat, buf) == FAILURE){
+		if (func_cloudvela_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Pack message error!\n");
 			return FAILURE;

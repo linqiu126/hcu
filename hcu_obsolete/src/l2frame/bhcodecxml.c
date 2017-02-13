@@ -21,7 +21,7 @@ extern UINT32 CMDPollingNoCommandNum;
 //XML自定义标准的编码函数方式
 //完全自己手动编码的方式，未来可以灵活的改动
 //也可以考虑使用XML的标准函数来做，但其实最大的内容部分，也是靠手工编码的，并没有省略多少复杂度
-OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdxml_msg_pack(CloudBhItfDevReportStdXml_t *xmlFormat, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (xmlFormat == NULL){
@@ -236,7 +236,7 @@ OPSTAT func_cloudvela_standard_xml_pack(CloudBhItfDevReportStdXml_t *xmlFormat, 
 }
 
 
-OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=0, cmdId=0;
 	//int ret = 0;
@@ -264,7 +264,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 	if (cmdId ==L3CI_heart_beat)
 	{
-		if (func_cloudvela_standard_xml_heart_beat_msg_unpack(rcv) == FAILURE){
+		if (func_cloudvela_stdxml_heart_beat_unpack(rcv) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error unpack receiving message!\n");
 			return FAILURE;
@@ -354,7 +354,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	{
 		case L3CI_emc:
 
-			if (func_cloudvela_standard_xml_emc_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_emc_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of EMC!\n");
 				return FAILURE;
@@ -362,7 +362,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_pm25:
-			if (func_cloudvela_standard_xml_pm25_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_pm25_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of PM25!\n");
 				return FAILURE;
@@ -370,7 +370,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_winddir:
-			if (func_cloudvela_standard_xml_winddir_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_winddir_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of WINDDIR!\n");
 				return FAILURE;
@@ -378,7 +378,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_windspd:
-			if (func_cloudvela_standard_xml_windspd_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_windspd_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of WINDSPD!\n");
 				return FAILURE;
@@ -386,7 +386,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_temp:
-			if (func_cloudvela_standard_xml_temp_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_temp_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of TEMP!\n");
 				return FAILURE;
@@ -394,7 +394,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_humid:
-			if (func_cloudvela_standard_xml_humid_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_humid_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message HUMID!\n");
 				return FAILURE;
@@ -402,7 +402,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_noise:
-			if (func_cloudvela_standard_xml_noise_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_noise_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of NOISE!\n");
 				return FAILURE;
@@ -410,7 +410,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_hsmmp:
-			if (func_cloudvela_standard_xml_hsmmp_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_hsmmp_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of HSMMP!\n");
 				return FAILURE;
@@ -418,7 +418,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_hcu_inventory:
-			if (func_cloudvela_standard_xml_hcuinventory_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_hcuinventory_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of SW INVENTORY!\n");
 				return FAILURE;
@@ -426,7 +426,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 			break;
 
 		case L3CI_sw_package:
-			if (func_cloudvela_standard_xml_swpackage_msg_unpack(rcv) == FAILURE){
+			if (func_cloudvela_stdxml_msg_swpackage_unpack(rcv) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Error unpack receiving message of SW PACKAGE!\n");
 				return FAILURE;
@@ -445,7 +445,7 @@ OPSTAT func_cloudvela_standard_xml_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_heart_beat_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0;  //, cmdId=0
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -482,7 +482,7 @@ OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvel
 	//暂时没有层2的帧号，所以不用对帧号进行处理
 
 	//也许会有其它潜在的状态转移困惑，所以这里的ONLINE状态只是为了做一定的检查，防止出现各种奇怪现象，而不是为了设置状态
-	if (func_cloudvela_heart_beat_received_handle() == FAILURE){
+	if (func_cloudvela_hb_link_rcv_signal_check() == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Heart_beat processing error!\n");
 		return FAILURE;
@@ -492,7 +492,7 @@ OPSTAT func_cloudvela_standard_xml_heart_beat_msg_unpack(msg_struct_com_cloudvel
 }
 
 
-OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_emc_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -717,7 +717,7 @@ OPSTAT func_cloudvela_standard_xml_emc_msg_unpack(msg_struct_com_cloudvela_data_
 }
 
 
-OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_pm25_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -936,7 +936,7 @@ OPSTAT func_cloudvela_standard_xml_pm25_msg_unpack(msg_struct_com_cloudvela_data
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_winddir_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -1158,7 +1158,7 @@ OPSTAT func_cloudvela_standard_xml_winddir_msg_unpack(msg_struct_com_cloudvela_d
 }
 
 
-OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_windspd_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -1381,7 +1381,7 @@ OPSTAT func_cloudvela_standard_xml_windspd_msg_unpack(msg_struct_com_cloudvela_d
 }
 
 
-OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_temp_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -1603,7 +1603,7 @@ OPSTAT func_cloudvela_standard_xml_temp_msg_unpack(msg_struct_com_cloudvela_data
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_humid_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -1825,7 +1825,7 @@ OPSTAT func_cloudvela_standard_xml_humid_msg_unpack(msg_struct_com_cloudvela_dat
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_noise_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, it=0, len=0, ret=0, cmdId=0, optId=0, equId=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -2047,7 +2047,7 @@ OPSTAT func_cloudvela_standard_xml_noise_msg_unpack(msg_struct_com_cloudvela_dat
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_hsmmp_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, avUpload=0, ret=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -2110,7 +2110,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 			CloudDataSendBuf_t buf;
 			memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 			//打包数据
-			if (FAILURE == func_cloudvela_huanbao_av_upload_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, avUpload, st, &buf))
+			if (FAILURE == func_cloudvela_stdzhb_msg_av_upload_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, avUpload, st, &buf))
 			{
 				HcuErrorPrint("CLOUDVELA: Package message error!\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -2143,7 +2143,7 @@ OPSTAT func_cloudvela_standard_xml_hsmmp_msg_unpack(msg_struct_com_cloudvela_dat
 
 
 //for hcu sw invertory by shanchun
-OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_hcuinventory_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, ret=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -2204,7 +2204,7 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 				CloudDataSendBuf_t buf;
 				memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 				//打包数据
-				if (FAILURE == func_cloudvela_huanbao_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &hcuInventoryInfo, &buf))
+				if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &hcuInventoryInfo, &buf))
 				{
 					HcuErrorPrint("CLOUDVELA: Package message error!\n");
 					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -2236,7 +2236,7 @@ OPSTAT func_cloudvela_standard_xml_hcuinventory_msg_unpack(msg_struct_com_cloudv
 
 
 //for hcu sw package by shanchun
-OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
+OPSTAT func_cloudvela_stdxml_msg_swpackage_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, swDownload=0, ret=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
@@ -2307,7 +2307,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 				CloudDataSendBuf_t buf;
 				memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 				//打包数据
-				if (FAILURE == func_cloudvela_huanbao_sw_download_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, swDownload, &buf))
+				if (FAILURE == func_cloudvela_stdzhb_msg_sw_download_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, swDownload, &buf))
 				{
 					HcuErrorPrint("CLOUDVELA: Package message error!\n");
 					zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -2379,7 +2379,7 @@ OPSTAT func_cloudvela_standard_xml_swpackage_msg_unpack(msg_struct_com_cloudvela
 					CloudDataSendBuf_t buf;
 					memset(&buf, 0, sizeof(CloudDataSendBuf_t));
 					//打包数据
-					if (func_cloudvela_huanbao_sw_download_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, swDownload, &buf) == FAILURE)
+					if (func_cloudvela_stdzhb_msg_sw_download_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, swDownload, &buf) == FAILURE)
 					{
 						HcuErrorPrint("CLOUDVELA: Package message error!\n");
 						zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
