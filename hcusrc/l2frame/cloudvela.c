@@ -419,8 +419,15 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error message length to send back for cloud!\n");
 
 	//根据系统配置，决定使用那一种后台网络
+<<<<<<< HEAD
 	if (gTaskCloudvelaContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
+=======
+	if (gCloudvelaTaskContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
+		if (hcu_ethernet_socket_data_send(buf) == FAILURE){
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
+		}
+>>>>>>> 18c9116ae1b25195d2eb190464fe481f53bfab71
 	}
 	else if (gTaskCloudvelaContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET){
 		if (hcu_usbnet_data_send(buf) == FAILURE){
