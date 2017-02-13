@@ -60,8 +60,10 @@ HcuFsmStateItem_t HcuFsmHsmmp[] =
 
 //Global Variables
 
-//用于描述发送到后台，多少次才发送一次
-UINT32 zHcuHsmmpSendSaeCnt = 0;
+
+//Task Global variables
+gTaskHsmmpContext_t gTaskHsmmpContext;
+//UINT32 gTaskHsmmpContext.sendSaeCnt = 0;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -106,8 +108,8 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	}
 
 	//Task global variables init.
-	zHcuHsmmpSendSaeCnt = 0;
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP] = 0;
+	memset(&gTaskHsmmpContext, 0, sizeof(gTaskHsmmpContext_t));
 
 	//等待随机长度的时长，一分钟/60秒之类，然后再开始干活，以便减少所有传感器相互碰撞的几率，让所有任务分布更加平均
 	i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
@@ -444,9 +446,9 @@ OPSTAT func_hsmmp_time_out_period(void)
         return FAILURE;
     }
 	//发送后台的控制器，目前暂时是以10次回送一次的方式，未来可以由服务器后台控制
-    zHcuHsmmpSendSaeCnt++;
-    zHcuHsmmpSendSaeCnt = (zHcuHsmmpSendSaeCnt % HSMMP_SEND_BACK_MOD_BASE);
-	if (zHcuHsmmpSendSaeCnt == 0){
+    gTaskHsmmpContext.sendSaeCnt++;
+    gTaskHsmmpContext.sendSaeCnt = (gTaskHsmmpContext.sendSaeCnt % HSMMP_SEND_BACK_MOD_BASE);
+	if (gTaskHsmmpContext.sendSaeCnt == 0){
 		snd.boolBackCloud = TRUE;
 	}else{
 		snd.boolBackCloud = FALSE;

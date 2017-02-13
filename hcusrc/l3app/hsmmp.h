@@ -38,6 +38,12 @@ typedef struct dir
 //Global variables
 extern HcuFsmStateItem_t HcuFsmHsmmp[];
 
+typedef struct gTaskHsmmpContext
+{
+	UINT32 sendSaeCnt;  //用于描述发送到后台，多少次才发送一次
+}gTaskHsmmpContext_t;
+
+
 //定时器，控制摄像头工作周期及时长
 //#define HSMMP_TIMER_DURATION_PERIOD_AVORION_READ 60 //should be 600second = 10分钟, in second
 #define HSMMP_AVORION_CAPTURE_DURATION_DEFAULT 2 //10 second

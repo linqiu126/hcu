@@ -1463,14 +1463,12 @@ typedef enum
 
   //ALARM REPORT
 	HUITP_IEID_uni_alarm_info_min                   = 0xB000, 
-	HUITP_IEID_uni_alarm_info_type                  = 0xB000, 
-	HUITP_IEID_uni_alarm_info_value                 = 0xB001, 
+	HUITP_IEID_uni_alarm_info_element               = 0xB000,
 	HUITP_IEID_uni_alarm_info_max,
 
   //PM Report
 	HUITP_IEID_uni_performance_info_min             = 0xB100, 
-	HUITP_IEID_uni_performance_info_type            = 0xB100, 
-	HUITP_IEID_uni_performance_info_value           = 0xB101, 
+	HUITP_IEID_uni_performance_info_element         = 0xB100,
 	HUITP_IEID_uni_performance_info_max,
 
   //设备基本信息
@@ -3082,43 +3080,41 @@ typedef struct StrIe_HUITP_IEID_uni_sw_package_body
 
 //ALARM REPORT
 //HUITP_IEID_uni_alarm_info_min                   = 0xB000, 
-//HUITP_IEID_uni_alarm_info_type                  = 0xB000,
-typedef struct StrIe_HUITP_IEID_uni_alarm_info_type
+//HUITP_IEID_uni_alarm_info_element               = 0xB000,
+#define HUITP_IEID_UNI_ALARM_INFO_ELEMENT_DESC_LEN_MAX 100
+typedef struct StrIe_HUITP_IEID_uni_alarm_info_element
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 alarmInfoType;
-}StrIe_HUITP_IEID_uni_alarm_info_type_t;
-
-//HUITP_IEID_uni_alarm_info_value                 = 0xB001, 
-typedef struct StrIe_HUITP_IEID_uni_alarm_info_value
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT8  dataFormat;
-	UINT16 alarmInfoValue;
-}StrIe_HUITP_IEID_uni_alarm_info_value_t;
+	UINT16 alarmType;
+	UINT8  alarmServerity;
+	UINT8  alarmClearFlag;
+	UINT32 equID;
+	UINT32 causeId;
+	UINT32 alarmContent;
+	char   alarmDesc[HUITP_IEID_UNI_ALARM_INFO_ELEMENT_DESC_LEN_MAX];
+	UINT32 timeStamp;
+}StrIe_HUITP_IEID_uni_alarm_info_element_t;
 
 //HUITP_IEID_uni_alarm_info_max,
 
 //PM Report
 //HUITP_IEID_uni_performance_info_min             = 0xB100, 
-//HUITP_IEID_uni_performance_info_type            = 0xB100,
-typedef struct StrIe_HUITP_IEID_uni_performance_info_type
+//HUITP_IEID_uni_performance_info_element         = 0xB100,
+typedef struct StrIe_HUITP_IEID_uni_performance_info_element
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 pmInfoType;
-}StrIe_HUITP_IEID_uni_performance_info_type_t;
-
-//HUITP_IEID_uni_performance_info_value           = 0xB101, 
-typedef struct StrIe_HUITP_IEID_uni_performance_info_value
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT8  dataFormat;
-	UINT16 pmInfoValue;
-}StrIe_HUITP_IEID_uni_performance_info_value_t;
+	UINT32 restartCnt;
+	UINT32 networkConnCnt;
+	UINT32 networkConnFailCnt;
+	UINT32 networkDiscCnt;
+	UINT32 socketDiscCnt;
+	UINT32 cpuOccupy;
+	UINT32 memOccupy;
+	UINT32 diskOccupy;
+	UINT32 timeStamp;
+}StrIe_HUITP_IEID_uni_performance_info_element_t;
 
 //HUITP_IEID_uni_performance_info_max,
 
@@ -8071,7 +8067,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_alarm_info_resp
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_alarm_info_value_t respValue;
+	StrIe_HUITP_IEID_uni_alarm_info_element_t respValue;
 }StrMsg_HUITP_MSGID_uni_alarm_info_resp_t;
 
 //HUITP_MSGID_uni_alarm_info_report                = 0xB081,
@@ -8080,7 +8076,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_alarm_info_report
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_alarm_info_value_t reportValue;	
+	StrIe_HUITP_IEID_uni_alarm_info_element_t reportValue;
 }StrMsg_HUITP_MSGID_uni_alarm_info_report_t;
 
 //HUITP_MSGID_uni_alarm_info_confirm                   = 0xB001, 
@@ -8109,7 +8105,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_performance_info_resp
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_performance_info_value_t respValue;
+	StrIe_HUITP_IEID_uni_performance_info_element_t respValue;
 }StrMsg_HUITP_MSGID_uni_performance_info_resp_t;
 
 //HUITP_MSGID_uni_performance_info_report          = 0xB181, 
@@ -8118,7 +8114,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_performance_info_report
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_performance_info_value_t reportValue;	
+	StrIe_HUITP_IEID_uni_performance_info_element_t reportValue;
 }StrMsg_HUITP_MSGID_uni_performance_info_report_t;
 
 //HUITP_MSGID_uni_performance_info_confirm             = 0xB101,

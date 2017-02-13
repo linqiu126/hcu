@@ -20,7 +20,7 @@
 #include "../l2frame/cloudvela.h"
 
 //XML message pack/unpack
-extern OPSTAT func_cloudvela_huitpxml_msg_pack(UINT8 msgType, char *funcFlag, UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output);
+extern OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output);
 extern OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId);
 extern void   func_cloudvela_huitpxml_msg_generate_test_data(void);
 extern OPSTAT func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_req_t *rcv);

@@ -10,9 +10,11 @@
 #include "../l1com/hwinv.h"
 #include "../l2codec/bhcodeczhb.h"
 
-//Task Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
+//Global variables
 
+
+//Task Global variables
+extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数

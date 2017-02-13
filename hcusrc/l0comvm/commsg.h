@@ -844,10 +844,11 @@ typedef struct  sensor_toxicgas_zp01voc_data_element //
 #define IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX 20
 typedef struct msgie_struct_bh_com_head
 {
+	UINT8 msgType;
 	char  srcUser[IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX];
 	char  destUser[IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX];
 	UINT32 timeStamp;
-	UINT32 funcFlag;
+	char  funcFlag[IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX];
 }msgie_struct_bh_com_head_t;
 typedef struct msgie_struct_bfsc_scale_weight_sta_element
 {
@@ -2181,13 +2182,24 @@ typedef struct msg_struct_pm_report
 typedef struct msg_struct_cloudvela_spspm_alarm_req
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
 	UINT32 length;
 }msg_struct_cloudvela_spspm_alarm_req_t;
 
 //MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,
+#define HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX 100
 typedef struct msg_struct_spspm_cloudvela_alarm_resp
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT16 alarmType;
+	UINT8  alarmServerity;
+	UINT8  alarmClearFlag;
+	UINT32 equID;
+	UINT32 causeId;
+	UINT32 alarmContent;
+	char   alarmDesc[HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX];
+	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_alarm_resp_t;
 
@@ -2195,6 +2207,15 @@ typedef struct msg_struct_spspm_cloudvela_alarm_resp
 typedef struct msg_struct_spspm_cloudvela_alarm_report
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT16 alarmType;
+	UINT8  alarmServerity;
+	UINT8  alarmClearFlag;
+	UINT32 equID;
+	UINT32 causeId;
+	UINT32 alarmContent;
+	char   alarmDesc[HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX];
+	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_alarm_report_t;
 
@@ -2202,6 +2223,7 @@ typedef struct msg_struct_spspm_cloudvela_alarm_report
 typedef struct msg_struct_cloudvela_spspm_alarm_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
 	UINT32 length;
 }msg_struct_cloudvela_spspm_alarm_confirm_t;
 
@@ -2209,6 +2231,7 @@ typedef struct msg_struct_cloudvela_spspm_alarm_confirm
 typedef struct msg_struct_cloudvela_spspm_perfm_req
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
 	UINT32 length;
 }msg_struct_cloudvela_spspm_perfm_req_t;
 
@@ -2216,6 +2239,16 @@ typedef struct msg_struct_cloudvela_spspm_perfm_req
 typedef struct msg_struct_spspm_cloudvela_perfm_resp
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 restartCnt;
+	UINT32 networkConnCnt;
+	UINT32 networkConnFailCnt;
+	UINT32 networkDiscCnt;
+	UINT32 socketDiscCnt;
+	UINT32 cpuOccupy;
+	UINT32 memOccupy;
+	UINT32 diskOccupy;
+	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_perfm_resp_t;
 
@@ -2223,6 +2256,16 @@ typedef struct msg_struct_spspm_cloudvela_perfm_resp
 typedef struct msg_struct_spspm_cloudvela_perfm_report
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 restartCnt;
+	UINT32 networkConnCnt;
+	UINT32 networkConnFailCnt;
+	UINT32 networkDiscCnt;
+	UINT32 socketDiscCnt;
+	UINT32 cpuOccupy;
+	UINT32 memOccupy;
+	UINT32 diskOccupy;
+	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_perfm_report_t;
 
@@ -2230,6 +2273,7 @@ typedef struct msg_struct_spspm_cloudvela_perfm_report
 typedef struct msg_struct_cloudvela_spspm_perfm_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
 	UINT32 length;
 }msg_struct_cloudvela_spspm_perfm_confirm_t;
 
@@ -2237,6 +2281,7 @@ typedef struct msg_struct_cloudvela_spspm_perfm_confirm
 typedef struct msg_struct_cloudvela_spspm_inventory_req
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
 	UINT32 length;
 }msg_struct_cloudvela_spspm_inventory_req_t;
 
@@ -2244,6 +2289,7 @@ typedef struct msg_struct_cloudvela_spspm_inventory_req
 typedef struct msg_struct_spspm_cloudvela_inventory_resp
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_inventory_resp_t;
 
@@ -2251,6 +2297,7 @@ typedef struct msg_struct_spspm_cloudvela_inventory_resp
 typedef struct msg_struct_spspm_cloudvela_inventory_report
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_inventory_report_t;
 
@@ -2258,6 +2305,7 @@ typedef struct msg_struct_spspm_cloudvela_inventory_report
 typedef struct msg_struct_cloudvela_spspm_inventory_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
 	UINT32 length;
 }msg_struct_cloudvela_spspm_inventory_confirm_t;
 
@@ -2265,6 +2313,7 @@ typedef struct msg_struct_cloudvela_spspm_inventory_confirm
 typedef struct msg_struct_cloudvela_spspm_sw_package_req
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
 	UINT32 length;
 }msg_struct_cloudvela_spspm_sw_package_req_t;
 
@@ -2272,6 +2321,7 @@ typedef struct msg_struct_cloudvela_spspm_sw_package_req
 typedef struct msg_struct_spspm_cloudvela_sw_package_resp
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_sw_package_resp_t;
 
@@ -2279,6 +2329,7 @@ typedef struct msg_struct_spspm_cloudvela_sw_package_resp
 typedef struct msg_struct_spspm_cloudvela_sw_package_report
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_sw_package_report_t;
 
@@ -2286,6 +2337,7 @@ typedef struct msg_struct_spspm_cloudvela_sw_package_report
 typedef struct msg_struct_cloudvela_spspm_sw_packag_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
 	UINT32 length;
 }msg_struct_cloudvela_spspm_sw_packag_confirm_t;
 

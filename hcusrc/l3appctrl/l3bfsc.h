@@ -51,7 +51,7 @@ typedef struct L3BfscSensorWsInfo
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 5		//秤盘有料待抛弃
 
 //组合目标的控制表
-typedef struct L3BfscGenCtrlTable
+typedef struct gTaskL3bfscContext
 {
 	UINT32  targetValue;
 	UINT32	targetUpLimit;
@@ -70,7 +70,9 @@ typedef struct L3BfscGenCtrlTable
 	UINT32	wsTotalCombOutMatCnt;		//总共出料的数量
 	UINT32	wsTotalGiveupTimes;  		//总共被TGU的次数
 	UINT32	wsTotalGiveupMatCnt;		//总共被抛弃的数量
-}L3BfscGenCtrlTable_t;
+	UINT8   *SearchCoefficientPointer;
+	UINT32  searchSpaceTotalNbr; //搜索的长度，12对应4096
+}gTaskL3bfscContext_t;
 //#define HCU_L3BFSC_WHOLE_STATUS_INVALID		0
 //#define HCU_L3BFSC_WHOLE_STATUS_INVALID1	255
 //#define HCU_L3BFSC_WHOLE_STATUS_TO_COMB		1

@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="StrIe_HUITP_IEID_uni_performance_info_element_t" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle"/>
-			<item value="func_cloudvela_huitpxml_msg_bfsc_comb_scale_cmd_req_received_handle"/>
-			<item value="func_cloudvela_huitpxml_msg_bfsc_comb_scale_event_confirm_received_handle"/>
-			<item value="func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_confirm_received_handle"/>
-			<item value="func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_req_received_handle"/>
-			<item value="0x3B"/>
-			<item value="func_cloudvela_socket_conn_setup"/>
-			<item value="sw_download"/>
+			<item value="StrIe_HUITP_IEID_uni_performance_info_element_t"/>
+			<item value="HUITP_IEID_uni_performance_info_element"/>
+			<item value="0xB1"/>
+			<item value="StrIe_HUITP_IEID_uni_com_confirm_t"/>
+			<item value="HUITP_IEID_uni_performance_info_min"/>
+			<item value="B1"/>
+			<item value="MSG_ID_COM_PM_REPORT"/>
+			<item value="PM"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HUITPXML"/>
+			<item value="gTaskCloudvelaContext"/>
 			<item value="hcu_ethernet_socket_data_send"/>
 			<item value="gCloudvelaTaskContext"/>
 			<item value="HCU_SYSCFG_CLOUD_HCU_NAME"/>
 			<item value="func_cloudvela_stdzhb_msg_alarm_pack"/>
 			<item value="func_cloudvela_stdzhb_msg_unpack"/>
 			<item value="func_cloudvela_stdzhb_msg_pm25_cmd_pack"/>
-			<item value="func_cloudvela_stdzhb_msg_pm25_pack"/>
-			<item value="func_cloudvela_stdzhb_msg_emc_pack"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1050" key="DIALOG_X_ORIGIN"/>
-		<item value="277" key="DIALOG_Y_ORIGIN"/>
+		<item value="1199" key="DIALOG_X_ORIGIN"/>
+		<item value="316" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

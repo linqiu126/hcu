@@ -11,12 +11,10 @@
 #include "../l2codec/bhcodecxml.h"
 #include "../l0webser/ftp.h"
 
+//Global variables
+
 //Task Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
-//Added by Shanchun for CMD command
-//extern UINT8 CMDShortTimerFlag;
-//extern UINT8 CMDLongTimerFlag;
-//extern UINT32 CMDPollingNoCommandNum;
+extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
 
 //XML自定义标准的编码函数方式
 //完全自己手动编码的方式，未来可以灵活的改动
