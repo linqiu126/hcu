@@ -42,8 +42,9 @@ HcuFsmStateItem_t HcuFsmEthernet[] =
 };
 
 //Global Variables
-int zHcuEthConClientFd = 0;
-int socket_connected = FALSE;
+
+//Taks Global Variables
+extern HcuCloudvelaTaskContext_t gCloudvelaTaskContex;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -123,48 +124,48 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		//send(zHcuEthConClientFd,receiveBuffer.buf,receiveBuffer.length,0);
 		memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
 
-		idata = recv(zHcuEthConClientFd, &receiveBuffer.buf,HCU_SYSMSG_COM_MSG_BODY_LEN_MAX,0);
+		idata = recv(gCloudvelaTaskContex.ethConClientFd, &receiveBuffer.buf,HCU_SYSMSG_COM_MSG_BODY_LEN_MAX,0);
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
 			HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
-			socket_connected = FALSE;
+			gCloudvelaTaskContex.socket_connected = FALSE;
 			//return FAILURE;
 
-			close(zHcuEthConClientFd);
-			zHcuEthConClientFd = socket(AF_INET, SOCK_STREAM,0);
+			close(gCloudvelaTaskContex.ethConClientFd);
+			gCloudvelaTaskContex.ethConClientFd = socket(AF_INET, SOCK_STREAM,0);
 
-			if(zHcuEthConClientFd < 0){
+			if(gCloudvelaTaskContex.ethConClientFd < 0){
 				HcuErrorPrint("ETHERNET: Can not create socket!\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 				//return FAILURE;
 			}
 
-			if(setsockopt(zHcuEthConClientFd, SOL_SOCKET, SO_KEEPALIVE,(void*)&keepAlive, sizeof(keepAlive)) == -1)
+			if(setsockopt(gCloudvelaTaskContex.ethConClientFd, SOL_SOCKET, SO_KEEPALIVE,(void*)&keepAlive, sizeof(keepAlive)) == -1)
 				HcuErrorPrint("ETHERNET: setsockopt SO_KEEPALIVE error!\n");
-			if(setsockopt(zHcuEthConClientFd, SOL_TCP, TCP_KEEPIDLE,(void*)&keepIdle, sizeof(keepIdle)) == -1)
+			if(setsockopt(gCloudvelaTaskContex.ethConClientFd, SOL_TCP, TCP_KEEPIDLE,(void*)&keepIdle, sizeof(keepIdle)) == -1)
 				HcuErrorPrint("ETHERNET: setsockopt SO_KEEPIDLE error!\n");
-			if(setsockopt(zHcuEthConClientFd, SOL_TCP, TCP_KEEPINTVL,(void*)&keepInterval, sizeof(keepInterval)) == -1)
+			if(setsockopt(gCloudvelaTaskContex.ethConClientFd, SOL_TCP, TCP_KEEPINTVL,(void*)&keepInterval, sizeof(keepInterval)) == -1)
 				HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPINTVL error!\n");
-			if(setsockopt(zHcuEthConClientFd, SOL_TCP, TCP_KEEPCNT,(void*)&keepCount, sizeof(keepCount)) == -1)
+			if(setsockopt(gCloudvelaTaskContex.ethConClientFd, SOL_TCP, TCP_KEEPCNT,(void*)&keepCount, sizeof(keepCount)) == -1)
 				HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPCNT error!\n");
-			if( connect(zHcuEthConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
+			if( connect(gCloudvelaTaskContex.ethConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 			{
 				HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
-				socket_connected = FALSE;
+				gCloudvelaTaskContex.socket_connected = FALSE;
 			}
 			else
 			{
 				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n");
 				echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
-				if (send(zHcuEthConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
+				if (send(gCloudvelaTaskContex.ethConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
 					HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
 					zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 				}
 				else{
-					socket_connected = TRUE;
+					gCloudvelaTaskContex.socket_connected = TRUE;
 					HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.cloudBhHcuName);
 				}
 			}
@@ -187,7 +188,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	}//while(1) end
 
 	//出来后，断链
-	close(zHcuEthConClientFd);
+	close(gCloudvelaTaskContex.ethConClientFd);
 
 	//返回
 	return SUCCESS;
@@ -222,10 +223,10 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 {
 	int ret=0;
 	//创建Client端套接字描述符
-	zHcuEthConClientFd = socket(AF_INET, SOCK_STREAM,0);
+	gCloudvelaTaskContex.ethConClientFd = socket(AF_INET, SOCK_STREAM,0);
 
-	if(zHcuEthConClientFd < 0){
-		socket_connected = FALSE;
+	if(gCloudvelaTaskContex.ethConClientFd < 0){
+		gCloudvelaTaskContex.socket_connected = FALSE;
 		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Can not create socket!\n");
 	}
 
@@ -249,19 +250,19 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	int keepCount = HCU_CLOUDSRV_SOCKET_KEEPCOUNT; //count before disconnect Keepalive
 
 
-	if(setsockopt(zHcuEthConClientFd, SOL_SOCKET, SO_KEEPALIVE,(void*)&keepAlive, sizeof(keepAlive)) == -1)
+	if(setsockopt(gCloudvelaTaskContex.ethConClientFd, SOL_SOCKET, SO_KEEPALIVE,(void*)&keepAlive, sizeof(keepAlive)) == -1)
 		HcuErrorPrint("ETHERNET: setsockopt SO_KEEPALIVE error!\n");
-	if(setsockopt(zHcuEthConClientFd, SOL_TCP, TCP_KEEPIDLE,(void*)&keepIdle, sizeof(keepIdle)) == -1)
+	if(setsockopt(gCloudvelaTaskContex.ethConClientFd, SOL_TCP, TCP_KEEPIDLE,(void*)&keepIdle, sizeof(keepIdle)) == -1)
 		HcuErrorPrint("ETHERNET: setsockopt SO_KEEPIDLE error!\n");
-	if(setsockopt(zHcuEthConClientFd, SOL_TCP, TCP_KEEPINTVL,(void*)&keepInterval, sizeof(keepInterval)) == -1)
+	if(setsockopt(gCloudvelaTaskContex.ethConClientFd, SOL_TCP, TCP_KEEPINTVL,(void*)&keepInterval, sizeof(keepInterval)) == -1)
 		HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPINTVL error!\n");
-	if(setsockopt(zHcuEthConClientFd, SOL_TCP, TCP_KEEPCNT,(void*)&keepCount, sizeof(keepCount)) == -1)
+	if(setsockopt(gCloudvelaTaskContex.ethConClientFd, SOL_TCP, TCP_KEEPCNT,(void*)&keepCount, sizeof(keepCount)) == -1)
 		HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPCNT error!\n");
-	if( connect(zHcuEthConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
+	if( connect(gCloudvelaTaskContex.ethConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 	{
 		HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
-		socket_connected = FALSE;
+		gCloudvelaTaskContex.socket_connected = FALSE;
 		//to restart this task
 		hcu_usleep(HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV * 10);
 		msg_struct_com_restart_t snd0;
@@ -276,12 +277,12 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	{
 		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected\n");
 		echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
-		if (send(zHcuEthConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
+		if (send(gCloudvelaTaskContex.ethConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen){
 			HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 		}
 		else{
-			socket_connected = TRUE;
+			gCloudvelaTaskContex.socket_connected = TRUE;
 		}
 	}
 
@@ -299,11 +300,11 @@ OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
 {
 
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-		if(zHcuEthConClientFd < 0) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "CLOUDVELA: socket id is not valid!\n");
+		if(gCloudvelaTaskContex.ethConClientFd < 0) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "CLOUDVELA: socket id is not valid!\n");
 	}
 
-	if (send(zHcuEthConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
-		socket_connected = FALSE;
+	if (send(gCloudvelaTaskContex.ethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
+		gCloudvelaTaskContex.socket_connected = FALSE;
 		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
 	}else{
 		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);

@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="JASON" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="ClientFd" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="ClientFd"/>
+			<item value="socket_connected"/>
+			<item value="gCloudvelaTaskContex"/>
+			<item value="socket"/>
 			<item value="JASON"/>
 			<item value="func_cloudvela_huanbao_pm_msg_pack"/>
 			<item value="func_cloudvela_huanbao_alarm_msg_pack"/>
 			<item value="func_cloudvela_huanbao_bfsc_msg_pack"/>
-			<item value="func_cloudvela_huanbao_hcu_inventory_pack"/>
-			<item value="func_cloudvela_huanbao_av_upload_pack"/>
-			<item value="func_cloudvela_huanbao_sw_download_pack"/>
-			<item value="func_cloudvela_huanbao_hsmmp_msg_pack"/>
 		</list>
 		<list key="replacehistory">
 			<item value="func_cloudvela_stdzhb_msg_alarm_pack"/>

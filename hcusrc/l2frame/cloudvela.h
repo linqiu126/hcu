@@ -32,6 +32,8 @@ enum FSM_STATE_CLOUDVELA
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmCloudvela[];
+extern HcuCloudvelaTaskContext_t gCloudvelaTaskContex;
+
 
 //FSM API
 extern OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
