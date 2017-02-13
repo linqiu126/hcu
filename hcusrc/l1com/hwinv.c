@@ -386,7 +386,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		//后台部分
 		strncpy(zHcuSysEngPar.cloud.svrAddrHttpLocal, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpLocal))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpLocal)));
 		strncpy(zHcuSysEngPar.cloud.hcuName, HCU_SYSCFG_CLOUD_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)<sizeof(zHcuSysEngPar.cloud.hcuName))?(sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)):(sizeof(zHcuSysEngPar.cloud.hcuName)));
-		zHcuSysEngPar.cloud.bhItfFrameStd = HCU_SYSCFG_CLOUD_BH_ITF_STD_SET;
+		zHcuSysEngPar.cloud.svrBhItfFrameStdDefault = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET;
 		strncpy(zHcuSysEngPar.cloud.svrAddrSocketipDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault)));
 		strncpy(zHcuSysEngPar.cloud.svrAddrHttpDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpDefault)));
 		strncpy(zHcuSysEngPar.cloud.svrNameDefault, HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrNameDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrNameDefault)));
@@ -415,6 +415,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	strncpy(zHcuSysEngPar.cloud.svrAddrHttpHome, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome)));
 	strncpy(zHcuSysEngPar.cloud.svrNameHome, HCU_SYSCFG_CLOUD_SVR_NAME_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)<sizeof(zHcuSysEngPar.cloud.svrNameHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)):(sizeof(zHcuSysEngPar.cloud.svrNameHome)));
 	zHcuSysEngPar.cloud.svrPortHome = HCU_SYSCFG_CLOUD_SVR_PORT_HOME;
+	zHcuSysEngPar.cloud.svrBhItfFrameStdHome = HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET;
 
 	//读取HcuTraceModuleCtr表单到系统内存中
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);

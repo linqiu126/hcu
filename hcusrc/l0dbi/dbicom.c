@@ -356,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `svraddhttpdefault` char(200) NOT NULL,
   `svrnamedefault` char(12) NOT NULL,
   `hcuname` char(20) NOT NULL,
-  `bhitfframestd` int(1) NOT NULL,
+  `svrbhitfframestddefault` int(1) NOT NULL,
   `cloudftpadd` char(64) NOT NULL,
   `cloudftpuser` char(12) NOT NULL,
   `cloudftppwd` char(12) NOT NULL,
@@ -380,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 -- Dumping data for table `hcusysengpar`
 --
 
-INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`,`seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `svraddhttplocal`, `svraddsocketipdefault`, `svraddhttpdefault`, `svrnamedefault`, `hcuname`, `bhitfframestd`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
+INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`,`seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `svraddhttplocal`, `svraddsocketipdefault`, `svraddhttpdefault`, `svrnamedefault`, `hcuname`, `svrbhitfframestddefault`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
 ('HCU_PRJ_AQYCG10_335D',     1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php',       'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php',         'XHZN_HCU', 'HCU_G201_AQYC_SH001', 1, 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_AQYC_OBSOLETE',    1, 'localhost', 'root', '123456', 'hcudb', 3306,  0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php',       'AQ_HCU', 'HCU_G101_AQYC_SH001', 1, 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/home/pi/hcu_sw_download/', '/home/pi/hcu_sw_active/', '/home/pi/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
@@ -833,7 +833,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		if(sqlRow[index]) strncpy(engPar->cloud.svrAddrHttpDefault, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
 		if(sqlRow[index]) strncpy(engPar->cloud.svrNameDefault, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 		if(sqlRow[index]) strncpy(engPar->cloud.hcuName, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
-		if(sqlRow[index]) engPar->cloud.bhItfFrameStd = (UINT8)(atol(sqlRow[index++]) & 0xFF);
+		if(sqlRow[index]) engPar->cloud.svrBhItfFrameStdDefault = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
 		//For HCU SW download
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpAdd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);

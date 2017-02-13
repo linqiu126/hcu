@@ -497,7 +497,7 @@ OPSTAT hcu_hwinv_read_engineering_data_into_mem(void)
 		strcpy(zHcuSysEngPar.cloud.cloudHttpAddWechat, HCU_SYSCFG_CLOUD_HTTP_ADDR_WECHAT);
 		strcpy(zHcuSysEngPar.cloud.cloudBhServerName, HCU_CLOUDVELA_HTTP_SERVER_NAME);
 		strcpy(zHcuSysEngPar.cloud.cloudBhHcuName, HCU_SYSCFG_CLOUD_HCU_NAME);
-		zHcuSysEngPar.cloud.cloudBhItfFrameStd = HCU_SYSCFG_CLOUD_BH_ITF_STD_SET;
+		zHcuSysEngPar.cloud.cloudBhItfFrameStd = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET;
 
 		//for HCU SW FTP by shanchun
 		strcpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_SWM_SERVER_FTP_ADDRESS);

@@ -104,7 +104,7 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 //Global variables
 
 //Task Global variables
-HcuCloudvelaTaskContext_t gCloudvelaTaskContex;
+HcuCloudvelaTaskContext_t gCloudvelaTaskContext;
 
 //Main Entry
 /***************************************************************************************************************************
@@ -156,7 +156,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//Task global variables init，
-	memset(&gCloudvelaTaskContex, 0, sizeof(HcuCloudvelaTaskContext_t));
+	memset(&gCloudvelaTaskContext, 0, sizeof(HcuCloudvelaTaskContext_t));
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] = 0;
 
 	//启动周期性心跳定时器
@@ -256,7 +256,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 
 	//检查链路状态，离线，则再连接
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
-		if ((gCloudvelaTaskContex.socket_connected == TRUE) && (func_cloudvela_socket_conn_setup() == SUCCESS)){
+		if ((gCloudvelaTaskContext.defaultSvrSocketCon == TRUE) && (func_cloudvela_socket_conn_setup() == SUCCESS)){
 			zHcuSysStaPm.statisCnt.cloudVelaConnCnt++;
 			//State Transfer to FSM_STATE_CLOUDVELA_ONLINE
 			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
@@ -285,45 +285,45 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 			//主动断掉链路，需要复位CurrentConnection指示以及Http-Curl全局指针
 
 			//如果当前是3G4G
-			if ((gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
+			if ((gCloudvelaTaskContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
 					((zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 							(zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 							(zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
 				//如果还没有试图重连过
-				if ((gCloudvelaTaskContex.ethConTry == 0) || (gCloudvelaTaskContex.usbnetConTry == 0) || (gCloudvelaTaskContex.wifiConTry == 0)){
+				if ((gCloudvelaTaskContext.ethConTry == 0) || (gCloudvelaTaskContext.usbnetConTry == 0) || (gCloudvelaTaskContext.wifiConTry == 0)){
 					//Disconnect current 3g4g connection!!!
 					if (hcu_3g4g_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect 3G4G link!\n");
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
 					//设置当前工作物理链路为无效
-					gCloudvelaTaskContex.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					gCloudvelaTaskContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
 				//不做任何动作
 			}
 			//如果当前是WIFI
-			else if ((gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
+			else if ((gCloudvelaTaskContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
 				((zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 						(zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
-				if ((gCloudvelaTaskContex.ethConTry == 0) || (gCloudvelaTaskContex.usbnetConTry == 0)){
+				if ((gCloudvelaTaskContext.ethConTry == 0) || (gCloudvelaTaskContext.usbnetConTry == 0)){
 					//Disconnect current wifi connection!!!
 					if (hcu_wifi_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect WIFI link!\n");
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
 					//设置当前工作物理链路为无效
-					gCloudvelaTaskContex.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					gCloudvelaTaskContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
 				//不做任何动作
 			}
 			//如果当前是USBNET
-			else if ((gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
+			else if ((gCloudvelaTaskContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
 					(zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE)){
-				if (gCloudvelaTaskContex.ethConTry == 0){
+				if (gCloudvelaTaskContext.ethConTry == 0){
 					//Disconnect current usbnet connection!!!
 					if (hcu_usbnet_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect USBNET link!\n");
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
 					//设置当前工作物理链路为无效
-					gCloudvelaTaskContex.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					gCloudvelaTaskContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
 				//不做任何动作
 			}
@@ -475,20 +475,20 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error message length to send back for cloud!\n");
 
 	//根据系统配置，决定使用那一种后台网络
-	if (gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
+	if (gCloudvelaTaskContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 	}
-	else if (gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET){
+	else if (gCloudvelaTaskContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET){
 		if (hcu_usbnet_data_send(buf) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 		}
 	}
-	else if (gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI){
+	else if (gCloudvelaTaskContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI){
 		if (hcu_wifi_data_send(buf) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 		}
 	}
-	else if (gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G){
+	else if (gCloudvelaTaskContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G){
 		if (hcu_3g4g_data_send(buf) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 		}
@@ -534,12 +534,12 @@ OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * para
 	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
 
 	//如果是XML自定义格式
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		if (func_cloudvela_stdxml_msg_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 	}
 
 	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		if (func_cloudvela_stdzhb_msg_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 	}
 
@@ -592,7 +592,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	rcv.length = param_len;
 	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
 
-	switch (zHcuSysEngPar.cloud.bhItfFrameStd){
+	switch (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault){
 	case HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML:
 		//不期望任何目标消息
 		if (func_cloudvela_huitpxml_msg_unpack(&rcv, -1) == FAILURE){
@@ -634,10 +634,10 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
-	if ((rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContex.ethConTry = 0;
-	else if ((rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContex.usbnetConTry = 0;
-	else if ((rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContex.wifiConTry = 0;
-	else if ((rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContex.g3g4ConTry = 0;
+	if ((rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContext.ethConTry = 0;
+	else if ((rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContext.usbnetConTry = 0;
+	else if ((rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContext.wifiConTry = 0;
+	else if ((rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContext.g3g4ConTry = 0;
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Message received with error content!\n");
 	}
@@ -761,11 +761,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContex.ethConTry++;
+		gCloudvelaTaskContext.ethConTry++;
 	}
 	if (ret == SUCCESS){
-		gCloudvelaTaskContex.ethConTry = 0;
-		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+		gCloudvelaTaskContext.ethConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 		return SUCCESS;
 	}
 
@@ -775,11 +775,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContex.usbnetConTry++;
+		gCloudvelaTaskContext.usbnetConTry++;
 	}
 	if (ret == SUCCESS){
-		gCloudvelaTaskContex.usbnetConTry = 0;
-		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
+		gCloudvelaTaskContext.usbnetConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
 		return SUCCESS;
 	}
 
@@ -789,11 +789,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContex.wifiConTry++;
+		gCloudvelaTaskContext.wifiConTry++;
 	}
 	if (ret == SUCCESS){
-		gCloudvelaTaskContex.wifiConTry = 0;
-		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
+		gCloudvelaTaskContext.wifiConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
 		return SUCCESS;
 	}
 
@@ -804,11 +804,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContex.g3g4ConTry++;
+		gCloudvelaTaskContext.g3g4ConTry++;
 	}
 	if (ret == SUCCESS){
-		gCloudvelaTaskContex.g3g4ConTry = 0;
-		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
+		gCloudvelaTaskContext.g3g4ConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
 		return SUCCESS;
 	}
 
@@ -1257,7 +1257,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 	CloudDataSendBuf_t pMsgOutput;
 
 	//分格式类型组装
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
 		//准备组装发送消息
 		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_resp_t pMsgProc;
 		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_resp_t);
@@ -1302,13 +1302,13 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
@@ -1335,7 +1335,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 	CloudDataSendBuf_t pMsgOutput;
 
 	//分格式类型组装
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
 		//准备组装发送消息
 		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_report_t pMsgProc;
 		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_report_t);
@@ -1380,13 +1380,13 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
@@ -1413,7 +1413,7 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 	CloudDataSendBuf_t pMsgOutput;
 
 	//分格式类型组装
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
 		//准备组装发送消息
 		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_report_t pMsgProc;
 		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_report_t);
@@ -1445,13 +1445,13 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
@@ -1478,7 +1478,7 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 	CloudDataSendBuf_t pMsgOutput;
 
 	//分格式类型组装
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
 		//准备组装发送消息
 		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp_t pMsgProc;
 		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp_t);
@@ -1510,13 +1510,13 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
@@ -1543,7 +1543,7 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 	CloudDataSendBuf_t pMsgOutput;
 
 	//分格式类型组装
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
 		//准备组装发送消息
 		StrMsg_HUITP_MSGID_uni_bfsc_statistic_report_t pMsgProc;
 		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_bfsc_statistic_report_t);
@@ -1582,13 +1582,13 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
@@ -1654,11 +1654,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContex.ethConTry++;
+		gCloudvelaTaskContext.ethConTry++;
 	}
 	if (ret == SUCCESS){
-		gCloudvelaTaskContex.ethConTry = 0;
-		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+		gCloudvelaTaskContext.ethConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 		return SUCCESS;
 	}
 
@@ -1668,11 +1668,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContex.usbnetConTry++;
+		gCloudvelaTaskContext.usbnetConTry++;
 	}
 	if (ret == SUCCESS){
-		gCloudvelaTaskContex.usbnetConTry = 0;
-		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
+		gCloudvelaTaskContext.usbnetConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
 		return SUCCESS;
 	}
 
@@ -1682,11 +1682,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContex.wifiConTry++;
+		gCloudvelaTaskContext.wifiConTry++;
 	}
 	if (ret == SUCCESS){
-		gCloudvelaTaskContex.wifiConTry = 0;
-		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
+		gCloudvelaTaskContext.wifiConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
 		return SUCCESS;
 	}
 
@@ -1697,11 +1697,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContex.g3g4ConTry++;
+		gCloudvelaTaskContext.g3g4ConTry++;
 	}
 	if (ret == SUCCESS){
-		gCloudvelaTaskContex.g3g4ConTry = 0;
-		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
+		gCloudvelaTaskContext.g3g4ConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
 		return SUCCESS;
 	}
 

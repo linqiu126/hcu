@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="cloudhttpaddlocal" key="selection"/>
+		<item value="defaultSvrSocketCon" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="defaultSvrSocketCon"/>
+			<item value="gCloudvelaTaskContex"/>
+			<item value="svrBhItfFrameStdDefault"/>
+			<item value="HCU_SYSCFG_CLOUD_SVR_PORT_HOME"/>
+			<item value="HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT"/>
 			<item value="cloudhttpaddlocal"/>
 			<item value="HCU_SYSCFG_CLOUD_BH_HCU_NAME"/>
 			<item value="jd"/>
-			<item value="sae"/>
-			<item value="HCU_SYSCFG_CLOUD_HTTP_ADDR_SAE"/>
-			<item value="cloudHttpAddSae"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_SVR_IP_ADDR"/>
-			<item value="ClientFd"/>
 		</list>
 		<list key="replacehistory">
+			<item value="gCloudvelaTaskContext"/>
 			<item value="HCU_SYSCFG_CLOUD_HCU_NAME"/>
 			<item value="func_cloudvela_stdzhb_msg_alarm_pack"/>
 			<item value="func_cloudvela_stdzhb_msg_unpack"/>
@@ -25,7 +26,6 @@
 			<item value="func_cloudvela_stdzhb_msg_pm25_pack"/>
 			<item value="func_cloudvela_stdzhb_msg_emc_pack"/>
 			<item value="func_cloudvela_stdzhb_msg_heart_beat_pack"/>
-			<item value="func_cloudvela_stdxml_msg_pack"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

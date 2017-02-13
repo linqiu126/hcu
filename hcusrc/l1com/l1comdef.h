@@ -610,8 +610,10 @@ typedef struct HcuCloudvelaTaskContext
 	UINT32 usbnetConTry; //下同
 	UINT32 wifiConTry;
 	UINT32 g3g4ConTry;
-	int    socket_connected;  //SOCKET连接标识
-	int    ethConClientFd;    //eth客户标签
+	int    defaultSvrSocketCon;  		//业务服务器SOCKET连接标识
+	int    defaultSvrethConClientFd;    //业务服务器eth客户标签
+	int    homeSvrSocketCon;  			//家庭服务器SOCKET连接标识
+	int    homeSvrethConClientFd;       //家庭服务器eth客户标签
 }HcuCloudvelaTaskContext_t;
 
 //跟后台的通信接口中，需要定义一些全局消息的结构体类型

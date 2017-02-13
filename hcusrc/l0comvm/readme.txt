@@ -16,6 +16,7 @@ PRJ_BFSC待完成或者回答的问题：
 //= ZJL, 2017 Feb.13, CURRENT_SW_DELIVERY 164=>BFSC项目
 =清理JD/SAE等服务器地址，只保留最为必要的服务器配置项
 =同步清理了数据库，先做标签备份
+=完整的两套BH_STD_FORMAT，相互之间不冲突。ETH链路建立两套的具体过程，待完善。
 
 //= ZJL, 2017 Feb.13, CURRENT_SW_DELIVERY 163=>BFSC项目
 = 清理STDXML, STDZHB，以及HUITPXML的编解码格式函数的位置，统一化处理

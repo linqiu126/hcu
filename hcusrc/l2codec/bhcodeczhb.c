@@ -26,7 +26,7 @@ OPSTAT func_cloudvela_stdzhb_msg_heart_beat_pack(CloudDataSendBuf_t *buf)
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -46,7 +46,7 @@ OPSTAT func_cloudvela_stdzhb_msg_heart_beat_pack(CloudDataSendBuf_t *buf)
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -87,7 +87,7 @@ OPSTAT func_cloudvela_stdzhb_msg_emc_pack(UINT8 msgType, UINT8 cmdId, UINT8 optI
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -125,7 +125,7 @@ OPSTAT func_cloudvela_stdzhb_msg_emc_pack(UINT8 msgType, UINT8 cmdId, UINT8 optI
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -164,7 +164,7 @@ OPSTAT func_cloudvela_stdzhb_msg_pm25_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -204,7 +204,7 @@ OPSTAT func_cloudvela_stdzhb_msg_pm25_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -243,7 +243,7 @@ OPSTAT func_cloudvela_stdzhb_msg_winddir_pack(UINT8 msgType, UINT8 cmdId, UINT8 
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -281,7 +281,7 @@ OPSTAT func_cloudvela_stdzhb_msg_winddir_pack(UINT8 msgType, UINT8 cmdId, UINT8 
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -320,7 +320,7 @@ OPSTAT func_cloudvela_stdzhb_msg_windspd_pack(UINT8 msgType, UINT8 cmdId, UINT8 
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -358,7 +358,7 @@ OPSTAT func_cloudvela_stdzhb_msg_windspd_pack(UINT8 msgType, UINT8 cmdId, UINT8 
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -398,7 +398,7 @@ OPSTAT func_cloudvela_stdzhb_msg_temp_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -436,7 +436,7 @@ OPSTAT func_cloudvela_stdzhb_msg_temp_pack(UINT8 msgType, UINT8 cmdId, UINT8 opt
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -475,7 +475,7 @@ OPSTAT func_cloudvela_stdzhb_msg_humid_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -513,7 +513,7 @@ OPSTAT func_cloudvela_stdzhb_msg_humid_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -552,7 +552,7 @@ OPSTAT func_cloudvela_stdzhb_msg_noise_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -590,7 +590,7 @@ OPSTAT func_cloudvela_stdzhb_msg_noise_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -630,7 +630,7 @@ OPSTAT func_cloudvela_stdzhb_msg_hsmmp_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -674,7 +674,7 @@ OPSTAT func_cloudvela_stdzhb_msg_hsmmp_pack(UINT8 msgType, UINT8 cmdId, UINT8 op
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
 		memset(&zhbFormat, 0, sizeof(CloudBhItfDevReportStdZhb_t));
@@ -722,7 +722,7 @@ OPSTAT func_cloudvela_stdzhb_msg_pm25_cmd_pack(UINT8 msgType, UINT8 cmdId, UINT8
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -865,7 +865,7 @@ OPSTAT func_cloudvela_stdzhb_msg_sw_download_pack(UINT8 msgType, UINT8 cmdId, UI
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -931,7 +931,7 @@ OPSTAT func_cloudvela_stdzhb_msg_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, 
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -997,7 +997,7 @@ OPSTAT func_cloudvela_stdzhb_msg_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -1702,7 +1702,7 @@ OPSTAT func_cloudvela_stdzhb_msg_alarm_pack(UINT8 msgType, UINT8 cmdId, UINT8 us
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -1741,7 +1741,7 @@ OPSTAT func_cloudvela_stdzhb_msg_alarm_pack(UINT8 msgType, UINT8 cmdId, UINT8 us
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		/*
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
@@ -1782,7 +1782,7 @@ extern OPSTAT func_cloudvela_stdzhb_msg_pm_pack(UINT8 msgType, UINT8 cmdId, UINT
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;
@@ -1826,7 +1826,7 @@ extern OPSTAT func_cloudvela_stdzhb_msg_pm_pack(UINT8 msgType, UINT8 cmdId, UINT
 		}
 	}
 
-	else if (zHcuSysEngPar.cloud.bhItfFrameStd == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		/*
 		//初始化变量
 		CloudBhItfDevReportStdZhb_t zhbFormat;
