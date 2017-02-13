@@ -29,7 +29,7 @@ enum FSM_STATE_CLOUDVELA
 //Global variables
 extern HcuFsmStateItem_t FsmCloudvela[];
 extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
-extern CloudvelaTable_t zHcuCloudvelaTable;
+extern HcuCloudvelaTaskContext_t zHcuCloudvelaTable;
 extern CURL *zHcuCloudCurlPtr;
 extern msgie_struct_gps_pos_info_t zHcuVmCtrTab.hwinv.gps;//for test by shanchun
 

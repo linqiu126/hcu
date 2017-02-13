@@ -57,8 +57,6 @@ HcuFsmStateItem_t HcuFsmNoise[] =
 //Task Global variables
 SensorNoiseInfo_t zSensorNoiseInfo[MAX_NUM_OF_SENSOR_NOISE_INSTALLED];
 UINT8 currentSensorNoiseId;
-//暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
-//extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -448,44 +446,23 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			record.gpsz = rcv.noise.gps.gpsz;
 			record.ew = rcv.noise.gps.ew;
 			record.ns = rcv.noise.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_noise_data_element_t noiseData;
-				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
-				noiseData.equipid = record.equipid;
-				noiseData.timeStamp = record.timestamp;
-				noiseData.dataFormat = record.dataFormat;
-				noiseData.noiseValue = record.noiseValue;
-				noiseData.gps.gpsx = record.gpsx;
-				noiseData.gps.gpsy = record.gpsy;
-				noiseData.gps.gpsz = record.gpsz;
-				noiseData.gps.ew = record.ew;
-				noiseData.gps.ns = record.ns;
-				noiseData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Can not save data into database!\n");
-				}
+			sensor_noise_data_element_t noiseData;
+			memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
+			noiseData.equipid = record.equipid;
+			noiseData.timeStamp = record.timestamp;
+			noiseData.dataFormat = record.dataFormat;
+			noiseData.noiseValue = record.noiseValue;
+			noiseData.gps.gpsx = record.gpsx;
+			noiseData.gps.gpsy = record.gpsy;
+			noiseData.gps.gpsz = record.gpsz;
+			noiseData.gps.ew = record.ew;
+			noiseData.gps.ns = record.ns;
+			noiseData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuNoiseDataInfo_save(&noiseData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+				HcuErrorPrint("NOISE: Can not save data into database!\n");
 			}
 		}//周期模式
 		else{
@@ -536,44 +513,23 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			record.gpsz = rcv.noise.gps.gpsz;
 			record.ew = rcv.noise.gps.ew;
 			record.ns = rcv.noise.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_noise_data_element_t noiseData;
-				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
-				noiseData.equipid = record.equipid;
-				noiseData.timeStamp = record.timestamp;
-				noiseData.dataFormat = record.dataFormat;
-				noiseData.noiseValue = record.noiseValue;
-				noiseData.gps.gpsx = record.gpsx;
-				noiseData.gps.gpsy = record.gpsy;
-				noiseData.gps.gpsz = record.gpsz;
-				noiseData.gps.ew = record.ew;
-				noiseData.gps.ns = record.ns;
-				noiseData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Can not save data into database!\n");
-				}
+			sensor_noise_data_element_t noiseData;
+			memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
+			noiseData.equipid = record.equipid;
+			noiseData.timeStamp = record.timestamp;
+			noiseData.dataFormat = record.dataFormat;
+			noiseData.noiseValue = record.noiseValue;
+			noiseData.gps.gpsx = record.gpsx;
+			noiseData.gps.gpsy = record.gpsy;
+			noiseData.gps.gpsz = record.gpsz;
+			noiseData.gps.ew = record.ew;
+			noiseData.gps.ns = record.ns;
+			noiseData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuNoiseDataInfo_save(&noiseData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+				HcuErrorPrint("NOISE: Can not save data into database!\n");
 			}
 		}// Period mode OK!
 		// Instance mode, no need store!
@@ -647,49 +603,23 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//完整的处理情形，有待完成，存入磁盘还为实现
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.noise.equipid;
-			record.sensortype = L3CI_noise;
-			record.onOffLine = DISC_DATA_SAMPLE_OFFLINE;
-			record.timestamp = rcv.noise.timeStamp;
-			record.dataFormat = rcv.noise.dataFormat;
-			record.noiseValue = rcv.noise.noiseValue;
-			record.gpsx = rcv.noise.gps.gpsx;
-			record.gpsy = rcv.noise.gps.gpsy;
-			record.gpsz = rcv.noise.gps.gpsz;
-			record.ew = rcv.noise.gps.ew;
-			record.ns = rcv.noise.gps.ns;
-			ret = hcu_save_to_storage_mem(&record);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				HcuErrorPrint("NOISE: Can not save data into memory buffer, might par error!\n");
-			}
-			//RECORD存入硬盘
-			ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_noise_data_element_t noiseData;
-				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
-				noiseData.equipid = record.equipid;
-				noiseData.timeStamp = record.timestamp;
-				noiseData.dataFormat = record.dataFormat;
-				noiseData.noiseValue = record.noiseValue;
-				noiseData.gps.gpsx = record.gpsx;
-				noiseData.gps.gpsy = record.gpsy;
-				noiseData.gps.gpsz = record.gpsz;
-				noiseData.gps.ew = record.ew;
-				noiseData.gps.ns = record.ns;
-				noiseData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Can not save data into database!\n");
-				}
+			sensor_noise_data_element_t noiseData;
+			memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
+			noiseData.equipid = record.equipid;
+			noiseData.timeStamp = record.timestamp;
+			noiseData.dataFormat = record.dataFormat;
+			noiseData.noiseValue = record.noiseValue;
+			noiseData.gps.gpsx = record.gpsx;
+			noiseData.gps.gpsy = record.gpsy;
+			noiseData.gps.gpsz = record.gpsz;
+			noiseData.gps.ew = record.ew;
+			noiseData.gps.ns = record.ns;
+			noiseData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuNoiseDataInfo_save(&noiseData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+				HcuErrorPrint("NOISE: Can not save data into database!\n");
 			}
 		}//周期模式
 		else{
@@ -727,50 +657,23 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.noise.equipid;
-			record.sensortype = L3CI_noise;
-			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-			record.timestamp = rcv.noise.timeStamp;
-			record.dataFormat = rcv.noise.dataFormat;
-			record.noiseValue = rcv.noise.noiseValue;
-			record.gpsx = rcv.noise.gps.gpsx;
-			record.gpsy = rcv.noise.gps.gpsy;
-			record.gpsz = rcv.noise.gps.gpsz;
-			record.ew = rcv.noise.gps.ew;
-			record.ns = rcv.noise.gps.ns;
-			ret = hcu_save_to_storage_mem(&record);
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				HcuErrorPrint("NOISE: Can not save data into memory buffer, might par error!\n");
-			}
-			//RECORD存入硬盘
-			ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-				HcuErrorPrint("NOISE: Can not save data into hard disk!\n");
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_noise_data_element_t noiseData;
-				memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
-				noiseData.equipid = record.equipid;
-				noiseData.timeStamp = record.timestamp;
-				noiseData.dataFormat = record.dataFormat;
-				noiseData.noiseValue = record.noiseValue;
-				noiseData.gps.gpsx = record.gpsx;
-				noiseData.gps.gpsy = record.gpsy;
-				noiseData.gps.gpsz = record.gpsz;
-				noiseData.gps.ew = record.ew;
-				noiseData.gps.ns = record.ns;
-				noiseData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuNoiseDataInfo_save(&noiseData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Can not save data into database!\n");
-				}
+			sensor_noise_data_element_t noiseData;
+			memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
+			noiseData.equipid = record.equipid;
+			noiseData.timeStamp = record.timestamp;
+			noiseData.dataFormat = record.dataFormat;
+			noiseData.noiseValue = record.noiseValue;
+			noiseData.gps.gpsx = record.gpsx;
+			noiseData.gps.gpsy = record.gpsy;
+			noiseData.gps.gpsz = record.gpsz;
+			noiseData.gps.ew = record.ew;
+			noiseData.gps.ns = record.ns;
+			noiseData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuNoiseDataInfo_save(&noiseData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+				HcuErrorPrint("NOISE: Can not save data into database!\n");
 			}
 		}// Period mode OK!
 		// Instance mode, no need store!

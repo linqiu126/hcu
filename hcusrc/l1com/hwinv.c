@@ -1222,6 +1222,7 @@ void func_hwinv_scan_message_queue(void)
 
 //只是提供了硬件和FLASH访问的一种抽象
 //一种最为简单的硬盘存储传感器记录的机制搞定，以后可以逐步丰富：碎片文件/内容按照时间轴/记录数量/定时清理等等，待完成
+//将数据离线存在我们的MEMDISK/HDDISK中，这两种机制做古了，因为以下函数暂时不用，但函数API是久经考验的，暂时留在这儿保留它用
 UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen)
 {
 	int fHandler;

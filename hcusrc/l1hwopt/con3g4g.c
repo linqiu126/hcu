@@ -42,8 +42,6 @@ HcuFsmStateItem_t HcuFsm3g4g[] =
 };
 
 //Global Variables
-//extern CURL *zHcuCloudCurlPtr;
-//extern CloudvelaTable_t zHcuCloudvelaTable;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose

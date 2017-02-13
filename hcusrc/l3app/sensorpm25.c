@@ -469,46 +469,25 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.gpsz = rcv.pm25.gps.gpsz;
 			record.ew = rcv.pm25.gps.ew;
 			record.ns = rcv.pm25.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_pm25_data_element_t pm25Data;
-				memset(&pm25Data, 0, sizeof(sensor_pm25_data_element_t));
-				pm25Data.equipid = record.equipid;
-				pm25Data.timeStamp = record.timestamp;
-				pm25Data.dataFormat = record.dataFormat;
-				pm25Data.pm1d0Value = record.pm1d0Value;
-				pm25Data.pm2d5Value = record.pm2d5Value;
-				pm25Data.pm10Value = record.pm10Value;
-				pm25Data.gps.gpsx = record.gpsx;
-				pm25Data.gps.gpsy = record.gpsy;
-				pm25Data.gps.gpsz = record.gpsz;
-				pm25Data.gps.ew = record.ew;
-				pm25Data.gps.ns = record.ns;
-				pm25Data.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuPm25DataInfo_save(&pm25Data);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into database!\n");
-				}
+			sensor_pm25_data_element_t pm25Data;
+			memset(&pm25Data, 0, sizeof(sensor_pm25_data_element_t));
+			pm25Data.equipid = record.equipid;
+			pm25Data.timeStamp = record.timestamp;
+			pm25Data.dataFormat = record.dataFormat;
+			pm25Data.pm1d0Value = record.pm1d0Value;
+			pm25Data.pm2d5Value = record.pm2d5Value;
+			pm25Data.pm10Value = record.pm10Value;
+			pm25Data.gps.gpsx = record.gpsx;
+			pm25Data.gps.gpsy = record.gpsy;
+			pm25Data.gps.gpsz = record.gpsz;
+			pm25Data.gps.ew = record.ew;
+			pm25Data.gps.ns = record.ns;
+			pm25Data.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuPm25DataInfo_save(&pm25Data);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+				HcuErrorPrint("PM25: Can not save data into database!\n");
 			}
 		}//周期模式
 		else{
@@ -563,46 +542,25 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.gpsz = rcv.pm25.gps.gpsz;
 			record.ew = rcv.pm25.gps.ew;
 			record.ns = rcv.pm25.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_pm25_data_element_t pm25Data;
-				memset(&pm25Data, 0, sizeof(sensor_pm25_data_element_t));
-				pm25Data.equipid = record.equipid;
-				pm25Data.timeStamp = record.timestamp;
-				pm25Data.dataFormat = record.dataFormat;
-				pm25Data.pm1d0Value = record.pm1d0Value;
-				pm25Data.pm2d5Value = record.pm2d5Value;
-				pm25Data.pm10Value = record.pm10Value;
-				pm25Data.gps.gpsx = record.gpsx;
-				pm25Data.gps.gpsy = record.gpsy;
-				pm25Data.gps.gpsz = record.gpsz;
-				pm25Data.gps.ew = record.ew;
-				pm25Data.gps.ns = record.ns;
-				pm25Data.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuPm25DataInfo_save(&pm25Data);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into database!\n");
-				}
+			sensor_pm25_data_element_t pm25Data;
+			memset(&pm25Data, 0, sizeof(sensor_pm25_data_element_t));
+			pm25Data.equipid = record.equipid;
+			pm25Data.timeStamp = record.timestamp;
+			pm25Data.dataFormat = record.dataFormat;
+			pm25Data.pm1d0Value = record.pm1d0Value;
+			pm25Data.pm2d5Value = record.pm2d5Value;
+			pm25Data.pm10Value = record.pm10Value;
+			pm25Data.gps.gpsx = record.gpsx;
+			pm25Data.gps.gpsy = record.gpsy;
+			pm25Data.gps.gpsz = record.gpsz;
+			pm25Data.gps.ew = record.ew;
+			pm25Data.gps.ns = record.ns;
+			pm25Data.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuPm25DataInfo_save(&pm25Data);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+				HcuErrorPrint("PM25: Can not save data into database!\n");
 			}
 		}// Period mode OK!
 		// Instance mode, no need store!
@@ -852,53 +810,21 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 			record.powerOnOff = rcv.opt.powerOnOff;//Shanchun: need switch-case save all operation status
 			*/
 
-			/*
-			//RECORD存入内存盘
-			if (HCU_MEM_SENSOR_SAVE_FLAG == HCU_MEM_SENSOR_SAVE_FLAG_YES)
-			{
-				//to discuss if save to memory
-
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into memory buffer, might par error!\n");
-				}
-
-			}
-			*/
-
-			/*
-			//RECORD存入硬盘
-			if (HCU_DISC_SENSOR_SAVE_FLAG == HCU_DISC_SENSOR_SAVE_FLAG_YES)
-			{
-
-				//to discuss if save to local disc
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into hard disk!\n");
-				}
-
-			}
-			*/
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				//to discuss if save to local DB
-				/*
-				sensor_modbus_opertion_general_t pm25Cmd; //zsc: need to define new struct for sensor config status or reuse sensor_modbus_opertion_general_t??
-				memset(&pm25Cmd, 0, sizeof(sensor_modbus_opertion_general_t));
+			//to discuss if save to local DB
+			/*
+			sensor_modbus_opertion_general_t pm25Cmd; //zsc: need to define new struct for sensor config status or reuse sensor_modbus_opertion_general_t??
+			memset(&pm25Cmd, 0, sizeof(sensor_modbus_opertion_general_t));
 
-				pm25Cmd.equId = record.equipid;
-				pm25Cmd.powerOnOff = record.powerOnOff;
+			pm25Cmd.equId = record.equipid;
+			pm25Cmd.powerOnOff = record.powerOnOff;
 
-				ret = dbi_HcuPm25DataInfo_save(&pm25Cmd);
-				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into database!\n");
-				}
-				*/
+			ret = dbi_HcuPm25DataInfo_save(&pm25Cmd);
+			if (ret == FAILURE){
+				zHcuRunErrCnt[TASK_ID_PM25]++;
+				HcuErrorPrint("PM25: Can not save data into database!\n");
 			}
+			*/
 
 		}
 		else
@@ -1025,38 +951,12 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 			record.onOffLine = DISC_DATA_SAMPLE_OFFLINE;
 			record.powerOnOff = rcv.opt.powerOnOff; //Shanchun: need switch-case save all operation status
 			*/
-			//RECORD存入内存盘
-			/*
-			if (HCU_MEM_SENSOR_SAVE_FLAG == HCU_MEM_SENSOR_SAVE_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			*/
-
-			/*
-			//RECORD存入硬盘
-			if (HCU_DISC_SENSOR_SAVE_FLAG == HCU_DISC_SENSOR_SAVE_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into hard disk!\n");
-				}
-			}
-			*/
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				//ret = dbi_HcuPm25ConfigData_save(&zPM25ConfigData);
-				ret = dbi_HcuPm25ConfigData_update(rcv.optId, &zPM25ConfigData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-					HcuErrorPrint("PM25: Can not save data into database!\n");
-				}
+			//ret = dbi_HcuPm25ConfigData_save(&zPM25ConfigData);
+			ret = dbi_HcuPm25ConfigData_update(rcv.optId, &zPM25ConfigData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+				HcuErrorPrint("PM25: Can not save data into database!\n");
 			}
 		}
 	}
@@ -1101,20 +1001,17 @@ OPSTAT func_pm25_time_out_read_data_from_bmpd300(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal <= HCU_SENSOR_PM25_VALUE_MAX))
-	{
-		sensor_pm25_bmpd300_data_element_t pm25Data;
-		memset(&pm25Data, 0, sizeof(sensor_pm25_bmpd300_data_element_t));
-		pm25Data.equipid = 0;
-		pm25Data.timeStamp = time(0);
-		pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
-		pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal);
+	sensor_pm25_bmpd300_data_element_t pm25Data;
+	memset(&pm25Data, 0, sizeof(sensor_pm25_bmpd300_data_element_t));
+	pm25Data.equipid = 0;
+	pm25Data.timeStamp = time(0);
+	pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_I2CPM25BMPD300].fVal);
 
-		ret = dbi_HcuPm25Bmpd300DataInfo_save(&pm25Data);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-			HcuErrorPrint("PM25: Can not save Pm25Bmpd300 data into database!\n");
-		}
+	ret = dbi_HcuPm25Bmpd300DataInfo_save(&pm25Data);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+		HcuErrorPrint("PM25: Can not save Pm25Bmpd300 data into database!\n");
 	}
 
 	return SUCCESS;
@@ -1125,20 +1022,17 @@ OPSTAT func_pm25_time_out_read_data_from_sharp(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].fVal >= HCU_SENSOR_PM25_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].fVal <= HCU_SENSOR_PM25_VALUE_MAX))
-	{
-		sensor_pm25_sharp_data_element_t pm25Data;
-		memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
-		pm25Data.equipid = 0;
-		pm25Data.timeStamp = time(0);
-		pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
-		pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].fVal*100);
+	sensor_pm25_sharp_data_element_t pm25Data;
+	memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
+	pm25Data.equipid = 0;
+	pm25Data.timeStamp = time(0);
+	pm25Data.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2;
+	pm25Data.pm2d5Value = (int)(zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].fVal*100);
 
-		ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-			HcuErrorPrint("PM25: Can not save Pm25Sharp data into database!\n");
-		}
+	ret = dbi_HcuPm25SharpDataInfo_save(&pm25Data);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+		HcuErrorPrint("PM25: Can not save Pm25Sharp data into database!\n");
 	}
 
 	return SUCCESS;

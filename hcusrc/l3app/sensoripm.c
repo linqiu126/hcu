@@ -419,21 +419,18 @@ OPSTAT fsm_ipm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	}
 
 	//准备存入本地数据库, RECORD还要存入数据库
-	if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-	{
-		sensor_ipm_cj188_data_element_t ipmDbSave;
-		memset(&ipmDbSave, 0, sizeof(sensor_ipm_cj188_data_element_t));
-		memcpy(&ipmDbSave.ipm, &ipmResp.ipmData, sizeof(sensor_general_cj188_data_element_t));
-		strcpy(ipmDbSave.cj188address, ipmResp.ipmHead.addr);
-		ipmDbSave.equtype = ipmResp.equtype;
-		ipmDbSave.timestamp = ipmResp.ipmHead.timestamp;
-		ipmDbSave.billtodayaccuvolume = ipmResp.billtodayaccuvolume;
-		ipmDbSave.billtodayaccuvolumeunit = ipmResp.billtodayaccuvolumeunit;
-		ret = dbi_HcuIpmCj188DataInfo_save(&ipmDbSave);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_IPM]++;
-			HcuErrorPrint("IPM: Can not save data into database!\n");
-		}
+	sensor_ipm_cj188_data_element_t ipmDbSave;
+	memset(&ipmDbSave, 0, sizeof(sensor_ipm_cj188_data_element_t));
+	memcpy(&ipmDbSave.ipm, &ipmResp.ipmData, sizeof(sensor_general_cj188_data_element_t));
+	strcpy(ipmDbSave.cj188address, ipmResp.ipmHead.addr);
+	ipmDbSave.equtype = ipmResp.equtype;
+	ipmDbSave.timestamp = ipmResp.ipmHead.timestamp;
+	ipmDbSave.billtodayaccuvolume = ipmResp.billtodayaccuvolume;
+	ipmDbSave.billtodayaccuvolumeunit = ipmResp.billtodayaccuvolumeunit;
+	ret = dbi_HcuIpmCj188DataInfo_save(&ipmDbSave);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_IPM]++;
+		HcuErrorPrint("IPM: Can not save data into database!\n");
 	}
 
 	//准备发送数据回去给NBIOTCJ188，然后通过UL上行链路送回CLOUD平台

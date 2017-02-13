@@ -53,8 +53,6 @@ HcuFsmStateItem_t HcuFsmWinddir[] =
 //Task Global variables
 SensorWinddirInfo_t zSensorWinddirInfo[MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED];
 UINT8 currentSensorWinddirId;
-//暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
-//extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -342,44 +340,23 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			record.gpsz = rcv.winddir.gps.gpsz;
 			record.ew = rcv.winddir.gps.ew;
 			record.ns = rcv.winddir.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-					HcuErrorPrint("WINDDIR: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-					HcuErrorPrint("WINDDIR: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_winddir_data_element_t winddirData;
-				memset(&winddirData, 0, sizeof(sensor_winddir_data_element_t));
-				winddirData.equipid = record.equipid;
-				winddirData.timeStamp = record.timestamp;
-				winddirData.dataFormat = record.dataFormat;
-				winddirData.winddirValue = record.winddirValue;
-				winddirData.gps.gpsx = record.gpsx;
-				winddirData.gps.gpsy = record.gpsy;
-				winddirData.gps.gpsz = record.gpsz;
-				winddirData.gps.ew = record.ew;
-				winddirData.gps.ns = record.ns;
-				winddirData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuWinddirDataInfo_save(&winddirData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-					HcuErrorPrint("WINDDIR: Can not save data into database!\n");
-				}
+			sensor_winddir_data_element_t winddirData;
+			memset(&winddirData, 0, sizeof(sensor_winddir_data_element_t));
+			winddirData.equipid = record.equipid;
+			winddirData.timeStamp = record.timestamp;
+			winddirData.dataFormat = record.dataFormat;
+			winddirData.winddirValue = record.winddirValue;
+			winddirData.gps.gpsx = record.gpsx;
+			winddirData.gps.gpsy = record.gpsy;
+			winddirData.gps.gpsz = record.gpsz;
+			winddirData.gps.ew = record.ew;
+			winddirData.gps.ns = record.ns;
+			winddirData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuWinddirDataInfo_save(&winddirData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
+				HcuErrorPrint("WINDDIR: Can not save data into database!\n");
 			}
 		}//周期模式
 		else{
@@ -430,44 +407,23 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			record.gpsz = rcv.winddir.gps.gpsz;
 			record.ew = rcv.winddir.gps.ew;
 			record.ns = rcv.winddir.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-					HcuErrorPrint("WINDDIR: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-					HcuErrorPrint("WINDDIR: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_winddir_data_element_t winddirData;
-				memset(&winddirData, 0, sizeof(sensor_winddir_data_element_t));
-				winddirData.equipid = record.equipid;
-				winddirData.timeStamp = record.timestamp;
-				winddirData.dataFormat = record.dataFormat;
-				winddirData.winddirValue = record.winddirValue;
-				winddirData.gps.gpsx = record.gpsx;
-				winddirData.gps.gpsy = record.gpsy;
-				winddirData.gps.gpsz = record.gpsz;
-				winddirData.gps.ew = record.ew;
-				winddirData.gps.ns = record.ns;
-				winddirData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuWinddirDataInfo_save(&winddirData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
-					HcuErrorPrint("WINDDIR: Can not save data into database!\n");
-				}
+			sensor_winddir_data_element_t winddirData;
+			memset(&winddirData, 0, sizeof(sensor_winddir_data_element_t));
+			winddirData.equipid = record.equipid;
+			winddirData.timeStamp = record.timestamp;
+			winddirData.dataFormat = record.dataFormat;
+			winddirData.winddirValue = record.winddirValue;
+			winddirData.gps.gpsx = record.gpsx;
+			winddirData.gps.gpsy = record.gpsy;
+			winddirData.gps.gpsz = record.gpsz;
+			winddirData.gps.ew = record.ew;
+			winddirData.gps.ns = record.ns;
+			winddirData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuWinddirDataInfo_save(&winddirData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR]++;
+				HcuErrorPrint("WINDDIR: Can not save data into database!\n");
 			}
 		}// Period mode OK!
 		// Instance mode, no need store!

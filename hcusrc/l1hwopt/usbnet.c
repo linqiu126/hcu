@@ -42,10 +42,7 @@ HcuFsmStateItem_t HcuFsmUsbnet[] =
 };
 
 //Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
-//extern CURL *zHcuCloudCurlPtr;
-//extern CloudvelaTable_t zHcuCloudvelaTable;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose

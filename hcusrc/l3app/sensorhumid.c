@@ -349,44 +349,23 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			record.gpsz = rcv.humid.gps.gpsz;
 			record.ew = rcv.humid.gps.ew;
 			record.ns = rcv.humid.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-					HcuErrorPrint("HUMID: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-					HcuErrorPrint("HUMID: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_humid_data_element_t humidData;
-				memset(&humidData, 0, sizeof(sensor_humid_data_element_t));
-				humidData.equipid = record.equipid;
-				humidData.timeStamp = record.timestamp;
-				humidData.dataFormat = record.dataFormat;
-				humidData.humidValue = record.humidValue;
-				humidData.gps.gpsx = record.gpsx;
-				humidData.gps.gpsy = record.gpsy;
-				humidData.gps.gpsz = record.gpsz;
-				humidData.gps.ew = record.ew;
-				humidData.gps.ns = record.ns;
-				humidData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuHumidDataInfo_save(&humidData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-					HcuErrorPrint("HUMID: Can not save data into database!\n");
-				}
+			sensor_humid_data_element_t humidData;
+			memset(&humidData, 0, sizeof(sensor_humid_data_element_t));
+			humidData.equipid = record.equipid;
+			humidData.timeStamp = record.timestamp;
+			humidData.dataFormat = record.dataFormat;
+			humidData.humidValue = record.humidValue;
+			humidData.gps.gpsx = record.gpsx;
+			humidData.gps.gpsy = record.gpsy;
+			humidData.gps.gpsz = record.gpsz;
+			humidData.gps.ew = record.ew;
+			humidData.gps.ns = record.ns;
+			humidData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuHumidDataInfo_save(&humidData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
+				HcuErrorPrint("HUMID: Can not save data into database!\n");
 			}
 		}//周期模式
 		else{
@@ -424,59 +403,24 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.humid.equipid;
-			record.sensortype = L3CI_humid;
-			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-			record.timestamp = rcv.humid.timeStamp;
-			record.dataFormat = rcv.humid.dataFormat;
-			record.humidValue = rcv.humid.humidValue;
-			record.gpsx = rcv.humid.gps.gpsx;
-			record.gpsy = rcv.humid.gps.gpsy;
-			record.gpsz = rcv.humid.gps.gpsz;
-			record.ew = rcv.humid.gps.ew;
-			record.ns = rcv.humid.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-					HcuErrorPrint("HUMID: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-					HcuErrorPrint("HUMID: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_humid_data_element_t humidData;
-				memset(&humidData, 0, sizeof(sensor_humid_data_element_t));
-				humidData.equipid = record.equipid;
-				humidData.timeStamp = record.timestamp;
-				humidData.dataFormat = record.dataFormat;
-				humidData.humidValue = record.humidValue;
-				humidData.gps.gpsx = record.gpsx;
-				humidData.gps.gpsy = record.gpsy;
-				humidData.gps.gpsz = record.gpsz;
-				humidData.gps.ew = record.ew;
-				humidData.gps.ns = record.ns;
-				humidData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuHumidDataInfo_save(&humidData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
-					HcuErrorPrint("HUMID: Can not save data into database!\n");
-				}
+			sensor_humid_data_element_t humidData;
+			memset(&humidData, 0, sizeof(sensor_humid_data_element_t));
+			humidData.equipid = record.equipid;
+			humidData.timeStamp = record.timestamp;
+			humidData.dataFormat = record.dataFormat;
+			humidData.humidValue = record.humidValue;
+			humidData.gps.gpsx = record.gpsx;
+			humidData.gps.gpsy = record.gpsy;
+			humidData.gps.gpsz = record.gpsz;
+			humidData.gps.ew = record.ew;
+			humidData.gps.ns = record.ns;
+			humidData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuHumidDataInfo_save(&humidData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
+				HcuErrorPrint("HUMID: Can not save data into database!\n");
 			}
-
 		}// Period mode OK!
 		// Instance mode, no need store!
 	}
@@ -562,7 +506,7 @@ OPSTAT func_humid_time_out_read_data_from_dht11(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOHUMIDDHT11].fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOHUMIDDHT11].fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOHUMIDDHT11].fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOHUMIDDHT11].fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_dht11_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_dht11_data_element_t));
@@ -586,7 +530,7 @@ OPSTAT func_humid_time_out_read_data_from_sht20(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CHUMIDSHT20].fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CHUMIDSHT20].fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_I2CHUMIDSHT20].fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CHUMIDSHT20].fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_sht20_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_sht20_data_element_t));
@@ -610,7 +554,7 @@ OPSTAT func_humid_time_out_read_data_from_rht03(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDRHT03].fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDRHT03].fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDRHT03].fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDRHT03].fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_rht03_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_rht03_data_element_t));
@@ -634,7 +578,7 @@ OPSTAT func_humid_time_out_read_data_from_mth01(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDMTH01].fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDMTH01].fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDMTH01].fVal >= HCU_SENSOR_HUMID_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPIHUMIDMTH01].fVal <= HCU_SENSOR_HUMID_VALUE_MAX))
 	{
 		sensor_humid_mth01_data_element_t humidData;
 		memset(&humidData, 0, sizeof(sensor_humid_mth01_data_element_t));

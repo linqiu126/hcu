@@ -264,7 +264,7 @@ void func_pm25sharp_read_data(UINT32 fd)
 				  HcuDebugPrint("PM25SHARP: Last bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
 				  average_pm25 = sum_2s / counter;
 
-				  if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (average_pm25 >= HCU_SENSOR_PM25_VALUE_MIN) && (average_pm25 <= HCU_SENSOR_PM25_VALUE_MAX))
+				  if ((average_pm25 >= HCU_SENSOR_PM25_VALUE_MIN) && (average_pm25 <= HCU_SENSOR_PM25_VALUE_MAX))
 				  {
 					  memset(&pm25Data, 0, sizeof(sensor_pm25_sharp_data_element_t));
 					  pm25Data.equipid = 0;
@@ -276,7 +276,6 @@ void func_pm25sharp_read_data(UINT32 fd)
 							zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25SHARP]++;
 							HcuErrorPrint("PM25SHARP: Can not save data into database!\n");
 					  }
-
 				  }
 				  HcuDebugPrint("PM25SHARP: start_time is %d, end_time is %d, counter in 2 seconds is %d, sum_2s is %f, average_pm25 value is:%f \n", start_time, end_time, counter, sum_2s, average_pm25);
 				  counter = 0;

@@ -53,8 +53,7 @@ HcuFsmStateItem_t HcuFsmEmc[] =
 //Task Global variables
 SensorEmcInfo_t zSensorEmcInfo[MAX_NUM_OF_SENSOR_EMC_INSTALLED];
 UINT8 currentSensorEmcId;
-//暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
-//extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -349,47 +348,26 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 			record.gpsz = rcv.emc.gps.gpsz;
 			record.ew = rcv.emc.gps.ew;
 			record.ns = rcv.emc.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-					HcuErrorPrint("EMC: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-					HcuErrorPrint("EMC: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_emc_data_element_t emcData;
-				memset(&emcData, 0, sizeof(sensor_emc_data_element_t));
-				emcData.equipid = record.equipid;
-				emcData.timeStamp = record.timestamp;
-				emcData.dataFormat = record.dataFormat;
-				emcData.emcValue = record.emcValue;
-				emcData.gps.gpsx = record.gpsx;
-				emcData.gps.gpsy = record.gpsy;
-				emcData.gps.gpsz = record.gpsz;
-				//emcData.gps.ew = 'E';
-				//emcData.gps.ns = 'N';
-				emcData.gps.ew = record.ew;
-				emcData.gps.ns = record.ns;;
-				HcuDebugPrint("EMC: EW = %c, gpsx = %d, NS = %c, gpsy = %d, gpsz = %d\n",record.ew, record.gpsx, record.ns, record.gpsy, record.gpsz);
-				emcData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuEmcDataInfo_save(&emcData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-					HcuErrorPrint("EMC: Can not save data into database!\n");
-				}
+			sensor_emc_data_element_t emcData;
+			memset(&emcData, 0, sizeof(sensor_emc_data_element_t));
+			emcData.equipid = record.equipid;
+			emcData.timeStamp = record.timestamp;
+			emcData.dataFormat = record.dataFormat;
+			emcData.emcValue = record.emcValue;
+			emcData.gps.gpsx = record.gpsx;
+			emcData.gps.gpsy = record.gpsy;
+			emcData.gps.gpsz = record.gpsz;
+			//emcData.gps.ew = 'E';
+			//emcData.gps.ns = 'N';
+			emcData.gps.ew = record.ew;
+			emcData.gps.ns = record.ns;;
+			HcuDebugPrint("EMC: EW = %c, gpsx = %d, NS = %c, gpsy = %d, gpsz = %d\n",record.ew, record.gpsx, record.ns, record.gpsy, record.gpsz);
+			emcData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuEmcDataInfo_save(&emcData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
+				HcuErrorPrint("EMC: Can not save data into database!\n");
 			}
 		}//周期模式
 		else{
@@ -427,57 +405,23 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.emc.equipid;
-			record.sensortype = L3CI_emc;
-			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-			record.timestamp = rcv.emc.timeStamp;
-			record.dataFormat = rcv.emc.dataFormat;
-			record.emcValue = rcv.emc.emcValue;
-			record.gpsx = rcv.emc.gps.gpsx;
-			record.gpsy = rcv.emc.gps.gpsy;
-			record.gpsz = rcv.emc.gps.gpsz;
-			record.ew = rcv.emc.gps.ew;
-			record.ns = rcv.emc.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-					HcuErrorPrint("EMC: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-					HcuErrorPrint("EMC: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_emc_data_element_t emcData;
-				memset(&emcData, 0, sizeof(sensor_emc_data_element_t));
-				emcData.equipid = record.equipid;
-				emcData.timeStamp = record.timestamp;
-				emcData.dataFormat = record.dataFormat;
-				emcData.emcValue = record.emcValue;
-				emcData.gps.gpsx = record.gpsx;
-				emcData.gps.gpsy = record.gpsy;
-				emcData.gps.gpsz = record.gpsz;
-				emcData.gps.ew = record.ew;
-				emcData.gps.ns = record.ns;
-				emcData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuEmcDataInfo_save(&emcData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-					HcuErrorPrint("EMC: Can not save data into database!\n");
-				}
+			sensor_emc_data_element_t emcData;
+			memset(&emcData, 0, sizeof(sensor_emc_data_element_t));
+			emcData.equipid = record.equipid;
+			emcData.timeStamp = record.timestamp;
+			emcData.dataFormat = record.dataFormat;
+			emcData.emcValue = record.emcValue;
+			emcData.gps.gpsx = record.gpsx;
+			emcData.gps.gpsy = record.gpsy;
+			emcData.gps.gpsz = record.gpsz;
+			emcData.gps.ew = record.ew;
+			emcData.gps.ns = record.ns;
+			emcData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuEmcDataInfo_save(&emcData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
+				HcuErrorPrint("EMC: Can not save data into database!\n");
 			}
 		}// Period mode OK!
 		// Instance mode, no need store!

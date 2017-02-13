@@ -32,9 +32,6 @@ enum FSM_STATE_CLOUDVELA
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmCloudvela[];
-extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
-extern CloudvelaTable_t zHcuCloudvelaTable;
-extern CURL *zHcuCloudCurlPtr;
 
 //FSM API
 extern OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -83,7 +80,6 @@ OPSTAT func_cloudvela_time_out_period_long_duration(void);
 OPSTAT func_cloudvela_cmd_control_check(void);//for cmd control by Shanchun
 OPSTAT func_cloudvela_time_out_period_for_socket_heart(void);
 OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void);
-OPSTAT func_cloudvela_time_out_sendback_offline_data(void);
 OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf);
 OPSTAT func_cloudvela_socket_conn_setup(void);
 

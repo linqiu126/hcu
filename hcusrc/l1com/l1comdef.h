@@ -612,14 +612,16 @@ typedef struct CloudDataSendBuf
 	char curBuf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];  //内部还包括格式化的参数部分，所以需要多加100个字节的长度
 }CloudDataSendBuf_t;
 //在CLOUD模块中定义的公共数据Buffer结构体，必须放在这儿
-typedef struct CloudvelaTable
+typedef struct HcuCloudvelaTaskContext
 {
-	UINT8 curCon;  //表示当前是哪一种物理接口在工作
+	UINT8  curCon;  //表示当前是哪一种物理接口在工作
 	UINT32 ethConTry;  //用于断链的处理，确保高优先级物理链路可以处于优势地位，节省用户的链路成本消耗
 	UINT32 usbnetConTry; //下同
 	UINT32 wifiConTry;
 	UINT32 g3g4ConTry;
-}CloudvelaTable_t;
+	int    socket_connected;  //SOCKET连接标识
+	int    ethConClientFd;    //eth客户标签
+}HcuCloudvelaTaskContext_t;
 
 //跟后台的通信接口中，需要定义一些全局消息的结构体类型
 enum CloudBhMsgTypeEnum

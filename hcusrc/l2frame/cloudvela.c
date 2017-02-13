@@ -102,12 +102,10 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 };
 
 //Global variables
-HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
-CloudvelaTable_t zHcuCloudvelaTable;
+//HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 
 //Task Global variables
-extern int zHcuEthConClientFd;
-extern int socket_connected;
+HcuCloudvelaTaskContext_t gCloudvelaTaskContex;
 
 //Main Entry
 /***************************************************************************************************************************
@@ -159,12 +157,10 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//Task global variables init，
-	//zHcuMemStorageBuf其实还是一个全局变量，但因为这个模块用的多，故而在这里定义
-	memset(&zHcuMemStorageBuf, 0, sizeof(HcuDiscDataSampleStorage_t));
-	memset(&zHcuCloudvelaTable, 0, sizeof(CloudvelaTable_t));
+	memset(&gCloudvelaTaskContex, 0, sizeof(HcuCloudvelaTaskContext_t));
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] = 0;
 
-	//启动周期性定时器
+	//启动周期性心跳定时器
 	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT, \
 			zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
@@ -233,11 +229,6 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 		ret = func_cloudvela_time_out_period_long_duration();
 	}
 
-	//定时短时钟进行离线数据回送
-	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_cloudvela_time_out_sendback_offline_data();
-	}
-
 	//for sw&db version report
 	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_time_out_period_for_sw_db_report();
@@ -252,23 +243,16 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 //长周期定时器, 周期性心跳时钟处理机制
 OPSTAT func_cloudvela_time_out_period_long_duration(void)
 {
-	int ret = 0;
+	//int ret = 0;
 
 	//检查链路状态
 	//离线，则再连接
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
-		if (socket_connected == TRUE && func_cloudvela_socket_conn_setup() == SUCCESS){
+		if ((gCloudvelaTaskContex.socket_connected == TRUE) && (func_cloudvela_socket_conn_setup() == SUCCESS)){
 			zHcuSysStaPm.statisCnt.cloudVelaConnCnt++;
 			//State Transfer to FSM_STATE_CLOUDVELA_ONLINE
 			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
 			HCU_DEBUG_PRINT_NOR("CLOUDVELA: Connect state change, from OFFLINE to ONLINE!\n");
-
-			//启动周期性短定时器，進行数据回传云平台
-			if (zHcuMemStorageBuf.offlineNbr>0){
-				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, \
-						zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-				if (ret == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error start timer!\n");
-			}
 		}
 		//如果是失败情况，并不返回错误，属于正常情况
 		//当链路不可用时，这个打印结果会非常频繁，放开比较好
@@ -294,57 +278,48 @@ OPSTAT func_cloudvela_time_out_period_long_duration(void)
 			//主动断掉链路，需要复位CurrentConnection指示以及Http-Curl全局指针
 
 			//如果当前是3G4G
-			if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
+			if ((gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G) &&
 					((zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 							(zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 							(zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
 				//如果还没有试图重连过
-				if ((zHcuCloudvelaTable.ethConTry == 0) || (zHcuCloudvelaTable.usbnetConTry == 0) || (zHcuCloudvelaTable.wifiConTry == 0)){
+				if ((gCloudvelaTaskContex.ethConTry == 0) || (gCloudvelaTaskContex.usbnetConTry == 0) || (gCloudvelaTaskContex.wifiConTry == 0)){
 					//Disconnect current 3g4g connection!!!
 					if (hcu_3g4g_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect 3G4G link!\n");
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					gCloudvelaTaskContex.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
 				//不做任何动作
 			}
 			//如果当前是WIFI
-			else if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
+			else if ((gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI) &&
 				((zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE) ||
 						(zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE))){
-				if ((zHcuCloudvelaTable.ethConTry == 0) || (zHcuCloudvelaTable.usbnetConTry == 0)){
+				if ((gCloudvelaTaskContex.ethConTry == 0) || (gCloudvelaTaskContex.usbnetConTry == 0)){
 					//Disconnect current wifi connection!!!
 					if (hcu_wifi_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect WIFI link!\n");
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					gCloudvelaTaskContex.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
 				//不做任何动作
 			}
 			//如果当前是USBNET
-			else if ((zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
+			else if ((gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET) &&
 					(zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE)){
-				if (zHcuCloudvelaTable.ethConTry == 0){
+				if (gCloudvelaTaskContex.ethConTry == 0){
 					//Disconnect current usbnet connection!!!
 					if (hcu_usbnet_phy_link_disconnect() == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error disconnect USBNET link!\n");
 					//设置为离线状态，以便下次重连接
 					if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error set FSM status!\n");
 					//设置当前工作物理链路为无效
-					zHcuCloudvelaTable.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
+					gCloudvelaTaskContex.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_INVALID;
 				}
 				//不做任何动作
 			}
-			//如果是ETHERNET，则很好！
-			//else do nothing
-
-			//然后再试图启动周期性短定时器，進行数据回传云平台
-			if (zHcuMemStorageBuf.offlineNbr>0){
-				ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, \
-						zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-				if (ret == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error start timer!\n");
-			}//BUFFER还有离线数据
 		}//end of 在线而且心跳握手正常
 	}//end of 长周期定时在线状态
 
@@ -352,108 +327,6 @@ OPSTAT func_cloudvela_time_out_period_long_duration(void)
 	else{
 		if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
 	}
-
-	return SUCCESS;
-}
-
-//短周期定时器
-//短时长周期性时钟处理过程，主要是读取离线数据，回送云后台
-OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
-{
-	int ret = 0;
-	HcuDiscDataSampleStorageArray_t record;
-
-	//检查离线数据还有没有未送完的，如果没有，停止回送短定时器
-	//先检查并停止，再读取数据，会造成多一次定时到达，不是坏事情，会让扫描更为完整
-	if (zHcuMemStorageBuf.offlineNbr<=0){
-		zHcuMemStorageBuf.offlineNbr = 0;
-		ret = hcu_timer_stop(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error stop timer!\n");
-		return SUCCESS;
-	}
-
-	//如果离线，一样需要停止定时器，不干活
-	 if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
-		ret = hcu_timer_stop(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_SEND_DATA_BACK, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error stop timer!\n");
-		return SUCCESS;
-	 }
-
-	 //读取离线数据，通过参数进去无效，不得不使用返回RETURN FUNC的形式
-	memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-	ret = hcu_read_from_storage_mem(&record);
-	if (ret == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: No any more off-line data shall be sent to CLOUD!\n");
-
-	//将发送成功后的数据条目从OFFLINE状态设置为ONLINE状态，表示数据已经发送完成，留着只是为了本地备份
-	//实际上，读取的过程已经将OFFLINE状态给设置了，这里不需要再处理，不然差错处理会导致状态机太多的报错
-	//在线状态下，读取离线成功，但发送不成功，会导致离线数据不再重复发送给后台，因为已经被设置为ONLINE/BACKUP留作本地备份了
-	//考虑到这种概率非常低下，不值得再做复杂的处理，反正数据还留着本地备份，万一需要，可以人工介入
-
-	//RECORD数据参数检查，这里只做最为基本的检查，
-	if ((record.equipid <=0) || (record.timestamp<=0) || (record.sensortype <=0) ||(record.onOffLine != DISC_DATA_SAMPLE_OFFLINE))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Invalid record read from MEM-DISC, dropped!\n");
-
-	//准备发送数据到后台
-	CloudDataSendBuf_t buf;
-	memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-
-	//RECORD数据打包，这里的打包需要根据数据类型进行判定，而且还是按照国家环保部的标准进行
-	switch(record.sensortype)
-	{
-	case L3CI_emc:
-		if (func_cloudvela_huanbao_emc_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_emc_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.emcValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: EMC pack message error!\n");
-		break;
-
-	case L3CI_pm25:
-		if (func_cloudvela_huanbao_pm25_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_pm25_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.pm1d0Value, record.pm2d5Value, record.pm10Value, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: PM25 pack message error!\n");
-		break;
-
-	case L3CI_windspd:
-		if (func_cloudvela_huanbao_winddir_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_windspd_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.windspdValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: WINDSPD pack message error!\n");
-		break;
-
-	case L3CI_winddir:
-		if (func_cloudvela_huanbao_windspd_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_winddir_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.winddirValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: WINDDIR pack message error!\n");
-		break;
-
-	case L3CI_temp:
-		if (func_cloudvela_huanbao_temp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_temp_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.tempValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: TEMP pack message error!\n");
-		break;
-
-	case L3CI_humid:
-		if (func_cloudvela_huanbao_humid_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_humid_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.humidValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: HUMID pack message error!\n");
-		break;
-
-	case L3CI_noise:
-		if (func_cloudvela_huanbao_noise_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_noise_data_report, L3CI_cmdid_back_type_period, record.equipid, record.dataFormat, record.noiseValue, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: NOISE pack message error!\n");
-		break;
-
-	case L3CI_hsmmp:
-		if (func_cloudvela_huanbao_hsmmp_msg_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, record.sensortype, L3PO_hsmmp_upload_req, L3CI_cmdid_back_type_period, record.equipid, record.gpsx, record.gpsy, record.gpsz, record.ns, record.ew, record.timestamp, record.hsmmpLink, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: HSMMP pack message error!\n");
-		break;
-
-	default:
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not known sensor type MEM storage data found!\n");
-		break;
-	}
-
-	//发送到后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		if (func_cloudvela_send_data_to_cloud(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send off-line data to back cloud error!\n");
-	}
-
-	//结束
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Under online state, send off-line data to cloud success!\n");
-
-	//State no change
 
 	return SUCCESS;
 }
@@ -473,11 +346,11 @@ OPSTAT func_cloudvela_time_out_sendback_offline_data(void)
 OPSTAT func_cloudvela_time_out_period_for_socket_heart(void)
 {
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-		if(zHcuEthConClientFd < 0) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: socket id is not valid!\n");
+		if(gCloudvelaTaskContex.ethConClientFd < 0) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: socket id is not valid!\n");
 	}
 
 	UINT32 echolen = strlen(zHcuSysEngPar.cloud.cloudBhHcuName);
-	if (send(zHcuEthConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen)
+	if (send(gCloudvelaTaskContex.ethConClientFd, zHcuSysEngPar.cloud.cloudBhHcuName, echolen, 0) != echolen)
 	{
 		HcuErrorPrint("CLOUDVELA: Socket disconnected & Mismatch in number of send bytes!\n\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -628,111 +501,6 @@ OPSTAT func_cloudvela_sw_download(char *filename)
  *  核心API函数
  *
  ***************************************************************************************************************************/
-//存入数据到本地内存磁盘
-OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record)
-{
-	//int ret=0;
-	UINT32 readCnt=0, wrtCnt=0, totalNbr=0, sid=0;
-
-	//先检查输入数据的合法性，以下三项必须填写，其它的无所谓
-	if (((record->sensortype)<=0) || ((record->timestamp)<=0))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error input of data save to memory, on Sensor type or Time stamp!\n");
-	if (((record->onOffLine) != DISC_DATA_SAMPLE_ONLINE) && ((record->onOffLine) != DISC_DATA_SAMPLE_OFFLINE))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error input of data save to memory, on on/off line attribute!\n");
-
-	//取得缓冲区数据的状态
-	readCnt = zHcuMemStorageBuf.rdCnt;
-	wrtCnt = zHcuMemStorageBuf.wrtCnt;
-	totalNbr = zHcuMemStorageBuf.recordNbr;
-	sid = zHcuMemStorageBuf.lastSid+1; //达到32位的最大值，需要连续工作几百年，几乎不可能
-
-	//先清零原先的记录，然后再贯穿写，不然之前的记录会污染当前的记录
-	//但是一股脑儿的全部拷贝，反而不会出错，就不需要清零原来的记录了
-	memcpy(&zHcuMemStorageBuf.recordItem[wrtCnt], record, sizeof(HcuDiscDataSampleStorageArray_t));
-	if ((record->onOffLine) == DISC_DATA_SAMPLE_OFFLINE) {
-		zHcuMemStorageBuf.offlineNbr = zHcuMemStorageBuf.offlineNbr + 1;
-		if (zHcuMemStorageBuf.offlineNbr >= DISC_DATA_SAMPLE_STORAGE_NBR_MAX){
-			zHcuMemStorageBuf.offlineNbr = DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
-		}
-	}
-
-	//判断是否满，从而回写
-	wrtCnt++;
-	wrtCnt = wrtCnt % DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
-	if (totalNbr >= DISC_DATA_SAMPLE_STORAGE_NBR_MAX)
-	{
-		totalNbr = DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
-		readCnt++;
-		readCnt = readCnt % DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
-	}else{
-		totalNbr++;
-	}
-	zHcuMemStorageBuf.rdCnt = readCnt;
-	zHcuMemStorageBuf.wrtCnt = wrtCnt;
-	zHcuMemStorageBuf.recordNbr = totalNbr;
-	zHcuMemStorageBuf.lastSid = sid;  //最新一个写入记录的SID数值
-
-	//Always successful, as the storage is a cycle buffer!
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Data record save to MEM-DISC, sid=%d, totalNbr=%d, offNbr=%d\n", sid, totalNbr, zHcuMemStorageBuf.offlineNbr);
-	return SUCCESS;
-}
-
-//从本地内存磁盘，读取数据并送往后台
-OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record)
-{
-	//int ret=0;
-	UINT32 readCnt=0, totalNbr=0;
-
-	readCnt = zHcuMemStorageBuf.rdCnt;
-	totalNbr = zHcuMemStorageBuf.recordNbr;
-	memset(record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-
-	//先检查输入数据的合法性，以下三项必须填写，其它的无所谓
-	//总控数量优先
-	if (totalNbr <=0 ) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error during MEM storage!\n");
-
-	//读取一个记录
-	//总数totalNbr和离线计数offlineNbr双重控制，如果出现不一致，一定是存储读取错误
-	BOOL flag = FALSE;
-	while(totalNbr>0){
-		if (zHcuMemStorageBuf.recordItem[readCnt].onOffLine == DISC_DATA_SAMPLE_OFFLINE){
-			memcpy(record, &zHcuMemStorageBuf.recordItem[readCnt], sizeof(HcuDiscDataSampleStorageArray_t));
-			zHcuMemStorageBuf.recordItem[readCnt].onOffLine = DISC_DATA_SAMPLE_ONLINE; //used as backup
-			if ((zHcuMemStorageBuf.offlineNbr <=0) || (zHcuMemStorageBuf.offlineNbr > totalNbr))
-				HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error occurs during totalNbr/offlineNbr control MEM STORAGE, recover!\n");
-			totalNbr--;
-			readCnt++;
-			readCnt = readCnt % DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
-			zHcuMemStorageBuf.rdCnt = readCnt;
-			zHcuMemStorageBuf.recordNbr = totalNbr;
-			zHcuMemStorageBuf.offlineNbr--;
-			flag = TRUE;
-			break;
-		}else{
-			totalNbr--;
-			readCnt++;
-			readCnt = readCnt % DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
-			zHcuMemStorageBuf.rdCnt = readCnt;
-			zHcuMemStorageBuf.recordNbr = totalNbr;
-		}
-	}
-	//如果offlineNbr>0，数据又没有读到，这个也是正常情况，因为Offline数据可能被桶形ONLINE数据给覆盖掉了
-	//所以没有读到数据的情形，也得当正常情形来看待，而不能当出错，不然处理方式就不对
-	if (flag == FALSE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Data read nothing, rdCnt=%d, totalNbr = %d, offNbr=%d\n", readCnt, totalNbr, zHcuMemStorageBuf.offlineNbr);
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Data record read from MEM-DISC, rdCnt=%d, totalNbr = %d, offNbr=%d\n", readCnt, totalNbr, zHcuMemStorageBuf.offlineNbr);
-	return SUCCESS;
-}
-
-//记录多少条，是否超限，过时清理等等，都在这儿完成
-OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen)
-{
-	return hcu_disk_write(fId, dataBuffer, dataLen);
-}
-
-OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen)
-{
-	return SUCCESS;
-}
 
 //Send to backhawl cloud
 OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
@@ -742,20 +510,20 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error message length to send back for cloud!\n");
 
 	//根据系统配置，决定使用那一种后台网络
-	if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
+	if (gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 	}
-	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET){
+	else if (gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET){
 		if (hcu_usbnet_data_send(buf) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 		}
 	}
-	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI){
+	else if (gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI){
 		if (hcu_wifi_data_send(buf) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 		}
 	}
-	else if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G){
+	else if (gCloudvelaTaskContex.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G){
 		if (hcu_3g4g_data_send(buf) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 		}
@@ -894,10 +662,10 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
-	if ((rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.ethConTry = 0;
-	else if ((rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.usbnetConTry = 0;
-	else if ((rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.wifiConTry = 0;
-	else if ((rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) zHcuCloudvelaTable.g3g4ConTry = 0;
+	if ((rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.ethStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContex.ethConTry = 0;
+	else if ((rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.usbnetStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContex.usbnetConTry = 0;
+	else if ((rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.wifiStatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContex.wifiConTry = 0;
+	else if ((rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE) || (rcv.g3g4StatChg == HCU_SYSMSG_HWINV_PHY_STATUS_ACTIVE_TO_DEACTIVE)) gCloudvelaTaskContex.g3g4ConTry = 0;
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Message received with error content!\n");
 	}
@@ -1071,11 +839,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		zHcuCloudvelaTable.ethConTry++;
+		gCloudvelaTaskContex.ethConTry++;
 	}
 	if (ret == SUCCESS){
-		zHcuCloudvelaTable.ethConTry = 0;
-		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+		gCloudvelaTaskContex.ethConTry = 0;
+		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 		return SUCCESS;
 	}
 
@@ -1085,11 +853,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		zHcuCloudvelaTable.usbnetConTry++;
+		gCloudvelaTaskContex.usbnetConTry++;
 	}
 	if (ret == SUCCESS){
-		zHcuCloudvelaTable.usbnetConTry = 0;
-		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
+		gCloudvelaTaskContex.usbnetConTry = 0;
+		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
 		return SUCCESS;
 	}
 
@@ -1099,11 +867,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		zHcuCloudvelaTable.wifiConTry++;
+		gCloudvelaTaskContex.wifiConTry++;
 	}
 	if (ret == SUCCESS){
-		zHcuCloudvelaTable.wifiConTry = 0;
-		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
+		gCloudvelaTaskContex.wifiConTry = 0;
+		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
 		return SUCCESS;
 	}
 
@@ -1114,11 +882,11 @@ OPSTAT func_cloudvela_socket_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		zHcuCloudvelaTable.g3g4ConTry++;
+		gCloudvelaTaskContex.g3g4ConTry++;
 	}
 	if (ret == SUCCESS){
-		zHcuCloudvelaTable.g3g4ConTry = 0;
-		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
+		gCloudvelaTaskContex.g3g4ConTry = 0;
+		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
 		return SUCCESS;
 	}
 
@@ -1608,6 +1376,9 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.respValue.dataFormat = rcv.dataFormat;
 		pMsgProc.respValue.snrCfgNbrMax = rcv.snrCfgNbrMax;
 		pMsgProc.respValue.snrUsedBitmap = HUITP_ENDIAN_EXG32(rcv.snrUsedBitmap);
+		#if (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX > HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX)
+			#error Error message structure or system parameter set!
+		#endif
 		memcpy(pMsgProc.respValue.snrValue, rcv.snrValue, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
 		//不能采取memcpy的方式，因为既有可能两边定义的结构不一致，更有可能pack()导致的sizeof()不一样，甚至有大小端的问题
 		pMsgProc.respValue.sta.combTimes = HUITP_ENDIAN_EXG32(rcv.sta.combTimes);
@@ -1683,6 +1454,9 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 		pMsgProc.reportValue.dataFormat = rcv.dataFormat;
 		pMsgProc.reportValue.snrCfgNbrMax = rcv.snrCfgNbrMax;
 		pMsgProc.reportValue.snrUsedBitmap = HUITP_ENDIAN_EXG32(rcv.snrUsedBitmap);
+		#if (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX > HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX)
+			#error Error message structure or system parameter set!
+		#endif
 		memcpy(pMsgProc.reportValue.snrValue, rcv.snrValue, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
 		//不能采取memcpy的方式，因为既有可能两边定义的结构不一致，更有可能pack()导致的sizeof()不一样，甚至有大小端的问题
 		pMsgProc.reportValue.sta.combTimes = HUITP_ENDIAN_EXG32(rcv.sta.combTimes);
@@ -1982,11 +1756,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		zHcuCloudvelaTable.ethConTry++;
+		gCloudvelaTaskContex.ethConTry++;
 	}
 	if (ret == SUCCESS){
-		zHcuCloudvelaTable.ethConTry = 0;
-		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+		gCloudvelaTaskContex.ethConTry = 0;
+		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 		return SUCCESS;
 	}
 
@@ -1996,11 +1770,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		zHcuCloudvelaTable.usbnetConTry++;
+		gCloudvelaTaskContex.usbnetConTry++;
 	}
 	if (ret == SUCCESS){
-		zHcuCloudvelaTable.usbnetConTry = 0;
-		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
+		gCloudvelaTaskContex.usbnetConTry = 0;
+		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
 		return SUCCESS;
 	}
 
@@ -2010,11 +1784,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		zHcuCloudvelaTable.wifiConTry++;
+		gCloudvelaTaskContex.wifiConTry++;
 	}
 	if (ret == SUCCESS){
-		zHcuCloudvelaTable.wifiConTry = 0;
-		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
+		gCloudvelaTaskContex.wifiConTry = 0;
+		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
 		return SUCCESS;
 	}
 
@@ -2025,11 +1799,11 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	}
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		zHcuCloudvelaTable.g3g4ConTry++;
+		gCloudvelaTaskContex.g3g4ConTry++;
 	}
 	if (ret == SUCCESS){
-		zHcuCloudvelaTable.g3g4ConTry = 0;
-		zHcuCloudvelaTable.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
+		gCloudvelaTaskContex.g3g4ConTry = 0;
+		gCloudvelaTaskContex.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
 		return SUCCESS;
 	}
 
@@ -2062,5 +1836,116 @@ size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, voi
  *
  ***************************************************************************************************************************/
 
+/***************************************************************************************************************************
+ *
+ * 　不再使用的API，但由于其久经考验的程序价值，暂时放在这儿
+ *
+ ***************************************************************************************************************************/
+/*//存入数据到本地内存磁盘
+OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record)
+{
+	//int ret=0;
+	UINT32 readCnt=0, wrtCnt=0, totalNbr=0, sid=0;
 
+	//先检查输入数据的合法性，以下三项必须填写，其它的无所谓
+	if (((record->sensortype)<=0) || ((record->timestamp)<=0))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error input of data save to memory, on Sensor type or Time stamp!\n");
+	if (((record->onOffLine) != DISC_DATA_SAMPLE_ONLINE) && ((record->onOffLine) != DISC_DATA_SAMPLE_OFFLINE))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error input of data save to memory, on on/off line attribute!\n");
+
+	//取得缓冲区数据的状态
+	readCnt = zHcuMemStorageBuf.rdCnt;
+	wrtCnt = zHcuMemStorageBuf.wrtCnt;
+	totalNbr = zHcuMemStorageBuf.recordNbr;
+	sid = zHcuMemStorageBuf.lastSid+1; //达到32位的最大值，需要连续工作几百年，几乎不可能
+
+	//先清零原先的记录，然后再贯穿写，不然之前的记录会污染当前的记录
+	//但是一股脑儿的全部拷贝，反而不会出错，就不需要清零原来的记录了
+	memcpy(&zHcuMemStorageBuf.recordItem[wrtCnt], record, sizeof(HcuDiscDataSampleStorageArray_t));
+	if ((record->onOffLine) == DISC_DATA_SAMPLE_OFFLINE) {
+		zHcuMemStorageBuf.offlineNbr = zHcuMemStorageBuf.offlineNbr + 1;
+		if (zHcuMemStorageBuf.offlineNbr >= DISC_DATA_SAMPLE_STORAGE_NBR_MAX){
+			zHcuMemStorageBuf.offlineNbr = DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
+		}
+	}
+
+	//判断是否满，从而回写
+	wrtCnt++;
+	wrtCnt = wrtCnt % DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
+	if (totalNbr >= DISC_DATA_SAMPLE_STORAGE_NBR_MAX)
+	{
+		totalNbr = DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
+		readCnt++;
+		readCnt = readCnt % DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
+	}else{
+		totalNbr++;
+	}
+	zHcuMemStorageBuf.rdCnt = readCnt;
+	zHcuMemStorageBuf.wrtCnt = wrtCnt;
+	zHcuMemStorageBuf.recordNbr = totalNbr;
+	zHcuMemStorageBuf.lastSid = sid;  //最新一个写入记录的SID数值
+
+	//Always successful, as the storage is a cycle buffer!
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Data record save to MEM-DISC, sid=%d, totalNbr=%d, offNbr=%d\n", sid, totalNbr, zHcuMemStorageBuf.offlineNbr);
+	return SUCCESS;
+}
+
+//从本地内存磁盘，读取数据并送往后台
+OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record)
+{
+	//int ret=0;
+	UINT32 readCnt=0, totalNbr=0;
+
+	readCnt = zHcuMemStorageBuf.rdCnt;
+	totalNbr = zHcuMemStorageBuf.recordNbr;
+	memset(record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+
+	//先检查输入数据的合法性，以下三项必须填写，其它的无所谓
+	//总控数量优先
+	if (totalNbr <=0 ) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error during MEM storage!\n");
+
+	//读取一个记录
+	//总数totalNbr和离线计数offlineNbr双重控制，如果出现不一致，一定是存储读取错误
+	BOOL flag = FALSE;
+	while(totalNbr>0){
+		if (zHcuMemStorageBuf.recordItem[readCnt].onOffLine == DISC_DATA_SAMPLE_OFFLINE){
+			memcpy(record, &zHcuMemStorageBuf.recordItem[readCnt], sizeof(HcuDiscDataSampleStorageArray_t));
+			zHcuMemStorageBuf.recordItem[readCnt].onOffLine = DISC_DATA_SAMPLE_ONLINE; //used as backup
+			if ((zHcuMemStorageBuf.offlineNbr <=0) || (zHcuMemStorageBuf.offlineNbr > totalNbr))
+				HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error occurs during totalNbr/offlineNbr control MEM STORAGE, recover!\n");
+			totalNbr--;
+			readCnt++;
+			readCnt = readCnt % DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
+			zHcuMemStorageBuf.rdCnt = readCnt;
+			zHcuMemStorageBuf.recordNbr = totalNbr;
+			zHcuMemStorageBuf.offlineNbr--;
+			flag = TRUE;
+			break;
+		}else{
+			totalNbr--;
+			readCnt++;
+			readCnt = readCnt % DISC_DATA_SAMPLE_STORAGE_NBR_MAX;
+			zHcuMemStorageBuf.rdCnt = readCnt;
+			zHcuMemStorageBuf.recordNbr = totalNbr;
+		}
+	}
+	//如果offlineNbr>0，数据又没有读到，这个也是正常情况，因为Offline数据可能被桶形ONLINE数据给覆盖掉了
+	//所以没有读到数据的情形，也得当正常情形来看待，而不能当出错，不然处理方式就不对
+	if (flag == FALSE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Data read nothing, rdCnt=%d, totalNbr = %d, offNbr=%d\n", readCnt, totalNbr, zHcuMemStorageBuf.offlineNbr);
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Data record read from MEM-DISC, rdCnt=%d, totalNbr = %d, offNbr=%d\n", readCnt, totalNbr, zHcuMemStorageBuf.offlineNbr);
+	return SUCCESS;
+}
+
+//记录多少条，是否超限，过时清理等等，都在这儿完成
+OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen)
+{
+	return hcu_disk_write(fId, dataBuffer, dataLen);
+}
+
+OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen)
+{
+	return SUCCESS;
+}
+
+*/
 

@@ -210,7 +210,7 @@ OPSTAT func_airprs_time_out_read_data_from_bmp180(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CAIRPRSBMP180].fVal >= HCU_SENSOR_AIRPRS_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CAIRPRSBMP180].fVal <= HCU_SENSOR_AIRPRS_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_I2CAIRPRSBMP180].fVal >= HCU_SENSOR_AIRPRS_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CAIRPRSBMP180].fVal <= HCU_SENSOR_AIRPRS_VALUE_MAX))
 	{
 		sensor_airprs_bmp180_data_element_t airprsData;
 		memset(&airprsData, 0, sizeof(sensor_airprs_bmp180_data_element_t));
@@ -227,7 +227,7 @@ OPSTAT func_airprs_time_out_read_data_from_bmp180(void)
 	}
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CALTITUDEBMP180].fVal >= HCU_SENSOR_ALTITUDE_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CALTITUDEBMP180].fVal <= HCU_SENSOR_ALTITUDE_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_I2CALTITUDEBMP180].fVal >= HCU_SENSOR_ALTITUDE_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CALTITUDEBMP180].fVal <= HCU_SENSOR_ALTITUDE_VALUE_MAX))
 	{
 		sensor_airprs_altitude_bmp180_data_element_t altitudeData;
 		memset(&altitudeData, 0, sizeof(sensor_airprs_altitude_bmp180_data_element_t));

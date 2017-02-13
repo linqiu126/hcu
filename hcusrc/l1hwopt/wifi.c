@@ -43,10 +43,6 @@ HcuFsmStateItem_t HcuFsmWifi[] =
 
 //Global variables
 
-
-//extern CURL *zHcuCloudCurlPtr;
-//extern CloudvelaTable_t zHcuCloudvelaTable;
-
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_wifi_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)

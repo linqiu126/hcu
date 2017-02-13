@@ -449,44 +449,23 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.gpsz = rcv.temp.gps.gpsz;
 			record.ew = rcv.temp.gps.ew;
 			record.ns = rcv.temp.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-					HcuErrorPrint("TEMP: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-					HcuErrorPrint("TEMP: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_temp_data_element_t tempData;
-				memset(&tempData, 0, sizeof(sensor_temp_data_element_t));
-				tempData.equipid = record.equipid;
-				tempData.timeStamp = record.timestamp;
-				tempData.dataFormat = record.dataFormat;
-				tempData.tempValue = record.tempValue;
-				tempData.gps.gpsx = record.gpsx;
-				tempData.gps.gpsy = record.gpsy;
-				tempData.gps.gpsz = record.gpsz;
-				tempData.gps.ew = record.ew;
-				tempData.gps.ns = record.ns;
-				tempData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuTempDataInfo_save(&tempData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-					HcuErrorPrint("TEMP: Can not save data into database!\n");
-				}
+			sensor_temp_data_element_t tempData;
+			memset(&tempData, 0, sizeof(sensor_temp_data_element_t));
+			tempData.equipid = record.equipid;
+			tempData.timeStamp = record.timestamp;
+			tempData.dataFormat = record.dataFormat;
+			tempData.tempValue = record.tempValue;
+			tempData.gps.gpsx = record.gpsx;
+			tempData.gps.gpsy = record.gpsy;
+			tempData.gps.gpsz = record.gpsz;
+			tempData.gps.ew = record.ew;
+			tempData.gps.ns = record.ns;
+			tempData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuTempDataInfo_save(&tempData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
+				HcuErrorPrint("TEMP: Can not save data into database!\n");
 			}
 		}//周期模式
 		else{
@@ -537,44 +516,23 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.gpsz = rcv.temp.gps.gpsz;
 			record.ew = rcv.temp.gps.ew;
 			record.ns = rcv.temp.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-					HcuErrorPrint("TEMP: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-					HcuErrorPrint("TEMP: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_temp_data_element_t tempData;
-				memset(&tempData, 0, sizeof(sensor_temp_data_element_t));
-				tempData.equipid = record.equipid;
-				tempData.timeStamp = record.timestamp;
-				tempData.dataFormat = record.dataFormat;
-				tempData.tempValue = record.tempValue;
-				tempData.gps.gpsx = record.gpsx;
-				tempData.gps.gpsy = record.gpsy;
-				tempData.gps.gpsz = record.gpsz;
-				tempData.gps.ew = record.ew;
-				tempData.gps.ns = record.ns;
-				tempData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuTempDataInfo_save(&tempData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
-					HcuErrorPrint("TEMP: Can not save data into database!\n");
-				}
+			sensor_temp_data_element_t tempData;
+			memset(&tempData, 0, sizeof(sensor_temp_data_element_t));
+			tempData.equipid = record.equipid;
+			tempData.timeStamp = record.timestamp;
+			tempData.dataFormat = record.dataFormat;
+			tempData.tempValue = record.tempValue;
+			tempData.gps.gpsx = record.gpsx;
+			tempData.gps.gpsy = record.gpsy;
+			tempData.gps.gpsz = record.gpsz;
+			tempData.gps.ew = record.ew;
+			tempData.gps.ns = record.ns;
+			tempData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuTempDataInfo_save(&tempData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
+				HcuErrorPrint("TEMP: Can not save data into database!\n");
 			}
 		}// Period mode OK!
 		// Instance mode, no need store!
@@ -661,7 +619,7 @@ OPSTAT func_temp_time_out_read_data_from_dht11(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTEMPDHT11].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_dht11_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_dht11_data_element_t));
@@ -685,7 +643,7 @@ OPSTAT func_temp_time_out_read_data_from_sht20(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPSHT20].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_sht20_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_sht20_data_element_t));
@@ -709,7 +667,7 @@ OPSTAT func_temp_time_out_read_data_from_rht03(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPRHT03].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPRHT03].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPRHT03].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPRHT03].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_rht03_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_rht03_data_element_t));
@@ -733,7 +691,7 @@ OPSTAT func_temp_time_out_read_data_from_bmp180(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_I2CTEMPBMP180].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_bmp180_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_bmp180_data_element_t));
@@ -757,7 +715,7 @@ OPSTAT func_temp_time_out_read_data_from_mth01(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].fVal >= HCU_SENSOR_TEMP_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPITEMPMTH01].fVal <= HCU_SENSOR_TEMP_VALUE_MAX))
 	{
 		sensor_temp_mth01_data_element_t tempData;
 		memset(&tempData, 0, sizeof(sensor_temp_mth01_data_element_t));

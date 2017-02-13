@@ -212,7 +212,7 @@ OPSTAT func_toxicgas_time_out_read_data_from_mq135(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASMQ135].fVal >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASMQ135].fVal <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASMQ135].fVal >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASMQ135].fVal <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
 	{
 		sensor_toxicgas_mq135_data_element_t toxicgasData;
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_mq135_data_element_t));
@@ -237,7 +237,7 @@ OPSTAT func_toxicgas_time_out_read_data_from_zp01voc(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASZP01VOC].fVal >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASZP01VOC].fVal <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASZP01VOC].fVal >= HCU_SENSOR_TOXICGAS_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_GPIOTOXICGASZP01VOC].fVal <= HCU_SENSOR_TOXICGAS_VALUE_MAX))
 	{
 		sensor_toxicgas_zp01voc_data_element_t toxicgasData;
 		memset(&toxicgasData, 0, sizeof(sensor_toxicgas_zp01voc_data_element_t));

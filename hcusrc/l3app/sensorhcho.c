@@ -210,7 +210,7 @@ OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void)
 	int ret=0;
 
 	//存入数据库
-	if ((HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].fVal >= HCU_SENSOR_HCHO_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].fVal <= HCU_SENSOR_HCHO_VALUE_MAX))
+	if ((zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].fVal >= HCU_SENSOR_HCHO_VALUE_MIN) && (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSHCHOZE08CH2O].fVal <= HCU_SENSOR_HCHO_VALUE_MAX))
 	{
 		sensor_hcho_ze08ch2o_data_element_t hchoData;
 		memset(&hchoData, 0, sizeof(sensor_hcho_ze08ch2o_data_element_t));

@@ -92,7 +92,7 @@ HcuFsmStateItem_t FsmCloudvela[] =
 
 //Global variables
 HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
-CloudvelaTable_t zHcuCloudvelaTable;
+HcuCloudvelaTaskContext_t zHcuCloudvelaTable;
 //CURL *zHcuCloudCurlPtrTx;
 //CURL *zHcuCloudCurlPtrRx;
 
@@ -151,7 +151,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	//Task global variables init，
 	//zHcuMemStorageBuf其实还是一个全局变量，但因为这个模块用的多，故而在这里定义
 	memset(&zHcuMemStorageBuf, 0, sizeof(HcuDiscDataSampleStorage_t));
-	memset(&zHcuCloudvelaTable, 0, sizeof(CloudvelaTable_t));
+	memset(&zHcuCloudvelaTable, 0, sizeof(HcuCloudvelaTaskContext_t));
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA] = 0;
 	//zHcuCloudCurlPtrTx = NULL;
 	//zHcuCloudCurlPtrTx = NULL;

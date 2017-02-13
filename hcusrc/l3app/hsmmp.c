@@ -297,49 +297,27 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			record.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
 			record.ew = zHcuVmCtrTab.hwinv.gps.EW;
 			record.ns = zHcuVmCtrTab.hwinv.gps.NS;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-					HcuErrorPrint("HSMMP: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-					HcuErrorPrint("HSMMP: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_hsmmp_data_element_t hsmmpData;
-				memset(&hsmmpData, 0, sizeof(sensor_hsmmp_data_element_t));
-				hsmmpData.timeStamp = record.timestamp;
-				strcpy(hsmmpData.hsmmpFdir, record.hsmmpFdir);
-				strcpy(hsmmpData.hsmmpFname, record.hsmmpFname);
-				strcpy(hsmmpData.hsmmpLink, record.hsmmpLink);
-				hsmmpData.equipid = record.equipid;
-				hsmmpData.gps.gpsx = record.gpsx;
-				hsmmpData.gps.gpsy = record.gpsy;
-				hsmmpData.gps.gpsz = record.gpsz;
-				hsmmpData.gps.ew = record.ew;
-				hsmmpData.gps.ns = record.ns;
-				hsmmpData.onOffLineFlag = record.onOffLine;
-				//printf("HSMMP: hsmmpData address = 0x%08x\n", (UINT32)&hsmmpData);
-				//printf("HSMMP: hsmmpFdir = %s, hsmmpFname = %s, hsmmpLink = %s\n", hsmmpData.hsmmpFdir, hsmmpData.hsmmpFname, hsmmpData.hsmmpLink);
-				ret = dbi_HcuHsmmpDataInfo_save(&hsmmpData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-					HcuErrorPrint("HSMMP: Can not save data into database!\n");
-				}
+			sensor_hsmmp_data_element_t hsmmpData;
+			memset(&hsmmpData, 0, sizeof(sensor_hsmmp_data_element_t));
+			hsmmpData.timeStamp = record.timestamp;
+			strcpy(hsmmpData.hsmmpFdir, record.hsmmpFdir);
+			strcpy(hsmmpData.hsmmpFname, record.hsmmpFname);
+			strcpy(hsmmpData.hsmmpLink, record.hsmmpLink);
+			hsmmpData.equipid = record.equipid;
+			hsmmpData.gps.gpsx = record.gpsx;
+			hsmmpData.gps.gpsy = record.gpsy;
+			hsmmpData.gps.gpsz = record.gpsz;
+			hsmmpData.gps.ew = record.ew;
+			hsmmpData.gps.ns = record.ns;
+			hsmmpData.onOffLineFlag = record.onOffLine;
+			//printf("HSMMP: hsmmpData address = 0x%08x\n", (UINT32)&hsmmpData);
+			//printf("HSMMP: hsmmpFdir = %s, hsmmpFname = %s, hsmmpLink = %s\n", hsmmpData.hsmmpFdir, hsmmpData.hsmmpFname, hsmmpData.hsmmpLink);
+			ret = dbi_HcuHsmmpDataInfo_save(&hsmmpData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+				HcuErrorPrint("HSMMP: Can not save data into database!\n");
 			}
-			//瞬时模式，待完善
 		}
 		//在线模式
 		else if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -372,63 +350,26 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 				return FAILURE;
 			}
 
-			//Save to disk as request：在线是为了备份，离线是为了重发给后台
-			//完整的处理情形，有待完成，存入磁盘还为实现
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.hsmmp.equipid;
-			record.sensortype = L3CI_hsmmp;
-			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-			record.timestamp = rcv.hsmmp.timeStamp;
-			strcpy(record.hsmmpFdir, rcv.hsmmp.hsmmpFdir);
-			strcpy(record.hsmmpFname, rcv.hsmmp.hsmmpFname);
-			strcpy(record.hsmmpLink, newpath); //都是以HCU_FILE_NAME_LENGTH_MAX长度为限
-			record.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
-			record.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
-			record.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
-			record.ew = zHcuVmCtrTab.hwinv.gps.EW;
-			record.ns = zHcuVmCtrTab.hwinv.gps.NS;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-					HcuErrorPrint("HSMMP: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-					HcuErrorPrint("HSMMP: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_hsmmp_data_element_t hsmmpData;
-				memset(&hsmmpData, 0, sizeof(sensor_hsmmp_data_element_t));
-				hsmmpData.equipid = record.equipid;
-				hsmmpData.timeStamp = record.timestamp;
-				strcpy(hsmmpData.hsmmpFdir, record.hsmmpFdir);
-				strcpy(hsmmpData.hsmmpFname, record.hsmmpFname);
-				strcpy(hsmmpData.hsmmpLink, record.hsmmpLink);
-				hsmmpData.gps.gpsx = record.gpsx;
-				hsmmpData.gps.gpsy = record.gpsy;
-				hsmmpData.gps.gpsz = record.gpsz;
-				hsmmpData.gps.ew = record.ew;
-				hsmmpData.gps.ns = record.ns;
-				hsmmpData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuHsmmpDataInfo_save(&hsmmpData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
-					HcuErrorPrint("HSMMP: Can not save data into database!\n");
-				}
+			sensor_hsmmp_data_element_t hsmmpData;
+			memset(&hsmmpData, 0, sizeof(sensor_hsmmp_data_element_t));
+			hsmmpData.equipid = record.equipid;
+			hsmmpData.timeStamp = record.timestamp;
+			strcpy(hsmmpData.hsmmpFdir, record.hsmmpFdir);
+			strcpy(hsmmpData.hsmmpFname, record.hsmmpFname);
+			strcpy(hsmmpData.hsmmpLink, record.hsmmpLink);
+			hsmmpData.gps.gpsx = record.gpsx;
+			hsmmpData.gps.gpsy = record.gpsy;
+			hsmmpData.gps.gpsz = record.gpsz;
+			hsmmpData.gps.ew = record.ew;
+			hsmmpData.gps.ns = record.ns;
+			hsmmpData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuHsmmpDataInfo_save(&hsmmpData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+				HcuErrorPrint("HSMMP: Can not save data into database!\n");
 			}
 			//瞬时模式，待完善
-
 		}
 		//差错情形
 		else{

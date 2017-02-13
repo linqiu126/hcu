@@ -52,8 +52,6 @@ HcuFsmStateItem_t HcuFsmWindspd[] =
 //Task Global variables
 SensorWindspdInfo_t zSensorWindspdInfo[MAX_NUM_OF_SENSOR_WINDSPD_INSTALLED];
 UINT8 currentSensorWindspdId;
-//暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
-//extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -341,44 +339,23 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 			record.gpsz = rcv.windspd.gps.gpsz;
 			record.ew = rcv.windspd.gps.ew;
 			record.ns = rcv.windspd.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-					HcuErrorPrint("WINDSPD: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-					HcuErrorPrint("WINDSPD: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_windspd_data_element_t windspdData;
-				memset(&windspdData, 0, sizeof(sensor_windspd_data_element_t));
-				windspdData.equipid = record.equipid;
-				windspdData.timeStamp = record.timestamp;
-				windspdData.dataFormat = record.dataFormat;
-				windspdData.windspdValue = record.windspdValue;
-				windspdData.gps.gpsx = record.gpsx;
-				windspdData.gps.gpsy = record.gpsy;
-				windspdData.gps.gpsz = record.gpsz;
-				windspdData.gps.ew = record.ew;
-				windspdData.gps.ns = record.ns;
-				windspdData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuWindspdDataInfo_save(&windspdData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-					HcuErrorPrint("WINDSPD: Can not save data into database!\n");
-				}
+			sensor_windspd_data_element_t windspdData;
+			memset(&windspdData, 0, sizeof(sensor_windspd_data_element_t));
+			windspdData.equipid = record.equipid;
+			windspdData.timeStamp = record.timestamp;
+			windspdData.dataFormat = record.dataFormat;
+			windspdData.windspdValue = record.windspdValue;
+			windspdData.gps.gpsx = record.gpsx;
+			windspdData.gps.gpsy = record.gpsy;
+			windspdData.gps.gpsz = record.gpsz;
+			windspdData.gps.ew = record.ew;
+			windspdData.gps.ns = record.ns;
+			windspdData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuWindspdDataInfo_save(&windspdData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
+				HcuErrorPrint("WINDSPD: Can not save data into database!\n");
 			}
 		}//周期模式
 		else{
@@ -416,57 +393,23 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
-			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
-			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
-			record.equipid = rcv.windspd.equipid;
-			record.sensortype = L3CI_windspd;
-			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
-			record.timestamp = rcv.windspd.timeStamp;
-			record.dataFormat = rcv.windspd.dataFormat;
-			record.windspdValue = rcv.windspd.windspdValue;
-			record.gpsx = rcv.windspd.gps.gpsx;
-			record.gpsy = rcv.windspd.gps.gpsy;
-			record.gpsz = rcv.windspd.gps.gpsz;
-			record.ew = rcv.windspd.gps.ew;
-			record.ns = rcv.windspd.gps.ns;
-			//RECORD存入内存盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_MEMDISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_MEMDISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_mem(&record);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-					HcuErrorPrint("WINDSPD: Can not save data into memory buffer, might par error!\n");
-				}
-			}
-			//RECORD存入硬盘
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_FLASH_DISK_SET == HCU_SYSCFG_SENSOR_SAVE_TO_FLASH_DISK_FLAG_YES)
-			{
-				ret = hcu_save_to_storage_disc(FILE_OPERATION_TYPE_SENSOR, &record, sizeof(HcuDiscDataSampleStorageArray_t));
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-					HcuErrorPrint("WINDSPD: Can not save data into hard disk!\n");
-				}
-			}
 			//RECORD还要存入数据库
-			if (HCU_SYSCFG_SNR_DATA_SAVE_TO_LOCAL_DB_SET == HCU_SYSCFG_SENSOR_SAVE_TO_LOCAL_DB_FLAG_YES)
-			{
-				sensor_windspd_data_element_t windspdData;
-				memset(&windspdData, 0, sizeof(sensor_windspd_data_element_t));
-				windspdData.equipid = record.equipid;
-				windspdData.timeStamp = record.timestamp;
-				windspdData.dataFormat = record.dataFormat;
-				windspdData.windspdValue = record.windspdValue;
-				windspdData.gps.gpsx = record.gpsx;
-				windspdData.gps.gpsy = record.gpsy;
-				windspdData.gps.gpsz = record.gpsz;
-				windspdData.gps.ew = record.ew;
-				windspdData.gps.ns = record.ns;
-				windspdData.onOffLineFlag = record.onOffLine;
-				ret = dbi_HcuWindspdDataInfo_save(&windspdData);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-					HcuErrorPrint("WINDSPD: Can not save data into database!\n");
-				}
+			sensor_windspd_data_element_t windspdData;
+			memset(&windspdData, 0, sizeof(sensor_windspd_data_element_t));
+			windspdData.equipid = record.equipid;
+			windspdData.timeStamp = record.timestamp;
+			windspdData.dataFormat = record.dataFormat;
+			windspdData.windspdValue = record.windspdValue;
+			windspdData.gps.gpsx = record.gpsx;
+			windspdData.gps.gpsy = record.gpsy;
+			windspdData.gps.gpsz = record.gpsz;
+			windspdData.gps.ew = record.ew;
+			windspdData.gps.ns = record.ns;
+			windspdData.onOffLineFlag = record.onOffLine;
+			ret = dbi_HcuWindspdDataInfo_save(&windspdData);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
+				HcuErrorPrint("WINDSPD: Can not save data into database!\n");
 			}
 		}// Period mode OK!
 		// Instance mode, no need store!
