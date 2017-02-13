@@ -77,10 +77,10 @@ HcuFsmStateItem_t FsmCloudvela[] =
 	//所有传感器接口（232/485/BLE/USB-CAMERA/I2S-AUDIO）均直接采用API发送，接受采用阻塞式任务框架
 	//所有后台接口（ETHERNET/WIFI/USB-OTG/3G4G）也是发送TX直接API，但RX采用阻塞式任务框架
 	//由于实质上四种接口的处理方式完全一样，现使用同一个函数，未来有变化再改变
-	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},
-	{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_usbnet_data_rx
-	{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_wifi_data_rx
-	{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_3g4g_data_rx
+	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_curl_data_rx},
+	{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_usbnet_data_rx
+	{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_wifi_data_rx
+	{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_3g4g_data_rx
 
 	//HWINV发来了硬件状态的改变，一般是硬件重新插拔造成的PnP状态改变
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 	fsm_cloudvela_hwinv_phy_status_chg},
@@ -291,7 +291,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 
 	//在线状态，则检查
 	else if(FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		if (func_cloudvela_hb_link_send_signal() == FAILURE){
+		if (func_cloudvela_hb_link_active_send_signal() == FAILURE){
 			zHcuSysStaPm.statisCnt.cloudVelaDiscCnt++;
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
@@ -1180,7 +1180,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 //心跳握手检测，搞不好就是一种新状态，这里得想办法做成一个立即返回的过程，不然状态机太复杂，上面的控制程序也不好处理
 //这里的发送接受，只是有SAE-CLOUD的反馈就算成功，如果在消息解码中再遇到问题，可以重新设置本模块的状态，比如强行进入离线等等
 //所以这里返回成功，以及相应的处理，只能是不完善的，因为发送和接收过程分离的，但99%情况下，这种机制是可以正常工作的
-OPSTAT func_cloudvela_hb_link_send_signal(void)
+OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 {
 	int ret = 0;
 
@@ -1425,7 +1425,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 
 	//根据系统配置，决定使用那一种后台网络
 	if (zHcuCloudvelaTable.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
-		if (hcu_ethernet_date_send(buf) == FAILURE){
+		if (hcu_ethernet_curl_data_send(buf) == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Error send data to back-cloud!\n");
 			return FAILURE;
@@ -1473,7 +1473,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 //带buffer不定长的结构体，其长度域，只是为了发送消息的安全，都是结构体的最大长度，所以不可以使用它来界定buffer的实际长度
 //发现在接收数据的处理中，使用的是完全相同的msg_struct_com_cloudvela_data_rx_t，故而采用完全相同的接收处理函数
 //如果未来不同的物理接口出现变化，必须需要不同的处理，再行改变
-OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_ethernet_curl_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//参数检查
 	if ((param_len <=0) || (param_len >HCU_SYSDIM_MSG_BODY_LEN_MAX)){
@@ -1678,7 +1678,7 @@ OPSTAT hcu_cloudvela_http_link_init(void)
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_hb_link_rcv_signal_check(void)
+OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(void)
 {
 	//FSM状态检查
 	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_ONLINE){

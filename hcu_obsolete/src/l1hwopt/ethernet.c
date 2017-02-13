@@ -345,7 +345,7 @@ OPSTAT func_ethernet_int_init(void)
 	return SUCCESS;
 }
 
-OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
+OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 {
 	CURLcode curlRes;
 	int ret = 0;
@@ -491,7 +491,7 @@ OPSTAT hcu_ethernet_socket_link_disconnect(void)
 }
 
 //在SOCKET上发送数据
-OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
+OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 {
 	return SUCCESS;
 }

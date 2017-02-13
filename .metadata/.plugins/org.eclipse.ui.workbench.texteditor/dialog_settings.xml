@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="defaultSvrSocketCon" key="selection"/>
+		<item value="func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="defaultSvrSocketCon"/>
-			<item value="gCloudvelaTaskContex"/>
-			<item value="svrBhItfFrameStdDefault"/>
-			<item value="HCU_SYSCFG_CLOUD_SVR_PORT_HOME"/>
-			<item value="HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT"/>
-			<item value="cloudhttpaddlocal"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_HCU_NAME"/>
-			<item value="jd"/>
+			<item value="func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle"/>
+			<item value="func_cloudvela_huitpxml_msg_bfsc_comb_scale_cmd_req_received_handle"/>
+			<item value="func_cloudvela_huitpxml_msg_bfsc_comb_scale_event_confirm_received_handle"/>
+			<item value="func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_confirm_received_handle"/>
+			<item value="func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_req_received_handle"/>
+			<item value="0x3B"/>
+			<item value="func_cloudvela_socket_conn_setup"/>
+			<item value="sw_download"/>
 		</list>
 		<list key="replacehistory">
+			<item value="hcu_ethernet_socket_data_send"/>
 			<item value="gCloudvelaTaskContext"/>
 			<item value="HCU_SYSCFG_CLOUD_HCU_NAME"/>
 			<item value="func_cloudvela_stdzhb_msg_alarm_pack"/>
@@ -25,7 +26,6 @@
 			<item value="func_cloudvela_stdzhb_msg_pm25_cmd_pack"/>
 			<item value="func_cloudvela_stdzhb_msg_pm25_pack"/>
 			<item value="func_cloudvela_stdzhb_msg_emc_pack"/>
-			<item value="func_cloudvela_stdzhb_msg_heart_beat_pack"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

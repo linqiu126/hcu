@@ -29,7 +29,7 @@ extern OPSTAT func_cloudvela_stdxml_msg_hsmmp_unpack(msg_struct_com_cloudvela_da
 
 //Extern API
 //Added by Shanchun for SW download, SW inventory, AV upload
-extern OPSTAT func_cloudvela_hb_link_rcv_signal_check(void);
+extern OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(void);
 extern OPSTAT func_cloudvela_sw_download(char *filename);
 extern OPSTAT func_cloudvela_av_upload(char *filename);
 

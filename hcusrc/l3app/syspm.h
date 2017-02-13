@@ -59,6 +59,11 @@ extern OPSTAT fsm_syspm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_p
 extern OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_syspm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_syspm_cloudvela_alarm_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_syspm_cloudvela_alarm_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_syspm_cloudvela_perfm_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_syspm_cloudvela_perfm_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 
 //Local API
 OPSTAT func_syspm_int_init(void);

@@ -131,7 +131,6 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
 			gCloudvelaTaskContext.defaultSvrSocketCon = FALSE;
-			//return FAILURE;
 
 			close(gCloudvelaTaskContext.defaultSvrethConClientFd);
 			gCloudvelaTaskContext.defaultSvrethConClientFd = socket(AF_INET, SOCK_STREAM,0);
@@ -139,7 +138,6 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			if(gCloudvelaTaskContext.defaultSvrethConClientFd < 0){
 				HcuErrorPrint("ETHERNET: Can not create socket!\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
-				//return FAILURE;
 			}
 
 			if(setsockopt(gCloudvelaTaskContext.defaultSvrethConClientFd, SOL_SOCKET, SO_KEEPALIVE,(void*)&keepAlive, sizeof(keepAlive)) == -1)
@@ -296,7 +294,7 @@ OPSTAT hcu_ethernet_socket_link_disconnect(void)
 }
 
 //在SOCKET上发送数据
-OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
+OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 {
 
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
@@ -319,7 +317,7 @@ OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf)
  * 　CURL/ETHERNET函数暂时没有启用，因为HTTP/CURL方式不再激活使用
  *
  ***************************************************************************************************************************/
-OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf)
+OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 {
 	CURLcode curlRes;
 	int ret = 0;

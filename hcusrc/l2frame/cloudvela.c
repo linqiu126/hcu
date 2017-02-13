@@ -49,27 +49,30 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
     {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            		fsm_cloudvela_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          			fsm_cloudvela_time_out},
 
-    //Offline working, 定时重新启动链路，但不接受任何L3消息
+    //Offline working, 定时重新启动链路，但不接受任何L3消息 //HWINV发来了硬件状态的改变，一般是硬件重新插拔造成的PnP状态改变
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
-	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_socket_data_rx},
-
-	//HWINV发来了硬件状态的改变，一般是硬件重新插拔造成的PnP状态改变
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
 
 	//Online working， 从后台接收到数据和控制命令，四种均有可能，具体是哪一种起作用，将由HWINV定时扫描并解决互斥问题
-	//通过全局变量/本模块任务中心跳检测的共同作用，确定到底是哪一种通信接口在运行，确保不同后连接的PnP即插即用特性
-	//所有传感器接口（232/485/BLE/USB-CAMERA/I2S-AUDIO）均直接采用API发送，接受采用阻塞式任务框架
-	//所有后台接口（ETHERNET/WIFI/USB-OTG/3G4G）也是发送TX直接API，但RX采用阻塞式任务框架
-	//由于实质上四种接口的处理方式完全一样，现使用同一个函数，未来有变化再改变
-	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_data_rx},
-	{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_usbnet_data_rx
-	{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_wifi_data_rx
-	{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_data_rx},  //fsm_cloudvela_3g4g_data_rx
+	//CURL方式暂未启动，完全只采用了SOCKET方式
+	//{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_curl_data_rx},
+	//{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_usbnet_data_rx
+	//{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_wifi_data_rx
+	//{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_3g4g_data_rx
+	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_socket_data_rx},
 	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_socket_data_rx},
 
-    //Online working， 定时检查链路，并安排离线数据的及时上传
-	{MSG_ID_COM_ALARM_REPORT,   				FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_alarm_report},
-	{MSG_ID_COM_PM_REPORT,   					FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm_report},
+    //通用服务能力处理部分，UL上行链路处理部分，DL下行在解包函数中自动路由完成
+	{MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_alarm_resp},
+	{MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_alarm_report},
+	{MSG_ID_SYSPM_CLOUDVELA_PERFM_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_perfm_resp},
+	{MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_perfm_report},
+	{MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_sysswm_inventory_resp},
+	{MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT,  FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_sysswm_inventory_report},
+	{MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,   FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_sysswm_sw_package_resp},
+	{MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_sysswm_sw_package_report},
+
+	//一般通用传感器业务部分，UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	{MSG_ID_EMC_CLOUDVELA_DATA_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_emc_data_resp},
 	{MSG_ID_EMC_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_emc_contrl_fb},
 	{MSG_ID_PM25_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25_data_resp},
@@ -88,7 +91,11 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_control_fb},
 	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_link_resp},
 
-	//采用分项目控制方式，降低不同项目之间的关联，特别是海量MSGID-STATE这一表的内存压力
+	//待完善部分，未来可能需要从这里移除，让这两个消息只承担业务模块之间交互的作用，而非发送给后台的通信作用
+	{MSG_ID_COM_ALARM_REPORT,   				FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_alarm_report},
+	{MSG_ID_COM_PM_REPORT,   					FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm_report},
+
+	//采用分项目控制方式，降低不同项目之间的关联，特别是海量MSGID-STATE这一表的内存压力。UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	{MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,         FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_data_resp},
 	{MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,       FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_data_report},
@@ -271,7 +278,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 
 	//在线状态，则检查
 	else if(FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		if (func_cloudvela_hb_link_send_signal() == FAILURE){
+		if (func_cloudvela_hb_link_active_send_signal() == FAILURE){
 			zHcuSysStaPm.statisCnt.cloudVelaDiscCnt++;
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
@@ -338,7 +345,8 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_hb_link_send_signal(void)
+//主动发送心跳信号
+OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 {
 	int ret = 0;
 
@@ -368,7 +376,8 @@ OPSTAT func_cloudvela_hb_link_send_signal(void)
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_hb_link_rcv_signal_check(void)
+//主动发送心跳信号以后，收到对方的反馈
+OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(void)
 {
 	//FSM状态检查
 	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_ONLINE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: FSM State error, taking care of potential risk!\n");
@@ -385,80 +394,14 @@ OPSTAT func_cloudvela_hb_link_rcv_signal_check(void)
 	return SUCCESS;
 }
 
-
-/***************************************************************************************************************************
- *
- *  各种协议下的公共处理API：链路处理／软件下载／控制与管理
- *
- ***************************************************************************************************************************/
-OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
+//被动接收到对方的HEART-BEAT信号，反馈就是了
+OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(void)
 {
-	UINT32 optId=0, cmdId=0, backType=0;
-
-	//命令字
-	cmdId = L3CI_hcu_inventory;
-	backType = L3CI_cmdid_back_type_period;
-    optId = L3PO_hcuinventory_report;
-    zHcuSysEngPar.swDbInvInfo.hw_type = zHcuSysEngPar.hwBurnId.hwType;
-    zHcuSysEngPar.swDbInvInfo.hw_version = zHcuSysEngPar.hwBurnId.hwPemId;
-    zHcuSysEngPar.swDbInvInfo.sw_release = zHcuSysEngPar.hwBurnId.swRelId;
-    zHcuSysEngPar.swDbInvInfo.sw_delivery = zHcuSysEngPar.hwBurnId.swVerId;
-
-	// send resp msg to cloud
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-		//打包数据
-		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &zHcuSysEngPar.swDbInvInfo, &buf))
-		{
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-		}
-
-		//Send out
-		if (func_cloudvela_send_data_to_cloud(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Online state, send HCU Inventory Resp to cloud failure!\n");
-		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Online state, send HCU Inventory Resp to cloud success!\n");
-	}
 
 	return SUCCESS;
 }
 
-OPSTAT func_cloudvela_sw_download(char *filename)
-{
-	FTP_OPT ftp_opt;
 
-	char usrtmp[3] = ":";
-
-	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
-
-	//ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
-	strcat(ftp_opt.user_key, usrtmp);
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
-
-	//char filetmp[64] = "swdownload.txt";
-	//ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
-	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
-	strcat(ftp_opt.url, filename);
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
-
-	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
-	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwDownloadDir);
-	strcat(ftp_opt.file, filename);
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
-
-	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt)){
-		HCU_DEBUG_PRINT_NOR("CLOUDVELA: HCU SW Download success.\n");
-	    // send resp msg to cloud: 01 successful
-	    //system("reboot");
-		return SUCCESS;
-	}else{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: HCU SW Download failed.\n");
-	}
-
-	return SUCCESS;
-}
 
 
 /***************************************************************************************************************************
@@ -500,6 +443,94 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	return SUCCESS;
 }
 
+/*
+ * 后台连接采用如下策略：
+ * - HWINV不断更新硬件状态
+ * - 本任务的长定时器不断扫描链路状态，并进行心跳检测，目的是维护后台连接的长期性和稳定性
+ * - 如果心跳检测没变化，则不动
+ * - 如果心态检测发现链路有变化，则根据后台硬件状态，按照ETHERNET > USBNET > WIFI > 3G4G的优先级，进行链路连接建立的发起
+ * - 如果全部失败，则继续保持OFFLINE状态
+ * - 如果成功，则就进入ONLINE状态
+ *
+ */
+//调用此函数的条件是，已知状态就是OFFLINE了
+OPSTAT func_cloudvela_socket_conn_setup(void)
+{
+	int ret = FAILURE;
+	//3G, ETHERNET, WIFI connection?
+	//周期性的检测，随便连上哪一种链路，则自然的搞定
+	//后面的Hardware Inventory任务会制作一张实时全局硬件状态表，不需要通过消息发送给不同任务模块，这样谁需要访问，一查便知
+	//这种方式下，消息减少，还能方便的实现PnP功能
+
+	//检查任务模块状态
+	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_OFFLINE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error task status, can not setup new connection with cloud!\n");
+
+	//调用后台模块提供的函数，进行连接建立
+	//第一优先级：连接ETHERNET
+	//当前的情况下，ETHERNET物理链路的确啥都不干，只是回复成功，未来可以挂载更多的物理链路处理过程在其中
+	if (zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		ret = hcu_ethernet_phy_link_setup();
+	}
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		gCloudvelaTaskContext.ethConTry++;
+	}
+	if (ret == SUCCESS){
+		gCloudvelaTaskContext.ethConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+		return SUCCESS;
+	}
+
+	//第二优先级：连接USBNET
+	if (zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		ret = hcu_usbnet_phy_link_setup();
+	}
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		gCloudvelaTaskContext.usbnetConTry++;
+	}
+	if (ret == SUCCESS){
+		gCloudvelaTaskContext.usbnetConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
+		return SUCCESS;
+	}
+
+	//第三优先级：连接WIFI
+	if (zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		ret = hcu_wifi_phy_link_setup();
+	}
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		gCloudvelaTaskContext.wifiConTry++;
+	}
+	if (ret == SUCCESS){
+		gCloudvelaTaskContext.wifiConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
+		return SUCCESS;
+	}
+
+	//第四优先级：连接3G4G
+	if (zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
+		ret = hcu_3g4g_phy_link_setup();
+
+	}
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		gCloudvelaTaskContext.g3g4ConTry++;
+	}
+	if (ret == SUCCESS){
+		gCloudvelaTaskContext.g3g4ConTry = 0;
+		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
+		return SUCCESS;
+	}
+
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+	return FAILURE;
+}
+
+
 
 /*
  *
@@ -512,75 +543,16 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 //带buffer不定长的结构体，其长度域，只是为了发送消息的安全，都是结构体的最大长度，所以不可以使用它来界定buffer的实际长度
 //发现在接收数据的处理中，使用的是完全相同的msg_struct_com_cloudvela_data_rx_t，故而采用完全相同的接收处理函数
 //如果未来不同的物理接口出现变化，必须需要不同的处理，再行改变
-OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//参数检查
-	if ((param_len <=0) || (param_len >HCU_SYSDIM_MSG_BODY_LEN_MAX))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error message length received from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
-
-	if (param_ptr == NULL)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
-
-	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
-
-	//接收消息解码
-	msg_struct_com_cloudvela_data_rx_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_com_cloudvela_data_rx_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_cloudvela_data_rx_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
-	memcpy(rcv.buf, param_ptr, param_len);
-	rcv.length = param_len;
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
-
-	//如果是XML自定义格式
-	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		if (func_cloudvela_stdxml_msg_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
-	}
-
-	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		if (func_cloudvela_stdzhb_msg_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
-	}
-
-	//非法格式
-	else{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
-	}
-
-	return SUCCESS;
-}
-
-OPSTAT fsm_cloudvela_usbnet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
-
-	return SUCCESS;
-}
-
-OPSTAT fsm_cloudvela_wifi_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
-
-	return SUCCESS;
-}
-
-OPSTAT fsm_cloudvela_3g4g_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//连接态
-	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
-
-	return SUCCESS;
-}
-
+//CURL方式暂时没启动，使用的是SOCKET方式
 OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//参数检查
 	if ((param_len <=0) || (param_len >HCU_SYSDIM_MSG_BODY_LEN_MAX))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error message length received from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 	if (param_ptr == NULL) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+
+	//连接态
+	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
 
 	//接收消息解码
 	msg_struct_com_cloudvela_data_rx_t rcv;
@@ -728,93 +700,113 @@ OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	return SUCCESS;
 }
 
-
-
-/*
- * 后台连接采用如下策略：
- * - HWINV不断更新硬件状态
- * - 本任务的长定时器不断扫描链路状态，并进行心跳检测，目的是维护后台连接的长期性和稳定性
- * - 如果心跳检测没变化，则不动
- * - 如果心态检测发现链路有变化，则根据后台硬件状态，按照ETHERNET > USBNET > WIFI > 3G4G的优先级，进行链路连接建立的发起
- * - 如果全部失败，则继续保持OFFLINE状态
- * - 如果成功，则就进入ONLINE状态
- *
- */
-//调用此函数的条件是，已知状态就是OFFLINE了
-OPSTAT func_cloudvela_socket_conn_setup(void)
+OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 {
-	int ret = FAILURE;
-	//3G, ETHERNET, WIFI connection?
-	//周期性的检测，随便连上哪一种链路，则自然的搞定
-	//后面的Hardware Inventory任务会制作一张实时全局硬件状态表，不需要通过消息发送给不同任务模块，这样谁需要访问，一查便知
-	//这种方式下，消息减少，还能方便的实现PnP功能
+	UINT32 optId=0, cmdId=0, backType=0;
 
-	//检查任务模块状态
-	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_OFFLINE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error task status, can not setup new connection with cloud!\n");
+	//命令字
+	cmdId = L3CI_hcu_inventory;
+	backType = L3CI_cmdid_back_type_period;
+    optId = L3PO_hcuinventory_report;
+    zHcuSysEngPar.swDbInvInfo.hw_type = zHcuSysEngPar.hwBurnId.hwType;
+    zHcuSysEngPar.swDbInvInfo.hw_version = zHcuSysEngPar.hwBurnId.hwPemId;
+    zHcuSysEngPar.swDbInvInfo.sw_release = zHcuSysEngPar.hwBurnId.swRelId;
+    zHcuSysEngPar.swDbInvInfo.sw_delivery = zHcuSysEngPar.hwBurnId.swVerId;
 
-	//调用后台模块提供的函数，进行连接建立
-	//第一优先级：连接ETHERNET
-	//当前的情况下，ETHERNET物理链路的确啥都不干，只是回复成功，未来可以挂载更多的物理链路处理过程在其中
-	if (zHcuVmCtrTab.hwinv.ethernet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
-		ret = hcu_ethernet_phy_link_setup();
+	// send resp msg to cloud
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+		//打包数据
+		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &zHcuSysEngPar.swDbInvInfo, &buf))
+		{
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+		}
+
+		//Send out
+		if (func_cloudvela_send_data_to_cloud(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Online state, send HCU Inventory Resp to cloud failure!\n");
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Online state, send HCU Inventory Resp to cloud success!\n");
 	}
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContext.ethConTry++;
-	}
-	if (ret == SUCCESS){
-		gCloudvelaTaskContext.ethConTry = 0;
-		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
+
+	return SUCCESS;
+}
+
+OPSTAT func_cloudvela_sw_download(char *filename)
+{
+	FTP_OPT ftp_opt;
+
+	char usrtmp[3] = ":";
+
+	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
+
+	//ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
+	strcat(ftp_opt.user_key, usrtmp);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
+
+	//char filetmp[64] = "swdownload.txt";
+	//ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
+	strcat(ftp_opt.url, filename);
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
+
+	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwDownloadDir);
+	strcat(ftp_opt.file, filename);
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
+
+	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt)){
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: HCU SW Download success.\n");
+	    // send resp msg to cloud: 01 successful
+	    //system("reboot");
 		return SUCCESS;
+	}else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: HCU SW Download failed.\n");
 	}
 
-	//第二优先级：连接USBNET
-	if (zHcuVmCtrTab.hwinv.usbnet.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
-		ret = hcu_usbnet_phy_link_setup();
-	}
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContext.usbnetConTry++;
-	}
-	if (ret == SUCCESS){
-		gCloudvelaTaskContext.usbnetConTry = 0;
-		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_USBNET;
-		return SUCCESS;
-	}
+	return SUCCESS;
+}
 
-	//第三优先级：连接WIFI
-	if (zHcuVmCtrTab.hwinv.wifi.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
-		ret = hcu_wifi_phy_link_setup();
-	}
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContext.wifiConTry++;
-	}
-	if (ret == SUCCESS){
-		gCloudvelaTaskContext.wifiConTry = 0;
-		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_WIFI;
-		return SUCCESS;
-	}
+OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
-	//第四优先级：连接3G4G
-	if (zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus == HCU_HWINV_STATUS_INSTALL_ACTIVE){
-		ret = hcu_3g4g_phy_link_setup();
+OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
-	}
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		gCloudvelaTaskContext.g3g4ConTry++;
-	}
-	if (ret == SUCCESS){
-		gCloudvelaTaskContext.g3g4ConTry = 0;
-		gCloudvelaTaskContext.curCon =HCU_CLOUDVELA_CONTROL_PHY_CON_3G4G;
-		return SUCCESS;
-	}
+OPSTAT fsm_cloudvela_syspm_perfm_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: No CLOUD-BH physical link hardware available or not setup successful!\n");
-	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-	return FAILURE;
+OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
 }
 
 
@@ -1728,6 +1720,69 @@ size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, voi
 
 	return realsize;
 }
+
+OPSTAT fsm_cloudvela_ethernet_curl_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//参数检查
+	if ((param_len <=0) || (param_len >HCU_SYSDIM_MSG_BODY_LEN_MAX))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error message length received from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+	if (param_ptr == NULL)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NULL pointer data from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+
+	//连接态
+	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+
+	//接收消息解码
+	msg_struct_com_cloudvela_data_rx_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_cloudvela_data_rx_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_cloudvela_data_rx_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+	memcpy(rcv.buf, param_ptr, param_len);
+	rcv.length = param_len;
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
+
+	//如果是XML自定义格式
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+		if (func_cloudvela_stdxml_msg_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+	}
+
+	//如果是ZHB格式 //to be update for CMD if itf standard is ZHB
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+		if (func_cloudvela_stdzhb_msg_unpack(&rcv) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+	}
+
+	//非法格式
+	else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_usbnet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//连接态
+	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_wifi_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//连接态
+	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_3g4g_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//连接态
+	if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+
+	return SUCCESS;
+}
+
 /***************************************************************************************************************************
  *
  * 　CURL/ETHERNET未启用函数END

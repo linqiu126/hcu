@@ -27,9 +27,8 @@ enum FSM_STATE_ETHERNET
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmEthernet[];
-extern CURL *zHcuEthernetCurlPtr;
 
-//Local virables
+//Local variables
 #define ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS 3000
 #define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
 
@@ -39,12 +38,12 @@ extern OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 extern OPSTAT fsm_ethernet_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT hcu_ethernet_phy_link_setup(void);
 extern OPSTAT hcu_ethernet_phy_link_disconnect(void);
-extern OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf);
+extern OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf);
 
 //API for NBIOT CJ188/QG376
 extern OPSTAT hcu_ethernet_socket_link_setup(void);
 extern OPSTAT hcu_ethernet_socket_link_disconnect(void);
-extern OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf);
+extern OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf);
 
 //Local API
 OPSTAT func_ethernet_int_init(void);

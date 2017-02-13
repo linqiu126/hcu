@@ -77,7 +77,7 @@ extern OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * para
 
 //Local API
 OPSTAT func_cloudvela_http_conn_setup(void);
-OPSTAT func_cloudvela_hb_link_send_signal(void);
+OPSTAT func_cloudvela_hb_link_active_send_signal(void);
 OPSTAT func_cloudvela_time_out_period(void);
 OPSTAT func_cloudvela_cmd_control_check(void);//for cmd control by Shanchun
 OPSTAT func_cloudvela_time_out_period_for_cmd_control(void);//for cmd control by Shanchun
@@ -101,7 +101,7 @@ extern size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nme
 
 //引用外部函数
 extern UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen);
-extern OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf);
+extern OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf);
 extern OPSTAT hcu_usbnet_data_send(CloudDataSendBuf_t *buf);
 extern OPSTAT hcu_wifi_data_send(CloudDataSendBuf_t *buf);
 extern OPSTAT hcu_3g4g_data_send(CloudDataSendBuf_t *buf);

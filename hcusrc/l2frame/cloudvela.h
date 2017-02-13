@@ -41,15 +41,27 @@ extern OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr
 extern OPSTAT fsm_cloudvela_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 //LINK LEVEL FSM API
-extern OPSTAT fsm_cloudvela_ethernet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_cloudvela_ethernet_curl_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_usbnet_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_wifi_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_3g4g_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-//for alarm & pm report added by ZSC
+//ALARM/PM/INVENTORY/SW-PACKAGE
+extern OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_cloudvela_syspm_perfm_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
+//待去掉
 extern OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
+
 //L3 SENSOR APP FSM API
 extern OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -77,8 +89,9 @@ extern OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_i
 
 //Local API - Heart beat functions
 OPSTAT func_cloudvela_hb_link_main_entry(void);
-OPSTAT func_cloudvela_hb_link_send_signal(void);
-OPSTAT func_cloudvela_hb_link_rcv_signal_check(void);
+OPSTAT func_cloudvela_hb_link_active_send_signal(void);
+OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(void);
+OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(void);
 
 //Local API - Core Link functions
 OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf);
@@ -98,7 +111,7 @@ OPSTAT func_cloudvela_http_conn_setup(void);
 
 //引用外部函数
 extern UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen);
-extern OPSTAT hcu_ethernet_date_send(CloudDataSendBuf_t *buf);
+extern OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf);
 extern OPSTAT hcu_usbnet_data_send(CloudDataSendBuf_t *buf);
 extern OPSTAT hcu_wifi_data_send(CloudDataSendBuf_t *buf);
 extern OPSTAT hcu_3g4g_data_send(CloudDataSendBuf_t *buf);
@@ -112,7 +125,7 @@ extern OPSTAT hcu_wifi_phy_link_disconnect(void);
 extern OPSTAT hcu_3g4g_phy_link_disconnect(void);
 extern void CheckCRCModBus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
 extern void func_hwinv_scan_date(void);
-extern OPSTAT hcu_ethernet_socket_date_send(CloudDataSendBuf_t *buf);
+extern OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_CLOUDVELA(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

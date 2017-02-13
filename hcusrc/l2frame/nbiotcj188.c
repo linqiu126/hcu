@@ -828,7 +828,7 @@ OPSTAT func_nbiotcj188_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	}
 
 	//这里只考虑ETHERNET一种网络配置情况，其它的不考虑
-	if (hcu_ethernet_socket_date_send(buf) == FAILURE){
+	if (hcu_ethernet_socket_data_send(buf) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		HcuErrorPrint("NBIOTCJ188: Error send data to back-cloud!\n");
 		return FAILURE;

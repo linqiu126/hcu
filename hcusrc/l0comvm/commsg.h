@@ -445,6 +445,24 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_COM_ALARM_REPORT,
 	MSG_ID_COM_PM_REPORT,
 
+	//FM/PM/INVENTORY/SW-PACKAGE
+	MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ,
+	MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,
+	MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT,
+	MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM,
+	MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ,
+	MSG_ID_SYSPM_CLOUDVELA_PERFM_RESP,
+	MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT,
+	MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM,
+	MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,
+	MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP,
+	MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT,
+	MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM,
+	MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,
+	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,
+	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT,
+	MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
+
 	//CANITF
 	MSG_ID_CANITFLEO_DATA_REPORT,
 
@@ -2157,6 +2175,122 @@ typedef struct msg_struct_pm_report
 	UINT32 length;
 }msg_struct_pm_report_t;
 
+
+//FM/PM/INVENTORY/SW-PACKAGE
+//MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ,
+typedef struct msg_struct_cloudvela_spspm_alarm_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_spspm_alarm_req_t;
+
+//MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,
+typedef struct msg_struct_spspm_cloudvela_alarm_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_spspm_cloudvela_alarm_resp_t;
+
+//MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT,
+typedef struct msg_struct_spspm_cloudvela_alarm_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_spspm_cloudvela_alarm_report_t;
+
+//MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM,
+typedef struct msg_struct_cloudvela_spspm_alarm_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_spspm_alarm_confirm_t;
+
+//MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ,
+typedef struct msg_struct_cloudvela_spspm_perfm_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_spspm_perfm_req_t;
+
+//MSG_ID_SYSPM_CLOUDVELA_PERFM_RESP,
+typedef struct msg_struct_spspm_cloudvela_perfm_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_spspm_cloudvela_perfm_resp_t;
+
+//MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT,
+typedef struct msg_struct_spspm_cloudvela_perfm_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_spspm_cloudvela_perfm_report_t;
+
+//MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM,
+typedef struct msg_struct_cloudvela_spspm_perfm_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_spspm_perfm_confirm_t;
+
+//MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,
+typedef struct msg_struct_cloudvela_spspm_inventory_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_spspm_inventory_req_t;
+
+//MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP,
+typedef struct msg_struct_spspm_cloudvela_inventory_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_spspm_cloudvela_inventory_resp_t;
+
+//MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT,
+typedef struct msg_struct_spspm_cloudvela_inventory_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_spspm_cloudvela_inventory_report_t;
+
+//MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM,
+typedef struct msg_struct_cloudvela_spspm_inventory_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_spspm_inventory_confirm_t;
+
+//MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,
+typedef struct msg_struct_cloudvela_spspm_sw_package_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_spspm_sw_package_req_t;
+
+//MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,
+typedef struct msg_struct_spspm_cloudvela_sw_package_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_spspm_cloudvela_sw_package_resp_t;
+
+//MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT,
+typedef struct msg_struct_spspm_cloudvela_sw_package_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_spspm_cloudvela_sw_package_report_t;
+
+//MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
+typedef struct msg_struct_cloudvela_spspm_sw_packag_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_spspm_sw_packag_confirm_t;
+
+
+//CANITF
 //MSG_ID_CANITFLEO_DATA_REPORT,
 typedef struct msg_struct_canitfleo_data_report
 {
