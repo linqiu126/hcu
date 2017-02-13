@@ -351,6 +351,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curPhotoDir);
 	strcat(HKVisionOption.file_photo, "/");
 	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curHikvisionFname);
+	strcat(HKVisionOption.file_photo_pure, zHcuVmCtrTab.clock.curHikvisionPureFname);
 
 	strcat(HKVisionOption.file_video, zHcuVmCtrTab.clock.curPhotoDir);
 	strcat(HKVisionOption.file_video, "/");

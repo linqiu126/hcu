@@ -1199,7 +1199,8 @@ typedef struct HKVisionOption
 	char url_video_start[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*url of HKvision video server*/
 	char url_video_stop[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*url of HKvision video server*/
 	char user_key[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*username:password*/
-	char file_photo[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*filepath*/
+	char file_photo[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*filename include path*/
+	char file_photo_pure[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*pure filename*/
 	char file_video[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*filepath*/
 }HKVisionOption_t;
 
