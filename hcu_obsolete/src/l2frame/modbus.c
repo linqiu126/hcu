@@ -358,10 +358,10 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm_info;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
@@ -547,10 +547,10 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm_info;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
@@ -734,10 +734,10 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm_info;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
@@ -925,10 +925,10 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 
 			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm_info;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
@@ -1116,10 +1116,10 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm_info;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
@@ -1321,10 +1321,10 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
 			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm_info;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;

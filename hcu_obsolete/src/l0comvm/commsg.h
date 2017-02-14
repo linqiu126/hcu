@@ -2266,7 +2266,7 @@ typedef struct msg_struct_com_alarm_report
 	UINT32 alarmContent;
 	UINT32 timeStamp;
 	UINT32 length;
-}msg_struct_alarm_report_t;
+}msg_struct_com_alarm_report_t;
 
 //for PM report added by ZSC
 typedef struct msg_struct_com_pm_report

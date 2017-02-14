@@ -953,7 +953,7 @@ typedef struct msg_struct_com_alarm_report
 	UINT8  equID;
 	UINT8 alarmType;
 	UINT32 alarmContent;
-	char photofileName[HCU_SYSDIM_FILE_NAME_LEN_MAX];  //photo file name, only valid when PM25 exceed the threshold
+	char   alarmDesc[HCU_SYSDIM_FILE_NAME_LEN_MAX];  //photo file name, only valid when PM25 exceed the threshold
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_com_alarm_report_t;
@@ -976,8 +976,6 @@ typedef struct msg_struct_com_pm_report
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_com_pm_report_t;
-
-
 
 #define HCU_SYSMSG_HWINV_PHY_STATUS_NULL 0
 #define HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE 1
@@ -2176,46 +2174,6 @@ typedef struct  msg_struct_nbiotqg376_ipm_data_req //
 	UINT32 length;
 }msg_struct_nbiotqg376_ipm_data_req_t;
 
-<<<<<<< HEAD
-=======
-//MSG_ID_COM_ALARM_REPORT,
-//for alarm report added by ZSC
-typedef struct msg_struct_alarm_report
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType;
-	UINT8  alarmServerity;
-	UINT8  alarmClearFlag;
-	UINT8  equID;
-	UINT8 alarmType;
-	UINT32 alarmContent;
-	char alarmDescription[HCU_SYSDIM_FILE_NAME_LEN_MAX];  //photo file name, only valid when PM25 exceed the threshold
-	UINT32 timeStamp;
-	UINT32 length;
-}msg_struct_alarm_report_t;
-
-//MSG_ID_COM_PM_REPORT,
-//for PM report added by ZSC
-typedef struct msg_struct_pm_report
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType;
-	UINT32 TaskRestartCnt;
-	UINT32 CloudVelaConnCnt;
-	UINT32 CloudVelaConnFailCnt;
-	UINT32 CloudVelaDiscCnt;
-	UINT32 SocketDiscCnt;
-	UINT32 cpu_occupy;
-	UINT32 mem_occupy;
-	UINT32 disk_occupy;
-	UINT32 timeStamp;
-	UINT32 length;
-}msg_struct_pm_report_t;
-
-
->>>>>>> 8d1d7943370483888aeae3a4238125e6a61a023d
 //FM/PM/INVENTORY/SW-PACKAGE
 //MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ,
 typedef struct msg_struct_cloudvela_spspm_alarm_req

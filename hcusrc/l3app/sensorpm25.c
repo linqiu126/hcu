@@ -389,7 +389,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.equID = rcv.pm25.equipid;
 		snd.alarmType = ALARM_TYPE_PM25_VALUE;
 		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.alarmDescription, HKVisionOption.file_photo_pure);
+		strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
@@ -421,7 +421,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.equID = rcv.pm25.equipid;
 		snd.alarmType = ALARM_TYPE_PM25_VALUE;
 		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.alarmDescription, HKVisionOption.file_photo);
+		strcpy(snd.alarmDesc, HKVisionOption.file_photo);
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);

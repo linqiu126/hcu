@@ -193,7 +193,7 @@ OPSTAT dbi_HcuSysAlarmInfo_save(msg_struct_com_alarm_report_t *alarmData)
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcusysalarminfo` (eqpid, alarmtype, alarmcontent, alarmseverity, alarmclearflag, photofilename, timestamp) VALUES \
     		('%d', '%d','%d', '%d', '%d', '%s', '%d')",\
-    		alarmData->equID, alarmData->alarmType, alarmData->alarmContent, alarmData->alarmServerity, alarmData->alarmClearFlag, alarmData->alarmDescription, (UINT32)time(NULL));
+    		alarmData->equID, alarmData->alarmType, alarmData->alarmContent, alarmData->alarmServerity, alarmData->alarmClearFlag, alarmData->alarmDesc, (UINT32)time(NULL));
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

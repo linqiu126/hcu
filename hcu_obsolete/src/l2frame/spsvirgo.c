@@ -212,10 +212,10 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			HcuErrorPrint("SPSVIRGO: Error send command to serials port!\n");
 
 			//for alarm report added by ZSC
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm_info;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
