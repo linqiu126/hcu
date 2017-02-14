@@ -287,7 +287,7 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.cloud.hcuName);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname,"_");
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_HK_CLEAN);
-	strcat(zHcuVmCtrTab.clock.curHikvisionFname, zHcuVmCtrTab.clock.sSec);
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname, zHcuVmCtrTab.clock.sMin);
 	strcpy(zHcuVmCtrTab.clock.curHikvisionPureFname, zHcuVmCtrTab.clock.curHikvisionFname);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_EXTEND_HK_PHOTO);
 	HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curPhotoDir %s!\n", zHcuVmCtrTab.clock.curPhotoDir);
@@ -740,7 +740,7 @@ void func_hwinv_scan_date(void)
 	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.cloud.hcuName);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname,"_");
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_HK_CLEAN);
-	strcat(zHcuVmCtrTab.clock.curHikvisionFname, zHcuVmCtrTab.clock.sSec);
+	strcat(zHcuVmCtrTab.clock.curHikvisionFname, zHcuVmCtrTab.clock.sMin);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_EXTEND_HK_PHOTO);
 	HcuDebugPrint("HWINV: zCurTimeDate.curPhotoDir %s!\n", zHcuVmCtrTab.clock.curPhotoDir);
 	HcuDebugPrint("HWINV: zCurTimeDate.curHikvisionFname %s!\n\n", zHcuVmCtrTab.clock.curHikvisionFname);
