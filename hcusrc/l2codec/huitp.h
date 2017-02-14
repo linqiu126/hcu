@@ -3208,6 +3208,7 @@ typedef struct StrIe_HUITP_IEID_uni_heart_beat_ping
 {
 	UINT16 ieId;
 	UINT16 ieLen;
+	UINT16 randval;
 }StrIe_HUITP_IEID_uni_heart_beat_ping_t;
 
 //HUITP_IEID_uni_heart_beat_pong                  = 0xFE01, 
@@ -3215,6 +3216,7 @@ typedef struct StrIe_HUITP_IEID_uni_heart_beat_pong
 {
 	UINT16 ieId;
 	UINT16 ieLen;
+	UINT16 randval;
 }StrIe_HUITP_IEID_uni_heart_beat_pong_t;
 
 //HUITP_IEID_uni_heart_beat_max,

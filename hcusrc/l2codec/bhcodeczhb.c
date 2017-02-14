@@ -1208,7 +1208,7 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	if (totalLen == 0){
 		//心跳接收的特殊处理
 		if (flag == 1){
-			if (func_cloudvela_hb_link_active_rcv_signal_check() == FAILURE){
+			if (func_cloudvela_hb_link_active_rcv_signal_check(0, 0) == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 				HcuErrorPrint("CLOUDVELA: Heart_beat processing error!\n");
 				return FAILURE;

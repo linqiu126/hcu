@@ -172,6 +172,16 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 	//存入返回参量中：这个长度用于控制输出的字符串
 	output->curLen = strlen(output->curBuf);
 
+	//根据目的服务器地址，填入LINKID信息
+	if ((strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
+		output->linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
+	else if (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
+		output->linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+	else if (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameHome) == 0)
+		output->linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
+	else
+		output->linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
+
 	//返回
 	return SUCCESS;
 }
@@ -218,7 +228,7 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	memset(msgToUser, 0, sizeof(msgToUser));
 	strncpy(msgToUser, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_TO_USER_L), dif);
 	//是否要如此对比，待定
-	if (strcmp(msgToUser, zHcuSysEngPar.hwBurnId.equLable) !=0)
+	if ((strcmp(msgToUser, zHcuSysEngPar.hwBurnId.equLable) !=0) && (strcmp(msgToUser, zHcuSysEngPar.cloud.hcuName) !=0))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid toUser field!\n");
 	strncpy(gTaskCloudvelaContext.L2Link.destUser, msgToUser, strlen(msgToUser)<sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(msgToUser):sizeof(gTaskCloudvelaContext.L2Link.destUser));
 	
@@ -231,7 +241,7 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	memset(msgFromUser, 0, sizeof(msgFromUser));
 	strncpy(msgFromUser, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_FROM_USER_L), dif);
 	//是否要如此对比，待定
-	if (strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameDefault) !=0)
+	if ((strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameDefault) !=0) &&(strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameHome) !=0))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid fromUser field!\n");
 	strncpy(gTaskCloudvelaContext.L2Link.srcUser, msgFromUser, strlen(msgFromUser)<sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(msgFromUser):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
 	
@@ -604,12 +614,80 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 
 OPSTAT func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_req_t *rcv)
 {
-	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_heart_beat_req_t received!\n");
+	//int ret = 0;
+
+	//先处理大小端问题
+	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+	rcv->baseReq.ieId = HUITP_ENDIAN_EXG16(rcv->baseReq.ieId);
+	rcv->baseReq.ieLen = HUITP_ENDIAN_EXG16(rcv->baseReq.ieLen);
+	rcv->ping.ieId = HUITP_ENDIAN_EXG16(rcv->ping.ieId);
+	rcv->ping.ieLen = HUITP_ENDIAN_EXG16(rcv->ping.ieLen);
+
+	//IE参数检查
+	if ((rcv->baseReq.ieId != HUITP_IEID_uni_com_req) || (rcv->baseReq.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_req_t) - 4)))
+		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->ping.ieId != HUITP_IEID_uni_heart_beat_ping) || (rcv->ping.ieLen != (sizeof(StrIe_HUITP_IEID_uni_heart_beat_ping_t) - 4)))
+		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+
+	//这个消息属于L2/CLOUDVELA的处理过程
+	UINT16 randval = HUITP_ENDIAN_EXG16(rcv->ping.randval);
+
+	//根据目的服务器地址，填入LINKID信息
+	UINT8 linkid = 0;
+	if ((strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
+		linkid = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
+	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
+		linkid = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0)
+		linkid = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
+	else
+		linkid = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
+
+	//干活
+	if (func_cloudvela_hb_link_passive_rcv_signal_for_react(linkid, randval) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Heart_beat processing error!\n");
+
+	//返回
+	return SUCCESS;
 }
 
 OPSTAT func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *rcv)
 {
-	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t received!\n");
+	//int ret = 0;
+
+	//先处理大小端问题
+	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+	rcv->pong.ieId = HUITP_ENDIAN_EXG16(rcv->pong.ieId);
+	rcv->pong.ieLen = HUITP_ENDIAN_EXG16(rcv->pong.ieLen);
+
+	//IE参数检查
+	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+	if ((rcv->pong.ieId != HUITP_IEID_uni_heart_beat_pong) || (rcv->pong.ieLen != (sizeof(StrIe_HUITP_IEID_uni_heart_beat_pong_t) - 4)))
+		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+
+	//这个消息属于L2/CLOUDVELA的处理过程
+	UINT16 randval = HUITP_ENDIAN_EXG16(rcv->pong.randval);
+
+	//根据目的服务器地址，填入LINKID信息
+	UINT8 linkid = 0;
+	if ((strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
+		linkid = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
+	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
+		linkid = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0)
+		linkid = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
+	else
+		linkid = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
+
+	//干活
+	if (func_cloudvela_hb_link_active_rcv_signal_check(linkid, randval) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Heart_beat processing error!\n");
+
+	//返回
+	return SUCCESS;
 }
 
 OPSTAT func_cloudvela_huitpxml_msg_alarm_info_req_received_handle(StrMsg_HUITP_MSGID_uni_alarm_info_req_t *rcv)
@@ -1017,6 +1095,8 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle(StrMsg
 	return SUCCESS;
 }
 
+
+//HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_heart_beat_req_t received!\n");
 
 void func_cloudvela_huitpxml_msg_generate_test_data(void)
 {

@@ -599,22 +599,25 @@ typedef enum
 typedef struct CloudDataSendBuf
 {
 	UINT32 curLen;
+	UINT8  linkId;
 	//char的意义是，底层均为字符串，而不是十六进制数据
 	char curBuf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];  //内部还包括格式化的参数部分，所以需要多加100个字节的长度
 }CloudDataSendBuf_t;
 //在CLOUD模块中定义的公共数据Buffer结构体，必须放在这儿
 typedef struct gTaskCloudvelaContext
 {
-	UINT8  curCon;  //表示当前是哪一种物理接口在工作
-	UINT32 ethConTry;  //用于断链的处理，确保高优先级物理链路可以处于优势地位，节省用户的链路成本消耗
-	UINT32 usbnetConTry; //下同
-	UINT32 wifiConTry;
-	UINT32 g3g4ConTry;
+	UINT8  curCon;  					//表示当前是哪一种物理接口在工作
+	UINT32 ethConTry;  					//用于断链的处理，确保高优先级物理链路可以处于优势地位，节省用户的链路成本消耗
+	UINT32 usbnetConTry; 				//下同
+	UINT32 wifiConTry;					//下同
+	UINT32 g3g4ConTry;					//下同
 	int    defaultSvrSocketCon;  		//业务服务器SOCKET连接标识
 	int    defaultSvrethConClientFd;    //业务服务器eth客户标签
 	int    homeSvrSocketCon;  			//家庭服务器SOCKET连接标识
 	int    homeSvrethConClientFd;       //家庭服务器eth客户标签
-	msgie_struct_bh_com_head_t L2Link;  //层2的链路上下文
+	msgie_struct_bh_com_head_t L2Link;  //层2的链路上下文，用于编解码时带到API函数中去
+	UINT16 defaultHbRand;    			//用于业务心跳链路的随机数检查，只用于HCU发起主动心跳，不适用于被动心跳过程
+	UINT16 homeHbRand;    				//用于家庭心跳链路的随机数检查，只用于HCU发起主动心跳，不适用于被动心跳过程
 }gTaskCloudvelaContext_t;
 
 //跟后台的通信接口中，需要定义一些全局消息的结构体类型

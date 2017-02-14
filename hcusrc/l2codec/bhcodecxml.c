@@ -306,8 +306,6 @@ OPSTAT func_cloudvela_stdxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 			}
 			break;
 
-
-
 		case L3CI_emc:
 
 			if (func_cloudvela_stdxml_msg_emc_unpack(rcv) == FAILURE){
@@ -395,7 +393,6 @@ OPSTAT func_cloudvela_stdxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 			return FAILURE;
 
 			break;
-
 	}
 
 	return SUCCESS;
@@ -2417,7 +2414,7 @@ OPSTAT func_cloudvela_stdxml_heart_beat_unpack(msg_struct_com_cloudvela_data_rx_
 	//暂时没有层2的帧号，所以不用对帧号进行处理
 
 	//也许会有其它潜在的状态转移困惑，所以这里的ONLINE状态只是为了做一定的检查，防止出现各种奇怪现象，而不是为了设置状态
-	if (func_cloudvela_hb_link_active_rcv_signal_check() == FAILURE){
+	if (func_cloudvela_hb_link_active_rcv_signal_check(0, 0) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("CLOUDVELA: Heart_beat processing error!\n");
 		return FAILURE;

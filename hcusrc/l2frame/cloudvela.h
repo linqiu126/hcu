@@ -89,9 +89,9 @@ extern OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_i
 
 //Local API - Heart beat functions
 OPSTAT func_cloudvela_hb_link_main_entry(void);
-OPSTAT func_cloudvela_hb_link_active_send_signal(void);
-OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(void);
-OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(void);
+OPSTAT func_cloudvela_hb_link_active_send_signal(UINT8 linkid);
+OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(UINT8 linkid, UINT16 randval);
+OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(UINT8 linkid, UINT16 randval);
 
 //Local API - Core Link functions
 OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf);

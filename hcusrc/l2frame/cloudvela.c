@@ -248,6 +248,14 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
  *
  *  CLOUDVELA链路协议
  *
+ *  - 未来至少需要支持DEFAULT/HOME两个链路
+ *    其实在任何L3MOD发送给底层进行通信的链路DestUser中已经知晓是哪一个目的地址，所以链路层处理在pack消息时，完全可以自动生成linkid
+ *    业务模块就关注于填写正确的目的地就是了，上层不应该涉足具体的链路ID细节
+ *  - 链路层上行解码时，已经将srcUser填写的非常清楚，也一起带给了L3MOD，所以也没有必要给出LINKID信息
+ *  - 有关限制链路层只能传递某些消息内容，完全没有必要，链路层只提供编解码，传任何内容，都有L3MOD自己负责
+ *  - 在CLOUDVELA的上下文中以及系统工参信息中，已经配置了主备两个链路服务器信息，链路层启动的时候，就会不断的尝试并建立双链路
+ *  - L2 PACK时需要给出是哪一条链路，从而让底层知晓该发往哪一条链路上
+ *
  ***************************************************************************************************************************/
 //进入离线，具备两种方式：被动心跳检测到离线状态，主动断掉链路从而连到更高优先级的链路上
 //这两种情形下，都需要复位ConTable对应的状态，不然可能会导致物理接口模块处于不正常的接收状态
@@ -258,6 +266,8 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 //在线状态下，zHcuCloudvelaTable.ethConTry的参数用于控制是否可能进入链路断掉-》重建的情形，该参数在尝试过后会+1,
 //但HWINV的状态逆转报告会导致它清零，从而具备再一次尝试的资格。这里还要照顾一种清醒：如果所有链路都没有建立起来，则自然需要不断的+1,也没有大问题
 //长周期定时器, 周期性心跳时钟处理机制
+
+//多链路的HEAT-BEAT主动发起，未来考虑完善
 OPSTAT func_cloudvela_hb_link_main_entry(void)
 {
 	//int ret = 0;
@@ -279,7 +289,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 
 	//在线状态，则检查
 	else if(FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		if (func_cloudvela_hb_link_active_send_signal() == FAILURE){
+		if (func_cloudvela_hb_link_active_send_signal(HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT) == FAILURE){
 			zHcuSysStaPm.statisCnt.cloudVelaDiscCnt++;
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
@@ -347,38 +357,91 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 }
 
 //主动发送心跳信号
-OPSTAT func_cloudvela_hb_link_active_send_signal(void)
+//多链路处理过程，未来需要考虑完善
+//链路ID和格式的判定还有些问题，未来再完善
+OPSTAT func_cloudvela_hb_link_active_send_signal(UINT8 linkid)
 {
-	int ret = 0;
+	//int ret = 0;
 
 	//如果这里的链路已经被动断掉，必须将下面的数据清理掉，不然会出现下层物理接口模块还在接收的状态
 	//zHcuCloudvelaTable.curCon = CLOUDVELA_CONTROL_PHY_CON_INVALID;
 
-	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-
-		//打包数据
-		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-
-		//Send out
-		ret = func_cloudvela_send_data_to_cloud(&buf);
-		if ( ret == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
-	}else{
+	//检查链路状态
+	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_ONLINE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send HEART_BEAT to cloud, get by ONLINE, but back off line so quick!\n");
+
+	//发送数据给后台//初始化变量//申明发送消息
+	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+
+	//分格式类型组装
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
+		if (linkid == HCU_SYSCFG_CLOUD_BH_LINK_HOME){
+			strncpy(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+					sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(gTaskCloudvelaContext.L2Link.destUser));
+		}else{
+			strncpy(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+					sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(gTaskCloudvelaContext.L2Link.destUser));
+		}
+		//zHcuSysEngPar.cloud.hcuName 代替 zHcuSysEngPar.hwBurnId.equLable，未来待完善
+		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.hcuName, strlen(zHcuSysEngPar.cloud.hcuName)<\
+				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.cloud.hcuName):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
+		gTaskCloudvelaContext.L2Link.timeStamp = time(0);
+		gTaskCloudvelaContext.L2Link.msgType = HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID;
+		strcpy(gTaskCloudvelaContext.L2Link.funcFlag, "0");
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_uni_heart_beat_report_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_report_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_heart_beat_report>>8)&0xFF;
+		pMsgProc.msgId.optId = HUITP_MSGID_uni_heart_beat_report&0xFF;
+		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+		//StrIe_HUITP_IEID_uni_com_report_t
+		pMsgProc.baseReport.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_report);
+		pMsgProc.baseReport.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_report_t) - 4);
+		pMsgProc.baseReport.comReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		//StrIe_HUITP_IEID_uni_heart_beat_ping_t
+		pMsgProc.ping.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_heart_beat_ping);
+		pMsgProc.ping.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_heart_beat_ping_t) - 4);
+		//留下来用于随机验证：服务器需要原封不动的送回来
+		UINT16 randval = rand()%65000;
+		pMsgProc.ping.randval = HUITP_ENDIAN_EXG16(randval);
+		gTaskCloudvelaContext.defaultHbRand = randval;
+		//Pack message
+		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
+		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
+		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
+		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_heart_beat_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	//结束
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Online state, send HEART_BEAT message out to cloud success!\n");
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+	}
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+	}
+	else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+	}
+
+	//Send out
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
 
 	//State no change
 	return SUCCESS;
 }
 
 //主动发送心跳信号以后，收到对方的反馈
-OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(void)
+//链路ID和格式的判定还有些问题，未来再完善
+OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(UINT8 linkid, UINT16 randval)
 {
 	//FSM状态检查
 	if (FsmGetState(TASK_ID_CLOUDVELA) != FSM_STATE_CLOUDVELA_ONLINE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: FSM State error, taking care of potential risk!\n");
@@ -390,15 +453,85 @@ OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(void)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Hardware ETH/USBNET/WIFI/3G4G connection state error, taking care of potential risk!\n");
 	}
 
-	HCU_DEBUG_PRINT_CRT("CLOUDVELA: Ack HEART_BEAT successful!\n");
+	//检查随机数是否相等。有关多链路ID，等待未来再完善。目前该功能并未完全实现，故而只是提醒而已。
+	if (linkid == HCU_SYSCFG_CLOUD_BH_LINK_HOME){
+		if (randval != gTaskCloudvelaContext.homeHbRand) HCU_DEBUG_PRINT_INF("CLOUDVELA: Home Server potential risk of feedback value!\n");
+	}else{
+		if (randval != gTaskCloudvelaContext.defaultHbRand) HCU_DEBUG_PRINT_INF("CLOUDVELA: Default Server potential risk of feedback value!\n");
+	}
 
 	return SUCCESS;
 }
 
 //被动接收到对方的HEART-BEAT信号，反馈就是了
-OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(void)
+//链路ID和格式的判定还有些问题，未来再完善
+OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(UINT8 linkid, UINT16 randval)
 {
+	//int ret = 0;
 
+	//发送数据给后台//初始化变量//申明发送消息
+	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+
+	//分格式类型组装
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
+		if (linkid == HCU_SYSCFG_CLOUD_BH_LINK_HOME){
+			strncpy(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+					sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(gTaskCloudvelaContext.L2Link.destUser));
+		}else{
+			strncpy(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+					sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(gTaskCloudvelaContext.L2Link.destUser));
+		}
+		//zHcuSysEngPar.cloud.hcuName 代替 zHcuSysEngPar.hwBurnId.equLable，未来待完善
+		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.hcuName, strlen(zHcuSysEngPar.cloud.hcuName)<\
+				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.cloud.hcuName):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
+		gTaskCloudvelaContext.L2Link.timeStamp = time(0);
+		gTaskCloudvelaContext.L2Link.msgType = HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID;
+		strcpy(gTaskCloudvelaContext.L2Link.funcFlag, "0");
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_uni_heart_beat_resp_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_resp_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_heart_beat_resp>>8)&0xFF;
+		pMsgProc.msgId.optId = HUITP_MSGID_uni_heart_beat_resp&0xFF;
+		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+		//StrIe_HUITP_IEID_uni_com_resp_t
+		pMsgProc.baseResp.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_resp);
+		pMsgProc.baseResp.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_resp_t) - 4);
+		pMsgProc.baseResp.comResp = HUITP_IEID_UNI_COM_REPORT_YES;
+		//StrIe_HUITP_IEID_uni_heart_beat_pong_t
+		pMsgProc.pong.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_heart_beat_pong);
+		pMsgProc.pong.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_heart_beat_pong_t) - 4);
+		//留下来用于随机验证：服务器需要原封不动的送回来
+		UINT16 randval = rand()%65000;
+		pMsgProc.pong.randval = HUITP_ENDIAN_EXG16(randval);
+		//Pack message
+		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
+		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
+		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
+		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_heart_beat_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+	}
+
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+	else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+	}
+
+	//Send out
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+
+	//State no change
 	return SUCCESS;
 }
 
@@ -782,6 +915,7 @@ OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -816,7 +950,6 @@ OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * para
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_alarm_info_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -852,6 +985,7 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -886,7 +1020,6 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_alarm_info_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -922,6 +1055,7 @@ OPSTAT fsm_cloudvela_syspm_perfm_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -954,7 +1088,6 @@ OPSTAT fsm_cloudvela_syspm_perfm_resp(UINT32 dest_id, UINT32 src_id, void * para
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_performance_info_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -990,6 +1123,7 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -1022,7 +1156,6 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_performance_info_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -1058,6 +1191,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -1090,7 +1224,6 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_inventory_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -1126,6 +1259,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -1158,7 +1292,6 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_inventory_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -1194,6 +1327,7 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -1220,7 +1354,6 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_sw_package_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -1256,6 +1389,7 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -1282,7 +1416,6 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_sw_package_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -1746,6 +1879,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -1790,7 +1924,6 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_data_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -1826,6 +1959,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -1870,7 +2004,6 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_data_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -1906,6 +2039,7 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -1937,7 +2071,6 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_event_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -1973,6 +2106,7 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -2004,7 +2138,6 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
@@ -2040,6 +2173,7 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
@@ -2078,7 +2212,6 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}

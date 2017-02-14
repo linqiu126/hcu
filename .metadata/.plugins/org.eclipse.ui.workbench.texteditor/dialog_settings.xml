@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="seg" key="selection"/>
+		<item value="func_cloudvela_huitpxml_msg_heart_beat_req_received_handle" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="seg"/>
-			<item value="StrIe_HUITP_IEID_uni_com_segment_t"/>
-			<item value="StrMsg_HUITP_MSGID_uni_sw_package_confirm_t"/>
-			<item value="HUITP_IE_BUF_MAX_LEN"/>
-			<item value="StrIe_HUITP_IEID_uni_sw_package_body_t"/>
-			<item value="sw_package"/>
-			<item value="body"/>
-			<item value="_segment"/>
+			<item value="func_cloudvela_huitpxml_msg_heart_beat_req_received_handle"/>
+			<item value="func_cloudvela_hb_link_active_send_signal"/>
+			<item value="StrMsg_HUITP_MSGID_uni_heart_beat_req_t"/>
+			<item value="heart"/>
+			<item value="StrIe_HUITP_IEID_uni_heart_beat_pong_t"/>
+			<item value="strcmp"/>
+			<item value="cur"/>
+			<item value="StrIe_HUITP_IEID_uni_heart_beat_ping_t"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HUITPXML"/>
@@ -32,7 +32,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1199" key="DIALOG_X_ORIGIN"/>
-		<item value="316" key="DIALOG_Y_ORIGIN"/>
+		<item value="1183" key="DIALOG_X_ORIGIN"/>
+		<item value="431" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

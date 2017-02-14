@@ -217,6 +217,7 @@ OPSTAT hcu_ethernet_phy_link_disconnect(void)
 }
 
 //为SOCKET建立链路
+//有关双链路部分，应该考虑自动建立双链路
 OPSTAT hcu_ethernet_socket_link_setup(void)
 {
 	int ret=0;
@@ -301,11 +302,22 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 		if(gTaskCloudvelaContext.defaultSvrethConClientFd < 0) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "CLOUDVELA: socket id is not valid!\n");
 	}
 
-	if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
-		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
-		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
+	//有关LINKID的处理还不完善。因为程序中大量的地方还未改过来，所以只在if中判定是否属于HOME，其它情况都当做DEFAULT业务部分
+	//即便放到正式程序中，这个也不算太不合理
+	if (buf->linkId == HCU_SYSCFG_CLOUD_BH_LINK_HOME){
+		if (send(gTaskCloudvelaContext.homeSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
+			gTaskCloudvelaContext.homeSvrSocketCon = FALSE;
+			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
+		}else{
+			HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);
+		}
 	}else{
-		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);
+		if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
+			gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
+			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
+		}else{
+			HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);
+		}
 	}
 
 	//返回
