@@ -18,6 +18,7 @@ PRJ_BFSC待完成或者回答的问题：
 =完成HEART-BEAT的改造
 =增加双链路的工作框架，在不影响目前功能的情况下，进行了略微的改进，一切是以保护FEFAULT为基础，HOME只能算是BEST EFFORTS
 =使用上下文机制，简化链路ID的设计：LinkID由pack/unpack函数生产，由其它底层链路决定是否使用，以及如何使用
+=完成TIME_SYNC的L2通信机制
 
 //= ZJL, 2017 Feb.13, CURRENT_SW_DELIVERY 166=>BFSC项目
 =完成了ALARM/PERFORM的L2消息处理
