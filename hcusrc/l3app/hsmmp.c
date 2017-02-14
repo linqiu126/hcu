@@ -657,6 +657,7 @@ OPSTAT hcu_hsmmp_photo_capture_start(const HKVisionOption_t HKVisionOption)
 	HcuDebugPrint("HSMMP: HKVisionOption.url_video_start: %s \n", HKVisionOption.url_video_start);
 	HcuDebugPrint("HSMMP: HKVisionOption.url_video_stop: %s \n", HKVisionOption.url_video_stop);
 	HcuDebugPrint("HSMMP: HKVisionOption.file_photo: %s \n", HKVisionOption.file_photo);
+	HcuDebugPrint("HSMMP: HKVisionOption.file_photo_pure: %s \n", HKVisionOption.file_photo_pure);
 	HcuDebugPrint("HSMMP: HKVisionOption.file_video: %s \n\n", HKVisionOption.file_video);
 
 	FILE *fp = fopen(HKVisionOption.file_photo, "w");

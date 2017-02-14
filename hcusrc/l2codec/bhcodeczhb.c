@@ -1695,7 +1695,7 @@ OPSTAT func_cloudvela_stdzhb_msg_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, Cl
 
 //For alarm report
 //rcv输入参数，buf输出参数
-OPSTAT func_cloudvela_stdzhb_msg_alarm_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT8 alarmType, UINT32 alarmContent, UINT8 equID, UINT8 alarmSeverity, UINT8 alarmClearFlag, char *avFileName, UINT32 timeStamp, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_alarm_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT8 alarmType, UINT32 alarmContent, UINT8 equID, UINT8 alarmSeverity, UINT8 alarmClearFlag, char *alarmDescrition, UINT32 timeStamp, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -1719,7 +1719,7 @@ OPSTAT func_cloudvela_stdzhb_msg_alarm_pack(UINT8 msgType, UINT8 cmdId, UINT8 us
 		sprintf(xmlFormat.conEqpId, "%02X", equID & 0xFF);
 		sprintf(xmlFormat.conAlarmSeverity, "%02X", alarmSeverity & 0xFF);
 		sprintf(xmlFormat.conAlarmClearFlag, "%02X", alarmClearFlag & 0xFF);
-		strcpy(xmlFormat.FuncFlag, avFileName);//for HKvision photo when PM25 valuse exceed the threshold
+		strcpy(xmlFormat.FuncFlag, alarmDescrition);//for HKvision photo when PM25 valuse exceed the threshold
 		sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
 
 		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);

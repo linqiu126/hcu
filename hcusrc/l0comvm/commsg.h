@@ -459,10 +459,6 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,
 	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT,
 	MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
-	MSG_ID_CLOUDVELA_SYSSWM_TIME_SYNC_REQ,
-	MSG_ID_SYSSWM_CLOUDVELA_TIME_SYNC_RESP,
-	MSG_ID_SYSSWM_CLOUDVELA_TIME_SYNC_REPORT,
-	MSG_ID_CLOUDVELA_SYSSWM_TIME_SYNC_CONFIRM,
 
 	//CANITF
 	MSG_ID_CANITFLEO_DATA_REPORT,
@@ -2180,6 +2176,46 @@ typedef struct  msg_struct_nbiotqg376_ipm_data_req //
 	UINT32 length;
 }msg_struct_nbiotqg376_ipm_data_req_t;
 
+<<<<<<< HEAD
+=======
+//MSG_ID_COM_ALARM_REPORT,
+//for alarm report added by ZSC
+typedef struct msg_struct_alarm_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType;
+	UINT8  alarmServerity;
+	UINT8  alarmClearFlag;
+	UINT8  equID;
+	UINT8 alarmType;
+	UINT32 alarmContent;
+	char alarmDescription[HCU_SYSDIM_FILE_NAME_LEN_MAX];  //photo file name, only valid when PM25 exceed the threshold
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_alarm_report_t;
+
+//MSG_ID_COM_PM_REPORT,
+//for PM report added by ZSC
+typedef struct msg_struct_pm_report
+{
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType;
+	UINT32 TaskRestartCnt;
+	UINT32 CloudVelaConnCnt;
+	UINT32 CloudVelaConnFailCnt;
+	UINT32 CloudVelaDiscCnt;
+	UINT32 SocketDiscCnt;
+	UINT32 cpu_occupy;
+	UINT32 mem_occupy;
+	UINT32 disk_occupy;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_pm_report_t;
+
+
+>>>>>>> 8d1d7943370483888aeae3a4238125e6a61a023d
 //FM/PM/INVENTORY/SW-PACKAGE
 //MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ,
 typedef struct msg_struct_cloudvela_spspm_alarm_req
@@ -2282,7 +2318,7 @@ typedef struct msg_struct_cloudvela_spspm_perfm_confirm
 
 //MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,
 #define HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX 50
-typedef struct msg_struct_cloudvela_sysswm_inventory_req
+typedef struct msg_struct_cloudvela_spspm_inventory_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -2293,10 +2329,10 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_req
 	UINT8  upgradeFlag;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
-}msg_struct_cloudvela_sysswm_inventory_req_t;
+}msg_struct_cloudvela_spspm_inventory_req_t;
 
 //MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP,
-typedef struct msg_struct_sysswm_cloudvela_inventory_resp
+typedef struct msg_struct_spspm_cloudvela_inventory_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
@@ -2307,10 +2343,10 @@ typedef struct msg_struct_sysswm_cloudvela_inventory_resp
 	UINT8  upgradeFlag;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
-}msg_struct_sysswm_cloudvela_inventory_resp_t;
+}msg_struct_spspm_cloudvela_inventory_resp_t;
 
 //MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT,
-typedef struct msg_struct_sysswm_cloudvela_inventory_report
+typedef struct msg_struct_spspm_cloudvela_inventory_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
@@ -2321,10 +2357,10 @@ typedef struct msg_struct_sysswm_cloudvela_inventory_report
 	UINT8  upgradeFlag;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
-}msg_struct_sysswm_cloudvela_inventory_report_t;
+}msg_struct_spspm_cloudvela_inventory_report_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM,
-typedef struct msg_struct_cloudvela_sysswm_inventory_confirm
+typedef struct msg_struct_cloudvela_spspm_inventory_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
@@ -2335,11 +2371,11 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_confirm
 	UINT8  upgradeFlag;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
-}msg_struct_cloudvela_sysswm_inventory_confirm_t;
+}msg_struct_cloudvela_spspm_inventory_confirm_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,
 #define HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 400
-typedef struct msg_struct_cloudvela_sysswm_sw_package_req
+typedef struct msg_struct_cloudvela_spspm_sw_package_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -2349,10 +2385,10 @@ typedef struct msg_struct_cloudvela_sysswm_sw_package_req
 	UINT16 validLen;
 	UINT8  body[HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT32 length;
-}msg_struct_cloudvela_sysswm_sw_package_req_t;
+}msg_struct_cloudvela_spspm_sw_package_req_t;
 
 //MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,
-typedef struct msg_struct_sysswm_cloudvela_sw_package_resp
+typedef struct msg_struct_spspm_cloudvela_sw_package_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
@@ -2360,10 +2396,10 @@ typedef struct msg_struct_sysswm_cloudvela_sw_package_resp
 	UINT16 segTotal;
 	UINT16 segLen;
 	UINT32 length;
-}msg_struct_sysswm_cloudvela_sw_package_resp_t;
+}msg_struct_spspm_cloudvela_sw_package_resp_t;
 
 //MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT,
-typedef struct msg_struct_sysswm_cloudvela_sw_package_report
+typedef struct msg_struct_spspm_cloudvela_sw_package_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
@@ -2371,10 +2407,10 @@ typedef struct msg_struct_sysswm_cloudvela_sw_package_report
 	UINT16 segTotal;
 	UINT16 segLen;
 	UINT32 length;
-}msg_struct_sysswm_cloudvela_sw_package_report_t;
+}msg_struct_spspm_cloudvela_sw_package_report_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
-typedef struct msg_struct_cloudvela_sysswm_sw_packag_confirm
+typedef struct msg_struct_cloudvela_spspm_sw_packag_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
@@ -2384,47 +2420,7 @@ typedef struct msg_struct_cloudvela_sysswm_sw_packag_confirm
 	UINT16 validLen;
 	UINT8  body[HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT32 length;
-}msg_struct_cloudvela_sysswm_sw_packag_confirm_t;
-
-//MSG_ID_CLOUDVELA_SYSSWM_TIME_SYNC_REQ,
-typedef struct msg_struct_cloudvela_sysswm_time_sync_req
-{
-	msgie_struct_bh_com_head_t comHead;
-	UINT8  baseReq;
-	UINT8  timeRegion;
-	UINT32 timeInUnix;
-	UINT32 length;
-}msg_struct_cloudvela_sysswm_time_sync_req_t;
-
-//MSG_ID_SYSSWM_CLOUDVELA_TIME_SYNC_RESP,
-typedef struct msg_struct_sysswm_cloudvela_time_sync_resp
-{
-	msgie_struct_bh_com_head_t comHead;
-	UINT8  baseResp;
-	UINT8  timeRegion;
-	UINT32 timeInUnix;
-	UINT32 length;
-}msg_struct_sysswm_cloudvela_time_sync_resp_t;
-
-//MSG_ID_SYSSWM_CLOUDVELA_TIME_SYNC_REPORT,
-typedef struct msg_struct_sysswm_cloudvela_time_sync_report
-{
-	msgie_struct_bh_com_head_t comHead;
-	UINT8  baseReport;
-	UINT8  timeRegion;
-	UINT32 timeInUnix;
-	UINT32 length;
-}msg_struct_sysswm_cloudvela_time_sync_report_t;
-
-//MSG_ID_CLOUDVELA_SYSSWM_TIME_SYNC_CONFIRM,
-typedef struct msg_struct_cloudvela_sysswm_time_sync_confirm
-{
-	msgie_struct_bh_com_head_t comHead;
-	UINT8  baseConfirm;
-	UINT8  timeRegion;
-	UINT32 timeInUnix;
-	UINT32 length;
-}msg_struct_cloudvela_sysswm_time_sync_confirm_t;
+}msg_struct_cloudvela_spspm_sw_packag_confirm_t;
 
 
 //CANITF
