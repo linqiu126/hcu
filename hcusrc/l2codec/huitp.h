@@ -1449,11 +1449,8 @@ typedef enum
 	HUITP_IEID_uni_itf_485_max,
 
   //软件清单
-	HUITP_IEID_uni_inventory_min                    = 0xA000,	
-	HUITP_IEID_uni_inventory_hw_type                = 0xA000, 
-	HUITP_IEID_uni_inventory_hw_id                  = 0xA001, 
-	HUITP_IEID_uni_inventory_sw_rel                 = 0xA002, 
-	HUITP_IEID_uni_inventory_sw_ver                 = 0xA003, 
+	HUITP_IEID_uni_inventory_min                    = 0xA000,
+	HUITP_IEID_uni_inventory_element                = 0xA000,
 	HUITP_IEID_uni_inventory_max,
 
   //软件版本体
@@ -2990,12 +2987,18 @@ typedef struct StrIe_HUITP_IEID_uni_itf_485_value
 //软件清单
 //HUITP_IEID_uni_inventory_min                    = 0xA000,
 //HUITP_IEID_uni_inventory_hw_type                = 0xA000,
-typedef struct StrIe_HUITP_IEID_uni_inventory_hw_type
+#define HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX 50
+typedef struct StrIe_HUITP_IEID_uni_inventory_element
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT16 hwType;
-}StrIe_HUITP_IEID_uni_inventory_hw_type_t;
+	UINT16 hwId;
+	UINT16 swRel;
+	UINT16 swVer;
+	UINT8  upgradeFlag;
+	char   desc[HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX];
+}StrIe_HUITP_IEID_uni_inventory_element_t;
 //HW_TYPE的高字节将表示HCU、IHU等不同类型
 //HW_TYPE的低字节将表示产品的具体型号
 #define HUITP_IEID_UNI_INVENT_HWTYPE_PDCAT_G1 0x01
@@ -3035,33 +3038,8 @@ typedef struct StrIe_HUITP_IEID_uni_inventory_hw_type
 #define HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_E2_HJJK_01 0x1201  //手持式环境监控
 #define HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_E3_DZGP_01 0x1301  //电子工牌
 #define HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_E4_ZNSH_01 0x1401  //智能手环
-
-//HUITP_IEID_uni_inventory_hw_id                  = 0xA001, 
-typedef struct StrIe_HUITP_IEID_uni_inventory_hw_id
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT16 hwId;
-}StrIe_HUITP_IEID_uni_inventory_hw_id_t;
 //用于指示单个硬件具体的PEM信息，或者小版本的演进修改。
 //如果没有独特信息，可采用0000/FFFF来表示无效不用。
-
-
-//HUITP_IEID_uni_inventory_sw_rel                 = 0xA002, 
-typedef struct StrIe_HUITP_IEID_uni_inventory_sw_rel
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT16 swRel;
-}StrIe_HUITP_IEID_uni_inventory_sw_rel_t;
-
-//HUITP_IEID_uni_inventory_sw_ver                 = 0xA003,
-typedef struct StrIe_HUITP_IEID_uni_inventory_sw_ver
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT16 swVer;
-}StrIe_HUITP_IEID_uni_inventory_sw_ver_t;
 
 //HUITP_IEID_uni_inventory_max,
 
@@ -7969,6 +7947,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_inventory_req
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+	StrIe_HUITP_IEID_uni_inventory_element_t reqValue;
 }StrMsg_HUITP_MSGID_uni_inventory_req_t;
 
 //HUITP_MSGID_uni_inventory_resp                   = 0xA080,
@@ -7977,10 +7956,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_inventory_resp
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_inventory_hw_type_t hwTypeRespValue;
-	StrIe_HUITP_IEID_uni_inventory_hw_id_t hwIdRespValue;
-	StrIe_HUITP_IEID_uni_inventory_sw_rel_t swRelRespValue;
-	StrIe_HUITP_IEID_uni_inventory_sw_ver_t swVerRespValue;
+	StrIe_HUITP_IEID_uni_inventory_element_t respValue;
 }StrMsg_HUITP_MSGID_uni_inventory_resp_t;
 
 //HUITP_MSGID_uni_inventory_report                 = 0xA081, 
@@ -7989,10 +7965,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_inventory_report
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_inventory_hw_type_t hwTypeReportValue;
-	StrIe_HUITP_IEID_uni_inventory_hw_id_t hwIdReportValue;
-	StrIe_HUITP_IEID_uni_inventory_sw_rel_t swRelReportValue;
-	StrIe_HUITP_IEID_uni_inventory_sw_ver_t swVerReportValue;
+	StrIe_HUITP_IEID_uni_inventory_element_t reportValue;
 }StrMsg_HUITP_MSGID_uni_inventory_report_t;
 
 //HUITP_MSGID_uni_inventory_confirm                    = 0xA001, 
@@ -8001,6 +7974,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_inventory_confirm
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+	StrIe_HUITP_IEID_uni_inventory_element_t confirmValue;
 }StrMsg_HUITP_MSGID_uni_inventory_confirm_t;
 
 //HUITP_MSGID_uni_inventory_max,
