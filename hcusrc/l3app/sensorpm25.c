@@ -409,7 +409,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
-	if(rcv.pm25.pm2d5Value >= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD && AlarmFlag == TRUE)
+	if((rcv.pm25.pm2d5Value >= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD) && (AlarmFlag == TRUE))
 	{
 		AlarmFlag = FALSE;
 

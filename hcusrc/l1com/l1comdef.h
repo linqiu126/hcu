@@ -144,7 +144,7 @@ typedef enum
 	L3PO_generic_read_sample_cycle = 0x85, //In second
 	L3PO_generic_read_sample_number = 0x86,
 	L3PO_generic_max,
-}L3GenericOptIdDef;
+}L3GenericOptIdDef;alarm
 
 //CLOUD<->HCU之间定义的操作字
 //所有的操作字，需要极度的丰富化，以形成完整的处理任务模块
@@ -544,10 +544,8 @@ typedef enum
 
 typedef enum
 {
-	ALARM_CLEAR_FLAG_NONE = 0,
-	ALARM_CLEAR_FLAG_OFF,
+	ALARM_CLEAR_FLAG_OFF = 0,
 	ALARM_CLEAR_FLAG_ON,
-	ALARM_CLEAR_FLAG_INVALID = 0xFF,
 }AlarmClearFlagEnum;
 
 //公共定义的设备缺省标识，暂时以335D设备为模版
