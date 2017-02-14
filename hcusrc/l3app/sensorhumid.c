@@ -40,7 +40,7 @@ HcuFsmStateItem_t HcuFsmHumid[] =
 
     //Normal working status
 	{MSG_ID_CLOUDVELA_HUMID_DATA_REQ,    	FSM_STATE_HUMID_ACTIVED,      		fsm_humid_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD,    FSM_STATE_HUMID_ACTIVED,          	fsm_humid_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,    FSM_STATE_HUMID_ACTIVED,          	fsm_humid_cloudvela_control_cmd},
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_HUMID_DATA_REPORT, 	FSM_STATE_HUMID_OPT_WFFB,        	fsm_humid_data_report_from_modbus},

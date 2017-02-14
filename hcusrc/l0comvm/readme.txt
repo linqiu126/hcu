@@ -13,6 +13,13 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 ===>离线任务，移出CLOUDVELA，放到L3xxxxTASK中去
 
+
+//= ZJL, 2017 Feb.14, CURRENT_SW_DELIVERY 169=>BFSC项目
+=对传统的EMC/TEMP/WINDDIR/WINDSPD/TEMP/HUMID/HSMMP/NOISE进行改造
+=统一采用DATA-REQ/DATA-RESP, CTRL-REQ/CTRL-RESP, DATA-REPORT/DATA-CONFIRM这种方式
+=将所有传感器的L2消息全部制造出来了，下面就是填写处理函数内容
+=收发，搭建完成所有的消息处理通道
+
 //= ZJL, 2017 Feb.14, CURRENT_SW_DELIVERY 168=>BFSC项目
 =将ALARM功能移到SYSPM功能模块中去，清理完毕。改动量较大，单独备份标签。
 =ALARM合并

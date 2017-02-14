@@ -44,13 +44,13 @@ HcuFsmStateItem_t HcuFsmHsmmp[] =
 
     //Normal working status, 等待上层来的控制消息
 	{MSG_ID_SPSVIRGO_HSMMP_DATA_RX,     	FSM_STATE_HSMMP_ACTIVED,          	fsm_hsmmp_audio_data_rx},
-	{MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,	FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_cmd},
+	{MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,	FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_cmd},
 	{MSG_ID_AVORION_HSMMP_DATA_RX,      	FSM_STATE_HSMMP_ACTIVED,         	fsm_hsmmp_avorion_data_rx},
 
 	//来自CLOUD的控制协议，可以在不同的激活状态下起作用，但起作用必须等待下一轮硬件空闲的时候
     //Waiting for feedback from
 	{MSG_ID_SPSVIRGO_HSMMP_DATA_RX,       	FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_audio_data_rx},
-	{MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,    FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_cloudvela_cmd},
+	{MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,    FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_cloudvela_cmd},
 	{MSG_ID_AVORION_HSMMP_DATA_RX,       	FSM_STATE_HSMMP_ACTIVED_WFFB,    	fsm_hsmmp_avorion_data_rx},
 	{MSG_ID_AVORION_HSMMP_DATA_READ_FB,  	FSM_STATE_HSMMP_ACTIVED_WFFB,    	fsm_hsmmp_avorion_data_read_fb},
 
@@ -323,9 +323,9 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 		}
 		//在线模式
 		else if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			msg_struct_hsmmp_cloudvela_data_link_resp_t snd;
-			memset(&snd, 0, sizeof(msg_struct_hsmmp_cloudvela_data_link_resp_t));
-			snd.length = sizeof(msg_struct_hsmmp_cloudvela_data_link_resp_t);
+			msg_struct_hsmmp_cloudvela_data_resp_t snd;
+			memset(&snd, 0, sizeof(msg_struct_hsmmp_cloudvela_data_resp_t));
+			snd.length = sizeof(msg_struct_hsmmp_cloudvela_data_resp_t);
 			strcpy(snd.link.linkName, newpath);
 			snd.link.linkLen = strlen(newpath);
 
@@ -345,7 +345,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			snd.cmdIdBackType = L3CI_cmdid_back_type_period;
 			//ZHB格式的参数应该在这里一并填入
 			//snd.cn =
-			ret = hcu_message_send(MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP, TASK_ID_CLOUDVELA, TASK_ID_HSMMP, &snd, snd.length);
+			ret = hcu_message_send(MSG_ID_HSMMP_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_HSMMP, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
 				HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);

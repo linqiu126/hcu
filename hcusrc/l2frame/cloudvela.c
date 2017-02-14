@@ -74,22 +74,45 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 
 	//一般通用传感器业务部分，UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	{MSG_ID_EMC_CLOUDVELA_DATA_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_emc_data_resp},
-	{MSG_ID_EMC_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_emc_contrl_fb},
+	{MSG_ID_EMC_CLOUDVELA_CTRL_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_emc_ctrl_resp},
+	{MSG_ID_EMC_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_emc_data_report},
 	{MSG_ID_PM25_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25_data_resp},
-	{MSG_ID_PM25_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25_contrl_fb},
-	{MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP, 		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_winddir_data_resp},
-	{MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_winddir_contrl_fb},
-	{MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_windspd_data_resp},
-	{MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_windspd_contrl_fb},
+	{MSG_ID_PM25_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25_ctrl_resp},
+	{MSG_ID_PM25_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25_data_report},
 	{MSG_ID_TEMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_temp_data_resp},
-	{MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_temp_contrl_fb},
+	{MSG_ID_TEMP_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_temp_ctrl_resp},
+	{MSG_ID_TEMP_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_temp_data_report},
 	{MSG_ID_HUMID_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_humid_data_resp},
-	{MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_humid_contrl_fb},
-	{MSG_ID_NOISE_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_data_resp},
-	{MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_contrl_fb},
+	{MSG_ID_HUMID_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_humid_ctrl_resp},
+	{MSG_ID_HUMID_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_humid_data_report},
+	{MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP, 		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_winddir_data_resp},
+	{MSG_ID_WINDDIR_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_winddir_ctrl_resp},
+	{MSG_ID_WINDDIR_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_winddir_data_report},
+	{MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_windspd_data_resp},
+	{MSG_ID_WINDSPD_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_windspd_ctrl_resp},
+	{MSG_ID_WINDSPD_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_windspd_data_report},
+	{MSG_ID_HSMMP_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_ctrl_resp},
 	{MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_resp},
-	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_control_fb},
-	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_link_resp},
+	{MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_report},
+	{MSG_ID_NOISE_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_data_resp},
+	{MSG_ID_NOISE_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_ctrl_resp},
+	{MSG_ID_NOISE_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_data_report},
+
+	//CONVENIENCE SENSO业务部分，UL上行链路处理部分，DL下行在解包函数中自动路由完成
+	{MSG_ID_AIRPRS_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_airprs_data_resp},
+	{MSG_ID_AIRPRS_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_airprs_data_report},
+	{MSG_ID_ALCOHOL_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_alcohol_data_resp},
+	{MSG_ID_ALCOHOL_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_alcohol_data_report},
+	{MSG_ID_CO1_CLOUDVELA_DATA_RESP,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_co1_data_resp},
+	{MSG_ID_CO1_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_co1_data_report},
+	{MSG_ID_HCHO_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hcho_data_resp},
+	{MSG_ID_HCHO_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hcho_data_report},
+	{MSG_ID_LIGHTSTR_CLOUDVELA_DATA_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_lightstr_data_resp},
+	{MSG_ID_LIGHTSTR_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_lightstr_data_report},
+	{MSG_ID_PM25SP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25sp_data_resp},
+	{MSG_ID_PM25SP_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25sp_data_report},
+	{MSG_ID_TOXICGAS_CLOUDVELA_DATA_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_toxicgas_data_resp},
+	{MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_toxicgas_data_report},
 
 	//采用分项目控制方式，降低不同项目之间的关联，特别是海量MSGID-STATE这一表的内存压力。UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -1557,7 +1580,12 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 }
 
 
-OPSTAT fsm_cloudvela_emc_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_emc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_emc_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
@@ -1605,13 +1633,13 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_pm25_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//Adding by Shanchun for control cmd
 	//int ret=0;
-	msg_struct_pm25_cloudvela_control_fb_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_control_fb_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_control_fb_t)))
+	msg_struct_pm25_cloudvela_ctrl_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_ctrl_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_ctrl_resp_t)))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25_CMD_RESP message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -1642,6 +1670,12 @@ OPSTAT fsm_cloudvela_pm25_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_
 	//State no change
 	return SUCCESS;
 }
+
+OPSTAT fsm_cloudvela_pm25_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
 
 /***************************************************************************************************************************
  *
@@ -1684,11 +1718,15 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	return SUCCESS;
 }
 
-OPSTAT fsm_cloudvela_winddir_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_winddir_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
 
+OPSTAT fsm_cloudvela_winddir_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
 /***************************************************************************************************************************
  *
@@ -1731,11 +1769,15 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 	return SUCCESS;
 }
 
-OPSTAT fsm_cloudvela_windspd_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_windspd_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
 
+OPSTAT fsm_cloudvela_windspd_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
 /***************************************************************************************************************************
  *
@@ -1778,11 +1820,15 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-OPSTAT fsm_cloudvela_temp_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_temp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
 
+OPSTAT fsm_cloudvela_temp_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
 
 /***************************************************************************************************************************
@@ -1825,7 +1871,67 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	return SUCCESS;
 }
 
-OPSTAT fsm_cloudvela_humid_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_humid_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_humid_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+
+/***************************************************************************************************************************
+ *
+ * 　HSMMP业务处理
+ *
+ ***************************************************************************************************************************/
+//收到来自HSMMP的数据，处理后发送数据到后台云
+OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_hsmmp_cloudvela_data_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_data_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_data_resp_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HSMMP message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//检查参数
+	if ((rcv.link.linkName == NULL) || ((strlen(rcv.link.linkName) > HCU_SYSDIM_FILE_NAME_LEN_MAX)))
+		HCU_ERROR_PRINT_CLOUDVELA("HSMMP: Error parameter message received!\n");
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		//初始化变量
+		CloudDataSendBuf_t buf;
+		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
+
+		//打包数据
+		if (func_cloudvela_stdzhb_msg_hsmmp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
+				rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, rcv.link.linkName, &buf) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+
+		//Send out
+		if (func_cloudvela_send_data_to_cloud(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+	}else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to cloud, get HSMMP by ONLINE, but back off line so quick!\n");
+	}
+
+	//结束
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Online state, send instance/period HSMMP to cloud success!\n");
+	//State no change
+	return SUCCESS;
+}
+
+
+//收到来自HSMMP的数据，处理后发送数据到后台云
+OPSTAT fsm_cloudvela_hsmmp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
@@ -1872,64 +1978,12 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 	return SUCCESS;
 }
 
-OPSTAT fsm_cloudvela_noise_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_noise_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
 
-
-
-/***************************************************************************************************************************
- *
- * 　HSMMP业务处理
- *
- ***************************************************************************************************************************/
-//收到来自HSMMP的数据，处理后发送数据到后台云
-OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	return SUCCESS;
-}
-
-//收到来自HSMMP的数据，处理后发送数据到后台云
-OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//int ret=0;
-	msg_struct_hsmmp_cloudvela_data_link_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_data_link_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_data_link_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HSMMP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
-
-	//检查参数
-	if ((rcv.link.linkName == NULL) || ((strlen(rcv.link.linkName) > HCU_SYSDIM_FILE_NAME_LEN_MAX)))
-		HCU_ERROR_PRINT_CLOUDVELA("HSMMP: Error parameter message received!\n");
-
-	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-
-		//打包数据
-		if (func_cloudvela_stdzhb_msg_hsmmp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
-				rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, rcv.link.linkName, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-
-		//Send out
-		if (func_cloudvela_send_data_to_cloud(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-	}else{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to cloud, get HSMMP by ONLINE, but back off line so quick!\n");
-	}
-
-	//结束
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Online state, send instance/period HSMMP to cloud success!\n");
-	//State no change
-	return SUCCESS;
-}
-
-
-//收到来自HSMMP的数据，处理后发送数据到后台云
-OPSTAT fsm_cloudvela_hsmmp_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_noise_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
@@ -2436,4 +2490,93 @@ OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen)
 }
 
 */
+
+/*
+ *
+ *
+ *
+ *  一般性低档传感器
+ *
+ *
+ *
+ */
+
+
+OPSTAT fsm_cloudvela_airprs_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_airprs_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_alcohol_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_alcohol_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_co1_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_co1_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_hcho_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_hcho_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_lightstr_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_lightstr_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_pm25sp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_pm25sp_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_toxicgas_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_toxicgas_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+
+
+
+
+
+
+
 

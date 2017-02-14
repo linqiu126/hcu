@@ -2,29 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="alarm" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="HUITP_MSGID_uni_lightstr_data_min" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="ALARM"/>
-			<item value="MSG_ID_COM_ALARM_REPORT"/>
-			<item value="msg_struct_com_alarm_report_t"/>
-			<item value="msg_com_struct_alarm_report"/>
-			<item value="alarmDescription"/>
-			<item value="StrIe_HUITP_IEID_uni_alarm_info_element_t"/>
-			<item value="HUITP_MSGID_uni_alarm_info_resp"/>
-			<item value="alarm_info"/>
+			<item value=";"/>
+			<item value="HUITP_MSGID_uni_lightstr_data_min"/>
+			<item value="lightstr"/>
+			<item value="uni_altitude_data"/>
+			<item value="uni_altitude"/>
+			<item value="uni_toxicgas_data"/>
+			<item value="uni_toxicgas"/>
+			<item value="lightstr_data"/>
 		</list>
 		<list key="replacehistory">
+			<item value="&#x0A;{&#x0A;&#x09;HCU_ERROR_PRINT_CLOUDVELA(&quot;HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_emc_data_req_t received!\n&quot;);&#x0A;}&#x0A;"/>
+			<item value="uni_altitude_data"/>
+			<item value="uni_toxicgas_data"/>
+			<item value="lightstr_data"/>
+			<item value="msg_struct_ipm_nbiotcj188_ctrl_resp_t"/>
+			<item value="MSG_ID_NBIOTCJ188_IWM_CTRL_REQ"/>
+			<item value="msg_struct_hsmmp_cloudvela_data_resp_t"/>
+			<item value="msg_struct_cloudvela_pm25_ctrl_req_t"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="303" key="DIALOG_WIDTH"/>
+		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="424" key="DIALOG_HEIGHT"/>
-		<item value="629" key="DIALOG_X_ORIGIN"/>
-		<item value="170" key="DIALOG_Y_ORIGIN"/>
+		<item value="425" key="DIALOG_HEIGHT"/>
+		<item value="1197" key="DIALOG_X_ORIGIN"/>
+		<item value="377" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

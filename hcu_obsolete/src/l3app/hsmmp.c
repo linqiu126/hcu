@@ -44,7 +44,7 @@ HcuFsmStateItem_t FsmHsmmp[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_HSMMP_ACTIVED,          	fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_HSMMP_ACTIVED,          	fsm_hsmmp_time_out},
 	{MSG_ID_SPSVIRGO_HSMMP_DATA_RX,     	FSM_STATE_HSMMP_ACTIVED,          	fsm_hsmmp_audio_data_rx},
-	{MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,	FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_cmd},
+	{MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,	FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_cmd},
 	{MSG_ID_AVORION_HSMMP_DATA_RX,      	FSM_STATE_HSMMP_ACTIVED,         	fsm_hsmmp_avorion_data_rx},
 
 	//来自CLOUD的控制协议，可以在不同的激活状态下起作用，但起作用必须等待下一轮硬件空闲的时候
@@ -55,7 +55,7 @@ HcuFsmStateItem_t FsmHsmmp[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_time_out},
 	{MSG_ID_SPSVIRGO_HSMMP_DATA_RX,       	FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_audio_data_rx},
-	{MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,    FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_cloudvela_cmd},
+	{MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,    FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_cloudvela_cmd},
 	{MSG_ID_AVORION_HSMMP_DATA_RX,       	FSM_STATE_HSMMP_ACTIVED_WFFB,    	fsm_hsmmp_avorion_data_rx},
 	{MSG_ID_AVORION_HSMMP_DATA_READ_FB,  	FSM_STATE_HSMMP_ACTIVED_WFFB,    	fsm_hsmmp_avorion_data_read_fb},
 

@@ -46,7 +46,7 @@ HcuFsmStateItem_t FsmNbiotqg376[] =
 	{MSG_ID_COM_HEART_BEAT_FB,  			FSM_STATE_NBIOTQG376_ONLINE,    fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_time_out},
 	{MSG_ID_IPM_NBIOTQG376_DATA_RESP,   	FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ipm_data_resp},
-	{MSG_ID_IPM_NBIOTQG376_CONTROL_FB,   	FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ipm_contrl_fb},
+	{MSG_ID_IPM_NBIOTQG376_CTRL_RESP,   	FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ipm_ctrl_resp},
 
 	//Online working，这里不再考虑不同的物理链接导致的差异性链路。从Linux系统来看，WIFI/ETHERNET/USBNET/34G都是同一种连接
 	{MSG_ID_ETHERNET_NBIOTQG376_DATA_RX,    FSM_STATE_NBIOTQG376_ONLINE, 	fsm_nbiotqg376_ethernet_data_rx},
@@ -187,7 +187,7 @@ OPSTAT fsm_nbiotqg376_ipm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-OPSTAT fsm_nbiotqg376_ipm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_nbiotqg376_ipm_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

@@ -39,7 +39,7 @@ HcuFsmStateItem_t FsmHumid[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_HUMID_ACTIVED,          	fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_HUMID_ACTIVED,          	fsm_humid_time_out},
 	{MSG_ID_CLOUDVELA_HUMID_DATA_REQ,    	FSM_STATE_HUMID_ACTIVED,      		fsm_humid_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD,    FSM_STATE_HUMID_ACTIVED,          	fsm_humid_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,    FSM_STATE_HUMID_ACTIVED,          	fsm_humid_cloudvela_control_cmd},
 
     //Wait for Modbus Feedback
     {MSG_ID_COM_RESTART,        		FSM_STATE_HUMID_OPT_WFFB,         	fsm_humid_restart},

@@ -40,7 +40,7 @@ HcuFsmStateItem_t HcuFsmIwm[] =
 
 	//Normal working status
 	{MSG_ID_NBIOTCJ188_IWM_DATA_REQ,     		FSM_STATE_IWM_ACTIVED,      			fsm_iwm_nbiotcj188_data_req},
-	{MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD,  		FSM_STATE_IWM_ACTIVED,          		fsm_iwm_nbiotcj188_control_cmd},
+	{MSG_ID_NBIOTCJ188_IWM_CTRL_REQ,  		FSM_STATE_IWM_ACTIVED,          		fsm_iwm_nbiotcj188_control_cmd},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending

@@ -312,135 +312,66 @@ enum HCU_INTER_TASK_MSG_ID
 	//HWINV
 	MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,
 
-	//CloudConnection message
-	MSG_ID_CLOUDVELA_EMC_DATA_REQ,
-	MSG_ID_CLOUDVELA_EMC_CONTROL_CMD,
-
-	MSG_ID_CLOUDVELA_PM25_DATA_REQ,
-	MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,
-
-	MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,
-	MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD,
-
-	MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,
-	MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD,
-
-	MSG_ID_CLOUDVELA_TEMP_DATA_REQ,
-	MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,
-
-	MSG_ID_CLOUDVELA_HUMID_DATA_REQ,
-	MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD,
-
-	MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,
-
-	MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
-	MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD,
-
-	//NBIOT message
+	//NBIOT message //IWM/IHM/IGM/IPM
 	MSG_ID_NBIOTCJ188_IWM_DATA_REQ,
-	MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD,
+	MSG_ID_IWM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_NBIOTCJ188_IWM_CTRL_REQ,
+	MSG_ID_IWM_NBIOTCJ188_CTRL_RESP,
 	MSG_ID_NBIOTCJ188_IHM_DATA_REQ,
-	MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD,
+	MSG_ID_IHM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_NBIOTCJ188_IHM_CTRL_REQ,
+	MSG_ID_IHM_NBIOTCJ188_CTRL_RESP,
 	MSG_ID_NBIOTCJ188_IGM_DATA_REQ,
-	MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD,
+	MSG_ID_IGM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_NBIOTCJ188_IGM_CTRL_REQ,
+	MSG_ID_IGM_NBIOTCJ188_CTRL_RESP,
 	MSG_ID_NBIOTCJ188_IPM_DATA_REQ,
-	MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,
+	MSG_ID_IPM_NBIOTCJ188_DATA_RESP,
+	MSG_ID_NBIOTCJ188_IPM_CTRL_REQ,
+	MSG_ID_IPM_NBIOTCJ188_CTRL_RESP,
 	MSG_ID_NBIOTQG376_IPM_DATA_REQ,
-	MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,
+	MSG_ID_IPM_NBIOTQG376_DATA_RESP,
+	MSG_ID_NBIOTQG376_IPM_CTRL_REQ,
+	MSG_ID_IPM_NBIOTQG376_CTRL_RESP,
 
 	//Modbus report
 	MSG_ID_MODBUS_EMC_DATA_REPORT,
 	MSG_ID_MODBUS_EMC_CONTROL_FB,
-
 	MSG_ID_MODBUS_PM25_DATA_REPORT,
 	MSG_ID_MODBUS_PM25_CONTROL_FB,
-
 	MSG_ID_MODBUS_WINDDIR_DATA_REPORT,
 	MSG_ID_MODBUS_WINDDIR_CONTROL_FB,
-
 	MSG_ID_MODBUS_WINDSPD_DATA_REPORT,
 	MSG_ID_MODBUS_WINDSPD_CONTROL_FB,
-
 	MSG_ID_MODBUS_TEMP_DATA_REPORT,
 	MSG_ID_MODBUS_TEMP_CONTROL_FB,
-
 	MSG_ID_MODBUS_HUMID_DATA_REPORT,
 	MSG_ID_MODBUS_HUMID_CONTROL_FB,
-
 	MSG_ID_MODBUS_NOISE_DATA_REPORT,
 	MSG_ID_MODBUS_NOISE_CONTROL_FB,
 
-	//EMC
+	//基础传感器
 	MSG_ID_EMC_MODBUS_DATA_READ,
-	MSG_ID_EMC_CLOUDVELA_DATA_RESP,
 	MSG_ID_EMC_MODBUS_CONTROL_CMD,
-	MSG_ID_EMC_CLOUDVELA_CONTROL_FB,
-
-	//PM25 message
 	MSG_ID_PM25_MODBUS_DATA_READ,
-	MSG_ID_PM25_CLOUDVELA_DATA_RESP,
 	MSG_ID_PM25_MODBUS_CONTROL_CMD,
-	MSG_ID_PM25_CLOUDVELA_CONTROL_FB,
-
-	//WIND_DIRECTION message
 	MSG_ID_WINDDIR_MODBUS_DATA_READ,
-	MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP,
 	MSG_ID_WINDDIR_MODBUS_CONTROL_CMD,
-	MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,
-
-	//WIND_SPEED message
 	MSG_ID_WINDSPD_MODBUS_DATA_READ,
-	MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,
 	MSG_ID_WINDSPD_MODBUS_CONTROL_CMD,
-	MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,
-
-	//TEMPERATURE message
 	MSG_ID_TEMP_MODBUS_DATA_READ,
 	MSG_ID_TEMP_SPIBUSARIES_DATA_READ,//SPIBUSARIES
-	MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
 	MSG_ID_TEMP_MODBUS_CONTROL_CMD,
 	MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD,//SPIBUSARIES
-	MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,
-
-	//HUMIDITY message
 	MSG_ID_HUMID_MODBUS_DATA_READ,
-	MSG_ID_HUMID_CLOUDVELA_DATA_RESP,
 	MSG_ID_HUMID_MODBUS_CONTROL_CMD,
-	MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,
-
-	//HSMMP
 	MSG_ID_HSMMP_AVORION_DATA_READ,
 	MSG_ID_HSMMP_AVORION_STOP,
-	MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,
-	MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,
-	MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,
-
-	//NOISE
 	MSG_ID_NOISE_SPSVIRGO_DATA_READ,
 	MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD,
 	MSG_ID_NOISE_SPSVIRGO_STOP,
-	MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
-	MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,
 	MSG_ID_NOISE_MODBUS_DATA_READ,
 	MSG_ID_NOISE_MODBUS_CONTROL_CMD,
-
-	//IWM
-	MSG_ID_IWM_NBIOTCJ188_DATA_RESP,
-	MSG_ID_IWM_NBIOTCJ188_CONTROL_FB,
-
-	//IHM
-	MSG_ID_IHM_NBIOTCJ188_DATA_RESP,
-	MSG_ID_IHM_NBIOTCJ188_CONTROL_FB,
-
-	//IGM
-	MSG_ID_IGM_NBIOTCJ188_DATA_RESP,
-	MSG_ID_IGM_NBIOTCJ188_CONTROL_FB,
-
-	//IPM
-	MSG_ID_IPM_NBIOTCJ188_DATA_RESP,
-	MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,
-	MSG_ID_IPM_NBIOTQG376_DATA_RESP,
-	MSG_ID_IPM_NBIOTQG376_CONTROL_FB,
 
 	//FM/PM/INVENTORY/SW-PACKAGE
 	MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ,
@@ -459,6 +390,85 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,
 	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT,
 	MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
+
+	//SENSOR-CLOUDVELA
+	MSG_ID_CLOUDVELA_EMC_DATA_REQ,
+	MSG_ID_EMC_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_EMC_CTRL_REQ,
+	MSG_ID_EMC_CLOUDVELA_CTRL_RESP,
+	MSG_ID_EMC_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_EMC_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_PM25_DATA_REQ,
+	MSG_ID_PM25_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_PM25_CTRL_REQ,
+	MSG_ID_PM25_CLOUDVELA_CTRL_RESP,
+	MSG_ID_PM25_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_TEMP_DATA_REQ,
+	MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_TEMP_CTRL_REQ,
+	MSG_ID_TEMP_CLOUDVELA_CTRL_RESP,
+	MSG_ID_TEMP_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_TEMP_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_HUMID_DATA_REQ,
+	MSG_ID_HUMID_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,
+	MSG_ID_HUMID_CLOUDVELA_CTRL_RESP,
+	MSG_ID_HUMID_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,
+	MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ,
+	MSG_ID_WINDDIR_CLOUDVELA_CTRL_RESP,
+	MSG_ID_WINDDIR_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,
+	MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ,
+	MSG_ID_WINDSPD_CLOUDVELA_CTRL_RESP,
+	MSG_ID_WINDSPD_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_WINDSPD_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_HSMMP_DATA_REQ,
+	MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,
+	MSG_ID_HSMMP_CLOUDVELA_CTRL_RESP,
+	MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
+	MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_NOISE_CTRL_REQ,
+	MSG_ID_NOISE_CLOUDVELA_CTRL_RESP,
+	MSG_ID_NOISE_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM,
+	//CONVENIENCE SENSOR-CLOUD
+	MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ,
+	MSG_ID_AIRPRS_CLOUDVELA_DATA_RESP,
+	MSG_ID_AIRPRS_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_AIRPRS_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_ALCOHOL_DATA_REQ,
+	MSG_ID_ALCOHOL_CLOUDVELA_DATA_RESP,
+	MSG_ID_ALCOHOL_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_CO1_DATA_REQ,
+	MSG_ID_CO1_CLOUDVELA_DATA_RESP,
+	MSG_ID_CO1_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_CO1_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_HCHO_DATA_REQ,
+	MSG_ID_HCHO_CLOUDVELA_DATA_RESP,
+	MSG_ID_HCHO_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ,
+	MSG_ID_LIGHTSTR_CLOUDVELA_DATA_RESP,
+	MSG_ID_LIGHTSTR_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_PM25SP_DATA_REQ,
+	MSG_ID_PM25SP_CLOUDVELA_DATA_RESP,
+	MSG_ID_PM25SP_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_TOXICGAS_DATA_REQ,
+	MSG_ID_TOXICGAS_CLOUDVELA_DATA_RESP,
+	MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM,
 
 	//CANITF
 	MSG_ID_CANITFLEO_DATA_REPORT,
@@ -1103,171 +1113,7 @@ typedef struct msg_struct_microphone_avorion_data_rx //
 	UINT8 buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_microphone_avorion_data_rx_t;
 
-//MSG_ID_CLOUDVELA_EMC_DATA_REQ,
-//Data request from Cloud to Sensors
-typedef struct  msg_struct_cloudvela_emc_data_req //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_emc_data_req_t;
 
-//MSG_ID_CLOUDVELA_PM25_DATA_REQ,
-typedef struct  msg_struct_cloudvela_pm25_data_req //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_pm25_data_req_t;
-
-//MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,
-typedef struct  msg_struct_cloudvela_winddir_data_req //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_winddir_data_req_t;
-
-//MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,
-typedef struct  msg_struct_cloudvela_windspd_data_req //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_windspd_data_req_t;
-
-//MSG_ID_CLOUDVELA_TEMP_DATA_REQ,
-typedef struct  msg_struct_cloudvela_temp_data_req //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_temp_data_req_t;
-
-//MSG_ID_CLOUDVELA_HUMID_DATA_REQ,
-typedef struct  msg_struct_cloudvela_humid_data_req //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_humid_data_req_t;
-
-//MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
-typedef struct  msg_struct_cloudvela_noise_data_req //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_noise_data_req_t;
-
-//MSG_ID_CLOUDVELA_EMC_CONTROL_CMD,
-typedef struct  msg_struct_cloudvela_emc_control_cmd //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_emc_control_cmd_t;
-
-//MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,
-typedef struct  msg_struct_cloudvela_pm25_control_cmd //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_pm25_control_cmd_t;
-
-//MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD,
-typedef struct  msg_struct_cloudvela_winddir_control_cmd //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_winddir_control_cmd_t;
-
-//MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD,
-typedef struct  msg_struct_cloudvela_windspd_control_cmd //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_windspd_control_cmd_t;
-
-//MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,
-typedef struct  msg_struct_cloudvela_temp_control_cmd //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_temp_control_cmd_t;
-
-//MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD,
-typedef struct  msg_struct_cloudvela_humid_control_cmd //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_humid_control_cmd_t;
-
-//MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD,
-typedef struct  msg_struct_cloudvela_noise_control_cmd //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_noise_control_cmd_t;
-
-//MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,
-typedef struct  msg_struct_cloudvela_hsmmp_control_cmd //
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
-	UINT32 length;
-}msg_struct_cloudvela_hsmmp_control_cmd_t;
 
 //SENSOR Data request to MODBUS
 //MSG_ID_EMC_MODBUS_DATA_READ,
@@ -1362,7 +1208,7 @@ typedef struct  msg_struct_noise_spsvirgo_data_read //
 }msg_struct_noise_spsvirgo_data_read_t;
 
 //MSG_ID_EMC_MODBUS_CONTROL_CMD,
-typedef struct  msg_struct_emc_modbus_control_cmd //
+typedef struct  msg_struct_emc_modbus_control_cmd
 {
 	UINT8  cmdId;
 	UINT8  optId;
@@ -1602,161 +1448,6 @@ typedef struct msg_struct_spsvirgo_noise_control_fb
 	UINT32 length;
 }msg_struct_spsvirgo_noise_control_fb_t;
 
-//MSG_ID_EMC_CLOUDVELA_DATA_RESP,
-//Data response message to Cloud
-typedef struct  msg_struct_emc_cloudvela_data_resp //
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_emc_data_element_t emc;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_emc_cloudvela_data_resp_t;
-
-//MSG_ID_PM25_CLOUDVELA_DATA_RESP,
-typedef struct  msg_struct_pm25_cloudvela_data_resp_t //
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_pm25_data_element_t pm25;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_pm25_cloudvela_data_resp_t;
-
-//MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP,
-typedef struct msg_struct_winddir_cloudvela_data_resp
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_winddir_data_element_t winddir;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_winddir_cloudvela_data_resp_t;
-
-//MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,
-typedef struct msg_struct_windspd_cloudvela_data_resp
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_windspd_data_element_t windspd;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_windspd_cloudvela_data_resp_t;
-
-//MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
-typedef struct msg_struct_temp_cloudvela_data_resp
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_temp_data_element_t temp;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_temp_cloudvela_data_resp_t;
-
-//MSG_ID_HUMID_CLOUDVELA_DATA_RESP,
-typedef struct msg_struct_humid_cloudvela_data_resp
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_humid_data_element_t humid;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_humid_cloudvela_data_resp_t;
-
-//MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
-typedef struct msg_struct_noise_cloudvela_data_resp
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_noise_data_element_t noise;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_noise_cloudvela_data_resp_t;
-
-//MSG_ID_EMC_CLOUDVELA_CONTROL_FB,
-typedef struct msg_struct_emc_cloudvela_control_fb
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_emc_cloudvela_control_fb_t;
-
-//MSG_ID_PM25_CLOUDVELA_CONTROL_FB,
-typedef struct msg_struct_pm25_cloudvela_control_fb
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_pm25_cloudvela_control_fb_t;
-
-//MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,
-typedef struct msg_struct_winddir_cloudvela_control_fb
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_winddir_cloudvela_control_fb_t;
-
-//MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,
-typedef struct msg_struct_windspd_cloudvela_control_fb
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_windspd_cloudvela_control_fb_t;
-
-//MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,
-typedef struct msg_struct_temp_cloudvela_control_fb
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_temp_cloudvela_control_fb_t;
-
-//MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,
-typedef struct msg_struct_humid_cloudvela_control_fb
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_humid_cloudvela_control_fb_t;
-
-//MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,
-typedef struct msg_struct_noise_cloudvela_control_fb
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_noise_cloudvela_control_fb_t;
-
 //MSG_ID_HSMMP_AVORION_DATA_READ,
 typedef struct msg_struct_hsmmp_avorion_data_read //
 {
@@ -1785,39 +1476,6 @@ typedef struct msg_struct_avorion_hsmmp_data_read_fb //
 	sensor_hsmmp_data_element_t hsmmp; //tmpFname暂时被hsmmpLink所替代
 	UINT32 length;
 }msg_struct_avorion_hsmmp_data_read_fb_t;
-
-//MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,
-typedef struct msg_struct_hsmmp_cloudvela_data_resp
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_hsmmp_link_element_t link;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_hsmmp_cloudvela_data_resp_t;
-
-//MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,
-typedef struct msg_struct_hsmmp_cloudvela_control_fb
-{
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
-	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_hsmmp_cloudvela_control_fb_t;
-
-//MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,
-typedef struct msg_struct_hsmmp_cloudvela_data_link_resp
-{
-	UINT8  usercmdid;
-	UINT8  useroptid;
-	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
-	sensor_hsmmp_link_element_t link;
-	sensor_zhb_transport_format_ul_t zhbUl;
-	UINT32 length;
-}msg_struct_hsmmp_cloudvela_data_link_resp_t;
 
 //MSG_ID_NOISE_SPSVIRGO_STOP,
 typedef struct msg_struct_noise_spsvirgo_stop //
@@ -1980,8 +1638,8 @@ typedef struct  msg_struct_nbiotcj188_ipm_data_req //
 	UINT32 length;
 }msg_struct_nbiotcj188_ipm_data_req_t;
 
-//MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD,
-typedef struct  msg_struct_nbiotcj188_iwm_control_cmd //
+//MSG_ID_NBIOTCJ188_IWM_CTRL_REQ,
+typedef struct  msg_struct_nbiotcj188_iwm_ctrl_req
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t iwmHead;
@@ -1989,10 +1647,10 @@ typedef struct  msg_struct_nbiotcj188_iwm_control_cmd //
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwmData;
 	UINT32 length;
-}msg_struct_nbiotcj188_iwm_control_cmd_t;
+}msg_struct_nbiotcj188_iwm_ctrl_req_t;
 
-//MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD,
-typedef struct  msg_struct_nbiotcj188_ihm_control_cmd //
+//MSG_ID_NBIOTCJ188_IHM_CTRL_REQ
+typedef struct  msg_struct_nbiotcj188_ihm_ctrl_req
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t ihmHead;
@@ -2004,10 +1662,10 @@ typedef struct  msg_struct_nbiotcj188_ihm_control_cmd //
 	INT8 billtodayheatunit;
 	sensor_general_cj188_data_element_t ihmData;
 	UINT32 length;
-}msg_struct_nbiotcj188_ihm_control_cmd_t;
+}msg_struct_nbiotcj188_ihm_ctrl_req_t;
 
-//MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD,
-typedef struct  msg_struct_nbiotcj188_igm_control_cmd //
+//MSG_ID_NBIOTCJ188_IGM_CTRL_REQ
+typedef struct  msg_struct_nbiotcj188_igm_ctrl_req
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t igmHead;
@@ -2015,10 +1673,10 @@ typedef struct  msg_struct_nbiotcj188_igm_control_cmd //
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
-}msg_struct_nbiotcj188_igm_control_cmd_t;
+}msg_struct_nbiotcj188_igm_ctrl_req_t;
 
-//MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,
-typedef struct  msg_struct_nbiotcj188_ipm_control_cmd //
+//MSG_ID_NBIOTCJ188_IPM_CTRL_REQ
+typedef struct  msg_struct_nbiotcj188_ipm_ctrl_req
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t igmHead;
@@ -2026,7 +1684,7 @@ typedef struct  msg_struct_nbiotcj188_ipm_control_cmd //
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
-}msg_struct_nbiotcj188_ipm_control_cmd_t;
+}msg_struct_nbiotcj188_ipm_ctrl_req_t;
 
 //MSG_ID_IWM_NBIOTCJ188_DATA_RESP,
 typedef struct msg_struct_iwm_nbiotcj188_data_resp
@@ -2076,8 +1734,8 @@ typedef struct msg_struct_ipm_nbiotcj188_data_resp
 	UINT32 length;
 }msg_struct_ipm_nbiotcj188_data_resp_t;
 
-//MSG_ID_IWM_NBIOTCJ188_CONTROL_FB,
-typedef struct msg_struct_iwm_nbiotcj188_control_fb
+//MSG_ID_IWM_NBIOTCJ188_CTRL_RESP,
+typedef struct msg_struct_iwm_nbiotcj188_ctrl_resp
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t iwmHead;
@@ -2085,10 +1743,10 @@ typedef struct msg_struct_iwm_nbiotcj188_control_fb
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwmData;
 	UINT32 length;
-}msg_struct_iwm_nbiotcj188_control_fb_t;
+}msg_struct_iwm_nbiotcj188_ctrl_resp_t;
 
-//MSG_ID_IHM_NBIOTCJ188_CONTROL_FB,
-typedef struct msg_struct_ihm_nbiotcj188_control_fb
+//MSG_ID_IHM_NBIOTCJ188_CTRL_RESP,
+typedef struct msg_struct_ihm_nbiotcj188_ctrl_resp
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t ihmHead;
@@ -2100,10 +1758,10 @@ typedef struct msg_struct_ihm_nbiotcj188_control_fb
 	INT8 billtodayheatunit;
 	sensor_general_cj188_data_element_t ihmData;
 	UINT32 length;
-}msg_struct_ihm_nbiotcj188_control_fb_t;
+}msg_struct_ihm_nbiotcj188_ctrl_resp_t;
 
-//MSG_ID_IGM_NBIOTCJ188_CONTROL_FB,
-typedef struct msg_struct_igm_nbiotcj188_control_fb
+//MSG_ID_IGM_NBIOTCJ188_CTRL_RESP,
+typedef struct msg_struct_igm_nbiotcj188_ctrl_resp
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t igmHead;
@@ -2111,10 +1769,10 @@ typedef struct msg_struct_igm_nbiotcj188_control_fb
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
-}msg_struct_igm_nbiotcj188_control_fb_t;
+}msg_struct_igm_nbiotcj188_ctrl_resp_t;
 
-//MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,
-typedef struct msg_struct_ipm_nbiotcj188_control_fb
+//MSG_ID_IPM_NBIOTCJ188_CTRL_RESP,
+typedef struct msg_struct_ipm_nbiotcj188_ctrl_resp
 {
 	INT8 equtype;
 	sensor_general_cj188_control_head_t ipmHead;
@@ -2122,7 +1780,7 @@ typedef struct msg_struct_ipm_nbiotcj188_control_fb
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t ipmData;
 	UINT32 length;
-}msg_struct_ipm_nbiotcj188_control_fb_t;
+}msg_struct_ipm_nbiotcj188_ctrl_resp_t;
 
 
 /**************************************************************************************
@@ -2137,14 +1795,14 @@ typedef struct  msg_struct_ethernet_nbiotqg376_data_rx //
 	char buf[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 }msg_struct_ethernet_nbiotqg376_data_rx_t;
 
-//MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,
-typedef struct  msg_struct_nbiotqg376_ipm_control_cmd //
+//MSG_ID_NBIOTQG376_IPM_CTRL_REQ,
+typedef struct  msg_struct_nbiotqg376_ipm_ctrl_req
 {
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
 	UINT32 length;
-}msg_struct_nbiotqg376_ipm_control_cmd_t;
+}msg_struct_nbiotqg376_ipm_ctrl_req_t;
 
 //MSG_ID_IPM_NBIOTQG376_DATA_RESP,
 typedef struct msg_struct_ipm_nbiotqg376_data_resp
@@ -2155,14 +1813,14 @@ typedef struct msg_struct_ipm_nbiotqg376_data_resp
 	UINT32 length;
 }msg_struct_ipm_nbiotqg376_data_resp_t;
 
-//MSG_ID_IPM_NBIOTQG376_CONTROL_FB,
-typedef struct msg_struct_ipm_nbiotqg376_control_fb
+//MSG_ID_IPM_NBIOTQG376_CTRL_RESP,
+typedef struct msg_struct_ipm_nbiotqg376_ctrl_resp
 {
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
 	UINT32 length;
-}msg_struct_ipm_nbiotqg376_control_fb_t;
+}msg_struct_ipm_nbiotqg376_ctrl_resp_t;
 
 //MSG_ID_NBIOTQG376_IPM_DATA_REQ,
 typedef struct  msg_struct_nbiotqg376_ipm_data_req //
@@ -2656,6 +2314,795 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
 	UINT8	maxWsNbr;
 	UINT32 	length;
 }msg_struct_uicomm_l3bfsc_param_set_result_t;
+
+
+
+
+
+
+/*
+ *
+ *  传感器-CLOUDVELA之间的消息对
+ *
+ */
+//MSG_ID_CLOUDVELA_EMC_DATA_REQ,
+//Data request from Cloud to Sensors
+typedef struct  msg_struct_cloudvela_emc_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_emc_data_req_t;
+
+//MSG_ID_EMC_CLOUDVELA_DATA_RESP,
+//Data response message to Cloud
+typedef struct  msg_struct_emc_cloudvela_data_resp //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_emc_data_element_t emc;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_emc_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_EMC_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_emc_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_emc_ctrl_req_t;
+
+//MSG_ID_EMC_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_emc_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_emc_cloudvela_ctrl_resp_t;
+
+//MSG_ID_EMC_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_emc_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_emc_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_EMC_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_emc_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_emc_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_PM25_DATA_REQ,
+typedef struct  msg_struct_cloudvela_pm25_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_pm25_data_req_t;
+
+//MSG_ID_PM25_CLOUDVELA_DATA_RESP,
+typedef struct  msg_struct_pm25_cloudvela_data_resp_t //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_pm25_data_element_t pm25;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_pm25_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_PM25_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_pm25_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_pm25_ctrl_req_t;
+
+//MSG_ID_PM25_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_pm25_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_pm25_cloudvela_ctrl_resp_t;
+
+//MSG_ID_PM25_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_pm25_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_pm25_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_pm25_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_pm25_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_TEMP_DATA_REQ,
+typedef struct  msg_struct_cloudvela_temp_data_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_temp_data_req_t;
+
+//MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_temp_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_temp_data_element_t temp;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_temp_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_TEMP_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_temp_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_temp_ctrl_req_t;
+
+//MSG_ID_TEMP_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_temp_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_temp_cloudvela_ctrl_resp_t;
+
+//MSG_ID_TEMP_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_temp_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_temp_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_TEMP_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_temp_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_temp_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_HUMID_DATA_REQ,
+typedef struct  msg_struct_cloudvela_humid_data_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_humid_data_req_t;
+
+//MSG_ID_HUMID_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_humid_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_humid_data_element_t humid;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_humid_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_humid_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_humid_ctrl_req_t;
+
+//MSG_ID_HUMID_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_humid_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_humid_cloudvela_ctrl_resp_t;
+
+//MSG_ID_HUMID_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_humid_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_humid_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_humid_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_humid_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,
+typedef struct  msg_struct_cloudvela_winddir_data_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_winddir_data_req_t;
+
+//MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_winddir_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_winddir_data_element_t winddir;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_winddir_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_winddir_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_winddir_ctrl_req_t;
+
+//MSG_ID_WINDDIR_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_winddir_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_winddir_cloudvela_ctrl_resp_t;
+
+//MSG_ID_WINDDIR_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_winddir_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_winddir_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_winddir_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_winddir_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,
+typedef struct  msg_struct_cloudvela_windspd_data_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_windspd_data_req_t;
+
+//MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_windspd_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_windspd_data_element_t windspd;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_windspd_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_windspd_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_windspd_ctrl_req_t;
+
+//MSG_ID_WINDSPD_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_windspd_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_windspd_cloudvela_ctrl_resp_t;
+
+//MSG_ID_WINDSPD_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_windspd_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_windspd_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_WINDSPD_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_windspd_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_windspd_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_HSMMP_DATA_REQ,
+typedef struct  msg_struct_cloudvela_hsmmp_data_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_hsmmp_data_req_t;
+
+//MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_hsmmp_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_hsmmp_link_element_t link;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_hsmmp_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_hsmmp_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_hsmmp_ctrl_req_t;
+
+//MSG_ID_HSMMP_CLOUDVELA_CTRL_RESP
+typedef struct msg_struct_hsmmp_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_hsmmp_cloudvela_ctrl_resp_t;
+
+//MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_hsmmp_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_hsmmp_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_hsmmp_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_hsmmp_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
+typedef struct  msg_struct_cloudvela_noise_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_noise_data_req_t;
+
+//MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_noise_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_noise_data_element_t noise;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_noise_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_NOISE_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_noise_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_noise_ctrl_req_t;
+
+//MSG_ID_NOISE_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_noise_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_noise_cloudvela_ctrl_resp_t;
+
+//MSG_ID_NOISE_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_noise_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_noise_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_noise_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_noise_data_confirm_t;
+
+
+/*
+ *
+ *  一般性传感器-CLOUDVELA之间的消息对
+ *
+ */
+
+//MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ,
+typedef struct  msg_struct_cloudvela_airprs_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 length;
+}msg_struct_cloudvela_airprs_data_req_t;
+
+//MSG_ID_AIRPRS_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_airprs_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 length;
+}msg_struct_airprs_cloudvela_data_resp_t;
+
+//MSG_ID_AIRPRS_CLOUDVELA_DATA_REPORT,
+typedef struct  msg_struct_airprs_cloudvela_data_report //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_airprs_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_AIRPRS_DATA_CONFIRM,
+typedef struct  msg_struct_cloudvela_airprs_data_confirm //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_airprs_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_ALCOHOL_DATA_REQ,
+typedef struct  msg_struct_cloudvela_alcohol_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 length;
+}msg_struct_cloudvela_alcohol_data_req_t;
+
+//MSG_ID_ALCOHOL_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_alcohol_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 length;
+}msg_struct_alcohol_cloudvela_data_resp_t;
+
+//MSG_ID_ALCOHOL_CLOUDVELA_DATA_REPORT,
+typedef struct  msg_struct_alcohol_cloudvela_data_report //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_alcohol_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM,
+typedef struct  msg_struct_cloudvela_alcohol_data_confirm //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_alcohol_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_CO1_DATA_REQ,
+typedef struct  msg_struct_cloudvela_co1_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 length;
+}msg_struct_cloudvela_co1_data_req_t;
+
+//MSG_ID_CO1_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_co1_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 length;
+}msg_struct_co1_cloudvela_data_resp_t;
+
+//MSG_ID_CO1_CLOUDVELA_DATA_REPORT,
+typedef struct  msg_struct_co1_cloudvela_data_report //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_co1_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_CO1_DATA_CONFIRM,
+typedef struct  msg_struct_cloudvela_co1_data_confirm //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_co1_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_HCHO_DATA_REQ,
+typedef struct  msg_struct_cloudvela_hcho_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 length;
+}msg_struct_cloudvela_hcho_data_req_t;
+
+//MSG_ID_HCHO_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_hcho_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 length;
+}msg_struct_hcho_cloudvela_data_resp_t;
+
+//MSG_ID_HCHO_CLOUDVELA_DATA_REPORT,
+typedef struct  msg_struct_hcho_cloudvela_data_report //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_hcho_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM,
+typedef struct  msg_struct_cloudvela_hcho_data_confirm //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_hcho_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ,
+typedef struct  msg_struct_cloudvela_lightstr_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 length;
+}msg_struct_cloudvela_lightstr_data_req_t;
+
+//MSG_ID_LIGHTSTR_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_lightstr_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 length;
+}msg_struct_lightstr_cloudvela_data_resp_t;
+
+//MSG_ID_LIGHTSTR_CLOUDVELA_DATA_REPORT,
+typedef struct  msg_struct_lightstr_cloudvela_data_report //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_lightstr_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM,
+typedef struct  msg_struct_cloudvela_lightstr_data_confirm //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_lightstr_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_PM25SP_DATA_REQ,
+typedef struct  msg_struct_cloudvela_pm25sp_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 length;
+}msg_struct_cloudvela_pm25sp_data_req_t;
+
+//MSG_ID_PM25SP_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_pm25sp_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 length;
+}msg_struct_pm25sp_cloudvela_data_resp_t;
+
+//MSG_ID_PM25SP_CLOUDVELA_DATA_REPORT,
+typedef struct  msg_struct_pm25sp_cloudvela_data_report //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_pm25sp_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM,
+typedef struct  msg_struct_cloudvela_pm25sp_data_confirm //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_pm25sp_data_confirm_t;
+
+//MSG_ID_CLOUDVELA_TOXICGAS_DATA_REQ,
+typedef struct  msg_struct_cloudvela_toxicgas_data_req //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 length;
+}msg_struct_cloudvela_toxicgas_data_req_t;
+
+//MSG_ID_TOXICGAS_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_toxicgas_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 length;
+}msg_struct_toxicgas_cloudvela_data_resp_t;
+
+//MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT,
+typedef struct  msg_struct_toxicgas_cloudvela_data_report //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 length;
+}msg_struct_toxicgas_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM,
+typedef struct  msg_struct_cloudvela_toxicgas_data_confirm //
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_toxicgas_data_confirm_t;
+
+
 
 
 #endif /* L0COMVM_COMMSG_H_ */

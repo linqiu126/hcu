@@ -12,7 +12,7 @@
 
 /*
  *
- *  顺从并更新到技术规范《慧HUITP接口规范v1.4, LAST UPDATE@2007/2》
+ *  顺从并更新到技术规范《慧HUITP接口规范v2.0, LAST UPDATE@2007/2》
  *
  */
 
@@ -83,7 +83,7 @@ typedef enum
 	HUITP_CMDID_uni_emc                   = 0x20, //电磁辐射强度
 	HUITP_CMDID_uni_emc_accumulation      = 0x21, //电磁辐射剂量
 	HUITP_CMDID_uni_co                    = 0x22, //一氧化碳
-	HUITP_CMDID_uni_formaldehyde          = 0x23, //甲醛HCHO
+	HUITP_CMDID_uni_hcho                  = 0x23, //甲醛HCHO
 	HUITP_CMDID_uni_alcohol               = 0x24, //酒精
 	HUITP_CMDID_uni_pm25                  = 0x25, //PM1/2.5/10
 	HUITP_CMDID_uni_windspd               = 0x26, //风速Wind Speed
@@ -101,7 +101,7 @@ typedef enum
 	HUITP_CMDID_uni_heat_meter            = 0x32, //热表
 	HUITP_CMDID_uni_gas_meter             = 0x33, //气表
 	HUITP_CMDID_uni_power_meter           = 0x34, //电表
-	HUITP_CMDID_uni_light_strength        = 0x35, //光照强度
+	HUITP_CMDID_uni_lightstr              = 0x35, //光照强度
 	HUITP_CMDID_uni_toxicgas              = 0x36, //有毒气体VOC
 	HUITP_CMDID_uni_altitude              = 0x37, //海拔高度
 	HUITP_CMDID_uni_moto                  = 0x38, //马达
@@ -267,27 +267,9 @@ typedef enum
 	HUITP_MSGID_uni_emc_data_req                     = 0x2000, 
 	HUITP_MSGID_uni_emc_data_resp                    = 0x2080, 
 	HUITP_MSGID_uni_emc_data_report                  = 0x2081, 
-	HUITP_MSGID_uni_emc_data_confirm                 = 0x2001, 
-	HUITP_MSGID_uni_emc_set_switch                   = 0x2002, 
-	HUITP_MSGID_uni_emc_set_switch_ack               = 0x2082, 	
-	HUITP_MSGID_uni_emc_set_modbus_address           = 0x2003, 
-	HUITP_MSGID_uni_emc_set_modbus_address_ack       = 0x2083, 
-	HUITP_MSGID_uni_emc_set_work_cycle               = 0x2004,   //In second
-	HUITP_MSGID_uni_emc_set_work_cycle_ack           = 0x2084,   //In second
-	HUITP_MSGID_uni_emc_set_sample_cycle             = 0x2005,   //In second
-	HUITP_MSGID_uni_emc_set_sample_cycle_ack         = 0x2085,   //In second
-	HUITP_MSGID_uni_emc_set_sample_number            = 0x2006,   
-	HUITP_MSGID_uni_emc_set_sample_number_ack        = 0x2086,   
-	HUITP_MSGID_uni_emc_read_switch                  = 0x2007,
-	HUITP_MSGID_uni_emc_read_switch_ack              = 0x2087,
-	HUITP_MSGID_uni_emc_read_modbus_address          = 0x2008,
-	HUITP_MSGID_uni_emc_read_modbus_address_ack      = 0x2088,
-	HUITP_MSGID_uni_emc_read_work_cycle              = 0x2009,
-	HUITP_MSGID_uni_emc_read_work_cycle_ack          = 0x2089,
-	HUITP_MSGID_uni_emc_read_sample_cycle            = 0x200A, 
-	HUITP_MSGID_uni_emc_read_sample_cycle_ack        = 0x208A, 
-  HUITP_MSGID_uni_emc_read_sample_number           = 0x200B,
-  HUITP_MSGID_uni_emc_read_sample_number_ack       = 0x208B,
+	HUITP_MSGID_uni_emc_data_confirm                 = 0x2001,
+	HUITP_MSGID_uni_emc_ctrl_req                     = 0x2002,
+	HUITP_MSGID_uni_emc_ctrl_resp                    = 0x2082,
 	HUITP_MSGID_uni_emc_data_max,
 
   //电磁辐射剂量
@@ -299,27 +281,27 @@ typedef enum
 	HUITP_MSGID_uni_emc_accu_max,
 
   //一氧化碳
-	HUITP_MSGID_uni_co_min                           = 0x2200, 
-	HUITP_MSGID_uni_co_req                           = 0x2200, 
-	HUITP_MSGID_uni_co_resp                          = 0x2280, 
-	HUITP_MSGID_uni_co_report                        = 0x2281, 
-	HUITP_MSGID_uni_co_confirm                       = 0x2201,
-	HUITP_MSGID_uni_co_max,
+	HUITP_MSGID_uni_co1_min                           = 0x2200,
+	HUITP_MSGID_uni_co1_data_req                      = 0x2200,
+	HUITP_MSGID_uni_co1_data_resp                     = 0x2280,
+	HUITP_MSGID_uni_co1_data_report                   = 0x2281,
+	HUITP_MSGID_uni_co1_data_confirm                  = 0x2201,
+	HUITP_MSGID_uni_co1_max,
 
   //甲醛HCHO
-	HUITP_MSGID_uni_formaldehyde_min                 = 0x2300, 
-	HUITP_MSGID_uni_formaldehyde_req                 = 0x2300, 
-	HUITP_MSGID_uni_formaldehyde_resp                = 0x2380, 
-	HUITP_MSGID_uni_formaldehyde_report              = 0x2381, 
-	HUITP_MSGID_uni_formaldehyde_confirm             = 0x2301, 
-	HUITP_MSGID_uni_formaldehyde_max,
+	HUITP_MSGID_uni_hcho_min                         = 0x2300,
+	HUITP_MSGID_uni_hcho_data_req                    = 0x2300,
+	HUITP_MSGID_uni_hcho_data_resp                   = 0x2380,
+	HUITP_MSGID_uni_hcho_data_report                 = 0x2381,
+	HUITP_MSGID_uni_hcho_data_confirm                = 0x2301,
+	HUITP_MSGID_uni_hcho_max,
 
   //酒精
 	HUITP_MSGID_uni_alcohol_min                      = 0x2400, 
-	HUITP_MSGID_uni_alcohol_req                      = 0x2400, 
-	HUITP_MSGID_uni_alcohol_resp                     = 0x2480, 
-	HUITP_MSGID_uni_alcohol_report                   = 0x2481, 
-	HUITP_MSGID_uni_alcohol_confirm                  = 0x2401, 
+	HUITP_MSGID_uni_alcohol_data_req                 = 0x2400,
+	HUITP_MSGID_uni_alcohol_data_resp                = 0x2480,
+	HUITP_MSGID_uni_alcohol_data_report              = 0x2481,
+	HUITP_MSGID_uni_alcohol_data_confirm             = 0x2401,
 	HUITP_MSGID_uni_alcohol_max,
  
   //PM1/2.5/10
@@ -328,26 +310,13 @@ typedef enum
 	HUITP_MSGID_uni_pm25_data_resp                   = 0x2580, 
 	HUITP_MSGID_uni_pm25_data_report                 = 0x2581, 
 	HUITP_MSGID_uni_pm25_data_confirm                = 0x2501, 
-	HUITP_MSGID_uni_pm25_set_switch                  = 0x2502, 
-	HUITP_MSGID_uni_pm25_set_switch_ack              = 0x2582, 
-	HUITP_MSGID_uni_pm25_set_modbus_address          = 0x2503, 
-	HUITP_MSGID_uni_pm25_set_modbus_address_ack      = 0x2583, 
-	HUITP_MSGID_uni_pm25_set_work_cycle              = 0x2504,  //In second
-	HUITP_MSGID_uni_pm25_set_work_cycle_ack          = 0x2584,  
-	HUITP_MSGID_uni_pm25_set_sample_cycle            = 0x2505,  //In second
-	HUITP_MSGID_uni_pm25_set_sample_cycle_ack        = 0x2585,  
-	HUITP_MSGID_uni_pm25_set_sample_number           = 0x2506,
-	HUITP_MSGID_uni_pm25_set_sample_number_ack       = 0x2586,  
-	HUITP_MSGID_uni_pm25_read_switch                 = 0x2507,
-	HUITP_MSGID_uni_pm25_read_switch_ack             = 0x2587,  
-	HUITP_MSGID_uni_pm25_read_modbus_address         = 0x2508,
-	HUITP_MSGID_uni_pm25_read_modbus_address_ack     = 0x2588,  
-	HUITP_MSGID_uni_pm25_read_work_cycle             = 0x2509,  //In second
-	HUITP_MSGID_uni_pm25_read_work_cycle_ack         = 0x2589,  
-	HUITP_MSGID_uni_pm25_read_sample_cycle           = 0x250A,  //In second
-	HUITP_MSGID_uni_pm25_read_sample_cycle_ack       = 0x258A,  
-	HUITP_MSGID_uni_pm25_read_sample_number          = 0x250B,
-	HUITP_MSGID_uni_pm25_read_sample_number_ack      = 0x258B,  
+	HUITP_MSGID_uni_pm25_ctrl_req                    = 0x2502,
+	HUITP_MSGID_uni_pm25_ctrl_resp                   = 0x2582,
+	HUITP_MSGID_uni_pm25sp_data_req                  = 0x2503,
+	HUITP_MSGID_uni_pm25sp_data_resp                 = 0x2583,
+	HUITP_MSGID_uni_pm25sp_data_report               = 0x2504,
+	HUITP_MSGID_uni_pm25sp_data_confirm              = 0x2584,
+
 	HUITP_MSGID_uni_pm25_max,
 
   //风速Wind Speed
@@ -356,26 +325,8 @@ typedef enum
 	HUITP_MSGID_uni_windspd_data_resp                = 0x2680, 
 	HUITP_MSGID_uni_windspd_data_report              = 0x2681, 
 	HUITP_MSGID_uni_windspd_data_confirm             = 0x2601,
-	HUITP_MSGID_uni_windspd_set_switch               = 0x2602, 
-	HUITP_MSGID_uni_windspd_set_switch_ack           = 0x2682, 
-	HUITP_MSGID_uni_windspd_set_modbus_address       = 0x2603, 
-	HUITP_MSGID_uni_windspd_set_modbus_address_ack   = 0x2683, 
-	HUITP_MSGID_uni_windspd_set_work_cycle           = 0x2604, //In second
-	HUITP_MSGID_uni_windspd_set_work_cycle_ack       = 0x2684, 
-	HUITP_MSGID_uni_windspd_set_sample_cycle         = 0x2605,  //In second
-	HUITP_MSGID_uni_windspd_set_sample_cycle_ack     = 0x2685, 
-	HUITP_MSGID_uni_windspd_set_sample_number        = 0x2606, 
-	HUITP_MSGID_uni_windspd_set_sample_number_ack    = 0x2686, 
-	HUITP_MSGID_uni_windspd_read_switch              = 0x2607, 
-	HUITP_MSGID_uni_windspd_read_switch_ack          = 0x2687, 
-	HUITP_MSGID_uni_windspd_read_modbus_address      = 0x2608, 
-	HUITP_MSGID_uni_windspd_read_modbus_address_ack  = 0x2688, 
-	HUITP_MSGID_uni_windspd_read_work_cycle          = 0x2609, //In second
-	HUITP_MSGID_uni_windspd_read_work_cycle_ack      = 0x2689, 
-	HUITP_MSGID_uni_windspd_read_sample_cycle        = 0x260A,  //In second
-	HUITP_MSGID_uni_windspd_read_sample_cycle_ack    = 0x268A, 
-	HUITP_MSGID_uni_windspd_read_sample_number       = 0x260B, 
-	HUITP_MSGID_uni_windspd_read_sample_number_ack   = 0x268B, 
+	HUITP_MSGID_uni_windspd_ctrl_req                 = 0x2602,
+	HUITP_MSGID_uni_windspd_ctrl_resp                = 0x2682,
 	HUITP_MSGID_uni_windspd_max,
 
 	//风向Wind Direction
@@ -384,26 +335,8 @@ typedef enum
 	HUITP_MSGID_uni_winddir_data_resp                = 0x2780, 
 	HUITP_MSGID_uni_winddir_data_report              = 0x2781, 
 	HUITP_MSGID_uni_winddir_data_confirm             = 0x2701,
-	HUITP_MSGID_uni_winddir_set_switch               = 0x2702, 
-	HUITP_MSGID_uni_winddir_set_switch_ack           = 0x2782, 
-	HUITP_MSGID_uni_winddir_set_modbus_address       = 0x2703, 
-	HUITP_MSGID_uni_winddir_set_modbus_address_ack   = 0x2783, 
-	HUITP_MSGID_uni_winddir_set_work_cycle           = 0x2704, //In second
-	HUITP_MSGID_uni_winddir_set_work_cycle_ack       = 0x2784, 
-	HUITP_MSGID_uni_winddir_set_sample_cycle         = 0x2705,  //In second
-	HUITP_MSGID_uni_winddir_set_sample_cycle_ack     = 0x2785, 
-	HUITP_MSGID_uni_winddir_set_sample_number        = 0x2706, 
-	HUITP_MSGID_uni_winddir_set_sample_number_ack    = 0x2786, 
-	HUITP_MSGID_uni_winddir_read_switch              = 0x2707, 
-	HUITP_MSGID_uni_winddir_read_switch_ack          = 0x2787, 
-	HUITP_MSGID_uni_winddir_read_modbus_address      = 0x2708, 
-	HUITP_MSGID_uni_winddir_read_modbus_address_ack  = 0x2788, 
-	HUITP_MSGID_uni_winddir_read_work_cycle          = 0x2709, //In second
-	HUITP_MSGID_uni_winddir_read_work_cycle_ack      = 0x2789, 
-	HUITP_MSGID_uni_winddir_read_sample_cycle        = 0x270A,  //In second
-	HUITP_MSGID_uni_winddir_read_sample_cycle_ack    = 0x278A, 
-	HUITP_MSGID_uni_winddir_read_sample_number       = 0x270B, 
-	HUITP_MSGID_uni_winddir_read_sample_number_ack   = 0x278B, 
+	HUITP_MSGID_uni_winddir_ctrl_req                 = 0x2702,
+	HUITP_MSGID_uni_winddir_ctrl_resp                = 0x2782,
 	HUITP_MSGID_uni_winddir_max,
 	
 	//温度Temperature
@@ -412,26 +345,8 @@ typedef enum
 	HUITP_MSGID_uni_temp_data_resp                   = 0x2880, 
 	HUITP_MSGID_uni_temp_data_report                 = 0x2881, 
 	HUITP_MSGID_uni_temp_data_confirm                = 0x2801,
-	HUITP_MSGID_uni_temp_set_switch                  = 0x2802, 
-	HUITP_MSGID_uni_temp_set_switch_ack              = 0x2882, 
-	HUITP_MSGID_uni_temp_set_modbus_address          = 0x2803, 
-	HUITP_MSGID_uni_temp_set_modbus_address_ack      = 0x2883, 
-	HUITP_MSGID_uni_temp_set_work_cycle              = 0x2804, //In second
-	HUITP_MSGID_uni_temp_set_work_cycle_ack          = 0x2884, 
-	HUITP_MSGID_uni_temp_set_sample_cycle            = 0x2805,  //In second
-	HUITP_MSGID_uni_temp_set_sample_cycle_ack        = 0x2885, 
-	HUITP_MSGID_uni_temp_set_sample_number           = 0x2806, 
-	HUITP_MSGID_uni_temp_set_sample_number_ack       = 0x2886, 
-	HUITP_MSGID_uni_temp_read_switch                 = 0x2807, 
-	HUITP_MSGID_uni_temp_read_switch_ack             = 0x2887, 
-	HUITP_MSGID_uni_temp_read_modbus_address         = 0x2808, 
-	HUITP_MSGID_uni_temp_read_modbus_address_ack     = 0x2888, 
-	HUITP_MSGID_uni_temp_read_work_cycle             = 0x2809, //In second
-	HUITP_MSGID_uni_temp_read_work_cycle_ack         = 0x2889, 
-	HUITP_MSGID_uni_temp_read_sample_cycle           = 0x280A,  //In second
-	HUITP_MSGID_uni_temp_read_sample_cycle_ack       = 0x288A, 
-	HUITP_MSGID_uni_temp_read_sample_number          = 0x280B, 
-	HUITP_MSGID_uni_temp_read_sample_number_ack      = 0x288B, 
+	HUITP_MSGID_uni_temp_ctrl_req                    = 0x2802,
+	HUITP_MSGID_uni_temp_ctrl_resp                   = 0x2882,
 	HUITP_MSGID_uni_temp_max,
 
   //湿度Humidity
@@ -440,26 +355,8 @@ typedef enum
 	HUITP_MSGID_uni_humid_data_resp                  = 0x2980, 
 	HUITP_MSGID_uni_humid_data_report                = 0x2981, 
 	HUITP_MSGID_uni_humid_data_confirm               = 0x2901,
-	HUITP_MSGID_uni_humid_set_switch                 = 0x2902, 
-	HUITP_MSGID_uni_humid_set_switch_ack             = 0x2982, 
-	HUITP_MSGID_uni_humid_set_modbus_address         = 0x2903, 
-	HUITP_MSGID_uni_humid_set_modbus_address_ack     = 0x2983, 
-	HUITP_MSGID_uni_humid_set_work_cycle             = 0x2904, //In second
-	HUITP_MSGID_uni_humid_set_work_cycle_ack         = 0x2984, 
-	HUITP_MSGID_uni_humid_set_sample_cycle           = 0x2905,  //In second
-	HUITP_MSGID_uni_humid_set_sample_cycle_ack       = 0x2985, 
-	HUITP_MSGID_uni_humid_set_sample_number          = 0x2906, 
-	HUITP_MSGID_uni_humid_set_sample_number_ack      = 0x2986, 
-	HUITP_MSGID_uni_humid_read_switch                = 0x2907, 
-	HUITP_MSGID_uni_humid_read_switch_ack            = 0x2987, 
-	HUITP_MSGID_uni_humid_read_modbus_address        = 0x2908, 
-	HUITP_MSGID_uni_humid_read_modbus_address_ack    = 0x2988, 
-	HUITP_MSGID_uni_humid_read_work_cycle            = 0x2909, //In second
-	HUITP_MSGID_uni_humid_read_work_cycle_ack        = 0x2989, 
-	HUITP_MSGID_uni_humid_read_sample_cycle          = 0x290A,  //In second
-	HUITP_MSGID_uni_humid_read_sample_cycle_ack      = 0x298A, 
-	HUITP_MSGID_uni_humid_read_sample_number         = 0x290B, 
-	HUITP_MSGID_uni_humid_read_sample_number_ack     = 0x298B, 
+	HUITP_MSGID_uni_humid_ctrl_req                   = 0x2902,
+	HUITP_MSGID_uni_humid_ctrl_resp                  = 0x2982,
 	HUITP_MSGID_uni_humid_max,
 
   //气压Air pressure
@@ -468,26 +365,6 @@ typedef enum
 	HUITP_MSGID_uni_airprs_data_resp                 = 0x2A80, 
 	HUITP_MSGID_uni_airprs_data_report               = 0x2A81, 
 	HUITP_MSGID_uni_airprs_data_confirm              = 0x2A01,
-	HUITP_MSGID_uni_airprs_set_switch                = 0x2A02, 
-	HUITP_MSGID_uni_airprs_set_switch_ack            = 0x2A82, 
-	HUITP_MSGID_uni_airprs_set_modbus_address        = 0x2A03, 
-	HUITP_MSGID_uni_airprs_set_modbus_address_ack    = 0x2A83, 
-	HUITP_MSGID_uni_airprs_set_work_cycle            = 0x2A04, //In second
-	HUITP_MSGID_uni_airprs_set_work_cycle_ack        = 0x2A84, 
-	HUITP_MSGID_uni_airprs_set_sample_cycle          = 0x2A05,  //In second
-	HUITP_MSGID_uni_airprs_set_sample_cycle_ack      = 0x2A85, 
-	HUITP_MSGID_uni_airprs_set_sample_number         = 0x2A06, 
-	HUITP_MSGID_uni_airprs_set_sample_number_ack     = 0x2A86, 
-	HUITP_MSGID_uni_airprs_read_switch               = 0x2A07, 
-	HUITP_MSGID_uni_airprs_read_switch_ack           = 0x2A87, 
-	HUITP_MSGID_uni_airprs_read_modbus_address       = 0x2A08, 
-	HUITP_MSGID_uni_airprs_read_modbus_address_ack   = 0x2A88, 
-	HUITP_MSGID_uni_airprs_read_work_cycle           = 0x2A09, //In second
-	HUITP_MSGID_uni_airprs_read_work_cycle_ack       = 0x2A89, 
-	HUITP_MSGID_uni_airprs_read_sample_cycle         = 0x2A0A,  //In second
-	HUITP_MSGID_uni_airprs_read_sample_cycle_ack     = 0x2A8A, 
-	HUITP_MSGID_uni_airprs_read_sample_number        = 0x2A0B, 
-	HUITP_MSGID_uni_airprs_read_sample_number_ack    = 0x2A8B, 
 	HUITP_MSGID_uni_airprs_max,
 
   //噪声Noise
@@ -496,26 +373,8 @@ typedef enum
 	HUITP_MSGID_uni_noise_data_resp                  = 0x2B80, 
 	HUITP_MSGID_uni_noise_data_report                = 0x2B81, 
 	HUITP_MSGID_uni_noise_data_confirm               = 0x2B01,
-	HUITP_MSGID_uni_noise_set_switch                 = 0x2B02, 
-	HUITP_MSGID_uni_noise_set_switch_ack             = 0x2B82, 
-	HUITP_MSGID_uni_noise_set_modbus_address         = 0x2B03, 
-	HUITP_MSGID_uni_noise_set_modbus_address_ack     = 0x2B83, 
-	HUITP_MSGID_uni_noise_set_work_cycle             = 0x2B04, //In second
-	HUITP_MSGID_uni_noise_set_work_cycle_ack         = 0x2B84, 
-	HUITP_MSGID_uni_noise_set_sample_cycle           = 0x2B05,  //In second
-	HUITP_MSGID_uni_noise_set_sample_cycle_ack       = 0x2B85, 
-	HUITP_MSGID_uni_noise_set_sample_number          = 0x2B06, 
-	HUITP_MSGID_uni_noise_set_sample_number_ack      = 0x2B86, 
-	HUITP_MSGID_uni_noise_read_switch                = 0x2B07, 
-	HUITP_MSGID_uni_noise_read_switch_ack            = 0x2B87, 
-	HUITP_MSGID_uni_noise_read_modbus_address        = 0x2B08, 
-	HUITP_MSGID_uni_noise_read_modbus_address_ack    = 0x2B88, 
-	HUITP_MSGID_uni_noise_read_work_cycle            = 0x2B09, //In second
-	HUITP_MSGID_uni_noise_read_work_cycle_ack        = 0x2B89, 
-	HUITP_MSGID_uni_noise_read_sample_cycle          = 0x2B0A,  //In second
-	HUITP_MSGID_uni_noise_read_sample_cycle_ack      = 0x2B8A, 
-	HUITP_MSGID_uni_noise_read_sample_number         = 0x2B0B, 
-	HUITP_MSGID_uni_noise_read_sample_number_ack     = 0x2B8B, 
+	HUITP_MSGID_uni_noise_ctrl_req                   = 0x2B02,
+	HUITP_MSGID_uni_noise_ctrl_resp                  = 0x2B82,
 	HUITP_MSGID_uni_noise_max,
 
   //相机Camer or audio high speed
@@ -524,26 +383,8 @@ typedef enum
 	HUITP_MSGID_uni_hsmmp_data_resp                  = 0x2C80, 
 	HUITP_MSGID_uni_hsmmp_data_report                = 0x2C81, 
 	HUITP_MSGID_uni_hsmmp_data_confirm               = 0x2C01,
-	HUITP_MSGID_uni_hsmmp_set_switch                 = 0x2C02, 
-	HUITP_MSGID_uni_hsmmp_set_switch_ack             = 0x2C82, 
-	HUITP_MSGID_uni_hsmmp_set_modbus_address         = 0x2C03, 
-	HUITP_MSGID_uni_hsmmp_set_modbus_address_ack     = 0x2C83, 
-	HUITP_MSGID_uni_hsmmp_set_work_cycle             = 0x2C04, //In second
-	HUITP_MSGID_uni_hsmmp_set_work_cycle_ack         = 0x2C84, 
-	HUITP_MSGID_uni_hsmmp_set_sample_cycle           = 0x2C05,  //In second
-	HUITP_MSGID_uni_hsmmp_set_sample_cycle_ack       = 0x2C85, 
-	HUITP_MSGID_uni_hsmmp_set_sample_number          = 0x2C06, 
-	HUITP_MSGID_uni_hsmmp_set_sample_number_ack      = 0x2C86, 
-	HUITP_MSGID_uni_hsmmp_read_switch                = 0x2C07, 
-	HUITP_MSGID_uni_hsmmp_read_switch_ack            = 0x2C87, 
-	HUITP_MSGID_uni_hsmmp_read_modbus_address        = 0x2C08, 
-	HUITP_MSGID_uni_hsmmp_read_modbus_address_ack    = 0x2C88, 
-	HUITP_MSGID_uni_hsmmp_read_work_cycle            = 0x2C09, //In second
-	HUITP_MSGID_uni_hsmmp_read_work_cycle_ack        = 0x2C89, 
-	HUITP_MSGID_uni_hsmmp_read_sample_cycle          = 0x2C0A,  //In second
-	HUITP_MSGID_uni_hsmmp_read_sample_cycle_ack      = 0x2C8A, 
-	HUITP_MSGID_uni_hsmmp_read_sample_number         = 0x2C0B, 
-	HUITP_MSGID_uni_hsmmp_read_sample_number_ack     = 0x2C8B, 
+	HUITP_MSGID_uni_hsmmp_ctrl_req                   = 0x2C02,
+	HUITP_MSGID_uni_hsmmp_ctrl_resp                  = 0x2C82,
 	HUITP_MSGID_uni_hsmmp_max,
 
   //声音
@@ -552,26 +393,6 @@ typedef enum
 	HUITP_MSGID_uni_audio_data_resp                  = 0x2D80, 
 	HUITP_MSGID_uni_audio_data_report                = 0x2D81, 
 	HUITP_MSGID_uni_audio_data_confirm               = 0x2D01,
-	HUITP_MSGID_uni_audio_set_switch                 = 0x2D02, 
-	HUITP_MSGID_uni_audio_set_switch_ack             = 0x2D82, 
-	HUITP_MSGID_uni_audio_set_modbus_address         = 0x2D03, 
-	HUITP_MSGID_uni_audio_set_modbus_address_ack     = 0x2D83, 
-	HUITP_MSGID_uni_audio_set_work_cycle             = 0x2D04, //In second
-	HUITP_MSGID_uni_audio_set_work_cycle_ack         = 0x2D84, 
-	HUITP_MSGID_uni_audio_set_sample_cycle           = 0x2D05,  //In second
-	HUITP_MSGID_uni_audio_set_sample_cycle_ack       = 0x2D85, 
-	HUITP_MSGID_uni_audio_set_sample_number          = 0x2D06, 
-	HUITP_MSGID_uni_audio_set_sample_number_ack      = 0x2D86, 
-	HUITP_MSGID_uni_audio_read_switch                = 0x2D07, 
-	HUITP_MSGID_uni_audio_read_switch_ack            = 0x2D87, 
-	HUITP_MSGID_uni_audio_read_modbus_address        = 0x2D08, 
-	HUITP_MSGID_uni_audio_read_modbus_address_ack    = 0x2D88, 
-	HUITP_MSGID_uni_audio_read_work_cycle            = 0x2D09, //In second
-	HUITP_MSGID_uni_audio_read_work_cycle_ack        = 0x2D89, 
-	HUITP_MSGID_uni_audio_read_sample_cycle          = 0x2D0A,  //In second
-	HUITP_MSGID_uni_audio_read_sample_cycle_ack      = 0x2D8A, 
-	HUITP_MSGID_uni_audio_read_sample_number         = 0x2D0B, 
-	HUITP_MSGID_uni_audio_read_sample_number_ack     = 0x2D8B, 
 	HUITP_MSGID_uni_audio_max,
 
   //视频
@@ -580,26 +401,6 @@ typedef enum
 	HUITP_MSGID_uni_video_data_resp                  = 0x2E80, 
 	HUITP_MSGID_uni_video_data_report                = 0x2E81, 
 	HUITP_MSGID_uni_video_data_confirm               = 0x2E01,
-	HUITP_MSGID_uni_video_set_switch                 = 0x2E02, 
-	HUITP_MSGID_uni_video_set_switch_ack             = 0x2E82, 
-	HUITP_MSGID_uni_video_set_modbus_address         = 0x2E03, 
-	HUITP_MSGID_uni_video_set_modbus_address_ack     = 0x2E83, 
-	HUITP_MSGID_uni_video_set_work_cycle             = 0x2E04, //In second
-	HUITP_MSGID_uni_video_set_work_cycle_ack         = 0x2E84, 
-	HUITP_MSGID_uni_video_set_sample_cycle           = 0x2E05,  //In second
-	HUITP_MSGID_uni_video_set_sample_cycle_ack       = 0x2E85, 
-	HUITP_MSGID_uni_video_set_sample_number          = 0x2E06, 
-	HUITP_MSGID_uni_video_set_sample_number_ack      = 0x2E86, 
-	HUITP_MSGID_uni_video_read_switch                = 0x2E07, 
-	HUITP_MSGID_uni_video_read_switch_ack            = 0x2E87, 
-	HUITP_MSGID_uni_video_read_modbus_address        = 0x2E08, 
-	HUITP_MSGID_uni_video_read_modbus_address_ack    = 0x2E88, 
-	HUITP_MSGID_uni_video_read_work_cycle            = 0x2E09, //In second
-	HUITP_MSGID_uni_video_read_work_cycle_ack        = 0x2E89, 
-	HUITP_MSGID_uni_video_read_sample_cycle          = 0x2E0A,  //In second
-	HUITP_MSGID_uni_video_read_sample_cycle_ack      = 0x2E8A, 
-	HUITP_MSGID_uni_video_read_sample_number         = 0x2E0B, 
-	HUITP_MSGID_uni_video_read_sample_number_ack     = 0x2E8B, 
 	HUITP_MSGID_uni_video_max,
 
   //图片
@@ -608,26 +409,6 @@ typedef enum
 	HUITP_MSGID_uni_picture_data_resp                = 0x2F80, 
 	HUITP_MSGID_uni_picture_data_report              = 0x2F81, 
 	HUITP_MSGID_uni_picture_data_confirm             = 0x2F01,
-	HUITP_MSGID_uni_picture_set_switch               = 0x2F02, 
-	HUITP_MSGID_uni_picture_set_switch_ack           = 0x2F82, 
-	HUITP_MSGID_uni_picture_set_modbus_address       = 0x2F03, 
-	HUITP_MSGID_uni_picture_set_modbus_address_ack   = 0x2F83, 
-	HUITP_MSGID_uni_picture_set_work_cycle           = 0x2F04, //In second
-	HUITP_MSGID_uni_picture_set_work_cycle_ack       = 0x2F84, 
-	HUITP_MSGID_uni_picture_set_sample_cycle         = 0x2F05,  //In second
-	HUITP_MSGID_uni_picture_set_sample_cycle_ack     = 0x2F85, 
-	HUITP_MSGID_uni_picture_set_sample_number        = 0x2F06, 
-	HUITP_MSGID_uni_picture_set_sample_number_ack    = 0x2F86, 
-	HUITP_MSGID_uni_picture_read_switch              = 0x2F07, 
-	HUITP_MSGID_uni_picture_read_switch_ack          = 0x2F87, 
-	HUITP_MSGID_uni_picture_read_modbus_address      = 0x2F08, 
-	HUITP_MSGID_uni_picture_read_modbus_address_ack  = 0x2F88, 
-	HUITP_MSGID_uni_picture_read_work_cycle          = 0x2F09, //In second
-	HUITP_MSGID_uni_picture_read_work_cycle_ack      = 0x2F89, 
-	HUITP_MSGID_uni_picture_read_sample_cycle        = 0x2F0A,  //In second
-	HUITP_MSGID_uni_picture_read_sample_cycle_ack    = 0x2F8A, 
-	HUITP_MSGID_uni_picture_read_sample_number       = 0x2F0B, 
-	HUITP_MSGID_uni_picture_read_sample_number_ack   = 0x2F8B, 
 	HUITP_MSGID_uni_picture_max,
 
   //扬尘监控系统
@@ -635,7 +416,7 @@ typedef enum
 	HUITP_MSGID_uni_ycjk_req                         = 0x3000, 
 	HUITP_MSGID_uni_ycjk_resp                        = 0x3080, 
 	HUITP_MSGID_uni_ycjk_report                      = 0x3081, 
-	HUITP_MSGID_uni_ycjk_confirm                     = 0x3001, 
+	HUITP_MSGID_uni_ycjk_confirm                     = 0x3001,
 	HUITP_MSGID_uni_ycjk_max,
 
   //水表
@@ -671,28 +452,28 @@ typedef enum
 	HUITP_MSGID_uni_power_meter_max,
 
   //光照强度
-	HUITP_MSGID_uni_light_strength_min               = 0x3500, 
-	HUITP_MSGID_uni_light_strength_req               = 0x3500, 
-	HUITP_MSGID_uni_light_strength_resp              = 0x3580, 
-	HUITP_MSGID_uni_light_strength_report            = 0x3581, 
-	HUITP_MSGID_uni_light_strength_confirm           = 0x3501, 
-	HUITP_MSGID_uni_light_strength_max,
+	HUITP_MSGID_uni_lightstr_data_min                = 0x3500,
+	HUITP_MSGID_uni_lightstr_data_req                = 0x3500,
+	HUITP_MSGID_uni_lightstr_data_resp               = 0x3580,
+	HUITP_MSGID_uni_lightstr_data_report             = 0x3581,
+	HUITP_MSGID_uni_lightstr_data_confirm            = 0x3501,
+	HUITP_MSGID_uni_lightstr_data_max,
 
   //有毒气体VOC
-	HUITP_MSGID_uni_toxicgas_min                     = 0x3600, 
-	HUITP_MSGID_uni_toxicgas_req                     = 0x3600, 
-	HUITP_MSGID_uni_toxicgas_resp                    = 0x3680, 
-	HUITP_MSGID_uni_toxicgas_report                  = 0x3681, 
-	HUITP_MSGID_uni_toxicgas_confirm                 = 0x3601, 
-	HUITP_MSGID_uni_toxicgas_max,
+	HUITP_MSGID_uni_toxicgas_data_min                     = 0x3600,
+	HUITP_MSGID_uni_toxicgas_data_req                     = 0x3600,
+	HUITP_MSGID_uni_toxicgas_data_resp                    = 0x3680,
+	HUITP_MSGID_uni_toxicgas_data_report                  = 0x3681,
+	HUITP_MSGID_uni_toxicgas_data_confirm                 = 0x3601,
+	HUITP_MSGID_uni_toxicgas_data_max,
 
   //海拔高度
-	HUITP_MSGID_uni_altitude_min                     = 0x3700, 
-	HUITP_MSGID_uni_altitude_req                     = 0x3700, 
-	HUITP_MSGID_uni_altitude_resp                    = 0x3780, 
-	HUITP_MSGID_uni_altitude_report                  = 0x3781, 
-	HUITP_MSGID_uni_altitude_confirm                 = 0x3701, 
-	HUITP_MSGID_uni_altitude_max,
+	HUITP_MSGID_uni_altitude_data_min                     = 0x3700,
+	HUITP_MSGID_uni_altitude_data_req                     = 0x3700,
+	HUITP_MSGID_uni_altitude_data_resp                    = 0x3780,
+	HUITP_MSGID_uni_altitude_data_report                  = 0x3781,
+	HUITP_MSGID_uni_altitude_data_confirm                 = 0x3701,
+	HUITP_MSGID_uni_altitude_data_max,
 
   //马达
 	HUITP_MSGID_uni_moto_min                         = 0x3800, 
@@ -1102,6 +883,8 @@ typedef enum
 	HUITP_IEID_uni_com_file_name                    = 0x0030,
 	HUITP_IEID_uni_com_http_link                    = 0x0031,
 	HUITP_IEID_uni_com_segment                      = 0x0032,
+	HUITP_IEID_uni_com_snr_cmd_tag                  = 0x0033,
+
 
 	//血糖
 	HUITP_IEID_uni_blood_glucose_min                = 0x0100, 
@@ -1151,8 +934,8 @@ typedef enum
 	HUITP_IEID_uni_iau_ctrl_max,
 
   //电磁辐射强度
-	HUITP_IEID_uni_emc_data_min                     = 0x2000, 
-	HUITP_IEID_uni_emc_data_value                   = 0x2000, 
+	HUITP_IEID_uni_emc_data_min                     = 0x2000,
+	HUITP_IEID_uni_emc_data_value                   = 0x2000,
 	HUITP_IEID_uni_emc_data_max,
 
   //电磁辐射剂量
@@ -1166,10 +949,9 @@ typedef enum
 	HUITP_IEID_uni_co_max,
 
   //甲醛HCHO
-	HUITP_IEID_uni_formaldehyde_min                 = 0x2300, 
-	HUITP_IEID_uni_formaldehyde_value               = 0x2300, 
-	HUITP_IEID_uni_hcho_value                       = 0x2301, 
-	HUITP_IEID_uni_formaldehyde_max,
+	HUITP_IEID_uni_hcho_min                         = 0x2300,
+	HUITP_IEID_uni_hcho_value                       = 0x2300,
+	HUITP_IEID_uni_hcho_max,
 
   //酒精
 	HUITP_IEID_uni_alcohol_min                      = 0x2400, 
@@ -1262,19 +1044,19 @@ typedef enum
 	HUITP_IEID_uni_power_meter_max,
 
   //光照强度
-	HUITP_IEID_uni_light_strength_min               = 0x3500, 
-	HUITP_IEID_uni_light_strength_value             = 0x3500, 
-	HUITP_IEID_uni_light_strength_max,
+	HUITP_IEID_uni_lightstr_data_min               = 0x3500,
+	HUITP_IEID_uni_lightstr_data_value             = 0x3500,
+	HUITP_IEID_uni_lightstr_data_max,
 
   //有毒气体VOC
-	HUITP_IEID_uni_toxicgas_min                     = 0x3600, 
-	HUITP_IEID_uni_toxicgas_value                   = 0x3600, 
-	HUITP_IEID_uni_toxicgas_max,
+	HUITP_IEID_uni_toxicgas_data_min                     = 0x3600,
+	HUITP_IEID_uni_toxicgas_data_value                   = 0x3600,
+	HUITP_IEID_uni_toxicgas_data_max,
 
   //海拔高度
-	HUITP_IEID_uni_altitude_min                     = 0x3700, 
-	HUITP_IEID_uni_altitude_value                   = 0x3700, 
-	HUITP_IEID_uni_altitude_max,
+	HUITP_IEID_uni_altitude_data_min                     = 0x3700,
+	HUITP_IEID_uni_altitude_data_value                   = 0x3700,
+	HUITP_IEID_uni_altitude_data_max,
 
   //马达
 	HUITP_IEID_uni_moto_min                         = 0x3800, 
@@ -1633,7 +1415,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_switch_onoff
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT8  comSwitch;
+	UINT8  flag;
 }StrIe_HUITP_IEID_uni_com_switch_onoff_t;
 #define HUITP_IEID_UNI_COM_SWITCH_ONOFF_NULL 0
 #define HUITP_IEID_UNI_COM_SWITCH_ONOFF_YES 1
@@ -1669,7 +1451,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_equp_id
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 comEqupIdValue;
+	UINT32 comEqupIdValue;
 }StrIe_HUITP_IEID_uni_com_equp_id_t;
 
 //HUITP_IEID_uni_com_format_type                  = 0x0021,
@@ -1692,7 +1474,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_work_cycle
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 comWorkCycleValue;
+	UINT32 value;
 }StrIe_HUITP_IEID_uni_com_work_cycle_t;
 
 //HUITP_IEID_uni_com_sample_cycle                 = 0x0023,
@@ -1700,7 +1482,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_sample_cycle
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 comSampleCycleValue;
+	UINT32 value;
 }StrIe_HUITP_IEID_uni_com_sample_cycle_t;
 
 //HUITP_IEID_uni_com_sample_number                = 0x0024,
@@ -1708,7 +1490,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_sample_number
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 comSampleNumberValue;
+	UINT32 value;
 }StrIe_HUITP_IEID_uni_com_sample_number_t;
 
 //HUITP_IEID_uni_com_unix_time                    = 0x0025,
@@ -1732,7 +1514,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_ntimes
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 comNtimesValue; 
+	UINT32 comNtimesValue;
 }StrIe_HUITP_IEID_uni_com_ntimes_t;
 
 //HUITP_IEID_uni_com_gps_x                        = 0x0028,
@@ -1778,7 +1560,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_grade
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 comGradeValue;
+	UINT32 value;
 }StrIe_HUITP_IEID_uni_com_grade_t;
 
 //HUITP_IEID_uni_com_percentage                   = 0x002E,
@@ -1787,7 +1569,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_percentage
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 comPercentageValue;
+	UINT32 value;
 }StrIe_HUITP_IEID_uni_com_percentage_t;
 
 //HUITP_IEID_uni_com_modbus_address               = 0x002F,
@@ -1795,8 +1577,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_modbus_address
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT8  dataFormat;
-	UINT16 comModbusAddressValue;
+	UINT32 value;
 }StrIe_HUITP_IEID_uni_com_modbus_address_t;
 
 //HUITP_IEID_uni_com_file_name                    = 0x0030,
@@ -1826,6 +1607,26 @@ typedef struct StrIe_HUITP_IEID_uni_com_segment
 	UINT16 segTotal;
 	UINT16 segLen;
 }StrIe_HUITP_IEID_uni_com_segment_t;
+
+//HUITP_IEID_uni_com_snr_cmd_tag                  = 0x0033,
+typedef struct StrIe_HUITP_IEID_uni_com_snr_cmd_tag
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT8  cmdTag;
+}StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t;
+#define HUITP_IEID_UNI_COM_CMD_TAG_NULL                   0
+#define HUITP_IEID_UNI_COM_CMD_TAG_SET_SWITCH             1
+#define HUITP_IEID_UNI_COM_CMD_TAG_SET_MODBUS_ADDR        2
+#define HUITP_IEID_UNI_COM_CMD_TAG_SET_WORK_CYCLE         3
+#define HUITP_IEID_UNI_COM_CMD_TAG_SET_SAMPLE_CYCLE      　4
+#define HUITP_IEID_UNI_COM_CMD_TAG_SET_SAMPLE_NBR         5
+#define HUITP_IEID_UNI_COM_CMD_TAG_READ_SWITCH            6
+#define HUITP_IEID_UNI_COM_CMD_TAG_READ_MODBUS_ADDR       7
+#define HUITP_IEID_UNI_COM_CMD_TAG_READ_WORK_CYCLE        8
+#define HUITP_IEID_UNI_COM_CMD_TAG_READ_SAMPLE_CYCLE      9
+#define HUITP_IEID_UNI_COM_CMD_TAG_READ_SAMPLE_NBR        10
+#define HUITP_IEID_UNI_COM_CMD_TAG_INVALID                0xFF
 
 //血糖
 //HUITP_IEID_uni_blood_glucose_min                = 0x0100,
@@ -1959,10 +1760,11 @@ typedef struct StrIe_HUITP_IEID_uni_emc_data_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 emcDataValue;
+	UINT32 emcDataValue;
 }StrIe_HUITP_IEID_uni_emc_data_value_t;
 
 //HUITP_IEID_uni_emc_data_max,
+
 
 //电磁辐射剂量
 //HUITP_IEID_uni_emc_accu_min                     = 0x2100, 
@@ -1972,7 +1774,7 @@ typedef struct StrIe_HUITP_IEID_uni_emc_accu_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  emcFormat;
-	UINT16 emcAccuValue;
+	UINT32 emcAccuValue;
 }StrIe_HUITP_IEID_uni_emc_accu_value_t;
 
 //HUITP_IEID_uni_emc_accu_max,
@@ -1985,32 +1787,23 @@ typedef struct StrIe_HUITP_IEID_uni_co_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 coValue;
+	UINT32 coValue;
 }StrIe_HUITP_IEID_uni_co_value_t;
 
 //HUITP_IEID_uni_co_max,
 
 //甲醛HCHO
-//HUITP_IEID_uni_formaldehyde_min                 = 0x2300, 
-//HUITP_IEID_uni_formaldehyde_value               = 0x2300,
-typedef struct StrIe_HUITP_IEID_uni_formaldehyde_value
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT8  formaldehydeFormat;
-	UINT16 formaldehydeValue;
-}StrIe_HUITP_IEID_uni_formaldehyde_value_t;
-
-//HUITP_IEID_uni_hcho_value                       = 0x2301, 
+//HUITP_IEID_uni_hcho_min                 = 0x2300,
+//HUITP_IEID_uni_hcho_value               = 0x2300,
 typedef struct StrIe_HUITP_IEID_uni_hcho_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 hchoValue;
+	UINT32 hchoValue;
 }StrIe_HUITP_IEID_uni_hcho_value_t;
 
-//HUITP_IEID_uni_formaldehyde_max,
+//HUITP_IEID_uni_hcho_max,
 
 //酒精
 //HUITP_IEID_uni_alcohol_min                      = 0x2400, 
@@ -2020,7 +1813,7 @@ typedef struct StrIe_HUITP_IEID_uni_alcohol_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 alcoholValue;
+	UINT32 alcoholValue;
 }StrIe_HUITP_IEID_uni_alcohol_value_t;
 
 //HUITP_IEID_uni_alcohol_max,
@@ -2033,7 +1826,7 @@ typedef struct StrIe_HUITP_IEID_uni_pm01_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 pm01Value;
+	UINT32 pm01Value;
 }StrIe_HUITP_IEID_uni_pm01_value_t;
 
 //HUITP_IEID_uni_pm25_value                       = 0x2501,
@@ -2042,7 +1835,7 @@ typedef struct StrIe_HUITP_IEID_uni_pm25_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 pm25Value;
+	UINT32 pm25Value;
 }StrIe_HUITP_IEID_uni_pm25_value_t;
 
 //HUITP_IEID_uni_pm10_value                       = 0x2502,
@@ -2051,7 +1844,7 @@ typedef struct StrIe_HUITP_IEID_uni_pm10_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 pm10Value;
+	UINT32 pm10Value;
 }StrIe_HUITP_IEID_uni_pm10_value_t;
 
 //HUITP_IEID_uni_pm25_max,
@@ -2064,7 +1857,7 @@ typedef struct StrIe_HUITP_IEID_uni_windspd_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 windspdValue;
+	UINT32 windspdValue;
 }StrIe_HUITP_IEID_uni_windspd_value_t;
 
 //HUITP_IEID_uni_windspd_max,
@@ -2077,7 +1870,7 @@ typedef struct StrIe_HUITP_IEID_uni_winddir_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 winddirValue;
+	UINT32 winddirValue;
 }StrIe_HUITP_IEID_uni_winddir_value_t;
 
 //HUITP_IEID_uni_winddir_max,
@@ -2090,7 +1883,7 @@ typedef struct StrIe_HUITP_IEID_uni_temp_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 tempValue;
+	UINT32 tempValue;
 }StrIe_HUITP_IEID_uni_temp_value_t;
 
 //HUITP_IEID_uni_temp_max,
@@ -2103,7 +1896,7 @@ typedef struct StrIe_HUITP_IEID_uni_humid_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 humidValue;
+	UINT32 humidValue;
 }StrIe_HUITP_IEID_uni_humid_value_t;
 
 //HUITP_IEID_uni_humid_max,
@@ -2116,7 +1909,7 @@ typedef struct StrIe_HUITP_IEID_uni_airprs_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 airprsValue;
+	UINT32 airprsValue;
 }StrIe_HUITP_IEID_uni_airprs_value_t;
 
 //HUITP_IEID_uni_airprs_max,
@@ -2129,7 +1922,7 @@ typedef struct StrIe_HUITP_IEID_uni_noise_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 noiseValue;
+	UINT32 noiseValue;
 }StrIe_HUITP_IEID_uni_noise_value_t;
 
 //HUITP_IEID_uni_noise_max,
@@ -2142,7 +1935,7 @@ typedef struct StrIe_HUITP_IEID_uni_hsmmp_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 hsmmpValue;
+	UINT32 hsmmpValue;
 }StrIe_HUITP_IEID_uni_hsmmp_value_t;
 
 //HUITP_IEID_uni_hsmmp_max,
@@ -2155,7 +1948,7 @@ typedef struct StrIe_HUITP_IEID_uni_audio_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 audioValue;
+	UINT32 audioValue;
 }StrIe_HUITP_IEID_uni_audio_value_t;
 
 //HUITP_IEID_uni_audio_max,
@@ -2168,7 +1961,7 @@ typedef struct StrIe_HUITP_IEID_uni_video_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 videoValue;
+	UINT32 videoValue;
 }StrIe_HUITP_IEID_uni_video_value_t;
 
 //HUITP_IEID_uni_video_max,
@@ -2181,7 +1974,7 @@ typedef struct StrIe_HUITP_IEID_uni_picture_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 pictureValue;
+	UINT32 pictureValue;
 }StrIe_HUITP_IEID_uni_picture_value_t;
 
 //HUITP_IEID_uni_picture_segment                  = 0x2F01,
@@ -2198,7 +1991,7 @@ typedef struct StrIe_HUITP_IEID_uni_picture_format
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT8 picFormat;
+	UINT8  picFormat;
 }StrIe_HUITP_IEID_uni_picture_format_t;
 #define HUITP_IEID_UNI_PICTURE_FORMAT_NULL 0
 #define HUITP_IEID_UNI_PICTURE_FORMAT_BITMAP 1
@@ -2240,7 +2033,7 @@ typedef struct StrIe_HUITP_IEID_uni_ycjk_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 ycjkTestValue;
+	UINT32 ycjkTestValue;
 }StrIe_HUITP_IEID_uni_ycjk_value_t;
 
 //HUITP_IEID_uni_ycjk_max,
@@ -2253,7 +2046,7 @@ typedef struct StrIe_HUITP_IEID_uni_water_meter_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  waterMeterFormat;
-	UINT16 waterMeterValue;
+	UINT32 waterMeterValue;
 }StrIe_HUITP_IEID_uni_water_meter_value_t;
 
 //HUITP_IEID_uni_water_meter_max,
@@ -2266,7 +2059,7 @@ typedef struct StrIe_HUITP_IEID_uni_heat_meter_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 heatMeterValue;
+	UINT32 heatMeterValue;
 }StrIe_HUITP_IEID_uni_heat_meter_value_t;
 
 //HUITP_IEID_uni_heat_meter_max,
@@ -2279,7 +2072,7 @@ typedef struct StrIe_HUITP_IEID_uni_gas_meter_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 gasMeterValue;
+	UINT32 gasMeterValue;
 }StrIe_HUITP_IEID_uni_gas_meter_value_t;
 
 //HUITP_IEID_uni_gas_meter_max,
@@ -2292,49 +2085,49 @@ typedef struct StrIe_HUITP_IEID_uni_power_meter_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 powerMeterValue;
+	UINT32 powerMeterValue;
 }StrIe_HUITP_IEID_uni_power_meter_value_t;
 
 //HUITP_IEID_uni_power_meter_max,
 
 //光照强度
-//HUITP_IEID_uni_light_strength_min               = 0x3500, 
-//HUITP_IEID_uni_light_strength_value             = 0x3500, 
-typedef struct StrIe_HUITP_IEID_uni_light_strength_value
+//HUITP_IEID_uni_lightstr_data_min               = 0x3500,
+//HUITP_IEID_uni_lightstr_data_value             = 0x3500,
+typedef struct StrIe_HUITP_IEID_uni_lightstr_data_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 lightStrengthValue;
-}StrIe_HUITP_IEID_uni_light_strength_value_t;
+	UINT32 lightStrengthValue;
+}StrIe_HUITP_IEID_uni_lightstr_data_value_t;
 
-//HUITP_IEID_uni_light_strength_max,
+//HUITP_IEID_uni_lightstr_data_max,
 
 //有毒气体VOC
-//HUITP_IEID_uni_toxicgas_min                     = 0x3600, 
-//HUITP_IEID_uni_toxicgas_value                   = 0x3600,
-typedef struct StrIe_HUITP_IEID_uni_toxicgas_value
+//HUITP_IEID_uni_toxicgas_data_min                     = 0x3600,
+//HUITP_IEID_uni_toxicgas_data_value                   = 0x3600,
+typedef struct StrIe_HUITP_IEID_uni_toxicgas_data_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 toxicgasValue;
-}StrIe_HUITP_IEID_uni_toxicgas_value_t;
+	UINT32 toxicgasValue;
+}StrIe_HUITP_IEID_uni_toxicgas_data_value_t;
 
-//HUITP_IEID_uni_toxicgas_max,
+//HUITP_IEID_uni_toxicgas_data_max,
 
 //海拔高度
-//HUITP_IEID_uni_altitude_min                     = 0x3700, 
-//HUITP_IEID_uni_altitude_value                   = 0x3700,
-typedef struct StrIe_HUITP_IEID_uni_altitude_value
+//HUITP_IEID_uni_altitude_data_min                     = 0x3700,
+//HUITP_IEID_uni_altitude_data_value                   = 0x3700,
+typedef struct StrIe_HUITP_IEID_uni_altitude_data_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 altitudeValue;
-}StrIe_HUITP_IEID_uni_altitude_value_t;
+	UINT32 altitudeValue;
+}StrIe_HUITP_IEID_uni_altitude_data_value_t;
 
-//HUITP_IEID_uni_altitude_max,
+//HUITP_IEID_uni_altitude_data_max,
 
 //马达
 //HUITP_IEID_uni_moto_min                         = 0x3800, 
@@ -2344,7 +2137,7 @@ typedef struct StrIe_HUITP_IEID_uni_moto_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 motoValue;
+	UINT32 motoValue;
 }StrIe_HUITP_IEID_uni_moto_value_t;
 
 //HUITP_IEID_uni_moto_max,
@@ -2357,7 +2150,7 @@ typedef struct StrIe_HUITP_IEID_uni_switch_resistor_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 switchResistorValue;
+	UINT32 switchResistorValue;
 }StrIe_HUITP_IEID_uni_switch_resistor_value_t;
 
 //HUITP_IEID_uni_switch_max,
@@ -2370,7 +2163,7 @@ typedef struct StrIe_HUITP_IEID_uni_transporter_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT16 transporterValue;
+	UINT32 transporterValue;
 }StrIe_HUITP_IEID_uni_transporter_value_t;
 
 //HUITP_IEID_uni_transporter_max,
@@ -3646,175 +3439,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_emc_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_emc_data_confirm_t;
 
-//HUITP_MSGID_uni_emc_set_switch                   = 0x2002,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_switch
+//HUITP_MSGID_uni_emc_ctrl_req                     = 0x2002,
+typedef struct StrMsg_HUITP_MSGID_uni_emc_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_emc_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t;
 
-//HUITP_MSGID_uni_emc_set_switch_ack               = 0x2082, 	
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_switch_ack
+//HUITP_MSGID_uni_emc_ctrl_resp                    = 0x2082,
+typedef struct StrMsg_HUITP_MSGID_uni_emc_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_emc_set_switch_ack_t;
-
-//HUITP_MSGID_uni_emc_set_modbus_address           = 0x2003,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_emc_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_emc_set_modbus_address_ack       = 0x2083, 
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_emc_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_emc_set_work_cycle               = 0x2004,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_emc_set_work_cycle_t;
-
-//HUITP_MSGID_uni_emc_set_work_cycle_ack           = 0x2084,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_emc_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_emc_set_sample_cycle             = 0x2005,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_emc_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_emc_set_sample_cycle_ack         = 0x2085,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_emc_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_emc_set_sample_number            = 0x2006,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_emc_set_sample_number_t;
-   
-//HUITP_MSGID_uni_emc_set_sample_number_ack        = 0x2086,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_emc_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_emc_read_switch                  = 0x2007,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_emc_read_switch_t;
-
-//HUITP_MSGID_uni_emc_read_switch_ack              = 0x2087,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_emc_read_switch_ack_t;
-
-//HUITP_MSGID_uni_emc_read_modbus_address          = 0x2008,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_emc_read_modbus_address_t;
-
-//HUITP_MSGID_uni_emc_read_modbus_address_ack      = 0x2088,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_emc_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_emc_read_work_cycle              = 0x2009,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_emc_read_work_cycle_t;
-
-//HUITP_MSGID_uni_emc_read_work_cycle_ack          = 0x2089,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_emc_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_emc_read_sample_cycle            = 0x200A, 
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_emc_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_emc_read_sample_cycle_ack        = 0x208A,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_emc_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_emc_read_sample_number           = 0x200B,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_emc_read_sample_number_t;
-
-//HUITP_MSGID_uni_emc_read_sample_number_ack       = 0x208B,
-typedef struct StrMsg_HUITP_MSGID_uni_emc_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_emc_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_emc_ctrl_resp_t;
 
 //HUITP_MSGID_uni_emc_data_max,
 
@@ -3857,116 +3508,117 @@ typedef struct StrMsg_HUITP_MSGID_uni_emc_accu_confirm
 //HUITP_MSGID_uni_emc_accu_max,
 
 //一氧化碳
-//HUITP_MSGID_uni_co_min                           = 0x2200,
-//HUITP_MSGID_uni_co_req                           = 0x2200,
-typedef struct StrMsg_HUITP_MSGID_uni_co_req
+//HUITP_MSGID_uni_co1_min                           = 0x2200,
+//HUITP_MSGID_uni_co1_req                           = 0x2200,
+typedef struct StrMsg_HUITP_MSGID_uni_co1_data_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_co_req_t;
+}StrMsg_HUITP_MSGID_uni_co1_data_req_t;
 
-//HUITP_MSGID_uni_co_resp                          = 0x2280,
-typedef struct StrMsg_HUITP_MSGID_uni_co_resp
+//HUITP_MSGID_uni_co1_data_resp                          = 0x2280,
+typedef struct StrMsg_HUITP_MSGID_uni_co1_data_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
 	StrIe_HUITP_IEID_uni_co_value_t respValue;
-}StrMsg_HUITP_MSGID_uni_co_resp_t;
+}StrMsg_HUITP_MSGID_uni_co1_data_resp_t;
 
-//HUITP_MSGID_uni_co_report                        = 0x2281,
-typedef struct StrMsg_HUITP_MSGID_uni_co_report
+//HUITP_MSGID_uni_co1_data_report                        = 0x2281,
+typedef struct StrMsg_HUITP_MSGID_uni_co1_data_report
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
 	StrIe_HUITP_IEID_uni_co_value_t reportValue;	
-}StrMsg_HUITP_MSGID_uni_co_report_t;
+}StrMsg_HUITP_MSGID_uni_co1_data_report_t;
  
-//HUITP_MSGID_uni_co_confirm                           = 0x2201,
-typedef struct StrMsg_HUITP_MSGID_uni_co_confirm
+//HUITP_MSGID_uni_co1_co1_data_confirm                           = 0x2201,
+typedef struct StrMsg_HUITP_MSGID_uni_co1_data_confirm
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-}StrMsg_HUITP_MSGID_uni_co_confirm_t;
+}StrMsg_HUITP_MSGID_uni_co1_data_confirm_t;
 
-//HUITP_MSGID_uni_co_max,
+
+//HUITP_MSGID_uni_co1_max,
 
 //甲醛HCHO
-//HUITP_MSGID_uni_formaldehyde_min                 = 0x2300, 
-//HUITP_MSGID_uni_formaldehyde_req                 = 0x2300,
-typedef struct StrMsg_HUITP_MSGID_uni_formaldehyde_req
+//HUITP_MSGID_uni_hcho_min                         = 0x2300,
+//HUITP_MSGID_uni_hcho_data_req                 = 0x2300,
+typedef struct StrMsg_HUITP_MSGID_uni_hcho_data_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_formaldehyde_req_t;
+}StrMsg_HUITP_MSGID_uni_hcho_data_req_t;
 
-//HUITP_MSGID_uni_formaldehyde_resp                = 0x2380,
-typedef struct StrMsg_HUITP_MSGID_uni_formaldehyde_resp
+//HUITP_MSGID_uni_hcho_data_resp                = 0x2380,
+typedef struct StrMsg_HUITP_MSGID_uni_hcho_data_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_formaldehyde_value_t respValue;
-}StrMsg_HUITP_MSGID_uni_formaldehyde_resp_t;
+	StrIe_HUITP_IEID_uni_hcho_value_t respValue;
+}StrMsg_HUITP_MSGID_uni_hcho_data_resp_t;
  
-//HUITP_MSGID_uni_formaldehyde_report              = 0x2381,
-typedef struct StrMsg_HUITP_MSGID_uni_formaldehyde_report
+//HUITP_MSGID_uni_hcho_data_report              = 0x2381,
+typedef struct StrMsg_HUITP_MSGID_uni_hcho_data_report
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_formaldehyde_value_t reportValue;	
-}StrMsg_HUITP_MSGID_uni_formaldehyde_report_t;
+	StrIe_HUITP_IEID_uni_hcho_value_t reportValue;
+}StrMsg_HUITP_MSGID_uni_hcho_data_report_t;
  
-//HUITP_MSGID_uni_formaldehyde_confirm                 = 0x2301,
-typedef struct StrMsg_HUITP_MSGID_uni_formaldehyde_confirm
+//HUITP_MSGID_uni_hcho_data_confirm                 = 0x2301,
+typedef struct StrMsg_HUITP_MSGID_uni_hcho_data_confirm
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-}StrMsg_HUITP_MSGID_uni_formaldehyde_confirm_t;
+}StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t;
 
-//HUITP_MSGID_uni_formaldehyde_max,
+//HUITP_MSGID_uni_hcho_max,
 
 //酒精
 //HUITP_MSGID_uni_alcohol_min                      = 0x2400, 
-//HUITP_MSGID_uni_alcohol_req                      = 0x2400,
-typedef struct StrMsg_HUITP_MSGID_uni_alcohol_req
+//HUITP_MSGID_uni_alcohol_data_req                      = 0x2400,
+typedef struct StrMsg_HUITP_MSGID_uni_alcohol_data_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_alcohol_req_t;
+}StrMsg_HUITP_MSGID_uni_alcohol_data_req_t;
 
-//HUITP_MSGID_uni_alcohol_resp                     = 0x2480,
-typedef struct StrMsg_HUITP_MSGID_uni_alcohol_resp
+//HUITP_MSGID_uni_alcohol_data_resp                     = 0x2480,
+typedef struct StrMsg_HUITP_MSGID_uni_alcohol_data_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
 	StrIe_HUITP_IEID_uni_alcohol_value_t respValue;
-}StrMsg_HUITP_MSGID_uni_alcohol_resp_t;
+}StrMsg_HUITP_MSGID_uni_alcohol_data_resp_t;
 
-//HUITP_MSGID_uni_alcohol_report                   = 0x2481,
-typedef struct StrMsg_HUITP_MSGID_uni_alcohol_report
+//HUITP_MSGID_uni_alcohol_data_report                   = 0x2481,
+typedef struct StrMsg_HUITP_MSGID_uni_alcohol_data_report
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
 	StrIe_HUITP_IEID_uni_alcohol_value_t reportValue;	
-}StrMsg_HUITP_MSGID_uni_alcohol_report_t;
+}StrMsg_HUITP_MSGID_uni_alcohol_data_report_t;
 
-//HUITP_MSGID_uni_alcohol_confirm                      = 0x2401, 
-typedef struct StrMsg_HUITP_MSGID_uni_alcohol_confirm
+//HUITP_MSGID_uni_alcohol_data_confirm                      = 0x2401,
+typedef struct StrMsg_HUITP_MSGID_uni_alcohol_data_confirm
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-}StrMsg_HUITP_MSGID_uni_alcohol_confirm_t;
+}StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t;
 
 //HUITP_MSGID_uni_alcohol_max,
 
@@ -4010,176 +3662,72 @@ typedef struct StrMsg_HUITP_MSGID_uni_pm25_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t;
 
-//HUITP_MSGID_uni_pm25_set_switch                  = 0x2502,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_switch
+//HUITP_MSGID_uni_pm25_ctrl_req                    = 0x2502,
+typedef struct StrMsg_HUITP_MSGID_uni_pm25_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_pm25_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t;
 
-//HUITP_MSGID_uni_pm25_set_switch_ack              = 0x2582,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_switch_ack
+//HUITP_MSGID_uni_pm25_ctrl_resp                   = 0x2582,
+typedef struct StrMsg_HUITP_MSGID_uni_pm25_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_pm25_set_switch_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_pm25_ctrl_resp_t;
 
-//HUITP_MSGID_uni_pm25_set_modbus_address          = 0x2503,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_modbus_address
+//HUITP_MSGID_uni_pm25sp_data_req                  = 0x2503,
+typedef struct StrMsg_HUITP_MSGID_uni_pm25sp_data_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_pm25_set_modbus_address_t;
+}StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t;
 
-//HUITP_MSGID_uni_pm25_set_modbus_address_ack      = 0x2583, 
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_modbus_address_ack
+//HUITP_MSGID_uni_pm25sp_data_resp                 = 0x2583,
+typedef struct StrMsg_HUITP_MSGID_uni_pm25sp_data_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_pm25_set_modbus_address_ack_t;
+	StrIe_HUITP_IEID_uni_pm01_value_t respPm01Value;
+	StrIe_HUITP_IEID_uni_pm25_value_t respPm25Value;
+	StrIe_HUITP_IEID_uni_pm10_value_t respPm10Value;
+}StrMsg_HUITP_MSGID_uni_pm25sp_data_resp_t;
 
-//HUITP_MSGID_uni_pm25_set_work_cycle              = 0x2504,  //In second
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_work_cycle
+//HUITP_MSGID_uni_pm25sp_data_report                  = 0x2504,
+typedef struct StrMsg_HUITP_MSGID_uni_pm25sp_data_report
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_pm25_set_work_cycle_t;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_pm01_value_t reportPm01Value;
+	StrIe_HUITP_IEID_uni_pm25_value_t reportPm25Value;
+	StrIe_HUITP_IEID_uni_pm10_value_t reportPm10Value;
+}StrMsg_HUITP_MSGID_uni_pm25sp_data_report_t;
 
-//HUITP_MSGID_uni_pm25_set_work_cycle_ack          = 0x2584,  
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_work_cycle_ack
+//HUITP_MSGID_uni_pm25sp_data_confirm                 = 0x2584,
+typedef struct StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_pm25_set_work_cycle_ack_t;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+}StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t;
 
-//HUITP_MSGID_uni_pm25_set_sample_cycle            = 0x2505,  //In second
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_pm25_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_pm25_set_sample_cycle_ack        = 0x2585,  
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_pm25_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_pm25_set_sample_number           = 0x2506,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_pm25_set_sample_number_t;
-
-//HUITP_MSGID_uni_pm25_set_sample_number_ack       = 0x2586,  
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_pm25_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_pm25_read_switch                 = 0x2507,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_pm25_read_switch_t;
-
-//HUITP_MSGID_uni_pm25_read_switch_ack             = 0x2587,  
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_pm25_read_switch_ack_t;
-
-//HUITP_MSGID_uni_pm25_read_modbus_address         = 0x2508,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_pm25_read_modbus_address_t;
-
-//HUITP_MSGID_uni_pm25_read_modbus_address_ack     = 0x2588,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_pm25_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_pm25_read_work_cycle             = 0x2509,  //In second
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_pm25_read_work_cycle_t;
-
-//HUITP_MSGID_uni_pm25_read_work_cycle_ack         = 0x2589,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_pm25_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_pm25_read_sample_cycle           = 0x250A,  //In 
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_pm25_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_pm25_read_sample_cycle_ack       = 0x258A,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_pm25_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_pm25_read_sample_number          = 0x250B,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_pm25_read_sample_number_t;
-
-//HUITP_MSGID_uni_pm25_read_sample_number_ack      = 0x258B,
-typedef struct StrMsg_HUITP_MSGID_uni_pm25_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_pm25_read_sample_number_ack_t;
- 
 //HUITP_MSGID_uni_pm25_max,
 
 //风速Wind Speed
@@ -4218,175 +3766,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_windspd_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t;
 
-//HUITP_MSGID_uni_windspd_set_switch                   = 0x2602,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_switch
+//HUITP_MSGID_uni_windspd_ctrl_req                 = 0x2602,
+typedef struct StrMsg_HUITP_MSGID_uni_windspd_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_windspd_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t;
 
-//HUITP_MSGID_uni_windspd_set_switch_ack               = 0x2682, 	
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_switch_ack
+//HUITP_MSGID_uni_windspd_ctrl_resp                = 0x2682,
+typedef struct StrMsg_HUITP_MSGID_uni_windspd_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_windspd_set_switch_ack_t;
-
-//HUITP_MSGID_uni_windspd_set_modbus_address           = 0x2603,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_windspd_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_windspd_set_modbus_address_ack       = 0x2683, 
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_windspd_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_windspd_set_work_cycle               = 0x2604,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_windspd_set_work_cycle_t;
-
-//HUITP_MSGID_uni_windspd_set_work_cycle_ack           = 0x2684,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_windspd_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_windspd_set_sample_cycle             = 0x2605,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_windspd_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_windspd_set_sample_cycle_ack         = 0x2685,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_windspd_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_windspd_set_sample_number            = 0x2606,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_windspd_set_sample_number_t;
-   
-//HUITP_MSGID_uni_windspd_set_sample_number_ack        = 0x2686,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_windspd_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_windspd_read_switch                  = 0x2607,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_windspd_read_switch_t;
-
-//HUITP_MSGID_uni_windspd_read_switch_ack              = 0x2687,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_windspd_read_switch_ack_t;
-
-//HUITP_MSGID_uni_windspd_read_modbus_address          = 0x2608,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_windspd_read_modbus_address_t;
-
-//HUITP_MSGID_uni_windspd_read_modbus_address_ack      = 0x2688,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_windspd_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_windspd_read_work_cycle              = 0x2609,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_windspd_read_work_cycle_t;
-
-//HUITP_MSGID_uni_windspd_read_work_cycle_ack          = 0x2689,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_windspd_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_windspd_read_sample_cycle            = 0x260A, 
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_windspd_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_windspd_read_sample_cycle_ack        = 0x268A,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_windspd_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_windspd_read_sample_number           = 0x260B,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_windspd_read_sample_number_t;
-
-//HUITP_MSGID_uni_windspd_read_sample_number_ack       = 0x268B,
-typedef struct StrMsg_HUITP_MSGID_uni_windspd_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_windspd_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_windspd_ctrl_resp_t;
 
 //HUITP_MSGID_uni_windspd_max,
 
@@ -4426,175 +3832,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_winddir_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t;
 
-//HUITP_MSGID_uni_winddir_set_switch                   = 0x2702,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_switch
+//HUITP_MSGID_uni_winddir_ctrl_req                 = 0x2702,
+typedef struct StrMsg_HUITP_MSGID_uni_winddir_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_winddir_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t;
 
-//HUITP_MSGID_uni_winddir_set_switch_ack               = 0x2782, 	
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_switch_ack
+//HUITP_MSGID_uni_winddir_ctrl_resp                = 0x2782,
+typedef struct StrMsg_HUITP_MSGID_uni_winddir_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_winddir_set_switch_ack_t;
-
-//HUITP_MSGID_uni_winddir_set_modbus_address           = 0x2703,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_winddir_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_winddir_set_modbus_address_ack       = 0x2783, 
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_winddir_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_winddir_set_work_cycle               = 0x2704,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_winddir_set_work_cycle_t;
-
-//HUITP_MSGID_uni_winddir_set_work_cycle_ack           = 0x2784,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_winddir_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_winddir_set_sample_cycle             = 0x2705,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_winddir_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_winddir_set_sample_cycle_ack         = 0x2785,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_winddir_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_winddir_set_sample_number            = 0x2706,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_winddir_set_sample_number_t;
-   
-//HUITP_MSGID_uni_winddir_set_sample_number_ack        = 0x2786,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_winddir_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_winddir_read_switch                  = 0x2707,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_winddir_read_switch_t;
-
-//HUITP_MSGID_uni_winddir_read_switch_ack              = 0x2787,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_winddir_read_switch_ack_t;
-
-//HUITP_MSGID_uni_winddir_read_modbus_address          = 0x2708,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_winddir_read_modbus_address_t;
-
-//HUITP_MSGID_uni_winddir_read_modbus_address_ack      = 0x2788,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_winddir_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_winddir_read_work_cycle              = 0x2709,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_winddir_read_work_cycle_t;
-
-//HUITP_MSGID_uni_winddir_read_work_cycle_ack          = 0x2789,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_winddir_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_winddir_read_sample_cycle            = 0x270A, 
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_winddir_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_winddir_read_sample_cycle_ack        = 0x278A,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_winddir_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_winddir_read_sample_number           = 0x270B,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_winddir_read_sample_number_t;
-
-//HUITP_MSGID_uni_winddir_read_sample_number_ack       = 0x278B,
-typedef struct StrMsg_HUITP_MSGID_uni_winddir_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_winddir_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_winddir_ctrl_resp_t;
 
 //HUITP_MSGID_uni_winddir_max,
 
@@ -4634,175 +3898,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_temp_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_temp_data_confirm_t;
 
-//HUITP_MSGID_uni_temp_set_switch                   = 0x2802,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_switch
+//HUITP_MSGID_uni_temp_ctrl_req                    = 0x2802,
+typedef struct StrMsg_HUITP_MSGID_uni_temp_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_temp_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t;
 
-//HUITP_MSGID_uni_temp_set_switch_ack               = 0x2882, 	
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_switch_ack
+//HUITP_MSGID_uni_temp_ctrl_resp                   = 0x2882,
+typedef struct StrMsg_HUITP_MSGID_uni_temp_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_temp_set_switch_ack_t;
-
-//HUITP_MSGID_uni_temp_set_modbus_address           = 0x2803,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_temp_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_temp_set_modbus_address_ack       = 0x2883, 
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_temp_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_temp_set_work_cycle               = 0x2804,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_temp_set_work_cycle_t;
-
-//HUITP_MSGID_uni_temp_set_work_cycle_ack           = 0x2884,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_temp_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_temp_set_sample_cycle             = 0x2805,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_temp_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_temp_set_sample_cycle_ack         = 0x2885,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_temp_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_temp_set_sample_number            = 0x2806,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_temp_set_sample_number_t;
-   
-//HUITP_MSGID_uni_temp_set_sample_number_ack        = 0x2886,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_temp_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_temp_read_switch                  = 0x2807,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_temp_read_switch_t;
-
-//HUITP_MSGID_uni_temp_read_switch_ack              = 0x2887,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_temp_read_switch_ack_t;
-
-//HUITP_MSGID_uni_temp_read_modbus_address          = 0x2808,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_temp_read_modbus_address_t;
-
-//HUITP_MSGID_uni_temp_read_modbus_address_ack      = 0x2888,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_temp_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_temp_read_work_cycle              = 0x2809,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_temp_read_work_cycle_t;
-
-//HUITP_MSGID_uni_temp_read_work_cycle_ack          = 0x2889,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_temp_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_temp_read_sample_cycle            = 0x280A, 
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_temp_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_temp_read_sample_cycle_ack        = 0x288A,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_temp_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_temp_read_sample_number           = 0x280B,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_temp_read_sample_number_t;
-
-//HUITP_MSGID_uni_temp_read_sample_number_ack       = 0x288B,
-typedef struct StrMsg_HUITP_MSGID_uni_temp_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_temp_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_temp_ctrl_resp_t;
 
 //HUITP_MSGID_uni_temp_max,
 
@@ -4842,175 +3964,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_humid_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_humid_data_confirm_t;
 
-//HUITP_MSGID_uni_humid_set_switch                   = 0x2902,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_switch
+//HUITP_MSGID_uni_humid_ctrl_req                   = 0x2902,
+typedef struct StrMsg_HUITP_MSGID_uni_humid_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_humid_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t;
 
-//HUITP_MSGID_uni_humid_set_switch_ack               = 0x2982, 	
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_switch_ack
+//HUITP_MSGID_uni_humid_ctrl_resp                  = 0x2982,
+typedef struct StrMsg_HUITP_MSGID_uni_humid_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_humid_set_switch_ack_t;
-
-//HUITP_MSGID_uni_humid_set_modbus_address           = 0x2903,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_humid_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_humid_set_modbus_address_ack       = 0x2983, 
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_humid_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_humid_set_work_cycle               = 0x2904,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_humid_set_work_cycle_t;
-
-//HUITP_MSGID_uni_humid_set_work_cycle_ack           = 0x2984,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_humid_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_humid_set_sample_cycle             = 0x2905,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_humid_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_humid_set_sample_cycle_ack         = 0x2985,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_humid_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_humid_set_sample_number            = 0x2906,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_humid_set_sample_number_t;
-   
-//HUITP_MSGID_uni_humid_set_sample_number_ack        = 0x2986,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_humid_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_humid_read_switch                  = 0x2907,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_humid_read_switch_t;
-
-//HUITP_MSGID_uni_humid_read_switch_ack              = 0x2987,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_humid_read_switch_ack_t;
-
-//HUITP_MSGID_uni_humid_read_modbus_address          = 0x2908,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_humid_read_modbus_address_t;
-
-//HUITP_MSGID_uni_humid_read_modbus_address_ack      = 0x2988,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_humid_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_humid_read_work_cycle              = 0x2909,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_humid_read_work_cycle_t;
-
-//HUITP_MSGID_uni_humid_read_work_cycle_ack          = 0x2989,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_humid_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_humid_read_sample_cycle            = 0x290A, 
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_humid_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_humid_read_sample_cycle_ack        = 0x298A,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_humid_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_humid_read_sample_number           = 0x290B,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_humid_read_sample_number_t;
-
-//HUITP_MSGID_uni_humid_read_sample_number_ack       = 0x298B,
-typedef struct StrMsg_HUITP_MSGID_uni_humid_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_humid_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_humid_ctrl_resp_t;
 
 //HUITP_MSGID_uni_humid_max,
 
@@ -5050,176 +4030,6 @@ typedef struct StrMsg_HUITP_MSGID_uni_airprs_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t;
 
-//HUITP_MSGID_uni_airprs_set_switch                   = 0x2A02,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_airprs_set_switch_t;
-
-//HUITP_MSGID_uni_airprs_set_switch_ack               = 0x2A82, 	
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_airprs_set_switch_ack_t;
-
-//HUITP_MSGID_uni_airprs_set_modbus_address           = 0x2A03,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_airprs_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_airprs_set_modbus_address_ack       = 0x2A83, 
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_airprs_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_airprs_set_work_cycle               = 0x2A04,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_airprs_set_work_cycle_t;
-
-//HUITP_MSGID_uni_airprs_set_work_cycle_ack           = 0x2A84,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_airprs_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_airprs_set_sample_cycle             = 0x2A05,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_airprs_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_airprs_set_sample_cycle_ack         = 0x2A85,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_airprs_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_airprs_set_sample_number            = 0x2A06,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_airprs_set_sample_number_t;
-   
-//HUITP_MSGID_uni_airprs_set_sample_number_ack        = 0x2A86,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_airprs_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_airprs_read_switch                  = 0x2A07,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_airprs_read_switch_t;
-
-//HUITP_MSGID_uni_airprs_read_switch_ack              = 0x2A87,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_airprs_read_switch_ack_t;
-
-//HUITP_MSGID_uni_airprs_read_modbus_address          = 0x2A08,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_airprs_read_modbus_address_t;
-
-//HUITP_MSGID_uni_airprs_read_modbus_address_ack      = 0x2A88,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_airprs_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_airprs_read_work_cycle              = 0x2A09,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_airprs_read_work_cycle_t;
-
-//HUITP_MSGID_uni_airprs_read_work_cycle_ack          = 0x2A89,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_airprs_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_airprs_read_sample_cycle            = 0x2A0A, 
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_airprs_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_airprs_read_sample_cycle_ack        = 0x2A8A,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_airprs_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_airprs_read_sample_number           = 0x2A0B,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_airprs_read_sample_number_t;
-
-//HUITP_MSGID_uni_airprs_read_sample_number_ack       = 0x2A8B,
-typedef struct StrMsg_HUITP_MSGID_uni_airprs_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_airprs_read_sample_number_ack_t;
-
 //HUITP_MSGID_uni_airprs_max,
 
 //噪声Noise
@@ -5258,175 +4068,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_noise_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_noise_data_confirm_t;
 
-//HUITP_MSGID_uni_noise_set_switch                   = 0x2B02,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_switch
+//HUITP_MSGID_uni_noise_ctrl_req                   = 0x2B02,
+typedef struct StrMsg_HUITP_MSGID_uni_noise_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_noise_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t;
 
-//HUITP_MSGID_uni_noise_set_switch_ack               = 0x2B82, 	
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_switch_ack
+//HUITP_MSGID_uni_noise_ctrl_resp                  = 0x2B82,
+typedef struct StrMsg_HUITP_MSGID_uni_noise_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_noise_set_switch_ack_t;
-
-//HUITP_MSGID_uni_noise_set_modbus_address           = 0x2B03,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_noise_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_noise_set_modbus_address_ack       = 0x2B83, 
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_noise_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_noise_set_work_cycle               = 0x2B04,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_noise_set_work_cycle_t;
-
-//HUITP_MSGID_uni_noise_set_work_cycle_ack           = 0x2B84,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_noise_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_noise_set_sample_cycle             = 0x2B05,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_noise_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_noise_set_sample_cycle_ack         = 0x2B85,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_noise_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_noise_set_sample_number            = 0x2B06,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_noise_set_sample_number_t;
-   
-//HUITP_MSGID_uni_noise_set_sample_number_ack        = 0x2B86,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_noise_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_noise_read_switch                  = 0x2B07,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_noise_read_switch_t;
-
-//HUITP_MSGID_uni_noise_read_switch_ack              = 0x2B87,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_noise_read_switch_ack_t;
-
-//HUITP_MSGID_uni_noise_read_modbus_address          = 0x2B08,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_noise_read_modbus_address_t;
-
-//HUITP_MSGID_uni_noise_read_modbus_address_ack      = 0x2B88,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_noise_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_noise_read_work_cycle              = 0x2B09,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_noise_read_work_cycle_t;
-
-//HUITP_MSGID_uni_noise_read_work_cycle_ack          = 0x2B89,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_noise_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_noise_read_sample_cycle            = 0x2B0A, 
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_noise_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_noise_read_sample_cycle_ack        = 0x2B8A,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_noise_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_noise_read_sample_number           = 0x2B0B,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_noise_read_sample_number_t;
-
-//HUITP_MSGID_uni_noise_read_sample_number_ack       = 0x2B8B,
-typedef struct StrMsg_HUITP_MSGID_uni_noise_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_noise_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_noise_ctrl_resp_t;
 
 //HUITP_MSGID_uni_noise_max,
 
@@ -5466,175 +4134,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t;
 
-//HUITP_MSGID_uni_hsmmp_set_switch                   = 0x2C02,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_switch
+//HUITP_MSGID_uni_hsmmp_ctrl_req                   = 0x2C02,
+typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t;
 
-//HUITP_MSGID_uni_hsmmp_set_switch_ack               = 0x2C82, 	
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_switch_ack
+//HUITP_MSGID_uni_hsmmp_ctrl_resp                  = 0x2C82,
+typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_switch_ack_t;
-
-//HUITP_MSGID_uni_hsmmp_set_modbus_address           = 0x2C03,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_hsmmp_set_modbus_address_ack       = 0x2C83, 
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_hsmmp_set_work_cycle               = 0x2C04,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_work_cycle_t;
-
-//HUITP_MSGID_uni_hsmmp_set_work_cycle_ack           = 0x2C84,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_hsmmp_set_sample_cycle             = 0x2C05,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_hsmmp_set_sample_cycle_ack         = 0x2C85,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_hsmmp_set_sample_number            = 0x2C06,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_sample_number_t;
-   
-//HUITP_MSGID_uni_hsmmp_set_sample_number_ack        = 0x2C86,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_hsmmp_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_hsmmp_read_switch                  = 0x2C07,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_switch_t;
-
-//HUITP_MSGID_uni_hsmmp_read_switch_ack              = 0x2C87,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_switch_ack_t;
-
-//HUITP_MSGID_uni_hsmmp_read_modbus_address          = 0x2C08,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_modbus_address_t;
-
-//HUITP_MSGID_uni_hsmmp_read_modbus_address_ack      = 0x2C88,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_hsmmp_read_work_cycle              = 0x2C09,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_work_cycle_t;
-
-//HUITP_MSGID_uni_hsmmp_read_work_cycle_ack          = 0x2C89,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_hsmmp_read_sample_cycle            = 0x2C0A, 
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_hsmmp_read_sample_cycle_ack        = 0x2C8A,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_hsmmp_read_sample_number           = 0x2C0B,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_sample_number_t;
-
-//HUITP_MSGID_uni_hsmmp_read_sample_number_ack       = 0x2C8B,
-typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_hsmmp_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_resp_t;
 
 //HUITP_MSGID_uni_hsmmp_max,
 
@@ -5674,175 +4200,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_audio_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_audio_data_confirm_t;
 
-//HUITP_MSGID_uni_audio_set_switch                   = 0x2D02,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_switch
+//HUITP_MSGID_uni_audio_ctrl_req                   = 0x2D02,
+typedef struct StrMsg_HUITP_MSGID_uni_audio_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_audio_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_audio_ctrl_req_t;
 
-//HUITP_MSGID_uni_audio_set_switch_ack               = 0x2D82, 	
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_switch_ack
+//HUITP_MSGID_uni_audio_ctrl_resp                  = 0x2D82,
+typedef struct StrMsg_HUITP_MSGID_uni_audio_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_audio_set_switch_ack_t;
-
-//HUITP_MSGID_uni_audio_set_modbus_address           = 0x2D03,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_audio_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_audio_set_modbus_address_ack       = 0x2D83, 
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_audio_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_audio_set_work_cycle               = 0x2D04,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_audio_set_work_cycle_t;
-
-//HUITP_MSGID_uni_audio_set_work_cycle_ack           = 0x2D84,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_audio_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_audio_set_sample_cycle             = 0x2D05,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_audio_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_audio_set_sample_cycle_ack         = 0x2D85,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_audio_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_audio_set_sample_number            = 0x2D06,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_audio_set_sample_number_t;
-   
-//HUITP_MSGID_uni_audio_set_sample_number_ack        = 0x2D86,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_audio_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_audio_read_switch                  = 0x2D07,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_audio_read_switch_t;
-
-//HUITP_MSGID_uni_audio_read_switch_ack              = 0x2D87,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_audio_read_switch_ack_t;
-
-//HUITP_MSGID_uni_audio_read_modbus_address          = 0x2D08,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_audio_read_modbus_address_t;
-
-//HUITP_MSGID_uni_audio_read_modbus_address_ack      = 0x2D88,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_audio_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_audio_read_work_cycle              = 0x2D09,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_audio_read_work_cycle_t;
-
-//HUITP_MSGID_uni_audio_read_work_cycle_ack          = 0x2D89,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_audio_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_audio_read_sample_cycle            = 0x2D0A, 
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_audio_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_audio_read_sample_cycle_ack        = 0x2D8A,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_audio_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_audio_read_sample_number           = 0x2D0B,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_audio_read_sample_number_t;
-
-//HUITP_MSGID_uni_audio_read_sample_number_ack       = 0x2D8B,
-typedef struct StrMsg_HUITP_MSGID_uni_audio_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_audio_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_audio_ctrl_resp_t;
 
 //HUITP_MSGID_uni_audio_max,
 
@@ -5882,175 +4266,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_video_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_video_data_confirm_t;
 
-//HUITP_MSGID_uni_video_set_switch                   = 0x2E02,
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_switch
+//HUITP_MSGID_uni_video_ctrl_req                   = 0x2E02,
+typedef struct StrMsg_HUITP_MSGID_uni_video_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_video_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_video_ctrl_req_t;
 
-//HUITP_MSGID_uni_video_set_switch_ack               = 0x2E82, 	
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_switch_ack
+//HUITP_MSGID_uni_audio_ctrl_resp                  = 0x2E82,
+typedef struct StrMsg_HUITP_MSGID_uni_video_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_video_set_switch_ack_t;
-
-//HUITP_MSGID_uni_video_set_modbus_address           = 0x2E03,
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_video_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_video_set_modbus_address_ack       = 0x2E83, 
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_video_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_video_set_work_cycle               = 0x2E04,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_video_set_work_cycle_t;
-
-//HUITP_MSGID_uni_video_set_work_cycle_ack           = 0x2E84,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_video_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_video_set_sample_cycle             = 0x2E05,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_video_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_video_set_sample_cycle_ack         = 0x2E85,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_video_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_video_set_sample_number            = 0x2E06,
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_video_set_sample_number_t;
-   
-//HUITP_MSGID_uni_video_set_sample_number_ack        = 0x2E86,
-typedef struct StrMsg_HUITP_MSGID_uni_video_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_video_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_video_read_switch                  = 0x2E07,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_video_read_switch_t;
-
-//HUITP_MSGID_uni_video_read_switch_ack              = 0x2E87,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_video_read_switch_ack_t;
-
-//HUITP_MSGID_uni_video_read_modbus_address          = 0x2E08,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_video_read_modbus_address_t;
-
-//HUITP_MSGID_uni_video_read_modbus_address_ack      = 0x2E88,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_video_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_video_read_work_cycle              = 0x2E09,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_video_read_work_cycle_t;
-
-//HUITP_MSGID_uni_video_read_work_cycle_ack          = 0x2E89,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_video_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_video_read_sample_cycle            = 0x2E0A, 
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_video_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_video_read_sample_cycle_ack        = 0x2E8A,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_video_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_video_read_sample_number           = 0x2E0B,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_video_read_sample_number_t;
-
-//HUITP_MSGID_uni_video_read_sample_number_ack       = 0x2E8B,
-typedef struct StrMsg_HUITP_MSGID_uni_video_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_video_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_video_ctrl_resp_t;
 
 //HUITP_MSGID_uni_video_max,
 
@@ -6090,175 +4332,33 @@ typedef struct StrMsg_HUITP_MSGID_uni_picture_data_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_picture_data_confirm_t;
 
-//HUITP_MSGID_uni_picture_set_switch                   = 0x2F02,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_switch
+//HUITP_MSGID_uni_picture_ctrl_req                 = 0x2F02,
+typedef struct StrMsg_HUITP_MSGID_uni_picture_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t setSwitch;
-}StrMsg_HUITP_MSGID_uni_picture_set_switch_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdReq;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_picture_ctrl_req_t;
 
-//HUITP_MSGID_uni_picture_set_switch_ack               = 0x2F82, 	
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_switch_ack
+//HUITP_MSGID_uni_picture_ctrl_resp                = 0x2F82,
+typedef struct StrMsg_HUITP_MSGID_uni_picture_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_picture_set_switch_ack_t;
-
-//HUITP_MSGID_uni_picture_set_modbus_address           = 0x2F03,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t setModbusAddr;
-}StrMsg_HUITP_MSGID_uni_picture_set_modbus_address_t;
- 
-//HUITP_MSGID_uni_picture_set_modbus_address_ack       = 0x2F83, 
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_picture_set_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_picture_set_work_cycle               = 0x2F04,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t setWorkCycle;
-}StrMsg_HUITP_MSGID_uni_picture_set_work_cycle_t;
-
-//HUITP_MSGID_uni_picture_set_work_cycle_ack           = 0x2F84,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_picture_set_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_picture_set_sample_cycle             = 0x2F05,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t setSampleCycle;
-}StrMsg_HUITP_MSGID_uni_picture_set_sample_cycle_t;
-
-//HUITP_MSGID_uni_picture_set_sample_cycle_ack         = 0x2F85,   //In second
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_picture_set_sample_cycle_ack_t;
-
-//HUITP_MSGID_uni_picture_set_sample_number            = 0x2F06,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_sample_number_t setSampleNumber;
-}StrMsg_HUITP_MSGID_uni_picture_set_sample_number_t;
-   
-//HUITP_MSGID_uni_picture_set_sample_number_ack        = 0x2F86,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_set_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-}StrMsg_HUITP_MSGID_uni_picture_set_sample_number_ack_t;
-
-//HUITP_MSGID_uni_picture_read_switch                  = 0x2F07,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_switch
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_picture_read_switch_t;
-
-//HUITP_MSGID_uni_picture_read_switch_ack              = 0x2F87,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_switch_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_switch_onoff_t readSwitch;
-}StrMsg_HUITP_MSGID_uni_picture_read_switch_ack_t;
-
-//HUITP_MSGID_uni_picture_read_modbus_address          = 0x2F08,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_modbus_address
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_picture_read_modbus_address_t;
-
-//HUITP_MSGID_uni_picture_read_modbus_address_ack      = 0x2F88,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_modbus_address_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_modbus_address_t readModbusAddr;
-}StrMsg_HUITP_MSGID_uni_picture_read_modbus_address_ack_t;
-
-//HUITP_MSGID_uni_picture_read_work_cycle              = 0x2F09,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_work_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_picture_read_work_cycle_t;
-
-//HUITP_MSGID_uni_picture_read_work_cycle_ack          = 0x2F89,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_work_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_work_cycle_t readWorkCycle;
-}StrMsg_HUITP_MSGID_uni_picture_read_work_cycle_ack_t;
-
-//HUITP_MSGID_uni_picture_read_sample_cycle            = 0x2F0A, 
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_sample_cycle
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_picture_read_sample_cycle_t;
-
-//HUITP_MSGID_uni_picture_read_sample_cycle_ack        = 0x2F8A,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_sample_cycle_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_cycle_t readSampleCycle;
-}StrMsg_HUITP_MSGID_uni_picture_read_sample_cycle_ack_t;
- 
-//HUITP_MSGID_uni_picture_read_sample_number           = 0x2F0B,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_sample_number
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_picture_read_sample_number_t;
-
-//HUITP_MSGID_uni_picture_read_sample_number_ack       = 0x2F8B,
-typedef struct StrMsg_HUITP_MSGID_uni_picture_read_sample_number_ack
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_sample_number_t readSampleNumber;
-}StrMsg_HUITP_MSGID_uni_picture_read_sample_number_ack_t;
+	StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t cmdResp;
+	StrIe_HUITP_IEID_uni_com_switch_onoff_t switchState;
+	StrIe_HUITP_IEID_uni_com_work_cycle_t workCycle;
+	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
+	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
+	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+}StrMsg_HUITP_MSGID_uni_picture_ctrl_resp_t;
 
 //HUITP_MSGID_uni_picture_max,
 
@@ -6453,118 +4553,118 @@ typedef struct StrMsg_HUITP_MSGID_uni_power_meter_confirm
 //HUITP_MSGID_uni_power_meter_max,
 
 //光照强度
-//HUITP_MSGID_uni_light_strength_min               = 0x3500, 
-//HUITP_MSGID_uni_light_strength_req               = 0x3500,
-typedef struct StrMsg_HUITP_MSGID_uni_light_strength_req
+//HUITP_MSGID_uni_lightstr_data_min               = 0x3500,
+//HUITP_MSGID_uni_lightstr_data_req               = 0x3500,
+typedef struct StrMsg_HUITP_MSGID_uni_lightstr_data_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_light_strength_req_t;
+}StrMsg_HUITP_MSGID_uni_lightstr_data_req_t;
 
-//HUITP_MSGID_uni_light_strength_resp              = 0x3580,
-typedef struct StrMsg_HUITP_MSGID_uni_light_strength_resp
+//HUITP_MSGID_uni_lightstr_data_resp              = 0x3580,
+typedef struct StrMsg_HUITP_MSGID_uni_lightstr_data_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_light_strength_value_t respValue;
-}StrMsg_HUITP_MSGID_uni_light_strength_resp_t;
+	StrIe_HUITP_IEID_uni_lightstr_data_value_t respValue;
+}StrMsg_HUITP_MSGID_uni_lightstr_data_resp_t;
 
-//HUITP_MSGID_uni_light_strength_report            = 0x3581,
-typedef struct StrMsg_HUITP_MSGID_uni_light_strength_report
+//HUITP_MSGID_uni_lightstr_data_report            = 0x3581,
+typedef struct StrMsg_HUITP_MSGID_uni_lightstr_data_report
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_light_strength_value_t reportValue;
-}StrMsg_HUITP_MSGID_uni_light_strength_report_t;
+	StrIe_HUITP_IEID_uni_lightstr_data_value_t reportValue;
+}StrMsg_HUITP_MSGID_uni_lightstr_data_report_t;
 
-//HUITP_MSGID_uni_light_strength_confirm               = 0x3501,
-typedef struct StrMsg_HUITP_MSGID_uni_light_strength_confirm
+//HUITP_MSGID_uni_lightstr_data_confirm               = 0x3501,
+typedef struct StrMsg_HUITP_MSGID_uni_lightstr_data_confirm
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-}StrMsg_HUITP_HUITP_MSGID_uni_light_strength_confirm_t;
+}StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t;
  
-//HUITP_MSGID_uni_light_strength_max,
+//HUITP_MSGID_uni_lightstr_data_max,
 
 //有毒气体VOC
-//HUITP_MSGID_uni_toxicgas_min                     = 0x3600, 
-//HUITP_MSGID_uni_toxicgas_req                     = 0x3600,
-typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_req
+//HUITP_MSGID_uni_toxicgas_data_min                     = 0x3600,
+//HUITP_MSGID_uni_toxicgas_data_req                     = 0x3600,
+typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_data_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_toxicgas_req_t;
+}StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t;
  
-//HUITP_MSGID_uni_toxicgas_resp                    = 0x3680,
-typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_resp
+//HUITP_MSGID_uni_toxicgas_data_resp                    = 0x3680,
+typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_data_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_toxicgas_value_t respValue;
-}StrMsg_HUITP_MSGID_uni_toxicgas_resp_t;
+	StrIe_HUITP_IEID_uni_toxicgas_data_value_t respValue;
+}StrMsg_HUITP_MSGID_uni_toxicgas_data_resp_t;
  
-//HUITP_MSGID_uni_toxicgas_report                  = 0x3681,
-typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_report
+//HUITP_MSGID_uni_toxicgas_data_report                  = 0x3681,
+typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_data_report
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_toxicgas_value_t reportValue;
-}StrMsg_HUITP_HUITP_MSGID_uni_toxicgas_report_t;
+	StrIe_HUITP_IEID_uni_toxicgas_data_value_t reportValue;
+}StrMsg_HUITP_HUITP_MSGID_uni_toxicgas_data_report_t;
 
-//HUITP_MSGID_uni_toxicgas_confirm                     = 0x3601,
-typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_confirm
+//HUITP_MSGID_uni_toxicgas_data_confirm                     = 0x3601,
+typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-}StrMsg_HUITP_MSGID_uni_toxicgas_confirm_t;
+}StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t;
  
-//HUITP_MSGID_uni_toxicgas_max,
+//HUITP_MSGID_uni_toxicgas_data_max,
 
 //海拔高度
-//HUITP_MSGID_uni_altitude_min                     = 0x3700,
-//HUITP_MSGID_uni_altitude_req                     = 0x3700,
-typedef struct StrMsg_HUITP_MSGID_uni_altitude_req
+//HUITP_MSGID_uni_altitude_data_min                     = 0x3700,
+//HUITP_MSGID_uni_altitude_data_req                     = 0x3700,
+typedef struct StrMsg_HUITP_MSGID_uni_altitude_data_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-}StrMsg_HUITP_MSGID_uni_altitude_req_t;
+}StrMsg_HUITP_MSGID_uni_altitude_data_req_t;
  
-//HUITP_MSGID_uni_altitude_resp                    = 0x3780,
-typedef struct StrMsg_HUITP_MSGID_uni_altitude_resp
+//HUITP_MSGID_uni_altitude_data_resp                    = 0x3780,
+typedef struct StrMsg_HUITP_MSGID_uni_altitude_data_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_altitude_value_t respValue;
-}StrMsg_HUITP_MSGID_uni_altitude_resp_t;
+	StrIe_HUITP_IEID_uni_altitude_data_value_t respValue;
+}StrMsg_HUITP_MSGID_uni_altitude_data_resp_t;
  
-//HUITP_MSGID_uni_altitude_report                  = 0x3781,
-typedef struct StrMsg_HUITP_MSGID_uni_altitude_report
+//HUITP_MSGID_uni_altitude_data_report                  = 0x3781,
+typedef struct StrMsg_HUITP_MSGID_uni_altitude_data_report
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_altitude_value_t reportValue;
-}StrMsg_HUITP_HUITP_MSGID_uni_altitude_report_t;
+	StrIe_HUITP_IEID_uni_altitude_data_value_t reportValue;
+}StrMsg_HUITP_HUITP_MSGID_uni_altitude_data_report_t;
 
-//HUITP_MSGID_uni_altitude_confirm                     = 0x3701,
-typedef struct StrMsg_HUITP_MSGID_uni_altitude_confirm
+//HUITP_MSGID_uni_altitude_data_confirm                     = 0x3701,
+typedef struct StrMsg_HUITP_MSGID_uni_altitude_data_confirm
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-}StrMsg_HUITP_MSGID_uni_altitude_confirm_t;
+}StrMsg_HUITP_MSGID_uni_altitude_data_confirm_t;
 
-//HUITP_MSGID_uni_altitude_max,
+//HUITP_MSGID_uni_altitude_data_max,
 
 //马达
 //HUITP_MSGID_uni_moto_min                         = 0x3800,

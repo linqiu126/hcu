@@ -612,6 +612,424 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	}
 	break;
 
+	//EMC
+	case HUITP_MSGID_uni_emc_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_emc_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_emc_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_emc_data_req_received_handle(snd);
+	}
+	break;
+
+	//EMC
+	case HUITP_MSGID_uni_emc_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_emc_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_emc_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_emc_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//EMC
+	case HUITP_MSGID_uni_emc_ctrl_req:
+	{
+		StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle(snd);
+	}
+	break;
+
+	//CO1
+	case HUITP_MSGID_uni_co1_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_co1_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_co1_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_co1_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_co1_data_req_received_handle(snd);
+	}
+	break;
+
+	//CO1
+	case HUITP_MSGID_uni_co1_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_co1_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_co1_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_co1_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_co1_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//HCHO
+	case HUITP_MSGID_uni_hcho_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_hcho_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hcho_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_hcho_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_hcho_data_req_received_handle(snd);
+	}
+	break;
+
+	//HCHO
+	case HUITP_MSGID_uni_hcho_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hcho_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_hcho_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//酒精
+	case HUITP_MSGID_uni_alcohol_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_alcohol_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alcohol_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_alcohol_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_alcohol_data_req_received_handle(snd);
+	}
+	break;
+
+	//酒精
+	case HUITP_MSGID_uni_alcohol_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_alcohol_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//PM25
+	case HUITP_MSGID_uni_pm25_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_pm25_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_pm25_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_pm25_data_req_received_handle(snd);
+	}
+	break;
+
+	//PM25
+	case HUITP_MSGID_uni_pm25_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_pm25_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//PM25
+	case HUITP_MSGID_uni_pm25_ctrl_req:
+	{
+		StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle(snd);
+	}
+	break;
+
+	//PM25SP
+	case HUITP_MSGID_uni_pm25sp_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_pm25sp_data_req_received_handle(snd);
+	}
+	break;
+
+	//PM25SP
+	case HUITP_MSGID_uni_pm25sp_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_pm25sp_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//WINDSPD
+	case HUITP_MSGID_uni_windspd_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_windspd_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_windspd_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_windspd_data_req_received_handle(snd);
+	}
+	break;
+
+	//WINDSPD
+	case HUITP_MSGID_uni_windspd_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_windspd_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//WINDSPD
+	case HUITP_MSGID_uni_windspd_ctrl_req:
+	{
+		StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle(snd);
+	}
+	break;
+
+	//WINDDIR
+	case HUITP_MSGID_uni_winddir_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_winddir_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_winddir_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_winddir_data_req_received_handle(snd);
+	}
+	break;
+
+	//WINDDIR
+	case HUITP_MSGID_uni_winddir_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_winddir_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//WINDDIR
+	case HUITP_MSGID_uni_winddir_ctrl_req:
+	{
+		StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle(snd);
+	}
+	break;
+
+	//TEMP
+	case HUITP_MSGID_uni_temp_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_temp_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_temp_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_temp_data_req_received_handle(snd);
+	}
+	break;
+
+	//TEMP
+	case HUITP_MSGID_uni_temp_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_temp_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_temp_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//TEMP
+	case HUITP_MSGID_uni_temp_ctrl_req:
+	{
+		StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle(snd);
+	}
+	break;
+
+	//HUMID
+	case HUITP_MSGID_uni_humid_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_humid_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_humid_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_humid_data_req_received_handle(snd);
+	}
+	break;
+
+	//HUMID
+	case HUITP_MSGID_uni_humid_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_humid_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_humid_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_humid_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//HUMID
+	case HUITP_MSGID_uni_humid_ctrl_req:
+	{
+		StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle(snd);
+	}
+	break;
+
+	//AIRPRS
+	case HUITP_MSGID_uni_airprs_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_airprs_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_airprs_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_airprs_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_airprs_data_req_received_handle(snd);
+	}
+	break;
+
+	//AIRPRS
+	case HUITP_MSGID_uni_airprs_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_airprs_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//NOISE
+	case HUITP_MSGID_uni_noise_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_noise_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_noise_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_noise_data_req_received_handle(snd);
+	}
+	break;
+
+	//NOISE
+	case HUITP_MSGID_uni_noise_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_noise_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_noise_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_noise_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//NOISE
+	case HUITP_MSGID_uni_noise_ctrl_req:
+	{
+		StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle(snd);
+	}
+	break;
+
+	//HSMMP
+	case HUITP_MSGID_uni_hsmmp_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_hsmmp_data_req_received_handle(snd);
+	}
+	break;
+
+	//HSMMP
+	case HUITP_MSGID_uni_hsmmp_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//HSMMP
+	case HUITP_MSGID_uni_hsmmp_ctrl_req:
+	{
+		StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(snd);
+	}
+	break;
+
+	//LIGHTSTR
+	case HUITP_MSGID_uni_lightstr_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_lightstr_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_lightstr_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_lightstr_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_lightstr_data_req_received_handle(snd);
+	}
+	break;
+
+	//LIGHTSTR
+	case HUITP_MSGID_uni_lightstr_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//TOXICGAS
+	case HUITP_MSGID_uni_toxicgas_data_req:
+	{
+		StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_toxicgas_data_req_received_handle(snd);
+	}
+	break;
+
+	//TOXICGAS
+	case HUITP_MSGID_uni_toxicgas_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_toxicgas_data_confirm_received_handle(snd);
+	}
+	break;
+
 	default:
 	{
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Receive unknown message id and not able to process!\n");
@@ -1104,7 +1522,6 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle(StrMsg
 }
 
 
-//HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_heart_beat_req_t received!\n");
 
 void func_cloudvela_huitpxml_msg_generate_test_data(void)
 {
@@ -1286,6 +1703,195 @@ void func_cloudvela_huitpxml_msg_generate_test_data(void)
 	
 }
 
+OPSTAT func_cloudvela_huitpxml_msg_emc_data_req_received_handle(StrMsg_HUITP_MSGID_uni_emc_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_emc_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_emc_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_emc_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_emc_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_co1_data_req_received_handle(StrMsg_HUITP_MSGID_uni_co1_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_co1_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_co1_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_co1_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_co1_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_hcho_data_req_received_handle(StrMsg_HUITP_MSGID_uni_hcho_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_hcho_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_hcho_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_alcohol_data_req_received_handle(StrMsg_HUITP_MSGID_uni_alcohol_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_alcohol_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_alcohol_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_pm25_data_req_received_handle(StrMsg_HUITP_MSGID_uni_pm25_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_pm25_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_pm25_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_pm25sp_data_req_received_handle(StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_pm25sp_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_windspd_data_req_received_handle(StrMsg_HUITP_MSGID_uni_windspd_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_windspd_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_windspd_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_winddir_data_req_received_handle(StrMsg_HUITP_MSGID_uni_winddir_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_winddir_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_winddir_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_temp_data_req_received_handle(StrMsg_HUITP_MSGID_uni_temp_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_temp_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_temp_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_temp_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_humid_data_req_received_handle(StrMsg_HUITP_MSGID_uni_humid_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_humid_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_humid_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_humid_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_humid_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_airprs_data_req_received_handle(StrMsg_HUITP_MSGID_uni_airprs_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_airprs_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_airprs_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_noise_data_req_received_handle(StrMsg_HUITP_MSGID_uni_noise_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_noise_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_noise_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_noise_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_noise_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_req_received_handle(StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_lightstr_data_req_received_handle(StrMsg_HUITP_MSGID_uni_lightstr_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_lightstr_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_toxicgas_data_req_received_handle(StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t received!\n");
+}
+
+OPSTAT func_cloudvela_huitpxml_msg_toxicgas_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t*rcv)
+{
+	HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t received!\n");
+}
 
 
 

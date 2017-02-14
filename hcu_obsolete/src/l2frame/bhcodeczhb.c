@@ -1338,8 +1338,8 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//EMC传感器任务
 	if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_EMC) == 0){
 		//初始化发送函数
-		msg_struct_cloudvela_emc_control_cmd_t snd;
-		memset(&snd, 0, sizeof(msg_struct_cloudvela_emc_control_cmd_t));
+		msg_struct_cloudvela_emc_ctrl_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_cloudvela_emc_ctrl_req_t));
 
 		//赋值
 		snd.cmdId = L3CI_emc;
@@ -1349,10 +1349,10 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 		strcpy(snd.zhbDl.pw, ipw);
 		strcpy(snd.zhbDl.mn, imn);
 		snd.zhbDl.ansFlag = iansFlag;
-		snd.length = sizeof(msg_struct_cloudvela_emc_control_cmd_t);
+		snd.length = sizeof(msg_struct_cloudvela_emc_ctrl_req_t);
 
 		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_EMC_CONTROL_CMD, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_EMC_CTRL_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA], zHcuSysCrlTab.taskRun.taskName[TASK_ID_EMC]);
@@ -1363,8 +1363,8 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//TEMP传感器任务
 	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_TEMP) == 0){
 		//初始化发送函数
-		msg_struct_cloudvela_temp_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_temp_control_cmd_t));
+		msg_struct_cloudvela_temp_ctrl_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_temp_ctrl_req_t));
 
 		//赋值
 		snd1.cmdId = L3CI_temp;
@@ -1374,10 +1374,10 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 		strcpy(snd1.zhbDl.pw, ipw);
 		strcpy(snd1.zhbDl.mn, imn);
 		snd1.zhbDl.ansFlag = iansFlag;
-		snd1.length = sizeof(msg_struct_cloudvela_temp_control_cmd_t);
+		snd1.length = sizeof(msg_struct_cloudvela_temp_ctrl_req_t);
 
 		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CTRL_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA], zHcuSysCrlTab.taskRun.taskName[TASK_ID_TEMP]);
@@ -1388,8 +1388,8 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//HUMID传感器任务
 	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_HUMID) == 0){
 		//初始化发送函数
-		msg_struct_cloudvela_humid_control_cmd_t snd2;
-		memset(&snd2, 0, sizeof(msg_struct_cloudvela_humid_control_cmd_t));
+		msg_struct_cloudvela_humid_ctrl_req_t snd2;
+		memset(&snd2, 0, sizeof(msg_struct_cloudvela_humid_ctrl_req_t));
 
 		//赋值
 		snd2.cmdId = L3CI_humid;
@@ -1399,10 +1399,10 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 		strcpy(snd2.zhbDl.pw, ipw);
 		strcpy(snd2.zhbDl.mn, imn);
 		snd2.zhbDl.ansFlag = iansFlag;
-		snd2.length = sizeof(msg_struct_cloudvela_humid_control_cmd_t);
+		snd2.length = sizeof(msg_struct_cloudvela_humid_ctrl_req_t);
 
 		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd2, snd2.length);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CTRL_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd2, snd2.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA], zHcuSysCrlTab.taskRun.taskName[TASK_ID_HUMID]);
@@ -1420,8 +1420,8 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//WINDSPD传感器任务
 	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_WINDSPD) == 0){
 		//初始化发送函数
-		msg_struct_cloudvela_windspd_control_cmd_t snd4;
-		memset(&snd4, 0, sizeof(msg_struct_cloudvela_windspd_control_cmd_t));
+		msg_struct_cloudvela_windspd_ctrl_req_t snd4;
+		memset(&snd4, 0, sizeof(msg_struct_cloudvela_windspd_ctrl_req_t));
 
 		//赋值
 		snd4.cmdId = L3CI_windspd;
@@ -1431,10 +1431,10 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 		strcpy(snd4.zhbDl.pw, ipw);
 		strcpy(snd4.zhbDl.mn, imn);
 		snd4.zhbDl.ansFlag = iansFlag;
-		snd4.length = sizeof(msg_struct_cloudvela_windspd_control_cmd_t);
+		snd4.length = sizeof(msg_struct_cloudvela_windspd_ctrl_req_t);
 
 		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd4, snd4.length);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd4, snd4.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA], zHcuSysCrlTab.taskRun.taskName[TASK_ID_WINDSPD]);
@@ -1445,8 +1445,8 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//WINDDIR传感器任务
 	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_WINDDIR) == 0){
 		//初始化发送函数
-		msg_struct_cloudvela_winddir_control_cmd_t snd5;
-		memset(&snd5, 0, sizeof(msg_struct_cloudvela_winddir_control_cmd_t));
+		msg_struct_cloudvela_winddir_ctrl_req_t snd5;
+		memset(&snd5, 0, sizeof(msg_struct_cloudvela_winddir_ctrl_req_t));
 
 		//赋值
 		snd5.cmdId = L3CI_winddir;
@@ -1456,10 +1456,10 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 		strcpy(snd5.zhbDl.pw, ipw);
 		strcpy(snd5.zhbDl.mn, imn);
 		snd5.zhbDl.ansFlag = iansFlag;
-		snd5.length = sizeof(msg_struct_cloudvela_winddir_control_cmd_t);
+		snd5.length = sizeof(msg_struct_cloudvela_winddir_ctrl_req_t);
 
 		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd5, snd5.length);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd5, snd5.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA], zHcuSysCrlTab.taskRun.taskName[TASK_ID_WINDDIR]);
@@ -1470,8 +1470,8 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//PM25传感器任务
 	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_PM25) == 0){
 		//初始化发送函数
-		msg_struct_cloudvela_pm25_control_cmd_t snd6;
-		memset(&snd6, 0, sizeof(msg_struct_cloudvela_pm25_control_cmd_t));
+		msg_struct_cloudvela_pm25_ctrl_req_t snd6;
+		memset(&snd6, 0, sizeof(msg_struct_cloudvela_pm25_ctrl_req_t));
 
 		//赋值
 		snd6.cmdId = L3CI_pm25;
@@ -1481,10 +1481,10 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 		strcpy(snd6.zhbDl.pw, ipw);
 		strcpy(snd6.zhbDl.mn, imn);
 		snd6.zhbDl.ansFlag = iansFlag;
-		snd6.length = sizeof(msg_struct_cloudvela_pm25_control_cmd_t);
+		snd6.length = sizeof(msg_struct_cloudvela_pm25_ctrl_req_t);
 
 		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_PM25_CONTROL_CMD, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd6, snd6.length);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_PM25_CTRL_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd6, snd6.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA], zHcuSysCrlTab.taskRun.taskName[TASK_ID_PM25]);
@@ -1495,8 +1495,8 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//NOISE传感器任务
 	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_NOISE) == 0){
 		//初始化发送函数
-		msg_struct_cloudvela_noise_control_cmd_t snd7;
-		memset(&snd7, 0, sizeof(msg_struct_cloudvela_noise_control_cmd_t));
+		msg_struct_cloudvela_noise_ctrl_req_t snd7;
+		memset(&snd7, 0, sizeof(msg_struct_cloudvela_noise_ctrl_req_t));
 
 		//赋值
 		snd7.cmdId = L3CI_noise;
@@ -1506,10 +1506,10 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 		strcpy(snd7.zhbDl.pw, ipw);
 		strcpy(snd7.zhbDl.mn, imn);
 		snd7.zhbDl.ansFlag = iansFlag;
-		snd7.length = sizeof(msg_struct_cloudvela_noise_control_cmd_t);
+		snd7.length = sizeof(msg_struct_cloudvela_noise_ctrl_req_t);
 
 		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd7, snd7.length);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CTRL_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd7, snd7.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA], zHcuSysCrlTab.taskRun.taskName[TASK_ID_NOISE]);
@@ -1520,8 +1520,8 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//HSMMP传感器任务，待实现
 	else if (strcmp(st, HCU_CLOUDVELA_BH_ITF_STD_ZHB_HSMMP) == 0){
 		//初始化发送函数
-		msg_struct_cloudvela_hsmmp_control_cmd_t snd8;
-		memset(&snd8, 0, sizeof(msg_struct_cloudvela_hsmmp_control_cmd_t));
+		msg_struct_cloudvela_hsmmp_ctrl_req_t snd8;
+		memset(&snd8, 0, sizeof(msg_struct_cloudvela_hsmmp_ctrl_req_t));
 
 		//赋值
 		snd8.cmdId = L3CI_hsmmp;
@@ -1531,10 +1531,10 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 		strcpy(snd8.zhbDl.pw, ipw);
 		strcpy(snd8.zhbDl.mn, imn);
 		snd8.zhbDl.ansFlag = iansFlag;
-		snd8.length = sizeof(msg_struct_cloudvela_hsmmp_control_cmd_t);
+		snd8.length = sizeof(msg_struct_cloudvela_hsmmp_ctrl_req_t);
 
 		//发送
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd8, snd8.length);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd8, snd8.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA], zHcuSysCrlTab.taskRun.taskName[TASK_ID_HSMMP]);

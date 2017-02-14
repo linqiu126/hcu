@@ -38,7 +38,7 @@ HcuFsmStateItem_t FsmPm25[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_PM25_ACTIVED,          fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_PM25_ACTIVED,          fsm_pm25_time_out},
 	{MSG_ID_CLOUDVELA_PM25_DATA_REQ,       	FSM_STATE_PM25_ACTIVED,          fsm_pm25_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,      FSM_STATE_PM25_ACTIVED,         fsm_pm25_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_PM25_CTRL_REQ,      FSM_STATE_PM25_ACTIVED,         fsm_pm25_cloudvela_control_cmd},
 
     //Wait for Modbus Feedback
     {MSG_ID_COM_RESTART,        		FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_restart},
@@ -50,7 +50,7 @@ HcuFsmStateItem_t FsmPm25[] =
 	{MSG_ID_MODBUS_PM25_CONTROL_FB,     FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_modbus_control_fb},
 
 	//added by Shanchun to ensure not blocking the next command in cast no response from the last command
-	{MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,      FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_PM25_CTRL_REQ,      FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_cloudvela_control_cmd},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -807,9 +807,9 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 	else if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE)){
 		//Online processing
 		//赋值给发送消息
-		msg_struct_pm25_cloudvela_control_fb_t snd;
-		memset(&snd, 0, sizeof(msg_struct_pm25_cloudvela_control_fb_t));
-		snd.length = sizeof(msg_struct_pm25_cloudvela_control_fb_t);
+		msg_struct_pm25_cloudvela_ctrl_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_pm25_cloudvela_ctrl_resp_t));
+		snd.length = sizeof(msg_struct_pm25_cloudvela_ctrl_resp_t);
 		snd.opt.equId = rcv.opt.equId;
 		snd.backType = rcv.backType;
 		snd.cmdId = rcv.cmdId;
@@ -901,7 +901,7 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		}
 
-	ret = hcu_message_send(MSG_ID_PM25_CLOUDVELA_CONTROL_FB, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);
+	ret = hcu_message_send(MSG_ID_PM25_CLOUDVELA_CTRL_RESP, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
 		HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuSysCrlTab.taskRun.taskName[TASK_ID_PM25], zHcuSysCrlTab.taskRun.taskName[TASK_ID_CLOUDVELA]);

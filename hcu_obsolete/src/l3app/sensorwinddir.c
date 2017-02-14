@@ -39,7 +39,7 @@ HcuFsmStateItem_t FsmWinddir[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_WINDDIR_ACTIVED,          fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_WINDDIR_ACTIVED,          fsm_winddir_time_out},
 	{MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,     FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD,  FSM_STATE_WINDDIR_ACTIVED,          fsm_winddir_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ,  FSM_STATE_WINDDIR_ACTIVED,          fsm_winddir_cloudvela_control_cmd},
 
     //Wait for Modbus Feedback
     {MSG_ID_COM_RESTART,        		FSM_STATE_WINDDIR_OPT_WFFB,         fsm_winddir_restart},

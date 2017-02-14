@@ -39,7 +39,7 @@ HcuFsmStateItem_t FsmNoise[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_NOISE_ACTIVED,          		fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_NOISE_ACTIVED,          		fsm_noise_time_out},
 	{MSG_ID_CLOUDVELA_NOISE_DATA_REQ,    	FSM_STATE_NOISE_ACTIVED,      			fsm_noise_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD,    FSM_STATE_NOISE_ACTIVED,          		fsm_noise_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_NOISE_CTRL_REQ,    FSM_STATE_NOISE_ACTIVED,          		fsm_noise_cloudvela_control_cmd},
 
     //Wait for MODBUS Feedback
     {MSG_ID_COM_RESTART,        			FSM_STATE_NOISE_MODBUS_WFFB,        	fsm_noise_restart},

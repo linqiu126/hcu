@@ -45,13 +45,13 @@ HcuFsmStateItem_t HcuFsmNbiotcj188[] =
 
     //Online working， 定时检查链路，并安排离线数据的及时上传
 	{MSG_ID_IWM_NBIOTCJ188_DATA_RESP,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_iwm_data_resp},
-	{MSG_ID_IWM_NBIOTCJ188_CONTROL_FB,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_iwm_contrl_fb},
+	{MSG_ID_IWM_NBIOTCJ188_CTRL_RESP,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_iwm_ctrl_resp},
 	{MSG_ID_IHM_NBIOTCJ188_DATA_RESP,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_ihm_data_resp},
-	{MSG_ID_IHM_NBIOTCJ188_CONTROL_FB,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_ihm_contrl_fb},
+	{MSG_ID_IHM_NBIOTCJ188_CTRL_RESP,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_ihm_ctrl_resp},
 	{MSG_ID_IGM_NBIOTCJ188_DATA_RESP,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_igm_data_resp},
-	{MSG_ID_IGM_NBIOTCJ188_CONTROL_FB,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_igm_contrl_fb},
+	{MSG_ID_IGM_NBIOTCJ188_CTRL_RESP,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_igm_ctrl_resp},
 	{MSG_ID_IPM_NBIOTCJ188_DATA_RESP,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_ipm_data_resp},
-	{MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_ipm_contrl_fb},
+	{MSG_ID_IPM_NBIOTCJ188_CTRL_RESP,   	FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_ipm_ctrl_resp},
 
 	//Online working，这里不再考虑不同的物理链接导致的差异性链路。从Linux系统来看，WIFI/ETHERNET/USBNET/34G都是同一种连接
 	{MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX,    FSM_STATE_NBIOTCJ188_ONLINE, 	fsm_nbiotcj188_ethernet_data_rx},
@@ -249,12 +249,12 @@ OPSTAT fsm_nbiotcj188_iwm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-OPSTAT fsm_nbiotcj188_iwm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_nbiotcj188_iwm_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-	msg_struct_iwm_nbiotcj188_control_fb_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_iwm_nbiotcj188_control_fb_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_iwm_nbiotcj188_control_fb_t))){
+	msg_struct_iwm_nbiotcj188_ctrl_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_iwm_nbiotcj188_ctrl_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_iwm_nbiotcj188_ctrl_resp_t))){
 		HcuErrorPrint("NBIOTCJ188: Receive IWM message error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		return FAILURE;
@@ -377,12 +377,12 @@ OPSTAT fsm_nbiotcj188_ihm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-OPSTAT fsm_nbiotcj188_ihm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_nbiotcj188_ihm_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-	msg_struct_ihm_nbiotcj188_control_fb_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_ihm_nbiotcj188_control_fb_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ihm_nbiotcj188_control_fb_t))){
+	msg_struct_ihm_nbiotcj188_ctrl_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_ihm_nbiotcj188_ctrl_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ihm_nbiotcj188_ctrl_resp_t))){
 		HcuErrorPrint("NBIOTCJ188: Receive IHM message error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		return FAILURE;
@@ -505,12 +505,12 @@ OPSTAT fsm_nbiotcj188_igm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-OPSTAT fsm_nbiotcj188_igm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_nbiotcj188_igm_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-	msg_struct_igm_nbiotcj188_control_fb_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_igm_nbiotcj188_control_fb_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_igm_nbiotcj188_control_fb_t))){
+	msg_struct_igm_nbiotcj188_ctrl_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_igm_nbiotcj188_ctrl_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_igm_nbiotcj188_ctrl_resp_t))){
 		HcuErrorPrint("NBIOTCJ188: Receive IGM message error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		return FAILURE;
@@ -629,12 +629,12 @@ OPSTAT fsm_nbiotcj188_ipm_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-OPSTAT fsm_nbiotcj188_ipm_contrl_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_nbiotcj188_ipm_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-	msg_struct_ipm_nbiotcj188_control_fb_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_ipm_nbiotcj188_control_fb_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ipm_nbiotcj188_control_fb_t))){
+	msg_struct_ipm_nbiotcj188_ctrl_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_ipm_nbiotcj188_ctrl_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ipm_nbiotcj188_ctrl_resp_t))){
 		HcuErrorPrint("NBIOTCJ188: Receive IPM message error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_NBIOTCJ188]++;
 		return FAILURE;

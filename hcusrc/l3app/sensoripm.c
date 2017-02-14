@@ -40,9 +40,9 @@ HcuFsmStateItem_t HcuFsmIpm[] =
 
 	//Normal working status
 	{MSG_ID_NBIOTCJ188_IPM_DATA_REQ,     		FSM_STATE_IPM_ACTIVED,      			fsm_ipm_nbiotcj188_data_req},
-	{MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotcj188_control_cmd},
+	{MSG_ID_NBIOTCJ188_IPM_CTRL_REQ,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotcj188_control_cmd},
 	{MSG_ID_NBIOTQG376_IPM_DATA_REQ,     		FSM_STATE_IPM_ACTIVED,      			fsm_ipm_nbiotqg376_data_req},
-	{MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotqg376_control_cmd},
+	{MSG_ID_NBIOTQG376_IPM_CTRL_REQ,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotqg376_control_cmd},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending

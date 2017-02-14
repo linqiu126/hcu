@@ -41,7 +41,7 @@ HcuFsmStateItem_t HcuFsmTemp[] =
 
     //Normal working status
 	{MSG_ID_CLOUDVELA_TEMP_DATA_REQ,    	FSM_STATE_TEMP_ACTIVED,      	 fsm_temp_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,      FSM_STATE_TEMP_ACTIVED,         fsm_temp_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_TEMP_CTRL_REQ,        FSM_STATE_TEMP_ACTIVED,         fsm_temp_cloudvela_control_cmd},
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_TEMP_DATA_REPORT, 	FSM_STATE_TEMP_OPT_WFFB,         fsm_temp_data_report_from_modbus},

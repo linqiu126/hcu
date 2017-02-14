@@ -479,36 +479,36 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CLOUDVELA_EMC_CONTROL_CMD,
 
 	MSG_ID_CLOUDVELA_PM25_DATA_REQ,
-	MSG_ID_CLOUDVELA_PM25_CONTROL_CMD,
+	MSG_ID_CLOUDVELA_PM25_CTRL_REQ,
 
 	MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,
-	MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD,
+	MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ,
 
 	MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,
-	MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD,
+	MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ,
 
 	MSG_ID_CLOUDVELA_TEMP_DATA_REQ,
 	MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,
 
 	MSG_ID_CLOUDVELA_HUMID_DATA_REQ,
-	MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD,
+	MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,
 
-	MSG_ID_CLOUDVELA_HSMMP_CONTROL_CMD,
+	MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,
 
 	MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
-	MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD,
+	MSG_ID_CLOUDVELA_NOISE_CTRL_REQ,
 
 	//NBIOT message
 	MSG_ID_NBIOTCJ188_IWM_DATA_REQ,
 	MSG_ID_NBIOTCJ188_IWM_CONTROL_CMD,
 	MSG_ID_NBIOTCJ188_IHM_DATA_REQ,
-	MSG_ID_NBIOTCJ188_IHM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IHM_CTRL_REQ,
 	MSG_ID_NBIOTCJ188_IGM_DATA_REQ,
-	MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IGM_CTRL_REQ,
 	MSG_ID_NBIOTCJ188_IPM_DATA_REQ,
-	MSG_ID_NBIOTCJ188_IPM_CONTROL_CMD,
+	MSG_ID_NBIOTCJ188_IPM_CTRL_REQ,
 	MSG_ID_NBIOTQG376_IPM_DATA_REQ,
-	MSG_ID_NBIOTQG376_IPM_CONTROL_CMD,
+	MSG_ID_NBIOTQG376_IPM_CTRL_REQ,
 
 	//Modbus report
 	MSG_ID_MODBUS_EMC_DATA_REPORT,
@@ -536,25 +536,25 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_EMC_MODBUS_DATA_READ,
 	MSG_ID_EMC_CLOUDVELA_DATA_RESP,
 	MSG_ID_EMC_MODBUS_CONTROL_CMD,
-	MSG_ID_EMC_CLOUDVELA_CONTROL_FB,
+	MSG_ID_EMC_CLOUDVELA_CTRL_RESP,
 
 	//PM25 message
 	MSG_ID_PM25_MODBUS_DATA_READ,
 	MSG_ID_PM25_CLOUDVELA_DATA_RESP,
 	MSG_ID_PM25_MODBUS_CONTROL_CMD,
-	MSG_ID_PM25_CLOUDVELA_CONTROL_FB,
+	MSG_ID_PM25_CLOUDVELA_CTRL_RESP,
 
 	//WIND_DIRECTION message
 	MSG_ID_WINDDIR_MODBUS_DATA_READ,
 	MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP,
 	MSG_ID_WINDDIR_MODBUS_CONTROL_CMD,
-	MSG_ID_WINDDIR_CLOUDVELA_CONTROL_FB,
+	MSG_ID_WINDDIR_CLOUDVELA_CTRL_RESP,
 
 	//WIND_SPEED message
 	MSG_ID_WINDSPD_MODBUS_DATA_READ,
 	MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP,
 	MSG_ID_WINDSPD_MODBUS_CONTROL_CMD,
-	MSG_ID_WINDSPD_CLOUDVELA_CONTROL_FB,
+	MSG_ID_WINDSPD_CLOUDVELA_CTRL_RESP,
 
 	//TEMPERATURE message
 	MSG_ID_TEMP_MODBUS_DATA_READ,
@@ -562,20 +562,20 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_TEMP_CLOUDVELA_DATA_RESP,
 	MSG_ID_TEMP_MODBUS_CONTROL_CMD,
 	MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD,//SPIBUSARIES
-	MSG_ID_TEMP_CLOUDVELA_CONTROL_FB,
+	MSG_ID_TEMP_CLOUDVELA_CTRL_RESP,
 
 
 	//HUMIDITY message
 	MSG_ID_HUMID_MODBUS_DATA_READ,
 	MSG_ID_HUMID_CLOUDVELA_DATA_RESP,
 	MSG_ID_HUMID_MODBUS_CONTROL_CMD,
-	MSG_ID_HUMID_CLOUDVELA_CONTROL_FB,
+	MSG_ID_HUMID_CLOUDVELA_CTRL_RESP,
 
 	//HSMMP
 	MSG_ID_HSMMP_AVORION_DATA_READ,
 	MSG_ID_HSMMP_AVORION_STOP,
 	MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,
-	MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,
+	MSG_ID_HSMMP_CLOUDVELA_CTRL_RESP,
 	MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,
 
 	//NOISE
@@ -583,27 +583,27 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD,
 	MSG_ID_NOISE_SPSVIRGO_STOP,
 	MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
-	MSG_ID_NOISE_CLOUDVELA_CONTROL_FB,
+	MSG_ID_NOISE_CLOUDVELA_CTRL_RESP,
 	MSG_ID_NOISE_MODBUS_DATA_READ,//0x67,103?
 	MSG_ID_NOISE_MODBUS_CONTROL_CMD,
 
 	//IWM
 	MSG_ID_IWM_NBIOTCJ188_DATA_RESP,
-	MSG_ID_IWM_NBIOTCJ188_CONTROL_FB,
+	MSG_ID_IWM_NBIOTCJ188_CTRL_RESP,
 
 	//IHM
 	MSG_ID_IHM_NBIOTCJ188_DATA_RESP,
-	MSG_ID_IHM_NBIOTCJ188_CONTROL_FB,
+	MSG_ID_IHM_NBIOTCJ188_CTRL_RESP,
 
 	//IGM
 	MSG_ID_IGM_NBIOTCJ188_DATA_RESP,
-	MSG_ID_IGM_NBIOTCJ188_CONTROL_FB,
+	MSG_ID_IGM_NBIOTCJ188_CTRL_RESP,
 
 	//IPM
 	MSG_ID_IPM_NBIOTCJ188_DATA_RESP,
 	MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,
 	MSG_ID_IPM_NBIOTQG376_DATA_RESP,
-	MSG_ID_IPM_NBIOTQG376_CONTROL_FB,
+	MSG_ID_IPM_NBIOTQG376_CTRL_RESP,
 
 	//AirSync message
 	MSG_ID_AIRSYNC_INIT,
@@ -1230,7 +1230,7 @@ typedef struct  msg_struct_cloudvela_windspd_control_cmd //
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
-}msg_struct_cloudvela_windspd_control_cmd_t;
+}msg_struct_cloudvela_windspd_ctrl_req_t;
 typedef struct  msg_struct_cloudvela_temp_control_cmd //
 {
 	UINT8  cmdId;
@@ -1239,7 +1239,7 @@ typedef struct  msg_struct_cloudvela_temp_control_cmd //
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
-}msg_struct_cloudvela_temp_control_cmd_t;
+}msg_struct_cloudvela_temp_ctrl_req_t;
 typedef struct  msg_struct_cloudvela_humid_control_cmd //
 {
 	UINT8  cmdId;
@@ -1248,7 +1248,7 @@ typedef struct  msg_struct_cloudvela_humid_control_cmd //
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
-}msg_struct_cloudvela_humid_control_cmd_t;
+}msg_struct_cloudvela_humid_ctrl_req_t;
 typedef struct  msg_struct_cloudvela_noise_control_cmd //
 {
 	UINT8  cmdId;
@@ -1257,7 +1257,7 @@ typedef struct  msg_struct_cloudvela_noise_control_cmd //
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
-}msg_struct_cloudvela_noise_control_cmd_t;
+}msg_struct_cloudvela_noise_ctrl_req_t;
 typedef struct  msg_struct_cloudvela_hsmmp_control_cmd //
 {
 	UINT8  cmdId;
@@ -1266,7 +1266,7 @@ typedef struct  msg_struct_cloudvela_hsmmp_control_cmd //
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
-}msg_struct_cloudvela_hsmmp_control_cmd_t;
+}msg_struct_cloudvela_hsmmp_ctrl_req_t;
 
 
 
@@ -1625,7 +1625,7 @@ typedef struct msg_struct_emc_cloudvela_control_fb
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
-}msg_struct_emc_cloudvela_control_fb_t;
+}msg_struct_emc_cloudvela_ctrl_resp_t;
 typedef struct msg_struct_pm25_cloudvela_control_fb
 {
 	UINT8  cmdId;
@@ -1634,7 +1634,7 @@ typedef struct msg_struct_pm25_cloudvela_control_fb
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
-}msg_struct_pm25_cloudvela_control_fb_t;
+}msg_struct_pm25_cloudvela_ctrl_resp_t;
 typedef struct msg_struct_winddir_cloudvela_control_fb
 {
 	UINT8  cmdId;
@@ -1643,7 +1643,7 @@ typedef struct msg_struct_winddir_cloudvela_control_fb
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
-}msg_struct_winddir_cloudvela_control_fb_t;
+}msg_struct_winddir_cloudvela_ctrl_resp_t;
 typedef struct msg_struct_windspd_cloudvela_control_fb
 {
 	UINT8  cmdId;
@@ -1652,7 +1652,7 @@ typedef struct msg_struct_windspd_cloudvela_control_fb
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
-}msg_struct_windspd_cloudvela_control_fb_t;
+}msg_struct_windspd_cloudvela_ctrl_resp_t;
 typedef struct msg_struct_temp_cloudvela_control_fb
 {
 	UINT8  cmdId;
@@ -1661,7 +1661,7 @@ typedef struct msg_struct_temp_cloudvela_control_fb
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
-}msg_struct_temp_cloudvela_control_fb_t;
+}msg_struct_temp_cloudvela_ctrl_resp_t;
 typedef struct msg_struct_humid_cloudvela_control_fb
 {
 	UINT8  cmdId;
@@ -1670,7 +1670,7 @@ typedef struct msg_struct_humid_cloudvela_control_fb
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
-}msg_struct_humid_cloudvela_control_fb_t;
+}msg_struct_humid_cloudvela_ctrl_resp_t;
 typedef struct msg_struct_noise_cloudvela_control_fb
 {
 	UINT8  cmdId;
@@ -1679,7 +1679,7 @@ typedef struct msg_struct_noise_cloudvela_control_fb
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
-}msg_struct_noise_cloudvela_control_fb_t;
+}msg_struct_noise_cloudvela_ctrl_resp_t;
 
 
 
@@ -2096,7 +2096,7 @@ typedef struct  msg_struct_nbiotcj188_iwm_control_cmd //
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwmData;
 	UINT32 length;
-}msg_struct_nbiotcj188_iwm_control_cmd_t;
+}msg_struct_nbiotcj188_iwm_ctrl_req_t;
 typedef struct  msg_struct_nbiotcj188_ihm_control_cmd //
 {
 	INT8 equtype;
@@ -2119,7 +2119,7 @@ typedef struct  msg_struct_nbiotcj188_igm_control_cmd //
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
-}msg_struct_nbiotcj188_igm_control_cmd_t;
+}msg_struct_nbiotcj188_igm_ctrl_req_t;
 typedef struct  msg_struct_nbiotcj188_ipm_control_cmd //
 {
 	INT8 equtype;
@@ -2128,7 +2128,7 @@ typedef struct  msg_struct_nbiotcj188_ipm_control_cmd //
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
-}msg_struct_nbiotcj188_ipm_control_cmd_t;
+}msg_struct_nbiotcj188_ipm_ctrl_req_t;
 
 typedef struct msg_struct_iwm_nbiotcj188_data_resp
 {
@@ -2180,7 +2180,7 @@ typedef struct msg_struct_iwm_nbiotcj188_control_fb
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t iwmData;
 	UINT32 length;
-}msg_struct_iwm_nbiotcj188_control_fb_t;
+}msg_struct_iwm_nbiotcj188_ctrl_resp_t;
 typedef struct msg_struct_ihm_nbiotcj188_control_fb
 {
 	INT8 equtype;
@@ -2194,7 +2194,7 @@ typedef struct msg_struct_ihm_nbiotcj188_control_fb
 	sensor_general_cj188_data_element_t ihmData;
 	UINT32 length;
 
-}msg_struct_ihm_nbiotcj188_control_fb_t;
+}msg_struct_ihm_nbiotcj188_ctrl_resp_t;
 typedef struct msg_struct_igm_nbiotcj188_control_fb
 {
 	INT8 equtype;
@@ -2203,7 +2203,7 @@ typedef struct msg_struct_igm_nbiotcj188_control_fb
 	INT8 billtodayaccuvolumeunit;
 	sensor_general_cj188_data_element_t igmData;
 	UINT32 length;
-}msg_struct_igm_nbiotcj188_control_fb_t;
+}msg_struct_igm_nbiotcj188_ctrl_resp_t;
 typedef struct msg_struct_ipm_nbiotcj188_control_fb
 {
 	INT8 equtype;
@@ -2232,7 +2232,7 @@ typedef struct  msg_struct_nbiotqg376_ipm_control_cmd //
 	UINT8  optId;
 	UINT8  backType;
 	UINT32 length;
-}msg_struct_nbiotqg376_ipm_control_cmd_t;
+}msg_struct_nbiotqg376_ipm_ctrl_req_t;
 typedef struct msg_struct_ipm_nbiotqg376_data_resp
 {
 	UINT8  usercmdid;
@@ -2246,7 +2246,7 @@ typedef struct msg_struct_ipm_nbiotqg376_control_fb
 	UINT8  optId;
 	UINT8  backType;
 	UINT32 length;
-}msg_struct_ipm_nbiotqg376_control_fb_t;
+}msg_struct_ipm_nbiotqg376_ctrl_resp_t;
 typedef struct  msg_struct_nbiotqg376_ipm_data_req //
 {
 	UINT8  cmdId;

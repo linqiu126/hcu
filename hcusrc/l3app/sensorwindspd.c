@@ -39,7 +39,7 @@ HcuFsmStateItem_t HcuFsmWindspd[] =
 
     //Normal working status
 	{MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,     FSM_STATE_WINDSPD_ACTIVED,      	fsm_windspd_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD,  FSM_STATE_WINDSPD_ACTIVED,          fsm_windspd_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ,  FSM_STATE_WINDSPD_ACTIVED,          fsm_windspd_cloudvela_control_cmd},
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_WINDSPD_DATA_REPORT, FSM_STATE_WINDSPD_OPT_WFFB,        	fsm_windspd_data_report_from_modbus},

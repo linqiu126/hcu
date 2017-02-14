@@ -39,7 +39,7 @@ HcuFsmStateItem_t FsmIgm[] =
 	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_IGM_ACTIVED,       			fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_IGM_ACTIVED,          		fsm_igm_time_out},
 	{MSG_ID_NBIOTCJ188_IGM_DATA_REQ,     		FSM_STATE_IGM_ACTIVED,      			fsm_igm_nbiotcj188_data_req},
-	{MSG_ID_NBIOTCJ188_IGM_CONTROL_CMD,  		FSM_STATE_IGM_ACTIVED,          		fsm_igm_nbiotcj188_control_cmd},
+	{MSG_ID_NBIOTCJ188_IGM_CTRL_REQ,  		FSM_STATE_IGM_ACTIVED,          		fsm_igm_nbiotcj188_control_cmd},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending

@@ -488,8 +488,8 @@ OPSTAT func_cloudvela_stdxml_msg_emc_unpack(msg_struct_com_cloudvela_data_rx_t *
 			|| (optId == L3PO_emc_read_sample_number) ){
 
 		//初始化发送函数
-		msg_struct_cloudvela_emc_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_emc_control_cmd_t));
+		msg_struct_cloudvela_emc_ctrl_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_emc_ctrl_req_t));
 
 		snd1.cmdId = cmdId;
 		snd1.optId = optId;
@@ -603,8 +603,8 @@ OPSTAT func_cloudvela_stdxml_msg_emc_unpack(msg_struct_com_cloudvela_data_rx_t *
 		}
 
 		//将消息命令发送给EMC任务
-		snd1.length = sizeof(msg_struct_cloudvela_emc_control_cmd_t);
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_EMC_CONTROL_CMD, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		snd1.length = sizeof(msg_struct_cloudvela_emc_ctrl_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_EMC_CTRL_REQ, TASK_ID_EMC, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_EMC].taskName);
@@ -712,8 +712,8 @@ OPSTAT func_cloudvela_stdxml_msg_pm25_unpack(msg_struct_com_cloudvela_data_rx_t 
 			|| (optId == L3PO_pm25_read_sample_number) ){
 
 		//初始化发送函数
-		msg_struct_cloudvela_pm25_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_pm25_control_cmd_t));
+		msg_struct_cloudvela_pm25_ctrl_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_pm25_ctrl_req_t));
 
 		snd1.cmdId = cmdId;
 		snd1.optId = optId;
@@ -823,8 +823,8 @@ OPSTAT func_cloudvela_stdxml_msg_pm25_unpack(msg_struct_com_cloudvela_data_rx_t 
 		}
 
 		//将消息命令发送给PM25任务
-		snd1.length = sizeof(msg_struct_cloudvela_pm25_control_cmd_t);
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_PM25_CONTROL_CMD, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		snd1.length = sizeof(msg_struct_cloudvela_pm25_ctrl_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_PM25_CTRL_REQ, TASK_ID_PM25, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_PM25].taskName);
@@ -930,8 +930,8 @@ OPSTAT func_cloudvela_stdxml_msg_winddir_unpack(msg_struct_com_cloudvela_data_rx
 			|| (optId == L3PO_winddir_read_sample_number) ){
 
 		//初始化发送函数
-		msg_struct_cloudvela_winddir_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_winddir_control_cmd_t));
+		msg_struct_cloudvela_winddir_ctrl_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_winddir_ctrl_req_t));
 
 		snd1.cmdId = cmdId;
 		snd1.optId = optId;
@@ -1045,8 +1045,8 @@ OPSTAT func_cloudvela_stdxml_msg_winddir_unpack(msg_struct_com_cloudvela_data_rx
 		}
 
 		//将消息命令发送给WINDDIR任务
-		snd1.length = sizeof(msg_struct_cloudvela_winddir_control_cmd_t);
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CONTROL_CMD, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		snd1.length = sizeof(msg_struct_cloudvela_winddir_ctrl_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ, TASK_ID_WINDDIR, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDDIR].taskName);
@@ -1153,8 +1153,8 @@ OPSTAT func_cloudvela_stdxml_msg_windspd_unpack(msg_struct_com_cloudvela_data_rx
 			|| (optId == L3PO_windspd_read_sample_number) ){
 
 		//初始化发送函数
-		msg_struct_cloudvela_windspd_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_windspd_control_cmd_t));
+		msg_struct_cloudvela_windspd_ctrl_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_windspd_ctrl_req_t));
 
 		snd1.cmdId = cmdId;
 		snd1.optId = optId;
@@ -1268,8 +1268,8 @@ OPSTAT func_cloudvela_stdxml_msg_windspd_unpack(msg_struct_com_cloudvela_data_rx
 		}
 
 		//将消息命令发送给WINDSPD任务
-		snd1.length = sizeof(msg_struct_cloudvela_windspd_control_cmd_t);
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CONTROL_CMD, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		snd1.length = sizeof(msg_struct_cloudvela_windspd_ctrl_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ, TASK_ID_WINDSPD, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName);
@@ -1376,8 +1376,8 @@ OPSTAT func_cloudvela_stdxml_msg_temp_unpack(msg_struct_com_cloudvela_data_rx_t 
 			|| (optId == L3PO_temp_read_sample_number) ){
 
 		//初始化发送函数
-		msg_struct_cloudvela_temp_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_temp_control_cmd_t));
+		msg_struct_cloudvela_temp_ctrl_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_temp_ctrl_req_t));
 
 		snd1.cmdId = cmdId;
 		snd1.optId = optId;
@@ -1491,8 +1491,8 @@ OPSTAT func_cloudvela_stdxml_msg_temp_unpack(msg_struct_com_cloudvela_data_rx_t 
 		}
 
 		//将消息命令发送给TEMP任务
-		snd1.length = sizeof(msg_struct_cloudvela_temp_control_cmd_t);
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		snd1.length = sizeof(msg_struct_cloudvela_temp_ctrl_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_TEMP_CTRL_REQ, TASK_ID_TEMP, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_TEMP].taskName);
@@ -1598,8 +1598,8 @@ OPSTAT func_cloudvela_stdxml_msg_humid_unpack(msg_struct_com_cloudvela_data_rx_t
 			|| (optId == L3PO_humid_read_sample_number) ){
 
 		//初始化发送函数
-		msg_struct_cloudvela_humid_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_humid_control_cmd_t));
+		msg_struct_cloudvela_humid_ctrl_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_humid_ctrl_req_t));
 
 		snd1.cmdId = cmdId;
 		snd1.optId = optId;
@@ -1713,8 +1713,8 @@ OPSTAT func_cloudvela_stdxml_msg_humid_unpack(msg_struct_com_cloudvela_data_rx_t
 		}
 
 		//将消息命令发送给HUMID任务
-		snd1.length = sizeof(msg_struct_cloudvela_humid_control_cmd_t);
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CONTROL_CMD, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		snd1.length = sizeof(msg_struct_cloudvela_humid_ctrl_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_HUMID_CTRL_REQ, TASK_ID_HUMID, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HUMID].taskName);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1820,8 +1820,8 @@ OPSTAT func_cloudvela_stdxml_msg_noise_unpack(msg_struct_com_cloudvela_data_rx_t
 			|| (optId == L3PO_noise_read_sample_number) ){
 
 		//初始化发送函数
-		msg_struct_cloudvela_noise_control_cmd_t snd1;
-		memset(&snd1, 0, sizeof(msg_struct_cloudvela_noise_control_cmd_t));
+		msg_struct_cloudvela_noise_ctrl_req_t snd1;
+		memset(&snd1, 0, sizeof(msg_struct_cloudvela_noise_ctrl_req_t));
 
 		snd1.cmdId = cmdId;
 		snd1.optId = optId;
@@ -1935,8 +1935,8 @@ OPSTAT func_cloudvela_stdxml_msg_noise_unpack(msg_struct_com_cloudvela_data_rx_t
 		}
 
 		//将消息命令发送给NOISE任务
-		snd1.length = sizeof(msg_struct_cloudvela_noise_control_cmd_t);
-		ret = hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CONTROL_CMD, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd1, snd1.length);
+		snd1.length = sizeof(msg_struct_cloudvela_noise_ctrl_req_t);
+		ret = hcu_message_send(MSG_ID_CLOUDVELA_NOISE_CTRL_REQ, TASK_ID_NOISE, TASK_ID_CLOUDVELA, &snd1, snd1.length);
 		if (ret == FAILURE){
 			HcuErrorPrint("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_NOISE].taskName);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
