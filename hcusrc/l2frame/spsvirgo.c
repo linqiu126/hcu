@@ -208,10 +208,10 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Error send command to serials port!\n");
 
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm;
 			snd.useroptid = L3PO_hcualarm_report;
 			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
@@ -222,28 +222,11 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			snd.alarmType = ALARM_TYPE_SENSOR;
 			snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
 
-			if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-				ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SPSVIRGO, &snd, snd.length);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
-					HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-					return FAILURE;
-				}
-			}
-			//差错情形
-			else{
-				HcuErrorPrint("SPSVIRGO: Wrong state of CLOUDVELA when data need send out!\n");
-				//zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				return FAILURE;
-			}
-
+			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 			return FAILURE;
-
-		}
-		else
-		{
-			HcuDebugPrint("SPSVIRGO: Send SPSVIRGO noise req data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
-			//HcuDebugPrint("SPSVIRGO: Send noise req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15],currentSpsBuf.curBuf[16]);
+		}else{
+			HCU_DEBUG_PRINT_INF("SPSVIRGO: Send SPSVIRGO noise req data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
 		}
 
 		//等待短时
@@ -264,10 +247,10 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Can not read data from serial port, return of read %d \n", ret);
 
-			msg_struct_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-			snd.length = sizeof(msg_struct_alarm_report_t);
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
 			snd.usercmdid = L3CI_alarm;
 			snd.useroptid = L3PO_hcualarm_report;
 			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
@@ -278,21 +261,8 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			snd.alarmType = ALARM_TYPE_SENSOR;
 			snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
 
-			if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-				ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SPSVIRGO, &snd, snd.length);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
-					HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-					return FAILURE;
-				}
-			}
-			//差错情形
-			else{
-				HcuErrorPrint("SPSVIRGO: Wrong state of CLOUDVELA when data need send out!\n");
-				//zHcuRunErrCnt[TASK_ID_MODBUS]++;
-				return FAILURE;
-			}
-
+			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 			return FAILURE;
 		}
 

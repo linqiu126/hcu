@@ -199,10 +199,10 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 		//PM report to Cloud added by ZSC
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			msg_struct_pm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_pm_report_t));
+			msg_struct_com_pm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_pm_report_t));
 
-			snd.length = sizeof(msg_struct_pm_report_t);
+			snd.length = sizeof(msg_struct_com_pm_report_t);
 			snd.usercmdid = L3CI_performance_info;
 			snd.timeStamp = time(0);
 			snd.PmRestartCnt = zHcuSysStaPm.statisCnt.restartCnt;

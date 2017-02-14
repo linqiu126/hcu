@@ -2258,7 +2258,7 @@ typedef struct  msg_struct_nbiotqg376_ipm_data_req //
 
 
 //for alarm report added by ZSC
-typedef struct msg_struct_alarm_report
+typedef struct msg_struct_com_alarm_report
 {
 	UINT8  usercmdid;
 	UINT32 equID;
@@ -2269,7 +2269,7 @@ typedef struct msg_struct_alarm_report
 }msg_struct_alarm_report_t;
 
 //for PM report added by ZSC
-typedef struct msg_struct_pm_report
+typedef struct msg_struct_com_pm_report
 {
 	UINT8  usercmdid;
 	//HcuGlobalCounter_t zHcuGlobalCounter;
@@ -2279,7 +2279,7 @@ typedef struct msg_struct_pm_report
 	UINT32 PmSocketDiscCnt;
 	UINT32 timeStamp;
 	UINT32 length;
-}msg_struct_pm_report_t;
+}msg_struct_com_pm_report_t;
 
 
 #endif /* L0COMVM_COMMSG_H_ */

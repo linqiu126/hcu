@@ -1945,9 +1945,9 @@ OPSTAT fsm_cloudvela_hsmmp_control_fb(UINT32 dest_id, UINT32 src_id, void * para
 OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-	msg_struct_alarm_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_alarm_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_alarm_report_t))){
+	msg_struct_com_alarm_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_alarm_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_alarm_report_t))){
 		HcuErrorPrint("CLOUDVELA: Receive Alarm message error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;
@@ -2007,9 +2007,9 @@ OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-	msg_struct_pm_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_pm_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm_report_t))){
+	msg_struct_com_pm_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_pm_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_pm_report_t))){
 		HcuErrorPrint("CLOUDVELA: Receive PM message error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		return FAILURE;

@@ -47,6 +47,8 @@ HcuFsmStateItem_t HcuFsmSyspm[] =
 	{MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM,      FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_cloudvela_alarm_confirm},
 	{MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ,          FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_cloudvela_perfm_req},
 	{MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM,      FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_cloudvela_perfm_confirm},
+	{MSG_ID_COM_ALARM_REPORT,      				FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_com_alarm_report},
+	{MSG_ID_COM_PM_REPORT,      				FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_com_pm_report},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            					FSM_STATE_END,             				NULL},  //Ending
@@ -189,10 +191,10 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 		//PM report to Cloud added by ZSC
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			msg_struct_pm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_pm_report_t));
+			msg_struct_com_pm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_pm_report_t));
 
-			snd.length = sizeof(msg_struct_pm_report_t);
+			snd.length = sizeof(msg_struct_com_pm_report_t);
 			snd.usercmdid = L3CI_performance;
 			snd.useroptid = L3PO_hcupm_report;
 			snd.cmdIdBackType = L3CI_cmdid_back_type_period;
@@ -386,6 +388,105 @@ OPSTAT fsm_syspm_cloudvela_perfm_confirm(UINT32 dest_id, UINT32 src_id, void * p
 {
 	return SUCCESS;
 }
+
+//未来需要集中到本地表单，然后通过一定的统计机制触发并汇报告警。当前暂时采用单件汇报机制。
+OPSTAT fsm_syspm_com_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_com_alarm_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_alarm_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_alarm_report_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive Alarm message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.equID <= 0) || (rcv.usercmdid != L3CI_alarm) || (rcv.timeStamp <=0))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive invalid data!\n");
+
+	if(dbi_HcuSysAlarmInfo_save(&rcv) == FAILURE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "CLOUDVELA: Can not save data into database!\n");
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		msg_struct_spspm_cloudvela_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_alarm_report_t));
+
+		//L2信息
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.cloud.hcuName, strlen(zHcuSysEngPar.cloud.hcuName)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.cloud.hcuName):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		snd.alarmType = rcv.alarmType;
+		snd.equID = rcv.equID;
+		snd.alarmServerity = rcv.alarmServerity;
+		snd.alarmClearFlag = rcv.alarmClearFlag;
+		snd.causeId = 0;
+		snd.timeStamp = rcv.timeStamp;
+		snd.alarmContent = rcv.alarmContent;
+		strncpy(snd.alarmDesc, rcv.photofileName, strlen(rcv.photofileName) < sizeof(snd.alarmDesc)? strlen(rcv.photofileName): sizeof(snd.alarmDesc));
+		snd.length = sizeof(msg_struct_spspm_cloudvela_alarm_report_t);
+		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+	}
+
+	//State no change
+	return SUCCESS;
+}
+
+//未来需要集中到本地表单，然后通过一定的统计机制触发并汇报性能。当前暂时采用单件汇报机制。
+OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_com_pm_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_pm_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_pm_report_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//参数检查
+	if ((rcv.usercmdid != L3CI_performance) || (rcv.timeStamp <=0))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive invalid data!\n");
+
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		msg_struct_spspm_cloudvela_perfm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_perfm_report_t));
+
+		//L2信息
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.cloud.hcuName, strlen(zHcuSysEngPar.cloud.hcuName)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.cloud.hcuName):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		snd.restartCnt = rcv.TaskRestartCnt;
+		snd.networkConnCnt = rcv.CloudVelaConnCnt;
+		snd.networkConnFailCnt = rcv.CloudVelaConnFailCnt;
+		snd.networkDiscCnt = rcv.CloudVelaDiscCnt;
+		snd.socketDiscCnt = rcv.SocketDiscCnt;
+		snd.cpuOccupy = rcv.cpu_occupy;
+		snd.memOccupy = rcv.mem_occupy;
+		snd.diskOccupy = rcv.disk_occupy;
+		snd.timeStamp = rcv.timeStamp;
+		snd.length = sizeof(msg_struct_spspm_cloudvela_perfm_report_t);
+		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+	}
+
+	//State no change
+	return SUCCESS;
+}
+
 
 
 

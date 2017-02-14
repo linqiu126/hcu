@@ -168,7 +168,7 @@ INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `ala
 
 //存alarm report数据，每一次存储，都是新增一条记录
 //由于是本地数据库，这里不考虑网格问题，直接存储，简单处理
-OPSTAT dbi_HcuSysAlarmInfo_save(msg_struct_alarm_report_t *alarmData)
+OPSTAT dbi_HcuSysAlarmInfo_save(msg_struct_com_alarm_report_t *alarmData)
 {
 	MYSQL *sqlHandler;
     int result = 0;

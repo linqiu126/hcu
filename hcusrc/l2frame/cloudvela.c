@@ -93,10 +93,6 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_HSMMP_CLOUDVELA_CONTROL_FB,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_control_fb},
 	{MSG_ID_HSMMP_CLOUDVELA_DATA_LINK_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_link_resp},
 
-	//待完善部分，未来可能需要从这里移除，让这两个消息只承担业务模块之间交互的作用，而非发送给后台的通信作用
-	{MSG_ID_COM_ALARM_REPORT,   				FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_alarm_report},
-	{MSG_ID_COM_PM_REPORT,   					FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm_report},
-
 	//采用分项目控制方式，降低不同项目之间的关联，特别是海量MSGID-STATE这一表的内存压力。UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	{MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,         FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_data_resp},
@@ -161,9 +157,7 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("CLOUDVELA: Error Set FSM State at fsm_cloudvela_init\n");
 		return FAILURE;
 	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("CLOUDVELA: Enter FSM_STATE_CLOUDVELA_INITED status, everything goes well!\n");
-	}
+	HCU_DEBUG_PRINT_FAT("CLOUDVELA: Enter FSM_STATE_CLOUDVELA_INITED status, everything goes well!\n");
 
 	//Task global variables init，
 	memset(&gTaskCloudvelaContext, 0, sizeof(gTaskCloudvelaContext_t));
@@ -916,84 +910,6 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
  *  AMARM / PM性能管理部分
  *
  ***************************************************************************************************************************/
-OPSTAT fsm_cloudvela_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)//to create a seperate task in L3APP to handle all alarm stuff
-{
-	//int ret=0;
-	msg_struct_alarm_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_alarm_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_alarm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive Alarm message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
-
-	//参数检查
-	if ((rcv.equID <= 0) || (rcv.usercmdid != L3CI_alarm) || (rcv.timeStamp <=0))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive invalid data!\n");
-
-	if(dbi_HcuSysAlarmInfo_save(&rcv) == FAILURE)
-	{
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Can not save data into database!\n");
-	}
-
-	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-
-		//打包数据
-		if (func_cloudvela_stdzhb_msg_alarm_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.photofileName, rcv.timeStamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-
-		//Send out
-		if (func_cloudvela_send_data_to_cloud(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-	}else{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to cloud, get ALARM by ONLINE, but back off line so quick!\n");
-	}
-
-	//结束
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Online state, send alarm info to cloud success!\n");
-
-	//State no change
-	return SUCCESS;
-}
-
-
-OPSTAT fsm_cloudvela_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//int ret=0;
-	msg_struct_pm_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_pm_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
-
-	//参数检查
-	if ((rcv.usercmdid != L3CI_performance) || (rcv.timeStamp <=0))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive invalid data!\n");
-
-	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-
-		//打包数据
-		if (func_cloudvela_stdzhb_msg_pm_pack(CLOUDVELA_BH_MSG_TYPE_PM_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.CloudVelaConnCnt, rcv.CloudVelaConnFailCnt, rcv.CloudVelaDiscCnt, rcv.SocketDiscCnt, rcv.TaskRestartCnt, rcv.cpu_occupy, rcv.mem_occupy, rcv.disk_occupy, rcv.timeStamp, &buf) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-
-		//Send out
-		if (func_cloudvela_send_data_to_cloud(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-	}else{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to cloud, get PM by ONLINE, but back off line so quick!\n");
-	}
-
-	//结束
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Online state, send PM info to cloud success!\n");
-	//State no change
-	return SUCCESS;
-}
-
 OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
 {
 	UINT32 optId=0, cmdId=0, backType=0;

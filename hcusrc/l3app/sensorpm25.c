@@ -376,10 +376,10 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		AlarmFlag = TRUE;
 
 		//send alarm report
-		msg_struct_alarm_report_t snd;
-		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+		msg_struct_com_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.length = sizeof(msg_struct_com_alarm_report_t);
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
@@ -391,21 +391,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
 		strcpy(snd.photofileName, HKVisionOption.file_photo);
 
-		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
-			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-				//HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuTaskNameList[TASK_ID_PM25], zHcuTaskNameList[TASK_ID_CLOUDVELA]);
-				HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-				return FAILURE;
-			}
-		}
-		//差错情形
-		else{
-			HcuErrorPrint("PM25: Wrong state of CLOUDVELA when data need send out!\n");
-			//zHcuRunErrCnt[TASK_ID_MODBUS]++;
-			return FAILURE;
-		}
+		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 	}
 
 	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
@@ -421,10 +408,10 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		}
 
 		//send alarm clear report
-		msg_struct_alarm_report_t snd;
-		memset(&snd, 0, sizeof(msg_struct_alarm_report_t));
+		msg_struct_com_alarm_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
-		snd.length = sizeof(msg_struct_alarm_report_t);
+		snd.length = sizeof(msg_struct_com_alarm_report_t);
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
@@ -436,19 +423,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
 		strcpy(snd.photofileName, HKVisionOption.file_photo);
 
-		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
-			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-				HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-				return FAILURE;
-			}
-		}
-		//差错情形
-		else{
-			HcuErrorPrint("PM25: Wrong state of CLOUDVELA when data need send out!\n");
-			return FAILURE;
-		}
+		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 	}
 
 	//离线模式

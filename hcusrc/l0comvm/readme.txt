@@ -13,6 +13,9 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 ===>离线任务，移出CLOUDVELA，放到L3xxxxTASK中去
 
+//= ZJL, 2017 Feb.14, CURRENT_SW_DELIVERY 168=>BFSC项目
+=将ALARM功能移到SYSPM功能模块中去，清理完毕。改动量较大，单独备份标签。
+
 //= ZJL, 2017 Feb.14, CURRENT_SW_DELIVERY 167=>BFSC项目
 =完成INVENTORY, SW-PACKAGE的L2消息处理过程
 =完成HEART-BEAT的改造

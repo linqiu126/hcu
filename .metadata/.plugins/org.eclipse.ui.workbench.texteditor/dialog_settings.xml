@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrMsg_HUITP_MSGID_uni_time_sync_req_t" key="selection"/>
+		<item value="MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="StrMsg_HUITP_MSGID_uni_time_sync_req_t"/>
-			<item value="func_cloudvela_huitpxml_msg_alarm_info_req_received_handle"/>
-			<item value="StrMsg_HUITP_MSGID_uni_sw_package_resp_t"/>
-			<item value="spspm"/>
-			<item value="spsswm"/>
-			<item value="MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM"/>
-			<item value="StrIe_HUITP_IEID_uni_time_sync_value_t"/>
-			<item value="HUITP_IEID_uni_time_sync_value"/>
+			<item value="MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT"/>
+			<item value="PM"/>
+			<item value="PM_REPORT"/>
+			<item value="zHcuSysEng"/>
+			<item value="HcuDebugPrint"/>
+			<item value="MSG_ID_COM_ALARM_REPORT"/>
+			<item value="msg_struct_alarm_report_t"/>
+			<item value="YES"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_DEBUG_PRINT_INF"/>
+			<item value="msg_struct_com_alarm_report_t"/>
 			<item value="sysswm"/>
 			<item value="if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){"/>
 			<item value="HUITPXML"/>
 			<item value="gTaskCloudvelaContext"/>
 			<item value="hcu_ethernet_socket_data_send"/>
 			<item value="gCloudvelaTaskContext"/>
-			<item value="HCU_SYSCFG_CLOUD_HCU_NAME"/>
-			<item value="func_cloudvela_stdzhb_msg_alarm_pack"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

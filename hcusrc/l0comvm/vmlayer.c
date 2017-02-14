@@ -249,6 +249,9 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_COM_HEART_BEAT,                       "MSG_ID_COM_HEART_BEAT",                      1, 1, 1},
 	{MSG_ID_COM_HEART_BEAT_FB,                    "MSG_ID_COM_HEART_BEAT_FB",                   1, 1, 1},
 	{MSG_ID_COM_PROCESS_REBOOT,                   "MSG_ID_COM_PROCESS_REBOOT",                  1, 1, 1},
+	//ALAMR-PM
+	{MSG_ID_COM_ALARM_REPORT,                     "MSG_ID_COM_ALARM_REPORT",                    1, 1, 1},
+	{MSG_ID_COM_PM_REPORT,                        "MSG_ID_COM_PM_REPORT",                       1, 1, 1},
 	//Service Control message
 	//ETHERNET
 	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,           "MSG_ID_ETHERNET_CLOUDVELA_DATA_RX",          1, 1, 1},
@@ -386,9 +389,6 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_IPM_NBIOTCJ188_CONTROL_FB,            "MSG_ID_IPM_NBIOTCJ188_CONTROL_FB",           1, 1, 1},
 	{MSG_ID_IPM_NBIOTQG376_DATA_RESP,             "MSG_ID_IPM_NBIOTQG376_DATA_RESP",            1, 1, 1},
 	{MSG_ID_IPM_NBIOTQG376_CONTROL_FB,            "MSG_ID_IPM_NBIOTQG376_CONTROL_FB",           1, 1, 1},
-	//ALAMR-PM
-	{MSG_ID_COM_ALARM_REPORT,                     "MSG_ID_COM_ALARM_REPORT",                    1, 1, 1},
-	{MSG_ID_COM_PM_REPORT,                        "MSG_ID_COM_PM_REPORT",                       1, 1, 1},
 	//FM/PM/INVENTORY/SW-PACKAGE
 	{MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ,            "MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ",           1, 1, 1},
 	{MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,           "MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP",          1, 1, 1},

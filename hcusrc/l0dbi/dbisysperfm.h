@@ -15,7 +15,7 @@
 extern OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void);
 extern OPSTAT dbi_HcuSyspmGlobalDataInfo_delete_3monold(UINT32 days);
 
-extern OPSTAT dbi_HcuSysAlarmInfo_save(msg_struct_alarm_report_t *alarmData);
+extern OPSTAT dbi_HcuSysAlarmInfo_save(msg_struct_com_alarm_report_t *alarmData);
 extern OPSTAT dbi_HcuSysAlarmInfo_delete_3monold(UINT32 days);
 
 //引用外部的API
