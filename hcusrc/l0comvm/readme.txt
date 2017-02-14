@@ -13,6 +13,9 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 ===>离线任务，移出CLOUDVELA，放到L3xxxxTASK中去
 
+//= ZJL, 2017 Feb.14, CURRENT_SW_DELIVERY 167=>BFSC项目
+=
+
 //= ZJL, 2017 Feb.13, CURRENT_SW_DELIVERY 166=>BFSC项目
 =完成了ALARM/PERFORM的L2消息处理
 
