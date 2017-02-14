@@ -58,6 +58,16 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 	sprintf(s, "%d", gTaskCloudvelaContext.L2Link.timeStamp);
 	strcat(output->curBuf, s);
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_R);
+
+	//根据目的服务器地址，填入LINKID信息
+	if ((strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
+	else if (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+	else if (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameHome) == 0)
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
+	else
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
 	
 	//Message Type content
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L);
@@ -172,16 +182,6 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 	//存入返回参量中：这个长度用于控制输出的字符串
 	output->curLen = strlen(output->curBuf);
 
-	//根据目的服务器地址，填入LINKID信息
-	if ((strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
-		output->linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
-	else if (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
-		output->linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
-	else if (strcmp(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameHome) == 0)
-		output->linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
-	else
-		output->linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
-
 	//返回
 	return SUCCESS;
 }
@@ -245,6 +245,16 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid fromUser field!\n");
 	strncpy(gTaskCloudvelaContext.L2Link.srcUser, msgFromUser, strlen(msgFromUser)<sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(msgFromUser):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
 	
+	//根据目的服务器地址，填入LINKID信息
+	if ((strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
+	else if (strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+	else if (strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameHome) == 0)
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
+	else
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
+
 	//寻找<CreateTime>
 	pIndexT1 = strstr(rcv->buf, HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_L);
 	pIndexT2 = strstr(rcv->buf, HUITP_MSG_HUIXML_CONSTANT_CREATE_TIME_R);
@@ -633,18 +643,17 @@ OPSTAT func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(StrMsg_HUITP_M
 	UINT16 randval = HUITP_ENDIAN_EXG16(rcv->ping.randval);
 
 	//根据目的服务器地址，填入LINKID信息
-	UINT8 linkid = 0;
 	if ((strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
-		linkid = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
 	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
-		linkid = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
 	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0)
-		linkid = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
 	else
-		linkid = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
 
 	//干活
-	if (func_cloudvela_hb_link_passive_rcv_signal_for_react(linkid, randval) == FAILURE)
+	if (func_cloudvela_hb_link_passive_rcv_signal_for_react(randval) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Heart_beat processing error!\n");
 
 	//返回
@@ -672,18 +681,17 @@ OPSTAT func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(StrMsg_HUI
 	UINT16 randval = HUITP_ENDIAN_EXG16(rcv->pong.randval);
 
 	//根据目的服务器地址，填入LINKID信息
-	UINT8 linkid = 0;
 	if ((strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
-		linkid = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
 	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
-		linkid = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
 	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0)
-		linkid = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
 	else
-		linkid = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
 
 	//干活
-	if (func_cloudvela_hb_link_active_rcv_signal_check(linkid, randval) == FAILURE)
+	if (func_cloudvela_hb_link_active_rcv_signal_check(randval) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Heart_beat processing error!\n");
 
 	//返回

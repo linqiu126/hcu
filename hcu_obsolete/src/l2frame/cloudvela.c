@@ -260,7 +260,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 	//检查链路状态
 	//离线，则再连接
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
-		if (func_cloudvela_http_conn_setup() == SUCCESS){
+		if (func_cloudvela_http_curl_conn_setup() == SUCCESS){
 			zHcuSysStaPm.statisCnt.cloudVelaConnCnt++;
 			//State Transfer to FSM_STATE_CLOUDVELA_ONLINE
 			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE){
@@ -576,7 +576,7 @@ OPSTAT func_cloudvela_time_out_period_for_cmd_control(void)
 	//检查链路状态
 	//离线，则再连接
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
-		if (func_cloudvela_http_conn_setup() == SUCCESS){
+		if (func_cloudvela_http_curl_conn_setup() == SUCCESS){
 			zHcuSysStaPm.statisCnt.cloudVelaConnCnt++;
 			//State Transfer to FSM_STATE_CLOUDVELA_ONLINE
 			if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE){
@@ -1074,7 +1074,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_link_resp(UINT32 dest_id, UINT32 src_id, void * 
 //调用此函数的条件是，已知状态就是OFFLINE了
 //HTTP-CURL的状态（创建/更改/删除）全部在本模块完成，ETHERNET/USBNET/WIFI/CON3G4G只能引用，而不能对其做任何操作
 //当前的主要物理链路是Ethernet，链路建立没干啥，真实的HTTP-CURL操作都在接收与发送函数中，未来需要进一步优化
-OPSTAT func_cloudvela_http_conn_setup(void)
+OPSTAT func_cloudvela_http_curl_conn_setup(void)
 {
 	int ret = FAILURE;
 	//3G, ETHERNET, WIFI connection?
@@ -1098,7 +1098,7 @@ OPSTAT func_cloudvela_http_conn_setup(void)
 	//}
 
 	//第一次初始化，或者重新初始化全局HTTP-CURL链路
-	if (hcu_cloudvela_http_link_init() == FAILURE){
+	if (func_cloudvela_http_curl_link_init() == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
 		HcuErrorPrint("ETHERNET: Init Curl Http link failure!\n");
 		return FAILURE;
@@ -1635,7 +1635,7 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
 }
 
 //This callback function gets called by libcurl as soon as there is  data received that needs to be saved
-size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, void *userp)
+size_t func_cloudvela_http_curl_write_callback(void *buffer, size_t size, size_t nmemb, void *userp)
 {
 	size_t realsize = size*nmemb;
 	msg_struct_ethernet_cloudvela_data_rx_t *mem = (msg_struct_ethernet_cloudvela_data_rx_t *)userp;
@@ -1656,7 +1656,7 @@ size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, voi
 }
 
 //为了多线程的安全，CURL参数的初始化只能做一次，做一遍，不能都做，所以采用全局变量让其它线程共享，而不能大家都分别去做初始化
-OPSTAT hcu_cloudvela_http_link_init(void)
+OPSTAT func_cloudvela_http_curl_link_init(void)
 {
 	//初始化
 	curl_global_init(CURL_GLOBAL_ALL);

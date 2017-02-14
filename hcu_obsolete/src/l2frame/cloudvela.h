@@ -95,7 +95,7 @@ extern OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 da
 extern OPSTAT hcu_save_to_storage_mem(HcuDiscDataSampleStorageArray_t *record);
 extern OPSTAT hcu_read_from_storage_mem(HcuDiscDataSampleStorageArray_t *record);
 extern OPSTAT hcu_cloudvela_http_link_init(void);
-extern size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);
+extern size_t func_cloudvela_http_curl_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);
 
 //char* func_cloudvela_get_file_path(char *file, char *buf, int count);
 

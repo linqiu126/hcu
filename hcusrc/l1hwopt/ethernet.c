@@ -217,7 +217,6 @@ OPSTAT hcu_ethernet_phy_link_disconnect(void)
 }
 
 //为SOCKET建立链路
-//有关双链路部分，应该考虑自动建立双链路
 OPSTAT hcu_ethernet_socket_link_setup(void)
 {
 	int ret=0;
@@ -295,6 +294,8 @@ OPSTAT hcu_ethernet_socket_link_disconnect(void)
 }
 
 //在SOCKET上发送数据
+//我们这里采取这种方式：Heart-Beat只能业务服务器之间保持链路，跟HOME服务器之间采取即连即断的方式，进行数据汇报，不保持长链接
+//这意味着，我们采取CURL机制发送数据给HOME服务器
 OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 {
 
@@ -303,32 +304,20 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 	}
 
 	//有关LINKID的处理还不完善。因为程序中大量的地方还未改过来，所以只在if中判定是否属于HOME，其它情况都当做DEFAULT业务部分
-	//即便放到正式程序中，这个也不算太不合理
-	if (buf->linkId == HCU_SYSCFG_CLOUD_BH_LINK_HOME){
-		if (send(gTaskCloudvelaContext.homeSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
-			gTaskCloudvelaContext.homeSvrSocketCon = FALSE;
-			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
-		}else{
-			HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);
-		}
+	if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
+		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
+		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
 	}else{
-		if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
-			gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
-			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
-		}else{
-			HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);
-		}
+		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);
 	}
 
 	//返回
 	return SUCCESS;
 }
 
-/***************************************************************************************************************************
- *
- * 　CURL/ETHERNET函数暂时没有启用，因为HTTP/CURL方式不再激活使用
- *
- ***************************************************************************************************************************/
+//我们这里采取这种方式：Heart-Beat只能业务服务器之间保持链路，跟HOME服务器之间采取即连即断的方式，进行数据汇报，不保持长链接
+//这意味着，我们可以采取CURL机制发送数据给HOME服务器
+//CURL发送给后台HOME服务器，不采用主动从服务器接受命令的形式，而是采用HCU主动链接和汇报，然后带回命令的方式
 OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 {
 	CURLcode curlRes;
@@ -372,7 +361,7 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buf->curBuf);
 
 		//设置回调函数
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, hcu_cloudvela_write_callback);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, func_cloudvela_http_curl_write_callback);
 
 		//设置接收buffer
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&receiveBuffer);
@@ -410,11 +399,8 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 	//返回
 	return SUCCESS;
 }
-/***************************************************************************************************************************
- *
- * 　CURL/ETHERNET未启用函数END
- *
- ***************************************************************************************************************************/
+
+
 /*
 static int base64_encode(char *str, int str_len, char *encode, int encode_len){
     BIO *bmem,*b64;

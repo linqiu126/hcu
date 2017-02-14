@@ -411,7 +411,7 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buf->curBuf);
 
 		//设置回调函数
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, hcu_cloudvela_write_callback);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, func_cloudvela_http_curl_write_callback);
 
 		//设置接收buffer
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&receiveBuffer);

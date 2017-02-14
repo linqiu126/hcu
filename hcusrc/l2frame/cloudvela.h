@@ -89,24 +89,21 @@ extern OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_i
 
 //Local API - Heart beat functions
 OPSTAT func_cloudvela_hb_link_main_entry(void);
-OPSTAT func_cloudvela_hb_link_active_send_signal(UINT8 linkid);
-OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(UINT8 linkid, UINT16 randval);
-OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(UINT8 linkid, UINT16 randval);
+OPSTAT func_cloudvela_hb_link_active_send_signal(void);
+OPSTAT func_cloudvela_hb_link_active_rcv_signal_check(UINT16 randval);
+OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(UINT16 randval);
 
 //Local API - Core Link functions
-OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf);
-OPSTAT func_cloudvela_socket_conn_setup(void);
+extern OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf);
+extern OPSTAT func_cloudvela_socket_conn_setup(void);
+extern OPSTAT func_cloudvela_http_curl_conn_setup(void);
+extern OPSTAT func_cloudvela_http_curl_link_init(void);
+extern size_t func_cloudvela_http_curl_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);
 
-//Global API
-extern OPSTAT hcu_cloudvela_http_link_init(void);
-extern size_t hcu_cloudvela_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);
 
 //核心功能Message Handler
 OPSTAT func_cloudvela_sw_download(char *filename);
 OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void);
-
-//Supress API functions
-OPSTAT func_cloudvela_http_conn_setup(void);
 
 
 //引用外部函数
