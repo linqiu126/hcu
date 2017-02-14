@@ -1101,8 +1101,7 @@ typedef enum
 	HUITP_IEID_uni_com_modbus_address               = 0x002F,	
 	HUITP_IEID_uni_com_file_name                    = 0x0030,
 	HUITP_IEID_uni_com_http_link                    = 0x0031,
-	HUITP_IEID_uni_com_segment_total                = 0x0032,
-	HUITP_IEID_uni_com_segment_index                = 0x0033,
+	HUITP_IEID_uni_com_segment                      = 0x0032,
 
 	//血糖
 	HUITP_IEID_uni_blood_glucose_min                = 0x0100, 
@@ -1818,21 +1817,15 @@ typedef struct StrIe_HUITP_IEID_uni_com_http_link
 	char   comHttpLink[HUITP_IEID_UNI_COM_HTTP_LINK_MAX_LEN];
 }StrIe_HUITP_IEID_uni_com_http_link_t;
 
-//HUITP_IEID_uni_com_segment_total                = 0x0032,
-typedef struct StrIe_HUITP_IEID_uni_com_segment_total
+//HUITP_IEID_uni_com_segment                     = 0x0032,
+typedef struct StrIe_HUITP_IEID_uni_com_segment
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 comSegmentTotalValue;
-}StrIe_HUITP_IEID_uni_com_segment_total_t;
-
-//HUITP_IEID_uni_com_segment_index                = 0x0033,
-typedef struct StrIe_HUITP_IEID_uni_com_segment_index
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT16 comSegmentIndexValue;
-}StrIe_HUITP_IEID_uni_com_segment_index_t;
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segLen;
+}StrIe_HUITP_IEID_uni_com_segment_t;
 
 //血糖
 //HUITP_IEID_uni_blood_glucose_min                = 0x0100,
@@ -3051,6 +3044,7 @@ typedef struct StrIe_HUITP_IEID_uni_sw_package_body
 {
 	UINT16 ieId;
 	UINT16 ieLen;
+	UINT16 validLen;
 	UINT8  swPkgBody[HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN];
 }StrIe_HUITP_IEID_uni_sw_package_body_t;
 
@@ -7987,9 +7981,8 @@ typedef struct StrMsg_HUITP_MSGID_uni_sw_package_req
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_com_segment_total_t segTotal;
-	StrIe_HUITP_IEID_uni_com_segment_index_t segIndex;
-	StrIe_HUITP_IEID_uni_sw_package_body_t swPackageBody;
+	StrIe_HUITP_IEID_uni_com_segment_t segValue;
+	StrIe_HUITP_IEID_uni_sw_package_body_t body;
 }StrMsg_HUITP_MSGID_uni_sw_package_req_t;
 
 //HUITP_MSGID_uni_sw_package_resp                  = 0xA180,
@@ -7998,8 +7991,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_sw_package_resp
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_com_segment_total_t segTotal;
-	StrIe_HUITP_IEID_uni_com_segment_index_t segIndex;
+	StrIe_HUITP_IEID_uni_com_segment_t segValue;
 }StrMsg_HUITP_MSGID_uni_sw_package_resp_t;
 
 //HUITP_MSGID_uni_sw_package_report                = 0xA181,
@@ -8008,8 +8000,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_sw_package_report
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_com_segment_total_t segTotal;
-	StrIe_HUITP_IEID_uni_com_segment_index_t segIndex;
+	StrIe_HUITP_IEID_uni_com_segment_t segValue;
 }StrMsg_HUITP_MSGID_uni_sw_package_report_t;
 
 //HUITP_MSGID_uni_sw_package_confirm                   = 0xA101,
@@ -8018,9 +8009,8 @@ typedef struct StrMsg_HUITP_MSGID_uni_sw_package_confirm
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-	StrIe_HUITP_IEID_uni_com_segment_total_t segTotal;
-	StrIe_HUITP_IEID_uni_com_segment_index_t segIndex;
-	StrIe_HUITP_IEID_uni_sw_package_body_t swPackageBody;
+	StrIe_HUITP_IEID_uni_com_segment_t segValue;
+	StrIe_HUITP_IEID_uni_sw_package_body_t body;
 }StrMsg_HUITP_MSGID_uni_sw_package_confirm_t;
 
 //HUITP_MSGID_uni_sw_package_max,

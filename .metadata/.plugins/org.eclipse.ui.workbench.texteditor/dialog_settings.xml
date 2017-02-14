@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrIe_HUITP_IEID_uni_inventory_element_t" key="selection"/>
+		<item value="seg" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="StrIe_HUITP_IEID_uni_inventory_element_t"/>
-			<item value="#if"/>
-			<item value="inventory"/>
-			<item value="HUITP_IEID_uni_inventory_min"/>
-			<item value="0xA0"/>
-			<item value="StrIe_HUITP_IEID_uni_performance_info_element_t"/>
-			<item value="HUITP_IEID_uni_performance_info_element"/>
-			<item value="0xB1"/>
+			<item value="seg"/>
+			<item value="StrIe_HUITP_IEID_uni_com_segment_t"/>
+			<item value="StrMsg_HUITP_MSGID_uni_sw_package_confirm_t"/>
+			<item value="HUITP_IE_BUF_MAX_LEN"/>
+			<item value="StrIe_HUITP_IEID_uni_sw_package_body_t"/>
+			<item value="sw_package"/>
+			<item value="body"/>
+			<item value="_segment"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HUITPXML"/>

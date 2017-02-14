@@ -2335,10 +2335,16 @@ typedef struct msg_struct_cloudvela_spspm_inventory_confirm
 }msg_struct_cloudvela_spspm_inventory_confirm_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,
+#define HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 400
 typedef struct msg_struct_cloudvela_spspm_sw_package_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segLen;
+	UINT16 validLen;
+	UINT8  body[HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT32 length;
 }msg_struct_cloudvela_spspm_sw_package_req_t;
 
@@ -2347,6 +2353,9 @@ typedef struct msg_struct_spspm_cloudvela_sw_package_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segLen;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_sw_package_resp_t;
 
@@ -2355,6 +2364,9 @@ typedef struct msg_struct_spspm_cloudvela_sw_package_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segLen;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_sw_package_report_t;
 
@@ -2363,6 +2375,11 @@ typedef struct msg_struct_cloudvela_spspm_sw_packag_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segLen;
+	UINT16 validLen;
+	UINT8  body[HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT32 length;
 }msg_struct_cloudvela_spspm_sw_packag_confirm_t;
 
