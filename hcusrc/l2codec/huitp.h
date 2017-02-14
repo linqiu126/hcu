@@ -3123,8 +3123,8 @@ typedef struct StrIe_HUITP_IEID_uni_time_sync_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT8  timeRegion;
-	UINT32 timeInUnix;
+	UINT8  dataFormat;
+	UINT16 timeSyncValue;
 }StrIe_HUITP_IEID_uni_time_sync_value_t;
 
 //HUITP_IEID_uni_time_sync_max,
@@ -8177,7 +8177,6 @@ typedef struct StrMsg_HUITP_MSGID_uni_time_sync_req
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
-	StrIe_HUITP_IEID_uni_time_sync_value_t timeSync;
 }StrMsg_HUITP_MSGID_uni_time_sync_req_t;
 
 //HUITP_MSGID_uni_time_sync_resp                   = 0xF280,
@@ -8186,7 +8185,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_time_sync_resp
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_time_sync_value_t timeSync;
+	StrIe_HUITP_IEID_uni_time_sync_value_t respValue;
 }StrMsg_HUITP_MSGID_uni_time_sync_resp_t;
 
 //HUITP_MSGID_uni_time_sync_report                 = 0xF281,
@@ -8195,7 +8194,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_time_sync_report
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_time_sync_value_t timeSync;
+	StrIe_HUITP_IEID_uni_time_sync_value_t reportValue;	
 }StrMsg_HUITP_MSGID_uni_time_sync_report_t;
 
 //HUITP_MSGID_uni_time_sync_confirm                    = 0xF201,
@@ -8204,7 +8203,6 @@ typedef struct StrMsg_HUITP_MSGID_uni_time_sync_confirm
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-	StrIe_HUITP_IEID_uni_time_sync_value_t timeSync;
 }StrMsg_HUITP_MSGID_uni_time_sync_confirm_t;
 
 //HUITP_MSGID_uni_time_sync_max,

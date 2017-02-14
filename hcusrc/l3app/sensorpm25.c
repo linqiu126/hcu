@@ -351,7 +351,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curPhotoDir);
 	strcat(HKVisionOption.file_photo, "/");
 	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curHikvisionFname);
-	strcat(HKVisionOption.file_photo_pure, zHcuVmCtrTab.clock.curHikvisionPureFname);
+	strcpy(HKVisionOption.file_photo_pure, zHcuVmCtrTab.clock.curHikvisionPureFname);
 
 	strcat(HKVisionOption.file_video, zHcuVmCtrTab.clock.curPhotoDir);
 	strcat(HKVisionOption.file_video, "/");
@@ -389,7 +389,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.equID = rcv.pm25.equipid;
 		snd.alarmType = ALARM_TYPE_PM25_VALUE;
 		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.photofileName, HKVisionOption.file_photo);
+		strcpy(snd.alarmDescription, HKVisionOption.file_photo_pure);
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD
@@ -434,7 +434,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.equID = rcv.pm25.equipid;
 		snd.alarmType = ALARM_TYPE_PM25_VALUE;
 		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.photofileName, HKVisionOption.file_photo);
+		strcpy(snd.alarmDescription, HKVisionOption.file_photo);
 
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//to update, send both online & offline
 			ret = hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);//route to L3 alarm or direct to cloudvela, TBD

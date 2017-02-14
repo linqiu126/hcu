@@ -2,23 +2,22 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrMsg_HUITP_MSGID_uni_time_sync_req_t" key="selection"/>
+		<item value="ethernet_http" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="StrMsg_HUITP_MSGID_uni_time_sync_req_t"/>
-			<item value="func_cloudvela_huitpxml_msg_alarm_info_req_received_handle"/>
-			<item value="StrMsg_HUITP_MSGID_uni_sw_package_resp_t"/>
-			<item value="spspm"/>
-			<item value="spsswm"/>
-			<item value="MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM"/>
-			<item value="StrIe_HUITP_IEID_uni_time_sync_value_t"/>
-			<item value="HUITP_IEID_uni_time_sync_value"/>
+			<item value="ethernet_http"/>
+			<item value="linkId"/>
+			<item value="linkid"/>
+			<item value="MSG_ID_ETHERNET_CLOUDVELA_DATA_RX"/>
+			<item value="Hb"/>
+			<item value="fsm_cloudvela_socket_data_rx"/>
+			<item value="fsm_cloudvela_ethernet_curl_data_rx"/>
+			<item value="func_cloudvela_socket_conn_setup"/>
 		</list>
 		<list key="replacehistory">
-			<item value="sysswm"/>
 			<item value="if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){"/>
 			<item value="HUITPXML"/>
 			<item value="gTaskCloudvelaContext"/>
@@ -26,6 +25,7 @@
 			<item value="gCloudvelaTaskContext"/>
 			<item value="HCU_SYSCFG_CLOUD_HCU_NAME"/>
 			<item value="func_cloudvela_stdzhb_msg_alarm_pack"/>
+			<item value="func_cloudvela_stdzhb_msg_unpack"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

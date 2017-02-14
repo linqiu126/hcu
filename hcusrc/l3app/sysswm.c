@@ -39,12 +39,10 @@ HcuFsmStateItem_t HcuFsmSysswm[] =
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          				fsm_sysswm_time_out},
 
     //Task level functions
-	{MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,         FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_req},
-	{MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM,     FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_confirm},
-	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,        FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_req},
-	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,    FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_confirm},
-	{MSG_ID_CLOUDVELA_SYSSWM_TIME_SYNC_REQ,    		FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_time_sync_req},
-	{MSG_ID_CLOUDVELA_SYSSWM_TIME_SYNC_CONFIRM, 	FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_time_sync_confirm},
+	{MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ,          FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_req},
+	{MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM,      FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_confirm},
+	{MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ,          FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_req},
+	{MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM,      FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_confirm},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -154,15 +152,6 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	return SUCCESS;
 }
 
-OPSTAT fsm_sysswm_cloudvela_time_sync_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	return SUCCESS;
-}
-
-OPSTAT fsm_sysswm_cloudvela_time_sync_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	return SUCCESS;
-}
 
 
 
