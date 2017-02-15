@@ -13,6 +13,10 @@ PRJ_BFSC待完成或者回答的问题：
 ==> 视频服务器/软件下载/烧录区/设备标签，待完善。
 ===>离线任务，移出CLOUDVELA，放到L3xxxxTASK中去
 
+
+//= ZJL, 2017 Feb.15, CURRENT_SW_DELIVERY 171=>BFSC项目
+=完成L2 CLOUDVELA上行解码，现在全部完成了。代码量大，再提交。
+
 //= ZJL, 2017 Feb.15, CURRENT_SW_DELIVERY 170=>BFSC项目
 =完成L3MOD模块级别的函数归一化，从而在L2-L3之间搭建完整的API处理框架
 =完成CLOUDVELA主函数中的编码。量足够大，分标签提交。

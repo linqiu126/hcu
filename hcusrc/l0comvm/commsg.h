@@ -2327,7 +2327,7 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
  */
 //MSG_ID_CLOUDVELA_EMC_DATA_REQ,
 //Data request from Cloud to Sensors
-typedef struct  msg_struct_cloudvela_emc_data_req //
+typedef struct  msg_struct_cloudvela_emc_data_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;

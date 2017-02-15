@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrIe_HUITP_IEID_uni_co1_value_t" key="selection"/>
+		<item value="msg_struct_cloudvela_emc_data_req_t" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="msg_struct_cloudvela_emc_data_req_t"/>
+			<item value="emc_ctrl_req"/>
+			<item value="ctrl_req"/>
+			<item value="emc_data_confirm"/>
+			<item value="emc_data_req"/>
+			<item value="func_cloudvela_huitpxml_msg_co1_data_req_received_handle"/>
+			<item value="StrMsg_HUITP_MSGID_uni_co1_data_req_t"/>
 			<item value="StrIe_HUITP_IEID_uni_co1_value_t"/>
-			<item value="StrIe_HUITP_IEID_uni_co1_data_value_t"/>
-			<item value="HUITP_IEID_uni_co_value"/>
-			<item value="uni_co_"/>
-			<item value="uni_co"/>
-			<item value="StrIe_HUITP_IEID_uni_lightstr_data_value_t"/>
-			<item value="i_lightstr"/>
-			<item value="msg_struct_pm25sp_cloudvela_data_report_t"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HUITP_IEID_uni_co1_value"/>
@@ -32,7 +32,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1208" key="DIALOG_X_ORIGIN"/>
+		<item value="1246" key="DIALOG_X_ORIGIN"/>
 		<item value="451" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
