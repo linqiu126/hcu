@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="gTaskPm25sharpContext.serialPort" key="selection"/>
+		<item value="StrIe_HUITP_IEID_uni_co1_value_t" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="gSerialPortForPm25Sharp"/>
-			<item value="gTaskPm25sharpContext"/>
-			<item value="gTaskWindspdContext"/>
-			<item value="gTaskWinddirContext_t.currentSensorId"/>
-			<item value="gTaskWinddirContext_t"/>
-			<item value="gTaskPm25Context"/>
-			<item value="zPM25ConfigData"/>
-			<item value="gTaskNoiseContext"/>
+			<item value="StrIe_HUITP_IEID_uni_co1_value_t"/>
+			<item value="StrIe_HUITP_IEID_uni_co1_data_value_t"/>
+			<item value="HUITP_IEID_uni_co_value"/>
+			<item value="uni_co_"/>
+			<item value="uni_co"/>
+			<item value="StrIe_HUITP_IEID_uni_lightstr_data_value_t"/>
+			<item value="i_lightstr"/>
+			<item value="msg_struct_pm25sp_cloudvela_data_report_t"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HUITP_IEID_uni_co1_value"/>
 			<item value="gTaskPm25sharpContext.serialPort"/>
 			<item value="gTaskWinddirContext.currentSensorId"/>
 			<item value="gTaskWinddirContext_t"/>
@@ -25,14 +26,13 @@
 			<item value="&#x0A;{&#x0A;&#x09;HCU_ERROR_PRINT_CLOUDVELA(&quot;HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_emc_data_req_t received!\n&quot;);&#x0A;}&#x0A;"/>
 			<item value="uni_altitude_data"/>
 			<item value="uni_toxicgas_data"/>
-			<item value="lightstr_data"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1197" key="DIALOG_X_ORIGIN"/>
-		<item value="377" key="DIALOG_Y_ORIGIN"/>
+		<item value="1208" key="DIALOG_X_ORIGIN"/>
+		<item value="451" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

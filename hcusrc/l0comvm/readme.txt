@@ -15,7 +15,7 @@ PRJ_BFSC待完成或者回答的问题：
 
 //= ZJL, 2017 Feb.15, CURRENT_SW_DELIVERY 170=>BFSC项目
 =完成L3MOD模块级别的函数归一化，从而在L2-L3之间搭建完整的API处理框架
-
+=完成CLOUDVELA主函数中的编码。量足够大，分标签提交。
 
 //= ZJL, 2017 Feb.14, CURRENT_SW_DELIVERY 169=>BFSC项目
 =对传统的EMC/TEMP/WINDDIR/WINDSPD/TEMP/HUMID/HSMMP/NOISE进行改造

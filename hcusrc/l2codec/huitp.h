@@ -945,7 +945,7 @@ typedef enum
 
   //一氧化碳
 	HUITP_IEID_uni_co_min                           = 0x2200, 
-	HUITP_IEID_uni_co_value                         = 0x2200, 
+	HUITP_IEID_uni_co1_value                         = 0x2200,
 	HUITP_IEID_uni_co_max,
 
   //甲醛HCHO
@@ -1577,7 +1577,8 @@ typedef struct StrIe_HUITP_IEID_uni_com_modbus_address
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT32 value;
+	UINT32 oldValue;
+	UINT32 newValue;
 }StrIe_HUITP_IEID_uni_com_modbus_address_t;
 
 //HUITP_IEID_uni_com_file_name                    = 0x0030,
@@ -1781,16 +1782,16 @@ typedef struct StrIe_HUITP_IEID_uni_emc_accu_value
 
 //一氧化碳
 //HUITP_IEID_uni_co_min                           = 0x2200, 
-//HUITP_IEID_uni_co_value                         = 0x2200, 
-typedef struct StrIe_HUITP_IEID_uni_co_value
+//HUITP_IEID_uni_co1_value                         = 0x2200,
+typedef struct StrIe_HUITP_IEID_uni_co1_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT32 coValue;
-}StrIe_HUITP_IEID_uni_co_value_t;
+	UINT32 co1Value;
+}StrIe_HUITP_IEID_uni_co1_value_t;
 
-//HUITP_IEID_uni_co_max,
+//HUITP_IEID_uni_co_max,1
 
 //甲醛HCHO
 //HUITP_IEID_uni_hcho_min                 = 0x2300,
@@ -1930,12 +1931,14 @@ typedef struct StrIe_HUITP_IEID_uni_noise_value
 //相机Camer or audio high speed
 //HUITP_IEID_uni_hsmmp_min                        = 0x2C00, 
 //HUITP_IEID_uni_hsmmp_value                      = 0x2C00,
+#define HUITP_IEID_UNI_HSMMP_LINK_FILE_LEN_MAX  80
 typedef struct StrIe_HUITP_IEID_uni_hsmmp_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT8  dataFormat;
-	UINT32 hsmmpValue;
+	char   linkName[HUITP_IEID_UNI_HSMMP_LINK_FILE_LEN_MAX];
+	UINT32 timeStampStart;
+	UINT32 timeStampEnd;
 }StrIe_HUITP_IEID_uni_hsmmp_value_t;
 
 //HUITP_IEID_uni_hsmmp_max,
@@ -2098,7 +2101,7 @@ typedef struct StrIe_HUITP_IEID_uni_lightstr_data_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT32 lightStrengthValue;
+	UINT32 lightstrValue;
 }StrIe_HUITP_IEID_uni_lightstr_data_value_t;
 
 //HUITP_IEID_uni_lightstr_data_max,
@@ -3523,7 +3526,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_co1_data_resp
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_co_value_t respValue;
+	StrIe_HUITP_IEID_uni_co1_value_t respValue;
 }StrMsg_HUITP_MSGID_uni_co1_data_resp_t;
 
 //HUITP_MSGID_uni_co1_data_report                        = 0x2281,
@@ -3532,7 +3535,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_co1_data_report
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_co_value_t reportValue;	
+	StrIe_HUITP_IEID_uni_co1_value_t reportValue;
 }StrMsg_HUITP_MSGID_uni_co1_data_report_t;
  
 //HUITP_MSGID_uni_co1_co1_data_confirm                           = 0x2201,
@@ -4616,7 +4619,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_data_report
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
 	StrIe_HUITP_IEID_uni_toxicgas_data_value_t reportValue;
-}StrMsg_HUITP_HUITP_MSGID_uni_toxicgas_data_report_t;
+}StrMsg_HUITP_MSGID_uni_toxicgas_data_report_t;
 
 //HUITP_MSGID_uni_toxicgas_data_confirm                     = 0x3601,
 typedef struct StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm

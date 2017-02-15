@@ -545,8 +545,8 @@ typedef struct  sensor_modbus_opertion_general //
 	UINT8  powerOnOff;
 	UINT32 newEquId;
 	UINT32 workCycle;
-	UINT32 interSample;
-	UINT32 meausTimes;
+	UINT32 interSample;  //sample_number
+	UINT32 meausTimes;   //sample_cycle
 }sensor_modbus_opertion_general_t;
 typedef struct sensor_zhb_transport_format_dl //
 {
@@ -2341,7 +2341,7 @@ typedef struct  msg_struct_cloudvela_emc_data_req //
 
 //MSG_ID_EMC_CLOUDVELA_DATA_RESP,
 //Data response message to Cloud
-typedef struct  msg_struct_emc_cloudvela_data_resp //
+typedef struct  msg_struct_emc_cloudvela_data_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
@@ -2358,22 +2358,25 @@ typedef struct  msg_struct_cloudvela_emc_ctrl_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
+	UINT8  cmdTag;
+	UINT8  cmdId;  //STDXML放弃，该域将去掉
+	UINT8  optId;  //STDXML放弃，该域将去掉
+	UINT8  backType;  //STDXML放弃，该域将去掉
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_emc_ctrl_req_t;
+//cmdTag => huitp.h StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t
 
 //MSG_ID_EMC_CLOUDVELA_CTRL_RESP,
 typedef struct msg_struct_emc_cloudvela_ctrl_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
-	UINT8  cmdId;
-	UINT8  optId;
-	UINT8  backType;
+	UINT8  cmdTag;
+	UINT8  cmdId;  //STDXML放弃，该域将去掉
+	UINT8  optId;  //STDXML放弃，该域将去掉
+	UINT8  backType;  //STDXML放弃，该域将去掉
 	sensor_modbus_opertion_general_t opt;
 	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
@@ -2384,6 +2387,8 @@ typedef struct msg_struct_emc_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	sensor_emc_data_element_t emc;
+	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_emc_cloudvela_data_report_t;
 
@@ -2396,7 +2401,7 @@ typedef struct msg_struct_cloudvela_emc_data_confirm
 }msg_struct_cloudvela_emc_data_confirm_t;
 
 //MSG_ID_CLOUDVELA_PM25_DATA_REQ,
-typedef struct  msg_struct_cloudvela_pm25_data_req //
+typedef struct  msg_struct_cloudvela_pm25_data_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -2426,6 +2431,7 @@ typedef struct  msg_struct_cloudvela_pm25_ctrl_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2439,6 +2445,7 @@ typedef struct msg_struct_pm25_cloudvela_ctrl_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2452,6 +2459,8 @@ typedef struct msg_struct_pm25_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	sensor_pm25_data_element_t pm25;
+	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_pm25_cloudvela_data_report_t;
 
@@ -2494,6 +2503,7 @@ typedef struct  msg_struct_cloudvela_temp_ctrl_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2507,6 +2517,7 @@ typedef struct msg_struct_temp_cloudvela_ctrl_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2520,6 +2531,8 @@ typedef struct msg_struct_temp_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	sensor_temp_data_element_t temp;
+	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_temp_cloudvela_data_report_t;
 
@@ -2562,6 +2575,7 @@ typedef struct  msg_struct_cloudvela_humid_ctrl_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2575,6 +2589,7 @@ typedef struct msg_struct_humid_cloudvela_ctrl_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2588,6 +2603,8 @@ typedef struct msg_struct_humid_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	sensor_humid_data_element_t humid;
+	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_humid_cloudvela_data_report_t;
 
@@ -2630,6 +2647,7 @@ typedef struct  msg_struct_cloudvela_winddir_ctrl_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2643,6 +2661,7 @@ typedef struct msg_struct_winddir_cloudvela_ctrl_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2656,6 +2675,8 @@ typedef struct msg_struct_winddir_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	sensor_winddir_data_element_t winddir;
+	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_winddir_cloudvela_data_report_t;
 
@@ -2698,6 +2719,7 @@ typedef struct  msg_struct_cloudvela_windspd_ctrl_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2711,6 +2733,7 @@ typedef struct msg_struct_windspd_cloudvela_ctrl_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2724,6 +2747,8 @@ typedef struct msg_struct_windspd_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	sensor_windspd_data_element_t windspd;
+	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_windspd_cloudvela_data_report_t;
 
@@ -2766,6 +2791,7 @@ typedef struct  msg_struct_cloudvela_hsmmp_ctrl_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2779,6 +2805,7 @@ typedef struct msg_struct_hsmmp_cloudvela_ctrl_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2792,6 +2819,8 @@ typedef struct msg_struct_hsmmp_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	sensor_hsmmp_link_element_t link;
+	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_data_report_t;
 
@@ -2804,7 +2833,7 @@ typedef struct msg_struct_cloudvela_hsmmp_data_confirm
 }msg_struct_cloudvela_hsmmp_data_confirm_t;
 
 //MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
-typedef struct  msg_struct_cloudvela_noise_data_req //
+typedef struct  msg_struct_cloudvela_noise_data_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -2834,6 +2863,7 @@ typedef struct  msg_struct_cloudvela_noise_ctrl_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2847,6 +2877,7 @@ typedef struct msg_struct_noise_cloudvela_ctrl_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  cmdTag;
 	UINT8  cmdId;
 	UINT8  optId;
 	UINT8  backType;
@@ -2860,6 +2891,8 @@ typedef struct msg_struct_noise_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	sensor_noise_data_element_t noise;
+	sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_noise_cloudvela_data_report_t;
 
@@ -2891,6 +2924,8 @@ typedef struct msg_struct_airprs_cloudvela_data_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  dataFormat;
+	UINT32 airprsValue;
 	UINT32 length;
 }msg_struct_airprs_cloudvela_data_resp_t;
 
@@ -2899,6 +2934,8 @@ typedef struct  msg_struct_airprs_cloudvela_data_report //
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  dataFormat;
+	UINT32 airprsValue;
 	UINT32 length;
 }msg_struct_airprs_cloudvela_data_report_t;
 
@@ -2923,19 +2960,23 @@ typedef struct msg_struct_alcohol_cloudvela_data_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  dataFormat;
+	UINT32 alcoholValue;
 	UINT32 length;
 }msg_struct_alcohol_cloudvela_data_resp_t;
 
 //MSG_ID_ALCOHOL_CLOUDVELA_DATA_REPORT,
-typedef struct  msg_struct_alcohol_cloudvela_data_report //
+typedef struct  msg_struct_alcohol_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  dataFormat;
+	UINT32 alcoholValue;
 	UINT32 length;
 }msg_struct_alcohol_cloudvela_data_report_t;
 
 //MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM,
-typedef struct  msg_struct_cloudvela_alcohol_data_confirm //
+typedef struct  msg_struct_cloudvela_alcohol_data_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
@@ -2943,7 +2984,7 @@ typedef struct  msg_struct_cloudvela_alcohol_data_confirm //
 }msg_struct_cloudvela_alcohol_data_confirm_t;
 
 //MSG_ID_CLOUDVELA_CO1_DATA_REQ,
-typedef struct  msg_struct_cloudvela_co1_data_req //
+typedef struct  msg_struct_cloudvela_co1_data_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -2955,19 +2996,23 @@ typedef struct msg_struct_co1_cloudvela_data_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  dataFormat;
+	UINT32 co1Value;
 	UINT32 length;
 }msg_struct_co1_cloudvela_data_resp_t;
 
 //MSG_ID_CO1_CLOUDVELA_DATA_REPORT,
-typedef struct  msg_struct_co1_cloudvela_data_report //
+typedef struct  msg_struct_co1_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  dataFormat;
+	UINT32 co1Value;
 	UINT32 length;
 }msg_struct_co1_cloudvela_data_report_t;
 
 //MSG_ID_CLOUDVELA_CO1_DATA_CONFIRM,
-typedef struct  msg_struct_cloudvela_co1_data_confirm //
+typedef struct  msg_struct_cloudvela_co1_data_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
@@ -2975,7 +3020,7 @@ typedef struct  msg_struct_cloudvela_co1_data_confirm //
 }msg_struct_cloudvela_co1_data_confirm_t;
 
 //MSG_ID_CLOUDVELA_HCHO_DATA_REQ,
-typedef struct  msg_struct_cloudvela_hcho_data_req //
+typedef struct  msg_struct_cloudvela_hcho_data_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -2987,19 +3032,23 @@ typedef struct msg_struct_hcho_cloudvela_data_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  dataFormat;
+	UINT32 hchoValue;
 	UINT32 length;
 }msg_struct_hcho_cloudvela_data_resp_t;
 
 //MSG_ID_HCHO_CLOUDVELA_DATA_REPORT,
-typedef struct  msg_struct_hcho_cloudvela_data_report //
+typedef struct  msg_struct_hcho_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  dataFormat;
+	UINT32 hchoValue;
 	UINT32 length;
 }msg_struct_hcho_cloudvela_data_report_t;
 
 //MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM,
-typedef struct  msg_struct_cloudvela_hcho_data_confirm //
+typedef struct  msg_struct_cloudvela_hcho_data_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
@@ -3007,7 +3056,7 @@ typedef struct  msg_struct_cloudvela_hcho_data_confirm //
 }msg_struct_cloudvela_hcho_data_confirm_t;
 
 //MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ,
-typedef struct  msg_struct_cloudvela_lightstr_data_req //
+typedef struct  msg_struct_cloudvela_lightstr_data_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -3019,27 +3068,33 @@ typedef struct msg_struct_lightstr_cloudvela_data_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  dataFormat;
+	UINT32 lightstrValue;
 	UINT32 length;
 }msg_struct_lightstr_cloudvela_data_resp_t;
 
 //MSG_ID_LIGHTSTR_CLOUDVELA_DATA_REPORT,
-typedef struct  msg_struct_lightstr_cloudvela_data_report //
+typedef struct  msg_struct_lightstr_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  dataFormat;
+	UINT32 lightstrValue;
 	UINT32 length;
 }msg_struct_lightstr_cloudvela_data_report_t;
 
 //MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM,
-typedef struct  msg_struct_cloudvela_lightstr_data_confirm //
+typedef struct  msg_struct_cloudvela_lightstr_data_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
+	UINT8  dataFormat;
+	UINT32 lightstrValue;
 	UINT32 length;
 }msg_struct_cloudvela_lightstr_data_confirm_t;
 
 //MSG_ID_CLOUDVELA_PM25SP_DATA_REQ,
-typedef struct  msg_struct_cloudvela_pm25sp_data_req //
+typedef struct  msg_struct_cloudvela_pm25sp_data_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -3051,19 +3106,27 @@ typedef struct msg_struct_pm25sp_cloudvela_data_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  dataFormat;
+	UINT32 pm25sp1d0Value;
+	UINT32 pm25sp2d5Value;
+	UINT32 pm25sp10Value;
 	UINT32 length;
 }msg_struct_pm25sp_cloudvela_data_resp_t;
 
 //MSG_ID_PM25SP_CLOUDVELA_DATA_REPORT,
-typedef struct  msg_struct_pm25sp_cloudvela_data_report //
+typedef struct  msg_struct_pm25sp_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  dataFormat;
+	UINT32 pm25sp1d0Value;
+	UINT32 pm25sp2d5Value;
+	UINT32 pm25sp10Value;
 	UINT32 length;
 }msg_struct_pm25sp_cloudvela_data_report_t;
 
 //MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM,
-typedef struct  msg_struct_cloudvela_pm25sp_data_confirm //
+typedef struct  msg_struct_cloudvela_pm25sp_data_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
@@ -3071,7 +3134,7 @@ typedef struct  msg_struct_cloudvela_pm25sp_data_confirm //
 }msg_struct_cloudvela_pm25sp_data_confirm_t;
 
 //MSG_ID_CLOUDVELA_TOXICGAS_DATA_REQ,
-typedef struct  msg_struct_cloudvela_toxicgas_data_req //
+typedef struct  msg_struct_cloudvela_toxicgas_data_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -3083,19 +3146,23 @@ typedef struct msg_struct_toxicgas_cloudvela_data_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  dataFormat;
+	UINT32 toxicgasValue;
 	UINT32 length;
 }msg_struct_toxicgas_cloudvela_data_resp_t;
 
 //MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT,
-typedef struct  msg_struct_toxicgas_cloudvela_data_report //
+typedef struct  msg_struct_toxicgas_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  dataFormat;
+	UINT32 toxicgasValue;
 	UINT32 length;
 }msg_struct_toxicgas_cloudvela_data_report_t;
 
 //MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM,
-typedef struct  msg_struct_cloudvela_toxicgas_data_confirm //
+typedef struct  msg_struct_cloudvela_toxicgas_data_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
