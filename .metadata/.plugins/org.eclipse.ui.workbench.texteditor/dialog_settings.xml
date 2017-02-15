@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="while" key="selection"/>
+		<item value="statis" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="while"/>
-			<item value="func_canitfleo_can_receive"/>
-			<item value="printf"/>
-			<item value="func_canitfleo_can_send"/>
-			<item value="s"/>
-			<item value="fsm_l3bfsc_canitf_period_read_resp"/>
-			<item value="DATA_REPORT"/>
-			<item value="fsm_l3bfsc_cloudvela_statistic_conmfirm"/>
+			<item value="statis"/>
+			<item value="start"/>
+			<item value="TIMER_ID"/>
+			<item value="func_l3bfsc_time_out_period_read_process"/>
+			<item value="TIMER_ID_1S_L3BFSC_PERIOD_READ"/>
+			<item value="wsAvgTttMatCnt"/>
+			<item value="wsAvgTttTimes"/>
+			<item value="wsTgvMatWgt"/>
 		</list>
 		<list key="replacehistory">
 			<item value="msg_struct_l3bfsc_cloudvela_ctrl_resp_t"/>
@@ -32,7 +32,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1205" key="DIALOG_X_ORIGIN"/>
-		<item value="355" key="DIALOG_Y_ORIGIN"/>
+		<item value="1183" key="DIALOG_X_ORIGIN"/>
+		<item value="287" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

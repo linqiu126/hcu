@@ -27,6 +27,20 @@ enum FSM_STATE_CANITFLEO
 //Global variables
 extern HcuFsmStateItem_t HcuFsmCanitfleo[];
 
+/* ************ CAN ************** */
+#define MAXSOCK 16    /* max. number of CAN interfaces given on the cmdline */
+#define MAXIFNAMES 30 /* size of receive name index to omit ioctls */
+#define MAXCOL 6      /* number of different colors for colorized output */
+#define ANYDEV "any"  /* name of interface to receive from any CAN interface */
+#define ANL "\r\n"    /* newline in ASC mode */
+#define SILENT_INI 42 /* detect user setting on commandline */
+#define SILENT_OFF 0  /* no silent mode */
+#define SILENT_ANI 1  /* silent mode with animation */
+#define SILENT_ON  2  /* silent mode (completely silent) */
+#define MAXANI 4
+#define MAX_CANFRAME      "12345678#01.23.45.67.89.AB.CD.EF"
+/* ************ CAN ************** */
+
 typedef struct gTaskCanitfleoContext
 {
 	UINT32 sensorIdRoundBing;
@@ -47,12 +61,15 @@ extern OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id
 
 //Local API
 OPSTAT func_canitfleo_int_init(void);
-void func_canitfleo_working_scan_process(void);
 OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
 OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval);
 OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char);
 OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe);
 OPSTAT func_canitfleo_can_init(char *canitfname, int *sock);
+OPSTAT func_canitfleo_working_scan_process(void);
+OPSTAT func_canitfleo_bfsc_simulation_data_process(void);
+
+
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_CANITFLEO(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

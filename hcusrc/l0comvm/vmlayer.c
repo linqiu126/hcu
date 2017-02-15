@@ -546,6 +546,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_MAX,                                "TID_1S_MAX",                             0,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_10MS_MIN,                              "TID_10MS_MIN",                           0,       TIMER_RESOLUTION_10MS},
 	{TIMER_ID_10MS_SVRCON_TEST,                      "TID_10MS_SVRCON_TEST",                   10000,   TIMER_RESOLUTION_10MS},
+	{TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN,           "TID_10MS_L3BFSC_PERIOD_STA_SCAN",        50,      TIMER_RESOLUTION_10MS},
 	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     20,      TIMER_RESOLUTION_10MS},
 	{TIMER_ID_10MS_MAX,                              "TID_10MS_MAX",                           0,       TIMER_RESOLUTION_10MS},
 	{TIMER_ID_1MS_MIN,                               "TID_1MS_MIN",                            0,       TIMER_RESOLUTION_1MS},

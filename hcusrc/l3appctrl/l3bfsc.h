@@ -50,35 +50,67 @@ typedef struct L3BfscSensorWsInfo
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 4		//秤盘有料待出料
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 5		//秤盘有料待抛弃
 
+//统计周期，为了计算滑动平均数据
+#define HCU_L3BFSC_STA_CYCLE_DUR  60000 //1分钟，相当于60S
+#define HCU_L3BFSC_STA_UNIT_DUR  500 //500ms的单位
+#define HCU_L3BFSC_STA_BASE_CYCLE  (HCU_L3BFSC_STA_CYCLE_DUR / HCU_L3BFSC_STA_UNIT_DUR)
+#define HCU_L3BFSC_STA_1M_CYCLE  (60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
+#define HCU_L3BFSC_STA_15M_CYCLE  (15 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
+#define HCU_L3BFSC_STA_60M_CYCLE  (60 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
+#define HCU_L3BFSC_STA_2H_CYCLE  (2* 60 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
+#define HCU_L3BFSC_STA_8H_CYCLE  (8* 60 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
+#define HCU_L3BFSC_STA_24H_CYCLE  (24* 60 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
+
 //组合目标的控制表
+typedef struct gTaskL3bfscContextStaElement
+{
+	UINT32	wsIncMatCnt;  			//物料数量
+	float	wsIncMatWgt;  			//物料重量
+	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
+	UINT32	wsTttTimes;  			//TTT次数
+	UINT32	wsTgvTimes;  			//TGV次数
+	UINT32	wsTttMatCnt;			//TTT物料数量
+	UINT32	wsTgvMatCnt;			//TGV物料数量
+	UINT32	wsTttMatWgt;			//TTT物料重量
+	UINT32	wsTgvMatWgt;			//TGV物料重量
+	UINT32	wsAvgTttTimes;			//TTT平均次数
+	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
+	float	wsAvgTttMatWgt;			//TTT平均重量
+}gTaskL3bfscContextStaElement_t;
 typedef struct gTaskL3bfscContext
 {
-	UINT32  targetValue;
-	UINT32	targetUpLimit;
+	//搜索部分
+	UINT32 	wsRrSearchStart; 			//搜索算法从哪一个搜索系数开始
+	UINT8   *SearchCoefficientPointer;
+	UINT32  searchSpaceTotalNbr; 		//搜索的长度，12对应4096
+	//参数部分
 	UINT8	minWsNbr;
 	UINT8	maxWsNbr;
-	//UINT8	currentStatus;
+	UINT32  targetValue;
+	UINT32	targetUpLimit;
+	UINT32  startTimeInUnix;			//表示该系统开始工作的时间日程点
+	//动态部分
+	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是100ms为统计周期
 	L3BfscSensorWsInfo_t	sensorWs[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
-	UINT32 	wsRrSearchStart; //搜索算法从哪一个搜索系数开始
-	UINT8  	wsValueNbrFree;  	//空闲的0值秤盘数量
-	UINT8   wsValueNbrWeight;	//空闲有值的秤盘数量
-	UINT8 	wsValueNbrTtt;  	//待出料有值秤盘数量
-	UINT8 	wsValueNbrTgu;  	//待出料有值秤盘数量
+	UINT8  	wsValueNbrFree;  			//空闲的0值秤盘数量
+	UINT8   wsValueNbrWeight;			//空闲有值的秤盘数量
+	UINT8 	wsValueNbrTtt;  			//待出料有值秤盘数量
+	UINT8 	wsValueNbrTgu;  			//待出料有值秤盘数量
 	UINT8 	wsBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];  //组合出的秤盘标示
-	UINT32	wsTotalncomingCnt;  		//总共称重和计料数量
-	UINT32	wsTotalCombSucTimes;  		//总共成功素搜到目标的次数
-	UINT32	wsTotalCombOutMatCnt;		//总共出料的数量
-	UINT32	wsTotalGiveupTimes;  		//总共被TGU的次数
-	UINT32	wsTotalGiveupMatCnt;		//总共被抛弃的数量
-	UINT8   *SearchCoefficientPointer;
-	UINT32  searchSpaceTotalNbr; //搜索的长度，12对应4096
+	//实时统计部分：均以一个统计周期为单位
+	gTaskL3bfscContextStaElement_t cur;  		//当前统计周期中的数值，忽略统计数值
+	gTaskL3bfscContextStaElement_t curArray[HCU_L3BFSC_STA_BASE_CYCLE];
+	//统计报告部分
+	gTaskL3bfscContextStaElement_t staLocalUi;  //滑动平均给本地UI的数据
+	gTaskL3bfscContextStaElement_t staOneMin;  	//1分钟统计结果
+	gTaskL3bfscContextStaElement_t sta15Min;   	//15分钟统计结果
+	gTaskL3bfscContextStaElement_t sta60Min;	//60分钟统计结果
+	gTaskL3bfscContextStaElement_t sta2H;		//2H统计结果
+	gTaskL3bfscContextStaElement_t sta8H;		//8H统计结果
+	gTaskL3bfscContextStaElement_t sta24H;		//24H统计结果
+	gTaskL3bfscContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
 }gTaskL3bfscContext_t;
-//#define HCU_L3BFSC_WHOLE_STATUS_INVALID		0
-//#define HCU_L3BFSC_WHOLE_STATUS_INVALID1	255
-//#define HCU_L3BFSC_WHOLE_STATUS_TO_COMB		1
-//#define HCU_L3BFSC_WHOLE_STATUS_ERROR		2
-//#define HCU_L3BFSC_WHOLE_STATUS_TTT			3
-//#define HCU_L3BFSC_WHOLE_STATUS_TGU			4
+
 
 
 //API
@@ -113,6 +145,7 @@ OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_error_scan_process(void);
 OPSTAT func_l3bfsc_time_out_period_read_process(void);
+OPSTAT func_l3bfsc_time_out_statistic_scan_process(void);
 void func_l3bfsc_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
 
 //高级定义，简化程序的可读性
