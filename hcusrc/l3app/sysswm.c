@@ -12,6 +12,7 @@
 #include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
 
+
 /*
 ** FSM of the SYSSWM
 */
@@ -216,6 +217,5 @@ OPSTAT func_sysswm_time_out_period_working_scan(void)
 	//State no change
 	return SUCCESS;
 }
-
 
 

@@ -17,6 +17,7 @@ PRJ_BFSC待完成或者回答的问题：
 =改进软件下载等功能
 =移除func_cloudvela_time_out_period_for_sw_db_report，该工作机制内容移动到SYSSWM模块中去了
 =去掉了CLOUDVELA_SW_REP定时器
+=将FTP下载API函数移动到FTP服务中去了，不再放到链路中
 
 
 //= ZJL, 2017 Feb.15, CURRENT_SW_DELIVERY 171=>BFSC项目

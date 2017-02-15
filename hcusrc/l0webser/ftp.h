@@ -8,6 +8,8 @@
 #ifndef L0WEBSER_FTP_H_
 #define L0WEBSER_FTP_H_
 
+#include "../l0comvm/vmlayer.h"
+
 /*FTP OPERATION CODE*/
 typedef enum FTP_STATE
 {
@@ -32,5 +34,6 @@ FTP_STATE ftp_upload(const FTP_OPT ftp_option);
 /*download file from ftp server*/
 FTP_STATE ftp_download(const FTP_OPT ftp_option);
 
+OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename);
 
 #endif /* L0WEBSER_FTP_H_ */

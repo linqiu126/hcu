@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP" key="selection"/>
+		<item value="sw_download_by" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="sw_download_by"/>
+			<item value="ftp.h"/>
+			<item value="func_cloudvela_sw_download"/>
+			<item value="download"/>
+			<item value="downliad"/>
 			<item value="TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP"/>
 			<item value="&quot;PM25"/>
 			<item value="&quot;CLOUDVELA:"/>
-			<item value="TASK_ID_PM25"/>
-			<item value="msg_struct_spspm_cloudvela_alarm_report_t"/>
-			<item value="vfs"/>
-			<item value="msgie_struct_bh_com_head_t"/>
-			<item value="comHead"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&quot;SYSPM:"/>

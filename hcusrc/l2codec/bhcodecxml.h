@@ -29,7 +29,7 @@ extern OPSTAT func_cloudvela_stdxml_msg_hsmmp_unpack(msg_struct_com_cloudvela_da
 extern OPSTAT func_cloudvela_stdxml_heart_beat_unpack(msg_struct_com_cloudvela_data_rx_t *rcv);
 extern OPSTAT func_cloudvela_av_upload(char *filename);
 
-//Extern API
 
+//Extern API
 
 #endif /* L2FRAME_BHCODECXML_H_ */

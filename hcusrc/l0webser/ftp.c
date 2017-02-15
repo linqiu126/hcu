@@ -148,4 +148,40 @@ FTP_STATE ftp_download(const FTP_OPT ftp_option)
 	return state;
 }
 
+OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename)
+{
+	FTP_OPT ftp_opt;
+
+	char usrtmp[3] = ":";
+
+	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
+
+	//ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
+	strcat(ftp_opt.user_key, usrtmp);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
+
+	//char filetmp[64] = "swdownload.txt";
+	//ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
+	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
+	strcat(ftp_opt.url, filename);
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
+
+	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
+	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwDownloadDir);
+	strcat(ftp_opt.file, filename);
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
+
+	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt)){
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: HCU SW Download success.\n");
+		return SUCCESS;
+	}else{
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "CLOUDVELA: HCU SW Download failed.\n");
+	}
+
+	return SUCCESS;
+}
+
+
 

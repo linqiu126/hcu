@@ -917,43 +917,6 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
  *  AMARM / PM性能管理部分
  *
  ***************************************************************************************************************************/
-OPSTAT func_cloudvela_sw_download(char *filename)
-{
-	FTP_OPT ftp_opt;
-
-	char usrtmp[3] = ":";
-
-	memset( (void *)&ftp_opt, 0, sizeof(FTP_OPT));
-
-	//ftp_opt.user_key = zHcuSysEngPar.cloud.cloudFtpUser;
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
-	strcat(ftp_opt.user_key, usrtmp);
-	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.user_key: %s \n", ftp_opt.user_key);
-
-	//char filetmp[64] = "swdownload.txt";
-	//ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
-	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
-	strcat(ftp_opt.url, filename);
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.url: %s \n", ftp_opt.url);
-
-	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
-	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwDownloadDir);
-	strcat(ftp_opt.file, filename);
-	HCU_DEBUG_PRINT_NOR("CLOUDVELA: ftp_opt.file: %s \n", ftp_opt.file);
-
-	if(FTP_DOWNLOAD_SUCCESS == ftp_download(ftp_opt)){
-		HCU_DEBUG_PRINT_NOR("CLOUDVELA: HCU SW Download success.\n");
-	    // send resp msg to cloud: 01 successful
-	    //system("reboot");
-		return SUCCESS;
-	}else{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: HCU SW Download failed.\n");
-	}
-
-	return SUCCESS;
-}
-
 //标准消息处理方式
 OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {

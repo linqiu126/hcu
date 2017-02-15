@@ -14,7 +14,7 @@
 //Global variables
 
 //Task Global variables
-extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
+
 
 //XML自定义标准的编码函数方式
 //完全自己手动编码的方式，未来可以灵活的改动
@@ -2244,7 +2244,7 @@ OPSTAT func_cloudvela_stdxml_msg_swpackage_unpack(msg_struct_com_cloudvela_data_
 	//根据OptId操作字进行进一步的分解
 	if ((optId == L3PO_swdownload_req)){
 
-		if (func_cloudvela_sw_download(st) == SUCCESS){
+		if (hcu_service_ftp_sw_download_by_ftp(st) == SUCCESS){
 			HcuDebugPrint("CLOUDVELA: HCU SW Download successful.\n");
 			swDownload = TRUE;
 
@@ -2422,5 +2422,9 @@ OPSTAT func_cloudvela_stdxml_heart_beat_unpack(msg_struct_com_cloudvela_data_rx_
 
 	return SUCCESS;
 }
+
+
+
+
 
 
