@@ -45,5 +45,7 @@ extern OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src
 
 //Local API
 OPSTAT func_sysswm_int_init(void);
+OPSTAT func_sysswm_time_out_period_working_scan(void);
+
 
 #endif /* L3APP_SYSSWM_H_ */

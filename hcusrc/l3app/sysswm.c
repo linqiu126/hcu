@@ -10,6 +10,7 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
+#include "../l2frame/cloudvela.h"
 
 /*
 ** FSM of the SYSSWM
@@ -50,10 +51,8 @@ HcuFsmStateItem_t HcuFsmSysswm[] =
 
 //Global variables
 
-
 //Task Global variables
 gTaskSysswmContext_t gTaskSysswmContext;
-
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -135,7 +134,32 @@ OPSTAT func_sysswm_int_init(void)
 
 OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	return SUCCESS;
+	int ret=0;
+
+	//Receive message and copy to local variable
+	msg_struct_com_time_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t)))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//钩子在此处，检查zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]是否超限
+	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] > HCU_RUN_ERROR_LEVEL_3_CRITICAL){
+		//减少重复RESTART的概率
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] = zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] - HCU_RUN_ERROR_LEVEL_3_CRITICAL;
+		msg_struct_com_restart_t snd0;
+		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
+		snd0.length = sizeof(msg_struct_com_restart_t);
+		if (hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_SYSSWM, TASK_ID_SYSSWM, &snd0, snd0.length) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
+	}
+
+	//PERIOD WORKING TIMER
+	else if ((rcv.timeId == TIMER_ID_1S_SYSSWM_PERIOD_WORKING) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		ret = func_sysswm_time_out_period_working_scan();
+	}
+
+	return ret;
 }
 
 OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -158,7 +182,40 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	return SUCCESS;
 }
 
+OPSTAT func_sysswm_time_out_period_working_scan(void)
+{
+	//int ret=0;
 
+	//发送数据给后台
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		msg_struct_spspm_cloudvela_inventory_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_inventory_report_t));
+
+		//L2信息
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.cloud.hcuName, strlen(zHcuSysEngPar.cloud.hcuName)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.cloud.hcuName):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		snd.hwType = zHcuSysEngPar.hwBurnId.hwType;
+		snd.hwId = zHcuSysEngPar.hwBurnId.hwPemId;
+		snd.swRel = zHcuSysEngPar.hwBurnId.swRelId;
+		snd.swVer = zHcuSysEngPar.hwBurnId.swVerId;
+		snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
+		strcpy(snd.desc, "");
+		snd.length = sizeof(msg_struct_spspm_cloudvela_inventory_report_t);
+		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+	}
+
+	//State no change
+	return SUCCESS;
+}
 
 
 

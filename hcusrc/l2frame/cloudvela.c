@@ -193,15 +193,6 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
-	//For sw&db version report
-	ret = hcu_timer_start(TASK_ID_CLOUDVELA, TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP, \
-			zHcuSysEngPar.timer.array[TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		HcuErrorPrint("CLOUDVELA: Error start timer!\n");
-		return FAILURE;
-	}
-
 	//State Transfer to FSM_STATE_CLOUDVELA_OFFLINE
 	ret = FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_OFFLINE);
 	if (ret == FAILURE){
@@ -251,11 +242,6 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	//定时长时钟进行链路检测的
 	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_cloudvela_hb_link_main_entry();
-	}
-
-	//for sw&db version report
-	else if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_cloudvela_time_out_period_for_sw_db_report();
 	}
 
 	return ret;
@@ -931,38 +917,6 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
  *  AMARM / PM性能管理部分
  *
  ***************************************************************************************************************************/
-OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void)
-{
-	UINT32 optId=0, cmdId=0, backType=0;
-
-	//命令字
-	cmdId = L3CI_hcu_inventory;
-	backType = L3CI_cmdid_back_type_period;
-    optId = L3PO_hcuinventory_report;
-    zHcuSysEngPar.swDbInvInfo.hw_type = zHcuSysEngPar.hwBurnId.hwType;
-    zHcuSysEngPar.swDbInvInfo.hw_version = zHcuSysEngPar.hwBurnId.hwPemId;
-    zHcuSysEngPar.swDbInvInfo.sw_release = zHcuSysEngPar.hwBurnId.swRelId;
-    zHcuSysEngPar.swDbInvInfo.sw_delivery = zHcuSysEngPar.hwBurnId.swVerId;
-
-	// send resp msg to cloud
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//初始化变量
-		CloudDataSendBuf_t buf;
-		memset(&buf, 0, sizeof(CloudDataSendBuf_t));
-		//打包数据
-		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, &zHcuSysEngPar.swDbInvInfo, &buf))
-		{
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-		}
-
-		//Send out
-		if (func_cloudvela_send_data_to_cloud(&buf) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Online state, send HCU Inventory Resp to cloud failure!\n");
-		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Online state, send HCU Inventory Resp to cloud success!\n");
-	}
-
-	return SUCCESS;
-}
-
 OPSTAT func_cloudvela_sw_download(char *filename)
 {
 	FTP_OPT ftp_opt;
@@ -1395,11 +1349,35 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
+
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		UINT32 optId=0, cmdId=0, backType=0;
+		//命令字
+		cmdId = L3CI_hcu_inventory;
+		backType = L3CI_cmdid_back_type_period;
+	    optId = L3PO_hcuinventory_report;
+	    zHcuSysEngPar.swDbInvInfo.hw_type = rcv.hwType;
+	    zHcuSysEngPar.swDbInvInfo.hw_version = rcv.hwId;
+	    zHcuSysEngPar.swDbInvInfo.sw_release = rcv.swRel;
+	    zHcuSysEngPar.swDbInvInfo.sw_delivery = rcv.swRel;
+		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
+				&zHcuSysEngPar.swDbInvInfo, &pMsgOutput))
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
+
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		UINT32 optId=0, cmdId=0, backType=0;
+		//命令字
+		cmdId = L3CI_hcu_inventory;
+		backType = L3CI_cmdid_back_type_period;
+	    optId = L3PO_hcuinventory_report;
+	    zHcuSysEngPar.swDbInvInfo.hw_type = rcv.hwType;
+	    zHcuSysEngPar.swDbInvInfo.hw_version = rcv.hwId;
+	    zHcuSysEngPar.swDbInvInfo.sw_release = rcv.swRel;
+	    zHcuSysEngPar.swDbInvInfo.sw_delivery = rcv.swRel;
+		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
+				&zHcuSysEngPar.swDbInvInfo, &pMsgOutput))
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");

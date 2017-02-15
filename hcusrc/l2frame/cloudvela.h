@@ -123,7 +123,6 @@ extern size_t func_cloudvela_http_curl_write_callback(void *buffer, size_t size,
 
 //待移除API
 OPSTAT func_cloudvela_sw_download(char *filename);
-OPSTAT func_cloudvela_time_out_period_for_sw_db_report(void);
 
 
 //引用外部函数

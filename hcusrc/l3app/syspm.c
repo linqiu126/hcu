@@ -11,9 +11,6 @@
 #include "../l0service/trace.h"
 #include "../l2frame/cloudvela.h"
 
-#include <sys/vfs.h>
-
-
 
 /*
 ** FSM of the SYSPM
@@ -402,15 +399,15 @@ OPSTAT fsm_syspm_com_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 	msg_struct_com_alarm_report_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_com_alarm_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_alarm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive Alarm message error!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive Alarm message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
 	//参数检查
 	if ((rcv.equID <= 0) || (rcv.usercmdid != L3CI_alarm) || (rcv.timeStamp <=0))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive invalid data!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive invalid data!\n");
 
 	if(dbi_HcuSysAlarmInfo_save(&rcv) == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "CLOUDVELA: Can not save data into database!\n");
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM: Can not save data into database!\n");
 
 	//发送数据给后台
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -438,7 +435,7 @@ OPSTAT fsm_syspm_com_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 		strncpy(snd.alarmDesc, rcv.alarmDesc, strlen(rcv.alarmDesc) < sizeof(snd.alarmDesc)? strlen(rcv.alarmDesc): sizeof(snd.alarmDesc));
 		snd.length = sizeof(msg_struct_spspm_cloudvela_alarm_report_t);
 		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}
 
 	//State no change
@@ -452,12 +449,12 @@ OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	msg_struct_com_pm_report_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_com_pm_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_pm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM message error!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive PM message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
 	//参数检查
 	if ((rcv.usercmdid != L3CI_performance) || (rcv.timeStamp <=0))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive invalid data!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive invalid data!\n");
 
 	//发送数据给后台
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
@@ -486,7 +483,7 @@ OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		snd.timeStamp = rcv.timeStamp;
 		snd.length = sizeof(msg_struct_spspm_cloudvela_perfm_report_t);
 		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}
 
 	//State no change
