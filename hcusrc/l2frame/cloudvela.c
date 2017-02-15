@@ -119,7 +119,7 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,         FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_data_resp},
 	{MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,       FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_data_report},
 	{MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,      FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_event_report},
-	{MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,          FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_cmd_resp},
+	{MSG_ID_L3BFSC_CLOUDVELA_CTRL_RESP,          FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_ctrl_resp},
 	{MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,  FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_l3bfsc_statistic_report},
 	#endif
 
@@ -3543,11 +3543,11 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 	return SUCCESS;
 }
 
-OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_cloudvela_l3bfsc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfsc_cloudvela_cmd_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t)))
+	msg_struct_l3bfsc_cloudvela_ctrl_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_ctrl_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_ctrl_resp_t)))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -3560,11 +3560,11 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
 		memcpy(&(gTaskCloudvelaContext.L2Link), &(rcv.comHead), sizeof(msgie_struct_bh_com_head_t));
 		//准备组装发送消息
-		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp_t pMsgProc;
-		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp_t);
+		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp_t);
 		memset(&pMsgProc, 0, msgProcLen);
-		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp>>8)&0xFF;
-		pMsgProc.msgId.optId = HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp&0xFF;
+		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp>>8)&0xFF;
+		pMsgProc.msgId.optId = HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp&0xFF;
 		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 		//StrIe_HUITP_IEID_uni_com_resp_t
 		pMsgProc.baseResp.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_resp);
@@ -3585,7 +3585,7 @@ OPSTAT fsm_cloudvela_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
@@ -3659,7 +3659,7 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
-		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 

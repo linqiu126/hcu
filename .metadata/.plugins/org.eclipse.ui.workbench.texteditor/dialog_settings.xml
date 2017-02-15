@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="sw_download_by" key="selection"/>
+		<item value="while" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="sw_download_by"/>
-			<item value="ftp.h"/>
-			<item value="func_cloudvela_sw_download"/>
-			<item value="download"/>
-			<item value="downliad"/>
-			<item value="TIMER_ID_1S_CLOUDVELA_PRD_SWDB_VER_REP"/>
-			<item value="&quot;PM25"/>
-			<item value="&quot;CLOUDVELA:"/>
+			<item value="while"/>
+			<item value="func_canitfleo_can_receive"/>
+			<item value="printf"/>
+			<item value="func_canitfleo_can_send"/>
+			<item value="s"/>
+			<item value="fsm_l3bfsc_canitf_period_read_resp"/>
+			<item value="DATA_REPORT"/>
+			<item value="fsm_l3bfsc_cloudvela_statistic_conmfirm"/>
 		</list>
 		<list key="replacehistory">
-			<item value="&quot;SYSPM:"/>
-			<item value="TASK_ID_SYSPM"/>
-			<item value="&quot;SYSSWM"/>
-			<item value="SYS"/>
-			<item value="TASK_ID_SYSSWM"/>
-			<item value="TASK_ID_CLOUDVELA"/>
-			<item value="HUITP_IEID_uni_co1_value"/>
-			<item value="gTaskPm25sharpContext.serialPort"/>
+			<item value="msg_struct_l3bfsc_cloudvela_ctrl_resp_t"/>
+			<item value="fsm_l3bfsc_cloudvela_ctrl_resp"/>
+			<item value="fsm_l3bfsc_cloudvela_ctrl_req"/>
+			<item value="MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ"/>
+			<item value="ctrl_req"/>
+			<item value="comb_scale_ctrl_req"/>
+			<item value="comb_scale_ctrl_resp"/>
+			<item value="bfsc_comb_scale_ctrl_resp"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

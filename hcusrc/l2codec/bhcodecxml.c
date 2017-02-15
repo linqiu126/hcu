@@ -291,7 +291,7 @@ OPSTAT func_cloudvela_stdxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	//获取控制CMDID
 	char tmp[3] = "";
 	strncpy(tmp, &rcv->buf[index], 2);
-	HcuDebugPrint("CLOUDVELA: received comId %s !\n", tmp);
+	HCU_DEBUG_PRINT_INF("CLOUDVELA: received comId %s !\n", tmp);
 	cmdId = strtoul(tmp, NULL, 16);
 
 	switch(cmdId)
@@ -388,10 +388,7 @@ OPSTAT func_cloudvela_stdxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 			break;
 
 		default:
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-			HcuErrorPrint("CLOUDVELA: Receive cloud data error with CmdId = %d\n", cmdId);
-			return FAILURE;
-
+			HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "CLOUDVELA: Receive cloud data error with CmdId = %d\n", cmdId);
 			break;
 	}
 

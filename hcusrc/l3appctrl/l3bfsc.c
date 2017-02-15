@@ -43,8 +43,8 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 	{MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,          FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_data_req},
 	{MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,      FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,     FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_event_confirm},
-	{MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,           FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_cmd_req},
-	{MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_statistic_conmfirm},
+	{MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ,          FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_ctrl_req},
+	{MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_statistic_confirm},
 
 	//Normal working status：等待人工干预-登录触发
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_cmd_req},
@@ -492,14 +492,14 @@ OPSTAT fsm_l3bfsc_cloudvela_event_confirm(UINT32 dest_id, UINT32 src_id, void * 
 }
 
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
-OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3bfsc_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 
 	//入参检查
-	msg_struct_cloudvela_l3bfsc_cmd_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_l3bfsc_cmd_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_l3bfsc_cmd_req_t))){
+	msg_struct_cloudvela_l3bfsc_ctrl_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_l3bfsc_ctrl_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_l3bfsc_ctrl_req_t))){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -536,7 +536,7 @@ OPSTAT fsm_l3bfsc_cloudvela_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_
 }
 
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
-OPSTAT fsm_l3bfsc_cloudvela_statistic_conmfirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3bfsc_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
@@ -563,14 +563,14 @@ OPSTAT fsm_l3bfsc_canitf_general_cmd_resp(UINT32 dest_id, UINT32 src_id, void * 
 
 	//将数据发送到CLOUDVELA中去
 	//这里暂时不做数据合法性的判定，未来再考虑提高可靠性和安全性
-	msg_struct_l3bfsc_cloudvela_cmd_resp_t snd;
-	memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t));
-	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_cmd_resp_t);
+	msg_struct_l3bfsc_cloudvela_ctrl_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_ctrl_resp_t));
+	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_ctrl_resp_t);
 //	snd.optid = rcv.optid;
 //	snd.optpar = rcv.optpar;
 //	snd.modbusVal = rcv.modbusVal;
 	snd.comHead.timeStamp = time(0);
-	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
+	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_CTRL_RESP, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}

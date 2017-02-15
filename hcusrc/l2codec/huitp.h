@@ -507,8 +507,8 @@ typedef enum
 	HUITP_MSGID_uni_bfsc_comb_scale_data_confirm     = 0x3B01,
 	HUITP_MSGID_uni_bfsc_comb_scale_event_report     = 0x3B82,
 	HUITP_MSGID_uni_bfsc_comb_scale_event_confirm    = 0x3B02,
-	HUITP_MSGID_uni_bfsc_comb_scale_cmd_req          = 0x3B03,
-	HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp         = 0x3B83,
+	HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req          = 0x3B03,
+	HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp         = 0x3B83,
 	HUITP_MSGID_uni_bfsc_statistic_report            = 0x3B84,
 	HUITP_MSGID_uni_bfsc_statistic_confirm           = 0x3B04,
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
@@ -4837,25 +4837,25 @@ typedef struct StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t;
 
-//HUITP_MSGID_uni_bfsc_comb_scale_cmd_req          = 0x3B03,
-typedef struct StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_cmd_req
+//HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req          = 0x3B03,
+typedef struct StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_req_t baseReq;
 	StrIe_HUITP_IEID_uni_scale_weight_cmd_t cmdReq;
 	StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t cfgReq;
-}StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_cmd_req_t;
+}StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t;
 
-//HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp         = 0x3B83,
-typedef struct StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp
+//HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp         = 0x3B83,
+typedef struct StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
 	StrIe_HUITP_IEID_uni_scale_weight_cmd_t cmdResp;
 	StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t cfgResp;
-}StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_cmd_resp_t;
+}StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp_t;
 
 //HUITP_MSGID_uni_bfsc_statistic_report            = 0x3B84,
 typedef struct StrMsg_HUITP_MSGID_uni_bfsc_statistic_report

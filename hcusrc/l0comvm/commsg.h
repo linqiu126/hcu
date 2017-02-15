@@ -490,8 +490,8 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM,
 	MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT,
 	MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,
-	MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
-	MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
+	MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ,
+	MSG_ID_L3BFSC_CLOUDVELA_CTRL_RESP,
 	MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
 	MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
 
@@ -2176,8 +2176,8 @@ typedef struct msg_struct_cloudvela_l3bfsc_event_confirm
 	UINT32 length;
 }msg_struct_cloudvela_l3bfsc_event_confirm_t;
 
-//MSG_ID_CLOUDVELA_L3BFSC_CMD_REQ,
-typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
+//MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ,
+typedef struct msg_struct_cloudvela_l3bfsc_ctrl_req
 {
 	UINT8  baseReq;
 	UINT8  scaleWeightCmd;
@@ -2187,12 +2187,12 @@ typedef struct msg_struct_cloudvela_l3bfsc_cmd_req
 	UINT32 staReportDuration;     	//统计报告周期
 	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
-}msg_struct_cloudvela_l3bfsc_cmd_req_t;
+}msg_struct_cloudvela_l3bfsc_ctrl_req_t;
 //scaleWeightCmd => StrIe_HUITP_IEID_uni_scale_weight_cmd_t.scaleWeightCmd (HUITP.H)
 //workMode=>  StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t(HUITP.H)
 
-//MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP,
-typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
+//MSG_ID_L3BFSC_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_l3bfsc_cloudvela_ctrl_resp
 {
 	UINT8  baseResp;
 	UINT8  scaleWeightCmd;
@@ -2202,7 +2202,7 @@ typedef struct msg_struct_l3bfsc_cloudvela_cmd_resp
 	UINT32 staReportDuration;     	//统计报告周期
 	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
-}msg_struct_l3bfsc_cloudvela_cmd_resp_t;
+}msg_struct_l3bfsc_cloudvela_ctrl_resp_t;
 //scaleWeightCmd => StrIe_HUITP_IEID_uni_scale_weight_cmd_t.scaleWeightCmd (HUITP.H)
 //workMode=>  StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t(HUITP.H)
 

@@ -88,8 +88,10 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 };
 
 //Global variables
-UINT32 HcuSensorIdRoundBing;
-UINT32 can_socket_id; //MYC
+
+//Task Global variables
+gTaskCanitfleoContext_t gTaskCanitfleoContext;
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -137,7 +139,8 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] = 0;
-	HcuSensorIdRoundBing = 0;
+	memset(&gTaskCanitfleoContext, 0, sizeof(gTaskCanitfleoContext_t));
+	gTaskCanitfleoContext.sensorIdRoundBing = 0;
 
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
 /*	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, HCU_CANITFLEO_TIMER_WORKING_SCAN_DURATION, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -175,7 +178,7 @@ OPSTAT func_canitfleo_int_init(void)
 	//MYC
 #ifdef TARGET_RASPBERRY_PI3B
 	INT32 ret;
-	ret = func_canitfleo_can_init("can0", &can_socket_id);
+	ret = func_canitfleo_can_init("can0", &gTaskCanitfleoContext.can_socket_id);
 
 	if(0 == ret)
 		return SUCCESS;
@@ -490,27 +493,18 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	//将收到的传感器发送到下位机
 
 	/* MYC ADDED FOR BF DEMO */
-		ret = func_canitfleo_can_send(can_socket_id, "602#4000650200000000");
-		if(1 == ret)
-		{
+		if (func_canitfleo_can_send(gTaskCanitfleoContext.can_socket_id, "602#4000650200000000") == FAILURE)
 			HcuErrorPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#4000650200000000.\r\n");
-		}
-		HcuDebugPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#4000650200000000 successful.\r\n");
-
 
 		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
 		do{
-			ret = func_canitfleo_can_receive(can_socket_id, &canid, canframe_hex, buf);
-			if(1 == ret)
-			{
+			if (func_canitfleo_can_receive(gTaskCanitfleoContext.can_socket_id, &canid, canframe_hex, buf) == FAILURE)
 				HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
-			}
 			if(canid == 0x702)
 				HcuDebugPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
-
 		}while(canid == 0x702);
 		weight = canframe_hex[4] + (canframe_hex[5] << 8) + (canframe_hex[6] << 16) + (canframe_hex[7] << 24);
-		HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), canid =0x%X, buf = %s, weight = %d\r\n", (UINT32)canid, buf, weight);
+		HCU_DEBUG_PRINT_INF("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), canid =0x%X, buf = %s, weight = %d\r\n", (UINT32)canid, buf, weight);
 
 	//等待返回命令
 
@@ -519,7 +513,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_read_req(UINT32 dest_id, UINT32 src_id, void * pa
 	msg_struct_can_l3bfsc_ws_read_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_read_resp_t));
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
-		snd.sensorWsValue[i] = ++HcuSensorIdRoundBing;
+		snd.sensorWsValue[i] = ++gTaskCanitfleoContext.sensorIdRoundBing;
 		if ( i == (canid & 0xF))    //MYC
 			snd.sensorWsValue[i] = weight;
 		//if (rcv.wsBitmap[i] == 1){
@@ -565,7 +559,7 @@ OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void 
 	/* MYC ADDED FOR BF DEMO */
 	if (L3PO_bfsc_start_cmd == rcv.optid)
 	{
-		ret = func_canitfleo_can_send(can_socket_id, "602#2300652002000000");
+		ret = func_canitfleo_can_send(gTaskCanitfleoContext.can_socket_id, "602#2300652002000000");
 		if(1 == ret)
 		{
 			HcuErrorPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#2300652002000000.\r\n");
@@ -573,34 +567,22 @@ OPSTAT fsm_canitfleo_l3bfsc_general_cmd_req(UINT32 dest_id, UINT32 src_id, void 
 		HcuDebugPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#2300652002000000 successful.\r\n");
 		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
 		do{
-			ret = func_canitfleo_can_receive(can_socket_id, &canid, canframe_hex, buf);
-			if(1 == ret)
-			{
+			if (func_canitfleo_can_receive(gTaskCanitfleoContext.can_socket_id, &canid, canframe_hex, buf) == FAILURE)
 				HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
-			}
 			if(canid == 0x702)
 				HcuDebugPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
-
 		}while(canid == 0x702);
 	}
 	else if (L3PO_bfsc_stop_cmd == rcv.optid)
 	{
-		ret = func_canitfleo_can_send(can_socket_id, "602#2300652003000000");
-		if(1 == ret)
-		{
+		if (func_canitfleo_can_send(gTaskCanitfleoContext.can_socket_id, "602#2300652003000000") == FAILURE)
 			HcuErrorPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#2300652003000000.\r\n");
-		}
-		HcuDebugPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#2300652003000000 successful.\r\n");
 		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
 		do{
-			ret = func_canitfleo_can_receive(can_socket_id, &canid, canframe_hex, buf);
-			if(1 == ret)
-			{
+			if (func_canitfleo_can_receive(gTaskCanitfleoContext.can_socket_id, &canid, canframe_hex, buf) == FAILURE)
 				HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
-			}
 			if(canid == 0x702)
 				HcuDebugPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf), CANOpen Heartbeat [%s}\r\n", buf);
-
 		}while(canid == 0x702);
 	}
 	else
@@ -654,17 +636,15 @@ void func_canitfleo_working_scan_process(void)
 	snd.sensorid = HcuSensorIdRoundBing;*/
 
 	/* MYC ADDED FOR BF DEMO */
-	ret = func_canitfleo_can_send(can_socket_id, "602#4000650200000000");
+	ret = func_canitfleo_can_send(gTaskCanitfleoContext.can_socket_id, "602#4000650200000000");
 	if(1 == ret)
 	{
 		HcuErrorPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#4000650200000000.\r\n");
 	}
-	HcuDebugPrint("CANITFLEO: func_canitfleo_can_send(sock, 602#4000650200000000 successful.\r\n");
-
 
 	memset(buf, 0, sizeof(MAX_CANFRAME)+1);
 	do{
-		ret = func_canitfleo_can_receive(can_socket_id, &canid, canframe_hex, buf);
+		ret = func_canitfleo_can_receive(gTaskCanitfleoContext.can_socket_id, &canid, canframe_hex, buf);
 		if(1 == ret)
 		{
 			HcuErrorPrint("CANITFLEO: can_receive(sock, &canid, &canframe_hex, &buf);\r\n");
@@ -854,9 +834,7 @@ OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 pref
 		break;
 
 	default:
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
-		HcuErrorPrint("CANITFLEO: Input parameters error!\n");
-		return FAILURE;
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Input parameters error!\n");
 		break;
 	}
 
@@ -938,44 +916,21 @@ OPSTAT func_canitfleo_can_init(char *canitfname, int *sock)
  */
 OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe)
 {
-
 	int s; /* can raw socket */
 	int nbytes;
 	struct can_frame frame;
 
-	if (0 == socket || -1 == socket) {
-		fprintf(stderr, "Invalid Socket ID.\n");
-		return 1;
-	}
+	if (0 == socket || -1 == socket) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Invalid Socket ID.\n");
 
 	s = socket;
 
 	/* check command line options */
-	if (NULL == canid_canframe) {
-		fprintf(stderr, "canid_canframe == NULL\n");
-		return 1;
-	}
-
-	/* parse CAN frame
-	if (parse_canframe(canid_canframe, &frame)){
-		fprintf(stderr, "\nWrong CAN-frame format!\n\n");
-		fprintf(stderr, "Try: <can_id>#{R|data}\n");
-		fprintf(stderr, "can_id can have 3 (SFF) or 8 (EFF) hex chars\n");
-		fprintf(stderr, "data has 0 to 8 hex-values that can (optionally)");
-		fprintf(stderr, " be seperated by '.'\n\n");
-		fprintf(stderr, "e.g. 5A1#11.2233.44556677.88 / 123#DEADBEEF / ");
-		fprintf(stderr, "5AA# /\n     1F334455#1122334455667788 / 123#R ");
-		fprintf(stderr, "for remote transmission request.\n\n");
-		return 1;
-	}*/
+	if (NULL == canid_canframe) HCU_ERROR_PRINT_CANITFLEO("canid_canframe == NULL\n");
 
 	/* send frame */
-	if ((nbytes = write(s, &frame, sizeof(frame))) != sizeof(frame)) {
-		perror("write");
-		return 1;
-	}
+	if ((nbytes = write(s, &frame, sizeof(frame))) != sizeof(frame)) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Write error.\n");
 
-	return 0;
+	return SUCCESS;
 }
 
 /*
@@ -991,29 +946,21 @@ OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe)
 
 OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char)
 {
-
 	int s; /* can raw socket */
 	int nbytes;
 	struct sockaddr_can addr;
 	struct can_frame frame;
 
-
 	char ctrlmsg[CMSG_SPACE(sizeof(struct timeval)) + CMSG_SPACE(sizeof(__u32))];
 	struct iovec iov;
 	struct msghdr msg;
 
-	if (0 == socket || -1 == socket) {
-		fprintf(stderr, "Invalid Socket ID.\n");
-		return 1;
-	}
+	if (0 == socket || -1 == socket) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Invalid Socket ID.\n");
 
 	s = socket;
 
 	/* check command line options */
-	if (NULL == canframe_hex || NULL == canid_canframe_char) {
-		fprintf(stderr, "canid_canframe == NULL\n");
-		return 1;
-	}
+	if (NULL == canframe_hex || NULL == canid_canframe_char) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: canid_canframe == NULL\n");
 
 	/* these settings are static and can be held out of the hot path */
 	iov.iov_base = &frame;
@@ -1029,26 +976,15 @@ OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex
 	msg.msg_flags = 0;
 
 	nbytes = recvmsg(s, &msg, 0);
-	//nbytes = read(s, &frame, sizeof(frame));
 
-	if (nbytes < 0) {
-		perror("read");
-		return 1;
-	}
+	if (nbytes < 0) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: read error\n");
 
-	if (nbytes < sizeof(struct can_frame)) {
-		fprintf(stderr, "read: incomplete CAN frame\n");
-		return 1;
-	}
+	if (nbytes < sizeof(struct can_frame)) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: read: incomplete CAN frame\n");
 
 	*canid = frame.can_id;
 	memcpy(canframe_hex, frame.data, frame.can_dlc);
 
-	//fprint_canframe(stdout, &frame, "\n", 0);
-	//sprint_canframe(canid_canframe_char, &frame, 0);
-
-	return 0;
-
+	return SUCCESS;
 }
 
 int func_canitfleo_test_main(int argc, char **argv)

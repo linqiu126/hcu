@@ -27,6 +27,12 @@ enum FSM_STATE_CANITFLEO
 //Global variables
 extern HcuFsmStateItem_t HcuFsmCanitfleo[];
 
+typedef struct gTaskCanitfleoContext
+{
+	UINT32 sensorIdRoundBing;
+	UINT32 can_socket_id;
+}gTaskCanitfleoContext_t;
+
 //API
 extern OPSTAT fsm_canitfleo_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -48,5 +54,7 @@ OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex
 OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe);
 OPSTAT func_canitfleo_can_init(char *canitfname, int *sock);
 
+//高级定义，简化程序的可读性
+#define HCU_ERROR_PRINT_CANITFLEO(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 #endif /* L2FRAME_CANITFLEO_H_ */
