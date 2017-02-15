@@ -31,14 +31,20 @@ enum FSM_STATE_WINDDIR
 //Global variables
 extern HcuFsmStateItem_t HcuFsmWinddir[];
 
-typedef struct SensorWinddirInfo
+typedef struct gTaskWinddirContextElement
 {
 	UINT8 sensorId;
 	UINT32 equId;
 	UINT8 hwStatus;
 	UINT8 hwAccess;
 	UINT8 busyCount;  //被重复访问，但状态一直处于忙的次数
-}SensorWinddirInfo_t;
+}gTaskWinddirContextElement_t;
+#define MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED 1
+typedef struct gTaskWinddirContext
+{
+	gTaskWinddirContextElement_t winddir[MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED];
+	UINT8 currentSensorId;
+}gTaskWinddirContext_t;
 #define SENSOR_WINDDIR_HW_STATUS_INVALID 0xFF
 #define SENSOR_WINDDIR_HW_STATUS_ACTIVE 1
 #define SENSOR_WINDDIR_HW_STATUS_DEACTIVE 2
@@ -47,7 +53,7 @@ typedef struct SensorWinddirInfo
 #define SENSOR_WINDDIR_HW_ACCESS_INVALID 0xFF
 #define SENSOR_WINDDIR_HW_ACCESS_BUSY_COUNT_NUM_MAX 3
 
-#define MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED 1
+
 
 //#define WINDDIR_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define WINDDIR_TIMER_DURATION_MODBUS_FB 3    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题
@@ -59,10 +65,12 @@ extern OPSTAT fsm_winddir_restart(UINT32 dest_id, UINT32 src_id, void * param_pt
 extern OPSTAT fsm_winddir_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_winddir_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_winddir_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_winddir_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_winddir_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 void func_winddir_time_out_read_data_from_modbus(void);
 void func_winddir_time_out_processing_no_rsponse(void);
-extern OPSTAT fsm_winddir_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_winddir_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //引用外部API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);

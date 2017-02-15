@@ -38,7 +38,7 @@ HcuFsmStateItem_t FsmWindspd[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_WINDSPD_ACTIVED,          fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_WINDSPD_ACTIVED,          fsm_windspd_time_out},
 	{MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ,     FSM_STATE_WINDSPD_ACTIVED,      	fsm_windspd_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ,  FSM_STATE_WINDSPD_ACTIVED,          fsm_windspd_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ,  FSM_STATE_WINDSPD_ACTIVED,          fsm_windspd_cloudvela_ctrl_req},
 
     //Wait for Modbus Feedback
     {MSG_ID_COM_RESTART,        		FSM_STATE_WINDSPD_OPT_WFFB,         fsm_windspd_restart},
@@ -55,7 +55,7 @@ HcuFsmStateItem_t FsmWindspd[] =
 
 //Task Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-SensorWindspdInfo_t zSensorWindspdInfo[MAX_NUM_OF_SENSOR_WINDSPD_INSTALLED];
+gTaskWindspdContext_t zSensorWindspdInfo[MAX_NUM_OF_SENSOR_WINDSPD_INSTALLED];
 UINT8 currentSensorWindspdId;
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
 //extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
@@ -105,7 +105,7 @@ OPSTAT fsm_windspd_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	}
 
 	//Task global variables init.
-	memset(zSensorWindspdInfo, 0, sizeof(SensorWindspdInfo_t));
+	memset(zSensorWindspdInfo, 0, sizeof(gTaskWindspdContext_t));
 	currentSensorWindspdId = 0;
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD] = 0;
 	//目前暂时只有一个WINDSPD传感器，但程序的框架可以支持无数个传感器
@@ -540,7 +540,7 @@ OPSTAT fsm_windspd_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * para
 	return SUCCESS;
 }
 
-OPSTAT fsm_windspd_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_windspd_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

@@ -56,8 +56,8 @@ HcuFsmStateItem_t FsmEmc[] =
 
 //Task Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-SensorEmcInfo_t zSensorEmcInfo[MAX_NUM_OF_SENSOR_EMC_INSTALLED];
-UINT8 currentSensorEmcId;
+gTaskEmcContext_t zSensorEmcInfo[MAX_NUM_OF_SENSOR_EMC_INSTALLED];
+UINT8 gTaskEmcContext.currentSensorId;
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
 //extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 
@@ -106,8 +106,8 @@ OPSTAT fsm_emc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 	}
 
 	//Task global variables init.
-	memset(zSensorEmcInfo, 0, sizeof(SensorEmcInfo_t));
-	currentSensorEmcId = 0;
+	memset(zSensorEmcInfo, 0, sizeof(gTaskEmcContext_t));
+	gTaskEmcContext.currentSensorId = 0;
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC] = 0;
 	//目前暂时只有一个EMC传感器，但程序的框架可以支持无数个传感器
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
@@ -209,13 +209,13 @@ void func_emc_time_out_read_data_from_modbus(void)
 	int ret = 0;
 	//如果当前传感器还处于忙的状态，意味着下面操作还未完成，继续等待，下一次再操作
 	//通过多次等待，让离线的设备自动变成长周期读取一次
-	if (zSensorEmcInfo[currentSensorEmcId].hwAccess == SENSOR_EMC_HW_ACCESS_BUSY){
+	if (zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwAccess == SENSOR_EMC_HW_ACCESS_BUSY){
 		//多次等待后强行恢复
-		if ((zSensorEmcInfo[currentSensorEmcId].busyCount < 0) || (zSensorEmcInfo[currentSensorEmcId].busyCount >= SENSOR_EMC_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
-			zSensorEmcInfo[currentSensorEmcId].busyCount = 0;
-			zSensorEmcInfo[currentSensorEmcId].hwAccess =SENSOR_EMC_HW_ACCESS_IDLE;
+		if ((zSensorEmcInfo[gTaskEmcContext.currentSensorId].busyCount < 0) || (zSensorEmcInfo[gTaskEmcContext.currentSensorId].busyCount >= SENSOR_EMC_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
+			zSensorEmcInfo[gTaskEmcContext.currentSensorId].busyCount = 0;
+			zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwAccess =SENSOR_EMC_HW_ACCESS_IDLE;
 		}else{
-			zSensorEmcInfo[currentSensorEmcId].busyCount++;
+			zSensorEmcInfo[gTaskEmcContext.currentSensorId].busyCount++;
 			//Keep busy status
 		}
 		//状态机不能动，可能在ACTIVE，也可能在WFB，因为定时随时都可能来的
@@ -223,13 +223,13 @@ void func_emc_time_out_read_data_from_modbus(void)
 
 	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
 	//如果当前传感器处于空闲态，干活！
-	else if (zSensorEmcInfo[currentSensorEmcId].hwAccess == SENSOR_EMC_HW_ACCESS_IDLE){
+	else if (zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwAccess == SENSOR_EMC_HW_ACCESS_IDLE){
 		//Do somemthing
 		//Send out message to MODBUS
 		msg_struct_emc_modbus_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_emc_modbus_data_read_t));
 		snd.length = sizeof(msg_struct_emc_modbus_data_read_t);
-		snd.equId = zSensorEmcInfo[currentSensorEmcId].equId;
+		snd.equId = zSensorEmcInfo[gTaskEmcContext.currentSensorId].equId;
 		snd.cmdId = L3CI_emc;
 		snd.optId = L3PO_emc_data_req;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
@@ -253,8 +253,8 @@ void func_emc_time_out_read_data_from_modbus(void)
 
 
 		//设置当前传感器到忙，没反应之前，不置状态
-		zSensorEmcInfo[currentSensorEmcId].hwAccess = SENSOR_EMC_HW_ACCESS_BUSY;
-		zSensorEmcInfo[currentSensorEmcId].busyCount = 0;
+		zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwAccess = SENSOR_EMC_HW_ACCESS_BUSY;
+		zSensorEmcInfo[gTaskEmcContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_EMC_OPT_WFFB
 		ret = FsmSetState(TASK_ID_EMC, FSM_STATE_EMC_OPT_WFFB);
@@ -270,9 +270,9 @@ void func_emc_time_out_read_data_from_modbus(void)
 
 	//任何其他状态，强制初始化
 	else{
-		zSensorEmcInfo[currentSensorEmcId].hwAccess = SENSOR_EMC_HW_ACCESS_IDLE;
-		zSensorEmcInfo[currentSensorEmcId].hwStatus = SENSOR_EMC_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorEmcInfo[currentSensorEmcId].busyCount = 0;
+		zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwAccess = SENSOR_EMC_HW_ACCESS_IDLE;
+		zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwStatus = SENSOR_EMC_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		zSensorEmcInfo[gTaskEmcContext.currentSensorId].busyCount = 0;
 	}
 
 	return;
@@ -284,17 +284,17 @@ void func_emc_time_out_processing_no_rsponse(void)
 	int ret=0;
 
 	//恢复当前传感器的空闲状态
-	zSensorEmcInfo[currentSensorEmcId].hwAccess = SENSOR_EMC_HW_ACCESS_IDLE;
-	zSensorEmcInfo[currentSensorEmcId].hwStatus = SENSOR_EMC_HW_STATUS_DEACTIVE;
-	zSensorEmcInfo[currentSensorEmcId].busyCount = 0;
+	zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwAccess = SENSOR_EMC_HW_ACCESS_IDLE;
+	zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwStatus = SENSOR_EMC_HW_STATUS_DEACTIVE;
+	zSensorEmcInfo[gTaskEmcContext.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//CurrentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorEmcId < 0) || (currentSensorEmcId >= (MAX_NUM_OF_SENSOR_EMC_INSTALLED-1))){
-		currentSensorEmcId = 0;
+	if ((gTaskEmcContext.currentSensorId < 0) || (gTaskEmcContext.currentSensorId >= (MAX_NUM_OF_SENSOR_EMC_INSTALLED-1))){
+		gTaskEmcContext.currentSensorId = 0;
 	}else{
-		currentSensorEmcId++;
+		gTaskEmcContext.currentSensorId++;
 	}
 
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
@@ -498,17 +498,17 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	//恢复当前传感器的空闲状态
-	zSensorEmcInfo[currentSensorEmcId].hwAccess = SENSOR_EMC_HW_ACCESS_IDLE;
-	zSensorEmcInfo[currentSensorEmcId].hwStatus = SENSOR_EMC_HW_STATUS_ACTIVE;
-	zSensorEmcInfo[currentSensorEmcId].busyCount = 0;
+	zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwAccess = SENSOR_EMC_HW_ACCESS_IDLE;
+	zSensorEmcInfo[gTaskEmcContext.currentSensorId].hwStatus = SENSOR_EMC_HW_STATUS_ACTIVE;
+	zSensorEmcInfo[gTaskEmcContext.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//Finished, then currentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorEmcId < 0) || (currentSensorEmcId >= (MAX_NUM_OF_SENSOR_EMC_INSTALLED-1))){
-		currentSensorEmcId = 0;
+	if ((gTaskEmcContext.currentSensorId < 0) || (gTaskEmcContext.currentSensorId >= (MAX_NUM_OF_SENSOR_EMC_INSTALLED-1))){
+		gTaskEmcContext.currentSensorId = 0;
 	}else{
-		currentSensorEmcId++;
+		gTaskEmcContext.currentSensorId++;
 	}
 
 	//State Transfer to FSM_STATE_EMC_ACTIVE

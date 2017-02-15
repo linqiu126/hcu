@@ -38,9 +38,9 @@ HcuFsmStateItem_t HcuFsmPm25sharp[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_pm25sharp_restart},
 
     //Task level initialization
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_PM25SHARP_ACTIVED,            fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_PM25SHARP_ACTIVED,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_PM25SHARP_ACTIVED,       		fsm_com_do_nothing},
+	{MSG_ID_CLOUDVELA_PM25SP_DATA_REQ,		FSM_STATE_PM25SHARP_ACTIVED,      	  	fsm_pm25sharp_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM,	FSM_STATE_PM25SHARP_ACTIVED,      	  	fsm_pm25sharp_cloudvela_data_confirm},
+
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -48,8 +48,8 @@ HcuFsmStateItem_t HcuFsmPm25sharp[] =
 
 //Global variables
 
-//For Serial Port Init
-SerialPortCom_t gSerialPortForPm25Sharp;
+//Task Global variables
+gTaskPm25sharpContext_t gTaskPm25sharpContext;
 
 
 //Main Entry
@@ -91,17 +91,17 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	/*
 	//初始化硬件接口
-	gSerialPortForPm25Sharp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-	gSerialPortForPm25Sharp.nSpeed = 2400;
-	gSerialPortForPm25Sharp.nBits = 8;
-	gSerialPortForPm25Sharp.nEvent = 'N';
-	gSerialPortForPm25Sharp.nStop = 1;
-	gSerialPortForPm25Sharp.fd = HCU_INVALID_U16;
-	gSerialPortForPm25Sharp.vTime = HCU_INVALID_U8;
-	gSerialPortForPm25Sharp.vMin = HCU_INVALID_U8;
-	gSerialPortForPm25Sharp.c_lflag = 0;
+	gTaskPm25sharpContext.serialPort.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
+	gTaskPm25sharpContext.serialPort.nSpeed = 2400;
+	gTaskPm25sharpContext.serialPort.nBits = 8;
+	gTaskPm25sharpContext.serialPort.nEvent = 'N';
+	gTaskPm25sharpContext.serialPort.nStop = 1;
+	gTaskPm25sharpContext.serialPort.fd = HCU_INVALID_U16;
+	gTaskPm25sharpContext.serialPort.vTime = HCU_INVALID_U8;
+	gTaskPm25sharpContext.serialPort.vMin = HCU_INVALID_U8;
+	gTaskPm25sharpContext.serialPort.c_lflag = 0;
 
-	ret = hcu_sps485_serial_init(&gSerialPortForPm25Sharp);
+	ret = hcu_sps485_serial_init(&gTaskPm25sharpContext.serialPort);
 	if (FAILURE == ret)
 	{
 		HcuErrorPrint("PM25SHARP: Init Serial Port Failure, Exit.\n");
@@ -112,12 +112,13 @@ OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuDebugPrint("PM25SHARP: Init Serial Port Success ...\n");
 	}
 
-	SerialPortSetVtimeVmin(&gSerialPortForPm25Sharp, 10, 5);
-	HcuDebugPrint("PM25SHARP: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForPm25Sharp.vTime, gSerialPortForPm25Sharp.vMin);
+	SerialPortSetVtimeVmin(&gTaskPm25sharpContext.serialPort, 10, 5);
+	HcuDebugPrint("PM25SHARP: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gTaskPm25sharpContext.serialPort.vTime, gTaskPm25sharpContext.serialPort.vMin);
     */
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25SHARP] = 0;
+	memset(&gTaskPm25sharpContext, 0, sizeof(gTaskPm25sharpContext_t));
 
 	//启动周期性定时器
 	/*
@@ -197,7 +198,7 @@ OPSTAT fsm_pm25sharp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 			}//FsmSetState
 		}
 		//干活
-		UINT32 pm25sharpfd = gSerialPortForPm25Sharp.fd;
+		UINT32 pm25sharpfd = gTaskPm25sharpContext.serialPort.fd;
 		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 			HcuDebugPrint("PM25SHARP: fd = %d !\n", pm25sharpfd);
 		}
@@ -232,7 +233,7 @@ void func_pm25sharp_read_data(UINT32 fd)
 	//memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 	//ret = hcu_sps485_serial_port_get(&gSerialPort, currentModbusBuf.curBuf, MAX_HCU_MSG_BODY_LENGTH);//获得的数据存在currentModbusBuf中
 	//nread = read(fd, &received_single_byte, 1);
-	nread = hcu_sps485_serial_port_get(&gSerialPortForPm25Sharp, &received_single_byte, 1);
+	nread = hcu_sps485_serial_port_get(&gTaskPm25sharpContext.serialPort, &received_single_byte, 1);
 	if (nread > 0)
 	{
 		//起始位是0xAA
@@ -312,5 +313,18 @@ void func_pm25sharp_read_data(UINT32 fd)
 	}
 
 }
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_pm25sharp_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_pm25sharp_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
 
 

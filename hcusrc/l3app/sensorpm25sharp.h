@@ -34,13 +34,22 @@ enum FSM_STATE_PM25SHARP
 */
 //Global variables
 extern HcuFsmStateItem_t HcuFsmPm25sharp[];
-//extern GpsPosInfo_t zHcuGpsPosInfo;
+
+typedef struct gTaskPm25sharpContext
+{
+	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
+	SerialPortCom_t 	serialPort;
+}gTaskPm25sharpContext_t;
+
+
 
 //API
 extern OPSTAT fsm_pm25sharp_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_pm25sharp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_pm25sharp_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_pm25sharp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_pm25sharp_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_pm25sharp_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_pm25sharp_int_init(void);

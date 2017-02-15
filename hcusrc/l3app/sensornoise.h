@@ -32,14 +32,20 @@ enum FSM_STATE_NOISE
 //Global variables
 extern HcuFsmStateItem_t HcuFsmNoise[];
 
-typedef struct SensorNoiseInfo
+typedef struct gTaskNoiseContextElement
 {
 	UINT8 sensorId;
 	UINT32 equId;
 	UINT8 hwStatus;
 	UINT8 hwAccess;
 	UINT8 busyCount;  //被重复访问，但状态一直处于忙的次数
-}SensorNoiseInfo_t;
+}gTaskNoiseContextElement_t;
+#define MAX_NUM_OF_SENSOR_NOISE_INSTALLED 1
+typedef struct gTaskNoiseContext
+{
+	gTaskNoiseContextElement_t noise[MAX_NUM_OF_SENSOR_NOISE_INSTALLED];
+	UINT8 currentSensorId;
+}gTaskNoiseContext_t;
 #define SENSOR_NOISE_HW_STATUS_INVALID 0xFF
 #define SENSOR_NOISE_HW_STATUS_ACTIVE 1
 #define SENSOR_NOISE_HW_STATUS_DEACTIVE 2
@@ -48,7 +54,7 @@ typedef struct SensorNoiseInfo
 #define SENSOR_NOISE_HW_ACCESS_INVALID 0xFF
 #define SENSOR_NOISE_HW_ACCESS_BUSY_COUNT_NUM_MAX 3
 
-#define MAX_NUM_OF_SENSOR_NOISE_INSTALLED 1
+
 
 //#define NOISE_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define NOISE_TIMER_DURATION_MODBUS_FB 2    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题
@@ -72,7 +78,8 @@ extern OPSTAT fsm_noise_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * 
 extern OPSTAT fsm_noise_spsvirgo_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 extern OPSTAT fsm_noise_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_noise_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_noise_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_noise_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 void func_noise_time_out_read_data_from_modbus(void);
 void func_noise_time_out_read_data_from_spsvirgo(void);

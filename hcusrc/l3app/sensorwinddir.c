@@ -39,8 +39,9 @@ HcuFsmStateItem_t HcuFsmWinddir[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_winddir_time_out},
 
     //Normal working status
-	{MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,     FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ,  FSM_STATE_WINDDIR_ACTIVED,          fsm_winddir_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,     	FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM,     FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_cloudvela_data_confirm},
+	{MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ,  		FSM_STATE_WINDDIR_ACTIVED,          fsm_winddir_cloudvela_ctrl_req},
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_WINDDIR_DATA_REPORT, FSM_STATE_WINDDIR_OPT_WFFB,        	fsm_winddir_data_report_from_modbus},
@@ -50,9 +51,12 @@ HcuFsmStateItem_t HcuFsmWinddir[] =
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
+//Global variables
+
+
 //Task Global variables
-SensorWinddirInfo_t zSensorWinddirInfo[MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED];
-UINT8 currentSensorWinddirId;
+gTaskWinddirContext_t gTaskWinddirContext;
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -99,17 +103,17 @@ OPSTAT fsm_winddir_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 	}
 
 	//Task global variables init.
-	memset(zSensorWinddirInfo, 0, sizeof(SensorWinddirInfo_t));
-	currentSensorWinddirId = 0;
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDDIR] = 0;
+	memset(&gTaskWinddirContext, 0, sizeof(gTaskWinddirContext_t));
+
 	//目前暂时只有一个WINDDIR传感器，但程序的框架可以支持无数个传感器
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
 	for (i=0;i<MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED;i++){
-		zSensorWinddirInfo[i].sensorId = i;
-		zSensorWinddirInfo[i].equId = MODBUS_WINDDIR_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
-		zSensorWinddirInfo[i].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
-		zSensorWinddirInfo[i].hwStatus = SENSOR_WINDDIR_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorWinddirInfo[i].busyCount = 0;
+		gTaskWinddirContext.winddir[i].sensorId = i;
+		gTaskWinddirContext.winddir[i].equId = MODBUS_WINDDIR_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
+		gTaskWinddirContext.winddir[i].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
+		gTaskWinddirContext.winddir[i].hwStatus = SENSOR_WINDDIR_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		gTaskWinddirContext.winddir[i].busyCount = 0;
 	}
 
 	//等待随机长度的时长，一分钟/60秒之类，然后再开始干活，以便减少所有传感器相互碰撞的几率，让所有任务分布更加平均
@@ -201,13 +205,13 @@ void func_winddir_time_out_read_data_from_modbus(void)
 	int ret = 0;
 	//如果当前传感器还处于忙的状态，意味着下面操作还未完成，继续等待，下一次再操作
 	//通过多次等待，让离线的设备自动变成长周期读取一次
-	if (zSensorWinddirInfo[currentSensorWinddirId].hwAccess == SENSOR_WINDDIR_HW_ACCESS_BUSY){
+	if (gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwAccess == SENSOR_WINDDIR_HW_ACCESS_BUSY){
 		//多次等待后强行恢复
-		if ((zSensorWinddirInfo[currentSensorWinddirId].busyCount < 0) || (zSensorWinddirInfo[currentSensorWinddirId].busyCount >= SENSOR_WINDDIR_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
-			zSensorWinddirInfo[currentSensorWinddirId].busyCount = 0;
-			zSensorWinddirInfo[currentSensorWinddirId].hwAccess =SENSOR_WINDDIR_HW_ACCESS_IDLE;
+		if ((gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].busyCount < 0) || (gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].busyCount >= SENSOR_WINDDIR_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
+			gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].busyCount = 0;
+			gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwAccess =SENSOR_WINDDIR_HW_ACCESS_IDLE;
 		}else{
-			zSensorWinddirInfo[currentSensorWinddirId].busyCount++;
+			gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].busyCount++;
 			//Keep busy status
 		}
 		//状态机不能动，可能在ACTIVE，也可能在WFB，因为定时随时都可能来的
@@ -215,13 +219,13 @@ void func_winddir_time_out_read_data_from_modbus(void)
 
 	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
 	//如果当前传感器处于空闲态，干活！
-	else if (zSensorWinddirInfo[currentSensorWinddirId].hwAccess == SENSOR_WINDDIR_HW_ACCESS_IDLE){
+	else if (gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwAccess == SENSOR_WINDDIR_HW_ACCESS_IDLE){
 		//Do somemthing
 		//Send out message to MODBUS
 		msg_struct_winddir_modbus_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_winddir_modbus_data_read_t));
 		snd.length = sizeof(msg_struct_winddir_modbus_data_read_t);
-		snd.equId = zSensorWinddirInfo[currentSensorWinddirId].equId;
+		snd.equId = gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].equId;
 		snd.cmdId = L3CI_winddir;
 		snd.optId = L3PO_winddir_data_req;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
@@ -242,8 +246,8 @@ void func_winddir_time_out_read_data_from_modbus(void)
 		}
 
 		//设置当前传感器到忙，没反应之前，不置状态
-		zSensorWinddirInfo[currentSensorWinddirId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_BUSY;
-		zSensorWinddirInfo[currentSensorWinddirId].busyCount = 0;
+		gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_BUSY;
+		gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_WINDDIR_OPT_WFFB
 		ret = FsmSetState(TASK_ID_WINDDIR, FSM_STATE_WINDDIR_OPT_WFFB);
@@ -256,9 +260,9 @@ void func_winddir_time_out_read_data_from_modbus(void)
 
 	//任何其他状态，强制初始化
 	else{
-		zSensorWinddirInfo[currentSensorWinddirId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
-		zSensorWinddirInfo[currentSensorWinddirId].hwStatus = SENSOR_WINDDIR_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorWinddirInfo[currentSensorWinddirId].busyCount = 0;
+		gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
+		gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwStatus = SENSOR_WINDDIR_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].busyCount = 0;
 	}
 
 	return;
@@ -270,17 +274,17 @@ void func_winddir_time_out_processing_no_rsponse(void)
 	int ret=0;
 
 	//恢复当前传感器的空闲状态
-	zSensorWinddirInfo[currentSensorWinddirId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
-	zSensorWinddirInfo[currentSensorWinddirId].hwStatus = SENSOR_WINDDIR_HW_STATUS_DEACTIVE;
-	zSensorWinddirInfo[currentSensorWinddirId].busyCount = 0;
+	gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
+	gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwStatus = SENSOR_WINDDIR_HW_STATUS_DEACTIVE;
+	gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//CurrentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorWinddirId < 0) || (currentSensorWinddirId >= (MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED-1))){
-		currentSensorWinddirId = 0;
+	if ((gTaskWinddirContext.currentSensorId < 0) || (gTaskWinddirContext.currentSensorId >= (MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED-1))){
+		gTaskWinddirContext.currentSensorId = 0;
 	}else{
-		currentSensorWinddirId++;
+		gTaskWinddirContext.currentSensorId++;
 	}
 
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
@@ -439,17 +443,17 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 	}
 
 	//恢复当前传感器的空闲状态
-	zSensorWinddirInfo[currentSensorWinddirId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
-	zSensorWinddirInfo[currentSensorWinddirId].hwStatus = SENSOR_WINDDIR_HW_STATUS_ACTIVE;
-	zSensorWinddirInfo[currentSensorWinddirId].busyCount = 0;
+	gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwAccess = SENSOR_WINDDIR_HW_ACCESS_IDLE;
+	gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].hwStatus = SENSOR_WINDDIR_HW_STATUS_ACTIVE;
+	gTaskWinddirContext.winddir[gTaskWinddirContext.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//Finished, then currentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorWinddirId < 0) || (currentSensorWinddirId >= (MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED-1))){
-		currentSensorWinddirId = 0;
+	if ((gTaskWinddirContext.currentSensorId < 0) || (gTaskWinddirContext.currentSensorId >= (MAX_NUM_OF_SENSOR_WINDDIR_INSTALLED-1))){
+		gTaskWinddirContext.currentSensorId = 0;
 	}else{
-		currentSensorWinddirId++;
+		gTaskWinddirContext.currentSensorId++;
 	}
 
 	//State Transfer to FSM_STATE_WINDDIR_ACTIVE
@@ -494,7 +498,12 @@ OPSTAT fsm_winddir_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * para
 	return SUCCESS;
 }
 
-OPSTAT fsm_winddir_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_winddir_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_winddir_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

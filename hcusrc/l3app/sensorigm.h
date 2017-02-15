@@ -27,13 +27,19 @@ enum FSM_STATE_IGM
 //Global variables
 extern HcuFsmStateItem_t HcuFsmIgm[];
 
+typedef struct gTaskIgmContext
+{
+	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
+}gTaskIgmContext_t;
+
+
 //API
 extern OPSTAT fsm_igm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_igm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_igm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_igm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_igm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_igm_nbiotcj188_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_igm_nbiotcj188_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_igm_int_init(void);

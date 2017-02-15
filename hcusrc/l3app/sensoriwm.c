@@ -40,13 +40,16 @@ HcuFsmStateItem_t HcuFsmIwm[] =
 
 	//Normal working status
 	{MSG_ID_NBIOTCJ188_IWM_DATA_REQ,     		FSM_STATE_IWM_ACTIVED,      			fsm_iwm_nbiotcj188_data_req},
-	{MSG_ID_NBIOTCJ188_IWM_CTRL_REQ,  		FSM_STATE_IWM_ACTIVED,          		fsm_iwm_nbiotcj188_control_cmd},
+	{MSG_ID_NBIOTCJ188_IWM_CTRL_REQ,  			FSM_STATE_IWM_ACTIVED,          		fsm_iwm_nbiotcj188_ctrl_req},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
 //Global variables
+
+//Task Global variables
+gTaskIwmContext_t gTaskIwmContext;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -93,6 +96,7 @@ OPSTAT fsm_iwm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 para
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_IWM] = 0;
+	memset(&gTaskIwmContext, 0, sizeof(gTaskIwmContext_t));
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_IWM, TIMER_ID_1S_IWM_PERIOD_READ, \
@@ -445,7 +449,7 @@ OPSTAT fsm_iwm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 }
 
 //暂时不用，留待未来使用
-OPSTAT fsm_iwm_nbiotcj188_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_iwm_nbiotcj188_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

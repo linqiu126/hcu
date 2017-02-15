@@ -31,14 +31,20 @@ enum FSM_STATE_TEMP
 //Global variables
 extern HcuFsmStateItem_t HcuFsmTemp[];
 
-typedef struct SensorTempInfo
+typedef struct gTaskTempContextElement
 {
 	UINT8 sensorId;
 	UINT32 equId;
 	UINT8 hwStatus;
 	UINT8 hwAccess;
 	UINT8 busyCount;  //被重复访问，但状态一直处于忙的次数
-}SensorTempInfo_t;
+}gTaskTempContextElement_t;
+#define MAX_NUM_OF_SENSOR_TEMP_INSTALLED 1
+typedef struct gTaskTempContext
+{
+	gTaskTempContextElement_t temp[MAX_NUM_OF_SENSOR_TEMP_INSTALLED];
+	UINT8 currentSensorId;
+}gTaskTempContext_t;
 #define SENSOR_TEMP_HW_STATUS_INVALID 0xFF
 #define SENSOR_TEMP_HW_STATUS_ACTIVE 1
 #define SENSOR_TEMP_HW_STATUS_DEACTIVE 2
@@ -46,8 +52,6 @@ typedef struct SensorTempInfo
 #define SENSOR_TEMP_HW_ACCESS_BUSY 2
 #define SENSOR_TEMP_HW_ACCESS_INVALID 0xFF
 #define SENSOR_TEMP_HW_ACCESS_BUSY_COUNT_NUM_MAX 3
-
-#define MAX_NUM_OF_SENSOR_TEMP_INSTALLED 1
 
 #define SENSOR_TEMP_RPI_PRESENT_TRUE 1
 #define SENSOR_TEMP_RPI_PRESENT_FALSE 0
@@ -67,12 +71,13 @@ extern OPSTAT fsm_temp_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 extern OPSTAT fsm_temp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_temp_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_temp_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_temp_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_temp_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
+void func_temp_time_out_read_data_from_spibusaries(void);//for SPIBUSARIES
 void func_temp_time_out_read_data_from_modbus(void);
 void func_temp_time_out_processing_no_rsponse(void);
-void func_temp_time_out_read_data_from_spibusaries(void);//for SPIBUSARIES
-
-extern OPSTAT fsm_temp_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_temp_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT func_temp_time_out_read_data_from_dht11(void);
 OPSTAT func_temp_time_out_read_data_from_sht20(void);
 OPSTAT func_temp_time_out_read_data_from_rht03(void);

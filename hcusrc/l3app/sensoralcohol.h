@@ -31,11 +31,20 @@ extern OPSTAT func_alcohol_time_out_read_data_from_mq3alco(void);
 //Global variables
 extern HcuFsmStateItem_t HcuFsmAlcohol[];
 
+typedef struct gTaskAlcoholContext
+{
+	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
+}gTaskAlcoholContext_t;
+
+
+
 //API
 extern OPSTAT fsm_alcohol_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_alcohol_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_alcohol_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_alcohol_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_alcohol_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_alcohol_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_alcohol_int_init(void);

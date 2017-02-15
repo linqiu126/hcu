@@ -31,12 +31,20 @@ enum FSM_STATE_AIRPRS
 //Global variables
 extern HcuFsmStateItem_t HcuFsmAirprs[];
 
+typedef struct gTaskAirprsContext
+{
+	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
+}gTaskAirprsContext_t;
+
+
 //API
 extern OPSTAT fsm_airprs_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_airprs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_airprs_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_airprs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT func_airprs_time_out_read_data_from_bmp180(void);
+extern OPSTAT fsm_airprs_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_airprs_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_airprs_int_init(void);

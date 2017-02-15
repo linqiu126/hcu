@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HUITP_MSGID_uni_lightstr_data_min" key="selection"/>
+		<item value="gTaskPm25sharpContext.serialPort" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value=";"/>
-			<item value="HUITP_MSGID_uni_lightstr_data_min"/>
-			<item value="lightstr"/>
-			<item value="uni_altitude_data"/>
-			<item value="uni_altitude"/>
-			<item value="uni_toxicgas_data"/>
-			<item value="uni_toxicgas"/>
-			<item value="lightstr_data"/>
+			<item value="gSerialPortForPm25Sharp"/>
+			<item value="gTaskPm25sharpContext"/>
+			<item value="gTaskWindspdContext"/>
+			<item value="gTaskWinddirContext_t.currentSensorId"/>
+			<item value="gTaskWinddirContext_t"/>
+			<item value="gTaskPm25Context"/>
+			<item value="zPM25ConfigData"/>
+			<item value="gTaskNoiseContext"/>
 		</list>
 		<list key="replacehistory">
+			<item value="gTaskPm25sharpContext.serialPort"/>
+			<item value="gTaskWinddirContext.currentSensorId"/>
+			<item value="gTaskWinddirContext_t"/>
+			<item value="fsm_hsmmp_cloudvela_ctrl_req"/>
 			<item value="&#x0A;{&#x0A;&#x09;HCU_ERROR_PRINT_CLOUDVELA(&quot;HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_emc_data_req_t received!\n&quot;);&#x0A;}&#x0A;"/>
 			<item value="uni_altitude_data"/>
 			<item value="uni_toxicgas_data"/>
 			<item value="lightstr_data"/>
-			<item value="msg_struct_ipm_nbiotcj188_ctrl_resp_t"/>
-			<item value="MSG_ID_NBIOTCJ188_IWM_CTRL_REQ"/>
-			<item value="msg_struct_hsmmp_cloudvela_data_resp_t"/>
-			<item value="msg_struct_cloudvela_pm25_ctrl_req_t"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

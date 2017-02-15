@@ -23,19 +23,28 @@ enum FSM_STATE_HCHO
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+
+//Global variables
+extern HcuFsmStateItem_t HcuFsmHcho[];
+
+typedef struct gTaskHchoContext
+{
+	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
+}gTaskHchoContext_t;
+
+
 #define SENSOR_HCHO_RPI_PRESENT_TRUE 1
 #define SENSOR_HCHO_RPI_PRESENT_FALSE 0
 #define SENSOR_HCHO_RPI_ZE08CH2O_PRESENT SENSOR_HCHO_RPI_PRESENT_TRUE
 extern OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void);
-
-//Global variables
-extern HcuFsmStateItem_t HcuFsmHcho[];
 
 //API
 extern OPSTAT fsm_hcho_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_hcho_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_hcho_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_hcho_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_hcho_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_hcho_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_hcho_int_init(void);

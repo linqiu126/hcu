@@ -38,7 +38,7 @@ HcuFsmStateItem_t FsmPm25[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_PM25_ACTIVED,          fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_PM25_ACTIVED,          fsm_pm25_time_out},
 	{MSG_ID_CLOUDVELA_PM25_DATA_REQ,       	FSM_STATE_PM25_ACTIVED,          fsm_pm25_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_PM25_CTRL_REQ,      FSM_STATE_PM25_ACTIVED,         fsm_pm25_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_PM25_CTRL_REQ,      FSM_STATE_PM25_ACTIVED,         fsm_pm25_cloudvela_ctrl_req},
 
     //Wait for Modbus Feedback
     {MSG_ID_COM_RESTART,        		FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_restart},
@@ -50,7 +50,7 @@ HcuFsmStateItem_t FsmPm25[] =
 	{MSG_ID_MODBUS_PM25_CONTROL_FB,     FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_modbus_control_fb},
 
 	//added by Shanchun to ensure not blocking the next command in cast no response from the last command
-	{MSG_ID_CLOUDVELA_PM25_CTRL_REQ,      FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_PM25_CTRL_REQ,      FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_cloudvela_ctrl_req},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -58,8 +58,8 @@ HcuFsmStateItem_t FsmPm25[] =
 
 //Task Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-SensorPm25Info_t zSensorPm25Info[MAX_NUM_OF_SENSOR_PM25_INSTALLED];
-UINT8 currentSensorPm25Id;
+gTaskPm25Context_t zSensorPm25Info[MAX_NUM_OF_SENSOR_PM25_INSTALLED];
+UINT8 gTaskPm25Context.currentSensorId;
 
 sensor_modbus_opertion_general_t zPM25ConfigData;//Added by Shanchun to save sensor config data
 
@@ -114,8 +114,8 @@ OPSTAT fsm_pm25_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	}
 
 	//Task global variables init.
-	memset(zSensorPm25Info, 0, sizeof(SensorPm25Info_t));
-	currentSensorPm25Id = 0;
+	memset(zSensorPm25Info, 0, sizeof(gTaskPm25Context_t));
+	gTaskPm25Context.currentSensorId = 0;
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25] = 0;
 	memset(&zPM25ConfigData,0,sizeof(sensor_modbus_opertion_general_t)); //by shanchun for saving sensor config data
 	//目前暂时只有一个PM25传感器，但程序的框架可以支持无数个传感器
@@ -222,13 +222,13 @@ void func_pm25_time_out_read_data_from_modbus(void)
 	int ret = 0;
 	//如果当前传感器还处于忙的状态，意味着下面操作还未完成，继续等待，下一次再操作
 	//通过多次等待，让离线的设备自动变成长周期读取一次
-	if (zSensorPm25Info[currentSensorPm25Id].hwAccess == SENSOR_PM25_HW_ACCESS_BUSY){
+	if (zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess == SENSOR_PM25_HW_ACCESS_BUSY){
 		//多次等待后强行恢复
-		if ((zSensorPm25Info[currentSensorPm25Id].busyCount < 0) || (zSensorPm25Info[currentSensorPm25Id].busyCount >= SENSOR_PM25_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
-			zSensorPm25Info[currentSensorPm25Id].busyCount = 0;
-			zSensorPm25Info[currentSensorPm25Id].hwAccess =SENSOR_PM25_HW_ACCESS_IDLE;
+		if ((zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount < 0) || (zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount >= SENSOR_PM25_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
+			zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount = 0;
+			zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess =SENSOR_PM25_HW_ACCESS_IDLE;
 		}else{
-			zSensorPm25Info[currentSensorPm25Id].busyCount++;
+			zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount++;
 			//Keep busy status
 		}
 		//状态机不能动，可能在ACTIVE，也可能在WFB，因为定时随时都可能来的
@@ -236,13 +236,13 @@ void func_pm25_time_out_read_data_from_modbus(void)
 
 	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
 	//如果当前传感器处于空闲态，干活！
-	else if (zSensorPm25Info[currentSensorPm25Id].hwAccess == SENSOR_PM25_HW_ACCESS_IDLE){
+	else if (zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess == SENSOR_PM25_HW_ACCESS_IDLE){
 		//Do somemthing
 		//Send out message to MODBUS
 		msg_struct_pm25_modbus_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_pm25_modbus_data_read_t));
 		snd.length = sizeof(msg_struct_pm25_modbus_data_read_t);
-		snd.equId = zSensorPm25Info[currentSensorPm25Id].equId;//Shanchun:to check if it is inline with Sensor acal tuequId
+		snd.equId = zSensorPm25Info[gTaskPm25Context.currentSensorId].equId;//Shanchun:to check if it is inline with Sensor acal tuequId
 		snd.cmdId = L3CI_pm25;
 		snd.optId = L3PO_pm25_data_req;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
@@ -262,8 +262,8 @@ void func_pm25_time_out_read_data_from_modbus(void)
 		}
 
 		//设置当前传感器到忙，没反应之前，不置状态
-		zSensorPm25Info[currentSensorPm25Id].hwAccess = SENSOR_PM25_HW_ACCESS_BUSY;
-		zSensorPm25Info[currentSensorPm25Id].busyCount = 0;
+		zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess = SENSOR_PM25_HW_ACCESS_BUSY;
+		zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_PM25_OPT_WFFB
 		ret = FsmSetState(TASK_ID_PM25, FSM_STATE_PM25_OPT_WFFB);
@@ -276,9 +276,9 @@ void func_pm25_time_out_read_data_from_modbus(void)
 
 	//任何其他状态，强制初始化
 	else{
-		zSensorPm25Info[currentSensorPm25Id].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
-		zSensorPm25Info[currentSensorPm25Id].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorPm25Info[currentSensorPm25Id].busyCount = 0;
+		zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
+		zSensorPm25Info[gTaskPm25Context.currentSensorId].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount = 0;
 	}
 
 	return;
@@ -290,17 +290,17 @@ void func_pm25_time_out_processing_no_rsponse(void)
 	int ret=0;
 
 	//恢复当前传感器的空闲状态
-	zSensorPm25Info[currentSensorPm25Id].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
-	zSensorPm25Info[currentSensorPm25Id].hwStatus = SENSOR_PM25_HW_STATUS_DEACTIVE;
-	zSensorPm25Info[currentSensorPm25Id].busyCount = 0;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].hwStatus = SENSOR_PM25_HW_STATUS_DEACTIVE;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//CurrentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorPm25Id < 0) || (currentSensorPm25Id >= (MAX_NUM_OF_SENSOR_PM25_INSTALLED-1))){
-		currentSensorPm25Id = 0;
+	if ((gTaskPm25Context.currentSensorId < 0) || (gTaskPm25Context.currentSensorId >= (MAX_NUM_OF_SENSOR_PM25_INSTALLED-1))){
+		gTaskPm25Context.currentSensorId = 0;
 	}else{
-		currentSensorPm25Id++;
+		gTaskPm25Context.currentSensorId++;
 	}
 
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
@@ -512,17 +512,17 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//恢复当前传感器的空闲状态
-	zSensorPm25Info[currentSensorPm25Id].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
-	zSensorPm25Info[currentSensorPm25Id].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;
-	zSensorPm25Info[currentSensorPm25Id].busyCount = 0;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//Finished, then currentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorPm25Id < 0) || (currentSensorPm25Id >= (MAX_NUM_OF_SENSOR_PM25_INSTALLED-1))){
-		currentSensorPm25Id = 0;
+	if ((gTaskPm25Context.currentSensorId < 0) || (gTaskPm25Context.currentSensorId >= (MAX_NUM_OF_SENSOR_PM25_INSTALLED-1))){
+		gTaskPm25Context.currentSensorId = 0;
 	}else{
-		currentSensorPm25Id++;
+		gTaskPm25Context.currentSensorId++;
 	}
 
 	//State Transfer to FSM_STATE_PM25_ACTIVE
@@ -567,7 +567,7 @@ OPSTAT fsm_pm25_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	return SUCCESS;
 }
 
-OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_pm25_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//Added by Shanchun for control cmd
 	int ret;
@@ -611,13 +611,13 @@ OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * para
 
 	//如果当前传感器还处于忙的状态，意味着下面操作还未完成，继续等待，下一次再操作
 	//通过多次等待，让离线的设备自动变成长周期读取一次
-	if (zSensorPm25Info[currentSensorPm25Id].hwAccess == SENSOR_PM25_HW_ACCESS_BUSY){
+	if (zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess == SENSOR_PM25_HW_ACCESS_BUSY){
 		//多次等待后强行恢复
-		if ((zSensorPm25Info[currentSensorPm25Id].busyCount < 0) || (zSensorPm25Info[currentSensorPm25Id].busyCount >= SENSOR_PM25_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
-			zSensorPm25Info[currentSensorPm25Id].busyCount = 0;
-			zSensorPm25Info[currentSensorPm25Id].hwAccess =SENSOR_PM25_HW_ACCESS_IDLE;
+		if ((zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount < 0) || (zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount >= SENSOR_PM25_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
+			zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount = 0;
+			zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess =SENSOR_PM25_HW_ACCESS_IDLE;
 		}else{
-			zSensorPm25Info[currentSensorPm25Id].busyCount++;
+			zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount++;
 			//Keep busy status
 		}
 		//状态机不能动，可能在ACTIVE，也可能在WFB，因为定时随时都可能来的
@@ -625,7 +625,7 @@ OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * para
 
 	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
 	//如果当前传感器处于空闲态，干活！
-	else if (zSensorPm25Info[currentSensorPm25Id].hwAccess == SENSOR_PM25_HW_ACCESS_IDLE){
+	else if (zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess == SENSOR_PM25_HW_ACCESS_IDLE){
 
 		//Send out PM25 control cmd message to MODBUS
 		msg_struct_pm25_modbus_control_cmd_t snd;
@@ -702,9 +702,9 @@ OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * para
 
 	//任何其他状态，强制初始化
 	else{
-		zSensorPm25Info[currentSensorPm25Id].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
-		zSensorPm25Info[currentSensorPm25Id].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorPm25Info[currentSensorPm25Id].busyCount = 0;
+		zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
+		zSensorPm25Info[gTaskPm25Context.currentSensorId].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount = 0;
 	}
 
 
@@ -965,17 +965,17 @@ OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 
 	//恢复当前传感器的空闲状态
-	zSensorPm25Info[currentSensorPm25Id].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
-	zSensorPm25Info[currentSensorPm25Id].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;
-	zSensorPm25Info[currentSensorPm25Id].busyCount = 0;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].hwAccess = SENSOR_PM25_HW_ACCESS_IDLE;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].hwStatus = SENSOR_PM25_HW_STATUS_ACTIVE;
+	zSensorPm25Info[gTaskPm25Context.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//Finished, then currentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorPm25Id < 0) || (currentSensorPm25Id >= (MAX_NUM_OF_SENSOR_PM25_INSTALLED-1))){
-		currentSensorPm25Id = 0;
+	if ((gTaskPm25Context.currentSensorId < 0) || (gTaskPm25Context.currentSensorId >= (MAX_NUM_OF_SENSOR_PM25_INSTALLED-1))){
+		gTaskPm25Context.currentSensorId = 0;
 	}else{
-		currentSensorPm25Id++;
+		gTaskPm25Context.currentSensorId++;
 	}
 
 	//State Transfer to FSM_STATE_PM25_ACTIVE

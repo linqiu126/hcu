@@ -39,15 +39,18 @@ HcuFsmStateItem_t HcuFsmLightstr[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_lightstr_time_out},
 
     //Task level initialization
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_LIGHTSTR_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_LIGHTSTR_ACTIVED,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_LIGHTSTR_ACTIVED,       		fsm_com_do_nothing},
+	{MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ,		FSM_STATE_LIGHTSTR_ACTIVED,      	  	fsm_lightstr_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM,	FSM_STATE_LIGHTSTR_ACTIVED,      	  	fsm_lightstr_cloudvela_data_confirm},
+
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
 //Global variables
+
+//Task Global variables
+gTaskLightstrContext_t gTaskLightstrContext;
 
 
 //Main Entry
@@ -95,6 +98,7 @@ OPSTAT fsm_lightstr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_LIGHTSTR] = 0;
+	memset(&gTaskLightstrContext, 0, sizeof(gTaskLightstrContext_t));
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_LIGHTSTR, TIMER_ID_1S_LIGHTSTR_PERIOD_READ, \
@@ -226,5 +230,18 @@ OPSTAT func_lightstr_time_out_read_data_from_bh1750(void)
 
 	return SUCCESS;
 }
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_lightstr_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_lightstr_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
 
 

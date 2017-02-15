@@ -39,15 +39,17 @@ HcuFsmStateItem_t HcuFsmAlcohol[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_alcohol_time_out},
 
     //Task level initialization
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_ALCOHOL_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_ALCOHOL_ACTIVED,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_ALCOHOL_ACTIVED,       		fsm_com_do_nothing},
+	{MSG_ID_CLOUDVELA_ALCOHOL_DATA_REQ,		FSM_STATE_ALCOHOL_ACTIVED,      	  	fsm_alcohol_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM,	FSM_STATE_ALCOHOL_ACTIVED,      	  	fsm_alcohol_cloudvela_data_confirm},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
 //Global variables
+
+//Task Global variables
+gTaskAlcoholContext_t gTaskAlcoholContext;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -94,6 +96,7 @@ OPSTAT fsm_alcohol_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_ALCOHOL] = 0;
+	memset(&gTaskAlcoholContext, 0, sizeof(gTaskAlcoholContext_t));
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_ALCOHOL, TIMER_ID_1S_ALCOHOL_PERIOD_READ, \
@@ -228,5 +231,20 @@ OPSTAT func_alcohol_time_out_read_data_from_mq3alco(void)
 
 	return SUCCESS;
 }
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_alcohol_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_alcohol_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+
+
 
 

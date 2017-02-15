@@ -39,9 +39,9 @@ HcuFsmStateItem_t FsmIpm[] =
 	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_IPM_ACTIVED,       			fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_IPM_ACTIVED,          		fsm_ipm_time_out},
 	{MSG_ID_NBIOTCJ188_IPM_DATA_REQ,     		FSM_STATE_IPM_ACTIVED,      			fsm_ipm_nbiotcj188_data_req},
-	{MSG_ID_NBIOTCJ188_IPM_CTRL_REQ,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotcj188_control_cmd},
+	{MSG_ID_NBIOTCJ188_IPM_CTRL_REQ,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotcj188_ctrl_req},
 	{MSG_ID_NBIOTQG376_IPM_DATA_REQ,     		FSM_STATE_IPM_ACTIVED,      			fsm_ipm_nbiotqg376_data_req},
-	{MSG_ID_NBIOTQG376_IPM_CTRL_REQ,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotqg376_control_cmd},
+	{MSG_ID_NBIOTQG376_IPM_CTRL_REQ,  		FSM_STATE_IPM_ACTIVED,          		fsm_ipm_nbiotqg376_ctrl_req},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -449,7 +449,7 @@ OPSTAT fsm_ipm_nbiotcj188_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 }
 
 //暂时不用，留待未来使用
-OPSTAT fsm_ipm_nbiotcj188_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_ipm_nbiotcj188_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
@@ -460,7 +460,7 @@ OPSTAT fsm_ipm_nbiotqg376_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 }
 
 //暂时不用，留待未来使用
-OPSTAT fsm_ipm_nbiotqg376_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_ipm_nbiotqg376_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

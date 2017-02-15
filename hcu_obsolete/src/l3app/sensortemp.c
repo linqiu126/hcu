@@ -40,7 +40,7 @@ HcuFsmStateItem_t FsmTemp[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       	FSM_STATE_TEMP_ACTIVED,          fsm_com_do_nothing},
 	{MSG_ID_COM_TIME_OUT,       		FSM_STATE_TEMP_ACTIVED,          fsm_temp_time_out},
 	{MSG_ID_CLOUDVELA_TEMP_DATA_REQ,    	FSM_STATE_TEMP_ACTIVED,      	 fsm_temp_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,      FSM_STATE_TEMP_ACTIVED,         fsm_temp_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_TEMP_CONTROL_CMD,      FSM_STATE_TEMP_ACTIVED,         fsm_temp_cloudvela_ctrl_req},
 
     //Wait for Modbus Feedback
     {MSG_ID_COM_RESTART,        		FSM_STATE_TEMP_OPT_WFFB,         fsm_temp_restart},
@@ -57,8 +57,8 @@ HcuFsmStateItem_t FsmTemp[] =
 
 //Task Global variables
 extern HcuSysEngParTable_t zHcuSysEngPar; //全局工程参数控制表
-SensorTempInfo_t zSensorTempInfo[MAX_NUM_OF_SENSOR_TEMP_INSTALLED];
-UINT8 currentSensorTempId;
+gTaskTempContext_t zSensorTempInfo[MAX_NUM_OF_SENSOR_TEMP_INSTALLED];
+UINT8 gTaskTempContext.currentSensorId;
 //暂时没有硬盘，现在CLOUDVELA中定义了内存级离线缓冲区
 //extern HcuDiscDataSampleStorage_t zHcuMemStorageBuf;
 extern float zHcuVmCtrTab.codab.gpioTempDht11.fVal;
@@ -112,8 +112,8 @@ OPSTAT fsm_temp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	}
 
 	//Task global variables init.
-	memset(zSensorTempInfo, 0, sizeof(SensorTempInfo_t));
-	currentSensorTempId = 0;
+	memset(zSensorTempInfo, 0, sizeof(gTaskTempContext_t));
+	gTaskTempContext.currentSensorId = 0;
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP] = 0;
 	//目前暂时只有一个TEMP传感器，但程序的框架可以支持无数个传感器
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
@@ -230,13 +230,13 @@ void func_temp_time_out_read_data_from_modbus(void)
 	int ret = 0;
 	//如果当前传感器还处于忙的状态，意味着下面操作还未完成，继续等待，下一次再操作
 	//通过多次等待，让离线的设备自动变成长周期读取一次
-	if (zSensorTempInfo[currentSensorTempId].hwAccess == SENSOR_TEMP_HW_ACCESS_BUSY){
+	if (zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess == SENSOR_TEMP_HW_ACCESS_BUSY){
 		//多次等待后强行恢复
-		if ((zSensorTempInfo[currentSensorTempId].busyCount < 0) || (zSensorTempInfo[currentSensorTempId].busyCount >= SENSOR_TEMP_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
-			zSensorTempInfo[currentSensorTempId].busyCount = 0;
-			zSensorTempInfo[currentSensorTempId].hwAccess =SENSOR_TEMP_HW_ACCESS_IDLE;
+		if ((zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount < 0) || (zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount >= SENSOR_TEMP_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
+			zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount = 0;
+			zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess =SENSOR_TEMP_HW_ACCESS_IDLE;
 		}else{
-			zSensorTempInfo[currentSensorTempId].busyCount++;
+			zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount++;
 			//Keep busy status
 		}
 		//状态机不能动，可能在ACTIVE，也可能在WFB，因为定时随时都可能来的
@@ -244,13 +244,13 @@ void func_temp_time_out_read_data_from_modbus(void)
 
 	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
 	//如果当前传感器处于空闲态，干活！
-	else if (zSensorTempInfo[currentSensorTempId].hwAccess == SENSOR_TEMP_HW_ACCESS_IDLE){
+	else if (zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess == SENSOR_TEMP_HW_ACCESS_IDLE){
 		//Do somemthing
 		//Send out message to MODBUS
 		msg_struct_temp_modbus_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_temp_modbus_data_read_t));
 		snd.length = sizeof(msg_struct_temp_modbus_data_read_t);
-		snd.equId = zSensorTempInfo[currentSensorTempId].equId;
+		snd.equId = zSensorTempInfo[gTaskTempContext.currentSensorId].equId;
 		snd.cmdId = L3CI_temp;
 		snd.optId = L3PO_temp_data_req;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
@@ -270,8 +270,8 @@ void func_temp_time_out_read_data_from_modbus(void)
 		}
 
 		//设置当前传感器到忙，没反应之前，不置状态
-		zSensorTempInfo[currentSensorTempId].hwAccess = SENSOR_TEMP_HW_ACCESS_BUSY;
-		zSensorTempInfo[currentSensorTempId].busyCount = 0;
+		zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess = SENSOR_TEMP_HW_ACCESS_BUSY;
+		zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_TEMP_OPT_WFFB
 		ret = FsmSetState(TASK_ID_TEMP, FSM_STATE_TEMP_OPT_WFFB);
@@ -284,9 +284,9 @@ void func_temp_time_out_read_data_from_modbus(void)
 
 	//任何其他状态，强制初始化
 	else{
-		zSensorTempInfo[currentSensorTempId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
-		zSensorTempInfo[currentSensorTempId].hwStatus = SENSOR_TEMP_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorTempInfo[currentSensorTempId].busyCount = 0;
+		zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
+		zSensorTempInfo[gTaskTempContext.currentSensorId].hwStatus = SENSOR_TEMP_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount = 0;
 	}
 
 	return;
@@ -298,13 +298,13 @@ void func_temp_time_out_read_data_from_spibusaries(void)
 	int ret = 0;
 	//如果当前传感器还处于忙的状态，意味着下面操作还未完成，继续等待，下一次再操作
 	//通过多次等待，让离线的设备自动变成长周期读取一次
-	if (zSensorTempInfo[currentSensorTempId].hwAccess == SENSOR_TEMP_HW_ACCESS_BUSY){
+	if (zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess == SENSOR_TEMP_HW_ACCESS_BUSY){
 		//多次等待后强行恢复
-		if ((zSensorTempInfo[currentSensorTempId].busyCount < 0) || (zSensorTempInfo[currentSensorTempId].busyCount >= SENSOR_TEMP_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
-			zSensorTempInfo[currentSensorTempId].busyCount = 0;
-			zSensorTempInfo[currentSensorTempId].hwAccess =SENSOR_TEMP_HW_ACCESS_IDLE;
+		if ((zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount < 0) || (zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount >= SENSOR_TEMP_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
+			zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount = 0;
+			zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess =SENSOR_TEMP_HW_ACCESS_IDLE;
 		}else{
-			zSensorTempInfo[currentSensorTempId].busyCount++;
+			zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount++;
 			//Keep busy status
 		}
 		//状态机不能动，可能在ACTIVE，也可能在WFB，因为定时随时都可能来的
@@ -312,13 +312,13 @@ void func_temp_time_out_read_data_from_spibusaries(void)
 
 	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
 	//如果当前传感器处于空闲态，干活！
-	else if (zSensorTempInfo[currentSensorTempId].hwAccess == SENSOR_TEMP_HW_ACCESS_IDLE){
+	else if (zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess == SENSOR_TEMP_HW_ACCESS_IDLE){
 		//Do somemthing
 		//Send out message to SPIBUSARIES
 		msg_struct_temp_spibusaries_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_temp_spibusaries_data_read_t));
 		snd.length = sizeof(msg_struct_temp_spibusaries_data_read_t);
-		snd.equId = zSensorTempInfo[currentSensorTempId].equId;
+		snd.equId = zSensorTempInfo[gTaskTempContext.currentSensorId].equId;
 		snd.cmdId = L3CI_temp;
 		snd.optId = L3PO_temp_data_req;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
@@ -338,8 +338,8 @@ void func_temp_time_out_read_data_from_spibusaries(void)
 		}
 
 		//设置当前传感器到忙，没反应之前，不置状态
-		zSensorTempInfo[currentSensorTempId].hwAccess = SENSOR_TEMP_HW_ACCESS_BUSY;
-		zSensorTempInfo[currentSensorTempId].busyCount = 0;
+		zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess = SENSOR_TEMP_HW_ACCESS_BUSY;
+		zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_TEMP_OPT_WFFB
 		ret = FsmSetState(TASK_ID_TEMP, FSM_STATE_TEMP_OPT_WFFB);
@@ -352,9 +352,9 @@ void func_temp_time_out_read_data_from_spibusaries(void)
 
 	//任何其他状态，强制初始化
 	else{
-		zSensorTempInfo[currentSensorTempId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
-		zSensorTempInfo[currentSensorTempId].hwStatus = SENSOR_TEMP_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorTempInfo[currentSensorTempId].busyCount = 0;
+		zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
+		zSensorTempInfo[gTaskTempContext.currentSensorId].hwStatus = SENSOR_TEMP_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount = 0;
 	}
 
 	return;
@@ -367,17 +367,17 @@ void func_temp_time_out_processing_no_rsponse(void)
 	int ret=0;
 
 	//恢复当前传感器的空闲状态
-	zSensorTempInfo[currentSensorTempId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
-	zSensorTempInfo[currentSensorTempId].hwStatus = SENSOR_TEMP_HW_STATUS_DEACTIVE;
-	zSensorTempInfo[currentSensorTempId].busyCount = 0;
+	zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
+	zSensorTempInfo[gTaskTempContext.currentSensorId].hwStatus = SENSOR_TEMP_HW_STATUS_DEACTIVE;
+	zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//CurrentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorTempId < 0) || (currentSensorTempId >= (MAX_NUM_OF_SENSOR_TEMP_INSTALLED-1))){
-		currentSensorTempId = 0;
+	if ((gTaskTempContext.currentSensorId < 0) || (gTaskTempContext.currentSensorId >= (MAX_NUM_OF_SENSOR_TEMP_INSTALLED-1))){
+		gTaskTempContext.currentSensorId = 0;
 	}else{
-		currentSensorTempId++;
+		gTaskTempContext.currentSensorId++;
 	}
 
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
@@ -578,17 +578,17 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//恢复当前传感器的空闲状态
-	zSensorTempInfo[currentSensorTempId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
-	zSensorTempInfo[currentSensorTempId].hwStatus = SENSOR_TEMP_HW_STATUS_ACTIVE;
-	zSensorTempInfo[currentSensorTempId].busyCount = 0;
+	zSensorTempInfo[gTaskTempContext.currentSensorId].hwAccess = SENSOR_TEMP_HW_ACCESS_IDLE;
+	zSensorTempInfo[gTaskTempContext.currentSensorId].hwStatus = SENSOR_TEMP_HW_STATUS_ACTIVE;
+	zSensorTempInfo[gTaskTempContext.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//Finished, then currentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorTempId < 0) || (currentSensorTempId >= (MAX_NUM_OF_SENSOR_TEMP_INSTALLED-1))){
-		currentSensorTempId = 0;
+	if ((gTaskTempContext.currentSensorId < 0) || (gTaskTempContext.currentSensorId >= (MAX_NUM_OF_SENSOR_TEMP_INSTALLED-1))){
+		gTaskTempContext.currentSensorId = 0;
 	}else{
-		currentSensorTempId++;
+		gTaskTempContext.currentSensorId++;
 	}
 
 	//State Transfer to FSM_STATE_TEMP_ACTIVE
@@ -633,7 +633,7 @@ OPSTAT fsm_temp_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	return SUCCESS;
 }
 
-OPSTAT fsm_temp_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_temp_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

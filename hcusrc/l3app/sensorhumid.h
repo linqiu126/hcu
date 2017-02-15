@@ -31,14 +31,20 @@ enum FSM_STATE_HUMID
 //Global variables
 extern HcuFsmStateItem_t HcuFsmHumid[];
 
-typedef struct SensorHumidInfo
+typedef struct gTaskHumidContextElement
 {
 	UINT8 sensorId;
 	UINT32 equId;
 	UINT8 hwStatus;
 	UINT8 hwAccess;
 	UINT8 busyCount;  //被重复访问，但状态一直处于忙的次数
-}SensorHumidInfo_t;
+}gTaskHumidContextElement_t;
+#define MAX_NUM_OF_SENSOR_HUMID_INSTALLED 1
+typedef struct gTaskHumidContext
+{
+	gTaskHumidContextElement_t humid[MAX_NUM_OF_SENSOR_HUMID_INSTALLED];
+	UINT8 currentSensorId;
+}gTaskHumidContext_t;
 #define SENSOR_HUMID_HW_STATUS_INVALID 0xFF
 #define SENSOR_HUMID_HW_STATUS_ACTIVE 1
 #define SENSOR_HUMID_HW_STATUS_DEACTIVE 2
@@ -47,7 +53,7 @@ typedef struct SensorHumidInfo
 #define SENSOR_HUMID_HW_ACCESS_INVALID 0xFF
 #define SENSOR_HUMID_HW_ACCESS_BUSY_COUNT_NUM_MAX 3
 
-#define MAX_NUM_OF_SENSOR_HUMID_INSTALLED 1
+
 
 #define SENSOR_HUMID_RPI_PRESENT_TRUE 1
 #define SENSOR_HUMID_RPI_PRESENT_FALSE 0
@@ -66,14 +72,17 @@ extern OPSTAT fsm_humid_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 extern OPSTAT fsm_humid_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_humid_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-void func_humid_time_out_read_data_from_modbus(void);
-void func_humid_time_out_processing_no_rsponse(void);
-extern OPSTAT fsm_humid_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_humid_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_humid_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_humid_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
+
 OPSTAT func_humid_time_out_read_data_from_dht11(void);
 OPSTAT func_humid_time_out_read_data_from_sht20(void);
 OPSTAT func_humid_time_out_read_data_from_rht03(void);
 OPSTAT func_humid_time_out_read_data_from_mth01(void);
+void func_humid_time_out_read_data_from_modbus(void);
+void func_humid_time_out_processing_no_rsponse(void);
 
 //引用外部API
 extern OPSTAT hcu_save_to_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen);

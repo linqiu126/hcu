@@ -26,19 +26,19 @@ enum FSM_STATE_SYSPM
 
 typedef struct PmCpuOccupyInfo         //定义一个cpu occupy的结构体
 {
-char name[20];      //定义一个char类型的数组名name有20个元素
-UINT32 user; //定义一个无符号的int类型的user
-UINT32 nice; //定义一个无符号的int类型的nice
-UINT32 system;//定义一个无符号的int类型的system
-UINT32 idle; //定义一个无符号的int类型的idle
+	char name[20];      //定义一个char类型的数组名name有20个元素
+	UINT32 user; //定义一个无符号的int类型的user
+	UINT32 nice; //定义一个无符号的int类型的nice
+	UINT32 system;//定义一个无符号的int类型的system
+	UINT32 idle; //定义一个无符号的int类型的idle
 }PmCpuOccupyInfo_t;
 
 typedef struct PmMemOccupyInfo         //定义一个mem occupy的结构体
 {
-char name[20];      //定义一个char类型的数组名name有20个元素
-UINT32 total;
-char name2[20];
-UINT32 used;
+	char name[20];      //定义一个char类型的数组名name有20个元素
+	UINT32 total;
+	char name2[20];
+	UINT32 used;
 }PmMemOccupyInfo_t;
 /*
 const unsigned N = 10000;
@@ -53,6 +53,13 @@ typedef struct PmCpuTempInfo         //定义一个cpu temp的结构体
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmSyspm[];
+
+typedef struct gTaskSyspmContext
+{
+	PmCpuOccupyInfo_t cpu;
+	PmMemOccupyInfo_t mem;
+}gTaskSyspmContext_t;
+
 
 //API
 extern OPSTAT fsm_syspm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

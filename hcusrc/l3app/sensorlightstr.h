@@ -23,12 +23,19 @@ enum FSM_STATE_LIGHTSTR
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
-#define SENSOR_LIGHTSTR_RPI_PRESENT_TRUE 1
-#define SENSOR_LIGHTSTR_RPI_PRESENT_FALSE 0
-#define SENSOR_LIGHTSTR_RPI_BH1750_PRESENT SENSOR_LIGHTSTR_RPI_PRESENT_TRUE
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmLightstr[];
+
+typedef struct gTaskLightstrContext
+{
+	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
+}gTaskLightstrContext_t;
+
+
+#define SENSOR_LIGHTSTR_RPI_PRESENT_TRUE 1
+#define SENSOR_LIGHTSTR_RPI_PRESENT_FALSE 0
+#define SENSOR_LIGHTSTR_RPI_BH1750_PRESENT SENSOR_LIGHTSTR_RPI_PRESENT_TRUE
 
 //API
 extern OPSTAT fsm_lightstr_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -36,6 +43,8 @@ extern OPSTAT fsm_lightstr_init(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 extern OPSTAT fsm_lightstr_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_lightstr_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT func_lightstr_time_out_read_data_from_bh1750(void);
+extern OPSTAT fsm_lightstr_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_lightstr_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_lightstr_int_init(void);

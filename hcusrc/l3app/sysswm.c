@@ -39,16 +39,21 @@ HcuFsmStateItem_t HcuFsmSysswm[] =
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          				fsm_sysswm_time_out},
 
     //Task level functions
-	{MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ,          FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_req},
-	{MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM,      FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_confirm},
-	{MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ,          FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_req},
-	{MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM,      FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_confirm},
+	{MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,     	FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_req},
+	{MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, 	FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_confirm},
+	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,        FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_req},
+	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,    FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_confirm},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
 //Global variables
+
+
+//Task Global variables
+gTaskSysswmContext_t gTaskSysswmContext;
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -95,6 +100,7 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] = 0;
+	memset(&gTaskSysswmContext, 0, sizeof(gTaskSysswmContext_t));
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, \

@@ -33,11 +33,20 @@ extern OPSTAT func_toxicgas_time_out_read_data_from_zp01voc(void);
 //Global variables
 extern HcuFsmStateItem_t HcuFsmToxicgas[];
 
+typedef struct gTaskToxicgasContext
+{
+	UINT32 sendCloudCnt;  //用于描述发送到后台，多少次才发送一次
+}gTaskToxicgasContext_t;
+
+
 //API
 extern OPSTAT fsm_toxicgas_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_toxicgas_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_toxicgas_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_toxicgas_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_toxicgas_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_toxicgas_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 
 //Local API
 OPSTAT func_toxicgas_int_init(void);

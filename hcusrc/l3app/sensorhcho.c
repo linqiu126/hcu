@@ -39,9 +39,8 @@ HcuFsmStateItem_t HcuFsmHcho[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_hcho_time_out},
 
     //Task level initialization
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_HCHO_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_HCHO_ACTIVED,       		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_HCHO_ACTIVED,       		fsm_com_do_nothing},
+	{MSG_ID_CLOUDVELA_HCHO_DATA_REQ,		FSM_STATE_HCHO_ACTIVED,      	  	fsm_hcho_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM,	FSM_STATE_HCHO_ACTIVED,      	  	fsm_hcho_cloudvela_data_confirm},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -49,6 +48,8 @@ HcuFsmStateItem_t HcuFsmHcho[] =
 
 //Global variables
 
+//Task Global variables
+gTaskHchoContext_t gTaskHchoContext;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -95,6 +96,7 @@ OPSTAT fsm_hcho_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HCHO] = 0;
+	memset(&gTaskHchoContext, 0, sizeof(gTaskHchoContext_t));
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_HCHO, TIMER_ID_1S_HCHO_PERIOD_READ, \
@@ -228,4 +230,19 @@ OPSTAT func_hcho_time_out_read_data_from_ze08ch2o(void)
 
 	return SUCCESS;
 }
+
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_hcho_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_hcho_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+
 

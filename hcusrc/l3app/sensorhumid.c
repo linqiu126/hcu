@@ -40,7 +40,8 @@ HcuFsmStateItem_t HcuFsmHumid[] =
 
     //Normal working status
 	{MSG_ID_CLOUDVELA_HUMID_DATA_REQ,    	FSM_STATE_HUMID_ACTIVED,      		fsm_humid_cloudvela_data_req},
-	{MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,    FSM_STATE_HUMID_ACTIVED,          	fsm_humid_cloudvela_control_cmd},
+	{MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM,   FSM_STATE_HUMID_ACTIVED,      		fsm_humid_cloudvela_data_confirm},
+	{MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,   	FSM_STATE_HUMID_ACTIVED,          	fsm_humid_cloudvela_ctrl_req},
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_HUMID_DATA_REPORT, 	FSM_STATE_HUMID_OPT_WFFB,        	fsm_humid_data_report_from_modbus},
@@ -50,9 +51,11 @@ HcuFsmStateItem_t HcuFsmHumid[] =
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
+//Global variables
+
+
 //Task Global variables
-SensorHumidInfo_t zSensorHumidInfo[MAX_NUM_OF_SENSOR_HUMID_INSTALLED];
-UINT8 currentSensorHumidId;
+gTaskHumidContext_t gTaskHumidContext;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -99,17 +102,17 @@ OPSTAT fsm_humid_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	}
 
 	//Task global variables init.
-	memset(zSensorHumidInfo, 0, sizeof(SensorHumidInfo_t));
-	currentSensorHumidId = 0;
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID] = 0;
+	memset(&gTaskHumidContext, 0, sizeof(gTaskHumidContext_t));
+
 	//目前暂时只有一个HUMID传感器，但程序的框架可以支持无数个传感器
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
 	for (i=0;i<MAX_NUM_OF_SENSOR_HUMID_INSTALLED;i++){
-		zSensorHumidInfo[i].sensorId = i;
-		zSensorHumidInfo[i].equId = MODBUS_HUMID_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
-		zSensorHumidInfo[i].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
-		zSensorHumidInfo[i].hwStatus = SENSOR_HUMID_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorHumidInfo[i].busyCount = 0;
+		gTaskHumidContext.humid[i].sensorId = i;
+		gTaskHumidContext.humid[i].equId = MODBUS_HUMID_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
+		gTaskHumidContext.humid[i].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
+		gTaskHumidContext.humid[i].hwStatus = SENSOR_HUMID_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		gTaskHumidContext.humid[i].busyCount = 0;
 	}
 
 	//等待随机长度的时长，一分钟/60秒之类，然后再开始干活，以便减少所有传感器相互碰撞的几率，让所有任务分布更加平均
@@ -210,13 +213,13 @@ void func_humid_time_out_read_data_from_modbus(void)
 	int ret = 0;
 	//如果当前传感器还处于忙的状态，意味着下面操作还未完成，继续等待，下一次再操作
 	//通过多次等待，让离线的设备自动变成长周期读取一次
-	if (zSensorHumidInfo[currentSensorHumidId].hwAccess == SENSOR_HUMID_HW_ACCESS_BUSY){
+	if (gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess == SENSOR_HUMID_HW_ACCESS_BUSY){
 		//多次等待后强行恢复
-		if ((zSensorHumidInfo[currentSensorHumidId].busyCount < 0) || (zSensorHumidInfo[currentSensorHumidId].busyCount >= SENSOR_HUMID_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
-			zSensorHumidInfo[currentSensorHumidId].busyCount = 0;
-			zSensorHumidInfo[currentSensorHumidId].hwAccess =SENSOR_HUMID_HW_ACCESS_IDLE;
+		if ((gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount < 0) || (gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount >= SENSOR_HUMID_HW_ACCESS_BUSY_COUNT_NUM_MAX)){
+			gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount = 0;
+			gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess =SENSOR_HUMID_HW_ACCESS_IDLE;
 		}else{
-			zSensorHumidInfo[currentSensorHumidId].busyCount++;
+			gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount++;
 			//Keep busy status
 		}
 		//状态机不能动，可能在ACTIVE，也可能在WFB，因为定时随时都可能来的
@@ -224,13 +227,13 @@ void func_humid_time_out_read_data_from_modbus(void)
 
 	//是否可以通过HwInv模块中zHcuHwinvTable全局表，获取当前传感器的最新硬件状态，待确定
 	//如果当前传感器处于空闲态，干活！
-	else if (zSensorHumidInfo[currentSensorHumidId].hwAccess == SENSOR_HUMID_HW_ACCESS_IDLE){
+	else if (gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess == SENSOR_HUMID_HW_ACCESS_IDLE){
 		//Do somemthing
 		//Send out message to MODBUS
 		msg_struct_humid_modbus_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_humid_modbus_data_read_t));
 		snd.length = sizeof(msg_struct_humid_modbus_data_read_t);
-		snd.equId = zSensorHumidInfo[currentSensorHumidId].equId;
+		snd.equId = gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].equId;
 		snd.cmdId = L3CI_humid;
 		snd.optId = L3PO_humid_data_req;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
@@ -251,8 +254,8 @@ void func_humid_time_out_read_data_from_modbus(void)
 		}
 
 		//设置当前传感器到忙，没反应之前，不置状态
-		zSensorHumidInfo[currentSensorHumidId].hwAccess = SENSOR_HUMID_HW_ACCESS_BUSY;
-		zSensorHumidInfo[currentSensorHumidId].busyCount = 0;
+		gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess = SENSOR_HUMID_HW_ACCESS_BUSY;
+		gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount = 0;
 
 		//State Transfer to FSM_STATE_HUMID_OPT_WFFB
 		ret = FsmSetState(TASK_ID_HUMID, FSM_STATE_HUMID_OPT_WFFB);
@@ -265,9 +268,9 @@ void func_humid_time_out_read_data_from_modbus(void)
 
 	//任何其他状态，强制初始化
 	else{
-		zSensorHumidInfo[currentSensorHumidId].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
-		zSensorHumidInfo[currentSensorHumidId].hwStatus = SENSOR_HUMID_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
-		zSensorHumidInfo[currentSensorHumidId].busyCount = 0;
+		gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
+		gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwStatus = SENSOR_HUMID_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
+		gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount = 0;
 	}
 
 	return;
@@ -279,17 +282,17 @@ void func_humid_time_out_processing_no_rsponse(void)
 	int ret=0;
 
 	//恢复当前传感器的空闲状态
-	zSensorHumidInfo[currentSensorHumidId].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
-	zSensorHumidInfo[currentSensorHumidId].hwStatus = SENSOR_HUMID_HW_STATUS_DEACTIVE;
-	zSensorHumidInfo[currentSensorHumidId].busyCount = 0;
+	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
+	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwStatus = SENSOR_HUMID_HW_STATUS_DEACTIVE;
+	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//CurrentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorHumidId < 0) || (currentSensorHumidId >= (MAX_NUM_OF_SENSOR_HUMID_INSTALLED-1))){
-		currentSensorHumidId = 0;
+	if ((gTaskHumidContext.currentSensorId < 0) || (gTaskHumidContext.currentSensorId >= (MAX_NUM_OF_SENSOR_HUMID_INSTALLED-1))){
+		gTaskHumidContext.currentSensorId = 0;
 	}else{
-		currentSensorHumidId++;
+		gTaskHumidContext.currentSensorId++;
 	}
 
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
@@ -435,17 +438,17 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	}
 
 	//恢复当前传感器的空闲状态
-	zSensorHumidInfo[currentSensorHumidId].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
-	zSensorHumidInfo[currentSensorHumidId].hwStatus = SENSOR_HUMID_HW_STATUS_ACTIVE;
-	zSensorHumidInfo[currentSensorHumidId].busyCount = 0;
+	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwAccess = SENSOR_HUMID_HW_ACCESS_IDLE;
+	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].hwStatus = SENSOR_HUMID_HW_STATUS_ACTIVE;
+	gTaskHumidContext.humid[gTaskHumidContext.currentSensorId].busyCount = 0;
 
 	//当前传感器指针指向下一个
 	//Finished, then currentSensor+1 do firstly
 	//SensorId+1处理，Linux-C下模操作可能会出错，算法以后待处理优化
-	if ((currentSensorHumidId < 0) || (currentSensorHumidId >= (MAX_NUM_OF_SENSOR_HUMID_INSTALLED-1))){
-		currentSensorHumidId = 0;
+	if ((gTaskHumidContext.currentSensorId < 0) || (gTaskHumidContext.currentSensorId >= (MAX_NUM_OF_SENSOR_HUMID_INSTALLED-1))){
+		gTaskHumidContext.currentSensorId = 0;
 	}else{
-		currentSensorHumidId++;
+		gTaskHumidContext.currentSensorId++;
 	}
 
 	//State Transfer to FSM_STATE_HUMID_ACTIVE
@@ -490,7 +493,12 @@ OPSTAT fsm_humid_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_
 	return SUCCESS;
 }
 
-OPSTAT fsm_humid_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_humid_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_humid_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

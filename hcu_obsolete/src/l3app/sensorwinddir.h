@@ -37,7 +37,7 @@ typedef struct SensorWinddirInfo
 	UINT8 hwStatus;
 	UINT8 hwAccess;
 	UINT8 busyCount;  //被重复访问，但状态一直处于忙的次数
-}SensorWinddirInfo_t;
+}gTaskWinddirContext_t;
 #define SENSOR_WINDDIR_HW_STATUS_INVALID 0xFF
 #define SENSOR_WINDDIR_HW_STATUS_ACTIVE 1
 #define SENSOR_WINDDIR_HW_STATUS_DEACTIVE 2
@@ -60,7 +60,7 @@ extern OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id,
 extern OPSTAT fsm_winddir_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 void func_winddir_time_out_read_data_from_modbus(void);
 void func_winddir_time_out_processing_no_rsponse(void);
-extern OPSTAT fsm_winddir_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_winddir_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_winddir_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //引用外部API

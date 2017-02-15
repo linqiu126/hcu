@@ -26,6 +26,12 @@ enum FSM_STATE_SYSSWM
 //Global variables
 extern HcuFsmStateItem_t HcuFsmSysswm[];
 
+typedef struct gTaskSysswmContext
+{
+	UINT32 test;
+}gTaskSysswmContext_t;
+
+
 //API
 extern OPSTAT fsm_sysswm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

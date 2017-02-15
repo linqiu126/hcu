@@ -31,14 +31,21 @@ enum FSM_STATE_EMC
 //Global variables
 extern HcuFsmStateItem_t HcuFsmEmc[];
 
-typedef struct SensorEmcInfo
+typedef struct gTaskEmcContextElement
 {
 	UINT8 sensorId;
 	UINT32 equId;
 	UINT8 hwStatus;
 	UINT8 hwAccess;
 	UINT8 busyCount;  //被重复访问，但状态一直处于忙的次数
-}SensorEmcInfo_t;
+}gTaskEmcContextElement_t;
+
+#define MAX_NUM_OF_SENSOR_EMC_INSTALLED 1
+typedef struct gTaskEmcContext
+{
+	gTaskEmcContextElement_t emc[MAX_NUM_OF_SENSOR_EMC_INSTALLED];
+	UINT8 currentSensorId;
+}gTaskEmcContext_t;
 #define SENSOR_EMC_HW_STATUS_INVALID 0xFF
 #define SENSOR_EMC_HW_STATUS_ACTIVE 1
 #define SENSOR_EMC_HW_STATUS_DEACTIVE 2
@@ -47,7 +54,7 @@ typedef struct SensorEmcInfo
 #define SENSOR_EMC_HW_ACCESS_INVALID 0xFF
 #define SENSOR_EMC_HW_ACCESS_BUSY_COUNT_NUM_MAX 3
 
-#define MAX_NUM_OF_SENSOR_EMC_INSTALLED 1
+
 
 //Config in DB, move to l1com & locomvm(hwinv & sysengpar)
 //#define EMC_TIMER_DURATION_PERIOD_READ 30 //should be 60 second, in second
@@ -62,6 +69,8 @@ extern OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, voi
 extern OPSTAT fsm_emc_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_emc_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_emc_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_emc_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 
 void func_emc_time_out_read_data_from_modbus(void);
 void func_emc_time_out_processing_no_rsponse(void);

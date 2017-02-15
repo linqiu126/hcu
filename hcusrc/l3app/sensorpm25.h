@@ -39,16 +39,22 @@ enum FSM_STATE_PM25
 //Global variables
 extern HcuFsmStateItem_t HcuFsmPm25[];
 
-extern sensor_modbus_opertion_general_t zPM25ConfigData; // by Shanchun for sensor config data
-
-typedef struct SensorPm25Info
+typedef struct gTaskPm25ContextElement
 {
 	UINT8 sensorId;
 	UINT32 equId;
 	UINT8 hwStatus;
 	UINT8 hwAccess;
 	UINT8 busyCount;  //被重复访问，但状态一直处于忙的次数
-}SensorPm25Info_t;
+}gTaskPm25ContextElement_t;
+#define MAX_NUM_OF_SENSOR_PM25_INSTALLED 1
+typedef struct gTaskPm25Context
+{
+	gTaskPm25ContextElement_t pm25[MAX_NUM_OF_SENSOR_PM25_INSTALLED];
+	UINT8 currentSensorId;
+	UINT32 AlarmFlag;
+	sensor_modbus_opertion_general_t cfgData;
+}gTaskPm25Context_t;
 #define SENSOR_PM25_HW_STATUS_INVALID 0xFF
 #define SENSOR_PM25_HW_STATUS_ACTIVE 1
 #define SENSOR_PM25_HW_STATUS_DEACTIVE 2
@@ -57,7 +63,7 @@ typedef struct SensorPm25Info
 #define SENSOR_PM25_HW_ACCESS_INVALID 0xFF
 #define SENSOR_PM25_HW_ACCESS_BUSY_COUNT_NUM_MAX 3
 
-#define MAX_NUM_OF_SENSOR_PM25_INSTALLED 1
+extern gTaskPm25Context_t gTaskPm25Context;
 
 //#define PM25_TIMER_DURATION_PERIOD_READ 180 //should be 60 second, in second
 //#define PM25_TIMER_DURATION_MODBUS_FB 3    //通过MODBUS访问硬件，回应的时间，不给硬件太多的时间考虑问题
@@ -70,12 +76,14 @@ extern OPSTAT fsm_pm25_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 extern OPSTAT fsm_pm25_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_pm25_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-void func_pm25_time_out_read_data_from_modbus(void);
-void func_pm25_time_out_processing_no_rsponse(void);
-extern OPSTAT fsm_pm25_cloudvela_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_pm25_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_pm25_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 extern OPSTAT fsm_pm25_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT func_pm25_time_out_read_data_from_bmpd300(void);
 OPSTAT func_pm25_time_out_read_data_from_sharp(void);
+void func_pm25_time_out_read_data_from_modbus(void);
+void func_pm25_time_out_processing_no_rsponse(void);
 
 //For HKvision
 extern OPSTAT hcu_hsmmp_photo_capture_start(const HKVisionOption_t HKVisionOption);

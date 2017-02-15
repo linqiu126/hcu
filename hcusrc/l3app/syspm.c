@@ -56,6 +56,11 @@ HcuFsmStateItem_t HcuFsmSyspm[] =
 
 //Global variables
 
+
+//Task Global variables
+gTaskSyspmContext_t gTaskSyspmContext;
+
+
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_syspm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -102,6 +107,7 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM] = 0;
 	memset(&zHcuSysStaPm.statisCnt, 0, sizeof(HcuGlobalCounter_t));
+	memset(&gTaskSyspmContext, 0, sizeof(gTaskSyspmContext_t));
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_SYSPM, TIMER_ID_1S_SYSPM_PERIOD_WORKING, \

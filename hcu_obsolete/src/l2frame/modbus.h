@@ -28,7 +28,7 @@ enum FSM_STATE_MODBUS
 //Global variables
 extern HcuFsmStateItem_t FsmModbus[];
 extern GpsPosInfo_t zHcuVmCtrTab.hwinv.gps;
-extern sensor_modbus_opertion_general_t zPM25ConfigData; //by Shanchun for sensor config data
+extern sensor_modbus_opertion_general_t gTaskPm25Context.cfgData; //by Shanchun for sensor config data
 
 typedef struct SerialModbusMsgBuf
 {

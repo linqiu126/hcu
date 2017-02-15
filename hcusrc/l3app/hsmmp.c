@@ -43,15 +43,14 @@ HcuFsmStateItem_t HcuFsmHsmmp[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          	fsm_hsmmp_time_out},
 
     //Normal working status, 等待上层来的控制消息
+	{MSG_ID_CLOUDVELA_HSMMP_DATA_REQ,		FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM,	FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_data_confirm},
+	{MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,		FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_ctrl_req},
 	{MSG_ID_SPSVIRGO_HSMMP_DATA_RX,     	FSM_STATE_HSMMP_ACTIVED,          	fsm_hsmmp_audio_data_rx},
-	{MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,	FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_cmd},
 	{MSG_ID_AVORION_HSMMP_DATA_RX,      	FSM_STATE_HSMMP_ACTIVED,         	fsm_hsmmp_avorion_data_rx},
 
 	//来自CLOUD的控制协议，可以在不同的激活状态下起作用，但起作用必须等待下一轮硬件空闲的时候
     //Waiting for feedback from
-	{MSG_ID_SPSVIRGO_HSMMP_DATA_RX,       	FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_audio_data_rx},
-	{MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,    FSM_STATE_HSMMP_ACTIVED_WFFB,     	fsm_hsmmp_cloudvela_cmd},
-	{MSG_ID_AVORION_HSMMP_DATA_RX,       	FSM_STATE_HSMMP_ACTIVED_WFFB,    	fsm_hsmmp_avorion_data_rx},
 	{MSG_ID_AVORION_HSMMP_DATA_READ_FB,  	FSM_STATE_HSMMP_ACTIVED_WFFB,    	fsm_hsmmp_avorion_data_read_fb},
 
     //结束点，固定定义，不要改动
@@ -63,7 +62,6 @@ HcuFsmStateItem_t HcuFsmHsmmp[] =
 
 //Task Global variables
 gTaskHsmmpContext_t gTaskHsmmpContext;
-//UINT32 gTaskHsmmpContext.sendSaeCnt = 0;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -198,12 +196,24 @@ OPSTAT fsm_hsmmp_audio_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	return SUCCESS;
 }
 
-
 //收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
-OPSTAT fsm_hsmmp_cloudvela_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_hsmmp_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_hsmmp_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+//收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
+OPSTAT fsm_hsmmp_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
 
 OPSTAT fsm_hsmmp_avorion_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -446,9 +456,9 @@ OPSTAT func_hsmmp_time_out_period(void)
         return FAILURE;
     }
 	//发送后台的控制器，目前暂时是以10次回送一次的方式，未来可以由服务器后台控制
-    gTaskHsmmpContext.sendSaeCnt++;
-    gTaskHsmmpContext.sendSaeCnt = (gTaskHsmmpContext.sendSaeCnt % HSMMP_SEND_BACK_MOD_BASE);
-	if (gTaskHsmmpContext.sendSaeCnt == 0){
+    gTaskHsmmpContext.sendCloudCnt++;
+    gTaskHsmmpContext.sendCloudCnt = (gTaskHsmmpContext.sendCloudCnt % HSMMP_SEND_BACK_MOD_BASE);
+	if (gTaskHsmmpContext.sendCloudCnt == 0){
 		snd.boolBackCloud = TRUE;
 	}else{
 		snd.boolBackCloud = FALSE;
