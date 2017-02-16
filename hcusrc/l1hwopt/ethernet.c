@@ -124,12 +124,12 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		idata = 0;
 		//send(zHcuEthConClientFd,receiveBuffer.buf,receiveBuffer.length,0);
 		memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
-		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected succeed, gTaskCloudvelaContext.defaultSvrethConClientFd in while = %d!\n\n", gTaskCloudvelaContext.defaultSvrethConClientFd);
 
 		idata = recv(gTaskCloudvelaContext.defaultSvrethConClientFd, &receiveBuffer.buf,HCU_SYSMSG_COM_MSG_BODY_LEN_MAX,0);
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
+			HCU_DEBUG_PRINT_INF("ETHERNET: Socket receive error: %d !\n\n", idata);
 			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
 			if ((zHcuSysStaPm.statisCnt.SocketDiscCnt%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY)==0) HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
