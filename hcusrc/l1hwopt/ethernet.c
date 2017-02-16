@@ -103,6 +103,8 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		return FAILURE;
 	}
 
+	HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected succeed, gTaskCloudvelaContext.defaultSvrethConClientFd = %d!\n\n", gTaskCloudvelaContext.defaultSvrethConClientFd);
+
 	struct sockaddr_in serveraddr;
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
@@ -127,6 +129,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
+			//HCU_DEBUG_PRINT_INF("ETHERNET: Socket receive error: %d !\n\n", idata);
 			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
 			if ((zHcuSysStaPm.statisCnt.SocketDiscCnt%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY)==0) HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
@@ -318,28 +321,20 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 //CURL发送给后台HOME服务器，不采用主动从服务器接受命令的形式，而是采用HCU主动链接和汇报，然后带回命令的方式
 OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 {
-	CURLcode curlRes;
 	int ret = 0;
-	CURL *curl;
 
 	//初始化MSGSEND参数
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
 	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
 
-	curl = curl_easy_init();
+	//初始化
+	curl_global_init(CURL_GLOBAL_ALL);
+
+	CURL *curl = curl_easy_init();
 
 	if (curl == NULL){
 		HcuErrorPrint("ETHERNET: Init CURL error!\n");
 	}else{
-		//打印测试
-		//HcuDebugPrint("ETHERNET: Enter data send status, to send data for back-cloud!\n");
-
-		//如果你想CURL报告每一件意外的事情，设置这个选项为一个非零值
-		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 0);
-
-		//设置头，以便返回完整的信息
-		//curl_easy_setopt(curl, CURLOPT_HEADER, 0);
-
 		//也就是说，默认情况下libcurl完成一个任务以后，出于重用连接的考虑不会马上关闭如果没有新的TCP请求来重用这个连接，那么只能等到CLOSE_WAIT超时
 		//这个时间默认在7200秒甚至更高，太多的CLOSE_WAIT连接会导致性能问题。这里设置为0就是为了重用
 		//curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0);
@@ -365,10 +360,11 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&receiveBuffer);
 
 		//实施调用
-		curlRes = curl_easy_perform(curl);
+		CURLcode curlRes = curl_easy_perform(curl);
 
 		//Clean curl pointer
 		curl_easy_cleanup(curl);
+		curl_global_cleanup();
 
 		if(curlRes != CURLE_OK){
 			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
