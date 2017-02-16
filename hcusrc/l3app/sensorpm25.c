@@ -343,9 +343,9 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	strcat(HKVisionOption.user_key, ":");
 	strcat(HKVisionOption.user_key, "Bxxh!123");
 
-	strcat(HKVisionOption.url_photo, "http://ngrok.hkrob.com:30101/Streaming/channels/1/picture");
-	strcat(HKVisionOption.url_video_start, "http://ngrok.hkrob.com:30101/ISAPI/ContentMgmt/record/control/manual/start/tracks/1");
-	strcat(HKVisionOption.url_video_stop, "http://ngrok.hkrob.com:30101/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1");
+	strcat(HKVisionOption.url_photo, "http://192.168.111.64/Streaming/channels/1/picture");
+	strcat(HKVisionOption.url_video_start, "http://192.168.111.64/ISAPI/ContentMgmt/record/control/manual/start/tracks/1");
+	strcat(HKVisionOption.url_video_stop, "http://192.168.111.64/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1");
 
 
 	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curPhotoDir);
@@ -360,7 +360,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	//判断如果PM2.5超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
 	if(rcv.pm25.pm2d5Value >= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD)
 	{
-		if(FAILURE == hcu_hsmmp_photo_capture_start(HKVisionOption)){
+		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
+		if(FAILURE == ret){
 			HcuErrorPrint("PM25: Start HK photo capture error!\n\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
 		}
@@ -389,7 +390,11 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.equID = rcv.pm25.equipid;
 		snd.alarmType = ALARM_TYPE_PM25_VALUE;
 		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
+		if(FAILURE == ret){
+			strcpy(snd.alarmDesc, "PM25: Start HK photo capture error!");
+		}else{
+			strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
+		}
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
@@ -421,7 +426,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.equID = rcv.pm25.equipid;
 		snd.alarmType = ALARM_TYPE_PM25_VALUE;
 		snd.alarmContent = ALARM_CONTENT_PM25_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.alarmDesc, HKVisionOption.file_photo);
+		strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);

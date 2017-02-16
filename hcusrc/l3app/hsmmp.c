@@ -661,6 +661,7 @@ size_t hcu_hsmmp_write_data_callback(void *ptr, size_t size, size_t nmemb, FILE 
 OPSTAT hcu_hsmmp_photo_capture_start(const HKVisionOption_t HKVisionOption)
 {
 	OPSTAT state;
+	int ret = 0;
 
 	HcuDebugPrint("HSMMP: HKVisionOption.user_key: %s \n", HKVisionOption.user_key);
 	HcuDebugPrint("HSMMP: HKVisionOption.url_photo: %s \n", HKVisionOption.url_photo);
@@ -698,19 +699,25 @@ OPSTAT hcu_hsmmp_photo_capture_start(const HKVisionOption_t HKVisionOption)
 
 	CURLcode curlRes = curl_easy_perform(curl);
 
+	curl_easy_cleanup(curl);
+	curl_global_cleanup();
+	fclose(fp);
+
 	if(CURLE_OK == curlRes){
 		state = SUCCESS;
-		HcuDebugPrint("HSMMP: curl perform success [%d]\n\n\n\n", curlRes);
+		HcuDebugPrint("HSMMP: curl perform success [%d]\n\n", curlRes);
 	}
 	else{
 		state = FAILURE;
-		HcuDebugPrint("HSMMP: curl perform failure [%d]\n\n\n\n", curlRes);
+		HcuDebugPrint("HSMMP: curl perform failure [%d]\n\n", curlRes);
+		ret = remove(HKVisionOption.file_photo);
+		if(SUCCESS != ret){
+			HcuErrorPrint("HSMMP: Remove photo file failure when photo capture not success !\n");
+		}
+
 	}
 
-	curl_easy_cleanup(curl);
-	curl_global_cleanup();
 
-	fclose(fp);
 	return state;
 }
 
