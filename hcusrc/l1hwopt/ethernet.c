@@ -129,7 +129,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
-			HCU_DEBUG_PRINT_INF("ETHERNET: Socket receive error: %d !\n\n", idata);
+			//HCU_DEBUG_PRINT_INF("ETHERNET: Socket receive error: %d !\n\n", idata);
 			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
 			if ((zHcuSysStaPm.statisCnt.SocketDiscCnt%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY)==0) HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
