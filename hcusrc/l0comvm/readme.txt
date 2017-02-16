@@ -18,6 +18,8 @@
 
 //= ZJL, 2017 Feb.16, CURRENT_SW_DELIVERY 173=>BFSC项目
 =增加BFSC的统计算法
+=统一将文件目录改到/var/hcu/目录下了
+=去掉swDbInfo，合并到hwBurnId区域中了，以简化设备标签
 
 //= ZJL, 2017 Feb.15, CURRENT_SW_DELIVERY 172=>BFSC项目
 =改进软件下载等功能

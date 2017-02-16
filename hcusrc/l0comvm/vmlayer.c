@@ -603,10 +603,12 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 HcuSysEngPhyBootCfg_t zHcuSysEngPhyBootCfg[] = {
 	{0,   	"<xml>", 				    "</xml>"},
 	{20,  	"<equLable>",               "</equLable>"},
+	{32,  	"<hw_mac>",                 "</hw_mac>"},
 	{2,		"<hwType>",                 "</hwType>"},
 	{2,		"<hwPemId>",                "</hwPemId>"},
 	{2,		"<swRelId>",                "</swRelId>"},
 	{2,		"<swVerId>",                "</swVerId>"},
+	{2,		"<dbVerId>",                "</dbVerId>"},
 	{1,		"<swUpgradeFlag>",          "</swUpgradeFlag>"},
 	{1,		"<swUpgPollId>",            "</swUpgPollId>"},
 	{1,		"<bootIndex>",              "</bootIndex>"},
@@ -2591,12 +2593,6 @@ int hcu_vm_main_entry(void)
 		return EXIT_SUCCESS;
 	}
 
-	//读取宿主机eth0 Mac地址
-	if (hcu_hwinv_engpar_read_mac_address() == FAILURE){
-		HcuDebugPrint("HCU-MAIN: Read MAC address error!\n");
-		return EXIT_SUCCESS;
-	}
-
 	//智能初始化：任务模块启动初始化，既可以通过SYSCONFIG.H配置模块是否启动，而且还可以通过VMLAYER中的初始化表进行
 	//启动的逻辑是：VMLAYER中的表单必须首先初始化，然后再看SYSCONFIG中的开关是否打开。如果没有开关，则缺省启动
 	if (hcu_vm_application_task_env_init() == FAILURE){
@@ -2639,6 +2635,12 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 		return FAILURE;
 	}
 
+	//读取宿主机eth0 Mac地址，且强制覆盖人工输入部分
+	if (hcu_hwinv_engpar_read_mac_address() == FAILURE){
+		HcuDebugPrint("HCU-MAIN: Read MAC address error!\n");
+		return EXIT_SUCCESS;
+	}
+
 	//对硬件类型进行相同性检查，如果不一致，必然发生了生产性错误，或者硬件搞错，或者Factory Load用错，应该严重警告
 	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES) && (zHcuSysEngPar.hwBurnId.hwType != HCU_SYSCFG_HW_PRODUCT_CAT_TYPE)){
 		HcuErrorPrint("HCU-VM: Fatal error, using wrong hardware type or factory load!!!\n");
@@ -2646,20 +2648,27 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 	}
 	//由于硬件部分并没有真正起作用，所以暂时需要从系统定义区重复写入，一旦批量生产这部分可以去掉
 	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO){
-		strncpy(zHcuSysEngPar.hwBurnId.equLable, HCU_SYSCFG_CLOUD_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)<sizeof(zHcuSysEngPar.hwBurnId.equLable))?(sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)):(sizeof(zHcuSysEngPar.hwBurnId.equLable)));
 		zHcuSysEngPar.hwBurnId.hwType  = HCU_SYSCFG_HW_PRODUCT_CAT_TYPE;
 		zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_TYPE; //PEM小型号
 		zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
 		zHcuSysEngPar.hwBurnId.swVerId = HCU_CURRENT_SW_DELIVERY;
 		zHcuSysEngPar.hwBurnId.swUpgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_SET;
 		zHcuSysEngPar.hwBurnId.swUpgPollId = HCU_SYSCFG_HBB_FW_UPGRADE_METHOD_UART_GPRS;
+		zHcuSysEngPar.hwBurnId.dbVerId = 1;
 		//cipherKey[16];
 	}
 
 	//物理地址配置具备更高的优先级
-	if (strlen(zHcuSysEngPar.hwBurnId.equLable) != 0){
-		strcpy(zHcuSysEngPar.cloud.hcuName, zHcuSysEngPar.hwBurnId.equLable);
+	if (strlen(zHcuSysEngPar.hwBurnId.equLable) == 0){
+		strncpy(zHcuSysEngPar.hwBurnId.equLable, HCU_SYSCFG_CLOUD_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)<sizeof(zHcuSysEngPar.hwBurnId.equLable))?(sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)):(sizeof(zHcuSysEngPar.hwBurnId.equLable)));
+		//随机化最后两位
+		UINT8 temp = rand()%99;
+		char s[3];
+		sprintf(s, "%d", temp);
+		memcpy(&zHcuSysEngPar.hwBurnId.equLable[18], s, 2);
 	}
+	//待去掉HCUNAME标识
+	strcpy(zHcuSysEngPar.cloud.hcuName, zHcuSysEngPar.hwBurnId.equLable);
 
 	//初始化之后的系统标识信息
 	HcuDebugPrint("HCU-VM: Initialized Hardware Burn Physical Id/Address: CURRENT_PRJ=[%s], HW_LABLE=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[0x%x], SW_RELEASE_VER=[%d.%d], FW_UPGRADE_FLAG=[%d].\n", \
@@ -2735,10 +2744,21 @@ OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 		p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
 		strncpy(zHcuSysEngPar.hwBurnId.equLable, p1, len<sizeof(zHcuSysEngPar.hwBurnId.equLable)?len:sizeof(zHcuSysEngPar.hwBurnId.equLable));
 	}
+	//hw_mac
+	index++;
+	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
+	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
+	len = p2 - p1 - strlen(zHcuSysEngPhyBootCfg[index].left);
+	if ((p1!=NULL) && (p2!=NULL) &&  (len>0)){
+		p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
+		strncpy(zHcuSysEngPar.hwBurnId.hw_mac, p1, len<sizeof(zHcuSysEngPar.hwBurnId.hw_mac)?len:sizeof(zHcuSysEngPar.hwBurnId.hw_mac));
+	}
+
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwType));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwPemId));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swRelId));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swVerId));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.dbVerId));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swUpgradeFlag));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swUpgPollId));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.bootIndex));

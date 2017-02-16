@@ -170,10 +170,12 @@ typedef struct SysEngParElementProgramCodeDefineFix
 typedef struct SysEngParElementHwBurnPhyIdAddr
 {
 	char  	equLable[20];
+	UINT8 	hw_mac[32];
 	UINT16 	hwType;
 	UINT16 	hwPemId;
 	UINT16 	swRelId;
 	UINT16 	swVerId;
+	UINT16 	dbVerId;
 	UINT8  	swUpgradeFlag;
 	UINT8 	swUpgPollId;
 	UINT8 	bootIndex;
@@ -206,17 +208,6 @@ typedef struct SysEngParElementHwBurnPhyIdAddr
 	UINT8 	rsv[16];   //32
 }SysEngParElementHwBurnPhyIdAddr_t;
 
-//ZSC增加的数据库和软件版本控制信息
-typedef struct  SysEngParElementSwInvInfo
-{
-	UINT8 	hw_mac[32];
-	UINT8 	hw_type;
-	UINT16 	hw_version;
-	UINT8 	sw_release;
-	UINT16 	sw_delivery;
-	UINT16 	db_delivery;
-}SysEngParElementSwInvInfo_t;
-
 //工程参数总控制表
 #define HCU_SYSENG_PAR_PRJ_NAME_LEN 100  //保持跟数据库的一致性
 typedef struct HcuSysEngParTab
@@ -235,7 +226,6 @@ typedef struct HcuSysEngParTab
 	SysEngParElementLocalUi_t localUI;
 	SysEngParElementProgramCodeDefineFix_t codeDefineFix;
 	SysEngParElementHwBurnPhyIdAddr_t hwBurnId;
-	SysEngParElementSwInvInfo_t swDbInvInfo;  //软件及数据库版本
 }HcuSysEngParTab_t;
 
 

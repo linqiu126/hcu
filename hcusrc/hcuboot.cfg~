@@ -2,7 +2,7 @@
 
 <xml>
 		<equLable>HCU_G801_BFSC_SH001</equLable>
-		<hw_mac>11:22:33:44:55</hw_mac>
+		<hw_mac>HCU_G801_BFSC_SH001</hw_mac>
 		<hwType>2049</hwType>
 		<hwPemId>5</hwPemId>
 		<swRelId>1</swRelId>

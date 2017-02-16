@@ -2101,9 +2101,9 @@ OPSTAT func_cloudvela_stdxml_msg_hcuinventory_unpack(msg_struct_com_cloudvela_da
 {
 	UINT32 index=2, len=0, optId=0, cmdId=0, backType=0, ret=0;
 	char st[HCU_CLOUDVELA_BH_ITF_STD_XML_HEAD_MAX_LENGTH] = "";
-	SysEngParElementSwInvInfo_t hcuInventoryInfo;
+	SysEngParElementHwBurnPhyIdAddr_t hcuInventoryInfo;
 
-	memset(&hcuInventoryInfo, 0, sizeof(SysEngParElementSwInvInfo_t));
+	memset(&hcuInventoryInfo, 0, sizeof(SysEngParElementHwBurnPhyIdAddr_t));
 
 
 	//命令字
@@ -2136,19 +2136,19 @@ OPSTAT func_cloudvela_stdxml_msg_hcuinventory_unpack(msg_struct_com_cloudvela_da
 	//根据OptId操作字进行进一步的分解
 	if ((optId == L3PO_hcuinventory_req)){
 		    optId = L3PO_hcuinventory_report;
-			hcuInventoryInfo.hw_type = zHcuSysEngPar.hwBurnId.hwType;
-			hcuInventoryInfo.hw_version = zHcuSysEngPar.hwBurnId.hwPemId;
-			hcuInventoryInfo.sw_delivery = zHcuSysEngPar.hwBurnId.swRelId;
-			hcuInventoryInfo.sw_release = zHcuSysEngPar.hwBurnId.swVerId;
+			hcuInventoryInfo.hwType = zHcuSysEngPar.hwBurnId.hwType;
+			hcuInventoryInfo.hwPemId = zHcuSysEngPar.hwBurnId.hwPemId;
+			hcuInventoryInfo.swRelId = zHcuSysEngPar.hwBurnId.swRelId;
+			hcuInventoryInfo.swVerId = zHcuSysEngPar.hwBurnId.swVerId;
 
 			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
 				HcuDebugPrint("CLOUDVELA: control command cmdId= %d\n", cmdId);
 				HcuDebugPrint("CLOUDVELA: control command optId= %d\n", optId);
 				HcuDebugPrint("CLOUDVELA: control command backType = %d\n", backType);
-				HcuDebugPrint("CLOUDVELA: control command hw_type = %d\n", hcuInventoryInfo.hw_type);
-				HcuDebugPrint("CLOUDVELA: control command hw_version= %d\n", hcuInventoryInfo.hw_version);
-				HcuDebugPrint("CLOUDVELA: control command sw_delivery = %d\n", hcuInventoryInfo.sw_delivery);
-				HcuDebugPrint("CLOUDVELA: control command sw_release= %d\n", hcuInventoryInfo.sw_release);
+				HcuDebugPrint("CLOUDVELA: control command hw_type = %d\n", hcuInventoryInfo.hwType);
+				HcuDebugPrint("CLOUDVELA: control command hw_version= %d\n", hcuInventoryInfo.hwPemId);
+				HcuDebugPrint("CLOUDVELA: control command sw_delivery = %d\n", hcuInventoryInfo.swRelId);
+				HcuDebugPrint("CLOUDVELA: control command sw_release= %d\n", hcuInventoryInfo.swVerId);
 
 			}
 

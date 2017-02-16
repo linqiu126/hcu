@@ -924,7 +924,7 @@ OPSTAT func_cloudvela_stdzhb_msg_sw_download_pack(UINT8 msgType, UINT8 cmdId, UI
 
 
 //Adding by Shanchun for hcu sw inventory response
-OPSTAT func_cloudvela_stdzhb_msg_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, SysEngParElementSwInvInfo_t *hcuInventoryInfo, CloudDataSendBuf_t *buf)
+OPSTAT func_cloudvela_stdzhb_msg_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, SysEngParElementHwBurnPhyIdAddr_t *hcuInventoryInfo, CloudDataSendBuf_t *buf)
 {
 	//参数检查，其它参数无所谓
 	if (buf == NULL){
@@ -954,11 +954,11 @@ OPSTAT func_cloudvela_stdzhb_msg_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, 
 			strcat(xmlFormat.conHwMac, temp);
 		}
 
-		sprintf(xmlFormat.conHwType, "%02X", hcuInventoryInfo->hw_type & 0xFF);
-		sprintf(xmlFormat.conHwVersion, "%04X", hcuInventoryInfo->hw_version & 0xFFFF);
-		sprintf(xmlFormat.conSwRelease, "%02X", hcuInventoryInfo->sw_release & 0xFF);
-		sprintf(xmlFormat.conSwDelivery, "%04X", hcuInventoryInfo->sw_delivery & 0xFFFF);
-		sprintf(xmlFormat.conDbDelivery, "%04X", hcuInventoryInfo->db_delivery & 0xFFFF);
+		sprintf(xmlFormat.conHwType, "%02X", hcuInventoryInfo->hwType & 0xFF);
+		sprintf(xmlFormat.conHwVersion, "%04X", hcuInventoryInfo->hwPemId & 0xFFFF);
+		sprintf(xmlFormat.conSwRelease, "%02X", hcuInventoryInfo->swRelId & 0xFF);
+		sprintf(xmlFormat.conSwDelivery, "%04X", hcuInventoryInfo->swVerId & 0xFFFF);
+		sprintf(xmlFormat.conDbDelivery, "%04X", hcuInventoryInfo->dbVerId & 0xFFFF);
 
 		//sprintf(xmlFormat.conTimeStamp, "%08X", timeStamp);
 		if (msgType == CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8) strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_STRING);

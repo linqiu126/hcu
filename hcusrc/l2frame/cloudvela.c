@@ -1319,12 +1319,14 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		cmdId = L3CI_hcu_inventory;
 		backType = L3CI_cmdid_back_type_period;
 	    optId = L3PO_hcuinventory_report;
-	    zHcuSysEngPar.swDbInvInfo.hw_type = rcv.hwType;
-	    zHcuSysEngPar.swDbInvInfo.hw_version = rcv.hwId;
-	    zHcuSysEngPar.swDbInvInfo.sw_release = rcv.swRel;
-	    zHcuSysEngPar.swDbInvInfo.sw_delivery = rcv.swRel;
+	    SysEngParElementHwBurnPhyIdAddr_t test;
+	    memset(&test, 0, sizeof(SysEngParElementHwBurnPhyIdAddr_t));
+	    test.hwType = rcv.hwType;
+	    test.hwPemId = rcv.hwId;
+	    test.swRelId = rcv.swRel;
+	    test.swVerId = rcv.swRel;
 		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
-				&zHcuSysEngPar.swDbInvInfo, &pMsgOutput))
+				&test, &pMsgOutput))
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
@@ -1334,12 +1336,14 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		cmdId = L3CI_hcu_inventory;
 		backType = L3CI_cmdid_back_type_period;
 	    optId = L3PO_hcuinventory_report;
-	    zHcuSysEngPar.swDbInvInfo.hw_type = rcv.hwType;
-	    zHcuSysEngPar.swDbInvInfo.hw_version = rcv.hwId;
-	    zHcuSysEngPar.swDbInvInfo.sw_release = rcv.swRel;
-	    zHcuSysEngPar.swDbInvInfo.sw_delivery = rcv.swRel;
+	    SysEngParElementHwBurnPhyIdAddr_t test;
+	    memset(&test, 0, sizeof(SysEngParElementHwBurnPhyIdAddr_t));
+	    test.hwType = rcv.hwType;
+	    test.hwPemId = rcv.hwId;
+	    test.swRelId = rcv.swRel;
+	    test.swVerId = rcv.swRel;
 		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
-				&zHcuSysEngPar.swDbInvInfo, &pMsgOutput))
+				&test, &pMsgOutput))
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 	else{

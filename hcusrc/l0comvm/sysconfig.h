@@ -244,7 +244,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -305,7 +305,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G101_AQYC_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -325,9 +325,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -343,7 +343,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0201
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -364,7 +364,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -379,7 +379,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G201_TEST_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G201_TEST_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -399,9 +399,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -417,7 +417,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0201
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -437,7 +437,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -452,7 +452,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G101_AQYC_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G101_AQYC_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -472,9 +472,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -490,7 +490,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0101
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -511,7 +511,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -526,7 +526,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G201_AQYC_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G201_AQYC_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -546,9 +546,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -564,7 +564,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0201
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -585,7 +585,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -600,7 +600,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G301_TBSW_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G301_TBSW_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -620,9 +620,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//后台CLOUVELA选用的帧协议格式
 	//系统级参数，非常重要，一旦改变，可能导致后台不通！！！
@@ -641,7 +641,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0301
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -662,7 +662,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -677,7 +677,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G401_GQYB_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G401_GQYB_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -697,9 +697,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -715,7 +715,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0401
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -737,7 +737,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -752,7 +752,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G211_ILCX_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G211_ILCX_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -772,9 +772,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -790,7 +790,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0211
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -812,7 +812,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        	//连接数据库的密码
@@ -827,7 +827,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G221_GLAM_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G221_GLAM_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -847,9 +847,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -865,7 +865,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0221
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -886,7 +886,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -901,7 +901,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G231_NBLP_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G231_NBLP_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -921,9 +921,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -939,7 +939,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0231
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -960,7 +960,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -975,7 +975,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G241_NBHP_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G241_NBHP_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -995,9 +995,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -1013,7 +1013,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0241
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+		#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -1035,7 +1035,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -1050,7 +1050,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME 						"HCU_G801_BFSC_SH001"  	//DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME 						"HCU_G801_BFSC_TMP01"  	//DEVICE NAME，而且必须缺最后两位
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -1070,9 +1070,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -1088,7 +1088,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0801
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
@@ -1111,7 +1111,7 @@
 
 	//本地数据库HCUDB
 	#define HCU_SYSCFG_LOCAL_DB_SELECTION_SET HCU_SYSCFG_LOCAL_DB_SELECTION_MYSQL
-	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/home/hitpony/workspace/hcu/hcudb.sqlite"
+	#define HCU_SYSCFG_LOCAL_DB_SQLITE3_LOC_AND_FILE "/var/hcu/cfg/hcudb.sqlite"
 	#define HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT "localhost"		//连接的服务器地址
 	#define HCU_SYSCFG_LOCAL_DB_USER_DEFAULT "root"     		//连接数据库的用户名
 	#define HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT  "123456"        //连接数据库的密码
@@ -1126,7 +1126,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G711_OTDR_SH001"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G711_OTDR_TMP01"     //DEVICE NAME
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -1146,9 +1146,9 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/home/pi/hcu_sw_download/"
-	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/home/pi/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/home/pi/hcu_sw_backup/"
+	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
+	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
+	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
 
 	//定义本地视频服务器
 	#define HCU_SYSCFG_VIDEO_STREAM_SERVER_USER  "Avorion321"
@@ -1164,7 +1164,7 @@
 	#define HCU_SYSCFG_HW_PRODUCT_CAT_TYPE 0x0711
 	#define HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO
 	#define HCU_SYSCFG_HBB_FW_UPGRADE_SET HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH
-	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/www/hcuboot.cfg"
+	#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE	"/var/hcu/cfg/hcuboot.cfg"
 
 	//定义采用量产之前是否采用本地配置静态数据，从而提高开发效率
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES

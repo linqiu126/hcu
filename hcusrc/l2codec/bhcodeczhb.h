@@ -27,7 +27,7 @@ extern OPSTAT func_cloudvela_stdzhb_msg_noise_pack(UINT8 msgType, UINT8 cmdId, U
 extern OPSTAT func_cloudvela_stdzhb_msg_hsmmp_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT32 equipId, UINT32 gpsx, UINT32 gpsy, UINT32 gpsz, CHAR ns, CHAR ew,  UINT32 timeStamp, char *linkName, CloudDataSendBuf_t *buf);
 extern OPSTAT func_cloudvela_stdzhb_msg_sw_download_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 swDownload, CloudDataSendBuf_t *buf);
 extern OPSTAT func_cloudvela_stdzhb_msg_av_upload_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, UINT8 avUpload, char *avFileName, CloudDataSendBuf_t *buf);
-extern OPSTAT func_cloudvela_stdzhb_msg_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, SysEngParElementSwInvInfo_t *hcuInventoryInfo, CloudDataSendBuf_t *buf);
+extern OPSTAT func_cloudvela_stdzhb_msg_hcu_inventory_pack(UINT8 msgType, UINT8 cmdId, UINT8 optId, UINT8 backType, SysEngParElementHwBurnPhyIdAddr_t *hcuInventoryInfo, CloudDataSendBuf_t *buf);
 extern OPSTAT func_cloudvela_stdzhb_msg_alarm_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT8 alarmType, UINT32 alarmContent, UINT8 equID, UINT8 alarmSeverity, UINT8 alarmClearFlag, char *avFileName, UINT32 timeStamp, CloudDataSendBuf_t *buf);
 extern OPSTAT func_cloudvela_stdzhb_msg_pm_pack(UINT8 msgType, UINT8 cmdId, UINT8 useroptid, UINT8 cmdIdBackType, UINT32 cloudVelaConnCnt, UINT32 cloudVelaConnFailCnt, UINT32 cloudVelaDiscCnt, UINT32 SocketDiscCnt, UINT32 TaskRestartCnt,  UINT32 cpu_occupy, UINT32 mem_occupy, UINT32 disk_occupy, UINT32 timeStamp, CloudDataSendBuf_t *buf);
 

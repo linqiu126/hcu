@@ -437,7 +437,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	HCU_DEBUG_PRINT_NOR("HWINV: Set Timer based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuDbVersion表单到系统内存中
-	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.swDbInvInfo);
+	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.hwBurnId);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
 
@@ -534,10 +534,10 @@ OPSTAT hcu_hwinv_engpar_read_mac_address(void)
 
 	int j = 0;
 	for(j = 0; j < 6; j++){
-		sprintf(zHcuSysEngPar.swDbInvInfo.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+		sprintf(zHcuSysEngPar.hwBurnId.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
 	}
-	zHcuSysEngPar.swDbInvInfo.hw_mac[strlen(zHcuSysEngPar.swDbInvInfo.hw_mac) - 1] = 0;
-	HCU_DEBUG_PRINT_INF("HWINV: eth0 MAC address= %s\n\n", zHcuSysEngPar.swDbInvInfo.hw_mac);
+	zHcuSysEngPar.hwBurnId.hw_mac[strlen(zHcuSysEngPar.hwBurnId.hw_mac) - 1] = 0;
+	HCU_DEBUG_PRINT_INF("HWINV: eth0 MAC address= %s\n\n", zHcuSysEngPar.hwBurnId.hw_mac);
 
     //返回
 	return SUCCESS;

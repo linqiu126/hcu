@@ -1249,7 +1249,7 @@ void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow)
 }
 
 //查询当前HCU使用的数据库版本号
-OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv)
+OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementHwBurnPhyIdAddr_t *hcuInv)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;
@@ -1299,7 +1299,7 @@ OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementSwInvInfo_t *hcuInv)
 	}
 	else{
 		int index = 0;
-		if(sqlRow[index]) hcuInv->db_delivery = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if(sqlRow[index]) hcuInv->dbVerId = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 	}
 
 	//释放记录集
