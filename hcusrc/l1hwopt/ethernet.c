@@ -103,6 +103,8 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		return FAILURE;
 	}
 
+	HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected succeed, gTaskCloudvelaContext.defaultSvrethConClientFd = %d!\n\n", gTaskCloudvelaContext.defaultSvrethConClientFd);
+
 	struct sockaddr_in serveraddr;
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
@@ -122,6 +124,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		idata = 0;
 		//send(zHcuEthConClientFd,receiveBuffer.buf,receiveBuffer.length,0);
 		memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
+		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected succeed, gTaskCloudvelaContext.defaultSvrethConClientFd in while = %d!\n\n", gTaskCloudvelaContext.defaultSvrethConClientFd);
 
 		idata = recv(gTaskCloudvelaContext.defaultSvrethConClientFd, &receiveBuffer.buf,HCU_SYSMSG_COM_MSG_BODY_LEN_MAX,0);
 		receiveBuffer.length = idata;
