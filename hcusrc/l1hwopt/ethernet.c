@@ -326,6 +326,9 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
 	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
 
+	//初始化
+	curl_global_init(CURL_GLOBAL_ALL);
+
 	curl = curl_easy_init();
 
 	if (curl == NULL){
@@ -369,6 +372,7 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 
 		//Clean curl pointer
 		curl_easy_cleanup(curl);
+		curl_global_cleanup();
 
 		if(curlRes != CURLE_OK){
 			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){

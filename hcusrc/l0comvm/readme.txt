@@ -15,6 +15,8 @@
 
 [BUG#002]
 
+//= ZSC, 2017 Feb.16, CURRENT_SW_DELIVERY 174=>AQYC项目
+=更改完成hcu_ethernet_curl_data_send，此API供事件驱动调用发送给Home server时调用，curl连接无心跳检测
 
 //= ZJL, 2017 Feb.16, CURRENT_SW_DELIVERY 173=>BFSC项目
 =增加BFSC的统计算法
