@@ -32,8 +32,26 @@ enum FSM_STATE_CLOUDVELA
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmCloudvela[];
-extern gTaskCloudvelaContext_t gCloudvelaTaskContex;
 
+//在CLOUD模块中定义的公共数据
+typedef struct gTaskCloudvelaContext
+{
+	UINT8  curCon;  					//表示当前是哪一种物理接口在工作
+	UINT32 ethConTry;  					//用于断链的处理，确保高优先级物理链路可以处于优势地位，节省用户的链路成本消耗
+	UINT32 usbnetConTry; 				//下同
+	UINT32 wifiConTry;					//下同
+	UINT32 g3g4ConTry;					//下同
+	//[特别说明：因为业务服务器DEFAULT和HOME服务器已经使用了SOCKET/CURL不同机制分别工作，LINKID只有func_cloudvela_send_data_to_cloud才有作用]
+	UINT8  linkId;						//用来标识当前处理的链路是哪一个
+	int    defaultSvrSocketCon;  		//业务服务器SOCKET连接标识
+	int    defaultSvrethConClientFd;    //业务服务器eth客户标签
+	int    homeSvrSocketCon;  			//家庭服务器SOCKET连接标识
+	int    homeSvrethConClientFd;       //家庭服务器eth客户标签
+	msgie_struct_bh_com_head_t L2Link;  //层2的链路上下文，用于编解码时带到API函数中去
+	UINT16 defaultHbRand;    			//用于业务心跳链路的随机数检查，只用于HCU发起主动心跳，不适用于被动心跳过程
+}gTaskCloudvelaContext_t;
+
+extern gTaskCloudvelaContext_t gCloudvelaTaskContex;
 
 //FSM CORE API
 extern OPSTAT fsm_cloudvela_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

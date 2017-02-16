@@ -14,7 +14,7 @@
 
 
 //Task Global variables
-extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
+//extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
 
 //对于扬尘项目的环保国标进行协议编解码，暂时是自定义编码
 //rcv输入参数，buf输出参数

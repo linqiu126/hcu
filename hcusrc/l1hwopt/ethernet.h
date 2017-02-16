@@ -29,8 +29,9 @@ enum FSM_STATE_ETHERNET
 extern HcuFsmStateItem_t HcuFsmEthernet[];
 
 //Local variables
-#define ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS 3000
+#define HCU_ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS 3000
 #define HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV 200000
+#define HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY 200
 
 //API
 extern OPSTAT fsm_ethernet_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

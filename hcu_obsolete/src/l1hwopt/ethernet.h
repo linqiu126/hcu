@@ -29,7 +29,7 @@ extern HcuFsmStateItem_t FsmEthernet[];
 extern CURL *zHcuEthernetCurlPtr;
 
 //Local virables
-#define ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS 3000
+#define HCU_ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS 3000
 
 //API
 extern OPSTAT fsm_ethernet_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

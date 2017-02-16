@@ -401,7 +401,7 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		//curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddLocal);
 
 		//设置超时时长，做为发送API，这个设置绝对必要，不然会阻塞在这儿
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, HCU_ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS);
 
 		//就是当多个线程都使用超时处理的时候，同时主线程中有sleep或是wait等操作。如果不设置这个选项，libcurl将会发信号打断这个wait从而导致程序退出。
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);

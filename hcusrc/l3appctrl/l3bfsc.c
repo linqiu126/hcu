@@ -61,6 +61,7 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 
 	//进料组合态：等待正常的MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT，每一次进来均触发一次组合算法。结果无动作，或发送MSG_ID_L3BFSC_CAN_WS_COMB_OUT/MSG_ID_L3BFSC_CAN_WS_GIVE_UP
 	{MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,      FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_ws_new_ready_event},  //只能触发数据存储，不进入组合算法的执行
+	//下面为定时读取工作机制，之前是为了定时获取下位机的状态，从而上报。未来该工作机制将删去，改为从上下文中得到汇报状态
 	{MSG_ID_CAN_L3BFSC_WS_READ_RESP,       		FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_period_read_resp},  //只有在最为常见的SCAN状态下才允许定时上报，否则太复杂
 	{MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP,       	FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_general_cmd_resp},  //只有在最为常见的SCAN状态下才允许后台，否则太复杂
 
@@ -76,14 +77,6 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
     //结束点，固定定义，不要改动
     {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
 };
-
-//状态机中的一些遗留问题：
-//1. 什么是否允许后台查询或者发送命令？任何时候？这意味着状态机需要变得较为复杂了
-//2. 为了演示任务，定时读取
-//3. 启动１分钟定时，通过counter来决定报告的数据格式，然后将低级报告结构清零
-//4. 死机原因调查
-
-
 
 //Global variables
 
@@ -146,7 +139,10 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	#endif
 	//严格防止HUITP消息跟内部消息在关键结构上定义的不一致
 	if ((sizeof(StrIe_HUITP_IEID_uni_scale_weight_sta_element_t)) != (sizeof(msgie_struct_bfsc_scale_weight_sta_element_t)))
-	HCU_ERROR_PRINT_L3BFSC("L3BFSC: module message definition on statistic element error!\n");
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: module message definition on statistic element error!\n");
+	//严格保证统计周期的一致性
+	if (HCU_L3BFSC_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: module timer statistic parameter set error!\n");
 
 	//秤盘数据表单控制表初始化
 	memset(&gTaskL3bfscContext, 0, sizeof(gTaskL3bfscContext_t));
@@ -194,11 +190,12 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		//HCU_DEBUG_PRINT_INF(targetStr);
 	}
 
-	//启动周期性定时器：这个定时器是为了定时汇报12个传感器的测量数量
-	ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, \
+	//启动周期性定时器：这个定时器是为了定时读取12个传感器的测量数量
+	//多此一举，完全没有必要，去掉该工作机制
+	/*ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_PERIOD_READ, \
 			zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFSC_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE)
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");*/
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE)
@@ -397,8 +394,6 @@ OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	gTaskL3bfscContext.cur.wsTttMatCnt++;
-
 	//恢复
 	if (gTaskL3bfscContext.wsBitmap[rcv.sensorid] == 1){
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = 0;
@@ -445,8 +440,6 @@ OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 	memcpy(&rcv, param_ptr, param_len);
-
-	gTaskL3bfscContext.cur.wsTgvMatCnt++;
 
 	//恢复
 	if (gTaskL3bfscContext.wsBitmap[rcv.sensorid] == 1){
@@ -609,6 +602,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 	//正常处理
 	gTaskL3bfscContext.cur.wsIncMatCnt++;
+	gTaskL3bfscContext.cur.wsIncMatWgt += rcv.sensorWsValue;
 	HCU_DEBUG_PRINT_INF("L3BFSC: Sensor Input Id = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
 	if (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY){
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
@@ -685,6 +679,9 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				func_l3bfsc_ws_sensor_search_give_up();
 
 				gTaskL3bfscContext.cur.wsTgvTimes++;
+				gTaskL3bfscContext.cur.wsTgvMatCnt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number();
+				gTaskL3bfscContext.cur.wsTgvMatWgt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight();
+
 				//发送抛弃命令
 				msg_struct_l3bfsc_can_ws_give_up_t snd1;
 				memset(&snd1, 0, sizeof(msg_struct_l3bfsc_can_ws_give_up_t));
@@ -723,7 +720,9 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		//返回有意义的数值
 		else{
 			//发送出料命令
-			gTaskL3bfscContext.cur.wsCombTimes++;
+			gTaskL3bfscContext.cur.wsTttTimes++;
+			gTaskL3bfscContext.cur.wsTttMatCnt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number();
+			gTaskL3bfscContext.cur.wsTttMatWgt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight();
 
 			msg_struct_l3bfsc_can_ws_comb_out_t snd2;
 			memset(&snd2, 0, sizeof(msg_struct_l3bfsc_can_ws_comb_out_t));
@@ -761,12 +760,6 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		}
 	}
 
-	//重要的统计功能挂载
-	HCU_DEBUG_PRINT_CRT("L3BFSC: Control statistics, Running Free/Weight/Ttt/Tgu = [%d, %d, %d, %d], Total Inc Cnt = [%d], Combination Rate = [%5.2f\%], Give-up Rate = [%5.2f\%]\n",\
-			gTaskL3bfscContext.wsValueNbrFree, gTaskL3bfscContext.wsValueNbrWeight,\
-			gTaskL3bfscContext.wsValueNbrTtt, gTaskL3bfscContext.wsValueNbrTgu, gTaskL3bfscContext.cur.wsIncMatCnt, \
-			(float)(gTaskL3bfscContext.cur.wsTttMatCnt)/(float)(gTaskL3bfscContext.cur.wsIncMatCnt+0.01) * 100, \
-			(float)(gTaskL3bfscContext.cur.wsTgvMatCnt)/(float)(gTaskL3bfscContext.cur.wsIncMatCnt+0.01) * 100);
 	//返回
 	return SUCCESS;
 }
@@ -814,6 +807,9 @@ OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_
 		if (ret == FAILURE)
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");
 
+		//设置工作启动时间
+		gTaskL3bfscContext.startWorkTimeInUnix = time(0);
+
 		//设置新状态
 		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
@@ -825,9 +821,12 @@ OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_
 }
 
 //周期性读取数据并送往后台
+//周期性状态汇报机制将改为从任务模块的上下文中提取，而非以来定时读取
+//该机制将删去
 OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0, i=0;
+	//int ret=0;
+	int i=0;
 
 	//入参检查
 	msg_struct_can_l3bfsc_ws_read_resp_t rcv;
@@ -842,17 +841,15 @@ OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * 
 	msg_struct_l3bfsc_cloudvela_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
 	snd.length = sizeof(msg_struct_l3bfsc_cloudvela_data_report_t);
-//	snd.cmdid = L3CI_bfsc_comb_scale;
-//	snd.optid = L3PO_bfsc_data_report;
 	snd.snrCfgNbrMax = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		snd.snrValue[i] = rcv.sensorWsValue[i];
 	}
 	snd.comHead.timeStamp = time(0);
 
-	ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
-	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		if (hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}
 
 	//状态不转移
@@ -977,6 +974,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 				gTaskL3bfscContext.wsValueNbrTtt += gTaskL3bfscContext.wsBitmap[j];
 			}
 			i = i % gTaskL3bfscContext.searchSpaceTotalNbr;
+			gTaskL3bfscContext.cur.wsCombTimes++;
 			return i;
 		}
 	}
@@ -1025,6 +1023,35 @@ void func_l3bfsc_cacluate_sensor_ws_valid_value(void)
 	//返回
 	return;
 }
+
+//计算表中有多少个有效的bitmap传感器数量
+UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void)
+{
+	int i=0, total = 0;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++)
+	{
+		total += gTaskL3bfscContext.wsBitmap[i];
+	}
+
+	//返回
+	return total;
+}
+
+//计算表中有多少个有效的bitmap传感器下的重量值
+float func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void)
+{
+	int i=0;
+	float weight = 0;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++)
+	{
+		if (gTaskL3bfscContext.wsBitmap[i] == 1)
+		weight += gTaskL3bfscContext.sensorWs[i].sensorValue;
+	}
+
+	//返回
+	return weight;
+}
+
 
 OPSTAT func_l3bfsc_time_out_ws_init_req_process(void)
 {
@@ -1160,36 +1187,62 @@ OPSTAT func_l3bfsc_time_out_period_read_process(void)
 //周期性统计扫描定时器
 OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 {
-	int ret = 0, i=0;
-	UINT32 index = 0;
+	int ret = 0;
 
 	//首先增加时间流逝的计数器
 	gTaskL3bfscContext.elipseCnt++;
+	gTaskL3bfscContext.elipse24HourCnt++;
 
-	//将上一个周期的数据存到桶形存储器中
-	index = gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_BASE_CYCLE;
-	memcpy(&(gTaskL3bfscContext.curArray[index]), &(gTaskL3bfscContext.cur), sizeof(gTaskL3bfscContextStaElement_t));
+	//暂时不采用桶形算法，而改用老化算法
+//	//将上一个周期的数据存到桶形存储器中
+//	int i=0;
+//	UINT32 index = 0;
+//	index = gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_BASE_CYCLE;
+//	memcpy(&(gTaskL3bfscContext.curArray[index]), &(gTaskL3bfscContext.cur), sizeof(gTaskL3bfscContextStaElement_t));
+//	//通过桶形数据，更新LocUi的数据表单
+//	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(gTaskL3bfscContextStaElement_t));
+//	for (i= 0; i<HCU_L3BFSC_STA_BASE_CYCLE; i++){
+//		gTaskL3bfscContext.staLocalUi.wsIncMatCnt += gTaskL3bfscContext.curArray[i].wsIncMatCnt;
+//		gTaskL3bfscContext.staLocalUi.wsIncMatWgt += gTaskL3bfscContext.curArray[i].wsIncMatWgt;
+//		gTaskL3bfscContext.staLocalUi.wsCombTimes += gTaskL3bfscContext.curArray[i].wsCombTimes;
+//		gTaskL3bfscContext.staLocalUi.wsTttTimes  += gTaskL3bfscContext.curArray[i].wsTttTimes;
+//		gTaskL3bfscContext.staLocalUi.wsTgvTimes  += gTaskL3bfscContext.curArray[i].wsTgvTimes;
+//		gTaskL3bfscContext.staLocalUi.wsTttMatCnt += gTaskL3bfscContext.curArray[i].wsTttMatCnt;
+//		gTaskL3bfscContext.staLocalUi.wsTgvMatCnt += gTaskL3bfscContext.curArray[i].wsTgvMatCnt;
+//		gTaskL3bfscContext.staLocalUi.wsTttMatWgt += gTaskL3bfscContext.curArray[i].wsTttMatWgt;
+//		gTaskL3bfscContext.staLocalUi.wsTgvMatWgt += gTaskL3bfscContext.curArray[i].wsTgvMatWgt;
+//	}
+//	gTaskL3bfscContext.staLocalUi.wsAvgTttTimes = gTaskL3bfscContext.staLocalUi.wsTttTimes;
+//	gTaskL3bfscContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfscContext.staLocalUi.wsTttMatCnt;
+//	gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfscContext.staLocalUi.wsTttMatWgt;
 
-	//通过桶形数据，更新LocUi的数据表单
+	//采取老化算法 x(n+1) = x(n) * (1-1/120) + latest，从而得到最新的数据，但该数据最好使用float，然后再转换为UINT32存入到数据库表单中
 	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(gTaskL3bfscContextStaElement_t));
-	for (i= 0; i<HCU_L3BFSC_STA_BASE_CYCLE; i++){
-		gTaskL3bfscContext.staLocalUi.wsIncMatCnt += gTaskL3bfscContext.curArray[i].wsIncMatCnt;
-		gTaskL3bfscContext.staLocalUi.wsIncMatWgt += gTaskL3bfscContext.curArray[i].wsIncMatWgt;
-		gTaskL3bfscContext.staLocalUi.wsCombTimes += gTaskL3bfscContext.curArray[i].wsCombTimes;
-		gTaskL3bfscContext.staLocalUi.wsTttTimes  += gTaskL3bfscContext.curArray[i].wsTttTimes;
-		gTaskL3bfscContext.staLocalUi.wsTgvTimes  += gTaskL3bfscContext.curArray[i].wsTgvTimes;
-		gTaskL3bfscContext.staLocalUi.wsTttMatCnt += gTaskL3bfscContext.curArray[i].wsTttMatCnt;
-		gTaskL3bfscContext.staLocalUi.wsTgvMatCnt += gTaskL3bfscContext.curArray[i].wsTgvMatCnt;
-		gTaskL3bfscContext.staLocalUi.wsTttMatWgt += gTaskL3bfscContext.curArray[i].wsTttMatWgt;
-		gTaskL3bfscContext.staLocalUi.wsTgvMatWgt += gTaskL3bfscContext.curArray[i].wsTgvMatWgt;
-	}
+	//先存储临时数据
+	gTaskL3bfscContext.curAge.wsIncMatCntMid = gTaskL3bfscContext.curAge.wsIncMatCntMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsIncMatCnt;
+	gTaskL3bfscContext.curAge.wsIncMatWgtMid = gTaskL3bfscContext.curAge.wsIncMatWgtMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsIncMatWgt;
+	gTaskL3bfscContext.curAge.wsCombTimesMid = gTaskL3bfscContext.curAge.wsCombTimesMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsCombTimes;
+	gTaskL3bfscContext.curAge.wsTttTimesMid = gTaskL3bfscContext.curAge.wsTttTimesMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsTttTimes;
+	gTaskL3bfscContext.curAge.wsTgvTimesMid = gTaskL3bfscContext.curAge.wsTgvTimesMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsTgvTimes;
+	gTaskL3bfscContext.curAge.wsTttMatCntMid = gTaskL3bfscContext.curAge.wsTttMatCntMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsTttMatCnt;
+	gTaskL3bfscContext.curAge.wsTgvMatCntMid = gTaskL3bfscContext.curAge.wsTgvMatCntMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsTgvMatCnt;
+	gTaskL3bfscContext.curAge.wsTttMatWgtMid = gTaskL3bfscContext.curAge.wsTttMatWgtMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsTttMatWgt;
+	gTaskL3bfscContext.curAge.wsTgvMatWgtMid = gTaskL3bfscContext.curAge.wsTgvMatWgtMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsTgvMatWgt;
+	//再输出结果
+	gTaskL3bfscContext.staLocalUi.wsIncMatCnt = (UINT32)(gTaskL3bfscContext.curAge.wsIncMatCntMid + 0.5);
+	gTaskL3bfscContext.staLocalUi.wsIncMatWgt = (UINT32)(gTaskL3bfscContext.curAge.wsIncMatWgtMid + 0.5);
+	gTaskL3bfscContext.staLocalUi.wsCombTimes = (UINT32)(gTaskL3bfscContext.curAge.wsCombTimesMid + 0.5);
+	gTaskL3bfscContext.staLocalUi.wsTttTimes  = (UINT32)(gTaskL3bfscContext.curAge.wsTttTimesMid + 0.5);
+	gTaskL3bfscContext.staLocalUi.wsTgvTimes  = (UINT32)(gTaskL3bfscContext.curAge.wsTgvTimesMid + 0.5);
+	gTaskL3bfscContext.staLocalUi.wsTttMatCnt = (UINT32)(gTaskL3bfscContext.curAge.wsTttMatCntMid + 0.5);
+	gTaskL3bfscContext.staLocalUi.wsTgvMatCnt = (UINT32)(gTaskL3bfscContext.curAge.wsTgvMatCntMid + 0.5);
+	gTaskL3bfscContext.staLocalUi.wsTttMatWgt = (UINT32)(gTaskL3bfscContext.curAge.wsTttMatWgtMid + 0.5);
+	gTaskL3bfscContext.staLocalUi.wsTgvMatWgt = (UINT32)(gTaskL3bfscContext.curAge.wsTgvMatWgtMid + 0.5);
 	gTaskL3bfscContext.staLocalUi.wsAvgTttTimes = gTaskL3bfscContext.staLocalUi.wsTttTimes;
 	gTaskL3bfscContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfscContext.staLocalUi.wsTttMatCnt;
 	gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfscContext.staLocalUi.wsTttMatWgt;
 
-	//也可以采取老化算法 x(n+1) = x(n) * (1-1/120) + latest，从而得到最新的数据，但该数据最好使用float，然后再转换为UINT32存入到数据库表单中
-
-	//更新数据库，以便本地界面实时展示数据
+	//更新LocUI数据库，以便本地界面实时展示数据
 
 	//更新60Min各个统计表单
 	gTaskL3bfscContext.sta60Min.wsIncMatCnt += gTaskL3bfscContext.cur.wsIncMatCnt;
@@ -1201,6 +1254,10 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.sta60Min.wsTgvMatCnt += gTaskL3bfscContext.cur.wsTgvMatCnt;
 	gTaskL3bfscContext.sta60Min.wsTttMatWgt += gTaskL3bfscContext.cur.wsTttMatWgt;
 	gTaskL3bfscContext.sta60Min.wsTgvMatWgt += gTaskL3bfscContext.cur.wsTgvMatWgt;
+	float timeRun60MinRatio = (float) HCU_L3BFSC_STA_60M_CYCLE / (float)(((gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STA_60M_CYCLE)==0)?HCU_L3BFSC_STA_60M_CYCLE:(gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STA_60M_CYCLE));
+	gTaskL3bfscContext.sta60Min.wsAvgTttTimes = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttTimes*timeRun60MinRatio);
+	gTaskL3bfscContext.sta60Min.wsAvgTttMatCnt = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttMatCnt*timeRun60MinRatio);
+	gTaskL3bfscContext.sta60Min.wsAvgTttMatWgt = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttMatWgt*timeRun60MinRatio);
 
 	//60分钟到了，发送统计报告到后台：发送后台只需要一种统计报告即可，重复发送意义不大
 	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_60M_CYCLE) == 0){
@@ -1209,8 +1266,34 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 		//再发送统计报告
 		msg_struct_l3bfsc_cloudvela_statistic_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t));
-		snd.length = sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t);
 
+		//L2信息
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.cloud.hcuName, strlen(zHcuSysEngPar.cloud.hcuName)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.cloud.hcuName):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.dataFormat = HUITP_IEID_UNI_COM_FORMAT_TYPE_FLOAT_WITH_NF2;
+		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		snd.staRepType = HUITP_IEID_UNI_SCALE_WEIGHT_STATISTIC_REPORT_60M;
+		snd.sta.combTimes = gTaskL3bfscContext.sta60Min.wsCombTimes;
+		snd.sta.tttTimes = gTaskL3bfscContext.sta60Min.wsTttTimes;
+		snd.sta.tgvTimes = gTaskL3bfscContext.sta60Min.wsTgvTimes;
+		snd.sta.combMatNbr = gTaskL3bfscContext.sta60Min.wsIncMatCnt;
+		snd.sta.tttMatNbr = gTaskL3bfscContext.sta60Min.wsTttMatCnt;
+		snd.sta.tgvMatNbr = gTaskL3bfscContext.sta60Min.wsTgvMatCnt;
+		snd.sta.combAvgSpeed = gTaskL3bfscContext.sta60Min.wsAvgTttTimes;
+		snd.sta.totalWeight = (UINT32)(gTaskL3bfscContext.sta60Min.wsIncMatWgt*100);
+		snd.sta.totalMatNbr = gTaskL3bfscContext.sta60Min.wsIncMatCnt;
+		snd.sta.totalWorkMin = (time(0) - gTaskL3bfscContext.startWorkTimeInUnix)/60;
+		snd.sta.timeInUnix = time(0);
+		snd.sta.errNbr = 0;
+
+		snd.length = sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t);
 		ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -1230,13 +1313,17 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.sta24H.wsTgvMatCnt += gTaskL3bfscContext.cur.wsTgvMatCnt;
 	gTaskL3bfscContext.sta24H.wsTttMatWgt += gTaskL3bfscContext.cur.wsTttMatWgt;
 	gTaskL3bfscContext.sta24H.wsTgvMatWgt += gTaskL3bfscContext.cur.wsTgvMatWgt;
+	float timeRun24HourRatio = (float) HCU_L3BFSC_STA_24H_CYCLE / (float)(((gTaskL3bfscContext.elipse24HourCnt%HCU_L3BFSC_STA_24H_CYCLE)==0)?HCU_L3BFSC_STA_24H_CYCLE:(gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STA_24H_CYCLE));
+	gTaskL3bfscContext.sta24H.wsAvgTttTimes = (UINT32)(gTaskL3bfscContext.sta24H.wsTttTimes*timeRun24HourRatio);
+	gTaskL3bfscContext.sta24H.wsAvgTttMatCnt = (UINT32)(gTaskL3bfscContext.sta24H.wsTttMatCnt*timeRun24HourRatio);
+	gTaskL3bfscContext.sta24H.wsAvgTttMatWgt = (UINT32)(gTaskL3bfscContext.sta24H.wsTttMatWgt*timeRun24HourRatio);
 
-	//24小时到了
-	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_24H_CYCLE) == 0){
-		//24小时统计表更新数据库
+	//24小时统计表更新数据库
 
-		//然后将24小时统计数据表单清零，以便再次计数
+	//24小时到了，然后将24小时统计数据表单清零，以便再次计数
+	if (((time(0)-gTaskL3bfscContext.start24hStaTimeInUnix) % HCU_L3BFSC_STA_24H_IN_SECOND) == 0){
 		memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(gTaskL3bfscContextStaElement_t));
+		gTaskL3bfscContext.elipse24HourCnt = 0;
 	}
 
 	//增加数据到连续统计数据中
@@ -1249,6 +1336,20 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.staUp2Now.wsTgvMatCnt += gTaskL3bfscContext.cur.wsTgvMatCnt;
 	gTaskL3bfscContext.staUp2Now.wsTttMatWgt += gTaskL3bfscContext.cur.wsTttMatWgt;
 	gTaskL3bfscContext.staUp2Now.wsTgvMatWgt += gTaskL3bfscContext.cur.wsTgvMatWgt;
+	gTaskL3bfscContext.staUp2Now.wsAvgTttTimes = gTaskL3bfscContext.staUp2Now.wsTttTimes;
+	gTaskL3bfscContext.staUp2Now.wsAvgTttMatCnt = gTaskL3bfscContext.staUp2Now.wsTttMatCnt;
+	gTaskL3bfscContext.staUp2Now.wsAvgTttMatWgt = gTaskL3bfscContext.staUp2Now.wsTttMatWgt;
+
+	//更新连续数据库数据库
+
+	//重要的统计功能挂载
+	if ((gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STATISTIC_PRINT_FREQUENCY) == 0)
+	HCU_DEBUG_PRINT_CRT("L3BFSC: Control statistics, Running Free/Weight/Ttt/Tgu = [%d, %d, %d, %d], Total Up2Now Inc Cnt = [%d], Combination Rate = [%5.2f\%], Give-up Rate = [%5.2f\%], Local UI Shows AvgSpeed of [TTT Times/MatCnt/MatWgt] = %d/%d/%5.2f.\n",\
+			gTaskL3bfscContext.wsValueNbrFree, gTaskL3bfscContext.wsValueNbrWeight,\
+			gTaskL3bfscContext.wsValueNbrTtt, gTaskL3bfscContext.wsValueNbrTgu, gTaskL3bfscContext.staUp2Now.wsIncMatCnt, \
+			(float)(gTaskL3bfscContext.staUp2Now.wsTttMatCnt)/(float)(gTaskL3bfscContext.staUp2Now.wsIncMatCnt+0.01) * 100, \
+			(float)(gTaskL3bfscContext.staUp2Now.wsTgvMatCnt)/(float)(gTaskL3bfscContext.staUp2Now.wsIncMatCnt+0.01) * 100, \
+			gTaskL3bfscContext.staLocalUi.wsAvgTttTimes, gTaskL3bfscContext.staLocalUi.wsAvgTttMatCnt, gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt);
 
 	//将当前基础统计周期的数据清零
 	memset(&(gTaskL3bfscContext.cur), 0, sizeof(gTaskL3bfscContextStaElement_t));
@@ -1256,6 +1357,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	//返回
 	return SUCCESS;
 }
+
 
 
 /***************************************************************************************************************************

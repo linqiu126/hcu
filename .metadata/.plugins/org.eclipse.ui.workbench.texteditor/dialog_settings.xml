@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="statis" key="selection"/>
+		<item value="startTimeInUnix" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="statis"/>
-			<item value="start"/>
-			<item value="TIMER_ID"/>
-			<item value="func_l3bfsc_time_out_period_read_process"/>
-			<item value="TIMER_ID_1S_L3BFSC_PERIOD_READ"/>
-			<item value="wsAvgTttMatCnt"/>
-			<item value="wsAvgTttTimes"/>
-			<item value="wsTgvMatWgt"/>
+			<item value="startTimeInUnix"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_statistic_t"/>
+			<item value="msg_struct_l3bfsc_cloudvela_statistic_report_t"/>
+			<item value="dataFormat"/>
+			<item value="comHead"/>
+			<item value="msgie_struct_bfsc_scale_weight_sta_element_t"/>
+			<item value="statistic"/>
+			<item value="SIMULATION"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_L3BFSC_STA_AGEING_COEF"/>
 			<item value="msg_struct_l3bfsc_cloudvela_ctrl_resp_t"/>
 			<item value="fsm_l3bfsc_cloudvela_ctrl_resp"/>
 			<item value="fsm_l3bfsc_cloudvela_ctrl_req"/>
@@ -25,7 +26,6 @@
 			<item value="ctrl_req"/>
 			<item value="comb_scale_ctrl_req"/>
 			<item value="comb_scale_ctrl_resp"/>
-			<item value="bfsc_comb_scale_ctrl_resp"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

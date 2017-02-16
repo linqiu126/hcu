@@ -52,7 +52,7 @@ typedef struct L3BfscSensorWsInfo
 
 //统计周期，为了计算滑动平均数据
 #define HCU_L3BFSC_STA_CYCLE_DUR  60000 //1分钟，相当于60S
-#define HCU_L3BFSC_STA_UNIT_DUR  500 //500ms的单位
+#define HCU_L3BFSC_STA_UNIT_DUR  500 //500ms的单位，这是统计周期颗粒度，跟TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN保持一致
 #define HCU_L3BFSC_STA_BASE_CYCLE  (HCU_L3BFSC_STA_CYCLE_DUR / HCU_L3BFSC_STA_UNIT_DUR)
 #define HCU_L3BFSC_STA_1M_CYCLE  (60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
 #define HCU_L3BFSC_STA_15M_CYCLE  (15 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
@@ -60,6 +60,9 @@ typedef struct L3BfscSensorWsInfo
 #define HCU_L3BFSC_STA_2H_CYCLE  (2* 60 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
 #define HCU_L3BFSC_STA_8H_CYCLE  (8* 60 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
 #define HCU_L3BFSC_STA_24H_CYCLE  (24* 60 * 60 * 1000 / HCU_L3BFSC_STA_UNIT_DUR)
+#define HCU_L3BFSC_STA_AGEING_COEF_ALPHA   20  //老化系数，越大表示最近的权重越大，100%的情况就是120，相当于当前周期的统计数据除以统计周期
+#define HCU_L3BFSC_STA_AGEING_COEF (float)(((float)(HCU_L3BFSC_STA_BASE_CYCLE-HCU_L3BFSC_STA_AGEING_COEF_ALPHA))/(float)HCU_L3BFSC_STA_BASE_CYCLE)
+#define HCU_L3BFSC_STA_24H_IN_SECOND  24*3600
 
 //组合目标的控制表
 typedef struct gTaskL3bfscContextStaElement
@@ -71,12 +74,29 @@ typedef struct gTaskL3bfscContextStaElement
 	UINT32	wsTgvTimes;  			//TGV次数
 	UINT32	wsTttMatCnt;			//TTT物料数量
 	UINT32	wsTgvMatCnt;			//TGV物料数量
-	UINT32	wsTttMatWgt;			//TTT物料重量
-	UINT32	wsTgvMatWgt;			//TGV物料重量
+	float	wsTttMatWgt;			//TTT物料重量
+	float	wsTgvMatWgt;			//TGV物料重量
 	UINT32	wsAvgTttTimes;			//TTT平均次数
 	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
 	float	wsAvgTttMatWgt;			//TTT平均重量
 }gTaskL3bfscContextStaElement_t;
+//临时数据暂存内容
+typedef struct gTaskL3bfscContextStaEleMid
+{
+	float	wsIncMatCntMid;  			//物料数量
+	float	wsIncMatWgtMid;  			//物料重量
+	float	wsCombTimesMid;  			//总共成功素搜到目标的次数
+	float	wsTttTimesMid;  			//TTT次数
+	float	wsTgvTimesMid;  			//TGV次数
+	float	wsTttMatCntMid;				//TTT物料数量
+	float	wsTgvMatCntMid;				//TGV物料数量
+	float	wsTttMatWgtMid;				//TTT物料重量
+	float	wsTgvMatWgtMid;				//TGV物料重量
+	float	wsAvgTttTimesMid;			//TTT平均次数
+	float	wsAvgTttMatCntMid;			//TTT平均物料数
+	float	wsAvgTttMatWgtMid;			//TTT平均重量
+}gTaskL3bfscContextStaEleMid_t;
+//主体上下文
 typedef struct gTaskL3bfscContext
 {
 	//搜索部分
@@ -88,9 +108,11 @@ typedef struct gTaskL3bfscContext
 	UINT8	maxWsNbr;
 	UINT32  targetValue;
 	UINT32	targetUpLimit;
-	UINT32  startTimeInUnix;			//表示该系统开始工作的时间日程点
+	UINT32  start24hStaTimeInUnix;		//系统配置的参数，表示24小时统计的日历起点
 	//动态部分
+	UINT32  startWorkTimeInUnix;		//表示该系统开始工作的时间日程点
 	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是100ms为统计周期
+	UINT32  elipse24HourCnt;			//24小时的日历计数器
 	L3BfscSensorWsInfo_t	sensorWs[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
 	UINT8  	wsValueNbrFree;  			//空闲的0值秤盘数量
 	UINT8   wsValueNbrWeight;			//空闲有值的秤盘数量
@@ -98,8 +120,9 @@ typedef struct gTaskL3bfscContext
 	UINT8 	wsValueNbrTgu;  			//待出料有值秤盘数量
 	UINT8 	wsBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];  //组合出的秤盘标示
 	//实时统计部分：均以一个统计周期为单位
-	gTaskL3bfscContextStaElement_t cur;  		//当前统计周期中的数值，忽略统计数值
-	gTaskL3bfscContextStaElement_t curArray[HCU_L3BFSC_STA_BASE_CYCLE];
+	gTaskL3bfscContextStaElement_t cur;  		//当前统计基础颗粒中的数值
+	gTaskL3bfscContextStaEleMid_t  curAge;		//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
+	//gTaskL3bfscContextStaElement_t curArray[HCU_L3BFSC_STA_BASE_CYCLE]; //不使用桶形算法，抑制该数据。未来确定不用，可删去
 	//统计报告部分
 	gTaskL3bfscContextStaElement_t staLocalUi;  //滑动平均给本地UI的数据
 	gTaskL3bfscContextStaElement_t staOneMin;  	//1分钟统计结果
@@ -111,7 +134,8 @@ typedef struct gTaskL3bfscContext
 	gTaskL3bfscContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
 }gTaskL3bfscContext_t;
 
-
+//统计打印报告的频率调整
+#define HCU_L3BFSC_STATISTIC_PRINT_FREQUENCY 10
 
 //API
 extern OPSTAT fsm_l3bfsc_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -140,6 +164,8 @@ OPSTAT func_l3bfsc_int_init(void);
 void func_l3bfsc_cacluate_sensor_ws_valid_value(void);
 INT32 func_l3bfsc_ws_sensor_search_combination(void);
 void func_l3bfsc_ws_sensor_search_give_up(void);
+UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
+float func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
 OPSTAT func_l3bfsc_time_out_ws_init_req_process(void);
 OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void);

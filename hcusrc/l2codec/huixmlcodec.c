@@ -14,7 +14,7 @@
 #include "huixmlcodec.h"
 #include "../l0service/trace.h"
 
-//Task Global variables
+//Global variables
 
 //Task Global variables
 extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
@@ -246,6 +246,7 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	strncpy(gTaskCloudvelaContext.L2Link.srcUser, msgFromUser, strlen(msgFromUser)<sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(msgFromUser):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
 	
 	//根据目的服务器地址，填入LINKID信息
+	//[特别说明：因为业务服务器DEFAULT和HOME服务器已经使用了SOCKET/CURL不同机制分别工作，这里解码再分开只是为了程序完整性，并没有作用。LINKID只有func_cloudvela_send_data_to_cloud才有作用]
 	if ((strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
 		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
 	else if (strcmp(msgFromUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
@@ -1061,6 +1062,7 @@ OPSTAT func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(StrMsg_HUITP_M
 	UINT16 randval = HUITP_ENDIAN_EXG16(rcv->ping.randval);
 
 	//根据目的服务器地址，填入LINKID信息
+	//[特别说明：因为业务服务器DEFAULT和HOME服务器已经使用了SOCKET/CURL不同机制分别工作，这里解码再分开只是为了程序完整性，并没有作用。LINKID只有func_cloudvela_send_data_to_cloud才有作用]
 	if ((strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
 		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
 	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)
@@ -1099,6 +1101,7 @@ OPSTAT func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(StrMsg_HUI
 	UINT16 randval = HUITP_ENDIAN_EXG16(rcv->pong.randval);
 
 	//根据目的服务器地址，填入LINKID信息
+	//[特别说明：因为业务服务器DEFAULT和HOME服务器已经使用了SOCKET/CURL不同机制分别工作，这里解码再分开只是为了程序完整性，并没有作用。LINKID只有func_cloudvela_send_data_to_cloud才有作用]
 	if ((strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0) && (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameHome) == 0))
 		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DUAL_SAME;
 	else if (strcmp(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.svrNameDefault) == 0)

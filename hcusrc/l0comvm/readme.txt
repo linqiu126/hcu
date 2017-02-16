@@ -2,13 +2,22 @@
 ==                          修改历史                                                                                                                                                                                     ==
 ==                          从共流项目开始，历史将倒叙增加修改记录，以简化每次的更新                                                                             ==
 ====================================================================================================
-PRJ_BFSC待完成或者回答的问题：
 ==> 从BFSCUICOMM模块定时扫描，送回UI界面的结果给L3BFSC模块：机制是定时扫描数据库，还是有类似于ISR中断的钩子？
 ==> 上位机HUITPJASON支持
 ==> 上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/烧录区/设备标签，待完善。
+
+[BUG#001]
+发现在ETHERNET模块启动的时候，启动完成后，又收到了MSG_ID_COM_INIT，是从SVRCON发过来的，但此时SVRCON已经进入休眠了，不太可能发送该消息，怪哉
+如果ETHERNET模块不启动，则该问题消失。该问题出现在链路建立不成功，从而ETH模块给自己发送MSG_ID_COM_RESTART以后
+
+[BUG#002]
+
+
+//= ZJL, 2017 Feb.16, CURRENT_SW_DELIVERY 173=>BFSC项目
+=增加BFSC的统计算法
 
 //= ZJL, 2017 Feb.15, CURRENT_SW_DELIVERY 172=>BFSC项目
 =改进软件下载等功能

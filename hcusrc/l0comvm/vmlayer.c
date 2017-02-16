@@ -590,7 +590,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,                 "TID_1S_L3BFSC_TGU_WAIT_FB",              15,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN,           "TID_1S_L3BFSC_PERIOD_ERROR_SCAN",        60,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          600,     TIMER_RESOLUTION_1S},
-	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     200,     TIMER_RESOLUTION_10MS},
+	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     40,      TIMER_RESOLUTION_10MS},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 #else
 	#error Un-correct constant definition
@@ -1839,7 +1839,7 @@ UINT32 FsmProcessingLaunch(void)
 			//hcu_sleep(1); //to be removed
 			ret = FsmRunEngine(rcv.msgType, rcv.dest_id, rcv.src_id, rcv.msgBody, rcv.msgLen);
 			if (ret == FAILURE){
-				HcuErrorPrint("HCU-VM: Error execute FsmRun state machine!\n");
+				HcuErrorPrint("HCU-VM: Error execute FsmRun state machine, DEST/SRC=0x%x/%x, [%s/%s], msgid=%d/%s!\n", rcv.dest_id, rcv.src_id, zHcuVmCtrTab.task[rcv.dest_id].taskName, zHcuVmCtrTab.task[rcv.src_id].taskName, rcv.msgType, zHcuSysEngPar.traceList.msg[rcv.msgType].msgName);
 			}
 		}
 	}//While(1)
@@ -1936,7 +1936,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 			(dest_id, src_id, param_ptr, param_len);
 		if( FAILURE == ret)
 		{
-			HcuErrorPrint("HCU-VM: Internal error is found in the state function.\n");
+			HcuErrorPrint("HCU-VM: Internal error is found in the state function, DEST/SRC=0x%x/%x[%s/%s], MsgId=%d/%s.\n", dest_id, src_id, zHcuVmCtrTab.task[dest_id].taskName, zHcuVmCtrTab.task[src_id].taskName, mid, zHcuSysEngPar.traceList.msg[mid].msgName);
 			return FAILURE;
 		}
 	}

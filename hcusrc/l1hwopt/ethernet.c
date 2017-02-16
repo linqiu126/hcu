@@ -8,6 +8,7 @@
 #include "../l1hwopt/ethernet.h"
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
+#include "../l2frame/cloudvela.h"
 
 /*
 ** FSM of the ETHERNET
@@ -61,7 +62,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 {
 	int ret=0;
 
-	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
+	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX) && (src_id != TASK_ID_ETHERNET)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
 		msg_struct_com_init_feedback_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_init_feedback_t));
@@ -87,22 +88,20 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET] = 0;
 
 	//初始化参数
-	if (func_ethernet_int_init() == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
-		HcuErrorPrint("ETHERNET: Error initialize interface!\n");
-		return FAILURE;
-	}
+	if (func_ethernet_int_init() == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Error initialize interface!\n");
 
 	//设置状态机到目标状态
-	if (FsmSetState(TASK_ID_ETHERNET, FSM_STATE_ETHERNET_RECEIVED) == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Error Set FSM State!\n");
-	HCU_DEBUG_PRINT_FAT("ETHERNET: Enter FSM_STATE_ETHERNET_ACTIVED status, Keeping refresh here!\n");
+	if (FsmSetState(TASK_ID_ETHERNET, FSM_STATE_ETHERNET_RECEIVED) == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Error Set FSM State!\n");
+	HCU_DEBUG_PRINT_INF("ETHERNET: Enter FSM_STATE_ETHERNET_ACTIVED status, Keeping refresh here!\n");
 
 	//初始化MSGSEND参数
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
 	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
-	if (hcu_ethernet_socket_link_setup() == FAILURE)
-		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: socket line setup failure!\n");
+	if (hcu_ethernet_socket_link_setup() == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
+		if ((zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY) == 0) HcuErrorPrint("ETHERNET: socket line setup failure!\n");
+		return FAILURE;
+	}
 
 	struct sockaddr_in serveraddr;
 	bzero((char *)&serveraddr,sizeof(serveraddr));
@@ -128,8 +127,8 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
-			HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
+			if ((zHcuSysStaPm.statisCnt.SocketDiscCnt%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY)==0) HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
 
 			close(gTaskCloudvelaContext.defaultSvrethConClientFd);
@@ -147,10 +146,10 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			if(setsockopt(gTaskCloudvelaContext.defaultSvrethConClientFd, SOL_TCP, TCP_KEEPINTVL,(void*)&keepInterval, sizeof(keepInterval)) == -1)
 				HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPINTVL error!\n");
 			if(setsockopt(gTaskCloudvelaContext.defaultSvrethConClientFd, SOL_TCP, TCP_KEEPCNT,(void*)&keepCount, sizeof(keepCount)) == -1)
-				HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPCNT error!\n");
+				HcuErrorPrint("ETHERNET: set sock opt TCP_KEEPCNT error!\n");
 			if( connect(gTaskCloudvelaContext.defaultSvrethConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 			{
-				HcuErrorPrint("ETHERNET: Socket can not connect!\n");
+				if ((zHcuSysStaPm.statisCnt.SocketDiscCnt%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY)==0) HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 				gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
 			}
@@ -194,7 +193,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 OPSTAT fsm_ethernet_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	HcuErrorPrint("ETHERNET: Internal error counter reach DEAD level, SW-RESTART soon!\n");
+	if ((zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY)==0) HcuErrorPrint("ETHERNET: Internal error counter reach DEAD level, SW-RESTART soon!\n");
 	zHcuSysStaPm.statisCnt.restartCnt++;
 	fsm_ethernet_init(0, 0, NULL, 0);
 	return SUCCESS;
@@ -219,7 +218,7 @@ OPSTAT hcu_ethernet_phy_link_disconnect(void)
 //为SOCKET建立链路
 OPSTAT hcu_ethernet_socket_link_setup(void)
 {
-	int ret=0;
+	//int ret=0;
 	//创建Client端套接字描述符
 	gTaskCloudvelaContext.defaultSvrethConClientFd = socket(AF_INET, SOCK_STREAM,0);
 
@@ -258,16 +257,15 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 		HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPCNT error!\n");
 	if( connect(gTaskCloudvelaContext.defaultSvrethConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 	{
-		HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
+		if ((zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY) == 0) HcuErrorPrint("ETHERNET: Socket can not connect!\n");
 		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
 		//to restart this task
 		hcu_usleep(HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV * 10);
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
-		ret = hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length);
-		if (ret == FAILURE)
+		if (hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName);
 		return FAILURE;
 	}
@@ -351,7 +349,7 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		//curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddLocal);
 
 		//设置超时时长，做为发送API，这个设置绝对必要，不然会阻塞在这儿
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, HCU_ETHERNET_INSTANCE_DATA_SEND_TIME_OUT_IN_MS);
 
 		//就是当多个线程都使用超时处理的时候，同时主线程中有sleep或是wait等操作。如果不设置这个选项，libcurl将会发信号打断这个wait从而导致程序退出。
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);

@@ -14,7 +14,7 @@
 //Global variables
 
 //Task Global variables
-
+//extern gTaskCloudvelaContext_t gCloudvelaTaskContex;
 
 //XML自定义标准的编码函数方式
 //完全自己手动编码的方式，未来可以灵活的改动

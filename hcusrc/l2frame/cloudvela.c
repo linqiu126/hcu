@@ -540,7 +540,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	if ((buf->curLen <=0) || (buf->curLen >HCU_SYSMSG_COM_MSG_BODY_LEN_MAX))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error message length to send back for cloud!\n");
 
-	//如果是HOME服务器目标，则调用CURL机制发送到HOME。两个服务器相同则认为是下一种。
+	//如果是HOME服务器目标，则调用CURL机制发送到HOME。两个服务器HOME=DEFAULT相同则只使用socket/default服务器。
 	if (gTaskCloudvelaContext.linkId == HCU_SYSCFG_CLOUD_BH_LINK_HOME){
 		//调用CURL的函数，但初始化必须先完成。先只考虑使用ETHERNET
 		if (gTaskCloudvelaContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
