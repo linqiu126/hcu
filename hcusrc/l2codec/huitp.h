@@ -6545,5 +6545,5 @@ typedef struct StrMsg_HUITP_MSGID_uni_heart_beat_confirm
 //无效
 //HUITP_MSGID_uni_null                             = 0xFF,	
 
-//#pragma pack () //取消字节对齐
+#pragma pack () //取消字节对齐
 #endif /* _HUITP_H_ */

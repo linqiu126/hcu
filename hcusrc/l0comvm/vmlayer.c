@@ -2538,6 +2538,7 @@ void hcu_vm_task_delete_except_timer_and_hcumain(void)
 
 int hcu_vm_main_entry(void)
 {
+	printf("Len = %d\n", sizeof(msg_struct_cloudvela_zhbllc_frame_resp_t));
 	//系统状态初始化
 	if (hcu_vm_system_ctr_table_init() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Init system level environment error!\n");
@@ -2682,14 +2683,15 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 	}
 
 	//初始化之后的系统标识信息
-	HcuDebugPrint("HCU-VM: Initialized Hardware Burn Physical Id/Address: CURRENT_PRJ=[%s], HW_LABLE=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[0x%x], SW_RELEASE_VER=[%d.%d], FW_UPGRADE_FLAG=[%d].\n", \
+	HcuDebugPrint("HCU-VM: Initialized Hardware Burn Physical Id/Address: CURRENT_PRJ=[%s], HW_LABLE=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[0x%x], SW_RELEASE_VER=[%d.%d], FW_UPGRADE_FLAG=[%d], ZHB_MN_LABLE=[%s].\n", \
 			HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, \
 		zHcuSysEngPar.hwBurnId.equLable, \
 		zHcuSysEngPar.hwBurnId.hwType, \
 		zHcuSysEngPar.hwBurnId.hwPemId, \
 		zHcuSysEngPar.hwBurnId.swRelId, \
 		zHcuSysEngPar.hwBurnId.swVerId, \
-		zHcuSysEngPar.hwBurnId.swUpgradeFlag);
+		zHcuSysEngPar.hwBurnId.swUpgradeFlag,\
+		zHcuSysEngPar.hwBurnId.zhbMnLable);
 
 	return SUCCESS;
 }

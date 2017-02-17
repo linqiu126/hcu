@@ -109,7 +109,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
-	serveraddr.sin_port = htons(HCU_CLOUDSRV_SOCKET_PORT);
+	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 	UINT32 echolen;
 
 	//Heart beat checking in LLC
@@ -233,15 +233,10 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 
 	//创建用于服务的Client端套接字，注意与 Server端创建的套接字的区别  IP段里，Server端是可以为任何IP提供服务的，客户端里的IP是请求的端点
 	struct sockaddr_in serveraddr;
-	//struct hostent *hp;//
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	//inet_pton(AF_INET,CLOUDSRV_ADDRESS,&serveraddr.sin_addr);
-	//serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-	//temporarily use the element, to update DB later
 	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
-	serveraddr.sin_port = htons(HCU_CLOUDSRV_SOCKET_PORT);
+	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 	UINT32 echolen;
 
 	//Heart beat checking in LLC

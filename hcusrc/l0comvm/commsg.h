@@ -508,6 +508,10 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//本地界面请求
 	MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,  //本地界面设置结果
 
+	//ZHBHJT
+	MSG_ID_ZHBLLC_CLOUDVELA_FRAME_REQ,
+	MSG_ID_CLOUDVELA_ZHBLLC_FRAME_RESP,
+
 	MSG_ID_COM_MAX, //Ending point
 
 }; //end of HCU_INTER_TASK_MSG_ID
@@ -872,6 +876,100 @@ typedef struct msgie_struct_bfsc_scale_weight_sta_element
 	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
 	UINT32 errNbr;			//出错次数
 }msgie_struct_bfsc_scale_weight_sta_element_t;
+
+
+//ZHBHJT212
+typedef struct msgie_struct_zhbhjt_frame_head_dl //
+{
+	UINT32 qnymdhms;
+	UINT16 qnMicrosecond;  //SID
+	UINT8  st; //污染物种类
+	UINT16 cn;  //命令
+	UINT32 pw;  //密码
+	UINT8  ansFlag;//中环保标准， 3c, 数据包是否拆分及应答标志 Flag，从云后台的接收方向
+}msgie_struct_zhbhjt_frame_head_dl_t;
+typedef struct  msgie_struct_zhbhjt_frame_head_ul //
+{
+	UINT32 qnymdhms;
+	UINT16 qnMicrosecond;  //SID
+	UINT8  st; //污染物种类
+	UINT16 cn;  //命令
+	UINT32 pw;  //密码
+	UINT16 pnum;
+	UINT16 pno;
+}msgie_struct_zhbhjt_frame_head_ul_t;
+
+typedef struct  msgie_struct_zhbhjt_frame_data_pol_rtd
+{
+	INT32  Rtd;
+	char   PolFlag;
+}msgie_struct_zhbhjt_frame_data_pol_rtd_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_pol_rs
+{
+	INT32  RS;
+}msgie_struct_zhbhjt_frame_data_pol_rs_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_pol_rt
+{
+	INT32  RT;
+}msgie_struct_zhbhjt_frame_data_pol_rt_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
+{
+	INT32  Cou;
+	INT32  Min;
+	INT32  Avg;
+	INT32  Max;
+}msgie_struct_zhbhjt_frame_data_pol_min_hour_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_low_upvalue
+{
+	INT32  UpValue;
+	INT32  LowValue;
+}msgie_struct_zhbhjt_frame_data_low_upvalue_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_polid
+{
+	UINT8  PolId;
+}msgie_struct_zhbhjt_frame_data_polid_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_ctime
+{
+	UINT8  PolId;
+}msgie_struct_zhbhjt_frame_data_ctime_t;
+#define HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX 5
+#define HCU_SYSMSG_ZHBHJT_FRAME_DATA_CTIME_NBR_MAX 10
+typedef struct  msgie_struct_zhbhjt_frame_data
+{
+	UINT32 systemTime;
+	UINT8  QnRtn;
+	UINT8  ExeRtn;
+	UINT16 RtdInterval;
+	INT32  ZsRtd;
+	INT32  ZsMin;
+	INT32  ZsAvg;
+	INT32  ZsMax;
+	INT32  Ala;
+	INT32  Data;
+	INT32  DayData;
+	INT32  NightData;
+	UINT32 AlarmTime;
+	UINT8  AlarmType;
+	UINT32 BeginTime;
+	UINT32 EndTime;
+	UINT32 DataTime;
+	UINT16 ReportTime;
+	INT32  DayStdValue;
+	INT32  NightStdValue;
+	UINT8  PolId;
+	UINT8  CommFlag;
+	UINT32 OverTime;
+	UINT8  ReCount;
+	UINT32 WarnTime;
+	msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_pol_rs_t rs[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_pol_rt_t rt[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_pol_min_hour_t minHour[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_polid_t polid[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_ctime_t sampleTime[HCU_SYSMSG_ZHBHJT_FRAME_DATA_CTIME_NBR_MAX];
+}msgie_struct_zhbhjt_frame_data_t;
+
 
 
 
@@ -3169,7 +3267,32 @@ typedef struct  msg_struct_cloudvela_toxicgas_data_confirm
 	UINT32 length;
 }msg_struct_cloudvela_toxicgas_data_confirm_t;
 
+//ZHBHJT
+//MSG_ID_ZHBLLC_CLOUDVELA_FRAME_REQ,
+typedef struct  msg_struct_zhbllc_cloudvela_frame_req
+{
+	msgie_struct_zhbhjt_frame_head_dl_t dlHead;
+	msgie_struct_zhbhjt_frame_data_t dlData;
+	UINT32 length;
+}msg_struct_zhbllc_cloudvela_frame_req_t;
+
+
+//MSG_ID_CLOUDVELA_ZHBLLC_FRAME_RESP,
+typedef struct  msg_struct_cloudvela_zhbllc_frame_resp
+{
+	msgie_struct_zhbhjt_frame_head_ul_t ulHead;
+	msgie_struct_zhbhjt_frame_data_t ulData;
+	UINT32 length;
+}msg_struct_cloudvela_zhbllc_frame_resp_t;
+
+
+
 
 
 
 #endif /* L0COMVM_COMMSG_H_ */
+
+
+
+
+

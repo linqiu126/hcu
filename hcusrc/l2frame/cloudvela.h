@@ -12,9 +12,9 @@
 #include "../l1com/l1comdef.h"
 #include "../l2codec/bhcodecxml.h"
 #include "../l2codec/bhcodeczhb.h"
-#include "../l2codec/huitp.h"
 #include "../l2codec/huixmlcodec.h"
 #include "../l0dbi/l0dbi_inc.h"
+#include "../l2codec/zhbhjt212codec.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00

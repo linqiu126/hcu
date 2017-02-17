@@ -413,7 +413,7 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -502,7 +502,7 @@ OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(UINT16 randval)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -868,7 +868,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 		}
 	}
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -964,7 +964,7 @@ OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -1034,7 +1034,7 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -1102,7 +1102,7 @@ OPSTAT fsm_cloudvela_syspm_perfm_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -1170,7 +1170,7 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -1238,7 +1238,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -1306,7 +1306,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -1396,7 +1396,7 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -1458,7 +1458,7 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -1527,7 +1527,7 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -1618,7 +1618,7 @@ OPSTAT fsm_cloudvela_emc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -1683,7 +1683,7 @@ OPSTAT fsm_cloudvela_emc_data_report(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -1763,7 +1763,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -1855,7 +1855,7 @@ OPSTAT fsm_cloudvela_pm25_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -1933,7 +1933,7 @@ OPSTAT fsm_cloudvela_pm25_data_report(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2004,7 +2004,7 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2096,7 +2096,7 @@ OPSTAT fsm_cloudvela_winddir_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2160,7 +2160,7 @@ OPSTAT fsm_cloudvela_winddir_data_report(UINT32 dest_id, UINT32 src_id, void * p
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2229,7 +2229,7 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2319,7 +2319,7 @@ OPSTAT fsm_cloudvela_windspd_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2383,7 +2383,7 @@ OPSTAT fsm_cloudvela_windspd_data_report(UINT32 dest_id, UINT32 src_id, void * p
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2452,7 +2452,7 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2542,7 +2542,7 @@ OPSTAT fsm_cloudvela_temp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2606,7 +2606,7 @@ OPSTAT fsm_cloudvela_temp_data_report(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2677,7 +2677,7 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2768,7 +2768,7 @@ OPSTAT fsm_cloudvela_humid_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2832,7 +2832,7 @@ OPSTAT fsm_cloudvela_humid_data_report(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2904,7 +2904,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -2996,7 +2996,7 @@ OPSTAT fsm_cloudvela_hsmmp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -3061,7 +3061,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -3131,7 +3131,7 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -3222,7 +3222,7 @@ OPSTAT fsm_cloudvela_noise_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -3286,7 +3286,7 @@ OPSTAT fsm_cloudvela_noise_data_report(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -3376,7 +3376,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -3456,7 +3456,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -3523,7 +3523,7 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -3590,7 +3590,7 @@ OPSTAT fsm_cloudvela_l3bfsc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -3664,7 +3664,7 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
@@ -3864,7 +3864,7 @@ OPSTAT fsm_cloudvela_airprs_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -3928,7 +3928,7 @@ OPSTAT fsm_cloudvela_airprs_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -3992,7 +3992,7 @@ OPSTAT fsm_cloudvela_alcohol_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4056,7 +4056,7 @@ OPSTAT fsm_cloudvela_alcohol_data_report(UINT32 dest_id, UINT32 src_id, void * p
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4120,7 +4120,7 @@ OPSTAT fsm_cloudvela_co1_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4184,7 +4184,7 @@ OPSTAT fsm_cloudvela_co1_data_report(UINT32 dest_id, UINT32 src_id, void * param
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4248,7 +4248,7 @@ OPSTAT fsm_cloudvela_hcho_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4312,7 +4312,7 @@ OPSTAT fsm_cloudvela_hcho_data_report(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4376,7 +4376,7 @@ OPSTAT fsm_cloudvela_lightstr_data_resp(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4440,7 +4440,7 @@ OPSTAT fsm_cloudvela_lightstr_data_report(UINT32 dest_id, UINT32 src_id, void * 
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4514,7 +4514,7 @@ OPSTAT fsm_cloudvela_pm25sp_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4588,7 +4588,7 @@ OPSTAT fsm_cloudvela_pm25sp_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4652,7 +4652,7 @@ OPSTAT fsm_cloudvela_toxicgas_data_resp(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
@@ -4716,7 +4716,7 @@ OPSTAT fsm_cloudvela_toxicgas_data_report(UINT32 dest_id, UINT32 src_id, void * 
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_JASON){
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 

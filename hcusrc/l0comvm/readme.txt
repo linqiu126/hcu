@@ -12,9 +12,13 @@
 [BUG#001]
 发现在ETHERNET模块启动的时候，启动完成后，又收到了MSG_ID_COM_INIT，是从SVRCON发过来的，但此时SVRCON已经进入休眠了，不太可能发送该消息，怪哉
 如果ETHERNET模块不启动，则该问题消失。该问题出现在链路建立不成功，从而ETH模块给自己发送MSG_ID_COM_RESTART以后
-
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
+
+
+//= ZJL, 2017 Feb.17, CURRENT_SW_DELIVERY 176=>BFSC项目
+=清理端口的工参数数据定义，清理掉工参表中对协议的配置，只能从SYSCONFIG.H中进行读取，简化工参配置。数据库更新。
+=给ZHBHJT编写消息字典
 
 //= ZJL, 2017 Feb.17, CURRENT_SW_DELIVERY 175=>BFSC项目
 = 增加随机HCUNAME的方式，并删去了系统中对于该参数的工参配置，改为固定的hcuboot.cfg设备配置

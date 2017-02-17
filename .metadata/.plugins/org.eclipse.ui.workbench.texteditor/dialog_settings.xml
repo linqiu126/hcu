@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcu_vm_engpar_get_phy_burn_block_data" key="selection"/>
+		<item value="msgie_struct_zhbhjt_frame_date_t" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="hcu_vm_engpar_get_phy_burn_block_data"/>
-			<item value="HCU_SYSCFG_CLOUD_ZHBMN_NAME"/>
-			<item value="HCU_SYSCFG_CLOUD_HCU_NAME"/>
-			<item value="hcu_vm_engpar_read_phy_boot_cfg"/>
-			<item value="hw_mac"/>
-			<item value="hwBurnId.equLable"/>
-			<item value="cloud.hcuName"/>
-			<item value="rand"/>
+			<item value="msgie_struct_zhbhjt_frame_date_t"/>
+			<item value="ZHBHJT_STCODE_uni"/>
+			<item value="ZHBHJT_CNCODE_uni"/>
+			<item value="msgie_struct_zhbhjt_frame_head_dl_t"/>
+			<item value="msgie_struct_zhbhjt_frame_ul_t"/>
+			<item value="msgie_struct_zhbhjt_frame_dl_t"/>
+			<item value="zhb"/>
+			<item value="HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212"/>
 		</list>
 		<list key="replacehistory">
+			<item value="ZHBHJT_IE_uni_STcode"/>
+			<item value="ZHBHJT_IE_uni_"/>
+			<item value="ZHBHJT_IE_uni_CNcode"/>
+			<item value="HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212"/>
+			<item value="Zhbhjt"/>
+			<item value="zhbhjt"/>
+			<item value="ZHBHJT"/>
 			<item value="hwBurnId.equLable"/>
-			<item value="TMP01"/>
-			<item value="/var/hcu/cfg/"/>
-			<item value="/var/hcu/"/>
-			<item value="&#x09;#define HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE&#x09;&quot;/var/hcu/cfg/hcuboot.cfg&quot;"/>
-			<item value="HCU_L3BFSC_STA_AGEING_COEF"/>
-			<item value="msg_struct_l3bfsc_cloudvela_ctrl_resp_t"/>
-			<item value="fsm_l3bfsc_cloudvela_ctrl_resp"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1183" key="DIALOG_X_ORIGIN"/>
-		<item value="287" key="DIALOG_Y_ORIGIN"/>
+		<item value="1144" key="DIALOG_X_ORIGIN"/>
+		<item value="328" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
