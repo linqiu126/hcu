@@ -381,9 +381,8 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 		//这里就相当于L3，HEART-BEAT只支持业务服务器，必然采用SOCKET机制
 		strncpy(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
 			sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(gTaskCloudvelaContext.L2Link.destUser));
-		//zHcuSysEngPar.cloud.hcuName 代替 zHcuSysEngPar.hwBurnId.equLable，未来待完善
-		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.hcuName, strlen(zHcuSysEngPar.cloud.hcuName)<\
-				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.cloud.hcuName):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
+		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
 		gTaskCloudvelaContext.L2Link.timeStamp = time(0);
 		gTaskCloudvelaContext.L2Link.msgType = HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID;
 		strcpy(gTaskCloudvelaContext.L2Link.funcFlag, "0");
@@ -472,9 +471,8 @@ OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(UINT16 randval)
 		//这里就相当于L3，HEART-BEAT只支持业务服务器，必然采用SOCKET机制
 		strncpy(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
 			sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(gTaskCloudvelaContext.L2Link.destUser));
-		//zHcuSysEngPar.cloud.hcuName 代替 zHcuSysEngPar.hwBurnId.equLable，未来待完善
-		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.cloud.hcuName, strlen(zHcuSysEngPar.cloud.hcuName)<\
-				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.cloud.hcuName):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
+		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
 		gTaskCloudvelaContext.L2Link.timeStamp = time(0);
 		gTaskCloudvelaContext.L2Link.msgType = HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID;
 		strcpy(gTaskCloudvelaContext.L2Link.funcFlag, "0");

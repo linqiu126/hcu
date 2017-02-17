@@ -306,6 +306,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G101_AQYC_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_AQYC12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -380,6 +381,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G201_TEST_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_TEST12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -453,6 +455,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G101_AQYC_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_AQYC12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -527,6 +530,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G201_AQYC_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_AQYC12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -601,6 +605,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G301_TBSW_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_TBSW12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -678,6 +683,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G401_GQYB_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_GQYB12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -753,6 +759,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G211_ILCX_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_ILCX12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -828,6 +835,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G221_GLAM_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_GLAM12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -902,6 +910,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G231_NBLP_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_NBLP12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -976,6 +985,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G241_NBHP_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_NBHP12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -1051,6 +1061,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME 						"HCU_G801_BFSC_TMP01"  	//DEVICE NAME，而且必须缺最后两位
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_BFSC12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -1127,6 +1138,7 @@
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
 	#define HCU_SYSCFG_CLOUD_HCU_NAME "HCU_G711_OTDR_TMP01"     //DEVICE NAME
+	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_OTDR12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"

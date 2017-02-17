@@ -1552,7 +1552,7 @@ OPSTAT func_cloudvela_stdzhb_msg_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, Cl
 	}
 
 	//char mn[13]; //MN=设备编号
-	strcpy(tmp, zHcuSysEngPar.cloud.hcuName);
+	strcpy(tmp, zHcuSysEngPar.hwBurnId.equLable);
 	if (strlen(tmp) <12){
 		for (i = strlen(tmp); i<12; i++)
 			strcpy(&tmp[i], "_");

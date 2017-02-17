@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="TMP01" key="selection"/>
+		<item value="hcu_vm_engpar_get_phy_burn_block_data" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="SH001"/>
 			<item value="hcu_vm_engpar_get_phy_burn_block_data"/>
+			<item value="HCU_SYSCFG_CLOUD_ZHBMN_NAME"/>
+			<item value="HCU_SYSCFG_CLOUD_HCU_NAME"/>
 			<item value="hcu_vm_engpar_read_phy_boot_cfg"/>
-			<item value="zHcuSysEngPhyBootCfg"/>
-			<item value="SysEngParElementSwInvInfo_t"/>
-			<item value="StrIe_HUITP_IEID_uni_scale_weight_statistic_t"/>
-			<item value="HUITP_IEID_uni_scale_weight_cfg_par"/>
-			<item value="BFSC"/>
+			<item value="hw_mac"/>
+			<item value="hwBurnId.equLable"/>
+			<item value="cloud.hcuName"/>
+			<item value="rand"/>
 		</list>
 		<list key="replacehistory">
+			<item value="hwBurnId.equLable"/>
 			<item value="TMP01"/>
 			<item value="/var/hcu/cfg/"/>
 			<item value="/var/hcu/"/>
@@ -25,7 +26,6 @@
 			<item value="HCU_L3BFSC_STA_AGEING_COEF"/>
 			<item value="msg_struct_l3bfsc_cloudvela_ctrl_resp_t"/>
 			<item value="fsm_l3bfsc_cloudvela_ctrl_resp"/>
-			<item value="fsm_l3bfsc_cloudvela_ctrl_req"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

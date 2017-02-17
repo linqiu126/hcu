@@ -237,7 +237,7 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcpy(stmp, zHcuVmCtrTab.clock.curYmDir);
 	//strcat(stmp, HCU_RECORD_FILE_NAME_AVORION);
 	strcat(stmp, "/");
-	strcat(stmp,zHcuSysEngPar.cloud.hcuName);
+	strcat(stmp,zHcuSysEngPar.hwBurnId.equLable);
 	strcat(stmp,"_");
 	strcat(stmp, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(stmp, zHcuVmCtrTab.clock.sMin);
@@ -251,7 +251,7 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcat(zHcuVmCtrTab.clock.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 
 	//特殊的干净文件名字
-	strcpy(zHcuVmCtrTab.clock.curAvorionFnameH264,zHcuSysEngPar.cloud.hcuName);
+	strcpy(zHcuVmCtrTab.clock.curAvorionFnameH264,zHcuSysEngPar.hwBurnId.equLable);
 	strcat(zHcuVmCtrTab.clock.curAvorionFnameH264,"_");
 	strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 	strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, zHcuVmCtrTab.clock.sMin);
@@ -284,7 +284,7 @@ OPSTAT func_hwinv_global_par_init(void)
 		closedir(dtmp);
 	}
 
-	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.cloud.hcuName);
+	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.hwBurnId.equLable);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname,"_");
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_HK_CLEAN);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, zHcuVmCtrTab.clock.sMin);
@@ -362,7 +362,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 
 	//第一部分/zHcuSysEngPar总共三步分
 	if (ret == SUCCESS){
-		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.cloud.hcuName);
+		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.hwBurnId.equLable);
 		HCU_DEBUG_PRINT_NOR("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
 		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 	}else{
@@ -386,7 +386,6 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		zHcuSysEngPar.serialport.SeriesPortForPm25Sharp = HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT;
 		//后台部分
 		strncpy(zHcuSysEngPar.cloud.svrAddrHttpLocal, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpLocal))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpLocal)));
-		strncpy(zHcuSysEngPar.cloud.hcuName, HCU_SYSCFG_CLOUD_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)<sizeof(zHcuSysEngPar.cloud.hcuName))?(sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)):(sizeof(zHcuSysEngPar.cloud.hcuName)));
 		zHcuSysEngPar.cloud.svrBhItfFrameStdDefault = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET;
 		strncpy(zHcuSysEngPar.cloud.svrAddrSocketipDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault)));
 		strncpy(zHcuSysEngPar.cloud.svrAddrHttpDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpDefault)));
@@ -515,6 +514,8 @@ OPSTAT hcu_hwinv_engpar_create_storage_dir_env(void)
 	}else{
 		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW backup local directory: %s\n", zHcuSysEngPar.swm.hcuSwBackupDir);
 	}
+
+    //为所有的存储预留空间配额，并检查是否足够。如果不足，要么出错，要么清理。
 
     //返回
 	return SUCCESS;
@@ -695,7 +696,7 @@ void func_hwinv_scan_date(void)
 		strcpy(stmp, zHcuVmCtrTab.clock.curYmDir);
 
 		strcat(stmp, "/");
-		strcat(stmp,zHcuSysEngPar.cloud.hcuName);
+		strcat(stmp,zHcuSysEngPar.hwBurnId.equLable);
 		strcat(stmp,"_");
 		strcat(stmp, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 		strcat(stmp, zHcuVmCtrTab.clock.sMin);
@@ -708,7 +709,7 @@ void func_hwinv_scan_date(void)
 		strcat(zHcuVmCtrTab.clock.curAvorionFdMkv, HCU_RECORD_FILE_NAME_EXTEND_MKV);
 
 		//特殊的干净文件名字
-		strcpy(zHcuVmCtrTab.clock.curAvorionFnameH264,zHcuSysEngPar.cloud.hcuName);
+		strcpy(zHcuVmCtrTab.clock.curAvorionFnameH264,zHcuSysEngPar.hwBurnId.equLable);
 		strcat(zHcuVmCtrTab.clock.curAvorionFnameH264,"_");
 		strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, HCU_RECORD_FILE_NAME_AVORION_CLEAN);
 		strcat(zHcuVmCtrTab.clock.curAvorionFnameH264, zHcuVmCtrTab.clock.sMin);
@@ -737,7 +738,7 @@ void func_hwinv_scan_date(void)
 		closedir(dtmp);
 	}
 
-	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.cloud.hcuName);
+	strcpy(zHcuVmCtrTab.clock.curHikvisionFname,zHcuSysEngPar.hwBurnId.equLable);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname,"_");
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_HK_CLEAN);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, zHcuVmCtrTab.clock.sMin);

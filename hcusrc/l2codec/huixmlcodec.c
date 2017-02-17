@@ -228,7 +228,7 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	memset(msgToUser, 0, sizeof(msgToUser));
 	strncpy(msgToUser, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_TO_USER_L), dif);
 	//是否要如此对比，待定
-	if ((strcmp(msgToUser, zHcuSysEngPar.hwBurnId.equLable) !=0) && (strcmp(msgToUser, zHcuSysEngPar.cloud.hcuName) !=0))
+	if (strcmp(msgToUser, zHcuSysEngPar.hwBurnId.equLable) !=0)
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid toUser field!\n");
 	strncpy(gTaskCloudvelaContext.L2Link.destUser, msgToUser, strlen(msgToUser)<sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(msgToUser):sizeof(gTaskCloudvelaContext.L2Link.destUser));
 	

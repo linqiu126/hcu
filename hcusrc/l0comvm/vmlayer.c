@@ -602,8 +602,9 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 //启动区XML关键字定义
 HcuSysEngPhyBootCfg_t zHcuSysEngPhyBootCfg[] = {
 	{0,   	"<xml>", 				    "</xml>"},
-	{20,  	"<equLable>",               "</equLable>"},
-	{32,  	"<hw_mac>",                 "</hw_mac>"},
+	{HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX,  	"<equLable>",               "</equLable>"},
+	{HCU_SYSENG_PAR_HWBURN_MAC_LEN_MAX,  	"<hw_mac>",                 "</hw_mac>"},
+	{HCU_SYSENG_PAR_HWBURN_ZHBMN_LEN_MAX,  	"<zhbMnLable>",             "</zhbMnLable>"},
 	{2,		"<hwType>",                 "</hwType>"},
 	{2,		"<hwPemId>",                "</hwPemId>"},
 	{2,		"<swRelId>",                "</swRelId>"},
@@ -2587,7 +2588,7 @@ int hcu_vm_main_entry(void)
 		return EXIT_SUCCESS;
 	}
 
-	//创建目录存储环境：这个任务需要移到下载任务模块的初始化之中
+	//创建目录存储环境，以及所有硬盘空间的预约预留
 	if (hcu_hwinv_engpar_create_storage_dir_env() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Create storage directory environment error!\n");
 		return EXIT_SUCCESS;
@@ -2658,17 +2659,27 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 		//cipherKey[16];
 	}
 
-	//物理地址配置具备更高的优先级
-	if (strlen(zHcuSysEngPar.hwBurnId.equLable) == 0){
+	//如果收到不合法的HCUID物理地址，则自动设置：标准名字长度为19位长度
+	if (strlen(zHcuSysEngPar.hwBurnId.equLable) != (HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1)){
 		strncpy(zHcuSysEngPar.hwBurnId.equLable, HCU_SYSCFG_CLOUD_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)<sizeof(zHcuSysEngPar.hwBurnId.equLable))?(sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)):(sizeof(zHcuSysEngPar.hwBurnId.equLable)));
 		//随机化最后两位
+		srand((int)time(0));
 		UINT8 temp = rand()%99;
 		char s[3];
-		sprintf(s, "%d", temp);
-		memcpy(&zHcuSysEngPar.hwBurnId.equLable[18], s, 2);
+		sprintf(s, "%02d", temp);
+		strncpy(&zHcuSysEngPar.hwBurnId.equLable[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-3], s, 2);
 	}
-	//待去掉HCUNAME标识
-	strcpy(zHcuSysEngPar.cloud.hcuName, zHcuSysEngPar.hwBurnId.equLable);
+
+	//如果收到不合法的ZHBMNID物理地址，则自动设置：标准名字长度为14位长度
+	if (strlen(zHcuSysEngPar.hwBurnId.zhbMnLable) != (HCU_SYSENG_PAR_HWBURN_ZHBMN_LEN_MAX-1)){
+		strncpy(zHcuSysEngPar.hwBurnId.zhbMnLable, HCU_SYSCFG_CLOUD_ZHBMN_NAME, (sizeof(HCU_SYSCFG_CLOUD_ZHBMN_NAME)<sizeof(zHcuSysEngPar.hwBurnId.zhbMnLable))?(sizeof(HCU_SYSCFG_CLOUD_ZHBMN_NAME)):(sizeof(zHcuSysEngPar.hwBurnId.zhbMnLable)));
+		//随机化最后两位
+		srand((int)time(0));
+		UINT8 temp = rand()%99;
+		char s[3];
+		sprintf(s, "%02d", temp);
+		strncpy(&zHcuSysEngPar.hwBurnId.zhbMnLable[HCU_SYSENG_PAR_HWBURN_ZHBMN_LEN_MAX-3], s, 2);
+	}
 
 	//初始化之后的系统标识信息
 	HcuDebugPrint("HCU-VM: Initialized Hardware Burn Physical Id/Address: CURRENT_PRJ=[%s], HW_LABLE=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[0x%x], SW_RELEASE_VER=[%d.%d], FW_UPGRADE_FLAG=[%d].\n", \
@@ -2735,7 +2746,7 @@ OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 		  return FAILURE;
 	}
 
-	//equLable
+	//equLable HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX
 	index++;
 	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
 	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
@@ -2743,8 +2754,9 @@ OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 	if ((p1!=NULL) && (p2!=NULL) &&  (len>0)){
 		p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
 		strncpy(zHcuSysEngPar.hwBurnId.equLable, p1, len<sizeof(zHcuSysEngPar.hwBurnId.equLable)?len:sizeof(zHcuSysEngPar.hwBurnId.equLable));
+		//strncpy(zHcuSysEngPar.hwBurnId.equLable, p1, HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX);
 	}
-	//hw_mac
+	//hw_mac HCU_SYSENG_PAR_HWBURN_MAC_LEN_MAX
 	index++;
 	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
 	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
@@ -2752,8 +2764,18 @@ OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 	if ((p1!=NULL) && (p2!=NULL) &&  (len>0)){
 		p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
 		strncpy(zHcuSysEngPar.hwBurnId.hw_mac, p1, len<sizeof(zHcuSysEngPar.hwBurnId.hw_mac)?len:sizeof(zHcuSysEngPar.hwBurnId.hw_mac));
+		//strncpy(zHcuSysEngPar.hwBurnId.hw_mac, p1, HCU_SYSENG_PAR_HWBURN_MAC_LEN_MAX);
 	}
-
+	//zhbMnLable HCU_SYSENG_PAR_HWBURN_ZHBMN_LEN_MAX
+	index++;
+	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
+	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
+	len = p2 - p1 - strlen(zHcuSysEngPhyBootCfg[index].left);
+	if ((p1!=NULL) && (p2!=NULL) &&  (len>0)){
+		p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
+		strncpy(zHcuSysEngPar.hwBurnId.zhbMnLable, p1, len<sizeof(zHcuSysEngPar.hwBurnId.zhbMnLable)?len:sizeof(zHcuSysEngPar.hwBurnId.zhbMnLable));
+		//strncpy(zHcuSysEngPar.hwBurnId.zhbMnLable, p1, HCU_SYSENG_PAR_HWBURN_ZHBMN_LEN_MAX);
+	}
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwType));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.hwPemId));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.swRelId));

@@ -14,6 +14,12 @@
 如果ETHERNET模块不启动，则该问题消失。该问题出现在链路建立不成功，从而ETH模块给自己发送MSG_ID_COM_RESTART以后
 
 [BUG#002]
+待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
+
+//= ZJL, 2017 Feb.17, CURRENT_SW_DELIVERY 175=>BFSC项目
+= 增加随机HCUNAME的方式，并删去了系统中对于该参数的工参配置，改为固定的hcuboot.cfg设备配置
+=为ZHBMN增加物理配置信息
+=该版本需要支持：１.创建/var/hcu/cfg目录结构，并将hcuboot.cfg移过去　２/import更新数据库。数据库表单预计hcuboot.cfg都在hcusrc程序目录中
 
 //= ZSC, 2017 Feb.16, CURRENT_SW_DELIVERY 174=>AQYC项目
 =更改完成hcu_ethernet_curl_data_send，此API供事件驱动调用发送给Home server时调用，curl连接无心跳检测

@@ -594,24 +594,24 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTable_t *engPar, char *prjname)
 		//if(sqlRow[index]) engPar->serialport.BautRate = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
 		//后台链接部分
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddLocal, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddLocal, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
 		//printf("engPar->cloud.cloudHttpAddLocal = %s\n", engPar->cloud.cloudHttpAddLocal);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddTest, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddSae, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddJd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddWechat, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudBhServerName, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudBhHcuName, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddTest, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddSae, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddJd, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudHttpAddWechat, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudBhServerName, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudBhHcuName, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 		if(sqlRow[index]) engPar->cloud.cloudBhItfFrameStd = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 
 		//For HCU SW download
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpAdd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUser, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwd, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpAdd, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_LEN-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUser, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwd, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 
 		//For HCU video upload
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUserVideo, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwdVideo, sqlRow[index++], SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUserVideo, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwdVideo, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_CLOUDVELA_NAME-1);
 
 
 		if(sqlRow[index]) strncpy(engPar->swDownload.hcuSwDownloadDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);

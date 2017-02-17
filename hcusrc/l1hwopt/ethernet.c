@@ -158,15 +158,16 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			}
 			else
 			{
+				//先送物理设备标签的机制，待去掉
 				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n");
-				echolen = strlen(zHcuSysEngPar.cloud.hcuName);
-				if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, zHcuSysEngPar.cloud.hcuName, echolen, 0) != echolen){
+				echolen = strlen(zHcuSysEngPar.hwBurnId.equLable);
+				if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, zHcuSysEngPar.hwBurnId.equLable, echolen, 0) != echolen){
 					HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
 					zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 				}
 				else{
 					gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
-					HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.cloud.hcuName);
+					HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.hwBurnId.equLable);
 				}
 			}
 		}
@@ -274,9 +275,10 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	}
 	else
 	{
+		//发送名字的机制，待去掉
 		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected\n");
-		echolen = strlen(zHcuSysEngPar.cloud.hcuName);
-		if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, zHcuSysEngPar.cloud.hcuName, echolen, 0) != echolen){
+		echolen = strlen(zHcuSysEngPar.hwBurnId.equLable);
+		if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, zHcuSysEngPar.hwBurnId.equLable, echolen, 0) != echolen){
 			HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 		}

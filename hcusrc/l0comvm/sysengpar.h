@@ -53,27 +53,26 @@ typedef struct SysEngParElementSeriesPort
 }SysEngParElementSeriesPort_t;
 
 //后台服务器地址部分
-#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN 256
-#define SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME 20
+#define HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX 256
+#define HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX 20
 typedef struct SysEngParElementCloudvela
 {
-	char  svrAddrHttpLocal[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  hcuName[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
-	char  svrAddrHttpDefault[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  svrAddrSocketipDefault[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  svrNameDefault[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
+	char  svrAddrHttpLocal[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
+	char  svrAddrHttpDefault[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
+	char  svrAddrSocketipDefault[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
+	char  svrNameDefault[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];
 	UINT32 svrPortDefault;
 	UINT8 svrBhItfFrameStdDefault;
-	char  svrAddrHttpHome[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  svrAddrSocketipHome[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];
-	char  svrNameHome[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];
+	char  svrAddrHttpHome[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
+	char  svrAddrSocketipHome[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
+	char  svrNameHome[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];
 	UINT32 svrPortHome;
 	UINT8 svrBhItfFrameStdHome;
-	char  cloudFtpAdd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_LEN];//for HCU SW FTP by shanchun
-	char  cloudFtpUser[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
-	char  cloudFtpPwd[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for HCU SW FTP by shanchun
-	char  cloudFtpUserVideo[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for video FTP by upload shanchun
-	char  cloudFtpPwdVideo[SYS_ENG_PAR_ELEMENT_CLOUDVELA_NAME];//for video FTP upload by shanchun
+	char  cloudFtpAdd[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];//for HCU SW FTP by shanchun
+	char  cloudFtpUser[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];//for HCU SW FTP by shanchun
+	char  cloudFtpPwd[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];//for HCU SW FTP by shanchun
+	char  cloudFtpUserVideo[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];//for video FTP by upload shanchun
+	char  cloudFtpPwdVideo[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];//for video FTP upload by shanchun
 }SysEngParElementCloudvela_t;
 
 //local SW storage address for HCU SW upgrade by shanchun
@@ -167,10 +166,13 @@ typedef struct SysEngParElementProgramCodeDefineFix
 }SysEngParElementProgramCodeDefineFix_t;
 
 //通用硬件固定位置的标签存储内容，由工厂生产过程中烧录器写入
+#define HCU_SYSENG_PAR_HWBURN_MAC_LEN_MAX 32
+#define HCU_SYSENG_PAR_HWBURN_ZHBMN_LEN_MAX 15
 typedef struct SysEngParElementHwBurnPhyIdAddr
 {
-	char  	equLable[20];
-	UINT8 	hw_mac[32];
+	char  	equLable[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];
+	char 	hw_mac[HCU_SYSENG_PAR_HWBURN_MAC_LEN_MAX];
+	char 	zhbMnLable[HCU_SYSENG_PAR_HWBURN_ZHBMN_LEN_MAX];
 	UINT16 	hwType;
 	UINT16 	hwPemId;
 	UINT16 	swRelId;
