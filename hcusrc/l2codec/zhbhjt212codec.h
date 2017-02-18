@@ -20,8 +20,8 @@
 #include "../l2frame/cloudvela.h"
 
 //message pack/unpack
-extern OPSTAT func_cloudvela_zhbhjt_msg_pack(UINT16 msgId, StrMsg_ZHBHJT_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output);
-extern OPSTAT func_cloudvela_zhbhjt_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId);
+extern OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_t *inputPar, CloudDataSendBuf_t *output);
+extern OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId);
 
 
 //大小端变换宏定义

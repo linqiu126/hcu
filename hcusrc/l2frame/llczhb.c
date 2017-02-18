@@ -136,8 +136,26 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
-	//首先判定是否属于全新SESSION，如果是，则RESET链路/上下文
+	//链路MN在编解码过程中直接进行检查
 
+	//检查链路系统码
+	if ((rcv.head.st != HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE) && (rcv.head.st != ZHBHJT_IE_uni_STcode_system_interaction))
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Receive frame error!\n");
+
+	//检查链路密码：只有在正常业务操作的情况下才有意义，因为在ZHBHJT_IE_uni_STcode_system_interaction情况下本来就不存在
+	if ((rcv.head.st !=ZHBHJT_IE_uni_STcode_system_interaction) && (rcv.head.pw != gTaskLlczhbContext.env.pswd))
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Receive frame error!\n");
+
+	//检查链路FLAG，待定
+
+	//将链路层数据存入到静态上下文，以便后续继续使用
+	if (rcv.head.qn.qnymdhms !=0) memcpy(&(gTaskLlczhbContext.llc.frameHead.qn), &(rcv.head.qn), sizeof(msgie_struct_zhbhjt_frame_head_qn_t));
+	if (rcv.head.st !=0) gTaskLlczhbContext.llc.frameHead.st = rcv.head.st;
+	if (rcv.head.cn != 0) gTaskLlczhbContext.llc.frameHead.cn = rcv.head.cn;
+	if (rcv.head.pw !=0) gTaskLlczhbContext.llc.frameHead.pw = rcv.head.pw;
+	if (rcv.head.pno !=0) gTaskLlczhbContext.llc.frameHead.pno = rcv.head.pno;
+	if (rcv.head.pnum !=0) gTaskLlczhbContext.llc.frameHead.pnum = rcv.head.pnum;
+	if (rcv.head.ansFlag !=0) gTaskLlczhbContext.llc.frameHead.ansFlag = rcv.head.ansFlag;
 
 	//根据不同的接收命令进行判定
 	switch (rcv.head.cn){
@@ -175,6 +193,8 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		break;
 
 	case ZHBHJT_IE_uni_CNcode_par_set_access_pswd_req:
+		gTaskLlczhbContext.env.pswd = rcv.setpw;
+
 		break;
 
 	case ZHBHJT_IE_uni_CNcode_cmd_notification_req:
@@ -226,7 +246,6 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 	}
-
 
 
 
@@ -431,6 +450,22 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 	return SUCCESS;
 }
 
+//发送L2FRAME给后台
+OPSTAT fsm_llczhb_feeback_req_answer_in_layer2(void)
+{
+	msg_struct_llczhb_cloudvela_frame_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
+	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
 
+	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_answer_resp;
+	snd.head.pw = gTaskLlczhbContext.env.pswd;
+	snd.head.ansFlag = 0;
+
+	if (hcu_message_send(MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP, TASK_ID_CLOUDVELA, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+
+	return SUCCESS;
+}
 
 

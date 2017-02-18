@@ -116,7 +116,7 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_toxicgas_data_report},
 
 	//ZHB独特标准
-	{MSG_ID_PM25SP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_llczhb_data_resp},
+	{MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_llczhb_data_resp},
 
 	//采用分项目控制方式，降低不同项目之间的关联，特别是海量MSGID-STATE这一表的内存压力。UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -874,7 +874,9 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 		}
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		if (func_cloudvela_zhbhjt212_msg_unpack(&rcv, -1) == FAILURE){
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
+		}
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		if (func_cloudvela_stdxml_msg_unpack(&rcv) == FAILURE){
@@ -4984,9 +4986,32 @@ OPSTAT fsm_cloudvela_toxicgas_data_report(UINT32 dest_id, UINT32 src_id, void * 
 	return SUCCESS;
 }
 
-
+//进行目标编码，并发送给socket
 OPSTAT fsm_cloudvela_llczhb_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	//int ret=0;
+	msg_struct_llczhb_cloudvela_frame_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_llczhb_cloudvela_frame_resp_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LLCZHB frame error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//只支持ZHBHJT212格式
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault != HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+
+	//申明发送消息
+	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+
+	if (func_cloudvela_zhbhjt212_msg_pack(&rcv, &pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+
+	//Send out
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+
+	//State no change
 	return SUCCESS;
 }
 

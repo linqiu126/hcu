@@ -316,6 +316,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -391,6 +392,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -465,6 +467,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -540,6 +543,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -615,6 +619,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -693,6 +698,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -769,6 +775,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -845,6 +852,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -920,6 +928,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -995,6 +1004,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -1071,6 +1081,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET 		HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
@@ -1148,6 +1159,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT				HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET HCU_SYSCFG_CLOUD_BH_ITF_STD_XML
+	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"

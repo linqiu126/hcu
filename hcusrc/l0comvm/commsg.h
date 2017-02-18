@@ -3445,6 +3445,7 @@ typedef struct  msg_struct_llczhb_cloudvela_frame_resp
 	msgie_struct_zhbhjt_frame_head_t head;
 	msgie_struct_zhbhjt_frame_head_qn_t cfmQn;
 	msgie_struct_zhbhjt_element_dl_t dlData;
+	UINT32 length;
 }msg_struct_llczhb_cloudvela_frame_resp_t;
 
 typedef enum

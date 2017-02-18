@@ -40,7 +40,6 @@ typedef struct gTaskLlczhbContextLinkDynamic
 
 typedef struct gTaskLlczhbContext
 {
-	UINT32 pswd;
 	gTaskLlczhbContextStatic_t 		env;
 	gTaskLlczhbContextLinkDynamic_t llc;
 }gTaskLlczhbContext_t;

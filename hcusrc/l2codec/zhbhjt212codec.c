@@ -17,23 +17,28 @@
 //Global variables
 
 //Task Global variables
-//extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
-
-//使用编译器的功能，检查ZHBHJT中设置的长度参数是否适合
+extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
 
 
-//XML自定义标准的编码函数方式
-//inputLen：这是包括MsgHead在内的所有缓冲区长度，正常情况下=sizeof(StrMsg_ZHBHJT_MSGID_uni_general_message_t)，或者IE_BODY+4
-OPSTAT func_cloudvela_zhbhjt_msg_pack(UINT16 msgId, StrMsg_ZHBHJT_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output)
+OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_t *inputPar, CloudDataSendBuf_t *output)
 {
+	//因为是在ZHBHJT212函数体中，所以根据MN地址，自动设置目标服务器为业务服务器
+	gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+
 
 	//返回
 	return SUCCESS;
 }
 
 
-OPSTAT func_cloudvela_zhbhjt_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
+OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
 {
+	//因为是在ZHBHJT212函数体中，所以根据MN地址，自动设置目标服务器为业务服务器
+	gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+
+
+
+
 	//返回
 	return SUCCESS;
 }
