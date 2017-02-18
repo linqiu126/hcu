@@ -42,10 +42,13 @@ HcuFsmStateItem_t HcuFsmHumid[] =
 	{MSG_ID_CLOUDVELA_HUMID_DATA_REQ,    	FSM_STATE_HUMID_ACTIVED,      		fsm_humid_cloudvela_data_req},
 	{MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM,   FSM_STATE_HUMID_ACTIVED,      		fsm_humid_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,   	FSM_STATE_HUMID_ACTIVED,          	fsm_humid_cloudvela_ctrl_req},
+	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_HUMID_ACTIVED,      	  	fsm_humid_l3aqyc_exg_ctrl_req},
+
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_HUMID_DATA_REPORT, 	FSM_STATE_HUMID_OPT_WFFB,        	fsm_humid_data_report_from_modbus},
 	{MSG_ID_MODBUS_HUMID_CONTROL_FB,    FSM_STATE_HUMID_OPT_WFFB,          	fsm_humid_modbus_control_fb},
+
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -604,6 +607,12 @@ OPSTAT func_humid_time_out_read_data_from_mth01(void)
 
 	return SUCCESS;
 }
+
+OPSTAT fsm_humid_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
 
 
 

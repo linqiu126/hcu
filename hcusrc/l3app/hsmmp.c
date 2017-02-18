@@ -46,6 +46,7 @@ HcuFsmStateItem_t HcuFsmHsmmp[] =
 	{MSG_ID_CLOUDVELA_HSMMP_DATA_REQ,		FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_data_req},
 	{MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM,	FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ,		FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_cloudvela_ctrl_req},
+	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_l3aqyc_exg_ctrl_req},
 	{MSG_ID_SPSVIRGO_HSMMP_DATA_RX,     	FSM_STATE_HSMMP_ACTIVED,          	fsm_hsmmp_audio_data_rx},
 	{MSG_ID_AVORION_HSMMP_DATA_RX,      	FSM_STATE_HSMMP_ACTIVED,         	fsm_hsmmp_avorion_data_rx},
 
@@ -210,6 +211,11 @@ OPSTAT fsm_hsmmp_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * pa
 
 //收到来自CLOUD和后台云的命令，从而重新配置本地控制信息
 OPSTAT fsm_hsmmp_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_hsmmp_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

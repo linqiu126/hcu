@@ -42,6 +42,7 @@ HcuFsmStateItem_t HcuFsmNoise[] =
 	{MSG_ID_CLOUDVELA_NOISE_DATA_REQ,    	FSM_STATE_NOISE_ACTIVED,      			fsm_noise_cloudvela_data_req},
 	{MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM,   FSM_STATE_NOISE_ACTIVED,      			fsm_noise_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_NOISE_CTRL_REQ,    	FSM_STATE_NOISE_ACTIVED,          		fsm_noise_cloudvela_ctrl_req},
+	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_NOISE_ACTIVED,      	  		fsm_noise_l3aqyc_exg_ctrl_req},
 
     //Wait for MODBUS Feedback
 	{MSG_ID_MODBUS_NOISE_DATA_REPORT, 		FSM_STATE_NOISE_MODBUS_WFFB,        	fsm_noise_data_report_from_modbus},
@@ -766,4 +767,12 @@ OPSTAT fsm_noise_spsvirgo_control_fb(UINT32 dest_id, UINT32 src_id, void * param
 {
 	return SUCCESS;
 }
+
+OPSTAT fsm_noise_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+
+
 

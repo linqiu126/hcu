@@ -42,6 +42,8 @@ HcuFsmStateItem_t HcuFsmWinddir[] =
 	{MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ,     	FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_cloudvela_data_req},
 	{MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM,     FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ,  		FSM_STATE_WINDDIR_ACTIVED,          fsm_winddir_cloudvela_ctrl_req},
+	{MSG_ID_L3AQYC_EXG_CTRL_REQ,				FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_l3aqyc_exg_ctrl_req},
+
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_WINDDIR_DATA_REPORT, FSM_STATE_WINDDIR_OPT_WFFB,        	fsm_winddir_data_report_from_modbus},
@@ -512,3 +514,16 @@ OPSTAT fsm_winddir_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param
 {
 	return SUCCESS;
 }
+
+OPSTAT fsm_winddir_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+
+
+
+
+
+
+

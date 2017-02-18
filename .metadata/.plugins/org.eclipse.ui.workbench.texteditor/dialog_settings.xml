@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="msgie_struct_zhbhjt_frame_date_t" key="selection"/>
+		<item value="fsm_winddir_l3aqyc_exg_ctrl_req" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="msgie_struct_zhbhjt_frame_date_t"/>
-			<item value="ZHBHJT_STCODE_uni"/>
-			<item value="ZHBHJT_CNCODE_uni"/>
-			<item value="msgie_struct_zhbhjt_frame_head_dl_t"/>
-			<item value="msgie_struct_zhbhjt_frame_ul_t"/>
-			<item value="msgie_struct_zhbhjt_frame_dl_t"/>
-			<item value="zhb"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212"/>
+			<item value="fsm_winddir_l3aqyc_exg_ctrl_req"/>
+			<item value="fsm_hsmmp_l3aqyc_exg_ctrl_req"/>
+			<item value="fsm_l3aqycg20_cloudvela_ctrl_req"/>
+			<item value="fsm_l3aqycg20_cloudvela_data_confirm"/>
+			<item value="ycjk"/>
+			<item value="//ZHBHJT"/>
+			<item value="noise"/>
+			<item value="StrIe_HUITP_IEID_uni_ycjk_sensor_selection_t"/>
 		</list>
 		<list key="replacehistory">
+			<item value="ycjk"/>
 			<item value="ZHBHJT_IE_uni_STcode"/>
 			<item value="ZHBHJT_IE_uni_"/>
 			<item value="ZHBHJT_IE_uni_CNcode"/>
@@ -25,7 +26,6 @@
 			<item value="Zhbhjt"/>
 			<item value="zhbhjt"/>
 			<item value="ZHBHJT"/>
-			<item value="hwBurnId.equLable"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

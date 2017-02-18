@@ -41,17 +41,26 @@ HcuFsmStateItem_t HcuFsmL3aqycg20[] =
     {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            				fsm_l3aqycg20_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          					fsm_l3aqycg20_time_out},
 
-	//Normal working status
-    {MSG_ID_COM_INIT_FEEDBACK,					FSM_STATE_L3AQYCG20_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     				FSM_STATE_L3AQYCG20_ACTIVED,       			fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  				FSM_STATE_L3AQYCG20_ACTIVED,       			fsm_com_do_nothing},
+    //Normal working status
+	{MSG_ID_CLOUDVELA_YCJK_DATA_REQ,    	FSM_STATE_L3AQYCG20_ACTIVED,      			fsm_l3aqycg20_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_YCJK_DATA_CONFIRM,   	FSM_STATE_L3AQYCG20_ACTIVED,      			fsm_l3aqycg20_cloudvela_data_confirm},
+	{MSG_ID_CLOUDVELA_YCJK_CTRL_REQ,    	FSM_STATE_L3AQYCG20_ACTIVED,          		fsm_l3aqycg20_cloudvela_ctrl_req},
+	{MSG_ID_L3AQYC_EXG_CTRL_RESP,    		FSM_STATE_L3AQYCG20_ACTIVED,          		fsm_l3aqycg20_l3mod_exg_ctrl_resp},
+	{MSG_ID_L3AQYC_EXG_DATA_REPORT,    		FSM_STATE_L3AQYCG20_ACTIVED,          		fsm_l3aqycg20_l3mod_exg_data_report},
+
+
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
 //Global variables
-extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
+
+
+//Task Global variables
+gTaskL3aqycq20Context_t gTaskL3aqycq20Context;
+
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -184,11 +193,43 @@ OPSTAT fsm_l3aqycg20_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	return SUCCESS;
 }
 
+//这个模块收到这个命令后，需要跟更多的模块进行交互
+OPSTAT fsm_l3aqycg20_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_cloudvela_ycjk_data_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_ycjk_data_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_ycjk_data_req_t))){
+		HcuErrorPrint("NOISE: Receive message error!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		return FAILURE;
+	}
+	memcpy(&rcv, param_ptr, param_len);
 
 
 
+	return SUCCESS;
+}
 
+OPSTAT fsm_l3aqycg20_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
+OPSTAT fsm_l3aqycg20_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3aqycg20_l3mod_exg_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3aqycg20_l3mod_exg_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
 
 

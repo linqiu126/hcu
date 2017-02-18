@@ -41,6 +41,7 @@ HcuFsmStateItem_t HcuFsmAirprs[] =
     //Task level initialization
 	{MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ,		FSM_STATE_AIRPRS_ACTIVED,      	  	fsm_airprs_cloudvela_data_req},
 	{MSG_ID_CLOUDVELA_AIRPRS_DATA_CONFIRM,	FSM_STATE_AIRPRS_ACTIVED,      	  	fsm_airprs_cloudvela_data_confirm},
+	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_AIRPRS_ACTIVED,      	  	fsm_airprs_l3aqyc_exg_ctrl_req},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -263,5 +264,8 @@ OPSTAT fsm_airprs_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * p
 	return SUCCESS;
 }
 
-
+OPSTAT fsm_airprs_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 

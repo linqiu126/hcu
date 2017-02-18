@@ -19,6 +19,10 @@
 //= ZJL, 2017 Feb.17, CURRENT_SW_DELIVERY 176=>BFSC项目
 =清理端口的工参数数据定义，清理掉工参表中对协议的配置，只能从SYSCONFIG.H中进行读取，简化工参配置。数据库更新。
 =给ZHBHJT编写消息字典
+=增加YCJK的相应聚合消息，任务目标付给了TASK_ID_L3AQYCG20
+=增加YCJK的HUITP消息编解码过程和内容体
+=在TASK_ID_L3AQYCG20中，增加控制／数据中继的完善能力框架
+=通过TASK_ID_L3AQYCG20可以对所有其它传感器进行控制。消息将采用L3MOD_EXG_CTRL_REQ/RESP/REPORT三条消息对所有通信进行控制
 
 //= ZJL, 2017 Feb.17, CURRENT_SW_DELIVERY 175=>BFSC项目
 = 增加随机HCUNAME的方式，并删去了系统中对于该参数的工参配置，改为固定的hcuboot.cfg设备配置

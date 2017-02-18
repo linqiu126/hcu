@@ -440,6 +440,13 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_NOISE_CLOUDVELA_CTRL_RESP,
 	MSG_ID_NOISE_CLOUDVELA_DATA_REPORT,
 	MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM,
+	MSG_ID_CLOUDVELA_YCJK_DATA_REQ,
+	MSG_ID_YCJK_CLOUDVELA_DATA_RESP,
+	MSG_ID_CLOUDVELA_YCJK_CTRL_REQ,
+	MSG_ID_YCJK_CLOUDVELA_CTRL_RESP,
+	MSG_ID_YCJK_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_YCJK_DATA_CONFIRM,
+
 	//CONVENIENCE SENSOR-CLOUD
 	MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ,
 	MSG_ID_AIRPRS_CLOUDVELA_DATA_RESP,
@@ -508,9 +515,20 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//本地界面请求
 	MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,  //本地界面设置结果
 
+	//L3AQYCG20
+	MSG_ID_L3AQYC_EXG_CTRL_REQ,
+	MSG_ID_L3AQYC_EXG_CTRL_RESP,
+	MSG_ID_L3AQYC_EXG_DATA_REPORT,
+
 	//ZHBHJT
-	MSG_ID_ZHBLLC_CLOUDVELA_FRAME_REQ,
-	MSG_ID_CLOUDVELA_ZHBLLC_FRAME_RESP,
+	MSG_ID_LLCZHB_CLOUDVELA_FRAME_REQ,
+	MSG_ID_CLOUDVELA_LLCZHB_FRAME_RESP,
+	MSG_ID_LLCZHB_L3MOD_CTRL_REQ,
+	MSG_ID_L3MOD_LLCZHB_CTRL_RESP,
+	MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
+	MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,
+	MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,
+	MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,
 
 	MSG_ID_COM_MAX, //Ending point
 
@@ -720,6 +738,25 @@ typedef struct  sensor_noise_data_element //
 	UINT32 nTimes;
 	UINT8 onOffLineFlag;
 }sensor_noise_data_element_t;
+typedef struct  sensor_ycjk_data_element //
+{
+	UINT32 equipid;
+	UINT8 dataFormat;
+	UINT32 emcValue;
+	UINT32 tempValue;
+	UINT32 humidValue;
+	UINT32 winddirValue;
+	UINT32 windspdValue;
+	UINT32 pm1d0Value;
+	UINT32 pm2d5Value;
+	UINT32 pm10Value;
+	UINT32 noiseValue;
+	UINT32 airprsValue;
+	msgie_struct_com_gps_pos_t gps;
+	UINT32 timeStamp;
+	UINT32 nTimes;
+	UINT8 onOffLineFlag;
+}sensor_ycjk_data_element_t;
 typedef struct  sensor_hsmmp_data_element //
 {
 	UINT32 equipid;
@@ -876,100 +913,6 @@ typedef struct msgie_struct_bfsc_scale_weight_sta_element
 	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
 	UINT32 errNbr;			//出错次数
 }msgie_struct_bfsc_scale_weight_sta_element_t;
-
-
-//ZHBHJT212
-typedef struct msgie_struct_zhbhjt_frame_head_dl //
-{
-	UINT32 qnymdhms;
-	UINT16 qnMicrosecond;  //SID
-	UINT8  st; //污染物种类
-	UINT16 cn;  //命令
-	UINT32 pw;  //密码
-	UINT8  ansFlag;//中环保标准， 3c, 数据包是否拆分及应答标志 Flag，从云后台的接收方向
-}msgie_struct_zhbhjt_frame_head_dl_t;
-typedef struct  msgie_struct_zhbhjt_frame_head_ul //
-{
-	UINT32 qnymdhms;
-	UINT16 qnMicrosecond;  //SID
-	UINT8  st; //污染物种类
-	UINT16 cn;  //命令
-	UINT32 pw;  //密码
-	UINT16 pnum;
-	UINT16 pno;
-}msgie_struct_zhbhjt_frame_head_ul_t;
-
-typedef struct  msgie_struct_zhbhjt_frame_data_pol_rtd
-{
-	INT32  Rtd;
-	char   PolFlag;
-}msgie_struct_zhbhjt_frame_data_pol_rtd_t;
-typedef struct  msgie_struct_zhbhjt_frame_data_pol_rs
-{
-	INT32  RS;
-}msgie_struct_zhbhjt_frame_data_pol_rs_t;
-typedef struct  msgie_struct_zhbhjt_frame_data_pol_rt
-{
-	INT32  RT;
-}msgie_struct_zhbhjt_frame_data_pol_rt_t;
-typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
-{
-	INT32  Cou;
-	INT32  Min;
-	INT32  Avg;
-	INT32  Max;
-}msgie_struct_zhbhjt_frame_data_pol_min_hour_t;
-typedef struct  msgie_struct_zhbhjt_frame_data_low_upvalue
-{
-	INT32  UpValue;
-	INT32  LowValue;
-}msgie_struct_zhbhjt_frame_data_low_upvalue_t;
-typedef struct  msgie_struct_zhbhjt_frame_data_polid
-{
-	UINT8  PolId;
-}msgie_struct_zhbhjt_frame_data_polid_t;
-typedef struct  msgie_struct_zhbhjt_frame_data_ctime
-{
-	UINT8  PolId;
-}msgie_struct_zhbhjt_frame_data_ctime_t;
-#define HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX 5
-#define HCU_SYSMSG_ZHBHJT_FRAME_DATA_CTIME_NBR_MAX 10
-typedef struct  msgie_struct_zhbhjt_frame_data
-{
-	UINT32 systemTime;
-	UINT8  QnRtn;
-	UINT8  ExeRtn;
-	UINT16 RtdInterval;
-	INT32  ZsRtd;
-	INT32  ZsMin;
-	INT32  ZsAvg;
-	INT32  ZsMax;
-	INT32  Ala;
-	INT32  Data;
-	INT32  DayData;
-	INT32  NightData;
-	UINT32 AlarmTime;
-	UINT8  AlarmType;
-	UINT32 BeginTime;
-	UINT32 EndTime;
-	UINT32 DataTime;
-	UINT16 ReportTime;
-	INT32  DayStdValue;
-	INT32  NightStdValue;
-	UINT8  PolId;
-	UINT8  CommFlag;
-	UINT32 OverTime;
-	UINT8  ReCount;
-	UINT32 WarnTime;
-	msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
-	msgie_struct_zhbhjt_frame_data_pol_rs_t rs[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
-	msgie_struct_zhbhjt_frame_data_pol_rt_t rt[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
-	msgie_struct_zhbhjt_frame_data_pol_min_hour_t minHour[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
-	msgie_struct_zhbhjt_frame_data_polid_t polid[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
-	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_FRAME_DATA_POLID_NBR_MAX];
-	msgie_struct_zhbhjt_frame_data_ctime_t sampleTime[HCU_SYSMSG_ZHBHJT_FRAME_DATA_CTIME_NBR_MAX];
-}msgie_struct_zhbhjt_frame_data_t;
-
 
 
 
@@ -3003,6 +2946,85 @@ typedef struct msg_struct_cloudvela_noise_data_confirm
 }msg_struct_cloudvela_noise_data_confirm_t;
 
 
+//MSG_ID_CLOUDVELA_YCJK_DATA_REQ,
+typedef struct  msg_struct_cloudvela_ycjk_data_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	UINT32 equId;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT32 length;
+}msg_struct_cloudvela_ycjk_data_req_t;
+
+//MSG_ID_YCJK_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_ycjk_cloudvela_data_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  usercmdid;
+	UINT8  useroptid;
+	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
+	sensor_ycjk_data_element_t ycjk;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_ycjk_cloudvela_data_resp_t;
+
+//MSG_ID_CLOUDVELA_YCJK_CTRL_REQ,
+typedef struct  msg_struct_cloudvela_ycjk_ctrl_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdTag;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT8  sensorType;
+	UINT8  sensorId;
+	UINT32 sensorBitmap;
+	UINT32 length;
+}msg_struct_cloudvela_ycjk_ctrl_req_t;
+
+//MSG_ID_YCJK_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_ycjk_cloudvela_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdTag;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT8  sensorType;
+	UINT8  sensorId;
+	UINT32 sensorBitmap;
+	UINT32 length;
+}msg_struct_ycjk_cloudvela_ctrl_resp_t;
+
+//MSG_ID_YCJK_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_ycjk_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	sensor_ycjk_data_element_t ycjk;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_ycjk_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_YCJK_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_ycjk_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_ycjk_data_confirm_t;
+
+
 /*
  *
  *  一般性传感器-CLOUDVELA之间的消息对
@@ -3267,24 +3289,241 @@ typedef struct  msg_struct_cloudvela_toxicgas_data_confirm
 	UINT32 length;
 }msg_struct_cloudvela_toxicgas_data_confirm_t;
 
-//ZHBHJT
-//MSG_ID_ZHBLLC_CLOUDVELA_FRAME_REQ,
-typedef struct  msg_struct_zhbllc_cloudvela_frame_req
+//L3AQYCG20
+//MSG_ID_L3AQYC_EXG_CTRL_REQ,
+typedef struct  msg_struct_l3aqyc_exg_ctrl_req
 {
-	msgie_struct_zhbhjt_frame_head_dl_t dlHead;
-	msgie_struct_zhbhjt_frame_data_t dlData;
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT8  cmdTag;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_dl_t zhbDl;
+	UINT8  sensorType;
+	UINT8  sensorId;
+	UINT32 sensorBitmap;
 	UINT32 length;
-}msg_struct_zhbllc_cloudvela_frame_req_t;
+}msg_struct_l3aqyc_exg_ctrl_req_t;
+
+//MSG_ID_L3AQYC_EXG_CTRL_RESP,
+typedef struct msg_struct_l3aqyc_exg_ctrl_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT8  cmdTag;
+	UINT8  cmdId;
+	UINT8  optId;
+	UINT8  backType;
+	sensor_modbus_opertion_general_t opt;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT8  sensorType;
+	UINT8  sensorId;
+	UINT32 sensorBitmap;
+	UINT32 length;
+}msg_struct_l3aqyc_exg_ctrl_resp_t;
+
+//MSG_ID_L3AQYC_EXG_DATA_REPORT,
+typedef struct msg_struct_l3aqyc_exg_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	sensor_ycjk_data_element_t ycjk;
+	sensor_zhb_transport_format_ul_t zhbUl;
+	UINT32 length;
+}msg_struct_l3aqyc_exg_data_report_t;
 
 
-//MSG_ID_CLOUDVELA_ZHBLLC_FRAME_RESP,
-typedef struct  msg_struct_cloudvela_zhbllc_frame_resp
+/*
+ *
+ *
+ *   //ZHBHJT
+ *
+ *
+ */
+//ZHBHJT212
+#define HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX 5
+#define HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX 10
+typedef struct msgie_struct_zhbhjt_frame_head_qn //
 {
-	msgie_struct_zhbhjt_frame_head_ul_t ulHead;
-	msgie_struct_zhbhjt_frame_data_t ulData;
+	UINT32 qnymdhms;
+	UINT16 qnMicrosecond;  //SID
+}msgie_struct_zhbhjt_frame_head_qn_t;
+typedef struct msgie_struct_zhbhjt_frame_head //
+{
+	msgie_struct_zhbhjt_frame_head_qn_t qn;
+	UINT8  st; //污染物种类
+	UINT16 cn;  //命令
+	UINT32 pw;  //密码
+	UINT16 pnum;  //上位机也可能通过数据应答，将PNO/PMUM发送下来的。这是链路层的包证实机制，确保包收到。这个功能就留在LLC层次了
+	UINT16 pno;
+	UINT8  ansFlag;//中环保标准， 3c, 数据包是否拆分及应答标志 Flag，从云后台的接收方向
+}msgie_struct_zhbhjt_frame_head_t;
+
+typedef struct  msgie_struct_zhbhjt_frame_data_pol_rtd
+{
+	INT32  Rtd;
+	char   PolFlag;
+}msgie_struct_zhbhjt_frame_data_pol_rtd_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
+{
+	INT32  Cou;
+	INT32  Min;
+	INT32  Avg;
+	INT32  Max;
+}msgie_struct_zhbhjt_frame_data_pol_min_hour_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_low_upvalue
+{
+	float  UpValue;
+	float  LowValue;
+}msgie_struct_zhbhjt_frame_data_low_upvalue_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_ctime
+{
+	UINT8  PolId;
+	UINT8  CTime[HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX];
+}msgie_struct_zhbhjt_frame_data_ctime_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_begin_end_time
+{
+	UINT32 BeginTime;
+	UINT32 EndTime;
+}msgie_struct_zhbhjt_frame_data_begin_end_time_t;
+
+typedef struct  msgie_struct_zhbhjt_frame_data_alarm_event
+{
+	float Ala;
+	UINT8 AlarmType;
+}msgie_struct_zhbhjt_frame_data_alarm_event_t;
+
+typedef struct  msgie_struct_zhbhjt_element_ul
+{
+	msgie_struct_zhbhjt_frame_data_begin_end_time_t ttiTime;
+	UINT32 AlarmTarget;
+	UINT16 ReportTime;
+	UINT8  singlePolId;
+	UINT16 RtdInterval;
+	UINT32 OverTime;
+	UINT8  ReCount;
+	UINT32 WarnTime;
+	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	UINT8  multiPolid[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_ctime_t ctime;
+}msgie_struct_zhbhjt_element_ul_t;
+
+typedef struct  msgie_struct_zhbhjt_element_dl
+{
+	UINT8  QnRtn;
+	UINT32 SystemTime;
+	UINT8  ExeRtn;
+	UINT32 DataTime;
+	float  Ala;
+	UINT32 AlarmTime;
+	msgie_struct_zhbhjt_frame_data_alarm_event_t AlarmEvent;
+	UINT32 AlarmTarget;
+	UINT16 ReportTime;
+	UINT16 RtdInterval;
 	UINT32 length;
+	msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	INT32 RS[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	INT32 RT[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+}msgie_struct_zhbhjt_element_dl_t;
+
+//MSG_ID_LLCZHB_CLOUDVELA_FRAME_REQ,
+typedef struct  msg_struct_llczhb_cloudvela_frame_req
+{
+	msgie_struct_zhbhjt_frame_head_t head;
+	msgie_struct_zhbhjt_frame_head_qn_t cfmQn;
+	UINT16 cfmCN;
+	UINT32 setpw;
+	msgie_struct_zhbhjt_element_ul_t ulData;
+	UINT32 length;
+}msg_struct_llczhb_cloudvela_frame_req_t;
+
+//MSG_ID_CLOUDVELA_LLCZHB_FRAME_RESP,
+typedef struct  msg_struct_cloudvela_llczhb_frame_resp
+{
+	msgie_struct_zhbhjt_frame_head_t head;
+	msgie_struct_zhbhjt_frame_head_qn_t cfmQn;
+	msgie_struct_zhbhjt_element_dl_t dlData;
 }msg_struct_cloudvela_zhbllc_frame_resp_t;
 
+typedef enum
+{
+	HCU_SYSMSG_ZHBHJT_ACTION_EXECUTE_FINISH = 1,
+	HCU_SYSMSG_ZHBHJT_ACTION_DATA_CFM = 2,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_PSWD = 10,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_FIELD_TIME = 11,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_FIELD_TIME = 12,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RTD = 13,
+	HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD = 14,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN = 15,
+	HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN = 16,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT = 17,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT = 18,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RT = 19,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_ALA = 20,
+	HCU_SYSMSG_ZHBHJT_ACTION_SND_ALM_EVT = 21,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_ALMLIM = 22,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM = 23,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_MNADDR = 24,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_MNADDR = 25,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_RPT_TIME = 26,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_RPT_TIME = 27,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_ZERO = 28,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI = 29,
+	HCU_SYSMSG_ZHBHJT_ACTION_GET_RTDI = 30,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_OT_RC = 31,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_WARN_TIME = 32,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_INST_SAMPLE = 33,
+	HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME = 34,
+}ZhbhjtActionDefination;
+
+#define HCU_SYSMSG_ZHBHJT_DATA_TRANS_FINISHED_YES 1
+#define HCU_SYSMSG_ZHBHJT_DATA_TRANS_FINISHED_NO 2
+
+//MSG_ID_LLCZHB_L3MOD_CTRL_REQ,
+typedef struct  msg_struct_llczhb_l3mod_ctrl_req
+{
+	UINT8  actionId;
+	msgie_struct_zhbhjt_element_ul_t ulData;
+	UINT32 length;
+}msg_struct_llczhb_l3mod_ctrl_req_t;
+
+//MSG_ID_L3MOD_LLCZHB_CTRL_RESP,
+typedef struct  msg_struct_l3mod_llczhb_ctrl_rsp
+{
+	UINT8  actionId;
+	msgie_struct_zhbhjt_element_dl_t dlData;
+}msg_struct_l3mod_llczhb_ctrl_rsp;
+
+//MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
+typedef struct  msg_struct_l3mod_llczhb_data_report
+{
+	UINT8  actionId;
+	msgie_struct_zhbhjt_element_dl_t dlData;
+}msg_struct_l3mod_llczhb_data_report_t;
+
+//MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,
+typedef struct  msg_struct_l3mod_exg_ctrl_req
+{
+	UINT8  actionId;
+	msgie_struct_zhbhjt_element_ul_t ulData;
+	UINT32 length;
+}msg_struct_l3mod_exg_ctrl_req_t;
+
+//MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,
+typedef struct  msg_struct_l3mod_exg_ctrl_resp
+{
+	UINT8  actionId;
+	msgie_struct_zhbhjt_element_dl_t dlData;
+}msg_struct_l3mod_exg_ctrl_resp_t;
+
+//MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,
+typedef struct  msg_struct_l3mod_exg_data_report
+{
+	UINT8  actionId;
+	msgie_struct_zhbhjt_element_dl_t dlData;
+}msg_struct_l3mod_exg_data_report_t;
 
 
 
