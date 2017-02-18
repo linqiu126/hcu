@@ -3396,7 +3396,7 @@ typedef struct  msgie_struct_zhbhjt_frame_data_alarm_event
 	UINT8 AlarmType;
 }msgie_struct_zhbhjt_frame_data_alarm_event_t;
 
-typedef struct  msgie_struct_zhbhjt_element_ul
+typedef struct  msgie_struct_zhbhjt_element_dl2hcu
 {
 	UINT32 SystemTime;
 	UINT32 AlarmTarget;
@@ -3410,9 +3410,9 @@ typedef struct  msgie_struct_zhbhjt_element_ul
 	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	UINT8  multiPolid[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	msgie_struct_zhbhjt_frame_data_ctime_t ctime;
-}msgie_struct_zhbhjt_element_ul_t;
+}msgie_struct_zhbhjt_element_dl2hcu_t;
 
-typedef struct  msgie_struct_zhbhjt_element_dl
+typedef struct  msgie_struct_zhbhjt_element_ul2cloud
 {
 	UINT8  QnRtn;
 	UINT32 SystemTime;
@@ -3420,6 +3420,7 @@ typedef struct  msgie_struct_zhbhjt_element_dl
 	UINT32 DataTime;
 	float  Ala;
 	UINT32 AlarmTime;
+	UINT8  AlarmType;
 	msgie_struct_zhbhjt_frame_data_alarm_event_t AlarmEvent;
 	UINT32 AlarmTarget;
 	UINT16 ReportTime;
@@ -3428,7 +3429,8 @@ typedef struct  msgie_struct_zhbhjt_element_dl
 	msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	INT32 RS[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	INT32 RT[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
-}msgie_struct_zhbhjt_element_dl_t;
+	msgie_struct_zhbhjt_frame_data_pol_min_hour_t min[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+}msgie_struct_zhbhjt_element_ul2cloud_t;
 
 //MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ,
 typedef struct  msg_struct_cloudvela_llczhb_frame_req
@@ -3437,7 +3439,7 @@ typedef struct  msg_struct_cloudvela_llczhb_frame_req
 	UINT64 cfmQn;
 	UINT16 cfmCN;
 	UINT32 setpw;
-	msgie_struct_zhbhjt_element_ul_t ulData;
+	msgie_struct_zhbhjt_element_dl2hcu_t ulData;
 	UINT32 length;
 }msg_struct_cloudvela_llczhb_frame_req_t;
 
@@ -3446,7 +3448,7 @@ typedef struct  msg_struct_llczhb_cloudvela_frame_resp
 {
 	msgie_struct_zhbhjt_frame_head_t head;
 	UINT64 cfmQn;
-	msgie_struct_zhbhjt_element_dl_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
 	UINT32 length;
 }msg_struct_llczhb_cloudvela_frame_resp_t;
 
@@ -3485,7 +3487,7 @@ typedef enum
 typedef struct  msg_struct_llczhb_l3mod_ctrl_req
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_ul_t ulData;
+	msgie_struct_zhbhjt_element_dl2hcu_t ulData;
 	UINT32 length;
 }msg_struct_llczhb_l3mod_ctrl_req_t;
 
@@ -3493,21 +3495,21 @@ typedef struct  msg_struct_llczhb_l3mod_ctrl_req
 typedef struct  msg_struct_l3mod_llczhb_ctrl_resp
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_dl_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
 }msg_struct_l3mod_llczhb_ctrl_resp;
 
 //MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
 typedef struct  msg_struct_l3mod_llczhb_data_report
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_dl_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
 }msg_struct_l3mod_llczhb_data_report_t;
 
 //MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,
 typedef struct  msg_struct_l3mod_exg_ctrl_req
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_ul_t ulData;
+	msgie_struct_zhbhjt_element_dl2hcu_t ulData;
 	UINT32 length;
 }msg_struct_l3mod_exg_ctrl_req_t;
 
@@ -3515,14 +3517,14 @@ typedef struct  msg_struct_l3mod_exg_ctrl_req
 typedef struct  msg_struct_l3mod_exg_ctrl_resp
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_dl_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
 }msg_struct_l3mod_exg_ctrl_resp_t;
 
 //MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,
 typedef struct  msg_struct_l3mod_exg_data_report
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_dl_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
 }msg_struct_l3mod_exg_data_report_t;
 
 

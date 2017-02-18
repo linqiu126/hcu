@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="timer" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="timer"/>
-			<item value="fsm_llczhb_send_to_cloud_control_notify_answer"/>
-			<item value="ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req"/>
-			<item value="fsm_llczhb_send_to_cloud_data_get_pol_rtd"/>
-			<item value="ZHBHJT_IE_uni_CNcode_dat_get_rt_data_req"/>
-			<item value="2011"/>
-			<item value="ZHBHJT_IE_uni_CNcode_par_set_field_addr_req"/>
-			<item value="fsm_llczhb_send_to_cloud_get_field_time"/>
+			<item value="Rx"/>
+			<item value="dlRx"/>
+			<item value="msgie_struct_zhbhjt_element_ul_t"/>
+			<item value="fsm_llczhb_send_to_cloud_data_report_ala_event"/>
+			<item value="hcu_timer_stop"/>
+			<item value="ZHBHJT_IE_uni_CNcode_cmd_notification_req"/>
+			<item value="LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE"/>
+			<item value="HCU_SYSMSG_ZHBHJT_ACTION_SND_ALM_EVT"/>
 		</list>
 		<list key="replacehistory">
+			<item value="msgie_struct_zhbhjt_element_dl2hcu_t"/>
 			<item value="LLCZHB"/>
 			<item value="Llczhb"/>
 			<item value="llczhb"/>
@@ -25,7 +26,6 @@
 			<item value="ycjk"/>
 			<item value="ZHBHJT_IE_uni_STcode"/>
 			<item value="ZHBHJT_IE_uni_"/>
-			<item value="ZHBHJT_IE_uni_CNcode"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
