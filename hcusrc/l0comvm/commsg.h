@@ -3343,16 +3343,17 @@ typedef struct msg_struct_l3aqyc_exg_data_report
  *
  */
 //ZHBHJT212
-#define HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX 5
+#define HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX 8
 #define HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX 10
 typedef struct msgie_struct_zhbhjt_frame_head_qn //
 {
 	UINT32 qnymdhms;
 	UINT16 qnMicrosecond;  //SID
 }msgie_struct_zhbhjt_frame_head_qn_t;
+
 typedef struct msgie_struct_zhbhjt_frame_head //
 {
-	msgie_struct_zhbhjt_frame_head_qn_t qn;
+	UINT64 qn;
 	UINT8  st; //污染物种类
 	UINT16 cn;  //命令
 	UINT32 pw;  //密码
@@ -3397,7 +3398,7 @@ typedef struct  msgie_struct_zhbhjt_frame_data_alarm_event
 
 typedef struct  msgie_struct_zhbhjt_element_ul
 {
-	msgie_struct_zhbhjt_frame_data_begin_end_time_t ttiTime;
+	UINT32 SystemTime;
 	UINT32 AlarmTarget;
 	UINT16 ReportTime;
 	UINT8  singlePolId;
@@ -3405,6 +3406,7 @@ typedef struct  msgie_struct_zhbhjt_element_ul
 	UINT32 OverTime;
 	UINT8  ReCount;
 	UINT32 WarnTime;
+	msgie_struct_zhbhjt_frame_data_begin_end_time_t ttiTime;
 	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	UINT8  multiPolid[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	msgie_struct_zhbhjt_frame_data_ctime_t ctime;
@@ -3432,7 +3434,7 @@ typedef struct  msgie_struct_zhbhjt_element_dl
 typedef struct  msg_struct_cloudvela_llczhb_frame_req
 {
 	msgie_struct_zhbhjt_frame_head_t head;
-	msgie_struct_zhbhjt_frame_head_qn_t cfmQn;
+	UINT64 cfmQn;
 	UINT16 cfmCN;
 	UINT32 setpw;
 	msgie_struct_zhbhjt_element_ul_t ulData;
@@ -3443,7 +3445,7 @@ typedef struct  msg_struct_cloudvela_llczhb_frame_req
 typedef struct  msg_struct_llczhb_cloudvela_frame_resp
 {
 	msgie_struct_zhbhjt_frame_head_t head;
-	msgie_struct_zhbhjt_frame_head_qn_t cfmQn;
+	UINT64 cfmQn;
 	msgie_struct_zhbhjt_element_dl_t dlData;
 	UINT32 length;
 }msg_struct_llczhb_cloudvela_frame_resp_t;

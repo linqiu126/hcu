@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="fsm_cloudvela_llczhb_data_resp" key="selection"/>
+		<item value="timer" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="fsm_cloudvela_llczhb_data_resp"/>
-			<item value="MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP"/>
-			<item value="pswd"/>
-			<item value="HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET"/>
-			<item value="msgie_struct_zhbhjt_frame_head_t"/>
-			<item value="MSG_ID_LLCZHB_L3MOD_CTRL_REQ"/>
-			<item value="fsm_pm25_zhbl3mod_exg_ctrl_req"/>
-			<item value="//ZHBHJT"/>
+			<item value="timer"/>
+			<item value="fsm_llczhb_send_to_cloud_control_notify_answer"/>
+			<item value="ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req"/>
+			<item value="fsm_llczhb_send_to_cloud_data_get_pol_rtd"/>
+			<item value="ZHBHJT_IE_uni_CNcode_dat_get_rt_data_req"/>
+			<item value="2011"/>
+			<item value="ZHBHJT_IE_uni_CNcode_par_set_field_addr_req"/>
+			<item value="fsm_llczhb_send_to_cloud_get_field_time"/>
 		</list>
 		<list key="replacehistory">
 			<item value="LLCZHB"/>

@@ -535,6 +535,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_NBIOTCJ188_SEND_DATA_BACK,          "TID_1S_NBIOTCJ188_SEND_DATA_BACK",       10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT,  "TID_1S_NBIOTQG376_PERIOD_LINK_HBT",      600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_NBIOTQG376_SEND_DATA_BACK,          "TID_1S_NBIOTQG376_SEND_DATA_BACK",       10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_LLCZHB_LINK_CTRL,                   "TID_1S_LLCZHB_LINK_CTRL",                10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_AIRPRS_PERIOD_READ,                 "TID_1S_AIRPRS_PERIOD_READ",              600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_CO1_PERIOD_READ,                    "TID_1S_CO1_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_LIGHTSTR_PERIOD_READ,               "TID_1S_LIGHTSTR_PERIOD_READ",            600,     TIMER_RESOLUTION_1S},
@@ -2096,6 +2097,12 @@ UINT16 hcu_CRC_16(unsigned char *data,int len)
 	crcl=*CRC<<8;
 	*CRC=crch+crcl;
 	return(*CRC);
+}
+
+//将新时间设置到本地
+void hcu_vm_set_local_time(UINT32 newTimeInUnix)
+{
+	return;
 }
 
 //单进程模式，当前的工作模式！！！

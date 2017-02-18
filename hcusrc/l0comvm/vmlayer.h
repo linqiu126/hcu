@@ -680,6 +680,7 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_NBIOTCJ188_SEND_DATA_BACK,
 	TIMER_ID_1S_NBIOTQG376_PERIOD_LINK_HEART_BEAT,
 	TIMER_ID_1S_NBIOTQG376_SEND_DATA_BACK,
+	TIMER_ID_1S_LLCZHB_LINK_CTRL,
 	TIMER_ID_1S_AIRPRS_PERIOD_READ,
 	TIMER_ID_1S_CO1_PERIOD_READ,
 	TIMER_ID_1S_LIGHTSTR_PERIOD_READ,
@@ -828,7 +829,7 @@ extern void hcu_sleep(UINT32 second);
 extern void hcu_usleep(UINT32 usecond);  //resulution 10^(-6)s = 1 microsecond
 //UNIX下时钟函数非常丰富，这里不再做任何抽象化，上层应用可以直接调用系统库函数进行使用和处理
 extern UINT16 hcu_CRC_16(unsigned char *data,int len);
-
+extern void hcu_vm_set_local_time(UINT32 newTimeInUnix);
 
 /*
  *

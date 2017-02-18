@@ -21,6 +21,7 @@
 =增加LLCZHB模块，以及ZHBHJT212-L2CODEC两个模块，分别完成LLC链路层功能，以及MAC层的编解码功能。MAC依然挂在CLOUDVELA模块中。
 =搭建LLCZHB/AQYCG20对于ZHB协议处理的命令控制框架
 =搭好编解码调用关系的程序框架：CLOUDVELA不需要再动，只需要搞ZHBHJT212编解码即可
+=完成LLCZHB内部模块的状态机。流程完成了需要在LLC中处理的流程，以及第一个完整的RTD业务流程。后面继续，全部完成后，就继续MAC层的编解码
 
 //= ZJL, 2017 Feb.17, CURRENT_SW_DELIVERY 176=>BFSC项目
 =清理端口的工参数数据定义，清理掉工参表中对协议的配置，只能从SYSCONFIG.H中进行读取，简化工参配置。数据库更新。
