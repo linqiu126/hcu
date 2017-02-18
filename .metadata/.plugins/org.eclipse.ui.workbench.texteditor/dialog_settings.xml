@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="fsm_winddir_l3aqyc_exg_ctrl_req" key="selection"/>
+		<item value="msgie_struct_zhbhjt_frame_head_t" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="fsm_winddir_l3aqyc_exg_ctrl_req"/>
-			<item value="fsm_hsmmp_l3aqyc_exg_ctrl_req"/>
-			<item value="fsm_l3aqycg20_cloudvela_ctrl_req"/>
-			<item value="fsm_l3aqycg20_cloudvela_data_confirm"/>
-			<item value="ycjk"/>
+			<item value="msgie_struct_zhbhjt_frame_head_t"/>
+			<item value="MSG_ID_LLCZHB_L3MOD_CTRL_REQ"/>
+			<item value="fsm_pm25_zhbl3mod_exg_ctrl_req"/>
 			<item value="//ZHBHJT"/>
-			<item value="noise"/>
-			<item value="StrIe_HUITP_IEID_uni_ycjk_sensor_selection_t"/>
+			<item value="MSG_ID_L3AQYC_EXG_CTRL_REQ"/>
+			<item value="MSG_ID_YCJK_CLOUDVELA_CTRL_RESP"/>
+			<item value="TASK"/>
+			<item value="I2CBUSLIBRA"/>
 		</list>
 		<list key="replacehistory">
+			<item value="LLCZHB"/>
+			<item value="Llczhb"/>
+			<item value="llczhb"/>
+			<item value="i2czhb"/>
 			<item value="ycjk"/>
 			<item value="ZHBHJT_IE_uni_STcode"/>
 			<item value="ZHBHJT_IE_uni_"/>
 			<item value="ZHBHJT_IE_uni_CNcode"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212"/>
-			<item value="Zhbhjt"/>
-			<item value="zhbhjt"/>
-			<item value="ZHBHJT"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

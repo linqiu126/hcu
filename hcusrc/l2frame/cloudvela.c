@@ -99,7 +99,6 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_YCJK_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ycjk_data_resp},
 	{MSG_ID_YCJK_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ycjk_ctrl_resp},
 	{MSG_ID_YCJK_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ycjk_data_report},
-
 	//CONVENIENCE SENSO业务部分，UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	{MSG_ID_AIRPRS_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_airprs_data_resp},
 	{MSG_ID_AIRPRS_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_airprs_data_report},
@@ -115,6 +114,9 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_PM25SP_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_pm25sp_data_report},
 	{MSG_ID_TOXICGAS_CLOUDVELA_DATA_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_toxicgas_data_resp},
 	{MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_toxicgas_data_report},
+
+	//ZHB独特标准
+	{MSG_ID_PM25SP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_llczhb_data_resp},
 
 	//采用分项目控制方式，降低不同项目之间的关联，特别是海量MSGID-STATE这一表的内存压力。UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -4983,7 +4985,10 @@ OPSTAT fsm_cloudvela_toxicgas_data_report(UINT32 dest_id, UINT32 src_id, void * 
 }
 
 
-
+OPSTAT fsm_cloudvela_llczhb_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
 
 
 

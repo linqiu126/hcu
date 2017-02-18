@@ -69,6 +69,8 @@ extern OPSTAT fsm_winddir_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, 
 extern OPSTAT fsm_winddir_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_winddir_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_winddir_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_winddir_zhbl3mod_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 void func_winddir_time_out_read_data_from_modbus(void);
 void func_winddir_time_out_processing_no_rsponse(void);
 

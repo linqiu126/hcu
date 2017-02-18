@@ -521,8 +521,8 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3AQYC_EXG_DATA_REPORT,
 
 	//ZHBHJT
-	MSG_ID_LLCZHB_CLOUDVELA_FRAME_REQ,
-	MSG_ID_CLOUDVELA_LLCZHB_FRAME_RESP,
+	MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ,
+	MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP,
 	MSG_ID_LLCZHB_L3MOD_CTRL_REQ,
 	MSG_ID_L3MOD_LLCZHB_CTRL_RESP,
 	MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
@@ -3428,8 +3428,8 @@ typedef struct  msgie_struct_zhbhjt_element_dl
 	INT32 RT[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 }msgie_struct_zhbhjt_element_dl_t;
 
-//MSG_ID_LLCZHB_CLOUDVELA_FRAME_REQ,
-typedef struct  msg_struct_llczhb_cloudvela_frame_req
+//MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ,
+typedef struct  msg_struct_cloudvela_llczhb_frame_req
 {
 	msgie_struct_zhbhjt_frame_head_t head;
 	msgie_struct_zhbhjt_frame_head_qn_t cfmQn;
@@ -3437,15 +3437,15 @@ typedef struct  msg_struct_llczhb_cloudvela_frame_req
 	UINT32 setpw;
 	msgie_struct_zhbhjt_element_ul_t ulData;
 	UINT32 length;
-}msg_struct_llczhb_cloudvela_frame_req_t;
+}msg_struct_cloudvela_llczhb_frame_req_t;
 
-//MSG_ID_CLOUDVELA_LLCZHB_FRAME_RESP,
-typedef struct  msg_struct_cloudvela_llczhb_frame_resp
+//MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP,
+typedef struct  msg_struct_llczhb_cloudvela_frame_resp
 {
 	msgie_struct_zhbhjt_frame_head_t head;
 	msgie_struct_zhbhjt_frame_head_qn_t cfmQn;
 	msgie_struct_zhbhjt_element_dl_t dlData;
-}msg_struct_cloudvela_zhbllc_frame_resp_t;
+}msg_struct_llczhb_cloudvela_frame_resp_t;
 
 typedef enum
 {
@@ -3478,9 +3478,6 @@ typedef enum
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME = 34,
 }ZhbhjtActionDefination;
 
-#define HCU_SYSMSG_ZHBHJT_DATA_TRANS_FINISHED_YES 1
-#define HCU_SYSMSG_ZHBHJT_DATA_TRANS_FINISHED_NO 2
-
 //MSG_ID_LLCZHB_L3MOD_CTRL_REQ,
 typedef struct  msg_struct_llczhb_l3mod_ctrl_req
 {
@@ -3490,11 +3487,11 @@ typedef struct  msg_struct_llczhb_l3mod_ctrl_req
 }msg_struct_llczhb_l3mod_ctrl_req_t;
 
 //MSG_ID_L3MOD_LLCZHB_CTRL_RESP,
-typedef struct  msg_struct_l3mod_llczhb_ctrl_rsp
+typedef struct  msg_struct_l3mod_llczhb_ctrl_resp
 {
 	UINT8  actionId;
 	msgie_struct_zhbhjt_element_dl_t dlData;
-}msg_struct_l3mod_llczhb_ctrl_rsp;
+}msg_struct_l3mod_llczhb_ctrl_resp;
 
 //MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
 typedef struct  msg_struct_l3mod_llczhb_data_report

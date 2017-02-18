@@ -75,7 +75,7 @@ extern OPSTAT fsm_temp_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, voi
 extern OPSTAT fsm_temp_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_temp_modbus_control_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_temp_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-
+extern OPSTAT fsm_temp_zhbl3mod_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 void func_temp_time_out_read_data_from_spibusaries(void);//for SPIBUSARIES
 void func_temp_time_out_read_data_from_modbus(void);

@@ -101,7 +101,7 @@ typedef enum
 	ZHBHJT_IE_uni_CNcode_ctr_calabration_req                   = 3011,
 	ZHBHJT_IE_uni_CNcode_ctr_start_sample_req                  = 3012,
 	ZHBHJT_IE_uni_CNcode_ctr_equ_operation_req                 = 3013,
-	ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req                  = 3014,
+	ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req                = 3014,
 }ZhbhjtCNcodeUniDefination;
 
 //QNRTN

@@ -97,6 +97,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_SPIBUSARIES,   "SPIBUSARIES",      &HcuFsmSpibusaries,      HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_NBIOTCJ188,    "NBIOTCJ188",       &HcuFsmNbiotcj188,       HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_NBIOTQG376,    "NBIOTQG376",       &HcuFsmNbiotqg376,       HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_LLCZHB,        "LLCZHB",           &HcuFsmLlczhb,           HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_HSMMP,         "HSMMP",            &HcuFsmHsmmp,            HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
@@ -204,6 +205,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_LLCZHB,        "LLCZHB",           &HcuFsmLlczhb,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        &HcuFsmL3aqycg20,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 	{TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       &HcuFsmL3tbswrg30,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
@@ -484,9 +486,13 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	//BFSCUICOMM
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,                "MSG_ID_UICOMM_L3BFSC_CMD_REQ",               1, 1, 1},
 	{MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,       "MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT",      1, 1, 1},
+	//L3AQYCG20
+	{MSG_ID_L3AQYC_EXG_CTRL_REQ,                  "MSG_ID_L3AQYC_EXG_CTRL_REQ",                 1, 1, 1},
+	{MSG_ID_L3AQYC_EXG_CTRL_RESP,                 "MSG_ID_L3AQYC_EXG_CTRL_RESP",                1, 1, 1},
+	{MSG_ID_L3AQYC_EXG_DATA_REPORT,               "MSG_ID_L3AQYC_EXG_DATA_REPORT",              1, 1, 1},
 	//ZHBHJT
-	{MSG_ID_LLCZHB_CLOUDVELA_FRAME_REQ,           "MSG_ID_LLCZHB_CLOUDVELA_FRAME_REQ",          1, 1, 1},
-	{MSG_ID_CLOUDVELA_LLCZHB_FRAME_RESP,          "MSG_ID_CLOUDVELA_LLCZHB_FRAME_RESP",         1, 1, 1},
+	{MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ,           "MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ",          1, 1, 1},
+	{MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP,          "MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP",         1, 1, 1},
 	{MSG_ID_LLCZHB_L3MOD_CTRL_REQ,                "MSG_ID_LLCZHB_L3MOD_CTRL_REQ",               1, 1, 1},
 	{MSG_ID_L3MOD_LLCZHB_CTRL_RESP,               "MSG_ID_L3MOD_LLCZHB_CTRL_RESP",              1, 1, 1},
 	{MSG_ID_L3MOD_LLCZHB_DATA_REPORT,             "MSG_ID_L3MOD_LLCZHB_DATA_REPORT",            1, 1, 1},
@@ -2553,7 +2559,6 @@ void hcu_vm_task_delete_except_timer_and_hcumain(void)
 
 int hcu_vm_main_entry(void)
 {
-	printf("Len = %d\n", sizeof(msg_struct_cloudvela_zhbllc_frame_resp_t));
 	//系统状态初始化
 	if (hcu_vm_system_ctr_table_init() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Init system level environment error!\n");

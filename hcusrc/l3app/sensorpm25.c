@@ -42,6 +42,8 @@ HcuFsmStateItem_t HcuFsmPm25[] =
 	{MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM,   	FSM_STATE_PM25_ACTIVED,      		fsm_pm25_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_PM25_CTRL_REQ,     	FSM_STATE_PM25_ACTIVED,         	fsm_pm25_cloudvela_ctrl_req},
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_PM25_ACTIVED,      	  	fsm_pm25_l3aqyc_exg_ctrl_req},
+	{MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,			FSM_STATE_PM25_ACTIVED,      	  	fsm_pm25_zhbl3mod_exg_ctrl_req},
+
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_PM25_DATA_REPORT,    FSM_STATE_PM25_OPT_WFFB,         fsm_pm25_data_report_from_modbus},
@@ -1027,6 +1029,11 @@ OPSTAT func_pm25_time_out_read_data_from_sharp(void)
 }
 
 OPSTAT fsm_pm25_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_pm25_zhbl3mod_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }

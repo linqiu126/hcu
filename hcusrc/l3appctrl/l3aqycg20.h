@@ -19,6 +19,8 @@ enum FSM_STATE_L3AQYCG20
 {
 	FSM_STATE_L3AQYCG20_INITED = FSM_STATE_COMMON + 1,
 	FSM_STATE_L3AQYCG20_ACTIVED,
+	FSM_STATE_L3AQYCG20_WFFB_CTRL,
+	FSM_STATE_L3AQYCG20_WFFB_DATA,
 	FSM_STATE_L3AQYCG20_MAX,
 };
 //#define FSM_STATE_END   0xFE
@@ -42,11 +44,18 @@ extern OPSTAT fsm_l3aqycg20_time_out(UINT32 dest_id, UINT32 src_id, void * param
 extern OPSTAT fsm_l3aqycg20_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3aqycg20_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3aqycg20_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3aqycg20_l3mod_exg_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3aqycg20_l3mod_exg_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3aqycg20_huil3mod_exg_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3aqycg20_huil3mod_exg_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3aqycg20_zhbl3mod_exg_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3aqycg20_zhbl3mod_exg_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_l3aqycg20_int_init(void);
+
+
+//高级定义，简化程序的可读性
+#define HCU_ERROR_PRINT_L3AQYCG20(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 
 

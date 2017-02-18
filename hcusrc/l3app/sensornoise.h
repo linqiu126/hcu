@@ -81,6 +81,8 @@ extern OPSTAT fsm_noise_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void *
 extern OPSTAT fsm_noise_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_noise_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_noise_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_noise_zhbl3mod_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 
 void func_noise_time_out_read_data_from_modbus(void);
 void func_noise_time_out_read_data_from_spsvirgo(void);

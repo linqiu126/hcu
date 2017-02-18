@@ -51,6 +51,8 @@
 #include "../l2frame/nbiotcj188.h"
 #include "../l2frame/nbiotqg376.h"
 #include "../l2frame/canitfleo.h"
+#include "../l2frame/llczhb.h"
+
 
 #include "../l3app/svrcon.h"
 #include "../l3app/sensoremc.h"
