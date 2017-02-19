@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="Rx"/>
-			<item value="dlRx"/>
-			<item value="msgie_struct_zhbhjt_element_ul_t"/>
-			<item value="fsm_llczhb_send_to_cloud_data_report_ala_event"/>
-			<item value="hcu_timer_stop"/>
-			<item value="ZHBHJT_IE_uni_CNcode_cmd_notification_req"/>
-			<item value="LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE"/>
-			<item value="HCU_SYSMSG_ZHBHJT_ACTION_SND_ALM_EVT"/>
+			<item value="ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req"/>
+			<item value="HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME"/>
+			<item value="ctime"/>
+			<item value="LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE"/>
+			<item value="msgie_struct_zhbhjt_frame_data_ctime_t"/>
+			<item value="ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req"/>
+			<item value="HCU_SYSMSG_ZHBHJT_ACTION_SET_INST_SAMPLE"/>
+			<item value="ZHBHJT_IE_uni_CNcode_ctr_start_sample_req"/>
 		</list>
 		<list key="replacehistory">
+			<item value="snd"/>
+			<item value="snd.ul2Cloud"/>
+			<item value="rcv.ul2Cloud"/>
+			<item value="sndL3.dl2Self"/>
+			<item value="rcv.dl2Self"/>
 			<item value="msgie_struct_zhbhjt_element_dl2hcu_t"/>
 			<item value="LLCZHB"/>
 			<item value="Llczhb"/>
-			<item value="llczhb"/>
-			<item value="i2czhb"/>
-			<item value="ycjk"/>
-			<item value="ZHBHJT_IE_uni_STcode"/>
-			<item value="ZHBHJT_IE_uni_"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
