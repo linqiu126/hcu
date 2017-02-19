@@ -3407,8 +3407,11 @@ typedef struct  msgie_struct_zhbhjt_element_dl2hcu
 	UINT8  ReCount;
 	UINT32 WarnTime;
 	msgie_struct_zhbhjt_frame_data_begin_end_time_t ttiTime;
+	UINT8 nbrOfLimitation;
 	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	UINT8 nbrOfPolId;
 	UINT8  multiPolid[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	UINT8 nbrOfCTime;
 	msgie_struct_zhbhjt_frame_data_ctime_t ctime;
 }msgie_struct_zhbhjt_element_dl2hcu_t;
 
@@ -3426,10 +3429,16 @@ typedef struct  msgie_struct_zhbhjt_element_ul2cloud
 	UINT16 ReportTime;
 	UINT16 RtdInterval;
 	UINT32 length;
+	UINT8 nbrOfCRtd;
 	msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	UINT8 nbrOfRS;
 	INT32 RS[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	UINT8 nbrOfRT;
 	INT32 RT[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	UINT8 nbrOfCMinRpt;
 	msgie_struct_zhbhjt_frame_data_pol_min_hour_t min[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	UINT8 nbrOfAlmLim;
+	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 }msgie_struct_zhbhjt_element_ul2cloud_t;
 
 //MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ,
@@ -3439,7 +3448,7 @@ typedef struct  msg_struct_cloudvela_llczhb_frame_req
 	UINT64 cfmQn;
 	UINT16 cfmCN;
 	UINT32 setpw;
-	msgie_struct_zhbhjt_element_dl2hcu_t ulData;
+	msgie_struct_zhbhjt_element_dl2hcu_t dl2Self;
 	UINT32 length;
 }msg_struct_cloudvela_llczhb_frame_req_t;
 
@@ -3448,36 +3457,53 @@ typedef struct  msg_struct_llczhb_cloudvela_frame_resp
 {
 	msgie_struct_zhbhjt_frame_head_t head;
 	UINT64 cfmQn;
-	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 	UINT32 length;
 }msg_struct_llczhb_cloudvela_frame_resp_t;
 
 typedef enum
 {
+	//控制命令，完成
 	HCU_SYSMSG_ZHBHJT_ACTION_EXECUTE_FINISH = 1,
+	//控制命令，数据证实
 	HCU_SYSMSG_ZHBHJT_ACTION_DATA_CFM = 2,
+	//设置密码
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_PSWD = 10,
+	//现场设备的时间
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_FIELD_TIME = 11,
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_FIELD_TIME = 12,
+	//污染物实时数据
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RTD = 13,
 	HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD = 14,
+	//设备运行状态
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN = 15,
 	HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN = 16,
+	//分钟报告
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT = 17,
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT = 18,
+	//日数据
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RT = 19,
+	//告警数据
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_ALA = 20,
+	//告警事件
 	HCU_SYSMSG_ZHBHJT_ACTION_SND_ALM_EVT = 21,
+	//告警门限
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_ALMLIM = 22,
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM = 23,
+	//设备地址
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_MNADDR = 24,
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_MNADDR = 25,
+	//报告时间
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_RPT_TIME = 26,
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_RPT_TIME = 27,
+	//校准清零
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_ZERO = 28,
+	//实时数据上报间隔
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI = 29,
 	HCU_SYSMSG_ZHBHJT_ACTION_GET_RTDI = 30,
+	//超时与重传次数
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_OT_RC = 31,
+	//告警时间
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_WARN_TIME = 32,
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_INST_SAMPLE = 33,
 	HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME = 34,
@@ -3487,7 +3513,7 @@ typedef enum
 typedef struct  msg_struct_llczhb_l3mod_ctrl_req
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_dl2hcu_t ulData;
+	msgie_struct_zhbhjt_element_dl2hcu_t dl2Self;
 	UINT32 length;
 }msg_struct_llczhb_l3mod_ctrl_req_t;
 
@@ -3495,21 +3521,21 @@ typedef struct  msg_struct_llczhb_l3mod_ctrl_req
 typedef struct  msg_struct_l3mod_llczhb_ctrl_resp
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 }msg_struct_l3mod_llczhb_ctrl_resp;
 
 //MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
 typedef struct  msg_struct_l3mod_llczhb_data_report
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 }msg_struct_l3mod_llczhb_data_report_t;
 
 //MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,
 typedef struct  msg_struct_l3mod_exg_ctrl_req
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_dl2hcu_t ulData;
+	msgie_struct_zhbhjt_element_dl2hcu_t dl2Self;
 	UINT32 length;
 }msg_struct_l3mod_exg_ctrl_req_t;
 
@@ -3517,14 +3543,14 @@ typedef struct  msg_struct_l3mod_exg_ctrl_req
 typedef struct  msg_struct_l3mod_exg_ctrl_resp
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 }msg_struct_l3mod_exg_ctrl_resp_t;
 
 //MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,
 typedef struct  msg_struct_l3mod_exg_data_report
 {
 	UINT8  actionId;
-	msgie_struct_zhbhjt_element_ul2cloud_t dlData;
+	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 }msg_struct_l3mod_exg_data_report_t;
 
 

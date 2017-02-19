@@ -67,6 +67,17 @@ typedef struct gTaskLlczhbContext
 #define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT 11
 #define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_ALA 12
 #define LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE 13
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_ALARM_LIMITATION 14
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_ALARM_LIMUTATION 15
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_DATA_RPT_TIME 16
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME 17
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_CALIBRATION_ZERO 18
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_RTDI 19
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTDI 20
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_WARN_TIME 21
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_INSTANCE_SAMPLE 22
+#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE 22
+
 
 
 //API
@@ -99,6 +110,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_today_rt(void);
 OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt(void);
 OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_ala_record(void);
 OPSTAT fsm_llczhb_send_to_cloud_data_report_ala_event(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_alarm_limitation(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_report_time(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_rtdi_real_time_data_tti(void);
+
+
+
 
 
 //高级定义，简化程序的可读性

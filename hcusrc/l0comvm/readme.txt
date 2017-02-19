@@ -17,6 +17,10 @@
 
 
 
+//= ZJL, 2017 Feb.19, CURRENT_SW_DELIVERY 178=>AQYC项目
+=完成了LLC层所有的链路逻辑控制功能
+
+
 //= ZJL, 2017 Feb.18, CURRENT_SW_DELIVERY 177=>AQYC项目
 =增加LLCZHB模块，以及ZHBHJT212-L2CODEC两个模块，分别完成LLC链路层功能，以及MAC层的编解码功能。MAC依然挂在CLOUDVELA模块中。
 =搭建LLCZHB/AQYCG20对于ZHB协议处理的命令控制框架
