@@ -158,7 +158,7 @@ extern OPSTAT hcu_ethernet_phy_link_disconnect(void);
 extern OPSTAT hcu_usbnet_phy_link_disconnect(void);
 extern OPSTAT hcu_wifi_phy_link_disconnect(void);
 extern OPSTAT hcu_3g4g_phy_link_disconnect(void);
-extern void CheckCRCModBus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
+extern void hcu_vm_calculate_crc_modbus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
 extern void func_hwinv_scan_date(void);
 extern OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf);
 

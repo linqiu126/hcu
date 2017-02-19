@@ -3345,18 +3345,12 @@ typedef struct msg_struct_l3aqyc_exg_data_report
 //ZHBHJT212
 #define HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX 8
 #define HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX 10
-typedef struct msgie_struct_zhbhjt_frame_head_qn //
-{
-	UINT32 qnymdhms;
-	UINT16 qnMicrosecond;  //SID
-}msgie_struct_zhbhjt_frame_head_qn_t;
-
 typedef struct msgie_struct_zhbhjt_frame_head //
 {
 	UINT64 qn;
-	UINT8  st; //污染物种类
+	UINT8  st;  //污染物种类
 	UINT16 cn;  //命令
-	UINT32 pw;  //密码
+	char   pw[7];  //最长6位密码
 	UINT16 pnum;  //上位机也可能通过数据应答，将PNO/PMUM发送下来的。这是链路层的包证实机制，确保包收到。这个功能就留在LLC层次了
 	UINT16 pno;
 	UINT8  ansFlag;//中环保标准， 3c, 数据包是否拆分及应答标志 Flag，从云后台的接收方向
@@ -3364,11 +3358,13 @@ typedef struct msgie_struct_zhbhjt_frame_head //
 
 typedef struct  msgie_struct_zhbhjt_frame_data_pol_rtd
 {
+	UINT8  PolId;
 	INT32  Rtd;
 	char   PolFlag;
 }msgie_struct_zhbhjt_frame_data_pol_rtd_t;
 typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
 {
+	UINT8  PolId;
 	INT32  Cou;
 	INT32  Min;
 	INT32  Avg;
@@ -3376,6 +3372,7 @@ typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
 }msgie_struct_zhbhjt_frame_data_pol_min_hour_t;
 typedef struct  msgie_struct_zhbhjt_frame_data_low_upvalue
 {
+	UINT8  PolId;
 	float  UpValue;
 	float  LowValue;
 }msgie_struct_zhbhjt_frame_data_low_upvalue_t;
@@ -3392,26 +3389,41 @@ typedef struct  msgie_struct_zhbhjt_frame_data_begin_end_time
 
 typedef struct  msgie_struct_zhbhjt_frame_data_alarm_event
 {
-	float Ala;
-	UINT8 AlarmType;
+	UINT8  PolId;
+	float  Ala;
+	UINT8  AlarmType;
 }msgie_struct_zhbhjt_frame_data_alarm_event_t;
-
+typedef struct  msgie_struct_zhbhjt_frame_data_ala_value
+{
+	UINT8  PolId;
+	float  Ala;
+}msgie_struct_zhbhjt_frame_data_ala_value_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_RS_value
+{
+	UINT8  PolId;
+	UINT8  RS;
+}msgie_struct_zhbhjt_frame_data_RS_value_t;
+typedef struct  msgie_struct_zhbhjt_frame_data_RT_value
+{
+	UINT8  PolId;
+	INT32  RT;
+}msgie_struct_zhbhjt_frame_data_RT_value_t;
 typedef struct  msgie_struct_zhbhjt_element_dl2hcu
 {
 	UINT32 SystemTime;
 	UINT32 AlarmTarget;
 	UINT16 ReportTime;
-	UINT8  singlePolId;
+	UINT8  singlePolId;  //一样引到
 	UINT16 RtdInterval;
 	UINT32 OverTime;
 	UINT8  ReCount;
 	UINT32 WarnTime;
-	msgie_struct_zhbhjt_frame_data_begin_end_time_t ttiTime;
-	UINT8 nbrOfLimitation;
+	msgie_struct_zhbhjt_frame_data_begin_end_time_t gapTime;
+	UINT8  nbrOfLimitation;
 	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
-	UINT8 nbrOfPolId;
+	UINT8  nbrOfPolId;
 	UINT8  multiPolid[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
-	UINT8 nbrOfCTime;
+	UINT8  nbrOfCTime;
 	msgie_struct_zhbhjt_frame_data_ctime_t ctime;
 }msgie_struct_zhbhjt_element_dl2hcu_t;
 
@@ -3421,7 +3433,7 @@ typedef struct  msgie_struct_zhbhjt_element_ul2cloud
 	UINT32 SystemTime;
 	UINT8  ExeRtn;
 	UINT32 DataTime;
-	float  Ala;
+	msgie_struct_zhbhjt_frame_data_ala_value_t  Ala;
 	UINT32 AlarmTime;
 	UINT8  AlarmType;
 	msgie_struct_zhbhjt_frame_data_alarm_event_t AlarmEvent;
@@ -3432,9 +3444,9 @@ typedef struct  msgie_struct_zhbhjt_element_ul2cloud
 	UINT8 nbrOfCRtd;
 	msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	UINT8 nbrOfRS;
-	INT32 RS[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_RS_value_t RS[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	UINT8 nbrOfRT;
-	INT32 RT[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	msgie_struct_zhbhjt_frame_data_RT_value_t RT[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	UINT8 nbrOfCMinRpt;
 	msgie_struct_zhbhjt_frame_data_pol_min_hour_t min[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	UINT8 nbrOfAlmLim;
@@ -3447,7 +3459,9 @@ typedef struct  msg_struct_cloudvela_llczhb_frame_req
 	msgie_struct_zhbhjt_frame_head_t head;
 	UINT64 cfmQn;
 	UINT16 cfmCN;
-	UINT32 setpw;
+	UINT16 cfmPNUM;
+	UINT16 cfmPNO;
+	char setpw[7];
 	msgie_struct_zhbhjt_element_dl2hcu_t dl2Self;
 	UINT32 length;
 }msg_struct_cloudvela_llczhb_frame_req_t;

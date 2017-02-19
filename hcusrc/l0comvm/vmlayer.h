@@ -825,11 +825,19 @@ extern OPSTAT hcu_vm_timerid_to_string(UINT32 id, char *string);
 extern OPSTAT hcu_timer_polling(time_t sec, UINT32 nsec, void *handler());
 extern OPSTAT hcu_timer_set(UINT32 timerid, UINT32 taskid, UINT32 delay);
 extern OPSTAT hcu_timer_clear(UINT32 timerid, UINT32 taskid);
+//UNIX下时钟函数非常丰富，这里不再做任何抽象化，上层应用可以直接调用系统库函数进行使用和处理
 extern void hcu_sleep(UINT32 second);
 extern void hcu_usleep(UINT32 usecond);  //resulution 10^(-6)s = 1 microsecond
-//UNIX下时钟函数非常丰富，这里不再做任何抽象化，上层应用可以直接调用系统库函数进行使用和处理
-extern UINT16 hcu_CRC_16(unsigned char *data,int len);
-extern void hcu_vm_set_local_time(UINT32 newTimeInUnix);
+
+//CRC计算函数
+extern UINT16 hcu_vm_calculate_crc_u16(unsigned char *data,int len);
+extern void   hcu_vm_calculate_crc_modbus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
+extern UINT16 hcu_vm_calculate_crc_one_char(UINT8 cDataIn, UINT16 wCRCIn);
+extern UINT16 hcu_vm_calculate_crc_ccitt(unsigned char *q, int len);
+
+extern void   hcu_vm_set_local_time(UINT32 newTimeInUnix);
+
+
 
 /*
  *

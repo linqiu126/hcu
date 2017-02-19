@@ -29,7 +29,7 @@ extern HcuFsmStateItem_t HcuFsmLlczhb[];
 
 typedef struct gTaskLlczhbContextStatic
 {
-	UINT32 pswd;
+	char pswd[7];
 	UINT32 overTimeDur;
 	UINT8  resndTimesSet;
 	UINT32 AlarmTarget; //号称叫上位机地址，未来可能需要将这些参数存入数据库
@@ -48,7 +48,7 @@ typedef struct gTaskLlczhbContext
 	gTaskLlczhbContextStatic_t 		envSd;  //静态数据
 	gTaskLlczhbContextLinkDynamic_t llcSn;  //动态链路会话
 	UINT8 resndCnt;
-	UINT8 llcState;
+	UINT8 llcState;  //=>链路状态，因为消息简单，必须采用不同的状态来设定状态机
 }gTaskLlczhbContext_t;
 
 #define LLCZHB_CFG_STATIC_LLC_OVERTIME_DUR   10 //in second

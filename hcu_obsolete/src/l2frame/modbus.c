@@ -2797,7 +2797,7 @@ void CheckCRCModBus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut)
 
     for (i=0;i<iLenIn;i++)
     {
-        wCRC = CalcCRCModBus(*pDataIn, wCRC);
+        wCRC = hcu_vm_calculate_crc_one_char(*pDataIn, wCRC);
         pDataIn++;
     }
 
@@ -2808,7 +2808,7 @@ void CheckCRCModBus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut)
     *pCRCOut = wCRC;
 }
 
-UINT16 CalcCRCModBus(UINT8 cDataIn, UINT16 wCRCIn)
+UINT16 hcu_vm_calculate_crc_one_char(UINT8 cDataIn, UINT16 wCRCIn)
 {
     UINT16 wCheck = 0;
     wCRCIn = wCRCIn ^ cDataIn;

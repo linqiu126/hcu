@@ -756,7 +756,6 @@ typedef struct CloudBhItfDevReportStdXml
 
 //中环保协议标准的格式定义
 #define HCU_CLOUDVELA_BH_ITF_STD_ZHB_DATA_SEGMENT_MAX_LENGTH 30
-//#define HCU_CLOUDVELA_BH_ITF_STD_ZHB_DATA_TOTAL_MAX_LENGTH 1025
 typedef struct CloudBhItfDevReportStdZhbData
 {
 	char qn[21]; //请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令

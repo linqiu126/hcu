@@ -1193,7 +1193,7 @@ OPSTAT func_cloudvela_stdzhb_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv)
 	strncpy(st, &rcv->buf[rcv->length-6], 4);
 	it = strtoul(st, NULL, 16);  //16进制
 	UINT16 crc16=0;
-	CheckCRCModBus((UINT8*)&rcv->buf[index], rcv->length-12, &crc16);
+	hcu_vm_calculate_crc_modbus((UINT8*)&rcv->buf[index], rcv->length-12, &crc16);
 	if (it != crc16){
 		HcuErrorPrint("CLOUDVELA: Invalid received data CRC16!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
@@ -1753,7 +1753,7 @@ OPSTAT func_cloudvela_stdzhb_msg_pack(CloudBhItfDevReportStdZhb_t *zhbFormat, Cl
 
 	//CRC计算，字符串当UINT8做CRC计算，可能会有潜在的风险，未来待检查
 	UINT16 crc16=0;
-	CheckCRCModBus((UINT8*)s, strlen(s), &crc16);
+	hcu_vm_calculate_crc_modbus((UINT8*)s, strlen(s), &crc16);
 	sprintf(zhbFormat->crc16, "%04X", crc16);
 
 	//全部成帧

@@ -78,11 +78,6 @@ extern OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct
 extern OPSTAT func_modbus_pm25_cmd_pack(msg_struct_pm25_modbus_control_cmd_t *inMsg, SerialModbusMsgBuf_t *outMsg);
 extern OPSTAT func_modbus_pm25_cmd_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_modbus_control_cmd_t *rcv, msg_struct_modbus_pm25_control_fb_t *snd);
 
-//CRC16
-extern UINT16 CalcCRCModBus(UINT8 cDataIn, UINT16 wCRCIn);
-extern void CheckCRCModBus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
-extern UINT16 crc_ccitt(unsigned char *q, int len);
-
 //外部函数引用API by Shanchun
 extern UINT32 hcu_sps485_serial_init(SerialPortCom_t *sp);
 extern UINT32 hcu_sps485_serial_port_get(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 Len);

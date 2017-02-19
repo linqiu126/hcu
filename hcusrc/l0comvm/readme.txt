@@ -19,6 +19,8 @@
 
 //= ZJL, 2017 Feb.19, CURRENT_SW_DELIVERY 178=>AQYC项目
 =完成了LLC层所有的链路逻辑控制功能
+=修正密码，使用char s[7]的方式，而非整数
+=将xxx-Value的数据考虑在内
 
 
 //= ZJL, 2017 Feb.18, CURRENT_SW_DELIVERY 177=>AQYC项目

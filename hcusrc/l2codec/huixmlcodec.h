@@ -104,7 +104,7 @@ extern OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle
 
 
 //高级定义，简化程序的可读性
-#define HCU_ERROR_PRINT_HUIXMLCODEC(...)	do{zHcuRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+#define HCU_ERROR_PRINT_HUIXMLCODEC(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 //Test Data：纯粹是为了测试下位机，所以没有将ToUser/FromUser设置的非常规整
 #define HUITP_MSG_HUIXML_TEST_DATA_CCL_HEAD_VALID   				"<xml><ToUserName><![CDATA[HCU_G801_BFSC_SH001]]></ToUserName>\

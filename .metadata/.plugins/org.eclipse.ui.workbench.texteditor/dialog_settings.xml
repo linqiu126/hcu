@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req" key="selection"/>
+		<item value="setpw" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req"/>
-			<item value="HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME"/>
-			<item value="ctime"/>
-			<item value="LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE"/>
-			<item value="msgie_struct_zhbhjt_frame_data_ctime_t"/>
-			<item value="ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req"/>
-			<item value="HCU_SYSMSG_ZHBHJT_ACTION_SET_INST_SAMPLE"/>
-			<item value="ZHBHJT_IE_uni_CNcode_ctr_start_sample_req"/>
+			<item value="setpw"/>
+			<item value="pw"/>
+			<item value="strncpy"/>
+			<item value="strcpy"/>
+			<item value="limitation"/>
+			<item value="msgie_struct_zhbhjt_frame_data_low_upvalue_t"/>
+			<item value=".RT"/>
+			<item value="RT"/>
 		</list>
 		<list key="replacehistory">
+			<item value="gapTime"/>
+			<item value="beTime"/>
 			<item value="snd"/>
 			<item value="snd.ul2Cloud"/>
 			<item value="rcv.ul2Cloud"/>
 			<item value="sndL3.dl2Self"/>
 			<item value="rcv.dl2Self"/>
 			<item value="msgie_struct_zhbhjt_element_dl2hcu_t"/>
-			<item value="LLCZHB"/>
-			<item value="Llczhb"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1144" key="DIALOG_X_ORIGIN"/>
-		<item value="328" key="DIALOG_Y_ORIGIN"/>
+		<item value="1185" key="DIALOG_X_ORIGIN"/>
+		<item value="285" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

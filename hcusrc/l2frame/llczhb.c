@@ -99,7 +99,6 @@ OPSTAT fsm_llczhb_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_LLCZHB] = 0;
 	memset(&gTaskLlczhbContext, 0, sizeof(gTaskLlczhbContext_t));
-	gTaskLlczhbContext.envSd.pswd = 0;
 	gTaskLlczhbContext.envSd.overTimeDur = LLCZHB_CFG_STATIC_LLC_OVERTIME_DUR;
 	gTaskLlczhbContext.envSd.resndTimesSet = LLCZHB_CFG_STATIC_LLC_RESND_CNT;
 	//因为减少消息的使用，必须使用比特位来控制状态
@@ -180,7 +179,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Receive frame error!\n");
 
 	//检查链路密码：只有在正常业务操作的情况下才有意义，因为在ZHBHJT_IE_uni_STcode_system_interaction情况下本来就不存在
-	if ((rcv.head.st !=ZHBHJT_IE_uni_STcode_system_interaction) && (rcv.head.pw != gTaskLlczhbContext.envSd.pswd))
+	if ((rcv.head.st !=ZHBHJT_IE_uni_STcode_system_interaction) && (strcmp(rcv.head.pw, gTaskLlczhbContext.envSd.pswd) != 0))
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Receive frame error!\n");
 
 	//检查链路FLAG，待定
@@ -189,7 +188,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 	if (rcv.head.qn !=0) gTaskLlczhbContext.frameHead.qn = rcv.head.qn;
 	if (rcv.head.st !=0) gTaskLlczhbContext.frameHead.st = rcv.head.st;
 	if (rcv.head.cn != 0) gTaskLlczhbContext.frameHead.cn = rcv.head.cn;
-	if (rcv.head.pw !=0) gTaskLlczhbContext.frameHead.pw = rcv.head.pw;
+	if (rcv.head.pw != NULL) strncpy(gTaskLlczhbContext.frameHead.pw, rcv.head.pw, strlen(rcv.head.pw));
 	if (rcv.head.pno !=0) gTaskLlczhbContext.frameHead.pno = rcv.head.pno;
 	if (rcv.head.pnum !=0) gTaskLlczhbContext.frameHead.pnum = rcv.head.pnum;
 	if (rcv.head.ansFlag !=0) gTaskLlczhbContext.frameHead.ansFlag = rcv.head.ansFlag;
@@ -434,7 +433,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//设置新的密码
-		gTaskLlczhbContext.envSd.pswd = rcv.setpw;
+		strncpy(gTaskLlczhbContext.envSd.pswd, rcv.setpw, strlen(rcv.setpw));
 
 		//发送L2_LLC反馈给后台
 		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
@@ -555,8 +554,8 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
 		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT;
-		snd.dl2Self.ttiTime.BeginTime = rcv.dl2Self.ttiTime.BeginTime;
-		snd.dl2Self.ttiTime.EndTime = rcv.dl2Self.ttiTime.EndTime;
+		snd.dl2Self.gapTime.BeginTime = rcv.dl2Self.gapTime.BeginTime;
+		snd.dl2Self.gapTime.EndTime = rcv.dl2Self.gapTime.EndTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_DAY;
@@ -576,8 +575,8 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
 		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RT;
-		snd.dl2Self.ttiTime.BeginTime = rcv.dl2Self.ttiTime.BeginTime;
-		snd.dl2Self.ttiTime.EndTime = rcv.dl2Self.ttiTime.EndTime;
+		snd.dl2Self.gapTime.BeginTime = rcv.dl2Self.gapTime.BeginTime;
+		snd.dl2Self.gapTime.EndTime = rcv.dl2Self.gapTime.EndTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT;
@@ -597,8 +596,8 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
 		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT;
-		snd.dl2Self.ttiTime.BeginTime = rcv.dl2Self.ttiTime.BeginTime;
-		snd.dl2Self.ttiTime.EndTime = rcv.dl2Self.ttiTime.EndTime;
+		snd.dl2Self.gapTime.BeginTime = rcv.dl2Self.gapTime.BeginTime;
+		snd.dl2Self.gapTime.EndTime = rcv.dl2Self.gapTime.EndTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN;
@@ -621,8 +620,8 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
 		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_ALA;
-		snd.dl2Self.ttiTime.BeginTime = rcv.dl2Self.ttiTime.BeginTime;
-		snd.dl2Self.ttiTime.EndTime = rcv.dl2Self.ttiTime.EndTime;
+		snd.dl2Self.gapTime.BeginTime = rcv.dl2Self.gapTime.BeginTime;
+		snd.dl2Self.gapTime.EndTime = rcv.dl2Self.gapTime.EndTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_ALA;
@@ -864,7 +863,7 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfRS = rcv.ul2Cloud.nbrOfRS;
-		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.RS), &(rcv.ul2Cloud.RS), sizeof(INT32)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.RS), &(rcv.ul2Cloud.RS), sizeof(msgie_struct_zhbhjt_frame_data_RS_value_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		gTaskLlczhbContext.llcSn.ulTx.DataTime = rcv.ul2Cloud.DataTime;
 		if (fsm_llczhb_send_to_cloud_data_get_equ_run() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
@@ -912,7 +911,7 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfRT = rcv.ul2Cloud.nbrOfRT;
-		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.RT), &(rcv.ul2Cloud.RT), sizeof(INT32)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.RT), &(rcv.ul2Cloud.RT), sizeof(msgie_struct_zhbhjt_frame_data_RT_value_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		gTaskLlczhbContext.llcSn.ulTx.DataTime = rcv.ul2Cloud.DataTime;
 		if (fsm_llczhb_send_to_cloud_data_get_pol_today_rt() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
@@ -1006,8 +1005,11 @@ OPSTAT fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(UINT8 qnRtn)
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_answer_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	snd.head.ansFlag = 0;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.cfmQn = gTaskLlczhbContext.frameHead.qn;
 	snd.ul2Cloud.QnRtn = qnRtn;
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
@@ -1024,7 +1026,12 @@ OPSTAT fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(UINT8 exeRtn)
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.cfmQn = gTaskLlczhbContext.frameHead.qn;
 	snd.ul2Cloud.ExeRtn = exeRtn;
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
@@ -1041,7 +1048,12 @@ OPSTAT fsm_llczhb_send_to_cloud_ctrl_notify_answer(void)
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.cfmQn = gTaskLlczhbContext.frameHead.qn;
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
 	if (hcu_message_send(MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP, TASK_ID_CLOUDVELA, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
@@ -1057,7 +1069,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_field_time(void)
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_field_time_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.cfmQn = gTaskLlczhbContext.frameHead.qn;
 	snd.ul2Cloud.SystemTime = time(0);
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
@@ -1074,7 +1091,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_field_addr(void)
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_field_addr_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.cfmQn = gTaskLlczhbContext.frameHead.qn;
 	snd.ul2Cloud.AlarmTarget = gTaskLlczhbContext.envSd.AlarmTarget;
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
@@ -1091,7 +1113,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_data_get_pol_rtd(void)
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_rt_data_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.ul2Cloud.DataTime = gTaskLlczhbContext.llcSn.ulTx.DataTime;
 	snd.ul2Cloud.nbrOfCRtd = gTaskLlczhbContext.llcSn.ulTx.nbrOfCRtd;
 	memcpy(&(snd.ul2Cloud.rtd), &(gTaskLlczhbContext.llcSn.ulTx.rtd), sizeof(msgie_struct_zhbhjt_frame_data_pol_rtd_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
@@ -1109,10 +1136,15 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_equ_run(void)
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_equ_status_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.ul2Cloud.DataTime = gTaskLlczhbContext.llcSn.ulTx.DataTime;
 	snd.ul2Cloud.nbrOfRS = gTaskLlczhbContext.llcSn.ulTx.nbrOfRS;
-	memcpy(&(snd.ul2Cloud.RS), &(gTaskLlczhbContext.llcSn.ulTx.RS), sizeof(INT32)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+	memcpy(&(snd.ul2Cloud.RS), &(gTaskLlczhbContext.llcSn.ulTx.RS), sizeof(msgie_struct_zhbhjt_frame_data_RS_value_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
 	if (hcu_message_send(MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP, TASK_ID_CLOUDVELA, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -1127,7 +1159,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_min_rpt(void)
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.ul2Cloud.DataTime = gTaskLlczhbContext.llcSn.ulTx.DataTime;
 	snd.ul2Cloud.nbrOfCMinRpt = gTaskLlczhbContext.llcSn.ulTx.nbrOfCMinRpt;
 	memcpy(&(snd.ul2Cloud.min), &(gTaskLlczhbContext.llcSn.ulTx.min), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
@@ -1145,7 +1182,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt(void)
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.ul2Cloud.DataTime = gTaskLlczhbContext.llcSn.ulTx.DataTime;
 	snd.ul2Cloud.nbrOfCMinRpt = gTaskLlczhbContext.llcSn.ulTx.nbrOfCMinRpt;
 	memcpy(&(snd.ul2Cloud.min), &(gTaskLlczhbContext.llcSn.ulTx.min), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
@@ -1163,10 +1205,15 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_today_rt(void)
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.ul2Cloud.DataTime = gTaskLlczhbContext.llcSn.ulTx.DataTime;
 	snd.ul2Cloud.nbrOfRT = gTaskLlczhbContext.llcSn.ulTx.nbrOfRT;
-	memcpy(&(snd.ul2Cloud.RT), &(gTaskLlczhbContext.llcSn.ulTx.RT), sizeof(INT32)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+	memcpy(&(snd.ul2Cloud.RT), &(gTaskLlczhbContext.llcSn.ulTx.RT), sizeof(msgie_struct_zhbhjt_frame_data_RT_value_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
 	if (hcu_message_send(MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP, TASK_ID_CLOUDVELA, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -1181,7 +1228,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_ala_record(void)
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.ul2Cloud.DataTime = gTaskLlczhbContext.llcSn.ulTx.DataTime;
 	snd.ul2Cloud.Ala = gTaskLlczhbContext.llcSn.ulTx.Ala;
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
@@ -1201,7 +1253,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_report_ala_event(void)
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_event_resp;
 	snd.head.qn = time(0) * 1000;
 	gTaskLlczhbContext.frameHead.qn = snd.head.qn; //存下来用于比对。当收到消息时，这个域是空的，但会包含在消息体中
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.ul2Cloud.Ala = gTaskLlczhbContext.llcSn.ulTx.Ala;
 	snd.ul2Cloud.AlarmTime = gTaskLlczhbContext.llcSn.ulTx.AlarmTime;
 	snd.ul2Cloud.AlarmType = gTaskLlczhbContext.llcSn.ulTx.AlarmType;
@@ -1220,7 +1277,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_alarm_limitation(void)
 	//初次发送出去，需要带QN信息
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.cfmQn = gTaskLlczhbContext.frameHead.qn;
 	snd.ul2Cloud.nbrOfAlmLim = gTaskLlczhbContext.llcSn.ulTx.nbrOfAlmLim;
 	memcpy(&(snd.ul2Cloud.limitation), &(gTaskLlczhbContext.llcSn.ulTx.limitation), sizeof(msgie_struct_zhbhjt_frame_data_low_upvalue_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
@@ -1240,7 +1302,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_report_time(void)
 	//初次发送出去，需要带QN信息
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.cfmQn = gTaskLlczhbContext.frameHead.qn;
 	snd.ul2Cloud.ReportTime = gTaskLlczhbContext.llcSn.ulTx.ReportTime;
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
@@ -1259,7 +1326,12 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_rtdi_real_time_data_tti(void)
 	//初次发送出去，需要带QN信息
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp;
-	snd.head.pw = gTaskLlczhbContext.envSd.pswd;
+	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
+	//表示不需要回复Flag标识
+	snd.head.ansFlag = 0xFF;
+	//表示不需要分段
+	snd.head.pnum = 0xFFFF;
+	snd.head.pno = 0xFFFF;
 	snd.cfmQn = gTaskLlczhbContext.frameHead.qn;
 	snd.ul2Cloud.RtdInterval = gTaskLlczhbContext.llcSn.ulTx.RtdInterval;
 	snd.length = sizeof(msg_struct_llczhb_cloudvela_frame_resp_t);
@@ -1267,10 +1339,6 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_rtdi_real_time_data_tti(void)
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	return SUCCESS;
 }
-
-
-
-
 
 
 //链路超时重发的控制过程
@@ -1300,7 +1368,9 @@ OPSTAT func_llczhb_time_out_link_control_process(void)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Start timer error!\n");
 	}
 
-
+	else{
+		HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Wrong counter set or state entered!\n");
+	}
 
 	//返回
 	return SUCCESS;

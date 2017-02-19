@@ -1808,7 +1808,7 @@ OPSTAT fsm_com_heart_beat_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 unsigned short int x=CRC_16(datax,6);
 得到x=0x840a;
 ***************************************************/
-UINT16 hcu_CRC_16(unsigned char *data,int len)
+UINT16 hcu_vm_calculate_crc_u16(unsigned char *data,int len)
 {
 	unsigned char *buf;
 	unsigned short int * CRC;
