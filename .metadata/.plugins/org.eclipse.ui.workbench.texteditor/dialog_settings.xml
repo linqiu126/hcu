@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Pol" key="selection"/>
+		<item value="printf" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="pol"/>
-			<item value="DataTime"/>
-			<item value="2021"/>
-			<item value="HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX"/>
-			<item value="polid"/>
-			<item value="PNO"/>
-			<item value="0xFF"/>
-			<item value="gZhbhjtMsgFormatCfgDlReq"/>
+			<item value="printf"/>
+			<item value="hcu_vm_engpar_read_phy_boot_cfg"/>
+			<item value="zhbMnLable"/>
+			<item value="func_cloudvela_zhbhjt212_msg_pack"/>
+			<item value="msg_pack"/>
+			<item value="crc"/>
+			<item value="gZhbhjtIeEleCfg"/>
+			<item value="Flag"/>
 		</list>
 		<list key="replacehistory">
+			<item value="sprintf"/>
+			<item value="gZhbhjtMsgFormatCfgUlResp"/>
 			<item value="gZhbhjtMsgFormatCfgDlReq"/>
 			<item value="gapTime"/>
 			<item value="beTime"/>
 			<item value="snd"/>
 			<item value="snd.ul2Cloud"/>
 			<item value="rcv.ul2Cloud"/>
-			<item value="sndL3.dl2Self"/>
-			<item value="rcv.dl2Self"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

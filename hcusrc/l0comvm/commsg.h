@@ -3343,7 +3343,7 @@ typedef struct msg_struct_l3aqyc_exg_data_report
  *
  */
 //ZHBHJT212
-#define HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX 6
+#define HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX 7
 #define HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX 24
 typedef struct msgie_struct_zhbhjt_frame_head //
 {
@@ -3440,7 +3440,6 @@ typedef struct  msgie_struct_zhbhjt_element_ul2cloud
 	UINT32 AlarmTarget;
 	UINT16 ReportTime;
 	UINT16 RtdInterval;
-	UINT32 length;
 	UINT8 nbrOfCRtd;
 	msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	UINT8 nbrOfRS;
@@ -3451,6 +3450,7 @@ typedef struct  msgie_struct_zhbhjt_element_ul2cloud
 	msgie_struct_zhbhjt_frame_data_pol_min_hour_t min[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
 	UINT8 nbrOfAlmLim;
 	msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+	UINT32 length;
 }msgie_struct_zhbhjt_element_ul2cloud_t;
 
 //MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ,

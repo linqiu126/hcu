@@ -16,10 +16,13 @@
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
 
+
+//= ZJL, 2017 Feb.20, CURRENT_SW_DELIVERY 180=>AQYC项目
+=完成初步的编码过程，问题不少
+
 //= ZJL, 2017 Feb.20, CURRENT_SW_DELIVERY 179=>AQYC项目
 =完成消息编码中字典的全部构造
 =测试完善消息砖头的正确性
-
 
 //= ZJL, 2017 Feb.19, CURRENT_SW_DELIVERY 178=>AQYC项目
 =完成了LLC层所有的链路逻辑控制功能

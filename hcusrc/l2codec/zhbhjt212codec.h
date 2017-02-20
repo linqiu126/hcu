@@ -23,6 +23,8 @@
 #define ZHBHJT_PROTOCOL_FRAME_FIX_HEAD  "##"
 #define ZHBHJT_PROTOCOL_FRAME_FIX_TAIL  "\r\n"
 #define ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX 100  //考虑到CTime的循环长度，定义的长一点更加安全
+#define ZHBHJT_PROTOCOL_FRAME_DATA_LEN_MAX 1024
+
 
 //ZHBHJT212协议配置静态表
 typedef struct ZHBHJT212MsgIeEleStaticCfg
@@ -44,17 +46,21 @@ typedef struct ZHBHJT212MsgIeEleStaticCfg
 #define ZHBHJT_PFDT_POLID_NAME_LEN_MAX 7
 
 //组合IE的定义：目前考虑最多4次，如果更多的话，需要更加复杂的定义
-typedef struct ZHBHJT212MsgIeCmbBasicStaticCfg
+typedef struct ZHBHJTIeBasicStr
 {
-	const UINT8 ieId;
-	const UINT8 ieRptNbr;
-}ZHBHJT212MsgIeCmbBasicStaticCfg_t;
-#define ZHBHJT_PROTOCOL_FRAME_IE_TO_IECMB_NBR_MAX 4
+	UINT8 ieId;
+	UINT8 ieRptNbr;
+}ZHBHJTIeBasicStr_t;
+#define ZHBHJT_PFM_IE2CMB_NBR_MAX 4
 typedef struct ZHBHJT212MsgIeCmbStaticCfg
 {
 	const UINT8 cmbIeId;
-	ZHBHJT212MsgIeCmbBasicStaticCfg_t ie[ZHBHJT_PROTOCOL_FRAME_IE_TO_IECMB_NBR_MAX];
+	ZHBHJTIeBasicStr_t ie[ZHBHJT_PFM_IE2CMB_NBR_MAX];
 }ZHBHJT212MsgIeCmbStaticCfg_t;
+typedef struct ZHBHJT212IeList
+{
+	ZHBHJTIeBasicStr_t ie[ZHBHJT_PFM_IE2CMB_NBR_MAX];
+}ZHBHJT212IeList_t;
 
 //消息定义
 typedef struct ZHBHJT212MsgMsgBasicStaticCfg
@@ -62,11 +68,11 @@ typedef struct ZHBHJT212MsgMsgBasicStaticCfg
 	const UINT8 ieCmbId;
 	const UINT8 ieCmbRptNbr;
 }ZHBHJT212MsgMsgBasicStaticCfg_t;
-#define ZHBHJT_PROTOCOL_FRAME_IECMB_TO_MSG_NBR_MAX 4
+#define ZHBHJT_PFM_CMB2MSG_NBR_MAX 4
 typedef struct ZHBHJT212MsgFormatStaticCfg
 {
 	const UINT16 cnCode;
-	ZHBHJT212MsgMsgBasicStaticCfg_t IeCmb[ZHBHJT_PROTOCOL_FRAME_IECMB_TO_MSG_NBR_MAX];
+	ZHBHJT212MsgMsgBasicStaticCfg_t IeCmb[ZHBHJT_PFM_CMB2MSG_NBR_MAX];
 }ZHBHJT212MsgFormatStaticCfg_t;
 //ieCmbRptNbr取值的逻辑：0表示没有，1-254表示多少，255/0xFF表示可能存在也可以不存在
 
@@ -86,7 +92,7 @@ UINT8 func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(UINT16 cnid);
 UINT16 func_cloudvela_zhbhjt212_caculate_ul2cloud_msg_size_max(UINT16 cnId);
 UINT16 func_cloudvela_zhbhjt212_caculate_dl2hcu_msg_size_max(UINT16 cnId);
 extern void func_cloudvela_zhbhjt212_test(void);
-
+void func_cloudvela_zhbhjt212_convert_u64time_to_ymd(UINT64 in, char *out);
 
 
 //大小端变换宏定义
