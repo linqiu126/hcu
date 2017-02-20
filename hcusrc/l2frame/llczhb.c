@@ -112,7 +112,6 @@ OPSTAT fsm_llczhb_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 	HCU_DEBUG_PRINT_FAT("LLCZHB: Enter FSM_STATE_LLCZHB_ACTIVED status, Keeping refresh here!\n");
 
-
 	return SUCCESS;
 }
 

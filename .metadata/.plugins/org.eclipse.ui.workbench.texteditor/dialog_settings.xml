@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="fsm_llczhb_send_to_cloud_data_get_rtdi_interval_1061" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="Pol" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="fsm_llczhb_send_to_cloud_data_get_rtdi_interval_1061"/>
-			<item value="fsm_llczhb_send_to_cloud_ctrl_notify_answer_9013"/>
-			<item value="LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_EQU_RUN_2021"/>
-			<item value="fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt"/>
-			<item value="LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME"/>
-			<item value="HCU_SYSMSG_ZHBHJT_ACTION_DATA_CFM"/>
-			<item value="ZHBHJT_IE_uni_CNcode_MIN"/>
-			<item value="ZHBHJT_MSG_BUF_BODY_ONLY_MAX_LEN"/>
+			<item value="pol"/>
+			<item value="DataTime"/>
+			<item value="2021"/>
+			<item value="HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX"/>
+			<item value="polid"/>
+			<item value="PNO"/>
+			<item value="0xFF"/>
+			<item value="gZhbhjtMsgFormatCfgDlReq"/>
 		</list>
 		<list key="replacehistory">
+			<item value="gZhbhjtMsgFormatCfgDlReq"/>
 			<item value="gapTime"/>
 			<item value="beTime"/>
 			<item value="snd"/>
@@ -25,7 +26,6 @@
 			<item value="rcv.ul2Cloud"/>
 			<item value="sndL3.dl2Self"/>
 			<item value="rcv.dl2Self"/>
-			<item value="msgie_struct_zhbhjt_element_dl2hcu_t"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

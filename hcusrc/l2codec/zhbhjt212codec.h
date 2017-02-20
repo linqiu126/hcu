@@ -22,8 +22,7 @@
 //Task level definition
 #define ZHBHJT_PROTOCOL_FRAME_FIX_HEAD  "##"
 #define ZHBHJT_PROTOCOL_FRAME_FIX_TAIL  "\r\n"
-#define ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX 30
-
+#define ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX 100  //考虑到CTime的循环长度，定义的长一点更加安全
 
 //ZHBHJT212协议配置静态表
 typedef struct ZHBHJT212MsgIeEleStaticCfg
@@ -41,6 +40,9 @@ typedef struct ZHBHJT212MsgIeEleStaticCfg
 #define ZHBHJT_PFDT_INT64   5
 #define ZHBHJT_PFDT_FLOAT   6  //浮点
 #define ZHBHJT_PFDT_DBFLT   7  //双精度浮点
+
+#define ZHBHJT_PFDT_POLID_NAME_LEN_MAX 7
+
 //组合IE的定义：目前考虑最多4次，如果更多的话，需要更加复杂的定义
 typedef struct ZHBHJT212MsgIeCmbBasicStaticCfg
 {
@@ -75,6 +77,16 @@ typedef struct ZHBHJT212MsgFormatStaticCfg
 //message pack/unpack
 extern OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_t *inputPar, CloudDataSendBuf_t *output);
 extern OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId);
+
+
+//Local APIs
+UINT8 func_cloudvela_zhbhjt212_search_polid_by_name(char *PolIdName);
+UINT8 func_cloudvela_zhbhjt212_search_ul2cloud_msgid_by_cncode(UINT16 cnid);
+UINT8 func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(UINT16 cnid);
+UINT16 func_cloudvela_zhbhjt212_caculate_ul2cloud_msg_size_max(UINT16 cnId);
+UINT16 func_cloudvela_zhbhjt212_caculate_dl2hcu_msg_size_max(UINT16 cnId);
+extern void func_cloudvela_zhbhjt212_test(void);
+
 
 
 //大小端变换宏定义

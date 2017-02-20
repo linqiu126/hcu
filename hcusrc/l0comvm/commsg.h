@@ -3343,8 +3343,8 @@ typedef struct msg_struct_l3aqyc_exg_data_report
  *
  */
 //ZHBHJT212
-#define HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX 8
-#define HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX 10
+#define HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX 6
+#define HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX 24
 typedef struct msgie_struct_zhbhjt_frame_head //
 {
 	UINT64 qn;
@@ -3459,7 +3459,9 @@ typedef struct  msg_struct_cloudvela_llczhb_frame_req
 	msgie_struct_zhbhjt_frame_head_t head;
 	UINT64 cfmQn;
 	UINT16 cfmCN;
+	UINT8  IsCfmPNUMValidFlag;
 	UINT16 cfmPNUM;
+	UINT8  IsCfmPNOValidFlag;
 	UINT16 cfmPNO;
 	char setpw[7];
 	msgie_struct_zhbhjt_element_dl2hcu_t dl2Self;

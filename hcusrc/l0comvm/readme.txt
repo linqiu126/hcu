@@ -18,7 +18,7 @@
 
 //= ZJL, 2017 Feb.20, CURRENT_SW_DELIVERY 179=>AQYC项目
 =完成消息编码中字典的全部构造
-
+=测试完善消息砖头的正确性
 
 
 //= ZJL, 2017 Feb.19, CURRENT_SW_DELIVERY 178=>AQYC项目
