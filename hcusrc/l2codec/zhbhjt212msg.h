@@ -19,11 +19,6 @@
 //考虑到TCPIP中底层最长1500B的情形，这里先如此定义，不要超过这个限制，所以16进制的缓冲区最好不要超过500字节
 #define ZHBHJT_MSG_BUF_WITH_HEAD_MAX_LEN 				134
 #define ZHBHJT_MSG_BUF_BODY_ONLY_MAX_LEN 				ZHBHJT_MSG_BUF_WITH_HEAD_MAX_LEN - 4 //MSG头+长度域共4BYTE
-//HUIXML固定头部常量定义
-#define ZHBHJT_MSG_HUIXML_CONSTANT_XML_HEAD_L  			"<xml>"
-#define ZHBHJT_MSG_HUIXML_CONSTANT_XML_HEAD_R  			"</xml>"
-#define ZHBHJT_MSG_HUIXML_CONSTANT_TO_USER_L  			"<ToUserName><![CDATA["
-#define ZHBHJT_MSG_HUIXML_CONSTANT_TO_USER_R  			"]]></ToUserName>"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +26,7 @@
 //  ZHBHJT字典定义
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////
-//ST系统编码字典
+//ST系统编码字典：指示的是哪一种污染物体系
 typedef enum
 {
 	ZHBHJT_IE_uni_STcode_earth_water                      = 21,
@@ -49,61 +44,61 @@ typedef enum
 	ZHBHJT_IE_uni_STcode_system_interaction               = 91,
 }ZhbhjtSTcodeUniDefination;
 
-//ST系统编码字典
+//CN命令码子编码，指示的是命令，或者我们通常所说的消息ID
 typedef enum
 {
 	//INIT初始化
-	ZHBHJT_IE_uni_CNcode_MIN         						  = 0,
-	ZHBHJT_IE_uni_CNcode_init_set_resend_time_out_req         = 1000,
-	ZHBHJT_IE_uni_CNcode_init_set_uplimit_duration_req        = 1001,
+	ZHBHJT_IE_uni_CNcode_MIN_0000                                  = 0,
+	ZHBHJT_IE_uni_CNcode_init_set_resend_time_out_req_1000         = 1000,
+	ZHBHJT_IE_uni_CNcode_init_set_uplimit_duration_req_1001        = 1001,
 	//参数命令
-	ZHBHJT_IE_uni_CNcode_par_get_field_time_req               = 1011,
-	ZHBHJT_IE_uni_CNcode_par_get_field_time_resp              = 1011,
-	ZHBHJT_IE_uni_CNcode_par_set_field_time_req               = 1012,
-	ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_req      = 1021,
-	ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_resp     = 1021,
-	ZHBHJT_IE_uni_CNcode_par_set_pollution_limitaion_req      = 1022,
-	ZHBHJT_IE_uni_CNcode_par_get_field_addr_req               = 1031,
-	ZHBHJT_IE_uni_CNcode_par_get_field_addr_resp              = 1031,
-	ZHBHJT_IE_uni_CNcode_par_set_field_addr_req               = 1032,
-	ZHBHJT_IE_uni_CNcode_par_get_data_report_time_req         = 1041,
-	ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp        = 1041,
-	ZHBHJT_IE_uni_CNcode_par_set_data_report_time_req         = 1042,
-	ZHBHJT_IE_uni_CNcode_par_get_data_sample_cycle_req        = 1061,  //实时数据间隔
-	ZHBHJT_IE_uni_CNcode_par_get_data_sample_cycle_resp       = 1061,
-	ZHBHJT_IE_uni_CNcode_par_set_data_sample_cycle_req        = 1062,
-	ZHBHJT_IE_uni_CNcode_par_set_access_pswd_req              = 1072,
+	ZHBHJT_IE_uni_CNcode_par_get_field_time_req_1011               = 1011,
+	ZHBHJT_IE_uni_CNcode_par_get_field_time_resp_1011              = 1011,
+	ZHBHJT_IE_uni_CNcode_par_set_field_time_req_1012               = 1012,
+	ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_req_1021      = 1021,
+	ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_resp_1021     = 1021,
+	ZHBHJT_IE_uni_CNcode_par_set_pollution_limitaion_req_1022      = 1022,
+	ZHBHJT_IE_uni_CNcode_par_get_field_addr_req_1031               = 1031,
+	ZHBHJT_IE_uni_CNcode_par_get_field_addr_resp_1031              = 1031,
+	ZHBHJT_IE_uni_CNcode_par_set_field_addr_req_1032               = 1032,
+	ZHBHJT_IE_uni_CNcode_par_get_data_report_time_req_1041         = 1041,
+	ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp_1041        = 1041,
+	ZHBHJT_IE_uni_CNcode_par_set_data_report_time_req_1042         = 1042,
+	ZHBHJT_IE_uni_CNcode_par_get_rtdi_interval_req_1061            = 1061,  //实时数据间隔
+	ZHBHJT_IE_uni_CNcode_par_get_rtdi_interval_resp_1061           = 1061,
+	ZHBHJT_IE_uni_CNcode_par_set_rtdi_interval_req_1062            = 1062,
+	ZHBHJT_IE_uni_CNcode_par_set_access_pswd_req_1072              = 1072,
 	//交互命令
-	ZHBHJT_IE_uni_CNcode_cmd_answer_resp                       = 9011,
-	ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp             = 9012,
-	ZHBHJT_IE_uni_CNcode_cmd_notification_req                  = 9013,
-	ZHBHJT_IE_uni_CNcode_cmd_notification_resp                 = 9013,
-	ZHBHJT_IE_uni_CNcode_cmd_data_req                          = 9014,
-	ZHBHJT_IE_uni_CNcode_cmd_data_resp                         = 9014,
+	ZHBHJT_IE_uni_CNcode_cmd_answer_resp_9011                       = 9011,
+	ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp_9012             = 9012,
+	ZHBHJT_IE_uni_CNcode_cmd_notification_req_9013                  = 9013,
+	ZHBHJT_IE_uni_CNcode_cmd_notification_resp_9013                 = 9013,
+	ZHBHJT_IE_uni_CNcode_cmd_data_req_9014                          = 9014,
+	ZHBHJT_IE_uni_CNcode_cmd_data_resp_9014                         = 9014,
 	//数据命令
-	ZHBHJT_IE_uni_CNcode_dat_get_rt_data_req                   = 2011,
-	ZHBHJT_IE_uni_CNcode_dat_get_rt_data_resp                  = 2011,
-	ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req          = 2012,
-	ZHBHJT_IE_uni_CNcode_dat_get_equ_status_req                = 2021,
-	ZHBHJT_IE_uni_CNcode_dat_get_equ_status_resp               = 2021,
-	ZHBHJT_IE_uni_CNcode_dat_stop_monitor_equ_status_req       = 2022,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_req        = 2031,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp       = 2031,
-	ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_req            = 2041,
-	ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_resp           = 2041,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_req        = 2051,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp       = 2051,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req       = 2061,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_resp      = 2061,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_req    = 2071,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_resp   = 2071,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_event_resp    = 2072,
+	ZHBHJT_IE_uni_CNcode_dat_get_rt_data_req_2011                   = 2011,
+	ZHBHJT_IE_uni_CNcode_dat_get_rt_data_resp_2011                  = 2011,
+	ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req_2012          = 2012,
+	ZHBHJT_IE_uni_CNcode_dat_get_equ_status_req_2021                = 2021,
+	ZHBHJT_IE_uni_CNcode_dat_get_equ_status_resp_2021               = 2021,
+	ZHBHJT_IE_uni_CNcode_dat_stop_monitor_equ_status_req_2022       = 2022,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_req_2031        = 2031,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp_2031       = 2031,
+	ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_req_2041            = 2041,
+	ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_resp_2041           = 2041,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_req_2051        = 2051,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp_2051       = 2051,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req_2061       = 2061,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_resp_2061      = 2061,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_req_2071    = 2071,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_resp_2071   = 2071,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_event_resp_2072    = 2072,
 	//控制命令
-	ZHBHJT_IE_uni_CNcode_ctr_calabration_req                   = 3011,
-	ZHBHJT_IE_uni_CNcode_ctr_start_sample_req                  = 3012,
-	ZHBHJT_IE_uni_CNcode_ctr_equ_operation_req                 = 3013,
-	ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req                = 3014,
-	ZHBHJT_IE_uni_CNcode_MAX         						   = 9999,
+	ZHBHJT_IE_uni_CNcode_ctr_calabration_req_3011                   = 3011,
+	ZHBHJT_IE_uni_CNcode_ctr_start_sample_req_3012                  = 3012,
+	ZHBHJT_IE_uni_CNcode_ctr_equ_operation_req_3013                 = 3013,
+	ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req_3014                = 3014,
+	ZHBHJT_IE_uni_CNcode_MAX_9999                                   = 9999,
 }ZhbhjtCNcodeUniDefination;
 
 //QNRTN
@@ -121,14 +116,14 @@ typedef enum
 {
 	ZHBHJT_IEID_uni_null = 0,
 	ZHBHJT_IEID_uni_MIN =  0,
-	ZHBHJT_IEID_uni_system_time,
+	ZHBHJT_IEID_uni_SystemTime,
 	ZHBHJT_IEID_uni_CfmQN,
 	ZHBHJT_IEID_uni_CfmCN,
 	ZHBHJT_IEID_uni_CfmPNUM,
 	ZHBHJT_IEID_uni_CfmPNO,
 	ZHBHJT_IEID_uni_QnRtn,
 	ZHBHJT_IEID_uni_ExeRtn,
-	ZHBHJT_IEID_uni_Rtdinterval,
+	ZHBHJT_IEID_uni_RtdInterval,
 	ZHBHJT_IEID_uni_Rtd,
 	ZHBHJT_IEID_uni_value_Min,
 	ZHBHJT_IEID_uni_value_Avg,
@@ -149,7 +144,7 @@ typedef enum
 	ZHBHJT_IEID_uni_NightData,
 	ZHBHJT_IEID_uni_AlarmTime,
 	ZHBHJT_IEID_uni_AlarmType,
-	ZHBHJT_IEID_uni_ReportTarget,
+	ZHBHJT_IEID_uni_AlarmTarget,
 	ZHBHJT_IEID_uni_PolId,
 	ZHBHJT_IEID_uni_BeginTime,
 	ZHBHJT_IEID_uni_EndTime,
@@ -173,7 +168,7 @@ typedef enum
 	ZHBHJT_IEID_cmb_MAX,
 }ZhbhjtIeIdUniDefination;
 
-//自定义IE字典
+//自定义污染物标签的统一字典，以便节省内部交互的复杂度和字节成本
 typedef enum
 {
 	ZHBHJT_POLID_null = 0,
@@ -292,8 +287,8 @@ typedef enum
 //为了彻底解决大小端的问题，这里按照比特进行定义
 typedef struct StrMsg_ZHBHJT_MSGID_uni_general_head_msgid
 {
-	UINT8 cmdId;
-	UINT8 optId;
+	UINT16 msgId;
+	UINT16 msgLen;
 }StrMsg_ZHBHJT_MSGID_uni_general_head_msgid_t;
 
 typedef struct StrMsg_ZHBHJT_MSGID_uni_general_message

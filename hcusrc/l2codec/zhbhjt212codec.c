@@ -59,7 +59,7 @@ ZHBHJT212MsgIeEleStaticCfg_t gZhbhjtIeEleCfg[] = {
 	{"-NightData=",      ZHBHJT_PFDT_DBFLT,    18,  1},
 	{"AlarmTime=",       ZHBHJT_PFDT_INT32,    14,  0},
 	{"AlarmType=",       ZHBHJT_PFDT_UINT8,    1,   0},
-	{"ReportTarget=",    ZHBHJT_PFDT_CHAR,     20,  0},
+	{"AlarmTarget=",     ZHBHJT_PFDT_INT64,    20,  0},
 	{"PolId=",           ZHBHJT_PFDT_CHAR,     8,   0},
 	{"BeginTime=",       ZHBHJT_PFDT_INT32,    14,  0},
 	{"EndTime=",         ZHBHJT_PFDT_INT32,    14,  0},
@@ -77,71 +77,74 @@ ZHBHJT212MsgIeEleStaticCfg_t gZhbhjtIeEleCfg[] = {
 
 //组合IE的定义
 ZHBHJT212MsgIeCmbStaticCfg_t gZhbhjtIeCmbCfg[] = {
-	{ZHBHJT_IEID_cmb_MIN,           0,0,0,0,0,0,0,0},
-	{ZHBHJT_IEID_cmb_gap_time,      ZHBHJT_IEID_uni_BeginTime, 1, ZHBHJT_IEID_uni_EndTime,   1, 0,0,0,0},
-	{ZHBHJT_IEID_cmb_alm_lim_rng,   ZHBHJT_IEID_uni_UpValue,   1, ZHBHJT_IEID_uni_LowValue,  1, 0,0,0,0},
-	{ZHBHJT_IEID_cmb_multi_ctime,   ZHBHJT_IEID_uni_PolId,     1, ZHBHJT_IEID_uni_CTime,     HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX, 0,0,0,0},
-	{ZHBHJT_IEID_cmb_alarm_event,   ZHBHJT_IEID_uni_Ala,       1, ZHBHJT_IEID_uni_AlarmTime, 1, 0,0,0,0},
-	{ZHBHJT_IEID_cmb_multi_rtd,     ZHBHJT_IEID_uni_Rtd,       1, ZHBHJT_IEID_uni_polFlag,   1, 0,0,0,0},
-	{ZHBHJT_IEID_cmb_pol_report,    ZHBHJT_IEID_uni_Cou,       1, ZHBHJT_IEID_uni_value_Min, 1, ZHBHJT_IEID_uni_value_Avg, 1, ZHBHJT_IEID_uni_value_Max, 1},
-	{ZHBHJT_IEID_cmb_MAX,           0,0,0,0,0,0,0,0},
+	{ZHBHJT_IEID_cmb_MIN,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_gap_time,      {{ZHBHJT_IEID_uni_BeginTime, 1}, {ZHBHJT_IEID_uni_EndTime,   1}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_alm_lim_rng,   {{ZHBHJT_IEID_uni_LowValue,  1}, {ZHBHJT_IEID_uni_UpValue,   1}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_multi_ctime,   {{ZHBHJT_IEID_uni_PolId,     1}, {ZHBHJT_IEID_uni_CTime,     HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX},  {0,0},{0,                   0},},},
+	{ZHBHJT_IEID_cmb_alarm_event,   {{ZHBHJT_IEID_uni_Ala,       1}, {ZHBHJT_IEID_uni_AlarmType, 1}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_multi_rtd,     {{ZHBHJT_IEID_uni_Rtd,       1}, {ZHBHJT_IEID_uni_polFlag,   1}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_pol_report,    {{ZHBHJT_IEID_uni_Cou,       1}, {ZHBHJT_IEID_uni_value_Min, 1}, {ZHBHJT_IEID_uni_value_Avg, 1}, {ZHBHJT_IEID_uni_value_Max,1},},},
+	{ZHBHJT_IEID_cmb_MAX,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
 };
 
-//消息定义
+//消息定义：下行，从服务器来的消息
 ZHBHJT212MsgFormatStaticCfg_t gZhbhjtMsgFormatCfgDlReq[] = {
-	{ZHBHJT_IE_uni_CNcode_MIN                                , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_init_set_resend_time_out_req       , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_init_set_uplimit_duration_req      , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_field_time_req             , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_set_field_time_req             , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_req    , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_set_pollution_limitaion_req    , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_field_addr_req             , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_set_field_addr_req             , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_data_report_time_req       , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_set_data_report_time_req       , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_data_sample_cycle_req      , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_set_data_sample_cycle_req      , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_set_access_pswd_req            , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_cmd_notification_req               , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_cmd_data_req                       , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_rt_data_req                , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req       , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_equ_status_req             , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_stop_monitor_equ_status_req    , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_req     , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_req         , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_req     , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req    , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_req , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_ctr_calabration_req                , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_ctr_start_sample_req               , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_ctr_equ_operation_req              , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req             , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_MAX                                , 0,0,0,0,0,0,0,0},
+	{ZHBHJT_IE_uni_CNcode_MIN_0000                                , {{0,0},{0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_init_set_resend_time_out_req_1000       , {{ZHBHJT_IEID_uni_OverTime,   1},  {ZHBHJT_IEID_uni_ReCount,   1}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_init_set_uplimit_duration_req_1001      , {{ZHBHJT_IEID_uni_WarnTime,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_field_time_req_1011             , {{0,0},{0,0},{0,0},{0,0},},},//Done
+	{ZHBHJT_IE_uni_CNcode_par_set_field_time_req_1012             , {{ZHBHJT_IEID_uni_SystemTime,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_req_1021    , {{ZHBHJT_IEID_uni_PolId,   HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_set_pollution_limitaion_req_1022    , {{ZHBHJT_IEID_cmb_alm_lim_rng,   HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_field_addr_req_1031             , {{0,0},{0,0},{0,0},{0,0},},},//Done
+	{ZHBHJT_IE_uni_CNcode_par_set_field_addr_req_1032             , {{ZHBHJT_IEID_uni_AlarmTarget,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_data_report_time_req_1041       , {{0,0},{0,0},{0,0},{0,0},},},//Done
+	{ZHBHJT_IE_uni_CNcode_par_set_data_report_time_req_1042       , {{ZHBHJT_IEID_uni_ReportTime,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_rtdi_interval_req_1061      , {{0,0},{0,0},{0,0},{0,0},},},//Done
+	{ZHBHJT_IE_uni_CNcode_par_set_rtdi_interval_req_1062      , {{ZHBHJT_IEID_uni_RtdInterval,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_set_access_pswd_req_1072            , {{ZHBHJT_IEID_uni_SetPwd,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_cmd_notification_req_9013               , {{ZHBHJT_IEID_uni_CfmQN,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_cmd_data_req_9014                       , {{ZHBHJT_IEID_uni_CfmQN,   1},  {ZHBHJT_IEID_uni_CfmCN,   1},{ZHBHJT_IEID_uni_CfmPNUM,   0xFF},{ZHBHJT_IEID_uni_CfmPNO,   0xFF},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_rt_data_req_2011                , {{0,0},{0,0},{0,0},{0,0},},},//Done
+	{ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req_2012       , {{0,0},{0,0},{0,0},{0,0},},},//Done
+	{ZHBHJT_IE_uni_CNcode_dat_get_equ_status_req_2021             , {{0,0},{0,0},{0,0},{0,0},},},//Done
+	{ZHBHJT_IE_uni_CNcode_dat_stop_monitor_equ_status_req_2022    , {{0,0},{0,0},{0,0},{0,0},},},//Done
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_req_2031     , {{ZHBHJT_IEID_cmb_gap_time,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_req_2041         , {{ZHBHJT_IEID_cmb_gap_time,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_req_2051     , {{ZHBHJT_IEID_cmb_gap_time,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req_2061    , {{ZHBHJT_IEID_cmb_gap_time,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_req_2071 , {{ZHBHJT_IEID_cmb_gap_time,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_ctr_calabration_req_3011                , {{ZHBHJT_IEID_uni_PolId,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_ctr_start_sample_req_3012               , {{ZHBHJT_IEID_uni_PolId,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_ctr_equ_operation_req_3013              , {{0,0},{0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req_3014             , {{ZHBHJT_IEID_cmb_multi_ctime,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_MAX_9999                                , {{0,0},{0,0},{0,0},{0,0},},},
 };
 
+//消息定义：上行，送到服务器来的消息
 ZHBHJT212MsgFormatStaticCfg_t gZhbhjtMsgFormatCfgUlResp[] = {
-	{ZHBHJT_IE_uni_CNcode_MIN                                , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_field_time_resp            , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_resp   , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_field_addr_resp            , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp      , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_par_get_data_sample_cycle_resp     , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_cmd_answer_resp                    , ZHBHJT_IEID_uni_CfmQN,   1,  ZHBHJT_IEID_uni_QnRtn,    1, 0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp          , ZHBHJT_IEID_uni_CfmQN,   1,  ZHBHJT_IEID_uni_ExeRtn,   1, 0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_cmd_notification_resp              , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_rt_data_resp               , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_cmd_data_resp                      , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_equ_status_resp            , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp    , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_resp        , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp    , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_resp   , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_resp, 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_event_resp , 0,0,0,0,0,0,0,0},
-	{ZHBHJT_IE_uni_CNcode_MAX                                , 0,0,0,0,0,0,0,0},
+	{ZHBHJT_IE_uni_CNcode_MIN_0000                                , {{0,0},{0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_field_time_resp_1011            , {{ZHBHJT_IEID_uni_CfmQN,   1},  {ZHBHJT_IEID_uni_SystemTime, 1}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_resp_1021   , {{ZHBHJT_IEID_uni_CfmQN,   1},  {ZHBHJT_IEID_cmb_alm_lim_rng,HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_field_addr_resp_1031            , {{ZHBHJT_IEID_uni_CfmQN,   1},  {ZHBHJT_IEID_uni_AlarmTarget, 1}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp_1041      , {{ZHBHJT_IEID_uni_CfmQN,   1},  {ZHBHJT_IEID_uni_ReportTime, 1}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_par_get_rtdi_interval_resp_1061     , {{ZHBHJT_IEID_uni_CfmQN,   1},  {ZHBHJT_IEID_uni_RtdInterval, 1}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_cmd_answer_resp_9011                    , {{ZHBHJT_IEID_uni_CfmQN,   1},  {ZHBHJT_IEID_uni_QnRtn,    1}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp_9012          , {{ZHBHJT_IEID_uni_CfmQN,   1},  {ZHBHJT_IEID_uni_ExeRtn,   1}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_cmd_notification_resp_9013              , {{ZHBHJT_IEID_uni_CfmQN,   1},  {0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_rt_data_resp_2011               , {{ZHBHJT_IEID_uni_DataTime,1},  {ZHBHJT_IEID_cmb_multi_rtd,HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_cmd_data_resp_9014                      , {{0,0},{0,0},{0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_equ_status_resp_2021            , {{ZHBHJT_IEID_uni_DataTime,1},  {ZHBHJT_IEID_uni_RS,HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp_2031    , {{ZHBHJT_IEID_uni_DataTime,1},  {ZHBHJT_IEID_cmb_pol_report,HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_resp_2041        , {{ZHBHJT_IEID_uni_DataTime,1},  {ZHBHJT_IEID_uni_RT,HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp_2051    , {{ZHBHJT_IEID_uni_DataTime,1},  {ZHBHJT_IEID_cmb_pol_report,HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_resp_2061   , {{ZHBHJT_IEID_uni_DataTime,1},  {ZHBHJT_IEID_cmb_pol_report,HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_resp_2071, {{ZHBHJT_IEID_uni_DataTime,1},  {ZHBHJT_IEID_uni_Ala,HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_event_resp_2072 , {{ZHBHJT_IEID_uni_AlarmTime,1}, {ZHBHJT_IEID_cmb_alarm_event,1}, {0,0},{0,0},},},
+	{ZHBHJT_IE_uni_CNcode_MAX_9999                                , {{0,0},{0,0},{0,0},{0,0},},},
 };
+//ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_resp: Not exist, add temperay
+
 
 //PACK函数入口
 OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_t *inputPar, CloudDataSendBuf_t *output)

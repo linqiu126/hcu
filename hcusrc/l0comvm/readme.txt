@@ -16,12 +16,16 @@
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
 
+//= ZJL, 2017 Feb.20, CURRENT_SW_DELIVERY 179=>AQYC项目
+=完成消息编码中字典的全部构造
+
+
 
 //= ZJL, 2017 Feb.19, CURRENT_SW_DELIVERY 178=>AQYC项目
 =完成了LLC层所有的链路逻辑控制功能
 =修正密码，使用char s[7]的方式，而非整数
 =将xxx-Value的数据考虑在内
-
+=通过将信息单元／消息和函数命名为尾数编号，找到了潜在的错误，确保编码和俗名的一致性
 
 //= ZJL, 2017 Feb.18, CURRENT_SW_DELIVERY 177=>AQYC项目
 =增加LLCZHB模块，以及ZHBHJT212-L2CODEC两个模块，分别完成LLC链路层功能，以及MAC层的编解码功能。MAC依然挂在CLOUDVELA模块中。

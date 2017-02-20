@@ -42,34 +42,35 @@ typedef struct ZHBHJT212MsgIeEleStaticCfg
 #define ZHBHJT_PFDT_FLOAT   6  //浮点
 #define ZHBHJT_PFDT_DBFLT   7  //双精度浮点
 //组合IE的定义：目前考虑最多4次，如果更多的话，需要更加复杂的定义
+typedef struct ZHBHJT212MsgIeCmbBasicStaticCfg
+{
+	const UINT8 ieId;
+	const UINT8 ieRptNbr;
+}ZHBHJT212MsgIeCmbBasicStaticCfg_t;
+#define ZHBHJT_PROTOCOL_FRAME_IE_TO_IECMB_NBR_MAX 4
 typedef struct ZHBHJT212MsgIeCmbStaticCfg
 {
 	const UINT8 cmbIeId;
-	const UINT8 ie1Id;
-	const UINT8 ie1RptNbr;
-	const UINT8 ie2Id;
-	const UINT8 ie2RptNbr;
-	const UINT8 ie3Id;
-	const UINT8 ie3RptNbr;
-	const UINT8 ie4Id;
-	const UINT8 ie4RptNbr;
+	ZHBHJT212MsgIeCmbBasicStaticCfg_t ie[ZHBHJT_PROTOCOL_FRAME_IE_TO_IECMB_NBR_MAX];
 }ZHBHJT212MsgIeCmbStaticCfg_t;
-#define ZHBHJT_PROTOCOL_FRAME_IE_TO_IECMB_NBR_MAX 4
 
 //消息定义
+typedef struct ZHBHJT212MsgMsgBasicStaticCfg
+{
+	const UINT8 ieCmbId;
+	const UINT8 ieCmbRptNbr;
+}ZHBHJT212MsgMsgBasicStaticCfg_t;
+#define ZHBHJT_PROTOCOL_FRAME_IECMB_TO_MSG_NBR_MAX 4
 typedef struct ZHBHJT212MsgFormatStaticCfg
 {
 	const UINT16 cnCode;
-	const UINT8  IeCmb1Index;
-	const UINT8  IeCmb1RptNbr;
-	const UINT8  IeCmb2Index;
-	const UINT8  IeCmb2RptNbr;
-	const UINT8  IeCmb3Index;
-	const UINT8  IeCmb3RptNbr;
-	const UINT8  IeCmb4Index;
-	const UINT8  IeCmb4RptNbr;
+	ZHBHJT212MsgMsgBasicStaticCfg_t IeCmb[ZHBHJT_PROTOCOL_FRAME_IECMB_TO_MSG_NBR_MAX];
 }ZHBHJT212MsgFormatStaticCfg_t;
-#define ZHBHJT_PROTOCOL_FRAME_IECMB_TO_MSG_NBR_MAX 4
+//ieCmbRptNbr取值的逻辑：0表示没有，1-254表示多少，255/0xFF表示可能存在也可以不存在
+
+
+
+
 
 //message pack/unpack
 extern OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_t *inputPar, CloudDataSendBuf_t *output);

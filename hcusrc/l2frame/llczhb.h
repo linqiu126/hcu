@@ -51,32 +51,37 @@ typedef struct gTaskLlczhbContext
 	UINT8 llcState;  //=>链路状态，因为消息简单，必须采用不同的状态来设定状态机
 }gTaskLlczhbContext_t;
 
+typedef enum
+{
+	LLCZHB_STATE_CTRL_NULL = 0,
+	LLCZHB_STATE_CTRL_DEACTIVE,
+	LLCZHB_STATE_CTRL_ACTIVE,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTD_2011,
+	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_RTD_2011,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_EQU_RUN_2021,
+	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN_2021,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN_2051,
+	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_POL_MIN_2051,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_DAY_2031,
+	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_POL_DAY_2031,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT_2041,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_ALA_2071,
+	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE_2072,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_ALARM_LIMITATION_1022,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_ALARM_LIMUTATION_1021,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_DATA_RPT_TIME_1042,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME_1041,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_CALIBRATION_ZERO_3011,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_RTDI_1062,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTDI_1061,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_WARN_TIME_1001,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_INSTANCE_SAMPLE_3012,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE_3014,
+}gTaskLlczhbLlcStateDefinition_t;
+
 #define LLCZHB_CFG_STATIC_LLC_OVERTIME_DUR   10 //in second
 #define LLCZHB_CFG_STATIC_LLC_RESND_CNT   3
-#define LLCZHB_STATE_CTRL_NULL 0
-#define LLCZHB_STATE_CTRL_DEACTIVE 1
-#define LLCZHB_STATE_CTRL_ACTIVE 2
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTD 3
-#define LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_RTD 4
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_EQU_RUN 5
-#define LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN 6
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN 7
-#define LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_POL_MIN 8
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_DAY 9
-#define LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_POL_DAY 10
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT 11
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_ALA 12
-#define LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE 13
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_ALARM_LIMITATION 14
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_ALARM_LIMUTATION 15
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_DATA_RPT_TIME 16
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME 17
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_CALIBRATION_ZERO 18
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_RTDI 19
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTDI 20
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_WARN_TIME 21
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_INSTANCE_SAMPLE 22
-#define LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE 22
+
 
 
 
@@ -96,23 +101,23 @@ OPSTAT func_llczhb_int_init(void);
 void   func_llczhb_stm_main_recovery_from_fault(void);
 OPSTAT func_llczhb_time_out_link_control_process(void);
 //CONTROL COMMAND
-OPSTAT fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(UINT8 qnRtn);
-OPSTAT fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(UINT8 exeRtn);
-OPSTAT fsm_llczhb_send_to_cloud_ctrl_notify_answer(void);
+OPSTAT fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(UINT8 qnRtn);
+OPSTAT fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(UINT8 exeRtn);
+OPSTAT fsm_llczhb_send_to_cloud_ctrl_notify_answer_9013(void);
 //DATA COMMAND
-OPSTAT fsm_llczhb_send_to_cloud_data_get_field_time(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_field_addr(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_data_get_pol_rtd(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_equ_run(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_min_rpt(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_day_rpt(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_today_rt(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_ala_record(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_report_ala_event(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_alarm_limitation(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_report_time(void);
-OPSTAT fsm_llczhb_send_to_cloud_data_get_rtdi_real_time_data_tti(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_field_time_1011(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_field_addr_1031(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_data_get_pol_rtd_2011(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_equ_run_2021(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_min_rpt_2051(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_day_rpt_2031(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_today_rt_2041(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt_2031(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_ala_record_2071(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_report_ala_event_2072(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_alarm_limitation_1021(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_report_time_1041(void);
+OPSTAT fsm_llczhb_send_to_cloud_data_get_rtdi_interval_1061(void);
 
 
 

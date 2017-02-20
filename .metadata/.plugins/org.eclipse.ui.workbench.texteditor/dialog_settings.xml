@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="setpw" key="selection"/>
+		<item value="fsm_llczhb_send_to_cloud_data_get_rtdi_interval_1061" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="setpw"/>
-			<item value="pw"/>
-			<item value="strncpy"/>
-			<item value="strcpy"/>
-			<item value="limitation"/>
-			<item value="msgie_struct_zhbhjt_frame_data_low_upvalue_t"/>
-			<item value=".RT"/>
-			<item value="RT"/>
+			<item value="fsm_llczhb_send_to_cloud_data_get_rtdi_interval_1061"/>
+			<item value="fsm_llczhb_send_to_cloud_ctrl_notify_answer_9013"/>
+			<item value="LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_EQU_RUN_2021"/>
+			<item value="fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt"/>
+			<item value="LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME"/>
+			<item value="HCU_SYSMSG_ZHBHJT_ACTION_DATA_CFM"/>
+			<item value="ZHBHJT_IE_uni_CNcode_MIN"/>
+			<item value="ZHBHJT_MSG_BUF_BODY_ONLY_MAX_LEN"/>
 		</list>
 		<list key="replacehistory">
 			<item value="gapTime"/>

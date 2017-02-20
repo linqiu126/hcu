@@ -199,12 +199,12 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 	//根据不同的接收命令进行判定
 	switch (rcv.head.cn){
 	//初始化超时时间与重发次数
-	case ZHBHJT_IE_uni_CNcode_init_set_resend_time_out_req:
+	case ZHBHJT_IE_uni_CNcode_init_set_resend_time_out_req_1000:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//链路超时与重发次数设置
@@ -212,223 +212,223 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		gTaskLlczhbContext.envSd.resndTimesSet = rcv.dl2Self.ReCount;
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	//现场超限报警时间
-	case ZHBHJT_IE_uni_CNcode_init_set_uplimit_duration_req:
+	case ZHBHJT_IE_uni_CNcode_init_set_uplimit_duration_req_1001:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_WARN_TIME;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_WARN_TIME_1001;
 		snd.dl2Self.WarnTime = rcv.dl2Self.WarnTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_WARN_TIME;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_WARN_TIME_1001;
 		break;
 
 	//获取时间
-	case ZHBHJT_IE_uni_CNcode_par_get_field_time_req:
+	case ZHBHJT_IE_uni_CNcode_par_get_field_time_req_1011:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//执行上传现场时间到后台
-		if (fsm_llczhb_send_to_cloud_data_get_field_time() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_field_time_1011() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	//设置本地时间
-	case ZHBHJT_IE_uni_CNcode_par_set_field_time_req:
+	case ZHBHJT_IE_uni_CNcode_par_set_field_time_req_1012:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将收到的时间设置到本地
 		hcu_vm_set_local_time(rcv.dl2Self.SystemTime);
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	//污染物门限
-	case ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_req:
+	case ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_req_1021:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM_1021;
 		snd.dl2Self.nbrOfPolId = rcv.dl2Self.nbrOfPolId;
 		memcpy(&(rcv.dl2Self.multiPolid), &(rcv.dl2Self.multiPolid), sizeof(UINT8)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_ALARM_LIMUTATION;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_ALARM_LIMUTATION_1021;
 
 		break;
 
 	//设置污染物汇报门限值
-	case ZHBHJT_IE_uni_CNcode_par_set_pollution_limitaion_req:
+	case ZHBHJT_IE_uni_CNcode_par_set_pollution_limitaion_req_1022:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_ALMLIM;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_ALMLIM_1022;
 		snd.dl2Self.nbrOfLimitation = rcv.dl2Self.nbrOfLimitation;
 		memcpy(&(rcv.dl2Self.limitation), &(rcv.dl2Self.limitation), sizeof(msgie_struct_zhbhjt_frame_data_low_upvalue_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_ALARM_LIMITATION;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_ALARM_LIMITATION_1022;
 
 		//等待上面的传感器设置的结果L3MOD_LLCZHB_CTRL_RESP
 		break;
 
 	//提取上位机地址
-	case ZHBHJT_IE_uni_CNcode_par_get_field_addr_req:
+	case ZHBHJT_IE_uni_CNcode_par_get_field_addr_req_1031:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//读取上位机地址并发送到后台
-		if (fsm_llczhb_send_to_cloud_data_get_field_addr() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_field_addr_1031() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	//设置上位机地址
-	case ZHBHJT_IE_uni_CNcode_par_set_field_addr_req:
+	case ZHBHJT_IE_uni_CNcode_par_set_field_addr_req_1032:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//设置上位机地址
 		gTaskLlczhbContext.envSd.AlarmTarget = rcv.dl2Self.AlarmTarget;
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	//设置数据上报时间
-	case ZHBHJT_IE_uni_CNcode_par_get_data_report_time_req:
+	case ZHBHJT_IE_uni_CNcode_par_get_data_report_time_req_1041:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_RPT_TIME;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_RPT_TIME_1041;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME_1041;
 		break;
 
 	//设置数据上报时间
-	case ZHBHJT_IE_uni_CNcode_par_set_data_report_time_req:
+	case ZHBHJT_IE_uni_CNcode_par_set_data_report_time_req_1042:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_RPT_TIME;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_RPT_TIME_1042;
 		snd.dl2Self.ReportTime = rcv.dl2Self.ReportTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_DATA_RPT_TIME;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_DATA_RPT_TIME_1042;
 		break;
 
 	//提取实时采样数据上报间隔
-	case ZHBHJT_IE_uni_CNcode_par_get_data_sample_cycle_req:
+	case ZHBHJT_IE_uni_CNcode_par_get_rtdi_interval_req_1061:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_RTDI;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_RTDI_1061;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTDI;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTDI_1061;
 		break;
 
 	//设置实时采样数据上报间隔
-	case ZHBHJT_IE_uni_CNcode_par_set_data_sample_cycle_req:
+	case ZHBHJT_IE_uni_CNcode_par_set_rtdi_interval_req_1062:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062;
 		snd.dl2Self.RtdInterval = rcv.dl2Self.RtdInterval;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_RTDI;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_RTDI_1062;
 		break;
 
 	//设置新的密码
-	case ZHBHJT_IE_uni_CNcode_par_set_access_pswd_req:
+	case ZHBHJT_IE_uni_CNcode_par_set_access_pswd_req_1072:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
@@ -436,18 +436,18 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		strncpy(gTaskLlczhbContext.envSd.pswd, rcv.setpw, strlen(rcv.setpw));
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	//很可能是超标告警，其它的流程没来过
-	case ZHBHJT_IE_uni_CNcode_cmd_notification_req:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE)
+	case ZHBHJT_IE_uni_CNcode_cmd_notification_req_9013:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE_2072)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Wrong state entered!\n");
 
 		//STOP TIMER
@@ -458,30 +458,30 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case ZHBHJT_IE_uni_CNcode_cmd_data_req:
+	case ZHBHJT_IE_uni_CNcode_cmd_data_req_9014:
 		break;
 
 	//实时数据采集
-	case ZHBHJT_IE_uni_CNcode_dat_get_rt_data_req:
+	case ZHBHJT_IE_uni_CNcode_dat_get_rt_data_req_2011:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RTD;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RTD_2011;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTD;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTD_2011;
 		break;
 
 	//停止查看数据
-	case ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_RTD)
+	case ZHBHJT_IE_uni_CNcode_dat_stop_monitor_rt_data_req_2012:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_RTD_2011)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Wrong state of receive info!\n");
 
 		//STOP TIMER
@@ -490,39 +490,39 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		//发送CTRL_CMD给L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD_2012;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 
 		//通知应答
-		if (fsm_llczhb_send_to_cloud_ctrl_notify_answer() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_notify_answer_9013() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 
 		break;
 
 	//取污染治理设备运行状态
-	case ZHBHJT_IE_uni_CNcode_dat_get_equ_status_req:
+	case ZHBHJT_IE_uni_CNcode_dat_get_equ_status_req_2021:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN_2021;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_EQU_RUN;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_EQU_RUN_2021;
 
 		break;
 
 	//停止查看设备运行状态
-	case ZHBHJT_IE_uni_CNcode_dat_stop_monitor_equ_status_req:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN)
+	case ZHBHJT_IE_uni_CNcode_dat_stop_monitor_equ_status_req_2022:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN_2021)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Wrong state of receive info!\n");
 
 		//STOP TIMER
@@ -531,162 +531,162 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		msg_struct_llczhb_l3mod_ctrl_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN_2022;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 
 		//通知应答
-		if (fsm_llczhb_send_to_cloud_ctrl_notify_answer() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_notify_answer_9013() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	//获取污染物日数据
-	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_req:
+	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_req_2031:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT_2031;
 		snd.dl2Self.gapTime.BeginTime = rcv.dl2Self.gapTime.BeginTime;
 		snd.dl2Self.gapTime.EndTime = rcv.dl2Self.gapTime.EndTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_DAY;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_DAY_2031;
 
 		break;
 
 	//获取今天的运行的日数据
-	case ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_req:
+	case ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_req_2041:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RT;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RT_2041;
 		snd.dl2Self.gapTime.BeginTime = rcv.dl2Self.gapTime.BeginTime;
 		snd.dl2Self.gapTime.EndTime = rcv.dl2Self.gapTime.EndTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT_2041;
 		break;
 
 	//暂时只支持无应答／无拆分包的流程，其它的两个流程，未来再完善
 	//fsm_llczhb_send_to_cloud_req_answer_directly_in_l2llc()中FLAG=0,表示无应答，FLAG=1，表示有应答但不拆包，FLAG=3标识有应答且拆包
-	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_req:
+	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_req_2051:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051;
 		snd.dl2Self.gapTime.BeginTime = rcv.dl2Self.gapTime.BeginTime;
 		snd.dl2Self.gapTime.EndTime = rcv.dl2Self.gapTime.EndTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN_2051;
 
 		break;
 
-	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req:
+	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req_2061:
 		break;
 
 	//取污染物报警记录
-	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_req:
+	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_req_2071:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_ALA;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_ALA_2071;
 		snd.dl2Self.gapTime.BeginTime = rcv.dl2Self.gapTime.BeginTime;
 		snd.dl2Self.gapTime.EndTime = rcv.dl2Self.gapTime.EndTime;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_ALA;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_ALA_2071;
 		break;
 
 	//下端设备校零校满
-	case ZHBHJT_IE_uni_CNcode_ctr_calabration_req:
+	case ZHBHJT_IE_uni_CNcode_ctr_calabration_req_3011:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_ZERO;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_ZERO_3011;
 		snd.dl2Self.singlePolId = rcv.dl2Self.singlePolId;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_CALIBRATION_ZERO;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_CALIBRATION_ZERO_3011;
 		break;
 
 	//立即启动设备采样
-	case ZHBHJT_IE_uni_CNcode_ctr_start_sample_req:
+	case ZHBHJT_IE_uni_CNcode_ctr_start_sample_req_3012:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_INST_SAMPLE;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_INST_SAMPLE_3012;
 		snd.dl2Self.singlePolId = rcv.dl2Self.singlePolId;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_INSTANCE_SAMPLE;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_INSTANCE_SAMPLE_3012;
 		break;
 
-	case ZHBHJT_IE_uni_CNcode_ctr_equ_operation_req:
+	case ZHBHJT_IE_uni_CNcode_ctr_equ_operation_req_3013:
 		break;
 
 	//设置设备采样周期
-	case ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req:
+	case ZHBHJT_IE_uni_CNcode_ctr_set_sample_tti_req_3014:
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_ACTIVE;
 
 		//发送L2_LLC反馈给后台
-		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(ZHBHJT_IE_uni_QNRTN_PREPARE_REQ) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//将请求发往L3MOD
 		memset(&snd, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME_3014;
 		snd.dl2Self.nbrOfCTime = rcv.dl2Self.nbrOfCTime;
 		memcpy(&(snd.dl2Self.ctime), &(rcv.dl2Self.ctime), sizeof(msgie_struct_zhbhjt_frame_data_ctime_t));
 		snd.dl2Self.singlePolId = rcv.dl2Self.singlePolId;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE_3014;
 		break;
 
 	default:
@@ -710,107 +710,107 @@ OPSTAT fsm_llczhb_l3mod_llczhb_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * p
 	memcpy(&rcv, param_ptr, param_len);
 
 	switch (rcv.actionId){
-	case HCU_SYSMSG_ZHBHJT_ACTION_EXECUTE_FINISH:
+	case HCU_SYSMSG_ZHBHJT_ACTION_EXECUTE_FINISH_9012:
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_DATA_CFM:
+	case HCU_SYSMSG_ZHBHJT_ACTION_DATA_CFM_9014:
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_FIELD_TIME:
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_FIELD_TIME_1012:
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD:
+	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD_2012:
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN:
+	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN_2022:
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_ALMLIM:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_ALARM_LIMITATION)
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_ALMLIM_1022:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_ALARM_LIMITATION_1022)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 
 		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(rcv.ul2Cloud.ExeRtn) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(rcv.ul2Cloud.ExeRtn) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_ALARM_LIMUTATION)
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM_1021:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_ALARM_LIMUTATION_1021)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfAlmLim = rcv.ul2Cloud.nbrOfAlmLim;
 		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.limitation), &(rcv.ul2Cloud.limitation), sizeof(msgie_struct_zhbhjt_frame_data_low_upvalue_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		gTaskLlczhbContext.llcSn.ulTx.Ala = rcv.ul2Cloud.Ala;
-		if (fsm_llczhb_send_to_cloud_data_get_alarm_limitation() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_alarm_limitation_1021() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(rcv.ul2Cloud.ExeRtn) == FAILURE)
-			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
-		break;
-
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_MNADDR:
-		break;
-
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_RPT_TIME:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_DATA_RPT_TIME)
-			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
-
-		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(rcv.ul2Cloud.ExeRtn) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(rcv.ul2Cloud.ExeRtn) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_ZERO:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_CALIBRATION_ZERO)
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_MNADDR_1032:
+		break;
+
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_RPT_TIME_1042:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_DATA_RPT_TIME_1042)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 
 		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(rcv.ul2Cloud.ExeRtn) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(rcv.ul2Cloud.ExeRtn) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_RTDI)
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_ZERO_3011:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_CALIBRATION_ZERO_3011)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 
 		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(rcv.ul2Cloud.ExeRtn) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(rcv.ul2Cloud.ExeRtn) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_WARN_TIME:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_WARN_TIME)
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_RTDI_1062)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 
 		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(rcv.ul2Cloud.ExeRtn) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(rcv.ul2Cloud.ExeRtn) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_INST_SAMPLE:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_INSTANCE_SAMPLE)
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_WARN_TIME_1001:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_WARN_TIME_1001)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 
 		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(rcv.ul2Cloud.ExeRtn) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(rcv.ul2Cloud.ExeRtn) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE)
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_INST_SAMPLE_3012:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_INSTANCE_SAMPLE_3012)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 
 		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(rcv.ul2Cloud.ExeRtn) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(rcv.ul2Cloud.ExeRtn) == FAILURE)
+			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
+		break;
+
+	case HCU_SYSMSG_ZHBHJT_ACTION_SET_SAMPLE_CTIME_3014:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_SAMPLE_CYCLE_3014)
+			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
+
+		//发送完成终结函数到后台：实际上将根据操作的结果来定，结果写在ExeRtn中吧，省得再多费一个新的域
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(rcv.ul2Cloud.ExeRtn) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
@@ -836,117 +836,117 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 	memcpy(&rcv, param_ptr, param_len);
 
 	switch (rcv.actionId){
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RTD:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTD)
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RTD_2011:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTD_2011)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfCRtd = rcv.ul2Cloud.nbrOfCRtd;
 		memcpy(&gTaskLlczhbContext.llcSn.ulTx.rtd, &rcv.ul2Cloud.rtd, sizeof(msgie_struct_zhbhjt_frame_data_pol_rtd_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		gTaskLlczhbContext.llcSn.ulTx.DataTime = rcv.ul2Cloud.DataTime;
-		if (fsm_llczhb_send_to_cloud_data_data_get_pol_rtd() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_data_get_pol_rtd_2011() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_RTD;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_RTD_2011;
 		gTaskLlczhbContext.resndCnt = gTaskLlczhbContext.envSd.resndTimesSet;
 		//启动定时器
 		if (hcu_timer_start(TASK_ID_LLCZHB, TIMER_ID_1S_LLCZHB_LINK_CTRL, gTaskLlczhbContext.envSd.overTimeDur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Start timer error!\n");
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD:
+	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD_2012:
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN:
-		break;
-
-	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_EQU_RUN)
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN_2021:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_EQU_RUN_2021)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfRS = rcv.ul2Cloud.nbrOfRS;
 		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.RS), &(rcv.ul2Cloud.RS), sizeof(msgie_struct_zhbhjt_frame_data_RS_value_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		gTaskLlczhbContext.llcSn.ulTx.DataTime = rcv.ul2Cloud.DataTime;
-		if (fsm_llczhb_send_to_cloud_data_get_equ_run() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_equ_run_2021() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN_2021;
 		gTaskLlczhbContext.resndCnt = gTaskLlczhbContext.envSd.resndTimesSet;
 		//启动定时器
 		if (hcu_timer_start(TASK_ID_LLCZHB, TIMER_ID_1S_LLCZHB_LINK_CTRL, gTaskLlczhbContext.envSd.overTimeDur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Start timer error!\n");
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN)
+	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN_2022:
+		break;
+
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN_2051)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfCMinRpt = rcv.ul2Cloud.nbrOfCMinRpt;
 		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.min), &(rcv.ul2Cloud.min), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		gTaskLlczhbContext.llcSn.ulTx.DataTime = rcv.ul2Cloud.DataTime;
-		if (fsm_llczhb_send_to_cloud_data_get_pol_min_rpt() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_pol_min_rpt_2051() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_DAY)
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT_2031:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_DAY_2031)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfCMinRpt = rcv.ul2Cloud.nbrOfCMinRpt;
 		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.min), &(rcv.ul2Cloud.min), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		gTaskLlczhbContext.llcSn.ulTx.DataTime = rcv.ul2Cloud.DataTime;
-		if (fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt_2031() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RT:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT)
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RT_2041:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT_2041)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfRT = rcv.ul2Cloud.nbrOfRT;
 		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.RT), &(rcv.ul2Cloud.RT), sizeof(msgie_struct_zhbhjt_frame_data_RT_value_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 		gTaskLlczhbContext.llcSn.ulTx.DataTime = rcv.ul2Cloud.DataTime;
-		if (fsm_llczhb_send_to_cloud_data_get_pol_today_rt() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_pol_today_rt_2041() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_ALA:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_ALA)
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_ALA_2071:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_ALA_2071)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.Ala = rcv.ul2Cloud.Ala;
 		gTaskLlczhbContext.llcSn.ulTx.DataTime = rcv.ul2Cloud.DataTime;
-		if (fsm_llczhb_send_to_cloud_data_get_pol_ala_record() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_pol_ala_record_2071() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	//超标报警，这个是主动发送的，没有任何之前遗存的动态上下文
-	case HCU_SYSMSG_ZHBHJT_ACTION_SND_ALM_EVT:
+	case HCU_SYSMSG_ZHBHJT_ACTION_SND_ALM_EVT_2072:
 		//发送数据到后台
 		memset(&gTaskLlczhbContext.llcSn, 0, sizeof(gTaskLlczhbContextLinkDynamic_t));
 		gTaskLlczhbContext.llcSn.ulTx.Ala = rcv.ul2Cloud.Ala;
 		gTaskLlczhbContext.llcSn.ulTx.AlarmTime = rcv.ul2Cloud.AlarmTime;
 		gTaskLlczhbContext.llcSn.ulTx.AlarmType = rcv.ul2Cloud.AlarmType;
-		if (fsm_llczhb_send_to_cloud_data_report_ala_event() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_report_ala_event_2072() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE;
+		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE_2072;
 
 		//启动定时器，等待通知应答
 		gTaskLlczhbContext.resndCnt = gTaskLlczhbContext.envSd.resndTimesSet;
@@ -956,36 +956,36 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM:
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM_1021:
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_MNADDR:
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_MNADDR_1031:
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_RPT_TIME:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME)
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_RPT_TIME_1041:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_DATA_RPT_TIME_1041)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.ReportTime = rcv.ul2Cloud.ReportTime;
-		if (fsm_llczhb_send_to_cloud_data_get_report_time() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_report_time_1041() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_RTDI:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTDI)
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_RTDI_1061:
+		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_RTDI_1061)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.RtdInterval = rcv.ul2Cloud.RtdInterval;
-		if (fsm_llczhb_send_to_cloud_data_get_rtdi_real_time_data_tti() == FAILURE)
+		if (fsm_llczhb_send_to_cloud_data_get_rtdi_interval_1061() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
-		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
+		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
@@ -998,13 +998,13 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 }
 
 //发送L2FRAME给后台
-OPSTAT fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(UINT8 qnRtn)
+OPSTAT fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(UINT8 qnRtn)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_answer_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_answer_resp_9011;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	snd.head.ansFlag = 0;
 	//表示不需要分段
@@ -1019,13 +1019,13 @@ OPSTAT fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc(UINT8 qnRtn)
 }
 
 //通用API，将执行结果函数发送给后台
-OPSTAT fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(UINT8 exeRtn)
+OPSTAT fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(UINT8 exeRtn)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp_9012;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1041,13 +1041,13 @@ OPSTAT fsm_llczhb_send_to_cloud_ctrl_execute_operation_result(UINT8 exeRtn)
 }
 
 //通知应答
-OPSTAT fsm_llczhb_send_to_cloud_ctrl_notify_answer(void)
+OPSTAT fsm_llczhb_send_to_cloud_ctrl_notify_answer_9013(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_operation_result_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_notification_resp_9013;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1062,13 +1062,13 @@ OPSTAT fsm_llczhb_send_to_cloud_ctrl_notify_answer(void)
 }
 
 //将新时间发给后台
-OPSTAT fsm_llczhb_send_to_cloud_data_get_field_time(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_field_time_1011(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_field_time_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_field_time_resp_1011;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1084,13 +1084,13 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_field_time(void)
 }
 
 //提取上位机地址并发送到后台
-OPSTAT fsm_llczhb_send_to_cloud_data_get_field_addr(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_field_addr_1031(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_field_addr_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_field_addr_resp_1031;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1106,13 +1106,13 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_field_addr(void)
 }
 
 //发送数据到后台GET_POL_RTD
-OPSTAT fsm_llczhb_send_to_cloud_data_data_get_pol_rtd(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_data_get_pol_rtd_2011(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_rt_data_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_rt_data_resp_2011;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1129,13 +1129,13 @@ OPSTAT fsm_llczhb_send_to_cloud_data_data_get_pol_rtd(void)
 }
 
 //发送数据到后台GET_EAU_RUN
-OPSTAT fsm_llczhb_send_to_cloud_data_get_equ_run(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_equ_run_2021(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_equ_status_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_equ_status_resp_2021;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1152,13 +1152,13 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_equ_run(void)
 }
 
 //发送数据到后台GET_POL_MIN_REPORT
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_min_rpt(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_min_rpt_2051(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp_2051;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1175,13 +1175,13 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_min_rpt(void)
 }
 
 //发送数据到后台GET_POL_DAY_REPORT
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt_2031(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp_2031;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1198,13 +1198,13 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_his_day_rpt(void)
 }
 
 //发送数据到后台GET_POL_TODAY_RT
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_today_rt(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_today_rt_2041(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_resp_2041;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1221,13 +1221,13 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_today_rt(void)
 }
 
 //发送数据到后台GET_POL_ALA_RECORD
-OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_ala_record(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_ala_record_2071(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_resp_2071;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1243,14 +1243,14 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_ala_record(void)
 }
 
 //发送数据到后台REPORT_ALA_EVENT
-OPSTAT fsm_llczhb_send_to_cloud_data_report_ala_event(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_report_ala_event_2072(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	//初次发送出去，需要带QN信息
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_event_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_event_resp_2072;
 	snd.head.qn = time(0) * 1000;
 	gTaskLlczhbContext.frameHead.qn = snd.head.qn; //存下来用于比对。当收到消息时，这个域是空的，但会包含在消息体中
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
@@ -1269,14 +1269,14 @@ OPSTAT fsm_llczhb_send_to_cloud_data_report_ala_event(void)
 }
 
 //发送数据到后台SET_UP_LIMITATION
-OPSTAT fsm_llczhb_send_to_cloud_data_get_alarm_limitation(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_alarm_limitation_1021(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	//初次发送出去，需要带QN信息
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_pollution_limitaion_resp_1021;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1294,14 +1294,14 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_alarm_limitation(void)
 
 
 //发送数据到后台GET_REPORT_TIME
-OPSTAT fsm_llczhb_send_to_cloud_data_get_report_time(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_report_time_1041(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	//初次发送出去，需要带QN信息
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp_1041;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1318,14 +1318,14 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_report_time(void)
 
 
 //发送数据到后台GET_RTDI_TIME
-OPSTAT fsm_llczhb_send_to_cloud_data_get_rtdi_real_time_data_tti(void)
+OPSTAT fsm_llczhb_send_to_cloud_data_get_rtdi_interval_1061(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 
 	//初次发送出去，需要带QN信息
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
-	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_data_report_time_resp;
+	snd.head.cn = ZHBHJT_IE_uni_CNcode_par_get_rtdi_interval_resp_1061;
 	strncpy(snd.head.pw, gTaskLlczhbContext.envSd.pswd, strlen(gTaskLlczhbContext.envSd.pswd));
 	//表示不需要回复Flag标识
 	snd.head.ansFlag = 0xFF;
@@ -1347,22 +1347,22 @@ OPSTAT func_llczhb_time_out_link_control_process(void)
 	if (gTaskLlczhbContext.llcSn.resndCnt <=0) return SUCCESS;
 
 	gTaskLlczhbContext.llcSn.resndCnt--;
-	if ((gTaskLlczhbContext.llcSn.resndCnt >0) && (gTaskLlczhbContext.llcState == LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_RTD)){
-		if (fsm_llczhb_send_to_cloud_data_data_get_pol_rtd() == FAILURE)
+	if ((gTaskLlczhbContext.llcSn.resndCnt >0) && (gTaskLlczhbContext.llcState == LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_RTD_2011)){
+		if (fsm_llczhb_send_to_cloud_data_data_get_pol_rtd_2011() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		if (hcu_timer_start(TASK_ID_LLCZHB, TIMER_ID_1S_LLCZHB_LINK_CTRL, gTaskLlczhbContext.envSd.overTimeDur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Start timer error!\n");
 	}
 
-	else if ((gTaskLlczhbContext.llcSn.resndCnt >0) && (gTaskLlczhbContext.llcState == LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN)){
-		if (fsm_llczhb_send_to_cloud_data_get_equ_run() == FAILURE)
+	else if ((gTaskLlczhbContext.llcSn.resndCnt >0) && (gTaskLlczhbContext.llcState == LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN_2021)){
+		if (fsm_llczhb_send_to_cloud_data_get_equ_run_2021() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		if (hcu_timer_start(TASK_ID_LLCZHB, TIMER_ID_1S_LLCZHB_LINK_CTRL, gTaskLlczhbContext.envSd.overTimeDur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Start timer error!\n");
 	}
 
-	else if ((gTaskLlczhbContext.llcSn.resndCnt >0) && (gTaskLlczhbContext.llcState == LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE)){
-		if (fsm_llczhb_send_to_cloud_data_report_ala_event() == FAILURE)
+	else if ((gTaskLlczhbContext.llcSn.resndCnt >0) && (gTaskLlczhbContext.llcState == LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_REPORT_ALA_TYPE_2072)){
+		if (fsm_llczhb_send_to_cloud_data_report_ala_event_2072() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 		if (hcu_timer_start(TASK_ID_LLCZHB, TIMER_ID_1S_LLCZHB_LINK_CTRL, gTaskLlczhbContext.envSd.overTimeDur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Start timer error!\n");
