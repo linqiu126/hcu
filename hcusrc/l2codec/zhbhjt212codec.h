@@ -22,8 +22,8 @@
 //Task level definition
 #define ZHBHJT_PROTOCOL_FRAME_FIX_HEAD  "##"
 #define ZHBHJT_PROTOCOL_FRAME_FIX_TAIL  "\r\n"
-#define ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX 100  //考虑到CTime的循环长度，定义的长一点更加安全
-#define ZHBHJT_PROTOCOL_FRAME_DATA_LEN_MAX 1024
+#define ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX 150  //考虑到CTime的循环长度，定义的长一点更加安全
+#define ZHBHJT_PROTOCOL_FRAME_DATA_LEN_MAX 960
 
 
 //ZHBHJT212协议配置静态表
@@ -92,7 +92,11 @@ UINT8 func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(UINT16 cnid);
 UINT16 func_cloudvela_zhbhjt212_caculate_ul2cloud_msg_size_max(UINT16 cnId);
 UINT16 func_cloudvela_zhbhjt212_caculate_dl2hcu_msg_size_max(UINT16 cnId);
 extern void func_cloudvela_zhbhjt212_test(void);
-void func_cloudvela_zhbhjt212_convert_u64time_to_ymd(UINT64 in, char *out);
+void func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(UINT64 in, char *out);
+void func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(UINT32 in, char *out);
+void func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(char *in, UINT64 *out);
+void func_cloudvela_zhbhjt212_convert_ymd_wo_ms_to_u32time(char *in, UINT32 *out);
+//void func_cloudvela_zhbhjt212_convert_u64time_to_ymd_wo_ms(UINT64 in, char *out);
 
 
 //大小端变换宏定义

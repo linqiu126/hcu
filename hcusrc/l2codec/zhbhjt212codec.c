@@ -180,6 +180,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 {
 	int i=0, j = 0, k = 0, m=0, index = 0;
 	char tmp[ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
+	char tmpSecond[ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
 	char ds[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	char cps[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	UINT8 msgidIndex = 0;
@@ -199,7 +200,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 
 	//请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令
 	memset(tmp, 0, sizeof(tmp));
-	func_cloudvela_zhbhjt212_convert_u64time_to_ymd(inputPar->head.qn, tmp);
+	func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(inputPar->head.qn, tmp);
 	strcat(ds, "QN=");
 	strcat(ds, tmp);
 	strcat(ds, ";");
@@ -289,8 +290,8 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	}
 
 	//申请中间消息结构体，准备制造消息
-	char sMsgBuid[ZHBHJT_PFM_CMB2MSG_NBR_MAX][HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX][ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
-	memset(sMsgBuid, 0, sizeof(char)*ZHBHJT_PFM_CMB2MSG_NBR_MAX*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX*ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX);
+	char sMsgBuild[ZHBHJT_PFM_CMB2MSG_NBR_MAX][HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX][ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
+	memset(sMsgBuild, 0, sizeof(char)*ZHBHJT_PFM_CMB2MSG_NBR_MAX*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX*ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX);
 	UINT8 IeCmbIndex = 0;
 	UINT16 PrjLen = 0;
 	for (i=0; i<ZHBHJT_PFM_CMB2MSG_NBR_MAX; i++){
@@ -303,18 +304,19 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 				if ((index>ZHBHJT_IEID_uni_MIN) && (index<ZHBHJT_IEID_uni_MAX) && (rprTimes>0) && (rprTimes<=HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX)){
 					for(m=0; m<rprTimes; m++){
 						memset(tmp, 0, sizeof(tmp));
+						memset(tmpSecond, 0, sizeof(tmpSecond));
 						PrjLen++;  //计算长度
 						//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Index=[%d], rptTimes = %d\n", index, rprTimes);
 						switch(index){
 						case ZHBHJT_IEID_uni_SystemTime:
-							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_SystemTime].keyLable, inputPar->ul2Cloud.SystemTime);
-							strcat(sMsgBuid[i][j], tmp);
+							func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(inputPar->ul2Cloud.SystemTime, tmpSecond);
+							sprintf(tmp, "%s%s,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_SystemTime].keyLable, tmpSecond);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_CfmQN:
-							func_cloudvela_zhbhjt212_convert_u64time_to_ymd(inputPar->cfmQn, tmp);
-							strcat(sMsgBuid[i][j], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_CfmQN].keyLable);
-							strcat(sMsgBuid[i][j], tmp);
-							strcat(sMsgBuid[i][j], ",");
+							func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(inputPar->cfmQn, tmpSecond);
+							sprintf(tmp, "%s%s,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_CfmQN].keyLable, tmpSecond);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_CfmCN:
 							break;
@@ -324,41 +326,41 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							break;
 						case ZHBHJT_IEID_uni_QnRtn:
 							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_QnRtn].keyLable, inputPar->ul2Cloud.QnRtn);
-							strcat(sMsgBuid[i][j], tmp);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_ExeRtn:
 							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_ExeRtn].keyLable, inputPar->ul2Cloud.ExeRtn);
-							strcat(sMsgBuid[i][j], tmp);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_RtdInterval:
 							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_RtdInterval].keyLable, inputPar->ul2Cloud.RtdInterval);
-							strcat(sMsgBuid[i][j], tmp);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_Rtd:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_multi_rtd){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Rtd].keyLable, inputPar->ul2Cloud.rtd[j].Rtd);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}else{
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Rtd].keyLable, inputPar->ul2Cloud.rtd[j].Rtd);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Min:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[j].Min);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Avg:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Max:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[j].Max);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_ZsRtd:
@@ -372,43 +374,43 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 						case ZHBHJT_IEID_uni_polFlag:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_multi_rtd){
 								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.rtd[j].PolFlag);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_Cou:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Cou].keyLable, inputPar->ul2Cloud.min[j].Cou);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_RS:
 							sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.RS[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_RS].keyLable, inputPar->ul2Cloud.RS[j].RS);
-							strcat(sMsgBuid[i][j], tmp);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_RT:
 							sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.RT[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_RT].keyLable, inputPar->ul2Cloud.RT[j].RT);
-							strcat(sMsgBuid[i][j], tmp);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_Ala:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_alarm_event){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.AlarmEvent.PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Ala].keyLable, inputPar->ul2Cloud.AlarmEvent.Ala);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}else{
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.Ala.PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Ala].keyLable, inputPar->ul2Cloud.Ala.Ala);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_UpValue:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_alm_lim_rng){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_UpValue].keyLable, inputPar->ul2Cloud.limitation[j].UpValue);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 								//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Upvalue j=%d, Polid=%d, name=%s\n", j, inputPar->ul2Cloud.limitation[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId]);
 							}
 							break;
 						case ZHBHJT_IEID_uni_LowValue:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_alm_lim_rng){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_LowValue].keyLable, inputPar->ul2Cloud.limitation[j].LowValue);
-								strcat(sMsgBuid[i][j], tmp);
+								strcat(sMsgBuild[i][j], tmp);
 								//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Lowvalue j=%d, Polid=%d, name=%s\n", j, inputPar->ul2Cloud.limitation[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId]);
 							}
 							break;
@@ -419,16 +421,17 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 						case ZHBHJT_IEID_uni_NightData:
 							break;
 						case ZHBHJT_IEID_uni_AlarmTime:
-							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_AlarmTime].keyLable, inputPar->ul2Cloud.AlarmTime);
-							strcat(sMsgBuid[i][j], tmp);
+							func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(inputPar->ul2Cloud.AlarmTime, tmpSecond);
+							sprintf(tmp, "%s%s,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_AlarmTime].keyLable, tmpSecond);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_AlarmType:
 							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_AlarmType].keyLable, inputPar->ul2Cloud.AlarmType);
-							strcat(sMsgBuid[i][j], tmp);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_AlarmTarget:
 							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_AlarmTarget].keyLable, inputPar->ul2Cloud.AlarmTarget);
-							strcat(sMsgBuid[i][j], tmp);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_PolId:
 							break;
@@ -437,12 +440,13 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 						case ZHBHJT_IEID_uni_EndTime:
 							break;
 						case ZHBHJT_IEID_uni_DataTime:
-							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_DataTime].keyLable, inputPar->ul2Cloud.DataTime);
-							strcat(sMsgBuid[i][j], tmp);
+							func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(inputPar->ul2Cloud.DataTime, tmpSecond);
+							sprintf(tmp, "%s%s,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_DataTime].keyLable, tmpSecond);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_ReportTime:
 							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_ReportTime].keyLable, inputPar->ul2Cloud.ReportTime);
-							strcat(sMsgBuid[i][j], tmp);
+							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_DayStdValue:
 							break;
@@ -464,9 +468,9 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 					}//重复rprTimes
 				}//满足进入的条件
 			}//k，表达的是子项目重复
-			if ((PrjLen > 0) && (strlen(sMsgBuid[i][j]) > 0)){
+			if ((PrjLen > 0) && (strlen(sMsgBuild[i][j]) > 0)){
 				//附上;项目分隔符号，而且是将最后的一个逗号改为分号即可
-				if (sMsgBuid[i][j][strlen(sMsgBuid[i][j])-1] == ',') {sMsgBuid[i][j][strlen(sMsgBuid[i][j])-1] = ';'; }
+				if (sMsgBuild[i][j][strlen(sMsgBuild[i][j])-1] == ',') {sMsgBuild[i][j][strlen(sMsgBuild[i][j])-1] = ';'; }
 				//HCU_DEBUG_PRINT_FAT("ZHBHJT212: I/J=%d/%d, String=[%s]\n", i, j, sMsgBuid[i][j]);
 			}
 		}//单独IE
@@ -475,7 +479,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	//全部组合
 	for (i=0; i<ZHBHJT_PFM_CMB2MSG_NBR_MAX; i++){
 		for (j=0; j<HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX; j++){
-			strcat(cps, sMsgBuid[i][j]);
+			strcat(cps, sMsgBuild[i][j]);
 		}
 	}
 	//去掉最后一个分号
@@ -513,58 +517,354 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
 {
 	int i=0, j = 0, k = 0, m=0, index = 0;
+	UINT32 totalLen=0, it=0, tempLen = 0;
+	UINT64 u64Tmp = 0;
+	INT32 int32Tmp = 0;
+	float floatTmp = 0;
 	char tmp[ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
 	char ds[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	char cps[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	UINT8 msgidIndex = 0;
+	char *p1, *p2, *p3;
 
 	//因为是在ZHBHJT212函数体中，所以根据MN地址，自动设置目标服务器为业务服务器
 	gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
 
 	//参数检查
 	//忽略expectMsgId的输入条件，这个变量是为了兼容HUITPXML的函数格式
-	if ((rcv == NULL) || (rcv->length < 20) || (strlen(rcv->buf) < 20) || (strlen(rcv->buf) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX))
-		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: input buffer error!\n");
+	if ((rcv == NULL) || (rcv->length != strlen(rcv->buf)) || (rcv->length < 12) || (rcv->length > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX))
+		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data header!\n");
 
 	index = 0;
 	//取头部
-	if ((rcv->buf[index] !='#')||(rcv->buf[index+1] !='#')){
-		HcuErrorPrint("CLOUDVELA: Invalid received data header!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
+	if ((rcv->buf[index] !='#')||(rcv->buf[index+1] !='#')) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data header!\n");
 	index = index+2;
 
 	//取尾巴  \r = 0D, \n = 0A, should be 0D 0A
-	if ((rcv->buf[rcv->length-2] !='\r')||(rcv->buf[rcv->length-1] !='\n')){
-		HcuErrorPrint("CLOUDVELA: Invalid received data tail!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
-		return FAILURE;
-	}
+	if ((rcv->buf[rcv->length-2] !='\r')||(rcv->buf[rcv->length-1] !='\n')) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data header!\n");
 
+	//取长度
+	memset(tmp, 0, sizeof(tmp));
+	strncpy(tmp, &rcv->buf[index], 4);
+	it = strtoul(tmp, NULL, 10); //10进制
+	index = index + 4;
+	totalLen = rcv->length-12;  //12字符长度的固定包头，这个表示了cp域的具体长度
+	if (it != totalLen) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data length!\n");
 
-/*
-	strncpy(tmp, )
+	//取CRC并做比较判断
+	memset(tmp, 0, sizeof(tmp));
+	strncpy(tmp, &rcv->buf[rcv->length-6], 4);
+	it = strtoul(tmp, NULL, 16);  //16进制
+	UINT16 crc16=0;
+	hcu_vm_calculate_crc_modbus((UINT8*)&rcv->buf[index], rcv->length-12, &crc16);
+	if (it != crc16) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data CRC16!\n");
 
-	//申明输出数组结构
+	//申明输出结构
 	msg_struct_cloudvela_llczhb_frame_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_cloudvela_llczhb_frame_req_t));
+	snd.length = sizeof(msg_struct_cloudvela_llczhb_frame_req_t);
 
-	msgidIndex =  func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(inputPar->head.cn);
-	if ((msgidIndex <= ZHBHJT_IE_uni_CNcode_MIN_0000) || (msgidIndex >= ZHBHJT_IE_uni_CNcode_MAX_9999))
-		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Un-supported message or CN code to be packed!\n");
-
-	//先pack固定FRAME帧头部分
+	//取数据区的请求编码：CP具备长度
 	memset(ds, 0, sizeof(ds));
+	memset(cps, 0, sizeof(cps));
+	p1 = strstr(&rcv->buf[index], "CP=&&");
+	p2 = &rcv->buf[index] + strlen("CP=&&");
+	p3 = strstr(p2, "&&");
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 > p3))
+		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data CP domain!\n");
+	tempLen = p1 - &(rcv->buf[index]);
+	strncpy(ds, &(rcv->buf[index]), tempLen);
+	tempLen = p3 - p2;
+	strncpy(cps, p2, tempLen);
 
-	//请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令
+	//解MN：不能为空
 	memset(tmp, 0, sizeof(tmp));
-	func_cloudvela_zhbhjt212_convert_u64time_to_ymd(inputPar->head.qn, tmp);
-	strcat(ds, "QN=");
-	strcat(ds, tmp);
-	strcat(ds, ";");
-*/
+	p1 = strstr(ds, "MN=");
+	p2 = p1 + strlen("MN=");
+	p3 = strstr(p2, ";");
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received MN head!\n");
+	tempLen = p3 - p2;
+	if (tempLen > 14) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received MN head!\n");
+	strncpy(tmp, p2, tempLen);
+	if (strcmp(zHcuSysEngPar.hwBurnId.zhbMnLable, tmp) != 0) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received MN head!\n");
 
+	//解QN域：允许为空
+	memset(tmp, 0, sizeof(tmp));
+	p1 = strstr(ds, "QN=");
+	p2 = p1 + strlen("QN=");
+	p3 = strstr(p2, ";");
+	if ((p1 != NULL) && (p2 != NULL) && (p3 != NULL) && (p3 > p2)){
+		tempLen = p3 - p2;
+		if (tempLen != 17) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received QN head!\n");
+		strncpy(tmp, p2, tempLen);
+		func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(tmp, &u64Tmp);
+		snd.head.qn = u64Tmp;
+	}
+
+	//解ST领域：不允许为空
+	memset(tmp, 0, sizeof(tmp));
+	p1 = strstr(ds, "ST=");
+	p2 = p1 + strlen("ST=");
+	p3 = strstr(p2, ";");
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received ST head!\n");
+	tempLen = p3 - p2;
+	if (tempLen > 5) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received ST head!\n");
+	strncpy(tmp, p2, tempLen);
+	it = strtoul(tmp, NULL, 10) & 0xFFFF;
+	if ((it != ZHBHJT_IE_uni_STcode_system_interaction) && (it != HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE))
+		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received ST head!\n");
+	snd.head.st = it;
+
+	//解CN领域：不允许为空
+	memset(tmp, 0, sizeof(tmp));
+	p1 = strstr(ds, "CN=");
+	p2 = p1 + strlen("CN=");
+	p3 = strstr(p2, ";");
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received CN head!\n");
+	tempLen = p3 - p2;
+	if (tempLen > 7) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received QN head!\n");
+	strncpy(tmp, p2, tempLen);
+	it = strtoul(tmp, NULL, 10) & 0xFFFF;
+	//这里采用搜索技巧，不在静态表中的CNcode，都是非法CNcode
+	msgidIndex = func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(it);
+	i = func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(ZHBHJT_IE_uni_CNcode_MIN_0000);
+	j = func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(ZHBHJT_IE_uni_CNcode_MAX_9999);
+	if ((msgidIndex == i) || (msgidIndex == j)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received QN head!\n");
+	snd.head.cn = it;
+
+	//解密码：允许为空，交给LLC上层控制
+	memset(tmp, 0, sizeof(tmp));
+	p1 = strstr(ds, "PW=");
+	p2 = p1 + strlen("PW=");
+	p3 = strstr(p2, ";");
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 > p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received PW head!\n");
+	tempLen = p3 - p2;
+	if (tempLen > 6) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received PW head!\n");
+	strncpy(snd.head.pw, p2, tempLen);
+
+	//解PNUM领域：可以为空
+	memset(tmp, 0, sizeof(tmp));
+	p1 = strstr(ds, "PNUM=");
+	p2 = p1 + strlen("PNUM=");
+	p3 = strstr(p2, ";");
+	if ((p1 != NULL) && (p2 != NULL) && (p3 != NULL) && (p3 > p2)){
+		tempLen = p3 - p2;
+		if (tempLen > 4) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received PNUM head!\n");
+		strncpy(tmp, p2, tempLen);
+		snd.head.pnum = strtoul(tmp, NULL, 10) & 0xFFFF;
+	}else{
+		snd.head.pnum = 0xFFFF;
+	}
+
+	//解PNO领域：可以为空
+	memset(tmp, 0, sizeof(tmp));
+	p1 = strstr(ds, "PNO=");
+	p2 = p1 + strlen("PNO=");
+	p3 = strstr(p2, ";");
+	if ((p1 != NULL) && (p2 != NULL) && (p3 != NULL) && (p3 > p2)){
+		tempLen = p3 - p2;
+		if (tempLen > 4) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received PNO head!\n");
+		strncpy(tmp, p2, tempLen);
+		snd.head.pno = strtoul(tmp, NULL, 10) & 0xFFFF;
+	}else{
+		snd.head.pno = 0xFFFF;
+	}
+
+	//解Flag领域：可以为空
+	memset(tmp, 0, sizeof(tmp));
+	p1 = strstr(ds, "Flag=");
+	p2 = p1 + strlen("Flag=");
+	p3 = strstr(p2, ";");
+	if ((p1 != NULL) && (p2 != NULL) && (p3 != NULL) && (p3 > p2)){
+		tempLen = p3 - p2;
+		if (tempLen > 3) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received Flag head!\n");
+		strncpy(tmp, p2, tempLen);
+		snd.head.ansFlag = strtoul(tmp, NULL, 10) & 0xFF;
+	}else{
+		snd.head.ansFlag = 0xFF;
+	}
+
+	//准备解cps域，并按照;的项目切到数组中去
+	if (strlen(cps) == 0){
+		if(hcu_message_send(MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ, TASK_ID_CLOUDVELA, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		return SUCCESS;
+	}
+
+	//先切分到项目中
+	#define ZHBHJT_PFM_CMBIE_MAX    ZHBHJT_PFM_CMB2MSG_NBR_MAX * HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX
+	char sMsgPrj[ZHBHJT_PFM_CMBIE_MAX][ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
+	memset(sMsgPrj, 0, sizeof(char)*ZHBHJT_PFM_CMBIE_MAX*ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX);
+	index = 0;
+	totalLen = strlen(cps);
+	p1 = (char*)&(cps[0]);
+	while (totalLen > 0){
+		p2 = strstr(p1, ";");
+		//最后一段
+		if (p2 == NULL){
+			strncpy(sMsgPrj[index], p1, strlen(p1)<ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX?strlen(p1):ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX);
+			totalLen = 0;
+		}
+		//太长长度的字符串，非法
+		else if ((p2-p1) >= ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX){
+			HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+		}
+		//正常长度
+		else{
+			tempLen = p2 - p1 - 1;
+			strncpy(sMsgPrj[index], p1, tempLen);
+			p1 = p2+1;
+			totalLen = totalLen - tempLen -1;
+			index++;
+			//太长非法
+			if (index >= ZHBHJT_PFM_CMBIE_MAX)
+				HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+		}
+	}
+
+	//再切分到子项目中：LV1考虑到循环数量的复合IE结构，LV2是因为还存在类似于CTime的变态重复
+	char sMsgCut[ZHBHJT_PFM_CMBIE_MAX][HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX][ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
+	memset(sMsgCut, 0, sizeof(char)*ZHBHJT_PFM_CMBIE_MAX*HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX*ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX);
+	for (i=0; i<ZHBHJT_PFM_CMBIE_MAX; i++){
+		if (strlen(sMsgPrj[i]) == 0) continue;
+		p1 = (char*)&(sMsgPrj[i][0]);
+		totalLen = strlen(p1);
+		index = 0;
+		while(totalLen>0){
+			p2 = strstr(p1, ",");
+			//最后一段
+			if (p2 == NULL){
+				strcpy(sMsgCut[i][index], p1);
+				totalLen = 0;
+			}
+			//无效的逗号分隔符
+			if (p2 == p1){
+				p1 = p2+1;
+				totalLen = totalLen - 1;
+			}
+			//正常长度
+			else{
+				tempLen = p2 - p1 - 1;
+				strncpy(sMsgCut[i][index], p1, tempLen);
+				p1 = p2+1;
+				totalLen = totalLen - tempLen -1;
+				index++;
+				//太长非法
+				if (index >= HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+			}
+		}//while(totalLen>0){
+	}//i循环
+
+	//转化数据
+	for (i=0; i<ZHBHJT_PFM_CMBIE_MAX; i++){
+		for(j=0; j<HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX; j++){
+			if (strlen(sMsgCut[i][j] == 0)) continue;
+			//找到了第k个
+			p2 = NULL;
+			for(k=1; k<ZHBHJT_IEID_uni_MAX; k++){
+				p2 = strstr(sMsgCut[i][j], gZhbhjtIeEleCfg[k].keyLable);
+				if(p2 != NULL) break;
+			}
+			//如果未能找到(或者p2==NULL)
+			if (k == ZHBHJT_IEID_uni_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+
+			//找到了，先确定长度是否合法
+			totalLen = strlen(sMsgCut[i][j]);
+			tempLen = strlen(gZhbhjtIeEleCfg[k].keyLable);
+			if (gZhbhjtIeEleCfg[k].backwardMatchFlag == 1) tempLen += ZHBHJT_PFDT_POLID_NAME_LEN_MAX;
+			tempLen += gZhbhjtIeEleCfg[k].maxLen;
+			if (totalLen > tempLen) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+			p1 = (char*)&(sMsgCut[i][j][0]);
+			p3 = p2 + strlen(gZhbhjtIeEleCfg[k].keyLable);
+			//再分类处理
+			switch(k){
+			case ZHBHJT_IEID_uni_SystemTime:
+				break;
+			case ZHBHJT_IEID_uni_CfmQN:
+				break;
+			case ZHBHJT_IEID_uni_CfmCN:
+				break;
+			case ZHBHJT_IEID_uni_CfmPNUM:
+				break;
+			case ZHBHJT_IEID_uni_CfmPNO:
+				break;
+			case ZHBHJT_IEID_uni_QnRtn:
+				break;
+			case ZHBHJT_IEID_uni_ExeRtn:
+				break;
+			case ZHBHJT_IEID_uni_RtdInterval:
+				break;
+			case ZHBHJT_IEID_uni_Rtd:
+				break;
+			case ZHBHJT_IEID_uni_value_Min:
+				break;
+			case ZHBHJT_IEID_uni_value_Avg:
+				break;
+			case ZHBHJT_IEID_uni_value_Max:
+				break;
+			case ZHBHJT_IEID_uni_ZsRtd:
+				break;
+			case ZHBHJT_IEID_uni_value_ZsMin:
+				break;
+			case ZHBHJT_IEID_uni_value_ZsAvg:
+				break;
+			case ZHBHJT_IEID_uni_value_ZsMax:
+				break;
+			case ZHBHJT_IEID_uni_polFlag:
+				break;
+			case ZHBHJT_IEID_uni_Cou:
+				break;
+			case ZHBHJT_IEID_uni_RS:
+				break;
+			case ZHBHJT_IEID_uni_RT:
+				break;
+			case ZHBHJT_IEID_uni_Ala:
+				break;
+			case ZHBHJT_IEID_uni_UpValue:
+				break;
+			case ZHBHJT_IEID_uni_LowValue:
+				break;
+			case ZHBHJT_IEID_uni_Data:
+				break;
+			case ZHBHJT_IEID_uni_DayData:
+				break;
+			case ZHBHJT_IEID_uni_NightData:
+				break;
+			case ZHBHJT_IEID_uni_AlarmTime:
+				break;
+			case ZHBHJT_IEID_uni_AlarmType:
+				break;
+			case ZHBHJT_IEID_uni_AlarmTarget:
+				break;
+			case ZHBHJT_IEID_uni_PolId:
+				break;
+			case ZHBHJT_IEID_uni_BeginTime:
+				break;
+			case ZHBHJT_IEID_uni_EndTime:
+				break;
+			case ZHBHJT_IEID_uni_DataTime:
+				break;
+			case ZHBHJT_IEID_uni_ReportTime:
+				break;
+			case ZHBHJT_IEID_uni_DayStdValue:
+				break;
+			case ZHBHJT_IEID_uni_NightStdValue:
+				break;
+			case ZHBHJT_IEID_uni_SetPwd:
+				break;
+			case ZHBHJT_IEID_uni_OverTime:
+				break;
+			case ZHBHJT_IEID_uni_ReCount:
+				break;
+			case ZHBHJT_IEID_uni_WarnTime:
+				break;
+			case ZHBHJT_IEID_uni_CTime:
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
 
 
@@ -701,8 +1001,8 @@ UINT16 func_cloudvela_zhbhjt212_caculate_dl2hcu_msg_size_max(UINT16 cnId)
 	return totalRes;
 }
 
-//输出的out必须超过20字节的字符串，否则出错
-void func_cloudvela_zhbhjt212_convert_u64time_to_ymd(UINT64 in, char *out)
+//输出的out=17字节的字符串，否则出错
+void func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(UINT64 in, char *out)
 {
 	UINT32 time2Sec = 0, time2Milsec = 0;
 	time2Sec = (UINT32)(in / 1000);
@@ -712,6 +1012,256 @@ void func_cloudvela_zhbhjt212_convert_u64time_to_ymd(UINT64 in, char *out)
 	cu = localtime(&lt);
 	sprintf(out,  "%04d%02d%02d%02d%02d%02d%03d", (UINT16)(1900+cu->tm_year), (UINT8)(1+cu->tm_mon), (UINT8)cu->tm_mday,\
 			(UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec, time2Milsec);
+	return;
+}
+
+//输出的out=14字节的字符串，否则出错
+void func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(UINT32 in, char *out)
+{
+	struct tm *cu;
+	time_t lt = (time_t)in;
+
+	cu = localtime(&lt);
+	sprintf(out, "%04d%02d%02d%02d%02d%02d", (UINT16)(1900+cu->tm_year), (UINT8)(1+cu->tm_mon), (UINT8)cu->tm_mday, \
+			(UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+	return;
+}
+
+//输入必须是17个字符串，输出的U64的数值，否则出错
+void func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(char *in, UINT64 *out)
+{
+	char s[5];
+	struct tm cu;
+	UINT16 t=0;
+	UINT32 time2Milsec = 0;
+	UINT64 tout = 0;
+
+	int len = strlen (in);
+	if ((len > 17) || (len < 12)) return;
+
+	memset(&cu, 0, sizeof(struct tm));
+	memset(s, 0, sizeof(s));
+	strncpy(s, in, 4);
+	t = strtoul(s, NULL, 10) & 0xFFFF;
+	cu.tm_year = t-1900;
+
+	memset(s, 0, sizeof(s));
+	strncpy(s, in+4, 2);
+	t = strtoul(s, NULL, 10) & 0xFF;
+	cu.tm_mon = t-1;
+
+	memset(s, 0, sizeof(s));
+	strncpy(s, in+6, 2);
+	t = strtoul(s, NULL, 10) & 0xFF;
+	cu.tm_mday = t;
+
+	if (len == 17){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+10, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+12, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+14, 3);
+		t = strtoul(s, NULL, 10) & 0xFFFF;
+		time2Milsec = t;
+	}
+	else if (len == 16){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+9, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+11, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+13, 3);
+		t = strtoul(s, NULL, 10) & 0xFFFF;
+		time2Milsec = t;
+	}
+	else if (len == 15){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+9, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+10, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+12, 3);
+		t = strtoul(s, NULL, 10) & 0xFFFF;
+		time2Milsec = t;
+	}
+	else if (len == 14){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+10, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+12, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+
+		time2Milsec = 0;
+	}
+	else if (len == 13){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+9, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+11, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+
+		time2Milsec = 0;
+	}
+	else if (len == 12){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+9, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+10, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+
+		time2Milsec = 0;
+	}
+
+	time_t lt;
+
+	lt = mktime(&cu);
+	tout = lt * 1000 + time2Milsec;
+	*out = tout;
+
+	return;
+}
+
+//输入必须是14个字符串，输出的U32的数值，否则出错
+void func_cloudvela_zhbhjt212_convert_ymd_wo_ms_to_u32time(char *in, UINT32 *out)
+{
+	char s[5];
+	struct tm cu;
+	UINT16 t=0;
+
+	int len = strlen (in);
+	if ((len > 14) && (len < 12)) return;
+
+	memset(&cu, 0, sizeof(struct tm));
+	memset(s, 0, sizeof(s));
+	strncpy(s, in, 4);
+	t = strtoul(s, NULL, 10) & 0xFFFF;
+	cu.tm_year = t-1900;
+
+	memset(s, 0, sizeof(s));
+	strncpy(s, in+4, 2);
+	t = strtoul(s, NULL, 10) & 0xFF;
+	cu.tm_mon = t-1;
+
+	memset(s, 0, sizeof(s));
+	strncpy(s, in+6, 2);
+	t = strtoul(s, NULL, 10) & 0xFF;
+	cu.tm_mday = t;
+
+	if (len == 14){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+10, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+12, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+	}
+	else if (len == 13){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+9, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+11, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+	}
+	else if (len == 12){
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+8, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_hour = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+9, 1);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_min = t;
+
+		memset(s, 0, sizeof(s));
+		strncpy(s, in+10, 2);
+		t = strtoul(s, NULL, 10) & 0xFF;
+		cu.tm_sec = t;
+	}
+
+	time_t lt;
+
+	lt = mktime(&cu);
+	*out = lt;
+
 	return;
 }
 
@@ -847,9 +1397,6 @@ void func_cloudvela_zhbhjt212_test(void)
 		func_cloudvela_zhbhjt212_msg_pack(&rcv, &pMsgOutput);
 		gindex++;
 	}
-
-
-
 }
 
 
