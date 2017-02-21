@@ -3359,16 +3359,16 @@ typedef struct msgie_struct_zhbhjt_frame_head //
 typedef struct  msgie_struct_zhbhjt_frame_data_pol_rtd
 {
 	UINT8  PolId;
-	INT32  Rtd;
+	float  Rtd;
 	char   PolFlag;
 }msgie_struct_zhbhjt_frame_data_pol_rtd_t;
 typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
 {
 	UINT8  PolId;
-	INT32  Cou;
-	INT32  Min;
-	INT32  Avg;
-	INT32  Max;
+	float  Cou;
+	float  Min;
+	float  Avg;
+	float  Max;
 }msgie_struct_zhbhjt_frame_data_pol_min_hour_t;
 typedef struct  msgie_struct_zhbhjt_frame_data_low_upvalue
 {

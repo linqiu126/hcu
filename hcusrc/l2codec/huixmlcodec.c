@@ -1561,7 +1561,7 @@ OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle(StrMsg
 
 void func_cloudvela_huitpxml_msg_generate_test_data(void)
 {
-	/*	int i = 0;
+	/*int i = 0;
 	UINT16 msgProcLen = 0;
 	StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 	CloudDataSendBuf_t pMsgOutput;
@@ -3093,8 +3093,6 @@ OPSTAT func_cloudvela_huitpxml_msg_toxicgas_data_confirm_received_handle(StrMsg_
 
 
 //HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Un-supported message but known message StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t received!\n");
-
-
 
 
 

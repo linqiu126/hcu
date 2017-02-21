@@ -14,11 +14,14 @@
 如果ETHERNET模块不启动，则该问题消失。该问题出现在链路建立不成功，从而ETH模块给自己发送MSG_ID_COM_RESTART以后
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
-
+[BUG#003
+跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
 //= ZJL, 2017 Feb.20, CURRENT_SW_DELIVERY 180=>AQYC项目
 =完成初步的编码过程，问题不少
+=千万小心pack()宏编译包含的内容，不得包含任何内部*h文件，不然可能引起灾难
+
 
 //= ZJL, 2017 Feb.20, CURRENT_SW_DELIVERY 179=>AQYC项目
 =完成消息编码中字典的全部构造

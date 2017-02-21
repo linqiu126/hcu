@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="printf" key="selection"/>
+		<item value="unpack" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="unpack"/>
+			<item value="HCU_DEBUG_PRINT_FAT"/>
+			<item value="ZHBHJT_IE_uni_CNcode_par_get_field_time_resp_1011"/>
+			<item value="func_cloudvela_zhbhjt212_convert_u64time_to_ymd"/>
 			<item value="printf"/>
-			<item value="hcu_vm_engpar_read_phy_boot_cfg"/>
-			<item value="zhbMnLable"/>
-			<item value="func_cloudvela_zhbhjt212_msg_pack"/>
-			<item value="msg_pack"/>
-			<item value="crc"/>
-			<item value="gZhbhjtIeEleCfg"/>
-			<item value="Flag"/>
+			<item value="ZHBHJT_IEID_uni_SystemTime"/>
+			<item value="ZHB:"/>
+			<item value="ZHB"/>
 		</list>
 		<list key="replacehistory">
 			<item value="sprintf"/>

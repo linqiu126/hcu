@@ -7,7 +7,6 @@
 
 #ifndef _ZHBHJT_MSG_IE_DEFINITION_H_
 #define _ZHBHJT_MSG_IE_DEFINITION_H_
-#pragma pack (1) //强制1字节对齐
 #include "../l0comvm/vmlayer.h"
 
 
@@ -303,5 +302,4 @@ typedef struct StrMsg_ZHBHJT_MSGID_uni_general_message
 
 
 
-#pragma pack () //取消字节对齐
 #endif /* _ZHBHJT_MSG_IE_DEFINITION_H_ */

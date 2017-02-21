@@ -132,7 +132,7 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 };
 
 //Global variables
-
+extern HcuSysEngParTab_t 	zHcuSysEngPar; 		//全局工程参数控制表
 
 //Task Global variables
 gTaskCloudvelaContext_t gTaskCloudvelaContext;

@@ -32,12 +32,12 @@ extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
 
 //静态表
 char gZhbhjtPolIdName[114][ZHBHJT_PFDT_POLID_NAME_LEN_MAX] = {
-	"MINIMUM", "B03",	"L10",	"L5",	"L50",	"L90",	"L95",	"Ld",	"Ldn",	"Leq",	"LMn",	"LMx",	"Ln",	"S01",	"S02",	"S03",	"S04",
+	"MIN", "B03",	"L10",	"L5",	"L50",	"L90",	"L95",	"Ld",	"Ldn",	"Leq",	"LMn",	"LMx",	"Ln",	"S01",	"S02",	"S03",	"S04",
 	"S05",	"S06",	"S07",	"S08",	"B02",	"01",	"02",	"03",	"04",	"05",	"06",	"07",	"08",	"09",	"10",	"11",	"12",	"13",
 	"14",	"15",	"16",	"17",	"18",	"19",	"20",	"21",	"22",	"23",	"24",	"25",	"26",	"27",	"28",	"29",	"30",	"31",
 	"32",	"33",	"34",	"35",	"36",	"37",	"99",	"B01",	"001",	"002",	"003",	"010",	"011",	"015",	"020",	"021",	"022",	"023",
 	"024",	"025",	"026",	"027",	"028",	"029",	"030",	"031",	"032",	"033",	"034",	"035",	"036",	"037",	"038",	"039",	"040",	"041",
-	"060",	"061",	"065",	"080",	"101",	"a01001",	"a01002",	"a01006",	"a01007",	"a01008",	"a34001",	"a50001",	"MAXIMUM",
+	"060",	"061",	"065",	"080",	"101",	"a01001",	"a01002",	"a01006",	"a01007",	"a01008",	"a34001",	"a50001",	"MAX",
 };
 
 //静态配置ZHBHJT212协议的收发消息格式
@@ -200,7 +200,9 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	//请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令
 	memset(tmp, 0, sizeof(tmp));
 	func_cloudvela_zhbhjt212_convert_u64time_to_ymd(inputPar->head.qn, tmp);
+	strcat(ds, "QN=");
 	strcat(ds, tmp);
+	strcat(ds, ";");
 
 	//ST=系统编号
 	memset(tmp, 0, sizeof(tmp));
@@ -218,7 +220,6 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	strcat(ds, tmp);
 
 	//MN=设备编号
-	printf("ZHB: Lable=%s\n", zHcuSysEngPar.hwBurnId.equLable);
 	memset(tmp, 0, sizeof(tmp));
 	sprintf(tmp, "MN=%s;", zHcuSysEngPar.hwBurnId.zhbMnLable);
 	strcat(ds, tmp);
@@ -243,7 +244,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 		sprintf(tmp, "PNO=%d;", inputPar->head.pno);
 		strcat(ds, tmp);
 	}
-	printf("ZHB: DS=[%s]\n", ds);
+
 	//CP数据内容部分
 	memset(cps, 0, sizeof(cps));
 
@@ -291,10 +292,11 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	char sMsgBuid[ZHBHJT_PFM_CMB2MSG_NBR_MAX][HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX][ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
 	memset(sMsgBuid, 0, sizeof(char)*ZHBHJT_PFM_CMB2MSG_NBR_MAX*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX*ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX);
 	UINT8 IeCmbIndex = 0;
+	UINT16 PrjLen = 0;
 	for (i=0; i<ZHBHJT_PFM_CMB2MSG_NBR_MAX; i++){
 		IeCmbIndex = gZhbhjtMsgFormatCfgUlResp[msgidIndex].IeCmb[i].ieCmbId;
 		for (j=0; j<HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX; j++){
-			UINT16 PrjLen = 0;
+			PrjLen = 0;
 			for (k=0; k<ZHBHJT_PFM_IE2CMB_NBR_MAX; k++){
 				index = ieList[i*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX+j].ie[k].ieId;
 				rprTimes = ieList[i*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX+j].ie[k].ieRptNbr;
@@ -302,9 +304,10 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 					for(m=0; m<rprTimes; m++){
 						memset(tmp, 0, sizeof(tmp));
 						PrjLen++;  //计算长度
+						//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Index=[%d], rptTimes = %d\n", index, rprTimes);
 						switch(index){
 						case ZHBHJT_IEID_uni_SystemTime:
-							printf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_SystemTime].keyLable, inputPar->ul2Cloud.SystemTime);
+							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_SystemTime].keyLable, inputPar->ul2Cloud.SystemTime);
 							strcat(sMsgBuid[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_CfmQN:
@@ -332,28 +335,29 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							strcat(sMsgBuid[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_Rtd:
-							sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Rtd].keyLable, inputPar->ul2Cloud.rtd[k].Rtd);
-							strcat(sMsgBuid[i][j], tmp);
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_multi_rtd){
-								sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Rtd].keyLable, inputPar->ul2Cloud.rtd[k].Rtd);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Rtd].keyLable, inputPar->ul2Cloud.rtd[j].Rtd);
+								strcat(sMsgBuid[i][j], tmp);
+							}else{
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Rtd].keyLable, inputPar->ul2Cloud.rtd[j].Rtd);
 								strcat(sMsgBuid[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Min:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[k].Min);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[j].Min);
 								strcat(sMsgBuid[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Avg:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[k].Avg);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
 								strcat(sMsgBuid[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Max:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[k].Max);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[j].Max);
 								strcat(sMsgBuid[i][j], tmp);
 							}
 							break;
@@ -367,43 +371,45 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							break;
 						case ZHBHJT_IEID_uni_polFlag:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_multi_rtd){
-								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.rtd[k].PolFlag);
+								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.rtd[j].PolFlag);
 								strcat(sMsgBuid[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_Cou:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Cou].keyLable, inputPar->ul2Cloud.min[k].Cou);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Cou].keyLable, inputPar->ul2Cloud.min[j].Cou);
 								strcat(sMsgBuid[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_RS:
-							sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.RS[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_RS].keyLable, inputPar->ul2Cloud.RS[k].RS);
+							sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.RS[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_RS].keyLable, inputPar->ul2Cloud.RS[j].RS);
 							strcat(sMsgBuid[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_RT:
-							sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.RT[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_RT].keyLable, inputPar->ul2Cloud.RT[k].RT);
+							sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.RT[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_RT].keyLable, inputPar->ul2Cloud.RT[j].RT);
 							strcat(sMsgBuid[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_Ala:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_alarm_event){
-								sprintf(tmp, "%s%s%f,", gZhbhjtPolIdName[inputPar->ul2Cloud.AlarmEvent.PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Ala].keyLable, inputPar->ul2Cloud.AlarmEvent.Ala);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.AlarmEvent.PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Ala].keyLable, inputPar->ul2Cloud.AlarmEvent.Ala);
 								strcat(sMsgBuid[i][j], tmp);
 							}else{
-								sprintf(tmp, "%s%s%f,", gZhbhjtPolIdName[inputPar->ul2Cloud.Ala.PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Ala].keyLable, inputPar->ul2Cloud.Ala.Ala);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.Ala.PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Ala].keyLable, inputPar->ul2Cloud.Ala.Ala);
 								strcat(sMsgBuid[i][j], tmp);
 							}
 							break;
 						case ZHBHJT_IEID_uni_UpValue:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_alm_lim_rng){
-								sprintf(tmp, "%s%s%f,", gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_UpValue].keyLable, inputPar->ul2Cloud.limitation[k].UpValue);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_UpValue].keyLable, inputPar->ul2Cloud.limitation[j].UpValue);
 								strcat(sMsgBuid[i][j], tmp);
+								//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Upvalue j=%d, Polid=%d, name=%s\n", j, inputPar->ul2Cloud.limitation[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId]);
 							}
 							break;
 						case ZHBHJT_IEID_uni_LowValue:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_alm_lim_rng){
-								sprintf(tmp, "%s%s%f,", gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[k].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_LowValue].keyLable, inputPar->ul2Cloud.limitation[k].LowValue);
+								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_LowValue].keyLable, inputPar->ul2Cloud.limitation[j].LowValue);
 								strcat(sMsgBuid[i][j], tmp);
+								//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Lowvalue j=%d, Polid=%d, name=%s\n", j, inputPar->ul2Cloud.limitation[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId]);
 							}
 							break;
 						case ZHBHJT_IEID_uni_Data:
@@ -417,13 +423,8 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							strcat(sMsgBuid[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_AlarmType:
-							if (IeCmbIndex == ZHBHJT_IEID_cmb_alarm_event){
-								sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.AlarmEvent.PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Ala].keyLable, inputPar->ul2Cloud.AlarmEvent.AlarmType);
-								strcat(sMsgBuid[i][j], tmp);
-							}else{
-								sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_AlarmType].keyLable, inputPar->ul2Cloud.AlarmType);
-								strcat(sMsgBuid[i][j], tmp);
-							}
+							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_AlarmType].keyLable, inputPar->ul2Cloud.AlarmType);
+							strcat(sMsgBuid[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_AlarmTarget:
 							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_AlarmTarget].keyLable, inputPar->ul2Cloud.AlarmTarget);
@@ -465,7 +466,8 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 			}//k，表达的是子项目重复
 			if ((PrjLen > 0) && (strlen(sMsgBuid[i][j]) > 0)){
 				//附上;项目分隔符号，而且是将最后的一个逗号改为分号即可
-				if (sMsgBuid[i][j][strlen(sMsgBuid[i][j]-1)] == ',') sMsgBuid[i][j][strlen(sMsgBuid[i][j]-1)] = ';';
+				if (sMsgBuid[i][j][strlen(sMsgBuid[i][j])-1] == ',') {sMsgBuid[i][j][strlen(sMsgBuid[i][j])-1] = ';'; }
+				//HCU_DEBUG_PRINT_FAT("ZHBHJT212: I/J=%d/%d, String=[%s]\n", i, j, sMsgBuid[i][j]);
 			}
 		}//单独IE
 	}//复合组合
@@ -476,33 +478,31 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 			strcat(cps, sMsgBuid[i][j]);
 		}
 	}
-	printf("ZHB: CPS=[%s]\n", cps);
 	//去掉最后一个分号
 	if ((strlen(cps) > 0) && (cps[strlen(cps)-1] == ';'))  cps[strlen(cps)-1] = '\0';
-
+	//HCU_DEBUG_PRINT_FAT("ZHBHJT212: CPS=[%s]\n", cps);
 	//组合数据部分
+	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: pack error!\n");
 	strcat(ds, "CP=&&");
 	strcat(ds, cps);
 	strcat(ds, "&&");
-	printf("ZHB: DS+CPS=[%s]\n", ds);
 
 	//计算长度
 	UINT16 len = strlen(ds);
 	if (len > ZHBHJT_PROTOCOL_FRAME_DATA_LEN_MAX ) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: pack error!\n");
 
 	//构造输出
-	strcpy(output->curBuf, ZHBHJT_PROTOCOL_FRAME_FIX_HEAD);
-	sprintf(output->curBuf, "%04d%s", len, ds);
-
+	sprintf(output->curBuf, "%s%04d%s", ZHBHJT_PROTOCOL_FRAME_FIX_HEAD, len, ds);
 	UINT16 crc16 = 0;
 	hcu_vm_calculate_crc_modbus((UINT8*)ds, len, &crc16);
-	sprintf(output->curBuf, "%04x", crc16);
-
+	memset(tmp, 0, sizeof(tmp));
+	sprintf(tmp, "%04X", crc16);
+	strcat(output->curBuf, tmp);
 	strcat(output->curBuf, ZHBHJT_PROTOCOL_FRAME_FIX_TAIL);
 	output->curLen = strlen(output->curBuf);
 
 	//测试打印
-	printf("ZHB: output=[%s]\n", output->curBuf);
+	HCU_DEBUG_PRINT_FAT("ZHBHJT212: output=[%s]\n", output->curBuf);
 
 	//返回
 	return SUCCESS;
@@ -512,8 +512,59 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 //UNPACK函数入口
 OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
 {
+	int i=0, j = 0, k = 0, m=0, index = 0;
+	char tmp[ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
+	char ds[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+	char cps[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+	UINT8 msgidIndex = 0;
+
 	//因为是在ZHBHJT212函数体中，所以根据MN地址，自动设置目标服务器为业务服务器
 	gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
+
+	//参数检查
+	//忽略expectMsgId的输入条件，这个变量是为了兼容HUITPXML的函数格式
+	if ((rcv == NULL) || (rcv->length < 20) || (strlen(rcv->buf) < 20) || (strlen(rcv->buf) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX))
+		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: input buffer error!\n");
+
+	index = 0;
+	//取头部
+	if ((rcv->buf[index] !='#')||(rcv->buf[index+1] !='#')){
+		HcuErrorPrint("CLOUDVELA: Invalid received data header!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	index = index+2;
+
+	//取尾巴  \r = 0D, \n = 0A, should be 0D 0A
+	if ((rcv->buf[rcv->length-2] !='\r')||(rcv->buf[rcv->length-1] !='\n')){
+		HcuErrorPrint("CLOUDVELA: Invalid received data tail!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+
+/*
+	strncpy(tmp, )
+
+	//申明输出数组结构
+	msg_struct_cloudvela_llczhb_frame_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_cloudvela_llczhb_frame_req_t));
+
+	msgidIndex =  func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(inputPar->head.cn);
+	if ((msgidIndex <= ZHBHJT_IE_uni_CNcode_MIN_0000) || (msgidIndex >= ZHBHJT_IE_uni_CNcode_MAX_9999))
+		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Un-supported message or CN code to be packed!\n");
+
+	//先pack固定FRAME帧头部分
+	memset(ds, 0, sizeof(ds));
+
+	//请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令
+	memset(tmp, 0, sizeof(tmp));
+	func_cloudvela_zhbhjt212_convert_u64time_to_ymd(inputPar->head.qn, tmp);
+	strcat(ds, "QN=");
+	strcat(ds, tmp);
+	strcat(ds, ";");
+*/
+
 
 
 
@@ -659,14 +710,14 @@ void func_cloudvela_zhbhjt212_convert_u64time_to_ymd(UINT64 in, char *out)
 	time_t lt = (time_t)time2Sec;
 	struct tm *cu;
 	cu = localtime(&lt);
-	sprintf(out,  "QN=%04d%02d%02d%02d%02d%02d%03d;", (UINT16)(1900+cu->tm_year), (UINT8)(1+cu->tm_mon), (UINT8)cu->tm_mday,\
+	sprintf(out,  "%04d%02d%02d%02d%02d%02d%03d", (UINT16)(1900+cu->tm_year), (UINT8)(1+cu->tm_mon), (UINT8)cu->tm_mday,\
 			(UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec, time2Milsec);
 	return;
 }
 
 void func_cloudvela_zhbhjt212_test(void)
 {
-	//int i=0, j=0, k=0, index = 0, gindex = 0;
+	int i=0, j=0, k=0, index = 0, gindex = 0;
 	/*
 	UINT8 index = 0;
 	while(gZhbhjtMsgFormatCfgUlResp[index].cnCode != ZHBHJT_IE_uni_CNcode_MAX_9999){
@@ -739,12 +790,65 @@ void func_cloudvela_zhbhjt212_test(void)
 	}*/
 
 	msg_struct_llczhb_cloudvela_frame_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 	CloudDataSendBuf_t pMsgOutput;
+	memset(&rcv, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
 	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	rcv.head.cn = ZHBHJT_IE_uni_CNcode_par_get_field_time_resp_1011;
-	//func_cloudvela_zhbhjt212_msg_pack(&rcv, &pMsgOutput);
-	printf("ZHB: Lable=%s\n", zHcuSysEngPar.hwBurnId.equLable);
+	rcv.ul2Cloud.nbrOfAlmLim = 5;
+	rcv.ul2Cloud.nbrOfCMinRpt = 7;
+	rcv.ul2Cloud.nbrOfCRtd = 4;
+	rcv.ul2Cloud.nbrOfRS = 5;
+	rcv.ul2Cloud.nbrOfRT = 2;
+	rcv.ul2Cloud.SystemTime = 1234;
+	rcv.ul2Cloud.limitation[0].PolId = 91;
+	rcv.ul2Cloud.limitation[1].PolId = 92;
+	rcv.ul2Cloud.limitation[2].PolId = 93;
+	rcv.ul2Cloud.limitation[3].PolId = 94;
+	rcv.ul2Cloud.limitation[4].PolId = 95;
+	rcv.ul2Cloud.limitation[5].PolId = 96;
+	rcv.ul2Cloud.limitation[6].PolId = 97;
+	rcv.ul2Cloud.min[0].PolId = 94;
+	rcv.ul2Cloud.min[1].PolId = 95;
+	rcv.ul2Cloud.min[2].PolId = 96;
+	rcv.ul2Cloud.min[3].PolId = 97;
+	rcv.ul2Cloud.min[4].PolId = 98;
+	rcv.ul2Cloud.min[5].PolId = 99;
+	rcv.ul2Cloud.min[6].PolId = 100;
+	strcpy(rcv.head.pw, "abcd#1");
+	rcv.ul2Cloud.rtd[0].PolFlag='Y';
+	rcv.ul2Cloud.rtd[1].PolFlag='N';
+	rcv.ul2Cloud.rtd[2].PolFlag='N';
+	rcv.ul2Cloud.rtd[3].PolFlag='Y';
+	rcv.ul2Cloud.rtd[4].PolFlag='Y';
+	rcv.ul2Cloud.rtd[5].PolFlag='N';
+	rcv.ul2Cloud.rtd[6].PolFlag='Y';
+	rcv.ul2Cloud.RS[0].PolId = 94;
+	rcv.ul2Cloud.RS[0].RS = 11;
+	rcv.ul2Cloud.RS[1].PolId = 95;
+	rcv.ul2Cloud.RS[2].PolId = 96;
+	rcv.ul2Cloud.RS[3].PolId = 97;
+	rcv.ul2Cloud.RS[4].PolId = 98;
+	rcv.ul2Cloud.RS[5].PolId = 99;
+	rcv.ul2Cloud.RS[6].PolId = 100;
+	rcv.ul2Cloud.RT[0].PolId = 94;
+	rcv.ul2Cloud.RT[1].PolId = 95;
+	rcv.ul2Cloud.RT[2].PolId = 96;
+	rcv.ul2Cloud.RT[3].PolId = 97;
+	rcv.ul2Cloud.RT[4].PolId = 98;
+	rcv.ul2Cloud.RT[5].PolId = 99;
+	rcv.ul2Cloud.RT[6].PolId = 100;
+	rcv.ul2Cloud.AlarmEvent.PolId = 90;
+
+	/*	rcv.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp_2031;
+	func_cloudvela_zhbhjt212_msg_pack(&rcv, &pMsgOutput);*/
+	gindex = 0;
+	while(gZhbhjtMsgFormatCfgUlResp[gindex].cnCode != ZHBHJT_IE_uni_CNcode_MAX_9999){
+		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+		rcv.head.cn = gZhbhjtMsgFormatCfgUlResp[gindex].cnCode;
+		func_cloudvela_zhbhjt212_msg_pack(&rcv, &pMsgOutput);
+		gindex++;
+	}
+
+
 
 }
 
