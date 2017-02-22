@@ -43,7 +43,7 @@ typedef struct ZHBHJT212MsgIeEleStaticCfg
 #define ZHBHJT_PFDT_FLOAT   6  //浮点
 #define ZHBHJT_PFDT_DBFLT   7  //双精度浮点
 
-#define ZHBHJT_PFDT_POLID_NAME_LEN_MAX 7
+#define ZHBHJT_PFDT_POLID_NAME_LEN_MAX 9
 
 //组合IE的定义：目前考虑最多4次，如果更多的话，需要更加复杂的定义
 typedef struct ZHBHJTIeBasicStr

@@ -3459,9 +3459,7 @@ typedef struct  msg_struct_cloudvela_llczhb_frame_req
 	msgie_struct_zhbhjt_frame_head_t head;
 	UINT64 cfmQn;
 	UINT16 cfmCN;
-	UINT8  IsCfmPNUMValidFlag;
 	UINT16 cfmPNUM;
-	UINT8  IsCfmPNOValidFlag;
 	UINT16 cfmPNO;
 	char setpw[7];
 	msgie_struct_zhbhjt_element_dl2hcu_t dl2Self;

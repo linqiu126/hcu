@@ -31,7 +31,8 @@ extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
 
 
 //静态表
-char gZhbhjtPolIdName[114][ZHBHJT_PFDT_POLID_NAME_LEN_MAX] = {
+#define ZHBHJT_PFDT_POLID_NAME_ID_MAX 102  //这里的静态定义必须正好是该静态数组的长度，不然后期程序会出错，因为这个也是判定条件
+const char gZhbhjtPolIdName[ZHBHJT_PFDT_POLID_NAME_ID_MAX][ZHBHJT_PFDT_POLID_NAME_LEN_MAX] = {
 	"MIN", "B03",	"L10",	"L5",	"L50",	"L90",	"L95",	"Ld",	"Ldn",	"Leq",	"LMn",	"LMx",	"Ln",	"S01",	"S02",	"S03",	"S04",
 	"S05",	"S06",	"S07",	"S08",	"B02",	"01",	"02",	"03",	"04",	"05",	"06",	"07",	"08",	"09",	"10",	"11",	"12",	"13",
 	"14",	"15",	"16",	"17",	"18",	"19",	"20",	"21",	"22",	"23",	"24",	"25",	"26",	"27",	"28",	"29",	"30",	"31",
@@ -190,10 +191,10 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 
 	//参数检查
 	if ((inputPar == NULL) || (output == NULL))
-		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: input parameter error!\n");
+		HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: input parameter error!\n");
 	msgidIndex =  func_cloudvela_zhbhjt212_search_ul2cloud_msgid_by_cncode(inputPar->head.cn);
 	if ((msgidIndex <= ZHBHJT_IE_uni_CNcode_MIN_0000) || (msgidIndex >= ZHBHJT_IE_uni_CNcode_MAX_9999))
-		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Un-supported message or CN code to be packed!\n");
+		HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Un-supported message or CN code to be packed!\n");
 
 	//先pack固定FRAME帧头部分
 	memset(ds, 0, sizeof(ds));
@@ -306,7 +307,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 						memset(tmp, 0, sizeof(tmp));
 						memset(tmpSecond, 0, sizeof(tmpSecond));
 						PrjLen++;  //计算长度
-						//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Index=[%d], rptTimes = %d\n", index, rprTimes);
+						//HCU_DEBUG_PRINT_INF("ZHBHJT212: Index=[%d], rptTimes = %d\n", index, rprTimes);
 						switch(index){
 						case ZHBHJT_IEID_uni_SystemTime:
 							func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(inputPar->ul2Cloud.SystemTime, tmpSecond);
@@ -319,10 +320,13 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_CfmCN:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_CfmPNUM:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_CfmPNO:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_QnRtn:
 							sprintf(tmp, "%s%d,", gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_QnRtn].keyLable, inputPar->ul2Cloud.QnRtn);
@@ -364,12 +368,16 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							}
 							break;
 						case ZHBHJT_IEID_uni_ZsRtd:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_value_ZsMin:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_value_ZsAvg:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_value_ZsMax:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_polFlag:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_multi_rtd){
@@ -404,21 +412,24 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_alm_lim_rng){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_UpValue].keyLable, inputPar->ul2Cloud.limitation[j].UpValue);
 								strcat(sMsgBuild[i][j], tmp);
-								//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Upvalue j=%d, Polid=%d, name=%s\n", j, inputPar->ul2Cloud.limitation[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId]);
+								//HCU_DEBUG_PRINT_INF("ZHBHJT212: Upvalue j=%d, Polid=%d, name=%s\n", j, inputPar->ul2Cloud.limitation[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId]);
 							}
 							break;
 						case ZHBHJT_IEID_uni_LowValue:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_alm_lim_rng){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_LowValue].keyLable, inputPar->ul2Cloud.limitation[j].LowValue);
 								strcat(sMsgBuild[i][j], tmp);
-								//HCU_DEBUG_PRINT_FAT("ZHBHJT212: Lowvalue j=%d, Polid=%d, name=%s\n", j, inputPar->ul2Cloud.limitation[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId]);
+								//HCU_DEBUG_PRINT_INF("ZHBHJT212: Lowvalue j=%d, Polid=%d, name=%s\n", j, inputPar->ul2Cloud.limitation[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.limitation[j].PolId]);
 							}
 							break;
 						case ZHBHJT_IEID_uni_Data:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_DayData:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_NightData:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_AlarmTime:
 							func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(inputPar->ul2Cloud.AlarmTime, tmpSecond);
@@ -434,10 +445,13 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_PolId:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_BeginTime:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_EndTime:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_DataTime:
 							func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(inputPar->ul2Cloud.DataTime, tmpSecond);
@@ -449,20 +463,28 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							strcat(sMsgBuild[i][j], tmp);
 							break;
 						case ZHBHJT_IEID_uni_DayStdValue:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_NightStdValue:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_SetPwd:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_OverTime:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_ReCount:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_WarnTime:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						case ZHBHJT_IEID_uni_CTime:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						default:
+							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
 						}//switch(index)
 					}//重复rprTimes
@@ -471,7 +493,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 			if ((PrjLen > 0) && (strlen(sMsgBuild[i][j]) > 0)){
 				//附上;项目分隔符号，而且是将最后的一个逗号改为分号即可
 				if (sMsgBuild[i][j][strlen(sMsgBuild[i][j])-1] == ',') {sMsgBuild[i][j][strlen(sMsgBuild[i][j])-1] = ';'; }
-				//HCU_DEBUG_PRINT_FAT("ZHBHJT212: I/J=%d/%d, String=[%s]\n", i, j, sMsgBuid[i][j]);
+				//HCU_DEBUG_PRINT_INF("ZHBHJT212: I/J=%d/%d, String=[%s]\n", i, j, sMsgBuid[i][j]);
 			}
 		}//单独IE
 	}//复合组合
@@ -484,16 +506,16 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	}
 	//去掉最后一个分号
 	if ((strlen(cps) > 0) && (cps[strlen(cps)-1] == ';'))  cps[strlen(cps)-1] = '\0';
-	//HCU_DEBUG_PRINT_FAT("ZHBHJT212: CPS=[%s]\n", cps);
+	//HCU_DEBUG_PRINT_INF("ZHBHJT212: CPS=[%s]\n", cps);
 	//组合数据部分
-	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: pack error!\n");
+	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: pack error!\n");
 	strcat(ds, "CP=&&");
 	strcat(ds, cps);
 	strcat(ds, "&&");
 
 	//计算长度
 	UINT16 len = strlen(ds);
-	if (len > ZHBHJT_PROTOCOL_FRAME_DATA_LEN_MAX ) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: pack error!\n");
+	if (len > ZHBHJT_PROTOCOL_FRAME_DATA_LEN_MAX ) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: pack error!\n");
 
 	//构造输出
 	sprintf(output->curBuf, "%s%04d%s", ZHBHJT_PROTOCOL_FRAME_FIX_HEAD, len, ds);
@@ -506,7 +528,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	output->curLen = strlen(output->curBuf);
 
 	//测试打印
-	HCU_DEBUG_PRINT_FAT("ZHBHJT212: output=[%s]\n", output->curBuf);
+	HCU_DEBUG_PRINT_INF("ZHBHJT212: output=[%s]\n", output->curBuf);
 
 	//返回
 	return SUCCESS;
@@ -516,32 +538,32 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 //UNPACK函数入口
 OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
 {
-	int i=0, j = 0, k = 0, m=0, index = 0;
+	int i=0, j = 0, k = 0, m = 0, index = 0;
 	UINT32 totalLen=0, it=0, tempLen = 0;
 	UINT64 u64Tmp = 0;
-	INT32 int32Tmp = 0;
-	float floatTmp = 0;
+	UINT8 msgidIndex = 0;
 	char tmp[ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
 	char ds[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	char cps[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
-	UINT8 msgidIndex = 0;
 	char *p1, *p2, *p3;
 
 	//因为是在ZHBHJT212函数体中，所以根据MN地址，自动设置目标服务器为业务服务器
 	gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
 
+	HCU_DEBUG_PRINT_FAT("ZHBHJT212: input=[%s], FillInLen=%d, ActualBufLen=%d\n", rcv->buf, rcv->length, strlen(rcv->buf));
+
 	//参数检查
 	//忽略expectMsgId的输入条件，这个变量是为了兼容HUITPXML的函数格式
 	if ((rcv == NULL) || (rcv->length != strlen(rcv->buf)) || (rcv->length < 12) || (rcv->length > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX))
-		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data header!\n");
+		HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data header!\n");
 
 	index = 0;
 	//取头部
-	if ((rcv->buf[index] !='#')||(rcv->buf[index+1] !='#')) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data header!\n");
+	if ((rcv->buf[index] !='#')||(rcv->buf[index+1] !='#')) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data header!\n");
 	index = index+2;
 
 	//取尾巴  \r = 0D, \n = 0A, should be 0D 0A
-	if ((rcv->buf[rcv->length-2] !='\r')||(rcv->buf[rcv->length-1] !='\n')) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data header!\n");
+	if ((rcv->buf[rcv->length-2] !='\r')||(rcv->buf[rcv->length-1] !='\n')) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data header!\n");
 
 	//取长度
 	memset(tmp, 0, sizeof(tmp));
@@ -549,7 +571,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	it = strtoul(tmp, NULL, 10); //10进制
 	index = index + 4;
 	totalLen = rcv->length-12;  //12字符长度的固定包头，这个表示了cp域的具体长度
-	if (it != totalLen) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data length!\n");
+	if (it != totalLen) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data length!\n");
 
 	//取CRC并做比较判断
 	memset(tmp, 0, sizeof(tmp));
@@ -557,7 +579,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	it = strtoul(tmp, NULL, 16);  //16进制
 	UINT16 crc16=0;
 	hcu_vm_calculate_crc_modbus((UINT8*)&rcv->buf[index], rcv->length-12, &crc16);
-	if (it != crc16) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data CRC16!\n");
+	if (it != crc16) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data CRC16!\n");
 
 	//申明输出结构
 	msg_struct_cloudvela_llczhb_frame_req_t snd;
@@ -568,10 +590,10 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	memset(ds, 0, sizeof(ds));
 	memset(cps, 0, sizeof(cps));
 	p1 = strstr(&rcv->buf[index], "CP=&&");
-	p2 = &rcv->buf[index] + strlen("CP=&&");
-	p3 = strstr(p2, "&&");
+	if (p1 != NULL) p2 = p1 + strlen("CP=&&"); else p2 = NULL;
+	if (p2!=NULL) p3 = strstr(p2, "&&"); else p3 =NULL;
 	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 > p3))
-		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data CP domain!\n");
+		HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data CP domain!\n");
 	tempLen = p1 - &(rcv->buf[index]);
 	strncpy(ds, &(rcv->buf[index]), tempLen);
 	tempLen = p3 - p2;
@@ -580,22 +602,22 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	//解MN：不能为空
 	memset(tmp, 0, sizeof(tmp));
 	p1 = strstr(ds, "MN=");
-	p2 = p1 + strlen("MN=");
-	p3 = strstr(p2, ";");
-	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received MN head!\n");
+	if (p1!=NULL) p2 = p1 + strlen("MN="); else p2=NULL;
+	if (p2!=NULL) p3 = strstr(p2, ";"); else p3 =NULL;
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received MN head!\n");
 	tempLen = p3 - p2;
-	if (tempLen > 14) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received MN head!\n");
+	if (tempLen > 14) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received MN head!\n");
 	strncpy(tmp, p2, tempLen);
-	if (strcmp(zHcuSysEngPar.hwBurnId.zhbMnLable, tmp) != 0) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received MN head!\n");
+	if (strcmp(zHcuSysEngPar.hwBurnId.zhbMnLable, tmp) != 0) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received MN head!\n");
 
 	//解QN域：允许为空
 	memset(tmp, 0, sizeof(tmp));
 	p1 = strstr(ds, "QN=");
-	p2 = p1 + strlen("QN=");
-	p3 = strstr(p2, ";");
+	if (p1!=NULL) p2 = p1 + strlen("QN="); else p2=NULL;
+	if (p2!=NULL) p3 = strstr(p2, ";"); else p3 =NULL;
 	if ((p1 != NULL) && (p2 != NULL) && (p3 != NULL) && (p3 > p2)){
 		tempLen = p3 - p2;
-		if (tempLen != 17) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received QN head!\n");
+		if (tempLen != 17) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received QN head!\n");
 		strncpy(tmp, p2, tempLen);
 		func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(tmp, &u64Tmp);
 		snd.head.qn = u64Tmp;
@@ -604,52 +626,52 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	//解ST领域：不允许为空
 	memset(tmp, 0, sizeof(tmp));
 	p1 = strstr(ds, "ST=");
-	p2 = p1 + strlen("ST=");
-	p3 = strstr(p2, ";");
-	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received ST head!\n");
+	if (p1!=NULL) p2 = p1 + strlen("ST="); else p2=NULL;
+	if (p2!=NULL) p3 = strstr(p2, ";"); else p3 =NULL;
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received ST head!\n");
 	tempLen = p3 - p2;
-	if (tempLen > 5) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received ST head!\n");
+	if (tempLen > 5) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received ST head!\n");
 	strncpy(tmp, p2, tempLen);
 	it = strtoul(tmp, NULL, 10) & 0xFFFF;
 	if ((it != ZHBHJT_IE_uni_STcode_system_interaction) && (it != HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE))
-		HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received ST head!\n");
+		HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received ST head!\n");
 	snd.head.st = it;
 
 	//解CN领域：不允许为空
 	memset(tmp, 0, sizeof(tmp));
 	p1 = strstr(ds, "CN=");
-	p2 = p1 + strlen("CN=");
-	p3 = strstr(p2, ";");
-	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received CN head!\n");
+	if (p1!=NULL) p2 = p1 + strlen("CN="); else p2=NULL;
+	if (p2!=NULL) p3 = strstr(p2, ";"); else p3 =NULL;
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 >= p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received CN head!\n");
 	tempLen = p3 - p2;
-	if (tempLen > 7) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received QN head!\n");
+	if (tempLen > 7) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received QN head!\n");
 	strncpy(tmp, p2, tempLen);
 	it = strtoul(tmp, NULL, 10) & 0xFFFF;
 	//这里采用搜索技巧，不在静态表中的CNcode，都是非法CNcode
 	msgidIndex = func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(it);
 	i = func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(ZHBHJT_IE_uni_CNcode_MIN_0000);
 	j = func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(ZHBHJT_IE_uni_CNcode_MAX_9999);
-	if ((msgidIndex == i) || (msgidIndex == j)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received QN head!\n");
+	if ((msgidIndex == i) || (msgidIndex == j)) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received QN head!\n");
 	snd.head.cn = it;
 
 	//解密码：允许为空，交给LLC上层控制
 	memset(tmp, 0, sizeof(tmp));
 	p1 = strstr(ds, "PW=");
-	p2 = p1 + strlen("PW=");
-	p3 = strstr(p2, ";");
-	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 > p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received PW head!\n");
+	if (p1!=NULL) p2 = p1 + strlen("PW="); else p2=NULL;
+	if (p2!=NULL) p3 = strstr(p2, ";"); else p3 =NULL;
+	if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p2 > p3)) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received PW head!\n");
 	tempLen = p3 - p2;
-	if (tempLen > 6) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received PW head!\n");
+	if (tempLen > 6) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received PW head!\n");
 	strncpy(snd.head.pw, p2, tempLen);
 
 	//解PNUM领域：可以为空
 	memset(tmp, 0, sizeof(tmp));
 	p1 = strstr(ds, "PNUM=");
-	p2 = p1 + strlen("PNUM=");
-	p3 = strstr(p2, ";");
+	if (p1!=NULL) p2 = p1 + strlen("PNUM="); else p2=NULL;
+	if (p2!=NULL) p3 = strstr(p2, ";"); else p3 =NULL;
 	if ((p1 != NULL) && (p2 != NULL) && (p3 != NULL) && (p3 > p2)){
 		tempLen = p3 - p2;
-		if (tempLen > 4) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received PNUM head!\n");
+		if (tempLen > 4) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received PNUM head!\n");
 		strncpy(tmp, p2, tempLen);
 		snd.head.pnum = strtoul(tmp, NULL, 10) & 0xFFFF;
 	}else{
@@ -659,11 +681,11 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	//解PNO领域：可以为空
 	memset(tmp, 0, sizeof(tmp));
 	p1 = strstr(ds, "PNO=");
-	p2 = p1 + strlen("PNO=");
-	p3 = strstr(p2, ";");
+	if (p1!=NULL) p2 = p1 + strlen("PNO="); else p2=NULL;
+	if (p2!=NULL) p3 = strstr(p2, ";"); else p3 =NULL;
 	if ((p1 != NULL) && (p2 != NULL) && (p3 != NULL) && (p3 > p2)){
 		tempLen = p3 - p2;
-		if (tempLen > 4) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received PNO head!\n");
+		if (tempLen > 4) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received PNO head!\n");
 		strncpy(tmp, p2, tempLen);
 		snd.head.pno = strtoul(tmp, NULL, 10) & 0xFFFF;
 	}else{
@@ -673,11 +695,11 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	//解Flag领域：可以为空
 	memset(tmp, 0, sizeof(tmp));
 	p1 = strstr(ds, "Flag=");
-	p2 = p1 + strlen("Flag=");
-	p3 = strstr(p2, ";");
+	if (p1!=NULL) p2 = p1 + strlen("Flag="); else p2=NULL;
+	if (p2!=NULL) p3 = strstr(p2, ";"); else p3 =NULL;
 	if ((p1 != NULL) && (p2 != NULL) && (p3 != NULL) && (p3 > p2)){
 		tempLen = p3 - p2;
-		if (tempLen > 3) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received Flag head!\n");
+		if (tempLen > 3) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received Flag head!\n");
 		strncpy(tmp, p2, tempLen);
 		snd.head.ansFlag = strtoul(tmp, NULL, 10) & 0xFF;
 	}else{
@@ -686,8 +708,8 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 
 	//准备解cps域，并按照;的项目切到数组中去
 	if (strlen(cps) == 0){
-		if(hcu_message_send(MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ, TASK_ID_CLOUDVELA, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		if(hcu_message_send(MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ, TASK_ID_LLCZHB, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName);
 		return SUCCESS;
 	}
 
@@ -698,6 +720,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	index = 0;
 	totalLen = strlen(cps);
 	p1 = (char*)&(cps[0]);
+
 	while (totalLen > 0){
 		p2 = strstr(p1, ";");
 		//最后一段
@@ -707,7 +730,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 		}
 		//太长长度的字符串，非法
 		else if ((p2-p1) >= ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX){
-			HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+			HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 		}
 		//正常长度
 		else{
@@ -718,7 +741,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 			index++;
 			//太长非法
 			if (index >= ZHBHJT_PFM_CMBIE_MAX)
-				HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 		}
 	}
 
@@ -738,7 +761,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 				totalLen = 0;
 			}
 			//无效的逗号分隔符
-			if (p2 == p1){
+			else if (p2 == p1){
 				p1 = p2+1;
 				totalLen = totalLen - 1;
 			}
@@ -750,124 +773,271 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 				totalLen = totalLen - tempLen -1;
 				index++;
 				//太长非法
-				if (index >= HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+				if (index >= HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 			}
 		}//while(totalLen>0){
 	}//i循环
 
+	HCU_DEBUG_PRINT_FAT("ZHBHJT212: p1=%x, p2=%x, p3=%x\n", p1, p2, p3);
+
 	//转化数据
+	UINT32 u32Tmp = 0;
+	INT32 int32Tmp = 0;
+	UINT8 u8Tmp = 0;
+	UINT8 PolId = 0;
+	float floatTmp = 0;
+	UINT8 limNewRoundFlag = 0;
 	for (i=0; i<ZHBHJT_PFM_CMBIE_MAX; i++){
 		for(j=0; j<HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX; j++){
-			if (strlen(sMsgCut[i][j] == 0)) continue;
+			if (strlen(sMsgCut[i][j]) == 0) continue;
 			//找到了第k个
 			p2 = NULL;
 			for(k=1; k<ZHBHJT_IEID_uni_MAX; k++){
 				p2 = strstr(sMsgCut[i][j], gZhbhjtIeEleCfg[k].keyLable);
 				if(p2 != NULL) break;
 			}
+			printf("k=%d, sMsgCut[%d][%d]=%s\n", k, i, j, sMsgCut[i][j]);
 			//如果未能找到(或者p2==NULL)
-			if (k == ZHBHJT_IEID_uni_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+			if (k == ZHBHJT_IEID_uni_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 
 			//找到了，先确定长度是否合法
 			totalLen = strlen(sMsgCut[i][j]);
 			tempLen = strlen(gZhbhjtIeEleCfg[k].keyLable);
 			if (gZhbhjtIeEleCfg[k].backwardMatchFlag == 1) tempLen += ZHBHJT_PFDT_POLID_NAME_LEN_MAX;
 			tempLen += gZhbhjtIeEleCfg[k].maxLen;
-			if (totalLen > tempLen) HCU_ERROR_PRINT_ZHBHJTCODEC("CLOUDVELA: Invalid received data!\n");
+			if (totalLen > tempLen) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 			p1 = (char*)&(sMsgCut[i][j][0]);
 			p3 = p2 + strlen(gZhbhjtIeEleCfg[k].keyLable);
+			tempLen = totalLen - (p3 - p1);
+			//严格检查前后字符串的长度
+			if ((p2 == NULL) || (p3 == NULL) || (p2 >= p3) || (tempLen == 0) || (tempLen > 20) || ((p2-p1) > ZHBHJT_PFDT_POLID_NAME_LEN_MAX))
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+			//前缀只有在本该有前缀的时候有
+			if ((((p2-p1) > 0) && (gZhbhjtIeEleCfg[k].backwardMatchFlag == 0)) || (((p2-p1) == 0) && (gZhbhjtIeEleCfg[k].backwardMatchFlag == 1)))
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+			//不得超过规定的最长长度
+			if (tempLen > gZhbhjtIeEleCfg[k].maxLen) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+			//寻找PolId
+			if ((p2-p1) > 0){
+				memset(tmp, 0, sizeof(tmp));
+				strncpy(tmp, p1, (p2-p1));
+				PolId = func_cloudvela_zhbhjt212_search_polid_by_name(tmp);
+				if ((PolId == 0) || (PolId == (ZHBHJT_PFDT_POLID_NAME_ID_MAX-1))) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+			}
+			//转化
+			memset(tmp, 0, sizeof(tmp));
+			strncpy(tmp, p3, tempLen);
+			if (gZhbhjtIeEleCfg[k].dataType == ZHBHJT_PFDT_CHAR){
+			}else if (gZhbhjtIeEleCfg[k].dataType == ZHBHJT_PFDT_UINT8){
+				u8Tmp = strtoul(tmp, NULL, 10) & 0xFF;
+			}else if ((gZhbhjtIeEleCfg[k].dataType == ZHBHJT_PFDT_INT16) || (gZhbhjtIeEleCfg[k].dataType == ZHBHJT_PFDT_INT32)){
+				if ((k == ZHBHJT_IEID_uni_SystemTime) || (k == ZHBHJT_IEID_uni_AlarmTime) || (k == ZHBHJT_IEID_uni_BeginTime) \
+						|| (k == ZHBHJT_IEID_uni_EndTime) || (k == ZHBHJT_IEID_uni_DataTime)) {
+					u32Tmp = 0;
+					func_cloudvela_zhbhjt212_convert_ymd_wo_ms_to_u32time(tmp, &u32Tmp);
+				}else{
+					int32Tmp = strtoul(tmp, NULL, 10) & 0xFFFFFFFF;
+				}
+			}else if (gZhbhjtIeEleCfg[k].dataType == ZHBHJT_PFDT_INT64){
+				if (k == ZHBHJT_IEID_uni_CfmQN) {
+					u64Tmp = 0;
+					func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(tmp, &u64Tmp);
+				}else if (k == ZHBHJT_IEID_uni_AlarmTarget){  //目前暂时是将AlarmTarget转化为INT32的
+					int32Tmp = strtoul(tmp, NULL, 10) & 0xFFFFFFFF;
+				}else {
+					HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+				}
+			//暂时不考虑双精度的浮点，实际中并没有太多的价值
+			}else if ((gZhbhjtIeEleCfg[k].dataType == ZHBHJT_PFDT_FLOAT) || (gZhbhjtIeEleCfg[k].dataType == ZHBHJT_PFDT_DBFLT)){
+				floatTmp = strtof(tmp, NULL);
+			}else{
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+			}
+			printf("test14\n");
+
 			//再分类处理
 			switch(k){
 			case ZHBHJT_IEID_uni_SystemTime:
+				snd.dl2Self.SystemTime = u32Tmp;
 				break;
 			case ZHBHJT_IEID_uni_CfmQN:
+				snd.cfmQn = u64Tmp;
 				break;
 			case ZHBHJT_IEID_uni_CfmCN:
+				snd.cfmCN = int32Tmp & 0xFFFF;
 				break;
 			case ZHBHJT_IEID_uni_CfmPNUM:
+				snd.cfmPNUM = int32Tmp & 0xFFFF;
 				break;
 			case ZHBHJT_IEID_uni_CfmPNO:
+				snd.cfmPNO = int32Tmp & 0xFFFF;
 				break;
 			case ZHBHJT_IEID_uni_QnRtn:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_ExeRtn:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_RtdInterval:
+				snd.dl2Self.RtdInterval = int32Tmp;
 				break;
 			case ZHBHJT_IEID_uni_Rtd:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_value_Min:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_value_Avg:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_value_Max:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_ZsRtd:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_value_ZsMin:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_value_ZsAvg:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_value_ZsMax:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_polFlag:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_Cou:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_RS:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_RT:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_Ala:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_UpValue:
+				if (snd.dl2Self.nbrOfLimitation >= HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+				if (limNewRoundFlag == 0){
+					 limNewRoundFlag = 1;
+					 snd.dl2Self.limitation[snd.dl2Self.nbrOfLimitation].UpValue = floatTmp;
+					 snd.dl2Self.limitation[snd.dl2Self.nbrOfLimitation].PolId = PolId;
+				}else{
+					limNewRoundFlag = 0;
+					if (snd.dl2Self.limitation[snd.dl2Self.nbrOfLimitation].PolId != PolId) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+					snd.dl2Self.limitation[snd.dl2Self.nbrOfLimitation].UpValue = floatTmp;
+					snd.dl2Self.nbrOfLimitation++;
+				}
 				break;
 			case ZHBHJT_IEID_uni_LowValue:
+				if (snd.dl2Self.nbrOfLimitation >= HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+				if (limNewRoundFlag == 0){
+					 limNewRoundFlag = 1;
+					 snd.dl2Self.limitation[snd.dl2Self.nbrOfLimitation].LowValue = floatTmp;
+					 snd.dl2Self.limitation[snd.dl2Self.nbrOfLimitation].PolId = PolId;
+				}else{
+					limNewRoundFlag = 0;
+					if (snd.dl2Self.limitation[snd.dl2Self.nbrOfLimitation].PolId != PolId) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+					snd.dl2Self.limitation[snd.dl2Self.nbrOfLimitation].LowValue = floatTmp;
+					snd.dl2Self.nbrOfLimitation++;
+				}
 				break;
 			case ZHBHJT_IEID_uni_Data:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_DayData:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_NightData:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_AlarmTime:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_AlarmType:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_AlarmTarget:
+				snd.dl2Self.AlarmTarget = int32Tmp;
 				break;
 			case ZHBHJT_IEID_uni_PolId:
+				//独特的技巧：sMsgCut[i][0]必须是PolId，sMsgCut[i][1]以后必须是CTime，从而将polId分开
+				//如果只有单独的PolId在sMsgCut[i][0]，这意味着它是PolId，而不是Ctime
+				PolId = func_cloudvela_zhbhjt212_search_polid_by_name(tmp);
+				if ((PolId <=0) || (PolId >= (ZHBHJT_PFDT_POLID_NAME_ID_MAX-1))) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+				if ((strstr(sMsgCut[i][1], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_CTime].keyLable) != NULL) && (j == 0)){
+					snd.dl2Self.ctime.PolId = PolId;
+				}else if (snd.dl2Self.nbrOfPolId < HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX){
+					//不考虑同时存在单个和多个的情况：此时，单个和多个，是跟消息的配置静态表相关
+					UINT8 flagNbr = 0;
+					for (m=0; m<ZHBHJT_PFM_CMB2MSG_NBR_MAX; m++){
+						if (gZhbhjtMsgFormatCfgDlReq[msgidIndex].IeCmb[m].ieCmbId == ZHBHJT_IEID_uni_PolId)
+							flagNbr = gZhbhjtMsgFormatCfgDlReq[msgidIndex].IeCmb[m].ieCmbRptNbr;
+					}
+					if (flagNbr == 1) snd.dl2Self.singlePolId = PolId;
+					else if (flagNbr > 1){
+						snd.dl2Self.multiPolid[snd.dl2Self.nbrOfPolId] = PolId;
+						snd.dl2Self.nbrOfPolId++;
+					}else{
+						HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+					}
+				}else{
+					HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
+				}
 				break;
 			case ZHBHJT_IEID_uni_BeginTime:
+				snd.dl2Self.gapTime.BeginTime = u32Tmp;
 				break;
 			case ZHBHJT_IEID_uni_EndTime:
+				snd.dl2Self.gapTime.EndTime = u32Tmp;
 				break;
 			case ZHBHJT_IEID_uni_DataTime:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_ReportTime:
+				snd.dl2Self.ReportTime = int32Tmp & 0xFFFF;
 				break;
 			case ZHBHJT_IEID_uni_DayStdValue:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_NightStdValue:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			case ZHBHJT_IEID_uni_SetPwd:
+				strncpy(snd.setpw, tmp, strlen(tmp)<sizeof(snd.setpw)?strlen(tmp):sizeof(snd.setpw));
 				break;
 			case ZHBHJT_IEID_uni_OverTime:
+				snd.dl2Self.OverTime = int32Tmp;
 				break;
 			case ZHBHJT_IEID_uni_ReCount:
+				snd.dl2Self.ReCount = u8Tmp;
 				break;
 			case ZHBHJT_IEID_uni_WarnTime:
+				snd.dl2Self.WarnTime = int32Tmp;
 				break;
 			case ZHBHJT_IEID_uni_CTime:
+				//独特的技巧：sMsgCut[i][0]必须是PolId，sMsgCut[i][1]以后必须是CTime，从而将polId分开
+				//如果只有单独的PolId在sMsgCut[i][0]，这意味着它是PolId，而不是Ctime
+				if ((snd.dl2Self.nbrOfCTime < HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX) && (strstr(sMsgCut[i][0], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_PolId].keyLable) != NULL)){
+					snd.dl2Self.ctime.CTime[snd.dl2Self.nbrOfCTime] = u8Tmp;
+					snd.dl2Self.nbrOfCTime++;
+				}
 				break;
 			default:
+				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 				break;
 			}
 		}
 	}
+	printf("test5!\n");
 
-
-
+	//发送消息到上层LLC
+	if(hcu_message_send(MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ, TASK_ID_LLCZHB, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName);
 
 	//返回
 	return SUCCESS;
@@ -878,11 +1048,11 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 UINT8 func_cloudvela_zhbhjt212_search_polid_by_name(char *PolIdName)
 {
 	UINT8 index =0;
-	while(strcmp(gZhbhjtPolIdName[index], "MAXIMUM") !=0){
+	while(strcmp(gZhbhjtPolIdName[index], "MAX") !=0){
 		if (strcmp(gZhbhjtPolIdName[index], PolIdName) == 0) return index;
 		index++;
 	}
-	return index;  //如果找不到，最后一项必然是MAXIMUM
+	return index;  //如果找不到，最后一项必然是MAX
 }
 
 UINT8 func_cloudvela_zhbhjt212_search_ul2cloud_msgid_by_cncode(UINT16 cnid)
@@ -1339,6 +1509,8 @@ void func_cloudvela_zhbhjt212_test(void)
 		gindex++;
 	}*/
 
+	//发送消息编码
+	/*
 	msg_struct_llczhb_cloudvela_frame_resp_t rcv;
 	CloudDataSendBuf_t pMsgOutput;
 	memset(&rcv, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
@@ -1388,8 +1560,8 @@ void func_cloudvela_zhbhjt212_test(void)
 	rcv.ul2Cloud.RT[6].PolId = 100;
 	rcv.ul2Cloud.AlarmEvent.PolId = 90;
 
-	/*	rcv.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp_2031;
-	func_cloudvela_zhbhjt212_msg_pack(&rcv, &pMsgOutput);*/
+	//	rcv.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_his_data_resp_2031;
+	//func_cloudvela_zhbhjt212_msg_pack(&rcv, &pMsgOutput);
 	gindex = 0;
 	while(gZhbhjtMsgFormatCfgUlResp[gindex].cnCode != ZHBHJT_IE_uni_CNcode_MAX_9999){
 		memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
@@ -1397,6 +1569,65 @@ void func_cloudvela_zhbhjt212_test(void)
 		func_cloudvela_zhbhjt212_msg_pack(&rcv, &pMsgOutput);
 		gindex++;
 	}
+	*/
+
+	//计算所有输入消息的CRC数据
+	/*
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_PSWD);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_PSWD);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_FT_TIME);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_FT_TIME);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_RTD);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_STOP_MONIROT);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_EQU_RUN);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_STOP_EQU_RUN);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_MIN_RPT1);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_POL_DAY);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_HIS_DAY);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_POL_RCD);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_NOTIFY);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_LIM);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_LIM);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_ADDR);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_ADDR);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_CTIME);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_RPT_TIME);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_ZERO);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_GAP_TIME);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_GAP_TIME);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_INIT_OT);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_INIT_WARNING);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_INST_SMLP);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_SLMP_CYCLE);
+*/
+	/*
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_PSWD);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_PSWD);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_FT_TIME);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_FT_TIME);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_RTD);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_STOP_MONIROT);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_EQU_RUN);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_STOP_EQU_RUN);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_MIN_RPT1);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_POL_DAY);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_HIS_DAY);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_POL_RCD);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_NOTIFY);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_LIM);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_LIM);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_ADDR);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_ADDR);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_CTIME);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_RPT_TIME);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_ZERO);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_GAP_TIME);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_GAP_TIME);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_INIT_OT);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_INIT_WARNING);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_INST_SMLP);
+	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_SLMP_CYCLE);
+*/
 }
 
 

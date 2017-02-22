@@ -1002,7 +1002,7 @@ void func_hwinv_scan_eng_par(void)
 	if ((dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE) == SUCCESS) &&
 			(dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar) == SUCCESS) && (dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar) == SUCCESS)){
 		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
-			HcuDebugPrint("HWINV: Retrieve all engineering data correctly from DATABASE parameters!\n");
+			HCU_DEBUG_PRINT_INF("HWINV: Retrieve all engineering data correctly from DATABASE parameters!\n");
 		}
 	}
 	//如果读数据库失败，则不做任何动作，只是原封不动的保留原先启动时的设置

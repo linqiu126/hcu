@@ -48,18 +48,15 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       			FSM_STATE_COMMON,          			fsm_com_do_nothing},
     {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            		fsm_cloudvela_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          			fsm_cloudvela_time_out},
+	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,   		FSM_STATE_COMMON, 					fsm_cloudvela_ethernet_curl_data_rx},
+	{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_COMMON, 					fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_usbnet_data_rx
+	{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   			FSM_STATE_COMMON, 					fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_wifi_data_rx
+	{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   			FSM_STATE_COMMON, 					fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_3g4g_data_rx
+	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_COMMON, 					fsm_cloudvela_socket_data_rx},
 
     //Offline working, 定时重新启动链路，但不接受任何L3消息 //HWINV发来了硬件状态的改变，一般是硬件重新插拔造成的PnP状态改变
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
-
-	//Online working， 从后台接收到数据和控制命令，四种均有可能，具体是哪一种起作用，将由HWINV定时扫描并解决互斥问题
-	//CURL方式暂未启动，完全只采用了SOCKET方式
-	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_curl_data_rx},
-	{MSG_ID_USBNET_CLOUDVELA_DATA_RX,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_usbnet_data_rx
-	{MSG_ID_WIFI_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_wifi_data_rx
-	{MSG_ID_3G4G_CLOUDVELA_DATA_RX,   			FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_ethernet_curl_data_rx},  //fsm_cloudvela_3g4g_data_rx
-	{MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX,  FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_socket_data_rx},
 
     //通用服务能力处理部分，UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	{MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_alarm_resp},
@@ -205,6 +202,10 @@ OPSTAT fsm_cloudvela_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
+	//初次启动链路
+	func_cloudvela_hb_link_main_entry();
+
+	//返回
 	return SUCCESS;
 }
 
@@ -866,6 +867,10 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	memcpy(rcv.buf, param_ptr, param_len);
 	rcv.length = param_len;
 	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
+
+	//ZHB测试目标
+	strcpy(rcv.buf, ZHBHJT_MSG_TEST_DATA_SET_PSWD);
+	rcv.length = strlen(ZHBHJT_MSG_TEST_DATA_SET_PSWD);
 
 	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
 		//不期望任何目标消息
@@ -4996,9 +5001,9 @@ OPSTAT fsm_cloudvela_llczhb_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LLCZHB frame error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
-	//只支持ZHBHJT212格式
+/*	//只是为了支持ZHBHJT212格式的测试代码，立即需要删掉的
 	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault != HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");*/
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;

@@ -112,10 +112,6 @@ OPSTAT fsm_llczhb_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 	HCU_DEBUG_PRINT_FAT("LLCZHB: Enter FSM_STATE_LLCZHB_ACTIVED status, Keeping refresh here!\n");
 
-
-	//ZHBAPI测试
-	func_cloudvela_zhbhjt212_test();
-
 	return SUCCESS;
 }
 
@@ -182,7 +178,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Receive frame error!\n");
 
 	//检查链路密码：只有在正常业务操作的情况下才有意义，因为在ZHBHJT_IE_uni_STcode_system_interaction情况下本来就不存在
-	if ((rcv.head.st !=ZHBHJT_IE_uni_STcode_system_interaction) && (strcmp(rcv.head.pw, gTaskLlczhbContext.envSd.pswd) != 0))
+	if ((rcv.head.cn != ZHBHJT_IE_uni_CNcode_par_set_access_pswd_req_1072) && (rcv.head.st !=ZHBHJT_IE_uni_STcode_system_interaction) && (strcmp(rcv.head.pw, gTaskLlczhbContext.envSd.pswd) != 0))
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Receive frame error!\n");
 
 	//检查链路FLAG，待定
@@ -462,6 +458,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		break;
 
 	case ZHBHJT_IE_uni_CNcode_cmd_data_req_9014:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	//实时数据采集
@@ -608,6 +605,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		break;
 
 	case ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req_2061:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	//取污染物报警记录
@@ -669,6 +667,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		break;
 
 	case ZHBHJT_IE_uni_CNcode_ctr_equ_operation_req_3013:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	//设置设备采样周期
@@ -714,18 +713,23 @@ OPSTAT fsm_llczhb_l3mod_llczhb_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * p
 
 	switch (rcv.actionId){
 	case HCU_SYSMSG_ZHBHJT_ACTION_EXECUTE_FINISH_9012:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_DATA_CFM_9014:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_SET_FIELD_TIME_1012:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD_2012:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN_2022:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_SET_ALMLIM_1022:
@@ -756,6 +760,7 @@ OPSTAT fsm_llczhb_l3mod_llczhb_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * p
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_SET_MNADDR_1032:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_SET_RPT_TIME_1042:
@@ -856,6 +861,7 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD_2012:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN_2021:
@@ -875,6 +881,7 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN_2022:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051:
@@ -960,9 +967,11 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM_1021:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_MNADDR_1031:
+		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Error action received!\n");
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_RPT_TIME_1041:

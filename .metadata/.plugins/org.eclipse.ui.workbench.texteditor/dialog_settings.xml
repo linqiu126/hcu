@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="snd.length" key="selection"/>
+		<item value="psw" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="snd.length"/>
-			<item value="snd"/>
-			<item value="hcu_message_send"/>
-			<item value="func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms"/>
-			<item value="UINT64"/>
-			<item value="func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time"/>
-			<item value="strto"/>
-			<item value="unpack"/>
+			<item value="psw"/>
+			<item value="message_send"/>
+			<item value="_send_message"/>
+			<item value="fsm_cloudvela_socket_data_rx"/>
+			<item value="HCU_ERROR_PRINT_ZHBHJTCODEC(&quot;CLOUDVELA: "/>
+			<item value="crc"/>
+			<item value="HCU_DEBUG_PRINT_INF_TASK"/>
+			<item value="func_cloudvela_hb_link_main_entry"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_ERROR_PRINT_ZHBHJTCODEC(&quot;ZHBHJT: "/>
 			<item value="sprintf"/>
 			<item value="gZhbhjtMsgFormatCfgUlResp"/>
 			<item value="gZhbhjtMsgFormatCfgDlReq"/>
@@ -25,14 +26,13 @@
 			<item value="beTime"/>
 			<item value="snd"/>
 			<item value="snd.ul2Cloud"/>
-			<item value="rcv.ul2Cloud"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1185" key="DIALOG_X_ORIGIN"/>
-		<item value="285" key="DIALOG_Y_ORIGIN"/>
+		<item value="1019" key="DIALOG_X_ORIGIN"/>
+		<item value="451" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
