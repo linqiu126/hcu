@@ -43,7 +43,7 @@ HcuFsmStateItem_t HcuFsmNoise[] =
 	{MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM,   FSM_STATE_NOISE_ACTIVED,      			fsm_noise_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_NOISE_CTRL_REQ,    	FSM_STATE_NOISE_ACTIVED,          		fsm_noise_cloudvela_ctrl_req},
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_NOISE_ACTIVED,      	  		fsm_noise_l3aqyc_exg_ctrl_req},
-	{MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,			FSM_STATE_NOISE_ACTIVED,      	  		fsm_noise_zhbl3mod_exg_ctrl_req},
+	{MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,			FSM_STATE_NOISE_ACTIVED,      	  		fsm_noise_zhbl3mod_exg_ctrl_req},
 
 
     //Wait for MODBUS Feedback

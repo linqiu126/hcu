@@ -868,9 +868,12 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 	rcv.length = param_len;
 	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Receive data len=%d, data buffer = [%s], from [%s] module\n\n", rcv.length,  rcv.buf, zHcuVmCtrTab.task[src_id].taskName);
 
-	//ZHB测试目标
-	strcpy(rcv.buf, ZHBHJT_MSG_TEST_DATA_SET_PSWD);
-	rcv.length = strlen(ZHBHJT_MSG_TEST_DATA_SET_PSWD);
+	//ZHB测试钩子目标，实际不可如此使用的，必须恢复，不然程序不可以正常工作！！！
+	//TEST START
+//	strcpy(rcv.buf, ZHBHJT_MSG_TEST_DATA_SET_LIM);
+//	rcv.length = strlen(ZHBHJT_MSG_TEST_DATA_SET_LIM);
+	//TEST END
+	//ZHB测试体
 
 	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
 		//不期望任何目标消息
@@ -5001,9 +5004,8 @@ OPSTAT fsm_cloudvela_llczhb_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LLCZHB frame error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
-/*	//只是为了支持ZHBHJT212格式的测试代码，立即需要删掉的
 	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault != HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");*/
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;

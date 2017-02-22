@@ -42,7 +42,7 @@ HcuFsmStateItem_t HcuFsmPm25[] =
 	{MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM,   	FSM_STATE_PM25_ACTIVED,      		fsm_pm25_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_PM25_CTRL_REQ,     	FSM_STATE_PM25_ACTIVED,         	fsm_pm25_cloudvela_ctrl_req},
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_PM25_ACTIVED,      	  	fsm_pm25_l3aqyc_exg_ctrl_req},
-	{MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,			FSM_STATE_PM25_ACTIVED,      	  	fsm_pm25_zhbl3mod_exg_ctrl_req},
+	{MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,			FSM_STATE_PM25_ACTIVED,      	  	fsm_pm25_zhbl3mod_exg_ctrl_req},
 
 
     //Wait for Modbus Feedback

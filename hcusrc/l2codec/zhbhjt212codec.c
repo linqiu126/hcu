@@ -31,14 +31,14 @@ extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
 
 
 //静态表
-#define ZHBHJT_PFDT_POLID_NAME_ID_MAX 102  //这里的静态定义必须正好是该静态数组的长度，不然后期程序会出错，因为这个也是判定条件
+#define ZHBHJT_PFDT_POLID_NAME_ID_MAX 103  //这里的静态定义必须正好是该静态数组的长度，不然后期程序会出错，因为这个也是判定条件
 const char gZhbhjtPolIdName[ZHBHJT_PFDT_POLID_NAME_ID_MAX][ZHBHJT_PFDT_POLID_NAME_LEN_MAX] = {
 	"MIN", "B03",	"L10",	"L5",	"L50",	"L90",	"L95",	"Ld",	"Ldn",	"Leq",	"LMn",	"LMx",	"Ln",	"S01",	"S02",	"S03",	"S04",
 	"S05",	"S06",	"S07",	"S08",	"B02",	"01",	"02",	"03",	"04",	"05",	"06",	"07",	"08",	"09",	"10",	"11",	"12",	"13",
 	"14",	"15",	"16",	"17",	"18",	"19",	"20",	"21",	"22",	"23",	"24",	"25",	"26",	"27",	"28",	"29",	"30",	"31",
 	"32",	"33",	"34",	"35",	"36",	"37",	"99",	"B01",	"001",	"002",	"003",	"010",	"011",	"015",	"020",	"021",	"022",	"023",
 	"024",	"025",	"026",	"027",	"028",	"029",	"030",	"031",	"032",	"033",	"034",	"035",	"036",	"037",	"038",	"039",	"040",	"041",
-	"060",	"061",	"065",	"080",	"101",	"a01001",	"a01002",	"a01006",	"a01007",	"a01008",	"a34001",	"a50001",	"MAX",
+	"060",	"061",	"065",	"080",	"101",	"a01001",	"a01002",	"a01006",	"a01007",	"a01008",	"a34001",	"a50001",	"102",  "MAX",
 };
 
 //静态配置ZHBHJT212协议的收发消息格式
@@ -550,8 +550,6 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	//因为是在ZHBHJT212函数体中，所以根据MN地址，自动设置目标服务器为业务服务器
 	gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_DEFAULT;
 
-	HCU_DEBUG_PRINT_FAT("ZHBHJT212: input=[%s], FillInLen=%d, ActualBufLen=%d\n", rcv->buf, rcv->length, strlen(rcv->buf));
-
 	//参数检查
 	//忽略expectMsgId的输入条件，这个变量是为了兼容HUITPXML的函数格式
 	if ((rcv == NULL) || (rcv->length != strlen(rcv->buf)) || (rcv->length < 12) || (rcv->length > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX))
@@ -734,7 +732,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 		}
 		//正常长度
 		else{
-			tempLen = p2 - p1 - 1;
+			tempLen = p2 - p1;
 			strncpy(sMsgPrj[index], p1, tempLen);
 			p1 = p2+1;
 			totalLen = totalLen - tempLen -1;
@@ -778,8 +776,6 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 		}//while(totalLen>0){
 	}//i循环
 
-	HCU_DEBUG_PRINT_FAT("ZHBHJT212: p1=%x, p2=%x, p3=%x\n", p1, p2, p3);
-
 	//转化数据
 	UINT32 u32Tmp = 0;
 	INT32 int32Tmp = 0;
@@ -796,7 +792,6 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 				p2 = strstr(sMsgCut[i][j], gZhbhjtIeEleCfg[k].keyLable);
 				if(p2 != NULL) break;
 			}
-			printf("k=%d, sMsgCut[%d][%d]=%s\n", k, i, j, sMsgCut[i][j]);
 			//如果未能找到(或者p2==NULL)
 			if (k == ZHBHJT_IEID_uni_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 
@@ -809,6 +804,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 			p1 = (char*)&(sMsgCut[i][j][0]);
 			p3 = p2 + strlen(gZhbhjtIeEleCfg[k].keyLable);
 			tempLen = totalLen - (p3 - p1);
+			//printf("String[%s/%s], i=%d/j=%d/k=%d, p1=%x, p2=%x, p3=%x, tempLen=%d, totalLen = %d\n", sMsgCut[i][j], sMsgCut[i+1][j],i, j, k, (UINT32)p1, (UINT32)p2, (UINT32)p3, tempLen, totalLen);
 			//严格检查前后字符串的长度
 			if ((p2 == NULL) || (p3 == NULL) || (p2 >= p3) || (tempLen == 0) || (tempLen > 20) || ((p2-p1) > ZHBHJT_PFDT_POLID_NAME_LEN_MAX))
 				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
@@ -853,7 +849,6 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 			}else{
 				HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 			}
-			printf("test14\n");
 
 			//再分类处理
 			switch(k){
@@ -1033,7 +1028,6 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 			}
 		}
 	}
-	printf("test5!\n");
 
 	//发送消息到上层LLC
 	if(hcu_message_send(MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ, TASK_ID_LLCZHB, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
@@ -1572,7 +1566,7 @@ void func_cloudvela_zhbhjt212_test(void)
 	*/
 
 	//计算所有输入消息的CRC数据
-	/*
+
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_PSWD);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_PSWD);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_FT_TIME);
@@ -1599,7 +1593,7 @@ void func_cloudvela_zhbhjt212_test(void)
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_INIT_WARNING);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_INST_SMLP);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_SLMP_CYCLE);
-*/
+
 	/*
 	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_PSWD);
 	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_GET_PSWD);

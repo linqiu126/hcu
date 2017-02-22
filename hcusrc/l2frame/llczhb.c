@@ -101,6 +101,7 @@ OPSTAT fsm_llczhb_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	memset(&gTaskLlczhbContext, 0, sizeof(gTaskLlczhbContext_t));
 	gTaskLlczhbContext.envSd.overTimeDur = LLCZHB_CFG_STATIC_LLC_OVERTIME_DUR;
 	gTaskLlczhbContext.envSd.resndTimesSet = LLCZHB_CFG_STATIC_LLC_RESND_CNT;
+	strcpy(gTaskLlczhbContext.envSd.pswd, "123456");
 	//因为减少消息的使用，必须使用比特位来控制状态
 	gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 

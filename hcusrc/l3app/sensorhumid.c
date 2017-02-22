@@ -43,7 +43,7 @@ HcuFsmStateItem_t HcuFsmHumid[] =
 	{MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM,   FSM_STATE_HUMID_ACTIVED,      		fsm_humid_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_HUMID_CTRL_REQ,   	FSM_STATE_HUMID_ACTIVED,          	fsm_humid_cloudvela_ctrl_req},
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_HUMID_ACTIVED,      	  	fsm_humid_l3aqyc_exg_ctrl_req},
-	{MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,			FSM_STATE_HUMID_ACTIVED,      	  	fsm_humid_zhbl3mod_exg_ctrl_req},
+	{MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,			FSM_STATE_HUMID_ACTIVED,      	  	fsm_humid_zhbl3mod_exg_ctrl_req},
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_HUMID_DATA_REPORT, 	FSM_STATE_HUMID_OPT_WFFB,        	fsm_humid_data_report_from_modbus},

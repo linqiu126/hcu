@@ -43,7 +43,7 @@ HcuFsmStateItem_t HcuFsmWinddir[] =
 	{MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM,     FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_cloudvela_data_confirm},
 	{MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ,  		FSM_STATE_WINDDIR_ACTIVED,          fsm_winddir_cloudvela_ctrl_req},
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,				FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_l3aqyc_exg_ctrl_req},
-	{MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,				FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_zhbl3mod_exg_ctrl_req},
+	{MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,				FSM_STATE_WINDDIR_ACTIVED,      	fsm_winddir_zhbl3mod_exg_ctrl_req},
 
     //Wait for Modbus Feedback
 	{MSG_ID_MODBUS_WINDDIR_DATA_REPORT, FSM_STATE_WINDDIR_OPT_WFFB,        	fsm_winddir_data_report_from_modbus},
