@@ -1951,7 +1951,7 @@ UINT32 FsmRunEngine(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_pt
 			(dest_id, src_id, param_ptr, param_len);
 		if( FAILURE == ret)
 		{
-			HcuErrorPrint("HCU-VM: Internal error is found in the FSM_STATE_COMMON state function.\n");
+			HcuErrorPrint("HCU-VM: Internal error is found in the FSM_STATE_COMMON state function, DEST/SRC=0x%x/%x[%s/%s], MsgId=%d/%s\n", dest_id, src_id, zHcuVmCtrTab.task[dest_id].taskName, zHcuVmCtrTab.task[src_id].taskName, mid, zHcuSysEngPar.traceList.msg[mid].msgName);
 			return FAILURE;
 		}
 	}

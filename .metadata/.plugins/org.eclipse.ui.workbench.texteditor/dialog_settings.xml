@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="printf" key="selection"/>
+		<item value="MSG_ID_COM_INIT" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="MSG_ID_COM_INIT"/>
+			<item value="hcu_ethernet_socket_link_setup"/>
+			<item value="fsm_ethernet_init"/>
+			<item value="fsm_cloudvela_restart"/>
+			<item value="restart"/>
+			<item value="MSG_ID_COM_RESTART"/>
+			<item value="receiveBuffer"/>
 			<item value="printf"/>
-			<item value="fsm_cloudvela_socket_data_rx"/>
-			<item value="ZHBHJT_MSG_TEST_DATA_INIT_WARNING"/>
-			<item value="Over"/>
-			<item value="fsm_l3aqycg20_llczhb_ctrl_req"/>
-			<item value="k="/>
-			<item value="k=1"/>
-			<item value="strcmp"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_ERROR_PRINT_ZHBHJTCODEC(&quot;ZHBHJT: "/>

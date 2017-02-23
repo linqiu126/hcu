@@ -40,6 +40,7 @@ typedef uint16_t 				ke_state_t;
 ** 0. FAILURE
 */
 typedef UINT32         OPSTAT;
+#define OPRSUCC        1
 #define SUCCESS        0
 #define FAILURE        -1
 #define true   			1

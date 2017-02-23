@@ -9,17 +9,22 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 ==> 视频服务器/烧录区/设备标签，待完善。
 
-[BUG#001]
-发现在ETHERNET模块启动的时候，启动完成后，又收到了MSG_ID_COM_INIT，是从SVRCON发过来的，但此时SVRCON已经进入休眠了，不太可能发送该消息，怪哉
-如果ETHERNET模块不启动，则该问题消失。该问题出现在链路建立不成功，从而ETH模块给自己发送MSG_ID_COM_RESTART以后
+
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 [BUG#003
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+
+
 //= ZJL, 2017 Feb.23, CURRENT_SW_DELIVERY 182=>BFSC项目
 =给所有项目增加新的LLCZHB模块，以便让项目编译变得统一和方便，当然采用虚拟LINK的方式，不是普通文件import的方式
+=解决了以下BUG#001：原因是链路没建立成功，FAILURE导致状态机报错。改为返回OPRSUCC，就没有问题了。
+[BUG#001]
+发现在ETHERNET模块启动的时候，启动完成后，又收到了MSG_ID_COM_INIT，是从SVRCON发过来的，但此时SVRCON已经进入休眠了，不太可能发送该消息，怪哉
+如果ETHERNET模块不启动，则该问题消失。该问题出现在链路建立不成功，从而ETH模块给自己发送MSG_ID_COM_RESTART以后
+
 
 
 

@@ -62,7 +62,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 {
 	int ret=0;
 
-	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX) && (src_id != TASK_ID_ETHERNET)){
+	if ((src_id > TASK_ID_MIN) && (src_id < TASK_ID_MAX) && (src_id != TASK_ID_ETHERNET)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
 		msg_struct_com_init_feedback_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_init_feedback_t));
@@ -100,7 +100,9 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	if (hcu_ethernet_socket_link_setup() == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 		if ((zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY) == 0) HcuErrorPrint("ETHERNET: socket line setup failure!\n");
-		return FAILURE;
+		//这里采用了独特的技巧，重新定义了一种特殊的操作状态。如果链路没有建立成功，并不是有啥错误，而是常态。所以返回OPRSUCC，并不是FAILURE。
+		//返回FAILURE将会导致状态机出错，所以这这里才使用这种形式，保证了状态机运行的完美性
+		return OPRSUCC;
 	}
 
 	HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected succeed, gTaskCloudvelaContext.defaultSvrethConClientFd = %d!\n\n", gTaskCloudvelaContext.defaultSvrethConClientFd);
