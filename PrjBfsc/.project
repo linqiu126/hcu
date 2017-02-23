@@ -861,6 +861,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/i2cbuslibra.h</locationURI>
 		</link>
 		<link>
+			<name>src/l2frame/llczhb.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/llczhb.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2frame/llczhb.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/llczhb.h</locationURI>
+		</link>
+		<link>
 			<name>src/l2frame/modbus.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/modbus.c</locationURI>

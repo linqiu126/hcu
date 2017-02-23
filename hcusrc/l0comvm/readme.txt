@@ -18,6 +18,10 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+//= ZJL, 2017 Feb.23, CURRENT_SW_DELIVERY 182=>BFSC项目
+=给所有项目增加新的LLCZHB模块，以便让项目编译变得统一和方便，当然采用虚拟LINK的方式，不是普通文件import的方式
+
+
 
 //= ZJL, 2017 Feb.22, CURRENT_SW_DELIVERY 181=>AQYC项目
 =LLC编解码完全完成，规范中所有的测试用力都测试通过，测试脚本数据在程序中。
