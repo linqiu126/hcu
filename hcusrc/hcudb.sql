@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 23, 2017 at 09:15 PM
+-- Generation Time: Feb 23, 2017 at 11:16 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -184,6 +184,125 @@ INSERT INTO `hcualcoholmq3alcodatainfo` (`sid`, `deviceid`, `timestamp`, `datafo
 (18, 0, 1481099724, 1, 0),
 (19, 0, 1481100324, 1, 0),
 (20, 0, 1481100924, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcubfsccfgpar`
+--
+
+CREATE TABLE IF NOT EXISTS `hcubfsccfgpar` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `MinScaleNumberCombination` int(4) NOT NULL,
+  `MaxScaleNumberCombination` int(4) NOT NULL,
+  `MinScaleNumberStartCombination` int(4) NOT NULL,
+  `TargetCombinationWeight` int(4) NOT NULL,
+  `TargetCombinationUpperWeight` int(4) NOT NULL,
+  `IsPriorityScaleEnabled` int(4) NOT NULL,
+  `IsProximitCombinationMode` int(4) NOT NULL,
+  `CombinationBias` int(4) NOT NULL,
+  `IsRemainDetectionEnable` int(4) NOT NULL,
+  `RemainDetectionTimeSec` int(4) NOT NULL,
+  `RemainScaleTreatment` int(4) NOT NULL,
+  `CombinationSpeedMode` int(4) NOT NULL,
+  `CombinationAutoMode` int(4) NOT NULL,
+  `MovingAvrageSpeedCount` int(4) NOT NULL,
+  `AlgSpare1` int(4) NOT NULL,
+  `AlgSpare2` int(4) NOT NULL,
+  `AlgSpare3` int(4) NOT NULL,
+  `AlgSpare4` int(4) NOT NULL,
+  `WeightSensorAdcParameter` int(4) NOT NULL,
+  `WeightSensorFilterMode` int(4) NOT NULL,
+  `filer_parameter1` int(4) NOT NULL,
+  `filer_parameter2` int(4) NOT NULL,
+  `filer_parameter3` int(4) NOT NULL,
+  `filer_parameter4` int(4) NOT NULL,
+  `WeightSensorAutoZeroThread` int(4) NOT NULL,
+  `WeightSensorFixCompesation` int(4) NOT NULL,
+  `WeightSensorLoadDetectionTimeMs` int(4) NOT NULL,
+  `WeightSensorLoadThread` int(4) NOT NULL,
+  `WeightSensorEmptyThread` int(4) NOT NULL,
+  `WeightSensorEmptyDetectionTimeMs` int(4) NOT NULL,
+  `WeightSensorPickupThread` int(4) NOT NULL,
+  `WeightSensorPickupDetectionTimeMs` int(4) NOT NULL,
+  `StardardReadyTimeMs` int(4) NOT NULL,
+  `MaxAllowedWeight` int(4) NOT NULL,
+  `WeightSpare1` int(4) NOT NULL,
+  `WeightSpare2` int(4) NOT NULL,
+  `WeightSpare3` int(4) NOT NULL,
+  `WeightSpare4` int(4) NOT NULL,
+  `MotorSpeed` int(4) NOT NULL,
+  `MotorDirection` int(4) NOT NULL,
+  `MotorRollingStartMs` int(4) NOT NULL,
+  `MotorRollingStopMs` int(4) NOT NULL,
+  `MotorRollingInveralMs` int(4) NOT NULL,
+  `MotorFailureDetectionVaration` int(4) NOT NULL,
+  `MotorFailureDetectionTimeMs` int(4) NOT NULL,
+  `MotorSpare1` int(4) NOT NULL,
+  `MotorSpare2` int(4) NOT NULL,
+  `MotorSpare3` int(4) NOT NULL,
+  `MotorSpare4` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `hcubfsccfgpar`
+--
+
+INSERT INTO `hcubfsccfgpar` (`sid`, `MinScaleNumberCombination`, `MaxScaleNumberCombination`, `MinScaleNumberStartCombination`, `TargetCombinationWeight`, `TargetCombinationUpperWeight`, `IsPriorityScaleEnabled`, `IsProximitCombinationMode`, `CombinationBias`, `IsRemainDetectionEnable`, `RemainDetectionTimeSec`, `RemainScaleTreatment`, `CombinationSpeedMode`, `CombinationAutoMode`, `MovingAvrageSpeedCount`, `AlgSpare1`, `AlgSpare2`, `AlgSpare3`, `AlgSpare4`, `WeightSensorAdcParameter`, `WeightSensorFilterMode`, `filer_parameter1`, `filer_parameter2`, `filer_parameter3`, `filer_parameter4`, `WeightSensorAutoZeroThread`, `WeightSensorFixCompesation`, `WeightSensorLoadDetectionTimeMs`, `WeightSensorLoadThread`, `WeightSensorEmptyThread`, `WeightSensorEmptyDetectionTimeMs`, `WeightSensorPickupThread`, `WeightSensorPickupDetectionTimeMs`, `StardardReadyTimeMs`, `MaxAllowedWeight`, `WeightSpare1`, `WeightSpare2`, `WeightSpare3`, `WeightSpare4`, `MotorSpeed`, `MotorDirection`, `MotorRollingStartMs`, `MotorRollingStopMs`, `MotorRollingInveralMs`, `MotorFailureDetectionVaration`, `MotorFailureDetectionTimeMs`, `MotorSpare1`, `MotorSpare2`, `MotorSpare3`, `MotorSpare4`) VALUES
+(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcubfscctrlcmdexg`
+--
+
+CREATE TABLE IF NOT EXISTS `hcubfscctrlcmdexg` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `startexecuteflag` int(1) NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `hcubfscctrlcmdexg`
+--
+
+INSERT INTO `hcubfscctrlcmdexg` (`sid`, `startexecuteflag`) VALUES
+(1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcubfscstadatainfo`
+--
+
+CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
+  `StaType` char(20) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `wsIncMatCnt` int(4) NOT NULL,
+  `wsIncMatWgt` float(8,2) NOT NULL,
+  `wsCombTimes` int(4) NOT NULL,
+  `wsTttTimes` int(4) NOT NULL,
+  `wsTgvTimes` int(4) NOT NULL,
+  `wsTttMatCnt` int(4) NOT NULL,
+  `wsTgvMatCnt` int(4) NOT NULL,
+  `wsTttMatWgt` float(8,2) NOT NULL,
+  `wsTgvMatWgt` float(8,2) NOT NULL,
+  `wsAvgTttTimes` int(4) NOT NULL,
+  `wsAvgTttMatCnt` int(4) NOT NULL,
+  `wsAvgTttMatWgt` float(8,2) NOT NULL,
+  PRIMARY KEY (`StaType`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcubfscstadatainfo`
+--
+
+INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
+('BFSC_STA_24_HOUR', 1487862937, 149, 78390.00, 30, 30, 0, 120, 0, 63142.00, 0.00, 43200, 172800, 1000000.00),
+('BFSC_STA_LOCAL_UI', 1487862979, 142, 73897.00, 34, 34, 0, 137, 0, 71200.00, 0.00, 34, 137, 71200.00),
+('BFSC_STA_UP_2_NOW', 1487862977, 249, 130765.00, 52, 52, 0, 208, 0, 109355.00, 0.00, 52, 208, 109355.00);
 
 -- --------------------------------------------------------
 
@@ -16077,106 +16196,6 @@ INSERT INTO `hcuwindspddatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, 
 (440, 33, 1484259990, 1, 0, 'E', 0, 'N', 0, 0, 1),
 (441, 33, 1484260100, 1, 0, 'E', 0, 'N', 0, 0, 1),
 (442, 33, 1484260210, 1, 0, 'E', 0, 'N', 0, 0, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hcu_bfsc_cfgpar`
---
-
-CREATE TABLE IF NOT EXISTS `hcu_bfsc_cfgpar` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
-  `MinScaleNumberCombination` int(4) NOT NULL,
-  `MaxScaleNumberCombination` int(4) NOT NULL,
-  `MinScaleNumberStartCombination` int(4) NOT NULL,
-  `TargetCombinationWeight` int(4) NOT NULL,
-  `TargetCombinationUpperWeight` int(4) NOT NULL,
-  `IsPriorityScaleEnabled` int(4) NOT NULL,
-  `IsProximitCombinationMode` int(4) NOT NULL,
-  `CombinationBias` int(4) NOT NULL,
-  `IsRemainDetectionEnable` int(4) NOT NULL,
-  `RemainDetectionTimeSec` int(4) NOT NULL,
-  `RemainScaleTreatment` int(4) NOT NULL,
-  `CombinationSpeedMode` int(4) NOT NULL,
-  `CombinationAutoMode` int(4) NOT NULL,
-  `MovingAvrageSpeedCount` int(4) NOT NULL,
-  `AlgSpare1` int(4) NOT NULL,
-  `AlgSpare2` int(4) NOT NULL,
-  `AlgSpare3` int(4) NOT NULL,
-  `AlgSpare4` int(4) NOT NULL,
-  `WeightSensorAdcParameter` int(4) NOT NULL,
-  `WeightSensorFilterMode` int(4) NOT NULL,
-  `filer_parameter1` int(4) NOT NULL,
-  `filer_parameter2` int(4) NOT NULL,
-  `filer_parameter3` int(4) NOT NULL,
-  `filer_parameter4` int(4) NOT NULL,
-  `WeightSensorAutoZeroThread` int(4) NOT NULL,
-  `WeightSensorFixCompesation` int(4) NOT NULL,
-  `WeightSensorLoadDetectionTimeMs` int(4) NOT NULL,
-  `WeightSensorLoadThread` int(4) NOT NULL,
-  `WeightSensorEmptyThread` int(4) NOT NULL,
-  `WeightSensorEmptyDetectionTimeMs` int(4) NOT NULL,
-  `WeightSensorPickupThread` int(4) NOT NULL,
-  `WeightSensorPickupDetectionTimeMs` int(4) NOT NULL,
-  `StardardReadyTimeMs` int(4) NOT NULL,
-  `MaxAllowedWeight` int(4) NOT NULL,
-  `WeightSpare1` int(4) NOT NULL,
-  `WeightSpare2` int(4) NOT NULL,
-  `WeightSpare3` int(4) NOT NULL,
-  `WeightSpare4` int(4) NOT NULL,
-  `MotorSpeed` int(4) NOT NULL,
-  `MotorDirection` int(4) NOT NULL,
-  `MotorRollingStartMs` int(4) NOT NULL,
-  `MotorRollingStopMs` int(4) NOT NULL,
-  `MotorRollingInveralMs` int(4) NOT NULL,
-  `MotorFailureDetectionVaration` int(4) NOT NULL,
-  `MotorFailureDetectionTimeMs` int(4) NOT NULL,
-  `MotorSpare1` int(4) NOT NULL,
-  `MotorSpare2` int(4) NOT NULL,
-  `MotorSpare3` int(4) NOT NULL,
-  `MotorSpare4` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `hcu_bfsc_cfgpar`
---
-
-INSERT INTO `hcu_bfsc_cfgpar` (`sid`, `MinScaleNumberCombination`, `MaxScaleNumberCombination`, `MinScaleNumberStartCombination`, `TargetCombinationWeight`, `TargetCombinationUpperWeight`, `IsPriorityScaleEnabled`, `IsProximitCombinationMode`, `CombinationBias`, `IsRemainDetectionEnable`, `RemainDetectionTimeSec`, `RemainScaleTreatment`, `CombinationSpeedMode`, `CombinationAutoMode`, `MovingAvrageSpeedCount`, `AlgSpare1`, `AlgSpare2`, `AlgSpare3`, `AlgSpare4`, `WeightSensorAdcParameter`, `WeightSensorFilterMode`, `filer_parameter1`, `filer_parameter2`, `filer_parameter3`, `filer_parameter4`, `WeightSensorAutoZeroThread`, `WeightSensorFixCompesation`, `WeightSensorLoadDetectionTimeMs`, `WeightSensorLoadThread`, `WeightSensorEmptyThread`, `WeightSensorEmptyDetectionTimeMs`, `WeightSensorPickupThread`, `WeightSensorPickupDetectionTimeMs`, `StardardReadyTimeMs`, `MaxAllowedWeight`, `WeightSpare1`, `WeightSpare2`, `WeightSpare3`, `WeightSpare4`, `MotorSpeed`, `MotorDirection`, `MotorRollingStartMs`, `MotorRollingStopMs`, `MotorRollingInveralMs`, `MotorFailureDetectionVaration`, `MotorFailureDetectionTimeMs`, `MotorSpare1`, `MotorSpare2`, `MotorSpare3`, `MotorSpare4`) VALUES
-(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `hcu_bfsc_stadatainfo`
---
-
-CREATE TABLE IF NOT EXISTS `hcu_bfsc_stadatainfo` (
-  `StaType` char(20) NOT NULL,
-  `timestamp` int(4) NOT NULL,
-  `wsIncMatCnt` int(4) NOT NULL,
-  `wsIncMatWgt` float(8,2) NOT NULL,
-  `wsCombTimes` int(4) NOT NULL,
-  `wsTttTimes` int(4) NOT NULL,
-  `wsTgvTimes` int(4) NOT NULL,
-  `wsTttMatCnt` int(4) NOT NULL,
-  `wsTgvMatCnt` int(4) NOT NULL,
-  `wsTttMatWgt` float(8,2) NOT NULL,
-  `wsTgvMatWgt` float(8,2) NOT NULL,
-  `wsAvgTttTimes` int(4) NOT NULL,
-  `wsAvgTttMatCnt` int(4) NOT NULL,
-  `wsAvgTttMatWgt` float(8,2) NOT NULL,
-  PRIMARY KEY (`StaType`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `hcu_bfsc_stadatainfo`
---
-
-INSERT INTO `hcu_bfsc_stadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
-('BFSC_STA_24_HOUR', 1487855700, 599, 313995.00, 130, 130, 0, 520, 0, 272916.00, 0.00, 46800, 187200, 1000000.00),
-('BFSC_STA_LOCAL_UI', 1487855717, 142, 73632.00, 20, 20, 0, 80, 0, 41627.00, 0.00, 20, 80, 41627.00),
-('BFSC_STA_UP_2_NOW', 1487855715, 637, 333843.00, 137, 137, 0, 548, 0, 287586.00, 0.00, 137, 548, 287586.00);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

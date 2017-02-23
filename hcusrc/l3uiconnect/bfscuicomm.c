@@ -115,10 +115,15 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	snd.maxWsNbr = 5 + rand()%8;
 	snd.targetValue = 2000+ (rand()%100);
 	snd.targetUpLimit = 50 + (rand()%10);
-	snd.parSetId = 1;
 
-	//等待一会儿
-	hcu_sleep(2);
+	//循环读取通信设置信息，目前必须是１，必然会出错
+	UINT32 tmp = 0;
+	while(tmp == 0){
+		if (dbi_HcuBfsc_ui_ctrl_exg_read(&tmp) == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "BFSCUICOMM: Read DB error!\n");
+		hcu_sleep(2);
+	}
+	snd.parSetId = tmp & 0xFF;
 
 	ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
 	if (ret == FAILURE){

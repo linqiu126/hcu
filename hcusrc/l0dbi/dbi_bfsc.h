@@ -14,7 +14,7 @@
 
 extern OPSTAT dbi_HcuBfsc_Cfgpar_read_into_syseng(UINT32 sid, HcuSysEngBfscCfgpar_t *bfscCfgpar);
 extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
-
+extern OPSTAT dbi_HcuBfsc_ui_ctrl_exg_read(UINT32 *output);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);
