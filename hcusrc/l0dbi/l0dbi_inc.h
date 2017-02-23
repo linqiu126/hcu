@@ -32,4 +32,10 @@
 #include "../l0dbi/dbiwindspd.h"
 
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	#include "../l0dbi/dbi_bfsc.h"
+#endif
+
+
+
 #endif /* L0DBI_INC_H_ */

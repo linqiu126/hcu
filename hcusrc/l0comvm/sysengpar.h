@@ -208,24 +208,113 @@ typedef struct SysEngParElementHwBurnPhyIdAddr
 	UINT8 	rsv[16];   //32
 }SysEngParElementHwBurnPhyIdAddr_t;
 
-//工程参数总控制表
+
+
+
+/*
+ *
+ *
+ *   BFSC项目中的核心配置参数
+ *
+ *
+ */
+typedef struct HcuSysEngBfscCombinationAlgorithmParamaters
+{
+	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
+	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
+	UINT32	MinScaleNumberStartCombination;				//开始查找的最小个数，就是说大于这个个数就开始搜索
+	UINT32	TargetCombinationWeight;				//组合目标重量
+	UINT32	TargetCombinationUpperWeight;				//组合目标重量上限
+	UINT32	IsPriorityScaleEnabled;				// 1: Enable, 0: Disable
+	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
+	UINT32	CombinationBias;				//每个Scale要求放几个物品
+	UINT32	IsRemainDetectionEnable;				//Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
+	UINT32	RemainDetectionTimeSec;				// RemainDetionTime in Seconds
+	UINT32	RemainScaleTreatment;				// 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
+	UINT32	CombinationSpeedMode;				// 0：SpeedPriority，1: PrecisePriority
+	UINT32	CombinationAutoMode;				// 0: Auto, 1: Manual
+	UINT32	MovingAvrageSpeedCount;				//计算平均速度的时候使用最近多少个组合做统计
+	UINT32	AlgSpare1;
+	UINT32	AlgSpare2;
+	UINT32	AlgSpare3;
+	UINT32	AlgSpare4;
+}HcuSysEngBfscCombinationAlgorithmParamaters_t;
+typedef struct HcuSysEngBfscWeightSensorFilterParameter
+{
+	UINT32	filer_parameter1;
+	UINT32	filer_parameter2;
+	UINT32	filer_parameter3;
+	UINT32	filer_parameter4;
+}HcuSysEngBfscWeightSensorFilterParameter_t;
+typedef struct HcuSysEngBfscWeightSensorParamaters
+{
+	UINT32	WeightSensorAdcParameter;
+	UINT32	WeightSensorFilterMode;
+	HcuSysEngBfscWeightSensorFilterParameter_t	FilterParam;	//裸重量滤波的参数 (TO BE COMPLETED)
+	UINT32	WeightSensorAutoZeroThread;
+	UINT32	WeightSensorFixCompesation;
+	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+	UINT32	WeightSensorLoadThread;
+	UINT32	WeightSensorEmptyThread;
+	UINT32	WeightSensorEmptyDetectionTimeMs;
+	UINT32	WeightSensorPickupThread;
+	UINT32	WeightSensorPickupDetectionTimeMs;
+	UINT32	StardardReadyTimeMs;
+	UINT32	MaxAllowedWeight;
+	UINT32	WeightSpare1;
+	UINT32	WeightSpare2;
+	UINT32	WeightSpare3;
+	UINT32	WeightSpare4;
+}HcuSysEngBfscWeightSensorParamaters_t;
+typedef struct HcuSysEngBfscMotorControlParamaters
+{
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;				//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorRollingStartMs;				//how long do the motor rolling for start action
+	UINT32	MotorRollingStopMs;				//how long do the motor rolling for stop action
+	UINT32	MotorRollingInveralMs;				//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	MotorFailureDetectionVaration;				// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;				// within TimeMs, 如果速度都在外面，认为故障
+	UINT32	MotorSpare1;
+	UINT32	MotorSpare2;
+	UINT32	MotorSpare3;
+	UINT32	MotorSpare4;
+}HcuSysEngBfscMotorControlParamaters_t;
+typedef struct HcuSysEngBfscCfgpar
+{
+	UINT32 sid;   //可能有多套参数，缺省使用第一套
+	HcuSysEngBfscCombinationAlgorithmParamaters_t 	combAlg;
+	HcuSysEngBfscWeightSensorParamaters_t			wsPar;
+	HcuSysEngBfscMotorControlParamaters_t			motoPar;
+}HcuSysEngBfscCfgpar_t;
+
+
+/*
+ *
+ *
+ *   //工程参数总控制表
+ *
+ *
+ */
+
 #define HCU_SYSENG_PAR_PRJ_NAME_LEN 100  //保持跟数据库的一致性
 typedef struct HcuSysEngParTab
 {
 	char prjname[HCU_SYSENG_PAR_PRJ_NAME_LEN];
-	SysEngParElementComm_t comm;
-	SysEngParElementDbi_t dbi;
-	SysEngParElementSensorTimer_t timer;//by Shanchun
-	SysEngParElementSeriesPort_t serialport;//by Shanchun
-	SysEngParElementCloudvela_t cloud;
-	SysEngParElementHcuSwDownload_t swm;//by Shanchun
-	SysEngParElementVideoServer_t videoSev;
+	SysEngParElementComm_t 					comm;
+	SysEngParElementDbi_t 					dbi;
+	SysEngParElementSensorTimer_t 			timer;//by Shanchun
+	SysEngParElementSeriesPort_t 			serialport;//by Shanchun
+	SysEngParElementCloudvela_t 			cloud;
+	SysEngParElementHcuSwDownload_t 		swm;//by Shanchun
+	SysEngParElementVideoServer_t 			videoSev;
 	UINT8 debugMode;
 	UINT8 traceMode;
-	SysEngParElementTrace_t traceList;
-	SysEngParElementLocalUi_t localUI;
-	SysEngParElementProgramCodeDefineFix_t codeDefineFix;
-	SysEngParElementHwBurnPhyIdAddr_t hwBurnId;
+	SysEngParElementTrace_t 				traceList;
+	SysEngParElementLocalUi_t 				localUI;
+	SysEngParElementProgramCodeDefineFix_t 	codeDefineFix;
+	SysEngParElementHwBurnPhyIdAddr_t 		hwBurnId;
+	HcuSysEngBfscCfgpar_t					bfsc;
 }HcuSysEngParTab_t;
 
 

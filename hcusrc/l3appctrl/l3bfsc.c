@@ -899,6 +899,10 @@ OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * 
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
+	//将数据存入系统参数区域
+	if (dbi_HcuBfsc_Cfgpar_read_into_syseng(rcv.parSetId, &(zHcuSysEngPar.bfsc)) == FAILURE)
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Read DBI data error!\n");
+
 	//检查参数并存入系统区
 	gTaskL3bfscContext.targetValue = rcv.targetValue;
 	gTaskL3bfscContext.targetUpLimit = rcv.targetUpLimit;
@@ -1198,9 +1202,9 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 //	int i=0;
 //	UINT32 index = 0;
 //	index = gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_BASE_CYCLE;
-//	memcpy(&(gTaskL3bfscContext.curArray[index]), &(gTaskL3bfscContext.cur), sizeof(gTaskL3bfscContextStaElement_t));
+//	memcpy(&(gTaskL3bfscContext.curArray[index]), &(gTaskL3bfscContext.cur), sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 //	//通过桶形数据，更新LocUi的数据表单
-//	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(gTaskL3bfscContextStaElement_t));
+//	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 //	for (i= 0; i<HCU_L3BFSC_STA_BASE_CYCLE; i++){
 //		gTaskL3bfscContext.staLocalUi.wsIncMatCnt += gTaskL3bfscContext.curArray[i].wsIncMatCnt;
 //		gTaskL3bfscContext.staLocalUi.wsIncMatWgt += gTaskL3bfscContext.curArray[i].wsIncMatWgt;
@@ -1217,7 +1221,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 //	gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfscContext.staLocalUi.wsTttMatWgt;
 
 	//采取老化算法 x(n+1) = x(n) * (1-1/120) + latest，从而得到最新的数据，但该数据最好使用float，然后再转换为UINT32存入到数据库表单中
-	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(gTaskL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 	//先存储临时数据
 	gTaskL3bfscContext.curAge.wsIncMatCntMid = gTaskL3bfscContext.curAge.wsIncMatCntMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsIncMatCnt;
 	gTaskL3bfscContext.curAge.wsIncMatWgtMid = gTaskL3bfscContext.curAge.wsIncMatWgtMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsIncMatWgt;
@@ -1243,6 +1247,8 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfscContext.staLocalUi.wsTttMatWgt;
 
 	//更新LocUI数据库，以便本地界面实时展示数据
+	if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 
 	//更新60Min各个统计表单
 	gTaskL3bfscContext.sta60Min.wsIncMatCnt += gTaskL3bfscContext.cur.wsIncMatCnt;
@@ -1262,6 +1268,8 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	//60分钟到了，发送统计报告到后台：发送后台只需要一种统计报告即可，重复发送意义不大
 	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_60M_CYCLE) == 0){
 		//60分统计表更新数据库
+		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_60MIN, &(gTaskL3bfscContext.sta60Min)) == FAILURE)
+				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 
 		//再发送统计报告
 		msg_struct_l3bfsc_cloudvela_statistic_report_t snd;
@@ -1300,7 +1308,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 		}
 
 		//然后将60分钟统计数据表单清零，以便再次计数
-		memset(&(gTaskL3bfscContext.sta60Min), 0, sizeof(gTaskL3bfscContextStaElement_t));
+		memset(&(gTaskL3bfscContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 	}
 
 	//更新24小时统计表单
@@ -1319,12 +1327,19 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.sta24H.wsAvgTttMatWgt = (UINT32)(gTaskL3bfscContext.sta24H.wsTttMatWgt*timeRun24HourRatio);
 
 	//24小时统计表更新数据库
+	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_1M_CYCLE) == 0){
+		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_24HOUR, &(gTaskL3bfscContext.sta24H)) == FAILURE)
+				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
+	}
 
 	//24小时到了，然后将24小时统计数据表单清零，以便再次计数
 	if (((time(0)-gTaskL3bfscContext.start24hStaTimeInUnix) % HCU_L3BFSC_STA_24H_IN_SECOND) == 0){
-		memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(gTaskL3bfscContextStaElement_t));
+		memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 		gTaskL3bfscContext.elipse24HourCnt = 0;
+		printf("this is a test, to show enter into wrong loop!\n");
 	}
+
+	//24小时到了，应该发送单独的统计报告，未来完善
 
 	//增加数据到连续统计数据中
 	gTaskL3bfscContext.staUp2Now.wsIncMatCnt += gTaskL3bfscContext.cur.wsIncMatCnt;
@@ -1340,7 +1355,11 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.staUp2Now.wsAvgTttMatCnt = gTaskL3bfscContext.staUp2Now.wsTttMatCnt;
 	gTaskL3bfscContext.staUp2Now.wsAvgTttMatWgt = gTaskL3bfscContext.staUp2Now.wsTttMatWgt;
 
-	//更新连续数据库数据库
+	//更新连续数据库数据库：每5秒存储一次，不然数据库操作过于频繁
+	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_5S_CYCLE) == 0){
+		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_UP2NOW, &(gTaskL3bfscContext.staUp2Now)) == FAILURE)
+				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
+	}
 
 	//重要的统计功能挂载
 	if ((gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STATISTIC_PRINT_FREQUENCY) == 0)
@@ -1352,7 +1371,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 			gTaskL3bfscContext.staLocalUi.wsAvgTttTimes, gTaskL3bfscContext.staLocalUi.wsAvgTttMatCnt, gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt);
 
 	//将当前基础统计周期的数据清零
-	memset(&(gTaskL3bfscContext.cur), 0, sizeof(gTaskL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.cur), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 
 	//返回
 	return SUCCESS;

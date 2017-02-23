@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="MSG_ID_COM_INIT" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="fsm_l3bfsc_uicomm_param_set_result" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="MSG_ID_COM_INIT"/>
-			<item value="hcu_ethernet_socket_link_setup"/>
-			<item value="fsm_ethernet_init"/>
-			<item value="fsm_cloudvela_restart"/>
-			<item value="restart"/>
-			<item value="MSG_ID_COM_RESTART"/>
-			<item value="receiveBuffer"/>
-			<item value="printf"/>
+			<item value="fsm_l3bfsc_uicomm_param_set_result"/>
+			<item value="MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT"/>
+			<item value="MSG_ID_L3BFSC_CAN_WS_INIT_REQ"/>
+			<item value="fsm_l3bfsc_canitf_ws_init_fb"/>
+			<item value="fsm_l3bfsc_uicomm_cmd_req"/>
+			<item value="HCU_L3BFSC_STA_24H_IN_SECOND"/>
+			<item value="start24hStaTimeInUnix"/>
+			<item value="gTaskL3bfscContext.cur"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HcuSysMsgIeL3bfscContextStaElement_t"/>
+			<item value="DBIBFSC"/>
+			<item value="bfsc"/>
+			<item value="DBI_BFSC_DATA_SAVE_DAYS_MIN"/>
 			<item value="HCU_ERROR_PRINT_ZHBHJTCODEC(&quot;ZHBHJT: "/>
 			<item value="sprintf"/>
 			<item value="gZhbhjtMsgFormatCfgUlResp"/>
 			<item value="gZhbhjtMsgFormatCfgDlReq"/>
-			<item value="gapTime"/>
-			<item value="beTime"/>
-			<item value="snd"/>
-			<item value="snd.ul2Cloud"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

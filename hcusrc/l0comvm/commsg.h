@@ -2351,6 +2351,7 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
 {
 	UINT32  targetValue;
 	UINT32	targetUpLimit;
+	UINT32  parSetId; //指明是哪一套参数启作用了
 	UINT8	minWsNbr;
 	UINT8	maxWsNbr;
 	UINT32 	length;
@@ -3566,6 +3567,39 @@ typedef struct  msg_struct_l3mod_exg_data_report
 	UINT8  actionId;
 	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 }msg_struct_l3mod_exg_data_report_t;
+
+
+/*
+ *
+ *
+ *   //组合秤的统计报表合数数据结构
+ *
+ *
+ */
+
+typedef struct HcuSysMsgIeL3bfscContextStaElement
+{
+	UINT32	wsIncMatCnt;  			//物料数量
+	float	wsIncMatWgt;  			//物料重量
+	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
+	UINT32	wsTttTimes;  			//TTT次数
+	UINT32	wsTgvTimes;  			//TGV次数
+	UINT32	wsTttMatCnt;			//TTT物料数量
+	UINT32	wsTgvMatCnt;			//TGV物料数量
+	float	wsTttMatWgt;			//TTT物料重量
+	float	wsTgvMatWgt;			//TGV物料重量
+	UINT32	wsAvgTttTimes;			//TTT平均次数
+	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
+	float	wsAvgTttMatWgt;			//TTT平均重量
+}HcuSysMsgIeL3bfscContextStaElement_t;
+
+
+
+
+
+
+
+
 
 
 
