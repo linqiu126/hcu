@@ -157,12 +157,12 @@ CREATE TABLE IF NOT EXISTS `hcusysalarminfo` (
   `alarmcontent` int(4) NOT NULL,
   `alarmseverity` int(4) NOT NULL,
   `alarmclearflag` int(4) NOT NULL,
-  `photofilename` char(100) NOT NULL,
+  `alarmdesc` char(100) NOT NULL,
   `timestamp` int(4) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `alarmseverity`, `alarmclearflag`, `photofilename` `timestamp`) VALUES
+INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `alarmseverity`, `alarmclearflag`, `alarmdesc` `timestamp`) VALUES
 (1, 0, 0, 0, 0, 0, default, 111);
 */
 
@@ -191,7 +191,7 @@ OPSTAT dbi_HcuSysAlarmInfo_save(msg_struct_com_alarm_report_t *alarmData)
     }
 
 	//存入新的数据
-    sprintf(strsql, "INSERT INTO `hcusysalarminfo` (eqpid, alarmtype, alarmcontent, alarmseverity, alarmclearflag, photofilename, timestamp) VALUES \
+    sprintf(strsql, "INSERT INTO `hcusysalarminfo` (eqpid, alarmtype, alarmcontent, alarmseverity, alarmclearflag, alarmdesc, timestamp) VALUES \
     		('%d', '%d','%d', '%d', '%d', '%s', '%d')",\
     		alarmData->equID, alarmData->alarmType, alarmData->alarmContent, alarmData->alarmServerity, alarmData->alarmClearFlag, alarmData->alarmDesc, (UINT32)time(NULL));
 	result = mysql_query(sqlHandler, strsql);

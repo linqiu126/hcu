@@ -17,6 +17,9 @@
 =数据库表单再更新
 =需要更新本地L3UI界面
 
+//= ZSC, 2017 Feb.24, CURRENT_SW_DELIVERY 183=>AQYC项目
+=Update alarminfo table hcudb.sql for test
+
 
 //= ZJL, 2017 Feb.23, CURRENT_SW_DELIVERY 182=>BFSC项目
 =给所有项目增加新的LLCZHB模块，以便让项目编译变得统一和方便，当然采用虚拟LINK的方式，不是普通文件import的方式
