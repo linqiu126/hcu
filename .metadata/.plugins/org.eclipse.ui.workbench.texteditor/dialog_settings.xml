@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcubfscstadatainfo" key="selection"/>
+		<item value="0x3B" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="hcu_bfsc_stadatainfo"/>
-			<item value="hcu_bfsc_cfgpar"/>
-			<item value="fsm_l3bfsc_uicomm_param_set_result"/>
-			<item value="MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT"/>
-			<item value="MSG_ID_L3BFSC_CAN_WS_INIT_REQ"/>
-			<item value="fsm_l3bfsc_canitf_ws_init_fb"/>
-			<item value="fsm_l3bfsc_uicomm_cmd_req"/>
-			<item value="HCU_L3BFSC_STA_24H_IN_SECOND"/>
+			<item value="0x3B"/>
+			<item value="HUITP_IEID_sui_bfsc_startup_ind"/>
+			<item value="HUITP_IEID_uni_scale_weight_statistic"/>
+			<item value="MSGID"/>
+			<item value="HUITP_MSGID_sui_bfsc_startup_ind"/>
+			<item value="HUITP_MSGID_uni_bfsc_statistic_confirm"/>
+			<item value="HUITP_IEID_uni_sw_package_body"/>
+			<item value="HUITP_IEID_sui_inventory_element"/>
 		</list>
 		<list key="replacehistory">
+			<item value="IEID"/>
 			<item value="hcubfscstadatainfo"/>
 			<item value="hcubfsccfgpar"/>
 			<item value="HcuSysMsgIeL3bfscContextStaElement_t"/>
@@ -25,14 +26,13 @@
 			<item value="bfsc"/>
 			<item value="DBI_BFSC_DATA_SAVE_DAYS_MIN"/>
 			<item value="HCU_ERROR_PRINT_ZHBHJTCODEC(&quot;ZHBHJT: "/>
-			<item value="sprintf"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1115" key="DIALOG_X_ORIGIN"/>
-		<item value="299" key="DIALOG_Y_ORIGIN"/>
+		<item value="1163" key="DIALOG_X_ORIGIN"/>
+		<item value="244" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

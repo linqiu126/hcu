@@ -510,10 +510,38 @@ typedef enum
 	HUITP_MSGID_uni_bfsc_comb_scale_data_confirm     = 0x3B01,
 	HUITP_MSGID_uni_bfsc_comb_scale_event_report     = 0x3B82,
 	HUITP_MSGID_uni_bfsc_comb_scale_event_confirm    = 0x3B02,
-	HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req          = 0x3B03,
-	HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp         = 0x3B83,
+	HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req         = 0x3B03,
+	HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp        = 0x3B83,
 	HUITP_MSGID_uni_bfsc_statistic_report            = 0x3B84,
 	HUITP_MSGID_uni_bfsc_statistic_confirm           = 0x3B04,
+	//HCU-IHU SUI新增内容
+	//上电过程
+	HUITP_MSGID_sui_bfsc_startup_ind                 = 0x3B90,
+	//配置过程
+	HUITP_MSGID_sui_bfsc_set_config_req              = 0x3B11,
+	HUITP_MSGID_sui_bfsc_set_config_resp             = 0x3B91,
+	//启动过程
+	HUITP_MSGID_sui_bfsc_start_req                   = 0x3B12,
+	HUITP_MSGID_sui_bfsc_start_resp                  = 0x3B92,
+	HUITP_MSGID_sui_bfsc_stop_req                    = 0x3B13,
+	HUITP_MSGID_sui_bfsc_stop_resp                   = 0x3B93,
+	//重量汇报过程
+	HUITP_MSGID_sui_bfsc_new_ws_event                = 0x3B94,
+	HUITP_MSGID_sui_bfsc_repeat_ws_event             = 0x3B94,
+	//组合出料过程
+	HUITP_MSGID_sui_bfsc_ws_comb_out_req             = 0x3B15,
+	HUITP_MSGID_sui_bfsc_ws_comb_out_resp            = 0x3B95,
+	//抛料过程
+	HUITP_MSGID_sui_bfsc_ws_give_up_req              = 0x3B16,
+	HUITP_MSGID_sui_bfsc_ws_give_up_resp             = 0x3B96,
+	//特殊命令过程（测试等过程）
+	HUITP_MSGID_sui_bfsc_command_req                 = 0x3B17,
+	HUITP_MSGID_sui_bfsc_command_resp                = 0x3B97,
+	//差错过程
+	HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B98,
+	HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B19,
+	HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B99,
+	//统一结束符
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
 
   //云控锁-锁-旧系统兼容
@@ -746,6 +774,9 @@ typedef enum
 	HUITP_MSGID_uni_inventory_resp                   = 0xA080, 
 	HUITP_MSGID_uni_inventory_report                 = 0xA081, 
 	HUITP_MSGID_uni_inventory_confirm                = 0xA001, 
+	//HCU-IHU SUI新增内容
+	HUITP_MSGID_sui_inventory_report                 = 0xA090,
+	HUITP_MSGID_sui_inventory_confirm                = 0xA010,
 	HUITP_MSGID_uni_inventory_max,
 
   //软件版本体
@@ -753,7 +784,10 @@ typedef enum
 	HUITP_MSGID_uni_sw_package_req                   = 0xA100,	
 	HUITP_MSGID_uni_sw_package_resp                  = 0xA180,	 
 	HUITP_MSGID_uni_sw_package_report                = 0xA181,	 
-	HUITP_MSGID_uni_sw_package_confirm               = 0xA101, 
+	HUITP_MSGID_uni_sw_package_confirm               = 0xA101,
+	//HCU-IHU SUI新增内容
+	HUITP_MSGID_sui_sw_package_req                   = 0xA110,
+	HUITP_MSGID_sui_sw_package_resp                  = 0xA190,
 	HUITP_MSGID_uni_sw_package_max,
 
   //ALARM REPORT
@@ -1048,18 +1082,18 @@ typedef enum
 	HUITP_IEID_uni_power_meter_max,
 
   //光照强度
-	HUITP_IEID_uni_lightstr_data_min               = 0x3500,
-	HUITP_IEID_uni_lightstr_data_value             = 0x3500,
+	HUITP_IEID_uni_lightstr_data_min                = 0x3500,
+	HUITP_IEID_uni_lightstr_data_value              = 0x3500,
 	HUITP_IEID_uni_lightstr_data_max,
 
   //有毒气体VOC
-	HUITP_IEID_uni_toxicgas_data_min                     = 0x3600,
-	HUITP_IEID_uni_toxicgas_data_value                   = 0x3600,
+	HUITP_IEID_uni_toxicgas_data_min                = 0x3600,
+	HUITP_IEID_uni_toxicgas_data_value              = 0x3600,
 	HUITP_IEID_uni_toxicgas_data_max,
 
   //海拔高度
-	HUITP_IEID_uni_altitude_data_min                     = 0x3700,
-	HUITP_IEID_uni_altitude_data_value                   = 0x3700,
+	HUITP_IEID_uni_altitude_data_min                = 0x3700,
+	HUITP_IEID_uni_altitude_data_value              = 0x3700,
 	HUITP_IEID_uni_altitude_data_max,
 
   //马达
@@ -1085,6 +1119,33 @@ typedef enum
 	HUITP_IEID_uni_scale_weight_cfg_par             = 0x3B03,
 	HUITP_IEID_uni_scale_weight_event               = 0x3B04,
 	HUITP_IEID_uni_scale_weight_statistic           = 0x3B05,
+	//HCU-IHU SUI新增接口IE
+	//上电过程
+	HUITP_IEID_sui_bfsc_startup_ind                 = 0x3B10,
+	//配置过程
+	HUITP_IEID_sui_bfsc_set_config_req              = 0x3B11,
+	HUITP_IEID_sui_bfsc_set_config_resp             = 0x3B12,
+	//启动过程
+	HUITP_IEID_sui_bfsc_start_req                   = 0x3B13,
+	HUITP_IEID_sui_bfsc_start_resp                  = 0x3B14,
+	HUITP_IEID_sui_bfsc_stop_req                    = 0x3B15,
+	HUITP_IEID_sui_bfsc_stop_resp                   = 0x3B16,
+	//重量汇报过程
+	HUITP_IEID_sui_bfsc_new_ws_event                = 0x3B17,
+	HUITP_IEID_sui_bfsc_repeat_ws_event             = 0x3B18,
+	//组合出料过程
+	HUITP_IEID_sui_bfsc_ws_comb_out_req             = 0x3B19,
+	HUITP_IEID_sui_bfsc_ws_comb_out_resp            = 0x3B1A,
+	//抛料过程
+	HUITP_IEID_sui_bfsc_ws_give_up_req              = 0x3B1B,
+	HUITP_IEID_sui_bfsc_ws_give_up_resp             = 0x3B1C,
+	//特殊命令过程（测试等过程）
+	HUITP_IEID_sui_bfsc_command_req                 = 0x3B1D,
+	HUITP_IEID_sui_bfsc_command_resp                = 0x3B1E,
+	//差错过程
+	HUITP_IEID_sui_bfsc_fault_ind                   = 0x3B1F,
+	HUITP_IEID_sui_bfsc_err_inq_cmd_req             = 0x3B20,
+	HUITP_IEID_sui_bfsc_err_inq_cmd_resp            = 0x3B21,
 	HUITP_IEID_uni_bfsc_comb_scale_max,
 
   //云控锁-锁-旧系统
@@ -1159,10 +1220,10 @@ typedef enum
 	HUITP_IEID_uni_ccl_state_old_max,
 	
   //云控锁-锁
-	HUITP_IEID_uni_ccl_lock_min                 		= 0x4D00,  
-	HUITP_IEID_uni_ccl_lock_state               		= 0x4D00,
-	HUITP_IEID_uni_ccl_lock_auth_req            		= 0x4D01,
-	HUITP_IEID_uni_ccl_lock_auth_resp           		= 0x4D02,
+	HUITP_IEID_uni_ccl_lock_min                 	= 0x4D00,
+	HUITP_IEID_uni_ccl_lock_state               	= 0x4D00,
+	HUITP_IEID_uni_ccl_lock_auth_req            	= 0x4D01,
+	HUITP_IEID_uni_ccl_lock_auth_resp           	= 0x4D02,
 	HUITP_IEID_uni_ccl_lock_max,	
 	
   //云控锁-状态聚合
@@ -1236,11 +1297,13 @@ typedef enum
   //软件清单
 	HUITP_IEID_uni_inventory_min                    = 0xA000,
 	HUITP_IEID_uni_inventory_element                = 0xA000,
+	HUITP_IEID_sui_inventory_element                = 0xA010,
 	HUITP_IEID_uni_inventory_max,
 
   //软件版本体
 	HUITP_IEID_uni_sw_package_min                   = 0xA100,	
 	HUITP_IEID_uni_sw_package_body                  = 0xA100, 
+	HUITP_IEID_sui_sw_package_body                  = 0xA110,
 	HUITP_IEID_uni_sw_package_max,
 
   //ALARM REPORT
@@ -2369,6 +2432,124 @@ typedef struct StrIe_HUITP_IEID_uni_scale_weight_statistic
 #define HUITP_IEID_UNI_SCALE_WEIGHT_STATISTIC_REPORT_24H				(5)
 #define HUITP_IEID_UNI_SCALE_WEIGHT_STATISTIC_REPORT_INVALID			(0xFF)
 
+//上电过程
+//HUITP_IEID_sui_bfsc_startup_ind                 = 0x3B10,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_startup_ind
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_startup_ind_t;
+//配置过程
+//HUITP_IEID_sui_bfsc_set_config_req              = 0x3B11,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_set_config_req
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_set_config_req_t;
+//HUITP_IEID_sui_bfsc_set_config_resp             = 0x3B12,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_set_config_resp
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_set_config_resp_t;
+//启动过程
+//HUITP_IEID_sui_bfsc_start_req                   = 0x3B13,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_start_req
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_start_req_t;
+//HUITP_IEID_sui_bfsc_start_resp                  = 0x3B14,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_start_resp
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_start_resp_t;
+//HUITP_IEID_sui_bfsc_stop_req                    = 0x3B15,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_stop_req
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_stop_req_t;
+//HUITP_IEID_sui_bfsc_stop_resp                   = 0x3B16,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_stop_resp
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_stop_resp_t;
+//重量汇报过程
+//HUITP_IEID_sui_bfsc_new_ws_event                = 0x3B17,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_new_ws_event
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_new_ws_event_t;
+//HUITP_IEID_sui_bfsc_repeat_ws_event             = 0x3B18,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_repeat_ws_event
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_repeat_ws_event_t;
+//组合出料过程
+//HUITP_IEID_sui_bfsc_ws_comb_out_req             = 0x3B19,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_ws_comb_out_req
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_ws_comb_out_req_t;
+//HUITP_IEID_sui_bfsc_ws_comb_out_resp            = 0x3B1A,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_ws_comb_out_resp
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_ws_comb_out_resp_t;
+//抛料过程
+//HUITP_IEID_sui_bfsc_ws_give_up_req              = 0x3B1B,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_ws_give_up_req
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_ws_give_up_req_t;
+//HUITP_IEID_sui_bfsc_ws_give_up_resp             = 0x3B1C,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_ws_give_up_resp
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_ws_give_up_resp_t;
+//特殊命令过程（测试等过程）
+//HUITP_IEID_sui_bfsc_command_req                 = 0x3B1D,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_command_req
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_command_req_t;
+//HUITP_IEID_sui_bfsc_command_resp                = 0x3B1E,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_command_resp
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_command_resp_t;
+//差错过程
+//HUITP_IEID_sui_bfsc_fault_ind                   = 0x3B1F,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_fault_ind
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_fault_ind_t;
+//HUITP_IEID_sui_bfsc_err_inq_cmd_req             = 0x3B20,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_err_inq_cmd_req
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_err_inq_cmd_req_t;
+//HUITP_IEID_sui_bfsc_err_inq_cmd_resp            = 0x3B21,
+typedef struct StrIe_HUITP_IEID_sui_bfsc_err_inq_cmd_resp
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+}StrIe_HUITP_IEID_sui_bfsc_err_inq_cmd_resp_t;
+
+
 //HUITP_IEID_uni_bfsc_comb_scale_max,
 
 
@@ -2853,6 +3034,20 @@ typedef struct StrIe_HUITP_IEID_uni_inventory_element
 //用于指示单个硬件具体的PEM信息，或者小版本的演进修改。
 //如果没有独特信息，可采用0000/FFFF来表示无效不用。
 
+//HUITP_IEID_sui_inventory_element                = 0xA010,
+#define HUITP_IEID_SUI_INVENTORY_ELEMENT_DESC_LEN_MAX 50
+typedef struct StrIe_HUITP_IEID_sui_inventory_element
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT16 hwType;
+	UINT16 hwId;
+	UINT16 swRel;
+	UINT16 swVer;
+	UINT8  upgradeFlag;
+	char   desc[HUITP_IEID_SUI_INVENTORY_ELEMENT_DESC_LEN_MAX];
+}StrIe_HUITP_IEID_sui_inventory_element_t;
+
 //HUITP_IEID_uni_inventory_max,
 
 //软件版本体
@@ -2866,6 +3061,16 @@ typedef struct StrIe_HUITP_IEID_uni_sw_package_body
 	UINT16 validLen;
 	UINT8  swPkgBody[HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN];
 }StrIe_HUITP_IEID_uni_sw_package_body_t;
+
+//HUITP_IEID_sui_sw_package_body                  = 0xA110,
+#define HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN 240
+typedef struct StrIe_HUITP_IEID_sui_sw_package_body
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT16 validLen;
+	UINT8  swPkgBody[HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN];
+}StrIe_HUITP_IEID_sui_sw_package_body_t;
 
 //HUITP_IEID_uni_sw_package_max,
 
@@ -4928,7 +5133,163 @@ typedef struct StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t;
 
+//HCU-IHU SUI新增内容
+//上电过程
+//HUITP_MSGID_sui_bfsc_startup_ind                 = 0x3B90,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_startup_ind
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_startup_ind_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t;
+
+//配置过程
+//HUITP_MSGID_sui_bfsc_set_config_req              = 0x3B11,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_set_config_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_set_config_req_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_set_config_req_t;
+
+//HUITP_MSGID_sui_bfsc_set_config_resp             = 0x3B91,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_set_config_resp_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t;
+
+//启动过程
+//HUITP_MSGID_sui_bfsc_start_req                   = 0x3B12,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_start_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_start_req_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_start_req_t;
+
+//HUITP_MSGID_sui_bfsc_start_resp                  = 0x3B92,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_start_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_start_resp_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t;
+
+//HUITP_MSGID_sui_bfsc_stop_req                    = 0x3B13,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_stop_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_stop_req_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_stop_req_t;
+
+//HUITP_MSGID_sui_bfsc_stop_resp                   = 0x3B93,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_stop_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_stop_resp_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t;
+
+//重量汇报过程
+//HUITP_MSGID_sui_bfsc_new_ws_event                = 0x3B94,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_new_ws_event_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t;
+
+//HUITP_MSGID_sui_bfsc_repeat_ws_event             = 0x3B94,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_repeat_ws_event_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t;
+
+//组合出料过程
+//HUITP_MSGID_sui_bfsc_ws_comb_out_req             = 0x3B15,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_ws_comb_out_req_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_req_t;
+
+//HUITP_MSGID_sui_bfsc_ws_comb_out_resp            = 0x3B95,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_ws_comb_out_resp_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t;
+
+//抛料过程
+//HUITP_MSGID_sui_bfsc_ws_give_up_req              = 0x3B16,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_give_up_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_ws_give_up_req_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_ws_give_up_req_t;
+
+//HUITP_MSGID_sui_bfsc_ws_give_up_resp             = 0x3B96,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_give_up_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_ws_give_up_resp_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_ws_give_up_resp_t;
+
+//特殊命令过程（测试等过程）
+//HUITP_MSGID_sui_bfsc_command_req                 = 0x3B17,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_command_req_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_command_req_t;
+
+//HUITP_MSGID_sui_bfsc_command_resp                = 0x3B97,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_command_resp_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t;
+
+//差错过程
+//HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B98,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_fault_ind
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_fault_ind_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t;
+
+//HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B19,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_err_inq_cmd_req_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_req_t;
+
+//HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B99,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_bfsc_err_inq_cmd_resp_t cont;
+}StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t;
+
+
+//统一结束符
 //HUITP_MSGID_uni_bfsc_comb_scale_max,
+
 
 
 //云控锁-锁-兼容旧系统
@@ -6129,6 +6490,25 @@ typedef struct StrMsg_HUITP_MSGID_uni_inventory_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 	StrIe_HUITP_IEID_uni_inventory_element_t confirmValue;
 }StrMsg_HUITP_MSGID_uni_inventory_confirm_t;
+
+//HCU-IHU SUI新增内容
+//HUITP_MSGID_sui_inventory_report                 = 0xA090,
+typedef struct StrMsg_HUITP_MSGID_sui_inventory_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_inventory_element_t reportValue;
+}StrMsg_HUITP_MSGID_sui_inventory_report_t;
+
+//HUITP_MSGID_sui_inventory_confirm                = 0xA010,
+typedef struct StrMsg_HUITP_MSGID_sui_inventory_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_sui_inventory_element_t confirmValue;
+}StrMsg_HUITP_MSGID_sui_inventory_confirm_t;
+
+
 
 //HUITP_MSGID_uni_inventory_max,
 

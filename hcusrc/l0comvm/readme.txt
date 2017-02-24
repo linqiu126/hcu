@@ -7,20 +7,26 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
-
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 [BUG#003
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
-==> 从BFSCUICOMM模块定时扫描，送回UI界面的结果给L3BFSC模块：机制是定时扫描数据库，还是有类似于ISR中断的钩子？
-= 实现了最为无耻的界面控制方法
-=数据库表单再更新
-=需要更新本地L3UI界面
+
+
+//= ZJL, 2017 Feb.24, CURRENT_SW_DELIVERY 183=>BFSC项目
+=改进HUITP的消息定义，从而明确状态机的工作过程
+
+
+
 
 
 //= ZJL, 2017 Feb.23, CURRENT_SW_DELIVERY 182=>BFSC项目
 =给所有项目增加新的LLCZHB模块，以便让项目编译变得统一和方便，当然采用虚拟LINK的方式，不是普通文件import的方式
 =解决了以下BUG#001：原因是链路没建立成功，FAILURE导致状态机报错。改为返回OPRSUCC，就没有问题了。
+==> 从BFSCUICOMM模块定时扫描，送回UI界面的结果给L3BFSC模块：机制是定时扫描数据库，还是有类似于ISR中断的钩子？
+= 实现了最为无耻的界面控制方法
+=数据库表单再更新
+=需要更新本地L3UI界面
 
 [BUG#001]
 发现在ETHERNET模块启动的时候，启动完成后，又收到了MSG_ID_COM_INIT，是从SVRCON发过来的，但此时SVRCON已经进入休眠了，不太可能发送该消息，怪哉
