@@ -1053,7 +1053,18 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+
+		UINT32 optId=0, cmdId=0, backType=0;
+		//命令字
+		cmdId = L3CI_alarm;
+		backType = L3CI_cmdid_back_type_instance;
+	    optId = L3PO_hcualarm_report;
+
+		if (FAILURE == func_cloudvela_stdzhb_msg_alarm_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, cmdId, optId, \
+				backType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.alarmDesc,\
+				rcv.timeStamp, &pMsgOutput))
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
