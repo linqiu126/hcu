@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="0x3B" key="selection"/>
+		<item value="StrIe_HUITP_IEID_sui_sw_package_body" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="0x3B"/>
-			<item value="HUITP_IEID_sui_bfsc_startup_ind"/>
-			<item value="HUITP_IEID_uni_scale_weight_statistic"/>
-			<item value="MSGID"/>
-			<item value="HUITP_MSGID_sui_bfsc_startup_ind"/>
-			<item value="HUITP_MSGID_uni_bfsc_statistic_confirm"/>
-			<item value="HUITP_IEID_uni_sw_package_body"/>
-			<item value="HUITP_IEID_sui_inventory_element"/>
+			<item value="StrIe_HUITP_IEID_sui_sw_package_body"/>
+			<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
+			<item value="HUITP_IEID_sui_sw_package_body"/>
+			<item value="SW_PACKAGE_BODY_MAX_LEN"/>
+			<item value="HUITP_IEID_uni_com_segment"/>
+			<item value="seg"/>
+			<item value="seg_"/>
+			<item value="StrIe_HUITP_IEID_sui_sw_package_body_t"/>
 		</list>
 		<list key="replacehistory">
 			<item value="IEID"/>

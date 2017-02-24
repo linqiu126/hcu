@@ -13,15 +13,13 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
-//= ZJL, 2017 Feb.24, CURRENT_SW_DELIVERY 183=>BFSC项目
+
+//= ZJL, 2017 Feb.24, CURRENT_SW_DELIVERY 184=>BFSC项目
 =改进HUITP的消息定义，从而明确状态机的工作过程
-
-
 
 
 //= ZSC, 2017 Feb.24, CURRENT_SW_DELIVERY 183=>AQYC项目
 =Update alarminfo table hcudb.sql for test
-
 
 //= ZJL, 2017 Feb.23, CURRENT_SW_DELIVERY 182=>BFSC项目
 =给所有项目增加新的LLCZHB模块，以便让项目编译变得统一和方便，当然采用虚拟LINK的方式，不是普通文件import的方式
