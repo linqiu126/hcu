@@ -706,9 +706,9 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT fsm_llczhb_l3mod_llczhb_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	msg_struct_l3mod_llczhb_ctrl_resp rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3mod_llczhb_ctrl_resp));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3mod_llczhb_ctrl_resp)))
+	msg_struct_l3mod_llczhb_ctrl_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3mod_llczhb_ctrl_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3mod_llczhb_ctrl_resp_t)))
 		HCU_ERROR_PRINT_LLCZHB("LLCZHB: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 

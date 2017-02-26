@@ -870,8 +870,8 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 
 	//ZHB测试钩子目标，实际不可如此使用的，必须恢复，不然程序不可以正常工作！！！
 	//TEST START
-//	strcpy(rcv.buf, ZHBHJT_MSG_TEST_DATA_SET_LIM);
-//	rcv.length = strlen(ZHBHJT_MSG_TEST_DATA_SET_LIM);
+	strcpy(rcv.buf, ZHBHJT_MSG_TEST_DATA_GET_MIN_RPT1);
+	rcv.length = strlen(ZHBHJT_MSG_TEST_DATA_GET_MIN_RPT1);
 	//TEST END
 	//ZHB测试体
 

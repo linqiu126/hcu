@@ -3537,13 +3537,14 @@ typedef struct  msg_struct_l3mod_llczhb_ctrl_resp
 {
 	UINT8  actionId;
 	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
-}msg_struct_l3mod_llczhb_ctrl_resp;
+}msg_struct_l3mod_llczhb_ctrl_resp_t;
 
 //MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
 typedef struct  msg_struct_l3mod_llczhb_data_report
 {
 	UINT8  actionId;
 	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
+	UINT32 length;//added by zsc
 }msg_struct_l3mod_llczhb_data_report_t;
 
 //MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,
@@ -3595,7 +3596,54 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 
 
 
+/*
+ *
+ *
+ *   //扬尘监测的统计报表合数数据结构
+ *
+ *
+ */
 
+typedef struct HcuSysMsgIeL3aqycContextStaElement
+{
+	char    a34001_Flag[1];			//总悬浮颗粒物浓度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a34001_Avg;  			//总悬浮颗粒物浓度监测时间内的均值
+	float	a34001_Max;  			//总悬浮颗粒物浓度监测时间内最大值
+	float	a34001_Min;  			//总悬浮颗粒物浓度监测时间内最小值
+
+	char    a50001_Flag[1];			//噪声实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a50001_Avg;  			//噪声监测时间内的均值
+	float	a50001_Max;  			//噪声监测时间内最大值
+	float	a50001_Min;  			//噪声监测时间内最小值
+
+	char    a01001_Flag[1];			//温度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01001_Avg;  			//温度监测时间内的均值
+	float	a01001_Max;  			//温度监测时间内最大值
+	float	a01001_Min;  			//温度监测时间内最小值
+
+	char    a01002_Flag[1];			//湿度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01002_Avg;  			//湿监测时间内的均值
+	float	a01002_Max;  			//湿度监测时间内最大值
+	float	a01002_Min;  			//湿度监测时间内最小值
+
+	//气压暂不支持但先定义此处，粉尘和雨量未使用暂不定义
+	char    a01006_Flag[1];			//气压实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01006_Avg;  			//气压测时间内的均值
+	float	a01006_Max;  			//气压监测时间内最大值
+	float	a01006_Min;  			//气压监测时间内最小值
+
+	//风速风向无最大最小值要求，先定义成统一格式以后按需要再行调整
+	char    a01007_Flag[1];			//风速实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01007_Avg;  			//风速测时间内的均值
+	float	a01007_Max;  			//风速监测时间内最大值
+	float	a01007_Min;  			//风速监测时间内最小值
+
+	char    a01008_Flag[1];			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01008_Avg;  			//风向测时间内的均值
+	float	a01008_Max;  			//风向监测时间内最大值
+	float	a01008_Min;  			//风向监测时间内最小值
+
+}HcuSysMsgIeL3aqycContextStaElement_t;
 
 
 

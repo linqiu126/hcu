@@ -69,7 +69,7 @@ HcuFsmStateItem_t HcuFsmL3aqycg20[] =
 
 
 //Task Global variables
-gTaskL3aqycq20Context_t gTaskL3aqycq20Context;
+gTaskL3aqycq20Context_t gTaskL3aqycq20Context; //扬尘监测的总控表
 
 
 
@@ -115,6 +115,9 @@ OPSTAT fsm_l3aqycg20_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		HcuErrorPrint("L3AQYCG20: Error initialize interface!\n");
 		return FAILURE;
 	}
+
+	//秤盘数据表单控制表初始化
+	memset(&gTaskL3aqycq20Context, 0, sizeof(gTaskL3aqycq20Context_t));
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20] = 0;
@@ -206,7 +209,7 @@ OPSTAT fsm_l3aqycg20_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * pa
 	msg_struct_cloudvela_ycjk_data_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_cloudvela_ycjk_data_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_ycjk_data_req_t))){
-		HcuErrorPrint("NOISE: Receive message error!\n");
+		HcuErrorPrint("L3AQYCG20: Receive message error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		return FAILURE;
 	}
@@ -239,7 +242,7 @@ OPSTAT fsm_l3aqycg20_huil3mod_exg_data_report(UINT32 dest_id, UINT32 src_id, voi
 
 OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
+	int ret=0;
 	msg_struct_llczhb_l3mod_ctrl_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_llczhb_l3mod_ctrl_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_llczhb_l3mod_ctrl_req_t)))
@@ -275,6 +278,101 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051:
+		//取得开始和结束时间，计算开始和结束时间和当前时间的差值，并同时起采集数据起始时间和结束时间的定时器，数据起始timeout后启动一分钟周期定时器来周期读取并上传分钟数据（此处可设Flag），
+		//数据从聚合表中获得，聚合表由内部定义Timer定时从数据库中取数据计算（暂定一分钟），为简化设计，可依据Flag值来判断是否上传发送
+		HCU_DEBUG_PRINT_INF("L3AQYCG20: Receive 2051 CMD, BeginTime=%d, EndTime=%d\n\n\n\n\n", rcv.dl2Self.gapTime.BeginTime,  rcv.dl2Self.gapTime.EndTime);
+		/*
+		typedef struct  msg_struct_l3mod_llczhb_ctrl_resp
+		{
+			UINT8  actionId;
+			msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
+		}msg_struct_l3mod_llczhb_ctrl_resp_t;
+
+
+		typedef struct  msgie_struct_zhbhjt_element_ul2cloud
+		{
+			UINT8  QnRtn;
+			UINT32 SystemTime;
+			UINT8  ExeRtn;
+			UINT32 DataTime;
+			msgie_struct_zhbhjt_frame_data_ala_value_t  Ala;
+			UINT32 AlarmTime;
+			UINT8  AlarmType;
+			msgie_struct_zhbhjt_frame_data_alarm_event_t AlarmEvent;
+			UINT32 AlarmTarget;
+			UINT16 ReportTime;
+			UINT16 RtdInterval;
+			UINT8 nbrOfCRtd;
+			msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+			UINT8 nbrOfRS;
+			msgie_struct_zhbhjt_frame_data_RS_value_t RS[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+			UINT8 nbrOfRT;
+			msgie_struct_zhbhjt_frame_data_RT_value_t RT[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+			UINT8 nbrOfCMinRpt;
+			msgie_struct_zhbhjt_frame_data_pol_min_hour_t min[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+			UINT8 nbrOfAlmLim;
+			msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
+			UINT32 length;
+		}msgie_struct_zhbhjt_element_ul2cloud_t;
+
+		typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
+{
+	UINT8  PolId;
+	float  Cou;
+	float  Min;
+	float  Avg;
+	float  Max;
+}msgie_struct_zhbhjt_frame_data_pol_min_hour_t;
+		*/
+
+		msg_struct_l3mod_llczhb_data_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_data_report_t));
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051;
+		snd.ul2Cloud.DataTime = time(0);
+		snd.ul2Cloud.nbrOfCMinRpt = 7;
+		snd.ul2Cloud.min[0].PolId = 34001;
+		snd.ul2Cloud.min[0].Cou = 340.01;
+		snd.ul2Cloud.min[0].Avg = 340.01;
+		snd.ul2Cloud.min[0].Max = 340.01;
+		snd.ul2Cloud.min[0].Min = 340.01;
+		snd.ul2Cloud.min[1].PolId = 50001;
+		snd.ul2Cloud.min[1].Cou = 500.01;
+		snd.ul2Cloud.min[1].Avg = 500.01;
+		snd.ul2Cloud.min[1].Max = 500.01;
+		snd.ul2Cloud.min[1].Min = 500.01;
+		snd.ul2Cloud.min[2].PolId = 1001;
+		snd.ul2Cloud.min[2].Cou = 10.01;
+		snd.ul2Cloud.min[2].Avg = 10.01;
+		snd.ul2Cloud.min[2].Max = 10.01;
+		snd.ul2Cloud.min[2].Min = 10.01;
+		snd.ul2Cloud.min[3].PolId = 1002;
+		snd.ul2Cloud.min[3].Cou = 10.02;
+		snd.ul2Cloud.min[3].Avg = 10.02;
+		snd.ul2Cloud.min[3].Max = 10.02;
+		snd.ul2Cloud.min[3].Min = 10.02;
+		snd.ul2Cloud.min[4].PolId = 1006;
+		snd.ul2Cloud.min[4].Cou = 10.06;
+		snd.ul2Cloud.min[4].Avg = 10.06;
+		snd.ul2Cloud.min[4].Max = 10.06;
+		snd.ul2Cloud.min[4].Min = 10.06;
+		snd.ul2Cloud.min[5].PolId = 1007;
+		snd.ul2Cloud.min[5].Cou = 10.07;
+		snd.ul2Cloud.min[5].Avg = 10.07;
+		snd.ul2Cloud.min[5].Max = 10.07;
+		snd.ul2Cloud.min[5].Min = 10.07;
+		snd.ul2Cloud.min[6].PolId = 1008;
+		snd.ul2Cloud.min[6].Cou = 10.08;
+		snd.ul2Cloud.min[6].Avg = 10.08;
+		snd.ul2Cloud.min[6].Max = 10.08;
+		snd.ul2Cloud.min[6].Min = 10.08;
+
+		snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
+
+		ret = hcu_message_send(MSG_ID_L3MOD_LLCZHB_DATA_REPORT, TASK_ID_LLCZHB, TASK_ID_L3AQYCG20, &snd, snd.length);
+		if (ret == FAILURE){
+			HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName, zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName);
+		}
+
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT_2031:

@@ -31,7 +31,15 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 
 typedef struct gTaskL3aqycq20Context
 {
-	UINT8 currentSensorId;
+	//实时统计部分：均以一个统计周期为单位
+	HcuSysMsgIeL3aqycContextStaElement_t cur;  		//当前统计基础颗粒中的数值
+	HcuSysMsgIeL3aqycContextStaElement_t  curAge;	//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
+
+	//统计报告部分
+	HcuSysMsgIeL3aqycContextStaElement_t staInstant;  	//瞬时值结果，是否需要带Max,Min带商榷
+	HcuSysMsgIeL3aqycContextStaElement_t staOneMin;  	//1分钟统计结果
+	HcuSysMsgIeL3aqycContextStaElement_t sta60Min;		//60分钟统计结果
+	HcuSysMsgIeL3aqycContextStaElement_t sta24H;		//24H统计结果
 }gTaskL3aqycq20Context_t;
 
 
