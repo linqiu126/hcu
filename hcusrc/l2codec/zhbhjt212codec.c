@@ -508,7 +508,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	if ((strlen(cps) > 0) && (cps[strlen(cps)-1] == ';'))  cps[strlen(cps)-1] = '\0';
 	//HCU_DEBUG_PRINT_INF("ZHBHJT212: CPS=[%s]\n", cps);
 	//组合数据部分
-	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: pack error!\n");
+	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: pack error!%d\n", strlen(ds) + strlen(cps) + 20);
 	strcat(ds, "CP=&&");
 	strcat(ds, cps);
 	strcat(ds, "&&");

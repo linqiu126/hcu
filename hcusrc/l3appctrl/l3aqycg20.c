@@ -131,6 +131,7 @@ OPSTAT fsm_l3aqycg20_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
+
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3AQYCG20, FSM_STATE_L3AQYCG20_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Error Set FSM State!\n");
@@ -195,7 +196,27 @@ OPSTAT fsm_l3aqycg20_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 			}//FsmSetState
 		}
 
-		//Do nothing
+		//周期性聚合表生成
+		if (func_l3aqyc_time_out_aggregation_process() == FAILURE){
+			HcuErrorPrint("L3AQYCG20: Error prceoss time out message!\n");
+			}
+	}
+
+	//一次性工作
+	else if ((rcv.timeId == TIMER_ID_1S_L3AQYCG20_START_MONITOR) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//启动周期性数据报告定时器
+		ret = hcu_timer_start(TASK_ID_L3AQYCG20, TIMER_ID_1S_L3AQYCG20_PERIOD_REPORT, HCU_L3AQYC_STA_1M_CYCLE, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		if (ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+			HcuErrorPrint("L3AQYCG20: Error start period timer!\n");
+			return FAILURE;
+		}
+	}
+
+	//周期性工作
+	else if ((rcv.timeId == TIMER_ID_1S_L3AQYCG20_PERIOD_REPORT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//设置分钟，小时，天数据报告标志位为ON,在周期性统计扫描中生成报告后依据标志位是否为ON来确定是否发送，发送后设置相应标志位为OFF
+		gTaskL3aqycq20Context.MinReportFlag = TRUE;
 
 	}
 
@@ -249,6 +270,8 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_L3AQYCG20("AQYC: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+	UINT32 timeCurrent;
+
 	switch (rcv.actionId){
 	case HCU_SYSMSG_ZHBHJT_ACTION_EXECUTE_FINISH_9012:
 	break;
@@ -280,50 +303,20 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051:
 		//取得开始和结束时间，计算开始和结束时间和当前时间的差值，并同时起采集数据起始时间和结束时间的定时器，数据起始timeout后启动一分钟周期定时器来周期读取并上传分钟数据（此处可设Flag），
 		//数据从聚合表中获得，聚合表由内部定义Timer定时从数据库中取数据计算（暂定一分钟），为简化设计，可依据Flag值来判断是否上传发送
-		HCU_DEBUG_PRINT_INF("L3AQYCG20: Receive 2051 CMD, BeginTime=%d, EndTime=%d\n\n\n\n\n", rcv.dl2Self.gapTime.BeginTime,  rcv.dl2Self.gapTime.EndTime);
-		/*
-		typedef struct  msg_struct_l3mod_llczhb_ctrl_resp
-		{
-			UINT8  actionId;
-			msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
-		}msg_struct_l3mod_llczhb_ctrl_resp_t;
+		timeCurrent = time(0);
+		HcuErrorPrint("L3AQYCG20: BeginTime=%d  EndTime=%d at min report request message,current Time=%d !\n\n\n\n\n\n",rcv.dl2Self.gapTime.BeginTime, rcv.dl2Self.gapTime.EndTime,timeCurrent);
+		gTaskL3aqycq20Context.timeBegin = rcv.dl2Self.gapTime.BeginTime - timeCurrent;
+		gTaskL3aqycq20Context.timeEnd = rcv.dl2Self.gapTime.EndTime - timeCurrent;
+		if(gTaskL3aqycq20Context.timeBegin < 0 || gTaskL3aqycq20Context.timeEnd < 0)
+			HcuErrorPrint("L3AQYCG20: Receive backward BeginTime=%d or EndTime=%d at min report request message !\n\n\n\n\n\n",rcv.dl2Self.gapTime.BeginTime, rcv.dl2Self.gapTime.EndTime);
+		else
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: Receive 2051 CMD, get pollution date will start from BeginTime=%d, stop at EndTime=%d\n\n\n\n\n", gTaskL3aqycq20Context.timeBegin,  gTaskL3aqycq20Context.timeEnd);
 
-
-		typedef struct  msgie_struct_zhbhjt_element_ul2cloud
-		{
-			UINT8  QnRtn;
-			UINT32 SystemTime;
-			UINT8  ExeRtn;
-			UINT32 DataTime;
-			msgie_struct_zhbhjt_frame_data_ala_value_t  Ala;
-			UINT32 AlarmTime;
-			UINT8  AlarmType;
-			msgie_struct_zhbhjt_frame_data_alarm_event_t AlarmEvent;
-			UINT32 AlarmTarget;
-			UINT16 ReportTime;
-			UINT16 RtdInterval;
-			UINT8 nbrOfCRtd;
-			msgie_struct_zhbhjt_frame_data_pol_rtd_t rtd[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
-			UINT8 nbrOfRS;
-			msgie_struct_zhbhjt_frame_data_RS_value_t RS[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
-			UINT8 nbrOfRT;
-			msgie_struct_zhbhjt_frame_data_RT_value_t RT[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
-			UINT8 nbrOfCMinRpt;
-			msgie_struct_zhbhjt_frame_data_pol_min_hour_t min[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
-			UINT8 nbrOfAlmLim;
-			msgie_struct_zhbhjt_frame_data_low_upvalue_t limitation[HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX];
-			UINT32 length;
-		}msgie_struct_zhbhjt_element_ul2cloud_t;
-
-		typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
-{
-	UINT8  PolId;
-	float  Cou;
-	float  Min;
-	float  Avg;
-	float  Max;
-}msgie_struct_zhbhjt_frame_data_pol_min_hour_t;
-		*/
+		//启动数据采集定时器
+		ret = hcu_timer_start(TASK_ID_L3AQYCG20, TIMER_ID_1S_L3AQYCG20_START_MONITOR, gTaskL3aqycq20Context.timeBegin, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		if (ret == FAILURE){
+			HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Error start timer!\n");
+		}
 
 		msg_struct_l3mod_llczhb_data_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_data_report_t));
@@ -434,8 +427,10 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 	//设置状态机到目标状态
 	//根据情况，决定是希望等待控制命令的反馈，还是数据汇报的反馈。如果不需要对方反馈，也可以保持在ACTIVE状态
 	//设置多状态，就是为了更好的控制数据与控制命令的反馈。目前各种控制命令都聚合在一起，必须通过状态机将情况很清楚，不然很容易漏掉某些组合情况。
+	/*
 	if (FsmSetState(TASK_ID_L3AQYCG20, FSM_STATE_L3AQYCG20_WFFB_CTRL) == FAILURE)
 		HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Error Set FSM State!\n");
+		*/
 
 	return SUCCESS;
 }
@@ -466,6 +461,21 @@ OPSTAT fsm_l3aqycg20_zhbl3mod_exg_data_report(UINT32 dest_id, UINT32 src_id, voi
 
 	//状态转移
 
+	return SUCCESS;
+}
+
+
+//周期性统计扫描定时器
+OPSTAT func_l3aqyc_time_out_aggregation_process(void)
+{
+	//int ret = 0;
+
+
+	//从各个传感器DB中取数据生成数据聚合表
+	//统计分钟聚合表（avg,max,min）
+	//1min or 1hour or 1day 数据聚合表，聚合表存数据库，再依据标志为判断是否发送
+
+	//返回
 	return SUCCESS;
 }
 

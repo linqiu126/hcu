@@ -26,14 +26,34 @@ enum FSM_STATE_L3AQYCG20
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+
+//上报周期
+#define HCU_L3AQYC_STA_1M_CYCLE  60
+#define HCU_L3AQYC_STA_1H_CYCLE  60*60
+#define HCU_L3AQYC_STA_1D_CYCLE  24*60*60
+
+#define HCU_L3AQYC_STA_DBI_TABLE_1MIN   	"AQYC_STA_1_MIN"
+#define HCU_L3AQYC_STA_DBI_TABLE_1HOUR   	"AQYC_STA_1_HOUR"
+#define HCU_L3AQYC_STA_DBI_TABLE_1DAY   	"AQYC_STA_1_DAY"
+
+
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 
 typedef struct gTaskL3aqycq20Context
 {
+	//采集数据起始和结束时间和当前时间的差值
+	UINT32 timeBegin;
+	UINT32 timeEnd;
+
+	//分钟，小时，天数据报告标志位
+	UINT32 MinReportFlag;
+	UINT32 HourReportFlag;
+	UINT32 DayReportFlag;
+
 	//实时统计部分：均以一个统计周期为单位
-	HcuSysMsgIeL3aqycContextStaElement_t cur;  		//当前统计基础颗粒中的数值
-	HcuSysMsgIeL3aqycContextStaElement_t  curAge;	//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
+	HcuSysMsgIeL3aqycContextStaElement_t cur;  		//当前统计数值
+	HcuSysMsgIeL3aqycContextStaElement_t  curAge;	//存下中间结果，不然每一次计算均采用近似会导致数据失真
 
 	//统计报告部分
 	HcuSysMsgIeL3aqycContextStaElement_t staInstant;  	//瞬时值结果，是否需要带Max,Min带商榷
@@ -60,6 +80,7 @@ extern OPSTAT fsm_l3aqycg20_zhbl3mod_exg_data_report(UINT32 dest_id, UINT32 src_
 
 //Local API
 OPSTAT func_l3aqycg20_int_init(void);
+OPSTAT func_l3aqyc_time_out_aggregation_process(void);
 
 
 //高级定义，简化程序的可读性
