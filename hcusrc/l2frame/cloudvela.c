@@ -290,6 +290,7 @@ OPSTAT func_cloudvela_hb_link_main_entry(void)
 		}
 		//如果是失败情况，并不返回错误，属于正常情况
 		else{
+			HCU_DEBUG_PRINT_INF("CLOUDVELA: gTaskCloudvelaContext.defaultSvrSocketCon=[%d]\n\n", gTaskCloudvelaContext.defaultSvrSocketCon);
 			HCU_DEBUG_PRINT_NOR("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
 			zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt++;
 		}
@@ -420,7 +421,9 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&pMsgOutput) == FAILURE) //to remove or update for HJT212
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&pMsgOutput) == FAILURE)
@@ -435,8 +438,10 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 	}
 
 	//Send out
+/*
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+*/
 
 	//State no change
 	return SUCCESS;
@@ -556,6 +561,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 
 	//然后才是其它链路类型。当业务服务器/双同服务器模式下，均采用default链路。
 	//根据系统配置，决定使用那一种后台网络
+	gTaskCloudvelaContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 	if (gTaskCloudvelaContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		if (hcu_ethernet_socket_data_send(buf) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
@@ -577,6 +583,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 		}
 	}
 	else {
+		HCU_DEBUG_PRINT_INF("CLOUDVELA: gTaskCloudvelaContext.curCon=%d\n\n\n", gTaskCloudvelaContext.curCon);
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error status of physical layer link for data send!\n");
 	}
 

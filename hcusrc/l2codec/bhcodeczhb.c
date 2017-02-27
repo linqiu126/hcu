@@ -28,7 +28,7 @@ OPSTAT func_cloudvela_stdzhb_msg_heart_beat_pack(CloudDataSendBuf_t *buf)
 		return FAILURE;
 	}
 
-	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML)
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML || zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212)//add HJT212 for test
 	{
 		//初始化变量
 		CloudBhItfDevReportStdXml_t xmlFormat;

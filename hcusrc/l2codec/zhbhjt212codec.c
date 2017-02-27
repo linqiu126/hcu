@@ -359,6 +359,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
 								strcat(sMsgBuild[i][j], tmp);
+								//HCU_DEBUG_PRINT_INF("ZHBHJT212: Avg j=%d, Polid=%d, name=%s\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId]);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Max:
@@ -385,12 +386,14 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
+
 						case ZHBHJT_IEID_uni_Cou:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Cou].keyLable, inputPar->ul2Cloud.min[j].Cou);
 								strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
+
 						case ZHBHJT_IEID_uni_RS:
 							sprintf(tmp, "%s%s%d,", gZhbhjtPolIdName[inputPar->ul2Cloud.RS[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_RS].keyLable, inputPar->ul2Cloud.RS[j].RS);
 							strcat(sMsgBuild[i][j], tmp);
@@ -502,13 +505,22 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	for (i=0; i<ZHBHJT_PFM_CMB2MSG_NBR_MAX; i++){
 		for (j=0; j<HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX; j++){
 			strcat(cps, sMsgBuild[i][j]);
+			//HCU_DEBUG_PRINT_INF("ZHBHJT212: sMsgBuild[%d][%d]=%s\n", i,j,sMsgBuild[i][j]);
 		}
 	}
 	//去掉最后一个分号
 	if ((strlen(cps) > 0) && (cps[strlen(cps)-1] == ';'))  cps[strlen(cps)-1] = '\0';
-	//HCU_DEBUG_PRINT_INF("ZHBHJT212: CPS=[%s]\n", cps);
+
 	//组合数据部分
-	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: pack error!%d\n", strlen(ds) + strlen(cps) + 20);
+	/*
+	UINT16 dslen = strlen(ds);
+	UINT16 cpslen = strlen(cps);
+	HCU_DEBUG_PRINT_INF("ZHBHJT212: lengh of DS=[%d]\n\n", dslen);
+	HCU_DEBUG_PRINT_INF("ZHBHJT212: lengh of CPS=[%d]\n\n", cpslen);
+	HCU_DEBUG_PRINT_INF("ZHBHJT212: DS=[%s]\n\n", ds);
+	HCU_DEBUG_PRINT_INF("ZHBHJT212: CPS=[%s]\n\n", cps);
+	*/
+	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: pack error!\n");
 	strcat(ds, "CP=&&");
 	strcat(ds, cps);
 	strcat(ds, "&&");

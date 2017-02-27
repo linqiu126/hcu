@@ -72,7 +72,7 @@
 #define HCU_SYSDIM_MSGID_NBR_MAX 400 //一个任务中最多定义的消息数量，之前放254个，优化后更省内存，暂时用不了这么多：从200改为400个
 #define HCU_SYSDIM_MSGID_MASK_SET 511 //消息号段在同一个任务中必须连续到这个范围内：从255改为511个
 #define HCU_SYSDIM_MSGID_NAME_LEN_MAX 70
-#define HCU_SYSDIM_MSG_BODY_LEN_MAX 1500 //MYC改为1500，就是为了ETHERNET数据段的最大长度。考虑到实时性，应该缩短。考虑到LINUX最大9K的单个任务QUEUE，应该缩短。
+#define HCU_SYSDIM_MSG_BODY_LEN_MAX 800 //MYC改为1500，就是为了ETHERNET数据段的最大长度。考虑到实时性，应该缩短。考虑到LINUX最大9K的单个任务QUEUE，应该缩短。
 #define HCU_SYSDIM_FILE_NAME_LEN_MAX 256 //MYC
 //最大的定时器数量
 #define HCU_SYSDIM_TIMERID_NBR_MAX 100

@@ -36,30 +36,48 @@ enum FSM_STATE_L3AQYCG20
 #define HCU_L3AQYC_STA_DBI_TABLE_1HOUR   	"AQYC_STA_1_HOUR"
 #define HCU_L3AQYC_STA_DBI_TABLE_1DAY   	"AQYC_STA_1_DAY"
 
+#define HCU_L3AQYC_STA_DBI_TABLE_1MIN_REPORT   	"AQYC_STA_1_MIN_REPORT"
+#define HCU_L3AQYC_STA_DBI_TABLE_1HOUR_REPORT   "AQYC_STA_1_HOUR_REPORT"
+#define HCU_L3AQYC_STA_DBI_TABLE_1DAY_REPORT   	"AQYC_STA_1_DAY_REPORT"
+
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 
 typedef struct gTaskL3aqycq20Context
 {
+
 	//采集数据起始和结束时间和当前时间的差值
 	UINT32 timeBegin;
 	UINT32 timeEnd;
+
+
+	//开始测量标志位
+	UINT32 StartMonitorFlag;
 
 	//分钟，小时，天数据报告标志位
 	UINT32 MinReportFlag;
 	UINT32 HourReportFlag;
 	UINT32 DayReportFlag;
 
-	//实时统计部分：均以一个统计周期为单位
-	HcuSysMsgIeL3aqycContextStaElement_t cur;  		//当前统计数值
-	HcuSysMsgIeL3aqycContextStaElement_t  curAge;	//存下中间结果，不然每一次计算均采用近似会导致数据失真
+	//动态部分
+	UINT32  startWorkTimeInUnix;		//表示该系统开始工作的时间日程点
+	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是1s为统计周期
+	UINT32  elipse24HourCnt;			//24小时的日历计数器
 
-	//统计报告部分
+	//实时统计部分：均以一个统计周期为单位
+	HcuSysMsgIeL3aqycContextStaElement_t cur;  		//当前各传感器上报数值（从数据库取得 or 实时取得，为简化暂时从数据库取的）
+
+	//周期统计报告部分(统计从监测仪启动开始定期扫描)，存数据库备用
 	HcuSysMsgIeL3aqycContextStaElement_t staInstant;  	//瞬时值结果，是否需要带Max,Min带商榷
 	HcuSysMsgIeL3aqycContextStaElement_t staOneMin;  	//1分钟统计结果
 	HcuSysMsgIeL3aqycContextStaElement_t sta60Min;		//60分钟统计结果
 	HcuSysMsgIeL3aqycContextStaElement_t sta24H;		//24H统计结果
+
+	//周期统计报告部分(统计从收到上位机命令开始)
+	HcuSysMsgIeL3aqycContextStaElement_t staOneMinReport;  	//1分钟统计结果
+	HcuSysMsgIeL3aqycContextStaElement_t sta60MinReport;	//60分钟统计结果
+	HcuSysMsgIeL3aqycContextStaElement_t sta24HReport;		//24H统计结果
 }gTaskL3aqycq20Context_t;
 
 
