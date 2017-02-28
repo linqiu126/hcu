@@ -570,3 +570,47 @@ OPSTAT dbi_HcuPm25Bmpd300DataInfo_delete_3monold(UINT32 days)
     return SUCCESS;
 }
 
+
+
+OPSTAT dbi_HcuPm25DataInfo_1hour_MinMaxAvg(UINT32 dur)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (dur > PM25_DATA_SAVE_HOURS_MAX) dur = PM25_DATA_SAVE_HOURS_MAX;
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//删除满足条件的数据
+    cursec = time(NULL);
+    duration = dur;
+    sprintf(strsql, "SELECT MIN(pm10dvalue) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: INSERT data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+    //sprintf(strsql, "SELECT * FROM `hcusysengtimer` WHERE 1");
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+

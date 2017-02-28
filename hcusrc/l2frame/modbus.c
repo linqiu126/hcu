@@ -341,7 +341,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		return FAILURE;
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus PM25 req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
-
+/*
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
@@ -410,20 +410,23 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		return FAILURE;
 
 	}
-
+*/
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_pm25_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
 
-/*
+
 	//放点假数据进行测试
 	currentModbusBuf.curLen = 17;
 	UINT8 sample[] = {0x01,0x03,0x0C,0x01,0x02,0x03,0x04,0x11,0x12,0x13,0x14,
 			0x21,0x22,0x23,0x24,0xD4,0xB8};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
-*/
+	HCU_DEBUG_PRINT_INF("MODBUS: Len %d  \n", currentModbusBuf.curLen);
+	HCU_DEBUG_PRINT_INF("MODBUS: Received PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
 
-	currentModbusBuf.curLen = ret;
+
+	//currentModbusBuf.curLen = ret;
+
 	if (func_modbus_pm25_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
@@ -539,7 +542,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		return FAILURE;
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Prepareing send modbus winddir req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
-
+/*
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
@@ -605,19 +608,23 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 		return FAILURE;
 	}
-
+*/
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_winddir_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_winddir_data_report_t));
 
-	/*
+
 	//放点假数据进行测试
 	currentModbusBuf.curLen = 7;
-	UINT8 sample[] = {0x03,0x03,0x02,0x12,0x34,0xCC,0xF3};
+	//UINT8 sample[] = {0x03,0x03,0x02,0x12,0x34,0xCC,0xF3};
+	UINT8 sample[] = {0x23,0x04,0x02,0x12,0x34,0x4C,0x40};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
-	*/
+	HCU_DEBUG_PRINT_INF("MODBUS: Len %d  \n", currentModbusBuf.curLen);
+	HCU_DEBUG_PRINT_INF("MODBUS: Received windir data succeed: %02X %02X %02X %02X %02X %02X %02X \n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
 
-	currentModbusBuf.curLen =ret;
+
+	//currentModbusBuf.curLen =ret;
+
 	if (func_modbus_winddir_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
@@ -731,7 +738,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		return FAILURE;
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus windspd req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
-
+/*
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
@@ -796,19 +803,23 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 		return FAILURE;
 	}
-
+*/
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_windspd_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_windspd_data_report_t));
 
-	/*
+
 	//放点假数据进行测试
 	currentModbusBuf.curLen = 7;
-	UINT8 sample[] = {0x02,0x03,0x02,0x12,0x34,0xF1,0x33};
+	//UINT8 sample[] = {0x02,0x03,0x02,0x12,0x34,0xF1,0x33};
+	UINT8 sample[] = {0x21,0x04,0x02,0x12,0x34,0x35,0x80};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
-	*/
+	HCU_DEBUG_PRINT_INF("MODBUS: Len %d  \n", currentModbusBuf.curLen);
+	HCU_DEBUG_PRINT_INF("MODBUS: Received windspd data succeed %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
 
-	currentModbusBuf.curLen = ret;
+
+	//currentModbusBuf.curLen = ret;
+
 	if (func_modbus_windspd_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
@@ -922,7 +933,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		return FAILURE;
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus temp req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
-
+/*
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
@@ -988,19 +999,21 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 		return FAILURE;
 	}
-
+*/
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_temp_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_temp_data_report_t));
 
-	/*
+
 	//放点假数据进行测试
 	currentModbusBuf.curLen = 9;
 	UINT8 sample[] = {0x06,0x03,0x04,0x12,0x34,0x56,0x78,0xF7,0xC7};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
-	*/
+	HCU_DEBUG_PRINT_INF("MODBUS: Received temp data length: %d \n ", currentModbusBuf.curLen);
+	HCU_DEBUG_PRINT_INF("MODBUS: Received temp data content: %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8]);
 
-	currentModbusBuf.curLen = ret;
+	//currentModbusBuf.curLen = ret;
+
 	if (func_modbus_temp_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
@@ -1115,7 +1128,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		return FAILURE;
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus humid req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
-
+/*
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
@@ -1181,19 +1194,21 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 		return FAILURE;
 	}
-
+*/
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_humid_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_humid_data_report_t));
 
-	/*
+
 	//放点假数据进行测试
 	currentModbusBuf.curLen = 9;
 	UINT8 sample[] = {0x06,0x03,0x04,0x12,0x34,0x56,0x78,0xF7,0xC7};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
-	*/
+	HCU_DEBUG_PRINT_INF("MODBUS: Len %d\n", currentModbusBuf.curLen);
+	HCU_DEBUG_PRINT_INF("MODBUS: Received humuid req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8]);
 
-	currentModbusBuf.curLen = ret;
+	//currentModbusBuf.curLen = ret;
+
 	if (func_modbus_humid_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
@@ -1299,7 +1314,6 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 
 	//只从MODBUS语法角度检查收到的命令的正确性，逻辑正确性由上层任务保证
-
 	//对信息进行MODBUS协议的编码，包括CRC16的生成
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
@@ -1311,13 +1325,8 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus noise req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 
-/*
-	currentModbusBuf.curLen = 4;
-	UINT8 sample[] = {0x41,0x57,0x41,0x30};
-	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
-	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus noise req data = %02X %02x %02X %02X \n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3]);
-*/
 
+/*
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
@@ -1381,19 +1390,23 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 		return FAILURE;
 	}
-
+*/
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_noise_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_noise_data_report_t));
 
-	/*
+
 	//放点假数据进行测试
 	currentModbusBuf.curLen = 9;
-	UINT8 sample[] = {0x06,0x03,0x04,0x12,0x34,0x56,0x78,0xF7,0xC7};
+	//UINT8 sample[] = {0x06,0x03,0x04,0x12,0x34,0x56,0x78,0xF7,0xC7};
+	UINT8 sample[] = {0x0A,0x04,0x04,0x12,0x34,0x56,0x78,0x3A,0x70};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
-	*/
+	HCU_DEBUG_PRINT_INF("MODBUS: Len %d\n", currentModbusBuf.curLen);
+	HCU_DEBUG_PRINT_INF("MODBUS: Received noise req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8]);
 
-	currentModbusBuf.curLen = ret;
+
+	//currentModbusBuf.curLen = ret;
+
 	if (func_modbus_noise_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error unpack message!\n");

@@ -13,6 +13,8 @@
 #define PM25_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
 #define PM25SHARP_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
 
+#define PM25_DATA_SAVE_HOURS_MAX 3600  //最大3600秒，不能再大
+
 extern OPSTAT dbi_HcuPm25DataInfo_save(sensor_pm25_data_element_t *pm25Data);
 extern OPSTAT dbi_HcuPm25DataInfo_inqury_1st_record(UINT32 deviceid, sensor_pm25_data_element_t *pm25Data);
 extern OPSTAT dbi_HcuPm25DataInfo_delete_3monold(UINT32 days);
@@ -25,6 +27,8 @@ extern OPSTAT dbi_HcuPm25SharpDataInfo_delete_3monold(UINT32 days);
 
 extern OPSTAT dbi_HcuPm25Bmpd300DataInfo_save(sensor_pm25_bmpd300_data_element_t *pm25Data);
 extern OPSTAT dbi_HcuPm25Bmpd300DataInfo_delete_3monold(UINT32 days);
+
+extern OPSTAT dbi_HcuPm25DataInfo_1hour_MinMaxAvg(UINT32 dur);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

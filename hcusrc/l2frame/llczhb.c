@@ -898,7 +898,7 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 		//发送完成终结函数到后台
 		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
-		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
+		//gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_DAY_RPT_2031:

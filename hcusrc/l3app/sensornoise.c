@@ -214,7 +214,7 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		}
 		else //DEFAULT取SPSVIRGO
 		{
-			func_noise_time_out_read_data_from_spsvirgo();
+			//func_noise_time_out_read_data_from_spsvirgo();
 		}
 	}
 
