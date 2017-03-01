@@ -13,6 +13,10 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+//= ZSC, 2017 Feb.28, CURRENT_SW_DELIVERY 185=>AQYC项目
+=增加L3 功能
+=修改LLC bugs
+=修改链路不稳定Bug
 
 //= ZJL, 2017 Feb.24, CURRENT_SW_DELIVERY 184=>BFSC项目
 =改进HUITP的消息定义，从而明确状态机的工作过程

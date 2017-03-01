@@ -3652,10 +3652,10 @@ typedef struct HcuSysMsgIeL3aqycContextStaElement
 	//char    a50001_Flag;			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 
 	UINT8   a34001_PolId;
-	float   a34001_Cou;
-	float	a34001_Avg;  			//总悬浮颗粒物浓度监测时间内的均值
-	float	a34001_Max;  			//总悬浮颗粒物浓度监测时间内最大值
-	float	a34001_Min;  			//总悬浮颗粒物浓度监测时间内最小值
+	UINT32   a34001_Cou;
+	UINT32	a34001_Avg;  			//总悬浮颗粒物浓度监测时间内的均值
+	UINT32	a34001_Max;  			//总悬浮颗粒物浓度监测时间内最大值
+	UINT32	a34001_Min;  			//总悬浮颗粒物浓度监测时间内最小值
 	//char    a34001_Flag;			//总悬浮颗粒物浓度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 
 }HcuSysMsgIeL3aqycContextStaElement_t;

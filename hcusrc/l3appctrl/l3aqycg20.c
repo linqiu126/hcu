@@ -72,7 +72,6 @@ HcuFsmStateItem_t HcuFsmL3aqycg20[] =
 gTaskL3aqycq20Context_t gTaskL3aqycq20Context; //扬尘监测的总控表
 
 
-
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_l3aqycg20_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -469,8 +468,35 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	//统计分钟聚合表（avg,max,min）
 	//1min or 1hour or 1day 数据聚合表，聚合表存数据库，再依据标志为判断是否发送
 
-
 	int ret = 0;
+
+
+	ret = dbi_HcuPm25DataInfo_GetMin(50000,&gTaskL3aqycq20Context.sta60Min);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get min data from PM25 database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %d\n\n", gTaskL3aqycq20Context.sta60Min.a34001_Min);
+	}
+
+	ret = dbi_HcuPm25DataInfo_GetMax(50000,&gTaskL3aqycq20Context.sta60Min);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get max data from PM25 database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %d\n\n", gTaskL3aqycq20Context.sta60Min.a34001_Max);
+	}
+
+	ret = dbi_HcuPm25DataInfo_GetAvg(50000,&gTaskL3aqycq20Context.sta60Min);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get avg data from PM25 database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %d\n\n", gTaskL3aqycq20Context.sta60Min.a34001_Avg);
+	}
 
 	//首先增加时间流逝的计数器
 	gTaskL3aqycq20Context.elipseCnt++;
@@ -649,129 +675,6 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.sta60Min.a50001_Max = gTaskL3aqycq20Context.cur.a50001_Max;
 	//strncpy(gTaskL3aqycq20Context.staOneMin.a50001_Flag, "N", strlen(gTaskL3aqycq20Context.staOneMin.a50001_Flag));
 
-
-/*
-	//更新60Min各个统计表单
-	gTaskL3bfscContext.sta60Min.wsIncMatCnt += gTaskL3bfscContext.cur.wsIncMatCnt;
-	gTaskL3bfscContext.sta60Min.wsIncMatWgt += gTaskL3bfscContext.cur.wsIncMatWgt;
-	gTaskL3bfscContext.sta60Min.wsCombTimes += gTaskL3bfscContext.cur.wsCombTimes;
-	gTaskL3bfscContext.sta60Min.wsTttTimes  += gTaskL3bfscContext.cur.wsTttTimes;
-	gTaskL3bfscContext.sta60Min.wsTgvTimes  += gTaskL3bfscContext.cur.wsTgvTimes;
-	gTaskL3bfscContext.sta60Min.wsTttMatCnt += gTaskL3bfscContext.cur.wsTttMatCnt;
-	gTaskL3bfscContext.sta60Min.wsTgvMatCnt += gTaskL3bfscContext.cur.wsTgvMatCnt;
-	gTaskL3bfscContext.sta60Min.wsTttMatWgt += gTaskL3bfscContext.cur.wsTttMatWgt;
-	gTaskL3bfscContext.sta60Min.wsTgvMatWgt += gTaskL3bfscContext.cur.wsTgvMatWgt;
-	float timeRun60MinRatio = (float) HCU_L3BFSC_STA_60M_CYCLE / (float)(((gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STA_60M_CYCLE)==0)?HCU_L3BFSC_STA_60M_CYCLE:(gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STA_60M_CYCLE));
-	gTaskL3bfscContext.sta60Min.wsAvgTttTimes = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttTimes*timeRun60MinRatio);
-	gTaskL3bfscContext.sta60Min.wsAvgTttMatCnt = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttMatCnt*timeRun60MinRatio);
-	gTaskL3bfscContext.sta60Min.wsAvgTttMatWgt = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttMatWgt*timeRun60MinRatio);
-
-	//60分钟到了，发送统计报告到后台：发送后台只需要一种统计报告即可，重复发送意义不大
-	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_60M_CYCLE) == 0){
-		//60分统计表更新数据库
-		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_60MIN, &(gTaskL3bfscContext.sta60Min)) == FAILURE)
-				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
-
-		//再发送统计报告
-		msg_struct_l3bfsc_cloudvela_statistic_report_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t));
-
-		//L2信息
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
-		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
-				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
-		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
-		strcpy(snd.comHead.funcFlag, "0");
-
-		//CONTENT
-		snd.dataFormat = HUITP_IEID_UNI_COM_FORMAT_TYPE_FLOAT_WITH_NF2;
-		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
-		snd.staRepType = HUITP_IEID_UNI_SCALE_WEIGHT_STATISTIC_REPORT_60M;
-		snd.sta.combTimes = gTaskL3bfscContext.sta60Min.wsCombTimes;
-		snd.sta.tttTimes = gTaskL3bfscContext.sta60Min.wsTttTimes;
-		snd.sta.tgvTimes = gTaskL3bfscContext.sta60Min.wsTgvTimes;
-		snd.sta.combMatNbr = gTaskL3bfscContext.sta60Min.wsIncMatCnt;
-		snd.sta.tttMatNbr = gTaskL3bfscContext.sta60Min.wsTttMatCnt;
-		snd.sta.tgvMatNbr = gTaskL3bfscContext.sta60Min.wsTgvMatCnt;
-		snd.sta.combAvgSpeed = gTaskL3bfscContext.sta60Min.wsAvgTttTimes;
-		snd.sta.totalWeight = (UINT32)(gTaskL3bfscContext.sta60Min.wsIncMatWgt*100);
-		snd.sta.totalMatNbr = gTaskL3bfscContext.sta60Min.wsIncMatCnt;
-		snd.sta.totalWorkMin = (time(0) - gTaskL3bfscContext.startWorkTimeInUnix)/60;
-		snd.sta.timeInUnix = time(0);
-		snd.sta.errNbr = 0;
-
-		snd.length = sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t);
-		ret = hcu_message_send(MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3BFSC, &snd, snd.length);
-		if (ret == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-		}
-
-		//然后将60分钟统计数据表单清零，以便再次计数
-		memset(&(gTaskL3bfscContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
-	}
-
-	//更新24小时统计表单
-	gTaskL3bfscContext.sta24H.wsIncMatCnt += gTaskL3bfscContext.cur.wsIncMatCnt;
-	gTaskL3bfscContext.sta24H.wsIncMatWgt += gTaskL3bfscContext.cur.wsIncMatWgt;
-	gTaskL3bfscContext.sta24H.wsCombTimes += gTaskL3bfscContext.cur.wsCombTimes;
-	gTaskL3bfscContext.sta24H.wsTttTimes  += gTaskL3bfscContext.cur.wsTttTimes;
-	gTaskL3bfscContext.sta24H.wsTgvTimes  += gTaskL3bfscContext.cur.wsTgvTimes;
-	gTaskL3bfscContext.sta24H.wsTttMatCnt += gTaskL3bfscContext.cur.wsTttMatCnt;
-	gTaskL3bfscContext.sta24H.wsTgvMatCnt += gTaskL3bfscContext.cur.wsTgvMatCnt;
-	gTaskL3bfscContext.sta24H.wsTttMatWgt += gTaskL3bfscContext.cur.wsTttMatWgt;
-	gTaskL3bfscContext.sta24H.wsTgvMatWgt += gTaskL3bfscContext.cur.wsTgvMatWgt;
-	float timeRun24HourRatio = (float) HCU_L3BFSC_STA_24H_CYCLE / (float)(((gTaskL3bfscContext.elipse24HourCnt%HCU_L3BFSC_STA_24H_CYCLE)==0)?HCU_L3BFSC_STA_24H_CYCLE:(gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STA_24H_CYCLE));
-	gTaskL3bfscContext.sta24H.wsAvgTttTimes = (UINT32)(gTaskL3bfscContext.sta24H.wsTttTimes*timeRun24HourRatio);
-	gTaskL3bfscContext.sta24H.wsAvgTttMatCnt = (UINT32)(gTaskL3bfscContext.sta24H.wsTttMatCnt*timeRun24HourRatio);
-	gTaskL3bfscContext.sta24H.wsAvgTttMatWgt = (UINT32)(gTaskL3bfscContext.sta24H.wsTttMatWgt*timeRun24HourRatio);
-
-	//24小时统计表更新数据库
-	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_1M_CYCLE) == 0){
-		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_24HOUR, &(gTaskL3bfscContext.sta24H)) == FAILURE)
-				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
-	}
-
-	//24小时到了，然后将24小时统计数据表单清零，以便再次计数
-	if (((time(0)-gTaskL3bfscContext.start24hStaTimeInUnix) % HCU_L3BFSC_STA_24H_IN_SECOND) == 0){
-		memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
-		gTaskL3bfscContext.elipse24HourCnt = 0;
-		printf("this is a test, to show enter into wrong loop!\n");
-	}
-
-	//24小时到了，应该发送单独的统计报告，未来完善
-
-	//增加数据到连续统计数据中
-	gTaskL3bfscContext.staUp2Now.wsIncMatCnt += gTaskL3bfscContext.cur.wsIncMatCnt;
-	gTaskL3bfscContext.staUp2Now.wsIncMatWgt += gTaskL3bfscContext.cur.wsIncMatWgt;
-	gTaskL3bfscContext.staUp2Now.wsCombTimes += gTaskL3bfscContext.cur.wsCombTimes;
-	gTaskL3bfscContext.staUp2Now.wsTttTimes  += gTaskL3bfscContext.cur.wsTttTimes;
-	gTaskL3bfscContext.staUp2Now.wsTgvTimes  += gTaskL3bfscContext.cur.wsTgvTimes;
-	gTaskL3bfscContext.staUp2Now.wsTttMatCnt += gTaskL3bfscContext.cur.wsTttMatCnt;
-	gTaskL3bfscContext.staUp2Now.wsTgvMatCnt += gTaskL3bfscContext.cur.wsTgvMatCnt;
-	gTaskL3bfscContext.staUp2Now.wsTttMatWgt += gTaskL3bfscContext.cur.wsTttMatWgt;
-	gTaskL3bfscContext.staUp2Now.wsTgvMatWgt += gTaskL3bfscContext.cur.wsTgvMatWgt;
-	gTaskL3bfscContext.staUp2Now.wsAvgTttTimes = gTaskL3bfscContext.staUp2Now.wsTttTimes;
-	gTaskL3bfscContext.staUp2Now.wsAvgTttMatCnt = gTaskL3bfscContext.staUp2Now.wsTttMatCnt;
-	gTaskL3bfscContext.staUp2Now.wsAvgTttMatWgt = gTaskL3bfscContext.staUp2Now.wsTttMatWgt;
-
-	//更新连续数据库数据库：每5秒存储一次，不然数据库操作过于频繁
-	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_5S_CYCLE) == 0){
-		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_UP2NOW, &(gTaskL3bfscContext.staUp2Now)) == FAILURE)
-				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
-	}
-
-	//重要的统计功能挂载
-	if ((gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STATISTIC_PRINT_FREQUENCY) == 0)
-	HCU_DEBUG_PRINT_CRT("L3BFSC: Control statistics, Running Free/Weight/Ttt/Tgu = [%d, %d, %d, %d], Total Up2Now Inc Cnt = [%d], Combination Rate = [%5.2f\%], Give-up Rate = [%5.2f\%], Local UI Shows AvgSpeed of [TTT Times/MatCnt/MatWgt] = %d/%d/%5.2f.\n",\
-			gTaskL3bfscContext.wsValueNbrFree, gTaskL3bfscContext.wsValueNbrWeight,\
-			gTaskL3bfscContext.wsValueNbrTtt, gTaskL3bfscContext.wsValueNbrTgu, gTaskL3bfscContext.staUp2Now.wsIncMatCnt, \
-			(float)(gTaskL3bfscContext.staUp2Now.wsTttMatCnt)/(float)(gTaskL3bfscContext.staUp2Now.wsIncMatCnt+0.01) * 100, \
-			(float)(gTaskL3bfscContext.staUp2Now.wsTgvMatCnt)/(float)(gTaskL3bfscContext.staUp2Now.wsIncMatCnt+0.01) * 100, \
-			gTaskL3bfscContext.staLocalUi.wsAvgTttTimes, gTaskL3bfscContext.staLocalUi.wsAvgTttMatCnt, gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt);
-
-*/
 
 	//将当前基础统计周期的数据清零
 	memset(&(gTaskL3aqycq20Context.cur), 0, sizeof(HcuSysMsgIeL3aqycContextStaElement_t));

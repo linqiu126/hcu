@@ -572,16 +572,19 @@ OPSTAT dbi_HcuPm25Bmpd300DataInfo_delete_3monold(UINT32 days)
 
 
 
-OPSTAT dbi_HcuPm25DataInfo_1hour_MinMaxAvg(UINT32 dur)
+OPSTAT dbi_HcuPm25DataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *PM10data)
 {
 	MYSQL *sqlHandler;
     int result = 0;
+	MYSQL_RES *resPtr;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
     UINT32 cursec = 0;
     UINT32 duration =0;
 
-    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
-    if (dur > PM25_DATA_SAVE_HOURS_MAX) dur = PM25_DATA_SAVE_HOURS_MAX;
+	UINT32 index = 0;
+	//UINT32 min;
+
 	//建立连接
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
@@ -596,20 +599,173 @@ OPSTAT dbi_HcuPm25DataInfo_1hour_MinMaxAvg(UINT32 dur)
         return FAILURE;
     }
 
-	//删除满足条件的数据
     cursec = time(NULL);
     duration = dur;
+
+    //Get the minimum data
     sprintf(strsql, "SELECT MIN(pm10dvalue) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: INSERT data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIPM25: Get Minimum data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
-    //sprintf(strsql, "SELECT * FROM `hcusysengtimer` WHERE 1");
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) PM10data->a34001_Min = (UINT32)atol(sqlRow[index]);
+		HCU_DEBUG_PRINT_INF("DBIPM25: min=%d\n\n", PM10data->a34001_Min);
+	}
 
 	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuPm25DataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *PM10data)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+	MYSQL_RES *resPtr;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+	UINT32 index = 0;
+	//UINT32 max;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+    cursec = time(NULL);
+    duration = dur;
+
+    //Get the minimum data
+    sprintf(strsql, "SELECT MAX(pm10dvalue) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: Get Maximum data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) PM10data->a34001_Max = (UINT32)atol(sqlRow[index]);
+		HCU_DEBUG_PRINT_INF("DBIPM25: max=%d\n\n", PM10data->a34001_Max);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuPm25DataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *PM10data)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+	MYSQL_RES *resPtr;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+	UINT32 index = 0;
+	//UINT32 avg;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIPM25: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+    cursec = time(NULL);
+    duration = dur;
+
+    //Get the minimum data
+    sprintf(strsql, "SELECT AVG(pm10dvalue) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: Get Avg data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIPM25: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) PM10data->a34001_Avg = (UINT32)atol(sqlRow[index]);
+		HCU_DEBUG_PRINT_INF("DBIPM25: avg=%d\n\n", PM10data->a34001_Avg);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }

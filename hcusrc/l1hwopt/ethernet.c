@@ -131,14 +131,15 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
-			//HCU_DEBUG_PRINT_INF("ETHERNET: Socket receive error: %d !\n\n", idata);
+			HCU_DEBUG_PRINT_INF("ETHERNET: Socket receive error: %d !\n\n", idata);
+
 			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
 			if ((zHcuSysStaPm.statisCnt.SocketDiscCnt%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY)==0) HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
 			gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
 
 			close(gTaskCloudvelaContext.defaultSvrethConClientFd);
-			gTaskCloudvelaContext.defaultSvrethConClientFd = socket(AF_INET, SOCK_STREAM,0);
 
+			gTaskCloudvelaContext.defaultSvrethConClientFd = socket(AF_INET, SOCK_STREAM,0);
 			if(gTaskCloudvelaContext.defaultSvrethConClientFd < 0){
 				HcuErrorPrint("ETHERNET: Can not create socket!\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
@@ -162,6 +163,9 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			{
 				//先送物理设备标签的机制，待去掉
 				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n");
+
+				gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
+				/*
 				echolen = strlen(zHcuSysEngPar.hwBurnId.equLable);
 				if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, zHcuSysEngPar.hwBurnId.equLable, echolen, 0) != echolen){
 					HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
@@ -171,6 +175,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 					gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
 					HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.hwBurnId.equLable);
 				}
+				*/
 			}
 		}
 
