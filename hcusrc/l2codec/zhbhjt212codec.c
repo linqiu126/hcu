@@ -201,7 +201,10 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 
 	//请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令
 	memset(tmp, 0, sizeof(tmp));
+	HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms=%lu\n\n", inputPar->head.qn);
 	func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(inputPar->head.qn, tmp);
+	//func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(&inputPar->cfmQn, tmp);//LLC终结的消息立即返回时头里不带QN的值，L3回的消息头带QN??
+	HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms=%s\n\n", tmp);
 	strcat(ds, "QN=");
 	strcat(ds, tmp);
 	strcat(ds, ";");
@@ -539,6 +542,20 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	strcat(output->curBuf, ZHBHJT_PROTOCOL_FRAME_FIX_TAIL);
 	output->curLen = strlen(output->curBuf);
 
+    /*for test start
+	memset(ds, 0, sizeof(ds));
+	len = strlen(ZHBHJT_MSG_TEST_DATA_SEND_MIN_RPT1);
+	strcat(ds, ZHBHJT_MSG_TEST_DATA_SEND_MIN_RPT1);
+	sprintf(output->curBuf, "%s%04d%s", ZHBHJT_PROTOCOL_FRAME_FIX_HEAD, len, ds);
+	crc16 = 0;
+	hcu_vm_calculate_crc_modbus((UINT8*)ds, len, &crc16);
+	memset(tmp, 0, sizeof(tmp));
+	sprintf(tmp, "%04X", crc16);
+	strcat(output->curBuf, tmp);
+	strcat(output->curBuf, ZHBHJT_PROTOCOL_FRAME_FIX_TAIL);
+	output->curLen = strlen(output->curBuf);
+	*///for test end
+
 	//测试打印
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: output=[%s]\n", output->curBuf);
 
@@ -618,7 +635,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 	tempLen = p3 - p2;
 	if (tempLen > 14) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received MN head!\n");
 	strncpy(tmp, p2, tempLen);
-	if (strcmp(zHcuSysEngPar.hwBurnId.zhbMnLable, tmp) != 0) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received MN head!\n");
+	//if (strcmp(zHcuSysEngPar.hwBurnId.zhbMnLable, tmp) != 0) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received MN head!\n");
 
 	//解QN域：允许为空
 	memset(tmp, 0, sizeof(tmp));
@@ -629,8 +646,10 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 		tempLen = p3 - p2;
 		if (tempLen != 17) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received QN head!\n");
 		strncpy(tmp, p2, tempLen);
+		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%s\n\n", tmp);
 		func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(tmp, &u64Tmp);
 		snd.head.qn = u64Tmp;
+		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%u\n", u64Tmp);
 	}
 
 	//解ST领域：不允许为空

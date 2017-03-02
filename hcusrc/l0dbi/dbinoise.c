@@ -210,3 +210,208 @@ OPSTAT dbi_HcuNoiseDataInfo_delete_3monold(UINT32 days)
     mysql_close(sqlHandler);
     return SUCCESS;
 }
+
+
+
+
+
+//Get Min Max Avg accoriding time duration by shanchun
+OPSTAT dbi_HcuNoiseDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Noisedata)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+	MYSQL_RES *resPtr;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+	UINT32 index = 0;
+	//UINT32 min;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBINOISE: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+    cursec = time(NULL);
+    duration = dur;
+
+    //Get the minimum data
+    sprintf(strsql, "SELECT MIN(noiseValue) FROM `hcunoisedatainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: Get Minimum data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) Noisedata->a50001_Min = ((UINT32)atol(sqlRow[index]))*0.0000001;
+		HCU_DEBUG_PRINT_INF("DBINOISE: min=%4.2f\n\n", Noisedata->a50001_Min);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuNoiseDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Noisedata)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+	MYSQL_RES *resPtr;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+	UINT32 index = 0;
+	//UINT32 max;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBINOISE: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+    cursec = time(NULL);
+    duration = dur;
+
+    //Get the minimum data
+    sprintf(strsql, "SELECT MAX(noiseValue) FROM `hcunoisedatainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: Get Maximum data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) Noisedata->a50001_Max = ((UINT32)atol(sqlRow[index]))*0.0000001;
+		HCU_DEBUG_PRINT_INF("DBINOISE: max=%4.2f\n\n", Noisedata->a50001_Max);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuNoiseDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Noisedata)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+	MYSQL_RES *resPtr;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+	UINT32 index = 0;
+	//UINT32 avg;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBINOISE: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+    cursec = time(NULL);
+    duration = dur;
+
+    //Get the minimum data
+    sprintf(strsql, "SELECT AVG(noiseValue) FROM `hcunoisedatainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: Get Avg data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBINOISE: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) Noisedata->a50001_Avg = ((UINT32)atol(sqlRow[index]))*0.0000001;
+		HCU_DEBUG_PRINT_INF("DBINOISE: avg=%4.2f\n\n", Noisedata->a50001_Avg);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+

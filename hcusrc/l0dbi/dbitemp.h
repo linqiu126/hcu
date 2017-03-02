@@ -30,6 +30,11 @@ extern OPSTAT dbi_HcuTempBmp180DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuTempMth01DataInfo_save(sensor_temp_mth01_data_element_t *tempData);
 extern OPSTAT dbi_HcuTempMth01DataInfo_delete_3monold(UINT32 days);
 
+
+extern OPSTAT dbi_HcuTempDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *tempData);
+extern OPSTAT dbi_HcuTempDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *tempData);
+extern OPSTAT dbi_HcuTempDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *tempData);
+
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);
 extern void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow);

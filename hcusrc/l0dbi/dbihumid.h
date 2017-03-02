@@ -25,6 +25,10 @@ extern OPSTAT dbi_HcuHumidRht03DataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuHumidMth01DataInfo_save(sensor_humid_mth01_data_element_t *humidData);
 extern OPSTAT dbi_HcuHumidMth01DataInfo_delete_3monold(UINT32 days);
 
+extern OPSTAT dbi_HcuHumidDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Humiddata);
+extern OPSTAT dbi_HcuHumidDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Humiddata);
+extern OPSTAT dbi_HcuHumidDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Humiddata);
+
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);
 extern void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow);

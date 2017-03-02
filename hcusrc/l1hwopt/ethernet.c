@@ -164,8 +164,8 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 				//先送物理设备标签的机制，待去掉
 				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n");
 
-				gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
-				/*
+				//gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
+
 				echolen = strlen(zHcuSysEngPar.hwBurnId.equLable);
 				if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, zHcuSysEngPar.hwBurnId.equLable, echolen, 0) != echolen){
 					HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
@@ -175,7 +175,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 					gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
 					HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected & send data to Server succeed: %s!\n", zHcuSysEngPar.hwBurnId.equLable);
 				}
-				*/
+
 			}
 		}
 
@@ -235,7 +235,7 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 
 	if(gTaskCloudvelaContext.defaultSvrethConClientFd < 0){
 		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
-		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Can not create socket!\n");
+		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Can not create socket!\n\n\n");
 	}
 
 	//创建用于服务的Client端套接字，注意与 Server端创建的套接字的区别  IP段里，Server端是可以为任何IP提供服务的，客户端里的IP是请求的端点
@@ -243,7 +243,9 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server address = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server port = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 	UINT32 echolen;
 
 	//Heart beat checking in LLC
@@ -261,16 +263,18 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 		HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPINTVL error!\n");
 	if(setsockopt(gTaskCloudvelaContext.defaultSvrethConClientFd, SOL_TCP, TCP_KEEPCNT,(void*)&keepCount, sizeof(keepCount)) == -1)
 		HcuErrorPrint("ETHERNET: setsockopt TCP_KEEPCNT error!\n");
+
 	if( connect(gTaskCloudvelaContext.defaultSvrethConClientFd,(struct sockaddr *)&serveraddr,sizeof(serveraddr)) < 0)
 	{
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
-		if ((zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY) == 0) HcuErrorPrint("ETHERNET: Socket can not connect!\n");
+		if ((zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY) == 0) HcuErrorPrint("ETHERNET: Socket can not connect!\n\n\n");
 		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
 		//to restart this task
 		hcu_usleep(HCU_ETHERNET_SOCKET_DURATION_PERIOD_RECV * 10);
 		msg_struct_com_restart_t snd0;
 		memset(&snd0, 0, sizeof(msg_struct_com_restart_t));
 		snd0.length = sizeof(msg_struct_com_restart_t);
+		HCU_DEBUG_PRINT_INF("ETHERNET: Restart Ethernet task then try to connect server again!\n");
 		if (hcu_message_send(MSG_ID_COM_RESTART, TASK_ID_ETHERNET, TASK_ID_ETHERNET, &snd0, snd0.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName);
 		return FAILURE;
@@ -278,15 +282,19 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	else
 	{
 		//发送名字的机制，待去掉
-		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected\n");
+		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected\n\n\n");
+		gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
+
+		/*
 		echolen = strlen(zHcuSysEngPar.hwBurnId.equLable);
 		if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, zHcuSysEngPar.hwBurnId.equLable, echolen, 0) != echolen){
 			HcuErrorPrint("ETHERNET: Mismatch in number of send bytes");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 		}
 		else{
+
 			gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
-		}
+		}*/
 	}
 
 	return SUCCESS;

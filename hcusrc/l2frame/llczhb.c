@@ -886,8 +886,8 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051:
-		if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN_2051)
-			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
+		//if (gTaskLlczhbContext.llcState != LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN_2051)
+			//HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Not in the right state!\n");
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfCMinRpt = rcv.ul2Cloud.nbrOfCMinRpt;
 		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.min), &(rcv.ul2Cloud.min), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);

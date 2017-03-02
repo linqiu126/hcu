@@ -154,7 +154,9 @@ OPSTAT dbi_HcuHumidDataInfo_save(sensor_humid_data_element_t *humidData)
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcuhumiddatainfo` (deviceid, timestamp, dataformat, humidvalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
     		('%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", humidData->equipid, humidData->timeStamp, humidData->dataFormat, humidData->humidValue, humidData->gps.ew, humidData->gps.gpsx, humidData->gps.ns, humidData->gps.gpsy, humidData->gps.gpsz, humidData->onOffLineFlag);
-	result = mysql_query(sqlHandler, strsql);
+
+
+    result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBIHUMID: INSERT data error: %s\n", mysql_error(sqlHandler));
@@ -638,3 +640,202 @@ OPSTAT dbi_HcuHumidMth01DataInfo_delete_3monold(UINT32 days)
 }
 
 
+
+//Get Min Max Avg accoriding time duration by shanchun
+OPSTAT dbi_HcuHumidDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Humiddata)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+	MYSQL_RES *resPtr;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+	UINT32 index = 0;
+	//UINT32 min;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIHUMID: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+    cursec = time(NULL);
+    duration = dur;
+
+    //Get the minimum data
+    sprintf(strsql, "SELECT MIN(humidvalue) FROM `hcuhumiddatainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: Get Minimum data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) Humiddata->a01002_Min = ((UINT32)atol(sqlRow[index]))*0.001;
+		HCU_DEBUG_PRINT_INF("DBIHUMID: min=%4.2f\n\n", Humiddata->a01002_Min);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuHumidDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Humiddata)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+	MYSQL_RES *resPtr;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+	UINT32 index = 0;
+	//UINT32 max;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIHUMID: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+    cursec = time(NULL);
+    duration = dur;
+
+    //Get the minimum data
+    sprintf(strsql, "SELECT MAX(humidvalue) FROM `hcuhumiddatainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: Get Maximum data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) Humiddata->a01002_Max = ((UINT32)atol(sqlRow[index]))*0.001;
+		HCU_DEBUG_PRINT_INF("DBIHUMID: max=%4.2f\n\n", Humiddata->a01002_Max);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuHumidDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *Humiddata)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+	MYSQL_RES *resPtr;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_ROW sqlRow;
+    UINT32 cursec = 0;
+    UINT32 duration =0;
+
+	UINT32 index = 0;
+	//UINT32 avg;
+
+	//建立连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIHUMID: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+    cursec = time(NULL);
+    duration = dur;
+
+    //Get the minimum data
+    sprintf(strsql, "SELECT AVG(humidvalue) FROM `hcuhumiddatainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: Get Avg data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIHUMID: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+
+		if (sqlRow[index]) Humiddata->a01002_Avg = ((UINT32)atol(sqlRow[index]))*0.001;
+		HCU_DEBUG_PRINT_INF("DBIHUMID: avg=%4.2f\n\n", Humiddata->a01002_Avg);
+	}
+
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}

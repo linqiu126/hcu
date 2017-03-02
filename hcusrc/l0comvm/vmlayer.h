@@ -704,9 +704,9 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_L3AQYCG10_PERIOD_READ,
 	TIMER_ID_1S_L3AQYCG20_PERIOD_READ,
 	TIMER_ID_1S_L3AQYCG20_PERIOD_STA_SCAN,
-	TIMER_ID_1S_L3AQYCG20_START_MONITOR,//for start monitoring
-	TIMER_ID_1S_L3AQYCG20_STOP_MONITOR,//for stop monitoring
-	TIMER_ID_1S_L3AQYCG20_PERIOD_REPORT,//for period report
+	TIMER_ID_1S_L3AQYCG20_START_1MIN_REPORT,//for start monitoring
+	TIMER_ID_1S_L3AQYCG20_STOP_1MIN_REPORT,//for stop monitoring
+	//TIMER_ID_1S_L3AQYCG20_PERIOD_REPORT,//for period report
 	TIMER_ID_1S_L3TBSWRG30_PERIOD_READ,
 	TIMER_ID_1S_L3GQYBG40_PERIOD_READ,
 	TIMER_ID_1S_L3CXGLACM_PERIOD_READ,
@@ -840,6 +840,9 @@ extern UINT16 hcu_vm_calculate_crc_one_char(UINT8 cDataIn, UINT16 wCRCIn);
 extern UINT16 hcu_vm_calculate_crc_ccitt(unsigned char *q, int len);
 
 extern void   hcu_vm_set_local_time(UINT32 newTimeInUnix);
+
+//UINT32转Float
+extern float hcu_vm_UI2F(unsigned int x);
 
 
 

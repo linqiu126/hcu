@@ -19,6 +19,10 @@ extern OPSTAT dbi_HcuWindspdDataInfo_save(sensor_windspd_data_element_t *windspd
 extern OPSTAT dbi_HcuWindspdDataInfo_inqury_1st_record(UINT32 deviceid, sensor_windspd_data_element_t *windspdData);
 extern OPSTAT dbi_HcuWindspdDataInfo_delete_3monold(UINT32 days);
 
+extern OPSTAT dbi_HcuWindspdDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *windspdData);
+extern OPSTAT dbi_HcuWindspdDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *windspdData);
+extern OPSTAT dbi_HcuWindspdDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *windspdData);
+
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

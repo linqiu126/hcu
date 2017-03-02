@@ -564,6 +564,7 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	gTaskCloudvelaContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 	if (gTaskCloudvelaContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		if (hcu_ethernet_socket_data_send(buf) == FAILURE){
+		//if (hcu_ethernet_curl_data_send(buf) == FAILURE){
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 		}
 	}

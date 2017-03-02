@@ -28,9 +28,9 @@ extern OPSTAT dbi_HcuPm25SharpDataInfo_delete_3monold(UINT32 days);
 extern OPSTAT dbi_HcuPm25Bmpd300DataInfo_save(sensor_pm25_bmpd300_data_element_t *pm25Data);
 extern OPSTAT dbi_HcuPm25Bmpd300DataInfo_delete_3monold(UINT32 days);
 
-extern OPSTAT dbi_HcuPm25DataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *min);
-extern OPSTAT dbi_HcuPm25DataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *max);
-extern OPSTAT dbi_HcuPm25DataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *avg);
+extern OPSTAT dbi_HcuPm25DataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *PM10data);
+extern OPSTAT dbi_HcuPm25DataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *PM10data);
+extern OPSTAT dbi_HcuPm25DataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement_t *PM10data);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

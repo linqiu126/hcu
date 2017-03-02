@@ -368,6 +368,7 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			humidData.gps.ew = record.ew;
 			humidData.gps.ns = record.ns;
 			humidData.onOffLineFlag = record.onOffLine;
+
 			ret = dbi_HcuHumidDataInfo_save(&humidData);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUMID]++;
@@ -409,6 +410,19 @@ OPSTAT fsm_humid_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
+			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
+			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+			record.equipid = rcv.humid.equipid;
+			record.sensortype = L3CI_temp;
+			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
+			record.timestamp = rcv.humid.timeStamp;
+			record.dataFormat = rcv.humid.dataFormat;
+			record.humidValue = rcv.humid.humidValue;
+			record.gpsx = rcv.humid.gps.gpsx;
+			record.gpsy = rcv.humid.gps.gpsy;
+			record.gpsz = rcv.humid.gps.gpsz;
+			record.ew = rcv.humid.gps.ew;
+			record.ns = rcv.humid.gps.ns;
 			//RECORD还要存入数据库
 			sensor_humid_data_element_t humidData;
 			memset(&humidData, 0, sizeof(sensor_humid_data_element_t));

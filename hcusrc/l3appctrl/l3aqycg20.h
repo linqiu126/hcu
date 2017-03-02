@@ -26,11 +26,13 @@ enum FSM_STATE_L3AQYCG20
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+//分钟扫描计算标志位
+#define HCU_L3AQYC_STA_1M_CYCLE  60
 
 //上报周期
-#define HCU_L3AQYC_STA_1M_CYCLE  10
-#define HCU_L3AQYC_STA_1H_CYCLE  60*60
-#define HCU_L3AQYC_STA_1D_CYCLE  24*60*60
+#define HCU_L3AQYC_STA_1M_REPORT_DURATION  60
+#define HCU_L3AQYC_STA_1H_REPORT_DURATION   60*60
+#define HCU_L3AQYC_STA_1D_REPORT_DURATION   24*60*60
 
 #define HCU_L3AQYC_STA_DBI_TABLE_1MIN   	"AQYC_STA_1_MIN"
 #define HCU_L3AQYC_STA_DBI_TABLE_1HOUR   	"AQYC_STA_1_HOUR"
@@ -52,8 +54,8 @@ typedef struct gTaskL3aqycq20Context
 	UINT32 timeEnd;
 
 
-	//开始测量标志位
-	UINT32 StartMonitorFlag;
+	//开始报告标志位
+	UINT32 StartReportFlag;
 
 	//分钟，小时，天数据报告标志位
 	UINT32 MinReportFlag;
