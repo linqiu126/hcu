@@ -186,6 +186,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//将链路层数据存入到静态上下文，以便后续继续使用
 	if (rcv.head.qn !=0) gTaskLlczhbContext.frameHead.qn = rcv.head.qn;
+	HCU_DEBUG_PRINT_INF("LLCZHB: rcv.head.qn=%lu\n\n", rcv.head.qn);//for test by shanchun
 	if (rcv.head.st !=0) gTaskLlczhbContext.frameHead.st = rcv.head.st;
 	if (rcv.head.cn != 0) gTaskLlczhbContext.frameHead.cn = rcv.head.cn;
 	if (rcv.head.pw != NULL) strncpy(gTaskLlczhbContext.frameHead.pw, rcv.head.pw, strlen(rcv.head.pw));
@@ -896,8 +897,11 @@ OPSTAT fsm_llczhb_l3mod_llczhb_data_report(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//发送完成终结函数到后台
+		//test by shanchun
+		/*
 		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
+			*/
 		//gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_DEACTIVE;
 		break;
 
@@ -1015,6 +1019,8 @@ OPSTAT fsm_llczhb_send_to_cloud_ctrl_req_answer_directly_in_l2llc_9011(UINT8 qnR
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
+
+	snd.head.qn = gTaskLlczhbContext.frameHead.qn;//bug fix，added by shanchun: 对于消息终结在LLC的，消息头里需带上QN,否则到 pack时为 QN的值为0
 
 	snd.head.st = ZHBHJT_IE_uni_STcode_system_interaction;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_cmd_answer_resp_9011;
@@ -1169,6 +1175,8 @@ OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_min_rpt_2051(void)
 {
 	msg_struct_llczhb_cloudvela_frame_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
+
+	snd.head.qn = gTaskLlczhbContext.frameHead.qn;//bug fix by shanchun, qn valure must not be miss
 
 	snd.head.st = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE;
 	snd.head.cn = ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp_2051;

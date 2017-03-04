@@ -90,6 +90,7 @@ ZHBHJT212MsgIeEleStaticCfg_t gZhbhjtIeEleCfg[] = {
 };
 
 //组合IE的定义
+/*
 ZHBHJT212MsgIeCmbStaticCfg_t gZhbhjtIeCmbCfg[] = {
 	{ZHBHJT_IEID_cmb_MIN,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
 	{ZHBHJT_IEID_cmb_gap_time,      {{ZHBHJT_IEID_uni_BeginTime, 1}, {ZHBHJT_IEID_uni_EndTime,   1}, {0,                        0}, {0,                         0},},},
@@ -100,7 +101,19 @@ ZHBHJT212MsgIeCmbStaticCfg_t gZhbhjtIeCmbCfg[] = {
 	{ZHBHJT_IEID_cmb_pol_report,    {{ZHBHJT_IEID_uni_Cou,       1}, {ZHBHJT_IEID_uni_value_Min, 1}, {ZHBHJT_IEID_uni_value_Avg, 1}, {ZHBHJT_IEID_uni_value_Max,1},},},
 	{ZHBHJT_IEID_cmb_MAX,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
 };
+*/
+//test for shanchun
 
+ZHBHJT212MsgIeCmbStaticCfg_t gZhbhjtIeCmbCfg[] = {
+	{ZHBHJT_IEID_cmb_MIN,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_gap_time,      {{ZHBHJT_IEID_uni_BeginTime, 1}, {ZHBHJT_IEID_uni_EndTime,   1}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_alm_lim_rng,   {{ZHBHJT_IEID_uni_LowValue,  1}, {ZHBHJT_IEID_uni_UpValue,   1}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_multi_ctime,   {{ZHBHJT_IEID_uni_PolId,     1}, {ZHBHJT_IEID_uni_CTime,     HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX},  {0,0},{0,                   0},},},
+	{ZHBHJT_IEID_cmb_alarm_event,   {{ZHBHJT_IEID_uni_Ala,       1}, {ZHBHJT_IEID_uni_AlarmType, 1}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_multi_rtd,     {{ZHBHJT_IEID_uni_Rtd,       1}, {ZHBHJT_IEID_uni_polFlag,   1}, {0,                        0}, {0,                         0},},},
+	{ZHBHJT_IEID_cmb_pol_report,    {{ZHBHJT_IEID_uni_Cou,       1}, {ZHBHJT_IEID_uni_value_Avg, 1}, {ZHBHJT_IEID_uni_value_Max, 1}, {ZHBHJT_IEID_uni_value_Min,1},},},
+	{ZHBHJT_IEID_cmb_MAX,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
+};
 
 
 
@@ -356,19 +369,23 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[j].Min);
 								strcat(sMsgBuild[i][j], tmp);
+								HCU_DEBUG_PRINT_INF("ZHBHJT212: Min j=%d, Polid=%d, name=%s, keylable=%s, min=%4.2f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[j].Min);
+
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Avg:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
 								strcat(sMsgBuild[i][j], tmp);
-								//HCU_DEBUG_PRINT_INF("ZHBHJT212: Avg j=%d, Polid=%d, name=%s\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId]);
+								HCU_DEBUG_PRINT_INF("ZHBHJT212: Avg j=%d, Polid=%d, name=%s, keylable=%s, avg=%4.2f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Max:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[j].Max);
 								strcat(sMsgBuild[i][j], tmp);
+								HCU_DEBUG_PRINT_INF("ZHBHJT212: Max j=%d, Polid=%d, name=%s, keylable=%s, max=%4.2f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[j].Max);
+
 							}
 							break;
 						case ZHBHJT_IEID_uni_ZsRtd:
@@ -383,17 +400,37 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 						case ZHBHJT_IEID_uni_value_ZsMax:
 							HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received data!\n");
 							break;
+
 						case ZHBHJT_IEID_uni_polFlag:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_multi_rtd){
 								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.rtd[j].PolFlag);
 								strcat(sMsgBuild[i][j], tmp);
 							}
+							/*
+							else if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
+								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.min[j].PolFlag);
+								strcat(sMsgBuild[i][j], tmp);
+								HCU_DEBUG_PRINT_INF("ZHBHJT212: Flag j=%d, Polid=%d, name=%s, keylable=%s, polflag=%c\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.min[j].PolFlag);
+
+							}
+							*/
 							break;
+
+							//test by shanchun
+							/*
+						case ZHBHJT_IEID_uni_polFlag:
+							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
+								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.min[j].PolFlag);
+								strcat(sMsgBuild[i][j], tmp);
+							}
+							break;
+							*/
+
 
 						case ZHBHJT_IEID_uni_Cou:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Cou].keyLable, inputPar->ul2Cloud.min[j].Cou);
-								strcat(sMsgBuild[i][j], tmp);
+								//sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Cou].keyLable, inputPar->ul2Cloud.min[j].Cou);
+								//strcat(sMsgBuild[i][j], tmp);
 							}
 							break;
 
@@ -515,14 +552,14 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	if ((strlen(cps) > 0) && (cps[strlen(cps)-1] == ';'))  cps[strlen(cps)-1] = '\0';
 
 	//组合数据部分
-	/*
+    //test by shanchun
 	UINT16 dslen = strlen(ds);
 	UINT16 cpslen = strlen(cps);
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: lengh of DS=[%d]\n\n", dslen);
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: lengh of CPS=[%d]\n\n", cpslen);
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: DS=[%s]\n\n", ds);
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: CPS=[%s]\n\n", cps);
-	*/
+
 	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: pack error!\n");
 	strcat(ds, "CP=&&");
 	strcat(ds, cps);
@@ -542,7 +579,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	strcat(output->curBuf, ZHBHJT_PROTOCOL_FRAME_FIX_TAIL);
 	output->curLen = strlen(output->curBuf);
 
-    /*for test start
+/*for test start
 	memset(ds, 0, sizeof(ds));
 	len = strlen(ZHBHJT_MSG_TEST_DATA_SEND_MIN_RPT1);
 	strcat(ds, ZHBHJT_MSG_TEST_DATA_SEND_MIN_RPT1);
@@ -554,10 +591,10 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	strcat(output->curBuf, tmp);
 	strcat(output->curBuf, ZHBHJT_PROTOCOL_FRAME_FIX_TAIL);
 	output->curLen = strlen(output->curBuf);
-	*///for test end
+*/
 
 	//测试打印
-	HCU_DEBUG_PRINT_INF("ZHBHJT212: output=[%s]\n", output->curBuf);
+	HCU_DEBUG_PRINT_INF("ZHBHJT212: output=[%s]\n\n", output->curBuf);
 
 	//返回
 	return SUCCESS;
@@ -646,10 +683,22 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 		tempLen = p3 - p2;
 		if (tempLen != 17) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Invalid received QN head!\n");
 		strncpy(tmp, p2, tempLen);
-		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%s\n\n", tmp);
+		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%s\n\n", tmp);//for test
 		func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(tmp, &u64Tmp);
 		snd.head.qn = u64Tmp;
-		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%u\n", u64Tmp);
+		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%lu\n", u64Tmp);//for test
+
+		//for test by shanchun start
+		memset(tmp, 0, sizeof(tmp));
+		func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(snd.head.qn, tmp);
+		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms=%s\n\n", tmp);
+
+		memset(tmp, 0, sizeof(tmp));
+		u64Tmp = 1488519070;
+		func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(u64Tmp, tmp);
+		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms from =%lu to =%s\n\n", u64Tmp, tmp);
+
+
 	}
 
 	//解ST领域：不允许为空

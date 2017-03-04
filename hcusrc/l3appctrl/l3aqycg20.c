@@ -473,12 +473,12 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	//1min or 1hour or 1day 数据聚合表，聚合表存数据库，再依据标志为判断是否发送
 
 	int ret = 0;
-
-	/* for test start
+	/*
+	// for test start
 	char ds[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
 	char tmp[ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
 	memset(ds, 0, sizeof(ds));
-	strcat(ds, "QN=20170302200101001;ST=22;CN=2051;PW=123456;MN=AQHJ0QP0100001;CP=&&DataTime=20170302205537;a01001-Avg=46.60,a01001-Max=47.60,a01001-Min=46.00,a01001-Flag=N;a01002-Avg=50.60,a01002-Max=67.60,a01002-Min=46.00,a01002-Flag=N;a01006-Avg=7.20,a01006-Max=9.7.00;a01006-Min=2.30,a01006-Flag=N;a01007-Avg=33.00,a01007-Max=45.00;a01007-Min=12.00,a01007-Flag=N;a01008-Avg=33.00,a01008-Max=45.00,a01008-Min=23.00,a01008-Flag=N;a34001-Avg=45.00,a34001-Max=46.00,a34001-Min=30.00,a34001-Flag=N;a50001-Avg=0.69,a50001-Max=0.79,a50001-Min=0.59,a50001-Flag=N&&");
+	strcat(ds, "##QN=20160715025900000;ST=22;CN=2011;PW=123456;MN=SHHBZB1111;CP=&&DataTime=20160715025900;a34001-Avg=0.000,a34001-Max=0.000,a34001-Min=0.000,a34001-Flag=N;a50001-Avg=30.0,a50001-Max=30.0,a50001-Min=30.0,a50001-Flag=N;a01001-Avg=25.3,a01001-Max=25.3,a01001-Min=25.3,a01001-Flag=N;a01002-Avg=88.6,a01002-Max=88.6,a01002-Min=88.6,a01002-Flag=N;a01006-Avg=0.0,a01006-Max=0.0,a01006-Min=0.0,a01006-Flag=N;a01007-Avg=0.0,a01007-Max=0.0,a01007-Min=0.0,a01007-Flag=N;a01008-Avg=348,a01008-Max=348,a01008-Min=348,a01008-Flag=N&&");
 
 	//计算长度
 	UINT16 len = strlen(ds);
@@ -486,10 +486,8 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	hcu_vm_calculate_crc_modbus((UINT8*)ds, len, &crc16);
 	memset(tmp, 0, sizeof(tmp));
 	sprintf(tmp, "%04X", crc16);
-
-	//测试打印
 	HCU_DEBUG_PRINT_INF("L3AQYCG20: output=[%s]\n\n\n\n\n", tmp);
-    */
+	*/
 
 	//总悬浮物颗粒
 	gTaskL3aqycq20Context.staOneMin.a34001_PolId = 99;
@@ -501,7 +499,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from PM25 database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a34001_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a34001_Min);
 	}
 
 	ret = dbi_HcuPm25DataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -510,7 +508,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from PM25 database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a34001_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a34001_Max);
 	}
 
 	ret = dbi_HcuPm25DataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -521,7 +519,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	else{
 		gTaskL3aqycq20Context.staOneMin.a34001_Cou = gTaskL3aqycq20Context.staOneMin.a34001_Avg;
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a34001_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a34001_Avg);
 	}
 
 	//噪声
@@ -534,7 +532,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Noise database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a50001_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a50001_Min);
 	}
 
 	ret = dbi_HcuNoiseDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -543,7 +541,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Noise database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a50001_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a50001_Max);
 	}
 
 	ret = dbi_HcuNoiseDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -554,7 +552,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	else{
 		gTaskL3aqycq20Context.staOneMin.a50001_Cou = gTaskL3aqycq20Context.staOneMin.a50001_Avg;
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a50001_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a50001_Avg);
 	}
 
 
@@ -568,7 +566,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Temp database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01001_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01001_Min);
 	}
 
 	ret = dbi_HcuTempDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -577,7 +575,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Temp database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01001_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01001_Max);
 	}
 
 	ret = dbi_HcuTempDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -588,7 +586,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	else{
 		gTaskL3aqycq20Context.staOneMin.a01001_Cou = gTaskL3aqycq20Context.staOneMin.a01001_Avg;
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01001_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01001_Avg);
 	}
 
 
@@ -602,7 +600,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Humid database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01002_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01002_Min);
 	}
 
 	ret = dbi_HcuHumidDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -611,7 +609,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Humid database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01002_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01002_Max);
 	}
 
 	ret = dbi_HcuHumidDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -622,7 +620,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	else{
 		gTaskL3aqycq20Context.staOneMin.a01002_Cou = gTaskL3aqycq20Context.staOneMin.a01002_Avg;
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01002_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01002_Avg);
 	}
 
 
@@ -636,7 +634,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Windspd database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01007_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01007_Min);
 	}
 
 	ret = dbi_HcuWindspdDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -645,7 +643,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Windspd database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01007_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01007_Max);
 	}
 
 	ret = dbi_HcuWindspdDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -656,7 +654,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	else{
 		gTaskL3aqycq20Context.staOneMin.a01007_Cou = gTaskL3aqycq20Context.staOneMin.a01007_Avg;
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01007_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01007_Avg);
 	}
 
 	//风向
@@ -669,7 +667,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Winddir database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01008_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01008_Min);
 	}
 
 	ret = dbi_HcuWinddirDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -678,7 +676,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Winddir database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01008_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01008_Max);
 	}
 
 	ret = dbi_HcuWinddirDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -689,7 +687,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	else{
 		gTaskL3aqycq20Context.staOneMin.a01008_Cou = gTaskL3aqycq20Context.staOneMin.a01008_Avg;
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01008_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get average data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01008_Avg);
 	}
 
 	//气压
@@ -716,6 +714,18 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 		memcpy(&(snd.ul2Cloud.min), &(gTaskL3aqycq20Context.staOneMin), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 
+		//test by shanchun
+		/*snd.ul2Cloud.min[0].PolFlag='N';
+		snd.ul2Cloud.min[1].PolFlag='N';
+		snd.ul2Cloud.min[2].PolFlag='N';
+		snd.ul2Cloud.min[3].PolFlag='N';
+		snd.ul2Cloud.min[4].PolFlag='N';
+		snd.ul2Cloud.min[5].PolFlag='N';
+		snd.ul2Cloud.min[6].PolFlag='N';
+		int i;
+		for(i=0; i< HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;i++)
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].flag=[%c]\n\n\n",i, snd.ul2Cloud.min[i].PolFlag);
+		*/
 		snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
 
 		ret = hcu_message_send(MSG_ID_L3MOD_LLCZHB_DATA_REPORT, TASK_ID_LLCZHB, TASK_ID_L3AQYCG20, &snd, snd.length);
@@ -725,166 +735,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 	}
 
-/*
-	//首先增加时间流逝的计数器
-	gTaskL3aqycq20Context.elipseCnt++;
-	gTaskL3aqycq20Context.elipse24HourCnt++;
 
-	//从各个数据库表单中获取最近值，可依据timeframe判断数据有效性
-	//温度
-	gTaskL3aqycq20Context.cur.a01001_PolId = 95;
-	gTaskL3aqycq20Context.cur.a01001_Cou = 10.01;
-	gTaskL3aqycq20Context.cur.a01001_Avg = 10.01;
-	gTaskL3aqycq20Context.cur.a01001_Min = 10.01;
-	gTaskL3aqycq20Context.cur.a01001_Max = 10.01;
-	//gTaskL3aqycq20Context.staOneMin.a01001_Flag = 'N';
-	//湿度
-	gTaskL3aqycq20Context.cur.a01002_PolId = 96;
-	gTaskL3aqycq20Context.cur.a01002_Cou = 10.02;
-	gTaskL3aqycq20Context.cur.a01002_Avg = 10.02;
-	gTaskL3aqycq20Context.cur.a01002_Min = 10.02;
-	gTaskL3aqycq20Context.cur.a01002_Max = 10.02;
-	//gTaskL3aqycq20Context.staOneMin.a01002_Flag = 'N';
-	//气压
-	gTaskL3aqycq20Context.cur.a01006_PolId = 97;
-	gTaskL3aqycq20Context.cur.a01006_Cou = 0;
-	gTaskL3aqycq20Context.cur.a01006_Avg = 0;
-	gTaskL3aqycq20Context.cur.a01006_Min = 0;
-	gTaskL3aqycq20Context.cur.a01006_Max = 0;
-	//gTaskL3aqycq20Context.staOneMin.a01006_Flag = 'D';
-	//风速
-	gTaskL3aqycq20Context.cur.a01007_PolId = 98;
-	gTaskL3aqycq20Context.cur.a01007_Cou = 10.07;
-	gTaskL3aqycq20Context.cur.a01007_Avg = 10.07;
-	gTaskL3aqycq20Context.cur.a01007_Min = 10.07;
-	gTaskL3aqycq20Context.cur.a01007_Max = 10.07;
-	//gTaskL3aqycq20Context.staOneMin.a01007_Flag = 'N';
-	//风向
-	gTaskL3aqycq20Context.cur.a01008_PolId = 99;
-	gTaskL3aqycq20Context.cur.a01008_Cou = 10.08;
-	gTaskL3aqycq20Context.cur.a01008_Avg = 10.08;
-	gTaskL3aqycq20Context.cur.a01008_Min = 10.08;
-	gTaskL3aqycq20Context.cur.a01008_Max = 10.08;
-	//gTaskL3aqycq20Context.staOneMin.a01008_Flag = 'N';
-	//总悬浮物颗粒
-	gTaskL3aqycq20Context.cur.a34001_PolId = 100;
-	gTaskL3aqycq20Context.cur.a34001_Cou = 34.001;
-	gTaskL3aqycq20Context.cur.a34001_Avg = 34.001;
-	gTaskL3aqycq20Context.cur.a34001_Min = 34.001;
-	gTaskL3aqycq20Context.cur.a34001_Max = 34.001;
-	//gTaskL3aqycq20Context.staOneMin.a34001_Flag = 'N';
-	//噪声
-	gTaskL3aqycq20Context.cur.a50001_PolId = 101;
-	gTaskL3aqycq20Context.cur.a50001_Cou = 50.001;
-	gTaskL3aqycq20Context.cur.a50001_Avg = 50.001;
-	gTaskL3aqycq20Context.cur.a50001_Min = 50.001;
-	gTaskL3aqycq20Context.cur.a50001_Max = 50.001;
-	//gTaskL3aqycq20Context.staOneMin.a50001_Flag = 'N';
-
-	//更新1Min各个统计表单，因为传感器采集目前最小粒度是一分钟，所以直接赋当前读出值
-	//温度
-	gTaskL3aqycq20Context.staOneMin.a01001_PolId = gTaskL3aqycq20Context.cur.a01001_PolId;
-	gTaskL3aqycq20Context.staOneMin.a01001_Cou = gTaskL3aqycq20Context.cur.a01001_Cou;
-	gTaskL3aqycq20Context.staOneMin.a01001_Avg = gTaskL3aqycq20Context.cur.a01001_Avg;
-	gTaskL3aqycq20Context.staOneMin.a01001_Min = gTaskL3aqycq20Context.cur.a01001_Min;
-	gTaskL3aqycq20Context.staOneMin.a01001_Max = gTaskL3aqycq20Context.cur.a01001_Max;
-
-
-	//湿度
-	gTaskL3aqycq20Context.staOneMin.a01002_PolId = gTaskL3aqycq20Context.cur.a01002_PolId;
-	gTaskL3aqycq20Context.staOneMin.a01002_Cou = gTaskL3aqycq20Context.cur.a01002_Cou ;
-	gTaskL3aqycq20Context.staOneMin.a01002_Avg = gTaskL3aqycq20Context.cur.a01002_Avg ;
-	gTaskL3aqycq20Context.staOneMin.a01002_Min = gTaskL3aqycq20Context.cur.a01002_Min;
-	gTaskL3aqycq20Context.staOneMin.a01002_Max = gTaskL3aqycq20Context.cur.a01002_Max;
-
-	//气压
-	gTaskL3aqycq20Context.staOneMin.a01006_PolId = gTaskL3aqycq20Context.cur.a01006_PolId;
-	gTaskL3aqycq20Context.staOneMin.a01006_Cou = gTaskL3aqycq20Context.cur.a01006_Cou;
-	gTaskL3aqycq20Context.staOneMin.a01006_Avg = gTaskL3aqycq20Context.cur.a01006_Avg;
-	gTaskL3aqycq20Context.staOneMin.a01006_Min = gTaskL3aqycq20Context.cur.a01006_Min;
-	gTaskL3aqycq20Context.staOneMin.a01006_Max = gTaskL3aqycq20Context.cur.a01006_Max;
-
-	//风速
-	gTaskL3aqycq20Context.staOneMin.a01007_PolId = gTaskL3aqycq20Context.cur.a01007_PolId;
-	gTaskL3aqycq20Context.staOneMin.a01007_Cou = gTaskL3aqycq20Context.cur.a01007_Cou;
-	gTaskL3aqycq20Context.staOneMin.a01007_Avg = gTaskL3aqycq20Context.cur.a01007_Avg;
-	gTaskL3aqycq20Context.staOneMin.a01007_Min = gTaskL3aqycq20Context.cur.a01007_Min;
-	gTaskL3aqycq20Context.staOneMin.a01007_Max = gTaskL3aqycq20Context.cur.a01007_Max;
-
-	//风向
-	gTaskL3aqycq20Context.staOneMin.a01008_PolId = gTaskL3aqycq20Context.cur.a01008_PolId;
-	gTaskL3aqycq20Context.staOneMin.a01008_Cou = gTaskL3aqycq20Context.cur.a01008_Cou;
-	gTaskL3aqycq20Context.staOneMin.a01008_Avg = gTaskL3aqycq20Context.cur.a01008_Avg;
-	gTaskL3aqycq20Context.staOneMin.a01008_Min = gTaskL3aqycq20Context.cur.a01008_Min;
-	gTaskL3aqycq20Context.staOneMin.a01008_Max = gTaskL3aqycq20Context.cur.a01008_Max;
-
-	//总悬浮物颗粒
-	gTaskL3aqycq20Context.staOneMin.a34001_PolId = gTaskL3aqycq20Context.cur.a34001_PolId;
-	gTaskL3aqycq20Context.staOneMin.a34001_Cou = gTaskL3aqycq20Context.cur.a34001_Cou;
-	gTaskL3aqycq20Context.staOneMin.a34001_Avg = gTaskL3aqycq20Context.cur.a34001_Avg;
-	gTaskL3aqycq20Context.staOneMin.a34001_Min = gTaskL3aqycq20Context.cur.a34001_Min;
-	gTaskL3aqycq20Context.staOneMin.a34001_Max = gTaskL3aqycq20Context.cur.a34001_Max;
-
-	//噪声
-	gTaskL3aqycq20Context.staOneMin.a50001_PolId = gTaskL3aqycq20Context.cur.a50001_PolId;
-	gTaskL3aqycq20Context.staOneMin.a50001_Cou = gTaskL3aqycq20Context.cur.a50001_Cou;
-	gTaskL3aqycq20Context.staOneMin.a50001_Avg = gTaskL3aqycq20Context.cur.a50001_Avg;
-	gTaskL3aqycq20Context.staOneMin.a50001_Min = gTaskL3aqycq20Context.cur.a50001_Min;
-	gTaskL3aqycq20Context.staOneMin.a50001_Max = gTaskL3aqycq20Context.cur.a50001_Max;
-
-
-
-
-
-	//更新1hour各个统计表单
-	//温度
-	gTaskL3aqycq20Context.sta60Min.a01001_PolId = gTaskL3aqycq20Context.cur.a01001_PolId;
-	gTaskL3aqycq20Context.sta60Min.a01001_Avg = gTaskL3aqycq20Context.cur.a01001_Avg;
-	gTaskL3aqycq20Context.sta60Min.a01001_Min = gTaskL3aqycq20Context.cur.a01001_Min;
-	gTaskL3aqycq20Context.sta60Min.a01001_Max = gTaskL3aqycq20Context.cur.a01001_Max;
-	//strncpy(gTaskL3aqycq20Context.staOneMin.a01001_Flag, "N", strlen(gTaskL3aqycq20Context.staOneMin.a01001_Flag));
-	//湿度
-	gTaskL3aqycq20Context.sta60Min.a01002_PolId = gTaskL3aqycq20Context.cur.a01002_PolId;
-	gTaskL3aqycq20Context.sta60Min.a01002_Avg = gTaskL3aqycq20Context.cur.a01002_Avg ;
-	gTaskL3aqycq20Context.sta60Min.a01002_Min = gTaskL3aqycq20Context.cur.a01002_Min;
-	gTaskL3aqycq20Context.sta60Min.a01002_Max = gTaskL3aqycq20Context.cur.a01002_Max;
-	//strncpy(gTaskL3aqycq20Context.staOneMin.a01002_Flag, "N", strlen(gTaskL3aqycq20Context.staOneMin.a01002_Flag));
-	//气压
-	gTaskL3aqycq20Context.sta60Min.a01006_PolId = gTaskL3aqycq20Context.cur.a01006_PolId;
-	gTaskL3aqycq20Context.sta60Min.a01006_Avg = gTaskL3aqycq20Context.cur.a01006_Avg;
-	gTaskL3aqycq20Context.sta60Min.a01006_Min = gTaskL3aqycq20Context.cur.a01006_Min;
-	gTaskL3aqycq20Context.sta60Min.a01006_Max = gTaskL3aqycq20Context.cur.a01006_Max;
-	//strncpy(gTaskL3aqycq20Context.staOneMin.a01006_Flag, "N", strlen(gTaskL3aqycq20Context.staOneMin.a01006_Flag));
-	//风速
-	gTaskL3aqycq20Context.sta60Min.a01007_PolId = gTaskL3aqycq20Context.cur.a01007_PolId;
-	gTaskL3aqycq20Context.sta60Min.a01007_Avg = gTaskL3aqycq20Context.cur.a01007_Avg;
-	gTaskL3aqycq20Context.sta60Min.a01007_Min = gTaskL3aqycq20Context.cur.a01007_Min;
-	gTaskL3aqycq20Context.sta60Min.a01007_Max = gTaskL3aqycq20Context.cur.a01007_Max;
-	//strncpy(gTaskL3aqycq20Context.staOneMin.a01007_Flag, "N", strlen(gTaskL3aqycq20Context.staOneMin.a01007_Flag));
-	//风向
-	gTaskL3aqycq20Context.sta60Min.a01008_PolId = gTaskL3aqycq20Context.cur.a01008_PolId;
-
-	gTaskL3aqycq20Context.sta60Min.a01008_Avg = gTaskL3aqycq20Context.cur.a01008_Avg;
-	gTaskL3aqycq20Context.sta60Min.a01008_Min = gTaskL3aqycq20Context.cur.a01008_Min;
-	gTaskL3aqycq20Context.sta60Min.a01008_Max = gTaskL3aqycq20Context.cur.a01008_Max;
-	//strncpy(gTaskL3aqycq20Context.staOneMin.a01008_Flag, "N", strlen(gTaskL3aqycq20Context.staOneMin.a01008_Flag));
-	//总悬浮物颗粒
-	gTaskL3aqycq20Context.sta60Min.a34001_PolId = gTaskL3aqycq20Context.cur.a34001_PolId;
-	gTaskL3aqycq20Context.sta60Min.a34001_Avg = gTaskL3aqycq20Context.cur.a34001_Avg;
-	gTaskL3aqycq20Context.sta60Min.a34001_Min = gTaskL3aqycq20Context.cur.a34001_Min;
-	gTaskL3aqycq20Context.sta60Min.a34001_Max = gTaskL3aqycq20Context.cur.a34001_Max;
-	//strncpy(gTaskL3aqycq20Context.staOneMin.a34001_Flag, "N", strlen(gTaskL3aqycq20Context.staOneMin.a34001_Flag));
-	//噪声
-	gTaskL3aqycq20Context.sta60Min.a50001_PolId = gTaskL3aqycq20Context.cur.a50001_PolId;
-	gTaskL3aqycq20Context.sta60Min.a50001_Avg = gTaskL3aqycq20Context.cur.a50001_Avg;
-	gTaskL3aqycq20Context.sta60Min.a50001_Min = gTaskL3aqycq20Context.cur.a50001_Min;
-	gTaskL3aqycq20Context.sta60Min.a50001_Max = gTaskL3aqycq20Context.cur.a50001_Max;
-	//strncpy(gTaskL3aqycq20Context.staOneMin.a50001_Flag, "N", strlen(gTaskL3aqycq20Context.staOneMin.a50001_Flag));
-
-
-	//将当前基础统计周期的数据清零
-	memset(&(gTaskL3aqycq20Context.cur), 0, sizeof(HcuSysMsgIeL3aqycContextStaElement_t));
-*/
 	//返回
 	return SUCCESS;
 }

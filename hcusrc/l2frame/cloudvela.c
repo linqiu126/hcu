@@ -246,7 +246,28 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 	//定时长时钟进行链路检测的
 	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_cloudvela_hb_link_main_entry();
+
+		//ret = func_cloudvela_hb_link_main_entry(); //no need if it is not home server? to check later?
+
+		//test by shanchun start
+		//检查链路状态，离线，则再连接
+		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
+			if ((gTaskCloudvelaContext.defaultSvrSocketCon == TRUE) && (func_cloudvela_socket_conn_setup() == SUCCESS)){
+				zHcuSysStaPm.statisCnt.cloudVelaConnCnt++;
+				//State Transfer to FSM_STATE_CLOUDVELA_ONLINE
+				if (FsmSetState(TASK_ID_CLOUDVELA, FSM_STATE_CLOUDVELA_ONLINE) == FAILURE) HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error Set FSM State!\n");
+				HCU_DEBUG_PRINT_NOR("CLOUDVELA: Connect state change, from OFFLINE to ONLINE!\n");
+			}
+			//如果是失败情况，并不返回错误，属于正常情况
+			else{
+				HCU_DEBUG_PRINT_INF("CLOUDVELA: gTaskCloudvelaContext.defaultSvrSocketCon=[%d]\n\n", gTaskCloudvelaContext.defaultSvrSocketCon);
+				HCU_DEBUG_PRINT_NOR("CLOUDVELA: Try to setup connection with back-cloud, but not success!\n");
+				zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt++;
+			}
+		}
+		//test by shanchun stop
+
+
 	}
 
 	return ret;
