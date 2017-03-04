@@ -715,21 +715,13 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		memcpy(&(snd.ul2Cloud.min), &(gTaskL3aqycq20Context.staOneMin), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 
 		//test by shanchun
-		/*snd.ul2Cloud.min[0].PolFlag='N';
-		snd.ul2Cloud.min[1].PolFlag='N';
-		snd.ul2Cloud.min[2].PolFlag='N';
-		snd.ul2Cloud.min[3].PolFlag='N';
-		snd.ul2Cloud.min[4].PolFlag='N';
-		snd.ul2Cloud.min[5].PolFlag='N';
-		snd.ul2Cloud.min[6].PolFlag='N';
-				*/
 		int i;
 		for(i=0; i< HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;i++){
 			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].PolId=[%d]\n",i, snd.ul2Cloud.min[i].PolId);
 			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].PolFlag=[%c]\n",i, snd.ul2Cloud.min[i].PolFlag);
-			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Avg=[%d]\n",i, snd.ul2Cloud.min[i].Avg);
-			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Max=[%d]\n",i, snd.ul2Cloud.min[i].Max);
-			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Min=[%d]\n\n\n",i, snd.ul2Cloud.min[i].Min);
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Avg=[%4.2f]\n",i, snd.ul2Cloud.min[i].Avg);
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Max=[%4.2f]\n",i, snd.ul2Cloud.min[i].Max);
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Min=[%4.2f]\n\n\n",i, snd.ul2Cloud.min[i].Min);
 		}
 
 		snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);

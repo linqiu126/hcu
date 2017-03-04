@@ -21,6 +21,7 @@ typedef signed short    		INT16;
 typedef unsigned int    		UINT32;
 typedef	signed int      		INT32;  		//redefined at system lib jpeglib.h
 typedef unsigned long int 		UINT64;
+typedef unsigned long long int  LLP64;   //defined by shanchun for HJT
 typedef signed long int 		INT64;
 typedef unsigned long   		ULONG;
 typedef signed long     		SLONG;

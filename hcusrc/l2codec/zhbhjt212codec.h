@@ -92,9 +92,9 @@ UINT8 func_cloudvela_zhbhjt212_search_dl2hcu_msgid_by_cncode(UINT16 cnid);
 UINT16 func_cloudvela_zhbhjt212_caculate_ul2cloud_msg_size_max(UINT16 cnId);
 UINT16 func_cloudvela_zhbhjt212_caculate_dl2hcu_msg_size_max(UINT16 cnId);
 extern void func_cloudvela_zhbhjt212_test(void);
-void func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(UINT64 in, char *out);
+void func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(LLP64 in, char *out);
 void func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(UINT32 in, char *out);
-void func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(char *in, UINT64 *out);
+void func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(char *in, LLP64 *out);
 void func_cloudvela_zhbhjt212_convert_ymd_wo_ms_to_u32time(char *in, UINT32 *out);
 //void func_cloudvela_zhbhjt212_convert_u64time_to_ymd_wo_ms(UINT64 in, char *out);
 

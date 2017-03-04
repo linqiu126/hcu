@@ -3348,7 +3348,8 @@ typedef struct msg_struct_l3aqyc_exg_data_report
 #define HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX 24
 typedef struct msgie_struct_zhbhjt_frame_head //
 {
-	UINT64 qn;
+	//UINT64 qn;//bug fix by shanchun for time change tick to YYYYMMDDHHMMSSZZZ
+	LLP64 qn;
 	UINT8  st;  //污染物种类
 	UINT16 cn;  //命令
 	char   pw[7];  //最长6位密码
@@ -3460,7 +3461,7 @@ typedef struct  msgie_struct_zhbhjt_element_ul2cloud
 typedef struct  msg_struct_cloudvela_llczhb_frame_req
 {
 	msgie_struct_zhbhjt_frame_head_t head;
-	UINT64 cfmQn;
+	LLP64 cfmQn;//bug fix by shanchun for time change tick to YYYYMMDDHHMMSSZZZ
 	UINT16 cfmCN;
 	UINT16 cfmPNUM;
 	UINT16 cfmPNO;
@@ -3473,7 +3474,7 @@ typedef struct  msg_struct_cloudvela_llczhb_frame_req
 typedef struct  msg_struct_llczhb_cloudvela_frame_resp
 {
 	msgie_struct_zhbhjt_frame_head_t head;
-	UINT64 cfmQn;
+	LLP64 cfmQn; //bug fix by shanchun for time change tick to YYYYMMDDHHMMSSZZZ
 	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 	UINT32 length;
 }msg_struct_llczhb_cloudvela_frame_resp_t;

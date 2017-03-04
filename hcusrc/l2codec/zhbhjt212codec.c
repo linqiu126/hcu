@@ -46,7 +46,7 @@ const char gZhbhjtPolIdName[ZHBHJT_PFDT_POLID_NAME_ID_MAX][ZHBHJT_PFDT_POLID_NAM
 ZHBHJT212MsgIeEleStaticCfg_t gZhbhjtIeEleCfg[] = {
 	{"",                 ZHBHJT_PFDT_CHAR,     0,   0},
 	{"SystemTime=",      ZHBHJT_PFDT_INT32,    14,  0},
-	{"QN=",              ZHBHJT_PFDT_INT64,    20,  0},
+	{"QN=",              ZHBHJT_PFDT_INT32,    20,  0},
 	{"CN=",              ZHBHJT_PFDT_INT16,    4,   0},
 	{"PNUM=",            ZHBHJT_PFDT_INT16,    4,   0},
 	{"PNO=",             ZHBHJT_PFDT_INT16,    4,   0},
@@ -102,7 +102,7 @@ ZHBHJT212MsgIeCmbStaticCfg_t gZhbhjtIeCmbCfg[] = {
 	{ZHBHJT_IEID_cmb_MAX,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
 };
 */
-//test for shanchun
+//debug by shanchun
 
 ZHBHJT212MsgIeCmbStaticCfg_t gZhbhjtIeCmbCfg[] = {
 	{ZHBHJT_IEID_cmb_MIN,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
@@ -214,10 +214,18 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 
 	//请求编号 QN, 精 确 到 毫 秒 的 时 间戳:QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求，用于请求命令或通知命令
 	memset(tmp, 0, sizeof(tmp));
-	HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms=%lu\n\n", inputPar->head.qn);
+	HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms=%llu\n\n", inputPar->head.qn);
 	func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(inputPar->head.qn, tmp);
-	//func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(&inputPar->cfmQn, tmp);//LLC终结的消息立即返回时头里不带QN的值，L3回的消息头带QN??
 	HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms=%s\n\n", tmp);
+
+	//debug by shanchun
+	/*
+	memset(tmp, 0, sizeof(tmp));
+	unsigned long long int LongTmp = 1488643450999;
+	func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(LongTmp, tmp);
+	HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms from =%llu to =%s\n\n", LongTmp, tmp);
+	*/
+
 	strcat(ds, "QN=");
 	strcat(ds, tmp);
 	strcat(ds, ";");
@@ -552,13 +560,15 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	if ((strlen(cps) > 0) && (cps[strlen(cps)-1] == ';'))  cps[strlen(cps)-1] = '\0';
 
 	//组合数据部分
-    //test by shanchun
+    //debug by shanchun
+	/*
 	UINT16 dslen = strlen(ds);
 	UINT16 cpslen = strlen(cps);
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: lengh of DS=[%d]\n\n", dslen);
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: lengh of CPS=[%d]\n\n", cpslen);
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: DS=[%s]\n\n", ds);
 	HCU_DEBUG_PRINT_INF("ZHBHJT212: CPS=[%s]\n\n", cps);
+	*/
 
 	if ((strlen(ds) + strlen(cps) + 20) > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX) HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: pack error!\n");
 	strcat(ds, "CP=&&");
@@ -606,7 +616,8 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 {
 	int i=0, j = 0, k = 0, m = 0, index = 0;
 	UINT32 totalLen=0, it=0, tempLen = 0;
-	UINT64 u64Tmp = 0;
+	//UINT64 u64Tmp = 0; //bug fix by shanchun for time change tick to YYYYMMDDHHMMSSZZZ
+	LLP64 u64Tmp = 0;
 	UINT8 msgidIndex = 0;
 	char tmp[ZHBHJT_PROTOCOL_FRAME_SINGLE_SEG_LEN_MAX];
 	char ds[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
@@ -686,18 +697,7 @@ OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *r
 		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%s\n\n", tmp);//for test
 		func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(tmp, &u64Tmp);
 		snd.head.qn = u64Tmp;
-		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%lu\n", u64Tmp);//for test
-
-		//for test by shanchun start
-		memset(tmp, 0, sizeof(tmp));
-		func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(snd.head.qn, tmp);
-		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms=%s\n\n", tmp);
-
-		memset(tmp, 0, sizeof(tmp));
-		u64Tmp = 1488519070;
-		func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(u64Tmp, tmp);
-		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms from =%lu to =%s\n\n", u64Tmp, tmp);
-
+		HCU_DEBUG_PRINT_INF("CODEC: func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time=%llu\n", u64Tmp);//for test
 
 	}
 
@@ -1246,11 +1246,15 @@ UINT16 func_cloudvela_zhbhjt212_caculate_dl2hcu_msg_size_max(UINT16 cnId)
 }
 
 //输出的out=17字节的字符串，否则出错
-void func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(UINT64 in, char *out)
+void func_cloudvela_zhbhjt212_convert_u64time_to_ymd_with_ms(LLP64 in, char *out)
 {
 	UINT32 time2Sec = 0, time2Milsec = 0;
 	time2Sec = (UINT32)(in / 1000);
-	time2Milsec = (UINT32)(in - (in / 1000)*1000);
+	//HCU_DEBUG_PRINT_INF("L3AQYCG20: time2Sec=[%d]\n\n\n",time2Sec);
+	time2Milsec = (UINT32)(in - time2Sec*1000);//update by shanchun for bug fix
+	//HCU_DEBUG_PRINT_INF("L3AQYCG20: time2Milsec=[%d]\n\n\n",time2Milsec);
+	//time2Milsec = (UINT32)(in-(in -in / 1000) *1000);
+
 	time_t lt = (time_t)time2Sec;
 	struct tm *cu;
 	cu = localtime(&lt);
@@ -1272,13 +1276,15 @@ void func_cloudvela_zhbhjt212_convert_u32time_to_ymd_wo_ms(UINT32 in, char *out)
 }
 
 //输入必须是17个字符串，输出的U64的数值，否则出错
-void func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(char *in, UINT64 *out)
+void func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(char *in, LLP64 *out)
 {
 	char s[5];
 	struct tm cu;
 	UINT16 t=0;
 	UINT32 time2Milsec = 0;
-	UINT64 tout = 0;
+	//UINT64 tout = 0;
+	LLP64 tout = 0; // bug fix by shanchun
+
 
 	int len = strlen (in);
 	if ((len > 17) || (len < 12)) return;
@@ -1318,7 +1324,9 @@ void func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(char *in, UINT64 *o
 		memset(s, 0, sizeof(s));
 		strncpy(s, in+14, 3);
 		t = strtoul(s, NULL, 10) & 0xFFFF;
+		//HCU_DEBUG_PRINT_INF("LLCZHB: t=%d\n\n", t);
 		time2Milsec = t;
+		//HCU_DEBUG_PRINT_INF("LLCZHB: time2Milsec=%u\n\n", time2Milsec);//for debug by shanchun
 	}
 	else if (len == 16){
 		memset(s, 0, sizeof(s));
@@ -1420,8 +1428,13 @@ void func_cloudvela_zhbhjt212_convert_ymd_with_ms_to_u64time(char *in, UINT64 *o
 	time_t lt;
 
 	lt = mktime(&cu);
-	tout = lt * 1000 + time2Milsec;
+	//HCU_DEBUG_PRINT_INF("LLCZHB: lt=%d\n\n", lt);//for debug by shanchun
+	LLP64 temp = lt; //bug fix by shanchun
+	//HCU_DEBUG_PRINT_INF("LLCZHB: temp=%llu\n\n", temp);//for debug by shanchun
+	tout = temp * 1000 + time2Milsec;
+	//HCU_DEBUG_PRINT_INF("LLCZHB: tout=%llu\n\n", tout);//for debug by shanchun
 	*out = tout;
+	//HCU_DEBUG_PRINT_INF("LLCZHB: *out=%llu\n\n", *out);//for debug by shanchun
 
 	return;
 }
