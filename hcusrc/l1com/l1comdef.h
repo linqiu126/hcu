@@ -806,7 +806,7 @@ typedef struct CloudBhItfDevReportStdZhb
 
 //Adding by Shanchun for socket heart beat
 #define HCU_CLOUDSRV_SOCKET_KEEPALIVE 1  // set KeepAlive
-#define HCU_CLOUDSRV_SOCKET_KEEPIDLE 5   //tcp idle time before first KeepAlive checking
+#define HCU_CLOUDSRV_SOCKET_KEEPIDLE 10   //tcp idle time before first KeepAlive checking
 #define HCU_CLOUDSRV_SOCKET_KEEPINTERVAL 1  //interval between two KeepAlive checking
 #define HCU_CLOUDSRV_SOCKET_KEEPCOUNT 1  //count before disconnect Keepalive
 

@@ -111,7 +111,7 @@ ZHBHJT212MsgIeCmbStaticCfg_t gZhbhjtIeCmbCfg[] = {
 	{ZHBHJT_IEID_cmb_multi_ctime,   {{ZHBHJT_IEID_uni_PolId,     1}, {ZHBHJT_IEID_uni_CTime,     HCU_SYSMSG_ZHBHJT_CTIME_NBR_MAX},  {0,0},{0,                   0},},},
 	{ZHBHJT_IEID_cmb_alarm_event,   {{ZHBHJT_IEID_uni_Ala,       1}, {ZHBHJT_IEID_uni_AlarmType, 1}, {0,                        0}, {0,                         0},},},
 	{ZHBHJT_IEID_cmb_multi_rtd,     {{ZHBHJT_IEID_uni_Rtd,       1}, {ZHBHJT_IEID_uni_polFlag,   1}, {0,                        0}, {0,                         0},},},
-	{ZHBHJT_IEID_cmb_pol_report,    {{ZHBHJT_IEID_uni_Cou,       1}, {ZHBHJT_IEID_uni_value_Avg, 1}, {ZHBHJT_IEID_uni_value_Max, 1}, {ZHBHJT_IEID_uni_value_Min,1},},},
+	{ZHBHJT_IEID_cmb_pol_report,    {{ZHBHJT_IEID_uni_polFlag,       1}, {ZHBHJT_IEID_uni_value_Avg, 1}, {ZHBHJT_IEID_uni_value_Max, 1}, {ZHBHJT_IEID_uni_value_Min,1},},},
 	{ZHBHJT_IEID_cmb_MAX,           {{0,                         0}, {0,                         0}, {0,                        0}, {0,                         0},},},
 };
 
@@ -406,14 +406,14 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.rtd[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.rtd[j].PolFlag);
 								strcat(sMsgBuild[i][j], tmp);
 							}
-							/*
+
 							else if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
 								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.min[j].PolFlag);
 								strcat(sMsgBuild[i][j], tmp);
 								HCU_DEBUG_PRINT_INF("ZHBHJT212: Flag j=%d, Polid=%d, name=%s, keylable=%s, polflag=%c\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.min[j].PolFlag);
 
 							}
-							*/
+
 							break;
 
 							//test by shanchun

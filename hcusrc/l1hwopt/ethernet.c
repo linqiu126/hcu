@@ -114,7 +114,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
-	UINT32 echolen;
+	//UINT32 echolen;
 
 	//Heart beat checking in LLC
 	int keepAlive = HCU_CLOUDSRV_SOCKET_KEEPALIVE; // set KeepAlive
@@ -133,7 +133,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 		receiveBuffer.length = idata;
 
 		if(idata <= 0){
-			HCU_DEBUG_PRINT_INF("ETHERNET: Socket receive error: %d !\n\n", idata);
+			HCU_DEBUG_PRINT_INF("ETHERNET: Socket receive %d !\n\n", idata);
 
 			zHcuSysStaPm.statisCnt.SocketDiscCnt++;
 			if ((zHcuSysStaPm.statisCnt.SocketDiscCnt%HCU_ETHERNET_SOCKET_CON_ERR_PRINT_FREQUENCY)==0) HcuErrorPrint("ETHERNET: Socket receive error: %d !\n", idata);
@@ -143,7 +143,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 
 			gTaskCloudvelaContext.defaultSvrethConClientFd = socket(AF_INET, SOCK_STREAM,0);
 			if(gTaskCloudvelaContext.defaultSvrethConClientFd < 0){
-				HcuErrorPrint("ETHERNET: Can not create socket!\n\n\n");
+				HcuErrorPrint("ETHERNET: Can not create socket!\n");
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 			}
 
@@ -164,7 +164,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			else
 			{
 				//先送物理设备标签的机制，待去掉
-				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n\n\n\n");
+				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n\n");
 				gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
 				/*
 				echolen = strlen(zHcuSysEngPar.hwBurnId.equLable);

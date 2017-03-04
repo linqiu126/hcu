@@ -3366,11 +3366,12 @@ typedef struct  msgie_struct_zhbhjt_frame_data_pol_rtd
 typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
 {
 	UINT8  PolId;
+	char   PolFlag;
 	float  Avg;
 	float  Max;
 	float  Min;
-	float  Cou;
-	//char   PolFlag;
+	//float  Cou;
+
 }msgie_struct_zhbhjt_frame_data_pol_min_hour_t;
 typedef struct  msgie_struct_zhbhjt_frame_data_low_upvalue
 {
@@ -3608,55 +3609,59 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 typedef struct HcuSysMsgIeL3aqycContextStaElement
 {
 	UINT8   a34001_PolId;
+	char    a34001_Flag;			//总悬浮颗粒物浓度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 	float	a34001_Avg;  			//总悬浮颗粒物浓度监测时间内的均值
 	float	a34001_Max;  			//总悬浮颗粒物浓度监测时间内最大值
 	float	a34001_Min;  			//总悬浮颗粒物浓度监测时间内最小值
-	float   a34001_Cou;
-	//char    a34001_Flag;			//总悬浮颗粒物浓度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	//float   a34001_Cou;
+
 
 	UINT8   a50001_PolId;
+	char    a50001_Flag;			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 	float	a50001_Avg;  			//噪声监测时间内的均值
 	float	a50001_Max;  			//噪声监测时间内最大值
 	float	a50001_Min;  			//噪声监测时间内最小值
-	float   a50001_Cou;
-	//char    a50001_Flag;			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	//float   a50001_Cou;
+
 
 	UINT8   a01001_PolId;
+	char    a01001_Flag;			//温度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 	float	a01001_Avg;  			//温度监测时间内的均值
 	float	a01001_Max;  			//温度监测时间内最大值
 	float	a01001_Min;  			//温度监测时间内最小值
-	float   a01001_Cou;
-	//char    a01001_Flag;			//温度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	//float   a01001_Cou;
+
 
 	UINT8   a01002_PolId;
+	char    a01002_Flag;			//湿度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 	float	a01002_Avg;  			//湿监测时间内的均值
 	float	a01002_Max;  			//湿度监测时间内最大值
 	float	a01002_Min;  			//湿度监测时间内最小值
-	float   a01002_Cou;
-	//char    a01002_Flag;			//湿度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	//float   a01002_Cou;
 
 	//气压暂不支持但先定义此处，粉尘和雨量未使用暂不定义
 	UINT8   a01006_PolId;
+	char    a01006_Flag;			//气压实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 	float	a01006_Avg;  			//气压测时间内的均值
 	float	a01006_Max;  			//气压监测时间内最大值
 	float	a01006_Min;  			//气压监测时间内最小值
-	float   a01006_Cou;
-	//char    a01006_Flag;			//气压实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	//float   a01006_Cou;
 
 	//风速风向无最大最小值要求，先定义成统一格式以后按需要再行调整
 	UINT8   a01007_PolId;
+	char    a01007_Flag;			//风速实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 	float	a01007_Avg;  			//风速测时间内的均值
 	float	a01007_Max;  			//风速监测时间内最大值
 	float	a01007_Min;  			//风速监测时间内最小值
-	float   a01007_Cou;
-	//char    a01007_Flag;			//风速实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	//float   a01007_Cou;
 
 	UINT8   a01008_PolId;
+	char    a01008_Flag;			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 	float	a01008_Avg;  			//风向测时间内的均值
 	float	a01008_Max;  			//风向监测时间内最大值
 	float	a01008_Min;  			//风向监测时间内最小值
-	float   a01008_Cou;
-	//char    a01008_Flag;			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	//float   a01008_Cou;
+
 }HcuSysMsgIeL3aqycContextStaElement_t;
 
 

@@ -9,14 +9,18 @@
 
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
-[BUG#003
+[BUG#003]
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
+//= ZSC, 2017 Mar.4, CURRENT_SW_DELIVERY 186=>AQYC项目
+=增加L3 功能(设计任意duration所有传感器Min/Max/Avg聚合数据生成)
+=修改若干LLC上行处理 bugs
+=修改socket和联通云不能连接问题（心跳参数调整）
 
 //= ZSC, 2017 Feb.28, CURRENT_SW_DELIVERY 185=>AQYC项目
-=增加L3 功能
-=修改LLC bugs
-=修改链路不稳定Bug
+=增加L3 功能(2051消息)
+=修改LLC bugs（bug： LLC层终结的消息消息头需带QN）
+=修改socket不稳定Bug（cloudvela的频繁的online<->offline切换问题）
 
 //= ZJL, 2017 Feb.24, CURRENT_SW_DELIVERY 184=>BFSC项目
 =改进HUITP的消息定义，从而明确状态机的工作过程
