@@ -806,7 +806,7 @@ typedef struct CloudBhItfDevReportStdZhb
 
 //Adding by Shanchun for socket heart beat
 #define HCU_CLOUDSRV_SOCKET_KEEPALIVE 1  // set KeepAlive
-#define HCU_CLOUDSRV_SOCKET_KEEPIDLE 10   //tcp idle time before first KeepAlive checking
+#define HCU_CLOUDSRV_SOCKET_KEEPIDLE 5   //tcp idle time before first KeepAlive checking
 #define HCU_CLOUDSRV_SOCKET_KEEPINTERVAL 1  //interval between two KeepAlive checking
 #define HCU_CLOUDSRV_SOCKET_KEEPCOUNT 1  //count before disconnect Keepalive
 
@@ -892,8 +892,8 @@ typedef struct CloudBhItfDevReportStdZhb
 
 #ifdef TARGET_RASPBERRY_PI3B
 //#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
-#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
-#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
+#define HCU_SPS_COM_PORT_PATH_0  "/dev/hcu_serial0"
+#define HCU_SPS_COM_PORT_PATH_1  "/dev/hcu_serial1"
 #define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
 #define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
 #define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyACM0"

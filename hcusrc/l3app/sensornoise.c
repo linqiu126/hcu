@@ -214,7 +214,7 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		}
 		else //DEFAULT取SPSVIRGO
 		{
-			//func_noise_time_out_read_data_from_spsvirgo();
+			func_noise_time_out_read_data_from_spsvirgo();
 		}
 	}
 
@@ -465,6 +465,9 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			noiseData.gps.ew = record.ew;
 			noiseData.gps.ns = record.ns;
 			noiseData.onOffLineFlag = record.onOffLine;
+
+			HCU_DEBUG_PRINT_INF("NOISE: noiseValue=%d\n\n\n\n", noiseData.noiseValue);
+
 			ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
@@ -491,6 +494,8 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		snd.useroptid = rcv.useroptid;
 		snd.noise.dataFormat = rcv.noise.dataFormat;
 		snd.noise.noiseValue = rcv.noise.noiseValue;
+
+
 		snd.noise.gps.gpsx = rcv.noise.gps.gpsx;
 		snd.noise.gps.gpsy = rcv.noise.gps.gpsy;
 		snd.noise.gps.gpsz = rcv.noise.gps.gpsz;
@@ -532,6 +537,9 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			noiseData.gps.ew = record.ew;
 			noiseData.gps.ns = record.ns;
 			noiseData.onOffLineFlag = record.onOffLine;
+
+			HCU_DEBUG_PRINT_INF("NOISE: noiseValue=%d\n\n\n\n", noiseData.noiseValue);
+
 			ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
@@ -609,6 +617,18 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//完整的处理情形，有待完成，存入磁盘还为实现
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
+			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+			record.equipid = rcv.noise.equipid;
+			record.sensortype = L3CI_noise;
+			record.onOffLine = DISC_DATA_SAMPLE_OFFLINE;
+			record.timestamp = rcv.noise.timeStamp;
+			record.dataFormat = rcv.noise.dataFormat;
+			record.noiseValue = rcv.noise.noiseValue;
+			record.gpsx = rcv.noise.gps.gpsx;
+			record.gpsy = rcv.noise.gps.gpsy;
+			record.gpsz = rcv.noise.gps.gpsz;
+			record.ew = rcv.noise.gps.ew;
+			record.ns = rcv.noise.gps.ns;
 			//RECORD还要存入数据库
 			sensor_noise_data_element_t noiseData;
 			memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
@@ -622,6 +642,10 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			noiseData.gps.ew = record.ew;
 			noiseData.gps.ns = record.ns;
 			noiseData.onOffLineFlag = record.onOffLine;
+
+			HCU_DEBUG_PRINT_INF("NOISE: noiseValue=%d\n\n\n\n", noiseData.noiseValue);
+
+
 			ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
@@ -664,6 +688,19 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		//该函数，有待完成
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
 			//RECORD还要存入数据库
+			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+			record.equipid = rcv.noise.equipid;
+			record.sensortype = L3CI_noise;
+			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
+			record.timestamp = rcv.noise.timeStamp;
+			record.dataFormat = rcv.noise.dataFormat;
+			record.noiseValue = rcv.noise.noiseValue;
+			record.gpsx = rcv.noise.gps.gpsx;
+			record.gpsy = rcv.noise.gps.gpsy;
+			record.gpsz = rcv.noise.gps.gpsz;
+			record.ew = rcv.noise.gps.ew;
+			record.ns = rcv.noise.gps.ns;
+			//RECORD还要存入数据库
 			sensor_noise_data_element_t noiseData;
 			memset(&noiseData, 0, sizeof(sensor_noise_data_element_t));
 			noiseData.equipid = record.equipid;
@@ -676,6 +713,9 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			noiseData.gps.ew = record.ew;
 			noiseData.gps.ns = record.ns;
 			noiseData.onOffLineFlag = record.onOffLine;
+
+			//HCU_DEBUG_PRINT_INF("NOISE: noiseValue=%d\n\n\n\n", noiseData.noiseValue);
+
 			ret = dbi_HcuNoiseDataInfo_save(&noiseData);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;

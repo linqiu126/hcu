@@ -151,6 +151,9 @@ OPSTAT dbi_HcuHumidDataInfo_save(sensor_humid_data_element_t *humidData)
         return FAILURE;
     }
 
+    HcuDebugPrint("hcuhumiddatainfo: deviceid = %d, timestamp = %d, dataformat = %d, humidValue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", humidData->equipid, humidData->timeStamp, humidData->dataFormat, humidData->humidValue, humidData->gps.ew, humidData->gps.gpsx, humidData->gps.ns, humidData->gps.gpsy, humidData->gps.gpsz, humidData->onOffLineFlag);
+
+
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcuhumiddatainfo` (deviceid, timestamp, dataformat, humidvalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
     		('%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", humidData->equipid, humidData->timeStamp, humidData->dataFormat, humidData->humidValue, humidData->gps.ew, humidData->gps.gpsx, humidData->gps.ns, humidData->gps.gpsy, humidData->gps.gpsz, humidData->onOffLineFlag);
@@ -698,7 +701,7 @@ OPSTAT dbi_HcuHumidDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	}
 	else{
 
-		if (sqlRow[index]) Humiddata->a01002_Min = ((UINT32)atol(sqlRow[index]))*0.001;
+		if (sqlRow[index]) Humiddata->a01002_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIHUMID: min=%4.2f\n\n", Humiddata->a01002_Min);
 	}
 
@@ -764,7 +767,7 @@ OPSTAT dbi_HcuHumidDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	}
 	else{
 
-		if (sqlRow[index]) Humiddata->a01002_Max = ((UINT32)atol(sqlRow[index]))*0.001;
+		if (sqlRow[index]) Humiddata->a01002_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIHUMID: max=%4.2f\n\n", Humiddata->a01002_Max);
 	}
 
@@ -830,7 +833,7 @@ OPSTAT dbi_HcuHumidDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	}
 	else{
 
-		if (sqlRow[index]) Humiddata->a01002_Avg = ((UINT32)atol(sqlRow[index]))*0.001;
+		if (sqlRow[index]) Humiddata->a01002_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIHUMID: avg=%4.2f\n\n", Humiddata->a01002_Avg);
 	}
 

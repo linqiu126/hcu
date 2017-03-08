@@ -74,6 +74,10 @@ OPSTAT dbi_HcuWinddirDataInfo_save(sensor_winddir_data_element_t *winddirData)
         return FAILURE;
     }
 
+
+    HcuDebugPrint("hcuwinddirdatainfo: deviceid = %d, timestamp = %d, dataformat = %d, winddirvalue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", winddirData->equipid, winddirData->timeStamp, winddirData->dataFormat, winddirData->winddirValue, winddirData->gps.ew, winddirData->gps.gpsx, winddirData->gps.ns, winddirData->gps.gpsy, winddirData->gps.gpsz, winddirData->onOffLineFlag);
+
+
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcuwinddirdatainfo` (deviceid, timestamp, dataformat, winddirvalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
     		('%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", winddirData->equipid, winddirData->timeStamp, winddirData->dataFormat, winddirData->winddirValue, winddirData->gps.ew, winddirData->gps.gpsx, winddirData->gps.ns,winddirData->gps.gpsy, winddirData->gps.gpsz, winddirData->onOffLineFlag);
@@ -266,7 +270,7 @@ OPSTAT dbi_HcuWinddirDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	}
 	else{
 
-		if (sqlRow[index]) winddirData->a01008_Min = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) winddirData->a01008_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIWINDDIR: min=%4.2f\n\n", winddirData->a01008_Min);
 	}
 
@@ -332,7 +336,7 @@ OPSTAT dbi_HcuWinddirDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	}
 	else{
 
-		if (sqlRow[index]) winddirData->a01008_Max = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) winddirData->a01008_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIWINDDIR: max=%4.2f\n\n", winddirData->a01008_Max);
 	}
 
@@ -398,7 +402,7 @@ OPSTAT dbi_HcuWinddirDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	}
 	else{
 
-		if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIWINDDIR: avg=%4.2f\n\n", winddirData->a01008_Avg);
 	}
 

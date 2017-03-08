@@ -74,6 +74,8 @@ OPSTAT dbi_HcuWindspdDataInfo_save(sensor_windspd_data_element_t *windspdData)
         return FAILURE;
     }
 
+    HcuDebugPrint("hcuwindspddatainfo: deviceid = %d, timestamp = %d, dataformat = %d, windspdvalue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", windspdData->equipid, windspdData->timeStamp, windspdData->dataFormat, windspdData->windspdValue, windspdData->gps.ew, windspdData->gps.gpsx, windspdData->gps.ns, windspdData->gps.gpsy, windspdData->gps.gpsz, windspdData->onOffLineFlag);
+
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcuwindspddatainfo` (deviceid, timestamp, dataformat, windspdvalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
     		('%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", windspdData->equipid, windspdData->timeStamp, windspdData->dataFormat, windspdData->windspdValue, windspdData->gps.ew, windspdData->gps.gpsx, windspdData->gps.ns, windspdData->gps.gpsy, windspdData->gps.gpsz, windspdData->onOffLineFlag);
@@ -266,7 +268,7 @@ OPSTAT dbi_HcuWindspdDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	}
 	else{
 
-		if (sqlRow[index]) windspdData->a01007_Min = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) windspdData->a01007_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIWINDSPD: min=%4.2f\n\n", windspdData->a01007_Min);
 	}
 
@@ -332,7 +334,7 @@ OPSTAT dbi_HcuWindspdDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	}
 	else{
 
-		if (sqlRow[index]) windspdData->a01007_Max = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) windspdData->a01007_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIWINDSPD: max=%4.2f\n\n", windspdData->a01007_Max);
 	}
 
@@ -398,7 +400,7 @@ OPSTAT dbi_HcuWindspdDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	}
 	else{
 
-		if (sqlRow[index]) windspdData->a01007_Avg = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) windspdData->a01007_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBIWINDSPD: avg=%4.2f\n\n", windspdData->a01007_Avg);
 	}
 

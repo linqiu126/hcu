@@ -493,7 +493,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.staOneMin.a34001_PolId = 99;
 	gTaskL3aqycq20Context.staOneMin.a34001_Flag = 'N';
 
-	ret = dbi_HcuPm25DataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuPm25DataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get min data from PM25 database!\n");
@@ -502,7 +502,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a34001_Min);
 	}
 
-	ret = dbi_HcuPm25DataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuPm25DataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get max data from PM25 database!\n");
@@ -511,7 +511,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a34001_Max);
 	}
 
-	ret = dbi_HcuPm25DataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuPm25DataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from PM25 database!\n");
@@ -526,7 +526,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.staOneMin.a50001_PolId = 100;
 	gTaskL3aqycq20Context.staOneMin.a50001_Flag = 'N';
 
-	ret = dbi_HcuNoiseDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuNoiseDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Noise database!\n");
@@ -535,7 +535,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a50001_Min);
 	}
 
-	ret = dbi_HcuNoiseDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuNoiseDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Noise database!\n");
@@ -544,7 +544,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a50001_Max);
 	}
 
-	ret = dbi_HcuNoiseDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuNoiseDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Noise database!\n");
@@ -560,7 +560,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.staOneMin.a01001_PolId = 94;
 	gTaskL3aqycq20Context.staOneMin.a01001_Flag = 'N';
 
-	ret = dbi_HcuTempDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuTempDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Temp database!\n");
@@ -569,7 +569,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01001_Min);
 	}
 
-	ret = dbi_HcuTempDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuTempDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Temp database!\n");
@@ -578,7 +578,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01001_Max);
 	}
 
-	ret = dbi_HcuTempDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuTempDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Temp database!\n");
@@ -594,7 +594,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.staOneMin.a01002_PolId = 95;
 	gTaskL3aqycq20Context.staOneMin.a01002_Flag = 'N';
 
-	ret = dbi_HcuHumidDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuHumidDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Humid database!\n");
@@ -603,7 +603,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01002_Min);
 	}
 
-	ret = dbi_HcuHumidDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuHumidDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Humid database!\n");
@@ -612,7 +612,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01002_Max);
 	}
 
-	ret = dbi_HcuHumidDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuHumidDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Humid database!\n");
@@ -628,7 +628,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.staOneMin.a01007_PolId = 97;
 	gTaskL3aqycq20Context.staOneMin.a01007_Flag = 'N';
 
-	ret = dbi_HcuWindspdDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuWindspdDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Windspd database!\n");
@@ -637,7 +637,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01007_Min);
 	}
 
-	ret = dbi_HcuWindspdDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuWindspdDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Windspd database!\n");
@@ -646,7 +646,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01007_Max);
 	}
 
-	ret = dbi_HcuWindspdDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuWindspdDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Windspd database!\n");
@@ -661,7 +661,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.staOneMin.a01008_PolId = 98;
 	gTaskL3aqycq20Context.staOneMin.a01008_Flag = 'N';
 
-	ret = dbi_HcuWinddirDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuWinddirDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Winddir database!\n");
@@ -670,7 +670,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get minimum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01008_Min);
 	}
 
-	ret = dbi_HcuWinddirDataInfo_GetMax(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuWinddirDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Winddir database!\n");
@@ -679,7 +679,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get maximum data = %4.2f\n\n", gTaskL3aqycq20Context.staOneMin.a01008_Max);
 	}
 
-	ret = dbi_HcuWinddirDataInfo_GetAvg(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
+	ret = dbi_HcuWinddirDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Winddir database!\n");

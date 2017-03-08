@@ -74,7 +74,7 @@ OPSTAT dbi_HcuNoiseDataInfo_save(sensor_noise_data_element_t *noiseData)
         return FAILURE;
     }
 
-    HcuDebugPrint("hcunoisedatainfo: deviceid = %d, timestamp = %d, dataformat = %d, noisevalue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n", noiseData->equipid, noiseData->timeStamp, noiseData->dataFormat, noiseData->noiseValue, noiseData->gps.ew, noiseData->gps.gpsx, noiseData->gps.ns, noiseData->gps.gpsy, noiseData->gps.gpsz, noiseData->onOffLineFlag);
+    HcuDebugPrint("hcunoisedatainfo: deviceid = %d, timestamp = %d, dataformat = %d, noisevalue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", noiseData->equipid, noiseData->timeStamp, noiseData->dataFormat, noiseData->noiseValue, noiseData->gps.ew, noiseData->gps.gpsx, noiseData->gps.ns, noiseData->gps.gpsy, noiseData->gps.gpsz, noiseData->onOffLineFlag);
 
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcunoisedatainfo` (deviceid, timestamp, dataformat, noisevalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
@@ -89,9 +89,11 @@ OPSTAT dbi_HcuNoiseDataInfo_save(sensor_noise_data_element_t *noiseData)
 
 	//释放记录集
     mysql_close(sqlHandler);
+    /*
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
 		HcuDebugPrint("DBINOISE: NOISE data record save to DB!\n");
 	}
+	*/
     return SUCCESS;
 }
 
@@ -272,7 +274,7 @@ OPSTAT dbi_HcuNoiseDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	}
 	else{
 
-		if (sqlRow[index]) Noisedata->a50001_Min = ((UINT32)atol(sqlRow[index]))*0.0000001;
+		if (sqlRow[index]) Noisedata->a50001_Min = ((UINT32)atol(sqlRow[index]))*0.1;
 		HCU_DEBUG_PRINT_INF("DBINOISE: min=%4.2f\n\n", Noisedata->a50001_Min);
 	}
 
@@ -338,7 +340,7 @@ OPSTAT dbi_HcuNoiseDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	}
 	else{
 
-		if (sqlRow[index]) Noisedata->a50001_Max = ((UINT32)atol(sqlRow[index]))*0.0000001;
+		if (sqlRow[index]) Noisedata->a50001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBINOISE: max=%4.2f\n\n", Noisedata->a50001_Max);
 	}
 
@@ -404,7 +406,7 @@ OPSTAT dbi_HcuNoiseDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	}
 	else{
 
-		if (sqlRow[index]) Noisedata->a50001_Avg = ((UINT32)atol(sqlRow[index]))*0.0000001;
+		if (sqlRow[index]) Noisedata->a50001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBINOISE: avg=%4.2f\n\n", Noisedata->a50001_Avg);
 	}
 

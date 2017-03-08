@@ -490,7 +490,7 @@ OPSTAT hcu_hwinv_engpar_create_storage_dir_env(void)
 	}else{
 		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
 	}
-
+/*
     //create HCU SW download/active/backup local directory by Shanchun
 	ret = hcu_hwinv_create_multi_dir(zHcuSysEngPar.swm.hcuSwDownloadDir);
     if (ret == FAILURE){
@@ -512,7 +512,7 @@ OPSTAT hcu_hwinv_engpar_create_storage_dir_env(void)
 	}else{
 		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW backup local directory: %s\n", zHcuSysEngPar.swm.hcuSwBackupDir);
 	}
-
+*/
     //为所有的存储预留空间配额，并检查是否足够。如果不足，要么出错，要么清理。
 
     //返回

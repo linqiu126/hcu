@@ -127,6 +127,10 @@ OPSTAT dbi_HcuPm25DataInfo_save(sensor_pm25_data_element_t *pm25Data)
         return FAILURE;
     }
 
+
+    HcuDebugPrint("hcupm25datainfo: deviceid = %d, timestamp = %d, dataformat = %d, pm10dvalue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", pm25Data->equipid, pm25Data->timeStamp, pm25Data->dataFormat, pm25Data->pm10Value, pm25Data->gps.ew, pm25Data->gps.gpsx, pm25Data->gps.ns, pm25Data->gps.gpsy, pm25Data->gps.gpsz, pm25Data->onOffLineFlag);
+
+
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcupm25datainfo` (deviceid, timestamp, dataformat, pm1d0value, pm2d5value, pm10dvalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
     		('%d', '%d', '%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", pm25Data->equipid, pm25Data->timeStamp, pm25Data->dataFormat, pm25Data->pm1d0Value, pm25Data->pm2d5Value, pm25Data->pm10Value, pm25Data->gps.ew, pm25Data->gps.gpsx, pm25Data->gps.ns, pm25Data->gps.gpsy, pm25Data->gps.gpsz, pm25Data->onOffLineFlag);
@@ -628,7 +632,7 @@ OPSTAT dbi_HcuPm25DataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*0.000000001;
+		if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3;
 		HCU_DEBUG_PRINT_INF("DBIPM25: min=%4.2f\n\n", PM10data->a34001_Min);
 	}
 
@@ -694,7 +698,7 @@ OPSTAT dbi_HcuPm25DataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*0.000000001;
+		if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3;
 		HCU_DEBUG_PRINT_INF("DBIPM25: max=%4.2f\n\n", PM10data->a34001_Max);
 	}
 
@@ -760,7 +764,7 @@ OPSTAT dbi_HcuPm25DataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*0.000000001;
+		if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3;
 		HCU_DEBUG_PRINT_INF("DBIPM25: avg=%4.2f\n\n", PM10data->a34001_Avg);
 	}
 

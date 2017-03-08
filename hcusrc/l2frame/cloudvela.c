@@ -247,8 +247,8 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	//定时长时钟进行链路检测的
 	if ((rcv.timeId == TIMER_ID_1S_CLOUDVELA_PERIOD_LINK_HEART_BEAT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 
-		//ret = func_cloudvela_hb_link_main_entry(); //no need if it is not home server? to check later?
-
+		ret = func_cloudvela_hb_link_main_entry(); //no need if it is not home server? to check later?
+/*
 		//test by shanchun start
 		//检查链路状态，离线，则再连接
 		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
@@ -266,7 +266,7 @@ OPSTAT fsm_cloudvela_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 			}
 		}
 		//test by shanchun stop
-
+*/
 
 	}
 
@@ -459,10 +459,10 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 	}
 
 	//Send out
-/*
+
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
-*/
+
 
 	//State no change
 	return SUCCESS;
@@ -577,6 +577,9 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 				HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
 			}
 		}
+
+		//gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_NULL; //reset for debug, by shanchun
+
 		return SUCCESS;
 	}
 
@@ -1784,6 +1787,8 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
+
+
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
 		memcpy(&(gTaskCloudvelaContext.L2Link), &(rcv.comHead), sizeof(msgie_struct_bh_com_head_t));
@@ -1822,7 +1827,15 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol! here only test double link\n\n\n\n");//debug by shanchun
+/*
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
+
+		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
+				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pm1d0Value, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
+				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+*/
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){

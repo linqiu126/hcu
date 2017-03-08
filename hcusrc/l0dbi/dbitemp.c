@@ -170,6 +170,10 @@ OPSTAT dbi_HcuTempDataInfo_save(sensor_temp_data_element_t *tempData)
         return FAILURE;
     }
 
+
+    HcuDebugPrint("hcutempdatainfo: deviceid = %d, timestamp = %d, dataformat = %d, tempData = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", tempData->equipid, tempData->timeStamp, tempData->dataFormat, tempData->tempValue, tempData->gps.ew, tempData->gps.gpsx, tempData->gps.ns, tempData->gps.gpsy, tempData->gps.gpsz, tempData->onOffLineFlag);
+
+
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcutempdatainfo` (deviceid, timestamp, dataformat, tempvalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
     		('%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", tempData->equipid, tempData->timeStamp, tempData->dataFormat, tempData->tempValue, tempData->gps.ew, tempData->gps.gpsx, tempData->gps.ns, tempData->gps.gpsy, tempData->gps.gpsz, tempData->onOffLineFlag);
@@ -803,7 +807,7 @@ OPSTAT dbi_HcuTempDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) tempData->a01001_Min = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) tempData->a01001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBITEMP: min=%4.2f\n\n", tempData->a01001_Min);
 	}
 
@@ -869,7 +873,7 @@ OPSTAT dbi_HcuTempDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) tempData->a01001_Max = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) tempData->a01001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBITEMP: max=%4.2f\n\n", tempData->a01001_Max);
 	}
 
@@ -935,7 +939,7 @@ OPSTAT dbi_HcuTempDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) tempData->a01001_Avg = ((UINT32)atol(sqlRow[index]))*0.01;
+		if (sqlRow[index]) tempData->a01001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		HCU_DEBUG_PRINT_INF("DBITEMP: avg=%4.2f\n\n", tempData->a01001_Avg);
 	}
 
