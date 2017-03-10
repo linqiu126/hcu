@@ -632,8 +632,8 @@ OPSTAT dbi_HcuPm25DataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3;
-		HCU_DEBUG_PRINT_INF("DBIPM25: min=%4.2f\n\n", PM10data->a34001_Min);
+		if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF4;
+		//HCU_DEBUG_PRINT_INF("DBIPM25: min=%4.3f\n", PM10data->a34001_Min);
 	}
 
 	//释放记录集
@@ -698,8 +698,8 @@ OPSTAT dbi_HcuPm25DataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3;
-		HCU_DEBUG_PRINT_INF("DBIPM25: max=%4.2f\n\n", PM10data->a34001_Max);
+		if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF4;
+		//HCU_DEBUG_PRINT_INF("DBIPM25: max=%4.3f\n", PM10data->a34001_Max);
 	}
 
 	//释放记录集
@@ -764,8 +764,8 @@ OPSTAT dbi_HcuPm25DataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3;
-		HCU_DEBUG_PRINT_INF("DBIPM25: avg=%4.2f\n\n", PM10data->a34001_Avg);
+		if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF4;
+		//HCU_DEBUG_PRINT_INF("DBIPM25: avg=%4.3f\n", PM10data->a34001_Avg);
 	}
 
 	//释放记录集

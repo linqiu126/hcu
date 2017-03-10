@@ -808,7 +808,7 @@ OPSTAT dbi_HcuTempDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	else{
 
 		if (sqlRow[index]) tempData->a01001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBITEMP: min=%4.2f\n\n", tempData->a01001_Min);
+		//HCU_DEBUG_PRINT_INF("DBITEMP: min=%4.3f\n", tempData->a01001_Min);
 	}
 
 	//释放记录集
@@ -874,7 +874,7 @@ OPSTAT dbi_HcuTempDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	else{
 
 		if (sqlRow[index]) tempData->a01001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBITEMP: max=%4.2f\n\n", tempData->a01001_Max);
+		//HCU_DEBUG_PRINT_INF("DBITEMP: max=%4.3f\n", tempData->a01001_Max);
 	}
 
 	//释放记录集
@@ -940,7 +940,7 @@ OPSTAT dbi_HcuTempDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	else{
 
 		if (sqlRow[index]) tempData->a01001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBITEMP: avg=%4.2f\n\n", tempData->a01001_Avg);
+		//HCU_DEBUG_PRINT_INF("DBITEMP: avg=%4.3f\n", tempData->a01001_Avg);
 	}
 
 	//释放记录集

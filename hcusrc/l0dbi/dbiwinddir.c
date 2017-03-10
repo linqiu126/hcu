@@ -271,7 +271,7 @@ OPSTAT dbi_HcuWinddirDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	else{
 
 		if (sqlRow[index]) winddirData->a01008_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBIWINDDIR: min=%4.2f\n\n", winddirData->a01008_Min);
+		//HCU_DEBUG_PRINT_INF("DBIWINDDIR: min=%4.3f\n", winddirData->a01008_Min);
 	}
 
 	//释放记录集
@@ -337,7 +337,7 @@ OPSTAT dbi_HcuWinddirDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	else{
 
 		if (sqlRow[index]) winddirData->a01008_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBIWINDDIR: max=%4.2f\n\n", winddirData->a01008_Max);
+		//HCU_DEBUG_PRINT_INF("DBIWINDDIR: max=%4.3f\n", winddirData->a01008_Max);
 	}
 
 	//释放记录集
@@ -403,7 +403,7 @@ OPSTAT dbi_HcuWinddirDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	else{
 
 		if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBIWINDDIR: avg=%4.2f\n\n", winddirData->a01008_Avg);
+		//HCU_DEBUG_PRINT_INF("DBIWINDDIR: avg=%4.3f\n", winddirData->a01008_Avg);
 	}
 
 	//释放记录集

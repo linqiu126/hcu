@@ -275,7 +275,7 @@ OPSTAT dbi_HcuNoiseDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	else{
 
 		if (sqlRow[index]) Noisedata->a50001_Min = ((UINT32)atol(sqlRow[index]))*0.1;
-		HCU_DEBUG_PRINT_INF("DBINOISE: min=%4.2f\n\n", Noisedata->a50001_Min);
+		//HCU_DEBUG_PRINT_INF("DBINOISE: min=%4.3f\n", Noisedata->a50001_Min);
 	}
 
 	//释放记录集
@@ -341,7 +341,7 @@ OPSTAT dbi_HcuNoiseDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	else{
 
 		if (sqlRow[index]) Noisedata->a50001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBINOISE: max=%4.2f\n\n", Noisedata->a50001_Max);
+		//HCU_DEBUG_PRINT_INF("DBINOISE: max=%4.3f\n", Noisedata->a50001_Max);
 	}
 
 	//释放记录集
@@ -407,7 +407,7 @@ OPSTAT dbi_HcuNoiseDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	else{
 
 		if (sqlRow[index]) Noisedata->a50001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBINOISE: avg=%4.2f\n\n", Noisedata->a50001_Avg);
+		//HCU_DEBUG_PRINT_INF("DBINOISE: avg=%4.3f\n", Noisedata->a50001_Avg);
 	}
 
 	//释放记录集

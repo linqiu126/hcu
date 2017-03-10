@@ -702,7 +702,7 @@ OPSTAT dbi_HcuHumidDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	else{
 
 		if (sqlRow[index]) Humiddata->a01002_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBIHUMID: min=%4.2f\n\n", Humiddata->a01002_Min);
+		//HCU_DEBUG_PRINT_INF("DBIHUMID: min=%4.3f\n", Humiddata->a01002_Min);
 	}
 
 	//释放记录集
@@ -768,7 +768,7 @@ OPSTAT dbi_HcuHumidDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	else{
 
 		if (sqlRow[index]) Humiddata->a01002_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBIHUMID: max=%4.2f\n\n", Humiddata->a01002_Max);
+		//HCU_DEBUG_PRINT_INF("DBIHUMID: max=%4.3f\n", Humiddata->a01002_Max);
 	}
 
 	//释放记录集
@@ -834,7 +834,7 @@ OPSTAT dbi_HcuHumidDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElemen
 	else{
 
 		if (sqlRow[index]) Humiddata->a01002_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		HCU_DEBUG_PRINT_INF("DBIHUMID: avg=%4.2f\n\n", Humiddata->a01002_Avg);
+		//HCU_DEBUG_PRINT_INF("DBIHUMID: avg=%4.3f\n", Humiddata->a01002_Avg);
 	}
 
 	//释放记录集

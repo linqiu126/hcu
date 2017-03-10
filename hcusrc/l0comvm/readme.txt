@@ -12,9 +12,13 @@
 [BUG#003]
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
+//= ZSC, 2017 Mar.8, CURRENT_SW_DELIVERY 190=>AQYC项目
+=调整数据上报精度格式
+
+
 //= ZSC, 2017 Mar.8, CURRENT_SW_DELIVERY 189=>AQYC项目
 =修改串口non-blocking 读取的timer值
-=噪声仪（232转485接USB）不可与其他485设备共同使用一个串口，程序调整
+=噪声仪（232转485接USB）不可与其他485设备共同使用一个串口，程序调整为设置串口虚拟标识
 
 //= ZSC, 2017 Mar.6, CURRENT_SW_DELIVERY 188=>AQYC项目
 =修改noise,使所有传感器使用同一个串口

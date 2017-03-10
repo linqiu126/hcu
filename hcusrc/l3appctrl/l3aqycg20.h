@@ -51,12 +51,17 @@ typedef struct gTaskL3aqycq20Context
 {
 
 	//采集数据起始和结束时间和当前时间的差值
-	UINT32 timeBegin;
-	UINT32 timeEnd;
+	UINT32 timeBegin_1Min;
+	UINT32 timeEnd_1Min;
+	UINT32 timeBegin_1Hour;
+	UINT32 timeEnd_1Hour;
+	UINT32 timeBegin_1Day;
+	UINT32 timeEnd_1Day;
 
 
 	//开始报告标志位
 	UINT32 StartReportFlag;
+
 
 	//分钟，小时，天数据报告标志位
 	UINT32 MinReportFlag;

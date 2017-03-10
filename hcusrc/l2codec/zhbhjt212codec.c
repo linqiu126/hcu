@@ -375,24 +375,24 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 							break;
 						case ZHBHJT_IEID_uni_value_Min:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[j].Min);
+								sprintf(tmp, "%s%s%4.3f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[j].Min);
 								strcat(sMsgBuild[i][j], tmp);
-								HCU_DEBUG_PRINT_INF("ZHBHJT212: Min j=%d, Polid=%d, name=%s, keylable=%s, min=%4.2f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[j].Min);
+								HCU_DEBUG_PRINT_INF("ZHBHJT212: Min j=%d, Polid=%d, name=%s, keylable=%s, min=%4.3f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Min].keyLable, inputPar->ul2Cloud.min[j].Min);
 
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Avg:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
+								sprintf(tmp, "%s%s%4.3f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
 								strcat(sMsgBuild[i][j], tmp);
-								HCU_DEBUG_PRINT_INF("ZHBHJT212: Avg j=%d, Polid=%d, name=%s, keylable=%s, avg=%4.2f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
+								HCU_DEBUG_PRINT_INF("ZHBHJT212: Avg j=%d, Polid=%d, name=%s, keylable=%s, avg=%4.3f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Avg].keyLable, inputPar->ul2Cloud.min[j].Avg);
 							}
 							break;
 						case ZHBHJT_IEID_uni_value_Max:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[j].Max);
+								sprintf(tmp, "%s%s%4.3f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[j].Max);
 								strcat(sMsgBuild[i][j], tmp);
-								HCU_DEBUG_PRINT_INF("ZHBHJT212: Max j=%d, Polid=%d, name=%s, keylable=%s, max=%4.2f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[j].Max);
+								HCU_DEBUG_PRINT_INF("ZHBHJT212: Max j=%d, Polid=%d, name=%s, keylable=%s, max=%4.3f\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_value_Max].keyLable, inputPar->ul2Cloud.min[j].Max);
 
 							}
 							break;
@@ -421,22 +421,11 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 								HCU_DEBUG_PRINT_INF("ZHBHJT212: Flag j=%d, Polid=%d, name=%s, keylable=%s, polflag=%c\n\n", j, inputPar->ul2Cloud.min[j].PolId, gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId],gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.min[j].PolFlag);
 
 							}
-
 							break;
-
-							//test by shanchun
-							/*
-						case ZHBHJT_IEID_uni_polFlag:
-							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
-								sprintf(tmp, "%s%s%c,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_polFlag].keyLable, inputPar->ul2Cloud.min[j].PolFlag);
-								strcat(sMsgBuild[i][j], tmp);
-							}
-							break;
-							*/
-
 
 						case ZHBHJT_IEID_uni_Cou:
 							if (IeCmbIndex == ZHBHJT_IEID_cmb_pol_report){
+								//shanchun: no Cou currently, remove it temporarily
 								//sprintf(tmp, "%s%s%4.2f,", gZhbhjtPolIdName[inputPar->ul2Cloud.min[j].PolId], gZhbhjtIeEleCfg[ZHBHJT_IEID_uni_Cou].keyLable, inputPar->ul2Cloud.min[j].Cou);
 								//strcat(sMsgBuild[i][j], tmp);
 							}
