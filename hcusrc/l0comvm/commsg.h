@@ -3605,7 +3605,7 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 /*
  *
  *
- *   //扬尘监测的统计报表合数数据结构
+ *   //扬尘监测系统的统计报表合数数据结构
  *
  *
  */
@@ -3621,7 +3621,7 @@ typedef struct HcuSysMsgIeL3aqycContextStaElement
 
 
 	UINT8   a50001_PolId;
-	char    a50001_Flag;			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	char    a50001_Flag;			//噪声实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
 	float	a50001_Avg;  			//噪声监测时间内的均值
 	float	a50001_Max;  			//噪声监测时间内最大值
 	float	a50001_Min;  			//噪声监测时间内最小值
@@ -3669,10 +3669,100 @@ typedef struct HcuSysMsgIeL3aqycContextStaElement
 }HcuSysMsgIeL3aqycContextStaElement_t;
 
 
+/*
+ *
+ *
+ *   //扬尘监测的统计报表数据标识符判断值
+ *
+ *
+ */
+typedef struct HcuSysL3aqycValueJudgement
+{
+	//颗粒物监测仪量程
+	float   a34001_Range_Max;
+	float   a34001_Range_Min;
+
+	//噪声监测仪量程
+	float   a50001_Range_Max;
+	float   a50001_Range_Min;
+
+	//温度监测仪量程
+	float   a01001_Range_Max;
+	float   a01001_Range_Min;
+
+	//湿度监测仪量程
+	float   a01002_Range_Max;
+	float   a01002_Range_Min;
+
+	//风速监测仪量程
+	float   a01007_Range_Max;
+	float   a01007_Range_Min;
+
+	//风向监测仪量程
+	float   a01008_Range_Max;
+	float   a01008_Range_Min;
+
+	//气压监测仪量程
+	float   a01006_Range_Max;
+	float   a01006_Range_Min;
+	/////////////////////////////////////
+
+	//颗粒物监测仪数据设定范围
+	float   a34001_Range_Set_Max;
+	float   a34001_Range_Set_Min;
+
+	//噪声监测仪数据设定范围
+	float   a50001_Range_Set_Max;
+	float   a50001_Range_Set_Min;
+
+	//温度监测仪数据设定范围
+	float   a01001_Range_Set_Max;
+	float   a01001_Range_Set_Min;
+
+	//湿度监测仪数据设定范围
+	float   a01002_Range_Set_Max;
+	float   a01002_Range_Set_Min;
+
+	//风速监测仪数据设定范围
+	float   a01007_Range_Set_Max;
+	float   a01007_Range_Set_Min;
+
+	//风向监测仪数据设定范围
+	float   a01008_Range_Set_Max;
+	float   a01008_Range_Set_Min;
+
+	//气压监测仪数据设定范围
+	float   a01006_Range_Set_Max;
+	float   a01006_Range_Set_Min;
+	/////////////////////////////////////
 
 
+	//颗粒监测仪校准标志位
+	UINT32   a34001_Calibration_Flag;
+
+	//噪声监测仪校准标志位
+	UINT32   a50001_Calibration_Flag;
 
 
+	//温度监测仪校准标志位
+	UINT32   a01001_Calibration_Flag;
+
+	//湿度监测仪校准标志位
+	UINT32   a01002_Calibration_Flag;
+
+	//风速监测仪校准标志位
+	UINT32   a01007_Calibration_Flag;
+
+	//风向监测仪校准标志位
+	UINT32   a01008_Calibration_Flag;
+
+	//气压监测仪校准标志位
+	UINT32   a01006_Calibration_Flag;
+
+	//最大风速值（噪声仪失效）
+	float WindThresholdForNoise;
+
+}HcuSysL3aqycValueJudgement_t;
 
 
 

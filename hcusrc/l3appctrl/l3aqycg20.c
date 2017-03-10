@@ -115,8 +115,11 @@ OPSTAT fsm_l3aqycg20_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
-	//秤盘数据表单控制表初始化
+	//扬尘数据表单控制表初始化
 	memset(&gTaskL3aqycq20Context, 0, sizeof(gTaskL3aqycq20Context_t));
+
+	//监测数据标识符判断表初始化
+	func_l3aqycg20_judge_value_init();
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20] = 0;
@@ -1007,6 +1010,53 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 	//返回
 	return SUCCESS;
+}
+
+//监测数据标识符判断表初始化
+void func_l3aqycg20_judge_value_init(void)
+{
+	gTaskL3aqycq20Context.valueJudge.a34001_Range_Max = HCU_L3AQYC_A34001_RANGE_MAX;
+	gTaskL3aqycq20Context.valueJudge.a34001_Range_Min = HCU_L3AQYC_A34001_RANGE_MIN;
+	gTaskL3aqycq20Context.valueJudge.a50001_Range_Max = HCU_L3AQYC_A50001_RANGE_MAX;
+	gTaskL3aqycq20Context.valueJudge.a50001_Range_Min = HCU_L3AQYC_A50001_RANGE_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01001_Range_Max = HCU_L3AQYC_A01001_RANGE_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01001_Range_Min = HCU_L3AQYC_A01001_RANGE_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01002_Range_Max = HCU_L3AQYC_A01002_RANGE_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01002_Range_Min = HCU_L3AQYC_A01002_RANGE_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01007_Range_Max = HCU_L3AQYC_A01007_RANGE_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01007_Range_Min = HCU_L3AQYC_A01007_RANGE_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01008_Range_Max = HCU_L3AQYC_A01008_RANGE_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01008_Range_Min = HCU_L3AQYC_A01008_RANGE_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01006_Range_Max = HCU_L3AQYC_A01006_RANGE_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01006_Range_Min = HCU_L3AQYC_A01006_RANGE_MIN;
+
+	gTaskL3aqycq20Context.valueJudge.a34001_Range_Set_Max = HCU_L3AQYC_A34001_RANGE_SET_MAX;
+	gTaskL3aqycq20Context.valueJudge.a34001_Range_Set_Min = HCU_L3AQYC_A34001_RANGE_SET_MIN;
+	gTaskL3aqycq20Context.valueJudge.a50001_Range_Set_Max = HCU_L3AQYC_A50001_RANGE_SET_MAX;
+	gTaskL3aqycq20Context.valueJudge.a50001_Range_Set_Min = HCU_L3AQYC_A50001_RANGE_SET_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01001_Range_Set_Max = HCU_L3AQYC_A01001_RANGE_SET_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01001_Range_Set_Min = HCU_L3AQYC_A01001_RANGE_SET_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01002_Range_Set_Max = HCU_L3AQYC_A01002_RANGE_SET_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01002_Range_Set_Min = HCU_L3AQYC_A01002_RANGE_SET_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01007_Range_Set_Max = HCU_L3AQYC_A01007_RANGE_SET_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01007_Range_Set_Min = HCU_L3AQYC_A01007_RANGE_SET_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01008_Range_Set_Max = HCU_L3AQYC_A01008_RANGE_SET_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01008_Range_Set_Min = HCU_L3AQYC_A01008_RANGE_SET_MIN;
+	gTaskL3aqycq20Context.valueJudge.a01006_Range_Set_Max = HCU_L3AQYC_A01006_RANGE_SET_MAX;
+	gTaskL3aqycq20Context.valueJudge.a01006_Range_Set_Min = HCU_L3AQYC_A01006_RANGE_SET_MIN;
+
+	gTaskL3aqycq20Context.valueJudge.a34001_Calibration_Flag = HCU_L3AQYC_A34001_CALIBRATION_FLAG;
+	gTaskL3aqycq20Context.valueJudge.a50001_Calibration_Flag = HCU_L3AQYC_A50001_CALIBRATION_FLAG;
+	gTaskL3aqycq20Context.valueJudge.a01001_Calibration_Flag = HCU_L3AQYC_A01001_CALIBRATION_FLAG;
+	gTaskL3aqycq20Context.valueJudge.a01002_Calibration_Flag = HCU_L3AQYC_A01002_CALIBRATION_FLAG;
+	gTaskL3aqycq20Context.valueJudge.a01007_Calibration_Flag = HCU_L3AQYC_A01007_CALIBRATION_FLAG;
+	gTaskL3aqycq20Context.valueJudge.a01008_Calibration_Flag = HCU_L3AQYC_A01008_CALIBRATION_FLAG;
+	gTaskL3aqycq20Context.valueJudge.a01006_Calibration_Flag = HCU_L3AQYC_A01006_CALIBRATION_FLAG;
+
+	gTaskL3aqycq20Context.valueJudge.WindThresholdForNoise = HCU_L3AQYC_WINDTHRESHOLD_FOR_NOISE;
+
+
+
 }
 
 

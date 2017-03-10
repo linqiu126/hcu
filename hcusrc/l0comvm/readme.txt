@@ -12,6 +12,12 @@
 [BUG#003]
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
+
+
+//= ZSC, 2017 Mar.10, CURRENT_SW_DELIVERY 191=>AQYC项目
+=加入L3 2061 procedure
+=定义监测数据标识符判断表，增加判断上报数据有效性标识符
+
 //= ZSC, 2017 Mar.8, CURRENT_SW_DELIVERY 190=>AQYC项目
 =调整数据上报精度格式
 
