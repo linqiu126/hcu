@@ -374,7 +374,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		HCU_DEBUG_PRINT_INF("MODBUS: Send PM25 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	hcu_usleep(5); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
+	hcu_usleep(MODBUS_TIMER_FOR_SERIAL_PORT_READ); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
@@ -574,7 +574,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_DEBUG_PRINT_INF("MODBUS: Send  winddir req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	hcu_usleep(5); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
+	hcu_usleep(MODBUS_TIMER_FOR_SERIAL_PORT_READ); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
@@ -771,7 +771,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_DEBUG_PRINT_INF("MODBUS: Send windspd req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	hcu_usleep(5); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
+	hcu_usleep(MODBUS_TIMER_FOR_SERIAL_PORT_READ); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
@@ -968,7 +968,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	  HCU_DEBUG_PRINT_INF("MODBUS: Send temp req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	hcu_usleep(5); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
+	hcu_usleep(MODBUS_TIMER_FOR_SERIAL_PORT_READ); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
 
 	//从相应的从设备中读取数据
 
@@ -1165,7 +1165,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_DEBUG_PRINT_INF("MODBUS: Send humuid req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	hcu_usleep(5); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
+	hcu_usleep(MODBUS_TIMER_FOR_SERIAL_PORT_READ); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
@@ -1363,7 +1363,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_DEBUG_PRINT_INF("MODBUS: Send noise req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
-	hcu_usleep(10); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
+	hcu_usleep(MODBUS_TIMER_FOR_SERIAL_PORT_READ); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));

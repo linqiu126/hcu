@@ -20,7 +20,7 @@
 #define SPSAPI_COM_PORT_7 	0x07
 
 #define SPSAPI_COM_PORT_INVALIAD	0xFF
-#define SPSAPI_TIMER_FOR_SERIAL_PORT_READ 100000
+#define SPSAPI_TIMER_FOR_SERIAL_PORT_READ 3
 
 extern UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd);
 extern UINT32 spsapi_SerialPortSet(SerialPortCom_t *sp);

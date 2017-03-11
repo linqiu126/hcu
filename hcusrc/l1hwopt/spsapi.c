@@ -328,8 +328,8 @@ UINT32 hcu_spsapi_serial_port_get(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Le
 	UINT32 ret = SUCCESS;
 
 	struct timeval tv;
-	tv.tv_sec = 0;
-	tv.tv_usec = SPSAPI_TIMER_FOR_SERIAL_PORT_READ;
+	tv.tv_sec = SPSAPI_TIMER_FOR_SERIAL_PORT_READ;
+	tv.tv_usec = 0;
 	fd_set rfds;
 	FD_ZERO(&rfds);
 	FD_SET(fd, &rfds);

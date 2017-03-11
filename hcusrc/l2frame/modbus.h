@@ -35,6 +35,7 @@ typedef struct SerialModbusMsgBuf
 	UINT8  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 }SerialModbusMsgBuf_t;
 
+#define MODBUS_TIMER_FOR_SERIAL_PORT_READ 10
 
 //FSM API
 extern OPSTAT fsm_modbus_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
