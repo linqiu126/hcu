@@ -122,6 +122,8 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 #define HCU_L3AQYC_A01008_CALIBRATION_FLAG		FALSE
 //气压监测仪校准标志位
 #define HCU_L3AQYC_A01006_CALIBRATION_FLAG		FALSE
+//雨雪雷电标志位
+#define HCU_L3AQYC_RAIN_SNOW_FLAG		FALSE
 
 //最大风速值（噪声仪失效）
 #define HCU_L3AQYC_WINDTHRESHOLD_FOR_NOISE		5.0 //当风速大于5m/s时噪声数据无效（设噪声数据为S）
@@ -178,6 +180,7 @@ extern OPSTAT fsm_l3aqycg20_zhbl3mod_exg_data_report(UINT32 dest_id, UINT32 src_
 OPSTAT func_l3aqycg20_int_init(void);
 OPSTAT func_l3aqyc_time_out_aggregation_process(void);
 void func_l3aqycg20_judge_value_init(void);
+void func_l3aqyc_measurement_value_flag_judge(HcuSysMsgIeL3aqycContextStaElement_t *aggReport);
 
 
 //高级定义，简化程序的可读性

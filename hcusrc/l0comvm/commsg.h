@@ -3759,6 +3759,9 @@ typedef struct HcuSysL3aqycValueJudgement
 	//气压监测仪校准标志位
 	UINT32   a01006_Calibration_Flag;
 
+	//雨，雪，雷，电标志位
+	UINT32 RainSnow_Flag;
+
 	//最大风速值（噪声仪失效）
 	float WindThresholdForNoise;
 

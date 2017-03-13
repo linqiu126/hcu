@@ -724,6 +724,9 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.staOneMin.a01006_Min = 0;
 	gTaskL3aqycq20Context.staOneMin.a01006_Max = 0;
 	gTaskL3aqycq20Context.staOneMin.a01006_Flag = 'D';
+
+	func_l3aqyc_measurement_value_flag_judge(&gTaskL3aqycq20Context.staOneMin);
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -938,6 +941,8 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	gTaskL3aqycq20Context.sta60Min.a01006_Max = 0;
 	gTaskL3aqycq20Context.sta60Min.a01006_Flag = 'D';
 
+	func_l3aqyc_measurement_value_flag_judge(&gTaskL3aqycq20Context.sta60Min);
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -1053,9 +1058,132 @@ void func_l3aqycg20_judge_value_init(void)
 	gTaskL3aqycq20Context.valueJudge.a01008_Calibration_Flag = HCU_L3AQYC_A01008_CALIBRATION_FLAG;
 	gTaskL3aqycq20Context.valueJudge.a01006_Calibration_Flag = HCU_L3AQYC_A01006_CALIBRATION_FLAG;
 
+	gTaskL3aqycq20Context.valueJudge.RainSnow_Flag = HCU_L3AQYC_RAIN_SNOW_FLAG;
+
 	gTaskL3aqycq20Context.valueJudge.WindThresholdForNoise = HCU_L3AQYC_WINDTHRESHOLD_FOR_NOISE;
 
+}
 
+//监测数据flag判断，依据《建设工程颗粒物与噪声在线监测技术规范》
+void func_l3aqyc_measurement_value_flag_judge(HcuSysMsgIeL3aqycContextStaElement_t *aggReport)
+{
+	//int ret = 0;
+	aggReport->a34001_Flag = 'N';
+	aggReport->a50001_Flag = 'N';
+	aggReport->a01001_Flag = 'N';
+	aggReport->a01002_Flag = 'N';
+	aggReport->a01007_Flag = 'N';
+	aggReport->a01008_Flag = 'N';
+	aggReport->a01006_Flag = 'D';
+
+	//超仪器量程范围上下限
+	if(aggReport->a34001_Flag < gTaskL3aqycq20Context.valueJudge.a34001_Range_Min)
+			aggReport->a34001_Flag = 'L';
+
+	if(aggReport->a34001_Flag > gTaskL3aqycq20Context.valueJudge.a34001_Range_Max)
+			aggReport->a34001_Flag = 'H';
+
+	if(aggReport->a50001_Flag < gTaskL3aqycq20Context.valueJudge.a50001_Range_Min)
+			aggReport->a50001_Flag = 'L';
+
+	if(aggReport->a50001_Flag > gTaskL3aqycq20Context.valueJudge.a50001_Range_Max)
+			aggReport->a50001_Flag = 'H';
+
+	if(aggReport->a01001_Flag < gTaskL3aqycq20Context.valueJudge.a01001_Range_Min)
+			aggReport->a01001_Flag = 'L';
+
+	if(aggReport->a01001_Flag > gTaskL3aqycq20Context.valueJudge.a01001_Range_Max)
+			aggReport->a01001_Flag = 'H';
+
+	if(aggReport->a01002_Flag < gTaskL3aqycq20Context.valueJudge.a01002_Range_Min)
+			aggReport->a01002_Flag = 'L';
+
+	if(aggReport->a01002_Flag > gTaskL3aqycq20Context.valueJudge.a01002_Range_Max)
+			aggReport->a01002_Flag = 'H';
+
+	if(aggReport->a01007_Flag < gTaskL3aqycq20Context.valueJudge.a01007_Range_Min)
+			aggReport->a01007_Flag = 'L';
+
+	if(aggReport->a01007_Flag > gTaskL3aqycq20Context.valueJudge.a01007_Range_Max)
+			aggReport->a01007_Flag = 'H';
+
+	if(aggReport->a01008_Flag < gTaskL3aqycq20Context.valueJudge.a01008_Range_Min)
+			aggReport->a01008_Flag = 'L';
+
+	if(aggReport->a01008_Flag > gTaskL3aqycq20Context.valueJudge.a01008_Range_Max)
+			aggReport->a01008_Flag = 'H';
+
+	//超数据设定范围上下限，上下限的值设置由云端设置，默认和仪器量程相等
+	if(aggReport->a34001_Flag < gTaskL3aqycq20Context.valueJudge.a34001_Range_Min)
+			aggReport->a34001_Flag = '-';
+
+	if(aggReport->a34001_Flag > gTaskL3aqycq20Context.valueJudge.a34001_Range_Max)
+			aggReport->a34001_Flag = '+';
+
+	if(aggReport->a50001_Flag < gTaskL3aqycq20Context.valueJudge.a50001_Range_Min)
+			aggReport->a50001_Flag = '_';
+
+	if(aggReport->a50001_Flag > gTaskL3aqycq20Context.valueJudge.a50001_Range_Max)
+			aggReport->a50001_Flag = '+';
+
+	if(aggReport->a01001_Flag < gTaskL3aqycq20Context.valueJudge.a01001_Range_Min)
+			aggReport->a01001_Flag = '_';
+
+	if(aggReport->a01001_Flag > gTaskL3aqycq20Context.valueJudge.a01001_Range_Max)
+			aggReport->a01001_Flag = '+';
+
+	if(aggReport->a01002_Flag < gTaskL3aqycq20Context.valueJudge.a01002_Range_Min)
+			aggReport->a01002_Flag = '_';
+
+	if(aggReport->a01002_Flag > gTaskL3aqycq20Context.valueJudge.a01002_Range_Max)
+			aggReport->a01002_Flag = '+';
+
+	if(aggReport->a01007_Flag < gTaskL3aqycq20Context.valueJudge.a01007_Range_Min)
+			aggReport->a01007_Flag = '_';
+
+	if(aggReport->a01007_Flag > gTaskL3aqycq20Context.valueJudge.a01007_Range_Max)
+			aggReport->a01007_Flag = '+';
+
+	if(aggReport->a01008_Flag < gTaskL3aqycq20Context.valueJudge.a01008_Range_Min)
+			aggReport->a01008_Flag = '_';
+
+	if(aggReport->a01008_Flag > gTaskL3aqycq20Context.valueJudge.a01008_Range_Max)
+			aggReport->a01008_Flag = '+';
+
+	//当风速大于门限值时，默认5m/s
+	if(aggReport->a01007_Avg > gTaskL3aqycq20Context.valueJudge.WindThresholdForNoise)
+			aggReport->a50001_Flag = 'S';
+
+	//当雨雪雷电天气，标志位由云端设定,
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.RainSnow_Flag)
+	{
+		aggReport->a34001_Flag = 'R';
+		aggReport->a50001_Flag = 'R';
+		aggReport->a01001_Flag = 'R';
+		aggReport->a01002_Flag = 'R';
+		aggReport->a01007_Flag = 'R';
+		aggReport->a01008_Flag = 'R';
+	}
+
+	//当设备校准时，标志位由云端设定
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a34001_Calibration_Flag){
+		aggReport->a34001_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a50001_Calibration_Flag){
+		aggReport->a50001_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01001_Calibration_Flag){
+		aggReport->a01001_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01002_Calibration_Flag){
+		aggReport->a01002_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01007_Calibration_Flag){
+		aggReport->a01007_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01008_Calibration_Flag){
+		aggReport->a01008_Flag = 'R';
+	}
 
 }
 

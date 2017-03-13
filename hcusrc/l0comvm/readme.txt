@@ -13,6 +13,9 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+//= ZSC, 2017 Mar.13, CURRENT_SW_DELIVERY 192=>AQYC项目
+= 依据《建设工程颗粒物与噪声在线监测技术规范》 对上报数据设置标志位
+
 
 //= ZSC, 2017 Mar.10, CURRENT_SW_DELIVERY 191=>AQYC项目
 =加入L3 2061 procedure
