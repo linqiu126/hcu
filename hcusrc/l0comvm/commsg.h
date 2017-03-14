@@ -3711,6 +3711,40 @@ typedef struct HcuSysMsgIeL3aqycContextCurrentElement
 	float	a01008_Avg;  			//风向测时间内的均值
 }HcuSysMsgIeL3aqycContextCurrentElement_t;
 
+
+
+/*
+ *
+ *
+ *   //扬尘监测系统的设备运行状态
+ *
+ *
+ */
+
+typedef struct HcuSysMsgIeL3aqycContextEqtStatusElement
+{
+	UINT8   a34001_PolId;
+	UINT8   a34001_RS;			//扬尘传感器设备运行状态
+
+	UINT8   a50001_PolId;
+	UINT8   a50001_RS;
+
+	UINT8   a01001_PolId;
+	UINT8   a01001_RS;
+
+	UINT8   a01002_PolId;
+	UINT8	a01002_RS;
+
+	UINT8   a01006_PolId;
+	UINT8	a01006_RS;
+
+	UINT8   a01007_PolId;
+	UINT8	a01007_RS;
+
+	UINT8   a01008_PolId;
+	UINT8	a01008_RS;
+}HcuSysMsgIeL3aqycContextEqtStatusElement_t;
+
 /*
  *
  *

@@ -347,6 +347,8 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
+		gTaskL3aqycq20Context.eqtStatus.a34001_RS = OFF;
+
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 

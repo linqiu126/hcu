@@ -12,6 +12,8 @@
 #include "../l1hwopt/spsapi.h"
 #include "../l1com/l1comdef.h"
 
+#include "../l3appctrl/l3aqycg20.h"
+
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01

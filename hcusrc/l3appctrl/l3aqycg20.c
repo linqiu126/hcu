@@ -69,7 +69,7 @@ HcuFsmStateItem_t HcuFsmL3aqycg20[] =
 
 
 //Task Global variables
-gTaskL3aqycq20Context_t gTaskL3aqycq20Context; //扬尘监测的总控表
+gTaskL3aqycq20Context_t gTaskL3aqycq20Context; //扬尘监测的L3总控表
 
 
 //Main Entry
@@ -120,6 +120,9 @@ OPSTAT fsm_l3aqycg20_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//监测数据标识符判断表初始化
 	func_l3aqycg20_judge_value_init();
+
+	//传感器运行状态表初始化
+	func_l3aqycg20_eqt_rs_init();
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20] = 0;
@@ -298,6 +301,8 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 	memcpy(&rcv, param_ptr, param_len);
 
 	UINT32 timeCurrent;
+	msg_struct_l3mod_llczhb_ctrl_resp_t sndResp;
+	msg_struct_l3mod_llczhb_data_report_t sndReport;
 
 	switch (rcv.actionId){
 	case HCU_SYSMSG_ZHBHJT_ACTION_EXECUTE_FINISH_9012:
@@ -328,10 +333,33 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 		gTaskL3aqycq20Context.InstReportFlag = FALSE;//停止Timer(RtdInterval)
 		break;
 
-	case HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN_2021://设备SB状态，需要从L3 Context取得，L3需要记录每个设备运行状态(on/off),modbus or spr 串口数据不通需要告知L3: off
+	case HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN_2021://设备运行状态，需要从L3 Context取得，L3需要记录每个设备运行状态(on/off),modbus or spr 串口数据不通需要告知L3: off
+		gTaskL3aqycq20Context.EquStatusReportFlag =TRUE;
+		//msg_struct_l3mod_llczhb_data_report_t snd;
+		memset(&sndReport, 0, sizeof(msg_struct_l3mod_llczhb_data_report_t));
+		sndReport.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN_2021;
+		sndReport.ul2Cloud.DataTime = time(0);
+		sndReport.ul2Cloud.nbrOfCRtd = HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;
+
+		memcpy(&(sndReport.ul2Cloud.RS), &(gTaskL3aqycq20Context.eqtStatus), sizeof(msgie_struct_zhbhjt_frame_data_RS_value_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+
+		//test by shanchun
+		int i;
+		for(i=0; i< HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;i++){
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: sndReport.ul2Cloud.RS[%d].PolId=[%d]\n",i, sndReport.ul2Cloud.RS[i].PolId);
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: sndReport.ul2Cloud.RS[%d].RS=[%d]\n",i, sndReport.ul2Cloud.RS[i].RS);
+		}
+
+		sndReport.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
+
+		ret = hcu_message_send(MSG_ID_L3MOD_LLCZHB_DATA_REPORT, TASK_ID_LLCZHB, TASK_ID_L3AQYCG20, &sndReport, sndReport.length);
+		if (ret == FAILURE){
+			HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName, zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName);
+		}
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_EQU_RUN_2022:
+		gTaskL3aqycq20Context.EquStatusReportFlag =FALSE;
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051:
@@ -434,19 +462,16 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 	case HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062:
 		gTaskL3aqycq20Context.RtdInterval = rcv.dl2Self.RtdInterval;
 
-		msg_struct_l3mod_llczhb_ctrl_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_ctrl_resp_t));
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062;
-		snd.ul2Cloud.ExeRtn = TRUE;
-		snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
+		//msg_struct_l3mod_llczhb_ctrl_resp_t snd;
+		memset(&sndResp, 0, sizeof(msg_struct_l3mod_llczhb_ctrl_resp_t));
+		sndResp.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062;
+		sndResp.ul2Cloud.ExeRtn = TRUE;
+		sndResp.length = sizeof(msg_struct_l3mod_llczhb_ctrl_resp_t);
 
-		ret = hcu_message_send(MSG_ID_L3MOD_LLCZHB_CTRL_RESP, TASK_ID_LLCZHB, TASK_ID_L3AQYCG20, &snd, snd.length);
+		ret = hcu_message_send(MSG_ID_L3MOD_LLCZHB_CTRL_RESP, TASK_ID_LLCZHB, TASK_ID_L3AQYCG20, &sndResp, sndResp.length);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName, zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName);
 		}
-
-
-		//HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_RTDI_1061:
@@ -1429,6 +1454,33 @@ void func_l3aqyc_measurement_value_flag_judge_inst(HcuSysMsgIeL3aqycContextCurre
 	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01008_Calibration_Flag){
 		aggReport->a01008_Flag = 'R';
 	}
+
+}
+
+
+//传感器运行状态表初始化
+void func_l3aqycg20_eqt_rs_init(void)
+{
+	gTaskL3aqycq20Context.eqtStatus.a34001_PolId = HCU_L3AQYC_A34001_INDEX;
+	gTaskL3aqycq20Context.eqtStatus.a34001_RS = ON;
+
+	gTaskL3aqycq20Context.eqtStatus.a50001_PolId = HCU_L3AQYC_A50001_INDEX;
+	gTaskL3aqycq20Context.eqtStatus.a50001_RS = ON;
+
+	gTaskL3aqycq20Context.eqtStatus.a01001_PolId = HCU_L3AQYC_A01001_INDEX;
+	gTaskL3aqycq20Context.eqtStatus.a01001_RS = ON;
+
+	gTaskL3aqycq20Context.eqtStatus.a01002_PolId = HCU_L3AQYC_A01002_INDEX;
+	gTaskL3aqycq20Context.eqtStatus.a01002_RS = ON;
+
+	gTaskL3aqycq20Context.eqtStatus.a01006_PolId = HCU_L3AQYC_A01006_INDEX;
+	gTaskL3aqycq20Context.eqtStatus.a01006_RS = OFF;
+
+	gTaskL3aqycq20Context.eqtStatus.a01007_PolId = HCU_L3AQYC_A01007_INDEX;
+	gTaskL3aqycq20Context.eqtStatus.a01007_RS = ON;
+
+	gTaskL3aqycq20Context.eqtStatus.a01008_PolId = HCU_L3AQYC_A01008_INDEX;
+	gTaskL3aqycq20Context.eqtStatus.a01008_RS = ON;
 
 }
 

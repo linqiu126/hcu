@@ -142,6 +142,9 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 
 typedef struct gTaskL3aqycq20Context
 {
+	//设备运行状态标志位
+	UINT32 EquStatusReportFlag;
+
 	//实时采样数据上报间隔
 	UINT16 RtdInterval;
 
@@ -172,9 +175,12 @@ typedef struct gTaskL3aqycq20Context
 
 	HcuSysL3aqycValueJudgement_t valueJudge;
 
+	HcuSysMsgIeL3aqycContextEqtStatusElement_t eqtStatus;
+
 }gTaskL3aqycq20Context_t;
 
-
+//层三Context
+extern gTaskL3aqycq20Context_t		gTaskL3aqycq20Context;
 
 //API
 extern OPSTAT fsm_l3aqycg20_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -194,7 +200,10 @@ extern OPSTAT fsm_l3aqycg20_zhbl3mod_exg_data_report(UINT32 dest_id, UINT32 src_
 OPSTAT func_l3aqycg20_int_init(void);
 OPSTAT func_l3aqyc_time_out_aggregation_process(void);
 void func_l3aqycg20_judge_value_init(void);
-void func_l3aqyc_measurement_value_flag_judge(HcuSysMsgIeL3aqycContextStaElement_t *aggReport);
+void func_l3aqycg20_eqt_rs_init(void);
+void func_l3aqyc_measurement_value_flag_judge_inst(HcuSysMsgIeL3aqycContextCurrentElement_t *aggReport);
+void func_l3aqyc_measurement_value_flag_judge_min(HcuSysMsgIeL3aqycContextStaElement_t *aggReport);
+
 
 
 //高级定义，简化程序的可读性

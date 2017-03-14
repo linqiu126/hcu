@@ -11,6 +11,8 @@
 #include "../l0comvm/vmlayer.h"
 #include "../l1hwopt/spsapi.h"
 
+#include "../l3appctrl/l3aqycg20.h"
+
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01

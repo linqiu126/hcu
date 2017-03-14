@@ -156,6 +156,7 @@ OPSTAT func_sps232_int_init(void)
 	ret = hcu_spsapi_serial_init(&zHcuVmCtrTab.hwinv.sps232.sp);
 	if (FAILURE == ret)
 	{
+		gTaskL3aqycq20Context.eqtStatus.a50001_RS = OFF;
 		HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 		return ret;
