@@ -82,8 +82,6 @@ HcuFsmStateItem_t HcuFsmModbus[] =
 UINT32 currentSensorEqpId;  //当前正在工作的传感器
 SerialModbusMsgBuf_t currentModbusBuf;
 
-//MYC 2015/12/08, For 335xD, RS485 is ttyO2 !!!
-
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_modbus_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -424,14 +422,17 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	HCU_DEBUG_PRINT_INF("MODBUS: Len %d  \n", currentModbusBuf.curLen);
 	HCU_DEBUG_PRINT_INF("MODBUS: Received PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
 */
-
-	currentModbusBuf.curLen = ret;
+	currentModbusBuf.curLen =ret;
 
 	if (func_modbus_pm25_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
+
+	HCU_DEBUG_PRINT_INF("MODBUS: rcv.equId = %d  \n", rcv.equId);
+	HCU_DEBUG_PRINT_INF("MODBUS: currentSensorEqpId = %d  \n", currentSensorEqpId);
+	HCU_DEBUG_PRINT_INF("MODBUS: snd.pm25.equipid = %d  \n\n\n\n\n", snd.pm25.equipid);//debug by shanchun
 
 	//检查下equipmentId，确保没重入
 	if (snd.pm25.equipid != currentSensorEqpId){
@@ -446,6 +447,8 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	snd.usercmdid = rcv.cmdId;
 	snd.cmdIdBackType = rcv.cmdIdBackType;
 	snd.pm25.timeStamp = time(0);
+
+	//snd.pm25.equipid = rcv.equId;//debug by shanchun,需要查为何收到的消息解出来的equId和currentSensorEqpId为何不等，是收到字节错误，还是确实重入了。
 
 	switch(rcv.optId){
 	case L3PO_pm25_data_req:
@@ -630,6 +633,10 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
+
+	HCU_DEBUG_PRINT_INF("MODBUS: rcv.equId = %d  \n", rcv.equId);
+	HCU_DEBUG_PRINT_INF("MODBUS: currentSensorEqpId = %d  \n", currentSensorEqpId);
+	HCU_DEBUG_PRINT_INF("MODBUS: snd.winddir.equipid = %d  \n\n\n\n\n", snd.winddir.equipid);//debug by shanchun
 
 	//检查下equipmentId，确保没重入
 	if (snd.winddir.equipid != currentSensorEqpId){
@@ -828,6 +835,10 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		return FAILURE;
 	}
 
+	HCU_DEBUG_PRINT_INF("MODBUS: rcv.equId = %d  \n", rcv.equId);
+	HCU_DEBUG_PRINT_INF("MODBUS: currentSensorEqpId = %d  \n", currentSensorEqpId);
+	HCU_DEBUG_PRINT_INF("MODBUS: snd.windspd.equipid = %d  \n\n\n\n\n", snd.windspd.equipid);//debug by shanchun
+
 	//检查下equipmentId，确保没重入
 	if (snd.windspd.equipid != currentSensorEqpId){
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
@@ -1023,6 +1034,10 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
+
+	HCU_DEBUG_PRINT_INF("MODBUS: rcv.equId = %d  \n", rcv.equId);
+	HCU_DEBUG_PRINT_INF("MODBUS: currentSensorEqpId = %d  \n", currentSensorEqpId);
+	HCU_DEBUG_PRINT_INF("MODBUS: snd.temp.equipid = %d  \n\n\n\n\n", snd.temp.equipid);//debug by shanchun
 
 	//检查下equipmentId，确保没重入
 	if (snd.temp.equipid != currentSensorEqpId){
@@ -1220,6 +1235,10 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		return FAILURE;
 	}
+
+	HCU_DEBUG_PRINT_INF("MODBUS: rcv.equId = %d  \n", rcv.equId);
+	HCU_DEBUG_PRINT_INF("MODBUS: currentSensorEqpId = %d  \n", currentSensorEqpId);
+	HCU_DEBUG_PRINT_INF("MODBUS: snd.humid.equipid = %d  \n\n\n\n\n", snd.humid.equipid);//debug by shanchun
 
 	//检查下equipmentId，确保没重入
 	if (snd.humid.equipid != currentSensorEqpId){

@@ -235,7 +235,7 @@ void func_pm25_time_out_read_data_from_modbus(void)
 		msg_struct_pm25_modbus_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_pm25_modbus_data_read_t));
 		snd.length = sizeof(msg_struct_pm25_modbus_data_read_t);
-		snd.equId = gTaskPm25Context.pm25[gTaskPm25Context.currentSensorId].equId;//Shanchun:to check if it is inline with Sensor acal tuequId
+		snd.equId = gTaskPm25Context.pm25[gTaskPm25Context.currentSensorId].equId;//Shanchun:to check if it is inline with Sensor equId
 		snd.cmdId = L3CI_pm25;
 		snd.optId = L3PO_pm25_data_req;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;

@@ -87,7 +87,7 @@ typedef enum
 	ZHBHJT_IE_uni_CNcode_dat_get_today_his_data_resp_2041           = 2041,
 	ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_req_2051        = 2051,
 	ZHBHJT_IE_uni_CNcode_dat_get_pollution_min_data_resp_2051       = 2051,
-	ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req_2061       = 2061,
+	ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_req_2061       = 2061,//add by shanchun
 	ZHBHJT_IE_uni_CNcode_dat_get_pollution_hour_data_resp_2061      = 2061,
 	ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_req_2071    = 2071,
 	ZHBHJT_IE_uni_CNcode_dat_get_pollution_alarm_record_resp_2071   = 2071,

@@ -62,6 +62,8 @@ typedef enum
 	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_EQU_RUN_2021,
 	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_MIN_2051,
 	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_POL_MIN_2051,
+	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_HOUR_2061,//by shanchun
+	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_POL_HOUR_2061,//by shanchun
 	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_DAY_2031,
 	LLCZHB_STATE_CTRL_WFFB_FROM_CLOUD_GET_POL_DAY_2031,
 	LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_POL_TODAY_RT_2041,
@@ -118,7 +120,7 @@ OPSTAT fsm_llczhb_send_to_cloud_data_report_ala_event_2072(void);
 OPSTAT fsm_llczhb_send_to_cloud_data_get_alarm_limitation_1021(void);
 OPSTAT fsm_llczhb_send_to_cloud_data_get_report_time_1041(void);
 OPSTAT fsm_llczhb_send_to_cloud_data_get_rtdi_interval_1061(void);
-
+OPSTAT fsm_llczhb_send_to_cloud_data_get_pol_hour_rpt_2061(void);
 
 
 
