@@ -3543,6 +3543,7 @@ typedef struct  msg_struct_l3mod_llczhb_ctrl_resp
 {
 	UINT8  actionId;
 	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
+	UINT32 length;//added by zsc
 }msg_struct_l3mod_llczhb_ctrl_resp_t;
 
 //MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
@@ -3605,7 +3606,7 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 /*
  *
  *
- *   //扬尘监测系统的统计报表合数数据结构
+ *   //扬尘监测系统的统计报表表单
  *
  *
  */
@@ -3668,6 +3669,47 @@ typedef struct HcuSysMsgIeL3aqycContextStaElement
 
 }HcuSysMsgIeL3aqycContextStaElement_t;
 
+
+/*
+ *
+ *
+ *   //扬尘监测系统的实时数据表单
+ *
+ *
+ */
+
+typedef struct HcuSysMsgIeL3aqycContextCurrentElement
+{
+	UINT8   a34001_PolId;
+	char    a34001_Flag;			//总悬浮颗粒物浓度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a34001_Avg;  			//总悬浮颗粒物浓度监测时间内的均值
+
+	UINT8   a50001_PolId;
+	char    a50001_Flag;			//噪声实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a50001_Avg;  			//噪声监测时间内的均值
+
+	UINT8   a01001_PolId;
+	char    a01001_Flag;			//温度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01001_Avg;  			//温度监测时间内的均值
+
+	UINT8   a01002_PolId;
+	char    a01002_Flag;			//湿度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01002_Avg;  			//湿监测时间内的均值
+
+	//气压暂不支持但先定义此处，粉尘和雨量未使用暂不定义
+	UINT8   a01006_PolId;
+	char    a01006_Flag;			//气压实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01006_Avg;  			//气压测时间内的均值
+
+	//风速风向无最大最小值要求，先定义成统一格式以后按需要再行调整
+	UINT8   a01007_PolId;
+	char    a01007_Flag;			//风速实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01007_Avg;  			//风速测时间内的均值
+
+	UINT8   a01008_PolId;
+	char    a01008_Flag;			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01008_Avg;  			//风向测时间内的均值
+}HcuSysMsgIeL3aqycContextCurrentElement_t;
 
 /*
  *

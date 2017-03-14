@@ -32,13 +32,17 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 
 
 //分钟扫描计算标志位
-#define HCU_L3AQYC_STA_1M_CYCLE  60
+#define HCU_L3AQYC_STA_DURATION  30
 
 //上报周期
-#define HCU_L3AQYC_STA_1M_REPORT_DURATION  60
-#define HCU_L3AQYC_STA_5M_REPORT_DURATION  60*5
+#define HCU_L3AQYC_STA_1M_REPORT_DURATION   60
+#define HCU_L3AQYC_STA_5M_REPORT_DURATION   60*5
 #define HCU_L3AQYC_STA_1H_REPORT_DURATION   60*60
 #define HCU_L3AQYC_STA_1D_REPORT_DURATION   24*60*60
+
+#define HCU_L3AQYC_STA_1M_REPORT_CYCLE 	 60*2 //时间最小颗粒度为30s
+#define HCU_L3AQYC_STA_1H_REPORT_CYCLE   60*60*2
+#define HCU_L3AQYC_STA_1D_REPORT_CYCLE   24*60*60
 
 #define HCU_L3AQYC_STA_DBI_TABLE_1MIN   	"AQYC_STA_1_MIN"
 #define HCU_L3AQYC_STA_DBI_TABLE_1HOUR   	"AQYC_STA_1_HOUR"
@@ -47,6 +51,16 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 #define HCU_L3AQYC_STA_DBI_TABLE_1MIN_REPORT   	"AQYC_STA_1_MIN_REPORT"
 #define HCU_L3AQYC_STA_DBI_TABLE_1HOUR_REPORT   "AQYC_STA_1_HOUR_REPORT"
 #define HCU_L3AQYC_STA_DBI_TABLE_1DAY_REPORT   	"AQYC_STA_1_DAY_REPORT"
+
+//扬尘监测各传感器LLC标识符
+#define HCU_L3AQYC_A01001_INDEX 94
+#define HCU_L3AQYC_A01002_INDEX 95
+#define HCU_L3AQYC_A01006_INDEX 96
+#define HCU_L3AQYC_A01007_INDEX 97
+#define HCU_L3AQYC_A01008_INDEX 98
+#define HCU_L3AQYC_A34001_INDEX 99
+#define HCU_L3AQYC_A50001_INDEX 100
+
 
 //扬尘监测的统计报表数据标识符判断值缺省常量
 //颗粒物监测仪量程
@@ -131,6 +145,8 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 
 typedef struct gTaskL3aqycq20Context
 {
+	//实时采样数据上报间隔
+	UINT16 RtdInterval;
 
 	//采集数据起始和结束时间和当前时间的差值
 	UINT32 timeBegin_1Min;
@@ -140,7 +156,8 @@ typedef struct gTaskL3aqycq20Context
 	UINT32 timeBegin_1Day;
 	UINT32 timeEnd_1Day;
 
-	//分钟，小时，天数据报告标志位
+	//即时，分钟，小时，天数据报告标志位
+	UINT32 InstReportFlag;
 	UINT32 MinReportFlag;
 	UINT32 HourReportFlag;
 	UINT32 DayReportFlag;
@@ -148,10 +165,10 @@ typedef struct gTaskL3aqycq20Context
 	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是1s为统计周期
 
 	//实时统计部分：均以一个统计周期为单位
-	HcuSysMsgIeL3aqycContextStaElement_t cur;  		//当前各传感器上报数值（从数据库取得 or 实时取得，为简化暂时从数据库取的）
+	HcuSysMsgIeL3aqycContextCurrentElement_t cur;  		//当前各传感器上报数值（从数据库取得 or 实时取得，为简化暂时从数据库取的）
 
 	//周期统计报告部分(统计从监测仪启动开始定期扫描)，是否存数据库待定
-	HcuSysMsgIeL3aqycContextStaElement_t staInstant;  	//瞬时值结果，是否需要带Max,Min带商榷
+	HcuSysMsgIeL3aqycContextStaElement_t staInstant;  	//瞬时值结果(为数据完备性，暂时取一定取样的时间均值)
 	HcuSysMsgIeL3aqycContextStaElement_t staOneMin;  	//1分钟统计结果
 	HcuSysMsgIeL3aqycContextStaElement_t sta60Min;		//60分钟统计结果
 	HcuSysMsgIeL3aqycContextStaElement_t sta24H;		//24H统计结果

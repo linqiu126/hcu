@@ -135,7 +135,7 @@ OPSTAT fsm_l3aqycg20_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_L3AQYCG20, TIMER_ID_1S_L3AQYCG20_PERIOD_STA_SCAN, \
-			HCU_L3AQYC_STA_1M_CYCLE, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+			HCU_L3AQYC_STA_DURATION, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
 		HcuErrorPrint("L3AQYCG20: Error start period timer!\n");
@@ -313,9 +313,11 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RTD_2011:
+		gTaskL3aqycq20Context.InstReportFlag = TRUE;//应该取实时采样数据上报间隔RtdInterval(ref: 1062),然后起Timer定时上报，暂时简化处理每30s(缺省一个扫描周期：30s)上报
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_STOP_RTD_2012:
+		gTaskL3aqycq20Context.InstReportFlag = FALSE;//停止Timer(RtdInterval)
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_EQU_RUN_2021:
@@ -422,9 +424,25 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062:
+		gTaskL3aqycq20Context.RtdInterval = rcv.dl2Self.RtdInterval;
+
+		msg_struct_l3mod_llczhb_ctrl_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_ctrl_resp_t));
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062;
+		snd.ul2Cloud.ExeRtn = TRUE;
+		snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
+
+		ret = hcu_message_send(MSG_ID_L3MOD_LLCZHB_CTRL_RESP, TASK_ID_LLCZHB, TASK_ID_L3AQYCG20, &snd, snd.length);
+		if (ret == FAILURE){
+			HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName, zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName);
+		}
+
+
+		//HCU_SYSMSG_ZHBHJT_ACTION_SET_RTDI_1062
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_RTDI_1061:
+
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_SET_OT_RC_1000:
@@ -514,10 +532,102 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	//时间流逝的计数器
 	gTaskL3aqycq20Context.elipseCnt++;
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//总悬浮物颗粒
+	gTaskL3aqycq20Context.cur.a34001_PolId = HCU_L3AQYC_A34001_INDEX;
+	gTaskL3aqycq20Context.cur.a34001_Flag = 'N';
+	ret = dbi_HcuPm25DataInfo_GetAvg(HCU_L3AQYC_STA_1M_REPORT_DURATION,&gTaskL3aqycq20Context.staInstant);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get avg data from PM25 database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 avg data = %4.3f\n", gTaskL3aqycq20Context.staInstant.a34001_Avg);
+		gTaskL3aqycq20Context.cur.a34001_Avg = gTaskL3aqycq20Context.staInstant.a34001_Avg;
+	}
+
+	//噪声
+	gTaskL3aqycq20Context.cur.a50001_PolId = HCU_L3AQYC_A50001_INDEX;
+	gTaskL3aqycq20Context.cur.a50001_Flag = 'N';
+	ret = dbi_HcuNoiseDataInfo_GetAvg(HCU_L3AQYC_STA_1M_REPORT_DURATION,&gTaskL3aqycq20Context.staInstant);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get avg data from Noise database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise avg average data = %4.3f\n", gTaskL3aqycq20Context.staInstant.a50001_Avg);
+		gTaskL3aqycq20Context.cur.a50001_Avg = gTaskL3aqycq20Context.staInstant.a50001_Avg;
+	}
+
+
+	//温度
+	gTaskL3aqycq20Context.staInstant.a01001_PolId = HCU_L3AQYC_A01001_INDEX;
+	gTaskL3aqycq20Context.staInstant.a01001_Flag = 'N';
+	ret = dbi_HcuTempDataInfo_GetAvg(HCU_L3AQYC_STA_1M_REPORT_DURATION,&gTaskL3aqycq20Context.staInstant);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get avg data from Temp database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp avg average data = %4.3f\n", gTaskL3aqycq20Context.staInstant.a01001_Avg);
+		gTaskL3aqycq20Context.cur.a01001_Avg = gTaskL3aqycq20Context.staInstant.a01001_Avg;
+	}
+
+
+	//湿度
+	gTaskL3aqycq20Context.staInstant.a01002_PolId = HCU_L3AQYC_A01002_INDEX;
+	gTaskL3aqycq20Context.staInstant.a01002_Flag = 'N';
+	ret = dbi_HcuHumidDataInfo_GetAvg(HCU_L3AQYC_STA_1M_REPORT_DURATION,&gTaskL3aqycq20Context.staInstant);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get avg data from Humid database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid avg average data = %4.3f\n", gTaskL3aqycq20Context.staInstant.a01002_Avg);
+		gTaskL3aqycq20Context.cur.a01002_Avg = gTaskL3aqycq20Context.staInstant.a01002_Avg;
+	}
+
+
+	//风速
+	gTaskL3aqycq20Context.staInstant.a01007_PolId = HCU_L3AQYC_A01007_INDEX;
+	gTaskL3aqycq20Context.staInstant.a01007_Flag = 'N';
+	ret = dbi_HcuWindspdDataInfo_GetAvg(HCU_L3AQYC_STA_1M_REPORT_DURATION,&gTaskL3aqycq20Context.staInstant);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get avg data from Windspd database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd avg average data = %4.3f\n", gTaskL3aqycq20Context.staInstant.a01007_Avg);
+		gTaskL3aqycq20Context.cur.a01007_Avg = gTaskL3aqycq20Context.staInstant.a01007_Avg;
+	}
+
+	//风向
+	gTaskL3aqycq20Context.staInstant.a01008_PolId = HCU_L3AQYC_A01008_INDEX;
+	gTaskL3aqycq20Context.staInstant.a01008_Flag = 'N';
+	ret = dbi_HcuWinddirDataInfo_GetAvg(HCU_L3AQYC_STA_1M_REPORT_DURATION,&gTaskL3aqycq20Context.staInstant);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+		HcuErrorPrint("L3AQYCG20: Can not get avg data from Winddir database!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir avg average data = %4.3f\n", gTaskL3aqycq20Context.staInstant.a01008_Avg);
+		gTaskL3aqycq20Context.cur.a01008_Avg = gTaskL3aqycq20Context.staInstant.a01008_Avg;
+	}
+
+	//气压
+	gTaskL3aqycq20Context.cur.a01006_PolId = HCU_L3AQYC_A01006_INDEX;
+	gTaskL3aqycq20Context.cur.a01006_Avg = 0;
+	gTaskL3aqycq20Context.cur.a01006_Flag = 'D';
+
+	func_l3aqyc_measurement_value_flag_judge_inst(&gTaskL3aqycq20Context.cur);
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//总悬浮物颗粒
-	gTaskL3aqycq20Context.staOneMin.a34001_PolId = 99;
+	gTaskL3aqycq20Context.staOneMin.a34001_PolId = HCU_L3AQYC_A34001_INDEX;
 	gTaskL3aqycq20Context.staOneMin.a34001_Flag = 'N';
 
 	ret = dbi_HcuPm25DataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -544,13 +654,11 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from PM25 database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a34001_Cou = gTaskL3aqycq20Context.staOneMin.a34001_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 1M average data = %4.3f\n", gTaskL3aqycq20Context.staOneMin.a34001_Avg);
 	}
 
 	//噪声
-	gTaskL3aqycq20Context.staOneMin.a50001_PolId = 100;
+	gTaskL3aqycq20Context.staOneMin.a50001_PolId = HCU_L3AQYC_A50001_INDEX;
 	gTaskL3aqycq20Context.staOneMin.a50001_Flag = 'N';
 
 	ret = dbi_HcuNoiseDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -577,14 +685,12 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Noise database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a50001_Cou = gTaskL3aqycq20Context.staOneMin.a50001_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise 1M average data = %4.3f\n", gTaskL3aqycq20Context.staOneMin.a50001_Avg);
 	}
 
 
 	//温度
-	gTaskL3aqycq20Context.staOneMin.a01001_PolId = 94;
+	gTaskL3aqycq20Context.staOneMin.a01001_PolId = HCU_L3AQYC_A01001_INDEX;
 	gTaskL3aqycq20Context.staOneMin.a01001_Flag = 'N';
 
 	ret = dbi_HcuTempDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -611,14 +717,12 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Temp database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a01001_Cou = gTaskL3aqycq20Context.staOneMin.a01001_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1M average data = %4.3f\n", gTaskL3aqycq20Context.staOneMin.a01001_Avg);
 	}
 
 
 	//湿度
-	gTaskL3aqycq20Context.staOneMin.a01002_PolId = 95;
+	gTaskL3aqycq20Context.staOneMin.a01002_PolId = HCU_L3AQYC_A01002_INDEX;
 	gTaskL3aqycq20Context.staOneMin.a01002_Flag = 'N';
 
 	ret = dbi_HcuHumidDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -645,14 +749,12 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Humid database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a01002_Cou = gTaskL3aqycq20Context.staOneMin.a01002_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1M average data = %4.3f\n", gTaskL3aqycq20Context.staOneMin.a01002_Avg);
 	}
 
 
 	//风速
-	gTaskL3aqycq20Context.staOneMin.a01007_PolId = 97;
+	gTaskL3aqycq20Context.staOneMin.a01007_PolId = HCU_L3AQYC_A01007_INDEX;
 	gTaskL3aqycq20Context.staOneMin.a01007_Flag = 'N';
 
 	ret = dbi_HcuWindspdDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -679,13 +781,11 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Windspd database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a01007_Cou = gTaskL3aqycq20Context.staOneMin.a01007_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1M average data = %4.3f\n", gTaskL3aqycq20Context.staOneMin.a01007_Avg);
 	}
 
 	//风向
-	gTaskL3aqycq20Context.staOneMin.a01008_PolId = 98;
+	gTaskL3aqycq20Context.staOneMin.a01008_PolId = HCU_L3AQYC_A01008_INDEX;
 	gTaskL3aqycq20Context.staOneMin.a01008_Flag = 'N';
 
 	ret = dbi_HcuWinddirDataInfo_GetMin(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staOneMin);
@@ -712,20 +812,17 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Winddir database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a01008_Cou = gTaskL3aqycq20Context.staOneMin.a01008_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1M average data = %4.3f\n", gTaskL3aqycq20Context.staOneMin.a01008_Avg);
 	}
 
 	//气压
-	gTaskL3aqycq20Context.staOneMin.a01006_PolId = 96;
-	//gTaskL3aqycq20Context.staOneMin.a01006_Cou = 0;
+	gTaskL3aqycq20Context.staOneMin.a01006_PolId = HCU_L3AQYC_A01006_INDEX;
 	gTaskL3aqycq20Context.staOneMin.a01006_Avg = 0;
 	gTaskL3aqycq20Context.staOneMin.a01006_Min = 0;
 	gTaskL3aqycq20Context.staOneMin.a01006_Max = 0;
 	gTaskL3aqycq20Context.staOneMin.a01006_Flag = 'D';
 
-	func_l3aqyc_measurement_value_flag_judge(&gTaskL3aqycq20Context.staOneMin);
+	func_l3aqyc_measurement_value_flag_judge_min(&gTaskL3aqycq20Context.staOneMin);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -733,7 +830,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//总悬浮物颗粒
-	gTaskL3aqycq20Context.sta60Min.a34001_PolId = 99;
+	gTaskL3aqycq20Context.sta60Min.a34001_PolId = HCU_L3AQYC_A34001_INDEX;
 	gTaskL3aqycq20Context.sta60Min.a34001_Flag = 'N';
 
 	ret = dbi_HcuPm25DataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.sta60Min);
@@ -760,13 +857,11 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from PM25 database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a34001_Cou = gTaskL3aqycq20Context.staOneMin.a34001_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 Temp 1H average data = %4.3f\n", gTaskL3aqycq20Context.sta60Min.a34001_Avg);
 	}
 
 	//噪声
-	gTaskL3aqycq20Context.sta60Min.a50001_PolId = 100;
+	gTaskL3aqycq20Context.sta60Min.a50001_PolId = HCU_L3AQYC_A50001_INDEX;
 	gTaskL3aqycq20Context.sta60Min.a50001_Flag = 'N';
 
 	ret = dbi_HcuNoiseDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.sta60Min);
@@ -793,14 +888,12 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Noise database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a50001_Cou = gTaskL3aqycq20Context.staOneMin.a50001_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise 1H average data = %4.3f\n", gTaskL3aqycq20Context.sta60Min.a50001_Avg);
 	}
 
 
 	//温度
-	gTaskL3aqycq20Context.sta60Min.a01001_PolId = 94;
+	gTaskL3aqycq20Context.sta60Min.a01001_PolId = HCU_L3AQYC_A01001_INDEX;
 	gTaskL3aqycq20Context.sta60Min.a01001_Flag = 'N';
 
 	ret = dbi_HcuTempDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.sta60Min);
@@ -827,14 +920,12 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Temp database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a01001_Cou = gTaskL3aqycq20Context.staOneMin.a01001_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1H average data = %4.3f\n", gTaskL3aqycq20Context.sta60Min.a01001_Avg);
 	}
 
 
 	//湿度
-	gTaskL3aqycq20Context.sta60Min.a01002_PolId = 95;
+	gTaskL3aqycq20Context.sta60Min.a01002_PolId = HCU_L3AQYC_A01002_INDEX;
 	gTaskL3aqycq20Context.sta60Min.a01002_Flag = 'N';
 
 	ret = dbi_HcuHumidDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.sta60Min);
@@ -861,14 +952,12 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Humid database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a01002_Cou = gTaskL3aqycq20Context.staOneMin.a01002_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1H average data = %4.3f\n", gTaskL3aqycq20Context.sta60Min.a01002_Avg);
 	}
 
 
 	//风速
-	gTaskL3aqycq20Context.sta60Min.a01007_PolId = 97;
+	gTaskL3aqycq20Context.sta60Min.a01007_PolId = HCU_L3AQYC_A01007_INDEX;
 	gTaskL3aqycq20Context.sta60Min.a01007_Flag = 'N';
 
 	ret = dbi_HcuWindspdDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.sta60Min);
@@ -895,13 +984,11 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Windspd database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a01007_Cou = gTaskL3aqycq20Context.staOneMin.a01007_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1H average data = %4.3f\n", gTaskL3aqycq20Context.sta60Min.a01007_Avg);
 	}
 
 	//风向
-	gTaskL3aqycq20Context.sta60Min.a01008_PolId = 98;
+	gTaskL3aqycq20Context.sta60Min.a01008_PolId = HCU_L3AQYC_A01008_INDEX;
 	gTaskL3aqycq20Context.sta60Min.a01008_Flag = 'N';
 
 	ret = dbi_HcuWinddirDataInfo_GetMin(HCU_L3AQYC_STA_1H_REPORT_DURATION,&gTaskL3aqycq20Context.sta60Min);
@@ -928,48 +1015,38 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Winddir database!\n");
 	}
 	else{
-		//gTaskL3aqycq20Context.staOneMin.a01008_Cou = gTaskL3aqycq20Context.staOneMin.a01008_Avg;
-
 		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1H average data = %4.3f\n", gTaskL3aqycq20Context.sta60Min.a01008_Avg);
 	}
 
 	//气压
-	gTaskL3aqycq20Context.sta60Min.a01006_PolId = 96;
-	//gTaskL3aqycq20Context.staOneMin.a01006_Cou = 0;
+	gTaskL3aqycq20Context.sta60Min.a01006_PolId = HCU_L3AQYC_A01006_INDEX;
 	gTaskL3aqycq20Context.sta60Min.a01006_Avg = 0;
 	gTaskL3aqycq20Context.sta60Min.a01006_Min = 0;
 	gTaskL3aqycq20Context.sta60Min.a01006_Max = 0;
 	gTaskL3aqycq20Context.sta60Min.a01006_Flag = 'D';
 
-	func_l3aqyc_measurement_value_flag_judge(&gTaskL3aqycq20Context.sta60Min);
+	func_l3aqyc_measurement_value_flag_judge_min(&gTaskL3aqycq20Context.sta60Min);
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	//分钟统计表更新数据库
-	//if (dbi_Hcu_StaDatainfo_save(HCU_L3AQYC_STA_DBI_TABLE_1MIN, &(gTaskL3aqycq20Context.staOneMin)) == FAILURE)
-			//HCU_ERROR_PRINT_L3BFSC("L3AQYC: Save data to DB error!\n");
-
-
-	//分钟统计表发送统计报告
-	if((FALSE == gTaskL3aqycq20Context.MinReportFlag) || (TRUE == gTaskL3aqycq20Context.MinReportFlag))//always on for test
+	//实时报告
+	if(FALSE == gTaskL3aqycq20Context.InstReportFlag)//always on for test
 	{
 		msg_struct_l3mod_llczhb_data_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_data_report_t));
-		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051;
+		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_RTD_2011;
 		snd.ul2Cloud.DataTime = time(0);
-		snd.ul2Cloud.nbrOfCMinRpt = HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;
+		snd.ul2Cloud.nbrOfCRtd = HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;
 
-		memcpy(&(snd.ul2Cloud.min), &(gTaskL3aqycq20Context.staOneMin), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+		memcpy(&(snd.ul2Cloud.rtd), &(gTaskL3aqycq20Context.cur), sizeof(msgie_struct_zhbhjt_frame_data_pol_rtd_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 
 		//test by shanchun
 		int i;
 		for(i=0; i< HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;i++){
-			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].PolId=[%d]\n",i, snd.ul2Cloud.min[i].PolId);
-			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].PolFlag=[%c]\n",i, snd.ul2Cloud.min[i].PolFlag);
-			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Avg=[%4.2f]\n",i, snd.ul2Cloud.min[i].Avg);
-			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Max=[%4.2f]\n",i, snd.ul2Cloud.min[i].Max);
-			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Min=[%4.2f]\n\n\n",i, snd.ul2Cloud.min[i].Min);
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.rtd[%d].PolId=[%d]\n",i, snd.ul2Cloud.rtd[i].PolId);
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.rtd[%d].PolFlag=[%c]\n",i, snd.ul2Cloud.rtd[i].PolFlag);
+			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.rtd[%d].Rtd=[%4.2f]\n",i, snd.ul2Cloud.rtd[i].Rtd);
 		}
 
 		snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
@@ -982,8 +1059,46 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	}
 
 
-	if ((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1H_REPORT_DURATION) == 0){
+	//分钟统计表更新数据库
+	//if (dbi_Hcu_StaDatainfo_save(HCU_L3AQYC_STA_DBI_TABLE_1MIN, &(gTaskL3aqycq20Context.staOneMin)) == FAILURE)
+			//HCU_ERROR_PRINT_L3BFSC("L3AQYC: Save data to DB error!\n");
 
+
+	//分钟统计表发送统计报告
+	if ((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1M_REPORT_CYCLE) == 0)
+	{
+		if((FALSE == gTaskL3aqycq20Context.MinReportFlag) || (TRUE == gTaskL3aqycq20Context.MinReportFlag))//always on for test
+		{
+			msg_struct_l3mod_llczhb_data_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_data_report_t));
+			snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051;
+			snd.ul2Cloud.DataTime = time(0);
+			snd.ul2Cloud.nbrOfCMinRpt = HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;
+
+			memcpy(&(snd.ul2Cloud.min), &(gTaskL3aqycq20Context.staOneMin), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+
+			//test by shanchun
+			int i;
+			for(i=0; i< HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;i++){
+				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].PolId=[%d]\n",i, snd.ul2Cloud.min[i].PolId);
+				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].PolFlag=[%c]\n",i, snd.ul2Cloud.min[i].PolFlag);
+				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Avg=[%4.2f]\n",i, snd.ul2Cloud.min[i].Avg);
+				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Max=[%4.2f]\n",i, snd.ul2Cloud.min[i].Max);
+				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Min=[%4.2f]\n\n\n",i, snd.ul2Cloud.min[i].Min);
+			}
+
+			snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
+
+			ret = hcu_message_send(MSG_ID_L3MOD_LLCZHB_DATA_REPORT, TASK_ID_LLCZHB, TASK_ID_L3AQYCG20, &snd, snd.length);
+			if (ret == FAILURE){
+				HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName, zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName);
+			}
+		}
+	}
+
+
+	if ((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1H_REPORT_CYCLE) == 0)
+	{
 		if((FALSE == gTaskL3aqycq20Context.HourReportFlag) || (TRUE == gTaskL3aqycq20Context.HourReportFlag))//always on for test
 		{
 			msg_struct_l3mod_llczhb_data_report_t snd;
@@ -1065,7 +1180,7 @@ void func_l3aqycg20_judge_value_init(void)
 }
 
 //监测数据flag判断，依据《建设工程颗粒物与噪声在线监测技术规范》
-void func_l3aqyc_measurement_value_flag_judge(HcuSysMsgIeL3aqycContextStaElement_t *aggReport)
+void func_l3aqyc_measurement_value_flag_judge_min(HcuSysMsgIeL3aqycContextStaElement_t *aggReport)
 {
 	//int ret = 0;
 	aggReport->a34001_Flag = 'N';
@@ -1077,77 +1192,77 @@ void func_l3aqyc_measurement_value_flag_judge(HcuSysMsgIeL3aqycContextStaElement
 	aggReport->a01006_Flag = 'D';
 
 	//超仪器量程范围上下限
-	if(aggReport->a34001_Flag < gTaskL3aqycq20Context.valueJudge.a34001_Range_Min)
+	if(aggReport->a34001_Avg < gTaskL3aqycq20Context.valueJudge.a34001_Range_Min)
 			aggReport->a34001_Flag = 'L';
 
-	if(aggReport->a34001_Flag > gTaskL3aqycq20Context.valueJudge.a34001_Range_Max)
+	if(aggReport->a34001_Avg > gTaskL3aqycq20Context.valueJudge.a34001_Range_Max)
 			aggReport->a34001_Flag = 'H';
 
-	if(aggReport->a50001_Flag < gTaskL3aqycq20Context.valueJudge.a50001_Range_Min)
+	if(aggReport->a50001_Avg < gTaskL3aqycq20Context.valueJudge.a50001_Range_Min)
 			aggReport->a50001_Flag = 'L';
 
-	if(aggReport->a50001_Flag > gTaskL3aqycq20Context.valueJudge.a50001_Range_Max)
+	if(aggReport->a50001_Avg > gTaskL3aqycq20Context.valueJudge.a50001_Range_Max)
 			aggReport->a50001_Flag = 'H';
 
-	if(aggReport->a01001_Flag < gTaskL3aqycq20Context.valueJudge.a01001_Range_Min)
+	if(aggReport->a01001_Avg < gTaskL3aqycq20Context.valueJudge.a01001_Range_Min)
 			aggReport->a01001_Flag = 'L';
 
-	if(aggReport->a01001_Flag > gTaskL3aqycq20Context.valueJudge.a01001_Range_Max)
+	if(aggReport->a01001_Avg > gTaskL3aqycq20Context.valueJudge.a01001_Range_Max)
 			aggReport->a01001_Flag = 'H';
 
-	if(aggReport->a01002_Flag < gTaskL3aqycq20Context.valueJudge.a01002_Range_Min)
+	if(aggReport->a01002_Avg < gTaskL3aqycq20Context.valueJudge.a01002_Range_Min)
 			aggReport->a01002_Flag = 'L';
 
-	if(aggReport->a01002_Flag > gTaskL3aqycq20Context.valueJudge.a01002_Range_Max)
+	if(aggReport->a01002_Avg > gTaskL3aqycq20Context.valueJudge.a01002_Range_Max)
 			aggReport->a01002_Flag = 'H';
 
-	if(aggReport->a01007_Flag < gTaskL3aqycq20Context.valueJudge.a01007_Range_Min)
+	if(aggReport->a01007_Avg < gTaskL3aqycq20Context.valueJudge.a01007_Range_Min)
 			aggReport->a01007_Flag = 'L';
 
-	if(aggReport->a01007_Flag > gTaskL3aqycq20Context.valueJudge.a01007_Range_Max)
+	if(aggReport->a01007_Avg > gTaskL3aqycq20Context.valueJudge.a01007_Range_Max)
 			aggReport->a01007_Flag = 'H';
 
-	if(aggReport->a01008_Flag < gTaskL3aqycq20Context.valueJudge.a01008_Range_Min)
+	if(aggReport->a01008_Avg < gTaskL3aqycq20Context.valueJudge.a01008_Range_Min)
 			aggReport->a01008_Flag = 'L';
 
-	if(aggReport->a01008_Flag > gTaskL3aqycq20Context.valueJudge.a01008_Range_Max)
+	if(aggReport->a01008_Avg > gTaskL3aqycq20Context.valueJudge.a01008_Range_Max)
 			aggReport->a01008_Flag = 'H';
 
 	//超数据设定范围上下限，上下限的值设置由云端设置，默认和仪器量程相等
-	if(aggReport->a34001_Flag < gTaskL3aqycq20Context.valueJudge.a34001_Range_Min)
+	if(aggReport->a34001_Avg < gTaskL3aqycq20Context.valueJudge.a34001_Range_Set_Min)
 			aggReport->a34001_Flag = '-';
 
-	if(aggReport->a34001_Flag > gTaskL3aqycq20Context.valueJudge.a34001_Range_Max)
+	if(aggReport->a34001_Avg > gTaskL3aqycq20Context.valueJudge.a34001_Range_Set_Max)
 			aggReport->a34001_Flag = '+';
 
-	if(aggReport->a50001_Flag < gTaskL3aqycq20Context.valueJudge.a50001_Range_Min)
-			aggReport->a50001_Flag = '_';
+	if(aggReport->a50001_Avg < gTaskL3aqycq20Context.valueJudge.a50001_Range_Set_Min)
+			aggReport->a50001_Flag = '-';
 
-	if(aggReport->a50001_Flag > gTaskL3aqycq20Context.valueJudge.a50001_Range_Max)
+	if(aggReport->a50001_Avg > gTaskL3aqycq20Context.valueJudge.a50001_Range_Set_Max)
 			aggReport->a50001_Flag = '+';
 
-	if(aggReport->a01001_Flag < gTaskL3aqycq20Context.valueJudge.a01001_Range_Min)
-			aggReport->a01001_Flag = '_';
+	if(aggReport->a01001_Avg < gTaskL3aqycq20Context.valueJudge.a01001_Range_Set_Min)
+			aggReport->a01001_Flag = '-';
 
-	if(aggReport->a01001_Flag > gTaskL3aqycq20Context.valueJudge.a01001_Range_Max)
+	if(aggReport->a01001_Avg > gTaskL3aqycq20Context.valueJudge.a01001_Range_Set_Max)
 			aggReport->a01001_Flag = '+';
 
-	if(aggReport->a01002_Flag < gTaskL3aqycq20Context.valueJudge.a01002_Range_Min)
-			aggReport->a01002_Flag = '_';
+	if(aggReport->a01002_Avg < gTaskL3aqycq20Context.valueJudge.a01002_Range_Set_Min)
+			aggReport->a01002_Flag = '-';
 
-	if(aggReport->a01002_Flag > gTaskL3aqycq20Context.valueJudge.a01002_Range_Max)
+	if(aggReport->a01002_Avg > gTaskL3aqycq20Context.valueJudge.a01002_Range_Set_Max)
 			aggReport->a01002_Flag = '+';
 
-	if(aggReport->a01007_Flag < gTaskL3aqycq20Context.valueJudge.a01007_Range_Min)
-			aggReport->a01007_Flag = '_';
+	if(aggReport->a01007_Avg < gTaskL3aqycq20Context.valueJudge.a01007_Range_Set_Min)
+			aggReport->a01007_Flag = '-';
 
-	if(aggReport->a01007_Flag > gTaskL3aqycq20Context.valueJudge.a01007_Range_Max)
+	if(aggReport->a01007_Avg > gTaskL3aqycq20Context.valueJudge.a01007_Range_Set_Max)
 			aggReport->a01007_Flag = '+';
 
-	if(aggReport->a01008_Flag < gTaskL3aqycq20Context.valueJudge.a01008_Range_Min)
-			aggReport->a01008_Flag = '_';
+	if(aggReport->a01008_Avg < gTaskL3aqycq20Context.valueJudge.a01008_Range_Set_Min)
+			aggReport->a01008_Flag = '-';
 
-	if(aggReport->a01008_Flag > gTaskL3aqycq20Context.valueJudge.a01008_Range_Max)
+	if(aggReport->a01008_Avg > gTaskL3aqycq20Context.valueJudge.a01008_Range_Set_Max)
 			aggReport->a01008_Flag = '+';
 
 	//当风速大于门限值时，默认5m/s
@@ -1186,6 +1301,133 @@ void func_l3aqyc_measurement_value_flag_judge(HcuSysMsgIeL3aqycContextStaElement
 	}
 
 }
+
+void func_l3aqyc_measurement_value_flag_judge_inst(HcuSysMsgIeL3aqycContextCurrentElement_t *aggReport)
+{
+	//int ret = 0;
+	aggReport->a34001_Flag = 'N';
+	aggReport->a50001_Flag = 'N';
+	aggReport->a01001_Flag = 'N';
+	aggReport->a01002_Flag = 'N';
+	aggReport->a01007_Flag = 'N';
+	aggReport->a01008_Flag = 'N';
+	aggReport->a01006_Flag = 'D';
+
+	//超仪器量程范围上下限
+	if(aggReport->a34001_Avg < gTaskL3aqycq20Context.valueJudge.a34001_Range_Min)
+			aggReport->a34001_Flag = 'L';
+
+	if(aggReport->a34001_Avg > gTaskL3aqycq20Context.valueJudge.a34001_Range_Max)
+			aggReport->a34001_Flag = 'H';
+
+	if(aggReport->a50001_Avg < gTaskL3aqycq20Context.valueJudge.a50001_Range_Min)
+			aggReport->a50001_Flag = 'L';
+
+	if(aggReport->a50001_Avg > gTaskL3aqycq20Context.valueJudge.a50001_Range_Max)
+			aggReport->a50001_Flag = 'H';
+
+	if(aggReport->a01001_Avg < gTaskL3aqycq20Context.valueJudge.a01001_Range_Min)
+			aggReport->a01001_Flag = 'L';
+
+	if(aggReport->a01001_Avg > gTaskL3aqycq20Context.valueJudge.a01001_Range_Max)
+			aggReport->a01001_Flag = 'H';
+
+	if(aggReport->a01002_Avg < gTaskL3aqycq20Context.valueJudge.a01002_Range_Min)
+			aggReport->a01002_Flag = 'L';
+
+	if(aggReport->a01002_Avg > gTaskL3aqycq20Context.valueJudge.a01002_Range_Max)
+			aggReport->a01002_Flag = 'H';
+
+	if(aggReport->a01007_Avg < gTaskL3aqycq20Context.valueJudge.a01007_Range_Min)
+			aggReport->a01007_Flag = 'L';
+
+	if(aggReport->a01007_Avg > gTaskL3aqycq20Context.valueJudge.a01007_Range_Max)
+			aggReport->a01007_Flag = 'H';
+
+	if(aggReport->a01008_Avg < gTaskL3aqycq20Context.valueJudge.a01008_Range_Min)
+			aggReport->a01008_Flag = 'L';
+
+	if(aggReport->a01008_Avg > gTaskL3aqycq20Context.valueJudge.a01008_Range_Max)
+			aggReport->a01008_Flag = 'H';
+
+	//超数据设定范围上下限，上下限的值设置由云端设置，默认和仪器量程相等
+	if(aggReport->a34001_Avg < gTaskL3aqycq20Context.valueJudge.a34001_Range_Set_Min)
+			aggReport->a34001_Flag = '-';
+
+	if(aggReport->a34001_Avg > gTaskL3aqycq20Context.valueJudge.a34001_Range_Set_Max)
+			aggReport->a34001_Flag = '+';
+
+	if(aggReport->a50001_Avg < gTaskL3aqycq20Context.valueJudge.a50001_Range_Set_Min)
+			aggReport->a50001_Flag = '-';
+
+	if(aggReport->a50001_Avg > gTaskL3aqycq20Context.valueJudge.a50001_Range_Set_Max)
+			aggReport->a50001_Flag = '+';
+
+	if(aggReport->a01001_Avg < gTaskL3aqycq20Context.valueJudge.a01001_Range_Set_Min)
+			aggReport->a01001_Flag = '-';
+
+	if(aggReport->a01001_Avg > gTaskL3aqycq20Context.valueJudge.a01001_Range_Set_Max)
+			aggReport->a01001_Flag = '+';
+
+	if(aggReport->a01002_Avg < gTaskL3aqycq20Context.valueJudge.a01002_Range_Set_Min)
+			aggReport->a01002_Flag = '-';
+
+	if(aggReport->a01002_Avg > gTaskL3aqycq20Context.valueJudge.a01002_Range_Set_Max)
+			aggReport->a01002_Flag = '+';
+
+	if(aggReport->a01007_Avg < gTaskL3aqycq20Context.valueJudge.a01007_Range_Set_Min)
+			aggReport->a01007_Flag = '-';
+
+	if(aggReport->a01007_Avg > gTaskL3aqycq20Context.valueJudge.a01007_Range_Set_Max)
+			aggReport->a01007_Flag = '+';
+
+	if(aggReport->a01008_Avg < gTaskL3aqycq20Context.valueJudge.a01008_Range_Set_Min)
+			aggReport->a01008_Flag = '-';
+
+	if(aggReport->a01008_Avg > gTaskL3aqycq20Context.valueJudge.a01008_Range_Set_Max)
+			aggReport->a01008_Flag = '+';
+
+	//当风速大于门限值时，默认5m/s
+	if(aggReport->a01007_Avg > gTaskL3aqycq20Context.valueJudge.WindThresholdForNoise)
+			aggReport->a50001_Flag = 'S';
+
+	//当雨雪雷电天气，标志位由云端设定,
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.RainSnow_Flag)
+	{
+		aggReport->a34001_Flag = 'R';
+		aggReport->a50001_Flag = 'R';
+		aggReport->a01001_Flag = 'R';
+		aggReport->a01002_Flag = 'R';
+		aggReport->a01007_Flag = 'R';
+		aggReport->a01008_Flag = 'R';
+	}
+
+	//当设备校准时，标志位由云端设定
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a34001_Calibration_Flag){
+		aggReport->a34001_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a50001_Calibration_Flag){
+		aggReport->a50001_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01001_Calibration_Flag){
+		aggReport->a01001_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01002_Calibration_Flag){
+		aggReport->a01002_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01007_Calibration_Flag){
+		aggReport->a01007_Flag = 'R';
+	}
+	if(TRUE == gTaskL3aqycq20Context.valueJudge.a01008_Calibration_Flag){
+		aggReport->a01008_Flag = 'R';
+	}
+
+}
+
+
+
+
+
 
 
 

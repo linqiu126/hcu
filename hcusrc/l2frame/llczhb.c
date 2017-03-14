@@ -425,7 +425,9 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.dl2Self.RtdInterval = rcv.dl2Self.RtdInterval;
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
+
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_RTDI_1062;
+
 		break;
 
 	//设置新的密码
