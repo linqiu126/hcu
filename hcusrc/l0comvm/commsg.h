@@ -3812,6 +3812,36 @@ typedef struct HcuSysL3aqycValueJudgement
 	float   a01006_Range_Set_Min;
 	/////////////////////////////////////
 
+/*
+	//颗粒物监测仪告警设定范围
+	float   a34001_Alarm_UpValue;
+	float   a34001_Alarm_LowValue;
+
+	//噪声监测仪告警设定范围
+	float   a50001_Alarm_UpValue;
+	float   a50001_Alarm_LowValue;
+
+	//温度监测仪告警设定范围
+	float   a01001_Alarm_UpValue;
+	float   a01001_Alarm_LowValue;
+
+	//湿度监测仪告警设定范围
+	float   a01002_Alarm_UpValue;
+	float   a01002_Alarm_LowValue;
+
+	//风速监测仪告警设定范围
+	float   a01007_Alarm_UpValue;
+	float   a01007_Alarm_LowValue;
+
+	//风向监测仪告警设定范围
+	float   a01008_Alarm_UpValue;
+	float   a01008_Alarm_LowValue;
+
+	//气压监测仪告警设定范围
+	float   a01006_Alarm_UpValue;
+	float   a01006_Alarm_LowValue;
+	/////////////////////////////////////
+*/
 
 	//颗粒监测仪校准标志位
 	UINT32   a34001_Calibration_Flag;
@@ -3842,6 +3872,48 @@ typedef struct HcuSysL3aqycValueJudgement
 	float WindThresholdForNoise;
 
 }HcuSysL3aqycValueJudgement_t;
+
+
+/*
+ *
+ *
+ *   //扬尘监测的统计报表数据标识符判断值
+ *
+ *
+ */
+typedef struct HcuSysL3aqycAlarmLimit
+{
+	//颗粒物监测仪告警设定范围
+	float   a34001_Alarm_UpValue;
+	float   a34001_Alarm_LowValue;
+
+	//噪声监测仪告警设定范围
+	float   a50001_Alarm_UpValue;
+	float   a50001_Alarm_LowValue;
+
+	//温度监测仪告警设定范围
+	float   a01001_Alarm_UpValue;
+	float   a01001_Alarm_LowValue;
+
+	//湿度监测仪告警设定范围
+	float   a01002_Alarm_UpValue;
+	float   a01002_Alarm_LowValue;
+
+	//风速监测仪告警设定范围
+	float   a01007_Alarm_UpValue;
+	float   a01007_Alarm_LowValue;
+
+	//风向监测仪告警设定范围
+	float   a01008_Alarm_UpValue;
+	float   a01008_Alarm_LowValue;
+
+	//气压监测仪告警设定范围
+	float   a01006_Alarm_UpValue;
+	float   a01006_Alarm_LowValue;
+	/////////////////////////////////////
+
+
+}HcuSysL3aqycAlarmLimit_t;
 
 
 

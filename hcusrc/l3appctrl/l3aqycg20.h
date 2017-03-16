@@ -66,7 +66,7 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 
 //噪声监测仪量程
 #define HCU_L3AQYC_A50001_RANGE_MAX		130.0
-#define HCU_L3AQYC_A50001_RANGE_MIN		30.0
+#define HCU_L3AQYC_A50001_RANGE_MIN		20.0
 
 //温度监测仪量程
 #define HCU_L3AQYC_A01001_RANGE_MAX		50.0
@@ -116,6 +116,23 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 //气压监测仪数据设定范围
 #define HCU_L3AQYC_A01006_RANGE_SET_MAX		HCU_L3AQYC_A01006_RANGE_MAX
 #define HCU_L3AQYC_A01006_RANGE_SET_MIN		HCU_L3AQYC_A01006_RANGE_MIN
+
+
+
+#define HCU_L3AQYC_A34001_ALAMR_MAX		3.00
+#define HCU_L3AQYC_A34001_ALAMR_MIN		HCU_L3AQYC_A34001_RANGE_MIN
+#define HCU_L3AQYC_A50001_ALAMR_MAX		80.00
+#define HCU_L3AQYC_A50001_ALAMR_MIN		HCU_L3AQYC_A50001_RANGE_MIN
+#define HCU_L3AQYC_A01001_ALAMR_MAX		HCU_L3AQYC_A01001_RANGE_MAX
+#define HCU_L3AQYC_A01001_ALAMR_MIN		HCU_L3AQYC_A01001_RANGE_MAX
+#define HCU_L3AQYC_A01002_ALAMR_MAX		HCU_L3AQYC_A01002_RANGE_MIN
+#define HCU_L3AQYC_A01002_ALAMR_MIN		HCU_L3AQYC_A01002_RANGE_MIN
+#define HCU_L3AQYC_A01007_ALAMR_MAX		5.00
+#define HCU_L3AQYC_A01007_ALAMR_MIN		HCU_L3AQYC_A01007_RANGE_MIN
+#define HCU_L3AQYC_A01008_ALAMR_MAX		HCU_L3AQYC_A01008_RANGE_MAX
+#define HCU_L3AQYC_A01008_ALAMR_MIN		HCU_L3AQYC_A01008_RANGE_MIN
+#define HCU_L3AQYC_A01006_ALAMR_MAX		HCU_L3AQYC_A01006_RANGE_MAX
+#define HCU_L3AQYC_A01006_ALAMR_MIN		HCU_L3AQYC_A01006_RANGE_MIN
 /////////////////////////////////////
 
 
@@ -136,31 +153,46 @@ extern HcuFsmStateItem_t HcuFsmL3aqycg20[];
 //雨雪雷电标志位
 #define HCU_L3AQYC_RAIN_SNOW_FLAG		FALSE
 
-//最大风速值（噪声仪失效）
-#define HCU_L3AQYC_WINDTHRESHOLD_FOR_NOISE		5.0 //当风速大于5m/s时噪声数据无效（设噪声数据为S）
 
 
 typedef struct gTaskL3aqycq20Context
 {
+	//PM10报警标志位
+	UINT32 PM10AlarmOnOff;
+	//噪声报警标志位
+	UINT32 NoiseAlarmOnOff;
+
 	//设备运行状态标志位
 	UINT32 EquStatusReportFlag;
 
 	//实时采样数据上报间隔
 	UINT16 RtdInterval;
 
+	//数据上报时间
+	UINT16 ReportTime;
+
+	//监控设备较零较满污染物ID
+	UINT8 singlePolId;
+
+	//超限报警时间
+	UINT32 WarnTime;
+
 	//采集数据起始和结束时间和当前时间的差值
-	UINT32 timeBegin_1Min;
-	UINT32 timeEnd_1Min;
-	UINT32 timeBegin_1Hour;
-	UINT32 timeEnd_1Hour;
-	UINT32 timeBegin_1Day;
-	UINT32 timeEnd_1Day;
+	UINT32 timeBegin_Min;
+	UINT32 timeEnd_Min;
+	UINT32 timeBegin_Hour;
+	UINT32 timeEnd_Hour;
+	UINT32 timeBegin_Day;
+	UINT32 timeEnd_Day;
+	UINT32 timeBegin_Ala;
+	UINT32 timeEnd_Ala;
 
 	//即时，分钟，小时，天数据报告标志位
 	UINT32 InstReportFlag;
 	UINT32 MinReportFlag;
 	UINT32 HourReportFlag;
 	UINT32 DayReportFlag;
+	//UINT32 AlaReportFlag;
 
 	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是1s为统计周期
 
@@ -169,13 +201,15 @@ typedef struct gTaskL3aqycq20Context
 
 	//周期统计报告部分(统计从监测仪启动开始定期扫描)，是否存数据库待定
 	HcuSysMsgIeL3aqycContextStaElement_t staInstant;  	//瞬时值结果(为数据完备性，暂时取一定取样的时间均值)
-	HcuSysMsgIeL3aqycContextStaElement_t staOneMin;  	//1分钟统计结果
-	HcuSysMsgIeL3aqycContextStaElement_t sta60Min;		//60分钟统计结果
-	HcuSysMsgIeL3aqycContextStaElement_t sta24H;		//24H统计结果
+	HcuSysMsgIeL3aqycContextStaElement_t staMin;  	//1分钟统计结果
+	HcuSysMsgIeL3aqycContextStaElement_t staHour;		//60分钟统计结果
+	HcuSysMsgIeL3aqycContextStaElement_t staDay;		//24H统计结果
 
 	HcuSysL3aqycValueJudgement_t valueJudge;
 
 	HcuSysMsgIeL3aqycContextEqtStatusElement_t eqtStatus;
+
+	HcuSysL3aqycAlarmLimit_t alarmLimit;
 
 }gTaskL3aqycq20Context_t;
 
@@ -199,8 +233,10 @@ extern OPSTAT fsm_l3aqycg20_zhbl3mod_exg_data_report(UINT32 dest_id, UINT32 src_
 //Local API
 OPSTAT func_l3aqycg20_int_init(void);
 OPSTAT func_l3aqyc_time_out_aggregation_process(void);
+OPSTAT func_l3aqyc_pm10_noise_value_alarm_judge_2072(HcuSysMsgIeL3aqycContextStaElement_t *staInstant);
 void func_l3aqycg20_judge_value_init(void);
 void func_l3aqycg20_eqt_rs_init(void);
+void func_l3aqycg20_alarm_limit_init(void);
 void func_l3aqyc_measurement_value_flag_judge_inst(HcuSysMsgIeL3aqycContextCurrentElement_t *aggReport);
 void func_l3aqyc_measurement_value_flag_judge_min(HcuSysMsgIeL3aqycContextStaElement_t *aggReport);
 

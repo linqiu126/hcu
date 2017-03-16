@@ -35,8 +35,6 @@ enum FSM_STATE_PM25
 #define SENSOR_PM25_RPI_BMPD300_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
 #define SENSOR_PM25_RPI_SHARP_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
 
-//定义污染值门限值
-#define HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD 3000000000 //瞬时浓度报警值设为3.0mg/m3,当连续5min颗粒物平均浓度高于3.0mg/m3,在线监测系统应能发布报警提示
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmPm25[];

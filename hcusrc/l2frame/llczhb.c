@@ -290,7 +290,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
 		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_GET_ALMLIM_1021;
 		snd.dl2Self.nbrOfPolId = rcv.dl2Self.nbrOfPolId;
-		memcpy(&(rcv.dl2Self.multiPolid), &(rcv.dl2Self.multiPolid), sizeof(UINT8)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+		memcpy(&(snd.dl2Self.multiPolid), &(rcv.dl2Self.multiPolid), sizeof(UINT8)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);//bug fix by shanchun rcv->snd
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_GET_ALARM_LIMUTATION_1021;
@@ -311,7 +311,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.length = sizeof(msg_struct_llczhb_l3mod_ctrl_req_t);
 		snd.actionId = HCU_SYSMSG_ZHBHJT_ACTION_SET_ALMLIM_1022;
 		snd.dl2Self.nbrOfLimitation = rcv.dl2Self.nbrOfLimitation;
-		memcpy(&(rcv.dl2Self.limitation), &(rcv.dl2Self.limitation), sizeof(msgie_struct_zhbhjt_frame_data_low_upvalue_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
+		memcpy(&(snd.dl2Self.limitation), &(rcv.dl2Self.limitation), sizeof(msgie_struct_zhbhjt_frame_data_low_upvalue_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);//bug fix by shanchun rcv->snd
 		if (hcu_message_send(MSG_ID_LLCZHB_L3MOD_CTRL_REQ, TASK_ID_L3AQYCG20, TASK_ID_LLCZHB, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_LLCZHB].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
 		gTaskLlczhbContext.llcState = LLCZHB_STATE_CTRL_WFFB_FROM_L3MOD_SET_ALARM_LIMITATION_1022;
@@ -348,7 +348,7 @@ OPSTAT fsm_llczhb_cloudvela_l2frame_req(UINT32 dest_id, UINT32 src_id, void * pa
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
 		//设置上位机地址
-		gTaskLlczhbContext.envSd.AlarmTarget = rcv.dl2Self.AlarmTarget;
+		gTaskLlczhbContext.envSd.AlarmTarget = rcv.dl2Self.AlarmTarget;//shanchun: 上位机地址为啥是AlarmTarget?
 
 		//发送完成终结函数到后台
 		if (fsm_llczhb_send_to_cloud_ctrl_execute_operation_result_9012(ZHBHJT_IE_uni_EXETRN_EXE_SUCCESS) == FAILURE)
@@ -770,7 +770,7 @@ OPSTAT fsm_llczhb_l3mod_llczhb_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * p
 		//发送数据到后台
 		gTaskLlczhbContext.llcSn.ulTx.nbrOfAlmLim = rcv.ul2Cloud.nbrOfAlmLim;
 		memcpy(&(gTaskLlczhbContext.llcSn.ulTx.limitation), &(rcv.ul2Cloud.limitation), sizeof(msgie_struct_zhbhjt_frame_data_low_upvalue_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
-		gTaskLlczhbContext.llcSn.ulTx.Ala = rcv.ul2Cloud.Ala;
+		gTaskLlczhbContext.llcSn.ulTx.Ala = rcv.ul2Cloud.Ala;//shanchun: maybe it a bug, no need report Ala here!
 		if (fsm_llczhb_send_to_cloud_data_get_alarm_limitation_1021() == FAILURE)
 			HCU_ERROR_PRINT_LLCZHB_RECOVERY("LLCZHB: Send L2frame to cloud error!\n");
 
