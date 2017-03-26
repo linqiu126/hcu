@@ -4,17 +4,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-/home/pi/workspace/hcu/hcusrc/l2frame/avorion.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/canitfleo.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/canlib.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/cloudvela.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/llczhb.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/modbus.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/nbiotcj188.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/nbiotqg376.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/spibusaries.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/spsvirgo.c 
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/avorion.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/canitfleo.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/canlib.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/cloudvela.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/i2cbuslibra.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/llczhb.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/modbus.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/nbiotcj188.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/nbiotqg376.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/spibusaries.c \
+/home/test/workspace/hcu/hcu/hcusrc/l2frame/spsvirgo.c 
 
 OBJS += \
 ./src/l2frame/avorion.o \
@@ -44,80 +44,80 @@ C_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-src/l2frame/avorion.o: /home/pi/workspace/hcu/hcusrc/l2frame/avorion.c
+src/l2frame/avorion.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/avorion.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/canitfleo.o: /home/pi/workspace/hcu/hcusrc/l2frame/canitfleo.c
+src/l2frame/canitfleo.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/canitfleo.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/canlib.o: /home/pi/workspace/hcu/hcusrc/l2frame/canlib.c
+src/l2frame/canlib.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/canlib.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/cloudvela.o: /home/pi/workspace/hcu/hcusrc/l2frame/cloudvela.c
+src/l2frame/cloudvela.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/cloudvela.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/i2cbuslibra.o: /home/pi/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c
+src/l2frame/i2cbuslibra.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/i2cbuslibra.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/llczhb.o: /home/pi/workspace/hcu/hcusrc/l2frame/llczhb.c
+src/l2frame/llczhb.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/llczhb.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/modbus.o: /home/pi/workspace/hcu/hcusrc/l2frame/modbus.c
+src/l2frame/modbus.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/modbus.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/nbiotcj188.o: /home/pi/workspace/hcu/hcusrc/l2frame/nbiotcj188.c
+src/l2frame/nbiotcj188.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/nbiotcj188.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/nbiotqg376.o: /home/pi/workspace/hcu/hcusrc/l2frame/nbiotqg376.c
+src/l2frame/nbiotqg376.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/nbiotqg376.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/spibusaries.o: /home/pi/workspace/hcu/hcusrc/l2frame/spibusaries.c
+src/l2frame/spibusaries.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/spibusaries.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l2frame/spsvirgo.o: /home/pi/workspace/hcu/hcusrc/l2frame/spsvirgo.c
+src/l2frame/spsvirgo.o: /home/test/workspace/hcu/hcu/hcusrc/l2frame/spsvirgo.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
