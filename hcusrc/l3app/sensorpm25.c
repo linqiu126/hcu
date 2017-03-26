@@ -235,7 +235,7 @@ void func_pm25_time_out_read_data_from_modbus(void)
 		msg_struct_pm25_modbus_data_read_t snd;
 		memset(&snd, 0, sizeof(msg_struct_pm25_modbus_data_read_t));
 		snd.length = sizeof(msg_struct_pm25_modbus_data_read_t);
-		snd.equId = gTaskPm25Context.pm25[gTaskPm25Context.currentSensorId].equId;//Shanchun:to check if it is inline with Sensor acal tuequId
+		snd.equId = gTaskPm25Context.pm25[gTaskPm25Context.currentSensorId].equId;//Shanchun:to check if it is inline with Sensor equId
 		snd.cmdId = L3CI_pm25;
 		snd.optId = L3PO_pm25_data_req;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_period;
@@ -362,7 +362,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 
 	//判断如果PM2.5超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
 	HCU_DEBUG_PRINT_INF("PM25: rcv.pm25.pm10Value = %d\n", (rcv.pm25.pm10Value));
-	if(rcv.pm25.pm2d5Value >= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD)
+	if(rcv.pm25.pm2d5Value >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
 	{
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
 		if(FAILURE == ret){

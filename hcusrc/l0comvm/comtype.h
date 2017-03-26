@@ -50,6 +50,9 @@ typedef UINT32         OPSTAT;
 #define 	TRUE 		1
 #define 	FALSE 		0
 
+#define 	ON 		1
+#define 	OFF 	0
+
 /* For thread creation */
 typedef void *(*CALLBACK)(void *);
 

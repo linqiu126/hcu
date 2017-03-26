@@ -103,6 +103,11 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
 	ret = hcu_sps485_serial_init(&zHcuVmCtrTab.hwinv.sps485.modbus);
 	if (FAILURE == ret){
+		gTaskL3aqycq20Context.eqtStatus.a34001_RS = OFF;
+		gTaskL3aqycq20Context.eqtStatus.a01001_RS = OFF;
+		gTaskL3aqycq20Context.eqtStatus.a01002_RS = OFF;
+		gTaskL3aqycq20Context.eqtStatus.a01007_RS = OFF;
+		gTaskL3aqycq20Context.eqtStatus.a01008_RS = OFF;
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS485]++;
 		HcuErrorPrint("SPS485: Init Serial Port Failure, Exit.\n");
 	}

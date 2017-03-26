@@ -11,6 +11,8 @@
 #include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
 
+
+
 //如果将所有的操作都做成可重入的，则状态机很简单，但控制表就太复杂了，所以综合取舍，状态机做成单操作不可重入的，从而控制表将简单多了
 //本状态机还可以支持多个从设备一起工作，但所有设备操作相互之间均为不可重入型，意味着任何时候只有一个设备在操作，完成之后才能做下一个
 //这将大大简化所有的状态机设计以及程序控制，对于轻量级的外设控制足够了
@@ -33,8 +35,6 @@ enum FSM_STATE_PM25
 #define SENSOR_PM25_RPI_BMPD300_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
 #define SENSOR_PM25_RPI_SHARP_PRESENT SENSOR_PM25_RPI_PRESENT_TRUE
 
-//定义污染值门限值
-#define HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD 3000000000 //瞬时浓度报警值设为3.0mg/m3,当连续5min颗粒物平均浓度高于3.0mg/m3,在线监测系统应能发布报警提示
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmPm25[];

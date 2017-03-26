@@ -3361,8 +3361,8 @@ typedef struct msgie_struct_zhbhjt_frame_head //
 typedef struct  msgie_struct_zhbhjt_frame_data_pol_rtd
 {
 	UINT8  PolId;
-	float  Rtd;
 	char   PolFlag;
+	float  Rtd;
 }msgie_struct_zhbhjt_frame_data_pol_rtd_t;
 typedef struct  msgie_struct_zhbhjt_frame_data_pol_min_hour
 {
@@ -3543,6 +3543,7 @@ typedef struct  msg_struct_l3mod_llczhb_ctrl_resp
 {
 	UINT8  actionId;
 	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
+	UINT32 length;//added by zsc
 }msg_struct_l3mod_llczhb_ctrl_resp_t;
 
 //MSG_ID_L3MOD_LLCZHB_DATA_REPORT,
@@ -3605,7 +3606,7 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 /*
  *
  *
- *   //扬尘监测系统的统计报表合数数据结构
+ *   //扬尘监测系统的统计报表表单
  *
  *
  */
@@ -3668,6 +3669,81 @@ typedef struct HcuSysMsgIeL3aqycContextStaElement
 
 }HcuSysMsgIeL3aqycContextStaElement_t;
 
+
+/*
+ *
+ *
+ *   //扬尘监测系统的实时数据表单
+ *
+ *
+ */
+
+typedef struct HcuSysMsgIeL3aqycContextCurrentElement
+{
+	UINT8   a34001_PolId;
+	char    a34001_Flag;			//总悬浮颗粒物浓度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a34001_Avg;  			//总悬浮颗粒物浓度监测时间内的均值
+
+	UINT8   a50001_PolId;
+	char    a50001_Flag;			//噪声实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a50001_Avg;  			//噪声监测时间内的均值
+
+	UINT8   a01001_PolId;
+	char    a01001_Flag;			//温度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01001_Avg;  			//温度监测时间内的均值
+
+	UINT8   a01002_PolId;
+	char    a01002_Flag;			//湿度实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01002_Avg;  			//湿监测时间内的均值
+
+	//气压暂不支持但先定义此处，粉尘和雨量未使用暂不定义
+	UINT8   a01006_PolId;
+	char    a01006_Flag;			//气压实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01006_Avg;  			//气压测时间内的均值
+
+	//风速风向无最大最小值要求，先定义成统一格式以后按需要再行调整
+	UINT8   a01007_PolId;
+	char    a01007_Flag;			//风速实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01007_Avg;  			//风速测时间内的均值
+
+	UINT8   a01008_PolId;
+	char    a01008_Flag;			//风向实时字段标识（见规范数据标识符定义，有效数据：N, 设备校准：C..）
+	float	a01008_Avg;  			//风向测时间内的均值
+}HcuSysMsgIeL3aqycContextCurrentElement_t;
+
+
+
+/*
+ *
+ *
+ *   //扬尘监测系统的设备运行状态
+ *
+ *
+ */
+
+typedef struct HcuSysMsgIeL3aqycContextEqtStatusElement
+{
+	UINT8   a34001_PolId;
+	UINT8   a34001_RS;			//扬尘传感器设备运行状态
+
+	UINT8   a50001_PolId;
+	UINT8   a50001_RS;
+
+	UINT8   a01001_PolId;
+	UINT8   a01001_RS;
+
+	UINT8   a01002_PolId;
+	UINT8	a01002_RS;
+
+	UINT8   a01006_PolId;
+	UINT8	a01006_RS;
+
+	UINT8   a01007_PolId;
+	UINT8	a01007_RS;
+
+	UINT8   a01008_PolId;
+	UINT8	a01008_RS;
+}HcuSysMsgIeL3aqycContextEqtStatusElement_t;
 
 /*
  *
@@ -3736,6 +3812,36 @@ typedef struct HcuSysL3aqycValueJudgement
 	float   a01006_Range_Set_Min;
 	/////////////////////////////////////
 
+/*
+	//颗粒物监测仪告警设定范围
+	float   a34001_Alarm_UpValue;
+	float   a34001_Alarm_LowValue;
+
+	//噪声监测仪告警设定范围
+	float   a50001_Alarm_UpValue;
+	float   a50001_Alarm_LowValue;
+
+	//温度监测仪告警设定范围
+	float   a01001_Alarm_UpValue;
+	float   a01001_Alarm_LowValue;
+
+	//湿度监测仪告警设定范围
+	float   a01002_Alarm_UpValue;
+	float   a01002_Alarm_LowValue;
+
+	//风速监测仪告警设定范围
+	float   a01007_Alarm_UpValue;
+	float   a01007_Alarm_LowValue;
+
+	//风向监测仪告警设定范围
+	float   a01008_Alarm_UpValue;
+	float   a01008_Alarm_LowValue;
+
+	//气压监测仪告警设定范围
+	float   a01006_Alarm_UpValue;
+	float   a01006_Alarm_LowValue;
+	/////////////////////////////////////
+*/
 
 	//颗粒监测仪校准标志位
 	UINT32   a34001_Calibration_Flag;
@@ -3759,10 +3865,55 @@ typedef struct HcuSysL3aqycValueJudgement
 	//气压监测仪校准标志位
 	UINT32   a01006_Calibration_Flag;
 
+	//雨，雪，雷，电标志位
+	UINT32 RainSnow_Flag;
+
 	//最大风速值（噪声仪失效）
 	float WindThresholdForNoise;
 
 }HcuSysL3aqycValueJudgement_t;
+
+
+/*
+ *
+ *
+ *   //扬尘监测的统计报表数据标识符判断值
+ *
+ *
+ */
+typedef struct HcuSysL3aqycAlarmLimit
+{
+	//颗粒物监测仪告警设定范围
+	float   a34001_Alarm_UpValue;
+	float   a34001_Alarm_LowValue;
+
+	//噪声监测仪告警设定范围
+	float   a50001_Alarm_UpValue;
+	float   a50001_Alarm_LowValue;
+
+	//温度监测仪告警设定范围
+	float   a01001_Alarm_UpValue;
+	float   a01001_Alarm_LowValue;
+
+	//湿度监测仪告警设定范围
+	float   a01002_Alarm_UpValue;
+	float   a01002_Alarm_LowValue;
+
+	//风速监测仪告警设定范围
+	float   a01007_Alarm_UpValue;
+	float   a01007_Alarm_LowValue;
+
+	//风向监测仪告警设定范围
+	float   a01008_Alarm_UpValue;
+	float   a01008_Alarm_LowValue;
+
+	//气压监测仪告警设定范围
+	float   a01006_Alarm_UpValue;
+	float   a01006_Alarm_LowValue;
+	/////////////////////////////////////
+
+
+}HcuSysL3aqycAlarmLimit_t;
 
 
 

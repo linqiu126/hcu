@@ -46,7 +46,7 @@ HcuFsmStateItem_t HcuFsmSpsvirgo[] =
 
 //extern global variables
 extern SerialPortCom_t gSerialPortMobus;
-UINT32 currentSensorEqpId;  //当前正在工作的传感器
+UINT32 currentNoiseSensorId;  //当前正在工作的传感器
 SerialSpsMsgBuf_t currentSpsBuf;
 
 //Main Entry
@@ -160,10 +160,10 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		return FAILURE;
 	}
 	memcpy(&rcv, param_ptr, param_len);
-	currentSensorEqpId = rcv.equId;
+	currentNoiseSensorId = rcv.equId;
 
 	//Equipment Id can not be 0
-	if ((currentSensorEqpId <=0) || (rcv.cmdId != L3CI_noise)){
+	if ((currentNoiseSensorId <=0) || (rcv.cmdId != L3CI_noise)){
 		HcuErrorPrint("SPSVIRGO: Receive message with cmdId or EqpId error!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 		return FAILURE;
@@ -209,6 +209,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 		if (FAILURE == ret)
 		{
+			gTaskL3aqycq20Context.eqtStatus.a50001_RS = OFF;
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Error send command to serials port!\n");
 
@@ -275,7 +276,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		}
 
 
-		/*
+/*
 		//放点假数据进行测试
 		currentSpsBuf.curLen = 16;
 		//Resp Hex: 41 57 41 41 2C 20 34 33 2E 34 64 42 41 2C 42 03(ASCII: AWAA, 43.4dBA,B end)
@@ -286,7 +287,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 				currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],\
 				currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],\
 				currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15]);
-		*/
+*/
 
 
 		//解码,检查返回结果,赋值
@@ -391,7 +392,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//恢复当前传感器ID的初始值
-	currentSensorEqpId = 0;
+	currentNoiseSensorId = 0;
 	return SUCCESS;
 
 }
