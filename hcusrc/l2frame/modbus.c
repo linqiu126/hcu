@@ -81,6 +81,7 @@ HcuFsmStateItem_t HcuFsmModbus[] =
 //Task level global variables，该任务是单入的，所以两个传感器同时操作是不可以的
 UINT32 currentSensorEqpId;  //当前正在工作的传感器
 SerialModbusMsgBuf_t currentModbusBuf;
+gTaskL3aqycq20Context_t		gTaskL3aqycq20Context; //MYC added 2017/03/27 temp
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
