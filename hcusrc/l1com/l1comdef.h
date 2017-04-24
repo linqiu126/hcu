@@ -892,8 +892,10 @@ typedef struct CloudBhItfDevReportStdZhb
 
 #ifdef TARGET_RASPBERRY_PI3B
 //#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
+//#define HCU_SPS_COM_PORT_PATH_0  "/dev/hcu_serial0"
 #define HCU_SPS_COM_PORT_PATH_0  "/dev/hcu_serial0"
 #define HCU_SPS_COM_PORT_PATH_1  "/dev/hcu_serial1"
+//#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB0"
 #define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyUSB2"
 #define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyUSB3"
 #define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyACM0"

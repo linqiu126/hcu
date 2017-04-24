@@ -58,6 +58,19 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
 
+
+	{MSG_ID_NOISE_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_noise_data_report},
+	{MSG_ID_TEMP_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_temp_data_report},
+	{MSG_ID_HUMID_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_humid_data_report},
+	{MSG_ID_EMC_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_emc_data_report},
+	{MSG_ID_PM25_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_pm25_data_report},
+	{MSG_ID_WINDDIR_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_winddir_data_report},
+	{MSG_ID_WINDSPD_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_windspd_data_report},
+	{MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_syspm_alarm_report},
+	{MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_syspm_perfm_report},
+	{MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT,  FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_sysswm_inventory_report},
+	{MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_sysswm_sw_package_report},
+
     //通用服务能力处理部分，UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	{MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_alarm_resp},
 	{MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_alarm_report},
@@ -412,7 +425,7 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
 				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
 		gTaskCloudvelaContext.L2Link.timeStamp = time(0);
-		gTaskCloudvelaContext.L2Link.msgType = HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID;
+		gTaskCloudvelaContext.L2Link.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
 		strcpy(gTaskCloudvelaContext.L2Link.funcFlag, "0");
 		//准备组装发送消息
 		StrMsg_HUITP_MSGID_uni_heart_beat_report_t pMsgProc;
@@ -506,7 +519,7 @@ OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(UINT16 randval)
 		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
 				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
 		gTaskCloudvelaContext.L2Link.timeStamp = time(0);
-		gTaskCloudvelaContext.L2Link.msgType = HUITP_MSG_HUIXML_MSGTYPE_HEAT_BEAT_ID;
+		gTaskCloudvelaContext.L2Link.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
 		strcpy(gTaskCloudvelaContext.L2Link.funcFlag, "0");
 		//准备组装发送消息
 		StrMsg_HUITP_MSGID_uni_heart_beat_resp_t pMsgProc;
@@ -568,24 +581,26 @@ OPSTAT func_cloudvela_send_data_to_cloud(CloudDataSendBuf_t *buf)
 	//参数检查
 	if ((buf->curLen <=0) || (buf->curLen >HCU_SYSMSG_COM_MSG_BODY_LEN_MAX))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error message length to send back for cloud!\n");
+	gTaskCloudvelaContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 
 	//如果是HOME服务器目标，则调用CURL机制发送到HOME。两个服务器HOME=DEFAULT相同则只使用socket/default服务器。
 	if (gTaskCloudvelaContext.linkId == HCU_SYSCFG_CLOUD_BH_LINK_HOME){
 		//调用CURL的函数，但初始化必须先完成。先只考虑使用ETHERNET
 		if (gTaskCloudvelaContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
-			if (hcu_ethernet_curl_data_send(buf) == FAILURE){
-				HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud!\n");
-			}
+			if (hcu_ethernet_curl_data_send(buf) == FAILURE)
+				HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Error send data to back-cloud via curl!\n\n");
+			else
+				HcuDebugPrint("CLOUDVELA: Send curl message rightly!\n\n");
+
 		}
 
-		//gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_NULL; //reset for debug, by shanchun
+		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_NULL; //reset for debug, by shanchun
 
 		return SUCCESS;
 	}
 
 	//然后才是其它链路类型。当业务服务器/双同服务器模式下，均采用default链路。
 	//根据系统配置，决定使用那一种后台网络
-	gTaskCloudvelaContext.curCon = HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET;
 	if (gTaskCloudvelaContext.curCon == HCU_CLOUDVELA_CONTROL_PHY_CON_ETHERNET){
 		if (hcu_ethernet_socket_data_send(buf) == FAILURE){
 		//if (hcu_ethernet_curl_data_send(buf) == FAILURE){
@@ -1040,7 +1055,7 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 	msg_struct_spspm_cloudvela_alarm_report_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_alarm_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_alarm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3 message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
@@ -1085,11 +1100,11 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-	}
-	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-
+	}
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+/*
 		UINT32 optId=0, cmdId=0, backType=0;
 		//命令字
 		cmdId = L3CI_alarm;
@@ -1100,17 +1115,24 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 				backType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.alarmDesc,\
 				rcv.timeStamp, &pMsgOutput))
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+*/
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
 
+//for test
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: Alarm HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
+//for test
+
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HcuDebugPrint("CLOUDVELA: Send alarm report successfully!\n\n");
 
 	//返回
 	return SUCCESS;
@@ -1215,9 +1237,9 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 		pMsgProc.reportValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_performance_info_element);
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_performance_info_element_t) - 4);
 		pMsgProc.reportValue.restartCnt = HUITP_ENDIAN_EXG32(rcv.restartCnt);
-		pMsgProc.reportValue.networkConnCnt = HUITP_ENDIAN_EXG32(rcv.networkConnCnt);
-		pMsgProc.reportValue.networkConnFailCnt = HUITP_ENDIAN_EXG32(rcv.networkConnFailCnt);
-		pMsgProc.reportValue.networkDiscCnt = HUITP_ENDIAN_EXG32(rcv.networkDiscCnt);
+		//pMsgProc.reportValue.networkConnCnt = HUITP_ENDIAN_EXG32(rcv.networkConnCnt);
+		//pMsgProc.reportValue.networkConnFailCnt = HUITP_ENDIAN_EXG32(rcv.networkConnFailCnt);
+		//pMsgProc.reportValue.networkDiscCnt = HUITP_ENDIAN_EXG32(rcv.networkDiscCnt);
 		pMsgProc.reportValue.socketDiscCnt = HUITP_ENDIAN_EXG32(rcv.socketDiscCnt);
 		pMsgProc.reportValue.cpuOccupy = HUITP_ENDIAN_EXG32(rcv.cpuOccupy);
 		pMsgProc.reportValue.memOccupy = HUITP_ENDIAN_EXG32(rcv.memOccupy);
@@ -1232,17 +1254,19 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
+
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: PM HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
 
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
@@ -1355,6 +1379,9 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		pMsgProc.reportValue.swRel = HUITP_ENDIAN_EXG16(rcv.swRel);
 		pMsgProc.reportValue.swVer = HUITP_ENDIAN_EXG16(rcv.swVer);
 		pMsgProc.reportValue.upgradeFlag = rcv.upgradeFlag;
+		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.timeStamp);
+
+
 		#if (HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX < HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX)
 			#error HUITP and COMMSG parameter set error!
 		#endif
@@ -1368,10 +1395,11 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
+		/*
 		UINT32 optId=0, cmdId=0, backType=0;
 		//命令字
 		cmdId = L3CI_hcu_inventory;
@@ -1386,9 +1414,12 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
 				&test, &pMsgOutput))
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+
+		*/
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
+		/*
 		UINT32 optId=0, cmdId=0, backType=0;
 		//命令字
 		cmdId = L3CI_hcu_inventory;
@@ -1403,10 +1434,13 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
 				&test, &pMsgOutput))
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+		*/
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
+
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: SWM Inventory HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
 
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
@@ -1735,6 +1769,7 @@ OPSTAT fsm_cloudvela_emc_data_report(UINT32 dest_id, UINT32 src_id, void * param
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_emc_data_value_t) - 4);
 		pMsgProc.reportValue.dataFormat = rcv.emc.dataFormat;
 		pMsgProc.reportValue.emcDataValue = HUITP_ENDIAN_EXG32(rcv.emc.emcValue);
+		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.emc.timeStamp);
 
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
@@ -1745,23 +1780,28 @@ OPSTAT fsm_cloudvela_emc_data_report(UINT32 dest_id, UINT32 src_id, void * param
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
+
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: EMC HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
 
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send EMC report successfully !\n\n");
+
 
 	//State no change
 	return SUCCESS;
@@ -1986,16 +2026,22 @@ OPSTAT fsm_cloudvela_pm25_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.reportPm01Value.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_pm01_value_t) - 4);
 		pMsgProc.reportPm01Value.dataFormat = rcv.pm25.dataFormat;
 		pMsgProc.reportPm01Value.pm01Value = HUITP_ENDIAN_EXG32(rcv.pm25.pm1d0Value);
+		pMsgProc.reportPm01Value.timeStamp = HUITP_ENDIAN_EXG32(rcv.pm25.timeStamp);
+
 		//StrIe_HUITP_IEID_uni_pm25_value_t
 		pMsgProc.reportPm25Value.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_pm25_value);
 		pMsgProc.reportPm25Value.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_pm25_value_t) - 4);
 		pMsgProc.reportPm25Value.dataFormat = rcv.pm25.dataFormat;
 		pMsgProc.reportPm25Value.pm25Value = HUITP_ENDIAN_EXG32(rcv.pm25.pm2d5Value);
+		pMsgProc.reportPm25Value.timeStamp = HUITP_ENDIAN_EXG32(rcv.pm25.timeStamp);
+
 		//StrIe_HUITP_IEID_uni_pm10_value_t
 		pMsgProc.reportPm10Value.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_pm10_value);
 		pMsgProc.reportPm10Value.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_pm10_value_t) - 4);
 		pMsgProc.reportPm10Value.dataFormat = rcv.pm25.dataFormat;
 		pMsgProc.reportPm10Value.pm10Value = HUITP_ENDIAN_EXG32(rcv.pm25.pm10Value);
+		pMsgProc.reportPm10Value.timeStamp = HUITP_ENDIAN_EXG32(rcv.pm25.timeStamp);
+
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -2005,23 +2051,29 @@ OPSTAT fsm_cloudvela_pm25_data_report(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
 
+
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: PM25 HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
+
+
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send pm25 report successfully !\n\n");
 
 	//State no change
 	return SUCCESS;
@@ -2223,6 +2275,8 @@ OPSTAT fsm_cloudvela_winddir_data_report(UINT32 dest_id, UINT32 src_id, void * p
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_winddir_value_t) - 4);
 		pMsgProc.reportValue.dataFormat = rcv.winddir.dataFormat;
 		pMsgProc.reportValue.winddirValue = HUITP_ENDIAN_EXG32(rcv.winddir.winddirValue);
+		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.winddir.timeStamp);
+
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -2232,23 +2286,27 @@ OPSTAT fsm_cloudvela_winddir_data_report(UINT32 dest_id, UINT32 src_id, void * p
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
 
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: WINDDIR HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
+
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send winddir report successfully !\n\n");
 
 	//State no change
 	return SUCCESS;
@@ -2446,6 +2504,7 @@ OPSTAT fsm_cloudvela_windspd_data_report(UINT32 dest_id, UINT32 src_id, void * p
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_windspd_value_t) - 4);
 		pMsgProc.reportValue.dataFormat = rcv.windspd.dataFormat;
 		pMsgProc.reportValue.windspdValue = HUITP_ENDIAN_EXG32(rcv.windspd.windspdValue);
+		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.windspd.timeStamp);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -2455,23 +2514,27 @@ OPSTAT fsm_cloudvela_windspd_data_report(UINT32 dest_id, UINT32 src_id, void * p
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
 
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: WINDSPD HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
+
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send windspd report successfully !\n\n");
 
 	//State no change
 	return SUCCESS;
@@ -2669,6 +2732,7 @@ OPSTAT fsm_cloudvela_temp_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_temp_value_t) - 4);
 		pMsgProc.reportValue.dataFormat = rcv.temp.dataFormat;
 		pMsgProc.reportValue.tempValue = HUITP_ENDIAN_EXG32(rcv.temp.tempValue);
+		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.temp.timeStamp);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -2678,23 +2742,27 @@ OPSTAT fsm_cloudvela_temp_data_report(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
 
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: TEMP HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
+
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send temp report successfully !\n\n");
 
 	//State no change
 	return SUCCESS;
@@ -2895,6 +2963,7 @@ OPSTAT fsm_cloudvela_humid_data_report(UINT32 dest_id, UINT32 src_id, void * par
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_humid_value_t) - 4);
 		pMsgProc.reportValue.dataFormat = rcv.humid.dataFormat;
 		pMsgProc.reportValue.humidValue = HUITP_ENDIAN_EXG32(rcv.humid.humidValue);
+		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.humid.timeStamp);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -2904,23 +2973,27 @@ OPSTAT fsm_cloudvela_humid_data_report(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
 
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: HUMID HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
+
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send humid report successfully !\n\n");
 
 	//State no change
 	return SUCCESS;
@@ -3124,6 +3197,7 @@ OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * par
 		strncpy(pMsgProc.reportValue.linkName, rcv.link.linkName, strlen(rcv.link.linkName)<sizeof(pMsgProc.reportValue.linkName)?strlen(rcv.link.linkName):sizeof(pMsgProc.reportValue.linkName));
 		pMsgProc.reportValue.timeStampStart = HUITP_ENDIAN_EXG32(rcv.link.timeStampStart);
 		pMsgProc.reportValue.timeStampEnd = HUITP_ENDIAN_EXG32(rcv.link.timeStampEnd);
+
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -3349,6 +3423,7 @@ OPSTAT fsm_cloudvela_noise_data_report(UINT32 dest_id, UINT32 src_id, void * par
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_noise_value_t) - 4);
 		pMsgProc.reportValue.dataFormat = rcv.noise.dataFormat;
 		pMsgProc.reportValue.noiseValue = HUITP_ENDIAN_EXG32(rcv.noise.noiseValue);
+		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.noise.timeStamp);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -3358,23 +3433,27 @@ OPSTAT fsm_cloudvela_noise_data_report(UINT32 dest_id, UINT32 src_id, void * par
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 	else{
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
+
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: NOISE HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
 
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	else
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send noise report successfully !\n\n");
 
 	//State no change
 	return SUCCESS;

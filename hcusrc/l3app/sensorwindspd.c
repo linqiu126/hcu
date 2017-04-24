@@ -327,7 +327,7 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		HcuErrorPrint("WINDSPD: Error stop timer!\n");
 		return FAILURE;
 	}
-
+/*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
@@ -369,19 +369,31 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 				HcuErrorPrint("WINDSPD: Offline but instance or other control message received!\n");
 			}
 	}
+*/
 
-	//在线模式
-	else if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//Online processing
-		//赋值给发送消息
+	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+	{
+		///////////
+		//L2信息
 		msg_struct_windspd_cloudvela_data_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_windspd_cloudvela_data_resp_t));
-		snd.length = sizeof(msg_struct_windspd_cloudvela_data_resp_t);
-		snd.windspd.equipid = rcv.windspd.equipid;
-		snd.windspd.timeStamp = rcv.windspd.timeStamp;
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+		//snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.usercmdid = rcv.usercmdid;
 		snd.cmdIdBackType = rcv.cmdIdBackType;
 		snd.useroptid = rcv.useroptid;
+
+		snd.windspd.equipid = rcv.windspd.equipid;
+		snd.windspd.timeStamp = rcv.windspd.timeStamp;
 		snd.windspd.dataFormat = rcv.windspd.dataFormat;
 		snd.windspd.windspdValue = rcv.windspd.windspdValue;
 		snd.windspd.gps.gpsx = rcv.windspd.gps.gpsx;
@@ -389,16 +401,35 @@ OPSTAT fsm_windspd_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		snd.windspd.gps.gpsz = rcv.windspd.gps.gpsz;
 		snd.windspd.gps.ew = rcv.windspd.gps.ew;
 		snd.windspd.gps.ns = rcv.windspd.gps.ns;
-		ret = hcu_message_send(MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_WINDSPD, &snd, snd.length);
+		snd.windspd.nTimes = rcv.windspd.nTimes;
+		snd.windspd.onOffLineFlag = rcv.windspd.onOffLineFlag;
+		snd.length = sizeof(msg_struct_windspd_cloudvela_data_resp_t);
+
+		ret = hcu_message_send(MSG_ID_WINDSPD_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_WINDSPD, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_WINDSPD]++;
-			HcuErrorPrint("WINDSPD: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_WINDSPD].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
+		///////////
 
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){
+
+			//存入内存缓冲磁盘，做为本地缓存，未来需要实现磁盘模式
+			memset(&record, 0, sizeof(HcuDiscDataSampleStorageArray_t));
+			record.equipid = rcv.windspd.equipid;
+			record.sensortype = L3CI_windspd;
+			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
+			record.timestamp = rcv.windspd.timeStamp;
+			record.dataFormat = rcv.windspd.dataFormat;
+			record.windspdValue = rcv.windspd.windspdValue;
+			record.gpsx = rcv.windspd.gps.gpsx;
+			record.gpsy = rcv.windspd.gps.gpsy;
+			record.gpsz = rcv.windspd.gps.gpsz;
+			record.ew = rcv.windspd.gps.ew;
+			record.ns = rcv.windspd.gps.ns;
 			//RECORD还要存入数据库
 			sensor_windspd_data_element_t windspdData;
 			memset(&windspdData, 0, sizeof(sensor_windspd_data_element_t));
