@@ -344,6 +344,7 @@
 								<option id="gnu.c.compiler.option.debugging.level.665871208" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.50551962" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TARGET_LINUX_X86"/>
+									<listOptionValue builtIn="false" value="TARGET_LINUX_X86_ADVANTECH"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.paths.1997564291" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/libxml2"/>
@@ -441,6 +442,19 @@
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="BfscTarget">
+			<resource resourceType="PROJECT" workspacePath="/PrjBfsc"/>
+		</configuration>
+		<configuration configurationName="RasberryPi">
+			<resource resourceType="PROJECT" workspacePath="/PrjBfsc"/>
+		</configuration>
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/PrjBfsc"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/PrjBfsc"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>
