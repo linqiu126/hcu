@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="C Source File">
+<includepath>/usr/include/libxml2</includepath>
+<includepath>/usr/include/curl</includepath>
+<includepath>/root/ffmpeg_build/include</includepath>
+<includepath>/usr/local/sqlite3/include</includepath>
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+<includepath>/usr/include/libxml2</includepath>
+<includepath>/usr/include/curl</includepath>
+
+</language>
+</section>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+<language name="C Source File">
+<macro>
+<name>TARGET_LINUX_X86</name><value/>
+</macro>
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+
+</language>
+</section>
+</cdtprojectproperties>
