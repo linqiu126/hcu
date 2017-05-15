@@ -10,6 +10,8 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
+#include "l2usbcan.h"   //Added by MYC 2017/05/15
+
 
 /*
 ** FSM of the CANITFLEO
@@ -151,6 +153,20 @@ OPSTAT func_canitfleo_int_init(void)
 	else
 		return FAILURE;
 #endif
+
+#ifdef TARGET_LINUX_X86_ADVANTECH //Added by MYC 2017/05/15
+	INT32 ret;
+	ret = usb_can_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
+			CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN0, \
+			CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
+
+	HcuDebugPrint("CANITFLEO: usb_can_init() called, ret = %d\r\n", ret);
+
+	if(SUCCESS == ret)
+		return SUCCESS;
+	else
+		return FAILURE;
+#endif
 		return SUCCESS;
 }
 
@@ -221,6 +237,7 @@ OPSTAT fsm_canitfleo_l3bfsc_ws_init_req(UINT32 dest_id, UINT32 src_id, void * pa
 			if (func_canitfleo_frame_encode(HCU_CANITFLEO_PREFIXH_ws_ctrl, HCU_CANITFLEO_OPTID_weight_scale_calibration, HCU_CANITFLEO_OPTPAR_weight_scale_calibration_0, 0, &p) == FAILURE)
 				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Generate CAN Frame error!\n");
 			//发送CAN命令出去
+
 		}
 	}
 
