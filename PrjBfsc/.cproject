@@ -404,6 +404,7 @@
 									<listOptionValue builtIn="false" value="swscale"/>
 									<listOptionValue builtIn="false" value="m"/>
 									<listOptionValue builtIn="false" value="sqlite3"/>
+									<listOptionValue builtIn="false" value="usbcan"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1054801959" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>

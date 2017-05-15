@@ -871,6 +871,26 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/i2cbuslibra.h</locationURI>
 		</link>
 		<link>
+			<name>src/l2frame/l2packet.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/l2packet.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2frame/l2packet.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/l2packet.h</locationURI>
+		</link>
+		<link>
+			<name>src/l2frame/l2usbcan.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/l2usbcan.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2frame/l2usbcan.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/l2usbcan.h</locationURI>
+		</link>
+		<link>
 			<name>src/l2frame/llczhb.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/llczhb.c</locationURI>
