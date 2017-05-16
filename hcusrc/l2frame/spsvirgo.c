@@ -189,7 +189,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		//对信息进行MODBUS协议的编码，包括CRC16的生成
 		memset(&currentSpsBuf, 0, sizeof(SerialSpsMsgBuf_t));
 
-		snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+		snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 
 		//对发送数据进行编码
 
