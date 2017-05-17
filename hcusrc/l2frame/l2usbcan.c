@@ -28,6 +28,7 @@ typedef HANDLE pthread_t;
 #   include "../l0comvm/comtype.h"
 #   include "../l1com/l1comdef.h"
 #	include "l2packet.h"
+#	include "../l0service/trace.h"
 #   define msleep(ms)  usleep((ms)*1000)
 #   define min(a,b)  (((a) < (b)) ? (a) : (b))
 #endif
@@ -383,7 +384,7 @@ UINT32 can_bandrate_to_timing_mapping(UINT32 band_rate_kbps, UINT8 *timing0, UIN
 
 	if( (NULL == timing0) || (NULL == timing1) )
 	{
-		printf("can_bandrate_to_timing_mapping: (NULL == timing0) || (NULL == timing1), return FAILURE\r\n");
+		HcuErrorPrint("can_bandrate_to_timing_mapping: (NULL == timing0) || (NULL == timing1), return FAILURE\r\n");
 		return FAILURE;
 	}
 
@@ -392,96 +393,96 @@ UINT32 can_bandrate_to_timing_mapping(UINT32 band_rate_kbps, UINT8 *timing0, UIN
 		case CAN_BANDRATE_5KBPS:
 			*timing0 = 0xBF;
 			*timing1 = 0xFF;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_10KBPS:
 			*timing0 = 0xFF;
 			*timing1 = 0xFF;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_20KBPS:
 			*timing0 = 0x53;
 			*timing1 = 0x2F;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_40KBPS:
 			*timing0 = 0x87;
 			*timing1 = 0xFF;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_50KBPS:
 			*timing0 = 0x47;
 			*timing1 = 0x2F;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_80KBPS:
 			*timing0 = 0x83;
 			*timing1 = 0xFF;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_100KBPS:
 			*timing0 = 0x43;
 			*timing1 = 0x2F;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_125KBPS:
 			*timing0 = 0x03;
 			*timing1 = 0x1C;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_200KBPS:
 			*timing0 = 0x81;
 			*timing1 = 0xFA;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_250KBPS:
 			*timing0 = 0x01;
 			*timing1 = 0x1C;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_400KBPS:
 			*timing0 = 0x80;
 			*timing1 = 0xFA;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_500KBPS:
 			*timing0 = 0x00;
 			*timing1 = 0x1C;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_666KBPS:
 			*timing0 = 0x80;
 			*timing1 = 0xB6;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_800KBPS:
 			*timing0 = 0x00;
 			*timing1 = 0x16;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_1000KBPS:
 			*timing0 = 0x00;
 			*timing1 = 0x14;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\r\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		default:
 			ret = FAILURE;
-			printf("can_bandrate_to_timing_mapping: band_rate_kbps = %d, not supported, return FAILURE\r\n", band_rate_kbps);
+			HcuDebugPrint("can_bandrate_to_timing_mapping: band_rate_kbps = %d, not supported, return FAILURE\r\n", band_rate_kbps);
 	}
 
 	return ret;
@@ -502,14 +503,15 @@ void *can_rx_thread(void *data)
 	UINT32 i = 0;
 	UINT32 total_cnt;
 
-	printf("can_rx_thread: husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X, husbcan->can_channel_id = 0x%X\r\n", husbcan->can_dev_type, husbcan->can_dev_idx, husbcan->can_channel_id);
+	HcuDebugPrint("can_rx_thread: husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X, husbcan->can_channel_id = 0x%X\r\n", husbcan->can_dev_type, husbcan->can_dev_idx, husbcan->can_channel_id);
 
 	while (1)
     {
         cnt = VCI_Receive(husbcan->can_dev_type, husbcan->can_dev_idx, 0, can, RX_BUFF_SIZE, RX_WAIT_TIME);
         /* husbcan->can_channel_id => 0 */
+        //printf("can_rx_thread: husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X, cnt = %d\r\n", husbcan->can_dev_type, husbcan->can_dev_idx, cnt);
 
-        if (0 == cnt) continue;
+        if (0 == cnt)continue;
 
         total_cnt = total_cnt + cnt;
 
@@ -518,9 +520,9 @@ void *can_rx_thread(void *data)
         {
         	USB_CAN_RxCpltCallback(husbcan, &can[i]);
 
-        	printf("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], total_frame = %d\r\n", husbcan->can_channel_id,
-           			can[i].Data[0], can[i].Data[1], can[i].Data[2], can[i].Data[3],
-					can[i].Data[4], can[i].Data[5], can[i].Data[6], can[i].Data[7], total_cnt);
+//        	HcuDebugPrint("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], total_frame = %d\r\n", husbcan->can_channel_id,
+//           			can[i].Data[0], can[i].Data[1], can[i].Data[2], can[i].Data[3],
+//					can[i].Data[4], can[i].Data[5], can[i].Data[6], can[i].Data[7], total_cnt);
         }
 
         /* to add framing */
@@ -541,45 +543,45 @@ UINT32 usb_can_init(USB_CAN_HandleTypeDef *husbcan, UINT32 can_dev_type, UINT32 
 	/* Check handler is valid or not */
 	if(NULL == husbcan)
 	{
-		printf("usb_can_init: NULL == husbcan, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_init: NULL == husbcan, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	/* Check handler is valid or not */
 	if(CAN_STATUS_INITIALIZED == husbcan->can_status)
 	{
-		printf("usb_can_init: CAN_STATUS_INITIALIZED == husbcan->can_status, make sure DeInit it firstly, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_init: CAN_STATUS_INITIALIZED == husbcan->can_status, make sure DeInit it firstly, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	/* Check handler content */
 	if(can_dev_type > CAN_DEVICE_TYPE_16)
 	{
-		printf("usb_can_init: can_dev_type > CAN_DEVICE_TYPE_16, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_init: can_dev_type > CAN_DEVICE_TYPE_16, return FAILURE\r\n");
 		return FAILURE;
 	}
 
-	if(can_dev_idx > CAN_DEVIDE_IDX_CARD1)
+	if(can_dev_idx > (CAN_DEVIDE_IDX_CARD1 | CAN_DEVIDE_CHANNEL_CAN0))
 	{
-		printf("usb_can_init: can_dev_id > CAN_DEVIDE_IDX_CARD1, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_init: can_dev_id > 3, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	if(can_l2_forwarding_mode > CAN_L2_FRAME_FORWARD_YES)
 	{
-		printf("usb_can_init: can_l2_forwarding_mode > CAN_L2_FRAME_FORWARD_YES, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_init: can_l2_forwarding_mode > CAN_L2_FRAME_FORWARD_YES, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	if( (can_channel_id < CAN_DEVIDE_CHANNEL_CAN0) || (can_channel_id > CAN_DEVIDE_CHANNEL_CAN1) )
 	{
-		printf("usb_can_init: can_channel_id < CAN_DEVIDE_CHANNEL_CAN0, or > CAN_DEVIDE_CHANNEL_CAN1, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_init: can_channel_id < CAN_DEVIDE_CHANNEL_CAN0, or > CAN_DEVIDE_CHANNEL_CAN1, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	if( FAILURE == can_bandrate_to_timing_mapping(band_rate_kbps, &Timing0, &Timing1) )
 	{
-		printf("usb_can_init: can_bandrate_to_timing_mapping find invalid bandrate(%d), return FAILURE\r\n", band_rate_kbps);
+		HcuErrorPrint("usb_can_init: can_bandrate_to_timing_mapping find invalid bandrate(%d), return FAILURE\r\n", band_rate_kbps);
 		return FAILURE;
 	}
 
@@ -599,28 +601,29 @@ UINT32 usb_can_init(USB_CAN_HandleTypeDef *husbcan, UINT32 can_dev_type, UINT32 
 	husbcan->can_config.Timing0 = Timing0;
 	husbcan->can_config.Timing1 = Timing1;
 
-	printf("husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X\r\n", husbcan->can_dev_type, husbcan->can_dev_idx);
+	HcuDebugPrint("husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X\r\n", husbcan->can_dev_type, husbcan->can_dev_idx);
 
     if (!VCI_OpenDevice(husbcan->can_dev_type, husbcan->can_dev_idx, 0))
     {
-        printf("usb_can_init: VCI_OpenDevice failed\r\n");
+    	HcuErrorPrint("usb_can_init: VCI_OpenDevice(%d) failed\r\n", husbcan->can_dev_idx);
         husbcan->can_status = CAN_STATUS_NULL;
         return FAILURE;
     }
-    printf("usb_can_init: VCI_OpenDevice succeeded\r\n");
+    HcuDebugPrint("usb_can_init: VCI_OpenDevice succeeded\r\n");
 
 	if (!VCI_InitCAN(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &husbcan->can_config))
 	{
-		printf("usb_can_init: VCI_InitCAN(%d) failed\r\n", 0);
+		HcuErrorPrint("usb_can_init: VCI_InitCAN(%d) failed\r\n", husbcan->can_dev_idx);
 		husbcan->can_status = CAN_STATUS_NULL;
 		return FAILURE;
 	}
-	printf("usb_can_init: VCI_InitCAN(%d) succeeded\r\n", 0);
+	HcuDebugPrint("usb_can_init: VCI_InitCAN(%d) succeeded\r\n", husbcan->can_dev_idx);
 
+	// make sure the 3rd parameter is 0 !!!!
 	if (!VCI_StartCAN(husbcan->can_dev_type, husbcan->can_dev_idx, 0))
 	{
 		husbcan->can_status = CAN_STATUS_NULL;
-		printf("usb_can_init: VCI_StartCAN(%d) failed\r\n", 0);
+		HcuErrorPrint("usb_can_init: VCI_StartCAN(%d) failed\r\n", husbcan->can_dev_idx);
 		return FAILURE;
 	}
 
@@ -628,10 +631,8 @@ UINT32 usb_can_init(USB_CAN_HandleTypeDef *husbcan, UINT32 can_dev_type, UINT32 
 	bsp_can_start_rx(husbcan, app_can_loopback_callback, g_can_rx_buffer, BFSC_CAN_MAX_RX_BUF_SIZE, (void *)husbcan);
 	pthread_create(&husbcan->can_receiving_thread_id, NULL, can_rx_thread, (void *)husbcan);
 
-
-
 	husbcan->can_status = CAN_STATUS_INITIALIZED;
-	printf("usb_can_init: VCI_StartCAN(%d) succeeded\r\n", 0);
+	HcuDebugPrint("usb_can_init: VCI_StartCAN(%d) succeeded\r\n", husbcan->can_dev_idx);
 	return SUCCESS;
 }
 
@@ -644,14 +645,14 @@ UINT32 usb_can_deinit(USB_CAN_HandleTypeDef *husbcan)
 	/* Check handler is valid or not */
 	if(NULL == husbcan)
 	{
-		printf("usb_can_deinit: NULL == husbcan, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_deinit: NULL == husbcan, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	/* Check handler is valid or not */
 	if(CAN_STATUS_INITIALIZED != husbcan->can_status)
 	{
-		printf("usb_can_deinit: CAN_STATUS_INITIALIZED != husbcan->can_status, make sure it has been initialized firstly, do nothing, return SUCESSS\r\n");
+		HcuErrorPrint("usb_can_deinit: CAN_STATUS_INITIALIZED != husbcan->can_status, make sure it has been initialized firstly, do nothing, return SUCESSS\r\n");
 		return SUCCESS;
 	}
 
@@ -662,7 +663,7 @@ UINT32 usb_can_deinit(USB_CAN_HandleTypeDef *husbcan)
 
     husbcan->can_status = CAN_STATUS_NULL;
 
-    printf("usb_can_deinit: VCI_CloseDevice\r\n");
+    HcuDebugPrint("usb_can_deinit: VCI_CloseDevice\r\n");
     return SUCCESS;
 
 }
@@ -677,28 +678,28 @@ UINT32 usb_can_transmit(USB_CAN_HandleTypeDef *husbcan, UINT8 *ptr_data, UINT32 
 	/* Check handler is valid or not */
 	if(NULL == husbcan)
 	{
-		printf("usb_can_transmit: NULL == husbcan, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_transmit: NULL == husbcan, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	/* Check ptr_data is valid or not */
 	if(NULL == ptr_data)
 	{
-		printf("usb_can_transmit: NULL == ptr_data, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_transmit: NULL == ptr_data, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	/* Check ptr_data is valid or not */
 	if(data_len > 8)
 	{
-		printf("usb_can_transmit: data_len > 8, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_transmit: data_len > 8, return FAILURE\r\n");
 		return FAILURE;
 	}
 
 	/* Check extern_flag is valid only when it equals to 0 (normal) or 1(extended) */
 	if(extern_flag > 1)
 	{
-		printf("usb_can_transmit: extern_flag > 1, return FAILURE\r\n");
+		HcuErrorPrint("usb_can_transmit: extern_flag > 1, return FAILURE\r\n");
 		return FAILURE;
 	}
 	husbcan->can_data.ID = can_id;
@@ -709,11 +710,11 @@ UINT32 usb_can_transmit(USB_CAN_HandleTypeDef *husbcan, UINT8 *ptr_data, UINT32 
 
     if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_data), 1))
     {
-        printf("usb_can_transmit: CAN%d TX failed: ID=%08x\r\n", 0, husbcan->can_data.ID);
+    	HcuErrorPrint("usb_can_transmit: CAN%d TX failed: ID=%08x\r\n", 0, husbcan->can_data.ID);
         return FAILURE;
     }
 
-    printf("usb_can_transmit: CAN%d TX [0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X]: ID=%08x\r\n", 0, husbcan->can_data.ID,
+    HcuDebugPrint("usb_can_transmit: CAN%d TX [0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X]: ID=%08x\r\n", 0, husbcan->can_data.ID,
     		husbcan->can_data.Data[0], husbcan->can_data.Data[1], husbcan->can_data.Data[2], husbcan->can_data.Data[3],
 			husbcan->can_data.Data[4], husbcan->can_data.Data[5], husbcan->can_data.Data[6], husbcan->can_data.Data[7]);
 
@@ -738,12 +739,12 @@ void USB_CAN_RxCpltCallback(USB_CAN_HandleTypeDef* CanHandle, VCI_CAN_OBJ *Can)
 	else
 		frame_desc = &g_can_packet_desc[1];
 
-	printf("stdId 0x%x length %d, data: 0x%08x 0x%08x\r\n",
-		Can->ID,
-		Can->DataLen,
-		*(uint32_t *)(&Can->Data[0]),
-		*(uint32_t *)(&Can->Data[4])
-		);
+//	printf("stdId 0x%x length %d, data: 0x%08x 0x%08x\r\n",
+//		Can->ID,
+//		Can->DataLen,
+//		*(uint32_t *)(&Can->Data[0]),
+//		*(uint32_t *)(&Can->Data[4])
+//		);
 
 	l2packet_rx_bytes(frame_desc, &Can->Data[0], Can->DataLen);
 
@@ -765,13 +766,19 @@ void app_can_loopback_callback(IHU_HUITP_L2FRAME_Desc_t *pdesc)
 
 	CanHandle = (USB_CAN_HandleTypeDef* )pdesc->UserData;
 
-	printf("CAN ISR: L2Packet %d bytes, first: 0x%02x %02x last: 0x%02x %02x\r\n",
+	HcuDebugPrint("CAN ISR: L2Packet %d bytes, first: 0x%02x %02x last: 0x%02x %02x\r\n",
 		pdesc->RxXferCount,
 		CanHandle->can_data.Data[0], CanHandle->can_data.Data[1],
 		CanHandle->can_data.Data[6], CanHandle->can_data.Data[7]);
 
 	//Forward to TASK_ID_CANVELA
 	//ret = ihu_message_send_isr(MSG_ID_CAN_L2FRAME_RCV, TASK_ID_CANVELA, TASK_ID_CANVELA, g_can_rx_buffer, pdesc->RxXferCount);
+	ret = hcu_message_send(MSG_ID_CAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, g_can_rx_buffer, pdesc->RxXferCount);
+	if (ret == FAILURE){
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+		return FAILURE;
+	}
+
 	//printf("");
 	if (ret == FAILURE){
 		//zIhuSysStaPm.taskRunErrCnt[TASK_ID_CANVELA]++;

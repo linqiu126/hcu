@@ -48,6 +48,7 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 	{MSG_ID_L3BFSC_CAN_WS_GIVE_UP,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_give_up},   //剔除指令
 	{MSG_ID_L3BFSC_CAN_WS_READ_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_read_req},   //周期性读取
 	{MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,     FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_general_cmd_req}, //后台的指令
+	{MSG_ID_CAN_L2FRAME_RCV,				FSM_STATE_CANITFLEO_ACTIVED,				fsm_canitfleo_can_l2frame_receive}, //MYC 2017/05/15
 #endif
 	//结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -57,6 +58,7 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 
 //Task Global variables
 gTaskCanitfleoContext_t gTaskCanitfleoContext;
+static USB_CAN_HandleTypeDef can1;
 
 //const char anichar[MAXANI] = {'|', '/', '-', '\\'};
 //const char col_on [MAXCOL][19] = {BLUE, RED, GREEN, BOLD, MAGENTA, CYAN};
@@ -107,16 +109,16 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
+	//Global Variables
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] = 0;
+	memset(&gTaskCanitfleoContext, 0, sizeof(gTaskCanitfleoContext_t));
+
+	//MYC: func_canitfleo_int_init() must put after gTaskCanitfleoContext set to 0, as can1 interface will be saved
 	//初始化硬件接口
 	if (func_canitfleo_int_init() == FAILURE){
 		HcuErrorPrint("CANITFLEO: Error initialize interface!\n");
 		return FAILURE;
 	}
-
-	//Global Variables
-	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] = 0;
-	memset(&gTaskCanitfleoContext, 0, sizeof(gTaskCanitfleoContext_t));
-
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
 	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur,\
 			TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -1002,3 +1004,11 @@ int func_canitfleo_test_main(int argc, char **argv)
 	return EXIT_SUCCESS;
 }
 
+OPSTAT fsm_canitfleo_can_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0;
+	uint8_t *p = (uint8_t *)param_ptr;
+
+	HcuDebugPrint("CANITFLEO: Received CAN L2 FRAME: [0x%02X, 0x%02X, 0x%02X, 0x%02X], Len = [%d]\r\n", p[0], p[1], p[2], p[3], param_len);
+
+}

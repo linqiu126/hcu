@@ -2415,6 +2415,7 @@ void hcu_vm_task_create_all(void)
 			hcu_vm_system_task_init_call(task_id, p);
 		}
 	}
+
 }
 
 void hcu_vm_task_create_all_but_avorion(void)
@@ -3138,6 +3139,3 @@ float hcu_vm_UI2F(unsigned int x)
     memcpy(&fResult, &iMemory, sizeof(float));
     return fResult;
 }
-
-
-
