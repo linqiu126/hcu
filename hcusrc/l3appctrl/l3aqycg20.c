@@ -1340,7 +1340,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Humid database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1H minimum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01002_Min);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01002_Min);
 	}
 
 	ret = dbi_HcuHumidDataInfo_GetMax(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);

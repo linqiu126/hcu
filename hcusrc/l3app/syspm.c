@@ -193,57 +193,33 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		if (dbi_HcuSyspmGlobalDataInfo_save() == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
 
 		//PM report to Cloud added by ZSC
-		if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-			msg_struct_com_pm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_com_pm_report_t));
+		if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+		{
+			msg_struct_spspm_cloudvela_perfm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_perfm_report_t));
 
-			snd.length = sizeof(msg_struct_com_pm_report_t);
-			snd.usercmdid = L3CI_performance;
-			snd.useroptid = L3PO_hcupm_report;
-			snd.cmdIdBackType = L3CI_cmdid_back_type_period;
+			//L2信息
+			strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+				sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+			strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+					sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+
+			snd.comHead.timeStamp = time(0);
+			snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+			strcpy(snd.comHead.funcFlag, "0");
+
+			//CONTENT
+			snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+			snd.restartCnt = zHcuSysStaPm.statisCnt.restartCnt;
+			snd.socketDiscCnt = zHcuSysStaPm.statisCnt.SocketDiscCnt;
+			snd.cpuOccupy = zHcuSysStaPm.statisCnt.cpu_occupy;
+			snd.memOccupy = zHcuSysStaPm.statisCnt.mem_occupy;
+			snd.diskOccupy = zHcuSysStaPm.statisCnt.disk_occupy;
 			snd.timeStamp = time(0);
-			snd.CloudVelaConnCnt = zHcuSysStaPm.statisCnt.cloudVelaConnCnt;
-			snd.CloudVelaConnFailCnt = zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt;
-			snd.CloudVelaDiscCnt = zHcuSysStaPm.statisCnt.cloudVelaDiscCnt;
-			snd.SocketDiscCnt = zHcuSysStaPm.statisCnt.SocketDiscCnt;
-			snd.TaskRestartCnt = zHcuSysStaPm.statisCnt.restartCnt;
-			snd.cpu_occupy = zHcuSysStaPm.statisCnt.cpu_occupy;
-			snd.mem_occupy = zHcuSysStaPm.statisCnt.mem_occupy;
-			snd.disk_occupy = zHcuSysStaPm.statisCnt.disk_occupy;
+			snd.length = sizeof(msg_struct_spspm_cloudvela_perfm_report_t);
+			if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
-			/*
-			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_CRT_ON) != FALSE){
-				HcuDebugPrint("syspm:  cmdId= %d\n", snd.usercmdid);
-				HcuDebugPrint("syspm:  optId= %d\n", snd.useroptid);
-				HcuDebugPrint("syspm:  backType = %d\n", snd.cmdIdBackType);
-				HcuDebugPrint("syspm:  CloudVelaConnCnt= %d\n", snd.CloudVelaConnCnt);
-				HcuDebugPrint("syspm:  CloudVelaConnFailCnt= %d\n", snd.CloudVelaConnFailCnt);
-				HcuDebugPrint("syspm:  CloudVelaDiscCnt= %d\n", snd.CloudVelaDiscCnt);
-				HcuDebugPrint("syspm:  SocketDiscCnt= %d\n", snd.SocketDiscCnt);
-				HcuDebugPrint("syspm:  TaskRestartCnt= %d\n", snd.TaskRestartCnt);
-				HcuDebugPrint("syspm:  cpu_occupy= %d\n", snd.cpu_occupy);
-				HcuDebugPrint("syspm:  mem_occupy= %d\n", snd.mem_occupy);
-				HcuDebugPrint("syspm:  disk_occupy= %d\n", snd.disk_occupy);
-			}
-			*/
-
-
-			ret = hcu_message_send(MSG_ID_COM_PM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length);
-			memset(&zHcuSysStaPm.statisCnt, 0, sizeof(zHcuSysStaPm.statisCnt));
-			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
-				HcuErrorPrint("SYSPM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-				return FAILURE;
-			}
-
-
-		}
-
-		//差错情形
-		else{
-			HcuErrorPrint("SYSPM: Wrong state of CLOUDVELA when data need send out!\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
-			return FAILURE;
 		}
 	}
 
@@ -410,17 +386,20 @@ OPSTAT fsm_syspm_com_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM: Can not save data into database!\n");
 
 	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+	//if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//如果只发给Home,应该是Curl的连接状态
+	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE)){//debug by shanchun
+
 		msg_struct_spspm_cloudvela_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_alarm_report_t));
 
 		//L2信息
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
 		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		//snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
 		strcpy(snd.comHead.funcFlag, "0");
 
 		//CONTENT
@@ -467,15 +446,15 @@ OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
 		strcpy(snd.comHead.funcFlag, "0");
 
 		//CONTENT
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.restartCnt = rcv.TaskRestartCnt;
-		snd.networkConnCnt = rcv.CloudVelaConnCnt;
-		snd.networkConnFailCnt = rcv.CloudVelaConnFailCnt;
-		snd.networkDiscCnt = rcv.CloudVelaDiscCnt;
+		//snd.networkConnCnt = rcv.CloudVelaConnCnt;
+		//snd.networkConnFailCnt = rcv.CloudVelaConnFailCnt;
+		//snd.networkDiscCnt = rcv.CloudVelaDiscCnt;
 		snd.socketDiscCnt = rcv.SocketDiscCnt;
 		snd.cpuOccupy = rcv.cpu_occupy;
 		snd.memOccupy = rcv.mem_occupy;

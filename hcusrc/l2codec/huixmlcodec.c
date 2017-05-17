@@ -68,6 +68,13 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
 	else
 		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
+
+
+	HcuDebugPrint("HUITPXML: zHcuSysEngPar.cloud.svrNameDefault = %s !\n\n", zHcuSysEngPar.cloud.svrNameDefault);
+	HcuDebugPrint("HUITPXML: zHcuSysEngPar.cloud.svrNameHome = %s !\n\n", zHcuSysEngPar.cloud.svrNameHome);
+	HcuDebugPrint("HUITPXML: gTaskCloudvelaContext.L2Link.destUser = %s !\n\n", gTaskCloudvelaContext.L2Link.destUser);
+	HcuDebugPrint("HUITPXML: gTaskCloudvelaContext.linkId = %d !\n\n", gTaskCloudvelaContext.linkId);
+
 	
 	//Message Type content
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L);
@@ -77,6 +84,7 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_STRING);
 	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING);
 	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING);
+	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_COMMON_STRING);
 	else {
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error Message Type input!\n");
 	}
@@ -213,6 +221,10 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	pIndexT1 = strstr(rcv->buf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
 	pIndexT2 = strstr(rcv->buf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_R);
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
+	HCU_DEBUG_PRINT_NOR("HUITPXML: pIndexT1 = %s, pIndexT2 = %s, dif = %d\n\n",pIndexT1, pIndexT2, dif);//debug by shanchun
+	HCU_DEBUG_PRINT_NOR("HUITPXML: dif = %d\n\n",dif);//debug by shanchun
+
+
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L))>= pIndexT2) || (dif > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid head xml format!\n");
 	

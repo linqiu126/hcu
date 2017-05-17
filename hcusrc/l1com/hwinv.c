@@ -365,6 +365,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.hwBurnId.equLable);
 		HCU_DEBUG_PRINT_NOR("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
 		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
+
 	}else{
 		HCU_ERROR_PRINT_HWINV("HWINV: Read SysEng DB error!\n");
 	}
@@ -414,6 +415,8 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	strncpy(zHcuSysEngPar.cloud.svrAddrHttpHome, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome)));
 	strncpy(zHcuSysEngPar.cloud.svrNameHome, HCU_SYSCFG_CLOUD_SVR_NAME_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)<sizeof(zHcuSysEngPar.cloud.svrNameHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)):(sizeof(zHcuSysEngPar.cloud.svrNameHome)));
 	zHcuSysEngPar.cloud.svrBhItfFrameStdHome = HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET;
+
+	HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.svrNameDefault = %s !\n", zHcuSysEngPar.cloud.svrNameDefault);
 
 	//读取HcuTraceModuleCtr表单到系统内存中
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);

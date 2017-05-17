@@ -12,6 +12,14 @@
 [BUG#003]
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
+//= ZSC, 2017 May.16, CURRENT_SW_DELIVERY 196=>AQYC项目
+= bug fix for noise data format
+
+//= ZSC, 2017 May.6, CURRENT_SW_DELIVERY 195=>AQYC项目
+= Update for double server
+
+//= ZSC, 2017 Mar.16, CURRENT_SW_DELIVERY 194=>AQYC项目
+= Update for HUITP
 
 //= ZSC, 2017 Mar.16, CURRENT_SW_DELIVERY 193=>AQYC项目
 = 依据《HJ_T212-2005国标协议完成》完成层三大部分功能

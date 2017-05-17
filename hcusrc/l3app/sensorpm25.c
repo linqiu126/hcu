@@ -435,7 +435,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_PM25, "PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 	}
-
+/*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
@@ -481,19 +481,31 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				HcuErrorPrint("PM25: Offline but instance or other control message received!\n");
 			}
 	}
-
+*/
 	//在线模式
-	else if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//Online processing
-		//赋值给发送消息
+	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+	{
+		///////////
+		//L2信息
 		msg_struct_pm25_cloudvela_data_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_pm25_cloudvela_data_resp_t));
-		snd.length = sizeof(msg_struct_pm25_cloudvela_data_resp_t);
-		snd.pm25.equipid = rcv.pm25.equipid;
-		snd.pm25.timeStamp = rcv.pm25.timeStamp;
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+		//snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.usercmdid = rcv.usercmdid;
 		snd.cmdIdBackType = rcv.cmdIdBackType;
 		snd.useroptid = rcv.useroptid;
+
+		snd.pm25.equipid = rcv.pm25.equipid;
+		snd.pm25.timeStamp = rcv.pm25.timeStamp;
 		snd.pm25.dataFormat = rcv.pm25.dataFormat;
 		snd.pm25.pm1d0Value = rcv.pm25.pm1d0Value;
 		snd.pm25.pm2d5Value = rcv.pm25.pm2d5Value;
@@ -503,12 +515,17 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.pm25.gps.gpsz = rcv.pm25.gps.gpsz;
 		snd.pm25.gps.ew = rcv.pm25.gps.ew;
 		snd.pm25.gps.ns = rcv.pm25.gps.ns;
-		ret = hcu_message_send(MSG_ID_PM25_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);
+		snd.pm25.nTimes = rcv.pm25.nTimes;
+		snd.pm25.onOffLineFlag = rcv.pm25.onOffLineFlag;
+		snd.length = sizeof(msg_struct_pm25_cloudvela_data_resp_t);
+
+		ret = hcu_message_send(MSG_ID_PM25_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_PM25, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
-			HcuErrorPrint("PM25: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_PM25].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
+		///////////
 
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成

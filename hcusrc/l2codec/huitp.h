@@ -63,6 +63,9 @@
 #define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID 			6
 #define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING 		"huitp_pm"  //for pm report
 
+#define HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID 			7
+#define HUITP_MSG_HUIXML_MSGTYPE_COMMON_STRING 		"hcu_huitp"  //use common string for the moment
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //  HUITP字典定义
@@ -1831,6 +1834,7 @@ typedef struct StrIe_HUITP_IEID_uni_emc_data_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 emcDataValue;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_emc_data_value_t;
 
 //HUITP_IEID_uni_emc_data_max,
@@ -1897,6 +1901,7 @@ typedef struct StrIe_HUITP_IEID_uni_pm01_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 pm01Value;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_pm01_value_t;
 
 //HUITP_IEID_uni_pm25_value                       = 0x2501,
@@ -1906,6 +1911,7 @@ typedef struct StrIe_HUITP_IEID_uni_pm25_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 pm25Value;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_pm25_value_t;
 
 //HUITP_IEID_uni_pm10_value                       = 0x2502,
@@ -1915,6 +1921,7 @@ typedef struct StrIe_HUITP_IEID_uni_pm10_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 pm10Value;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_pm10_value_t;
 
 //HUITP_IEID_uni_pm25_max,
@@ -1928,6 +1935,7 @@ typedef struct StrIe_HUITP_IEID_uni_windspd_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 windspdValue;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_windspd_value_t;
 
 //HUITP_IEID_uni_windspd_max,
@@ -1941,6 +1949,7 @@ typedef struct StrIe_HUITP_IEID_uni_winddir_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 winddirValue;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_winddir_value_t;
 
 //HUITP_IEID_uni_winddir_max,
@@ -1954,6 +1963,7 @@ typedef struct StrIe_HUITP_IEID_uni_temp_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 tempValue;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_temp_value_t;
 
 //HUITP_IEID_uni_temp_max,
@@ -1967,6 +1977,7 @@ typedef struct StrIe_HUITP_IEID_uni_humid_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 humidValue;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_humid_value_t;
 
 //HUITP_IEID_uni_humid_max,
@@ -1993,6 +2004,7 @@ typedef struct StrIe_HUITP_IEID_uni_noise_value
 	UINT16 ieLen;
 	UINT8  dataFormat;
 	UINT32 noiseValue;
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_noise_value_t;
 
 //HUITP_IEID_uni_noise_max,
@@ -3275,6 +3287,7 @@ typedef struct StrIe_HUITP_IEID_uni_inventory_element
 	UINT16 swVer;
 	UINT8  upgradeFlag;
 	char   desc[HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX];
+	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_inventory_element_t;
 //HW_TYPE的高字节将表示HCU、IHU等不同类型
 //HW_TYPE的低字节将表示产品的具体型号
@@ -4282,6 +4295,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_windspd_data_report
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
 	StrIe_HUITP_IEID_uni_windspd_value_t reportValue;
+
 }StrMsg_HUITP_MSGID_uni_windspd_data_report_t;
 
 //HUITP_MSGID_uni_windspd_data_confirm                     = 0x2601,
@@ -4480,6 +4494,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_humid_data_report
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
 	StrIe_HUITP_IEID_uni_humid_value_t reportValue;
+
 }StrMsg_HUITP_MSGID_uni_humid_data_report_t;
 
 //HUITP_MSGID_uni_humid_data_confirm                     = 0x2901,
@@ -4584,6 +4599,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_noise_data_report
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
 	StrIe_HUITP_IEID_uni_noise_value_t reportValue;
+
 }StrMsg_HUITP_MSGID_uni_noise_data_report_t;
 
 //HUITP_MSGID_uni_noise_data_confirm                     = 0x2B01,

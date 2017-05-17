@@ -1955,9 +1955,9 @@ typedef struct msg_struct_spspm_cloudvela_perfm_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	UINT32 restartCnt;
-	UINT32 networkConnCnt;
-	UINT32 networkConnFailCnt;
-	UINT32 networkDiscCnt;
+	//UINT32 networkConnCnt;
+	//UINT32 networkConnFailCnt;
+	//UINT32 networkDiscCnt;
 	UINT32 socketDiscCnt;
 	UINT32 cpuOccupy;
 	UINT32 memOccupy;
@@ -2013,6 +2013,7 @@ typedef struct msg_struct_spspm_cloudvela_inventory_report
 	UINT16 swRel;
 	UINT16 swVer;
 	UINT8  upgradeFlag;
+	UINT32 timeStamp;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_spspm_cloudvela_inventory_report_t;

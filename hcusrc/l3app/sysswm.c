@@ -188,17 +188,17 @@ OPSTAT func_sysswm_time_out_period_working_scan(void)
 	//int ret=0;
 
 	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) ){
 		msg_struct_spspm_cloudvela_inventory_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_inventory_report_t));
 
 		//L2信息
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
 		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
 		strcpy(snd.comHead.funcFlag, "0");
 
 		//CONTENT
@@ -208,6 +208,7 @@ OPSTAT func_sysswm_time_out_period_working_scan(void)
 		snd.swRel = zHcuSysEngPar.hwBurnId.swRelId;
 		snd.swVer = zHcuSysEngPar.hwBurnId.swVerId;
 		snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
+		snd.timeStamp = time(0);
 		strcpy(snd.desc, "");
 		snd.length = sizeof(msg_struct_spspm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
