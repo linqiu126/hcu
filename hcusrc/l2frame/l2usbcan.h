@@ -237,23 +237,23 @@ typedef struct
 
 /* Can ID for communication between AWS and WMC */
 /* 1: AWS to WMC: 1 to n, n = 0 ... 15       */
-/* Node ID bitmap: CAN ID = 0x0010XXXX    */
-/* CAN ID          direction => ^~~~~ <= 1111 1111 1111 1111, */
+/* Node ID bitmap: CAN ID = 0x0010 XXXX    */
+/* CAN ID          direction => ^  ~~~~ <= 1111 1111 1111 1111, */
 #define AWS_TO_WMC_CAN_ID_PREFIX		(0x00100000U)
 //#define AWS_TO_WMC_CAN_ID_SUFFIX		(mwc_id_bitmap)
 
 /* 2: AWS to WMC-S: 1 to 1  */
-/* CAN ID: 0x00100000 */
+/* CAN ID: 0x0010 0000 */
 #define AWS_TO_WMCS_CAN_ID				(0x00110000U)
 
 /* 3: WMC to AWS: */
-/* CAN ID: 0X00020000 (Node ID 0) to 0X0003000F (Node ID 15) */
-#define WMC_TO_AWS_CAN_ID_PREFIX		(0x00030000U)
+/* CAN ID: 0x0030 0000 (WMC Node ID 0) to 0x0030 000F (WMC Node ID 15) */
+#define WMC_TO_AWS_CAN_ID_PREFIX		(0x00300000U)
 //#define WMC_TO_AWS_CAN_ID_SUFFIX		(mwc_id)
 
 /* 4: WMC-S to AWS: */
-/* CAN ID: 0X00020010 (Node ID 0) */
-#define WMCS_TO_AWS_CAN_ID				(0x00030010U)
+/* CAN ID: 0x0030 0010 (Node ID 0) */
+#define WMCS_TO_AWS_CAN_ID				(0x00300010U)
 
 
 /* CAN Interface APIs */
