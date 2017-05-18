@@ -1007,8 +1007,10 @@ int func_canitfleo_test_main(int argc, char **argv)
 OPSTAT fsm_canitfleo_can_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-	uint8_t *p = (uint8_t *)param_ptr;
+	can_l2frame_itf_t *p = (can_l2frame_itf_t *)param_ptr;
 
 	HcuDebugPrint("CANITFLEO: Received CAN L2 FRAME: [0x%02X, 0x%02X, 0x%02X, 0x%02X], Len = [%d]\r\n", p[0], p[1], p[2], p[3], param_len);
+
+	bsp_can_l2_frame_transmit(&(gTaskCanitfleoContext.can1), p->can_l2frame, p->can_l2frame_len, 0xFFFF);
 
 }

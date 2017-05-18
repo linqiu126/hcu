@@ -47,9 +47,9 @@ unsigned gTxSleep = 0;
 unsigned gTxFrames = 0;
 
 void bfsc_can_test();
-void USB_CAN_RxCpltCallback(USB_CAN_HandleTypeDef* CanHandle, VCI_CAN_OBJ *Can);
+void USB_CAN_RxCpltCallback(USB_CAN_HandleTypeDef* CanHandle, VCI_CAN_OBJ *Can, UINT32 wmc_id);
 
-int bsp_can_start_rx(USB_CAN_HandleTypeDef* CanHandle, void (*app_rx_callback)(), uint8_t *pRxBuffPtr, uint16_t rxBufferSize, void *user_data);
+int bsp_can_start_rx(USB_CAN_HandleTypeDef* CanHandle, void (*app_rx_callback)(), uint8_t *pRxBuffPtr, UINT32 wmc_id, uint16_t rxBufferSize, void *user_data);
 void app_can_loopback_callback(IHU_HUITP_L2FRAME_Desc_t *pdesc);
 
 unsigned s2n(const char *s)
@@ -358,9 +358,16 @@ int usbcan_test_main(int argc, char* argv[])
 /////////////////////////////////////////////////////////////////////////////////////////////////
 #include "l2packet.h"
 
-#define BFSC_CAN_MAX_RX_BUF_SIZE 256
-IHU_HUITP_L2FRAME_Desc_t g_can_packet_desc[2];
-uint8_t g_can_rx_buffer[BFSC_CAN_MAX_RX_BUF_SIZE];
+
+IHU_HUITP_L2FRAME_Desc_t g_can_packet_desc[2][WMC_NODE_NUMBER];
+uint8_t g_can_rx_buffer[BFSC_CAN_MAX_RX_BUF_SIZE][WMC_NODE_NUMBER];
+can_l2frame_itf_t can_l2frame_itf_rx_buffer[WMC_NODE_NUMBER];   //newly add by MYC
+can_l2frame_itf_t can_l2frame_itf_tx_buffer; 					//newly add by MYC
+
+UINT32 WmcCanIdMapToWmcId(UINT32 wmc_can_id)
+{
+	return (wmc_can_id % WMC_NODE_NUMBER);
+}
 
 /*
  * @brief  CAN handle Structure definition
@@ -496,18 +503,19 @@ void *can_rx_thread(void *data)
 
 	USB_CAN_HandleTypeDef *husbcan = NULL;
 
-	VCI_CAN_OBJ can[RX_BUFF_SIZE]; // buffer
+	//VCI_CAN_OBJ can[RX_BUFF_SIZE]; // buffer
 	husbcan = (USB_CAN_HandleTypeDef *)data;
 
 	UINT32 cnt = 0;
 	UINT32 i = 0;
-	UINT32 total_cnt;
+	UINT32 total_cnt = 0;
+	UINT32 wmc_id;
 
 	HcuDebugPrint("can_rx_thread: husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X, husbcan->can_channel_id = 0x%X\r\n", husbcan->can_dev_type, husbcan->can_dev_idx, husbcan->can_channel_id);
 
 	while (1)
     {
-        cnt = VCI_Receive(husbcan->can_dev_type, husbcan->can_dev_idx, 0, can, RX_BUFF_SIZE, RX_WAIT_TIME);
+        cnt = VCI_Receive(husbcan->can_dev_type, husbcan->can_dev_idx, 0, husbcan->can_rx_data, RX_BUFF_SIZE, RX_WAIT_TIME);
         /* husbcan->can_channel_id => 0 */
         //printf("can_rx_thread: husbcan->can_dev_type = 0x%X, husbcan->can_dev_idx = 0x%X, cnt = %d\r\n", husbcan->can_dev_type, husbcan->can_dev_idx, cnt);
 
@@ -518,11 +526,13 @@ void *can_rx_thread(void *data)
         /* for debug */
         for (i = 0; i < cnt; i++)
         {
-        	USB_CAN_RxCpltCallback(husbcan, &can[i]);
+        	wmc_id = WmcCanIdMapToWmcId(husbcan->can_rx_data[i].ID);
+        	USB_CAN_RxCpltCallback(husbcan, &husbcan->can_rx_data[i], wmc_id);
 
-//        	HcuDebugPrint("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], total_frame = %d\r\n", husbcan->can_channel_id,
-//           			can[i].Data[0], can[i].Data[1], can[i].Data[2], can[i].Data[3],
-//					can[i].Data[4], can[i].Data[5], can[i].Data[6], can[i].Data[7], total_cnt);
+        	printf("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], len=%d, canid=0x%X, wmc_id=%d, total_frame=%d\r\n", husbcan->can_channel_id,
+        			husbcan->can_rx_data[i].Data[0], husbcan->can_rx_data[i].Data[1], husbcan->can_rx_data[i].Data[2], husbcan->can_rx_data[i].Data[3],
+					husbcan->can_rx_data[i].Data[4], husbcan->can_rx_data[i].Data[5], husbcan->can_rx_data[i].Data[6], husbcan->can_rx_data[i].Data[7],
+					husbcan->can_rx_data[i].DataLen, husbcan->can_rx_data[i].ID, wmc_id, total_cnt);
         }
 
         /* to add framing */
@@ -539,7 +549,7 @@ UINT32 usb_can_init(USB_CAN_HandleTypeDef *husbcan, UINT32 can_dev_type, UINT32 
 {
 
 	UINT8 Timing0, Timing1;
-
+	UINT8 i = 0;
 	/* Check handler is valid or not */
 	if(NULL == husbcan)
 	{
@@ -628,7 +638,11 @@ UINT32 usb_can_init(USB_CAN_HandleTypeDef *husbcan, UINT32 can_dev_type, UINT32 
 	}
 
 	/* Create receiving thread */
-	bsp_can_start_rx(husbcan, app_can_loopback_callback, g_can_rx_buffer, BFSC_CAN_MAX_RX_BUF_SIZE, (void *)husbcan);
+	for(i = 0; i < WMC_NODE_NUMBER; i++)
+	{
+		can_l2frame_itf_rx_buffer[i].can_id_rx_wmc_id = i; ///!!!!!!!
+		bsp_can_start_rx(husbcan, app_can_loopback_callback, can_l2frame_itf_rx_buffer[i].can_l2frame, i, BFSC_CAN_MAX_RX_BUF_SIZE, (void *)husbcan);
+	}
 	pthread_create(&husbcan->can_receiving_thread_id, NULL, can_rx_thread, (void *)husbcan);
 
 	husbcan->can_status = CAN_STATUS_INITIALIZED;
@@ -702,21 +716,22 @@ UINT32 usb_can_transmit(USB_CAN_HandleTypeDef *husbcan, UINT8 *ptr_data, UINT32 
 		HcuErrorPrint("usb_can_transmit: extern_flag > 1, return FAILURE\r\n");
 		return FAILURE;
 	}
-	husbcan->can_data.ID = can_id;
-	husbcan->can_data.DataLen = data_len;
-	husbcan->can_data.SendType = 1;  // always for 1 for mini PCIe from ZLG
-	memcpy(&husbcan->can_data.Data[0], ptr_data, data_len);
-	husbcan->can_data.ExternFlag = extern_flag;
+	husbcan->can_tx_data.ID = can_id;
+	husbcan->can_tx_data.DataLen = data_len;
+	husbcan->can_tx_data.SendType = 1;  // always for 1 for mini PCIe from ZLG
+	memcpy(&husbcan->can_tx_data.Data[0], ptr_data, data_len);
+	husbcan->can_tx_data.ExternFlag = extern_flag;
 
-    if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_data), 1))
+    if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_tx_data), 1))
     {
-    	HcuErrorPrint("usb_can_transmit: CAN%d TX failed: ID=%08x\r\n", 0, husbcan->can_data.ID);
+    	HcuErrorPrint("usb_can_transmit: CAN%d TX failed: ID=%08x\r\n", 0, husbcan->can_tx_data.ID);
         return FAILURE;
     }
 
-    HcuDebugPrint("usb_can_transmit: CAN%d TX [0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X]: ID=%08x\r\n", 0, husbcan->can_data.ID,
-    		husbcan->can_data.Data[0], husbcan->can_data.Data[1], husbcan->can_data.Data[2], husbcan->can_data.Data[3],
-			husbcan->can_data.Data[4], husbcan->can_data.Data[5], husbcan->can_data.Data[6], husbcan->can_data.Data[7]);
+    printf("usb_can_transmit: CAN%d TX [%02X %02X %02X %02X %02X %02X %02X %02X]: ID=%08x\r\n", 0,
+    		husbcan->can_tx_data.Data[0], husbcan->can_tx_data.Data[1], husbcan->can_tx_data.Data[2], husbcan->can_tx_data.Data[3],
+			husbcan->can_tx_data.Data[4], husbcan->can_tx_data.Data[5], husbcan->can_tx_data.Data[6], husbcan->can_tx_data.Data[7],
+			husbcan->can_tx_data.ID);
 
     return SUCCESS;
 }
@@ -731,13 +746,13 @@ UINT32 usb_can_transmit(USB_CAN_HandleTypeDef *husbcan, UINT8 *ptr_data, UINT32 
   *         the configuration information for the specified CAN.
   * @retval None
   */
-void USB_CAN_RxCpltCallback(USB_CAN_HandleTypeDef* CanHandle, VCI_CAN_OBJ *Can)
+void USB_CAN_RxCpltCallback(USB_CAN_HandleTypeDef* CanHandle, VCI_CAN_OBJ *Can, UINT32 wmc_id)
 {
 	IHU_HUITP_L2FRAME_Desc_t *frame_desc;
 	if(CanHandle->can_channel_id == CAN_DEVIDE_CHANNEL_CAN1)
-		frame_desc = &g_can_packet_desc[0];
+		frame_desc = &g_can_packet_desc[0][wmc_id];
 	else
-		frame_desc = &g_can_packet_desc[1];
+		frame_desc = &g_can_packet_desc[1][wmc_id];
 
 //	printf("stdId 0x%x length %d, data: 0x%08x 0x%08x\r\n",
 //		Can->ID,
@@ -768,12 +783,15 @@ void app_can_loopback_callback(IHU_HUITP_L2FRAME_Desc_t *pdesc)
 
 	HcuDebugPrint("CAN ISR: L2Packet %d bytes, first: 0x%02x %02x last: 0x%02x %02x\r\n",
 		pdesc->RxXferCount,
-		CanHandle->can_data.Data[0], CanHandle->can_data.Data[1],
-		CanHandle->can_data.Data[6], CanHandle->can_data.Data[7]);
+		CanHandle->can_rx_data[0].Data[0], CanHandle->can_rx_data[0].Data[1],
+		CanHandle->can_rx_data[0].Data[6], CanHandle->can_rx_data[0].Data[7]);
+
+	/* SAVE THE FRAME LEN !!!!! */
+	can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len = pdesc->RxXferCount;
 
 	//Forward to TASK_ID_CANVELA
 	//ret = ihu_message_send_isr(MSG_ID_CAN_L2FRAME_RCV, TASK_ID_CANVELA, TASK_ID_CANVELA, g_can_rx_buffer, pdesc->RxXferCount);
-	ret = hcu_message_send(MSG_ID_CAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, g_can_rx_buffer, pdesc->RxXferCount);
+	ret = hcu_message_send(MSG_ID_CAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, (void *)&(can_l2frame_itf_rx_buffer[pdesc->wmc_id]), CAN_L2_FRAME_ITF_LEN);
 	if (ret == FAILURE){
 		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 		return FAILURE;
@@ -790,14 +808,14 @@ void app_can_loopback_callback(IHU_HUITP_L2FRAME_Desc_t *pdesc)
 	//bsp_can_transmit(CanHandle, pdesc->pRxBuffPtr, pdesc->RxXferCount, 10);
 }
 
-int bsp_can_start_rx(USB_CAN_HandleTypeDef* CanHandle, void (*app_rx_callback)(), uint8_t *pRxBuffPtr, uint16_t rxBufferSize, void *user_data)
+int bsp_can_start_rx(USB_CAN_HandleTypeDef* CanHandle, void (*app_rx_callback)(), uint8_t *pRxBuffPtr, uint32_t wmc_id, uint16_t rxBufferSize, void *user_data)
 {
 	IHU_HUITP_L2FRAME_Desc_t *frame_desc;
 
 	if(CanHandle->can_channel_id == CAN_DEVIDE_CHANNEL_CAN1)
-		frame_desc = &g_can_packet_desc[0];
+		frame_desc = &g_can_packet_desc[0][wmc_id];
 	else
-		frame_desc = &g_can_packet_desc[1];
+		frame_desc = &g_can_packet_desc[1][wmc_id];
 
 	memset(frame_desc, 0, sizeof(IHU_HUITP_L2FRAME_Desc_t));
 	memset(pRxBuffPtr, 0, rxBufferSize);
@@ -808,6 +826,7 @@ int bsp_can_start_rx(USB_CAN_HandleTypeDef* CanHandle, void (*app_rx_callback)()
 	frame_desc->RxXferCount = 0;
 	frame_desc->app_rx_callback = app_rx_callback;
 	frame_desc->UserData = user_data;
+	frame_desc->wmc_id = wmc_id;   // SAVE WMC NODE ID !!!!!!
 
 	//if(HAL_CAN_Receive_IT(CanHandle, CAN_FIFO0) != HAL_OK)
 	//{
@@ -819,7 +838,7 @@ int bsp_can_start_rx(USB_CAN_HandleTypeDef* CanHandle, void (*app_rx_callback)()
 }
 
 /* return the size of transmitted */
-uint32_t bsp_can_l2_frame_transmit(USB_CAN_HandleTypeDef* CanHandle, uint8_t *buffer, uint32_t length, uint32_t timeout)
+uint32_t bsp_can_l2_frame_transmit(USB_CAN_HandleTypeDef* CanHandle, uint8_t *buffer, uint32_t length, UINT32 wmc_id_bitmap)
 {
 	uint8_t translen;
 	//HAL_StatusTypeDef status;
@@ -828,10 +847,14 @@ uint32_t bsp_can_l2_frame_transmit(USB_CAN_HandleTypeDef* CanHandle, uint8_t *bu
 	while(length > 0)
 	{
 		translen = (length > 8)?8:length;
-		CanHandle->can_data.DataLen = translen;
-		memcpy(CanHandle->can_data.Data, buffer, translen);
+		CanHandle->can_tx_data.DataLen = translen;
+
+		/* THIS IS FOR BROADCAST */
+		CanHandle->can_tx_data.ID = (wmc_id_bitmap | AWS_TO_WMC_CAN_ID_PREFIX);
+
+		memcpy(CanHandle->can_tx_data.Data, buffer, translen);
 		//ret = HAL_CAN_Transmit(CanHandle, timeout);
-		ret = usb_can_transmit(CanHandle, buffer, translen, CanHandle->can_data.ID, 0);
+		ret = usb_can_transmit(CanHandle, buffer, translen, CanHandle->can_tx_data.ID, 1); ///!!! EXT FRAMEs
 		if(ret == SUCCESS)
 		{
 			length -= translen;
