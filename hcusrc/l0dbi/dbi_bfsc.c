@@ -421,7 +421,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     }
     else if( (0xFFFFFFFF != wmc_id) && (0xFFFFFFFF == wmc_weight_value) )
     {
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d', WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
 				20170518, wmc_id, wmc_status, wmc_id, wmc_weight_value);
     }
     else
@@ -445,6 +445,58 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 }
 
 
+//根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
+OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+    uint32_t wmc_id =0 ;
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    char s[20];
+    memset(s, 0, sizeof(s));
+    //strncpy(s, StaType, strlen(StaType)<sizeof(s)?strlen(StaType):sizeof(s));
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//REPLACE新的数据
+    UINT32 tmp = time(0);
+//    sprintf(strsql, "REPLACE INTO `hcubfsccurrentinfo` (StaType, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
+//    		('%s', '%d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
+//			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
+//			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
+//
+//    "REPLACE INTO `hcubfsccurrentinfo` (deviceid, status_05, value_05) VALUES ('HCU_G301_BFSC_P0001', '1', '1000')"
+    for(wmc_id = 1; wmc_id <= 16; wmc_id++)
+    {
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
+				20170518, wmc_id, 0);
+		printf("%s\r\n", strsql);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+    }
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
 
 
 

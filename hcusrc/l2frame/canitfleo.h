@@ -74,9 +74,14 @@ OPSTAT func_canitfleo_working_scan_process(void);
 OPSTAT func_canitfleo_bfsc_simulation_data_process(void);
 
 void BigSmallEndianMapping(uint8_t *In, uint8_t *Out, uint32_t len);
+uint16_t HuitpMsgIdMapToInternalMsgId(uint16_t huitp_msgid);
+uint16_t InternalMsgIdMapToHuitpMsgId(uint16_t internal_msgid);
+
 OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_frame_len);
-void canitfleo_can_l2frame_receive_process_bfsc_start_ind(uint8_t *ptr);
-void canitfleo_can_l2frame_receive_process_bfsc_new_ws_event(uint8_t *ptr);
+
+void canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr);
+void canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr);
+void canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr);
 
 // WILL BE REPLACED BY HUITP, ADDED 2017/05/15 */
 

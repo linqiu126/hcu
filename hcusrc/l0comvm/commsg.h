@@ -513,21 +513,21 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, 	//来自后台的控制命令反馈，只能在SCAN下工作
 
 	//MYC
-	MSG_ID_L3BFSC_STARTUP_IND,          //       = 0x3B90,
-	MSG_ID_L3BFSC_SET_CONFIG_REQ,       //       = 0x3B11,
-	MSG_ID_L3BFSC_SET_CONFIG_RESP,      //       = 0x3B91,
-	MSG_ID_L3BFSC_START_REQ,            //       = 0x3B12,
-	MSG_ID_L3BFSC_START_RESP,           //       = 0x3B92,
-	MSG_ID_L3BFSC_STOP_REQ,             //       = 0x3B13,
-	MSG_ID_L3BFSC_STOP_RESP,            //       = 0x3B93,
-	MSG_ID_L3BFSC_NEW_WS_EVENT,         //       = 0x3B94,
-	MSG_ID_L3BFSC_WS_COMB_OUT_REQ,      //       = 0x3B15,
-	MSG_ID_L3BFSC_WS_COMB_OUT_RESP,     //       = 0x3B95,
-	MSG_ID_L3BFSC_COMMAND_REQ,          //       = 0x3B17,
-	MSG_ID_L3BFSC_COMMAND_RESP,         //       = 0x3B97,
-	MSG_ID_L3BFSC_FAULT_IND,            //       = 0x3B98,
-	MSG_ID_L3BFSC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
-	MSG_ID_L3BFSC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
+	MSG_ID_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
+	MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ,       //       = 0x3B11,
+	MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP,      //       = 0x3B91,
+	MSG_ID_L3BFSC_WMC_START_REQ,            //       = 0x3B12,
+	MSG_ID_L3BFSC_WMC_START_RESP,           //       = 0x3B92,
+	MSG_ID_L3BFSC_WMC_STOP_REQ,             //       = 0x3B13,
+	MSG_ID_L3BFSC_WMC_STOP_RESP,            //       = 0x3B93,
+	MSG_ID_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
+	MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
+	MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP,     //       = 0x3B95,
+	MSG_ID_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
+	MSG_ID_L3BFSC_WMC_COMMAND_RESP,         //       = 0x3B97,
+	MSG_ID_L3BFSC_WMC_FAULT_IND,            //       = 0x3B98,
+	MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
+	MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
 
 	//BFSCUICOMM
 	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//本地界面请求
@@ -2381,25 +2381,25 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
 ** ============================ MYC START FOR BFSC =============================
 ** =============================================================================
 */
-//MSG_ID_CAN_L3BFSC_STARTUP_IND,          //       = 0x3B90,
-//MSG_ID_CAN_L3BFSC_SET_CONFIG_REQ,       //       = 0x3B11,
-//MSG_ID_CAN_L3BFSC_SET_CONFIG_RESP,      //       = 0x3B91,
-//MSG_ID_CAN_L3BFSC_START_REQ,            //       = 0x3B12,
-//MSG_ID_CAN_L3BFSC_START_RESP,           //       = 0x3B92,
-//MSG_ID_CAN_L3BFSC_STOP_REQ,             //       = 0x3B13,
-//MSG_ID_CAN_L3BFSC_STOP_RESP,            //       = 0x3B93,
-//MSG_ID_CAN_L3BFSC_NEW_WS_EVENT,         //       = 0x3B94,
-//MSG_ID_CAN_L3BFSC_WS_COMB_OUT_REQ,      //       = 0x3B15,
-//MSG_ID_CAN_L3BFSC_WS_COMB_OUT_RESP,     //       = 0x3B95,
-//MSG_ID_CAN_L3BFSC_COMMAND_REQ,          //       = 0x3B17,
-//MSG_ID_CAN_L3BFSC_COMMAND_RESP,         //       = 0x3B97,
-//MSG_ID_CAN_L3BFSC_FAULT_IND,            //       = 0x3B98,
-//MSG_ID_CAN_L3BFSC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
-//MSG_ID_CAN_L3BFSC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
+//MSG_ID_CAN_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
+//MSG_ID_CAN_L3BFSC_WMC_SET_CONFIG_REQ,       //       = 0x3B11,
+//MSG_ID_CAN_L3BFSC_WMC_SET_CONFIG_RESP,      //       = 0x3B91,
+//MSG_ID_CAN_L3BFSC_WMC_START_REQ,            //       = 0x3B12,
+//MSG_ID_CAN_L3BFSC_WMC_START_RESP,           //       = 0x3B92,
+//MSG_ID_CAN_L3BFSC_WMC_STOP_REQ,             //       = 0x3B13,
+//MSG_ID_CAN_L3BFSC_WMC_STOP_RESP,            //       = 0x3B93,
+//MSG_ID_CAN_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
+//MSG_ID_CAN_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
+//MSG_ID_CAN_L3BFSC_WMC_WS_COMB_OUT_RESP,     //       = 0x3B95,
+//MSG_ID_CAN_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
+//MSG_ID_CAN_L3BFSC_WMC_COMMAND_RESP,         //       = 0x3B97,
+//MSG_ID_CAN_L3BFSC_WMC_FAULT_IND,            //       = 0x3B98,
+//MSG_ID_CAN_L3BFSC_WMC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
+//MSG_ID_CAN_L3BFSC_WMC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
 
-/*
-**	common
-*/
+// =====================================================================
+// ========== FOLLOWING SHOULD BE SAME AS IN WMC, COPY START ===========
+// =====================================================================
 typedef struct WmcErrorCode
 {
 	UINT16 error_code;
@@ -2414,12 +2414,13 @@ typedef struct WmcId
 	UINT8 spare3;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
 }WmcId_t;
 
-typedef struct msg_struct_l3bfsc_resp
+typedef struct msg_struct_l3bfsc_wmc_resp
 {
 	UINT16	msgid;
 	UINT16  length;
 	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
-}msg_struct_l3bfsc_resp_t;
+	WmcErrorCode_t result;
+}msg_struct_l3bfsc_wmc_resp_t;
 
 typedef struct WmcInventory
 {
@@ -2435,34 +2436,34 @@ typedef struct WmcInventory
 
 //==========================================================
 /*
-**	MSG_ID_L3BFSC_STARTUP_IND,          //       = 0x3B90,
+**	MSG_ID_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
 */
-typedef struct msg_struct_l3bfsc_startup_ind
+typedef struct msg_struct_l3bfsc_wmc_startup_ind
 {
 	UINT16 msgid;
 	UINT16 length;
 	WmcInventory_t wmc_inventory;
-}msg_struct_l3bfsc_startup_ind_t;
+}msg_struct_l3bfsc_wmc_startup_ind_t;
 
 /*
-**	MSG_ID_L3BFSC_SET_CONFIG_REQ,       //       = 0x3B11,
+**	MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ,       //       = 0x3B11,
 */
 typedef struct CombinationAlgorithmParamaters
 {
 	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
 	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
-	UINT32	MinScaleNumberStartCombination;			//开始查找的最小个数，就是说大于这个个数就开始搜索
-	UINT32	TargetCombinationWeight;				//组合目标重量
+	UINT32	MinScaleNumberStartCombination;		//开始查找的最小个数，就是说大于这个个数就开始搜索
+	UINT32	TargetCombinationWeight;				  //组合目标重量
 	UINT32	TargetCombinationUpperWeight;			//组合目标重量上限
-	UINT32	IsPriorityScaleEnabled;					// 1: Enable, 0: Disable
+	UINT32	IsPriorityScaleEnabled;					  // 1: Enable, 0: Disable
 	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
-	UINT32	CombinationBias;						//每个Scale要求放几个物品
-	UINT32	IsRemainDetectionEnable;				//Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
-	UINT32	RemainDetectionTimeSec;					// RemainDetionTime in Seconds
-	UINT32	RemainScaleTreatment;					// 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
-	UINT32	CombinationSpeedMode;					// 0：SpeedPriority，1: PrecisePriority
-	UINT32	CombinationAutoMode;					// 0: Auto, 1: Manual
-	UINT32	MovingAvrageSpeedCount;					//计算平均速度的时候使用最近多少个组合做统计
+	UINT32	CombinationBias;						      //每个Scale要求放几个物品
+	UINT32	IsRemainDetectionEnable;				  //Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	RemainScaleTreatment;					    // 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
+	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
+	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
+	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
 	UINT32	spare1;
 	UINT32	spare2;
 	UINT32	spare3;
@@ -2472,74 +2473,73 @@ typedef struct CombinationAlgorithmParamaters
 typedef struct WeightSensorParamaters
 {
 	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
-	UINT32	WeightSensorLoadThread;					//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
 	UINT32	WeightSensorEmptyThread;
 	UINT32	WeightSensorEmptyDetectionTimeMs;
-	UINT32	WeightSensorPickupThread;				// NOT for GUI
-	UINT32	WeightSensorPickupDetectionTimeMs;		// NOT for GUI
-	UINT32	StardardReadyTimeMs;					//???
-	UINT32	MaxAllowedWeight;						//如果发现超过这个最大值，说明Sensor出错
-	UINT32	WeightSensorInitOrNot;					// NOT for GUI
+	UINT32	WeightSensorPickupThread;						// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+	UINT32	StardardReadyTimeMs;								//???
+	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+
+	UINT32	WeightSensorInitOrNot;							// NOT for GUI
 	UINT32	WeightSensorAdcSampleFreq;
 	UINT32	WeightSensorAdcGain;
-	UINT32	WeightSensorAdcBitwidth;				// NOT for GUI
-	UINT32  WeightSensorAdcValue;					// NOT for GUI
-	UINT32	WeightSensorCalibrationZeroAdcValue;	// NOT for GUI
-	UINT32	WeightSensorCalibrationFullAdcValue;	// NOT for GUI
+	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
+	UINT32  WeightSensorAdcValue;								// NOT for GUI
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
 	UINT32	WeightSensorCalibrationFullWeight;
-	double	WeightSensorCalibrationK;				// NOT for GUI
-	UINT32	WeightSensorCalibrationB;				// NOT for GUI
 	UINT32	WeightSensorStaticZeroValue;
 	UINT32	WeightSensorTailorValue;
 	UINT32	WeightSensorDynamicZeroThreadValue;
 	UINT32	WeightSensorDynamicZeroHysteresisMs;
-	UINT32  WeightSensorFilterCoeff[32];			// NOT for GUI
-	UINT32  WeightSensorOutputValue[32];			// NOT for GUI
+	//UINT32  WeightSensorFilterCoeff[32];				// NOT for GUI
+	//UINT32  WeightSensorOutputValue[32];				// NOT for GUI
 }WeightSensorParamaters_t;
 
 typedef struct MotorControlParamaters
 {
 	UINT32	MotorSpeed;
-	UINT32	MotorDirection;							//0: Clockwise; 1: Counter-Clockwise
-	UINT32	MotorRollingStartMs;					//how long do the motor rolling for start action
-	UINT32	MotorRollingStopMs;						//how long do the motor rolling for stop action
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorRollingStartMs;						//how long do the motor rolling for start action
+	UINT32	MotorRollingStopMs;							//how long do the motor rolling for stop action
 	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
-	UINT32	MotorFailureDetectionVaration;			// % of the MotorSpeed
-	UINT32	MotorFailureDetectionTimeMs;			// within TimeMs, 如果速度都在外面，认为故障
+	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
 	UINT32	spare1;
 	UINT32	spare2;
 	UINT32	spare3;
 	UINT32	spare4;
 }MotorControlParamaters_t;
 
-typedef struct msg_struct_l3bfsc_set_config_req
+typedef struct msg_struct_l3bfsc_wmc_set_config_req
 {
 	UINT16 msgid;
 	UINT16 length;
 	WeightSensorParamaters_t weight_sensor_param;
 	MotorControlParamaters_t motor_control_param;
-}msg_struct_l3bfsc_set_config_req_t;
+}msg_struct_l3bfsc_wmc_set_config_req_t;
 
 /*
-**	MSG_ID_L3BFSC_START_REQ,            //       = 0x3B12,
+**	MSG_ID_L3BFSC_WMC_START_REQ,            //       = 0x3B12,
 */
-typedef struct msg_struct_l3bfsc_start_req
+typedef struct msg_struct_l3bfsc_wmc_start_req
 {
 	UINT16 msgid;
 	UINT16 length;
-}msg_struct_l3bfsc_start_req_t;
+}msg_struct_l3bfsc_wmc_start_req_t;
 
 /*
-**	MSG_ID_L3BFSC_STOP_REQ,             //       = 0x3B13,
+**	MSG_ID_L3BFSC_WMC_STOP_REQ,             //       = 0x3B13,
 */
-typedef struct msg_struct_l3bfsc_stop_req
+typedef struct msg_struct_l3bfsc_wmc_stop_req
 {
 	UINT16 msgid;
 	UINT16 length;
-}msg_struct_l3bfsc_stop_req_t;
+}msg_struct_l3bfsc_wmc_stop_req_t;
 
 /*
-**	MSG_ID_L3BFSC_NEW_WS_EVENT,         //       = 0x3B94,
+**	MSG_ID_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
 */
 #define 	WEIGHT_EVENT_ID_LOAD						(0)
 #define 	WEIGHT_EVENT_ID_EMPTY						(1)
@@ -2551,16 +2551,16 @@ typedef struct WeightIndication
 	UINT32 average_weight;		//average value in the detect window  // <--- MUST
 }WeightIndication_t;
 
-typedef struct msg_struct_l3bfsc_new_ws_event
+typedef struct msg_struct_l3bfsc_wmc_new_ws_event
 {
 	UINT16 msgid;
 	UINT16 length;
 	WmcId_t wmc_id;             /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
 	WeightIndication_t weight_ind;
-}msg_struct_l3bfsc_new_ws_event_t;
+}msg_struct_l3bfsc_wmc_new_ws_event_t;
 
 /*
-**	MSG_ID_L3BFSC_WS_COMB_OUT_REQ,      //       = 0x3B15,
+**	MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
 */
 //#define 	LED_COMMNAD_ID_IGNORE					(0)//MUSR BE 0
 //#define 	LED_COMMNAD_ID_ON						(1)
@@ -2590,33 +2590,45 @@ typedef struct CombineType
 	UINT32	ActionDelayMs;
 }CombineType_t;
 
-typedef struct msg_struct_l3bfsc_wmc_combin_out_req
+typedef struct msg_struct_l3bfsc_wmc_comb_out_req
 {
 	UINT16 msgid;
 	UINT16 length;
 	CombineType_t weight_combin_type;
-}msg_struct_l3bfsc_wmc_combin_out_req_t;
+}msg_struct_l3bfsc_wmc_comb_out_req_t;
 
 /*
 **	MSG_ID_L3BFSC_WMC_FAULT_IND
 */
-typedef struct msg_struct_l3bfsc_fault_ind
+typedef struct msg_struct_l3bfsc_wmc_fault_ind
 {
 	UINT16 	msgid;
 	UINT16 	length;
 	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
 	UINT16	error_code;
-}msg_struct_l3bfsc_fault_ind_t;
+}msg_struct_l3bfsc_wmc_fault_ind_t;
 
 /*
-**	MSG_ID_L3BFSC_COMMAND_REQ,          //       = 0x3B17,
+**	MSG_ID_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
 */
+#define SENSOR_COMMAND_ID_WEITGH_READ (0x0001)
+#define MOTOR_COMMAND_ID (0x0002)
+#define LED1_COMMAND_ID (0x0004)
+#define LED2_COMMAND_ID (0x0008)
+#define LED3_COMMAND_ID (0x0010)
+#define LED4_COMMAND_ID (0x0020)
+
+#define 	LED_COMMNAD_ON						(1)
+#define 	LED_COMMNAD_OFF						(2)
+#define 	LED_COMMNAD_BINKING_HIGHSPEED		(3)
+#define 	LED_COMMNAD_BINKING_LOWSPEED		(4)
+
 #define 	SESOR_COMMAND_ID_IGORE						(0) //MUSR BE 0
 #define 	SESOR_COMMAND_ID_WEITGH_READ				(3)
 #define 	SESOR_COMMAND_ID_CALIBRATION_ZERO			(4)
 #define 	SESOR_COMMAND_ID_CALIBRATION_FULL			(5)
 
-typedef struct msg_struct_l3bfsc_command_req
+typedef struct msg_struct_l3bfsc_wmc_command_req
 {
 	UINT32 msgid;
 	UINT16 length;
@@ -2628,52 +2640,52 @@ typedef struct msg_struct_l3bfsc_command_req
 	UINT8 led4_command;
 	UINT32 motor_command;
 	UINT32 sensor_command;
-}msg_struct_l3bfsc_command_req_t;
+}msg_struct_l3bfsc_wmc_command_req_t;
 
 /*
-**	MSG_ID_L3BFSC_COMMAND_RESP,         //       = 0x3B97,
+**	MSG_ID_L3BFSC_WMC_COMMAND_RESP,         //       = 0x3B97,
 */
-typedef struct msg_struct_l3bfsc_command_resp
+typedef struct msg_struct_l3bfsc_wmc_command_resp
 {
 	UINT16	msgid;
 	UINT16	result;
 	UINT16	error_code;
 	UINT32 	motor_speed;
 	UINT32 	sensor_weight;
-}msg_struct_l3bfsc_command_resp_t;
+}msg_struct_l3bfsc_wmc_command_resp_t;
 
 /*
 **	MSG_ID_L3BFSC_WMC_MSH_HEADER
 */
 typedef struct msg_struct_l3bfsc_wmc_msg_header
 {
-	UINT32 msgid;
+	UINT16 msgid;
 	UINT16 length;
-	UINT16 spare;
-	UINT32 wmc_state;
 }msg_struct_l3bfsc_wmc_msg_header_t;
 
-//MSG_ID_CAN_L3BFSC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
+//MSG_ID_CAN_L3BFSC_WMC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
 //TBD
 
-//MSG_ID_CAN_L3BFSC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
+//MSG_ID_CAN_L3BFSC_WMC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
 //TBD
 
 /* Message Length definition */
-#define 	MSG_SIZE_L3BFSC_STARTUP_IND				(sizeof(msg_struct_l3bfsc_startup_ind_t))
-#define 	MSG_SIZE_L3BFSC_SET_CONFIG_REQ			(sizeof(msg_struct_l3bfsc_set_config_req_t))
-#define 	MSG_SIZE_L3BFSC_SET_CONFIG_RESP			(sizeof(msg_struct_l3bfsc_resp_t))
-#define 	MSG_SIZE_L3BFSC_START_REQ				(sizeof(msg_struct_l3bfsc_start_req_t))
-#define 	MSG_SIZE_L3BFSC_START_RESP				(sizeof(msg_struct_l3bfsc_resp_t))
-#define 	MSG_SIZE_L3BFSC_STOP_REQ				(sizeof(msg_struct_l3bfsc_stop_req_t))
-#define 	MSG_SIZE_L3BFSC_STOP_RESP				(sizeof(msg_struct_l3bfsc_resp_t))
-#define 	MSG_SIZE_L3BFSC_NEW_WS_EVENT			(sizeof(msg_struct_l3bfsc_new_ws_event_t))
-#define 	MSG_SIZE_L3BFSC_WS_COMB_OUT_REQ			(sizeof(msg_struct_l3bfsc_combin_out_req_t))
-#define 	MSG_SIZE_L3BFSC_WS_COMB_OUT_RESP		(sizeof(msg_struct_l3bfsc_resp_t))
-#define 	MSG_SIZE_L3BFSC_FAULT_IND				(sizeof(msg_struct_l3bfsc_fault_ind_t))
-#define 	MSG_SIZE_L3BFSC_COMMAND_REQ				(sizeof(msg_struct_l3bfsc_command_req_t))
-#define 	MSG_SIZE_L3BFSC_COMMAND_RESP			(sizeof(msg_struct_l3bfsc_command_resp_t))
-#define 	MSG_SIZE_L3BFSC_ERR_INQ_CMD_RESP		(sizeof(msg_struct_l3bfsc_resp_t))
+#define 	MSG_SIZE_L3BFSC_WMC_STARTUP_IND				(sizeof(msg_struct_l3bfsc_wmc_startup_ind_t))
+#define 	MSG_SIZE_L3BFSC_WMC_SET_CONFIG_REQ			(sizeof(msg_struct_l3bfsc_wmc_set_config_req_t))
+#define 	MSG_SIZE_L3BFSC_WMC_SET_CONFIG_RESP			(sizeof(msg_struct_l3bfsc_wmc_resp_t))
+#define 	MSG_SIZE_L3BFSC_WMC_START_REQ				(sizeof(msg_struct_l3bfsc_wmc_start_req_t))
+#define 	MSG_SIZE_L3BFSC_WMC_START_RESP				(sizeof(msg_struct_l3bfsc_wmc_resp_t))
+#define 	MSG_SIZE_L3BFSC_WMC_STOP_REQ				(sizeof(msg_struct_l3bfsc_wmc_stop_req_t))
+#define 	MSG_SIZE_L3BFSC_WMC_STOP_RESP				(sizeof(msg_struct_l3bfsc_wmc_resp_t))
+#define 	MSG_SIZE_L3BFSC_WMC_NEW_WS_EVENT			(sizeof(msg_struct_l3bfsc_wmc_new_ws_event_t))
+#define 	MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_REQ			(sizeof(msg_struct_l3bfsc_wmc_comb_out_req_t))
+#define 	MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_RESP		(sizeof(msg_struct_l3bfsc_wmc_resp_t))
+#define 	MSG_SIZE_L3BFSC_WMC_FAULT_IND				(sizeof(msg_struct_l3bfsc_wmc_fault_ind_t))
+#define 	MSG_SIZE_L3BFSC_WMC_COMMAND_REQ				(sizeof(msg_struct_l3bfsc_wmc_command_req_t))
+#define 	MSG_SIZE_L3BFSC_WMC_COMMAND_RESP			(sizeof(msg_struct_l3bfsc_wmc_command_resp_t))
+#define 	MSG_SIZE_L3BFSC_WMC_ERR_INQ_CMD_REQ			(sizeof(msg_struct_l3bfsc_wmc_req_t))
+#define 	MSG_SIZE_L3BFSC_WMC_ERR_INQ_CMD_RESP		(sizeof(msg_struct_l3bfsc_wmc_resp_t))
+
 /* Can ID for communication between AWS and WMC */
 /* 1: AWS to WMC: 1 to n, n = 0 ... 15       */
 /* Node ID bitmap: CAN ID = 0x0010 XXXX    */
@@ -2695,10 +2707,9 @@ typedef struct msg_struct_l3bfsc_wmc_msg_header
 #define WMCS_TO_AWS_CAN_ID				(0x00300010U)
 
 /* CAN Msg Length */
-#define		MAX_WMC_CONTROL_MSG_LEN						(256U)
-#define		MAX_WMC_CONTROL_MSG_HEADER_LEN				(sizeof(IHU_HUITP_L2FRAME_STD_frame_header_t))
-#define		MAX_WMC_CONTROL_MSG_BODY_LEN				(MAX_WMC_CONTROL_MSG_LEN - MAX_WMC_CONTROL_MSG_HEADER_LEN)
-
+#define		MAX_WMC_CONTROL_MSG_LEN				(256U)
+#define		MAX_WMC_CONTROL_MSG_HEADER_LEN		(sizeof(IHU_HUITP_L2FRAME_STD_frame_header_t))
+#define		MAX_WMC_CONTROL_MSG_BODY_LEN		(MAX_WMC_CONTROL_MSG_LEN - MAX_WMC_CONTROL_MSG_HEADER_LEN)
 
 /* ERROR CODE */
 typedef enum IHU_ERROR_CODE
@@ -2728,6 +2739,10 @@ typedef enum IHU_ERROR_CODE
 	ERROR_CODE_MAX, //Ending point
 
 }error_code_t; //end of IHU_INTER_TASK_MSG_ID
+
+// =====================================================================
+// ============== ABOVE SHOULD BE SAME AS IN WMC, COPY END =============
+// =====================================================================
 
 /*
 ** =============================================================================
