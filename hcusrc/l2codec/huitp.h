@@ -13,7 +13,7 @@
 #pragma pack (1) //强制1字节对齐
 /*
  *
- *  顺从并更新到技术规范《慧HUITP接口规范v2.2, LAST UPDATE@2007/2》
+ *  顺从并更新到技术规范《慧HUITP接口规范v2.4, LAST UPDATE@2007/5》
  *
  */
 
@@ -530,20 +530,20 @@ typedef enum
 	HUITP_MSGID_sui_bfsc_stop_resp                   = 0x3B93,
 	//重量汇报过程
 	HUITP_MSGID_sui_bfsc_new_ws_event                = 0x3B94,
-	HUITP_MSGID_sui_bfsc_repeat_ws_event             = 0x3B94,
+	HUITP_MSGID_sui_bfsc_repeat_ws_event             = 0x3B95,
 	//组合出料过程
-	HUITP_MSGID_sui_bfsc_ws_comb_out_req             = 0x3B15,
-	HUITP_MSGID_sui_bfsc_ws_comb_out_resp            = 0x3B95,
-	//抛料过程
-	HUITP_MSGID_sui_bfsc_ws_give_up_req              = 0x3B16,
-	HUITP_MSGID_sui_bfsc_ws_give_up_resp             = 0x3B96,
+	HUITP_MSGID_sui_bfsc_ws_comb_out_req             = 0x3B16,
+	HUITP_MSGID_sui_bfsc_ws_comb_out_resp            = 0x3B96,
+	//抛料过程：本协议暂时未使用
+	HUITP_MSGID_sui_bfsc_ws_give_up_req              = 0x3B17,
+	HUITP_MSGID_sui_bfsc_ws_give_up_resp             = 0x3B97,
 	//特殊命令过程（测试等过程）
-	HUITP_MSGID_sui_bfsc_command_req                 = 0x3B17,
-	HUITP_MSGID_sui_bfsc_command_resp                = 0x3B97,
+	HUITP_MSGID_sui_bfsc_command_req                 = 0x3B18,
+	HUITP_MSGID_sui_bfsc_command_resp                = 0x3B98,
 	//差错过程
-	HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B98,
-	HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B19,
-	HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B99,
+	HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B99,
+	HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B1A,
+	HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B9A,
 	//统一结束符
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
 
@@ -5333,156 +5333,266 @@ typedef struct StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm
 }StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t;
 
 //HCU-IHU SUI新增内容
+//以下FRAME消息结构体，由于特殊原因，并没有采用TLV结构，以便节省消息长度
 //上电过程
 //HUITP_MSGID_sui_bfsc_startup_ind                 = 0x3B90,
+typedef struct StrIe_HUITP_IEID_sui_WmcErrorCode
+{
+	UINT16 error_code;           
+	UINT16 spare1;               
+}StrIe_HUITP_IEID_sui_WmcErrorCode_t;
+
+typedef struct StrIe_HUITP_IEID_sui_WmcId
+{
+	UINT8 wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8 spare1;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8 spare2;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8 spare3;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */	
+}StrIe_HUITP_IEID_sui_WmcId_t;
+
+typedef struct StrIe_HUITP_IEID_sui_WmcInventory
+{
+	UINT32 hw_inventory_id;
+	UINT32 sw_inventory_id;
+	UINT32 stm32_cpu_id;
+	UINT32 weight_sensor_type;
+	UINT32 motor_type;
+	StrIe_HUITP_IEID_sui_WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT32 spare1;
+	UINT32 spare2;
+}StrIe_HUITP_IEID_sui_WmcInventory_t;
+
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_startup_ind
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_startup_ind_t cont;
+	UINT16 msgid;
+	UINT16 length;
+	StrIe_HUITP_IEID_sui_WmcInventory_t wmc_inventory;
 }StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t;
+
 
 //配置过程
 //HUITP_MSGID_sui_bfsc_set_config_req              = 0x3B11,
+typedef struct StrIe_HUITP_IEID_sui_CombinationAlgorithmParamaters
+{
+	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
+	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
+	UINT32	MinScaleNumberStartCombination;		//开始查找的最小个数，就是说大于这个个数就开始搜索
+	UINT32	TargetCombinationWeight;				  //组合目标重量
+	UINT32	TargetCombinationUpperWeight;			//组合目标重量上限
+	UINT32	IsPriorityScaleEnabled;					  // 1: Enable, 0: Disable
+	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
+	UINT32	CombinationBias;						      //每个Scale要求放几个物品
+	UINT32	IsRemainDetectionEnable;				  //Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	RemainScaleTreatment;					    // 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
+	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
+	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
+	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
+	UINT32	spare1;
+	UINT32	spare2;
+	UINT32	spare3;
+	UINT32	spare4;
+}StrIe_HUITP_IEID_sui_CombinationAlgorithmParamaters_t;
+
+typedef struct StrIe_HUITP_IEID_sui_WeightSensorParamaters
+{
+	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorEmptyThread;
+	UINT32	WeightSensorEmptyDetectionTimeMs;
+	UINT32	WeightSensorPickupThread;						// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+	UINT32	StardardReadyTimeMs;								//???
+	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	
+	UINT32	WeightSensorInitOrNot;							// NOT for GUI
+	UINT32	WeightSensorAdcSampleFreq;					
+	UINT32	WeightSensorAdcGain;
+	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
+	UINT32  WeightSensorAdcValue;								// NOT for GUI
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;	
+	UINT32	WeightSensorStaticZeroValue;				
+	UINT32	WeightSensorTailorValue;						
+	UINT32	WeightSensorDynamicZeroThreadValue;	
+	UINT32	WeightSensorDynamicZeroHysteresisMs;
+	//UINT32  WeightSensorFilterCoeff[32];				// NOT for GUI
+	//UINT32  WeightSensorOutputValue[32];				// NOT for GUI
+}StrIe_HUITP_IEID_sui_WeightSensorParamaters_t;
+
+typedef struct StrIe_HUITP_IEID_sui_MotorControlParamaters
+{
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorRollingStartMs;						//how long do the motor rolling for start action
+	UINT32	MotorRollingStopMs;							//how long do the motor rolling for stop action
+	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+	UINT32	spare1;
+	UINT32	spare2;
+	UINT32	spare3;
+	UINT32	spare4;
+}StrIe_HUITP_IEID_sui_MotorControlParamaters_t;
+
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_set_config_req
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_set_config_req_t cont;
+	UINT16 msgid;
+	UINT16 length;
+	StrIe_HUITP_IEID_sui_WeightSensorParamaters_t weight_sensor_param;
+	StrIe_HUITP_IEID_sui_MotorControlParamaters_t motor_control_param;
 }StrMsg_HUITP_MSGID_sui_bfsc_set_config_req_t;
 
 //HUITP_MSGID_sui_bfsc_set_config_resp             = 0x3B91,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_set_config_resp_t cont;
+	UINT16 msgid;
+	UINT16 length;
 }StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t;
 
 //启动过程
 //HUITP_MSGID_sui_bfsc_start_req                   = 0x3B12,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_start_req
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_start_req_t cont;
+	UINT16 msgid;
+	UINT16 length;
 }StrMsg_HUITP_MSGID_sui_bfsc_start_req_t;
 
 //HUITP_MSGID_sui_bfsc_start_resp                  = 0x3B92,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_start_resp
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_start_resp_t cont;
+	UINT16 msgid;
+	UINT16 length;
 }StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t;
 
 //HUITP_MSGID_sui_bfsc_stop_req                    = 0x3B13,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_stop_req
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_stop_req_t cont;
+	UINT16 msgid;
+	UINT16 length;
 }StrMsg_HUITP_MSGID_sui_bfsc_stop_req_t;
 
 //HUITP_MSGID_sui_bfsc_stop_resp                   = 0x3B93,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_stop_resp
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_stop_resp_t cont;
+	UINT16 msgid;
+	UINT16 length;
 }StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t;
 
 //重量汇报过程
 //HUITP_MSGID_sui_bfsc_new_ws_event                = 0x3B94,
+#define 	WEIGHT_EVENT_ID_LOAD						(0)
+#define 	WEIGHT_EVENT_ID_EMPTY						(1)
+#define 	WEIGHT_EVENT_ID_PICKUP					(2)
+typedef struct StrIe_HUITP_IEID_sui_WeightIndication
+{
+	UINT32 weight_event;		//LOAD, EMPTY, PICKUP(FFS)
+	UINT32 average_weight;	//average value in the detect window  // <--- MUST
+}StrIe_HUITP_IEID_sui_WeightIndication_t;
+
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_new_ws_event_t cont;
+	UINT16 msgid;
+	UINT16 length;
+	StrIe_HUITP_IEID_sui_WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	StrIe_HUITP_IEID_sui_WeightIndication_t weight_ind;	
 }StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t;
 
-//HUITP_MSGID_sui_bfsc_repeat_ws_event             = 0x3B94,
+//HUITP_MSGID_sui_bfsc_repeat_ws_event             = 0x3B95,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_repeat_ws_event_t cont;
+	UINT16 msgid;
+	UINT16 length;
+	StrIe_HUITP_IEID_sui_WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	StrIe_HUITP_IEID_sui_WeightIndication_t weight_ind;	
 }StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t;
 
 //组合出料过程
-//HUITP_MSGID_sui_bfsc_ws_comb_out_req             = 0x3B15,
+//HUITP_MSGID_sui_bfsc_ws_comb_out_req             = 0x3B16,
+typedef struct StrIe_HUITP_IEID_sui_CombineType
+{
+	UINT32	WeightCombineType;
+	UINT32	ActionDelayMs;
+}StrIe_HUITP_IEID_sui_CombineType_t;
+
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_req
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_ws_comb_out_req_t cont;
+	UINT16 msgid;
+	UINT16 length;
+	StrIe_HUITP_IEID_sui_CombineType_t weight_combin_type;
 }StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_req_t;
 
-//HUITP_MSGID_sui_bfsc_ws_comb_out_resp            = 0x3B95,
+//HUITP_MSGID_sui_bfsc_ws_comb_out_resp            = 0x3B96,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_ws_comb_out_resp_t cont;
+	UINT16 msgid;
+	UINT16 length;
 }StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t;
 
-//抛料过程
-//HUITP_MSGID_sui_bfsc_ws_give_up_req              = 0x3B16,
-typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_give_up_req
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_ws_give_up_req_t cont;
-}StrMsg_HUITP_MSGID_sui_bfsc_ws_give_up_req_t;
-
-//HUITP_MSGID_sui_bfsc_ws_give_up_resp             = 0x3B96,
-typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_give_up_resp
-{
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_ws_give_up_resp_t cont;
-}StrMsg_HUITP_MSGID_sui_bfsc_ws_give_up_resp_t;
 
 //特殊命令过程（测试等过程）
-//HUITP_MSGID_sui_bfsc_command_req                 = 0x3B17,
+//HUITP_MSGID_sui_bfsc_command_req                 = 0x3B18,
+#define SENSOR_COMMAND_ID_WEITGH_READ (0x0001)
+#define MOTOR_COMMAND_ID (0x0002)
+#define LED1_COMMAND_ID (0x0004)
+#define LED2_COMMAND_ID (0x0008)
+#define LED3_COMMAND_ID (0x0010)
+#define LED4_COMMAND_ID (0x0020)
+#define 	LED_COMMNAD_ON										(1)
+#define 	LED_COMMNAD_OFF									  (2)
+#define 	LED_COMMNAD_BINKING_HIGHSPEED		  (3)
+#define 	LED_COMMNAD_BINKING_LOWSPEED			(4)
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_req
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_command_req_t cont;
+	UINT16 msgid;
+	UINT16 length;
+	UINT32 comand_flags;
+	UINT8 led1_command;
+	UINT8 led2_command;
+	UINT8 led3_command;
+	UINT8 led4_command;
+	UINT32 motor_command;
+	UINT32 sensor_command;
 }StrMsg_HUITP_MSGID_sui_bfsc_command_req_t;
 
-//HUITP_MSGID_sui_bfsc_command_resp                = 0x3B97,
+//HUITP_MSGID_sui_bfsc_command_resp                = 0x3B98,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_resp
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_command_resp_t cont;
+	UINT16	msgid;
+	UINT16 length;
+	StrIe_HUITP_IEID_sui_WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+  StrIe_HUITP_IEID_sui_WmcErrorCode_t result;
+	UINT32 	motor_speed;
+	UINT32 	sensor_weight;
 }StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t;
 
 //差错过程
-//HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B98,
+//HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B99,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_fault_ind
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_fault_ind_t cont;
+	UINT16 	msgid;
+	UINT16 	length;
+	StrIe_HUITP_IEID_sui_WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT16	error_code;
 }StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t;
 
-//HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B19,
+//HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B1A,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_req
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_err_inq_cmd_req_t cont;
+	UINT16 	msgid;
+	UINT16 	length;
+	StrIe_HUITP_IEID_sui_WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT16	error_code;
 }StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_req_t;
 
-//HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B99,
+//HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B9A,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_bfsc_err_inq_cmd_resp_t cont;
+	UINT16 	msgid;
+	UINT16 	length;
+	StrIe_HUITP_IEID_sui_WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT16	error_code;
 }StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t;
 
 
