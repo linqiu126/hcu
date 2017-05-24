@@ -1314,8 +1314,8 @@ static long count_ws_event[16] = {0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0};
 void canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr)
 {
 
-	msg_struct_l3bfsc_wmc_new_ws_event_t snd;
-	memcpy((uint8_t *)&snd, ptr, sizeof(msg_struct_l3bfsc_wmc_new_ws_event_t));
+	msg_struct_l3bfsc_wmc_ws_event_t snd;
+	memcpy((uint8_t *)&snd, ptr, sizeof(msg_struct_l3bfsc_wmc_ws_event_t));
 
 	uint32_t weight_received = snd.weight_ind.average_weight;
 	uint32_t wmc_id_received = snd.wmc_id.wmc_id;

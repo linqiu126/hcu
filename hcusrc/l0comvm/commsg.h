@@ -521,6 +521,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_WMC_STOP_REQ,             //       = 0x3B13,
 	MSG_ID_L3BFSC_WMC_STOP_RESP,            //       = 0x3B93,
 	MSG_ID_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
+	MSG_ID_L3BFSC_WMC_REPEAT_WS_EVENT,		//		 = 0x3B95,
 	MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
 	MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP,     //       = 0x3B95,
 	MSG_ID_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
@@ -2381,21 +2382,22 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
 ** ============================ MYC START FOR BFSC =============================
 ** =============================================================================
 */
-//MSG_ID_CAN_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
-//MSG_ID_CAN_L3BFSC_WMC_SET_CONFIG_REQ,       //       = 0x3B11,
-//MSG_ID_CAN_L3BFSC_WMC_SET_CONFIG_RESP,      //       = 0x3B91,
-//MSG_ID_CAN_L3BFSC_WMC_START_REQ,            //       = 0x3B12,
-//MSG_ID_CAN_L3BFSC_WMC_START_RESP,           //       = 0x3B92,
-//MSG_ID_CAN_L3BFSC_WMC_STOP_REQ,             //       = 0x3B13,
-//MSG_ID_CAN_L3BFSC_WMC_STOP_RESP,            //       = 0x3B93,
-//MSG_ID_CAN_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
-//MSG_ID_CAN_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
-//MSG_ID_CAN_L3BFSC_WMC_WS_COMB_OUT_RESP,     //       = 0x3B95,
-//MSG_ID_CAN_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
-//MSG_ID_CAN_L3BFSC_WMC_COMMAND_RESP,         //       = 0x3B97,
-//MSG_ID_CAN_L3BFSC_WMC_FAULT_IND,            //       = 0x3B98,
-//MSG_ID_CAN_L3BFSC_WMC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
-//MSG_ID_CAN_L3BFSC_WMC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
+//MSG_ID_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
+//MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ,       //       = 0x3B11,
+//MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP,      //       = 0x3B91,
+//MSG_ID_L3BFSC_WMC_START_REQ,            //       = 0x3B12,
+//MSG_ID_L3BFSC_WMC_START_RESP,           //       = 0x3B92,
+//MSG_ID_L3BFSC_WMC_STOP_REQ,             //       = 0x3B13,
+//MSG_ID_L3BFSC_WMC_STOP_RESP,            //       = 0x3B93,
+//MSG_ID_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
+//MSG_ID_L3BFSC_WMC_REPEAT_WS_EVENT,	  //	   = 0x3B95,
+//MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
+//MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP,     //       = 0x3B95,
+//MSG_ID_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
+//MSG_ID_L3BFSC_WMC_COMMAND_RESP,         //       = 0x3B97,
+//MSG_ID_L3BFSC_WMC_FAULT_IND,            //       = 0x3B98,
+//MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
+//MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
 
 // =====================================================================
 // ========== FOLLOWING SHOULD BE SAME AS IN WMC, COPY START ===========
@@ -2480,6 +2482,7 @@ typedef struct WeightSensorParamaters
 	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
 	UINT32	StardardReadyTimeMs;								//???
 	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	//UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
 
 	UINT32	WeightSensorInitOrNot;							// NOT for GUI
 	UINT32	WeightSensorAdcSampleFreq;
@@ -2540,6 +2543,13 @@ typedef struct msg_struct_l3bfsc_wmc_stop_req
 
 /*
 **	MSG_ID_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
+**	MSG_ID_L3BFSC_WMC_REPEAT_WS_EVENT,	  	//	  	 = 0x3B95,
+**
+**	NOTE: These two are used for report Weight event, used same struct
+**	MSG_ID_L3BFSC_WMC_NEW_WS_EVENT -> EMPTY -> LOAD
+**	MSG_ID_L3BFSC_WMC_REPEAT_WS_EVENT -> LOAD -> LOAD. with repeat time, used for AWS to
+**	**
+**
 */
 #define 	WEIGHT_EVENT_ID_LOAD						(0)
 #define 	WEIGHT_EVENT_ID_EMPTY						(1)
@@ -2549,15 +2559,16 @@ typedef struct WeightIndication
 {
 	UINT32 weight_event;		//LOAD, EMPTY, PICKUP(FFS)
 	UINT32 average_weight;		//average value in the detect window  // <--- MUST
+	//UINT32 repeat_times;		// always = 0 for MSG_ID_L3BFSC_WMC_NEW_WS_EVENT, = n for MSG_ID_L3BFSC_WMC_REPEAT_WS_EVENT
 }WeightIndication_t;
 
-typedef struct msg_struct_l3bfsc_wmc_new_ws_event
+typedef struct msg_struct_l3bfsc_wmc_ws_event
 {
 	UINT16 msgid;
 	UINT16 length;
 	WmcId_t wmc_id;             /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
 	WeightIndication_t weight_ind;
-}msg_struct_l3bfsc_wmc_new_ws_event_t;
+}msg_struct_l3bfsc_wmc_ws_event_t;
 
 /*
 **	MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
@@ -2677,7 +2688,8 @@ typedef struct msg_struct_l3bfsc_wmc_msg_header
 #define 	MSG_SIZE_L3BFSC_WMC_START_RESP				(sizeof(msg_struct_l3bfsc_wmc_resp_t))
 #define 	MSG_SIZE_L3BFSC_WMC_STOP_REQ				(sizeof(msg_struct_l3bfsc_wmc_stop_req_t))
 #define 	MSG_SIZE_L3BFSC_WMC_STOP_RESP				(sizeof(msg_struct_l3bfsc_wmc_resp_t))
-#define 	MSG_SIZE_L3BFSC_WMC_NEW_WS_EVENT			(sizeof(msg_struct_l3bfsc_wmc_new_ws_event_t))
+#define 	MSG_SIZE_L3BFSC_WMC_NEW_WS_EVENT			(sizeof(msg_struct_l3bfsc_wmc_ws_event_t))
+#define 	MSG_SIZE_L3BFSC_WMC_REPEAT_WS_EVENT			(sizeof(msg_struct_l3bfsc_wmc_ws_event_t))
 #define 	MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_REQ			(sizeof(msg_struct_l3bfsc_wmc_comb_out_req_t))
 #define 	MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_RESP		(sizeof(msg_struct_l3bfsc_wmc_resp_t))
 #define 	MSG_SIZE_L3BFSC_WMC_FAULT_IND				(sizeof(msg_struct_l3bfsc_wmc_fault_ind_t))
