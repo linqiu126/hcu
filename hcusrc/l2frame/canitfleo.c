@@ -1007,38 +1007,185 @@ int func_canitfleo_test_main(int argc, char **argv)
 	return EXIT_SUCCESS;
 }
 
-// FOR TEST ONLY
-static uint32_t aws_id = 0;
-static uint32_t wmc_id = 0;
-static uint32_t wmc_status = 1;
-static uint32_t wmc_weight_value = 1000;
-// TO BE REMOVED
 
-OPSTAT fsm_canitfleo_can_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+/*
+ * =============================== BFSC MESSAGE PRCESS ===========================
+ */
+
+/* THESE ARE ONLY FOR TEST */
+
+void TestSetConfigReq(uint8_t wmc_id)
 {
-	int ret=0;
-	can_l2frame_itf_t *p = (can_l2frame_itf_t *)param_ptr;
-	uint8_t *p_l2_frame = p->can_l2frame;
-	uint32_t l2_frame_len = p->can_l2frame_len;
+	static uint8_t SetConfigReq[] = {
+	0xfe, 0x7a, 0x84, 0x00, 0x11, 0x3B, 0x80, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x10, 0x27, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0xe8, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00};
 
-	dbi_HcuBfsc_WmcStatusUpdate(aws_id, wmc_id + 1, wmc_status, wmc_weight_value);
-	wmc_id++; if( 16 == wmc_id) wmc_id = 0;	wmc_weight_value++;
-	HcuDebugPrint("CANITFLEO: dbi_HcuBfsc_WmcStatusUpdate, wmc_id=%d, wmc_weight_value=%d\r\n", wmc_id, wmc_weight_value);
+	int len;
+	len = 16 * 8 + 4;
 
-	HcuDebugPrint("CANITFLEO: Received CAN L2 FRAME: [0x%02X, 0x%02X, 0x%02X, 0x%02X], Len = [%d]\r\n", p->can_l2frame[0], p->can_l2frame[1], p->can_l2frame[2], p->can_l2frame[3], p->can_l2frame_len);
-	bsp_can_l2_frame_transmit(&(gTaskCanitfleoContext.can1), p->can_l2frame, p->can_l2frame_len, 0xFFFF);
-
-	/* process the L2 frame messag */
-	canitfleo_can_l2frame_receive_process(p_l2_frame, l2_frame_len);
-
+	bsp_can_l2_frame_transmit(&(gTaskCanitfleoContext.can1), SetConfigReq, len, (0x00100000 | (1 << wmc_id)));
 }
 
-void BigSmallEndianMapping(uint8_t *In, uint8_t *Out, uint32_t len)
+void TestCommandReq()
 {
-	uint32_t i = 0;
-	if( (NULL == In) || (NULL == Out) ) return;
-	for(i = 0; i < len; i++)
-		memcpy( (Out + i), (In + len - i - 1), 1);
+	static uint8_t CommandReq[] = {
+	0xfe, 0xe6, 0x18, 0x00, 0x17, 0x3B, 0x14, 0x00,
+	0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x88, 0x13, 0xe8, 0x03, 0x01, 0x00, 0x00, 0x00,
+	};
+
+	int len = 24;
+
+	bsp_can_l2_frame_transmit(&(gTaskCanitfleoContext.can1), CommandReq, len, 0xFFFF);
+}
+
+void TestStartReq(uint8_t wmc_id)
+{
+	static uint8_t StartReq[] = {0xfe, 0xf6, 0x08, 0x00, 0x12, 0x3B, 0x04, 0x00};
+
+	int len = 8;
+
+	bsp_can_l2_frame_transmit(&(gTaskCanitfleoContext.can1), StartReq, len, (0x00100000 | (1 << wmc_id)));
+}
+
+/*
+ * MESAGE ID MAPPING IN AWS/WMC
+ */
+//	HUITP_MSGID_sui_bfsc_startup_ind                 = 0x3B90,
+//	//配置过程
+//	HUITP_MSGID_sui_bfsc_set_config_req              = 0x3B11,
+//	HUITP_MSGID_sui_bfsc_set_config_resp             = 0x3B91,
+//	//启动过程
+//	HUITP_MSGID_sui_bfsc_start_req                   = 0x3B12,
+//	HUITP_MSGID_sui_bfsc_start_resp                  = 0x3B92,
+//	HUITP_MSGID_sui_bfsc_stop_req                    = 0x3B13,
+//	HUITP_MSGID_sui_bfsc_stop_resp                   = 0x3B93,
+//	//重量汇报过程
+//	HUITP_MSGID_sui_bfsc_new_ws_event                = 0x3B94,
+//	HUITP_MSGID_sui_bfsc_repeat_ws_event             = 0x3B94,
+//	//组合出料过程
+//	HUITP_MSGID_sui_bfsc_ws_comb_out_req             = 0x3B15,
+//	HUITP_MSGID_sui_bfsc_ws_comb_out_resp            = 0x3B95,
+//	//抛料过程
+//	HUITP_MSGID_sui_bfsc_ws_give_up_req              = 0x3B16,
+//	HUITP_MSGID_sui_bfsc_ws_give_up_resp             = 0x3B96,
+//	//特殊命令过程（测试等过程）
+//	HUITP_MSGID_sui_bfsc_command_req                 = 0x3B17,
+//	HUITP_MSGID_sui_bfsc_command_resp                = 0x3B97,
+//	//差错过程
+//	HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B98,
+//	HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B19,
+//	HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B99,
+
+uint16_t HuitpMsgIdMapToInternalMsgId(uint16_t huitp_msgid)
+{
+	switch (huitp_msgid)
+	{
+		case HUITP_MSGID_sui_bfsc_startup_ind:
+			return MSG_ID_L3BFSC_WMC_STARTUP_IND;
+
+		case HUITP_MSGID_sui_bfsc_set_config_req:
+			return MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ;
+		case HUITP_MSGID_sui_bfsc_set_config_resp:
+		   return MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP;
+
+		case HUITP_MSGID_sui_bfsc_start_req:
+			return MSG_ID_L3BFSC_WMC_START_RESP;
+		case HUITP_MSGID_sui_bfsc_start_resp:
+			return MSG_ID_L3BFSC_WMC_START_RESP;
+
+		case HUITP_MSGID_sui_bfsc_stop_req:
+			return MSG_ID_L3BFSC_WMC_STOP_RESP;
+		case HUITP_MSGID_sui_bfsc_stop_resp:
+			return MSG_ID_L3BFSC_WMC_STOP_RESP;
+
+		case HUITP_MSGID_sui_bfsc_new_ws_event:
+			return MSG_ID_L3BFSC_WMC_NEW_WS_EVENT;
+
+		case HUITP_MSGID_sui_bfsc_ws_comb_out_req:
+			return MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ;
+		case HUITP_MSGID_sui_bfsc_ws_comb_out_resp:
+			return MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP;
+
+		case HUITP_MSGID_sui_bfsc_command_req:
+			return MSG_ID_L3BFSC_WMC_COMMAND_REQ;
+		case HUITP_MSGID_sui_bfsc_command_resp:
+			return MSG_ID_L3BFSC_WMC_COMMAND_RESP;
+
+		case HUITP_MSGID_sui_bfsc_fault_ind:
+			return MSG_ID_L3BFSC_WMC_FAULT_IND;
+
+		case HUITP_MSGID_sui_bfsc_err_inq_cmd_req:
+			return MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP;
+		case HUITP_MSGID_sui_bfsc_err_inq_cmd_resp:
+			return MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP;
+
+		default:
+			return 0xFFFF;
+	}
+}
+
+uint16_t InternalMsgIdMapToHuitpMsgId(uint16_t internal_msgid)
+{
+	switch (internal_msgid)
+	{
+		case MSG_ID_L3BFSC_WMC_STARTUP_IND:
+			return HUITP_MSGID_sui_bfsc_startup_ind;
+
+		case MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ:
+		   return HUITP_MSGID_sui_bfsc_set_config_req;
+		case MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP:
+		   return HUITP_MSGID_sui_bfsc_set_config_resp;
+
+		case MSG_ID_L3BFSC_WMC_START_REQ:
+			return HUITP_MSGID_sui_bfsc_start_req;
+		case MSG_ID_L3BFSC_WMC_START_RESP:
+			return HUITP_MSGID_sui_bfsc_start_resp;
+
+		case MSG_ID_L3BFSC_WMC_STOP_REQ:
+			return HUITP_MSGID_sui_bfsc_stop_req;
+		case MSG_ID_L3BFSC_WMC_STOP_RESP:
+			return HUITP_MSGID_sui_bfsc_stop_resp;
+
+		case MSG_ID_L3BFSC_WMC_NEW_WS_EVENT:
+			return HUITP_MSGID_sui_bfsc_new_ws_event;
+
+		case MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ:
+			return HUITP_MSGID_sui_bfsc_ws_comb_out_req;
+		case MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP:
+			return HUITP_MSGID_sui_bfsc_ws_comb_out_resp;
+
+		case MSG_ID_L3BFSC_WMC_COMMAND_REQ:
+			return HUITP_MSGID_sui_bfsc_command_req;
+		case MSG_ID_L3BFSC_WMC_COMMAND_RESP:
+			return HUITP_MSGID_sui_bfsc_command_resp;
+
+		case MSG_ID_L3BFSC_WMC_FAULT_IND:
+			return HUITP_MSGID_sui_bfsc_fault_ind;
+
+		case MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_REQ:
+			return HUITP_MSGID_sui_bfsc_err_inq_cmd_req;
+		case MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP:
+			return HUITP_MSGID_sui_bfsc_err_inq_cmd_resp;
+
+		default:
+			return 0xFFFF;
+	}
 }
 
 OPSTAT BfscMessageLengthCheck(uint16_t msgid, uint16_t length)
@@ -1047,123 +1194,144 @@ OPSTAT BfscMessageLengthCheck(uint16_t msgid, uint16_t length)
 
 	switch (msgid)
 	{
-		case MSG_ID_L3BFSC_STARTUP_IND:
-			if (MSG_SIZE_L3BFSC_STARTUP_IND != length)
+		case MSG_ID_L3BFSC_WMC_STARTUP_IND:
+			if (MSG_SIZE_L3BFSC_WMC_STARTUP_IND != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_STARTUP_IND != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_STARTUP_IND != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_SET_CONFIG_RESP:
-			if (MSG_SIZE_L3BFSC_SET_CONFIG_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_SET_CONFIG_RESP != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_SET_CONFIG_RESP != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_SET_CONFIG_RESP(%d) != length\r\n", MSG_SIZE_L3BFSC_WMC_SET_CONFIG_RESP);
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_START_RESP:
-			if (MSG_SIZE_L3BFSC_START_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_START_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_START_RESP != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_START_RESP != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_START_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_STOP_RESP:
-			if (MSG_SIZE_L3BFSC_STOP_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_STOP_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_STOP_RESP != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_STOP_RESP != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_STOP_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_NEW_WS_EVENT:
-			if (MSG_SIZE_L3BFSC_NEW_WS_EVENT != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_NEW_WS_EVENT:
+			if (MSG_SIZE_L3BFSC_WMC_NEW_WS_EVENT != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_NEW_WS_EVENT != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_NEW_WS_EVENT != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_WS_COMB_OUT_RESP:
-			if (MSG_SIZE_L3BFSC_WS_COMB_OUT_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_RESP != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WS_COMB_OUT_RESP != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_COMMAND_RESP:
-			if (MSG_SIZE_L3BFSC_COMMAND_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_COMMAND_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_COMMAND_RESP != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_COMMAND_RESP != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_COMMAND_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_FAULT_IND:
-			if (MSG_SIZE_L3BFSC_FAULT_IND != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_FAULT_IND:
+			if (MSG_SIZE_L3BFSC_WMC_FAULT_IND != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_FAULT_IND != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_FAULT_IND != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_ERR_INQ_CMD_RESP:
-			if (MSG_SIZE_L3BFSC_ERR_INQ_CMD_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_ERR_INQ_CMD_RESP != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_ERR_INQ_CMD_RESP != length\r\n");
+				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WMC_ERR_INQ_CMD_RESP != length\r\n");
 				return FAILURE;
 			}
+			break;
 		default:
 			return SUCCESS;
 	}
+
 	return SUCCESS;
 }
 
-void canitfleo_can_l2frame_receive_process_bfsc_start_ind(uint8_t *ptr)
+/*
+ * Message Processing function for START_IND
+ */
+void canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr)
 {
-	msg_struct_l3bfsc_startup_ind_t snd;
+	msg_struct_l3bfsc_wmc_startup_ind_t snd;
+
+	memcpy((uint8_t *)&snd, ptr, sizeof(msg_struct_l3bfsc_wmc_startup_ind_t));
 	uint32_t wmc_id_received = snd.wmc_inventory.wmc_id.wmc_id;
 
-	memcpy((uint8_t *)&snd, ptr, sizeof(msg_struct_l3bfsc_startup_ind_t));
-
-	if (hcu_message_send(MSG_ID_L3BFSC_STARTUP_IND, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, sizeof(msg_struct_l3bfsc_startup_ind_t)) == FAILURE)
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+	/* TO DO: TO SEND TO BFSC TASK */
+	//if (hcu_message_send(MSG_ID_L3BFSC_STARTUP_IND, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, sizeof(msg_struct_l3bfsc_startup_ind_t)) == FAILURE)
+	//	HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
 #define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE 1
-	dbi_HcuBfsc_WmcStatusUpdate(aws_id, wmc_id_received + 1, HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE, -1);
+	dbi_HcuBfsc_WmcStatusUpdate(0, wmc_id_received + 1, HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE, -1);
 	HcuDebugPrint("CANITFLEO: dbi_HcuBfsc_WmcStatusUpdate, wmc_id=%d, wmc_weight_value=%d\r\n", wmc_id_received, -1);
 
+	/* THIS IS FOR TEST ONLY, NEED TO MOVE TO BFSC */
+	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process_bfsc_start_ind,  Send SetConfigReq to WMC\r\n");
+	TestSetConfigReq(wmc_id_received);
 }
 
-void canitfleo_can_l2frame_receive_process_bfsc_new_ws_event(uint8_t *ptr)
+/*
+ * Message Processing function for SET_CONFIG_RESP
+ */
+void canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr)
 {
+	msg_struct_l3bfsc_wmc_resp_t snd;
 
-	msg_struct_l3bfsc_new_ws_event_t snd;
-	uint32_t temp = snd.weight_ind.average_weight;
-	uint32_t weight_received = 0;
-	BigSmallEndianMapping((uint8_t)&temp, (uint8_t)&weight_received, sizeof(uint32_t));
+	memcpy((uint8_t *)&snd, ptr, sizeof(msg_struct_l3bfsc_wmc_resp_t));
 	uint32_t wmc_id_received = snd.wmc_id.wmc_id;
 
-	memcpy((uint8_t *)&snd, ptr, sizeof(msg_struct_l3bfsc_new_ws_event_t));
+	/* THIS IS WHERE NEED TO SEND INTERNAL MESSAGE TO BFSC, TO DO */
+	//if (hcu_message_send(MSG_ID_L3BFSC_STARTUP_IND, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, sizeof(msg_struct_l3bfsc_startup_ind_t)) == FAILURE)
+	//	HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
-	if (hcu_message_send(MSG_ID_L3BFSC_NEW_WS_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, sizeof(msg_struct_l3bfsc_startup_ind_t)) == FAILURE)
-		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+	/* Send for Test Only, NEED TO MOVE THE PROCESSING TO BFSC TASK, VIA MESSAGE */
+	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process_bfsc_set_config_resp\r\n");
+	TestStartReq(wmc_id_received);
+}
 
-#define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE 1
-	dbi_HcuBfsc_WmcStatusUpdate(aws_id, wmc_id_received + 1, HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE, weight_received);
+/*
+ * Message Processing function for NEW_WS_EVENT
+ */
+void canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr)
+{
+
+	msg_struct_l3bfsc_wmc_new_ws_event_t snd;
+	memcpy((uint8_t *)&snd, ptr, sizeof(msg_struct_l3bfsc_wmc_new_ws_event_t));
+
+	uint32_t weight_received = snd.weight_ind.average_weight;
+	uint32_t wmc_id_received = snd.wmc_id.wmc_id;
+
+	/* THIS IS ONLY FOR TEST -> NEED TO MOVE TO BFSC AS BELOW */
+	dbi_HcuBfsc_WmcStatusUpdate(0, wmc_id_received + 1, -1, weight_received);
 	HcuDebugPrint("CANITFLEO: dbi_HcuBfsc_WmcStatusUpdate, wmc_id=%d, wmc_weight_value=%d\r\n", wmc_id_received, weight_received);
+
+	/* TO BE UN-COMMENT IF BFSC STATE MACHINE IS OK */
+	//if (hcu_message_send(MSG_ID_L3BFSC_NEW_WS_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, sizeof(msg_struct_l3bfsc_startup_ind_t)) == FAILURE)
+	//	HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 }
 
 OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_frame_len)
 {
 
 	IHU_HUITP_L2FRAME_STD_frame_header_t *p = (IHU_HUITP_L2FRAME_STD_frame_header_t  *)p_l2_frame;
-
-	uint8_t start = p->start;
-	uint8_t chksum = p->chksum;
-
-	uint16_t len = p->len;
-	//BigSmallEndianMapping( (uint8_t *)&(p->len), (uint8_t *)(&len), sizeof(uint16_t));
-
-	uint8_t calc_chksum = ( (start) ^ ( (len>>8) & 0xFF ) ^ (len & 0xFF) );
-
-	HcuDebugPrint("canitfleo_can_l2frame_receive_process: start=0x%02X, chksum=0x%02X, calc_chksum=0x%02X, len=%d\r\n", start, chksum, calc_chksum, len);
-
-	uint16_t msgid =  *((uint16_t *)(&(p->start) + 4));
-	//BigSmallEndianMapping( (uint8_t *)(&(p->start) + 4), (uint8_t *)(&msgid), sizeof(uint16_t) );
-
-	uint16_t length =   *((uint16_t *)(&(p->start) + 8));;
-	//BigSmallEndianMapping( (uint8_t *)(&(p->start) + 8), (uint8_t *)(&length), sizeof(uint16_t) );
-
-	HcuDebugPrint("canitfleo_can_l2frame_receive_process: msgid=0x%02X, length=%d\r\n", msgid, len);
+	msg_struct_l3bfsc_wmc_msg_header_t *pBfscMsg = (msg_struct_l3bfsc_wmc_msg_header_t *)(p + 1);
 
 	if (NULL == p_l2_frame)
 	{
@@ -1177,11 +1345,24 @@ OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_fr
 		return FAILURE;
 	}
 
+	uint8_t start = p->start;
+	uint8_t chksum = p->chksum;
+	uint16_t len = p->len;
+
+	/* Header Checksum */
+	uint8_t calc_chksum = l2packet_gen_chksum(p);
+	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process: l2frame: start=0x%02X, chksum=0x%02X, calc_chksum=0x%02X, len=%d\r\n", start, chksum, calc_chksum, len);
+
 	if(chksum != calc_chksum)
 	{
 		HcuErrorPrint("CANITFLEO: canitfleo_can_l2frame_receive_process, L2 CAN Frame checksum NOK\r\n");
 		return FAILURE;
 	}
+
+	uint16_t msgid_huitp =  pBfscMsg->msgid;
+	uint16_t msgid = HuitpMsgIdMapToInternalMsgId(msgid_huitp);
+	uint16_t length =  pBfscMsg->length;
+	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process: l3bfsc: msgid_huitp=0x%04X, msgid=0x%02X, length=%d\r\n", msgid_huitp, msgid, length);
 
 	if(FAILURE == BfscMessageLengthCheck(msgid, length))
 	{
@@ -1191,61 +1372,87 @@ OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_fr
 
 	switch (msgid)
 	{
-		case MSG_ID_L3BFSC_STARTUP_IND:
-			if (MSG_SIZE_L3BFSC_STARTUP_IND == length)
+		case MSG_ID_L3BFSC_WMC_STARTUP_IND:
+			if (MSG_SIZE_L3BFSC_WMC_STARTUP_IND == length)
 			{
-				HcuDebugPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_STARTUP_IND == length\r\n");
-				canitfleo_can_l2frame_receive_process_bfsc_start_ind(p_l2_frame + 4);
+				HcuDebugPrint("CANITFLEO: call canitfleo_can_l2frame_receive_process_bfsc_start_ind()\r\n");
+				canitfleo_message_process_bfsc_wmc_start_ind((uint8_t *)pBfscMsg);
 			}
-		case MSG_ID_L3BFSC_SET_CONFIG_RESP:
-			if (MSG_SIZE_L3BFSC_SET_CONFIG_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_SET_CONFIG_RESP == length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_SET_CONFIG_RESP != length\r\n");
+				HcuDebugPrint("CANITFLEO: call canitfleo_can_l2frame_receive_process_bfsc_set_config_resp()\r\n");
+				canitfleo_message_process_bfsc_wmc_set_config_resp((uint8_t *)pBfscMsg);
+			}
+			break;
+		case MSG_ID_L3BFSC_WMC_START_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_START_RESP != length)
+			{
+				HcuErrorPrint("CANITFLEO: BfscMessageLengthCheck: MSG_SIZE_L3BFSC_START_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_START_RESP:
-			if (MSG_SIZE_L3BFSC_START_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_STOP_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_STOP_RESP != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_START_RESP != length\r\n");
+				HcuErrorPrint("CANITFLEO: BfscMessageLengthCheck: MSG_SIZE_L3BFSC_STOP_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_STOP_RESP:
-			if (MSG_SIZE_L3BFSC_STOP_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_NEW_WS_EVENT:
+			if (MSG_SIZE_L3BFSC_WMC_NEW_WS_EVENT == length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_STOP_RESP != length\r\n");
+				HcuDebugPrint("CANITFLEO: call canitfleo_can_l2frame_receive_process_bfsc_new_ws_event()\r\n");
+				canitfleo_message_process_bfsc_wmc_new_ws_event((uint8_t *)pBfscMsg);
+			}
+			break;
+		case MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_RESP != length)
+			{
+				HcuErrorPrint("CANITFLEO: BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WS_COMB_OUT_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_NEW_WS_EVENT:
-			if (MSG_SIZE_L3BFSC_NEW_WS_EVENT == length)
+			break;
+		case MSG_ID_L3BFSC_WMC_COMMAND_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_COMMAND_RESP != length)
 			{
-				HcuDebugPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_NEW_WS_EVENT == length\r\n");
-				canitfleo_can_l2frame_receive_process_bfsc_new_ws_event(p_l2_frame + 4);
-			}
-		case MSG_ID_L3BFSC_WS_COMB_OUT_RESP:
-			if (MSG_SIZE_L3BFSC_WS_COMB_OUT_RESP != length)
-			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_WS_COMB_OUT_RESP != length\r\n");
+				HcuErrorPrint("CANITFLEO: BfscMessageLengthCheck: MSG_SIZE_L3BFSC_COMMAND_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_COMMAND_RESP:
-			if (MSG_SIZE_L3BFSC_COMMAND_RESP != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_FAULT_IND:
+			if (MSG_SIZE_L3BFSC_WMC_FAULT_IND != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_COMMAND_RESP != length\r\n");
+				HcuErrorPrint("CANITFLEO: BfscMessageLengthCheck: MSG_SIZE_L3BFSC_FAULT_IND != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_FAULT_IND:
-			if (MSG_SIZE_L3BFSC_FAULT_IND != length)
+			break;
+		case MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP:
+			if (MSG_SIZE_L3BFSC_WMC_ERR_INQ_CMD_RESP != length)
 			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_FAULT_IND != length\r\n");
+				HcuErrorPrint("CANITFLEO: BfscMessageLengthCheck: MSG_SIZE_L3BFSC_ERR_INQ_CMD_RESP != length\r\n");
 				return FAILURE;
 			}
-		case MSG_ID_L3BFSC_ERR_INQ_CMD_RESP:
-			if (MSG_SIZE_L3BFSC_ERR_INQ_CMD_RESP != length)
-			{
-				HcuErrorPrint("BfscMessageLengthCheck: MSG_SIZE_L3BFSC_ERR_INQ_CMD_RESP != length\r\n");
-				return FAILURE;
-			}
+			break;
 		default:
 			return SUCCESS;
 	}
+	return SUCCESS;
+}
+
+/*
+ * CANITFLEO STATE MACHINE PROCESS FUNCTION, MAIN ENTRY FOR MESAGE RECEIVED
+ */
+OPSTAT fsm_canitfleo_can_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	/* PAY ATTENTION THAT the CAN Thread use can_l2frame_itf_t to transfer form/to with CANITFLEO task */
+	can_l2frame_itf_t *p = (can_l2frame_itf_t *)param_ptr;
+	uint8_t *p_l2_frame = p->can_l2frame;
+	uint32_t l2_frame_len = p->can_l2frame_len;
+
+	HcuDebugPrint("CANITFLEO: fsm_canitfleo_can_l2frame_receive, start to process message\r\n");
+
+	/* process the L2 frame message */
+	canitfleo_can_l2frame_receive_process(p_l2_frame, l2_frame_len);
 }

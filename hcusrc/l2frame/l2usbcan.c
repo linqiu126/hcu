@@ -855,6 +855,7 @@ uint32_t bsp_can_l2_frame_transmit(USB_CAN_HandleTypeDef* CanHandle, uint8_t *bu
 		memcpy(CanHandle->can_tx_data.Data, buffer, translen);
 		//ret = HAL_CAN_Transmit(CanHandle, timeout);
 		ret = usb_can_transmit(CanHandle, buffer, translen, CanHandle->can_tx_data.ID, 1); ///!!! EXT FRAMEs
+		//usleep(500);
 		if(ret == SUCCESS)
 		{
 			length -= translen;
