@@ -964,3 +964,87 @@ void bfsc_can_test()
 	}
 }
 
+/*
+ **  CAN API Stub for Ubuntu PC Linux for debug
+ **
+ **  cnt = VCI_Receive(husbcan->can_dev_type, husbcan->can_dev_idx, 0, husbcan->can_rx_data, RX_BUFF_SIZE, RX_WAIT_TIME);
+ **  if (!VCI_OpenDevice(husbcan->can_dev_type, husbcan->can_dev_idx, 0));
+ **  if (!VCI_InitCAN(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &husbcan->can_config));
+ **  if (!VCI_StartCAN(husbcan->can_dev_type, husbcan->can_dev_idx, 0));
+ **  VCI_CloseDevice(husbcan->can_dev_type, husbcan->can_dev_idx);
+ **  if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_tx_data), 1))
+ */
+#ifndef TARGET_LINUX_X86_ADVANTECH
+
+DWORD VCI_OpenDevice(DWORD DeviceType,DWORD DeviceInd,DWORD Reserved)
+{
+	return 1;
+}
+
+DWORD VCI_CloseDevice(DWORD DeviceType,DWORD DeviceInd)
+{
+	return 1;
+}
+
+DWORD VCI_InitCAN(DWORD DeviceType, DWORD DeviceInd, DWORD CANInd, PVCI_INIT_CONFIG pInitConfig)
+{
+	return 1;
+}
+
+DWORD VCI_ReadBoardInfo(DWORD DeviceType,DWORD DeviceInd,PVCI_BOARD_INFO pInfo)
+{
+	return 0;
+}
+
+DWORD VCI_ReadErrInfo(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_ERR_INFO pErrInfo)
+{
+	return 0;
+}
+
+DWORD VCI_ReadCANStatus(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_CAN_STATUS pCANStatus)
+{
+	return 0;
+}
+
+DWORD VCI_GetReference(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,DWORD RefType,PVOID pData)
+{
+	return 0;
+}
+
+DWORD VCI_SetReference(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,DWORD RefType,PVOID pData)
+{
+	return 0;
+}
+
+ULONG VCI_GetReceiveNum(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd)
+{
+	return 0;
+}
+
+DWORD VCI_ClearBuffer(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd)
+{
+	return 0;
+}
+
+DWORD VCI_StartCAN(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd)
+{
+	return 0;
+}
+
+DWORD VCI_ResetCAN(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd)
+{
+	return 1;
+}
+
+ULONG VCI_Transmit(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_CAN_OBJ pSend,unsigned int Len)
+{
+	return 1;
+}
+
+ULONG VCI_Receive(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_CAN_OBJ pReceive,unsigned int Len,INT WaitTime)
+{
+	return 0;
+}
+
+#endif /* #ifndef TARGET_LINUX_X86_ADVANTECH */
+
