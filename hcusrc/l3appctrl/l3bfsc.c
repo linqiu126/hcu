@@ -200,10 +200,15 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");*/
 
+	dbi_HcuBfsc_WmcStatusForceInvalid(0);
+	HcuErrorPrint("L3BFSC: dbi_HcuBfsc_WmcStatusForceInvalid()\r\n");
+
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
 	HCU_DEBUG_PRINT_FAT("L3BFSC: Enter FSM_STATE_L3BFSC_ACTIVED status, Keeping refresh here!\n");
+
+
 
 	//返回
 	return SUCCESS;

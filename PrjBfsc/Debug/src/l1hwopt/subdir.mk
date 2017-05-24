@@ -4,29 +4,29 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/adc.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/apigprs.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/ble.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/camera.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/con3g4g.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/ethernet.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/gpio.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/gps.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/i2c.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/lcd.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/led.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/microphone.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/motor.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/pwm.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/relay.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/spi.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/sps232.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/sps485.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/spsapi.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/switch.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/usbnet.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/wifi.c \
-/home/test/workspace/hcu/hcu/hcusrc/l1hwopt/zeegbe.c 
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/ble.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/camera.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/i2c.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/lcd.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/led.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/microphone.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/motor.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/pwm.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/relay.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/spi.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps232.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps485.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c \
+/home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c 
 
 OBJS += \
 ./src/l1hwopt/adc.o \
@@ -80,161 +80,161 @@ C_DEPS += \
 
 
 # Each subdirectory must supply rules for building sources it contributes
-src/l1hwopt/adc.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/adc.c
+src/l1hwopt/adc.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/adc.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/apigprs.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/apigprs.c
+src/l1hwopt/apigprs.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/apigprs.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/ble.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/ble.c
+src/l1hwopt/ble.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ble.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/camera.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/camera.c
+src/l1hwopt/camera.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/camera.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/con3g4g.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/con3g4g.c
+src/l1hwopt/con3g4g.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/con3g4g.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/ethernet.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/ethernet.c
+src/l1hwopt/ethernet.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/gpio.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/gpio.c
+src/l1hwopt/gpio.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gpio.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/gps.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/gps.c
+src/l1hwopt/gps.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/gps.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/i2c.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/i2c.c
+src/l1hwopt/i2c.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/i2c.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/lcd.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/lcd.c
+src/l1hwopt/lcd.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/lcd.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/led.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/led.c
+src/l1hwopt/led.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/led.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/microphone.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/microphone.c
+src/l1hwopt/microphone.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/microphone.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/motor.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/motor.c
+src/l1hwopt/motor.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/motor.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/pwm.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/pwm.c
+src/l1hwopt/pwm.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/pwm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/relay.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/relay.c
+src/l1hwopt/relay.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/relay.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/spi.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/spi.c
+src/l1hwopt/spi.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spi.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/sps232.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/sps232.c
+src/l1hwopt/sps232.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps232.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/sps485.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/sps485.c
+src/l1hwopt/sps485.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/sps485.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/spsapi.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/spsapi.c
+src/l1hwopt/spsapi.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/spsapi.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/switch.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/switch.c
+src/l1hwopt/switch.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/switch.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/usbnet.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/usbnet.c
+src/l1hwopt/usbnet.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/usbnet.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/wifi.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/wifi.c
+src/l1hwopt/wifi.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/wifi.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
-src/l1hwopt/zeegbe.o: /home/test/workspace/hcu/hcu/hcusrc/l1hwopt/zeegbe.c
+src/l1hwopt/zeegbe.o: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/zeegbe.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

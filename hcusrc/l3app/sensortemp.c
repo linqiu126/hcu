@@ -437,7 +437,7 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		HcuErrorPrint("TEMP: Error stop timer!\n");
 		return FAILURE;
 	}
-
+/*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
@@ -479,19 +479,28 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 				HcuErrorPrint("TEMP: Offline but instance or other control message received!\n");
 			}
 	}
-
-	//在线模式
-	else if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//Online processing
-		//赋值给发送消息
+*/
+	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+	{
+		//L2信息
 		msg_struct_temp_cloudvela_data_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_temp_cloudvela_data_resp_t));
-		snd.length = sizeof(msg_struct_temp_cloudvela_data_resp_t);
-		snd.temp.equipid = rcv.temp.equipid;
-		snd.temp.timeStamp = rcv.temp.timeStamp;
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.usercmdid = rcv.usercmdid;
 		snd.cmdIdBackType = rcv.cmdIdBackType;
 		snd.useroptid = rcv.useroptid;
+
+		snd.temp.equipid = rcv.temp.equipid;
+		snd.temp.timeStamp = rcv.temp.timeStamp;
 		snd.temp.dataFormat = rcv.temp.dataFormat;
 		snd.temp.tempValue = rcv.temp.tempValue;
 		snd.temp.gps.gpsx = rcv.temp.gps.gpsx;
@@ -499,7 +508,11 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.temp.gps.gpsz = rcv.temp.gps.gpsz;
 		snd.temp.gps.ew = rcv.temp.gps.ew;
 		snd.temp.gps.ns = rcv.temp.gps.ns;
-		ret = hcu_message_send(MSG_ID_TEMP_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_TEMP, &snd, snd.length);
+		snd.temp.nTimes = rcv.temp.nTimes;
+		snd.temp.onOffLineFlag = rcv.temp.onOffLineFlag;
+		snd.length = sizeof(msg_struct_temp_cloudvela_data_resp_t);
+
+		ret = hcu_message_send(MSG_ID_TEMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_TEMP, &snd, snd.length);
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
 			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_TEMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);

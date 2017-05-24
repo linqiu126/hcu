@@ -269,8 +269,8 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	//serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
-	serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
-	HCU_DEBUG_PRINT_INF("ETHERNET: Server address = %s\n\n", HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server address = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 	HCU_DEBUG_PRINT_INF("ETHERNET: Server port = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 
@@ -376,7 +376,7 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		//curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0);
 
 		//设置目标地址
-		curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.svrAddrHttpDefault);
+		curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.svrAddrHttpHome);
 		//curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.cloudHttpAddLocal);
 
 		//设置超时时长，做为发送API，这个设置绝对必要，不然会阻塞在这儿
@@ -409,7 +409,7 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 			return FAILURE;
 		}else{
-			HCU_DEBUG_PRINT_INF("ETHERNET: Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n", receiveBuffer.length,  receiveBuffer.buf);
+			HCU_DEBUG_PRINT_INF("ETHERNET: Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n\n\n\n", receiveBuffer.length,  receiveBuffer.buf);
 		}
 
 		//将数据发送给CLOUD，有关这个长度应该>0或者>1的问题，最后还是1，因为心跳握手帧只有二个字节的长度

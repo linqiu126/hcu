@@ -189,7 +189,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		//对信息进行MODBUS协议的编码，包括CRC16的生成
 		memset(&currentSpsBuf, 0, sizeof(SerialSpsMsgBuf_t));
 
-		snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+		snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 
 		//对发送数据进行编码
 
@@ -202,7 +202,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 			HcuDebugPrint("SPSVIRGO: Preparing send SPSVIRGO noise req data = %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
 		}
-
+//
 		//发送串口指令
 		//ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, currentSpsBuf.curLen);
 		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), currentSpsBuf.curBuf, currentSpsBuf.curLen);
@@ -274,9 +274,9 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 			return FAILURE;
 		}
+//
 
-
-/*
+/*//
 		//放点假数据进行测试
 		currentSpsBuf.curLen = 16;
 		//Resp Hex: 41 57 41 41 2C 20 34 33 2E 34 64 42 41 2C 42 03(ASCII: AWAA, 43.4dBA,B end)
@@ -287,9 +287,9 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 				currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],\
 				currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],\
 				currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15]);
-*/
 
 
+*///
 		//解码,检查返回结果,赋值
 		if (currentSpsBuf.curBuf[9] == SPSVIRGO_NOISE_RTU_EQUIPMENT_IND && currentSpsBuf.curBuf[0] == SPSVIRGO_NOISE_RTU_EQUIPMENT_ID)
 		{

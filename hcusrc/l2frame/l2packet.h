@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-//GENERAL FRAME帧结�?
+//GENERAL FRAME帧结�?
 typedef struct IHU_HUITP_L2FRAME_STD_frame_header
 {
   uint8_t start;
@@ -19,6 +19,7 @@ typedef struct IHU_HUITP_L2FRAME_Desc_s
 {
 	uint32_t RxState;
 	uint8_t *pRxBuffPtr;
+	uint8_t  wmc_id;
 	uint16_t RxBuffSize;
 	uint16_t RxXferCount;
 	void (*app_rx_callback)();

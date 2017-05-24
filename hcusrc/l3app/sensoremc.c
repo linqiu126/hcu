@@ -312,7 +312,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 {
 	int ret=0;
 	//这种申明方法，已经分配了完整的内存空间，不用再MALLOC单独申请内存了
-	HcuDiscDataSampleStorageArray_t record;
+	//HcuDiscDataSampleStorageArray_t record;
 
 	msg_struct_modbus_emc_data_report_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_modbus_emc_data_report_t));
@@ -332,7 +332,7 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 		HcuErrorPrint("EMC: Error stop timer!\n");
 		return FAILURE;
 	}
-
+/*
 	//离线模式
 	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE){
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
@@ -377,19 +377,28 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 				HcuErrorPrint("EMC: Offline but instance or other control message received!\n");
 			}
 	}
-
-	//在线模式
-	else if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
-		//Online processing
-		//赋值给发送消息
+*/
+	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
+	{
+		//L2信息
 		msg_struct_emc_cloudvela_data_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_emc_cloudvela_data_resp_t));
-		snd.length = sizeof(msg_struct_emc_cloudvela_data_resp_t);
-		snd.emc.equipid = rcv.emc.equipid;
-		snd.emc.timeStamp = rcv.emc.timeStamp;
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.baseResp = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.usercmdid = rcv.usercmdid;
 		snd.cmdIdBackType = rcv.cmdIdBackType;
 		snd.useroptid = rcv.useroptid;
+
+		snd.emc.equipid = rcv.emc.equipid;
+		snd.emc.timeStamp = rcv.emc.timeStamp;
 		snd.emc.dataFormat = rcv.emc.dataFormat;
 		snd.emc.emcValue = rcv.emc.emcValue;
 		snd.emc.gps.gpsx = rcv.emc.gps.gpsx;
@@ -397,10 +406,14 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 		snd.emc.gps.gpsz = rcv.emc.gps.gpsz;
 		snd.emc.gps.ew = rcv.emc.gps.ew;
 		snd.emc.gps.ns = rcv.emc.gps.ns;
-		ret = hcu_message_send(MSG_ID_EMC_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_EMC, &snd, snd.length);
+		snd.emc.nTimes = rcv.emc.nTimes;
+		snd.emc.onOffLineFlag = rcv.emc.onOffLineFlag;
+		snd.length = sizeof(msg_struct_emc_cloudvela_data_resp_t);
+
+		ret = hcu_message_send(MSG_ID_EMC_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_EMC, &snd, snd.length);
 		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
-			HcuErrorPrint("EMC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_EMC].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;
+			HcuErrorPrint("TEMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_TEMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 			return FAILURE;
 		}
 
@@ -410,16 +423,16 @@ OPSTAT fsm_emc_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * par
 			//RECORD还要存入数据库
 			sensor_emc_data_element_t emcData;
 			memset(&emcData, 0, sizeof(sensor_emc_data_element_t));
-			emcData.equipid = record.equipid;
-			emcData.timeStamp = record.timestamp;
-			emcData.dataFormat = record.dataFormat;
-			emcData.emcValue = record.emcValue;
-			emcData.gps.gpsx = record.gpsx;
-			emcData.gps.gpsy = record.gpsy;
-			emcData.gps.gpsz = record.gpsz;
-			emcData.gps.ew = record.ew;
-			emcData.gps.ns = record.ns;
-			emcData.onOffLineFlag = record.onOffLine;
+			emcData.equipid = rcv.emc.equipid;
+			emcData.timeStamp = rcv.emc.timeStamp;
+			emcData.dataFormat = rcv.emc.dataFormat;
+			emcData.emcValue = rcv.emc.emcValue;
+			emcData.gps.gpsx = rcv.emc.gps.gpsx;
+			emcData.gps.gpsy = rcv.emc.gps.gpsy;
+			emcData.gps.gpsz = rcv.emc.gps.gpsz;
+			emcData.gps.ew = rcv.emc.gps.ew;
+			emcData.gps.ns = rcv.emc.gps.ns;
+			emcData.onOffLineFlag = rcv.emc.onOffLineFlag;
 			ret = dbi_HcuEmcDataInfo_save(&emcData);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_EMC]++;
