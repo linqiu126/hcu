@@ -366,7 +366,7 @@ can_l2frame_itf_t can_l2frame_itf_tx_buffer; 					//newly add by MYC
 
 UINT32 WmcCanIdMapToWmcId(UINT32 wmc_can_id)
 {
-	return (wmc_can_id % WMC_NODE_NUMBER);
+	return ((wmc_can_id & 0xFF));
 }
 
 /*
@@ -529,10 +529,10 @@ void *can_rx_thread(void *data)
         	wmc_id = WmcCanIdMapToWmcId(husbcan->can_rx_data[i].ID);
         	USB_CAN_RxCpltCallback(husbcan, &husbcan->can_rx_data[i], wmc_id);
 
-        	printf("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], len=%d, canid=0x%X, wmc_id=%d, total_frame=%d\r\n", husbcan->can_channel_id,
-        			husbcan->can_rx_data[i].Data[0], husbcan->can_rx_data[i].Data[1], husbcan->can_rx_data[i].Data[2], husbcan->can_rx_data[i].Data[3],
-					husbcan->can_rx_data[i].Data[4], husbcan->can_rx_data[i].Data[5], husbcan->can_rx_data[i].Data[6], husbcan->can_rx_data[i].Data[7],
-					husbcan->can_rx_data[i].DataLen, husbcan->can_rx_data[i].ID, wmc_id, total_cnt);
+//        	HcuDebugPrint("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], len=%d, canid=0x%X, wmc_id=%d, total_frame=%d\r\n", husbcan->can_channel_id,
+//        			husbcan->can_rx_data[i].Data[0], husbcan->can_rx_data[i].Data[1], husbcan->can_rx_data[i].Data[2], husbcan->can_rx_data[i].Data[3],
+//					husbcan->can_rx_data[i].Data[4], husbcan->can_rx_data[i].Data[5], husbcan->can_rx_data[i].Data[6], husbcan->can_rx_data[i].Data[7],
+//					husbcan->can_rx_data[i].DataLen, husbcan->can_rx_data[i].ID, wmc_id, total_cnt);
         }
 
         /* to add framing */
@@ -728,10 +728,10 @@ UINT32 usb_can_transmit(USB_CAN_HandleTypeDef *husbcan, UINT8 *ptr_data, UINT32 
         return FAILURE;
     }
 
-    printf("usb_can_transmit: CAN%d TX [%02X %02X %02X %02X %02X %02X %02X %02X]: ID=%08x\r\n", 0,
-    		husbcan->can_tx_data.Data[0], husbcan->can_tx_data.Data[1], husbcan->can_tx_data.Data[2], husbcan->can_tx_data.Data[3],
-			husbcan->can_tx_data.Data[4], husbcan->can_tx_data.Data[5], husbcan->can_tx_data.Data[6], husbcan->can_tx_data.Data[7],
-			husbcan->can_tx_data.ID);
+//    printf("usb_can_transmit: CAN%d TX [%02X %02X %02X %02X %02X %02X %02X %02X]: ID=%08x\r\n", 0,
+//    		husbcan->can_tx_data.Data[0], husbcan->can_tx_data.Data[1], husbcan->can_tx_data.Data[2], husbcan->can_tx_data.Data[3],
+//			husbcan->can_tx_data.Data[4], husbcan->can_tx_data.Data[5], husbcan->can_tx_data.Data[6], husbcan->can_tx_data.Data[7],
+//			husbcan->can_tx_data.ID);
 
     return SUCCESS;
 }
@@ -781,10 +781,10 @@ void app_can_loopback_callback(IHU_HUITP_L2FRAME_Desc_t *pdesc)
 
 	CanHandle = (USB_CAN_HandleTypeDef* )pdesc->UserData;
 
-	HcuDebugPrint("CAN ISR: L2Packet %d bytes, first: 0x%02x %02x last: 0x%02x %02x\r\n",
-		pdesc->RxXferCount,
-		CanHandle->can_rx_data[0].Data[0], CanHandle->can_rx_data[0].Data[1],
-		CanHandle->can_rx_data[0].Data[6], CanHandle->can_rx_data[0].Data[7]);
+//	HcuDebugPrint("CAN ISR: L2Packet %d bytes, first: 0x%02x %02x last: 0x%02x %02x\r\n",
+//		pdesc->RxXferCount,
+//		CanHandle->can_rx_data[0].Data[0], CanHandle->can_rx_data[0].Data[1],
+//		CanHandle->can_rx_data[0].Data[6], CanHandle->can_rx_data[0].Data[7]);
 
 	/* SAVE THE FRAME LEN !!!!! */
 	can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len = pdesc->RxXferCount;
