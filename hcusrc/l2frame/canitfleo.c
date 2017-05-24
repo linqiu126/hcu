@@ -212,7 +212,7 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//测试目的，正式程序中可以去掉
 	else if ((rcv.timeId == TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
-		func_canitfleo_bfsc_simulation_data_process();
+		//func_canitfleo_bfsc_simulation_data_process();
 	}
 #endif
 	return SUCCESS;
@@ -1009,7 +1009,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 
 
 /*
- * =============================== BFSC MESSAGE PRCESS ===========================
+ * =============================== BFSC MESSAGE PROCESS ===========================
  */
 
 /* THESE ARE ONLY FOR TEST */
@@ -1283,7 +1283,7 @@ void canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr)
 	HcuDebugPrint("CANITFLEO: dbi_HcuBfsc_WmcStatusUpdate, wmc_id=%d, wmc_weight_value=%d\r\n", wmc_id_received, -1);
 
 	/* THIS IS FOR TEST ONLY, NEED TO MOVE TO BFSC */
-	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process_bfsc_start_ind,  Send SetConfigReq to WMC\r\n");
+	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process_bfsc_start_ind (%d),  Send SetConfigReq to WMC\r\n", wmc_id_received);
 	TestSetConfigReq(wmc_id_received);
 }
 
@@ -1302,13 +1302,15 @@ void canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr)
 	//	HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
 	/* Send for Test Only, NEED TO MOVE THE PROCESSING TO BFSC TASK, VIA MESSAGE */
-	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process_bfsc_set_config_resp\r\n");
+	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process_bfsc_set_config_resp(%)\r\n", wmc_id_received);
 	TestStartReq(wmc_id_received);
 }
 
 /*
  * Message Processing function for NEW_WS_EVENT
  */
+static long count_ws_event[16] = {0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0};
+
 void canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr)
 {
 
@@ -1317,10 +1319,17 @@ void canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr)
 
 	uint32_t weight_received = snd.weight_ind.average_weight;
 	uint32_t wmc_id_received = snd.wmc_id.wmc_id;
+	count_ws_event[wmc_id_received]++;
 
 	/* THIS IS ONLY FOR TEST -> NEED TO MOVE TO BFSC AS BELOW */
 	dbi_HcuBfsc_WmcStatusUpdate(0, wmc_id_received + 1, -1, weight_received);
 	HcuDebugPrint("CANITFLEO: dbi_HcuBfsc_WmcStatusUpdate, wmc_id=%d, wmc_weight_value=%d\r\n", wmc_id_received, weight_received);
+
+	HcuDebugPrint("CANITFLEO: WS EVENT: [%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d]\r\n",
+			count_ws_event[0], count_ws_event[1], count_ws_event[2], count_ws_event[3],
+			count_ws_event[4], count_ws_event[5], count_ws_event[6], count_ws_event[7],
+			count_ws_event[8], count_ws_event[9], count_ws_event[10], count_ws_event[11],
+			count_ws_event[12], count_ws_event[13], count_ws_event[14], count_ws_event[15]);
 
 	/* TO BE UN-COMMENT IF BFSC STATE MACHINE IS OK */
 	//if (hcu_message_send(MSG_ID_L3BFSC_NEW_WS_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, sizeof(msg_struct_l3bfsc_startup_ind_t)) == FAILURE)
