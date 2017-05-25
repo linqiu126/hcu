@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrIe_HUITP_IEID_sui_sw_package_body" key="selection"/>
+		<item value="HCU_SYSCFG_TRACE_DEBUG_INF_ON" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HCU_SYSCFG_TRACE_DEBUG_INF_ON"/>
+			<item value="HCU_SYSCFG_TRACE_DEBUG_SET"/>
+			<item value="HCU_WORKING_PROJECT_NAME_BFSC_CBU"/>
+			<item value="HCU_DEBUG"/>
 			<item value="StrIe_HUITP_IEID_sui_sw_package_body"/>
 			<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
 			<item value="HUITP_IEID_sui_sw_package_body"/>
 			<item value="SW_PACKAGE_BODY_MAX_LEN"/>
-			<item value="HUITP_IEID_uni_com_segment"/>
-			<item value="seg"/>
-			<item value="seg_"/>
-			<item value="StrIe_HUITP_IEID_sui_sw_package_body_t"/>
 		</list>
 		<list key="replacehistory">
 			<item value="IEID"/>
