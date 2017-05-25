@@ -572,9 +572,9 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 
 		//后台链接部分
 		if(sqlRow[index]) strncpy(engPar->cloud.svrAddrHttpLocal, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.svrAddrSocketipDefault, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.svrAddrHttpDefault, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.svrNameDefault, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.svrAddrSocketipHome, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.svrAddrHttpHome, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX-1);
+		if(sqlRow[index]) strncpy(engPar->cloud.svrNameHome, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
 
 		//For HCU SW download
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpAdd, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX-1);

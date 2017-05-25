@@ -559,10 +559,10 @@
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
 	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
-	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php"//XiaoHui
-	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"//XiaoHui
-    //#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME			"https://h5.aiqiworld.com/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php"//Aiqi
-    //#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.185.177"//Aiqi
+	//#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php"//XiaoHui
+	//#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"//XiaoHui
+    #define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME			    "https://h5.aiqiworld.com/xhzn/mfunhcu/l1mainentry/cloud_wechat.php"//Aiqi
+    #define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.185.177"//Aiqi
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET 			HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML

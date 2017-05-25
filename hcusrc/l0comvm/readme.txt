@@ -12,6 +12,19 @@
 [BUG#003]
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
+
+//= ZSC, 2017 May.24, CURRENT_SW_DELIVERY 200=>AQYC项目
+= bug fix by shanchun for segment fault when plug in the 3G dougle, root cause to be check
+
+//= ZSC, 2017 May.20, CURRENT_SW_DELIVERY 199=>AQYC项目
+= 颗粒物查询TSP，PM2.5，PM10的Bug修复
+
+//= ZSC, 2017 May.18, CURRENT_SW_DELIVERY 198=>AQYC项目
+= bug fix for PM25 data unpack
+
+//= ZSC, 2017 May.17, CURRENT_SW_DELIVERY 197=>AQYC项目
+= switch to Aiqi cloud
+
 //= ZSC, 2017 May.16, CURRENT_SW_DELIVERY 196=>AQYC项目
 = bug fix for noise data format
 
