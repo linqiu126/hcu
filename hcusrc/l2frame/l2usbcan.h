@@ -195,6 +195,11 @@ ULONG VCI_Receive(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_CAN_OBJ pRe
 #define 	CAN_L2_FRAME_FORWARD_YES	(1)
 #define 	CAN_L2_FRAME_FORWARD_NO		(0)
 
+#define MAX_CHANNELS  4
+#define CHECK_POINT  200
+#define RX_WAIT_TIME  100
+#define RX_BUFF_SIZE  1000
+
 /*
  * @brief  CAN handle Structure definition
  */
@@ -209,13 +214,50 @@ typedef struct
 	UINT32 can_l2_forwarding_mode;
 	UINT32 can_status;
 	VCI_INIT_CONFIG can_config;
-	VCI_CAN_OBJ can_data;
+	VCI_CAN_OBJ can_tx_data;
+	VCI_CAN_OBJ can_rx_data[RX_BUFF_SIZE]; // buffer
 }USB_CAN_HandleTypeDef;
+
+/*
+ * @brief  L2 Frame over CAN Interface between CAN and CANITFLOE
+ */
+#define BFSC_CAN_MAX_RX_BUF_SIZE 256
+#define WMC_NODE_NUMBER 17
+
+typedef struct
+{
+	UINT32 can_id_tx_wmc_bitmap;
+	UINT32 can_id_rx_wmc_id;
+	UINT32 can_l2frame_len;
+	UINT8  can_l2frame[BFSC_CAN_MAX_RX_BUF_SIZE];
+}can_l2frame_itf_t;
+
+#define 	CAN_L2_FRAME_ITF_LEN	(sizeof(can_l2frame_itf_t))
+
+
+
 
 /* CAN Interface APIs */
 UINT32 usb_can_deinit(USB_CAN_HandleTypeDef *husbcan);
 UINT32 usb_can_init(USB_CAN_HandleTypeDef *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
-uint32_t bsp_can_l2_frame_transmit(USB_CAN_HandleTypeDef* CanHandle, uint8_t *buffer, uint32_t length, uint32_t timeout);
+uint32_t bsp_can_l2_frame_transmit(USB_CAN_HandleTypeDef* CanHandle, uint8_t *buffer, uint32_t length, UINT32 wmc_id_bitmap);
 
+/* API Usage */
+//ret = usb_can_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
+//		CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN0, \
+//		CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
+//
+//HcuDebugPrint("CANITFLEO: usb_can_init() called, ret = %d\r\n", ret);
+
+//OPSTAT fsm_canitfleo_can_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//{
+//	int ret=0;
+//	can_l2frame_itf_t *p = (can_l2frame_itf_t *)param_ptr;
+//
+//	HcuDebugPrint("CANITFLEO: Received CAN L2 FRAME: [0x%02X, 0x%02X, 0x%02X, 0x%02X], Len = [%d]\r\n", p[0], p[1], p[2], p[3], param_len);
+//
+//	bsp_can_l2_frame_transmit(&(gTaskCanitfleoContext.can1), p->can_l2frame, p->can_l2frame_len, 0xFFFF);
+//
+//}
 
 #endif /* L2USBCAN_H_ */

@@ -76,21 +76,21 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1932435560" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
 								<option id="gnu.cpp.link.option.libs.712394734" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rt"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="usb"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="mysqlclient"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pthread"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="curl"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="xml2"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="avcodec"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="avformat"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="avutil"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="avdevice"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="avfilter"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="swscale"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="m"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="SDL2"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3"/>
+									<listOptionValue builtIn="false" value="rt"/>
+									<listOptionValue builtIn="false" value=""/>
+									<listOptionValue builtIn="false" value="mysqlclient"/>
+									<listOptionValue builtIn="false" value="pthread"/>
+									<listOptionValue builtIn="false" value="curl"/>
+									<listOptionValue builtIn="false" value="xml2"/>
+									<listOptionValue builtIn="false" value="avcodec"/>
+									<listOptionValue builtIn="false" value="avformat"/>
+									<listOptionValue builtIn="false" value="avutil"/>
+									<listOptionValue builtIn="false" value="avdevice"/>
+									<listOptionValue builtIn="false" value="avfilter"/>
+									<listOptionValue builtIn="false" value="swscale"/>
+									<listOptionValue builtIn="false" value="m"/>
+									<listOptionValue builtIn="false" value="SDL2"/>
+									<listOptionValue builtIn="false" value="sqlite3"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1071349470" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>

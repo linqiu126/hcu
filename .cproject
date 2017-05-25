@@ -34,8 +34,11 @@
 								<option id="gnu.c.compiler.option.include.paths.698847270" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/libxml2"/>
 									<listOptionValue builtIn="false" value="/usr/include/curl"/>
+<<<<<<< HEAD
+=======
 									<listOptionValue builtIn="false" value="/root/ffmpeg_build/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/sqlite3/include"/>
+>>>>>>> 6698c167b9cefc48183648adbbf9c497e85da30f
 								</option>
 								<option id="gnu.c.compiler.option.dialect.std.397322296" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.optimization.flags.332034320" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-lpthread" valueType="string"/>
@@ -47,6 +50,14 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.204780473" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.libs.750371443" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
+<<<<<<< HEAD
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rt"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pthread"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="curl"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="xml2"/>
+								</option>
+								<option id="gnu.c.link.option.paths.2103930069" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths"/>
+=======
 									<listOptionValue builtIn="false" value="rt"/>
 									<listOptionValue builtIn="false" value="usb"/>
 									<listOptionValue builtIn="false" value="mysqlclient"/>
@@ -68,6 +79,7 @@
 									<listOptionValue builtIn="false" value="/root/ffmpeg_build/lib"/>
 									<listOptionValue builtIn="false" value="/usr/local/sqlite3/lib"/>
 								</option>
+>>>>>>> 6698c167b9cefc48183648adbbf9c497e85da30f
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1505159480" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -119,6 +131,8 @@
 								<option id="gnu.cpp.compiler.option.debugging.level.1901041566" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1952771017" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
+<<<<<<< HEAD
+=======
 								<option id="gnu.c.link.option.libs.1953094719" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="avcodec"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="avformat"/>
@@ -134,6 +148,7 @@
 								<option id="gnu.c.link.option.paths.2055379914" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>
 								</option>
+>>>>>>> 6698c167b9cefc48183648adbbf9c497e85da30f
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.2004592313" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -171,18 +186,26 @@
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.1078640460" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1146209689" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/hcu}/Debug" id="cdt.managedbuild.builder.gnu.cross.1231000540" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+<<<<<<< HEAD
+							<tool command="/usr/local/arm/arm-2009q3/bin/arm-none-linux-gnueabi-gcc" id="cdt.managedbuild.tool.gnu.cross.c.compiler.1403154707" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+=======
 							<tool command="/usr/local/arm/arm-2014.05/bin/arm-none-linux-gnueabi-gcc" id="cdt.managedbuild.tool.gnu.cross.c.compiler.1403154707" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+>>>>>>> 6698c167b9cefc48183648adbbf9c497e85da30f
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.885393034" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.998637191" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1460654454" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TARGET_LINUX_ARM"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.paths.1908641763" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+<<<<<<< HEAD
+									<listOptionValue builtIn="false" value="/usr/local/arm/linux_arm_a8/include/libxml2"/>
+=======
 									<listOptionValue builtIn="false" value="/usr/local/mysql_arm/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/arm/linux_arm_a8/include/libxml2"/>
 									<listOptionValue builtIn="false" value="/root/ffmpeg_build_arm/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/arm/linux_arm_a8_curl/include"/>
 									<listOptionValue builtIn="false" value="/usr/local/sqlite3_arm/include"/>
+>>>>>>> 6698c167b9cefc48183648adbbf9c497e85da30f
 								</option>
 								<option id="gnu.c.compiler.option.dialect.std.397322296.1521018428" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.optimization.flags.1924288968" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-lpthread" valueType="string"/>
@@ -192,6 +215,18 @@
 								<option id="gnu.cpp.compiler.option.optimization.level.884736693" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.956845930" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 							</tool>
+<<<<<<< HEAD
+							<tool command="/usr/local/arm/arm-2009q3/bin/arm-none-linux-gnueabi-gcc" id="cdt.managedbuild.tool.gnu.cross.c.linker.1699499488" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
+								<option id="gnu.c.link.option.libs.394210607" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="rt"/>
+									<listOptionValue builtIn="false" value="pthread"/>
+									<listOptionValue builtIn="false" value="xml2"/>
+									<listOptionValue builtIn="false" value="curl"/>
+								</option>
+								<option id="gnu.c.link.option.paths.941058806" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="/usr/local/arm/linux_arm_a8/lib"/>
+								</option>
+=======
 							<tool command="/usr/local/arm/arm-2014.05/bin/arm-none-linux-gnueabi-gcc" id="cdt.managedbuild.tool.gnu.cross.c.linker.1699499488" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.libs.394210607" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="rt"/>
@@ -228,6 +263,7 @@
 									<listOptionValue builtIn="false" value="/usr/local/ncurses5_arm/lib"/>
 								</option>
 								<option id="gnu.c.link.option.ldflags.242204853" name="Linker flags" superClass="gnu.c.link.option.ldflags" value="" valueType="string"/>
+>>>>>>> 6698c167b9cefc48183648adbbf9c497e85da30f
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1530223815" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -247,6 +283,8 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
+<<<<<<< HEAD
+=======
 		<cconfiguration id="cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1754290045">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1754290045" moduleId="org.eclipse.cdt.core.settings" name="RasberryPi">
 				<externalSettings/>
@@ -334,6 +372,7 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
+>>>>>>> 6698c167b9cefc48183648adbbf9c497e85da30f
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="hcu.cdt.managedbuild.target.gnu.cross.exe.1321461309" name="Executable" projectType="cdt.managedbuild.target.gnu.cross.exe"/>
@@ -344,6 +383,25 @@
 			<resource resourceType="PROJECT" workspacePath="/hcu"/>
 		</configuration>
 		<configuration configurationName="Linux_Arm_A8"/>
+<<<<<<< HEAD
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/hcu"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.50817867;cdt.managedbuild.config.gnu.cross.exe.release.50817867.;cdt.managedbuild.tool.gnu.cross.c.compiler.1613889567;cdt.managedbuild.tool.gnu.c.compiler.input.803392321">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1486102072;cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1486102072.;cdt.managedbuild.tool.gnu.cross.c.compiler.1403154707;cdt.managedbuild.tool.gnu.c.compiler.input.1466288204">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1873467400;cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.;cdt.managedbuild.tool.gnu.cross.c.compiler.1818132500;cdt.managedbuild.tool.gnu.c.compiler.input.1214323317">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+=======
 		<configuration configurationName="RasberryPi">
 			<resource resourceType="PROJECT" workspacePath="/hcu"/>
 		</configuration>
@@ -368,4 +426,5 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+>>>>>>> 6698c167b9cefc48183648adbbf9c497e85da30f
 </cproject>

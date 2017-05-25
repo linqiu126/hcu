@@ -69,12 +69,10 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 	else
 		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
 
-
-	HcuDebugPrint("HUITPXML: zHcuSysEngPar.cloud.svrNameDefault = %s !\n\n", zHcuSysEngPar.cloud.svrNameDefault);
-	HcuDebugPrint("HUITPXML: zHcuSysEngPar.cloud.svrNameHome = %s !\n\n", zHcuSysEngPar.cloud.svrNameHome);
-	HcuDebugPrint("HUITPXML: gTaskCloudvelaContext.L2Link.destUser = %s !\n\n", gTaskCloudvelaContext.L2Link.destUser);
-	HcuDebugPrint("HUITPXML: gTaskCloudvelaContext.linkId = %d !\n\n", gTaskCloudvelaContext.linkId);
-
+	HCU_DEBUG_PRINT_INF("HUITPXML: zHcuSysEngPar.cloud.svrNameDefault = %s !\n\n", zHcuSysEngPar.cloud.svrNameDefault);
+	HCU_DEBUG_PRINT_INF("HUITPXML: zHcuSysEngPar.cloud.svrNameHome = %s !\n\n", zHcuSysEngPar.cloud.svrNameHome);
+	HCU_DEBUG_PRINT_INF("HUITPXML: gTaskCloudvelaContext.L2Link.destUser = %s !\n\n", gTaskCloudvelaContext.L2Link.destUser);
+	HCU_DEBUG_PRINT_INF("HUITPXML: gTaskCloudvelaContext.linkId = %d !\n\n", gTaskCloudvelaContext.linkId);
 	
 	//Message Type content
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L);

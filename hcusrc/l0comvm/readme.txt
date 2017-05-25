@@ -13,7 +13,7 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
-//= ZSC, 2017 May.24, CURRENT_SW_DELIVERY 200=>AQYC项目
+//= ZSC, 2017 May.25, CURRENT_SW_DELIVERY 200=>AQYC项目
 = bug fix by shanchun for segment fault when plug in the 3G dougle, root cause to be check
 
 //= ZSC, 2017 May.20, CURRENT_SW_DELIVERY 199=>AQYC项目
@@ -22,8 +22,13 @@
 //= ZSC, 2017 May.18, CURRENT_SW_DELIVERY 198=>AQYC项目
 = bug fix for PM25 data unpack
 
-//= ZSC, 2017 May.17, CURRENT_SW_DELIVERY 197=>AQYC项目
-= switch to Aiqi cloud
+
+//= ZJL/MYC, 2017 May.25, CURRENT_SW_DELIVERY 197=>BFSC项目
+= 整合BFSC之前改动的所有内容，特别是ＣＡＮ接口的驱动程序代码
+= 创建AdvanceTechBuntu目标机的编译环境
+= 清理HUITP FRAME的协议接口规范
+= 准备调整整个系统的状态机机制
+
 
 //= ZSC, 2017 May.16, CURRENT_SW_DELIVERY 196=>AQYC项目
 = bug fix for noise data format

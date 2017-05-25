@@ -50,6 +50,9 @@ typedef struct L3BfscSensorWsInfo
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 4		//秤盘有料待出料
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 5		//秤盘有料待抛弃
 
+#define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE		 0		//秤盘
+#define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE		 1		//秤盘
+
 //统计周期，为了计算滑动平均数据
 #define HCU_L3BFSC_STA_CYCLE_DUR  60000 //1分钟，相当于60S
 #define HCU_L3BFSC_STA_UNIT_DUR  500 //500ms的单位，这是统计周期颗粒度，跟TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN保持一致
