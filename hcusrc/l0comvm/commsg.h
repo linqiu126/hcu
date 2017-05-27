@@ -480,18 +480,7 @@ enum HCU_INTER_TASK_MSG_ID
 	//CANITF
 	MSG_ID_CANITFLEO_DATA_REPORT,
 
-	//BFSC/SCALE_WEIGHT组合秤
-	//CANITF部分
-	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
-	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
-	MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
-	MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化
-	MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求
-	MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
-	MSG_ID_CAN_L2FRAME_RCV,  //MYC 2017/05/15
-	//UICOMM部分
-	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
-	//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
+	//BFSC项目：后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
 	MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
 	MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
 	MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT,
@@ -503,16 +492,41 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
 	MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
 
-	//CANITFLEO
+	//BFSC项目：L3BFSC SCALE_WEIGHT / CANITFLEO组合秤
+	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求  TBD
 	MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
-	MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  	//传感器新数据事件
+
+	MSG_ID_CAN_L2FRAME_RCV,  //MYC 2017/05/15  TBD
+	MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//待删除
+	MSG_ID_CAN_L3BFSC_WS_INIT_FB,       	//待删除
+
+	//是不是考虑将这种机制去掉，只是单纯的将故障秤台隔离而已
+	MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求  TBD
+	MSG_ID_CAN_L3BFSC_WS_READ_RESP,  		//所有传感器读取一次性读取确认  TBD
+
+	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
 	MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  		//出料确认
+	MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
 	MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   		//放弃物料确认
-	MSG_ID_CAN_L3BFSC_WS_INIT_FB,       	//传感器初始化确认
-	MSG_ID_CAN_L3BFSC_WS_READ_RESP,  		//所有传感器读取一次性读取确认
+	MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  	//传感器新数据事件
+
+	MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
 	MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, 	//来自后台的控制命令反馈，只能在SCAN下工作
 
-	//MYC
+	MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
+	MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,
+	MSG_ID_L3BFSC_CAN_SYS_START_REQ,
+	MSG_ID_CAN_L3BFSC_SYS_START_RESP,
+	MSG_ID_L3BFSC_CAN_SYS_STOP_REQ,
+	MSG_ID_CAN_L3BFSC_SYS_STOP_RESP,
+
+	//BFSC项目：BFSCUICOMM
+	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//命令请求
+	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//命令反馈
+	MSG_ID_UICOMM_L3BFSC_CFG_REQ,  			//配置信息
+	MSG_ID_L3BFSC_UICOMM_CFG_RESP,  		//配置结果
+
+	//BFSC项目：MYC
 	MSG_ID_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
 	MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ,       //       = 0x3B11,
 	MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP,      //       = 0x3B91,
@@ -529,10 +543,6 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_WMC_FAULT_IND,            //       = 0x3B98,
 	MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
 	MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
-
-	//BFSCUICOMM
-	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//本地界面请求
-	MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,  //本地界面设置结果
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -2118,52 +2128,6 @@ typedef struct msg_struct_canitfleo_data_report
 //BFSC/SCALE_WEIGHT组合秤
 //MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
 #define HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR 20
-typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
-{
-	UINT8  sensorid;
-	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_error_inq_cmd_req_t;
-
-//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
-typedef struct msg_struct_l3bfsc_can_ws_comb_out
-{
-	UINT8  combnbr;
-	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_comb_out_t;
-
-//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
-typedef struct msg_struct_l3bfsc_can_ws_give_up
-{
-	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_give_up_t;
-
-//MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化
-typedef struct msg_struct_l3bfsc_can_ws_init_req
-{
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_init_req_t;
-
-//MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求
-typedef struct msg_struct_l3bfsc_can_ws_read_req
-{
-	UINT8 sensorid;
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_read_req_t;
-
-//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
-typedef struct msg_struct_l3bfsc_can_general_cmd_req
-{
-	UINT8 sensorid;
-	UINT8 optid;
-	UINT8 optpar;
-	UINT32 modbusVal;
-	UINT32 length;
-}msg_struct_l3bfsc_can_general_cmd_req_t;
 
 //后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
 //MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
@@ -2288,19 +2252,17 @@ typedef struct msg_struct_cloudvela_l3bfsc_statistic_confirm
 }msg_struct_cloudvela_l3bfsc_statistic_confirm_t;
 
 
-
-//UICOMM部分
-//MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//本地界面反馈
-typedef struct msg_struct_l3bfsc_uicomm_cmd_resp
+//BFSC项目：L3BFSC SCALE_WEIGHT组合秤
+//BFSC项目：CANITFLEO
+//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求  TBD
+typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
+	UINT8  sensorid;
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
-}msg_struct_l3bfsc_uicomm_cmd_resp_t;
+}msg_struct_l3bfsc_can_error_inq_cmd_req_t;
 
-
-//CANITFLEO
-//MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,
+//MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
 typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 {
 	UINT8 sensorid;
@@ -2309,29 +2271,16 @@ typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 	UINT32 length;
 }msg_struct_can_l3bfsc_error_inq_cmd_resp_t;
 
-//MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,
-typedef struct msg_struct_can_l3bfsc_new_ready_event
-{
-	UINT8  sensorid;
-	UINT32  sensorWsValue;
-	UINT32 length;
-}msg_struct_can_l3bfsc_new_ready_event_t;
+//MSG_ID_CAN_L2FRAME_RCV,  //MYC 2017/05/15  TBD
 
-//MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,
-typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
+//MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化  TBD
+typedef struct msg_struct_l3bfsc_can_ws_init_req
 {
-	UINT8  sensorid;
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
-}msg_struct_can_l3bfsc_ws_comb_out_fb_t;
+}msg_struct_l3bfsc_can_ws_init_req_t;
 
-//MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,
-typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
-{
-	UINT8  sensorid;
-	UINT32 length;
-}msg_struct_can_l3bfsc_ws_give_up_fb_t;
-
-//MSG_ID_CAN_L3BFSC_WS_INIT_FB,
+//MSG_ID_CAN_L3BFSC_WS_INIT_FB,       	//传感器初始化确认
 typedef struct msg_struct_can_l3bfsc_ws_init_fb
 {
 	UINT8  sensorid;
@@ -2339,14 +2288,69 @@ typedef struct msg_struct_can_l3bfsc_ws_init_fb
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_init_fb_t;
 
-//MSG_ID_CAN_L3BFSC_WS_READ_RESP
+//MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求  TBD
+typedef struct msg_struct_l3bfsc_can_ws_read_req
+{
+	UINT8 sensorid;
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_read_req_t;
+
+//MSG_ID_CAN_L3BFSC_WS_READ_RESP,  		//所有传感器读取一次性读取确认
 typedef struct msg_struct_can_l3bfsc_ws_read_resp
 {
 	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_read_resp_t;
 
-//MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP
+//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
+typedef struct msg_struct_l3bfsc_can_ws_comb_out
+{
+	UINT8  combnbr;
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_comb_out_t;
+
+//MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  		//出料确认
+typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
+{
+	UINT8  sensorid;
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_comb_out_fb_t;
+
+//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
+typedef struct msg_struct_l3bfsc_can_ws_give_up
+{
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_give_up_t;
+
+//MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   		//放弃物料确认
+typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
+{
+	UINT8  sensorid;
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_give_up_fb_t;
+
+//MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  	//传感器新数据事件
+typedef struct msg_struct_can_l3bfsc_new_ready_event
+{
+	UINT8  sensorid;
+	UINT32  sensorWsValue;
+	UINT32 length;
+}msg_struct_can_l3bfsc_new_ready_event_t;
+
+//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
+typedef struct msg_struct_l3bfsc_can_general_cmd_req
+{
+	UINT8 sensorid;
+	UINT8 optid;
+	UINT8 optpar;
+	UINT32 modbusVal;
+	UINT32 length;
+}msg_struct_l3bfsc_can_general_cmd_req_t;
+
+//MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, 	//来自后台的控制命令反馈，只能在SCAN下工作
 typedef struct msg_struct_can_l3bfsc_general_cmd_resp
 {
 	UINT8  sensorid;
@@ -2357,6 +2361,43 @@ typedef struct msg_struct_can_l3bfsc_general_cmd_resp
 	UINT32 length;
 }msg_struct_can_l3bfsc_general_cmd_resp_t;
 
+//MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
+typedef struct msg_struct_l3bfsc_can_sys_cfg_req
+{
+	UINT32 length;
+}msg_struct_l3bfsc_can_sys_cfg_req_t;
+
+//MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,
+typedef struct msg_struct_can_l3bfsc_sys_cfg_resp
+{
+	UINT32 length;
+}msg_struct_can_l3bfsc_sys_cfg_resp_t;
+
+//MSG_ID_L3BFSC_CAN_SYS_START_REQ,
+typedef struct msg_struct_l3bfsc_can_sys_start_req
+{
+	UINT32 length;
+}msg_struct_l3bfsc_can_sys_start_req_t;
+
+//MSG_ID_CAN_L3BFSC_SYS_START_RESP,
+typedef struct msg_struct_can_l3bfsc_sys_start_resp
+{
+	UINT32 length;
+}msg_struct_can_l3bfsc_sys_start_resp_t;
+
+//MSG_ID_L3BFSC_CAN_SYS_STOP_REQ,
+typedef struct msg_struct_l3bfsc_can_sys_stop_req
+{
+	UINT32 length;
+}msg_struct_l3bfsc_can_sys_stop_req_t;
+
+//MSG_ID_CAN_L3BFSC_SYS_STOP_RESP,
+typedef struct msg_struct_can_l3bfsc_sys_stop_resp
+{
+	UINT32 length;
+}msg_struct_can_l3bfsc_sys_stop_resp_t;
+
+
 //BFSCUICOMM
 //MSG_ID_UICOMM_L3BFSC_CMD_REQ,
 typedef struct msg_struct_uicomm_l3bfsc_cmd_req
@@ -2365,9 +2406,16 @@ typedef struct msg_struct_uicomm_l3bfsc_cmd_req
 	UINT32 timestamp;
 	UINT32 length;
 }msg_struct_uicomm_l3bfsc_cmd_req_t;
+//MSG_ID_L3BFSC_UICOMM_CMD_RESP,
+typedef struct msg_struct_l3bfsc_uicomm_cmd_resp
+{
+	UINT8  cmdid;
+	UINT32 timestamp;
+	UINT32 length;
+}msg_struct_l3bfsc_uicomm_cmd_resp_t;
 
-//MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT
-typedef struct msg_struct_uicomm_l3bfsc_param_set_result
+//MSG_ID_UICOMM_L3BFSC_CFG_REQ
+typedef struct msg_struct_uicomm_l3bfsc_cfg_req
 {
 	UINT32  targetValue;
 	UINT32	targetUpLimit;
@@ -2375,7 +2423,22 @@ typedef struct msg_struct_uicomm_l3bfsc_param_set_result
 	UINT8	minWsNbr;
 	UINT8	maxWsNbr;
 	UINT32 	length;
-}msg_struct_uicomm_l3bfsc_param_set_result_t;
+}msg_struct_uicomm_l3bfsc_cfg_req_t;
+
+//MSG_ID_L3BFSC_UICOMM_CFG_RESP,  		//配置结果
+typedef struct msg_struct_l3bfsc_uicomm_cfg_resp
+{
+	UINT32  targetValue;
+	UINT32	targetUpLimit;
+	UINT32  parSetId; //指明是哪一套参数启作用了
+	UINT8	minWsNbr;
+	UINT8	maxWsNbr;
+	UINT32 	length;
+}msg_struct_l3bfsc_uicomm_cfg_resp_t;
+
+
+
+
 
 /*
 ** =============================================================================

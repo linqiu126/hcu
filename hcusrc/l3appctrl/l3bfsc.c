@@ -46,24 +46,23 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 	{MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM,     FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_event_confirm},
 	{MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ,          FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_ctrl_req},
 	{MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_statistic_confirm},
+	//这个命令，有些命令可以在任何状态下执行：比如STOP，但有些命令必须在配置状态下，比如START
+	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_COMMON,          			fsm_l3bfsc_uicomm_cmd_req},
 
 	//Normal working status：等待人工干预-登录触发
-	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_cmd_req},
-	{MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,     FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_param_set_result},
+	{MSG_ID_UICOMM_L3BFSC_CFG_REQ,     			FSM_STATE_L3BFSC_ACTIVED,          	fsm_l3bfsc_uicomm_config_req},
 
-	//人工配置状态：等待参数配置完成。完成后，发送MSG_ID_L3BFSC_CAN_WS_INIT_REQ，进入FSM_STATE_L3BFSC_WS_INIT
-	//任何状态下，允许人工界面强行发送重启命令（后台或者本地界面），BFSCUICOMM模块将发送MSG_ID_COM_RESTART，从而重启整个系统
-	//重启需要重新登录并初始化整个秤盘传感器
-	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_uicomm_cmd_req},
-	{MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT,     FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_uicomm_param_set_result},
+	//配置状态：等待所有的下危机配置完成
+	{MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,     		FSM_STATE_L3BFSC_OPR_CFG,          	fsm_l3bfsc_canitf_config_resp},
 
-	//等待下位机完成参数初始化：等待MSG_ID_CAN_L3FSC_WS_INIT_RESP，完成后进入FSM_STATE_L3BFSC_OOS_SCAN
-	{MSG_ID_CAN_L3BFSC_WS_INIT_FB,       		FSM_STATE_L3BFSC_WS_INIT,          	fsm_l3bfsc_canitf_ws_init_fb},
+	//等待启动反馈结果：等待MSG_ID_CAN_L3BFSC_SYS_START_RESP，完成后进入FSM_STATE_L3BFSC_OOS_SCAN
+	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_L3BFSC_OPR_GO,          	fsm_l3bfsc_uicomm_cmd_req},
+	{MSG_ID_CAN_L3BFSC_SYS_START_RESP,       	FSM_STATE_L3BFSC_OPR_GO,          	fsm_l3bfsc_canitf_sys_start_resp},
 
 	//进料组合态：等待正常的MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT，每一次进来均触发一次组合算法。结果无动作，或发送MSG_ID_L3BFSC_CAN_WS_COMB_OUT/MSG_ID_L3BFSC_CAN_WS_GIVE_UP
 	{MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,      FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_ws_new_ready_event},  //只能触发数据存储，不进入组合算法的执行
 	//下面为定时读取工作机制，之前是为了定时获取下位机的状态，从而上报。未来该工作机制将删去，改为从上下文中得到汇报状态
-	{MSG_ID_CAN_L3BFSC_WS_READ_RESP,       		FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_period_read_resp},  //只有在最为常见的SCAN状态下才允许定时上报，否则太复杂
+	//{MSG_ID_CAN_L3BFSC_WS_READ_RESP,       		FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_period_read_resp},  //只有在最为常见的SCAN状态下才允许定时上报，否则太复杂
 	{MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP,       	FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_general_cmd_resp},  //只有在最为常见的SCAN状态下才允许后台，否则太复杂
 
 	//出料流程态：单纯等待MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
@@ -79,10 +78,10 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
     {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
 };
 
-//Global variables
+//System Level Global variables
 
 
-//Task Global variables
+//Task Level Global variables
 gTaskL3bfscContext_t gTaskL3bfscContext; //波峰秤盘的总控表
 
 //Main Entry
@@ -388,6 +387,19 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 		}
 	}
 
+	//返回
+	return SUCCESS;
+}
+
+
+OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfsc_canitf_sys_start_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
 	//返回
 	return SUCCESS;
 }
@@ -772,61 +784,62 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	int ret=0;
-
-	//入参检查
-	msg_struct_can_l3bfsc_ws_init_fb_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_ws_init_fb_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_ws_init_fb_t))){
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
-	}
-	memcpy(&rcv, param_ptr, param_len);
-
-	if (rcv.sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
-	}
-
-	//单独接受每一个反馈消息，而且还不能重复
-	if ((rcv.initFlag == 1) && (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus !=HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY)) {
-		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY;
-		gTaskL3bfscContext.wsValueNbrFree++;
-		HCU_DEBUG_PRINT_INF("L3BFSC: SensorId = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
-	}
-	else{
-		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INVALID;
-		//如果返回差错的初始化情况，不处理，继续无限初始化，当然也无法继续往下处理了
-
-		//未来需要考虑发送报告给后台
-	}
-
-	//判定是否是最后一个传感器返回
-	if (gTaskL3bfscContext.wsValueNbrFree == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
-		//停止定时器
-		ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_INIT_FB_WAIT, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start timer!\n");
-		}
-
-		//启动统计扫描定时器
-		ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN, \
-				zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
-		if (ret == FAILURE)
-			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");
-
-		//设置工作启动时间
-		gTaskL3bfscContext.startWorkTimeInUnix = time(0);
-
-		//设置新状态
-		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
-		}
-	}
-
-	//返回
-	return SUCCESS;
-}
+//待删除
+//OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//{
+//	int ret=0;
+//
+//	//入参检查
+//	msg_struct_can_l3bfsc_ws_init_fb_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_ws_init_fb_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_ws_init_fb_t))){
+//		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
+//	}
+//	memcpy(&rcv, param_ptr, param_len);
+//
+//	if (rcv.sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
+//		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
+//	}
+//
+//	//单独接受每一个反馈消息，而且还不能重复
+//	if ((rcv.initFlag == 1) && (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus !=HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY)) {
+//		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY;
+//		gTaskL3bfscContext.wsValueNbrFree++;
+//		HCU_DEBUG_PRINT_INF("L3BFSC: SensorId = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
+//	}
+//	else{
+//		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INVALID;
+//		//如果返回差错的初始化情况，不处理，继续无限初始化，当然也无法继续往下处理了
+//
+//		//未来需要考虑发送报告给后台
+//	}
+//
+//	//判定是否是最后一个传感器返回
+//	if (gTaskL3bfscContext.wsValueNbrFree == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
+//		//停止定时器
+//		ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_INIT_FB_WAIT, TIMER_RESOLUTION_1S);
+//		if (ret == FAILURE){
+//			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start timer!\n");
+//		}
+//
+//		//启动统计扫描定时器
+//		ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN, \
+//				zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
+//		if (ret == FAILURE)
+//			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");
+//
+//		//设置工作启动时间
+//		gTaskL3bfscContext.startWorkTimeInUnix = time(0);
+//
+//		//设置新状态
+//		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
+//			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
+//		}
+//	}
+//
+//	//返回
+//	return SUCCESS;
+//}
 
 //周期性读取数据并送往后台
 //周期性状态汇报机制将改为从任务模块的上下文中提取，而非以来定时读取
@@ -878,14 +891,16 @@ OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * 
 OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-/*	HcuDiscDataSampleStorageArray_t record;
 
-	msg_struct_modbus_pm25_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
-	}
-	memcpy(&rcv, param_ptr, param_len);*/
+	/*
+		msg_struct_modbus_pm25_data_report_t rcv;
+		memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
+		if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
+			HcuErrorPrint("BFSCUICOMM: Receive message error!\n");
+			zHcuRunErrCnt[TASK_ID_BFSCUICOMM]++;
+			return FAILURE;
+		}
+		memcpy(&rcv, param_ptr, param_len);*/
 
 	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
 	//检查参数配置的合法性，目标值必须在一定的合理范围内，否则拒绝进入进料状态
@@ -897,12 +912,12 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	return SUCCESS;
 }
 
-OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0, i=0;
-	msg_struct_uicomm_l3bfsc_param_set_result_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfsc_param_set_result_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_l3bfsc_param_set_result_t))){
+	msg_struct_uicomm_l3bfsc_cfg_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t))){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -941,7 +956,7 @@ OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * 
 	}
 
 	//设置新状态
-	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_WS_INIT) == FAILURE){
+	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
 	}
 

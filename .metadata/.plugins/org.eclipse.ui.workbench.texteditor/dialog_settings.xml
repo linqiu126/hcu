@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HCU_SYSCFG_TRACE_DEBUG_INF_ON" key="selection"/>
+		<item value="fsm_l3bfsc_canitf_ws_init_fb" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HCU_SYSCFG_TRACE_DEBUG_INF_ON"/>
-			<item value="HCU_SYSCFG_TRACE_DEBUG_SET"/>
-			<item value="HCU_WORKING_PROJECT_NAME_BFSC_CBU"/>
-			<item value="HCU_DEBUG"/>
-			<item value="StrIe_HUITP_IEID_sui_sw_package_body"/>
-			<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
-			<item value="HUITP_IEID_sui_sw_package_body"/>
-			<item value="SW_PACKAGE_BODY_MAX_LEN"/>
+			<item value="fsm_l3bfsc_canitf_ws_init_fb"/>
+			<item value="fsm_l3bfsc_uicomm_cmd_req"/>
+			<item value="fsm_l3bfsc_uicomm_config_req"/>
+			<item value="//BFSC项目：L3BFSC SCALE_WEIGHT组合秤"/>
+			<item value="MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM"/>
+			<item value="MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP"/>
+			<item value="MSG_ID_CAN_L3BFSC_SYS_START_RESP"/>
+			<item value="MSG_ID_L3BFSC_UICOMM_CMD_RESP"/>
 		</list>
 		<list key="replacehistory">
 			<item value="IEID"/>

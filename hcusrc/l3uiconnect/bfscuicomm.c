@@ -31,12 +31,12 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFSCUICOMM_INITED,            	fsm_com_do_nothing},
 
 	//ANY state entry
-    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          				fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          				fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          				fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          				fsm_com_do_nothing},
-    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_bfscuicomm_restart},
-	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_bfscuicomm_timeout},
+    {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_COMMON,          					fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT,       			FSM_STATE_COMMON,          					fsm_com_heart_beat_rcv},
+	{MSG_ID_COM_STOP,       				FSM_STATE_COMMON,          					fsm_com_do_nothing},
+	{MSG_ID_COM_HEART_BEAT_FB,       		FSM_STATE_COMMON,          					fsm_com_do_nothing},
+    {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            				fsm_bfscuicomm_restart},
+	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          					fsm_bfscuicomm_timeout},
 
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_com_do_nothing},
@@ -108,9 +108,9 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//为了测试目的，主动发送参数设置内容给L3BFSC
-	msg_struct_uicomm_l3bfsc_param_set_result_t snd;
-	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_param_set_result_t));
-	snd.length = sizeof(msg_struct_uicomm_l3bfsc_param_set_result_t);
+	msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+	snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
 	snd.minWsNbr = 1 + rand()%3;
 	snd.maxWsNbr = 5 + rand()%8;
 	snd.targetValue = 2000+ (rand()%100);
@@ -125,7 +125,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 	snd.parSetId = tmp & 0xFF;
 
-	ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_PARAM_SET_RESULT, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+	ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
 		HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
@@ -201,8 +201,7 @@ OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-/*	HcuDiscDataSampleStorageArray_t record;
-
+/*
 	msg_struct_modbus_pm25_data_report_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){

@@ -20,8 +20,8 @@ enum FSM_STATE_L3BFSC
 {
 	FSM_STATE_L3BFSC_INITED = FSM_STATE_COMMON + 1,
 	FSM_STATE_L3BFSC_ACTIVED,
-	FSM_STATE_L3BFSC_OPR_CFG,  	//人工配置状态
-	FSM_STATE_L3BFSC_WS_INIT,  	//初始化下位机
+	FSM_STATE_L3BFSC_OPR_CFG,  	//配置状态
+	FSM_STATE_L3BFSC_OPR_GO,  	//人工命令启动状态
 	FSM_STATE_L3BFSC_OOS_SCAN,  //进料组合态
 	FSM_STATE_L3BFSC_OOS_TTT,  	//出料流程态
 	FSM_STATE_L3BFSC_OOS_TGU,  	//放弃物料态
@@ -42,16 +42,17 @@ typedef struct L3BfscSensorWsInfo
 	UINT8  sensorStatus; //无效，空料，有料数值错误，有料待组合，有料待出料
 }L3BfscSensorWsInfo_t;
 //秤盘状态定义
-#define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID 	0  		//秤盘无效
-#define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID1 255  		//秤盘无效
-#define HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY 1       		//秤盘空
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR 2 		//秤盘有料数值错误
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB 3 	//秤盘有料待组合
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 4		//秤盘有料待出料
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 5		//秤盘有料待抛弃
-
-#define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE		 0		//秤盘
-#define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE		 1		//秤盘
+#define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID			0  		//秤盘无效
+#define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE		 	0		//秤盘
+#define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE		 	1		//秤盘
+#define HCU_L3BFSC_SENSOR_WS_STATUS_CONF_REQ 		2  		//CONFIG下发
+#define HCU_L3BFSC_SENSOR_WS_STATUS_CONF_COMP 		3  		//配置完成
+#define HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY 			4       //秤盘空
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR 	5 		//秤盘有料数值错误
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB 	6 		//秤盘有料待组合
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 	7		//秤盘有料待出料
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 	8		//秤盘有料待抛弃
+#define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID1  		255  	//秤盘无效
 
 //统计周期，为了计算滑动平均数据
 #define HCU_L3BFSC_STA_CYCLE_DUR  60000 //1分钟，相当于60S
@@ -148,8 +149,11 @@ extern OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, voi
 extern OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_general_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_uicomm_param_set_result(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+//extern OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_sys_start_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 //CLOUDVELA后台通信部分
 extern OPSTAT fsm_l3bfsc_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

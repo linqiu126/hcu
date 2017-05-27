@@ -17,8 +17,7 @@
 = 创建AdvanceTechBuntu目标机的编译环境
 = 清理HUITP FRAME的协议接口规范
 = 准备调整整个系统的状态机机制
-
-
+= HUITP调整到v2.5
 
 
 //= ZSC, 2017 May.16, CURRENT_SW_DELIVERY 196=>AQYC项目
