@@ -32,8 +32,17 @@ extern OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_pt
 extern OPSTAT fsm_bfscuicomm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT func_bfscuicomm_int_init(void);
+void func_bfscuicomm_install_file_scan(void);
+void func_bfscuicomm_scan_jason_callback(void);
+OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void);
+
+//高级定义，简化程序的可读性
+#define HCU_ERROR_PRINT_BFSCUICOMM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+
 
 #endif /* L2FRAME_BFSCUICOMM_H_ */

@@ -40,7 +40,9 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
 
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_L3BFSC_UICOMM_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cmd_resp},
+	{MSG_ID_L3BFSC_UICOMM_CFG_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cfg_resp},	//配置反馈
+	{MSG_ID_L3BFSC_UICOMM_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cmd_resp},	//人工控制反馈
+	{MSG_ID_CAN_UICOMM_TEST_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_can_test_cmd_resp},  //测试命令反馈
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -107,29 +109,15 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		HcuDebugPrint("BFSCUICOMM: Enter FSM_STATE_BFSCUICOMM_ACTIVED status, Keeping refresh here!\n");
 	}
 
-	//为了测试目的，主动发送参数设置内容给L3BFSC
-	msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-	snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-	snd.minWsNbr = 1 + rand()%3;
-	snd.maxWsNbr = 5 + rand()%8;
-	snd.targetValue = 2000+ (rand()%100);
-	snd.targetUpLimit = 50 + (rand()%10);
-
-	//循环读取通信设置信息，目前必须是１，必然会出错
-	UINT32 tmp = 0;
-	while(tmp == 0){
-		if (dbi_HcuBfsc_ui_ctrl_exg_read(&tmp) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "BFSCUICOMM: Read DB error!\n");
-		hcu_sleep(2);
-	}
-	snd.parSetId = tmp & 0xFF;
-
-	ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
-	if (ret == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
-		HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-		return FAILURE;
+	//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFSC
+	//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFSC
+	hcu_sleep(3);
+	if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+		msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 	}
 
 	//返回
@@ -146,8 +134,13 @@ OPSTAT fsm_bfscuicomm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 OPSTAT func_bfscuicomm_int_init(void)
 {
+	//安装扫描JASON文件的回调函数
+	func_bfscuicomm_install_file_scan();
+
+
 	return SUCCESS;
 }
+
 
 //暂时啥都不干，定时到达后，还不明确是否需要支持定时工作
 OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -198,27 +191,126 @@ OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	return SUCCESS;
 }
 
+//配置反馈
+OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_l3bfsc_uicomm_cfg_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t)))
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//存入数据库表单，通知界面新的状态信息
+
+	//返回
+	return SUCCESS;
+}
+
+//启动停止反馈
 OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-/*
-	msg_struct_modbus_pm25_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_modbus_pm25_data_report_t))){
-		HcuErrorPrint("BFSCUICOMM: Receive message error!\n");
-		zHcuRunErrCnt[TASK_ID_BFSCUICOMM]++;
-		return FAILURE;
-	}
-	memcpy(&rcv, param_ptr, param_len);*/
 
-	//检查收到的数据的正确性，然后再继续往CLOUD发送，仍然以平淡消息的格式，让L2_CLOUDVELA进行编码
+	msg_struct_l3bfsc_uicomm_cmd_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_uicomm_cmd_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_uicomm_cmd_resp_t)))
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
 
-	//停止定时器
+	//存入数据库表单，通知界面新的状态信息
 
+	//返回
+	return SUCCESS;
+}
+
+//一般性测试命令的反馈
+OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_can_uicomm_test_cmd_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_can_uicomm_test_cmd_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_uicomm_test_cmd_resp_t)))
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//存入数据库表单，通知界面新的状态信息
 
 	//返回
 	return SUCCESS;
 }
 
 
+//安装扫描JASON文件的回调函数
+void func_bfscuicomm_install_file_scan(void)
+{
+	return;
+}
+
+//具体扫描文件改变的回调函数
+void func_bfscuicomm_scan_jason_callback(void)
+{
+	int ret = 0;
+	int fileChnageContent = 0;
+	msg_struct_uicomm_l3bfsc_cmd_req_t snd;
+
+	//分析文件的变化
+
+	//依赖文件变化的内容，分类发送控制命令：首先是START/STOP命令
+	if ((fileChnageContent == 0) || (fileChnageContent == 1)){
+		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
+		if (fileChnageContent == 0) snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
+		else if (fileChnageContent == 1) snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP;
+
+		//发送命令给L3BFSC
+		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
+		ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
+			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+			return;
+		}
+	}
+
+	//然后是START/STOP命令
+	else if (fileChnageContent == 2){
+		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
+				HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+				return;
+			}
+		}
+	}
+
+	//还有可能是一般性控制命令
+	else if (fileChnageContent == 3){
+		msg_struct_uicomm_can_test_cmd_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
+		snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
+		ret = hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
+			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+			return;
+		}
+	}
+
+	//不符合预期的命令，忽略
+	else return;
+
+	return;
+}
+
+//安装扫描JASON文件的回调函数
+OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
+{
+	return SUCCESS;
+}
 

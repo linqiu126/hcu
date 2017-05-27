@@ -510,8 +510,8 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   		//放弃物料确认
 	MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  	//传感器新数据事件
 
-	MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
-	MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, 	//来自后台的控制命令反馈，只能在SCAN下工作
+	//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
+	//MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, 	//来自后台的控制命令反馈，只能在SCAN下工作
 
 	MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
 	MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,
@@ -525,6 +525,9 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//命令反馈
 	MSG_ID_UICOMM_L3BFSC_CFG_REQ,  			//配置信息
 	MSG_ID_L3BFSC_UICOMM_CFG_RESP,  		//配置结果
+	MSG_ID_UICOMM_CAN_TEST_CMD_REQ,  		//测试命令
+	MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
+
 
 	//BFSC项目：MYC
 	MSG_ID_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
@@ -2341,25 +2344,25 @@ typedef struct msg_struct_can_l3bfsc_new_ready_event
 }msg_struct_can_l3bfsc_new_ready_event_t;
 
 //MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
-typedef struct msg_struct_l3bfsc_can_general_cmd_req
-{
-	UINT8 sensorid;
-	UINT8 optid;
-	UINT8 optpar;
-	UINT32 modbusVal;
-	UINT32 length;
-}msg_struct_l3bfsc_can_general_cmd_req_t;
+//typedef struct msg_struct_l3bfsc_can_general_cmd_req
+//{
+//	UINT8 sensorid;
+//	UINT8 optid;
+//	UINT8 optpar;
+//	UINT32 modbusVal;
+//	UINT32 length;
+//}msg_struct_l3bfsc_can_general_cmd_req_t;
 
 //MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, 	//来自后台的控制命令反馈，只能在SCAN下工作
-typedef struct msg_struct_can_l3bfsc_general_cmd_resp
-{
-	UINT8  sensorid;
-	UINT8  cmdid;
-	UINT8  optid;
-	UINT8  optpar;
-	UINT32 modbusVal;
-	UINT32 length;
-}msg_struct_can_l3bfsc_general_cmd_resp_t;
+//typedef struct msg_struct_can_l3bfsc_general_cmd_resp
+//{
+//	UINT8  sensorid;
+//	UINT8  cmdid;
+//	UINT8  optid;
+//	UINT8  optpar;
+//	UINT32 modbusVal;
+//	UINT32 length;
+//}msg_struct_can_l3bfsc_general_cmd_resp_t;
 
 //MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
 typedef struct msg_struct_l3bfsc_can_sys_cfg_req
@@ -2400,6 +2403,12 @@ typedef struct msg_struct_can_l3bfsc_sys_stop_resp
 
 //BFSCUICOMM
 //MSG_ID_UICOMM_L3BFSC_CMD_REQ,
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_INVALL  	0
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_START  	1
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP  		2
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND  	3
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_RESUME  	4
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_NULL  		255
 typedef struct msg_struct_uicomm_l3bfsc_cmd_req
 {
 	UINT8  cmdid;
@@ -2436,8 +2445,19 @@ typedef struct msg_struct_l3bfsc_uicomm_cfg_resp
 	UINT32 	length;
 }msg_struct_l3bfsc_uicomm_cfg_resp_t;
 
+//MSG_ID_UICOMM_CAN_TEST_CMD_REQ,  		//测试命令
+typedef struct msg_struct_uicomm_can_test_cmd_req
+{
+	UINT8   cmdid;
+	UINT32 	length;
+}msg_struct_uicomm_can_test_cmd_req_t;
 
-
+//MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
+typedef struct msg_struct_can_uicomm_test_cmd_resp
+{
+	UINT8   cmdid;
+	UINT32 	length;
+}msg_struct_can_uicomm_test_cmd_resp_t;
 
 
 /*
