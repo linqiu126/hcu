@@ -253,16 +253,16 @@ void func_bfscuicomm_install_file_scan(void)
 void func_bfscuicomm_scan_jason_callback(void)
 {
 	int ret = 0;
-	int fileChnageContent = 0;
+	int fileChangeContent = 0;
 	msg_struct_uicomm_l3bfsc_cmd_req_t snd;
 
 	//分析文件的变化
 
 	//依赖文件变化的内容，分类发送控制命令：首先是START/STOP命令
-	if ((fileChnageContent == 0) || (fileChnageContent == 1)){
+	if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP)){
 		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
-		if (fileChnageContent == 0) snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
-		else if (fileChnageContent == 1) snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP;
+		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START) snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
+		else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP) snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP;
 
 		//发送命令给L3BFSC
 		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
@@ -274,8 +274,8 @@ void func_bfscuicomm_scan_jason_callback(void)
 		}
 	}
 
-	//然后是START/STOP命令
-	else if (fileChnageContent == 2){
+	//然后是CONFIG命令
+	else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CONFIG){
 		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
 			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
@@ -290,7 +290,7 @@ void func_bfscuicomm_scan_jason_callback(void)
 	}
 
 	//还有可能是一般性控制命令
-	else if (fileChnageContent == 3){
+	else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_TEST){
 		msg_struct_uicomm_can_test_cmd_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
 		snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);

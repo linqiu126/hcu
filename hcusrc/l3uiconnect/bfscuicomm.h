@@ -23,6 +23,12 @@ enum FSM_STATE_BFSCUICOMM
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+//本地常量定义
+#define HCU_BFSCCOMM_JASON_CMD_START 		1
+#define HCU_BFSCCOMM_JASON_CMD_STOP 		2
+#define HCU_BFSCCOMM_JASON_CMD_CONFIG 		3
+#define HCU_BFSCCOMM_JASON_CMD_TEST 		4
+
 //Global variables
 extern HcuFsmStateItem_t HcuFsmBfscuicomm[];
 
