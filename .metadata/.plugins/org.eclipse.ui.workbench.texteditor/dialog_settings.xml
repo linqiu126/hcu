@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="fsm_l3bfsc_canitf_ws_init_fb" key="selection"/>
+		<item value="MSG_ID_L3BFSC_UICOMM_CMD_RESP" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="MSG_ID_L3BFSC_UICOMM_CMD_RESP"/>
 			<item value="fsm_l3bfsc_canitf_ws_init_fb"/>
 			<item value="fsm_l3bfsc_uicomm_cmd_req"/>
 			<item value="fsm_l3bfsc_uicomm_config_req"/>
@@ -15,7 +16,6 @@
 			<item value="MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM"/>
 			<item value="MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP"/>
 			<item value="MSG_ID_CAN_L3BFSC_SYS_START_RESP"/>
-			<item value="MSG_ID_L3BFSC_UICOMM_CMD_RESP"/>
 		</list>
 		<list key="replacehistory">
 			<item value="IEID"/>
