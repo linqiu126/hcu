@@ -361,8 +361,8 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	strcat(HKVisionOption.file_video, "hkvideo.txt");
 
 	//判断如果PM2.5超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
-	HCU_DEBUG_PRINT_INF("PM25: rcv.pm25.pm10Value = %d\n", (rcv.pm25.pm10Value));
-	if(rcv.pm25.pm2d5Value >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
+	HCU_DEBUG_PRINT_INF("PM25: TSP = %d\n", (rcv.pm25.pm1d0Value));
+	if(rcv.pm25.pm10Value >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
 	{
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
 		if(FAILURE == ret){
@@ -405,7 +405,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
-	if((rcv.pm25.pm2d5Value <= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD) && (gTaskPm25Context.AlarmFlag == TRUE))
+	if((rcv.pm25.pm1d0Value <= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000) && (gTaskPm25Context.AlarmFlag == TRUE))
 	{
 		gTaskPm25Context.AlarmFlag = FALSE;
 

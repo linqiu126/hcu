@@ -98,6 +98,8 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//输出版本/调试/Copyright版权信息
 	func_hwinv_copy_right();
 
+	HcuDebugPrint("HWINV: test8!\n");
+
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_HWINV, FSM_STATE_HWINV_ACTIVED) == FAILURE){
@@ -108,6 +110,8 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("HWINV: Enter FSM_STATE_HWINV_ACTIVED status, Keeping refresh here!\n");
 	}
+
+	HcuDebugPrint("HWINV: test9!\n");
 
 	//进入等待反馈状态
 	while(1){
@@ -333,7 +337,6 @@ OPSTAT func_hwinv_global_par_init(void)
 	if ((zHcuVmCtrTab.task[TASK_ID_3G4G].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (HCU_DEFAULT_DEVICE_USB_3G4G != NULL))
 		zHcuVmCtrTab.hwinv.g3g4.hwBase.hwStatus = HCU_HWINV_STATUS_INSTALL_ACTIVE;
 
-
 	return SUCCESS;
 }
 
@@ -352,6 +355,7 @@ void func_hwinv_copy_right(void)
 	HCU_DEBUG_PRINT_FAT("SW Build: %s, %s\n", __DATE__, __TIME__); /* prints !!!Hello World!!! */
 	HCU_DEBUG_PRINT_FAT("HW Build: P01\n"); /* prints !!!Hello World!!! */
 	HCU_DEBUG_PRINT_FAT(" == SYSINFO ==\n"); /* prints !!!Hello World!!! */
+
 }
 
 //将工程参数从数据库中读出来并存入内存，该函数只是在初始化时做一次，并没有随时进行
@@ -411,9 +415,9 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 
 	//后台服务器中固定的配置部分，通过系统配置SYSCONFIG.H读取到工参表中
 	zHcuSysEngPar.cloud.svrBhItfFrameStdDefault = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET;
-	strncpy(zHcuSysEngPar.cloud.svrAddrSocketipHome, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipHome)));
-	strncpy(zHcuSysEngPar.cloud.svrAddrHttpHome, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome)));
-	strncpy(zHcuSysEngPar.cloud.svrNameHome, HCU_SYSCFG_CLOUD_SVR_NAME_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)<sizeof(zHcuSysEngPar.cloud.svrNameHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)):(sizeof(zHcuSysEngPar.cloud.svrNameHome)));
+	//strncpy(zHcuSysEngPar.cloud.svrAddrSocketipHome, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipHome)));
+	//strncpy(zHcuSysEngPar.cloud.svrAddrHttpHome, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome)));
+	//strncpy(zHcuSysEngPar.cloud.svrNameHome, HCU_SYSCFG_CLOUD_SVR_NAME_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)<sizeof(zHcuSysEngPar.cloud.svrNameHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)):(sizeof(zHcuSysEngPar.cloud.svrNameHome)));
 	zHcuSysEngPar.cloud.svrBhItfFrameStdHome = HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET;
 
 	HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.svrNameDefault = %s !\n", zHcuSysEngPar.cloud.svrNameDefault);
@@ -548,7 +552,7 @@ OPSTAT hcu_hwinv_engpar_read_mac_address(void)
 void func_hwinv_scan_all(void)
 {
 	func_hwinv_scan_date();
-	func_hwinv_scan_sysinfo();
+	//func_hwinv_scan_sysinfo();//bug fix by shanchun for segment fault when plug in the 3G dougle, root cause to be check
 	func_hwinv_scan_flash();
 	func_hwinv_scan_rtc();
 	func_hwinv_scan_memroy();

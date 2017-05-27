@@ -51,7 +51,6 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 	{MSG_ID_L3BFSC_CAN_WS_GIVE_UP,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_give_up},   //剔除指令
 	{MSG_ID_L3BFSC_CAN_WS_READ_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_ws_read_req},   //周期性读取
 	{MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,     FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_general_cmd_req}, //后台的指令
-	{MSG_ID_CAN_L2FRAME_RCV,				FSM_STATE_CANITFLEO_ACTIVED,				fsm_canitfleo_can_l2frame_receive}, //MYC 2017/05/15
 #endif
 	//结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -61,7 +60,6 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 
 //Task Global variables
 gTaskCanitfleoContext_t gTaskCanitfleoContext;
-static USB_CAN_HandleTypeDef can1;
 
 //const char anichar[MAXANI] = {'|', '/', '-', '\\'};
 //const char col_on [MAXCOL][19] = {BLUE, RED, GREEN, BOLD, MAGENTA, CYAN};
@@ -112,16 +110,16 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		return FAILURE;
 	}
 
-	//Global Variables
-	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] = 0;
-	memset(&gTaskCanitfleoContext, 0, sizeof(gTaskCanitfleoContext_t));
-
-	//MYC: func_canitfleo_int_init() must put after gTaskCanitfleoContext set to 0, as can1 interface will be saved
 	//初始化硬件接口
 	if (func_canitfleo_int_init() == FAILURE){
 		HcuErrorPrint("CANITFLEO: Error initialize interface!\n");
 		return FAILURE;
 	}
+
+	//Global Variables
+	zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO] = 0;
+	memset(&gTaskCanitfleoContext, 0, sizeof(gTaskCanitfleoContext_t));
+
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
 	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur,\
 			TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -149,6 +147,7 @@ OPSTAT fsm_canitfleo_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 OPSTAT func_canitfleo_int_init(void)
 {
 	//MYC
+/*
 #ifdef TARGET_RASPBERRY_PI3B
 	INT32 ret;
 	ret = func_canitfleo_can_init("can0", &gTaskCanitfleoContext.can_socket_id);
@@ -158,6 +157,7 @@ OPSTAT func_canitfleo_int_init(void)
 	else
 		return FAILURE;
 #endif
+*/
 
 #ifdef TARGET_LINUX_X86_ADVANTECH //Added by MYC 2017/05/15
 	INT32 ret;
@@ -206,7 +206,7 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
 			if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error Set FSM State!\n");
 		}
-		func_canitfleo_working_scan_process();
+		//func_canitfleo_working_scan_process(); //编译扬尘不过，暂注释掉
 	}
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -715,7 +715,7 @@ OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 pref
 	return SUCCESS;
 }
 
-#endif
+
 
 OPSTAT func_canitfleo_working_scan_process(void)
 {
@@ -1465,3 +1465,6 @@ OPSTAT fsm_canitfleo_can_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * p
 	/* process the L2 frame message */
 	canitfleo_can_l2frame_receive_process(p_l2_frame, l2_frame_len);
 }
+
+#endif
+

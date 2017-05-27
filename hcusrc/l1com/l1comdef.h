@@ -429,6 +429,11 @@ typedef enum
 	PM25_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x03,
 	//Added by shanchun for control cmd
 	PM25_MODBUS_GENERIC_FUNC_DATA_SET = 0x06,
+
+	//Added by shanchun for bug fix
+	PM25_REG_DATA_PMTSP_HIGH = 0x9C,  //2B
+	PM25_REG_DATA_PMTSP_LOW = 0x46,  //2B
+
 }Pm25RegisterSjfc200tDef;
 //WIND DIRECTION寄存器定义
 typedef enum
@@ -896,8 +901,8 @@ typedef struct CloudBhItfDevReportStdZhb
 #define HCU_SPS_COM_PORT_PATH_1  "/dev/hcu_serial1"
 //#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
 //#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
-#define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyS0"
-#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyS1"
+//#define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyS0"
+//#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyS1"
 #define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyACM0"
 
 #endif

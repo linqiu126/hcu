@@ -46,6 +46,7 @@ UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 			return FAILURE;
 		}
 	}
+/*
 	else if(SPSAPI_COM_PORT_2 == com_port_to_open)
 	{
 		*fd = open(HCU_SPS_COM_PORT_PATH_2, O_RDWR|O_NOCTTY|O_NDELAY);
@@ -67,7 +68,7 @@ UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 			return FAILURE;
 		}
 	}
-
+*/
 	else if(SPSAPI_COM_PORT_4 == com_port_to_open)
 	{
 		*fd = open(HCU_SPS_COM_PORT_PATH_4, O_RDWR|O_NOCTTY|O_NDELAY);

@@ -269,7 +269,7 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	//serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
-	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
 	HCU_DEBUG_PRINT_INF("ETHERNET: Server address = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 	HCU_DEBUG_PRINT_INF("ETHERNET: Server port = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);

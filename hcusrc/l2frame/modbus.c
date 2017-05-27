@@ -382,15 +382,15 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	msg_struct_modbus_pm25_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_pm25_data_report_t));
 
-/*//
+/*/
 	//放点假数据进行测试
 	currentModbusBuf.curLen = 17;
-	UINT8 sample[] = {0x01,0x03,0x0C,0x01,0x02,0x03,0x04,0x11,0x12,0x13,0x14,
-			0x21,0x22,0x23,0x24,0xD4,0xB8};
+	UINT8 sample[] = {0x01,0x03,0x0C,0x00,0x00,0x01,0x16,0x00,0x00,0x00,0xBA,
+			0x00,0x00,0x00,0xF7,0xBC,0x88};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
 	HCU_DEBUG_PRINT_INF("MODBUS: Len %d  \n", currentModbusBuf.curLen);
 	HCU_DEBUG_PRINT_INF("MODBUS: Received PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
-*///
+/*/
 	if (func_modbus_pm25_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		HcuErrorPrint("MODBUS: Error unpack message!\n");
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
@@ -1659,9 +1659,11 @@ OPSTAT func_modbus_pm25_msg_pack(msg_struct_pm25_modbus_data_read_t *inMsg, Seri
 	switch(inMsg->optId){
 	case L3PO_pm25_data_req:
 		//取得寄存器地址
-		outMsg->curBuf[outMsg->curLen] = (UINT8)((PM25_REG_DATA_PM1D0  >> 8) & 0x0FF); //高位
+		//outMsg->curBuf[outMsg->curLen] = (UINT8)((PM25_REG_DATA_PM1D0  >> 8) & 0x0FF); //高位
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_HIGH & 0x0FF); //高位
 		outMsg->curLen = outMsg->curLen + 1;
-		outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PM1D0 & 0x0FF); //低位
+		//outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PM1D0 & 0x0FF); //低位
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_LOW & 0x0FF); //高位
 		outMsg->curLen = outMsg->curLen + 1;
 		outMsg->curBuf[outMsg->curLen] = (UINT8)((PM25_LENGTH_OF_REG >> 8) & 0x0FF) ; //长度高位 = 3个寄存器，6B长度
 		outMsg->curLen = outMsg->curLen + 1;
@@ -1770,6 +1772,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
+/*//bug fix by shanchun
 		t0 = buf->curBuf[index++];
 		t1 = buf->curBuf[index++];
 		t2 = buf->curBuf[index++];
@@ -1797,6 +1800,39 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 		t2 = (t2 <<24) & 0xFF000000;
 		t3 = (t3 << 16) & 0xFF0000;
 		snd->pm25.pm10Value = t0 + t1 + t2 + t3;
+*/
+
+
+		//
+		t0 = buf->curBuf[index++];
+		t1 = buf->curBuf[index++];
+		t2 = buf->curBuf[index++];
+		t3 = buf->curBuf[index++];
+		t0 = (t0 <<24) & 0xFF000000;
+		t1 = (t1 << 16) & 0xFF0000;
+		t2 = (t2 << 8) & 0xFF00;
+		t3 = t3 & 0xFF;
+		snd->pm25.pm1d0Value = t0 + t1 + t2 + t3;
+		t0 = buf->curBuf[index++];
+		t1 = buf->curBuf[index++];
+		t2 = buf->curBuf[index++];
+		t3 = buf->curBuf[index++];
+		t0 = (t0 <<24) & 0xFF000000;
+		t1 = (t1 << 16) & 0xFF0000;
+		t2 = (t2 << 8) & 0xFF00;
+		t3 = t3 & 0xFF;
+		snd->pm25.pm2d5Value = t0 + t1 + t2 + t3;
+		t0 = buf->curBuf[index++];
+		t1 = buf->curBuf[index++];
+		t2 = buf->curBuf[index++];
+		t3 = buf->curBuf[index++];
+		t0 = (t0 <<24) & 0xFF000000;
+		t1 = (t1 << 16) & 0xFF0000;
+		t2 = (t2 << 8) & 0xFF00;
+		t3 = t3 & 0xFF;
+		snd->pm25.pm10Value = t0 + t1 + t2 + t3;
+		//
+
 		break;
 
 	case L3PO_pm25_set_switch:
