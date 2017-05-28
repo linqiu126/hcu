@@ -49,6 +49,10 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
 };
 
 //Global variables
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	#include "../l3appctrl/l3bfsc.h"
+	extern gTaskL3bfscContext_t gTaskL3bfscContext;
+#endif
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose

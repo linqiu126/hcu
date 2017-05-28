@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ" key="selection"/>
+		<item value="fsm_l3bfsc_canitf_period_read_resp" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ"/>
-			<item value="fsm_canitfleo_l3bfsc_general_cmd_req"/>
-			<item value="MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP"/>
-			<item value="fsm_l3bfsc_canitf_general_cmd_resp"/>
-			<item value="MSG_ID_L3BFSC_UICOMM_CFG_RESP"/>
-			<item value="MSG_ID_L3BFSC_UICOMM_CMD_RESP"/>
-			<item value="fsm_bfscuicomm_l3bfsc_cfg_resp"/>
-			<item value="MSG_ID_UICOMM_L3BFSC_CMD_REQ"/>
+			<item value="fsm_l3bfsc_canitf_period_read_resp"/>
+			<item value="TIMER_ID_1S_L3BFSC_PERIOD_READ"/>
+			<item value="func_l3bfsc_time_out_period_read_process"/>
+			<item value="fsm_canitfleo_l3bfsc_ws_read_req"/>
+			<item value="MSG_ID_L3BFSC_CAN_WS_READ_REQ"/>
+			<item value="MSG_ID_CAN_L3BFSC_WS_READ_RESP"/>
+			<item value="func_l3bfsc_time_out_sys_cfg_req_process"/>
+			<item value="func_l3bfsc_time_out_ws_init_req_process"/>
 		</list>
 		<list key="replacehistory">
 			<item value="IEID"/>

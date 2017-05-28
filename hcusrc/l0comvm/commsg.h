@@ -497,12 +497,12 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
 
 	MSG_ID_CAN_L2FRAME_RCV,  //MYC 2017/05/15  TBD
-	MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//待删除
-	MSG_ID_CAN_L3BFSC_WS_INIT_FB,       	//待删除
+	//MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//待删除
+	//MSG_ID_CAN_L3BFSC_WS_INIT_FB,       	//待删除
 
 	//是不是考虑将这种机制去掉，只是单纯的将故障秤台隔离而已
-	MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求  TBD
-	MSG_ID_CAN_L3BFSC_WS_READ_RESP,  		//所有传感器读取一次性读取确认  TBD
+	//MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求  TBD
+	//MSG_ID_CAN_L3BFSC_WS_READ_RESP,  		//所有传感器读取一次性读取确认  TBD
 
 	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
 	MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  		//出料确认
@@ -2277,34 +2277,34 @@ typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 //MSG_ID_CAN_L2FRAME_RCV,  //MYC 2017/05/15  TBD
 
 //MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化  TBD
-typedef struct msg_struct_l3bfsc_can_ws_init_req
-{
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_init_req_t;
+//typedef struct msg_struct_l3bfsc_can_ws_init_req
+//{
+//	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+//	UINT32 length;
+//}msg_struct_l3bfsc_can_ws_init_req_t;
 
 //MSG_ID_CAN_L3BFSC_WS_INIT_FB,       	//传感器初始化确认
-typedef struct msg_struct_can_l3bfsc_ws_init_fb
-{
-	UINT8  sensorid;
-	UINT8  initFlag;
-	UINT32 length;
-}msg_struct_can_l3bfsc_ws_init_fb_t;
+//typedef struct msg_struct_can_l3bfsc_ws_init_fb
+//{
+//	UINT8  sensorid;
+//	UINT8  initFlag;
+//	UINT32 length;
+//}msg_struct_can_l3bfsc_ws_init_fb_t;
 
 //MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求  TBD
-typedef struct msg_struct_l3bfsc_can_ws_read_req
-{
-	UINT8 sensorid;
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_read_req_t;
+//typedef struct msg_struct_l3bfsc_can_ws_read_req
+//{
+//	UINT8 sensorid;
+//	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+//	UINT32 length;
+//}msg_struct_l3bfsc_can_ws_read_req_t;
 
 //MSG_ID_CAN_L3BFSC_WS_READ_RESP,  		//所有传感器读取一次性读取确认
-typedef struct msg_struct_can_l3bfsc_ws_read_resp
-{
-	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_can_l3bfsc_ws_read_resp_t;
+//typedef struct msg_struct_can_l3bfsc_ws_read_resp
+//{
+//	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+//	UINT32 length;
+//}msg_struct_can_l3bfsc_ws_read_resp_t;
 
 //MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
 typedef struct msg_struct_l3bfsc_can_ws_comb_out
@@ -2379,24 +2379,28 @@ typedef struct msg_struct_can_l3bfsc_sys_cfg_resp
 //MSG_ID_L3BFSC_CAN_SYS_START_REQ,
 typedef struct msg_struct_l3bfsc_can_sys_start_req
 {
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_sys_start_req_t;
 
 //MSG_ID_CAN_L3BFSC_SYS_START_RESP,
 typedef struct msg_struct_can_l3bfsc_sys_start_resp
 {
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_can_l3bfsc_sys_start_resp_t;
 
 //MSG_ID_L3BFSC_CAN_SYS_STOP_REQ,
 typedef struct msg_struct_l3bfsc_can_sys_stop_req
 {
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_sys_stop_req_t;
 
 //MSG_ID_CAN_L3BFSC_SYS_STOP_RESP,
 typedef struct msg_struct_can_l3bfsc_sys_stop_resp
 {
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_can_l3bfsc_sys_stop_resp_t;
 

@@ -15,7 +15,7 @@
 
 //= ZJL, 2017 May.27, CURRENT_SW_DELIVERY 201=>BFSC项目
 = 编写UICOMM的状态机框架
-
+= 继续L3BFSC启动部分的程序框架
 
 
 //= ZSC, 2017 May.25, CURRENT_SW_DELIVERY 200=>AQYC项目

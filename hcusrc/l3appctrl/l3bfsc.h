@@ -12,6 +12,7 @@
 #include "../l1com/l1comdef.h"
 #include "../l0service/timer.h"
 
+
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01
@@ -34,7 +35,6 @@ enum FSM_STATE_L3BFSC
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfsc[];
 
-
 typedef struct L3BfscSensorWsInfo
 {
 	UINT8  sensorWsId;
@@ -43,15 +43,19 @@ typedef struct L3BfscSensorWsInfo
 }L3BfscSensorWsInfo_t;
 //秤盘状态定义
 #define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID			0  		//秤盘无效
-#define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE		 	0		//秤盘
-#define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE		 	1		//秤盘
+#define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE		 	0
+#define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE		 	1		//收到STARTUP以后
 #define HCU_L3BFSC_SENSOR_WS_STATUS_CONF_REQ 		2  		//CONFIG下发
 #define HCU_L3BFSC_SENSOR_WS_STATUS_CONF_COMP 		3  		//配置完成
-#define HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY 			4       //秤盘空
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR 	5 		//秤盘有料数值错误
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB 	6 		//秤盘有料待组合
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 	7		//秤盘有料待出料
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 	8		//秤盘有料待抛弃
+
+#define HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MIN 		10
+#define HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY 			11      //秤盘空
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR 	12 		//秤盘有料数值错误
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB 	13 		//秤盘有料待组合
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 	14		//秤盘有料待出料
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 	15		//秤盘有料待抛弃
+#define HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MAX 		19
+
 #define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID1  		255  	//秤盘无效
 
 //统计周期，为了计算滑动平均数据
@@ -132,27 +136,29 @@ typedef struct gTaskL3bfscContext
 	HcuSysMsgIeL3bfscContextStaElement_t sta24H;		//24H统计结果
 	HcuSysMsgIeL3bfscContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
 }gTaskL3bfscContext_t;
+extern gTaskL3bfscContext_t gTaskL3bfscContext;
 
 //统计打印报告的频率调整
 #define HCU_L3BFSC_STATISTIC_PRINT_FREQUENCY 10
 
-//API
+//API通用部分
 extern OPSTAT fsm_l3bfsc_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_period_read_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
+//API启动及命令控制部分
 extern OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-//extern OPSTAT fsm_l3bfsc_canitf_general_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-//extern OPSTAT fsm_l3bfsc_canitf_ws_init_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_sys_start_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
+//API组合部分
+extern OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //CLOUDVELA后台通信部分
 extern OPSTAT fsm_l3bfsc_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -168,11 +174,10 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void);
 void func_l3bfsc_ws_sensor_search_give_up(void);
 UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
 float func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
-OPSTAT func_l3bfsc_time_out_ws_init_req_process(void);
+OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void);
 OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_error_scan_process(void);
-OPSTAT func_l3bfsc_time_out_period_read_process(void);
 OPSTAT func_l3bfsc_time_out_statistic_scan_process(void);
 void func_l3bfsc_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
 
