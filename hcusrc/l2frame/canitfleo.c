@@ -1332,8 +1332,8 @@ void canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr)
 	//if (hcu_message_send(MSG_ID_L3BFSC_STARTUP_IND, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, sizeof(msg_struct_l3bfsc_startup_ind_t)) == FAILURE)
 	//	HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 
-#define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE 1
-	dbi_HcuBfsc_WmcStatusUpdate(0, wmc_id_received + 1, HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE, -1);
+#define HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP 1
+	dbi_HcuBfsc_WmcStatusUpdate(0, wmc_id_received + 1, HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP, -1);
 	HcuDebugPrint("CANITFLEO: dbi_HcuBfsc_WmcStatusUpdate, wmc_id=%d, wmc_weight_value=%d\r\n", wmc_id_received, -1);
 
 	/* THIS IS FOR TEST ONLY, NEED TO MOVE TO BFSC */

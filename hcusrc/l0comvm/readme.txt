@@ -19,7 +19,7 @@
 = HUITP.H被MYC更新
 = 清理sysengpar中有关BFSC的数据结构，这部分结构不再使用，包括数据库表单也不再使用，改用了ＵＩ界面配置的JASON文件进行配置
 = 增加了hcuBfscFb2Ui数据库表单，用于UICOMM向UI界面通知执行的结果
-
+= 建立启动过程的差错处理框架
 
 
 //= ZJL, 2017 May.27, CURRENT_SW_DELIVERY 201=>BFSC项目

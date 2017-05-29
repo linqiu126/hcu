@@ -46,21 +46,31 @@ typedef struct L3BfscSensorWsInfo
 	UINT32 sensorValue;
 	UINT32 sensorRepTimes;
 	UINT8  sensorStatus; //无效，空料，有料数值错误，有料待组合，有料待出料
+	UINT8  cfgRcvFlag;   //用来保存CFG_RESP是否收到
+	UINT8  startRcvFlag;  //用来保存START_RESP是否收到
+	UINT8  stopRcvFlag;   //用来保存STOP_RESP是否收到
 }L3BfscSensorWsInfo_t;
 //秤盘状态定义
 #define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID			0  		//秤盘无效
-#define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE		 	0
-#define HCU_L3BFSC_SENSOR_WS_STATUS_ONLINE		 	1		//收到STARTUP以后
-#define HCU_L3BFSC_SENSOR_WS_STATUS_CONF_REQ 		2  		//CONFIG下发
-#define HCU_L3BFSC_SENSOR_WS_STATUS_CONF_COMP 		3  		//配置完成
+#define HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE		 	1
 
-#define HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MIN 		10
-#define HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY 			11      //秤盘空
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR 	12 		//秤盘有料数值错误
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB 	13 		//秤盘有料待组合
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 	14		//秤盘有料待出料
-#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 	15		//秤盘有料待抛弃
-#define HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MAX 		19
+#define HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MIN		10
+#define HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP		 	11		//下位机上线
+#define HCU_L3BFSC_SENSOR_WS_STATUS_CFG_REQ 		12  	//配置开始
+#define HCU_L3BFSC_SENSOR_WS_STATUS_CFG_CMPL 		13  	//配置完成
+#define HCU_L3BFSC_SENSOR_WS_STATUS_START_REQ 		14  	//启动开始
+#define HCU_L3BFSC_SENSOR_WS_STATUS_START_CMPL 		15  	//启动完成
+#define HCU_L3BFSC_SENSOR_WS_STATUS_STOP_REQ 		16  	//停止开始
+#define HCU_L3BFSC_SENSOR_WS_STATUS_STOP_CMPL 		17  	//停止完成
+#define HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MAX		19
+
+#define HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MIN 		30
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY 	31      //秤盘空
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR 	32 		//秤盘有料数值错误
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB 	33 		//秤盘有料待组合
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT 	34		//秤盘有料待出料
+#define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 	35		//秤盘有料待抛弃
+#define HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MAX 		39
 
 #define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID1  		255  	//秤盘无效
 
@@ -159,6 +169,7 @@ extern OPSTAT fsm_l3bfsc_canitf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * p
 extern OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfsc_canitf_sys_start_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfsc_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //API组合部分
 extern OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -181,11 +192,18 @@ void func_l3bfsc_ws_sensor_search_give_up(void);
 UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
 float func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
 OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void);
+OPSTAT func_l3bfsc_time_out_sys_start_req_process(void);
+OPSTAT func_l3bfsc_time_out_sys_stop_req_process(void);
 OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_error_scan_process(void);
 OPSTAT func_l3bfsc_time_out_statistic_scan_process(void);
 void func_l3bfsc_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
+bool func_l3bfsc_cacluate_sensor_cfg_rcv_complete(void);
+bool func_l3bfsc_cacluate_sensor_start_rcv_complete(void);
+bool func_l3bfsc_cacluate_sensor_stop_rcv_complete(void);
+
+
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_L3BFSC(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFSC]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

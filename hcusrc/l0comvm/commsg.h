@@ -2332,36 +2332,24 @@ typedef struct msg_struct_can_l3bfsc_new_ready_event
 	UINT32 length;
 }msg_struct_can_l3bfsc_new_ready_event_t;
 
-//MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,  	//来自后台的控制命令，只能在SCAN下工作
-//typedef struct msg_struct_l3bfsc_can_general_cmd_req
-//{
-//	UINT8 sensorid;
-//	UINT8 optid;
-//	UINT8 optpar;
-//	UINT32 modbusVal;
-//	UINT32 length;
-//}msg_struct_l3bfsc_can_general_cmd_req_t;
-
-//MSG_ID_CAN_L3BFSC_GENERAL_CMD_RESP, 	//来自后台的控制命令反馈，只能在SCAN下工作
-//typedef struct msg_struct_can_l3bfsc_general_cmd_resp
-//{
-//	UINT8  sensorid;
-//	UINT8  cmdid;
-//	UINT8  optid;
-//	UINT8  optpar;
-//	UINT32 modbusVal;
-//	UINT32 length;
-//}msg_struct_can_l3bfsc_general_cmd_resp_t;
-
 //MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
+#define HCU_SYSMSG_BFSC_ERR_CODE_INVALIID	  	0
+#define HCU_SYSMSG_BFSC_ERR_CODE_UNSPECIFIC  	1
+#define HCU_SYSMSG_BFSC_ERR_CODE_TIME_OUT  		2
+#define HCU_SYSMSG_BFSC_ERR_CODE_NULL  		0xFFFF
+
 typedef struct msg_struct_l3bfsc_can_sys_cfg_req
 {
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32 length;
 }msg_struct_l3bfsc_can_sys_cfg_req_t;
 
 //MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,
 typedef struct msg_struct_can_l3bfsc_sys_cfg_resp
 {
+	UINT8  sensorid;
+	UINT8  validFlag;  //是否执行成功
+	UINT32 errCode;
 	UINT32 length;
 }msg_struct_can_l3bfsc_sys_cfg_resp_t;
 
@@ -2375,7 +2363,9 @@ typedef struct msg_struct_l3bfsc_can_sys_start_req
 //MSG_ID_CAN_L3BFSC_SYS_START_RESP,
 typedef struct msg_struct_can_l3bfsc_sys_start_resp
 {
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT8  sensorid;
+	UINT8  validFlag;  //是否执行成功
+	UINT32 errCode;
 	UINT32 length;
 }msg_struct_can_l3bfsc_sys_start_resp_t;
 
@@ -2389,7 +2379,9 @@ typedef struct msg_struct_l3bfsc_can_sys_stop_req
 //MSG_ID_CAN_L3BFSC_SYS_STOP_RESP,
 typedef struct msg_struct_can_l3bfsc_sys_stop_resp
 {
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT8  sensorid;
+	UINT8  validFlag;  //是否执行成功
+	UINT32 errCode;
 	UINT32 length;
 }msg_struct_can_l3bfsc_sys_stop_resp_t;
 
@@ -2411,30 +2403,36 @@ typedef struct msg_struct_uicomm_l3bfsc_cmd_req
 //MSG_ID_L3BFSC_UICOMM_CMD_RESP,
 typedef struct msg_struct_l3bfsc_uicomm_cmd_resp
 {
-	UINT8  cmdid;
-	UINT32 timestamp;
-	UINT32 length;
+	UINT8   cmdid;
+	UINT32  timestamp;
+	UINT8   validFlag;  //是否执行成功
+	UINT32  errCode;
+	UINT8	sensorid;
+	UINT32  length;
 }msg_struct_l3bfsc_uicomm_cmd_resp_t;
 
 //MSG_ID_UICOMM_L3BFSC_CFG_REQ
 typedef struct msg_struct_uicomm_l3bfsc_cfg_req
 {
-	UINT32  targetValue;
-	UINT32	targetUpLimit;
-	UINT32  parSetId; //指明是哪一套参数启作用了
-	UINT8	minWsNbr;
-	UINT8	maxWsNbr;
+//	UINT32  targetValue;
+//	UINT32	targetUpLimit;
+//	UINT32  parSetId; //指明是哪一套参数启作用了
+//	UINT8	minWsNbr;
+//	UINT8	maxWsNbr;
 	UINT32 	length;
 }msg_struct_uicomm_l3bfsc_cfg_req_t;
 
 //MSG_ID_L3BFSC_UICOMM_CFG_RESP,  		//配置结果
 typedef struct msg_struct_l3bfsc_uicomm_cfg_resp
 {
-	UINT32  targetValue;
-	UINT32	targetUpLimit;
-	UINT32  parSetId; //指明是哪一套参数启作用了
-	UINT8	minWsNbr;
-	UINT8	maxWsNbr;
+//	UINT32  targetValue;
+//	UINT32	targetUpLimit;
+//	UINT32  parSetId; //指明是哪一套参数启作用了
+//	UINT8	minWsNbr;
+//	UINT8	maxWsNbr;
+	UINT8	sensorid;
+	UINT8   validFlag;  //是否执行成功
+	UINT32  errCode;
 	UINT32 	length;
 }msg_struct_l3bfsc_uicomm_cfg_resp_t;
 
@@ -2449,6 +2447,8 @@ typedef struct msg_struct_uicomm_can_test_cmd_req
 typedef struct msg_struct_can_uicomm_test_cmd_resp
 {
 	UINT8   cmdid;
+	UINT8   validFlag;  //是否执行成功
+	UINT32  errCode;
 	UINT32 	length;
 }msg_struct_can_uicomm_test_cmd_resp_t;
 
