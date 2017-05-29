@@ -375,7 +375,7 @@ OPSTAT dbi_HcuBfsc_ui_ctrl_exg_read(UINT32 *output)
 
 
 
-//根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
+//
 OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wmc_status, uint32_t wmc_weight_value)
 {
 	MYSQL *sqlHandler;
@@ -385,7 +385,6 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     char s[20];
     memset(s, 0, sizeof(s));
-    //strncpy(s, StaType, strlen(StaType)<sizeof(s)?strlen(StaType):sizeof(s));
 
 	//建立数据库连接
     sqlHandler = mysql_init(NULL);
@@ -402,13 +401,6 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     }
 
 	//REPLACE新的数据
-    UINT32 tmp = time(0);
-//    sprintf(strsql, "REPLACE INTO `hcubfsccurrentinfo` (StaType, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
-//    		('%s', '%d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
-//			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
-//			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
-//
-//    "REPLACE INTO `hcubfsccurrentinfo` (deviceid, status_05, value_05) VALUES ('HCU_G301_BFSC_P0001', '1', '1000')"
     if( (0xFFFFFFFF == wmc_id) && (0xFFFFFFFF == wmc_weight_value) )
     {
         mysql_close(sqlHandler);
@@ -430,8 +422,6 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 				20170518, wmc_id, wmc_status, wmc_id, wmc_weight_value);
     }
 
-	printf("%s\r\n", strsql);
-
     result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -445,7 +435,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 }
 
 
-//根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
+//
 OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
 {
 	MYSQL *sqlHandler;
@@ -456,7 +446,6 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     char s[20];
     memset(s, 0, sizeof(s));
-    //strncpy(s, StaType, strlen(StaType)<sizeof(s)?strlen(StaType):sizeof(s));
 
 	//建立数据库连接
     sqlHandler = mysql_init(NULL);
@@ -473,18 +462,10 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     }
 
 	//REPLACE新的数据
-    UINT32 tmp = time(0);
-//    sprintf(strsql, "REPLACE INTO `hcubfsccurrentinfo` (StaType, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
-//    		('%s', '%d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
-//			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
-//			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
-//
-//    "REPLACE INTO `hcubfsccurrentinfo` (deviceid, status_05, value_05) VALUES ('HCU_G301_BFSC_P0001', '1', '1000')"
     for(wmc_id = 1; wmc_id <= 16; wmc_id++)
     {
 		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
 				20170518, wmc_id, 0);
-		printf("%s\r\n", strsql);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
