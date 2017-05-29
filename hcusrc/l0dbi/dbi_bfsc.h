@@ -16,6 +16,7 @@ extern OPSTAT dbi_HcuBfsc_Cfgpar_read_into_syseng(UINT32 sid, HcuSysEngBfscCfgpa
 extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
 extern OPSTAT dbi_HcuBfsc_ui_ctrl_exg_read(UINT32 *output);
 extern OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wmc_status, uint32_t wmc_weight_value);
+extern OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

@@ -35,10 +35,16 @@ enum FSM_STATE_L3BFSC
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfsc[];
 
+//大量编辑性错误，不得不采用这种方式
+#ifndef HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
+	#define HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX 16  //下位机总共有16个秤盘
+#endif
+
 typedef struct L3BfscSensorWsInfo
 {
 	UINT8  sensorWsId;
 	UINT32 sensorValue;
+	UINT32 sensorRepTimes;
 	UINT8  sensorStatus; //无效，空料，有料数值错误，有料待组合，有料待出料
 }L3BfscSensorWsInfo_t;
 //秤盘状态定义

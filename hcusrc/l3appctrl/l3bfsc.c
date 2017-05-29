@@ -143,7 +143,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (HCU_L3BFSC_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: module timer statistic parameter set error!\n");
 
-	//严格保证内部消息和外部消息
+	//严格保证内部消息和外部消息的一致性，进行必要的检查
 
 	//秤盘数据表单控制表初始化
 	memset(&gTaskL3bfscContext, 0, sizeof(gTaskL3bfscContext_t));
@@ -198,15 +198,14 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error start period timer!\n");*/
 
+	//初始化界面交互数据
 	dbi_HcuBfsc_WmcStatusForceInvalid(0);
-	HcuErrorPrint("L3BFSC: dbi_HcuBfsc_WmcStatusForceInvalid()\r\n");
+	HCU_DEBUG_PRINT_INF("L3BFSC: dbi_HcuBfsc_WmcStatusForceInvalid() set. \n");
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
 	HCU_DEBUG_PRINT_FAT("L3BFSC: Enter FSM_STATE_L3BFSC_ACTIVED status, Keeping refresh here!\n");
-
-
 
 	//返回
 	return SUCCESS;
@@ -623,6 +622,8 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	gTaskL3bfscContext.cur.wsIncMatCnt++;
 	gTaskL3bfscContext.cur.wsIncMatWgt += rcv.sensorWsValue;
 	HCU_DEBUG_PRINT_INF("L3BFSC: Sensor Input Id = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
+	//将重复次数清零：这个参数用于增加该传感器被算法命中的概率
+	gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorRepTimes = 0;
 	if (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_EMPTY){
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
@@ -914,6 +915,9 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		}
 		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_SYS_START_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 		if (ret == FAILURE) HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+
+		//启动定时器，等待所有反馈
+
 	}
 
 	//停止命令
@@ -947,7 +951,7 @@ OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	//将数据存入系统参数区域
+	//将数据存入系统参数区域：待完善，可能需要去掉
 	if (dbi_HcuBfsc_Cfgpar_read_into_syseng(rcv.parSetId, &(zHcuSysEngPar.bfsc)) == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Read DBI data error!\n");
 
