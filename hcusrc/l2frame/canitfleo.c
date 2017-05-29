@@ -13,6 +13,8 @@
 #include "../l2frame/l2usbcan.h"   //Added by MYC 2017/05/15
 #include "../l2frame/l2packet.h"   //Added by MYC 2017/05/15
 #include "../l0comvm/commsg.h"   //Added by MYC 2017/05/15
+#include "../l2codec/huitp.h"   //Added by MYC 2017/05/30
+
 
 /*
 ** FSM of the CANITFLEO
@@ -1392,7 +1394,7 @@ OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_fr
 {
 
 	IHU_HUITP_L2FRAME_STD_frame_header_t *p = (IHU_HUITP_L2FRAME_STD_frame_header_t  *)p_l2_frame;
-	msg_struct_l3bfsc_wmc_msg_header_t *pBfscMsg = (msg_struct_l3bfsc_wmc_msg_header_t *)(p + 1);
+	StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *pBfscMsg = (StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *)(p + 1);
 
 	if (NULL == p_l2_frame)
 	{

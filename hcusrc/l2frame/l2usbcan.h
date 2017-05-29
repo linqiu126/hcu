@@ -9,6 +9,8 @@
 #define L2USBCAN_H_
 
 #include "../l0comvm/comtype.h"
+# include "../l2codec/huitp.h"   //Added by MYC 2017/05/30
+
 
 //接口卡类型定义
 #define VCI_PCI5121		1
