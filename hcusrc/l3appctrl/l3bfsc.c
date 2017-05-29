@@ -512,7 +512,7 @@ OPSTAT fsm_l3bfsc_cloudvela_event_confirm(UINT32 dest_id, UINT32 src_id, void * 
 //由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
 OPSTAT fsm_l3bfsc_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	//int ret=0;
 
 	//入参检查
 	msg_struct_cloudvela_l3bfsc_ctrl_req_t rcv;
@@ -943,17 +943,13 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0, i=0;
+	int ret=0;
 	msg_struct_uicomm_l3bfsc_cfg_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t))){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
 	}
 	memcpy(&rcv, param_ptr, param_len);
-
-	//将数据存入系统参数区域：待完善，可能需要去掉
-	if (dbi_HcuBfsc_Cfgpar_read_into_syseng(rcv.parSetId, &(zHcuSysEngPar.bfsc)) == FAILURE)
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Read DBI data error!\n");
 
 	//检查参数并存入系统区
 	gTaskL3bfscContext.targetValue = rcv.targetValue;

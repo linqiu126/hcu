@@ -13,10 +13,18 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+
+
+//= ZJL, 2017 May.29, CURRENT_SW_DELIVERY 202=>BFSC项目
+= HUITP.H被MYC更新
+= 清理sysengpar中有关BFSC的数据结构，这部分结构不再使用，包括数据库表单也不再使用，改用了ＵＩ界面配置的JASON文件进行配置
+= 增加了hcuBfscFb2Ui数据库表单，用于UICOMM向UI界面通知执行的结果
+
+
+
 //= ZJL, 2017 May.27, CURRENT_SW_DELIVERY 201=>BFSC项目
 = 编写UICOMM的状态机框架
 = 继续L3BFSC启动部分的程序框架
-
 
 //= ZSC, 2017 May.25, CURRENT_SW_DELIVERY 200=>AQYC项目
 = bug fix by shanchun for segment fault when plug in the 3G dougle, root cause to be check

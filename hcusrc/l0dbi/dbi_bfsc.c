@@ -119,32 +119,31 @@ INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncM
 
 
 --
--- 表的结构 `hcubfscctrlcmdexg`
+-- 表的结构 `hcubfscfb2ui`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscctrlcmdexg`
+-- Table structure for table `hcubfscfb2ui`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscctrlcmdexg` (
+CREATE TABLE IF NOT EXISTS `hcubfscfb2ui` (
   `sid` int(4) NOT NULL AUTO_INCREMENT,
-  `startexecuteflag` int(1) NOT NULL,
+  `cmdtype` int(1) NOT NULL,
+  `validflag` int(1) NOT NULL,
+  `fbinfo` char(80) NOT NULL,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `hcubfscctrlcmdexg`
+-- Dumping data for table `hcubfscfb2ui`
 --
 
-INSERT INTO `hcubfscctrlcmdexg` (`sid`, `startexecuteflag`) VALUES
-(1, 0);
-
-
-
-
-
+INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
+(1, 1, 1, 'Configuration success'),
+(2, 2, 0, 'Start failure due to WS not reachable'),
+(3, 3, 0, 'Stop failure due to WS not reachable');
 
 
 
@@ -154,118 +153,119 @@ INSERT INTO `hcubfscctrlcmdexg` (`sid`, `startexecuteflag`) VALUES
 
 
 //查询满足条件的第一条记录
-OPSTAT dbi_HcuBfsc_Cfgpar_read_into_syseng(UINT32 sid, HcuSysEngBfscCfgpar_t *bfscCfgpar)
-{
-	MYSQL *sqlHandler;
-	MYSQL_RES *resPtr;
-	MYSQL_ROW sqlRow;
-    int result = 0;
-    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
-
-    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
-    if (bfscCfgpar == NULL){
-    	HcuErrorPrint("DBIBFSC: Input parameter NULL pointer!\n");
-        return FAILURE;
-    }
-
-	//建立数据库连接
-    sqlHandler = mysql_init(NULL);
-    if(!sqlHandler)
-    {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
-        return FAILURE;
-    }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
-    if (!sqlHandler){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed!\n");
-        return FAILURE;
-    }
-
-	//获取数据
-    sprintf(strsql, "SELECT * FROM `hcubfsccfgpar` WHERE (`sid` = '%d')", sid);
-	result = mysql_query(sqlHandler, strsql);
-	if(result){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: SELECT data error: %s\n", mysql_error(sqlHandler));
-        return FAILURE;
-	}
-
-	//查具体的结果
-	resPtr = mysql_use_result(sqlHandler);
-	if (!resPtr){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: mysql_use_result error!\n");
-        return FAILURE;
-	}
-
-	//只读取第一条记录
-	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
-	{
-		mysql_free_result(resPtr);
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
-        return FAILURE;
-	}
-	else{
-		UINT32 index = 0;
-		if (sqlRow[index]) bfscCfgpar->sid = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.MinScaleNumberCombination = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.MaxScaleNumberCombination = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.MinScaleNumberStartCombination = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.TargetCombinationWeight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.TargetCombinationUpperWeight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.IsPriorityScaleEnabled = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.IsProximitCombinationMode = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.CombinationBias = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.IsRemainDetectionEnable = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.RemainDetectionTimeSec = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.RemainScaleTreatment = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.CombinationSpeedMode = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.CombinationAutoMode = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.MovingAvrageSpeedCount = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.AlgSpare1 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.AlgSpare2 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.AlgSpare3 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->combAlg.AlgSpare4 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorAdcParameter = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorFilterMode = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.FilterParam.filer_parameter1 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.FilterParam.filer_parameter2 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.FilterParam.filer_parameter3 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.FilterParam.filer_parameter4 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorAutoZeroThread = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorFixCompesation = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorLoadDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorLoadThread = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorEmptyThread = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorEmptyDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorPickupThread = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorPickupDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.StardardReadyTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.MaxAllowedWeight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSpare1 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSpare2 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSpare3 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSpare4 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpeed = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorDirection = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorRollingStartMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorRollingStopMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorRollingInveralMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorFailureDetectionVaration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorFailureDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpare1 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpare2 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpare3 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpare4 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
-	}
-
-	//释放记录集
-	mysql_free_result(resPtr);
-    mysql_close(sqlHandler);
-    return SUCCESS;
-}
+//BFSC暂时不再使用数据库表单配置的方式，因而这个表单暂时不用。为了复用，这个函数先存在这儿，未来待删掉
+//OPSTAT dbi_HcuBfsc_Cfgpar_read_into_syseng(UINT32 sid, HcuSysEngBfscCfgpar_t *bfscCfgpar)
+//{
+//	MYSQL *sqlHandler;
+//	MYSQL_RES *resPtr;
+//	MYSQL_ROW sqlRow;
+//    int result = 0;
+//    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+//
+//    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+//    if (bfscCfgpar == NULL){
+//    	HcuErrorPrint("DBIBFSC: Input parameter NULL pointer!\n");
+//        return FAILURE;
+//    }
+//
+//	//建立数据库连接
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+//
+//	//获取数据
+//    sprintf(strsql, "SELECT * FROM `hcubfsccfgpar` WHERE (`sid` = '%d')", sid);
+//	result = mysql_query(sqlHandler, strsql);
+//	if(result){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIBFSC: SELECT data error: %s\n", mysql_error(sqlHandler));
+//        return FAILURE;
+//	}
+//
+//	//查具体的结果
+//	resPtr = mysql_use_result(sqlHandler);
+//	if (!resPtr){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIBFSC: mysql_use_result error!\n");
+//        return FAILURE;
+//	}
+//
+//	//只读取第一条记录
+//	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+//	{
+//		mysql_free_result(resPtr);
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
+//        return FAILURE;
+//	}
+//	else{
+//		UINT32 index = 0;
+//		if (sqlRow[index]) bfscCfgpar->sid = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.MinScaleNumberCombination = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.MaxScaleNumberCombination = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.MinScaleNumberStartCombination = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.TargetCombinationWeight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.TargetCombinationUpperWeight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.IsPriorityScaleEnabled = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.IsProximitCombinationMode = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.CombinationBias = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.IsRemainDetectionEnable = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.RemainDetectionTimeSec = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.RemainScaleTreatment = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.CombinationSpeedMode = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.CombinationAutoMode = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.MovingAvrageSpeedCount = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.AlgSpare1 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.AlgSpare2 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.AlgSpare3 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->combAlg.AlgSpare4 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorAdcParameter = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorFilterMode = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.FilterParam.filer_parameter1 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.FilterParam.filer_parameter2 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.FilterParam.filer_parameter3 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.FilterParam.filer_parameter4 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorAutoZeroThread = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorFixCompesation = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorLoadDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorLoadThread = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorEmptyThread = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorEmptyDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorPickupThread = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSensorPickupDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.StardardReadyTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.MaxAllowedWeight = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSpare1 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSpare2 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSpare3 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->wsPar.WeightSpare4 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpeed = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorDirection = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorRollingStartMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorRollingStopMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorRollingInveralMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorFailureDetectionVaration = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorFailureDetectionTimeMs = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpare1 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpare2 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpare3 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//		if (sqlRow[index]) bfscCfgpar->motoPar.MotorSpare4 = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//	}
+//
+//	//释放记录集
+//	mysql_free_result(resPtr);
+//    mysql_close(sqlHandler);
+//    return SUCCESS;
+//}
 
 
 //根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
@@ -313,11 +313,72 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaEl
 }
 
 //只读取第一条控制字段
-OPSTAT dbi_HcuBfsc_ui_ctrl_exg_read(UINT32 *output)
+//OPSTAT dbi_HcuBfsc_ui_ctrl_exg_read(UINT32 *output)
+//{
+//	MYSQL *sqlHandler;
+//	MYSQL_RES *resPtr;
+//	MYSQL_ROW sqlRow;
+//    int result = 0;
+//    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+//
+//    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+//
+//	//建立数据库连接
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIBFSC: MySQL connection failed!\n");
+//        return FAILURE;
+//    }
+//
+//	//获取数据
+//    sprintf(strsql, "SELECT * FROM `hcubfscctrlcmdexg` WHERE (1)");
+//	result = mysql_query(sqlHandler, strsql);
+//	if(result){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIBFSC: SELECT data error: %s\n", mysql_error(sqlHandler));
+//        return FAILURE;
+//	}
+//
+//	//查具体的结果
+//	resPtr = mysql_use_result(sqlHandler);
+//	if (!resPtr){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIBFSC: mysql_use_result error!\n");
+//        return FAILURE;
+//	}
+//
+//	//只读取第一条记录
+//	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+//	{
+//		mysql_free_result(resPtr);
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
+//        return FAILURE;
+//	}
+//	else{
+//		UINT32 index = 1;
+//		if (sqlRow[index]) *output = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
+//	}
+//
+//	//释放记录集
+//	mysql_free_result(resPtr);
+//    mysql_close(sqlHandler);
+//    return SUCCESS;
+//}
+
+
+
+//将执行结果存入hcubfscfb2ui
+OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info)
 {
 	MYSQL *sqlHandler;
-	MYSQL_RES *resPtr;
-	MYSQL_ROW sqlRow;
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
@@ -327,52 +388,30 @@ OPSTAT dbi_HcuBfsc_ui_ctrl_exg_read(UINT32 *output)
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
-    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
         return FAILURE;
     }
-    sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
         return FAILURE;
     }
 
-	//获取数据
-    sprintf(strsql, "SELECT * FROM `hcubfscctrlcmdexg` WHERE (1)");
+	//REPLACE新的数据
+    UINT32 tmp = time(0);
+    sprintf(strsql, "REPLACE INTO `hcubfscfb2ui` (cmdtype, validflag, fbinfo) VALUES ('%d', '%d', '%s')", cmdType, validFlag, info);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: SELECT data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
-	}
-
-	//查具体的结果
-	resPtr = mysql_use_result(sqlHandler);
-	if (!resPtr){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: mysql_use_result error!\n");
-        return FAILURE;
-	}
-
-	//只读取第一条记录
-	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
-	{
-		mysql_free_result(resPtr);
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
-        return FAILURE;
-	}
-	else{
-		UINT32 index = 1;
-		if (sqlRow[index]) *output = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 	}
 
 	//释放记录集
-	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }
-
 
 
 //

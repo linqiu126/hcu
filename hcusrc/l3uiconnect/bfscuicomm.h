@@ -47,6 +47,9 @@ void func_bfscuicomm_install_file_scan(void);
 void func_bfscuicomm_scan_jason_callback(void);
 OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void);
 
+//External APIs
+extern OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
+
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_BFSCUICOMM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
