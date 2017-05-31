@@ -162,11 +162,8 @@ OPSTAT func_canitfleo_int_init(void)
 {
 #ifdef TARGET_LINUX_X86_ADVANTECH //Added by MYC 2017/05/15
 	INT32 ret;
-	ret = hcu_usb_can_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
-			CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN0, \
-			CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
-
-	HCU_DEBUG_PRINT_INF("CANITFLEO: hcu_usb_can_init() called, ret = %d\n", ret);
+	ret = hcu_canitfleo_usbcan_interface_init();
+	HCU_DEBUG_PRINT_INF("CANITFLEO: hcu_canitfleo_usbcan_interface_init() called, ret = %d\n", ret);
 
 	if(SUCCESS == ret)
 		return SUCCESS;
@@ -794,6 +791,31 @@ OPSTAT func_canitfleo_working_scan_process(void)
 }
 
 
+
+
+/*
+ *  USBCAN BSP函数映射
+ *
+ */
+OPSTAT hcu_canitfleo_usbcan_interface_init(void)
+{
+	return hcu_bsp_usbcan_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
+				CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN0, \
+				CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
+}
+
+//发送API
+OPSTAT hcu_canitfleo_usbcan_l2frame_send(UINT8 *buffer, UINT32 length, UINT32 wmc_id_bitmap)
+{
+	return hcu_bsp_usbcan_l2frame_transmit(&(gTaskCanitfleoContext.can1), buffer, length, wmc_id_bitmap);
+}
+
+
+/*
+ *  以下函数暂时不用的，它是使用了socket CAN的函数形式
+ *
+ */
+
 /*
  *
  * Initialize the SocketCAN
@@ -803,7 +825,7 @@ OPSTAT func_canitfleo_working_scan_process(void)
  * MAKE SURE "sudo /sbin/ip link set can0 up type can bitrate 500000"
  *
  */
-OPSTAT func_canitfleo_can_init(char *canitfname, int *sock)
+OPSTAT func_canitfleo_socketcan_init(char *canitfname, int *sock)
 {
 
 	int s; /* can raw socket */
@@ -847,7 +869,7 @@ OPSTAT func_canitfleo_can_init(char *canitfname, int *sock)
  * Return: 1 Failure, 0 Success
  *
  */
-OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe)
+OPSTAT func_canitfleo_socketcan_send(int socket, char *canid_canframe)
 {
 	int s; /* can raw socket */
 	int nbytes;
@@ -877,7 +899,7 @@ OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe)
  *
  */
 
-OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char)
+OPSTAT func_canitfleo_socketcan_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char)
 {
 	int s; /* can raw socket */
 	int nbytes;
@@ -920,7 +942,7 @@ OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex
 	return SUCCESS;
 }
 
-int func_canitfleo_test_main(int argc, char **argv)
+int func_canitfleo_socketcan_test_main(int argc, char **argv)
 {
 	int sock;
 	int ret;
@@ -941,7 +963,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 	HCU_DEBUG_PRINT_INF("pi_cantest_bf loop = %d sleep_second = %d\n", loop, sleep_second);
 
 	/****** MAKE SURE "sudo /sbin/ip link set can0 up type can bitrate 500000" ********/
-	ret = func_canitfleo_can_init("can0", &sock);
+	ret = func_canitfleo_socketcan_init("can0", &sock);
 	if(1 == ret)
 	{
 		HCU_DEBUG_PRINT_INF("can_init failure.\n");
@@ -975,7 +997,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 		/* ========================= clockwise =========================*/
 		/* =============================================================*/
 		sleep(sleep_second);
-		ret = func_canitfleo_can_send(sock, "602#2300652001000000");
+		ret = func_canitfleo_socketcan_send(sock, "602#2300652001000000");
 		if(1 == ret)
 		{
 			HCU_DEBUG_PRINT_INF("func_canitfleo_can_send(sock, 602#2300652001000000.\n");
@@ -984,7 +1006,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 
 		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
 		do{
-			ret = func_canitfleo_can_receive(sock, &canid, canframe_hex, buf);
+			ret = func_canitfleo_socketcan_receive(sock, &canid, canframe_hex, buf);
 			if(1 == ret)
 			{
 				HCU_DEBUG_PRINT_INF("can_receive(sock, &canid, &canframe_hex, &buf);\n");
@@ -1000,7 +1022,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 		/* ======================== r-clockwise ========================*/
 		/* =============================================================*/
 		sleep(sleep_second);
-		ret = func_canitfleo_can_send(sock, "602#2300652002000000");
+		ret = func_canitfleo_socketcan_send(sock, "602#2300652002000000");
 		if(1 == ret)
 		{
 			HCU_DEBUG_PRINT_INF("func_canitfleo_can_send(sock, 602#2300652002000000.\n");
@@ -1009,7 +1031,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 
 		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
 		do{
-			ret = func_canitfleo_can_receive(sock, &canid, canframe_hex, buf);
+			ret = func_canitfleo_socketcan_receive(sock, &canid, canframe_hex, buf);
 			if(1 == ret)
 			{
 				HCU_DEBUG_PRINT_INF("func_canitfleo_can_receive(sock, &canid, &canframe_hex, &buf);\n");
@@ -1023,7 +1045,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 		/* ======================== stop motor  ========================*/
 		/* =============================================================*/
 		sleep(sleep_second);
-		ret = func_canitfleo_can_send(sock, "602#2300652003000000");
+		ret = func_canitfleo_socketcan_send(sock, "602#2300652003000000");
 		if(1 == ret)
 		{
 			HCU_DEBUG_PRINT_INF("func_canitfleo_can_send(sock, 602#2300652003000000.\n");
@@ -1033,7 +1055,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 		//usleep(2000);
 		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
 		do{
-			ret = func_canitfleo_can_receive(sock, &canid, canframe_hex, buf);
+			ret = func_canitfleo_socketcan_receive(sock, &canid, canframe_hex, buf);
 			if(1 == ret)
 			{
 				HCU_DEBUG_PRINT_INF("func_canitfleo_can_receive(sock, &canid, &canframe_hex, &buf);\n");
@@ -1048,7 +1070,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 		/* ======================== Weight Get  ========================*/
 		/* =============================================================*/
 		sleep(sleep_second);
-		ret = func_canitfleo_can_send(sock, "602#4000650200000000");
+		ret = func_canitfleo_socketcan_send(sock, "602#4000650200000000");
 		if(1 == ret)
 		{
 			HCU_DEBUG_PRINT_INF("func_canitfleo_can_send(sock, 602#4000650200000000.\n");
@@ -1058,7 +1080,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 		//usleep(2000);
 		memset(buf, 0, sizeof(MAX_CANFRAME)+1);
 		do{
-			ret = func_canitfleo_can_receive(sock, &canid, canframe_hex, buf);
+			ret = func_canitfleo_socketcan_receive(sock, &canid, canframe_hex, buf);
 			if(1 == ret)
 			{
 				HCU_DEBUG_PRINT_INF("can_receive(sock, &canid, &canframe_hex, &buf);\n");
@@ -1082,7 +1104,7 @@ int func_canitfleo_test_main(int argc, char **argv)
 
 /* THESE ARE ONLY FOR TEST */
 
-void TestSetConfigReq(uint8_t wmc_id)
+void func_canitfleo_usbcan_TestSetConfigReq(uint8_t wmc_id)
 {
 	static uint8_t SetConfigReq[] = {
 	0xfe, 0x7a, 0x84, 0x00, 0x11, 0x3B, 0x80, 0x00,
@@ -1109,7 +1131,7 @@ void TestSetConfigReq(uint8_t wmc_id)
 	hcu_bsp_usbcan_l2frame_transmit(&(gTaskCanitfleoContext.can1), SetConfigReq, len, (0x00100000 | (1 << wmc_id)));
 }
 
-void TestCommandReq()
+void func_canitfleo_usbcan_TestCommandReq(void)
 {
 	static uint8_t CommandReq[] = {
 	0xfe, 0xe6, 0x18, 0x00, 0x17, 0x3B, 0x14, 0x00,
@@ -1122,7 +1144,7 @@ void TestCommandReq()
 	hcu_bsp_usbcan_l2frame_transmit(&(gTaskCanitfleoContext.can1), CommandReq, len, 0xFFFF);
 }
 
-void TestStartReq(uint8_t wmc_id)
+void func_canitfleo_usbcan_TestStartReq(uint8_t wmc_id)
 {
 	static uint8_t StartReq[] = {0xfe, 0xf6, 0x08, 0x00, 0x12, 0x3B, 0x04, 0x00};
 
@@ -1160,7 +1182,7 @@ void TestStartReq(uint8_t wmc_id)
 //	HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B19,
 //	HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B99,
 
-uint16_t HuitpMsgIdMapToInternalMsgId(uint16_t huitp_msgid)
+uint16_t func_canitfleo_HuitpMsgIdMapToInternalMsgId(uint16_t huitp_msgid)
 {
 	switch (huitp_msgid)
 	{
@@ -1208,7 +1230,7 @@ uint16_t HuitpMsgIdMapToInternalMsgId(uint16_t huitp_msgid)
 	}
 }
 
-uint16_t InternalMsgIdMapToHuitpMsgId(uint16_t internal_msgid)
+uint16_t func_canitfleo_InternalMsgIdMapToHuitpMsgId(uint16_t internal_msgid)
 {
 	switch (internal_msgid)
 	{
@@ -1335,7 +1357,7 @@ OPSTAT BfscMessageLengthCheck(uint16_t msgid, uint16_t length)
 /*
  * Message Processing function for START_IND
  */
-void canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr)
+void func_canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr)
 {
 	msg_struct_l3bfsc_wmc_startup_ind_t snd;
 
@@ -1352,13 +1374,13 @@ void canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr)
 
 	/* THIS IS FOR TEST ONLY, NEED TO MOVE TO BFSC */
 	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process_bfsc_start_ind (%d),  Send SetConfigReq to WMC\n", wmc_id_received);
-	TestSetConfigReq(wmc_id_received);
+	func_canitfleo_usbcan_TestSetConfigReq(wmc_id_received);
 }
 
 /*
  * Message Processing function for SET_CONFIG_RESP
  */
-void canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr)
+void func_canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr)
 {
 	msg_struct_l3bfsc_wmc_resp_t snd;
 
@@ -1371,7 +1393,7 @@ void canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr)
 
 	/* Send for Test Only, NEED TO MOVE THE PROCESSING TO BFSC TASK, VIA MESSAGE */
 	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process_bfsc_set_config_resp(%)\n", wmc_id_received);
-	TestStartReq(wmc_id_received);
+	func_canitfleo_usbcan_TestStartReq(wmc_id_received);
 }
 
 /*
@@ -1379,7 +1401,7 @@ void canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr)
  */
 static long count_ws_event[16] = {0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0};
 
-void canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr)
+void func_canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr)
 {
 
 	msg_struct_l3bfsc_wmc_ws_event_t snd;
@@ -1404,7 +1426,7 @@ void canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr)
 	//	HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 }
 
-OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_frame_len)
+OPSTAT func_canitfleo_usbcan_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_frame_len)
 {
 
 	HCU_HUITP_L2FRAME_STD_frame_header_t *p = (HCU_HUITP_L2FRAME_STD_frame_header_t  *)p_l2_frame;
@@ -1437,7 +1459,7 @@ OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_fr
 	}
 
 	uint16_t msgid_huitp =  pBfscMsg->msgid;
-	uint16_t msgid = HuitpMsgIdMapToInternalMsgId(msgid_huitp);
+	uint16_t msgid = func_canitfleo_HuitpMsgIdMapToInternalMsgId(msgid_huitp);
 	uint16_t length =  pBfscMsg->length;
 	HcuDebugPrint("CANITFLEO: canitfleo_can_l2frame_receive_process: l3bfsc: msgid_huitp=0x%04X, msgid=0x%02X, length=%d\n", msgid_huitp, msgid, length);
 
@@ -1453,14 +1475,14 @@ OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_fr
 			if (MSG_SIZE_L3BFSC_WMC_STARTUP_IND == length)
 			{
 				HcuDebugPrint("CANITFLEO: call canitfleo_can_l2frame_receive_process_bfsc_start_ind()\n");
-				canitfleo_message_process_bfsc_wmc_start_ind((uint8_t *)pBfscMsg);
+				func_canitfleo_message_process_bfsc_wmc_start_ind((uint8_t *)pBfscMsg);
 			}
 			break;
 		case MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP:
 			if (MSG_SIZE_L3BFSC_WMC_SET_CONFIG_RESP == length)
 			{
 				HcuDebugPrint("CANITFLEO: call canitfleo_can_l2frame_receive_process_bfsc_set_config_resp()\n");
-				canitfleo_message_process_bfsc_wmc_set_config_resp((uint8_t *)pBfscMsg);
+				func_canitfleo_message_process_bfsc_wmc_set_config_resp((uint8_t *)pBfscMsg);
 			}
 			break;
 		case MSG_ID_L3BFSC_WMC_START_RESP:
@@ -1481,7 +1503,7 @@ OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_fr
 			if (MSG_SIZE_L3BFSC_WMC_NEW_WS_EVENT == length)
 			{
 				HcuDebugPrint("CANITFLEO: call canitfleo_can_l2frame_receive_process_bfsc_new_ws_event()\n");
-				canitfleo_message_process_bfsc_wmc_new_ws_event((uint8_t *)pBfscMsg);
+				func_canitfleo_message_process_bfsc_wmc_new_ws_event((uint8_t *)pBfscMsg);
 			}
 			break;
 		case MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP:

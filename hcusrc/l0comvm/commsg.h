@@ -2268,7 +2268,8 @@ typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 typedef struct msg_struct_bfsc_usbcan_l2frame_rcv
 {
 	UINT8  nodeId;
-	UINT8  databuf[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE];
+	UINT8  databuf[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE+1];  //为了防止尾巴重叠
+	UINT32 validDataLen;
 	UINT32 length;
 }msg_struct_bfsc_usbcan_l2frame_rcv_t;
 

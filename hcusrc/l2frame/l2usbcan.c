@@ -107,12 +107,12 @@ void * func_zlg_usbcan_rx_thread(void *data)
         for (i = 0; i < cnt; i++) {
             if (func_zlg_usbcan_verify_frame(&can[i]))
             {
-           	HCU_DEBUG_PRINT_INF("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X] \n", ctx->channel,
+           	HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X] \n", ctx->channel,
            			can[i].Data[0], can[i].Data[1], can[i].Data[2], can[i].Data[3],
 					can[i].Data[4], can[i].Data[5], can[i].Data[6], can[i].Data[7]);
             	continue;
             }
-            HCU_DEBUG_PRINT_INF("CAN%d: verify_frame() failed\n", ctx->channel);
+            HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN%d: verify_frame() failed\n", ctx->channel);
             ctx->error = 1;
             break;
         }
@@ -120,12 +120,12 @@ void * func_zlg_usbcan_rx_thread(void *data)
 
         ctx->total += cnt;
         if (ctx->total / CHECK_POINT >= check_point) {
-            HCU_DEBUG_PRINT_INF("CAN%d: %d frames received & verified\n", ctx->channel, ctx->total);
+            HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN%d: %d frames received & verified\n", ctx->channel, ctx->total);
             check_point++;
         }
     }
 
-    HCU_DEBUG_PRINT_INF("CAN%d RX thread terminated, %d frames received & verified: %s\n",
+    HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN%d RX thread terminated, %d frames received & verified: %s\n",
         ctx->channel, ctx->total, ctx->error ? "error(s) detected" : "no error");
 
 #ifdef WIN32
@@ -219,7 +219,7 @@ int func_zlg_usbcan_test_main1()
             func_zlg_usbcan_generate_frame(&can);
             if (1 != VCI_Transmit(gDevType, gDevIdx, i, &can, 1))
             {
-                HCU_DEBUG_PRINT_INF("CAN%d TX failed: ID=%08x\n", i, can.ID);
+                HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN%d TX failed: ID=%08x\n", i, can.ID);
                 err = 1;
                 break;
             }
@@ -357,7 +357,7 @@ UINT32 func_usbcan_bandrate_to_timing_mapping(UINT32 band_rate_kbps, UINT8 *timi
 
 	if( (NULL == timing0) || (NULL == timing1) )
 	{
-		HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: (NULL == timing0) || (NULL == timing1), return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  (NULL == timing0) || (NULL == timing1), return FAILURE\n");
 		return FAILURE;
 	}
 
@@ -366,96 +366,96 @@ UINT32 func_usbcan_bandrate_to_timing_mapping(UINT32 band_rate_kbps, UINT8 *timi
 		case CAN_BANDRATE_5KBPS:
 			*timing0 = 0xBF;
 			*timing1 = 0xFF;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_10KBPS:
 			*timing0 = 0xFF;
 			*timing1 = 0xFF;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_20KBPS:
 			*timing0 = 0x53;
 			*timing1 = 0x2F;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_40KBPS:
 			*timing0 = 0x87;
 			*timing1 = 0xFF;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_50KBPS:
 			*timing0 = 0x47;
 			*timing1 = 0x2F;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_80KBPS:
 			*timing0 = 0x83;
 			*timing1 = 0xFF;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_100KBPS:
 			*timing0 = 0x43;
 			*timing1 = 0x2F;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_125KBPS:
 			*timing0 = 0x03;
 			*timing1 = 0x1C;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_200KBPS:
 			*timing0 = 0x81;
 			*timing1 = 0xFA;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_250KBPS:
 			*timing0 = 0x01;
 			*timing1 = 0x1C;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_400KBPS:
 			*timing0 = 0x80;
 			*timing1 = 0xFA;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_500KBPS:
 			*timing0 = 0x00;
 			*timing1 = 0x1C;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_666KBPS:
 			*timing0 = 0x80;
 			*timing1 = 0xB6;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_800KBPS:
 			*timing0 = 0x00;
 			*timing1 = 0x16;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		case CAN_BANDRATE_1000KBPS:
 			*timing0 = 0x00;
 			*timing1 = 0x14;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, timing0 = 0x%02X, timing1 = 0x%02X\n", band_rate_kbps, *timing0, *timing1);
 			break;
 
 		default:
 			ret = FAILURE;
-			HCU_DEBUG_PRINT_INF("can_bandrate_to_timing_mapping: band_rate_kbps = %d, not supported, return FAILURE\n", band_rate_kbps);
+			HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping  band_rate_kbps = %d, not supported, return FAILURE\n", band_rate_kbps);
 	}
 
 	return ret;
@@ -494,10 +494,10 @@ void *func_usbcan_rx_thread(void *data)
         	wmc_id = func_usbcan_WmcCanIdMapToWmcId(husbcan->can_rx_data[i].ID);
         	func_usbcan_RxCpltCallback(husbcan, &husbcan->can_rx_data[i], wmc_id);
 
-//        	HCU_DEBUG_PRINT_INF("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], total_frame = %d\n", husbcan->can_channel_id,
+//        	HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], total_frame = %d\n", husbcan->can_channel_id,
 //           			can[i].Data[0], can[i].Data[1], can[i].Data[2], can[i].Data[3],
 //					can[i].Data[4], can[i].Data[5], can[i].Data[6], can[i].Data[7], total_cnt);
-//        	HcuDebugPrint("CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], len=%d, canid=0x%X, wmc_id=%d, total_frame=%d\n", husbcan->can_channel_id,
+//        	HcuDebugPrint("USBCAN_DH: CAN%d: received [%02X %02X %02X %02X %02X %02X %02X %02X], len=%d, canid=0x%X, wmc_id=%d, total_frame=%d\n", husbcan->can_channel_id,
 //        			husbcan->can_rx_data[i].Data[0], husbcan->can_rx_data[i].Data[1], husbcan->can_rx_data[i].Data[2], husbcan->can_rx_data[i].Data[3],
 //					husbcan->can_rx_data[i].Data[4], husbcan->can_rx_data[i].Data[5], husbcan->can_rx_data[i].Data[6], husbcan->can_rx_data[i].Data[7],
 //					husbcan->can_rx_data[i].DataLen, husbcan->can_rx_data[i].ID, wmc_id, total_cnt);
@@ -513,7 +513,7 @@ void *func_usbcan_rx_thread(void *data)
 /*
  * Init the CAN device
  */
-UINT32 hcu_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode)
+UINT32 hcu_bsp_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode)
 {
 
 	UINT8 Timing0, Timing1;
@@ -521,45 +521,45 @@ UINT32 hcu_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, U
 	/* Check handler is valid or not */
 	if(NULL == husbcan)
 	{
-		HCU_DEBUG_PRINT_INF("CAN_DRV: NULL == husbcan, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: NULL == husbcan, return FAILURE\n");
 		return FAILURE;
 	}
 
 	/* Check handler is valid or not */
 	if(CAN_STATUS_INITIALIZED == husbcan->can_status)
 	{
-		HCU_DEBUG_PRINT_INF("CAN_DRV: CAN_STATUS_INITIALIZED == husbcan->can_status, make sure DeInit it firstly, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN_STATUS_INITIALIZED == husbcan->can_status, make sure DeInit it firstly, return FAILURE\n");
 		return FAILURE;
 	}
 
 	/* Check handler content */
 	if(can_dev_type > CAN_DEVICE_TYPE_16)
 	{
-		HCU_DEBUG_PRINT_INF("CAN_DRV: can_dev_type > CAN_DEVICE_TYPE_16, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: can_dev_type > CAN_DEVICE_TYPE_16, return FAILURE\n");
 		return FAILURE;
 	}
 
 	if(can_dev_idx > CAN_DEVIDE_IDX_CARD1)
 	{
-		HCU_DEBUG_PRINT_INF("CAN_DRV: can_dev_id > CAN_DEVIDE_IDX_CARD1, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: can_dev_id > CAN_DEVIDE_IDX_CARD1, return FAILURE\n");
 		return FAILURE;
 	}
 
 	if(can_l2_forwarding_mode > CAN_L2_FRAME_FORWARD_YES)
 	{
-		HCU_DEBUG_PRINT_INF("CAN_DRV: can_l2_forwarding_mode > CAN_L2_FRAME_FORWARD_YES, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: can_l2_forwarding_mode > CAN_L2_FRAME_FORWARD_YES, return FAILURE\n");
 		return FAILURE;
 	}
 
 	if( (can_channel_id < CAN_DEVIDE_CHANNEL_CAN0) || (can_channel_id > CAN_DEVIDE_CHANNEL_CAN1) )
 	{
-		HCU_DEBUG_PRINT_INF("CAN_DRV: can_channel_id < CAN_DEVIDE_CHANNEL_CAN0, or > CAN_DEVIDE_CHANNEL_CAN1, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: can_channel_id < CAN_DEVIDE_CHANNEL_CAN0, or > CAN_DEVIDE_CHANNEL_CAN1, return FAILURE\n");
 		return FAILURE;
 	}
 
 	if( FAILURE == func_usbcan_bandrate_to_timing_mapping(band_rate_kbps, &Timing0, &Timing1) )
 	{
-		HCU_DEBUG_PRINT_INF("CAN_DRV: can_bandrate_to_timing_mapping find invalid bandrate(%d), return FAILURE\n", band_rate_kbps);
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: can_bandrate_to_timing_mapping find invalid bandrate(%d), return FAILURE\n", band_rate_kbps);
 		return FAILURE;
 	}
 
@@ -583,24 +583,24 @@ UINT32 hcu_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, U
 
     if (!VCI_OpenDevice(husbcan->can_dev_type, husbcan->can_dev_idx, 0))
     {
-        HCU_DEBUG_PRINT_INF("CAN_DRV: VCI_OpenDevice failed\n");
+        HCU_DEBUG_PRINT_INF("USBCAN_DH: VCI_OpenDevice failed\n");
         husbcan->can_status = CAN_STATUS_NULL;
         return FAILURE;
     }
-    HCU_DEBUG_PRINT_INF("CAN_DRV: VCI_OpenDevice succeeded\n");
+    HCU_DEBUG_PRINT_INF("USBCAN_DH: VCI_OpenDevice succeeded\n");
 
 	if (!VCI_InitCAN(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &husbcan->can_config))
 	{
-		HCU_DEBUG_PRINT_INF("CAN_DRV: VCI_InitCAN(%d) failed\n", 0);
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: VCI_InitCAN(%d) failed\n", 0);
 		husbcan->can_status = CAN_STATUS_NULL;
 		return FAILURE;
 	}
-	HCU_DEBUG_PRINT_INF("CAN_DRV: VCI_InitCAN(%d) succeeded\n", 0);
+	HCU_DEBUG_PRINT_INF("USBCAN_DH: VCI_InitCAN(%d) succeeded\n", 0);
 
 	if (!VCI_StartCAN(husbcan->can_dev_type, husbcan->can_dev_idx, 0))
 	{
 		husbcan->can_status = CAN_STATUS_NULL;
-		HCU_DEBUG_PRINT_INF("CAN_DRV: VCI_StartCAN(%d) failed\n", 0);
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: VCI_StartCAN(%d) failed\n", 0);
 		return FAILURE;
 	}
 
@@ -613,27 +613,27 @@ UINT32 hcu_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, U
 	pthread_create(&husbcan->can_receiving_thread_id, NULL, func_usbcan_rx_thread, (void *)husbcan);
 
 	husbcan->can_status = CAN_STATUS_INITIALIZED;
-	HCU_DEBUG_PRINT_INF("CAN_DRV: VCI_StartCAN(%d) succeeded\n", 0);
+	HCU_DEBUG_PRINT_INF("USBCAN_DH: VCI_StartCAN(%d) succeeded\n", 0);
 	return SUCCESS;
 }
 
 /*
  * DeInit the CAN device
  */
-UINT32 hcu_usbcan_deinit(HcuUsbCanHandleTypeDef_t *husbcan)
+UINT32 hcu_bsp_usbcan_deinit(HcuUsbCanHandleTypeDef_t *husbcan)
 {
 
 	/* Check handler is valid or not */
 	if(NULL == husbcan)
 	{
-		HCU_DEBUG_PRINT_INF("usb_can_deinit: NULL == husbcan, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: usbcan_deinit NULL == husbcan, return FAILURE\n");
 		return FAILURE;
 	}
 
 	/* Check handler is valid or not */
 	if(CAN_STATUS_INITIALIZED != husbcan->can_status)
 	{
-		HCU_DEBUG_PRINT_INF("usb_can_deinit: CAN_STATUS_INITIALIZED != husbcan->can_status, make sure it has been initialized firstly, do nothing, return SUCESSS\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: usbcan_deinit CAN_STATUS_INITIALIZED != husbcan->can_status, make sure it has been initialized firstly, do nothing, return SUCESSS\n");
 		return SUCCESS;
 	}
 
@@ -644,7 +644,7 @@ UINT32 hcu_usbcan_deinit(HcuUsbCanHandleTypeDef_t *husbcan)
 
     husbcan->can_status = CAN_STATUS_NULL;
 
-    HCU_DEBUG_PRINT_INF("usb_can_deinit: VCI_CloseDevice\n");
+    HCU_DEBUG_PRINT_INF("USBCAN_DH: usbcan_deinit VCI_CloseDevice\n");
     return SUCCESS;
 
 }
@@ -659,28 +659,28 @@ UINT32 func_usbcan_transmit(HcuUsbCanHandleTypeDef_t *husbcan, UINT8 *ptr_data, 
 	/* Check handler is valid or not */
 	if(NULL == husbcan)
 	{
-		HCU_DEBUG_PRINT_INF("usb_can_transmit: NULL == husbcan, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: NULL == husbcan, return FAILURE\n");
 		return FAILURE;
 	}
 
 	/* Check ptr_data is valid or not */
 	if(NULL == ptr_data)
 	{
-		HCU_DEBUG_PRINT_INF("usb_can_transmit: NULL == ptr_data, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: NULL == ptr_data, return FAILURE\n");
 		return FAILURE;
 	}
 
 	/* Check ptr_data is valid or not */
 	if(data_len > 8)
 	{
-		HCU_DEBUG_PRINT_INF("usb_can_transmit: data_len > 8, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: data_len > 8, return FAILURE\n");
 		return FAILURE;
 	}
 
 	/* Check extern_flag is valid only when it equals to 0 (normal) or 1(extended) */
 	if(extern_flag > 1)
 	{
-		HCU_DEBUG_PRINT_INF("usb_can_transmit: extern_flag > 1, return FAILURE\n");
+		HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: extern_flag > 1, return FAILURE\n");
 		return FAILURE;
 	}
 	husbcan->can_tx_data.ID = can_id;
@@ -691,18 +691,18 @@ UINT32 func_usbcan_transmit(HcuUsbCanHandleTypeDef_t *husbcan, UINT8 *ptr_data, 
 
 /*    if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_tx_data), 1))
     {
-        HCU_DEBUG_PRINT_INF("usb_can_transmit: CAN%d TX failed: ID=%08x\n", 0, husbcan->can_data.ID);
+        HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: CAN%d TX failed: ID=%08x\n", 0, husbcan->can_data.ID);
         return FAILURE;
     }*/
 
-//    HCU_DEBUG_PRINT_INF("usb_can_transmit: CAN%d TX [0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X]: ID=%08x\n", 0, husbcan->can_data.ID,
+//    HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: CAN%d TX [0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X]: ID=%08x\n", 0, husbcan->can_data.ID,
 //    		husbcan->can_data.Data[0], husbcan->can_data.Data[1], husbcan->can_data.Data[2], husbcan->can_data.Data[3],
 //			husbcan->can_data.Data[4], husbcan->can_data.Data[5], husbcan->can_data.Data[6], husbcan->can_data.Data[7]);
-//    	HcuErrorPrint("usb_can_transmit: CAN%d TX failed: ID=%08x\n", 0, husbcan->can_tx_data.ID);
+//    	HcuErrorPrint("USBCAN_DH: usb_can_transmit: CAN%d TX failed: ID=%08x\n", 0, husbcan->can_tx_data.ID);
 //        return FAILURE;
 //    }
 
-//    HCU_DEBUG_PRINT_INF("usb_can_transmit: CAN%d TX [%02X %02X %02X %02X %02X %02X %02X %02X]: ID=%08x\n", 0,
+//    HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: CAN%d TX [%02X %02X %02X %02X %02X %02X %02X %02X]: ID=%08x\n", 0,
 //    		husbcan->can_tx_data.Data[0], husbcan->can_tx_data.Data[1], husbcan->can_tx_data.Data[2], husbcan->can_tx_data.Data[3],
 //			husbcan->can_tx_data.Data[4], husbcan->can_tx_data.Data[5], husbcan->can_tx_data.Data[6], husbcan->can_tx_data.Data[7],
 //			husbcan->can_tx_data.ID);
@@ -741,52 +741,47 @@ void func_usbcan_RxCpltCallback(HcuUsbCanHandleTypeDef_t* CanHandle, VCI_CAN_OBJ
 	//if(HAL_CAN_Receive_IT(CanHandle, CAN_FIFO0) != HAL_OK)
 	//{
 		/* Reception Error */
-	//	IhuErrorPrint("HAL_CAN_Receive_IT() error.\n");
+	//	IhuErrorPrint("USBCAN_DH: HAL_CAN_Receive_IT() error.\n");
 	//}
 }
 
 void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc)
 {
-	HcuUsbCanHandleTypeDef_t* CanHandle;
-	int ret = 0;
+	//int ret = 0;
+	//HcuUsbCanHandleTypeDef_t* CanHandle;
 
-	//assert(pdesc);
-	//assert(CanHandle);
+	//入参检查
+	if ((pdesc->wmc_id >= HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE) || (can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE)){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("USBCAN: Receive parameter error!\n");
+		return;
+	}
 
-	CanHandle = (HcuUsbCanHandleTypeDef_t* )pdesc->UserData;
+	//CanHandle = (HcuUsbCanHandleTypeDef_t* )pdesc->UserData;
 
-//	HCU_DEBUG_PRINT_INF("CAN ISR: L2Packet %d bytes, first: 0x%02x %02x last: 0x%02x %02x\n",
+//	HCU_DEBUG_PRINT_INF("USBCAN: L2Packet %d bytes, first: 0x%02x %02x last: 0x%02x %02x\n",
 //		pdesc->RxXferCount,
 //		CanHandle->can_data.Data[0], CanHandle->can_data.Data[1],
 //		CanHandle->can_data.Data[6], CanHandle->can_data.Data[7]);
 
-	//Forward to TASK_ID_CANVELA
-	//ret = ihu_message_send_isr(MSG_ID_CAN_L2FRAME_RCV, TASK_ID_CANVELA, TASK_ID_CANVELA, g_can_rx_buffer, pdesc->RxXferCount);
-//	HcuDebugPrint("CAN ISR: L2Packet %d bytes, first: 0x%02x %02x last: 0x%02x %02x\n",
-//		pdesc->RxXferCount,
-//		CanHandle->can_rx_data[0].Data[0], CanHandle->can_rx_data[0].Data[1],
-//		CanHandle->can_rx_data[0].Data[6], CanHandle->can_rx_data[0].Data[7]);
-
 	/* SAVE THE FRAME LEN !!!!! */
 	can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len = pdesc->RxXferCount;
 
-	//Forward to TASK_ID_CANVELA
-	//ret = ihu_message_send_isr(MSG_ID_CAN_L2FRAME_RCV, TASK_ID_CANVELA, TASK_ID_CANVELA, g_can_rx_buffer, pdesc->RxXferCount);
-	ret = hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, (void *)&(can_l2frame_itf_rx_buffer[pdesc->wmc_id]), CAN_L2_FRAME_ITF_LEN);
-//	if (ret == FAILURE){
-//		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-//		return FAILURE;
-//	}
-
-	//HCU_DEBUG_PRINT_INF("");
-	if (ret == FAILURE){
-		//zIhuSysStaPm.taskRunErrCnt[TASK_ID_CANVELA]++;
-		//HCU_DEBUG_PRINT_INF("CAN ISR: Send message error, TASK [%s] to TASK[%s]!\n", zIhuVmCtrTab.task[TASK_ID_CANVELA].taskName, zIhuVmCtrTab.task[TASK_ID_CANVELA].taskName);
+	//发送给CANITFLEO模块
+	msg_struct_bfsc_usbcan_l2frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t));
+	snd.nodeId = pdesc->wmc_id;
+	snd.validDataLen = can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len;
+	memcpy(snd.databuf, (void *)&(can_l2frame_itf_rx_buffer[pdesc->wmc_id]), snd.validDataLen);
+	snd.length = sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t);
+	if (hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("USBCAN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 		return;
 	}
-	//HCU_DEBUG_PRINT_INF("CAN ISR: Send message OK, TASK [%s] to TASK[%s]!\n", zIhuVmCtrTab.task[TASK_ID_CANVELA].taskName, zIhuVmCtrTab.task[TASK_ID_BFSC].taskName);
+	//ret = hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, (void *)&(can_l2frame_itf_rx_buffer[pdesc->wmc_id]), CAN_L2_FRAME_ITF_LEN);
 
-	//bsp_can_transmit(CanHandle, pdesc->pRxBuffPtr, pdesc->RxXferCount, 10);
+	return;
 }
 
 int func_bsp_usbcan_start_rx(HcuUsbCanHandleTypeDef_t* CanHandle, void (*app_rx_callback)(), uint8_t *pRxBuffPtr, uint32_t wmc_id, uint16_t rxBufferSize, void *user_data)
@@ -822,8 +817,13 @@ int func_bsp_usbcan_start_rx(HcuUsbCanHandleTypeDef_t* CanHandle, void (*app_rx_
 uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, uint8_t *buffer, uint32_t length, UINT32 wmc_id_bitmap)
 {
 	uint8_t translen;
-	//HAL_StatusTypeDef status;
 	UINT32 ret;
+
+	//入参检查
+	if ((CanHandle == NULL) || (buffer == NULL) || (length == 0) || (length > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE)){
+		HcuErrorPrint("USBCAN_DH: Error input parameters reveived!\n");
+		return 0;
+	}
 
 	while(length > 0)
 	{
@@ -834,7 +834,6 @@ uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, ui
 		CanHandle->can_tx_data.ID = (wmc_id_bitmap | AWS_TO_WMC_CAN_ID_PREFIX);
 
 		memcpy(CanHandle->can_tx_data.Data, buffer, translen);
-		//ret = HAL_CAN_Transmit(CanHandle, timeout);
 		ret = func_usbcan_transmit(CanHandle, buffer, translen, CanHandle->can_tx_data.ID, 1); ///!!! EXT FRAMEs
 		//usleep(500);
 		if(ret == SUCCESS)
@@ -844,7 +843,7 @@ uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, ui
 		}
 		else
 		{
-			HCU_DEBUG_PRINT_INF("bsp_can_l2_frame_transmit() ret = %d\n", ret);
+			HcuErrorPrint("USBCAN_DH: bsp_can_l2_frame_transmit() ret = %d\n", ret);
 			break;
 		}
 	}
@@ -899,7 +898,7 @@ uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, ui
 //	ret = ihu_message_send(MSG_ID_CAN_L3BFSC_CMD_CTRL, TASK_ID_BFSC, TASK_ID_CANVELA, p_msg, msg_len);
 //	if (ret == IHU_FAILURE){
 //		zIhuSysStaPm.taskRunErrCnt[TASK_ID_CANVELA]++;
-//		IhuErrorPrint("CANVELA: Send message error, TASK [%s] to TASK[%s]!\n", zIhuVmCtrTab.task[TASK_ID_CANVELA].taskName, zIhuVmCtrTab.task[TASK_ID_BFSC].taskName);
+//		IhuErrorPrint("USBCAN_DH: Send message error, TASK [%s] to TASK[%s]!\n", zIhuVmCtrTab.task[TASK_ID_CANVELA].taskName, zIhuVmCtrTab.task[TASK_ID_BFSC].taskName);
 //		return IHU_FAILURE;
 //	}
 //	//返回
@@ -911,16 +910,15 @@ void func_bfsc_usbcan_test(void)
 	HcuUsbCanHandleTypeDef_t can1;
 	UINT32 ret;
 	UINT8 data[8];
-	UINT32 cnt = 0;
 	UINT32 total_cnt = 0;
 	UINT32 i = 0;
 
-	ret = hcu_usbcan_init(&can1, CAN_DEVICE_TYPE_PCI9820I, CAN_DEVIDE_IDX_CARD1,
+	ret = hcu_bsp_usbcan_init(&can1, CAN_DEVICE_TYPE_PCI9820I, CAN_DEVIDE_IDX_CARD1,
 						CAN_DEVIDE_CHANNEL_CAN0, CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
 
 	if(FAILURE == ret)
 	{
-		HCU_DEBUG_PRINT_INF("usb_can_int failure, exit\n");
+		HcuErrorPrint("USBCAN_DH: usb_can_int failure, exit\n");
 		exit(0);
 	}
 
@@ -934,7 +932,7 @@ void func_bfsc_usbcan_test(void)
 		//ret = usb_can_transmit(&can1, data, 8, 0x602, 0);
 		total_cnt = total_cnt + 1;
 
-		//HCU_DEBUG_PRINT_INF("CAN Transmit total_cnt = %d\n", total_cnt);
+		//HCU_DEBUG_PRINT_INF("USBCAN_DH: CAN Transmit total_cnt = %d\n", total_cnt);
 
 		if (FAILURE == ret)
 		{

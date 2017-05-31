@@ -270,7 +270,7 @@ typedef struct HcuCanL2framItfDef
 	UINT32 can_id_tx_wmc_bitmap;
 	UINT32 can_id_rx_wmc_id;
 	UINT32 can_l2frame_len;
-	UINT8  can_l2frame[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE];
+	UINT8  can_l2frame[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE+1];  //为了防止尾巴重叠
 }HcuCanL2framItfDef_t;
 #define 	CAN_L2_FRAME_ITF_LEN	(sizeof(HcuCanL2framItfDef_t))
 
@@ -278,7 +278,7 @@ typedef struct HcuCanL2framItfDef
 UINT32 func_usbcan_WmcCanIdMapToWmcId(UINT32 wmc_can_id);
 UINT32 func_usbcan_bandrate_to_timing_mapping(UINT32 band_rate_kbps, UINT8 *timing0, UINT8 *timing1);
 void *func_usbcan_rx_thread(void *data);
-UINT32 hcu_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
+UINT32 hcu_bsp_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
 UINT32 func_usbcan_transmit(HcuUsbCanHandleTypeDef_t *husbcan, UINT8 *ptr_data, UINT32 data_len, UINT32 can_id, UINT32 extern_flag);
 void func_usbcan_RxCpltCallback(HcuUsbCanHandleTypeDef_t* CanHandle, VCI_CAN_OBJ *Can, UINT32 wmc_id);
 void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc);
@@ -286,8 +286,8 @@ int func_bsp_usbcan_start_rx(HcuUsbCanHandleTypeDef_t* CanHandle, void (*app_rx_
 void func_bfsc_usbcan_test(void);
 
 //Global APIs
-UINT32   hcu_usbcan_deinit(HcuUsbCanHandleTypeDef_t *husbcan);
-UINT32   hcu_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
+UINT32   hcu_bsp_usbcan_deinit(HcuUsbCanHandleTypeDef_t *husbcan);
+UINT32   hcu_bsp_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
 uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, uint8_t *buffer, uint32_t length, UINT32 wmc_id_bitmap);
 
 /* API Usage */

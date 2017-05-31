@@ -75,22 +75,32 @@ extern OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id
 OPSTAT func_canitfleo_int_init(void);
 OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
 OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval);
-OPSTAT func_canitfleo_can_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char);
-OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe);
-OPSTAT func_canitfleo_can_init(char *canitfname, int *sock);
 OPSTAT func_canitfleo_working_scan_process(void);
 OPSTAT func_canitfleo_bfsc_simulation_data_process(void);
-int func_canitfleo_test_main(int argc, char **argv);
 
-void BigSmallEndianMapping(uint8_t *In, uint8_t *Out, uint32_t len);
-uint16_t HuitpMsgIdMapToInternalMsgId(uint16_t huitp_msgid);
-uint16_t InternalMsgIdMapToHuitpMsgId(uint16_t internal_msgid);
+//Socket CAN APIs
+OPSTAT func_canitfleo_socketcan_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char);
+OPSTAT func_canitfleo_socketcan_send(int socket, char *canid_canframe);
+OPSTAT func_canitfleo_socketcan_init(char *canitfname, int *sock);
+int    func_canitfleo_socketcan_test_main(int argc, char **argv);
 
-OPSTAT canitfleo_can_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_frame_len);
+//USBCAN BSP function mapping
+OPSTAT hcu_canitfleo_usbcan_interface_init(void);
+OPSTAT hcu_canitfleo_usbcan_l2frame_send(UINT8 *buffer, UINT32 length, UINT32 wmc_id_bitmap);
 
-void canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr);
-void canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr);
-void canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr);
+//USB CAN test functions
+void func_canitfleo_usbcan_TestSetConfigReq(uint8_t wmc_id);
+void func_canitfleo_usbcan_TestCommandReq(void);
+void func_canitfleo_usbcan_TestStartReq(uint8_t wmc_id);
+
+//MYC CAN message processing procedure
+void     func_canitfleo_BigSmallEndianMapping(uint8_t *In, uint8_t *Out, uint32_t len);
+uint16_t func_canitfleo_HuitpMsgIdMapToInternalMsgId(uint16_t huitp_msgid);
+uint16_t func_canitfleo_InternalMsgIdMapToHuitpMsgId(uint16_t internal_msgid);
+OPSTAT   func_canitfleo_usbcan_l2frame_receive_process(uint8_t *p_l2_frame, uint32_t l2_frame_len);
+void     func_canitfleo_message_process_bfsc_wmc_start_ind(uint8_t *ptr);
+void     func_canitfleo_message_process_bfsc_wmc_set_config_resp(uint8_t *ptr);
+void     func_canitfleo_message_process_bfsc_wmc_new_ws_event(uint8_t *ptr);
 
 // WILL BE REPLACED BY HUITP, ADDED 2017/05/15 */
 //=================================================================================================================//

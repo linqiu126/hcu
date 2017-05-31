@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_usbcan_s2nn" key="selection"/>
+		<item value="hcu" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="func_usbcan_s2nn"/>
-			<item value="func_usbcan_rx_thread"/>
-			<item value="_rx_thread"/>
-			<item value="usbcan_rx_thread"/>
-			<item value="func_usbcan_test_main2"/>
-			<item value="s2n"/>
-			<item value="generate_frame"/>
-			<item value="VCI_OpenDevice"/>
+			<item value="hcu"/>
+			<item value="l2frame_receive"/>
+			<item value="canitfleo_can_l2frame_receive_process"/>
+			<item value="func_canitfleo_socketcan_test_main"/>
+			<item value="TestSetConfigReq"/>
+			<item value="func_canitfleo_can_init"/>
+			<item value="func_canitfleo_test_main"/>
+			<item value="_init"/>
 		</list>
 		<list key="replacehistory">
-			<item value="CAN_DRV"/>
-			<item value="HCU_DEBUG_PRINT_INF"/>
-			<item value="\n"/>
-			<item value="IEID"/>
-			<item value="hcubfscstadatainfo"/>
-			<item value="hcubfsccfgpar"/>
-			<item value="HcuSysMsgIeL3bfscContextStaElement_t"/>
-			<item value="DBIBFSC"/>
+			<item value="&quot;USBCAN_DH: can_bandrate_to_timing_"/>
+			<item value="&quot;USBCAN_DH:  can_bandrate_to_timing_mapping "/>
+			<item value="&quot;USBCAN_DH: CAN"/>
+			<item value="&quot;USBCAN_DH: usb_can_int"/>
+			<item value="&quot;USBCAN_DH"/>
+			<item value="&quot;USBCAN_DH: bsp_can_l2_frame_transmit"/>
+			<item value="&quot;USBCAN_DH: HAL_CAN_Receive_IT"/>
+			<item value="&quot;USBCAN_DH: usb_can_transmit"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1158" key="DIALOG_X_ORIGIN"/>
-		<item value="337" key="DIALOG_Y_ORIGIN"/>
+		<item value="1117" key="DIALOG_X_ORIGIN"/>
+		<item value="369" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
