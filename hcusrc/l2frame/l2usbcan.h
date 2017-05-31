@@ -9,7 +9,34 @@
 #define L2USBCAN_H_
 
 #include "../l0comvm/comtype.h"
-# include "../l2codec/huitp.h"   //Added by MYC 2017/05/30
+#include "../l0comvm/vmlayer.h"
+#include "../l2codec/huitp.h"   //Added by MYC 2017/05/30
+
+#ifdef WIN32 // for windows
+	#include <windows.h>
+	#include <process.h>
+	#include <stdio.h>
+	#include <time.h>
+	#include "controlcan.h"
+	#pragma comment(lib, "controlcan.lib")
+	#define msleep(ms)  Sleep(ms)
+	typedef HANDLE pthread_t;
+#else // for linux
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <unistd.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <fcntl.h>
+	#include <pthread.h>
+	#include "../l0service/trace.h"
+	#include "../l0comvm/comtype.h"
+	#include "../l1com/l1comdef.h"
+	#include "l2packet.h"
+	#define msleep(ms)  usleep((ms)*1000)
+	#define min(a,b)  (((a) < (b)) ? (a) : (b))
+#endif
 
 
 //接口卡类型定义
@@ -41,6 +68,10 @@
 #define ERR_CMDFAILED				0x4000	//执行命令失败错误码
 #define	ERR_BUFFERCREATE			0x8000	//内存不足
 
+#define MAX_CHANNELS  4
+#define CHECK_POINT  200
+#define RX_WAIT_TIME  100
+#define RX_BUFF_SIZE  1000
 
 //函数调用返回状态值
 #define	STATUS_OK					1
@@ -139,6 +170,15 @@ DWORD VCI_ResetCAN(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd);
 ULONG VCI_Transmit(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_CAN_OBJ pSend,unsigned int Len);
 ULONG VCI_Receive(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_CAN_OBJ pReceive,unsigned int Len,INT WaitTime);
 
+unsigned func_zlg_usbcan_s2n(const char *s);
+void func_zlg_usbcan_generate_frame(VCI_CAN_OBJ *can);
+int func_zlg_usbcan_verify_frame(VCI_CAN_OBJ *can);
+void * func_zlg_usbcan_rx_thread(void *data);
+int func_zlg_usbcan_test_main1();
+int func_zlg_usbcan_test_main2(int argc, char* argv[]);
+
+
+
 /* ============== */
 /* 5-pci9820, 14-pci9840, 16-pci9820i, ....\n */
 
@@ -205,7 +245,7 @@ ULONG VCI_Receive(DWORD DeviceType,DWORD DeviceInd,DWORD CANInd,PVCI_CAN_OBJ pRe
 /*
  * @brief  CAN handle Structure definition
  */
-typedef struct
+typedef struct HcuUsbCanHandleTypeDef
 {
 	UINT32 can_dev_type;
 	UINT32 can_dev_idx;
@@ -218,31 +258,37 @@ typedef struct
 	VCI_INIT_CONFIG can_config;
 	VCI_CAN_OBJ can_tx_data;
 	VCI_CAN_OBJ can_rx_data[RX_BUFF_SIZE]; // buffer
-}USB_CAN_HandleTypeDef;
+}HcuUsbCanHandleTypeDef_t;
 
 /*
  * @brief  L2 Frame over CAN Interface between CAN and CANITFLOE
  */
-#define BFSC_CAN_MAX_RX_BUF_SIZE 256
-#define WMC_NODE_NUMBER 17
+#define WMC_NODE_NUMBER HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
 
-typedef struct
+typedef struct HcuCanL2framItfDef
 {
 	UINT32 can_id_tx_wmc_bitmap;
 	UINT32 can_id_rx_wmc_id;
 	UINT32 can_l2frame_len;
-	UINT8  can_l2frame[BFSC_CAN_MAX_RX_BUF_SIZE];
-}can_l2frame_itf_t;
+	UINT8  can_l2frame[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE];
+}HcuCanL2framItfDef_t;
+#define 	CAN_L2_FRAME_ITF_LEN	(sizeof(HcuCanL2framItfDef_t))
 
-#define 	CAN_L2_FRAME_ITF_LEN	(sizeof(can_l2frame_itf_t))
+//Local APIs
+UINT32 func_usbcan_WmcCanIdMapToWmcId(UINT32 wmc_can_id);
+UINT32 func_usbcan_bandrate_to_timing_mapping(UINT32 band_rate_kbps, UINT8 *timing0, UINT8 *timing1);
+void *func_usbcan_rx_thread(void *data);
+UINT32 hcu_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
+UINT32 func_usbcan_transmit(HcuUsbCanHandleTypeDef_t *husbcan, UINT8 *ptr_data, UINT32 data_len, UINT32 can_id, UINT32 extern_flag);
+void func_usbcan_RxCpltCallback(HcuUsbCanHandleTypeDef_t* CanHandle, VCI_CAN_OBJ *Can, UINT32 wmc_id);
+void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc);
+int func_bsp_usbcan_start_rx(HcuUsbCanHandleTypeDef_t* CanHandle, void (*app_rx_callback)(), uint8_t *pRxBuffPtr, uint32_t wmc_id, uint16_t rxBufferSize, void *user_data);
+void func_bfsc_usbcan_test(void);
 
-
-
-
-/* CAN Interface APIs */
-UINT32 usb_can_deinit(USB_CAN_HandleTypeDef *husbcan);
-UINT32 usb_can_init(USB_CAN_HandleTypeDef *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
-uint32_t bsp_can_l2_frame_transmit(USB_CAN_HandleTypeDef* CanHandle, uint8_t *buffer, uint32_t length, UINT32 wmc_id_bitmap);
+//Global APIs
+UINT32   hcu_usbcan_deinit(HcuUsbCanHandleTypeDef_t *husbcan);
+UINT32   hcu_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
+uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, uint8_t *buffer, uint32_t length, UINT32 wmc_id_bitmap);
 
 /* API Usage */
 //ret = usb_can_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \

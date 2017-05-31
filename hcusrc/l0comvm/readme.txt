@@ -12,6 +12,8 @@
 [BUG#003]
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
+//= ZJL, 2017 May.31, CURRENT_SW_DELIVERY 203=>BFSC项目
+= 改造USBCAN模块的函数命名
 
 
 
@@ -20,7 +22,6 @@
 = 清理sysengpar中有关BFSC的数据结构，这部分结构不再使用，包括数据库表单也不再使用，改用了ＵＩ界面配置的JASON文件进行配置
 = 增加了hcuBfscFb2Ui数据库表单，用于UICOMM向UI界面通知执行的结果
 = 建立启动过程的差错处理框架
-
 
 //= ZJL, 2017 May.27, CURRENT_SW_DELIVERY 201=>BFSC项目
 = 编写UICOMM的状态机框架

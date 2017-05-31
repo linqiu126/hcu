@@ -4,7 +4,7 @@
 #include "l2packet.h"
 
 /* generate check sum */
-uint8_t l2packet_gen_chksum(IHU_HUITP_L2FRAME_STD_frame_header_t *pMsgHeader)
+uint8_t l2packet_gen_chksum(HCU_HUITP_L2FRAME_STD_frame_header_t *pMsgHeader)
 {
 	uint8_t *pData = (uint8_t *)pMsgHeader;
 	
@@ -12,15 +12,15 @@ uint8_t l2packet_gen_chksum(IHU_HUITP_L2FRAME_STD_frame_header_t *pMsgHeader)
 }
 
 /* return: the size of consumed data */
-uint16_t l2packet_rx_bytes(IHU_HUITP_L2FRAME_Desc_t *pdesc, uint8_t *data, uint16_t data_size)
+uint16_t l2packet_rx_bytes(HCU_HUITP_L2FRAME_Desc_t *pdesc, uint8_t *data, uint16_t data_size)
 {
 	uint32_t i = 0;
-	IHU_HUITP_L2FRAME_STD_frame_header_t *pMsgHeader;
+	HCU_HUITP_L2FRAME_STD_frame_header_t *pMsgHeader;
 
 	if(pdesc == NULL || pdesc->pRxBuffPtr == NULL)
 		return 0;
 	
-	pMsgHeader = (IHU_HUITP_L2FRAME_STD_frame_header_t *)pdesc->pRxBuffPtr;
+	pMsgHeader = (HCU_HUITP_L2FRAME_STD_frame_header_t *)pdesc->pRxBuffPtr;
 	
 	for(i=0; i<data_size; i++)
 	{
@@ -41,7 +41,7 @@ uint16_t l2packet_rx_bytes(IHU_HUITP_L2FRAME_Desc_t *pdesc, uint8_t *data, uint1
 			break;
 
 			case IHU_L2PACKET_RX_STATE_HEADER:
-			if(pdesc->RxXferCount >= sizeof(IHU_HUITP_L2FRAME_STD_frame_header_t))
+			if(pdesc->RxXferCount >= sizeof(HCU_HUITP_L2FRAME_STD_frame_header_t))
 			{
 				if(l2packet_gen_chksum(pMsgHeader) != pMsgHeader->chksum)
 				{

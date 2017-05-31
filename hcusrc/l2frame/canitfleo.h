@@ -47,8 +47,7 @@ typedef struct gTaskCanitfleoContext
 {
 	UINT32 sensorIdRoundBing;
 	UINT32 can_socket_id;
-	//Added by MYC 2017/05/15
-	USB_CAN_HandleTypeDef can1;
+	HcuUsbCanHandleTypeDef_t can1;  //Added by MYC 2017/05/15
 }gTaskCanitfleoContext_t;
 
 //API
@@ -69,6 +68,9 @@ extern OPSTAT fsm_canitfleo_l3bfsc_ws_comb_out(UINT32 dest_id, UINT32 src_id, vo
 extern OPSTAT fsm_canitfleo_l3bfsc_ws_give_up(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
+//extern OPSTAT fsm_canitfleo_can_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 //Local API
 OPSTAT func_canitfleo_int_init(void);
 OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
@@ -78,6 +80,7 @@ OPSTAT func_canitfleo_can_send(int socket, char *canid_canframe);
 OPSTAT func_canitfleo_can_init(char *canitfname, int *sock);
 OPSTAT func_canitfleo_working_scan_process(void);
 OPSTAT func_canitfleo_bfsc_simulation_data_process(void);
+int func_canitfleo_test_main(int argc, char **argv);
 
 void BigSmallEndianMapping(uint8_t *In, uint8_t *Out, uint32_t len);
 uint16_t HuitpMsgIdMapToInternalMsgId(uint16_t huitp_msgid);

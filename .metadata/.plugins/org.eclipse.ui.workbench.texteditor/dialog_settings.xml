@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="MSG_ID_UICOMM_L3BFSC_CFG_REQ" key="selection"/>
+		<item value="func_usbcan_s2nn" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="MSG_ID_UICOMM_L3BFSC_CFG_REQ"/>
-			<item value="MSG_ID_UICOMM_L3BFSC_CMD_REQ"/>
-			<item value="MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT"/>
-			<item value="func_l3bfsc_time_out_period_read_process"/>
-			<item value="func_l3bfsc_time_out_error_scan_process"/>
-			<item value="TIMER_ID_1S_L3BFSC_PERIOD_ERROR_SCAN"/>
-			<item value="TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN"/>
-			<item value="FSM_STATE_L3BFSC_OOS_SCAN"/>
+			<item value="func_usbcan_s2nn"/>
+			<item value="func_usbcan_rx_thread"/>
+			<item value="_rx_thread"/>
+			<item value="usbcan_rx_thread"/>
+			<item value="func_usbcan_test_main2"/>
+			<item value="s2n"/>
+			<item value="generate_frame"/>
+			<item value="VCI_OpenDevice"/>
 		</list>
 		<list key="replacehistory">
+			<item value="CAN_DRV"/>
+			<item value="HCU_DEBUG_PRINT_INF"/>
+			<item value="\n"/>
 			<item value="IEID"/>
 			<item value="hcubfscstadatainfo"/>
 			<item value="hcubfsccfgpar"/>
 			<item value="HcuSysMsgIeL3bfscContextStaElement_t"/>
 			<item value="DBIBFSC"/>
-			<item value="bfsc"/>
-			<item value="DBI_BFSC_DATA_SAVE_DAYS_MIN"/>
-			<item value="HCU_ERROR_PRINT_ZHBHJTCODEC(&quot;ZHBHJT: "/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

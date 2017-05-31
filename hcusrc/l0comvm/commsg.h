@@ -507,7 +507,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   		//放弃物料确认
 	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求  TBD
 	MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
-	MSG_ID_CAN_L2FRAME_RCV,  //MYC 2017/05/15  TBD
+	MSG_ID_USBCAN_L2FRAME_RCV,  			//MYC 2017/05/15
 
 	//BFSC项目：BFSCUICOMM
 	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//命令请求
@@ -2263,7 +2263,14 @@ typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 	UINT32 length;
 }msg_struct_can_l3bfsc_error_inq_cmd_resp_t;
 
-//MSG_ID_CAN_L2FRAME_RCV,  //MYC 2017/05/15  TBD
+//MSG_ID_USBCAN_L2FRAME_RCV,  //MYC 2017/05/15
+#define HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE 256
+typedef struct msg_struct_bfsc_usbcan_l2frame_rcv
+{
+	UINT8  nodeId;
+	UINT8  databuf[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE];
+	UINT32 length;
+}msg_struct_bfsc_usbcan_l2frame_rcv_t;
 
 //MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化  TBD
 //typedef struct msg_struct_l3bfsc_can_ws_init_req

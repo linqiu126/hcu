@@ -482,7 +482,7 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,             "MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB",            1, 1, 1},
 	{MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,         "MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ",        1, 1, 1},
 	{MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,        "MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP",       1, 1, 1},
-	{MSG_ID_CAN_L2FRAME_RCV,        			  "MSG_ID_CAN_L2FRAME_RCV",       				1, 1, 1},
+	{MSG_ID_USBCAN_L2FRAME_RCV,        			  "MSG_ID_USBCAN_L2FRAME_RCV",       			1, 1, 1},
 	//BFSCUICOMM
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,                "MSG_ID_UICOMM_L3BFSC_CMD_REQ",               1, 1, 1},
 	{MSG_ID_L3BFSC_UICOMM_CMD_RESP,               "MSG_ID_L3BFSC_UICOMM_CMD_RESP",              1, 1, 1},
