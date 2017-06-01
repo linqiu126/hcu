@@ -5160,6 +5160,9 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp
 {
 	UINT16 msgid;
 	UINT16 length;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t;
 
 /*
@@ -5177,6 +5180,9 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_start_resp
 {
 	UINT16 msgid;
 	UINT16 length;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t;
 
 //HUITP_MSGID_sui_bfsc_stop_req                    = 0x3B13,
@@ -5191,6 +5197,9 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_stop_resp
 {
 	UINT16 msgid;
 	UINT16 length;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t;
 /*
 **	MSG_ID_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
@@ -5206,6 +5215,18 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_stop_resp
 #define 	WEIGHT_EVENT_ID_EMPTY						(1)
 #define 	WEIGHT_EVENT_ID_PICKUP						(2)
 
+typedef struct CombineType
+{
+	UINT32	WeightCombineType;
+	UINT32	ActionDelayMs;
+}CombineType_t;
+#define HUITP_IEID_SUI_BFSC_COMINETYPE_NULL 0
+#define HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT 1
+#define HUITP_IEID_SUI_BFSC_COMINETYPE_DROP 2
+#define HUITP_IEID_SUI_BFSC_COMINETYPE_WARNING 3
+#define HUITP_IEID_SUI_BFSC_COMINETYPE_ERROR 4
+#define HUITP_IEID_SUI_BFSC_COMINETYPE_INVALID 0xFF
+
 typedef struct WeightIndication
 {
 	UINT32 weight_event;		//LOAD, EMPTY, PICKUP(FFS)
@@ -5219,6 +5240,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event
 	UINT16 length;
 	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
 	WeightIndication_t weight_ind;
+	CombineType_t weight_combin_type;
 }StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t;
 
 //HUITP_MSGID_sui_bfsc_repeat_ws_event             = 0x3B95,
@@ -5228,6 +5250,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event
 	UINT16 length;
 	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
 	WeightIndication_t weight_ind;
+	CombineType_t weight_combin_type;
 }StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t;
 
 /*
@@ -5254,18 +5277,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event
 // COMNINETPYE_WARNING_COMPLETE
 // COMNINETPYE_ERROR_START
 // COMNINETPYE_ERROR_COMPLETE
-
-typedef struct CombineType
-{
-	UINT32	WeightCombineType;
-	UINT32	ActionDelayMs;
-}CombineType_t;
-#define HUITP_IEID_SUI_BFSC_COMINETYPE_NULL 0
-#define HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT 1
-#define HUITP_IEID_SUI_BFSC_COMINETYPE_DROP 2
-#define HUITP_IEID_SUI_BFSC_COMINETYPE_WARNING 3
-#define HUITP_IEID_SUI_BFSC_COMINETYPE_ERROR 4
-#define HUITP_IEID_SUI_BFSC_COMINETYPE_INVALID 0xFFFFFFFF
 
 //HUITP_MSGID_sui_bfsc_ws_comb_out_req             = 0x3B16,
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_req
@@ -5338,6 +5349,9 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_resp
     WmcErrorCode_t result;
 	UINT32 	motor_speed;
 	UINT32 	sensor_weight;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16 spare2;
 }StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t;
 
 /*
@@ -5360,6 +5374,9 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp
 	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
 	UINT16	error_code;
 	UINT32  average_weight;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16 spare2;
 }StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t;
 
 

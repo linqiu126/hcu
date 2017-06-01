@@ -12,6 +12,11 @@
 [BUG#003]
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
+
+//= ZJL, 2017 June.1 CURRENT_SW_DELIVERY 204=>BFSC项目
+= 完成基础CANITFLEO和L3BFSC的消息编解码及状态机处理机制
+
+
 //= ZJL, 2017 May.31, CURRENT_SW_DELIVERY 203=>BFSC项目
 = 改造USBCAN模块的函数命名
 = 封装USBCAN的发送和接收API

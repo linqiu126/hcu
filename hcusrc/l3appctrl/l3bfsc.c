@@ -333,7 +333,7 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 	}
 
 	//重发INQ_CMD_REQ，持续等待在这个错误状态中：是否需要恢复？待完善
-	if (rcv.flag != 1){
+	if (rcv.validFlag != 1){
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INVALID;
 
 		//启动周期性定时器

@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrMsg_HUITP_MSGID_uni_heart_beat_req_t" key="selection"/>
+		<item value="Get" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="StrMsg_HUITP_MSGID_uni_heart_beat_req_t"/>
-			<item value="StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t"/>
-			<item value="func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle"/>
-			<item value="HUITP_MSGID_sui_bfsc_startup_ind"/>
-			<item value="func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle"/>
-			<item value="256"/>
-			<item value="func_cloudvela_huitpxml_msg_unpack"/>
-			<item value="fsm_cloudvela_socket_data_rx"/>
+			<item value="Get"/>
+			<item value="get"/>
+			<item value="MSG_ID_L3BFSC_UICOMM_CMD_RESP"/>
+			<item value="WmcErrorCode_t"/>
+			<item value="sensorRepTimes"/>
+			<item value="gTaskCanitfleoContext"/>
+			<item value="HCU_ERROR_PRINT_CLOUDVELA"/>
+			<item value="fsm_canitfleo_usbcan_l2frame_receive"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_ERROR_PRINT_CANITFLEO"/>
 			<item value="&quot;USBCAN_DH: can_bandrate_to_timing_"/>
 			<item value="&quot;USBCAN_DH:  can_bandrate_to_timing_mapping "/>
 			<item value="&quot;USBCAN_DH: CAN"/>
@@ -25,14 +26,13 @@
 			<item value="&quot;USBCAN_DH"/>
 			<item value="&quot;USBCAN_DH: bsp_can_l2_frame_transmit"/>
 			<item value="&quot;USBCAN_DH: HAL_CAN_Receive_IT"/>
-			<item value="&quot;USBCAN_DH: usb_can_transmit"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1117" key="DIALOG_X_ORIGIN"/>
-		<item value="369" key="DIALOG_Y_ORIGIN"/>
+		<item value="1072" key="DIALOG_X_ORIGIN"/>
+		<item value="245" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
