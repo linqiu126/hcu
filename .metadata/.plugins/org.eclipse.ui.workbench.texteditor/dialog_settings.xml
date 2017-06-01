@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcu" key="selection"/>
+		<item value="HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="hcu"/>
-			<item value="l2frame_receive"/>
-			<item value="canitfleo_can_l2frame_receive_process"/>
-			<item value="func_canitfleo_socketcan_test_main"/>
-			<item value="TestSetConfigReq"/>
-			<item value="func_canitfleo_can_init"/>
-			<item value="func_canitfleo_test_main"/>
-			<item value="_init"/>
+			<item value="HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP"/>
+			<item value="func_canitfleo_frame_encode"/>
+			<item value="MSG_ID_L3BFSC_WMC_NEW_WS_EVENT"/>
+			<item value="WmcId_t"/>
+			<item value="MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ"/>
+			<item value="ERR"/>
+			<item value="combnbr"/>
+			<item value="WMC to AWS"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&quot;USBCAN_DH: can_bandrate_to_timing_"/>

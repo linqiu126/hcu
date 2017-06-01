@@ -73,8 +73,6 @@ extern OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id
 
 //Local API
 OPSTAT func_canitfleo_int_init(void);
-OPSTAT func_canitfleo_frame_encode(UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval, strHcuCanitfleoCmdFrame_t *pframe);
-OPSTAT func_canitfleo_frame_decode(strHcuCanitfleoCmdFrame_t *pframe, UINT8 prefixcmdid, UINT8 optid, UINT8 optpar, UINT32 modbusval);
 OPSTAT func_canitfleo_working_scan_process(void);
 OPSTAT func_canitfleo_bfsc_simulation_data_process(void);
 

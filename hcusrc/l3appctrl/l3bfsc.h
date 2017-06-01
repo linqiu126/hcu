@@ -115,6 +115,73 @@ typedef struct gTaskL3bfscContextStaEleMid
 	float	wsAvgTttMatCntMid;			//TTT平均物料数
 	float	wsAvgTttMatWgtMid;			//TTT平均重量
 }gTaskL3bfscContextStaEleMid_t;
+
+//配置参数
+typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
+{
+	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
+	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
+	UINT32	MinScaleNumberStartCombination;		//开始查找的最小个数，就是说大于这个个数就开始搜索
+	UINT32	TargetCombinationWeight;				  //组合目标重量
+	UINT32	TargetCombinationUpperWeight;			//组合目标重量上限
+	UINT32	IsPriorityScaleEnabled;					  // 1: Enable, 0: Disable
+	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
+	UINT32	CombinationBias;						      //每个Scale要求放几个物品
+	UINT32	IsRemainDetectionEnable;				  //Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	RemainScaleTreatment;					    // 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
+	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
+	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
+	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
+	UINT32	spare1;
+	UINT32	spare2;
+	UINT32	spare3;
+	UINT32	spare4;
+}gTaskL3bfscContextCombinationAlgorithmParamaters_t;
+
+typedef struct gTaskL3bfscContextWeightSensorParamaters
+{
+	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorEmptyThread;
+	UINT32	WeightSensorEmptyDetectionTimeMs;
+	UINT32	WeightSensorPickupThread;						// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+	UINT32	StardardReadyTimeMs;								//???
+	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	//UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	WeightSensorInitOrNot;							// NOT for GUI
+	UINT32	WeightSensorAdcSampleFreq;
+	UINT32	WeightSensorAdcGain;
+	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
+	UINT32  WeightSensorAdcValue;								// NOT for GUI
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;
+	UINT32	WeightSensorStaticZeroValue;
+	UINT32	WeightSensorTailorValue;
+	UINT32	WeightSensorDynamicZeroThreadValue;
+	UINT32	WeightSensorDynamicZeroHysteresisMs;
+	//UINT32  WeightSensorFilterCoeff[32];				// NOT for GUI
+	//UINT32  WeightSensorOutputValue[32];				// NOT for GUI
+}gTaskL3bfscContextWeightSensorParamaters_t;
+
+typedef struct gTaskL3bfscContextMotorControlParamaters
+{
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorRollingStartMs;						//how long do the motor rolling for start action
+	UINT32	MotorRollingStopMs;							//how long do the motor rolling for stop action
+	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+	UINT32	spare1;
+	UINT32	spare2;
+	UINT32	spare3;
+	UINT32	spare4;
+}gTaskL3bfscContextMotorControlParamaters_t;
+
+
 //主体上下文
 typedef struct gTaskL3bfscContext
 {
@@ -122,11 +189,14 @@ typedef struct gTaskL3bfscContext
 	UINT32 	wsRrSearchStart; 			//搜索算法从哪一个搜索系数开始
 	UINT8   *SearchCoefficientPointer;
 	UINT32  searchSpaceTotalNbr; 		//搜索的长度，12对应4096
-	//参数部分
+	//静态配置参数部分
 	UINT8	minWsNbr;
 	UINT8	maxWsNbr;
 	UINT32  targetValue;
 	UINT32	targetUpLimit;
+	gTaskL3bfscContextCombinationAlgorithmParamaters_t 	comAlgPar;
+	gTaskL3bfscContextWeightSensorParamaters_t			wgtSnrPar;
+	gTaskL3bfscContextMotorControlParamaters_t			motCtrPar;
 	UINT32  start24hStaTimeInUnix;		//系统配置的参数，表示24小时统计的日历起点
 	//动态部分
 	UINT32  startWorkTimeInUnix;		//表示该系统开始工作的时间日程点

@@ -505,7 +505,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  		//出料确认
 	MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
 	MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   		//放弃物料确认
-	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求  TBD
+	MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
 	MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
 	MSG_ID_USBCAN_L2FRAME_RCV,  			//MYC 2017/05/15
 
@@ -2118,7 +2118,6 @@ typedef struct msg_struct_canitfleo_data_report
  *
  *************************************************************************************/
 //BFSC/SCALE_WEIGHT组合秤
-//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
 #define HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR 20
 
 //后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
@@ -2246,20 +2245,22 @@ typedef struct msg_struct_cloudvela_l3bfsc_statistic_confirm
 
 //BFSC项目：L3BFSC SCALE_WEIGHT组合秤
 //BFSC项目：CANITFLEO
-//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求  TBD
+//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
 typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
 {
 	UINT8  sensorid;
 	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT16 errCode;
 	UINT32 length;
 }msg_struct_l3bfsc_can_error_inq_cmd_req_t;
 
 //MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
 typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 {
-	UINT8 sensorid;
+	UINT8  sensorid;
 	UINT32 sensorWsValue;
-	UINT8 flag;
+	UINT16 errCode;
+	UINT8  flag;
 	UINT32 length;
 }msg_struct_can_l3bfsc_error_inq_cmd_resp_t;
 
@@ -2272,36 +2273,6 @@ typedef struct msg_struct_bfsc_usbcan_l2frame_rcv
 	UINT32 validDataLen;
 	UINT32 length;
 }msg_struct_bfsc_usbcan_l2frame_rcv_t;
-
-//MSG_ID_L3BFSC_CAN_WS_INIT_REQ,  		//传感器初始化  TBD
-//typedef struct msg_struct_l3bfsc_can_ws_init_req
-//{
-//	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-//	UINT32 length;
-//}msg_struct_l3bfsc_can_ws_init_req_t;
-
-//MSG_ID_CAN_L3BFSC_WS_INIT_FB,       	//传感器初始化确认
-//typedef struct msg_struct_can_l3bfsc_ws_init_fb
-//{
-//	UINT8  sensorid;
-//	UINT8  initFlag;
-//	UINT32 length;
-//}msg_struct_can_l3bfsc_ws_init_fb_t;
-
-//MSG_ID_L3BFSC_CAN_WS_READ_REQ,  		//所有传感器读取一次性读取请求  TBD
-//typedef struct msg_struct_l3bfsc_can_ws_read_req
-//{
-//	UINT8 sensorid;
-//	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-//	UINT32 length;
-//}msg_struct_l3bfsc_can_ws_read_req_t;
-
-//MSG_ID_CAN_L3BFSC_WS_READ_RESP,  		//所有传感器读取一次性读取确认
-//typedef struct msg_struct_can_l3bfsc_ws_read_resp
-//{
-//	UINT32 sensorWsValue[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-//	UINT32 length;
-//}msg_struct_can_l3bfsc_ws_read_resp_t;
 
 //MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
 typedef struct msg_struct_l3bfsc_can_ws_comb_out
@@ -2448,7 +2419,16 @@ typedef struct msg_struct_l3bfsc_uicomm_cfg_resp
 typedef struct msg_struct_uicomm_can_test_cmd_req
 {
 	UINT8   cmdid;
+	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 comand_flags;
+	UINT8 led1_command;
+	UINT8 led2_command;
+	UINT8 led3_command;
+	UINT8 led4_command;
+	UINT32 motor_command;
+	UINT32 sensor_command;
 	UINT32 	length;
+
 }msg_struct_uicomm_can_test_cmd_req_t;
 
 //MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
