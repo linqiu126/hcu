@@ -5380,7 +5380,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp
 }StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t;
 
 
-typedef struct msg_struct_l3bfsc_wmc_msg_header
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header
 {
 	UINT16 msgid;
 	UINT16 length;
