@@ -17,6 +17,7 @@
 = 封装USBCAN的发送和接收API
 = 完成CANITFLEO的编码函数工作
 = 清理老旧编解码函数
+= 接收消息处理的框架搭建
 
 //= ZJL, 2017 May.29, CURRENT_SW_DELIVERY 202=>BFSC项目
 = HUITP.H被MYC更新

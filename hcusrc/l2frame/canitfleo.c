@@ -520,17 +520,104 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 //收到底层驱动USBCAN送过来的数据帧
 OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
+	int ret=0;
 
 	msg_struct_bfsc_usbcan_l2frame_rcv_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t)))
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
+	if ((rcv.nodeId > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.validDataLen > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
 
+	//解码MSGID/MSGLEN
+	UINT16 msgId = 0, msgLen = 0;
+	StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *pBfscMsg = (StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *)(rcv.databuf);
+	msgId = HUITP_ENDIAN_EXG16(pBfscMsg->msgid);
+	msgLen = HUITP_ENDIAN_EXG16(pBfscMsg->length);
+	if (msgLen != (rcv.validDataLen-4))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length!\n");
+
+	//按照消息类型进行分类处理
+	switch(msgId){
+
+	case HUITP_MSGID_sui_bfsc_startup_ind:
+	{
+		StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(snd);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_set_config_resp:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_start_resp:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_stop_resp:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_new_ws_event:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_repeat_ws_event:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_ws_comb_out_resp:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_ws_give_up_resp:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_command_resp:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_fault_ind:
+	{
+
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_err_inq_cmd_resp:
+	{
+
+	}
+	break;
+
+	default:
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message!\n");
+	break;
+	}
 
 	//返回
-	return SUCCESS;
+	return ret;
 }
 
 //后台的控制指令：启动/停止组合秤
@@ -630,6 +717,11 @@ OPSTAT func_canitfleo_working_scan_process(void)
 	return SUCCESS;
 }
 
+//Local APIs
+OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t *rcv)
+{
+	return SUCCESS;
+}
 
 
 
