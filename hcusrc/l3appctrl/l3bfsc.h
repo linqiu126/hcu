@@ -152,7 +152,6 @@ typedef struct gTaskL3bfscContextWeightSensorParamaters
 	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
 	UINT32	StardardReadyTimeMs;								//???
 	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
-	//UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
 	UINT32	WeightSensorInitOrNot;							// NOT for GUI
 	UINT32	WeightSensorAdcSampleFreq;
 	UINT32	WeightSensorAdcGain;
@@ -165,8 +164,6 @@ typedef struct gTaskL3bfscContextWeightSensorParamaters
 	UINT32	WeightSensorTailorValue;
 	UINT32	WeightSensorDynamicZeroThreadValue;
 	UINT32	WeightSensorDynamicZeroHysteresisMs;
-	//UINT32  WeightSensorFilterCoeff[32];				// NOT for GUI
-	//UINT32  WeightSensorOutputValue[32];				// NOT for GUI
 }gTaskL3bfscContextWeightSensorParamaters_t;
 
 typedef struct gTaskL3bfscContextMotorControlParamaters
@@ -264,6 +261,8 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void);
 void func_l3bfsc_ws_sensor_search_give_up(void);
 UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
 float func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
+UINT8 func_l3bfsc_count_numbers_of_startup_ws_sensors(void);
+
 OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_start_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_stop_req_process(void);

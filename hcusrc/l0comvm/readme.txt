@@ -15,7 +15,7 @@
 
 //= ZJL, 2017 June.1 CURRENT_SW_DELIVERY 204=>BFSC项目
 = 完成基础CANITFLEO和L3BFSC的消息编解码及状态机处理机制
-
+= 完善基础程序
 
 //= ZJL, 2017 May.31, CURRENT_SW_DELIVERY 203=>BFSC项目
 = 改造USBCAN模块的函数命名
