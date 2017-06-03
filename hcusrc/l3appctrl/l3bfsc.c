@@ -156,8 +156,6 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		gTaskL3bfscContext.sensorWs[i].sensorWsId = i;
 		gTaskL3bfscContext.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE;
 	}
-	gTaskL3bfscContext.minWsNbr = 1;
-	gTaskL3bfscContext.minWsNbr = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 
 	//为搜索空间申请内存
 	gTaskL3bfscContext.searchSpaceTotalNbr = pow(2, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
@@ -319,7 +317,7 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 	memcpy(&rcv, param_ptr, param_len);
 
 	//入参检查
-	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (gTaskL3bfscContext.targetValue + gTaskL3bfscContext.targetUpLimit))){
+	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight))){
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
 	}
 
@@ -788,7 +786,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (gTaskL3bfscContext.targetValue + gTaskL3bfscContext.targetUpLimit))){
+	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight))){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 
@@ -866,7 +864,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 
 	//是否要进入搜索
-	if (gTaskL3bfscContext.wsValueNbrWeight >= gTaskL3bfscContext.minWsNbr){
+	if (gTaskL3bfscContext.wsValueNbrWeight >= gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination){
 		if (func_l3bfsc_ws_sensor_search_combination() == -1){
 			if (gTaskL3bfscContext.wsValueNbrWeight == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 				//得到抛弃的传感器
@@ -1112,6 +1110,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	UINT32 i=0, j=0, t=0;
 	UINT32 result;
 	UINT8 resBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
+	UINT8 searchNbr = 0;
 
 	//选取起始位置
 	WsSensorStart = gTaskL3bfscContext.wsRrSearchStart % gTaskL3bfscContext.searchSpaceTotalNbr;
@@ -1127,9 +1126,13 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 				if (*(gTaskL3bfscContext.SearchCoefficientPointer + t) == 1) resBitmap[j] = 1;
 			}
 		}
-		//HCU_DEBUG_PRINT_NOR("L3BFSC: Temp value Target=[%d], TargetUp=[%d], result=[%d]\n", zHcuL3BfscGenCtrlTable.targetValue, zHcuL3BfscGenCtrlTable.targetUpLimit, result);
+		//HCU_DEBUG_PRINT_NOR("L3BFSC: Temp value Target=[%d], TargetUp=[%d], result=[%d]\n", zHcuL3BfscGenCtrlTable.comAlgPar.TargetCombinationWeight, zHcuL3BfscGenCtrlTable.comAlgPar.TargetCombinationUpperWeight, result);
 		//如果落入目标范围
-		if ((result >= gTaskL3bfscContext.targetValue) && (result <= (gTaskL3bfscContext.targetValue + gTaskL3bfscContext.targetUpLimit))){
+		searchNbr = func_l3bfsc_caculate_bitmap_valid_number(resBitmap);
+		if ((result >= gTaskL3bfscContext.comAlgPar.TargetCombinationWeight) && \
+				(result <= (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) &&\
+				(searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) &&\
+				(searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination)){
 			gTaskL3bfscContext.wsRrSearchStart = ((i+1) % gTaskL3bfscContext.searchSpaceTotalNbr);
 			memcpy(gTaskL3bfscContext.wsBitmap, resBitmap, sizeof(resBitmap));
 			gTaskL3bfscContext.wsValueNbrTtt = 0;
@@ -1143,6 +1146,19 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	}
 	gTaskL3bfscContext.wsRrSearchStart = ((i+1) % gTaskL3bfscContext.searchSpaceTotalNbr);
 	return -1;
+}
+
+
+UINT8 func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap)
+{
+	int i = 0;
+	UINT8 temp = 0;
+
+	for (i=0; i<sizeof(bitmap); i++){
+		temp += (UINT8)*bitmap;
+		bitmap++;
+	}
+	return temp;
 }
 
 
@@ -1290,7 +1306,7 @@ OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void)
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_CFG_CMPL) total++;
 	}
-	if (total < gTaskL3bfscContext.minWsNbr){
+	if (total < gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination){
 		//发送反馈给UICOMM
 		msg_struct_l3bfsc_uicomm_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
@@ -1338,7 +1354,7 @@ OPSTAT func_l3bfsc_time_out_sys_start_req_process(void)
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_START_CMPL) total++;
 	}
-	if (total < gTaskL3bfscContext.minWsNbr){
+	if (total < gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination){
 		//发送反馈给UICOMM
 		msg_struct_l3bfsc_uicomm_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cmd_resp_t));
@@ -1512,29 +1528,6 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	//首先增加时间流逝的计数器
 	gTaskL3bfscContext.elipseCnt++;
 	gTaskL3bfscContext.elipse24HourCnt++;
-
-	//暂时不采用桶形算法，而改用老化算法
-//	//将上一个周期的数据存到桶形存储器中
-//	int i=0;
-//	UINT32 index = 0;
-//	index = gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_BASE_CYCLE;
-//	memcpy(&(gTaskL3bfscContext.curArray[index]), &(gTaskL3bfscContext.cur), sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
-//	//通过桶形数据，更新LocUi的数据表单
-//	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
-//	for (i= 0; i<HCU_L3BFSC_STA_BASE_CYCLE; i++){
-//		gTaskL3bfscContext.staLocalUi.wsIncMatCnt += gTaskL3bfscContext.curArray[i].wsIncMatCnt;
-//		gTaskL3bfscContext.staLocalUi.wsIncMatWgt += gTaskL3bfscContext.curArray[i].wsIncMatWgt;
-//		gTaskL3bfscContext.staLocalUi.wsCombTimes += gTaskL3bfscContext.curArray[i].wsCombTimes;
-//		gTaskL3bfscContext.staLocalUi.wsTttTimes  += gTaskL3bfscContext.curArray[i].wsTttTimes;
-//		gTaskL3bfscContext.staLocalUi.wsTgvTimes  += gTaskL3bfscContext.curArray[i].wsTgvTimes;
-//		gTaskL3bfscContext.staLocalUi.wsTttMatCnt += gTaskL3bfscContext.curArray[i].wsTttMatCnt;
-//		gTaskL3bfscContext.staLocalUi.wsTgvMatCnt += gTaskL3bfscContext.curArray[i].wsTgvMatCnt;
-//		gTaskL3bfscContext.staLocalUi.wsTttMatWgt += gTaskL3bfscContext.curArray[i].wsTttMatWgt;
-//		gTaskL3bfscContext.staLocalUi.wsTgvMatWgt += gTaskL3bfscContext.curArray[i].wsTgvMatWgt;
-//	}
-//	gTaskL3bfscContext.staLocalUi.wsAvgTttTimes = gTaskL3bfscContext.staLocalUi.wsTttTimes;
-//	gTaskL3bfscContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfscContext.staLocalUi.wsTttMatCnt;
-//	gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfscContext.staLocalUi.wsTttMatWgt;
 
 	//采取老化算法 x(n+1) = x(n) * (1-1/120) + latest，从而得到最新的数据，但该数据最好使用float，然后再转换为UINT32存入到数据库表单中
 	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));

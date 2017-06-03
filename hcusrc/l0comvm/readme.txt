@@ -13,6 +13,13 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+
+//= ZJL, 2017 June.4 CURRENT_SW_DELIVERY 205=>BFSC项目
+= 配置信息改为单发，而非群发，因为每个下位机的配置信息不一样
+= 完善calibration表单
+
+
+
 //= ZJL, 2017 June.1 CURRENT_SW_DELIVERY 204=>BFSC项目
 = 完成基础CANITFLEO和L3BFSC的消息编解码及状态机处理机制
 = 完善基础程序

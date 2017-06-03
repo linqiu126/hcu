@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB" key="selection"/>
+		<item value="MinScaleNumberCombination" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="MinScaleNumberCombination"/>
+			<item value="targetUpLimit"/>
+			<item value="targetValue"/>
+			<item value="maxWsNbr"/>
+			<item value="minWsNbr"/>
+			<item value="HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR"/>
+			<item value="20"/>
 			<item value="TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB"/>
-			<item value="func_l3bfsc_time_out_sys_cfg_req_process"/>
-			<item value="MSG_ID_L3BFSC_UICOMM_CFG_RESP"/>
-			<item value="fsm_l3bfsc_uicomm_config_req"/>
-			<item value="func_l3bfsc_count_numbers_of_startup_ws_sensors"/>
-			<item value="func_bfscuicomm_int_init"/>
-			<item value="func_bfscuicomm_install_file_scan"/>
-			<item value="func_bfscuicomm_read_cfg_file_into_ctrl_table"/>
 		</list>
 		<list key="replacehistory">
+			<item value="comAlgPar.TargetCombinationUpperWeight"/>
 			<item value="HCU_ERROR_PRINT_CANITFLEO"/>
 			<item value="&quot;USBCAN_DH: can_bandrate_to_timing_"/>
 			<item value="&quot;USBCAN_DH:  can_bandrate_to_timing_mapping "/>
@@ -25,14 +26,13 @@
 			<item value="&quot;USBCAN_DH: usb_can_int"/>
 			<item value="&quot;USBCAN_DH"/>
 			<item value="&quot;USBCAN_DH: bsp_can_l2_frame_transmit"/>
-			<item value="&quot;USBCAN_DH: HAL_CAN_Receive_IT"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1072" key="DIALOG_X_ORIGIN"/>
-		<item value="245" key="DIALOG_Y_ORIGIN"/>
+		<item value="1150" key="DIALOG_X_ORIGIN"/>
+		<item value="420" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

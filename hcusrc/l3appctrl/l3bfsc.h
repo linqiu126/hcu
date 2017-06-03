@@ -124,10 +124,10 @@ typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
 {
 	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
 	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
-	UINT32	MinScaleNumberStartCombination;		//开始查找的最小个数，就是说大于这个个数就开始搜索
-	UINT32	TargetCombinationWeight;				  //组合目标重量
+	UINT32	MinScaleNumberStartCombination;			//开始查找的最小个数，就是说大于这个个数就开始搜索
+	UINT32	TargetCombinationWeight;				//组合目标重量
 	UINT32	TargetCombinationUpperWeight;			//组合目标重量上限
-	UINT32	IsPriorityScaleEnabled;					  // 1: Enable, 0: Disable
+	UINT32	IsPriorityScaleEnabled;					// 1: Enable, 0: Disable
 	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
 	UINT32	CombinationBias;						      //每个Scale要求放几个物品
 	UINT32	IsRemainDetectionEnable;				  //Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
@@ -142,6 +142,12 @@ typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
 	UINT32	spare4;
 }gTaskL3bfscContextCombinationAlgorithmParamaters_t;
 
+typedef struct gTaskL3bfscContextCalibration
+{
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;
+}gTaskL3bfscContextCalibration_t;
 typedef struct gTaskL3bfscContextWeightSensorParamaters
 {
 	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
@@ -157,9 +163,7 @@ typedef struct gTaskL3bfscContextWeightSensorParamaters
 	UINT32	WeightSensorAdcGain;
 	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
 	UINT32  WeightSensorAdcValue;								// NOT for GUI
-	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullWeight;
+	gTaskL3bfscContextCalibration_t  calibration[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32	WeightSensorStaticZeroValue;
 	UINT32	WeightSensorTailorValue;
 	UINT32	WeightSensorDynamicZeroThreadValue;
@@ -190,10 +194,6 @@ typedef struct gTaskL3bfscContext
 	UINT8   *SearchCoefficientPointer;
 	UINT32  searchSpaceTotalNbr; 		//搜索的长度，12对应4096
 	//静态配置参数部分
-	UINT8	minWsNbr;
-	UINT8	maxWsNbr;
-	UINT32  targetValue;
-	UINT32	targetUpLimit;
 	gTaskL3bfscContextCombinationAlgorithmParamaters_t 	comAlgPar;
 	gTaskL3bfscContextWeightSensorParamaters_t			wgtSnrPar;
 	gTaskL3bfscContextMotorControlParamaters_t			motCtrPar;
@@ -211,7 +211,6 @@ typedef struct gTaskL3bfscContext
 	//实时统计部分：均以一个统计周期为单位
 	HcuSysMsgIeL3bfscContextStaElement_t cur;  		//当前统计基础颗粒中的数值
 	gTaskL3bfscContextStaEleMid_t  curAge;		//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
-	//HcuSysMsgIeL3bfscContextStaElement_t curArray[HCU_L3BFSC_STA_BASE_CYCLE]; //不使用桶形算法，抑制该数据。未来确定不用，可删去
 	//统计报告部分
 	HcuSysMsgIeL3bfscContextStaElement_t staLocalUi;  //滑动平均给本地UI的数据
 	HcuSysMsgIeL3bfscContextStaElement_t staOneMin;  	//1分钟统计结果
@@ -257,6 +256,7 @@ extern OPSTAT fsm_l3bfsc_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_
 //Local API
 OPSTAT func_l3bfsc_int_init(void);
 void func_l3bfsc_cacluate_sensor_ws_valid_value(void);
+UINT8 func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap);
 INT32 func_l3bfsc_ws_sensor_search_combination(void);
 void func_l3bfsc_ws_sensor_search_give_up(void);
 UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
