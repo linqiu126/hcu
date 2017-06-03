@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="MinScaleNumberCombination" key="selection"/>
+		<item value="func_bfscuicomm_read_cfg_file_into_ctrl_table" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="func_bfscuicomm_read_cfg_file_into_ctrl_table"/>
 			<item value="MinScaleNumberCombination"/>
 			<item value="targetUpLimit"/>
 			<item value="targetValue"/>
@@ -15,7 +16,6 @@
 			<item value="minWsNbr"/>
 			<item value="HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR"/>
 			<item value="20"/>
-			<item value="TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB"/>
 		</list>
 		<list key="replacehistory">
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>

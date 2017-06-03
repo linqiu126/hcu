@@ -136,10 +136,6 @@ typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
 	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
 	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
 	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
-	UINT32	spare1;
-	UINT32	spare2;
-	UINT32	spare3;
-	UINT32	spare4;
 }gTaskL3bfscContextCombinationAlgorithmParamaters_t;
 
 typedef struct gTaskL3bfscContextCalibration
@@ -179,25 +175,21 @@ typedef struct gTaskL3bfscContextMotorControlParamaters
 	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
 	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
 	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
-	UINT32	spare1;
-	UINT32	spare2;
-	UINT32	spare3;
-	UINT32	spare4;
 }gTaskL3bfscContextMotorControlParamaters_t;
 
 
 //主体上下文
 typedef struct gTaskL3bfscContext
 {
-	//搜索部分
-	UINT32 	wsRrSearchStart; 			//搜索算法从哪一个搜索系数开始
-	UINT8   *SearchCoefficientPointer;
-	UINT32  searchSpaceTotalNbr; 		//搜索的长度，12对应4096
 	//静态配置参数部分
 	gTaskL3bfscContextCombinationAlgorithmParamaters_t 	comAlgPar;
 	gTaskL3bfscContextWeightSensorParamaters_t			wgtSnrPar;
 	gTaskL3bfscContextMotorControlParamaters_t			motCtrPar;
 	UINT32  start24hStaTimeInUnix;		//系统配置的参数，表示24小时统计的日历起点
+	//搜索部分
+	UINT32 	wsRrSearchStart; 			//搜索算法从哪一个搜索系数开始
+	UINT8   *SearchCoefficientPointer;
+	UINT32  searchSpaceTotalNbr; 		//搜索的长度，12对应4096
 	//动态部分
 	UINT32  startWorkTimeInUnix;		//表示该系统开始工作的时间日程点
 	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是500ms为统计周期
