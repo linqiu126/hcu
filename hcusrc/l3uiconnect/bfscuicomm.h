@@ -46,6 +46,9 @@ OPSTAT func_bfscuicomm_int_init(void);
 void func_bfscuicomm_install_file_scan(void);
 void func_bfscuicomm_scan_jason_callback(void);
 OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void);
+OPSTAT func_bfscuicomm_time_out_period_read_process(void);
+
+
 
 //External APIs
 extern OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);

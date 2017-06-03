@@ -10,3 +10,49 @@ Invoking: Cross G++ Linker
 g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/bhcodecxml.o ./src/l2codec/bhcodeczhb.o ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
 Finished building target: PrjBfsc
  
+15:14:07 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3uiconnect/bfscuicomm.d" -MT"src/l3uiconnect/bfscuicomm.o" -o "src/l3uiconnect/bfscuicomm.o" "/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
+In file included from /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.h:13:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:8:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/l2usbcan.h:294:1: warning: multi-line comment [-Wcomment]
+ //ret = usb_can_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
+ ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c:13:0:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/../l2frame/l2usbcan.h:294:1: warning: multi-line comment [-Wcomment]
+ //ret = usb_can_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
+ ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
+In file included from /home/hitpony/workspace/hcu/hcusrc/l0main/../l2frame/canitfleo.h:13:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c:53:
+/home/hitpony/workspace/hcu/hcusrc/l0main/../l2frame/l2usbcan.h:294:1: warning: multi-line comment [-Wcomment]
+ //ret = usb_can_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
+ ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/l0comvm/vmlayer.d" -MT"src/l0comvm/vmlayer.o" -o "src/l0comvm/vmlayer.o" "/home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/bhcodecxml.o ./src/l2codec/bhcodeczhb.o ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
