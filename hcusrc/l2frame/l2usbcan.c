@@ -728,12 +728,12 @@ void func_usbcan_RxCpltCallback(HcuUsbCanHandleTypeDef_t* CanHandle, VCI_CAN_OBJ
 	else
 		frame_desc = &g_can_packet_desc[1][wmc_id];
 
-	HCU_DEBUG_PRINT_INF("stdId 0x%x length %d, data: 0x%08x 0x%08x\n",
-		Can->ID,
-		Can->DataLen,
-		*(uint32_t *)(&Can->Data[0]),
-		*(uint32_t *)(&Can->Data[4])
-		);
+//	HCU_DEBUG_PRINT_INF("stdId 0x%x length %d, data: 0x%08x 0x%08x\n",
+//		Can->ID,
+//		Can->DataLen,
+//		*(uint32_t *)(&Can->Data[0]),
+//		*(uint32_t *)(&Can->Data[4])
+//		);
 
 	l2packet_rx_bytes(frame_desc, &Can->Data[0], Can->DataLen);
 
@@ -771,8 +771,18 @@ void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc)
 	msg_struct_bfsc_usbcan_l2frame_rcv_t snd;
 	memset(&snd, 0, sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t));
 	snd.nodeId = pdesc->wmc_id;
-	snd.validDataLen = can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len;
-	memcpy(snd.databuf, (void *)&(can_l2frame_itf_rx_buffer[pdesc->wmc_id]), snd.validDataLen);
+
+	/* 2017/06/03, MA Yuchu: -4 and +4 is to remove the 4 byted L2 Frame Header FE CC L1 L2 */
+	//snd.validDataLen = can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len;
+	snd.validDataLen = can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len - 4;
+	//memcpy(snd.databuf, (void *)&(can_l2frame_itf_rx_buffer[pdesc->wmc_id]), snd.validDataLen); /* 2017/06/03, MA Yuchu: THIS IS A BUG, CORRECT IN BELOW LINE !!!*/
+	memcpy(snd.databuf, (void *)&(can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame) + 4, snd.validDataLen);
+
+//	HcuErrorPrint("USBCAN: snd.nodeId=%d, snd.validDataLen=%d\n", snd.nodeId, snd.validDataLen);
+//	HcuErrorPrint("USBCAN: [%02X, %02X, %02X, %02X, %02X, %02X, %02X, %02X]\n",
+//			snd.databuf[0], snd.databuf[1], snd.databuf[2], snd.databuf[3],
+//			snd.databuf[4], snd.databuf[5], snd.databuf[6], snd.databuf[7]);
+
 	snd.length = sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t);
 	if (hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
