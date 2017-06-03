@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="MAX" key="selection"/>
+		<item value="fsm_l3bfsc_uicomm_config_req" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="MAX"/>
-			<item value="errCode"/>
-			<item value="fsm_l3bfsc_canitf_config_resp"/>
 			<item value="fsm_l3bfsc_uicomm_config_req"/>
-			<item value="System configuration parameter not matched with HUITP transmit structure"/>
-			<item value="TIMER_ID_1S_BFSCUICOMM_PERIOD_READ"/>
-			<item value="start"/>
-			<item value="MSG_ID_UICOMM_L3BFSC_CFG_REQ"/>
+			<item value="&#x09;&#x09;&#x09;if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){&#x0A;&#x09;&#x09;&#x09;&#x09;HCU_ERROR_PRINT_L3BFSC_RECOVERY(&quot;L3BFSC: Error Set FSM State!\n&quot;);&#x0A;&#x09;&#x09;&#x09;}&#x0A;"/>
+			<item value="fsm_bfscuicomm_l3bfsc_cfg_resp"/>
+			<item value="errCode"/>
+			<item value="errcode"/>
+			<item value="MSG_ID_CAN_L3BFSC_SYS_CFG_RESP"/>
+			<item value="MinScaleNumberCombination"/>
+			<item value="MinScaleNumberStartCombination"/>
 		</list>
 		<list key="replacehistory">
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>
