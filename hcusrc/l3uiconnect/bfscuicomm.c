@@ -409,7 +409,7 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 {
 	zHcuBfscuicommFlag++;
-	if (zHcuBfscuicommFlag > 1) {
+	if (zHcuBfscuicommFlag < 2) {
 		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFSC
 		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFSC
 		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
