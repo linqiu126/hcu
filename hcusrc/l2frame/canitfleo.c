@@ -211,6 +211,8 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 	//int ret=0;
 	int i=0;
 
+	HcuErrorPrint("CANITFLEO: fsm_canitfleo_l3bfsc_sys_cfg_req ...\n");
+
 	//入参检查
 	msg_struct_l3bfsc_can_sys_cfg_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_sys_cfg_req_t));
@@ -228,7 +230,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 			StrMsg_HUITP_MSGID_sui_bfsc_set_config_req_t pMsgProc;
 			UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_req_t);
 			memset(&pMsgProc, 0, msgProcLen);
-			pMsgProc.msgid = HUITP_ENDIAN_EXG16(MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ);
+			pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_set_config_req);
 			pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 			pMsgProc.weight_sensor_param.WeightSensorLoadDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs);
 			pMsgProc.weight_sensor_param.WeightSensorLoadThread = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread);
@@ -259,6 +261,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 			pMsgProc.motor_control_param.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs);
 
 			//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
+			HcuErrorPrint("CANITFLEO: fsm_canitfleo_l3bfsc_sys_cfg_req (msgid=0x%X, len=%d, i=%d)\n", pMsgProc.msgid, msgProcLen, i);
 			if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
 		}
@@ -544,7 +547,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t)) - 4)
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message(id=0x%X) on on length, msgLen(%d) != sizeof(...)(%d-4)\n", msgId, msgLen, sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t));
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(snd, rcv.nodeId);
 	}

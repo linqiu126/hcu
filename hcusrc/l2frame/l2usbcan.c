@@ -689,11 +689,11 @@ UINT32 func_usbcan_transmit(HcuUsbCanHandleTypeDef_t *husbcan, UINT8 *ptr_data, 
 	memcpy(&husbcan->can_tx_data.Data[0], ptr_data, data_len);
 	husbcan->can_tx_data.ExternFlag = extern_flag;
 
-/*    if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_tx_data), 1))
+	if (1 != VCI_Transmit(husbcan->can_dev_type, husbcan->can_dev_idx, 0, &(husbcan->can_tx_data), 1))
     {
-        HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: CAN%d TX failed: ID=%08x\n", 0, husbcan->can_data.ID);
+        HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: CAN%d TX failed: ID=%08x\n", 0, husbcan->can_tx_data.ID);
         return FAILURE;
-    }*/
+    }
 
 //    HCU_DEBUG_PRINT_INF("USBCAN_DH: usb_can_transmit: CAN%d TX [0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X]: ID=%08x\n", 0, husbcan->can_data.ID,
 //    		husbcan->can_data.Data[0], husbcan->can_data.Data[1], husbcan->can_data.Data[2], husbcan->can_data.Data[3],
@@ -828,28 +828,39 @@ uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, ui
 {
 	uint8_t translen;
 	UINT32 ret;
+	uint8_t l2frame[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE];
+	uint32_t l2framelen = length + sizeof(HCU_HUITP_L2FRAME_STD_frame_header_t);
+	HCU_HUITP_L2FRAME_STD_frame_header_t *p = (HCU_HUITP_L2FRAME_STD_frame_header_t *)l2frame;
+	uint8_t *pL2Frame = (uint8_t *)&l2frame[0];
 
 	//入参检查
-	if ((CanHandle == NULL) || (buffer == NULL) || (length == 0) || (length > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE)){
+	if ((CanHandle == NULL) || (buffer == NULL) || (length == 0) || (length > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE - 4)){
 		HcuErrorPrint("USBCAN_DH: Error input parameters reveived!\n");
 		return 0;
 	}
 
-	while(length > 0)
+	/* Need to add L2 frame Header */
+	p->start = 0xFE;
+	p->len = l2framelen;
+	p->chksum = (0xFE) ^ (p->len & 0xFF) ^ ((p->len>>8) & 0xFF);
+
+	memcpy(l2frame + 4, buffer, length);
+
+	while(l2framelen > 0)
 	{
-		translen = (length > 8)?8:length;
+		translen = (l2framelen > 8)?8:l2framelen;
 		CanHandle->can_tx_data.DataLen = translen;
 
 		/* THIS IS FOR BROADCAST */
 		CanHandle->can_tx_data.ID = (wmc_id_bitmap | AWS_TO_WMC_CAN_ID_PREFIX);
 
-		memcpy(CanHandle->can_tx_data.Data, buffer, translen);
-		ret = func_usbcan_transmit(CanHandle, buffer, translen, CanHandle->can_tx_data.ID, 1); ///!!! EXT FRAMEs
+		memcpy(CanHandle->can_tx_data.Data, pL2Frame, translen);
+		ret = func_usbcan_transmit(CanHandle, pL2Frame, translen, CanHandle->can_tx_data.ID, 1); ///!!! EXT FRAMEs
 		//usleep(500);
 		if(ret == SUCCESS)
 		{
-			length -= translen;
-			buffer += translen;
+			l2framelen = l2framelen - translen;
+			pL2Frame = pL2Frame + translen;
 		}
 		else
 		{
