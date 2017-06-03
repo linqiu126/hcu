@@ -18,6 +18,8 @@
 = 配置信息改为单发，而非群发，因为每个下位机的配置信息不一样
 = 完善calibration表单
 = Pop UICOMM中的测试数据
+= 当没有任何IHU启动的是否，返回错误配置消息给UICOMM
+
 
 
 //= ZJL, 2017 June.1 CURRENT_SW_DELIVERY 204=>BFSC项目

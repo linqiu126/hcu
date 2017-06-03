@@ -2315,6 +2315,7 @@ typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 #define HCU_SYSMSG_BFSC_ERR_CODE_INVALIID	  	0
 #define HCU_SYSMSG_BFSC_ERR_CODE_UNSPECIFIC  	1
 #define HCU_SYSMSG_BFSC_ERR_CODE_TIME_OUT  		2
+#define HCU_SYSMSG_BFSC_ERR_CODE_NO_IHU_WORK  	3
 #define HCU_SYSMSG_BFSC_ERR_CODE_NULL  		0xFFFF
 
 typedef struct msg_struct_l3bfsc_can_sys_cfg_req
