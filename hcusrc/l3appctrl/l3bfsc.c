@@ -381,7 +381,7 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 
 OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	int ret=0, i=0;
 	msg_struct_can_l3bfsc_sys_cfg_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t))){
@@ -425,7 +425,19 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 		//发送反馈给UICOMM
 		msg_struct_l3bfsc_uicomm_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
-		snd.validFlag = TRUE;
+
+		//先判定成功的数量是否达到最小数，如果是，就认为是成功了
+		int total = 0;
+		for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+			if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_CFG_CMPL) total++;
+		}
+		if (total < gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination){
+			snd.validFlag = TRUE;
+			snd.errCode = HCU_SYSMSG_BFSC_ERR_CODE_NO_ENOUGH_IHU;
+		}
+		else{
+			snd.validFlag = TRUE;
+		}
 		snd.length = sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t);
 		ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CFG_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
 		if (ret == FAILURE){
@@ -437,9 +449,16 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error stop timer!\n");
 		}
-		//设置状态机
-		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
+
+		//设置状态机：不成功，留在CFG状态，否则进入GO状态
+		if (total < gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination){
+			if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_CFG) == FAILURE){
+				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
+			}
+		}else{
+			if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
+				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
+			}
 		}
 	}
 

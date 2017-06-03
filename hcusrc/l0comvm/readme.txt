@@ -19,7 +19,7 @@
 = 完善calibration表单
 = Pop UICOMM中的测试数据
 = 当没有任何IHU启动的是否，返回错误配置消息给UICOMM
-
+= 完善收到CFG消息时，针对工作数量的判定
 
 
 //= ZJL, 2017 June.1 CURRENT_SW_DELIVERY 204=>BFSC项目
