@@ -191,7 +191,9 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
 			if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error Set FSM State!\n");
 		}
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 		func_canitfleo_working_scan_process();
+#endif
 	}
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -211,8 +213,6 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 	//int ret=0;
 	int i=0;
 
-	HcuErrorPrint("CANITFLEO: fsm_canitfleo_l3bfsc_sys_cfg_req ...\n");
-
 	//入参检查
 	msg_struct_l3bfsc_can_sys_cfg_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_can_sys_cfg_req_t));
@@ -230,7 +230,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 			StrMsg_HUITP_MSGID_sui_bfsc_set_config_req_t pMsgProc;
 			UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_req_t);
 			memset(&pMsgProc, 0, msgProcLen);
-			pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_set_config_req);
+			pMsgProc.msgid = HUITP_ENDIAN_EXG16(MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ);
 			pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 			pMsgProc.weight_sensor_param.WeightSensorLoadDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs);
 			pMsgProc.weight_sensor_param.WeightSensorLoadThread = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread);
@@ -261,7 +261,6 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 			pMsgProc.motor_control_param.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs);
 
 			//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
-			HcuErrorPrint("CANITFLEO: fsm_canitfleo_l3bfsc_sys_cfg_req (msgid=0x%X, len=%d, i=%d)\n", pMsgProc.msgid, msgProcLen, i);
 			if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
 		}
@@ -526,9 +525,8 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *pBfscMsg = (StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *)(rcv.databuf);
 	msgId = HUITP_ENDIAN_EXG16(pBfscMsg->msgid);
 	msgLen = HUITP_ENDIAN_EXG16(pBfscMsg->length);
-	if (msgLen != (rcv.validDataLen-4)) 	/* 2017/06/03, MA Yuchu, THESE 4 BYTES IS the huitp msg payload lenth !!! */
-	//if (msgLen != (rcv.validDataLen))     /* 2017/06/03, MA Yuchu, Modify with remove the 4 bytes header */
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message(id=0x%X) error on length, msgLen(%d) != validDataLen(%d-4)\n", msgId, msgLen, rcv.validDataLen);
+	if (msgLen != (rcv.validDataLen-4))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length!\n");
 
 	//按照消息类型进行分类处理
 	switch(msgId){
@@ -536,8 +534,8 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_startup_ind:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t)) - 4)
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message(id=0x%X) on on length, msgLen(%d) != sizeof(...)(%d-4)\n", msgId, msgLen, sizeof(StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t));
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(snd, rcv.nodeId);
 	}
@@ -546,8 +544,8 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_set_config_resp:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t)) - 4)
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message(id=0x%X) on on length, msgLen(%d) != sizeof(...)(%d-4)\n", msgId, msgLen, sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t));
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(snd, rcv.nodeId);
 	}
@@ -556,7 +554,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_start_resp:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t)) - 4)
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_start_resp_received_handle(snd, rcv.nodeId);
@@ -566,7 +564,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_stop_resp:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t)) - 4)
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(snd, rcv.nodeId);
@@ -576,7 +574,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_new_ws_event:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t)) - 4)
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(snd, rcv.nodeId);
@@ -586,7 +584,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_repeat_ws_event:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t)) - 4)
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(snd, rcv.nodeId);
@@ -596,7 +594,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_ws_comb_out_resp:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t)) - 4)
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_ws_comb_out_received_handle(snd, rcv.nodeId);
@@ -606,7 +604,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_command_resp:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t)) - 4)
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(snd, rcv.nodeId);
@@ -616,7 +614,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_fault_ind:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t)) - 4)
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_fault_ind_received_handle(snd, rcv.nodeId);
@@ -626,7 +624,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	case HUITP_MSGID_sui_bfsc_err_inq_cmd_resp:
 	{
 		StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t)) - 4)
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(snd, rcv.nodeId);
@@ -675,12 +673,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 
-	HCU_DEBUG_PRINT_INF("CANITFLEO: func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(NodeId=%d)\n", nodeId);
-
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP;
-		HCU_DEBUG_PRINT_INF("CANITFLEO: gTaskL3bfscContext.sensorWs[%d].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP(%d)\n", nodeId, HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP);
 	}
 
 	//系统已经在工作状态：发送CFG给IHU
@@ -724,7 +719,6 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 		pMsgProc.motor_control_param.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs);
 
 		//发送消息
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Send xxx_SET_CONFIG_REQ over CAN, msgId=0x%X, msgLen=%d\n", pMsgProc.msgid, msgProcLen);
 		if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
 

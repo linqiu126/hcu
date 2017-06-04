@@ -98,9 +98,6 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//输出版本/调试/Copyright版权信息
 	func_hwinv_copy_right();
 
-	HcuDebugPrint("HWINV: test8!\n");
-
-
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_HWINV, FSM_STATE_HWINV_ACTIVED) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
@@ -110,8 +107,6 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("HWINV: Enter FSM_STATE_HWINV_ACTIVED status, Keeping refresh here!\n");
 	}
-
-	HcuDebugPrint("HWINV: test9!\n");
 
 	//进入等待反馈状态
 	while(1){

@@ -1043,6 +1043,7 @@ typedef struct msg_struct_com_pm_report
 	UINT32 CloudVelaDiscCnt;
 	UINT32 SocketDiscCnt;
 	UINT32 cpu_occupy;
+	UINT32 cpu_temp;
 	UINT32 mem_occupy;
 	UINT32 disk_occupy;
 	UINT32 timeStamp;
@@ -1965,6 +1966,7 @@ typedef struct msg_struct_spspm_cloudvela_perfm_resp
 	UINT32 cpuOccupy;
 	UINT32 memOccupy;
 	UINT32 diskOccupy;
+	UINT32 cpuTemp;
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_perfm_resp_t;
@@ -1982,6 +1984,7 @@ typedef struct msg_struct_spspm_cloudvela_perfm_report
 	UINT32 cpuOccupy;
 	UINT32 memOccupy;
 	UINT32 diskOccupy;
+	UINT32 cpuTemp;
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_perfm_report_t;
@@ -2315,8 +2318,6 @@ typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 #define HCU_SYSMSG_BFSC_ERR_CODE_INVALIID	  	0
 #define HCU_SYSMSG_BFSC_ERR_CODE_UNSPECIFIC  	1
 #define HCU_SYSMSG_BFSC_ERR_CODE_TIME_OUT  		2
-#define HCU_SYSMSG_BFSC_ERR_CODE_NO_IHU_WORK  	3
-#define HCU_SYSMSG_BFSC_ERR_CODE_NO_ENOUGH_IHU  4
 #define HCU_SYSMSG_BFSC_ERR_CODE_NULL  		0xFFFF
 
 typedef struct msg_struct_l3bfsc_can_sys_cfg_req
