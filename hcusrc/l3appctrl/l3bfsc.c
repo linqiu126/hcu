@@ -143,6 +143,12 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (HCU_L3BFSC_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: module timer statistic parameter set error!\n");
 
+	//严格保证HUITP内部消息和外部消息的一致性，进行必要的检查
+	if ((sizeof(CombinationAlgorithmParamaters_t) != sizeof (gTaskL3bfscContextCombinationAlgorithmParamaters_t)) ||
+			(sizeof(WeightSensorParamaters_t) != sizeof (gTaskL3bfscContextWeightSensorParamaters_t)) ||
+					(sizeof(MotorControlParamaters_t) != sizeof (gTaskL3bfscContextMotorControlParamaters_t)))
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: System configuration parameter not matched with HUITP transmit structure!\n");
+
 	//秤盘数据表单控制表初始化
 	memset(&gTaskL3bfscContext, 0, sizeof(gTaskL3bfscContext_t));
 	int i=0;
@@ -189,7 +195,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//初始化界面交互数据
-	//dbi_HcuBfsc_WmcStatusForceInvalid(0);
+	dbi_HcuBfsc_WmcStatusForceInvalid(0);
 	HCU_DEBUG_PRINT_INF("L3BFSC: dbi_HcuBfsc_WmcStatusForceInvalid() set. \n");
 
 	//设置状态机到目标状态
@@ -381,7 +387,7 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 
 OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0, i=0;
+	int ret=0;
 	msg_struct_can_l3bfsc_sys_cfg_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t))){
@@ -425,19 +431,7 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 		//发送反馈给UICOMM
 		msg_struct_l3bfsc_uicomm_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
-
-		//先判定成功的数量是否达到最小数，如果是，就认为是成功了
-		int total = 0;
-		for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
-			if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_CFG_CMPL) total++;
-		}
-		if (total < gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination){
-			snd.validFlag = TRUE;
-			snd.errCode = HCU_SYSMSG_BFSC_ERR_CODE_NO_ENOUGH_IHU;
-		}
-		else{
-			snd.validFlag = TRUE;
-		}
+		snd.validFlag = TRUE;
 		snd.length = sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t);
 		ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CFG_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
 		if (ret == FAILURE){
@@ -449,16 +443,9 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error stop timer!\n");
 		}
-
-		//设置状态机：不成功，留在CFG状态，否则进入GO状态
-		if (total < gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination){
-			if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_CFG) == FAILURE){
-				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
-			}
-		}else{
-			if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
-				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
-			}
+		//设置状态机
+		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 		}
 	}
 
@@ -987,21 +974,7 @@ OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_
 
 	//先数一数传感器的启动状态
 	if (func_l3bfsc_count_numbers_of_startup_ws_sensors() == 0){
-		HCU_DEBUG_PRINT_FAT("L3BFSC: No any weight scale sensor startup yet!\n");
-
-		//发送反馈给UICOMM
-		msg_struct_l3bfsc_uicomm_cfg_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
-		snd.validFlag = FALSE;
-		snd.errCode = HCU_SYSMSG_BFSC_ERR_CODE_NO_IHU_WORK;
-		snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
-		snd.length = sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t);
-		ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CFG_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
-		if (ret == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
-		}
-
-		return SUCCESS;
+		HCU_ERROR_PRINT_L3BFSC("L3BFSC: No any weight scale sensor startup yet!\n");
 	}
 
 	//设置完成后，发送初始化命令给各个传感器

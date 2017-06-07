@@ -1244,7 +1244,9 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 		pMsgProc.reportValue.cpuOccupy = HUITP_ENDIAN_EXG32(rcv.cpuOccupy);
 		pMsgProc.reportValue.memOccupy = HUITP_ENDIAN_EXG32(rcv.memOccupy);
 		pMsgProc.reportValue.diskOccupy = HUITP_ENDIAN_EXG32(rcv.diskOccupy);
+		pMsgProc.reportValue.cpuTemp = HUITP_ENDIAN_EXG32(rcv.cpuTemp);
 		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.timeStamp);
+
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));

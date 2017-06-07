@@ -801,6 +801,7 @@ typedef struct HcuGlobalCounter
 	UINT32 cpu_occupy;
 	UINT32 mem_occupy;
 	UINT32 disk_occupy;
+	UINT32 cpu_temp;
 }HcuGlobalCounter_t;
 extern HcuGlobalCounter_t zHcuGlobalCounter;
 

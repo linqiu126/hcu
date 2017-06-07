@@ -2990,6 +2990,7 @@ typedef struct StrIe_HUITP_IEID_uni_performance_info_element
 	UINT32 cpuOccupy;
 	UINT32 memOccupy;
 	UINT32 diskOccupy;
+	UINT32 cpuTemp;
 	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_performance_info_element_t;
 

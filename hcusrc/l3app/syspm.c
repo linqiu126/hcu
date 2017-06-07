@@ -215,6 +215,7 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 			snd.cpuOccupy = zHcuSysStaPm.statisCnt.cpu_occupy;
 			snd.memOccupy = zHcuSysStaPm.statisCnt.mem_occupy;
 			snd.diskOccupy = zHcuSysStaPm.statisCnt.disk_occupy;
+			snd.cpuTemp = zHcuSysStaPm.statisCnt.cpu_temp;
 			snd.timeStamp = time(0);
 			snd.length = sizeof(msg_struct_spspm_cloudvela_perfm_report_t);
 			if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
@@ -339,6 +340,7 @@ void func_syspm_get_cpu_temp(void)
 	{
 		(void)clock_gettime(CLOCK_REALTIME, &r[i].t);
 		FILE *fp = fopen("/sys/devices/virtual/thermal/thermal_zone0/temp", "r");
+		//FILE *fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
 		(void)fscanf(fp,"%u", &r[i].temp);
 		(void)fclose(fp);
 	}
@@ -346,6 +348,12 @@ void func_syspm_get_cpu_temp(void)
 	for (unsigned i = 0; i < N; ++i)
 		printf("%lu.%06llu %u\n", r[i].t.tv_sec, (r[i].t.tv_nsec + 500ull) / 1000ull, r[i].temp);
 	*/
+
+	FILE *fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
+	(void)fscanf(fp,"%u", &zHcuSysStaPm.statisCnt.cpu_temp);
+	zHcuSysStaPm.statisCnt.cpu_temp = (UINT32)(zHcuSysStaPm.statisCnt.cpu_temp)/1000;
+	//printf("CPU Temprature = %u \n",zHcuSysStaPm.statisCnt.cpu_temp);
+
 }
 
 OPSTAT fsm_syspm_cloudvela_alarm_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -436,7 +444,9 @@ OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive invalid data!\n");
 
 	//发送数据给后台
-	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+	//if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){//如果只发给Home,应该是Curl的连接状态
+	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE)){//debug by shanchun
+
 		msg_struct_spspm_cloudvela_perfm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_perfm_report_t));
 
@@ -459,6 +469,7 @@ OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 		snd.cpuOccupy = rcv.cpu_occupy;
 		snd.memOccupy = rcv.mem_occupy;
 		snd.diskOccupy = rcv.disk_occupy;
+		snd.cpuTemp = rcv.cpu_temp;
 		snd.timeStamp = rcv.timeStamp;
 		snd.length = sizeof(msg_struct_spspm_cloudvela_perfm_report_t);
 		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)

@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
 INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`,
 `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`,
 `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`,
-`cpuoccupy`, `memoccupy`, diskoccupy,`timestamp`) VALUES
+`cpuoccupy`, `memoccupy`, `diskoccupy`,`cputemp`,`timestamp`) VALUES
 (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111);
 */
 
@@ -80,7 +80,7 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void)
     		taskcloudvelaec, taskavorionec, taskspsvirgoec, taskhsmmpec, \
 			taskemcec, taskpm25ec, taskwinddirec, taskwindspdec, tasktempec, taskhumidec, tasknoiseec,\
     		taskairprsec, taskco1ec, tasklightstrec, taskalcoholec, taskhchoec, tasktoxicgasec,\
-    		restartcnt, cloudvelaconncnt, cloudvelaconnfailcnt, cloudveladisccnt, clouddatatimeoutcnt, socketdisccnt, cpuoccupy, memoccupy, diskoccupy, timestamp) VALUES \
+    		restartcnt, cloudvelaconncnt, cloudvelaconnfailcnt, cloudveladisccnt, clouddatatimeoutcnt, socketdisccnt, cpuoccupy, memoccupy, diskoccupy, cputemp, timestamp) VALUES \
     		('%d', '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",\
     		zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HCUVM], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HWINV], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_SYSPM],zHcuSysStaPm.statisCnt.errCnt[TASK_ID_MODBUS],\
     		zHcuSysStaPm.statisCnt.errCnt[TASK_ID_CLOUDVELA], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_AVORION], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_SPSVIRGO], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HSMMP],\
@@ -88,7 +88,7 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void)
 			zHcuSysStaPm.statisCnt.errCnt[TASK_ID_TEMP], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HUMID], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_NOISE],\
     		zHcuSysStaPm.statisCnt.errCnt[TASK_ID_AIRPRS], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_CO1], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_LIGHTSTR], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_ALCOHOL], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HCHO], zHcuSysStaPm.statisCnt.errCnt[TASK_ID_TOXICGAS],\
     		zHcuSysStaPm.statisCnt.restartCnt, zHcuSysStaPm.statisCnt.cloudVelaConnCnt, zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt, zHcuSysStaPm.statisCnt.cloudVelaDiscCnt, zHcuSysStaPm.statisCnt.CloudDataTimeOutCnt, zHcuSysStaPm.statisCnt.SocketDiscCnt, \
-			zHcuSysStaPm.statisCnt.cpu_occupy, zHcuSysStaPm.statisCnt.mem_occupy, zHcuSysStaPm.statisCnt.disk_occupy, (UINT32)time(NULL));
+			zHcuSysStaPm.statisCnt.cpu_occupy, zHcuSysStaPm.statisCnt.mem_occupy, zHcuSysStaPm.statisCnt.disk_occupy, zHcuSysStaPm.statisCnt.cpu_temp, (UINT32)time(NULL));
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
