@@ -409,7 +409,7 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 {
 	zHcuBfscuicommFlag++;
-	if (zHcuBfscuicommFlag < 2) {
+	if (zHcuBfscuicommFlag < 20) {
 		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFSC
 		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFSC
 		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
@@ -419,6 +419,17 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
+	}
+	else if (zHcuBfscuicommFlag < 40) {
+		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
+		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
+		snd_start_req.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
+		snd_start_req.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
+		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd_start_req, snd_start_req.length) == FAILURE)
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+		}
+	else{
+
 	}
 	return SUCCESS;
 }

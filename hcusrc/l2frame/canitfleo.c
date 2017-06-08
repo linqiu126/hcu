@@ -966,7 +966,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(StrMsg_H
 OPSTAT hcu_canitfleo_usbcan_interface_init(void)
 {
 	return hcu_bsp_usbcan_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
-				CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN0, \
+				CAN_DEVIDE_IDX_CARD0, CAN_DEVIDE_CHANNEL_CAN0, \
 				CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
 }
 
