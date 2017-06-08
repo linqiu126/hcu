@@ -143,12 +143,6 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (HCU_L3BFSC_STA_UNIT_DUR != (10*zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN].dur))  //静态表是以10ms为单位的
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: module timer statistic parameter set error!\n");
 
-	//严格保证HUITP内部消息和外部消息的一致性，进行必要的检查
-	if ((sizeof(CombinationAlgorithmParamaters_t) != sizeof (gTaskL3bfscContextCombinationAlgorithmParamaters_t)) ||
-			(sizeof(WeightSensorParamaters_t) != sizeof (gTaskL3bfscContextWeightSensorParamaters_t)) ||
-					(sizeof(MotorControlParamaters_t) != sizeof (gTaskL3bfscContextMotorControlParamaters_t)))
-		HCU_ERROR_PRINT_L3BFSC("L3BFSC: System configuration parameter not matched with HUITP transmit structure!\n");
-
 	//秤盘数据表单控制表初始化
 	memset(&gTaskL3bfscContext, 0, sizeof(gTaskL3bfscContext_t));
 	int i=0;

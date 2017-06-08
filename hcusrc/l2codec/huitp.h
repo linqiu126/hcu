@@ -5418,12 +5418,12 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header
 
 /* 3: WMC to AWS: */
 /* CAN ID: 0x0020 0000 (WMC Node ID 0) to 0x0020 000F (WMC Node ID 15) */
-#define WMC_TO_AWS_CAN_ID_PREFIX		(0x00300000U)
+#define WMC_TO_AWS_CAN_ID_PREFIX		(0x00200000U)
 //#define WMC_TO_AWS_CAN_ID_SUFFIX		(mwc_id)
 
 /* 4: WMC-S to AWS: */
 /* CAN ID: 0x0030 0010 (Node ID 0) */
-#define WMCS_TO_AWS_CAN_ID				(0x00300010U)
+#define WMCS_TO_AWS_CAN_ID				(0x00200010U)
 
 /* CAN Msg Length */
 //#define		MAX_WMC_CONTROL_MSG_LEN				(256U)

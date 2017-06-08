@@ -533,6 +533,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_startup_ind:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_startup_ind \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -543,6 +544,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_set_config_resp:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_set_config_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -553,6 +555,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_start_resp:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_start_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -563,6 +566,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_stop_resp:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_stop_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -573,6 +577,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_new_ws_event:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_new_ws_event \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -583,6 +588,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_repeat_ws_event:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_repeat_ws_event \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -593,6 +599,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_ws_comb_out_resp:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_ws_comb_out_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -603,6 +610,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_command_resp:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_command_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -613,6 +621,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_fault_ind:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_fault_ind \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -623,6 +632,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	case HUITP_MSGID_sui_bfsc_err_inq_cmd_resp:
 	{
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_err_inq_cmd_resp \n");
 		StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
@@ -688,7 +698,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 		StrMsg_HUITP_MSGID_sui_bfsc_set_config_req_t pMsgProc;
 		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_req_t);
 		memset(&pMsgProc, 0, msgProcLen);
-		pMsgProc.msgid = HUITP_ENDIAN_EXG16(MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ);
+		pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_set_config_req);
 		pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 		pMsgProc.weight_sensor_param.WeightSensorLoadDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs);
 		pMsgProc.weight_sensor_param.WeightSensorLoadThread = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread);
