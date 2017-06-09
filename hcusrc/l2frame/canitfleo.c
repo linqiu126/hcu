@@ -122,9 +122,10 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 	}
 
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
-	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur,\
-			TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-	if (ret == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error start timer!\n");
+	//为了简化任务的执行，先禁止该定时器的启动
+//	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur,\
+//			TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+//	if (ret == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error start timer!\n");
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE)

@@ -238,6 +238,7 @@ void func_syspm_get_memoccupy (PmMemOccupyInfo_t *mem) //对无类型get函数�
     m=mem;
 
     fd = fopen ("/proc/meminfo", "r");
+    if (fd == NULL) return;
 
     fgets (buff, sizeof(buff), fd);
     fgets (buff, sizeof(buff), fd);
@@ -350,6 +351,7 @@ void func_syspm_get_cpu_temp(void)
 	*/
 
 	FILE *fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
+	if (fp == NULL) return;
 	(void)fscanf(fp,"%u", &zHcuSysStaPm.statisCnt.cpu_temp);
 	zHcuSysStaPm.statisCnt.cpu_temp = (UINT32)(zHcuSysStaPm.statisCnt.cpu_temp)/1000;
 	//printf("CPU Temprature = %u \n",zHcuSysStaPm.statisCnt.cpu_temp);

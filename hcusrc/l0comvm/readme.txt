@@ -20,8 +20,7 @@
 ＝修复L3BFSC初始化的一些问题
 ＝BFSCUICOMM喂测试数据
 ＝简化CANID的选择性问题
-= func_hwinv_scan_sysinfo可能造成崩溃，先禁止该函数
-
+= func_syspm_get_memoccupy / func_syspm_get_cpu_temp中，文件的操作没有对失败做保护，导致段错误程序崩溃，修正过来了
 
 
 

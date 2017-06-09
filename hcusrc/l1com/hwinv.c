@@ -749,10 +749,10 @@ void func_hwinv_scan_date(void)
 //这个函数的执行会出现崩溃的问题，先停止，待完善。
 void func_hwinv_scan_sysinfo(void)
 {
-//	if (HcuGetSysInfo(&(zHcuVmCtrTab.hwinv.sysInfo), FALSE) != SUCCESS){
-//		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
-//		HcuErrorPrint("HWINV: Read system hardware info error!\n");
-//	}
+	if (HcuGetSysInfo(&(zHcuVmCtrTab.hwinv.sysInfo), FALSE) != SUCCESS){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		HcuErrorPrint("HWINV: Read system hardware info error!\n");
+	}
 }
 
 void func_hwinv_scan_flash(void)

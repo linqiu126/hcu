@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hwinv.sysInfo" key="selection"/>
+		<item value="func_syspm_get_memoccupy" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="hwinv.sysInfo"/>
-			<item value="cpu"/>
-			<item value="CPU"/>
-			<item value="CPUINFO"/>
-			<item value="hcu_canitfleo_usbcan_interface_init"/>
-			<item value="TIMER_ID_1S_BFSCUICOMM_PERIOD_READ"/>
-			<item value="start"/>
-			<item value="MSG_ID_UICOMM_L3BFSC_CFG_REQ"/>
+			<item value="func_syspm_get_memoccupy"/>
+			<item value="func_syspm_cal_cpu_mem_disk_occupy"/>
+			<item value="func_syspm_get_cpu_temp"/>
+			<item value="fsm_syspm_time_out"/>
+			<item value="HCU_SYSCFG_TASK_PNP_ON"/>
+			<item value="TASK_ID_L3BFSC"/>
+			<item value="BFSC"/>
+			<item value="func_l3bfsc_time_out_statistic_scan_process"/>
 		</list>
 		<list key="replacehistory">
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>
@@ -32,7 +32,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="886" key="DIALOG_X_ORIGIN"/>
-		<item value="207" key="DIALOG_Y_ORIGIN"/>
+		<item value="1092" key="DIALOG_X_ORIGIN"/>
+		<item value="368" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

@@ -420,7 +420,7 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 	}
-	else if (zHcuBfscuicommFlag < 10) {
+	else if ((zHcuBfscuicommFlag >= 5) && (zHcuBfscuicommFlag < 10)) {
 		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
 		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
 		snd_start_req.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
@@ -429,7 +429,8 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 	else{
-
+		//For test purpose!
+		//HCU_DEBUG_PRINT_FAT("BFSCUICOMM: Test1!\n");
 	}
 	return SUCCESS;
 }
