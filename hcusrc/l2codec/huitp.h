@@ -15,6 +15,7 @@
  *
  *  顺从并更新到技术规范《慧HUITP接口规范v2.5, LAST UPDATE@2007/5/27》
  *
+ * 2017/06/10, MA Yuchu, modify  for BFSC, Weight Sensor parameters, based on v2.5, LAST UPDATE@2007/5/27
  */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -5112,7 +5113,7 @@ typedef struct WeightSensorParamaters
 	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
 	UINT32	StardardReadyTimeMs;								//???
 	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
-	//UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
 
 	UINT32	WeightSensorInitOrNot;							// NOT for GUI
 	UINT32	WeightSensorAdcSampleFreq;
@@ -5126,8 +5127,8 @@ typedef struct WeightSensorParamaters
 	UINT32	WeightSensorTailorValue;
 	UINT32	WeightSensorDynamicZeroThreadValue;
 	UINT32	WeightSensorDynamicZeroHysteresisMs;
-	//UINT32  WeightSensorFilterCoeff[32];				// NOT for GUI
-	//UINT32  WeightSensorOutputValue[32];				// NOT for GUI
+	UINT32  WeightSensorFilterCoeff[4];				// NOT for GUI
+	UINT32  WeightSensorOutputValue[4];				// NOT for GUI
 }WeightSensorParamaters_t;
 
 typedef struct MotorControlParamaters
