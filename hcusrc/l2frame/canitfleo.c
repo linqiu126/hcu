@@ -870,29 +870,29 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 		}
 	}
 
-	//组合完成事件
-	else if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT) && (wsEvent == WEIGHT_EVENT_ID_EMPTY)){
-		msg_struct_can_l3bfsc_ws_comb_out_fb_t snd;
-		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t));
-		snd.sensorid = nodeId;
-		snd.length = sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t);
-		if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-	}
-
-	//抛弃完成事件
-	else if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_DROP)  && (wsEvent == WEIGHT_EVENT_ID_EMPTY)){
-		msg_struct_can_l3bfsc_ws_give_up_fb_t snd;
-		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t));
-		snd.sensorid = nodeId;
-		snd.length = sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t);
-		if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-	}
+//	//组合完成事件
+//	else if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT) && (wsEvent == WEIGHT_EVENT_ID_EMPTY)){
+//		msg_struct_can_l3bfsc_ws_comb_out_fb_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t));
+//		snd.sensorid = nodeId;
+//		snd.length = sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t);
+//		if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+//	}
+//
+//	//抛弃完成事件
+//	else if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_DROP)  && (wsEvent == WEIGHT_EVENT_ID_EMPTY)){
+//		msg_struct_can_l3bfsc_ws_give_up_fb_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t));
+//		snd.sensorid = nodeId;
+//		snd.length = sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t);
+//		if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+//	}
 
 	//差错：也不完全是差错，只是上层不关心
 	else{
-		//HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error!");
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error!");
 	}
 	//返回
 	return SUCCESS;
@@ -927,10 +927,22 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_ws_comb_out_received_handle(StrMsg_HUITP_
 	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
 
 	if (comType == HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT){
-		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START;
+		//gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START;
+		msg_struct_can_l3bfsc_ws_comb_out_fb_t snd;
+		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t));
+		snd.sensorid = nodeId;
+		snd.length = sizeof(msg_struct_can_l3bfsc_ws_comb_out_fb_t);
+		if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 	}
 	else if (comType == HUITP_IEID_SUI_BFSC_COMINETYPE_DROP){
-		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START;
+		//gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START;
+		msg_struct_can_l3bfsc_ws_give_up_fb_t snd;
+		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t));
+		snd.sensorid = nodeId;
+		snd.length = sizeof(msg_struct_can_l3bfsc_ws_give_up_fb_t);
+		if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 	}
 	else
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error!");

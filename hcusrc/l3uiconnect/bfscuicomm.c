@@ -312,9 +312,9 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	//测试数据
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 3;
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
-	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 8;
+	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
 	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 120000;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 2000;
+	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 10000;
 	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
 	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
 	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;

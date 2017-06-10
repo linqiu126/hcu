@@ -94,17 +94,17 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
   `StaType` char(20) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `wsIncMatCnt` int(4) NOT NULL,
-  `wsIncMatWgt` double(14,2) NOT NULL,
+  `wsIncMatWgt` double(18,2) NOT NULL,
   `wsCombTimes` int(4) NOT NULL,
   `wsTttTimes` int(4) NOT NULL,
   `wsTgvTimes` int(4) NOT NULL,
   `wsTttMatCnt` int(4) NOT NULL,
   `wsTgvMatCnt` int(4) NOT NULL,
-  `wsTttMatWgt` double(14,2) NOT NULL,
-  `wsTgvMatWgt` double(14,2) NOT NULL,
+  `wsTttMatWgt` double(18,2) NOT NULL,
+  `wsTgvMatWgt` double(18,2) NOT NULL,
   `wsAvgTttTimes` int(4) NOT NULL,
   `wsAvgTttMatCnt` int(4) NOT NULL,
-  `wsAvgTttMatWgt` double(14,2) NOT NULL,
+  `wsAvgTttMatWgt` double(18,2) NOT NULL,
   PRIMARY KEY (`StaType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -144,6 +144,64 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 (1, 1, 1, 'Configuration success'),
 (2, 2, 0, 'Start failure due to WS not reachable'),
 (3, 3, 0, 'Stop failure due to WS not reachable');
+
+
+
+--
+-- Database: `hcudb`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcubfsccurrentinfo`
+--
+
+CREATE TABLE `hcubfsccurrentinfo` (
+  `deviceid` varchar(20) NOT NULL,
+  `timestamp` int(4) NOT NULL,
+  `status_01` int(1) DEFAULT NULL,
+  `value_01` int(2) DEFAULT NULL,
+  `status_02` int(1) DEFAULT NULL,
+  `value_02` int(2) DEFAULT NULL,
+  `status_03` int(1) DEFAULT NULL,
+  `value_03` int(2) DEFAULT NULL,
+  `status_04` int(1) DEFAULT NULL,
+  `value_04` int(2) DEFAULT NULL,
+  `status_05` int(1) DEFAULT NULL,
+  `value_05` int(2) DEFAULT NULL,
+  `status_06` int(1) DEFAULT NULL,
+  `value_06` int(2) DEFAULT NULL,
+  `status_07` int(1) DEFAULT NULL,
+  `value_07` int(2) DEFAULT NULL,
+  `status_08` int(1) DEFAULT NULL,
+  `value_08` int(2) DEFAULT NULL,
+  `status_09` int(1) DEFAULT NULL,
+  `value_09` int(2) DEFAULT NULL,
+  `status_10` int(1) DEFAULT NULL,
+  `value_10` int(2) DEFAULT NULL,
+  `status_11` int(1) DEFAULT NULL,
+  `value_11` int(2) DEFAULT NULL,
+  `status_12` int(1) DEFAULT NULL,
+  `value_12` int(2) DEFAULT NULL,
+  `status_13` int(1) DEFAULT NULL,
+  `value_13` int(2) DEFAULT NULL,
+  `status_14` int(1) DEFAULT NULL,
+  `value_14` int(2) DEFAULT NULL,
+  `status_15` int(1) DEFAULT NULL,
+  `value_15` int(2) DEFAULT NULL,
+  `status_16` int(1) DEFAULT NULL,
+  `value_16` int(2) DEFAULT NULL,
+  `curcomwgt` int(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcubfsccurrentinfo`
+--
+
+INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
+('HCU_G301_BFSC_P0001', 20170518, 1, 27639, 1, 23373, 1, 37718, 1, 26290, 1, 17153, 1, 20731, 1, 30501, 1, 23568, 1, 39125, 1, 22317, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
+
 
 
 
@@ -439,7 +497,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
         return FAILURE;
     }
 
-	//REPLACE新的数据
+	//UPDATE新的数据
     if( (0xFFFFFFFF == wmc_id) && (0xFFFFFFFF == wmc_weight_value) )
     {
         mysql_close(sqlHandler);
@@ -473,6 +531,46 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     return SUCCESS;
 }
 
+
+OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    char s[20];
+    memset(s, 0, sizeof(s));
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+        return FAILURE;
+    }
+
+	//UPDATE新的数据
+    sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET curcomwgt = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
+		wgt);
+
+    result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
 
 //
 OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)

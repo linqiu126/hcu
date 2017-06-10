@@ -785,7 +785,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	memcpy(&rcv, param_ptr, param_len);
 
 	//// Test, save database ///
-	dbi_HcuBfsc_WmcStatusUpdate(0, rcv.sensorid, 1, rcv.sensorWsValue);
+	dbi_HcuBfsc_WmcStatusUpdate(0, rcv.sensorid+1, 1, rcv.sensorWsValue);
 
 	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight))){
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
@@ -950,6 +950,13 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			strcat(targetStr, "]\n");
 			HCU_DEBUG_PRINT_IPT(targetStr);
 
+			//GET comb total value and store into DB
+			int totalWgt = 0;
+			for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+				if (gTaskL3bfscContext.wsBitmap[i] == 1)
+				totalWgt+= gTaskL3bfscContext.sensorWs[i].sensorValue;
+			}
+			dbi_HcuBfsc_WmcCurComWgtUpdate(totalWgt);
 
 			//启动定时器
 			ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_TTT_WAIT_FB, \
