@@ -686,6 +686,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP;
+		HCU_DEBUG_PRINT_CRT("CANITFLEO: Sensor ID = %d is set to be startup!\n", nodeId);
 	}
 
 	//系统已经在工作状态：发送CFG给IHU
@@ -837,7 +838,18 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 
 	//真的新事件
 	if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_NULL) && (wsEvent == WEIGHT_EVENT_ID_LOAD)){
-		if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OOS_SCAN){
+		if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_ACTIVED){
+			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP;
+		}
+		else if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OPR_CFG){
+			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_CFG_CMPL;
+			gTaskL3bfscContext.sensorWs[nodeId].cfgRcvFlag = TRUE;
+		}
+		else if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OPR_GO){
+			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY;
+			gTaskL3bfscContext.sensorWs[nodeId].startRcvFlag = TRUE;
+		}
+		else if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OOS_SCAN){
 			msg_struct_can_l3bfsc_new_ready_event_t snd;
 			memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
 			snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
@@ -988,7 +1000,7 @@ OPSTAT hcu_canitfleo_usbcan_interface_init(void)
 	if (ret == FAILURE){
 		HcuErrorPrint("CANITFLEO: Init CAN interface CAN_DEVIDE_IDX_CARD0 failure!\n");
 		ret = hcu_bsp_usbcan_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
-							CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN0, \
+							CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN1, \
 							CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
 	}
 

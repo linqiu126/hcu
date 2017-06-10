@@ -188,6 +188,10 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		//HCU_DEBUG_PRINT_INF(targetStr);
 	}
 
+	//更新LocUI数据库，以便本地界面实时展示数据
+	if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
+
 	//初始化界面交互数据
 	dbi_HcuBfsc_WmcStatusForceInvalid(0);
 	HCU_DEBUG_PRINT_INF("L3BFSC: dbi_HcuBfsc_WmcStatusForceInvalid() set.\n");
@@ -462,7 +466,7 @@ OPSTAT fsm_l3bfsc_canitf_sys_start_resp(UINT32 dest_id, UINT32 src_id, void * pa
 	memcpy(&rcv, param_ptr, param_len);
 
 	//先改本传感器的状态
-	gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_START_CMPL;
+	gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY;
 	gTaskL3bfscContext.sensorWs[rcv.sensorid].startRcvFlag = TRUE;
 
 	//收到错误的反馈，就回复差错给界面
@@ -787,6 +791,18 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Receive message error!\n");
 	}
 
+	//Test Print
+	char s[200], tmp[20];
+	memset(s, 0, sizeof(s));
+	sprintf(s, "L3BFSC: All sensor state = [");
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%d/", gTaskL3bfscContext.sensorWs[i].sensorStatus);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+	}
+	strcat(s, "]\n");
+	HCU_DEBUG_PRINT_CRT(s);
+
 	//正常处理
 	gTaskL3bfscContext.cur.wsIncMatCnt++;
 	gTaskL3bfscContext.cur.wsIncMatWgt += rcv.sensorWsValue;
@@ -962,6 +978,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0, i=0;
+	int total=0;
 	msg_struct_uicomm_l3bfsc_cfg_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
 	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t))){
@@ -977,17 +994,31 @@ OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_
 	//设置完成后，发送初始化命令给各个传感器
 	msg_struct_l3bfsc_can_sys_cfg_req_t snd;
 	memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_sys_cfg_req_t));
+	total=0;
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		//将所有启动的传感器全部归化到配置状态
 		if (gTaskL3bfscContext.sensorWs[i].sensorStatus > HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MIN){
 			snd.wsBitmap[i] = TRUE;
 			gTaskL3bfscContext.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_CFG_REQ;
 			gTaskL3bfscContext.sensorWs[i].cfgRcvFlag = FALSE;
+			total++;
 		}
 		else{
 			snd.wsBitmap[i] = FALSE;
 		}
 	}
+
+	char s[200], tmp[20];
+	memset(s, 0, sizeof(s));
+	sprintf(s, "L3BFSC: Total config sensor number = %d, bitmap = ", total);
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "%d/", snd.wsBitmap[i]);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+
 	snd.length = sizeof(msg_struct_l3bfsc_can_sys_cfg_req_t);
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_SYS_CFG_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 	if (ret == FAILURE){
@@ -1014,6 +1045,8 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 {
 	int ret=0, i = 0;
 	UINT8 state = 0;
+	int total=0;
+	char s[200], tmp[20];
 
 	msg_struct_uicomm_l3bfsc_cmd_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
@@ -1030,15 +1063,29 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		msg_struct_l3bfsc_can_sys_start_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_sys_start_req_t));
 		snd.length = sizeof(msg_struct_l3bfsc_can_sys_start_req_t);
+		total=0;
 		for (i = 0; i< HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 			//所有的配置过后的传感器
 			if (gTaskL3bfscContext.sensorWs[i].sensorStatus >= HCU_L3BFSC_SENSOR_WS_STATUS_CFG_CMPL){
 				snd.wsBitmap[i] = TRUE;
 				gTaskL3bfscContext.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_START_REQ;
 				gTaskL3bfscContext.sensorWs[i].startRcvFlag = FALSE;
+				total++;
 			}
 			else snd.wsBitmap[i] = FALSE;
 		}
+
+		memset(s, 0, sizeof(s));
+		sprintf(s, "L3BFSC: Total start sensor number = %d, bitmap = ", total);
+		for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+			memset(tmp, 0, sizeof(tmp));
+			sprintf(tmp, "%d/", snd.wsBitmap[i]);
+			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		}
+		strcat(s, "\n");
+		HCU_DEBUG_PRINT_CRT(s);
+
+		HCU_DEBUG_PRINT_CRT("L3BFSC: Total sensor to be start = %d\n", total);
 		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_SYS_START_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 		if (ret == FAILURE) HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 
@@ -1061,15 +1108,28 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		msg_struct_l3bfsc_can_sys_stop_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_can_sys_stop_req_t));
 		snd.length = sizeof(msg_struct_l3bfsc_can_sys_stop_req_t);
+		total=0;
 		for (i = 0; i< HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 			//所有的非离线传感器
 			if (gTaskL3bfscContext.sensorWs[i].sensorStatus > HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE){
 				snd.wsBitmap[i] = TRUE;
 				gTaskL3bfscContext.sensorWs[i].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STOP_REQ;
 				gTaskL3bfscContext.sensorWs[i].stopRcvFlag = FALSE;
+				total++;
 			}
 			else snd.wsBitmap[i] = FALSE;
 		}
+
+		memset(s, 0, sizeof(s));
+		sprintf(s, "L3BFSC: Total stop sensor number = %d, bitmap = ", total);
+		for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+			memset(tmp, 0, sizeof(tmp));
+			sprintf(tmp, "%d/", snd.wsBitmap[i]);
+			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		}
+		strcat(s, "\n");
+		HCU_DEBUG_PRINT_CRT(s);
+
 		ret = hcu_message_send(MSG_ID_L3BFSC_CAN_SYS_STOP_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);
 		if (ret == FAILURE) HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 
@@ -1084,7 +1144,6 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
 		}
-
 	}
 
 	//差错
@@ -1349,7 +1408,7 @@ OPSTAT func_l3bfsc_time_out_sys_start_req_process(void)
 
 	//先判定成功的数量是否达到最小数，如果是，就认为是成功了
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
-		if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_START_CMPL) total++;
+		if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY) total++;
 	}
 	if (total < gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination){
 		//发送反馈给UICOMM

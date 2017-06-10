@@ -94,17 +94,17 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
   `StaType` char(20) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `wsIncMatCnt` int(4) NOT NULL,
-  `wsIncMatWgt` float(8,2) NOT NULL,
+  `wsIncMatWgt` double(14,2) NOT NULL,
   `wsCombTimes` int(4) NOT NULL,
   `wsTttTimes` int(4) NOT NULL,
   `wsTgvTimes` int(4) NOT NULL,
   `wsTttMatCnt` int(4) NOT NULL,
   `wsTgvMatCnt` int(4) NOT NULL,
-  `wsTttMatWgt` float(8,2) NOT NULL,
-  `wsTgvMatWgt` float(8,2) NOT NULL,
+  `wsTttMatWgt` double(14,2) NOT NULL,
+  `wsTgvMatWgt` double(14,2) NOT NULL,
   `wsAvgTttTimes` int(4) NOT NULL,
   `wsAvgTttMatCnt` int(4) NOT NULL,
-  `wsAvgTttMatWgt` float(8,2) NOT NULL,
+  `wsAvgTttMatWgt` double(14,2) NOT NULL,
   PRIMARY KEY (`StaType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -303,7 +303,7 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaEl
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBICOM: REPLACE data error, staType = %s, err cause = %s\n", StaType, mysql_error(sqlHandler));
         return FAILURE;
 	}
 

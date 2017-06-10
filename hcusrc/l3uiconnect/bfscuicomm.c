@@ -49,7 +49,7 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
 };
 
 //Local variables
-UINT32 zHcuBfscuicommFlag = 0;
+
 
 //Global variables
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -408,8 +408,9 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 
 OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 {
-	zHcuBfscuicommFlag++;
-	if (zHcuBfscuicommFlag < 5) {
+	UINT8 state = FsmGetState(TASK_ID_L3BFSC);
+
+	if ((state == FSM_STATE_L3BFSC_ACTIVED) || (state == FSM_STATE_L3BFSC_OPR_CFG)) {
 		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFSC
 		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFSC
 		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
@@ -420,7 +421,7 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 	}
-	else if ((zHcuBfscuicommFlag >= 5) && (zHcuBfscuicommFlag < 10)) {
+	else if (state == FSM_STATE_L3BFSC_OPR_GO) {
 		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
 		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
 		snd_start_req.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
@@ -429,8 +430,7 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 	else{
-		//For test purpose!
-		//HCU_DEBUG_PRINT_FAT("BFSCUICOMM: Test1!\n");
+
 	}
 	return SUCCESS;
 }

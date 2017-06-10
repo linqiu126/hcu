@@ -190,7 +190,10 @@ OPSTAT fsm_syspm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		func_syspm_get_cpu_temp();
 
 		//存储事件到数据库中，形成报告
-		if (dbi_HcuSyspmGlobalDataInfo_save() == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
+		if (dbi_HcuSyspmGlobalDataInfo_save() == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM]++;
+			HcuErrorPrint("SYSPM: Error save PM data into DB!\n");
+		}
 
 		//PM report to Cloud added by ZSC
 		if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE))
