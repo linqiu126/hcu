@@ -14,7 +14,7 @@
 // HcuSyspmGlobaldDatainfo
 /*
 CREATE TABLE `hcusyspmglobaldatainfo` (
-  `sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `taskhcuvmec` int(4) NOT NULL,
   `taskhwinvec` int(4) NOT NULL,
   `tasksyspmec` int(4) NOT NULL,
@@ -46,7 +46,8 @@ CREATE TABLE `hcusyspmglobaldatainfo` (
   `memoccupy` int(11) NOT NULL,
   `diskoccupy` int(11) NOT NULL,
   `cputemp` int(11) NOT NULL,
-  `timestamp` int(4) NOT NULL
+  `timestamp` int(4) NOT NULL,
+  PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -54,9 +55,9 @@ CREATE TABLE `hcusyspmglobaldatainfo` (
 --
 
 INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
-(1053, 0, 1395, 1, 2, 232, 0, 69, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1483552923),
-(1054, 0, 1407, 1, 4, 234, 0, 69, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1483552983),
-(1055, 0, 1419, 1, 4, 236, 0, 70, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1483553043);
+(1, 0, 1395, 1, 2, 232, 0, 69, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1483552923),
+(2, 0, 1407, 1, 4, 234, 0, 69, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1483552983),
+(3, 0, 1419, 1, 4, 236, 0, 70, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1483553043);
 
 
 */

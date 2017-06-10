@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 10, 2017 at 03:45 PM
+-- Generation Time: Jun 10, 2017 at 04:35 PM
 -- Server version: 5.7.17-0ubuntu0.16.04.2
 -- PHP Version: 7.0.15-0ubuntu0.16.04.4
 
@@ -228,7 +228,7 @@ CREATE TABLE `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`) VALUES
-('HCU_G301_BFSC_P0001', 20170518, 0, 11, 1, 17783, 0, 31, 0, 41, 0, 51, 0, 61, 0, 71, 0, 81, 0, 19407, 0, 101, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161);
+('HCU_G301_BFSC_P0001', 20170518, 0, 11, 0, 16425, 0, 31, 0, 41, 0, 51, 0, 61, 0, 71, 0, 81, 0, 18045, 0, 101, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161);
 
 -- --------------------------------------------------------
 
@@ -280,9 +280,9 @@ CREATE TABLE `hcubfscstadatainfo` (
 --
 
 INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
-('BFSC_STA_24_HOUR', 1497080675, 65, 970462.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-('BFSC_STA_LOCAL_UI', 1497080719, 7, 103594.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-('BFSC_STA_UP_2_NOW', 1497080715, 78, 1164165.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
+('BFSC_STA_24_HOUR', 1497083243, 250, 3698827.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+('BFSC_STA_LOCAL_UI', 1497083649, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+('BFSC_STA_UP_2_NOW', 1497083248, 258, 3815059.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -6383,9 +6383,10 @@ CREATE TABLE `hcusyspmglobaldatainfo` (
 --
 
 INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
-(1053, 0, 1395, 1, 2, 232, 0, 69, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1483552923),
-(1054, 0, 1407, 1, 4, 234, 0, 69, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1483552983),
-(1055, 0, 1419, 1, 4, 236, 0, 70, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1483553043);
+(1, 0, 1395, 1, 2, 232, 0, 69, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1483552923),
+(2, 0, 1407, 1, 4, 234, 0, 69, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1483552983),
+(3, 0, 1419, 1, 4, 236, 0, 70, 0, 1, 0, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1483553043),
+(4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1497083649);
 
 -- --------------------------------------------------------
 
@@ -7271,6 +7272,12 @@ ALTER TABLE `hcusysengtimer`
   ADD PRIMARY KEY (`timerid`);
 
 --
+-- Indexes for table `hcusyspmglobaldatainfo`
+--
+ALTER TABLE `hcusyspmglobaldatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
 -- Indexes for table `hcutempbmp180datainfo`
 --
 ALTER TABLE `hcutempbmp180datainfo`
@@ -7487,6 +7494,11 @@ ALTER TABLE `hcupm25sharpdatainfo`
 --
 ALTER TABLE `hcusysalarminfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `hcusyspmglobaldatainfo`
+--
+ALTER TABLE `hcusyspmglobaldatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `hcutempbmp180datainfo`
 --
