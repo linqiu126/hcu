@@ -94,7 +94,7 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void)
 			(int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_CLOUDVELA], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_AVORION], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_SPSVIRGO], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HSMMP],\
 			(int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_EMC], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_PM25], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_WINDDIR], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_WINDSPD]);
     memset(tmp, 0, sizeof(tmp));
-    sprintf(tmp, "'%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', )",\
+    sprintf(tmp, "'%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', ",\
     		(int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_TEMP], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HUMID], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_NOISE], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_AIRPRS],\
 			(int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_CO1], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_LIGHTSTR], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_ALCOHOL], (int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_HCHO],\
 			(int)zHcuSysStaPm.statisCnt.errCnt[TASK_ID_TOXICGAS], (int)zHcuSysStaPm.statisCnt.restartCnt, (int)zHcuSysStaPm.statisCnt.cloudVelaConnCnt, (int)zHcuSysStaPm.statisCnt.cloudVelaConnFailCnt);
@@ -102,9 +102,13 @@ OPSTAT dbi_HcuSyspmGlobalDataInfo_save(void)
     memset(tmp, 0, sizeof(tmp));
     sprintf(tmp, "'%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",\
     		(int)zHcuSysStaPm.statisCnt.cloudVelaDiscCnt, (int)zHcuSysStaPm.statisCnt.CloudDataTimeOutCnt, (int)zHcuSysStaPm.statisCnt.SocketDiscCnt, (int)zHcuSysStaPm.statisCnt.cpu_occupy,\
-			(int)zHcuSysStaPm.statisCnt.mem_occupy, (int)zHcuSysStaPm.statisCnt.disk_occupy, (int)zHcuSysStaPm.statisCnt.cpu_temp, (int)time(NULL));
+			(int)zHcuSysStaPm.statisCnt.mem_occupy, (int)zHcuSysStaPm.statisCnt.disk_occupy, (int)zHcuSysStaPm.statisCnt.cpu_temp, (int)time(0));
     strcat(strsql, tmp);
-	result = mysql_query(sqlHandler, strsql);
+
+    //TEST PURPOSE
+    HCU_DEBUG_PRINT_INF(strcat(strsql, "\n"));
+
+    result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBISP: INSERT data error: %s\n", mysql_error(sqlHandler));
