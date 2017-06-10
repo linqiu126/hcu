@@ -151,7 +151,6 @@ OPSTAT func_canitfleo_int_init(void)
 #ifdef TARGET_LINUX_X86_ADVANTECH //Added by MYC 2017/05/15
 	INT32 ret;
 	ret = hcu_canitfleo_usbcan_interface_init();
-	HCU_DEBUG_PRINT_INF("CANITFLEO: hcu_canitfleo_usbcan_interface_init() called, ret = %d\n", ret);
 
 	if(SUCCESS == ret)
 		return SUCCESS;
@@ -987,10 +986,13 @@ OPSTAT hcu_canitfleo_usbcan_interface_init(void)
 					CAN_DEVIDE_IDX_CARD0, CAN_DEVIDE_CHANNEL_CAN0, \
 					CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
 	if (ret == FAILURE){
+		HcuErrorPrint("CANITFLEO: Init CAN interface CAN_DEVIDE_IDX_CARD0 failure!\n");
 		ret = hcu_bsp_usbcan_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
 							CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN0, \
 							CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
 	}
+
+	if (ret == FAILURE) HcuErrorPrint("CANITFLEO: Init CAN interface CAN_DEVIDE_IDX_CARD1 failure!\n");
 
 	return ret;
 }
