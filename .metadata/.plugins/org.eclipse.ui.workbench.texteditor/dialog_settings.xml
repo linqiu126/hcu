@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="gTaskL3bfscContext.wsValueNbrActive" key="selection"/>
+		<item value="HCU_L3BFSC_SENSOR_WS_STATUS_ERROR_INQ" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HCU_L3BFSC_SENSOR_WS_STATUS_ERROR_INQ"/>
 			<item value="gTaskL3bfscContext.wsValueNbrActive"/>
 			<item value="func_l3bfsc_time_out_error_scan_process"/>
 			<item value="FSM_STATE_L3BFSC_ERROR_INQ"/>
@@ -15,7 +16,6 @@
 			<item value="func_l3bfsc_ws_sensor_search_give_up"/>
 			<item value="HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START"/>
 			<item value="gTask"/>
-			<item value="hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_ERROR_INQ"/>
 		</list>
 		<list key="replacehistory">
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>

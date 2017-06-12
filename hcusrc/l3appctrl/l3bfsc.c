@@ -48,6 +48,7 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 	{MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfsc_cloudvela_statistic_confirm},
 	//这个命令，有些命令可以在任何状态下执行：比如STOP，但有些命令必须在配置状态下，比如START
 	{MSG_ID_UICOMM_L3BFSC_CMD_REQ,       		FSM_STATE_COMMON,          			fsm_l3bfsc_uicomm_cmd_req},
+	//考虑到单个错误的查询不能影响大部队的组合，所以差错不采用独立的状态机控制，而做为公共事件进行处理
 	{MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,      FSM_STATE_COMMON,         			fsm_l3bfsc_canitf_error_inq_cmd_resp},  //只能触发数据存储，不进入组合算法的执行
 
 	//Normal working status：等待人工干预-登录触发
@@ -65,14 +66,11 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 	//进料组合态：等待正常的MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT，每一次进来均触发一次组合算法。结果无动作，或发送MSG_ID_L3BFSC_CAN_WS_COMB_OUT/MSG_ID_L3BFSC_CAN_WS_GIVE_UP
 	{MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,      FSM_STATE_L3BFSC_OOS_SCAN,          fsm_l3bfsc_canitf_ws_new_ready_event},  //只能触发数据存储，不进入组合算法的执行
 
-	//出料流程态：单纯等待MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
+	//出料流程态：单纯等待MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN
 	{MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,       	FSM_STATE_L3BFSC_OOS_TTT,          	fsm_l3bfsc_canitf_ws_comb_out_fb},
 
-	//放弃物料态：单纯等待MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN。差错进入FSM_STATE_L3BFSC_ERROR_INQ。
+	//放弃物料态：单纯等待MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB，一旦收到无误后进入FSM_STATE_L3BFSC_OOS_SCAN
 	{MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,       	FSM_STATE_L3BFSC_OOS_TGU,          	fsm_l3bfsc_canitf_ws_give_up_fb},
-
-	//数据差错，重新采样所有数据：收到MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT差错，发送MSG_ID_L3BFSC_CAN_CMD_REQ，等待传感器传回所有差错的重测值。结束以后进入FSM_STATE_L3BFSC_OOS_SCAN。
-	//{MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,      FSM_STATE_L3BFSC_ERROR_INQ,         fsm_l3bfsc_canitf_error_inq_cmd_resp},  //只能触发数据存储，不进入组合算法的执行
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
@@ -321,18 +319,31 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Receive message error!\n");
 	}
 
-	//停止定时器
-	cnt = 0;
-	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
-		if(gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_ERROR_INQ) cnt++;
-	}
-	if (cnt == 0){
-		hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_ERROR_INQ, TIMER_RESOLUTION_1S);
+	//先改本传感器的状态
+	if (rcv.validFlag == 1){
+		//正常处理，并回复到SCAN状态
+		if (rcv.sensorWsValue == 0) {
+			gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY;
+			gTaskL3bfscContext.wsValueNbrFree++;
+		}
+		else{
+			gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
+			gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
+			gTaskL3bfscContext.wsValueNbrWeight++;
+		}
+		//停止定时器
+		cnt = 0;
+		for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+			if(gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR) cnt++;
+		}
+		if (cnt == 0){
+			hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_ERROR_INQ, TIMER_RESOLUTION_1S);
+		}
 	}
 
 	//重发INQ_CMD_REQ
-	if (rcv.validFlag != 1){
-		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_ERROR_INQ;
+	else{
+		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR;
 
 		//重新启动定时器
 		ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_ERROR_INQ, \
@@ -355,31 +366,21 @@ OPSTAT fsm_l3bfsc_canitf_error_inq_cmd_resp(UINT32 dest_id, UINT32 src_id, void 
 		return SUCCESS;
 	}
 
-	//正常处理，并回复到SCAN状态
-	if (rcv.sensorWsValue == 0) {
-		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY;
-		gTaskL3bfscContext.wsValueNbrFree++;
-	}
-	else{
-		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
-		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
-		gTaskL3bfscContext.wsValueNbrWeight++;
-	}
-
 	//如果达到了条件，可以转移：这里的条件是TTT和TGU必须完成
-	func_l3bfsc_cacluate_sensor_ws_valid_value();
-	if ((gTaskL3bfscContext.wsValueNbrFree + gTaskL3bfscContext.wsValueNbrWeight) == gTaskL3bfscContext.wsValueNbrActive){
-		//停止周期定时器
-		ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_ERROR_INQ, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error start timer!\n");
-		}
-
-		//设置状态机到目标状态
-		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
-			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
-		}
-	}
+	//因为ERR_IND不再参与状态转移的任务，所以不需要再考虑这个问题
+//	func_l3bfsc_cacluate_sensor_ws_valid_value();
+//	if ((gTaskL3bfscContext.wsValueNbrFree + gTaskL3bfscContext.wsValueNbrWeight) == gTaskL3bfscContext.wsValueNbrActive){
+//		//停止定时器
+//		ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_ERROR_INQ, TIMER_RESOLUTION_1S);
+//		if (ret == FAILURE){
+//			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error start timer!\n");
+//		}
+//
+//		//设置状态机到目标状态
+//		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
+//			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
+//		}
+//	}
 
 	//返回
 	return SUCCESS;
@@ -610,6 +611,7 @@ OPSTAT fsm_l3bfsc_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * par
 	return SUCCESS;
 }
 
+//组合反馈
 OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
@@ -776,7 +778,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	//// Test, save database ///
+	//测试代码：暂时存入数据库表单，未来待完善
 	dbi_HcuBfsc_WmcStatusUpdate(0, rcv.sensorid+1, 1, rcv.sensorWsValue);
 
 	if ((rcv.sensorid > HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.sensorWsValue > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight))){
@@ -786,7 +788,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//Test Print
 	char s[200], tmp[20];
 	memset(s, 0, sizeof(s));
-	sprintf(s, "L3BFSC: All sensor state = [");
+	sprintf(s, "L3BFSC: All sensor running state = [");
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
 		memset(tmp, 0, sizeof(tmp));
 		sprintf(tmp, "%d/", gTaskL3bfscContext.sensorWs[i].sensorStatus);
@@ -799,8 +801,11 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	gTaskL3bfscContext.cur.wsIncMatCnt++;
 	gTaskL3bfscContext.cur.wsIncMatWgt += rcv.sensorWsValue;
 	HCU_DEBUG_PRINT_INF("L3BFSC: Sensor Input Id = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
+
 	//将重复次数清零：这个参数用于增加该传感器被算法命中的概率
 	gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorRepTimes = 0;
+
+	//根据不同情况进行处理：正常空闲态
 	if (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY){
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
@@ -809,11 +814,13 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfscContext.wsValueNbrWeight = gTaskL3bfscContext.wsValueNbrWeight % (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + 1);
 		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Normally status!\n");
 	}
+
 	//重复来临
 	else if (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
 		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Repeat status!\n");
 	}
+
 	//恢复错误
 	else if (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR){
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
@@ -822,6 +829,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfscContext.wsValueNbrWeight = gTaskL3bfscContext.wsValueNbrWeight % (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + 1);
 		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Error recover status!\n");
 	}
+
 	//错误来临：进入ERROR_INQ流程 (TTT/TGU或者其它状态）
 	else
 	{
@@ -852,13 +860,6 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 		}
 
-		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_ERROR_INQ;
-
-//		//设置新状态
-//		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ERROR_INQ) == FAILURE) {
-//			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
-//		}
-
 		return SUCCESS;
 	}
 
@@ -872,6 +873,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 	//是否要进入搜索
 	if (gTaskL3bfscContext.wsValueNbrWeight >= gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination){
+		//组合失败
 		if (func_l3bfsc_ws_sensor_search_combination() == -1){
 			if (gTaskL3bfscContext.wsValueNbrWeight == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 				//得到抛弃的传感器
@@ -905,7 +907,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 					strcat(targetStr, tStr);
 				}
 				strcat(targetStr, "]\n");
-				HCU_DEBUG_PRINT_IPT(targetStr);
+				HCU_DEBUG_PRINT_CRT(targetStr);
 
 				//启动定时器
 				ret = hcu_timer_start(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_TGU_WAIT_FB, \
@@ -918,7 +920,8 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_TGU) == FAILURE){
 					HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 				}
-			}
+			} //== HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
+			//对于未到最大物料压秤的情形，不予理睬
 		}//-1
 
 		//返回有意义的数值
@@ -952,7 +955,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				strcat(targetStr, tStr);
 			}
 			strcat(targetStr, "]\n");
-			HCU_DEBUG_PRINT_IPT(targetStr);
+			HCU_DEBUG_PRINT_CRT(targetStr);
 
 			//GET comb total value and store into DB
 			int totalWgt = 0;
@@ -973,8 +976,9 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_TTT) == FAILURE){
 				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 			}
-		}
-	}
+		}//返回有意义的数值
+	} //>= gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination
+	//对于不足以启动搜索的情形，不予理睬
 
 	//返回
 	return SUCCESS;
@@ -1585,7 +1589,8 @@ OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void)
 	return SUCCESS;
 }
 
-
+//差错情形下的处理过程：这个过程是永恒的，一直到系统重启
+//暂时不考虑Ｎ次以后放弃的情形：我们将它当做是系统启动的是否还正常，为啥工作到一半就不正常了呢
 OPSTAT func_l3bfsc_time_out_error_inq_process(void)
 {
 	int ret = 0, i=0;
@@ -1596,8 +1601,7 @@ OPSTAT func_l3bfsc_time_out_error_inq_process(void)
 	snd.length = sizeof(msg_struct_l3bfsc_can_error_inq_cmd_req_t);
 	snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
 	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
-		if ((gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR) ||\
-				(gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_ERROR_INQ)) snd.sensorBitmap[i] = 1;
+		if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR) snd.sensorBitmap[i] = 1;
 	}
 
 	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd, snd.length);

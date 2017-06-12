@@ -832,7 +832,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(StrMsg_HUITP_MS
 	return SUCCESS;
 }
 
-//本消息将发送给L3
+//本消息或者在本地消耗，或者将发送给L3
 OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t *rcv, UINT8 nodeId)
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
