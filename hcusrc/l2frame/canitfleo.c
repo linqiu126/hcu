@@ -855,6 +855,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 			gTaskL3bfscContext.sensorWs[nodeId].startRcvFlag = TRUE;
 		}
 		else if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OOS_SCAN){
+			gTaskL3bfscContext.cur.wsIncMatCnt++;
+			gTaskL3bfscContext.cur.wsIncMatWgt += rcv->weight_ind.average_weight;
 			msg_struct_can_l3bfsc_new_ready_event_t snd;
 			memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
 			snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
@@ -865,6 +867,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 		else{
+			gTaskL3bfscContext.cur.wsIncMatCnt++;
+			gTaskL3bfscContext.cur.wsIncMatWgt += rcv->weight_ind.average_weight;
 			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
 			gTaskL3bfscContext.sensorWs[nodeId].sensorValue = rcv->weight_ind.average_weight;
 		}

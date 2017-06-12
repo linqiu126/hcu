@@ -72,6 +72,7 @@ typedef struct L3BfscSensorWsInfo
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START 35		//秤盘有料开始出
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TGU 	36		//秤盘有料待抛弃
 #define HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TGU_START 37		//秤盘有料开始出抛
+#define HCU_L3BFSC_SENSOR_WS_STATUS_ERROR_INQ 		38		//错误查询
 #define HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MAX 		39
 
 #define HCU_L3BFSC_SENSOR_WS_STATUS_INVALID1  		255  	//秤盘无效
@@ -198,6 +199,7 @@ typedef struct gTaskL3bfscContext
 	UINT8   wsValueNbrWeight;			//空闲有值的秤盘数量
 	UINT8 	wsValueNbrTtt;  			//待出料有值秤盘数量
 	UINT8 	wsValueNbrTgu;  			//待出料有值秤盘数量
+	UINT8 	wsValueNbrActive;		    //激活的秤盘数量
 	UINT8 	wsBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];  //组合出的秤盘标示
 	//实时统计部分：均以一个统计周期为单位
 	HcuSysMsgIeL3bfscContextStaElement_t cur;  		//当前统计基础颗粒中的数值
@@ -259,7 +261,7 @@ OPSTAT func_l3bfsc_time_out_sys_start_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_stop_req_process(void);
 OPSTAT func_l3bfsc_time_out_ttt_wait_fb_process(void);
 OPSTAT func_l3bfsc_time_out_tgu_wait_fb_process(void);
-OPSTAT func_l3bfsc_time_out_error_scan_process(void);
+OPSTAT func_l3bfsc_time_out_error_inq_process(void);
 OPSTAT func_l3bfsc_time_out_statistic_scan_process(void);
 void func_l3bfsc_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
 bool func_l3bfsc_cacluate_sensor_cfg_rcv_complete(void);
