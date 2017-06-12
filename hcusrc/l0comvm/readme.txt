@@ -13,6 +13,10 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+//= ZJL, 2017 June.12 CURRENT_SW_DELIVERY 208=>BFSC项目
+= 改善ERROR_INQ的处理过程
+
+
 
 
 //= ZJL, 2017 June.10 CURRENT_SW_DELIVERY 207=>BFSC项目
@@ -22,8 +26,6 @@
 ＝简化CANID的选择性问题
 = func_syspm_get_memoccupy / func_syspm_get_cpu_temp中，文件的操作没有对失败做保护，导致段错误程序崩溃，修正过来了
 = syspm_globaldatasave process error, as database element not matched with real external db definition
-
-
 
 //= ZSC, 2017 June.4 CURRENT_SW_DELIVERY 206=>AQYC项目
 = PM增加汇报CPU温度
