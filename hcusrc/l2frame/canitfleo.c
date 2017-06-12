@@ -982,7 +982,10 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_fault_ind_received_handle(StrMsg_HUITP_MS
 	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus < HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MAX)
 		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INIT_ERR;
 	else
-		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR;
+		//隔离该传感器
+		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_HW_ERROR; //HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR;
+
+	//是否要根据ERR_CODE，赋予不同的差错情形，待定
 
 	//返回
 	return SUCCESS;
