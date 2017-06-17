@@ -11,6 +11,8 @@
 #include "../l0service/trace.h"
 #include "../l2frame/cloudvela.h"
 
+//#include <stdio.h>
+
 
 /*
 ** FSM of the SYSPM
@@ -346,6 +348,9 @@ void func_syspm_get_cpu_temp(void)
 	(void)fscanf(fp,"%u", &zHcuSysStaPm.statisCnt.cpu_temp);
 	zHcuSysStaPm.statisCnt.cpu_temp = (UINT32)(zHcuSysStaPm.statisCnt.cpu_temp)/1000;
 	//printf("CPU Temprature = %u \n",zHcuSysStaPm.statisCnt.cpu_temp);
+    fclose(fp);
+
+	//exit(1);
 
 }
 

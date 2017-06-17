@@ -8,6 +8,9 @@
 #include "vmlayer.h"
 #include "../l0service/trace.h"
 
+#include <unistd.h>
+#include <stdio.h>
+
 /*
  *
  *   全局变量，存储所有任务的状态信息，以便后面使用
@@ -1129,6 +1132,8 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	if ( ret < 0 ) {
 		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuVmCtrTab.task[dest_id].taskName);
 		zHcuVmCtrTab.task[dest_id].QueFullFlag = HCU_TASK_QUEUE_FULL_TRUE;
+		//_exit(0)//add by shanchun for thread killing
+		exit(1);
 		return FAILURE;
 	}
 
