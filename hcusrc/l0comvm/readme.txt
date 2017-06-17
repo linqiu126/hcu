@@ -13,10 +13,13 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+//= ZSC, 2017 June.17 CURRENT_SW_DELIVERY 209=>AQYC项目
+= 一旦Msg Queue满退出HCU，以便Daemon重启HCU，保证业务不中断
+= 修改几个潜在的段错误Bug
+
+
 //= ZJL, 2017 June.12 CURRENT_SW_DELIVERY 208=>BFSC项目
 = 改善ERROR_INQ的处理过程
-
-
 
 
 //= ZJL, 2017 June.10 CURRENT_SW_DELIVERY 207=>BFSC项目
