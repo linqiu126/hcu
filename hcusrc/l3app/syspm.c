@@ -281,6 +281,8 @@ void func_syspm_get_cpuoccupy (PmCpuOccupyInfo_t *cpust) //对无类型get函数
     cpu_occupy=cpust;
 
     fd = fopen ("/proc/stat", "r");
+    if (fd == NULL) return;
+
     fgets (buff, sizeof(buff), fd);
 
     sscanf (buff, "%s %d %d %d %d", cpu_occupy->name, &cpu_occupy->user, &cpu_occupy->nice,&cpu_occupy->system, &cpu_occupy->idle);
@@ -338,20 +340,6 @@ void func_syspm_cal_cpu_mem_disk_occupy(void)
 
 void func_syspm_get_cpu_temp(void)
 {
-	/*
-	PmCpuTempInfo_t r[N];
-	for (unsigned i = 0; i < N; ++i)
-	{
-		(void)clock_gettime(CLOCK_REALTIME, &r[i].t);
-		FILE *fp = fopen("/sys/devices/virtual/thermal/thermal_zone0/temp", "r");
-		//FILE *fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
-		(void)fscanf(fp,"%u", &r[i].temp);
-		(void)fclose(fp);
-	}
-
-	for (unsigned i = 0; i < N; ++i)
-		printf("%lu.%06llu %u\n", r[i].t.tv_sec, (r[i].t.tv_nsec + 500ull) / 1000ull, r[i].temp);
-	*/
 
 	FILE *fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
 	if (fp == NULL) return;
