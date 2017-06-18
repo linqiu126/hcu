@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle" key="selection"/>
+		<item value="rcv-&gt;" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="rcv-&gt;"/>
 			<item value="func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle"/>
 			<item value="func_l3bfsc_count_numbers_of_startup_ws_sensors"/>
 			<item value="func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number"/>
@@ -15,7 +16,6 @@
 			<item value="gTaskL3bfscContext.wsValueNbrActive"/>
 			<item value="func_l3bfsc_time_out_error_scan_process"/>
 			<item value="FSM_STATE_L3BFSC_ERROR_INQ"/>
-			<item value="HCU_L3BFSC_SENSOR_WS_STATUS_VALID_ERROR"/>
 		</list>
 		<list key="replacehistory">
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>
@@ -32,7 +32,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1092" key="DIALOG_X_ORIGIN"/>
-		<item value="368" key="DIALOG_Y_ORIGIN"/>
+		<item value="1183" key="DIALOG_X_ORIGIN"/>
+		<item value="344" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

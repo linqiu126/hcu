@@ -744,7 +744,6 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 		pMsgProc.weight_sensor_param.WeightSensorOutputValue[1] = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[1]);
 		pMsgProc.weight_sensor_param.WeightSensorOutputValue[2] = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[2]);
 		pMsgProc.weight_sensor_param.WeightSensorOutputValue[3] = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[3]);
-
 		pMsgProc.motor_control_param.MotorSpeed = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.motCtrPar.MotorSpeed);
 		pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.motCtrPar.MotorDirection);
 		pMsgProc.motor_control_param.MotorRollingStartMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.motCtrPar.MotorRollingStartMs);
@@ -774,7 +773,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(StrMsg_HU
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t));
-		snd.validFlag = rcv->validFlag;
+		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 		snd.sensorid = nodeId;
 		snd.length = sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t);
@@ -816,7 +815,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_start_resp_received_handle(StrMsg_HUITP_M
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_start_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_start_resp_t));
-		snd.validFlag = rcv->validFlag;
+		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 		snd.sensorid = nodeId;
 		snd.length = sizeof(msg_struct_can_l3bfsc_sys_start_resp_t);
@@ -840,7 +839,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(StrMsg_HUITP_MS
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 	msg_struct_can_l3bfsc_sys_stop_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t));
-	snd.validFlag = rcv->validFlag;
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 	snd.sensorid = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t);
@@ -875,7 +874,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 		}
 		else if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OOS_SCAN){
 			gTaskL3bfscContext.cur.wsIncMatCnt++;
-			gTaskL3bfscContext.cur.wsIncMatWgt += rcv->weight_ind.average_weight;
+			gTaskL3bfscContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
 			msg_struct_can_l3bfsc_new_ready_event_t snd;
 			memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
 			snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
@@ -1005,7 +1004,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(StrMsg_HUITP
 	//将内容发送给目的模块
 	msg_struct_can_uicomm_test_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_uicomm_test_cmd_resp_t));
-	snd.validFlag = rcv->validFlag;
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->result.error_code);
 	snd.sensorid = nodeId;
 	snd.motor_speed = HUITP_ENDIAN_EXG32(rcv->motor_speed);
@@ -1043,7 +1042,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(StrMsg_H
 	msg_struct_can_l3bfsc_error_inq_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t));
 	snd.sensorid = nodeId;
-	snd.validFlag = rcv->validFlag;
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->average_weight);
 	snd.length = sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)

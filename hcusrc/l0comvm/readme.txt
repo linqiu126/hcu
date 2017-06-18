@@ -16,7 +16,7 @@
 //= ZJL, 2017 June.18 CURRENT_SW_DELIVERY 210=>BFSC项目
 = 完善REPEAT WS的消息处理过程，防止HCU重启以后，陷入所有传感器只汇报REPEAT_WS状态，而无法进入组合状态
 = 修正统计报表爆表的问题
-
+= 修正RESET下位机重新配置参数不完整的问题
 
 
 //= ZSC, 2017 June.17 CURRENT_SW_DELIVERY 209=>AQYC项目

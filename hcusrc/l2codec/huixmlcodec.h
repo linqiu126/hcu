@@ -99,13 +99,15 @@ extern OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle
 #endif
 
 #if (HUITP_CURRENT_PROCESSOR_ENDIAN_SET == HUITP_CURRENT_PROCESSOR_ENDIAN_BIG)
+	#define HUITP_ENDIAN_EXG8(x) (x)
     #define HUITP_ENDIAN_EXG16(x) (x)
     #define HUITP_ENDIAN_EXG32(x) (x)
 #elif (HUITP_CURRENT_PROCESSOR_ENDIAN_SET == HUITP_CURRENT_PROCESSOR_ENDIAN_SMALL)
-   #define HUITP_ENDIAN_EXG16(x) ((((x)&0xFF00)>>8) | (((x)&0x00FF)<<8))
-   #define HUITP_ENDIAN_EXG32(x) ((((x)&0xFF000000)>>24) | (((x)&0x00FF0000)>>8) | (((x)&0x0000FF00)<<8) | (((x)&0x000000FF)<<24))
+	#define HUITP_ENDIAN_EXG8(x) (x)
+   	#define HUITP_ENDIAN_EXG16(x) ((((x)&0xFF00)>>8) | (((x)&0x00FF)<<8))
+    #define HUITP_ENDIAN_EXG32(x) ((((x)&0xFF000000)>>24) | (((x)&0x00FF0000)>>8) | (((x)&0x0000FF00)<<8) | (((x)&0x000000FF)<<24))
 #else
-   #error Either BIG_ENDIAN or LITTLE_ENDIAN must be #defined, but not both.
+    #error Either BIG_ENDIAN or LITTLE_ENDIAN must be #defined, but not both.
 #endif
 
 //高级定义，简化程序的可读性
