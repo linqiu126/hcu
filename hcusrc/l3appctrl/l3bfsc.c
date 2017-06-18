@@ -1324,7 +1324,22 @@ UINT8 func_l3bfsc_count_numbers_of_startup_ws_sensors(void)
 	return count;
 }
 
+//判定是否所有传感器都进入REPEAT状态
+//TRUE:　所有传感器都进入REPEAT状态
+BOOL func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void)
+{
+	int i=0;
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++)
+	{
+		if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY){
+			gTaskL3bfscContext.sensorWs[i].sensorRepTimes = 0;
+			return FAILURE;
+		}
+	}
 
+	//返回
+	return TRUE;
+}
 
 
 /***************************************************************************************************************************

@@ -13,14 +13,18 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+//= ZJL, 2017 June.18 CURRENT_SW_DELIVERY 210=>BFSC项目
+= 完善REPEAT WS的消息处理过程，防止HCU重启以后，陷入所有传感器只汇报REPEAT_WS状态，而无法进入组合状态
+= 修正统计报表爆表的问题
+
+
+
 //= ZSC, 2017 June.17 CURRENT_SW_DELIVERY 209=>AQYC项目
 = 一旦Msg Queue满退出HCU，以便Daemon重启HCU，保证业务不中断
 = 修改几个潜在的段错误Bug
 
-
 //= ZJL, 2017 June.12 CURRENT_SW_DELIVERY 208=>BFSC项目
 = 改善ERROR_INQ的处理过程
-
 
 //= ZJL, 2017 June.10 CURRENT_SW_DELIVERY 207=>BFSC项目
 = 修复git合并的一些问题

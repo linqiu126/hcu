@@ -257,6 +257,7 @@ void func_l3bfsc_ws_sensor_search_give_up(void);
 UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
 float func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
 UINT8 func_l3bfsc_count_numbers_of_startup_ws_sensors(void);
+BOOL func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void);
 
 OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_start_req_process(void);

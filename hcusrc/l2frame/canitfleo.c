@@ -887,9 +887,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 		}
 		else{
 			gTaskL3bfscContext.cur.wsIncMatCnt++;
-			gTaskL3bfscContext.cur.wsIncMatWgt += rcv->weight_ind.average_weight;
+			gTaskL3bfscContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
 			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
-			gTaskL3bfscContext.sensorWs[nodeId].sensorValue = rcv->weight_ind.average_weight;
+			gTaskL3bfscContext.sensorWs[nodeId].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
 		}
 	}
 
@@ -942,14 +942,25 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(StrMsg_HUITP_MS
 			gTaskL3bfscContext.sensorWs[nodeId].startRcvFlag = TRUE;
 		}
 		else if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OOS_SCAN){
-			//这个事件，只允许在空闲态下汇报的
-			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
-			gTaskL3bfscContext.sensorWs[nodeId].sensorValue = rcv->weight_ind.average_weight;
-			gTaskL3bfscContext.sensorWs[nodeId].sensorRepTimes++;
+			//如果是所有传感器全部进入REPEAT状态，则将其翻译为NEW_WS_EVENT发送L3，以解锁其工作逻辑
+			if (func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status() == TRUE){
+				msg_struct_can_l3bfsc_new_ready_event_t snd;
+				memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
+				snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+				//暂时不处理weight_event等不同类型事件
+				snd.sensorid = nodeId;
+				snd.length = sizeof(msg_struct_can_l3bfsc_new_ready_event_t);
+				if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+					HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+			}else{
+				gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
+				gTaskL3bfscContext.sensorWs[nodeId].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+				gTaskL3bfscContext.sensorWs[nodeId].sensorRepTimes++;
+			}
 		}
-		else HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error, ComType=%d, Event=%d!\n", comType, wsEvent);
+		else HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error under wrong state machine, ComType=%d, Event=%d!\n", comType, wsEvent);
 	}
-	else HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error, ComType=%d, Event=%d!\n", comType, wsEvent);
+	else HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error under wrong sensor status, ComType=%d, Event=%d!\n", comType, wsEvent);
 
 	//返回
 	return SUCCESS;
