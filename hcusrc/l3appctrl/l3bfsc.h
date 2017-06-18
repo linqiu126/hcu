@@ -153,6 +153,7 @@ typedef struct gTaskL3bfscContextWeightSensorParamaters
 	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
 	UINT32	StardardReadyTimeMs;								//???
 	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	UINT32  RemainDetectionTimeSec;
 	UINT32	WeightSensorInitOrNot;							// NOT for GUI
 	UINT32	WeightSensorAdcSampleFreq;
 	UINT32	WeightSensorAdcGain;
@@ -163,6 +164,8 @@ typedef struct gTaskL3bfscContextWeightSensorParamaters
 	UINT32	WeightSensorTailorValue;
 	UINT32	WeightSensorDynamicZeroThreadValue;
 	UINT32	WeightSensorDynamicZeroHysteresisMs;
+	UINT32  WeightSensorFilterCoeff[4];				// NOT for GUI
+	UINT32  WeightSensorOutputValue[4];
 }gTaskL3bfscContextWeightSensorParamaters_t;
 
 typedef struct gTaskL3bfscContextMotorControlParamaters
