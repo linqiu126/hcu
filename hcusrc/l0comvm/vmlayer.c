@@ -8,6 +8,9 @@
 #include "vmlayer.h"
 #include "../l0service/trace.h"
 
+#include <unistd.h>
+#include <stdio.h>
+
 /*
  *
  *   全局变量，存储所有任务的状态信息，以便后面使用
@@ -583,24 +586,24 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 60,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_EMC_MODBUS_FB,                      "TID_1S_EMC_MODBUS_FB",                   10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_PM25_PERIOD_READ,                   "TID_1S_PM25_PERIOD_READ",                31,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_PM25_PERIOD_READ,                   "TID_1S_PM25_PERIOD_READ",                35,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_PM25_MODBUS_FB,                     "TID_1S_PM25_MODBUS_FB",                  10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDDIR_PERIOD_READ,                "TID_1S_WINDDIR_PERIOD_READ",             13,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDDIR_PERIOD_READ,                "TID_1S_WINDDIR_PERIOD_READ",             23,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_WINDDIR_MODBUS_FB,                  "TID_1S_WINDDIR_MODBUS_FB",               10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_WINDSPD_PERIOD_READ,                "TID_1S_WINDSPD_PERIOD_READ",             15,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_WINDSPD_PERIOD_READ,                "TID_1S_WINDSPD_PERIOD_READ",             25,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_WINDSPD_MODBUS_FB,                  "TID_1S_WINDSPD_MODBUS_FB",               10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_TEMP_PERIOD_READ,                   "TID_1S_TEMP_PERIOD_READ",                17,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_TEMP_PERIOD_READ,                   "TID_1S_TEMP_PERIOD_READ",                27,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_TEMP_FB,                            "TID_1S_TEMP_FB",                         10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HUMID_PERIOD_READ,                  "TID_1S_HUMID_PERIOD_READ",               19,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HUMID_PERIOD_READ,                  "TID_1S_HUMID_PERIOD_READ",               29,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_HUMID_MODBUS_FB,                    "TID_1S_HUMID_MODBUS_FB",                 10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_NOISE_PERIOD_READ,                  "TID_1S_NOISE_PERIOD_READ",               7,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_NOISE_MODBUS_FB,                    "TID_1S_NOISE_MODBUS_FB",                 5,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_NOISE_SPSVIRGO_FB,                  "TID_1S_NOISE_SPSVIRGO_FB",               10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ,          "TID_1S_HSMMP_PERIOD_AVORION_READ",       120,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ,          "TID_1S_HSMMP_PERIOD_AVORION_READ",       1120,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_HSMMP_AVORION_FB,                   "TID_1S_HSMMP_AVORION_FB",                10,      TIMER_RESOLUTION_1S},
-	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            60,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            300,     TIMER_RESOLUTION_1S},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_CXILC_ID)
@@ -1129,6 +1132,8 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	if ( ret < 0 ) {
 		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuVmCtrTab.task[dest_id].taskName);
 		zHcuVmCtrTab.task[dest_id].QueFullFlag = HCU_TASK_QUEUE_FULL_TRUE;
+		//_exit(0)//add by shanchun for thread killing
+		exit(1);
 		return FAILURE;
 	}
 
