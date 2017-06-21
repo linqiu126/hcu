@@ -859,6 +859,21 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
 	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
 
+	//先更新本地数据库表单
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId+1, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+
+	//先检查汇报事件/EMPTY_LOAD事件
+	if (HUITP_ENDIAN_EXG8(rcv->weight_ind.weight_event) == WEIGHT_EVENT_ID_EMPTY){
+		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY;
+		gTaskL3bfscContext.sensorWs[nodeId].sensorRepTimes = 0;
+		return SUCCESS;
+	}
+
+	else if (HUITP_ENDIAN_EXG8(rcv->weight_ind.weight_event) != WEIGHT_EVENT_ID_LOAD){
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error!\n");
+		return FAILURE;
+	}
+
 	//真的新事件
 	if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_NULL) && (wsEvent == WEIGHT_EVENT_ID_LOAD)){
 		if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_ACTIVED){
@@ -875,6 +890,10 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 		else if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OOS_SCAN){
 			gTaskL3bfscContext.cur.wsIncMatCnt++;
 			gTaskL3bfscContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+			//先存再发，是为了防止上层NEW_WS_EVENT重入被拒接，导致数据丢失
+			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
+			gTaskL3bfscContext.sensorWs[nodeId].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+			gTaskL3bfscContext.sensorWs[nodeId].sensorRepTimes = 0;
 			msg_struct_can_l3bfsc_new_ready_event_t snd;
 			memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
 			snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
@@ -889,6 +908,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 			gTaskL3bfscContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
 			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
 			gTaskL3bfscContext.sensorWs[nodeId].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+			gTaskL3bfscContext.sensorWs[nodeId].sensorRepTimes = 0;
 		}
 	}
 
@@ -927,6 +947,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(StrMsg_HUITP_MS
 	UINT32 comType = 0, wsEvent = 0;
 	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
 	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
+
+	//先更新本地数据库表单
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId+1, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
 
 	if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_NULL) && (wsEvent == WEIGHT_EVENT_ID_LOAD)){
 		if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_ACTIVED){
@@ -972,6 +995,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_ws_comb_out_received_handle(StrMsg_HUITP_
 	//更新状态
 	UINT32 comType = 0;
 	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
+
+	//先更新本地数据库表单
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId+1, 1, 0);	//数据清零
 
 	if (comType == HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT){
 		//gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START;

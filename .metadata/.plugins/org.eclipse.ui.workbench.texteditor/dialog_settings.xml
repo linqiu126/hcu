@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="rcv-&gt;" key="selection"/>
+		<item value="EMPTY" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="EMPTY"/>
+			<item value="EMPTY_LOAD"/>
 			<item value="rcv-&gt;"/>
 			<item value="func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle"/>
 			<item value="func_l3bfsc_count_numbers_of_startup_ws_sensors"/>
 			<item value="func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number"/>
 			<item value="HCU_L3BFSC_SENSOR_WS_STATUS_ERROR_INQ"/>
 			<item value="gTaskL3bfscContext.wsValueNbrActive"/>
-			<item value="func_l3bfsc_time_out_error_scan_process"/>
-			<item value="FSM_STATE_L3BFSC_ERROR_INQ"/>
 		</list>
 		<list key="replacehistory">
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>
