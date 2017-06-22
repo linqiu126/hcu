@@ -878,7 +878,9 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 				gTaskL3bfscContext.cur.wsTgvTimes++;
 				gTaskL3bfscContext.cur.wsTgvMatCnt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number();
+				HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 5 START!\n");
 				gTaskL3bfscContext.cur.wsTgvMatWgt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight();
+				HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 5 END!\n");
 
 				//发送抛弃命令
 				msg_struct_l3bfsc_can_ws_give_up_t snd1;
@@ -926,7 +928,9 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			//发送出料命令
 			gTaskL3bfscContext.cur.wsTttTimes++;
 			gTaskL3bfscContext.cur.wsTttMatCnt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number();
+			HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 6 START!\n");
 			gTaskL3bfscContext.cur.wsTttMatWgt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight();
+			HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 6 END!\n");
 
 			msg_struct_l3bfsc_can_ws_comb_out_t snd2;
 			memset(&snd2, 0, sizeof(msg_struct_l3bfsc_can_ws_comb_out_t));
@@ -1643,6 +1647,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	//采取老化算法 x(n+1) = x(n) * (1-1/120) + latest，从而得到最新的数据，但该数据最好使用float，然后再转换为UINT32存入到数据库表单中
 	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 	//先存储临时数据
+	HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 1 START!\n");
 	gTaskL3bfscContext.curAge.wsIncMatCntMid = gTaskL3bfscContext.curAge.wsIncMatCntMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsIncMatCnt;
 	gTaskL3bfscContext.curAge.wsIncMatWgtMid = gTaskL3bfscContext.curAge.wsIncMatWgtMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsIncMatWgt;
 	gTaskL3bfscContext.curAge.wsCombTimesMid = gTaskL3bfscContext.curAge.wsCombTimesMid*(float)HCU_L3BFSC_STA_AGEING_COEF + (float)HCU_L3BFSC_STA_AGEING_COEF_ALPHA*gTaskL3bfscContext.cur.wsCombTimes;
@@ -1665,12 +1670,14 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.staLocalUi.wsAvgTttTimes = gTaskL3bfscContext.staLocalUi.wsTttTimes;
 	gTaskL3bfscContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfscContext.staLocalUi.wsTttMatCnt;
 	gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfscContext.staLocalUi.wsTttMatWgt;
+	HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 1 END!\n");
 
 	//更新LocUI数据库，以便本地界面实时展示数据
 	if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 
 	//更新60Min各个统计表单
+	HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 2 START!\n");
 	gTaskL3bfscContext.sta60Min.wsIncMatCnt += gTaskL3bfscContext.cur.wsIncMatCnt;
 	gTaskL3bfscContext.sta60Min.wsIncMatWgt += gTaskL3bfscContext.cur.wsIncMatWgt;
 	gTaskL3bfscContext.sta60Min.wsCombTimes += gTaskL3bfscContext.cur.wsCombTimes;
@@ -1684,6 +1691,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.sta60Min.wsAvgTttTimes = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttTimes*timeRun60MinRatio);
 	gTaskL3bfscContext.sta60Min.wsAvgTttMatCnt = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttMatCnt*timeRun60MinRatio);
 	gTaskL3bfscContext.sta60Min.wsAvgTttMatWgt = (UINT32)(gTaskL3bfscContext.sta60Min.wsTttMatWgt*timeRun60MinRatio);
+	HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 2 END!\n");
 
 	//60分钟到了，发送统计报告到后台：发送后台只需要一种统计报告即可，重复发送意义不大
 	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_60M_CYCLE) == 0){
@@ -1732,6 +1740,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	}
 
 	//更新24小时统计表单
+	HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 3 START!\n");
 	gTaskL3bfscContext.sta24H.wsIncMatCnt += gTaskL3bfscContext.cur.wsIncMatCnt;
 	gTaskL3bfscContext.sta24H.wsIncMatWgt += gTaskL3bfscContext.cur.wsIncMatWgt;
 	gTaskL3bfscContext.sta24H.wsCombTimes += gTaskL3bfscContext.cur.wsCombTimes;
@@ -1745,6 +1754,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.sta24H.wsAvgTttTimes = (UINT32)(gTaskL3bfscContext.sta24H.wsTttTimes*timeRun24HourRatio);
 	gTaskL3bfscContext.sta24H.wsAvgTttMatCnt = (UINT32)(gTaskL3bfscContext.sta24H.wsTttMatCnt*timeRun24HourRatio);
 	gTaskL3bfscContext.sta24H.wsAvgTttMatWgt = (UINT32)(gTaskL3bfscContext.sta24H.wsTttMatWgt*timeRun24HourRatio);
+	HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 3 END!\n");
 
 	//24小时统计表更新数据库
 	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_1M_CYCLE) == 0){
@@ -1782,6 +1792,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	}
 
 	//重要的统计功能挂载
+	HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 4 START!\n");
 	if ((gTaskL3bfscContext.elipseCnt%HCU_L3BFSC_STATISTIC_PRINT_FREQUENCY) == 0)
 	HCU_DEBUG_PRINT_CRT("L3BFSC: Control statistics, Running Free/Weight/Ttt/Tgu = [%d, %d, %d, %d], Total Up2Now Inc Cnt = [%d], Combination Rate = [%5.2f\%], Give-up Rate = [%5.2f\%], Local UI Shows AvgSpeed of [TTT Times/MatCnt/MatWgt] = %d/%d/%5.2f.\n",\
 			gTaskL3bfscContext.wsValueNbrFree, gTaskL3bfscContext.wsValueNbrWeight,\
@@ -1789,7 +1800,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 			(float)(gTaskL3bfscContext.staUp2Now.wsTttMatCnt)/(float)(gTaskL3bfscContext.staUp2Now.wsIncMatCnt+0.01) * 100, \
 			(float)(gTaskL3bfscContext.staUp2Now.wsTgvMatCnt)/(float)(gTaskL3bfscContext.staUp2Now.wsIncMatCnt+0.01) * 100, \
 			gTaskL3bfscContext.staLocalUi.wsAvgTttTimes, gTaskL3bfscContext.staLocalUi.wsAvgTttMatCnt, gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt);
-
+	HCU_DEBUG_PRINT_CRT("L3BFSC: CRASH Potential point 4 END!\n");
 	//将当前基础统计周期的数据清零
 	memset(&(gTaskL3bfscContext.cur), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 

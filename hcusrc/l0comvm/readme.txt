@@ -16,7 +16,7 @@
 //= ZJL, 2017 June.21 CURRENT_SW_DELIVERY 211=>BFSC项目
 = 完善NEW_WS_EVENT中对于WS_EVENT的处理
 = 完善本地数据库界面的显示工作
-
+= 增加L3BFSC测试代码，查询崩溃的可能原因
 
 
 //= ZJL, 2017 June.18 CURRENT_SW_DELIVERY 210=>BFSC项目
