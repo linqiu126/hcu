@@ -40,6 +40,7 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
 
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_com_do_nothing},
+    {MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,				FSM_STATE_BFSCUICOMM_ACTIVED,            	func_bfscuicomm_scan_jason_callback},
 	{MSG_ID_L3BFSC_UICOMM_CFG_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cfg_resp},	//配置反馈
 	{MSG_ID_L3BFSC_UICOMM_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cmd_resp},	//人工控制反馈
 	{MSG_ID_CAN_UICOMM_TEST_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_can_test_cmd_resp},  //测试命令反馈
@@ -94,12 +95,6 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		return FAILURE;
 	}
 
-	//初始化硬件接口
-	if (func_bfscuicomm_int_init() == FAILURE){
-		HcuErrorPrint("BFSCUICOMM: Error initialize interface!\n");
-		return FAILURE;
-	}
-
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM] = 0;
 
@@ -128,16 +123,6 @@ OPSTAT fsm_bfscuicomm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	fsm_bfscuicomm_init(0, 0, NULL, 0);
 	return SUCCESS;
 }
-
-OPSTAT func_bfscuicomm_int_init(void)
-{
-	//安装扫描JASON文件的回调函数
-	func_bfscuicomm_install_file_scan();
-
-
-	return SUCCESS;
-}
-
 
 //暂时啥都不干，定时到达后，还不明确是否需要支持定时工作
 OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -239,15 +224,8 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 	return SUCCESS;
 }
 
-
-//安装扫描JASON文件的回调函数
-void func_bfscuicomm_install_file_scan(void)
-{
-	return;
-}
-
 //具体扫描文件改变的回调函数
-void func_bfscuicomm_scan_jason_callback(void)
+OPSTAT  func_bfscuicomm_scan_jason_callback(void)
 {
 	int ret = 0;
 	int fileChangeContent = 0;
@@ -267,7 +245,7 @@ void func_bfscuicomm_scan_jason_callback(void)
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
 			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-			return;
+			return FAILURE;
 		}
 	}
 
@@ -281,7 +259,7 @@ void func_bfscuicomm_scan_jason_callback(void)
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
 				HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-				return;
+				return FAILURE;
 			}
 		}
 	}
@@ -295,14 +273,14 @@ void func_bfscuicomm_scan_jason_callback(void)
 		if (ret == FAILURE){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
 			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-			return;
+			return FAILURE;
 		}
 	}
 
 	//不符合预期的命令，忽略
-	else return;
+	else return FAILURE;
 
-	return;
+	return SUCCESS;
 }
 
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
