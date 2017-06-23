@@ -963,7 +963,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(StrMsg_HUITP_MS
 			gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY;
 			gTaskL3bfscContext.sensorWs[nodeId].startRcvFlag = TRUE;
 		}
-		else if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_OOS_SCAN){
+		else if (FsmGetState(TASK_ID_L3BFSC) >= FSM_STATE_L3BFSC_OOS_SCAN){
 			//如果是所有传感器全部进入REPEAT状态，则将其翻译为NEW_WS_EVENT发送L3，以解锁其工作逻辑
 			if (func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status() == TRUE){
 				msg_struct_can_l3bfsc_new_ready_event_t snd;
@@ -980,9 +980,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(StrMsg_HUITP_MS
 				gTaskL3bfscContext.sensorWs[nodeId].sensorRepTimes++;
 			}
 		}
-		else HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error under wrong state machine, ComType=%d, Event=%d!\n", comType, wsEvent);
+		else HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error under wrong state machine, Nodeid=%d, ComType=%d, Event=%d!\n", nodeId, comType, wsEvent);
 	}
-	else HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error under wrong sensor status, ComType=%d, Event=%d!\n", comType, wsEvent);
+	else HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error under wrong sensor status, Nodeid=%d, ComType=%d, Event=%d!\n", nodeId, comType, wsEvent);
 
 	//返回
 	return SUCCESS;

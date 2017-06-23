@@ -314,7 +314,7 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
 	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
 	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 120000;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 100000;
+	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 10000;
 	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
 	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
 	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;
@@ -400,7 +400,7 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorFilterCoeff[2] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorFilterCoeff[3] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[0] = 1;				// NOT for GUI
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[1] = 1;				// NOT for GUI
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[1] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[2] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[3] = 0;				// NOT for GUI
 
