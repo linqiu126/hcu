@@ -61,71 +61,75 @@ void picture_pre_distribution_process(unsigned int width, unsigned int height);
 
 int main(int argc, char **argv)
 {
-	unsigned int i=0, j=0;
-	char strTemp[10];
-	FILE *fp;
+	int i =0;
+	int j = 10;
+	int t = 0;
+	t = j/i;
+	printf("Test result = %d\r\n");
 
-	//初始化
-	memset(zStg1PicSource, 0, sizeof(zStg1PicSource));
-	memset(zStg2GrayPic, 0, sizeof(zStg2GrayPic));
-	memset(zStg3BinPicture, 0, sizeof(zStg3BinPicture));
-	memset(zInputFile, 0, sizeof(zInputFile));
-
-	//输出测试开始
-	puts("Test starting...");
-
-	//扫描得到输入的字符串
-	//scanf("%s%s", &s1, &s2);
-
-	//得到输入文件，否则退出
-	if (argc <2) {printf("No input file, exit!\n"); exit(1); }
-	else {printf("Your input parameter = [%s]\n", argv[1]); }
-
-	//分析文件名，如果不是BMP文件，则退出
-	strncpy(zInputFile,  argv[1], sizeof(zInputFile)-1);
-	memset(strTemp, 0, sizeof(strTemp));
-	strncpy(strTemp, zInputFile + strlen(zInputFile)-4, 4);
-	printf("Your input file extension = [%s]\n",strTemp);
-
-	int res1=0, res2=0;
-	res1 = strcmp(strTemp, PDR_FILE_EXTENTION_1);
-	res2 = strcmp(strTemp, PDR_FILE_EXTENTION_2);
-	if ((res1 !=0) && (res2 !=0 ))
-	{printf("Not %s or %s files, exit!\n", PDR_FILE_EXTENTION_1, PDR_FILE_EXTENTION_2); exit(1); }
-	if ((fp = fopen(zInputFile, "rb")) == NULL){ printf("Open file error, exit!\n"); exit(1); }
-
-	//拷贝到目标字符串上来
-	printf("Your input file handler = [%d]\n", (int)fp);
-
-	//获取文件的格式：假设文件的宽高各为多少
-	unsigned int IncomingWidth = PDR_PIC_X_WIDTH;
-	unsigned int IncomingHeight = PDR_PIC_Y_HEIGHT;
-	//feof(fp)
-	for(i=0; i<IncomingHeight; i++)
-	 {
-		for (j=0; j<IncomingWidth; j++){
-			if(fread(&zStg1PicSource[i][j], sizeof(strPdrPIxel_t), 1, fp) != 1){
-				printf("File read error\n");
-				fclose(fp);
-				exit(1);
-			}
-		}
-	 }
-	fclose(fp);
-	printf("Original Pic Data => \n");
-	//检查并打印
-/*    for(j = 0; j < IncomingHeight; j++){
-    	printf("Picture read column [%d],", j);
-    	for (i=0; i<IncomingWidth; i++) {printf(" %02x %02x %02x", zStg1PicSource[j][i].R, zStg1PicSource[j][i].G, zStg1PicSource[j][i].B);}
-    	printf(", Size = %d\n", sizeof(zStg1PicSource[j]));
- 	 }*/
-
-    //图像预处理
-    picture_pre_distribution_process(IncomingWidth, IncomingHeight);
-
-    //算法处理
-
-
+//	unsigned int i=0, j=0;
+//	char strTemp[10];
+//	FILE *fp;
+//
+//	//初始化
+//	memset(zStg1PicSource, 0, sizeof(zStg1PicSource));
+//	memset(zStg2GrayPic, 0, sizeof(zStg2GrayPic));
+//	memset(zStg3BinPicture, 0, sizeof(zStg3BinPicture));
+//	memset(zInputFile, 0, sizeof(zInputFile));
+//
+//	//输出测试开始
+//	puts("Test starting...");
+//
+//	//扫描得到输入的字符串
+//	//scanf("%s%s", &s1, &s2);
+//
+//	//得到输入文件，否则退出
+//	if (argc <2) {printf("No input file, exit!\n"); exit(1); }
+//	else {printf("Your input parameter = [%s]\n", argv[1]); }
+//
+//	//分析文件名，如果不是BMP文件，则退出
+//	strncpy(zInputFile,  argv[1], sizeof(zInputFile)-1);
+//	memset(strTemp, 0, sizeof(strTemp));
+//	strncpy(strTemp, zInputFile + strlen(zInputFile)-4, 4);
+//	printf("Your input file extension = [%s]\n",strTemp);
+//
+//	int res1=0, res2=0;
+//	res1 = strcmp(strTemp, PDR_FILE_EXTENTION_1);
+//	res2 = strcmp(strTemp, PDR_FILE_EXTENTION_2);
+//	if ((res1 !=0) && (res2 !=0 ))
+//	{printf("Not %s or %s files, exit!\n", PDR_FILE_EXTENTION_1, PDR_FILE_EXTENTION_2); exit(1); }
+//	if ((fp = fopen(zInputFile, "rb")) == NULL){ printf("Open file error, exit!\n"); exit(1); }
+//
+//	//拷贝到目标字符串上来
+//	printf("Your input file handler = [%d]\n", (int)fp);
+//
+//	//获取文件的格式：假设文件的宽高各为多少
+//	unsigned int IncomingWidth = PDR_PIC_X_WIDTH;
+//	unsigned int IncomingHeight = PDR_PIC_Y_HEIGHT;
+//	//feof(fp)
+//	for(i=0; i<IncomingHeight; i++)
+//	 {
+//		for (j=0; j<IncomingWidth; j++){
+//			if(fread(&zStg1PicSource[i][j], sizeof(strPdrPIxel_t), 1, fp) != 1){
+//				printf("File read error\n");
+//				fclose(fp);
+//				exit(1);
+//			}
+//		}
+//	 }
+//	fclose(fp);
+//	printf("Original Pic Data => \n");
+//	//检查并打印
+///*    for(j = 0; j < IncomingHeight; j++){
+//    	printf("Picture read column [%d],", j);
+//    	for (i=0; i<IncomingWidth; i++) {printf(" %02x %02x %02x", zStg1PicSource[j][i].R, zStg1PicSource[j][i].G, zStg1PicSource[j][i].B);}
+//    	printf(", Size = %d\n", sizeof(zStg1PicSource[j]));
+// 	 }*/
+//
+//    //图像预处理
+//    picture_pre_distribution_process(IncomingWidth, IncomingHeight);
+//
+//    //算法处理
 
 	return 1;
 }
