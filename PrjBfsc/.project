@@ -1191,6 +1191,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3uiconnect/bfscuicomm.h</locationURI>
 		</link>
 		<link>
+			<name>src/l3uiconnect/jsoninotify.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3uiconnect/jsoninotify.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3uiconnect/jsoninotify.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3uiconnect/jsoninotify.h</locationURI>
+		</link>
+		<link>
 			<name>src/l4bi/aiqiyc.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l4bi/aiqiyc.c</locationURI>

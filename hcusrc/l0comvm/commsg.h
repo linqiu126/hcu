@@ -510,6 +510,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_USBCAN_L2FRAME_RCV,  			//MYC 2017/05/15
 
 	//BFSC项目：BFSCUICOMM
+	MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,    //JSON文件变更通知
 	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//命令请求
 	MSG_ID_L3BFSC_UICOMM_CMD_RESP,  		//命令反馈
 	MSG_ID_UICOMM_L3BFSC_CFG_REQ,  			//配置信息
@@ -2369,6 +2370,14 @@ typedef struct msg_struct_can_l3bfsc_sys_stop_resp
 
 
 //BFSCUICOMM
+
+//BFSCUI Json文件修改通知
+//MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND
+typedef struct msg_struct_inotify_uicomm_file_change_ind
+{
+	UINT32 	length;
+}msg_struct_inotify_uicomm_file_change_ind_t;
+
 //MSG_ID_UICOMM_L3BFSC_CMD_REQ,
 #define HCU_SYSMSG_BFSC_UICOMM_CMDID_INVALL  	0
 #define HCU_SYSMSG_BFSC_UICOMM_CMDID_START  	1
