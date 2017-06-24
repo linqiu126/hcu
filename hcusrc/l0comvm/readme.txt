@@ -17,7 +17,7 @@
 = 完善NEW_WS_EVENT中对于WS_EVENT的处理
 = 完善本地数据库界面的显示工作
 = 增加L3BFSC测试代码，查询崩溃的可能原因
-
+= Continue to dig the issues of HCU crash, to add gcc link option: -Wl,--hash-style=sysv
 
 //= ZJL, 2017 June.18 CURRENT_SW_DELIVERY 210=>BFSC项目
 = 完善REPEAT WS的消息处理过程，防止HCU重启以后，陷入所有传感器只汇报REPEAT_WS状态，而无法进入组合状态
