@@ -290,22 +290,5 @@ UINT32   hcu_bsp_usbcan_deinit(HcuUsbCanHandleTypeDef_t *husbcan);
 UINT32   hcu_bsp_usbcan_init(HcuUsbCanHandleTypeDef_t *husbcan, UINT32 can_dev_type, UINT32 can_dev_idx, UINT32 can_channel_id, UINT32 band_rate_kbps, pthread_t can_forwarding_thread_id, UINT32 can_l2_forwarding_mode);
 uint32_t hcu_bsp_usbcan_l2frame_transmit(HcuUsbCanHandleTypeDef_t* CanHandle, uint8_t *buffer, uint32_t length, UINT32 wmc_id_bitmap);
 
-/* API Usage */
-//ret = usb_can_init(&(gTaskCanitfleoContext.can1), CAN_DEVICE_TYPE_PCI9820I, \
-//		CAN_DEVIDE_IDX_CARD1, CAN_DEVIDE_CHANNEL_CAN0, \
-//		CAN_BANDRATE_500KBPS, 0, CAN_L2_FRAME_FORWARD_YES);
-//
-//HcuDebugPrint("CANITFLEO: usb_can_init() called, ret = %d\r\n", ret);
-
-//OPSTAT fsm_canitfleo_can_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-//{
-//	int ret=0;
-//	can_l2frame_itf_t *p = (can_l2frame_itf_t *)param_ptr;
-//
-//	HcuDebugPrint("CANITFLEO: Received CAN L2 FRAME: [0x%02X, 0x%02X, 0x%02X, 0x%02X], Len = [%d]\r\n", p[0], p[1], p[2], p[3], param_len);
-//
-//	bsp_can_l2_frame_transmit(&(gTaskCanitfleoContext.can1), p->can_l2frame, p->can_l2frame_len, 0xFFFF);
-//
-//}
 
 #endif /* L2USBCAN_H_ */

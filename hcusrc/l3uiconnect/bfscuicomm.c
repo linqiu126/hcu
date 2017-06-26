@@ -40,7 +40,7 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
 
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_com_do_nothing},
-    {MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,				FSM_STATE_BFSCUICOMM_ACTIVED,            	func_bfscuicomm_scan_jason_callback},
+    {MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,	FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_bfscuicomm_scan_jason_callback},
 	{MSG_ID_L3BFSC_UICOMM_CFG_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cfg_resp},	//配置反馈
 	{MSG_ID_L3BFSC_UICOMM_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cmd_resp},	//人工控制反馈
 	{MSG_ID_CAN_UICOMM_TEST_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_can_test_cmd_resp},  //测试命令反馈
@@ -225,7 +225,7 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 }
 
 //具体扫描文件改变的回调函数
-OPSTAT  func_bfscuicomm_scan_jason_callback(void)
+OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret = 0;
 	int fileChangeContent = 0;
@@ -292,7 +292,7 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
 	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
 	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 120000;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 10000;
+	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 100000;
 	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
 	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
 	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;
@@ -378,7 +378,7 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorFilterCoeff[2] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorFilterCoeff[3] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[0] = 1;				// NOT for GUI
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[1] = 1;				// NOT for GUI
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[1] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[2] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[3] = 0;				// NOT for GUI
 
