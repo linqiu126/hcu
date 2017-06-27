@@ -13,14 +13,19 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
+//= LZH/ZJL, 2017 June.26 CURRENT_SW_DELIVERY 212=>BFSC项目
+= 集成UICOMM的改进
+= 增加Heart_beat过程，并跟下位机保持同步
+
+
+
+
 //= ZJL, 2017 June.21 CURRENT_SW_DELIVERY 211=>BFSC项目
 = 完善NEW_WS_EVENT中对于WS_EVENT的处理
 = 完善本地数据库界面的显示工作
 = 增加L3BFSC测试代码，查询崩溃的可能原因
 = Continue to dig the issues of HCU crash, to add gcc link option: -Wl,--hash-style=sysv
 = Change back the uplimt from 100g to 1000g, to match current factory test environment
-
-
 
 //= ZJL, 2017 June.18 CURRENT_SW_DELIVERY 210=>BFSC项目
 = 完善REPEAT WS的消息处理过程，防止HCU重启以后，陷入所有传感器只汇报REPEAT_WS状态，而无法进入组合状态

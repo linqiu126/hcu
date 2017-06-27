@@ -13,7 +13,7 @@
 #pragma pack (1) //强制1字节对齐
 /*
  *
- *  顺从并更新到技术规范《慧HUITP接口规范v2.5, LAST UPDATE@2007/5/27》
+ *  顺从并更新到技术规范《慧HUITP接口规范v2.6, LAST UPDATE@2007/6/26》
  *
  * 2017/06/10, MA Yuchu, modify  for BFSC, Weight Sensor parameters, based on v2.5, LAST UPDATE@2007/5/27
  */
@@ -545,6 +545,10 @@ typedef enum
 	HUITP_MSGID_sui_bfsc_fault_ind                   = 0x3B99,
 	HUITP_MSGID_sui_bfsc_err_inq_cmd_req             = 0x3B1A,
 	HUITP_MSGID_sui_bfsc_err_inq_cmd_resp            = 0x3B9A,
+	//心跳过程
+	HUITP_MSGID_sui_bfsc_heart_beat_report           = 0x3BA0,
+	HUITP_MSGID_sui_bfsc_heart_beat_confirm          = 0x3B20,
+
 	//统一结束符
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
 
@@ -5019,27 +5023,15 @@ typedef struct StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t;
 
+
+//HCU-IHU SUI新增内容
+//以下FRAME消息结构体，由于特殊原因，并没有采用TLV结构，以便节省消息长度
+
 /*
 ** =============================================================================
 ** ============================ MYC START FOR BFSC =============================
 ** =============================================================================
 */
-//MSG_ID_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
-//MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ,       //       = 0x3B11,
-//MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP,      //       = 0x3B91,
-//MSG_ID_L3BFSC_WMC_START_REQ,            //       = 0x3B12,
-//MSG_ID_L3BFSC_WMC_START_RESP,           //       = 0x3B92,
-//MSG_ID_L3BFSC_WMC_STOP_REQ,             //       = 0x3B13,
-//MSG_ID_L3BFSC_WMC_STOP_RESP,            //       = 0x3B93,
-//MSG_ID_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
-//MSG_ID_L3BFSC_WMC_REPEAT_WS_EVENT,	  //	   = 0x3B95,
-//MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
-//MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP,     //       = 0x3B95,
-//MSG_ID_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
-//MSG_ID_L3BFSC_WMC_COMMAND_RESP,         //       = 0x3B97,
-//MSG_ID_L3BFSC_WMC_FAULT_IND,            //       = 0x3B98,
-//MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
-//MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
 
 typedef struct WmcErrorCode
 {
@@ -5381,30 +5373,37 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp
 	UINT16 spare2;
 }StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t;
 
+//心跳过程
+//HUITP_MSGID_sui_bfsc_heart_beat_report           = 0x3BA0,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+}StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t;
 
+//HUITP_MSGID_sui_bfsc_heart_beat_confirm          = 0x3B20,
+typedef struct StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8   wmcState;
+	UINT8   spare1;
+	UINT16  spare2;
+}StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm_t;
+#define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_NULL 		0
+#define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_OFFLINE 	1
+#define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INIT 		2
+#define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_WORKING 	3
+#define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INVALID 	0xFF
+
+//Common head defintion
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header
 {
 	UINT16 msgid;
 	UINT16 length;
 }StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t;
-
-/* Message Length definition */
-//#define 	MSG_SIZE_L3BFSC_WMC_STARTUP_IND				(sizeof(msg_struct_l3bfsc_wmc_startup_ind_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_SET_CONFIG_REQ			(sizeof(msg_struct_l3bfsc_wmc_set_config_req_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_SET_CONFIG_RESP			(sizeof(msg_struct_l3bfsc_wmc_resp_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_START_REQ				(sizeof(msg_struct_l3bfsc_wmc_start_req_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_START_RESP				(sizeof(msg_struct_l3bfsc_wmc_resp_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_STOP_REQ				(sizeof(msg_struct_l3bfsc_wmc_stop_req_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_STOP_RESP				(sizeof(msg_struct_l3bfsc_wmc_resp_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_NEW_WS_EVENT			(sizeof(msg_struct_l3bfsc_wmc_ws_event_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_REPEAT_WS_EVENT			(sizeof(msg_struct_l3bfsc_wmc_ws_event_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_REQ			(sizeof(msg_struct_l3bfsc_wmc_comb_out_req_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_WS_COMB_OUT_RESP		(sizeof(msg_struct_l3bfsc_wmc_resp_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_FAULT_IND				(sizeof(msg_struct_l3bfsc_wmc_fault_ind_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_COMMAND_REQ				(sizeof(msg_struct_l3bfsc_wmc_command_req_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_COMMAND_RESP			(sizeof(msg_struct_l3bfsc_wmc_command_resp_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_ERR_INQ_CMD_REQ			(sizeof(msg_struct_l3bfsc_wmc_req_t))
-//#define 	MSG_SIZE_L3BFSC_WMC_ERR_INQ_CMD_RESP		(sizeof(msg_struct_l3bfsc_wmc_resp_t))
 
 /* Can ID for communication between AWS and WMC */
 /* 1: AWS to WMC: 1 to n, n = 0 ... 15       */

@@ -650,6 +650,17 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	}
 	break;
 
+	case HUITP_MSGID_sui_bfsc_heart_beat_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_heat_beat_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
 	default:
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message!\n");
 	break;
@@ -1078,7 +1089,38 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(StrMsg_H
 	return SUCCESS;
 }
 
+//本消息将消耗在L2
+OPSTAT func_canitfleo_l2frame_msg_bfsc_heat_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
 
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_heart_beat_confirm);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	pMsgProc.wmc_id.wmc_id = nodeId;
+	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus <= HCU_L3BFSC_SENSOR_WS_STATUS_OFFLINE_MAX)
+		pMsgProc.wmcState = HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_OFFLINE;
+	else if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus <= HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MAX)
+		pMsgProc.wmcState = HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INIT;
+	else if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus <= HCU_L3BFSC_SENSOR_WS_STATUS_WORK_MAX)
+		pMsgProc.wmcState = HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_WORKING;
+	else
+		pMsgProc.wmcState = HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INVALID;
+
+	//生成bitmap
+	UINT32 bitmap = ((UINT32)1<<nodeId);
+
+	//发送消息
+	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+	//返回
+	return SUCCESS;
+}
 
 /*
  *  USBCAN BSP函数映射：硬件在两个CAN接口之间跳动，待固定住哪个CAN接口
