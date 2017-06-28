@@ -623,7 +623,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	memcpy(&rcv, param_ptr, param_len);
 
 	//先处理错误情况
-	if (rcv.validFlag == TRUE){
+	if (rcv.validFlag == FALSE){
 		//发送命令给界面
 		msg_struct_l3bfsc_uicomm_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cmd_resp_t));
@@ -699,7 +699,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * par
 	memcpy(&rcv, param_ptr, param_len);
 
 	//先处理错误情况
-	if (rcv.validFlag == TRUE){
+	if (rcv.validFlag == FALSE){
 		//发送命令给界面
 		msg_struct_l3bfsc_uicomm_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cmd_resp_t));
