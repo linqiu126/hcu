@@ -6,9 +6,10 @@
  */
 
 #ifndef L3UI_BFSCUICOMM_H_
-#define L2FRAME_BFSCUICOMM_H_
+#define L3UI_BFSCUICOMM_H_
 
 #include "../l0comvm/vmlayer.h"
+#include "../l2codec/huitp.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -23,11 +24,56 @@ enum FSM_STATE_BFSCUICOMM
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
+typedef struct L3BfscuiStartCmd
+{
+	UINT32  cmdFlag;
+	UINT32 cmdValue;
+}L3BfscuiStartCmd_t;
+
+typedef struct L3BfscuiCalibrationCmd
+{
+	UINT32  cmdFlag;
+	UINT32 cmdValue;
+	UINT8	sensorid;
+}L3BfscuiCalibrationCmd_t;
+
+typedef struct L3BfscuiConfigCmd
+{
+	UINT32  cmdFlag;
+	UINT32 cmdValue;
+}L3BfscuiConfigCmd_t;
+
+typedef struct L3BfscuiResumeCmd
+{
+	UINT32  cmdFlag;
+	UINT32 cmdValue;
+}L3BfscuiResumeCmd_t;
+
+typedef struct L3BfscuiTestCmd
+{
+	UINT32  cmdFlag;
+	UINT32 cmdValue;
+} L3BfscuiTestCmd_t;
+
+typedef struct L3BfscuiJsonCmdParseResult
+{
+	L3BfscuiStartCmd_t  cmdStart;
+	L3BfscuiCalibrationCmd_t  cmdCalibration;
+	L3BfscuiConfigCmd_t  cmdConfig;
+	L3BfscuiResumeCmd_t  cmdResume;
+	L3BfscuiTestCmd_t  cmdTest;
+} L3BfscuiJsonCmdParseResult_t;
+
 //本地常量定义
 #define HCU_BFSCCOMM_JASON_CMD_START 		1
 #define HCU_BFSCCOMM_JASON_CMD_STOP 		2
 #define HCU_BFSCCOMM_JASON_CMD_CONFIG 		3
 #define HCU_BFSCCOMM_JASON_CMD_TEST 		4
+#define HCU_BFSCCOMM_JASON_CMD_CALZERO		5
+#define HCU_BFSCCOMM_JASON_CMD_CALFULL 		6
+#define HCU_BFSCCOMM_JASON_CMD_RESUME 		7
+#define HCU_BFSCCOMM_JASON_CMD_SUSPEND 		8
+
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmBfscuicomm[];
@@ -45,6 +91,7 @@ extern OPSTAT fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, 
 //Local API
 OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void);
 OPSTAT func_bfscuicomm_time_out_period_read_process(void);
+OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJsonCmdParseResult_t parseResult );
 
 
 

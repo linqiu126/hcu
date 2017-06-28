@@ -6,10 +6,13 @@
  */
 
 #include "bfscuicomm.h"
+#include  "jsoninotify.h"
 
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
+#include <json-c/json.h>
+#include <json-c/json_object.h>
 
 /*
 ** FSM of the BFSCUICOMM
@@ -49,8 +52,13 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
-//Local variables
 
+//本地全局变量，分别用于标识开启命令，校准命令，和配置命令的变化，系统启动初始化为0, UI界面修改后自动累加，HCU对比Flag变化判断用户修改了那个Json文件
+UINT32  zCmdStartFlag = 0;
+UINT32  zCmdCalibrationFlag = 0;
+UINT32  zCmdConfigFlag = 0;
+UINT32  zCmdTResumeFlag = 0;
+UINT32  zCmdTestFlag = 0;
 
 //Global variables
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
@@ -97,6 +105,11 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM] = 0;
+	zCmdStartFlag = 0;
+	zCmdCalibrationFlag = 0;
+	zCmdConfigFlag = 0;
+	zCmdTResumeFlag = 0;
+	zCmdTestFlag = 0;
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_BFSCUICOMM, TIMER_ID_1S_BFSCUICOMM_PERIOD_READ, \
@@ -211,6 +224,8 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
+	UINT32  adcvalue = 0;
+	UINT8  sensorid = 0;
 
 	msg_struct_can_uicomm_test_cmd_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_can_uicomm_test_cmd_resp_t));
@@ -219,6 +234,23 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 	memcpy(&rcv, param_ptr, param_len);
 
 	//存入数据库表单，通知界面新的状态信息
+	switch(rcv.cmdid)
+	{
+		case SESOR_COMMAND_ID_CALIBRATION_ZERO:
+			adcvalue = rcv.sensor_weight;
+			sensorid = rcv.sensorid;
+
+			break;
+		case SESOR_COMMAND_ID_CALIBRATION_FULL:
+			adcvalue = rcv.sensor_weight;
+			sensorid = rcv.sensorid;
+
+			break;
+		case SESOR_COMMAND_ID_WEITGH_READ:
+			break;
+		default:
+			break;
+	}
 
 	//返回
 	return SUCCESS;
@@ -228,59 +260,273 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret = 0;
-	int fileChangeContent = 0;
-	msg_struct_uicomm_l3bfsc_cmd_req_t snd;
+	UINT32  fileChangeContent = 0;
+	UINT8  sensorid = 0;
 
-	//分析文件的变化
+	L3BfscuiJsonCmdParseResult_t parseResult;
 
-	//依赖文件变化的内容，分类发送控制命令：首先是START/STOP命令
-	if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP)){
-		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
-		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START) snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
-		else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP) snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP;
-
-		//发送命令给L3BFSC
-		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
-		ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
-			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-			return FAILURE;
-		}
+	//分析命令标志文件command.json的变化
+	memset(&parseResult, 0, sizeof(L3BfscuiJsonCmdParseResult_t));
+	ret =  func_bfscuicomm_cmdfile_json_parse(zHcuCmdflagJsonFile, parseResult );
+	if (ret == FAILURE){
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command Json file parse failure, [func = func_bfscuicomm_cmdfile_json_parse]");
+		return FAILURE;
 	}
 
-	//然后是CONFIG命令
-	else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CONFIG){
-		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
-			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+	//开启命令标志位发生了变化，
+	if (parseResult.cmdStart.cmdFlag != zCmdStartFlag)
+	{
+		zCmdStartFlag = parseResult.cmdStart.cmdFlag;
+		fileChangeContent = parseResult.cmdStart.cmdValue;
+		//依赖文件变化的内容，分类发送控制命令：START/STOP命令
+		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP)){
+			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
+			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
+			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
+			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP;
+
+			//发送命令给L3BFSC
+			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
 			if (ret == FAILURE){
-				zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
-				HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 				return FAILURE;
 			}
 		}
 	}
 
-	//还有可能是一般性控制命令
-	else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_TEST){
-		msg_struct_uicomm_can_test_cmd_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
-		snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
-		ret = hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFSCUICOMM]++;
-			HcuErrorPrint("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-			return FAILURE;
+	//校准命令标志位发生了变化
+	if (parseResult.cmdCalibration.cmdFlag != zCmdCalibrationFlag)
+	{
+		zCmdCalibrationFlag = parseResult.cmdCalibration.cmdFlag;
+		fileChangeContent = parseResult.cmdCalibration.cmdValue;
+		sensorid = parseResult.cmdCalibration.sensorid;
+		//依赖文件变化的内容，分类发送控制命令：零值校准命令/满值校准命令
+		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)){
+			msg_struct_uicomm_can_test_cmd_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
+			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
+			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO)  snd.cmdid = SESOR_COMMAND_ID_CALIBRATION_ZERO;
+			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)  snd.cmdid = SESOR_COMMAND_ID_CALIBRATION_FULL;
+
+			if (sensorid >=0 && sensorid < HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR)  snd.wsBitmap[sensorid] = 1;
+			//发送命令给CANITFLEO
+			ret = hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length);
+			if (ret == FAILURE){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+				return FAILURE;
+			}
 		}
 	}
 
-	//不符合预期的命令，忽略
-	else return FAILURE;
+	//业务配置命令标志位发生了变化
+	if (parseResult.cmdConfig.cmdFlag != zCmdConfigFlag)
+	{
+		zCmdConfigFlag = parseResult.cmdConfig.cmdFlag;
+		fileChangeContent = parseResult.cmdConfig.cmdValue;
+		//依赖文件变化的内容，分类发送控制命令：CONFIG命令
+		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CONFIG){
+			if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+					msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+					memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+					snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+
+					ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+					if (ret == FAILURE){
+						HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+						return FAILURE;
+					}
+			  }
+		  }
+	 }
+
+	//暂停命令标志位发生了变化
+	if (parseResult.cmdResume.cmdFlag != zCmdTResumeFlag)
+	{
+		zCmdTResumeFlag = parseResult.cmdResume.cmdFlag;
+		fileChangeContent = parseResult.cmdResume.cmdValue;
+		//依赖文件变化的内容，分类发送控制命令：SUSPEND命令/RESUME命令
+		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)){
+			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
+			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
+			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_RESUME;
+			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND;
+
+			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+			if (ret == FAILURE){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+				return FAILURE;
+			}
+		}
+	}
+
+	//一般性测试命令标志位发生了变化
+	if (parseResult.cmdTest.cmdFlag != zCmdTestFlag)
+	{
+		zCmdTestFlag = parseResult.cmdTest.cmdFlag;
+		fileChangeContent = parseResult.cmdTest.cmdValue;
+		//依赖文件变化的内容，分类发送控制命令：一般性控制命令
+		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_TEST){
+			msg_struct_uicomm_can_test_cmd_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
+			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
+
+			ret = hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length);
+			if (ret == FAILURE){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+				return FAILURE;
+			}
+		}
+	}
 
 	return SUCCESS;
+}
+
+OPSTAT func_bfscuicomm_time_out_period_read_process(void)
+{
+	UINT8 state = FsmGetState(TASK_ID_L3BFSC);
+
+	if ((state == FSM_STATE_L3BFSC_ACTIVED) || (state == FSM_STATE_L3BFSC_OPR_CFG)) {
+		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFSC
+		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFSC
+		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+		}
+	}
+	else if (state == FSM_STATE_L3BFSC_OPR_GO) {
+		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
+		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
+		snd_start_req.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
+		snd_start_req.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
+		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd_start_req, snd_start_req.length) == FAILURE)
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+		}
+	else{
+
+	}
+	return SUCCESS;
+}
+
+//命令标志command.Json文件解析
+OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJsonCmdParseResult_t parseResult )
+{
+	FILE *fileStream;
+	char inotifyReadBuf[BUFSIZ];
+	UINT32  numread = 0;
+	UINT32  flag = 0, value = 0;
+	UINT8  sensorid = 0;
+
+	struct json_object *file_jsonobj = NULL;
+	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL;
+
+    if ((fileStream = fopen( monitorJasonFile, "r" )) != NULL )  // 文件读取
+    {
+			numread = fread( inotifyReadBuf, sizeof( char ), BUFSIZ-1, fileStream );
+			fclose( fileStream );
+			if (numread == 0){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s]  ! \n", monitorJasonFile);
+				return FAILURE;
+			}
+
+			file_jsonobj = json_tokener_parse(inotifyReadBuf);
+			if (file_jsonobj == NULL){
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command file json_tokener_parse failure, [file=%s]  ! \n", monitorJasonFile);
+				json_object_put(file_jsonobj);  //释放Json Object指针
+				return FAILURE;
+			}
+
+			//解析Start/Stop命令
+		   if ( json_object_object_get_ex(file_jsonobj, "start_cmd", &cmd_jsonobj)){
+			   flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+			   value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+			   if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+				   flag = json_object_get_int(flag_jsonobj);
+				   value = json_object_get_int(value_jsonobj);
+				   parseResult.cmdStart.cmdFlag = flag;
+				   parseResult.cmdStart.cmdValue = value;
+			   }
+		   }
+		  else
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [start_cmd] dose not exist in command json file ! \n");
+
+		   //解析Calibration命令
+		  if (json_object_object_get_ex(file_jsonobj, "calibration_cmd", &cmd_jsonobj)){
+			  flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+			  value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+			  sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+			  if ((flag_jsonobj != NULL) && (value_jsonobj != NULL) && (sensorid_jsonobj != NULL)){
+				  flag = json_object_get_int(flag_jsonobj);
+				  value = json_object_get_int(value_jsonobj);
+				  sensorid = json_object_get_int(sensorid_jsonobj);
+				  parseResult.cmdCalibration.cmdFlag = flag;
+				  parseResult.cmdCalibration.cmdValue = value;
+				  parseResult.cmdCalibration.sensorid = sensorid;
+			  }
+		  }
+		 else
+			 HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [calibration_cmd] dose not exist in command json file ! \n");
+
+		  //解析Config命令
+		 if (json_object_object_get_ex(file_jsonobj, "config_cmd", &cmd_jsonobj)){
+			 flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+			 value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+			 if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+				 flag = json_object_get_int(flag_jsonobj);
+				 value = json_object_get_int(value_jsonobj);
+				 parseResult.cmdConfig.cmdFlag = flag;
+				 parseResult.cmdConfig.cmdValue = value;
+			 }
+		 }
+		 else
+			 HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [config_cmd] dose not exist in command json file ! \n");
+
+		 //解析Resume命令
+		if (json_object_object_get_ex(file_jsonobj, "resume_cmd", &cmd_jsonobj)){
+			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+				flag = json_object_get_int(flag_jsonobj);
+				value = json_object_get_int(value_jsonobj);
+				parseResult.cmdResume.cmdFlag = flag;
+				parseResult.cmdResume.cmdValue = value;
+			}
+		}
+		else
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [resume_cmd] dose not exist in command json file ! \n");
+
+		 //解析Test命令
+		if (json_object_object_get_ex(file_jsonobj, "test_cmd", &cmd_jsonobj)){
+			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+				flag = json_object_get_int(flag_jsonobj);
+				value = json_object_get_int(value_jsonobj);
+				parseResult.cmdTest.cmdFlag = flag;
+				parseResult.cmdTest.cmdValue = value;
+			}
+		}
+		else
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [test_cmd] dose not exist in command json file ! \n");
+
+		 //释放Json Object指针
+		json_object_put(file_jsonobj);
+		json_object_put(cmd_jsonobj);
+		json_object_put(flag_jsonobj);
+		json_object_put(value_jsonobj);
+		json_object_put(sensorid_jsonobj);
+
+        return SUCCESS;
+    }
+    else
+    {
+    	HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Open command json file failure, file=%s \n", monitorJasonFile);
+        return FAILURE;
+    }
 }
 
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
@@ -390,34 +636,5 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionVaration = 0;
 	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs = 0;
 
-	return SUCCESS;
-}
-
-OPSTAT func_bfscuicomm_time_out_period_read_process(void)
-{
-	UINT8 state = FsmGetState(TASK_ID_L3BFSC);
-
-	if ((state == FSM_STATE_L3BFSC_ACTIVED) || (state == FSM_STATE_L3BFSC_OPR_CFG)) {
-		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFSC
-		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFSC
-		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
-			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-		}
-	}
-	else if (state == FSM_STATE_L3BFSC_OPR_GO) {
-		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
-		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
-		snd_start_req.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
-		snd_start_req.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
-		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd_start_req, snd_start_req.length) == FAILURE)
-			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-		}
-	else{
-
-	}
 	return SUCCESS;
 }

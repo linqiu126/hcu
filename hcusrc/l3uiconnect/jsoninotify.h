@@ -5,8 +5,8 @@
  *      Author: LZH
  */
 
-#ifndef L1HWOPT_JSONINOTIFY_H_
-#define L1HWOPT_JSONINOTIFY_H_
+#ifndef L3UI_JSONINOTIFY_H_
+#define L3UI_JSONINOTIFY_H_
 
 #include "../l0comvm/vmlayer.h"
 
@@ -25,6 +25,7 @@ enum FSM_STATE_JSONINOTIFY
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmJsoninotify[];
+extern   char zHcuCmdflagJsonFile[] ;
 
 //API
 extern OPSTAT fsm_jsoninotify_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
