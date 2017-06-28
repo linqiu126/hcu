@@ -952,7 +952,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	if (gTaskL3bfscContext.wsValueNbrWeight >= gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination){
 		//组合失败
 		if (func_l3bfsc_ws_sensor_search_combination() == -1){
-			if (gTaskL3bfscContext.wsValueNbrWeight == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
+			if (gTaskL3bfscContext.wsValueNbrWeight >= (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)){
 				//得到抛弃的传感器
 				func_l3bfsc_ws_sensor_search_give_up();
 

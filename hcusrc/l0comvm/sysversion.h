@@ -12,7 +12,7 @@
 #define HCU_CURRENT_HW_TYPE 5// HARDWARE PEM，表征PEM5
 
 //SW version control, for internal usage
-#define HCU_CURRENT_SW_RELEASE 1 //R01 = 0x01 (XQ.HCU.SW.R01.456)
+#define HCU_CURRENT_SW_RELEASE 3 //R01 = 0x01 (XQ.HCU.SW.R01.456)
 
 #define HCU_CURRENT_SW_DELIVERY 212 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
 
