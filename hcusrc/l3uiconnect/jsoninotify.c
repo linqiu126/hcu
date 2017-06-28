@@ -42,8 +42,7 @@ HcuFsmStateItem_t HcuFsmJsoninotify[] =
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
-//Global variables
-static  const char zHcuCmdJsonFile []  = "/var/www/html/bfscui/command.json";
+char zHcuCmdflagJsonFile[]  = "/var/www/html/bfscui/command.json";
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -96,7 +95,7 @@ OPSTAT fsm_jsoninotify_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 	}
 
 	//进入阻塞式文件读取监控
-	if((func_jsoninotify_add_watch(zHcuCmdJsonFile)) ==FAILURE){
+	if((func_jsoninotify_add_watch(zHcuCmdflagJsonFile)) ==FAILURE){
 		HcuDebugPrint("JSONINOTIFY: Add json file watch failure!\n");
 	}
 
