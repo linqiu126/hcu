@@ -2270,6 +2270,8 @@ typedef struct msg_struct_l3bfsc_can_ws_comb_out
 typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
 {
 	UINT8  sensorid;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_comb_out_fb_t;
 
@@ -2284,6 +2286,8 @@ typedef struct msg_struct_l3bfsc_can_ws_give_up
 typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
 {
 	UINT8  sensorid;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
 	UINT32 length;
 }msg_struct_can_l3bfsc_ws_give_up_fb_t;
 

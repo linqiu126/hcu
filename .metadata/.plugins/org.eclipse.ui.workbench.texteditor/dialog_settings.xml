@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="gTask" key="selection"/>
+		<item value="stop" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="gTask"/>
-			<item value="FsmGetState"/>
-			<item value="HUITP_MSGID_sui_bfsc_heart_beat_report"/>
+			<item value="stop"/>
+			<item value="CombineType_t"/>
+			<item value="HUITP_MSGID_sui_bfsc_ws_comb_out_resp"/>
 			<item value="BFSC"/>
-			<item value="WmcId_t"/>
-			<item value="HUITP_MSGID_sui_bfsc_err_inq_cmd_resp"/>
-			<item value="float"/>
-			<item value="func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight"/>
+			<item value="MSG_ID_L3BFSC_CAN_WS_COMB_OUT"/>
+			<item value="COMB_"/>
+			<item value="StrIe_HUITP_IEID_uni_scale_weight_cmd_t"/>
+			<item value="HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req"/>
 		</list>
 		<list key="replacehistory">
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>

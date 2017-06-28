@@ -16,8 +16,8 @@
 //= LZH/ZJL, 2017 June.26 CURRENT_SW_DELIVERY 212=>BFSC项目
 = 集成UICOMM的改进
 = 增加Heart_beat过程，并跟下位机保持同步
-
-
+= 为了支持组合之后再重新组合，将REPEAT消息翻译成NEW_WS，以触发重新组合
+= 支持在组合出料差错条件下，让系统进入STOP状态
 
 
 //= ZJL, 2017 June.21 CURRENT_SW_DELIVERY 211=>BFSC项目
