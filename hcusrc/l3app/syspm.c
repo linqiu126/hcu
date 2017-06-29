@@ -269,7 +269,7 @@ UINT32 func_syspm_cal_cpuoccupy (PmCpuOccupyInfo_t *o, PmCpuOccupyInfo_t *n)
     id = (UINT32) (n->user - o->user);    //用户第一次和第二次的时间之差再赋给id
     sd = (UINT32) (n->system - o->system);//系统第一次和第二次的时间之差再赋给sd
     if((nd-od) != 0)
-    	cpu_use = (UINT32)((sd+id)*100)/(nd-od); //((用户+系统)乖100)除(第一次和第二次的时间差)再赋给cpu_used
+    	cpu_use = (UINT32)((sd+id)*100)/((nd-od)==0?0.01:(nd-od)); //((用户+系统)乖100)除(第一次和第二次的时间差)再赋给cpu_used
     else cpu_use = 0;
 
     return cpu_use;
@@ -302,7 +302,7 @@ void func_syspm_get_diskoccupy(void)
 	unsigned long long freeDisk = diskInfo.f_bfree * totalBlocks;
 	size_t mbFreedisk = freeDisk>>20;
 
-	float r = (float)(mbTotalsize - mbFreedisk)*100/mbTotalsize;
+	float r = (float)(mbTotalsize - mbFreedisk)*100/(mbTotalsize==0?0.01:mbTotalsize);
 
 	zHcuSysStaPm.statisCnt.disk_occupy = r;
 
@@ -323,7 +323,7 @@ void func_syspm_cal_cpu_mem_disk_occupy(void)
     func_syspm_get_memoccupy ((PmMemOccupyInfo_t *)&mem_stat);
     //HcuDebugPrint("syspm:  mem_stat.total= %d, mem_stat.used = %d\n", mem_stat.total, mem_stat.used);
 
-    zHcuSysStaPm.statisCnt.mem_occupy = mem_stat.used*100/mem_stat.total;
+    zHcuSysStaPm.statisCnt.mem_occupy = mem_stat.used*100/((mem_stat.total == 0)?0.01:mem_stat.total);
 
     func_syspm_get_diskoccupy();
 

@@ -13,9 +13,12 @@
 跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
 
 
-//= ZJL, 2017 June.29 CURRENT_SW_DELIVERY 213=>BFSC
-= Bug Fix：组合对于ValidFlag的判定
+//= ZJL, 2017 June.29 CURRENT_SW_DELIVERY 214=>BFSC项目
 
+
+
+//= ZJL, 2017 June.28 CURRENT_SW_DELIVERY 213=>BFSC项目
+= Bug Fix：组合对于ValidFlag的判定
 
 //= LZH/ZJL, 2017 June.26 CURRENT_SW_DELIVERY 212=>BFSC项目
 = 集成UICOMM的改进
