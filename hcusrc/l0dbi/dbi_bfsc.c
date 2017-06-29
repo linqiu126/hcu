@@ -368,6 +368,7 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaEl
 
 	//释放记录集
     mysql_close(sqlHandler);
+    HCU_DEBUG_PRINT_CRT("DBICOM: Test SQL number sqlHandler=%l\n", sqlHandler);
     return SUCCESS;
 }
 
@@ -459,7 +460,7 @@ OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info)
     sqlHandler = sqlResult;
 
 	//REPLACE新的数据
-    UINT32 tmp = time(0);
+    //UINT32 tmp = time(0);
     sprintf(strsql, "REPLACE INTO `hcubfscfb2ui` (cmdtype, validflag, fbinfo) VALUES ('%d', '%d', '%s')", cmdType, validFlag, info);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
@@ -470,6 +471,7 @@ OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info)
 
 	//释放记录集
     mysql_close(sqlHandler);
+    HCU_DEBUG_PRINT_CRT("DBICOM: Test SQL number sqlHandler=%l\n", sqlHandler);
     return SUCCESS;
 }
 
@@ -531,6 +533,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 
 	//释放记录集
     mysql_close(sqlHandler);
+    HCU_DEBUG_PRINT_CRT("DBICOM: Test SQL number sqlHandler=%l\n", sqlHandler);
     return SUCCESS;
 }
 
@@ -573,6 +576,7 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
 
 	//释放记录集
     mysql_close(sqlHandler);
+    HCU_DEBUG_PRINT_CRT("DBICOM: Test SQL number sqlHandler=%l\n", sqlHandler);
     return SUCCESS;
 }
 
@@ -618,6 +622,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
 
 	//释放记录集
     mysql_close(sqlHandler);
+    HCU_DEBUG_PRINT_CRT("DBICOM: Test SQL number sqlHandler=%l\n", sqlHandler);
     return SUCCESS;
 }
 
