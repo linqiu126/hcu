@@ -11,8 +11,8 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
-#include <json-c/json.h>
-#include <json-c/json_object.h>
+//#include <json-c/json.h>
+//#include <json-c/json_object.h>
 
 /*
 ** FSM of the BFSCUICOMM
@@ -43,7 +43,7 @@ HcuFsmStateItem_t HcuFsmBfscuicomm[] =
 
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_com_do_nothing},
-    {MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,	FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_bfscuicomm_scan_jason_callback},
+    //{MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,	FSM_STATE_BFSCUICOMM_ACTIVED,            	fsm_bfscuicomm_scan_jason_callback},
 	{MSG_ID_L3BFSC_UICOMM_CFG_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cfg_resp},	//配置反馈
 	{MSG_ID_L3BFSC_UICOMM_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_l3bfsc_cmd_resp},	//人工控制反馈
 	{MSG_ID_CAN_UICOMM_TEST_CMD_RESP,      	FSM_STATE_BFSCUICOMM_ACTIVED,          		fsm_bfscuicomm_can_test_cmd_resp},  //测试命令反馈
@@ -257,131 +257,131 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 }
 
 //具体扫描文件改变的回调函数
-OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	int ret = 0;
-	UINT32  fileChangeContent = 0;
-	UINT8  sensorid = 0;
-
-	L3BfscuiJsonCmdParseResult_t parseResult;
-
-	//分析命令标志文件command.json的变化
-	memset(&parseResult, 0, sizeof(L3BfscuiJsonCmdParseResult_t));
-	ret =  func_bfscuicomm_cmdfile_json_parse(zHcuCmdflagJsonFile, parseResult );
-	if (ret == FAILURE){
-		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command Json file parse failure, [func = func_bfscuicomm_cmdfile_json_parse]");
-		return FAILURE;
-	}
-
-	//开启命令标志位发生了变化，
-	if (parseResult.cmdStart.cmdFlag != zCmdStartFlag)
-	{
-		zCmdStartFlag = parseResult.cmdStart.cmdFlag;
-		fileChangeContent = parseResult.cmdStart.cmdValue;
-		//依赖文件变化的内容，分类发送控制命令：START/STOP命令
-		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP)){
-			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
-			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
-			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
-			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP;
-
-			//发送命令给L3BFSC
-			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
-			if (ret == FAILURE){
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-				return FAILURE;
-			}
-		}
-	}
-
-	//校准命令标志位发生了变化
-	if (parseResult.cmdCalibration.cmdFlag != zCmdCalibrationFlag)
-	{
-		zCmdCalibrationFlag = parseResult.cmdCalibration.cmdFlag;
-		fileChangeContent = parseResult.cmdCalibration.cmdValue;
-		sensorid = parseResult.cmdCalibration.sensorid;
-		//依赖文件变化的内容，分类发送控制命令：零值校准命令/满值校准命令
-		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)){
-			msg_struct_uicomm_can_test_cmd_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
-			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
-			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO)  snd.cmdid = SESOR_COMMAND_ID_CALIBRATION_ZERO;
-			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)  snd.cmdid = SESOR_COMMAND_ID_CALIBRATION_FULL;
-
-			if (sensorid >=0 && sensorid < HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR)  snd.wsBitmap[sensorid] = 1;
-			//发送命令给CANITFLEO
-			ret = hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length);
-			if (ret == FAILURE){
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-				return FAILURE;
-			}
-		}
-	}
-
-	//业务配置命令标志位发生了变化
-	if (parseResult.cmdConfig.cmdFlag != zCmdConfigFlag)
-	{
-		zCmdConfigFlag = parseResult.cmdConfig.cmdFlag;
-		fileChangeContent = parseResult.cmdConfig.cmdValue;
-		//依赖文件变化的内容，分类发送控制命令：CONFIG命令
-		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CONFIG){
-			if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
-					msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-					memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-					snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-
-					ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
-					if (ret == FAILURE){
-						HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-						return FAILURE;
-					}
-			  }
-		  }
-	 }
-
-	//暂停命令标志位发生了变化
-	if (parseResult.cmdResume.cmdFlag != zCmdTResumeFlag)
-	{
-		zCmdTResumeFlag = parseResult.cmdResume.cmdFlag;
-		fileChangeContent = parseResult.cmdResume.cmdValue;
-		//依赖文件变化的内容，分类发送控制命令：SUSPEND命令/RESUME命令
-		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)){
-			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
-			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
-			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_RESUME;
-			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND;
-
-			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
-			if (ret == FAILURE){
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-				return FAILURE;
-			}
-		}
-	}
-
-	//一般性测试命令标志位发生了变化
-	if (parseResult.cmdTest.cmdFlag != zCmdTestFlag)
-	{
-		zCmdTestFlag = parseResult.cmdTest.cmdFlag;
-		fileChangeContent = parseResult.cmdTest.cmdValue;
-		//依赖文件变化的内容，分类发送控制命令：一般性控制命令
-		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_TEST){
-			msg_struct_uicomm_can_test_cmd_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
-			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
-
-			ret = hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length);
-			if (ret == FAILURE){
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-				return FAILURE;
-			}
-		}
-	}
-
-	return SUCCESS;
-}
+//OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//{
+//	int ret = 0;
+//	UINT32  fileChangeContent = 0;
+//	UINT8  sensorid = 0;
+//
+//	L3BfscuiJsonCmdParseResult_t parseResult;
+//
+//	//分析命令标志文件command.json的变化
+//	memset(&parseResult, 0, sizeof(L3BfscuiJsonCmdParseResult_t));
+//	ret =  func_bfscuicomm_cmdfile_json_parse(zHcuCmdflagJsonFile, parseResult );
+//	if (ret == FAILURE){
+//		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command Json file parse failure, [func = func_bfscuicomm_cmdfile_json_parse]");
+//		return FAILURE;
+//	}
+//
+//	//开启命令标志位发生了变化，
+//	if (parseResult.cmdStart.cmdFlag != zCmdStartFlag)
+//	{
+//		zCmdStartFlag = parseResult.cmdStart.cmdFlag;
+//		fileChangeContent = parseResult.cmdStart.cmdValue;
+//		//依赖文件变化的内容，分类发送控制命令：START/STOP命令
+//		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP)){
+//			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
+//			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
+//			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
+//			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
+//			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_STOP)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP;
+//
+//			//发送命令给L3BFSC
+//			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+//			if (ret == FAILURE){
+//				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+//				return FAILURE;
+//			}
+//		}
+//	}
+//
+//	//校准命令标志位发生了变化
+//	if (parseResult.cmdCalibration.cmdFlag != zCmdCalibrationFlag)
+//	{
+//		zCmdCalibrationFlag = parseResult.cmdCalibration.cmdFlag;
+//		fileChangeContent = parseResult.cmdCalibration.cmdValue;
+//		sensorid = parseResult.cmdCalibration.sensorid;
+//		//依赖文件变化的内容，分类发送控制命令：零值校准命令/满值校准命令
+//		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)){
+//			msg_struct_uicomm_can_test_cmd_req_t snd;
+//			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
+//			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
+//			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO)  snd.cmdid = SESOR_COMMAND_ID_CALIBRATION_ZERO;
+//			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)  snd.cmdid = SESOR_COMMAND_ID_CALIBRATION_FULL;
+//
+//			if (sensorid >=0 && sensorid < HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR)  snd.wsBitmap[sensorid] = 1;
+//			//发送命令给CANITFLEO
+//			ret = hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length);
+//			if (ret == FAILURE){
+//				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+//				return FAILURE;
+//			}
+//		}
+//	}
+//
+//	//业务配置命令标志位发生了变化
+//	if (parseResult.cmdConfig.cmdFlag != zCmdConfigFlag)
+//	{
+//		zCmdConfigFlag = parseResult.cmdConfig.cmdFlag;
+//		fileChangeContent = parseResult.cmdConfig.cmdValue;
+//		//依赖文件变化的内容，分类发送控制命令：CONFIG命令
+//		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CONFIG){
+//			if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+//					msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+//					memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+//					snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+//
+//					ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+//					if (ret == FAILURE){
+//						HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+//						return FAILURE;
+//					}
+//			  }
+//		  }
+//	 }
+//
+//	//暂停命令标志位发生了变化
+//	if (parseResult.cmdResume.cmdFlag != zCmdTResumeFlag)
+//	{
+//		zCmdTResumeFlag = parseResult.cmdResume.cmdFlag;
+//		fileChangeContent = parseResult.cmdResume.cmdValue;
+//		//依赖文件变化的内容，分类发送控制命令：SUSPEND命令/RESUME命令
+//		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)){
+//			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
+//			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
+//			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
+//			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_RESUME;
+//			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND;
+//
+//			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+//			if (ret == FAILURE){
+//				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+//				return FAILURE;
+//			}
+//		}
+//	}
+//
+//	//一般性测试命令标志位发生了变化
+//	if (parseResult.cmdTest.cmdFlag != zCmdTestFlag)
+//	{
+//		zCmdTestFlag = parseResult.cmdTest.cmdFlag;
+//		fileChangeContent = parseResult.cmdTest.cmdValue;
+//		//依赖文件变化的内容，分类发送控制命令：一般性控制命令
+//		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_TEST){
+//			msg_struct_uicomm_can_test_cmd_req_t snd;
+//			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
+//			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
+//
+//			ret = hcu_message_send(MSG_ID_UICOMM_CAN_TEST_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_BFSCUICOMM, &snd, snd.length);
+//			if (ret == FAILURE){
+//				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+//				return FAILURE;
+//			}
+//		}
+//	}
+//
+//	return SUCCESS;
+//}
 
 OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 {
@@ -413,121 +413,121 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 }
 
 //命令标志command.Json文件解析
-OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJsonCmdParseResult_t parseResult )
-{
-	FILE *fileStream;
-	char inotifyReadBuf[BUFSIZ];
-	UINT32  numread = 0;
-	UINT32  flag = 0, value = 0;
-	UINT8  sensorid = 0;
-
-	struct json_object *file_jsonobj = NULL;
-	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL;
-
-    if ((fileStream = fopen( monitorJasonFile, "r" )) != NULL )  // 文件读取
-    {
-			numread = fread( inotifyReadBuf, sizeof( char ), BUFSIZ-1, fileStream );
-			fclose( fileStream );
-			if (numread == 0){
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s]  ! \n", monitorJasonFile);
-				return FAILURE;
-			}
-
-			file_jsonobj = json_tokener_parse(inotifyReadBuf);
-			if (file_jsonobj == NULL){
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command file json_tokener_parse failure, [file=%s]  ! \n", monitorJasonFile);
-				json_object_put(file_jsonobj);  //释放Json Object指针
-				return FAILURE;
-			}
-
-			//解析Start/Stop命令
-		   if ( json_object_object_get_ex(file_jsonobj, "start_cmd", &cmd_jsonobj)){
-			   flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			   value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			   if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
-				   flag = json_object_get_int(flag_jsonobj);
-				   value = json_object_get_int(value_jsonobj);
-				   parseResult.cmdStart.cmdFlag = flag;
-				   parseResult.cmdStart.cmdValue = value;
-			   }
-		   }
-		  else
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [start_cmd] dose not exist in command json file ! \n");
-
-		   //解析Calibration命令
-		  if (json_object_object_get_ex(file_jsonobj, "calibration_cmd", &cmd_jsonobj)){
-			  flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			  value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			  sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
-			  if ((flag_jsonobj != NULL) && (value_jsonobj != NULL) && (sensorid_jsonobj != NULL)){
-				  flag = json_object_get_int(flag_jsonobj);
-				  value = json_object_get_int(value_jsonobj);
-				  sensorid = json_object_get_int(sensorid_jsonobj);
-				  parseResult.cmdCalibration.cmdFlag = flag;
-				  parseResult.cmdCalibration.cmdValue = value;
-				  parseResult.cmdCalibration.sensorid = sensorid;
-			  }
-		  }
-		 else
-			 HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [calibration_cmd] dose not exist in command json file ! \n");
-
-		  //解析Config命令
-		 if (json_object_object_get_ex(file_jsonobj, "config_cmd", &cmd_jsonobj)){
-			 flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			 value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			 if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
-				 flag = json_object_get_int(flag_jsonobj);
-				 value = json_object_get_int(value_jsonobj);
-				 parseResult.cmdConfig.cmdFlag = flag;
-				 parseResult.cmdConfig.cmdValue = value;
-			 }
-		 }
-		 else
-			 HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [config_cmd] dose not exist in command json file ! \n");
-
-		 //解析Resume命令
-		if (json_object_object_get_ex(file_jsonobj, "resume_cmd", &cmd_jsonobj)){
-			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
-				flag = json_object_get_int(flag_jsonobj);
-				value = json_object_get_int(value_jsonobj);
-				parseResult.cmdResume.cmdFlag = flag;
-				parseResult.cmdResume.cmdValue = value;
-			}
-		}
-		else
-			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [resume_cmd] dose not exist in command json file ! \n");
-
-		 //解析Test命令
-		if (json_object_object_get_ex(file_jsonobj, "test_cmd", &cmd_jsonobj)){
-			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
-			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
-				flag = json_object_get_int(flag_jsonobj);
-				value = json_object_get_int(value_jsonobj);
-				parseResult.cmdTest.cmdFlag = flag;
-				parseResult.cmdTest.cmdValue = value;
-			}
-		}
-		else
-			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [test_cmd] dose not exist in command json file ! \n");
-
-		 //释放Json Object指针
-		json_object_put(file_jsonobj);
-		json_object_put(cmd_jsonobj);
-		json_object_put(flag_jsonobj);
-		json_object_put(value_jsonobj);
-		json_object_put(sensorid_jsonobj);
-
-        return SUCCESS;
-    }
-    else
-    {
-    	HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Open command json file failure, file=%s \n", monitorJasonFile);
-        return FAILURE;
-    }
-}
+//OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJsonCmdParseResult_t parseResult )
+//{
+//	FILE *fileStream;
+//	char inotifyReadBuf[BUFSIZ];
+//	UINT32  numread = 0;
+//	UINT32  flag = 0, value = 0;
+//	UINT8  sensorid = 0;
+//
+//	struct json_object *file_jsonobj = NULL;
+//	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL;
+//
+//    if ((fileStream = fopen( monitorJasonFile, "r" )) != NULL )  // 文件读取
+//    {
+//			numread = fread( inotifyReadBuf, sizeof( char ), BUFSIZ-1, fileStream );
+//			fclose( fileStream );
+//			if (numread == 0){
+//				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s]  ! \n", monitorJasonFile);
+//				return FAILURE;
+//			}
+//
+//			file_jsonobj = json_tokener_parse(inotifyReadBuf);
+//			if (file_jsonobj == NULL){
+//				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command file json_tokener_parse failure, [file=%s]  ! \n", monitorJasonFile);
+//				json_object_put(file_jsonobj);  //释放Json Object指针
+//				return FAILURE;
+//			}
+//
+//			//解析Start/Stop命令
+//		   if ( json_object_object_get_ex(file_jsonobj, "start_cmd", &cmd_jsonobj)){
+//			   flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+//			   value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+//			   if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+//				   flag = json_object_get_int(flag_jsonobj);
+//				   value = json_object_get_int(value_jsonobj);
+//				   parseResult.cmdStart.cmdFlag = flag;
+//				   parseResult.cmdStart.cmdValue = value;
+//			   }
+//		   }
+//		  else
+//				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [start_cmd] dose not exist in command json file ! \n");
+//
+//		   //解析Calibration命令
+//		  if (json_object_object_get_ex(file_jsonobj, "calibration_cmd", &cmd_jsonobj)){
+//			  flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+//			  value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+//			  sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+//			  if ((flag_jsonobj != NULL) && (value_jsonobj != NULL) && (sensorid_jsonobj != NULL)){
+//				  flag = json_object_get_int(flag_jsonobj);
+//				  value = json_object_get_int(value_jsonobj);
+//				  sensorid = json_object_get_int(sensorid_jsonobj);
+//				  parseResult.cmdCalibration.cmdFlag = flag;
+//				  parseResult.cmdCalibration.cmdValue = value;
+//				  parseResult.cmdCalibration.sensorid = sensorid;
+//			  }
+//		  }
+//		 else
+//			 HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [calibration_cmd] dose not exist in command json file ! \n");
+//
+//		  //解析Config命令
+//		 if (json_object_object_get_ex(file_jsonobj, "config_cmd", &cmd_jsonobj)){
+//			 flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+//			 value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+//			 if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+//				 flag = json_object_get_int(flag_jsonobj);
+//				 value = json_object_get_int(value_jsonobj);
+//				 parseResult.cmdConfig.cmdFlag = flag;
+//				 parseResult.cmdConfig.cmdValue = value;
+//			 }
+//		 }
+//		 else
+//			 HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [config_cmd] dose not exist in command json file ! \n");
+//
+//		 //解析Resume命令
+//		if (json_object_object_get_ex(file_jsonobj, "resume_cmd", &cmd_jsonobj)){
+//			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+//			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+//			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+//				flag = json_object_get_int(flag_jsonobj);
+//				value = json_object_get_int(value_jsonobj);
+//				parseResult.cmdResume.cmdFlag = flag;
+//				parseResult.cmdResume.cmdValue = value;
+//			}
+//		}
+//		else
+//			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [resume_cmd] dose not exist in command json file ! \n");
+//
+//		 //解析Test命令
+//		if (json_object_object_get_ex(file_jsonobj, "test_cmd", &cmd_jsonobj)){
+//			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+//			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+//			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+//				flag = json_object_get_int(flag_jsonobj);
+//				value = json_object_get_int(value_jsonobj);
+//				parseResult.cmdTest.cmdFlag = flag;
+//				parseResult.cmdTest.cmdValue = value;
+//			}
+//		}
+//		else
+//			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Field [test_cmd] dose not exist in command json file ! \n");
+//
+//		 //释放Json Object指针
+//		json_object_put(file_jsonobj);
+//		json_object_put(cmd_jsonobj);
+//		json_object_put(flag_jsonobj);
+//		json_object_put(value_jsonobj);
+//		json_object_put(sensorid_jsonobj);
+//
+//        return SUCCESS;
+//    }
+//    else
+//    {
+//    	HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Open command json file failure, file=%s \n", monitorJasonFile);
+//        return FAILURE;
+//    }
+//}
 
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
 OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
