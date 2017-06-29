@@ -251,7 +251,7 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaEl
 
 	//释放记录集
     mysql_close(sqlHandler);
-    HCU_DEBUG_PRINT_CRT("DBICOM: MYSQL release result = %s\n", mysql_error(sqlHandler));
+    //HCU_DEBUG_PRINT_CRT("DBICOM: MYSQL release result = %s\n", mysql_error(sqlHandler));
     return SUCCESS;
 }
 

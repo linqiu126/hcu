@@ -15,6 +15,11 @@
 
 //= ZJL, 2017 June.29 CURRENT_SW_DELIVERY 214=>BFSC项目
 = Bug fix on SYSPM CRASH
+= 数据库表单的访问中，发现can't create unix socket(24)，这是因为linux内核的open files数量中配置了1024，不够用了。将其改为10240或者51200/Unlimited，就够用了 
+= MySql采用mysqladmin -uroot -p123456 variables | grep files，也能发现mysql对于文件打开的最大限制数为1024，但据说这个没起作用。
+= MySql max_connetions也没改动，因为咱们只有少量的用户在使用
+= 经过配置参数的放大以后，这个问题暂时按下不表，未来继续进行观察，看看是否还有其它风险
+
 
 
 //= ZJL, 2017 June.28 CURRENT_SW_DELIVERY 213=>BFSC项目
