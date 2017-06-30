@@ -144,6 +144,9 @@ extern OPSTAT func_cloudvela_http_curl_conn_setup(void);
 extern OPSTAT func_cloudvela_http_curl_link_init(void);
 extern size_t func_cloudvela_http_curl_write_callback(void *buffer, size_t size, size_t nmemb, void *userp);
 
+//给外部使用的函数
+extern bool hcu_cloudvela_check_online_status(void);
+
 //引用外部函数
 extern UINT32 hcu_disk_write(UINT32 fId, void *dataBuffer, UINT32 dataLen);
 extern OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf);

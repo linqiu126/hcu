@@ -2984,6 +2984,119 @@ OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 	return SUCCESS;
 }
 
+//更新boot区文件的版本信息
+OPSTAT hcu_vm_engpar_update_phy_boot_sw_ver(UINT16 relId, UINT16 verId)
+{
+	//int fHandler = 0;
+	FILE *fp;
+	int bytes_read = 0, len = 0, index =0;
+	int file_len=0;
+	char *pRecord, *pRecordNew, *px;
+
+	//打开源文件
+	if((fp=fopen(HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE, "rt+"))== NULL){
+		HcuErrorPrint("HCU-VM: Open %s Error!\n", HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE);
+		return FAILURE;
+	}
+
+	//测得文件大小
+	//curpos = ftell(fp);
+	fseek(fp, 0L, SEEK_END);
+	file_len = ftell(fp);
+	fseek(fp, 0L, SEEK_SET);
+	if (file_len <=0){
+		HcuErrorPrint("HCU-VM: Not file content!\n");
+		fclose(fp);
+		return FAILURE;
+	}
+
+	//读取文件：人为的放大一点点，就是为了容纳下潜在的RELID/VERID比原先的字符串大
+	pRecord = malloc(file_len+20);
+	if (pRecord==NULL){
+		HcuErrorPrint("HCU-VM: Allocate memory fail!\n");
+		return FAILURE;
+	}
+	pRecordNew = malloc(file_len+20);
+	if (pRecordNew==NULL){
+		HcuErrorPrint("HCU-VM: Allocate memory fail!\n");
+		return FAILURE;
+	}
+	bytes_read=fread(pRecord, 1, file_len, fp);
+	if (bytes_read != file_len){
+		HcuErrorPrint("HCU-VM: Read file fail, byte_read = %d, file_len = %d!\n", bytes_read, file_len);
+		free(pRecord);
+		free(pRecordNew);
+		fclose(fp);
+		return FAILURE;
+	}
+
+	char *p1, *p2, stmp[10];
+	memset(stmp, 0, sizeof(stmp));
+	//RelId
+	index = 6;
+	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
+	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
+	if ((p1==NULL) || (p2==NULL) || (p1>=p2)){
+		  HcuErrorPrint("HCU-VM: Read file fail!\n");
+		  free(pRecord);
+		  free(pRecordNew);
+		  fclose(fp);
+		  return FAILURE;
+	}
+	len = p2 - p1 - strlen(zHcuSysEngPhyBootCfg[index].left);
+	p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
+	memcpy(pRecordNew, pRecord, p1-pRecord);
+	sprintf(stmp, "%d", relId);
+	px = pRecordNew + (p1 - pRecord);
+	memcpy(px, stmp, strlen(stmp));
+	px = px + strlen(stmp);
+	memcpy(px, p2, (strlen(pRecord)-(p2-pRecord)));
+	//重新赋给pRecord
+	memset(pRecord, 0, sizeof(pRecord));
+	memcpy(pRecord, pRecordNew, strlen(pRecordNew));
+
+	//VerId
+	index = 7;
+	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
+	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
+	if ((p1==NULL) || (p2==NULL) || (p1>=p2)){
+		  HcuErrorPrint("HCU-VM: Read file fail!\n");
+		  free(pRecord);
+		  free(pRecordNew);
+		  fclose(fp);
+		  return FAILURE;
+	}
+	len = p2 - p1 - strlen(zHcuSysEngPhyBootCfg[index].left);
+	p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
+	memset(pRecordNew, 0, sizeof(pRecordNew));
+	memcpy(pRecordNew, pRecord, p1-pRecord);
+	sprintf(stmp, "%d", relId);
+	px = pRecordNew + (p1 - pRecord);
+	memcpy(px, stmp, strlen(stmp));
+	px = px + strlen(stmp);
+	memcpy(px, p2, (strlen(pRecord)-(p2-pRecord)));
+	//重新赋给pRecord
+	memset(pRecord, 0, sizeof(pRecord));
+	memcpy(pRecord, pRecordNew, strlen(pRecordNew));
+
+	//将pRecord回写到文件中
+	if (fwrite(pRecord, 1, strlen(pRecord), fp) != strlen(pRecord)){
+		  HcuErrorPrint("HCU-VM: Write file fail!\n");
+		  free(pRecord);
+		  free(pRecordNew);
+		  fclose(fp);
+		  return FAILURE;
+	}
+
+	//关闭文件
+	free(pRecord);
+	free(pRecordNew);
+	fclose(fp);
+
+	return SUCCESS;
+}
+
+
 //翻译信息
 void hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target)
 {

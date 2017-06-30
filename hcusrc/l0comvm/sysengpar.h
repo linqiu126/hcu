@@ -314,7 +314,6 @@ typedef struct HcuSysEngParTab
 	SysEngParElementLocalUi_t 				localUI;
 	SysEngParElementProgramCodeDefineFix_t 	codeDefineFix;
 	SysEngParElementHwBurnPhyIdAddr_t 		hwBurnId;
-	//HcuSysEngBfscCfgpar_t					bfsc;  //不再使用数据库表单参数配置的方式来进行这部分的控制
 }HcuSysEngParTab_t;
 
 

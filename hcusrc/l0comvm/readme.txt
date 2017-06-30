@@ -11,9 +11,12 @@
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
 
+//= ZJL, 2017 June.30 CURRENT_SW_DELIVERY 216=>BFSC项目
+= 创建程序升级过程的框架
+= 创建boot区更新RELID/VERID的函数
+
 //= ZJL, 2017 June.30 CURRENT_SW_DELIVERY 215=>BFSC项目
 = 改进VM功能：当某个任务MsgQue满的时候，删除该任务／消息队列，然后重新创建，从而达到重置的目的
-
 
 //= ZJL, 2017 June.29 CURRENT_SW_DELIVERY 214=>BFSC项目
 = Bug fix on SYSPM CRASH

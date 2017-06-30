@@ -5160,6 +5160,14 @@ OPSTAT fsm_cloudvela_llczhb_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 	return SUCCESS;
 }
 
+//检查是否在线
+bool hcu_cloudvela_check_online_status(void)
+{
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE)
+		return TRUE;
+	else
+		return FALSE;
+}
 
 
 

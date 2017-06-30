@@ -165,21 +165,198 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	//int ret=0;
+
+	//Receive message and copy to local variable
+	msg_struct_cloudvela_spspm_inventory_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_spspm_inventory_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_spspm_inventory_req_t)))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//生成消息并发送给后台
+	msg_struct_spspm_cloudvela_inventory_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_inventory_resp_t));
+
+	//L2信息
+	strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+		sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+	strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+			sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+	snd.comHead.timeStamp = time(0);
+	snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+	strcpy(snd.comHead.funcFlag, "0");
+
+	snd.baseResp = HUITP_IEID_UNI_COM_RESPONSE_YES;
+	snd.hwType = zHcuSysEngPar.hwBurnId.hwType;
+	snd.hwId = zHcuSysEngPar.hwBurnId.hwPemId;
+	snd.swRel = zHcuSysEngPar.hwBurnId.swRelId;
+	snd.swVer = zHcuSysEngPar.hwBurnId.swVerId;
+	snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
+	strcpy(snd.desc, "");
+	snd.length = sizeof(msg_struct_spspm_cloudvela_inventory_resp_t);
+	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+
+	//返回
 	return SUCCESS;
 }
 
 OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	//int ret=0;
+
+	//Receive message and copy to local variable
+	msg_struct_cloudvela_spspm_inventory_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_spspm_inventory_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_spspm_inventory_confirm_t)))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//处理接收到的反馈，并进行合理的处理
+	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
+		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive none-positive inventory confirm message, so no handle.\n");
+		return SUCCESS;
+	}
+	if ((rcv.hwType != zHcuSysEngPar.hwBurnId.hwType) || (rcv.hwId != zHcuSysEngPar.hwBurnId.hwPemId) || (rcv.upgradeFlag != zHcuSysEngPar.hwBurnId.swUpgradeFlag)){
+		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive none-compliance hardware info, so no handle.\n");
+		return SUCCESS;
+	}
+	if ((rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE) && (rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_TRAIL) && (rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH)){
+		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive none-compliance upgrade info, so no handle.\n");
+		return SUCCESS;
+	}
+
+	//处理软件升级过程：每一次都会重置下载过程
+	memset(&(gTaskSysswmContext.bhSw), 0, sizeof(gTaskSysswmContextBody_t));
+	gTaskSysswmContext.bhSw.targetSwRel = rcv.swRel;
+	gTaskSysswmContext.bhSw.targetSwVer = rcv.swVer;
+
+	//生成消息并发送给后台
+	msg_struct_spspm_cloudvela_sw_package_report_t snd;
+	memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_sw_package_report_t));
+
+	//L2信息
+	strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+		sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+	strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+			sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+	snd.comHead.timeStamp = time(0);
+	snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+	strcpy(snd.comHead.funcFlag, "0");
+
+	snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+	snd.segIndex = 0;
+	snd.segTotal = 0;
+	snd.segLen = 0;
+	snd.length = sizeof(msg_struct_spspm_cloudvela_sw_package_report_t);
+	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+
+	//返回
 	return SUCCESS;
 }
 
+//暂时不处理
 OPSTAT fsm_sysswm_cloudvela_sw_package_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	//int ret=0;
+
+	//Receive message and copy to local variable
+	msg_struct_cloudvela_spspm_sw_package_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_spspm_sw_package_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_spspm_sw_package_req_t)))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+
+
 	return SUCCESS;
 }
 
+//完全依赖于这个过程进行软件体的传输
 OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	//int ret=0;
+
+	//Receive message and copy to local variable
+	msg_struct_cloudvela_spspm_sw_packag_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_spspm_sw_packag_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_spspm_sw_packag_confirm_t)))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//具体的处理过程
+	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
+		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive none-positive sw package confirm message, so no handle.\n");
+		return SUCCESS;
+	}
+	//接下来的这一段：第一段index=1，是必须的
+	if ((rcv.validLen > rcv.segLen) || (rcv.segIndex != (gTaskSysswmContext.bhSw.cfmSegIndex+1))){
+		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive invalid segment sw package, so no handle.\n");
+		return SUCCESS;
+	}
+
+	//重新覆盖关键参数，包括第一次写入
+	gTaskSysswmContext.bhSw.totalSeg = rcv.segTotal;
+	gTaskSysswmContext.bhSw.segLen = rcv.segLen;
+
+	//处理数据并写到硬盘
+
+
+	//如果检查一切正确，则证实需要＋１
+	gTaskSysswmContext.bhSw.cfmSegIndex++;
+	gTaskSysswmContext.bhSw.retransTimes = 0;
+
+	//重发，则cfm不变，retransTimes++
+
+	//如果达到最大重传次数，则结束
+	if (gTaskSysswmContext.bhSw.retransTimes >= HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES){
+		memset(&(gTaskSysswmContext.bhSw), 0, sizeof(gTaskSysswmContextBody_t));
+		HCU_DEBUG_PRINT_IPT("SYSSWM: Retransmit sw package reach max times, not success.\n");
+		//处理硬盘上已经接收到的数据
+
+		return SUCCESS;
+	}
+
+	//如果还未收全：暂时无限接收重传
+	if (gTaskSysswmContext.bhSw.cfmSegIndex < gTaskSysswmContext.bhSw.totalSeg){
+		//继续接收下一段
+		msg_struct_spspm_cloudvela_sw_package_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_sw_package_report_t));
+
+		//L2信息
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		snd.segIndex = gTaskSysswmContext.bhSw.cfmSegIndex;  //证实的作用，以便让后台发送下一段
+		snd.segTotal = rcv.segTotal;
+		snd.segLen = rcv.segLen;
+		snd.length = sizeof(msg_struct_spspm_cloudvela_sw_package_report_t);
+		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+	}
+
+	//数据收齐活了
+	else{
+		//硬盘文件，并实施升级过程
+
+		//升级系统区的软件版本
+		zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.bhSw.targetSwRel;
+		zHcuSysEngPar.hwBurnId.swVerId = gTaskSysswmContext.bhSw.targetSwVer;
+
+		//升级BOOT区参数
+		if (hcu_vm_engpar_update_phy_boot_sw_ver(zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId) == FAILURE)
+			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
+	}
+
+	//返回
 	return SUCCESS;
 }
 
