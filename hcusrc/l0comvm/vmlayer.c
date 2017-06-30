@@ -3032,8 +3032,8 @@ OPSTAT hcu_vm_engpar_update_phy_boot_sw_ver(UINT16 relId, UINT16 verId)
 
 	char *p1, *p2, stmp[10];
 	memset(stmp, 0, sizeof(stmp));
-	//RelId
-	index = 6;
+	len = 0;
+	index = 6; //RelId
 	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
 	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
 	if ((p1==NULL) || (p2==NULL) || (p1>=p2)){
@@ -3043,20 +3043,32 @@ OPSTAT hcu_vm_engpar_update_phy_boot_sw_ver(UINT16 relId, UINT16 verId)
 		  fclose(fp);
 		  return FAILURE;
 	}
-	len = p2 - p1 - strlen(zHcuSysEngPhyBootCfg[index].left);
 	p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
+	memset(pRecordNew, 0, file_len+20);
 	memcpy(pRecordNew, pRecord, p1-pRecord);
+	len += p1-pRecord;
 	sprintf(stmp, "%d", relId);
 	px = pRecordNew + (p1 - pRecord);
 	memcpy(px, stmp, strlen(stmp));
+	len += strlen(stmp);
 	px = px + strlen(stmp);
-	memcpy(px, p2, (strlen(pRecord)-(p2-pRecord)));
+	memcpy(px, p2, (file_len-(p2-pRecord)));
+	len += (file_len-(p2-pRecord));
 	//重新赋给pRecord
-	memset(pRecord, 0, sizeof(pRecord));
-	memcpy(pRecord, pRecordNew, strlen(pRecordNew));
+	memset(pRecord, 0, file_len+20);
+	if (len >= file_len+20){
+		  HcuErrorPrint("HCU-VM: Caculate length fail!\n");
+		  free(pRecord);
+		  free(pRecordNew);
+		  fclose(fp);
+		  return FAILURE;
+	}
+	memcpy(pRecord, pRecordNew, len);
 
-	//VerId
-	index = 7;
+
+	index = 7; //VerId
+	len = 0;
+	memset(stmp, 0, sizeof(stmp));
 	p1 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].left);
 	p2 = strstr(pRecord, zHcuSysEngPhyBootCfg[index].right);
 	if ((p1==NULL) || (p2==NULL) || (p1>=p2)){
@@ -3066,21 +3078,30 @@ OPSTAT hcu_vm_engpar_update_phy_boot_sw_ver(UINT16 relId, UINT16 verId)
 		  fclose(fp);
 		  return FAILURE;
 	}
-	len = p2 - p1 - strlen(zHcuSysEngPhyBootCfg[index].left);
 	p1 = p1+strlen(zHcuSysEngPhyBootCfg[index].left);
-	memset(pRecordNew, 0, sizeof(pRecordNew));
+	memset(pRecordNew, 0, file_len+20);
 	memcpy(pRecordNew, pRecord, p1-pRecord);
+	len += p1-pRecord;
 	sprintf(stmp, "%d", relId);
 	px = pRecordNew + (p1 - pRecord);
 	memcpy(px, stmp, strlen(stmp));
+	len += strlen(stmp);
 	px = px + strlen(stmp);
-	memcpy(px, p2, (strlen(pRecord)-(p2-pRecord)));
+	memcpy(px, p2, (file_len - (p2-pRecord)));
+	len += (file_len-(p2-pRecord));
 	//重新赋给pRecord
-	memset(pRecord, 0, sizeof(pRecord));
-	memcpy(pRecord, pRecordNew, strlen(pRecordNew));
+	memset(pRecord, 0, file_len+20);
+	if (len >= file_len+20){
+		  HcuErrorPrint("HCU-VM: Caculate length fail!\n");
+		  free(pRecord);
+		  free(pRecordNew);
+		  fclose(fp);
+		  return FAILURE;
+	}
+	memcpy(pRecord, pRecordNew, len);
 
 	//将pRecord回写到文件中
-	if (fwrite(pRecord, 1, strlen(pRecord), fp) != strlen(pRecord)){
+	if (fwrite(pRecord, 1, len, fp) != len){
 		  HcuErrorPrint("HCU-VM: Write file fail!\n");
 		  free(pRecord);
 		  free(pRecordNew);

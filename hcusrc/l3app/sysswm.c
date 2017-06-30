@@ -292,7 +292,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 		return SUCCESS;
 	}
 	//接下来的这一段：第一段index=1，是必须的
-	if ((rcv.validLen > rcv.segLen) || (rcv.segIndex != (gTaskSysswmContext.bhSw.cfmSegIndex+1))){
+	if ((rcv.validLen > rcv.segLen) || (rcv.segIndex != (gTaskSysswmContext.bhSw.cfmSegIndex+1)) || (rcv.validLen > sizeof(rcv.body))){
 		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive invalid segment sw package, so no handle.\n");
 		return SUCCESS;
 	}
@@ -302,7 +302,21 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	gTaskSysswmContext.bhSw.segLen = rcv.segLen;
 
 	//处理数据并写到硬盘
-
+	FILE *fp;
+	char stmp[200];
+	memset(stmp, 0, sizeof(stmp));
+	strcpy(stmp, zHcuSysEngPar.swm.hcuSwDownloadDir);
+	sprintf(stmp, "%shcusw_r%d_v%d.zip", zHcuSysEngPar.swm.hcuSwDownloadDir, gTaskSysswmContext.bhSw.targetSwRel, gTaskSysswmContext.bhSw.targetSwVer);
+	//打开源文件：不存在就创建
+	if((fp=fopen(stmp, "wb+"))== NULL){
+		fclose(fp);
+		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Open file %s Error!\n", stmp);
+	}
+	fseek(fp, 0L, SEEK_END);
+	if (fwrite(rcv.body, 1, rcv.validLen, fp) != rcv.validLen){
+		fclose(fp);
+		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Write file %s Error!\n", stmp);
+	}
 
 	//如果检查一切正确，则证实需要＋１
 	gTaskSysswmContext.bhSw.cfmSegIndex++;
@@ -314,8 +328,9 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	if (gTaskSysswmContext.bhSw.retransTimes >= HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES){
 		memset(&(gTaskSysswmContext.bhSw), 0, sizeof(gTaskSysswmContextBody_t));
 		HCU_DEBUG_PRINT_IPT("SYSSWM: Retransmit sw package reach max times, not success.\n");
-		//处理硬盘上已经接收到的数据
+		//处理硬盘上已经接收到的数据：暂时忽略
 
+		//返回
 		return SUCCESS;
 	}
 
@@ -346,6 +361,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//数据收齐活了
 	else{
 		//硬盘文件，并实施升级过程
+		//执行过程，未来待完善
 
 		//升级系统区的软件版本
 		zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.bhSw.targetSwRel;
