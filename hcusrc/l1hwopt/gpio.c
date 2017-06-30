@@ -174,9 +174,6 @@ OPSTAT func_gpio_read_data_dht11(void)
         delay(200); //wiringPi functions
         if(func_gpio_readSensorDht11Data(RPI_GPIO_PIN_DHT11_DATA))
         {
-//        	if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-//            	HcuDebugPrint("GPIO: Sensor DHT11 Original read result Temp=%d.%dC, Humid=%d.%d\%, DATA_GPIO#=%d\n", (databuf>>8)&0xFF, databuf&0xFF, (databuf>>24)&0xFF, (databuf>>16)&0xFF, RPI_GPIO_PIN_DHT11_DATA);
-//        	}
         	tmp1 =  (databuf>>8)&0xFF;
         	tmp2 = databuf&0xFF;
         	tempSum += tmp1 + tmp2/256;
@@ -273,17 +270,6 @@ OPSTAT func_gpio_read_data_mq135(void)
 	    //目前还有较多的问题，读取的数据总是HIGH，待完善
 	    toxicgas = digitalRead(RPI_GPIO_PIN_MQ135_DATA);
 	    toxicgasSum += toxicgas;
-
-//		if ((toxicgas == 1) && (zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE)
-//			HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [HIGH], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
-//		else if ((toxicgas == 0) && (zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE)
-//			HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [LOW], DATA_GPIO#=%d\n", RPI_GPIO_PIN_MQ135_DATA);
-//		else
-//		{
-//			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-//				HcuDebugPrint("GPIO: Sensor MQ135 Original read result pollution= [NULL-%d], DATA_GPIO#=%d\n", toxicgas, RPI_GPIO_PIN_MQ135_DATA);
-//			}
-//		}
 	}
 
 	//求平均

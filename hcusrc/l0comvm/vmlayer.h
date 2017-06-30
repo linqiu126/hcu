@@ -838,6 +838,8 @@ extern OPSTAT hcu_task_create_and_run(UINT32 task_id, HcuFsmStateItem_t* pFsmSta
 extern OPSTAT hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *param_ptr, UINT32 param_len); //message send
 extern OPSTAT hcu_message_rcv(UINT32 dest_id, HcuMsgSruct_t *msg);
 extern UINT32 hcu_message_rcv_no_wait(UINT32 dest_id, HcuMsgSruct_t *msg);
+extern void   hcu_task_recreate(UINT32 taskid);
+
 extern OPSTAT hcu_vm_taskid_to_string(UINT32 id, char *string);
 extern OPSTAT hcu_vm_msgid_to_string(UINT32 id, char *string);
 extern OPSTAT hcu_vm_timerid_to_string(UINT32 id, char *string);

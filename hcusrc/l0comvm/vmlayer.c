@@ -1128,14 +1128,17 @@ UINT32 hcu_message_send(UINT32 msg_id, UINT32 dest_id, UINT32 src_id, void *para
 	EFAULT：参数msgp指向无效的内存地址
 	EINTR：队列已满而处于等待情况下被信号中断
 	EINVAL：无效的参数msqid、msgsz或参数消息类型type小于0  */
-	//ret = msgsnd(zHcuTaskInfo[dest_id].QueId, msg, (sizeof(HcuMsgSruct_t)-sizeof(long)), IPC_NOWAIT);
 	ret = msgsnd(hcu_msgque_inquery(dest_id), msg, (sizeof(HcuMsgSruct_t)-sizeof(long)), IPC_NOWAIT);
 	free(msg);
-	if ( ret < 0 ) {
+	//各种不同错误的处理：消息队列满，发送RESTART消息给TASK_ID_SCRCON，让起帮着处理
+	if (ret == EAGAIN){
+		hcu_task_recreate(dest_id);
+		HCU_DEBUG_PRINT_CRT("HCU-VM: Deat task msg send wrong due to queue full, re-create this task, taskId = 0x%x [%s].\n", dest_id, zHcuVmCtrTab.task[dest_id].taskName);
+	}
+	else if ( ret < 0 ) {
 		HcuErrorPrint("HCU-VM: msgsnd() write msg failed, errno=%d[%s], dest_id = %d [%s]\n",errno,strerror(errno), dest_id, zHcuVmCtrTab.task[dest_id].taskName);
 		zHcuVmCtrTab.task[dest_id].QueFullFlag = HCU_TASK_QUEUE_FULL_TRUE;
 		//_exit(0)//add by shanchun for thread killing
-		exit(1);
 		return FAILURE;
 	}
 
@@ -1524,6 +1527,31 @@ UINT32 hcu_message_rcv_no_wait(UINT32 dest_id, HcuMsgSruct_t *msg)
 
 	return ret;
 }
+
+//删除运行的任务以后，重新再创建该任务
+void hcu_task_recreate(UINT32 taskid)
+{
+	//入参检查
+	if ((taskid<TASK_ID_MIN) || (taskid>=TASK_ID_MAX)){
+		HcuErrorPrint("HCU-VM: Error task Id input!\n");
+		return;
+	}
+	//清理该任务
+	hcu_msgque_delete(taskid);
+	hcu_task_delete(taskid);
+	zHcuVmCtrTab.fsm.pFsmCtrlTable[taskid].taskId = TASK_ID_INVALID;
+
+	//重新创建该任务
+	hcu_vm_system_task_init_call(taskid, zHcuVmCtrTab.task[taskid].taskFuncEntry);
+	msg_struct_com_init_t snd0;
+
+	//发送初始化消息给目标任务，以便初始化所有任务模块
+	memset(&snd0, 0, sizeof(msg_struct_com_init_t));
+	snd0.length = sizeof(msg_struct_com_init_t);
+	hcu_message_send(MSG_ID_COM_INIT, taskid, TASK_ID_SVRCON, &snd0, snd0.length);
+	return;
+}
+
 
 /*
  *

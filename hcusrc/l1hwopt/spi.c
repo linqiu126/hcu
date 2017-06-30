@@ -158,23 +158,11 @@ OPSTAT func_spi_read_data_mth01(void)
 		delay (1000);
 		//数据存在的位置是前两个字节是温度，第三个字节是湿度，第四个是CRC
 		//CRC8暂时不检查，未来需要检查
-//		for (j=0;j<256;j++) read[j]=j;
 		wiringPiSPIDataRW(RPI_SPI_ADDR_MTH01, read, 4);
-//		sprintf(str, "SPI: Sensor MTH01 read result: Index=%d, Return = %d, Read result = 0x ", i, tmp);
-//		for(j=0;j<256;j++){
-//			sprintf(strtmp, "%02x ", read[j]);
-//			strcat(str, strtmp);
-//		}
-//		strcat(str, "\n");
-//		HcuDebugPrint(str);
-		//HcuDebugPrint("SPI: Sensor MTH01 read result: Index=%d, Read[4] = 0x%x %x %x %x, Return=%d\n", i, read[0], read[1], read[2], read[3], tmp);
 		temp = ((read[0]<<8)&0xFF00) + (read[1]&0xFF) - 400;
 		tempSum += temp/10;
 		humid = read[2]&0xFF;
 		humidSum += humid;
-//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-//			HcuDebugPrint("SPI: Sensor MTH01 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
-//		}
 	}
 
 	//求平均
@@ -216,14 +204,10 @@ OPSTAT func_spi_read_data_rht03(void)
 		//数据存在的位置是前两个字节是温度，第三个字节是湿度，第四个是CRC
 		//CRC16暂时不检查，未来需要检查
 		wiringPiSPIDataRW(RPI_SPI_ADDR_RHT03, read, 4);
-		//HcuDebugPrint("SPI: Sensor RHT03 read result: Index=%d, Read[4] = 0x%x %x %x %x, Return=%d\n", i, read[0], read[1], read[2], read[3], tmp);
 		temp = ((read[0]<<8)&0xFF00) + (read[1]&0xFF) - 400;
 		tempSum += temp/10;
 		humid = read[2]&0xFF;
 		humidSum += humid;
-//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-//			HcuDebugPrint("SPI: Sensor RHT03 Original read result Temp=0x%xC, Temp=0x%x\%, index = %d, DATA_MOSI#=%d\n", temp, humid, i, RPI_SPI_PIN_MOSI);
-//		}
 	}
 
 	//求平均

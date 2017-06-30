@@ -173,9 +173,6 @@ OPSTAT func_i2c_read_data_sht20(void)
 		delay (200);
 		temp = wiringPiI2CReadReg16(fd, 0xE3);
 		humid = wiringPiI2CReadReg16(fd, 0xE5);
-//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-//			HcuDebugPrint("I2C: Sensor SHT20 Original read result Temp=0x%xC, Humid=0x%x\%, DATA_I2C_SDA#=%d\n", temp, humid, RPI_I2C_PIN_SDA);
-//		}
 		tmp1 = (temp>>8)&0xFF;
 		tmp2 = ((temp&0xFF)<<8)&0xFF00;
 		tempSum += (tmp1 + tmp2) * 175.72 / 1024 / 64 - 46.85;
@@ -248,9 +245,6 @@ OPSTAT func_i2c_read_data_bh1750(void)
 		if(read(fd, &buf, 3))
 		{
 			flight=(buf[0]*256 + buf[1])/1.2;
-//			if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-//				HcuDebugPrint("I2C: Sensor BH1750 Original float result light = %6.2f lx, DATA_I2C_SDA#=%d\n", flight, RPI_I2C_PIN_SDA);
-//			}
 			flightSum+= flight;
 		}
 		else
@@ -323,9 +317,6 @@ OPSTAT func_i2c_read_data_bmp180(void)
 		delay(5); tmp = wiringPiI2CReadReg8(fd, 0xF8);
 		airprs = ((((airprs&0xFF)<<16) + ((airprs&0xFF00)>>8) + (tmp&0xFF)) >> (8-RPI_I2C_SENSOR_BMP180_OVER_SAMPLE_SET));
 		airprsSum += airprs;
-//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-//			HcuDebugPrint("I2C: Sensor BMP180 Original read result Airprs=0x%xPa, Temp=0x%xC, DATA_I2C_SDA#=%d\n", airprs, temp, RPI_I2C_PIN_SDA);
-//		}
 	}
 
 	//求平均
@@ -404,9 +395,6 @@ OPSTAT func_i2c_read_data_bmpd300(void)
 			pm25 = ((pm25&0xFF)<<8) + ((pm25&0xFF00)>>8);
 			pm25Sum += pm25;
 		}
-//		if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_INF_ON) != FALSE){
-//			HcuDebugPrint("I2C: Sensor BMPD300 Original read result Pm25=0x%xmg/m3DATA_I2C_SDA#=%d\n", pm25, RPI_I2C_PIN_SDA);
-//		}
 	}
 
 	//求平均

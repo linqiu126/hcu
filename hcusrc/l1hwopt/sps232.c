@@ -220,7 +220,6 @@ OPSTAT func_sps232_read_data_ze08ch2o(void)
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPS232]++;
 			return FAILURE;
 		}
-		//HcuDebugPrint("SPS232: Fd = %d, ZE08CH2O receive buffer = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x\n", gSerialPortForSPS232.fd, rb[0], rb[1], rb[2], rb[3], rb[4], rb[5], rb[6], rb[7], rb[8], rb[9], rb[10], rb[11], rb[12], rb[13], rb[14], rb[15], rb[16], rb[17]);
 
 		//example: ff 17	//先关掉串口句柄 04 00 01 20 13 88 29 ff
 		//寻找帧头

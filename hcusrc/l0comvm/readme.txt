@@ -9,8 +9,10 @@
 
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
-[BUG#003]
-跑一会儿，会出现段错误，怀疑是HWINV的数据库访问造成的
+
+
+//= ZJL, 2017 June.30 CURRENT_SW_DELIVERY 215=>BFSC项目
+= 改进VM功能：当某个任务MsgQue满的时候，删除该任务／消息队列，然后重新创建，从而达到重置的目的
 
 
 //= ZJL, 2017 June.29 CURRENT_SW_DELIVERY 214=>BFSC项目
@@ -19,8 +21,6 @@
 = MySql采用mysqladmin -uroot -p123456 variables | grep files，也能发现mysql对于文件打开的最大限制数为1024，但据说这个没起作用。
 = MySql max_connetions也没改动，因为咱们只有少量的用户在使用
 = 经过配置参数的放大以后，这个问题暂时按下不表，未来继续进行观察，看看是否还有其它风险
-
-
 
 //= ZJL, 2017 June.28 CURRENT_SW_DELIVERY 213=>BFSC项目
 = Bug Fix：组合对于ValidFlag的判定

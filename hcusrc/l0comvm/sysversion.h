@@ -14,7 +14,7 @@
 //SW version control, for internal usage
 #define HCU_CURRENT_SW_RELEASE 3 //R01 = 0x01 (XQ.HCU.SW.R01.456)
 
-#define HCU_CURRENT_SW_DELIVERY 214 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
+#define HCU_CURRENT_SW_DELIVERY 215 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
 
 
 
@@ -227,6 +227,12 @@
 //= LZH, 2017 June.26 CURRENT_SW_DELIVERY 212=>BFSC项目
 //= ZJL, 2017 June.28 CURRENT_SW_DELIVERY 213=>BFSC项目
 //= ZJL, 2017 June.29 CURRENT_SW_DELIVERY 214=>BFSC项目
+//= ZJL, 2017 June.30 CURRENT_SW_DELIVERY 215=>BFSC项目
+
+
+
+
+
 
 
 
