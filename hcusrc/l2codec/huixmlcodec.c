@@ -1284,8 +1284,8 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MS
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
-	msg_struct_cloudvela_spspm_inventory_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_cloudvela_spspm_inventory_req_t));
+	msg_struct_cloudvela_sysswm_inventory_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_cloudvela_sysswm_inventory_req_t));
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = HUITP_ENDIAN_EXG16(rcv->baseReq.comReq);
 	snd.hwType = HUITP_ENDIAN_EXG16(rcv->reqValue.hwType);
@@ -1294,7 +1294,7 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MS
 	snd.swVer = HUITP_ENDIAN_EXG16(rcv->reqValue.swVer);
 	snd.upgradeFlag = rcv->reqValue.upgradeFlag;
 	strncpy(snd.desc, rcv->reqValue.desc, strlen(rcv->reqValue.desc)<sizeof(snd.desc)?strlen(rcv->reqValue.desc):sizeof(snd.desc));
-	snd.length = sizeof(msg_struct_cloudvela_spspm_inventory_req_t);
+	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_req_t);
 	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ].taskName);
 
@@ -1320,8 +1320,8 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUIT
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
-	msg_struct_cloudvela_spspm_inventory_confirm_t snd;
-	memset(&snd, 0, sizeof(msg_struct_cloudvela_spspm_inventory_confirm_t));
+	msg_struct_cloudvela_sysswm_inventory_confirm_t snd;
+	memset(&snd, 0, sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t));
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.hwType = HUITP_ENDIAN_EXG16(rcv->confirmValue.hwType);
@@ -1330,7 +1330,7 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUIT
 	snd.swVer = HUITP_ENDIAN_EXG16(rcv->confirmValue.swVer);
 	snd.upgradeFlag = rcv->confirmValue.upgradeFlag;
 	strncpy(snd.desc, rcv->confirmValue.desc, strlen(rcv->confirmValue.desc)<sizeof(snd.desc)?strlen(rcv->confirmValue.desc):sizeof(snd.desc));
-	snd.length = sizeof(msg_struct_cloudvela_spspm_inventory_confirm_t);
+	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t);
 	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
 
@@ -1360,8 +1360,8 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_M
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
-	msg_struct_cloudvela_spspm_sw_package_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_cloudvela_spspm_sw_package_req_t));
+	msg_struct_cloudvela_sysswm_sw_package_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_cloudvela_sysswm_sw_package_req_t));
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = HUITP_ENDIAN_EXG16(rcv->baseReq.comReq);
 	snd.segIndex = HUITP_ENDIAN_EXG16(rcv->segValue.segIndex);
@@ -1371,7 +1371,7 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_M
 	if (HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN > HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: HUITP and COMMSG parameter set error!\n");
 	memcpy(snd.body, rcv->body.swPkgBody, sizeof(rcv->body.swPkgBody)<sizeof(snd.body)?sizeof(rcv->body.swPkgBody):sizeof(snd.body));
-	snd.length = sizeof(msg_struct_cloudvela_spspm_inventory_req_t);
+	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_req_t);
 	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ].taskName);
 
@@ -1401,8 +1401,8 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUI
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
 
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
-	msg_struct_cloudvela_spspm_sw_packag_confirm_t snd;
-	memset(&snd, 0, sizeof(msg_struct_cloudvela_spspm_sw_packag_confirm_t));
+	msg_struct_cloudvela_sysswm_sw_packag_confirm_t snd;
+	memset(&snd, 0, sizeof(msg_struct_cloudvela_sysswm_sw_packag_confirm_t));
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.segIndex = HUITP_ENDIAN_EXG16(rcv->segValue.segIndex);
@@ -1412,7 +1412,7 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUI
 	if (HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN > HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: HUITP and COMMSG parameter set error!\n");
 	memcpy(snd.body, rcv->body.swPkgBody, sizeof(rcv->body.swPkgBody)<sizeof(snd.body)?sizeof(rcv->body.swPkgBody):sizeof(snd.body));
-	snd.length = sizeof(msg_struct_cloudvela_spspm_inventory_confirm_t);
+	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t);
 	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
 

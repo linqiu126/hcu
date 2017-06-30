@@ -44,10 +44,11 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_canitfleo_timeout},
 
     //Normal task status
+	{MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM, 	FSM_STATE_CANITFLEO_ACTIVED,     fsm_canitfleo_sysswm_inventory_confirm},
+	{MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM, 	FSM_STATE_CANITFLEO_ACTIVED,     fsm_canitfleo_sysswm_sw_package_confirm},
+
+    //Normal task status
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-
-	//{MSG_ID_L3BFSC_CAN_GENERAL_CMD_REQ,     FSM_STATE_CANITFLEO_ACTIVED,          	fsm_canitfleo_l3bfsc_general_cmd_req}, //后台的指令
-
 	{MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_sys_cfg_req},  	//初始化配置
 	{MSG_ID_L3BFSC_CAN_SYS_START_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_can_sys_start_req},   	//人工命令
 	{MSG_ID_L3BFSC_CAN_SYS_STOP_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_can_sys_stop_req},   		//人工命令
@@ -661,6 +662,28 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	}
 	break;
 
+	case HUITP_MSGID_sui_inventory_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_inventory_report \n");
+		StrMsg_HUITP_MSGID_sui_inventory_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_inventory_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_inventory_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_inventory_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_uni_sw_package_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_uni_sw_package_report \n");
+		StrMsg_HUITP_MSGID_uni_sw_package_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_sw_package_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_sw_package_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
 	default:
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message!\n");
 	break;
@@ -1160,6 +1183,37 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_heat_beat_report_received_handle(StrMsg_H
 	return SUCCESS;
 }
 
+//本消息将送到SYSSWM模块
+OPSTAT func_canitfleo_l2frame_msg_inventory_report_received_handle(StrMsg_HUITP_MSGID_sui_inventory_report_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
+
+	//准备组装发送消息
+
+
+	//发送消息
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_sw_package_report_received_handle(StrMsg_HUITP_MSGID_sui_sw_package_report_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
+
+	//准备组装发送消息
+
+
+	//发送消息
+
+	//返回
+	return SUCCESS;
+}
+
+
+
 /*
  *  USBCAN BSP函数映射：硬件在两个CAN接口之间跳动，待固定住哪个CAN接口
  *
@@ -1475,6 +1529,40 @@ int func_canitfleo_socketcan_test_main(int argc, char **argv)
 	return EXIT_SUCCESS;
 }
 
+#endif  //BFSC
 
-#endif
+
+
+
+//通用过程
+OPSTAT fsm_canitfleo_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sysswm_canitfleo_inventory_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sysswm_canitfleo_sw_package_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+
+
 

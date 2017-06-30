@@ -13,9 +13,14 @@
 #pragma pack (1) //强制1字节对齐
 /*
  *
- *  顺从并更新到技术规范《慧HUITP接口规范v2.6, LAST UPDATE@2007/6/26》
+ *  顺从并更新到技术规范《慧HUITP接口规范v2.7, LAST UPDATE@2007/6/26》
  *
  * 2017/06/10, MA Yuchu, modify  for BFSC, Weight Sensor parameters, based on v2.5, LAST UPDATE@2007/5/27
+ * 2017/06/20 v2.6: 修改L3BFSC对应的结构，增加Heart-Beat过程
+ * 2017/06/30 V2.7: 修改CANITF接口上SW INVENTORY/SW PACKAGE的消息定义与结构
+ *
+ *
+ *
  */
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -794,8 +799,9 @@ typedef enum
 	HUITP_MSGID_uni_sw_package_report                = 0xA181,	 
 	HUITP_MSGID_uni_sw_package_confirm               = 0xA101,
 	//HCU-IHU SUI新增内容
-	HUITP_MSGID_sui_sw_package_req                   = 0xA110,
-	HUITP_MSGID_sui_sw_package_resp                  = 0xA190,
+	HUITP_MSGID_sui_sw_package_report                = 0xA190,
+	HUITP_MSGID_sui_sw_package_confirm               = 0xA110,
+
 	HUITP_MSGID_uni_sw_package_max,
 
   //ALARM REPORT
@@ -6731,22 +6737,22 @@ typedef struct StrMsg_HUITP_MSGID_uni_sw_package_confirm
 
 
 //HCU-IHU SUI新增内容
-//HUITP_MSGID_sui_sw_package_req                   = 0xA110,
-typedef struct StrMsg_HUITP_MSGID_sui_sw_package_req
+//HUITP_MSGID_sui_sw_package_report                   = 0xA190,
+typedef struct StrMsg_HUITP_MSGID_sui_sw_package_report
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_segment_t segValue;
-	StrIe_HUITP_IEID_sui_sw_package_body_t body;
-}StrMsg_HUITP_MSGID_sui_sw_package_req_t;
+}StrMsg_HUITP_MSGID_sui_sw_package_report_t;
 
-//HUITP_MSGID_sui_sw_package_resp                  = 0xA190,
-typedef struct StrMsg_HUITP_MSGID_sui_sw_package_resp
+//HUITP_MSGID_sui_sw_package_confirm                  = 0xA110,
+typedef struct StrMsg_HUITP_MSGID_sui_sw_package_confirm
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_sui_sw_package_segment_t seg;
-}StrMsg_HUITP_MSGID_sui_sw_package_resp_t;
+	StrIe_HUITP_IEID_sui_sw_package_body_t body;
+}StrMsg_HUITP_MSGID_sui_sw_package_confirm_t;
 
 
 //HUITP_MSGID_uni_sw_package_max,

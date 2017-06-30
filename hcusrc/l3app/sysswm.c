@@ -40,11 +40,17 @@ HcuFsmStateItem_t HcuFsmSysswm[] =
     {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            			fsm_sysswm_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          				fsm_sysswm_time_out},
 
-    //Task level functions
-	{MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,     	FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_req},
-	{MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, 	FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_inventory_confirm},
-	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,        FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_req},
-	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,    FSM_STATE_SYSSWM_ACTIVED,                fsm_sysswm_cloudvela_sw_package_confirm},
+    //Task level functions: CLOUD BH handler
+	{MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,     	FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_cloudvela_inventory_req},
+	{MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, 	FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_cloudvela_inventory_confirm},
+	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,        FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_cloudvela_sw_package_req},
+	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,    FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_cloudvela_sw_package_confirm},
+
+	//Task level functions: IHU CAN handler
+	{MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,     	FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_canitfleo_inventory_report},
+	{MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,     FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_canitfleo_sw_package_report},
+
+
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -168,15 +174,15 @@ OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * 
 	//int ret=0;
 
 	//Receive message and copy to local variable
-	msg_struct_cloudvela_spspm_inventory_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_spspm_inventory_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_spspm_inventory_req_t)))
+	msg_struct_cloudvela_sysswm_inventory_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_inventory_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_inventory_req_t)))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
 	//生成消息并发送给后台
-	msg_struct_spspm_cloudvela_inventory_resp_t snd;
-	memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_inventory_resp_t));
+	msg_struct_sysswm_cloudvela_inventory_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t));
 
 	//L2信息
 	strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
@@ -194,7 +200,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * 
 	snd.swVer = zHcuSysEngPar.hwBurnId.swVerId;
 	snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
 	strcpy(snd.desc, "");
-	snd.length = sizeof(msg_struct_spspm_cloudvela_inventory_resp_t);
+	snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t);
 	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
@@ -207,9 +213,9 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	//int ret=0;
 
 	//Receive message and copy to local variable
-	msg_struct_cloudvela_spspm_inventory_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_spspm_inventory_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_spspm_inventory_confirm_t)))
+	msg_struct_cloudvela_sysswm_inventory_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t)))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -233,8 +239,8 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	gTaskSysswmContext.bhSw.targetSwVer = rcv.swVer;
 
 	//生成消息并发送给后台
-	msg_struct_spspm_cloudvela_sw_package_report_t snd;
-	memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_sw_package_report_t));
+	msg_struct_sysswm_cloudvela_sw_package_report_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t));
 
 	//L2信息
 	strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
@@ -249,7 +255,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	snd.segIndex = 0;
 	snd.segTotal = 0;
 	snd.segLen = 0;
-	snd.length = sizeof(msg_struct_spspm_cloudvela_sw_package_report_t);
+	snd.length = sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t);
 	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 
@@ -263,9 +269,9 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_req(UINT32 dest_id, UINT32 src_id, void *
 	//int ret=0;
 
 	//Receive message and copy to local variable
-	msg_struct_cloudvela_spspm_sw_package_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_spspm_sw_package_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_spspm_sw_package_req_t)))
+	msg_struct_cloudvela_sysswm_sw_package_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_sw_package_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_sw_package_req_t)))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -280,9 +286,9 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//int ret=0;
 
 	//Receive message and copy to local variable
-	msg_struct_cloudvela_spspm_sw_packag_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_spspm_sw_packag_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_spspm_sw_packag_confirm_t)))
+	msg_struct_cloudvela_sysswm_sw_packag_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_sw_packag_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_sw_packag_confirm_t)))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -337,8 +343,8 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//如果还未收全：暂时无限接收重传
 	if (gTaskSysswmContext.bhSw.cfmSegIndex < gTaskSysswmContext.bhSw.totalSeg){
 		//继续接收下一段
-		msg_struct_spspm_cloudvela_sw_package_report_t snd;
-		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_sw_package_report_t));
+		msg_struct_sysswm_cloudvela_sw_package_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t));
 
 		//L2信息
 		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
@@ -353,7 +359,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 		snd.segIndex = gTaskSysswmContext.bhSw.cfmSegIndex;  //证实的作用，以便让后台发送下一段
 		snd.segTotal = rcv.segTotal;
 		snd.segLen = rcv.segLen;
-		snd.length = sizeof(msg_struct_spspm_cloudvela_sw_package_report_t);
+		snd.length = sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}
@@ -382,8 +388,8 @@ OPSTAT func_sysswm_time_out_period_working_scan(void)
 
 	//发送数据给后台
 	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) ){
-		msg_struct_spspm_cloudvela_inventory_report_t snd;
-		memset(&snd, 0, sizeof(msg_struct_spspm_cloudvela_inventory_report_t));
+		msg_struct_sysswm_cloudvela_inventory_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_sysswm_cloudvela_inventory_report_t));
 
 		//L2信息
 		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
@@ -403,7 +409,7 @@ OPSTAT func_sysswm_time_out_period_working_scan(void)
 		snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
 		snd.timeStamp = time(0);
 		strcpy(snd.desc, "");
-		snd.length = sizeof(msg_struct_spspm_cloudvela_inventory_report_t);
+		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
 	}
@@ -411,5 +417,39 @@ OPSTAT func_sysswm_time_out_period_working_scan(void)
 	//State no change
 	return SUCCESS;
 }
+
+
+OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	//Receive message and copy to local variable
+	msg_struct_canitfleo_sysswm_inventory_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_canitfleo_sysswm_inventory_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_canitfleo_sysswm_inventory_report_t)))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	//Receive message and copy to local variable
+	msg_struct_canitfleo_sysswm_sw_package_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_canitfleo_sysswm_sw_package_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_canitfleo_sysswm_sw_package_report_t)))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+
+	return SUCCESS;
+}
+
+
+
+
 
 

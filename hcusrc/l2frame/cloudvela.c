@@ -1280,9 +1280,9 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_spspm_cloudvela_inventory_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_inventory_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_inventory_resp_t)))
+	msg_struct_sysswm_cloudvela_inventory_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t)))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -1348,9 +1348,9 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 
 OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_spspm_cloudvela_inventory_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_inventory_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_inventory_report_t)))
+	msg_struct_sysswm_cloudvela_inventory_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_inventory_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_inventory_report_t)))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -1454,9 +1454,9 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 
 OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_spspm_cloudvela_sw_package_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_sw_package_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_sw_package_resp_t)))
+	msg_struct_sysswm_cloudvela_sw_package_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_sw_package_resp_t)))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -1516,9 +1516,9 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 
 OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_spspm_cloudvela_sw_package_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_sw_package_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_sw_package_report_t)))
+	msg_struct_sysswm_cloudvela_sw_package_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t)))
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 

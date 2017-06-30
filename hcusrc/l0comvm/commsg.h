@@ -479,6 +479,11 @@ enum HCU_INTER_TASK_MSG_ID
 
 	//CANITF
 	MSG_ID_CANITFLEO_DATA_REPORT,
+	MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,
+	MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM,
+	MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,
+	MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM,
+
 
 	//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
 	MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
@@ -517,25 +522,6 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_UICOMM_CFG_RESP,  		//配置结果
 	MSG_ID_UICOMM_CAN_TEST_CMD_REQ,  		//测试命令
 	MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
-
-
-	//BFSC项目：MYC
-//	MSG_ID_L3BFSC_WMC_STARTUP_IND,          //       = 0x3B90,
-//	MSG_ID_L3BFSC_WMC_SET_CONFIG_REQ,       //       = 0x3B11,
-//	MSG_ID_L3BFSC_WMC_SET_CONFIG_RESP,      //       = 0x3B91,
-//	MSG_ID_L3BFSC_WMC_START_REQ,            //       = 0x3B12,
-//	MSG_ID_L3BFSC_WMC_START_RESP,           //       = 0x3B92,
-//	MSG_ID_L3BFSC_WMC_STOP_REQ,             //       = 0x3B13,
-//	MSG_ID_L3BFSC_WMC_STOP_RESP,            //       = 0x3B93,
-//	MSG_ID_L3BFSC_WMC_NEW_WS_EVENT,         //       = 0x3B94,
-//	MSG_ID_L3BFSC_WMC_REPEAT_WS_EVENT,		//		 = 0x3B95,
-//	MSG_ID_L3BFSC_WMC_WS_COMB_OUT_REQ,      //       = 0x3B15,
-//	MSG_ID_L3BFSC_WMC_WS_COMB_OUT_RESP,     //       = 0x3B95,
-//	MSG_ID_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
-//	MSG_ID_L3BFSC_WMC_COMMAND_RESP,         //       = 0x3B97,
-//	MSG_ID_L3BFSC_WMC_FAULT_IND,            //       = 0x3B98,
-//	MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_REQ,      //       = 0x3B19,
-//	MSG_ID_L3BFSC_WMC_ERR_INQ_CMD_RESP,     //       = 0x3B99,
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -2000,7 +1986,7 @@ typedef struct msg_struct_cloudvela_spspm_perfm_confirm
 
 //MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,
 #define HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX 50
-typedef struct msg_struct_cloudvela_spspm_inventory_req
+typedef struct msg_struct_cloudvela_sysswm_inventory_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -2011,10 +1997,10 @@ typedef struct msg_struct_cloudvela_spspm_inventory_req
 	UINT8  upgradeFlag;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
-}msg_struct_cloudvela_spspm_inventory_req_t;
+}msg_struct_cloudvela_sysswm_inventory_req_t;
 
 //MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP,
-typedef struct msg_struct_spspm_cloudvela_inventory_resp
+typedef struct msg_struct_sysswm_cloudvela_inventory_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
@@ -2025,10 +2011,10 @@ typedef struct msg_struct_spspm_cloudvela_inventory_resp
 	UINT8  upgradeFlag;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
-}msg_struct_spspm_cloudvela_inventory_resp_t;
+}msg_struct_sysswm_cloudvela_inventory_resp_t;
 
 //MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT,
-typedef struct msg_struct_spspm_cloudvela_inventory_report
+typedef struct msg_struct_sysswm_cloudvela_inventory_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
@@ -2040,10 +2026,10 @@ typedef struct msg_struct_spspm_cloudvela_inventory_report
 	UINT32 timeStamp;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
-}msg_struct_spspm_cloudvela_inventory_report_t;
+}msg_struct_sysswm_cloudvela_inventory_report_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM,
-typedef struct msg_struct_cloudvela_spspm_inventory_confirm
+typedef struct msg_struct_cloudvela_sysswm_inventory_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
@@ -2054,11 +2040,11 @@ typedef struct msg_struct_cloudvela_spspm_inventory_confirm
 	UINT8  upgradeFlag;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
-}msg_struct_cloudvela_spspm_inventory_confirm_t;
+}msg_struct_cloudvela_sysswm_inventory_confirm_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,
 #define HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 400
-typedef struct msg_struct_cloudvela_spspm_sw_package_req
+typedef struct msg_struct_cloudvela_sysswm_sw_package_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
@@ -2068,10 +2054,10 @@ typedef struct msg_struct_cloudvela_spspm_sw_package_req
 	UINT16 validLen;
 	UINT8  body[HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT32 length;
-}msg_struct_cloudvela_spspm_sw_package_req_t;
+}msg_struct_cloudvela_sysswm_sw_package_req_t;
 
 //MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,
-typedef struct msg_struct_spspm_cloudvela_sw_package_resp
+typedef struct msg_struct_sysswm_cloudvela_sw_package_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
@@ -2079,10 +2065,10 @@ typedef struct msg_struct_spspm_cloudvela_sw_package_resp
 	UINT16 segTotal;
 	UINT16 segLen;
 	UINT32 length;
-}msg_struct_spspm_cloudvela_sw_package_resp_t;
+}msg_struct_sysswm_cloudvela_sw_package_resp_t;
 
 //MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT,
-typedef struct msg_struct_spspm_cloudvela_sw_package_report
+typedef struct msg_struct_sysswm_cloudvela_sw_package_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
@@ -2090,10 +2076,10 @@ typedef struct msg_struct_spspm_cloudvela_sw_package_report
 	UINT16 segTotal;
 	UINT16 segLen;
 	UINT32 length;
-}msg_struct_spspm_cloudvela_sw_package_report_t;
+}msg_struct_sysswm_cloudvela_sw_package_report_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
-typedef struct msg_struct_cloudvela_spspm_sw_packag_confirm
+typedef struct msg_struct_cloudvela_sysswm_sw_packag_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
@@ -2103,7 +2089,7 @@ typedef struct msg_struct_cloudvela_spspm_sw_packag_confirm
 	UINT16 validLen;
 	UINT8  body[HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT32 length;
-}msg_struct_cloudvela_spspm_sw_packag_confirm_t;
+}msg_struct_cloudvela_sysswm_sw_packag_confirm_t;
 
 
 //CANITF
@@ -2115,6 +2101,50 @@ typedef struct msg_struct_canitfleo_data_report
 	UINT32 length;
 }msg_struct_canitfleo_data_report_t;
 
+//MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,
+typedef struct msg_struct_canitfleo_sysswm_inventory_report
+{
+	UINT16 hwType;
+	UINT16 hwId;
+	UINT16 swRel;
+	UINT16 swVer;
+	UINT8  upgradeFlag;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_canitfleo_sysswm_inventory_report_t;
+
+//MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM,
+typedef struct msg_struct_sysswm_canitfleo_inventory_confirm
+{
+	UINT16 hwType;
+	UINT16 hwId;
+	UINT16 swRel;
+	UINT16 swVer;
+	UINT8  upgradeFlag;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_sysswm_canitfleo_inventory_confirm_t;
+
+//MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,
+typedef struct msg_struct_canitfleo_sysswm_sw_package_report
+{
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segLen;
+	UINT32 length;
+}msg_struct_canitfleo_sysswm_sw_package_report_t;
+
+//MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM,
+#define HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 500
+typedef struct msg_struct_sysswm_canitfleo_sw_package_confirm
+{
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segLen;
+	UINT16 validLen;
+	UINT8  body[HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
+	UINT32 length;
+}msg_struct_sysswm_canitfleo_sw_package_confirm_t;
 
 /**************************************************************************************
  *
