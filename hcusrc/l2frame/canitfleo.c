@@ -658,7 +658,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_heat_beat_report_received_handle(snd, rcv.nodeId);
+		ret = func_canitfleo_l2frame_msg_bfsc_heart_beat_report_received_handle(snd, rcv.nodeId);
 	}
 	break;
 
@@ -1151,7 +1151,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(StrMsg_H
 }
 
 //本消息将消耗在L2
-OPSTAT func_canitfleo_l2frame_msg_bfsc_heat_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t *rcv, UINT8 nodeId)
+OPSTAT func_canitfleo_l2frame_msg_bfsc_heart_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t *rcv, UINT8 nodeId)
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启

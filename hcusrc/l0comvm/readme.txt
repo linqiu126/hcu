@@ -13,6 +13,7 @@
 
 //= ZJL, 2017 July.2 CURRENT_SW_DELIVERY 217=>BFSC项目
 = Remove Big Endian set for BFSC, to aligned with all other projects
+= Heart-Beat bug fix
 
 //= ZJL, 2017 June.30 CURRENT_SW_DELIVERY 216=>BFSC项目
 = 创建程序升级过程的框架
