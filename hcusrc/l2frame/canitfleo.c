@@ -685,7 +685,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	break;
 
 	default:
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message!\n");
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message! Msgid=0x%x, NodeId=%d\n", msgId, rcv.nodeId);
 	break;
 	}
 
