@@ -11,7 +11,7 @@
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
 //= ZJL, 2017 July.3 CURRENT_SW_DELIVERY 218=>BFSC项目
-
+= Upgrade on HUITP SPEC V2.8
 
 //= ZJL, 2017 July.2 CURRENT_SW_DELIVERY 217=>BFSC项目
 = Remove Big Endian set for BFSC, to aligned with all other projects
