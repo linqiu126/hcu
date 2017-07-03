@@ -2110,39 +2110,51 @@ typedef struct msg_struct_canitfleo_sysswm_inventory_report
 	UINT16 swVer;
 	UINT8  upgradeFlag;
 	UINT32 timeStamp;
+	UINT8  nodeId;
 	UINT32 length;
 }msg_struct_canitfleo_sysswm_inventory_report_t;
 
 //MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM,
 typedef struct msg_struct_sysswm_canitfleo_inventory_confirm
 {
-	UINT16 hwType;
-	UINT16 hwId;
 	UINT16 swRel;
 	UINT16 swVer;
 	UINT8  upgradeFlag;
+	UINT16 	swCheckSum;
+	UINT32  swTotalLengthInBytes;
 	UINT32 timeStamp;
+	UINT8  nodeId;
 	UINT32 length;
 }msg_struct_sysswm_canitfleo_inventory_confirm_t;
 
 //MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,
 typedef struct msg_struct_canitfleo_sysswm_sw_package_report
 {
+	UINT16 swRelId;
+	UINT16 swVerId;
 	UINT16 segIndex;
 	UINT16 segTotal;
-	UINT16 segLen;
+	UINT16 segSplitLen;
+	UINT8  nodeId;
 	UINT32 length;
 }msg_struct_canitfleo_sysswm_sw_package_report_t;
 
 //MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM,
 #define HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 500
+#if (HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN)
+	#error Internal SYSMSG parameter setting error!
+#endif
 typedef struct msg_struct_sysswm_canitfleo_sw_package_confirm
 {
+	UINT16 swRelId;
+	UINT16 swVerId;
 	UINT16 segIndex;
 	UINT16 segTotal;
-	UINT16 segLen;
-	UINT16 validLen;
-	UINT8  body[HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
+	UINT16 segSplitLen;
+	UINT16 segValidLen;
+	UINT16 segCheckSum;
+	UINT8  swPkgBody[HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
+	UINT8  nodeId;
 	UINT32 length;
 }msg_struct_sysswm_canitfleo_sw_package_confirm_t;
 

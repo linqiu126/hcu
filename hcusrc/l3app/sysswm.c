@@ -430,9 +430,54 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+	//入参检查
+	if ((rcv.upgradeFlag != HUITP_IEID_SUI_FW_UPGRADE_YES_STABLE) && (rcv.upgradeFlag != HUITP_IEID_SUI_FW_UPGRADE_YES_TRAIL) \
+			&& (rcv.upgradeFlag != HUITP_IEID_SUI_FW_UPGRADE_YES_PATCH))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+
+	//返回消息
+	msg_struct_sysswm_canitfleo_inventory_confirm_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t));
+
+	//先生成特定假的数据
+	if (rcv.upgradeFlag == HUITP_IEID_SUI_FW_UPGRADE_YES_STABLE){
+		//判定一样，意味着不升级
+		snd.swRel = rcv.swRel;
+		snd.swVer = rcv.swVer;
+		snd.swCheckSum = 0;
+		snd.swTotalLengthInBytes = 0;
+	}
+	else if (rcv.upgradeFlag == HUITP_IEID_SUI_FW_UPGRADE_YES_TRAIL){
+		//判定一样，意味着不升级
+		snd.swRel = rcv.swRel;
+		snd.swVer = rcv.swVer;
+		snd.swCheckSum = 0;
+		snd.swTotalLengthInBytes = 0;
+	}
+	else if (rcv.upgradeFlag == HUITP_IEID_SUI_FW_UPGRADE_YES_PATCH){
+		//判定一样，意味着不升级
+		snd.swRel = rcv.swRel;
+		snd.swVer = rcv.swVer;
+		snd.swCheckSum = 0;
+		snd.swTotalLengthInBytes = 0;
+	}
+
+	//固定填入的信息
+	snd.upgradeFlag = rcv.upgradeFlag;
+	snd.timeStamp = time(0);
+	snd.nodeId = rcv.nodeId;
+	snd.length = sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t);
+	if (hcu_message_send(MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+
 	return SUCCESS;
 }
 
+
+//软件下载方案，打算采用一种硬件版本，只存储STABLE/TRAIL/PATCH的最新版本，不存储中间版本的情形，从而简化升级路径
+//本地将根据硬件信息，读取文件名字，然后分段下载
+//为了简化，并借助于淘宝文件的技巧，所有下位机软件版本包都存在目录下，版本信息全部使用文件名的方式进行隔离
+//比如，采用IHU_HW8001_11_SW03_218_PATCH.HEX
 OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
@@ -444,6 +489,29 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+	//入参检查
+	if (rcv.segIndex > rcv.segTotal)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
+
+	//返回消息
+	msg_struct_sysswm_canitfleo_sw_package_confirm_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t));
+
+	//测试假数据
+	snd.swRelId = rcv.swRelId;
+	snd.swVerId = rcv.swVerId;
+	snd.segIndex = rcv.segIndex;
+	snd.segTotal = rcv.segTotal;
+	snd.segSplitLen = rcv.segSplitLen;
+	snd.segValidLen = 1;
+	snd.segCheckSum = 0xAA;
+	snd.swPkgBody[0] = 0xAA;
+
+	//固定填入的信息
+	snd.nodeId = rcv.nodeId;
+	snd.length = sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t);
+	if (hcu_message_send(MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 
 	return SUCCESS;
 }

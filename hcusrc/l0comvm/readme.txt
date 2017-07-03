@@ -10,6 +10,10 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+
+//= ZJL, 2017 July.3 CURRENT_SW_DELIVERY 219=>BFSC项目
+= 制作软件下载的中台假数据
+
 //= ZJL, 2017 July.3 CURRENT_SW_DELIVERY 218=>BFSC项目
 = Upgrade on HUITP SPEC V2.8
 
