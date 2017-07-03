@@ -1366,8 +1366,8 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_M
 	snd.baseReq = HUITP_ENDIAN_EXG16(rcv->baseReq.comReq);
 	snd.segIndex = HUITP_ENDIAN_EXG16(rcv->segValue.segIndex);
 	snd.segTotal = HUITP_ENDIAN_EXG16(rcv->segValue.segTotal);
-	snd.segLen = HUITP_ENDIAN_EXG16(rcv->segValue.segLen);
-	snd.validLen = HUITP_ENDIAN_EXG16(rcv->body.validLen);
+	snd.segLen = HUITP_ENDIAN_EXG16(rcv->segValue.segSplitLen);
+	snd.validLen = HUITP_ENDIAN_EXG16(rcv->body.segValidLen);
 	if (HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN > HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: HUITP and COMMSG parameter set error!\n");
 	memcpy(snd.body, rcv->body.swPkgBody, sizeof(rcv->body.swPkgBody)<sizeof(snd.body)?sizeof(rcv->body.swPkgBody):sizeof(snd.body));
@@ -1407,8 +1407,8 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUI
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
 	snd.segIndex = HUITP_ENDIAN_EXG16(rcv->segValue.segIndex);
 	snd.segTotal = HUITP_ENDIAN_EXG16(rcv->segValue.segTotal);
-	snd.segLen = HUITP_ENDIAN_EXG16(rcv->segValue.segLen);
-	snd.validLen = HUITP_ENDIAN_EXG16(rcv->body.validLen);
+	snd.segLen = HUITP_ENDIAN_EXG16(rcv->segValue.segSplitLen);
+	snd.validLen = HUITP_ENDIAN_EXG16(rcv->body.segValidLen);
 	if (HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN > HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: HUITP and COMMSG parameter set error!\n");
 	memcpy(snd.body, rcv->body.swPkgBody, sizeof(rcv->body.swPkgBody)<sizeof(snd.body)?sizeof(rcv->body.swPkgBody):sizeof(snd.body));

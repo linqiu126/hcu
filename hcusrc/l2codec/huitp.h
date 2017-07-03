@@ -13,12 +13,12 @@
 #pragma pack (1) //强制1字节对齐
 /*
  *
- *  顺从并更新到技术规范《慧HUITP接口规范v2.7, LAST UPDATE@2007/6/26》
+ *  顺从并更新到技术规范《慧HUITP接口规范v2.8, LAST UPDATE@2007/7/3》
  *
  * 2017/06/10, MA Yuchu, modify  for BFSC, Weight Sensor parameters, based on v2.5, LAST UPDATE@2007/5/27
  * 2017/06/20 v2.6: 修改L3BFSC对应的结构，增加Heart-Beat过程
  * 2017/06/30 V2.7: 修改CANITF接口上SW INVENTORY/SW PACKAGE的消息定义与结构
- *
+ * 2017/07/03 V2.8: 完善SW INVENTORY/SW PACKAGE的消息定义与结构
  *
  *
  */
@@ -1290,9 +1290,6 @@ typedef enum
   //软件版本体
 	HUITP_IEID_uni_sw_package_min                   = 0xA100,	
 	HUITP_IEID_uni_sw_package_body                  = 0xA100, 
-	HUITP_IEID_sui_sw_package_body                  = 0xA110,
-	HUITP_IEID_sui_sw_package_segment               = 0xA111,
-
 	HUITP_IEID_uni_sw_package_max,
 
   //ALARM REPORT
@@ -1660,9 +1657,11 @@ typedef struct StrIe_HUITP_IEID_uni_com_segment
 {
 	UINT16 ieId;
 	UINT16 ieLen;
+	UINT16 swRelId;
+	UINT16 swVerId;
 	UINT16 segIndex;
 	UINT16 segTotal;
-	UINT16 segLen;
+	UINT16 segSplitLen;
 }StrIe_HUITP_IEID_uni_com_segment_t;
 
 //HUITP_IEID_uni_com_snr_cmd_tag                  = 0x0033,
@@ -2869,10 +2868,25 @@ typedef struct StrIe_HUITP_IEID_uni_inventory_element
 	UINT16 hwId;
 	UINT16 swRel;
 	UINT16 swVer;
+	UINT16 	swCheckSum;
+	UINT32  swTotalLengthInBytes;
 	UINT8  upgradeFlag;
 	char   desc[HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_inventory_element_t;
+//UpgradeFlag定义
+#define HUITP_IEID_UNI_FW_UPGRADE_NONE 0
+#define HUITP_IEID_UNI_FW_UPGRADE_NO 1
+#define HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE 2
+#define HUITP_IEID_UNI_FW_UPGRADE_YES_TRAIL 3
+#define HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH 4
+#define HUITP_IEID_UNI_FW_UPGRADE_YES_INVALID 0xFF
+#define HUITP_IEID_SUI_FW_UPGRADE_NONE 0
+#define HUITP_IEID_SUI_FW_UPGRADE_NO 1
+#define HUITP_IEID_SUI_FW_UPGRADE_YES_STABLE 2
+#define HUITP_IEID_SUI_FW_UPGRADE_YES_TRAIL 3
+#define HUITP_IEID_SUI_FW_UPGRADE_YES_PATCH 4
+#define HUITP_IEID_SUI_FW_UPGRADE_YES_INVALID 0xFF
 //HW_TYPE的高字节将表示HCU、IHU等不同类型
 //HW_TYPE的低字节将表示产品的具体型号
 #define HUITP_IEID_UNI_INVENT_HWTYPE_PDCAT_G1 0x01
@@ -2953,30 +2967,11 @@ typedef struct StrIe_HUITP_IEID_uni_sw_package_body
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT16 validLen;
+	UINT16 segValidLen;
+	UINT16 segCheckSum;
 	UINT8  swPkgBody[HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN];
 }StrIe_HUITP_IEID_uni_sw_package_body_t;
-
-//HUITP_IEID_sui_sw_package_body                  = 0xA110,
-#define HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN 240
-typedef struct StrIe_HUITP_IEID_sui_sw_package_body
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT16 segIndex;
-	UINT16 segTotal;
-	UINT16 validLen;
-	UINT8  swPkgBody[HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN];
-}StrIe_HUITP_IEID_sui_sw_package_body_t;
-
-//HUITP_IEID_sui_sw_package_segment               = 0xA111,
-typedef struct StrIe_HUITP_IEID_sui_sw_package_segment
-{
-	UINT16 ieId;
-	UINT16 ieLen;
-	UINT16 segIndex;
-	UINT16 segTotal;
-}StrIe_HUITP_IEID_sui_sw_package_segment_t;
+#define HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN 232
 
 //HUITP_IEID_uni_sw_package_max,
 
@@ -6692,19 +6687,26 @@ typedef struct StrMsg_HUITP_MSGID_uni_inventory_confirm
 //HUITP_MSGID_sui_inventory_report                 = 0xA090,
 typedef struct StrMsg_HUITP_MSGID_sui_inventory_report
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_inventory_element_t reportValue;
+	UINT16 msgid;
+	UINT16 length;
+	UINT16 hwType;
+	UINT16 hwId;
+	UINT16 swRel;
+	UINT16 swVer;
+	UINT8  upgradeFlag;
 }StrMsg_HUITP_MSGID_sui_inventory_report_t;
 
 //HUITP_MSGID_sui_inventory_confirm                = 0xA010,
 typedef struct StrMsg_HUITP_MSGID_sui_inventory_confirm
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_inventory_element_t confirmValue;
+	UINT16 msgid;
+	UINT16 length;
+	UINT16 swRel;
+	UINT16 swVer;
+	UINT8  upgradeFlag;
+	UINT16 	swCheckSum;
+	UINT32  swTotalLengthInBytes;
 }StrMsg_HUITP_MSGID_sui_inventory_confirm_t;
-
 
 
 //HUITP_MSGID_uni_inventory_max,
@@ -6754,18 +6756,28 @@ typedef struct StrMsg_HUITP_MSGID_uni_sw_package_confirm
 //HUITP_MSGID_sui_sw_package_report                   = 0xA190,
 typedef struct StrMsg_HUITP_MSGID_sui_sw_package_report
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_uni_com_segment_t segValue;
+	UINT16 msgid;
+	UINT16 length;
+	UINT16 swRelId;
+	UINT16 swVerId;
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segSplitLen;
 }StrMsg_HUITP_MSGID_sui_sw_package_report_t;
 
 //HUITP_MSGID_sui_sw_package_confirm                  = 0xA110,
 typedef struct StrMsg_HUITP_MSGID_sui_sw_package_confirm
 {
-	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
-	UINT16 msgLen;
-	StrIe_HUITP_IEID_sui_sw_package_segment_t seg;
-	StrIe_HUITP_IEID_sui_sw_package_body_t body;
+	UINT16 msgid;
+	UINT16 length;
+	UINT16 swRelId;
+	UINT16 swVerId;
+	UINT16 segIndex;
+	UINT16 segTotal;
+	UINT16 segSplitLen;
+	UINT16 segValidLen;
+	UINT16 segCheckSum;
+	UINT8  swPkgBody[HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN];
 }StrMsg_HUITP_MSGID_sui_sw_package_confirm_t;
 
 

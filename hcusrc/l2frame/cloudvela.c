@@ -1484,7 +1484,7 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 		pMsgProc.segValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_segment_t) - 4);
 		pMsgProc.segValue.segIndex = HUITP_ENDIAN_EXG16(rcv.segIndex);
 		pMsgProc.segValue.segTotal = HUITP_ENDIAN_EXG16(rcv.segTotal);
-		pMsgProc.segValue.segLen = HUITP_ENDIAN_EXG16(rcv.segLen);
+		pMsgProc.segValue.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segLen);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -1546,7 +1546,7 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 		pMsgProc.segValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_segment_t) - 4);
 		pMsgProc.segValue.segIndex = HUITP_ENDIAN_EXG16(rcv.segIndex);
 		pMsgProc.segValue.segTotal = HUITP_ENDIAN_EXG16(rcv.segTotal);
-		pMsgProc.segValue.segLen = HUITP_ENDIAN_EXG16(rcv.segLen);
+		pMsgProc.segValue.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segLen);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));

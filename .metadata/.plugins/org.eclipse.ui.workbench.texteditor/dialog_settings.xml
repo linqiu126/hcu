@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_canitfleo_l2frame_msg_bfsc_hea" key="selection"/>
+		<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="func_canitfleo_l2frame_msg_bfsc_hea"/>
-			<item value="func_canitfleo_l2frame_msg_bfsc_heat_beat_report_received_handle"/>
-			<item value="heart_beat"/>
-			<item value="801"/>
-			<item value="203"/>
-			<item value="#define HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_01 0x0201"/>
-			<item value="HUITP_MSGID_uni_sw_package_confirm"/>
-			<item value="HUITP_MSGID_sui_sw_package_req"/>
+			<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
+			<item value="swPkgBody[HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
+			<item value="HUITP_MSGID_sui_inventory_report"/>
+			<item value="//HUITP_MSGID_sui_inventory_report                 = 0xA090,&#x0A;"/>
+			<item value="HUITP_IEID_uni_com_segment"/>
+			<item value="segment"/>
+			<item value="sw_package_b"/>
+			<item value="sw_body"/>
 		</list>
 		<list key="replacehistory">
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>
