@@ -200,12 +200,14 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 	memcpy(&rcv, param_ptr, param_len);
 
 	//收到正确且所有秤台齐活的反馈
+	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d\n", rcv.validFlag);
 	if(rcv.validFlag == TRUE){
 		//在系统/temp目录下创建空的command.json文件，用于通知界面HCU及下位机已经准备好了
 		if ((fileStream = fopen( zHcuCmdflagJsonFile, "w+" )) != NULL ) {
 			fputs(cmdJson, fileStream);
 			fclose(fileStream);
 		 }
+		HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d, fileStream=%x, zHcuCmdflagJsonFile = %d\n", rcv.validFlag, fileStream, zHcuCmdflagJsonFile);
 	}
 
 	//收到L3BFSC指示秤台配置错误的反馈
@@ -281,7 +283,7 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 
 	//分析命令标志文件command.json的变化
 	memset(&parseResult, 0, sizeof(L3BfscuiJsonCmdParseResult_t));
-	ret =  func_bfscuicomm_cmdfile_json_parse(zHcuCmdflagJsonFile, parseResult );
+	ret =  func_bfscuicomm_cmdfile_json_parse(zHcuCmdflagJsonFile, &parseResult );
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command Json file parse failure, [func = func_bfscuicomm_cmdfile_json_parse]");
 		return FAILURE;
@@ -320,8 +322,16 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			msg_struct_uicomm_can_test_cmd_req_t snd;
 			memset(&snd, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
 			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
-			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO)  snd.cmdid = SESOR_COMMAND_ID_CALIBRATION_ZERO;
-			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)  snd.cmdid = SESOR_COMMAND_ID_CALIBRATION_FULL;
+			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO)
+			{
+				snd.cmdid = SENSOR_COMMAND_ID_WEITGH_READ;
+				snd.sensor_command = SESOR_COMMAND_ID_CALIBRATION_ZERO;
+			}
+			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)
+			{
+				snd.cmdid = SENSOR_COMMAND_ID_WEITGH_READ;
+				snd.sensor_command = SESOR_COMMAND_ID_CALIBRATION_FULL;
+			}
 
 			if (sensorid >=0 && sensorid < HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR)  snd.wsBitmap[sensorid] = 1;
 			//发送命令给CANITFLEO
@@ -427,26 +437,34 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 }
 
 //命令标志command.Json文件解析
-OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJsonCmdParseResult_t parseResult )
+OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJasonFile, L3BfscuiJsonCmdParseResult_t *parseResult )
 {
 	FILE *fileStream;
-	char inotifyReadBuf[BUFSIZ];
+	char inotifyReadBuf[8192];
 	UINT32  numread = 0;
-	UINT32  flag = 0, value = 0;
+	UINT32  flag = 0, value = 0, errid = 0;
 	UINT8  sensorid = 0;
+
+	if((NULL == monitorJasonFile) || (NULL == parseResult))
+	{
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: (NULL == monitorJasonFile) || (NULL == parseResult), return.\n");
+	}
 
 	struct json_object *file_jsonobj = NULL;
 	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL;
 
     if ((fileStream = fopen( monitorJasonFile, "r" )) != NULL )  // 文件读取
     {
-			numread = fread( inotifyReadBuf, sizeof( char ), BUFSIZ-1, fileStream );
-			fclose( fileStream );
+			numread = fread( inotifyReadBuf, sizeof( char ), 8192-1, fileStream );
 			if (numread == 0){
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s]  ! \n", monitorJasonFile);
+				errid = ferror(fileStream);
+				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s] errno=%d ! \n", monitorJasonFile, errid);
+				fclose( fileStream );
 				return FAILURE;
 			}
+			fclose( fileStream );
 
+			HcuDebugPrint("BFSCUICOMM: [%s]\n", inotifyReadBuf);
 			file_jsonobj = json_tokener_parse(inotifyReadBuf);
 			if (file_jsonobj == NULL){
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command file json_tokener_parse failure, [file=%s]  ! \n", monitorJasonFile);
@@ -461,8 +479,8 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJso
 			   if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
 				   flag = json_object_get_int(flag_jsonobj);
 				   value = json_object_get_int(value_jsonobj);
-				   parseResult.cmdStart.cmdFlag = flag;
-				   parseResult.cmdStart.cmdValue = value;
+				   parseResult->cmdStart.cmdFlag = flag;
+				   parseResult->cmdStart.cmdValue = value;
 			   }
 		   }
 		  else
@@ -477,9 +495,9 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJso
 				  flag = json_object_get_int(flag_jsonobj);
 				  value = json_object_get_int(value_jsonobj);
 				  sensorid = json_object_get_int(sensorid_jsonobj);
-				  parseResult.cmdCalibration.cmdFlag = flag;
-				  parseResult.cmdCalibration.cmdValue = value;
-				  parseResult.cmdCalibration.sensorid = sensorid;
+				  parseResult->cmdCalibration.cmdFlag = flag;
+				  parseResult->cmdCalibration.cmdValue = value;
+				  parseResult->cmdCalibration.sensorid = sensorid;
 			  }
 		  }
 		 else
@@ -492,8 +510,8 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJso
 			 if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
 				 flag = json_object_get_int(flag_jsonobj);
 				 value = json_object_get_int(value_jsonobj);
-				 parseResult.cmdConfig.cmdFlag = flag;
-				 parseResult.cmdConfig.cmdValue = value;
+				 parseResult->cmdConfig.cmdFlag = flag;
+				 parseResult->cmdConfig.cmdValue = value;
 			 }
 		 }
 		 else
@@ -506,8 +524,8 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJso
 			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
 				flag = json_object_get_int(flag_jsonobj);
 				value = json_object_get_int(value_jsonobj);
-				parseResult.cmdResume.cmdFlag = flag;
-				parseResult.cmdResume.cmdValue = value;
+				parseResult->cmdResume.cmdFlag = flag;
+				parseResult->cmdResume.cmdValue = value;
 			}
 		}
 		else
@@ -520,8 +538,8 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJso
 			if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
 				flag = json_object_get_int(flag_jsonobj);
 				value = json_object_get_int(value_jsonobj);
-				parseResult.cmdTest.cmdFlag = flag;
-				parseResult.cmdTest.cmdValue = value;
+				parseResult->cmdTest.cmdFlag = flag;
+				parseResult->cmdTest.cmdValue = value;
 			}
 		}
 		else
@@ -552,7 +570,7 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
 	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
 	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 120000;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 100000;
+	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 10000; //MYC: 1200g to 1300g
 	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
 	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
 	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;

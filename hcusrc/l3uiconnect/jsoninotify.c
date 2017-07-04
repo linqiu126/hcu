@@ -147,7 +147,7 @@ OPSTAT func_jsoninotify_add_watch(char monitorJsonFile [] )
 	 	 if(retReadLen > 0)
 	 	 {
 	 		    //JSON文件有修改，发送消息通知BFSCUI模块
-				ret = hcu_message_send(MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND, TASK_ID_JSONINOTIFY, TASK_ID_BFSCUICOMM, &snd0, snd0.length);
+				ret = hcu_message_send(MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND, TASK_ID_BFSCUICOMM, TASK_ID_JSONINOTIFY, &snd0, snd0.length);
 				if (ret == FAILURE){
 					HcuErrorPrint("JSONINOTIFY: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_JSONINOTIFY].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
 					return FAILURE;
