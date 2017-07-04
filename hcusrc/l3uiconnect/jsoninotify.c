@@ -42,7 +42,7 @@ HcuFsmStateItem_t HcuFsmJsoninotify[] =
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
 
-char zHcuCmdflagJsonFile[]  = "/var/www/html/bfscui/command.json";
+char zHcuCmdflagJsonFile[]  = "/tmp/command.json";
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
