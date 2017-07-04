@@ -1219,6 +1219,7 @@ OPSTAT func_canitfleo_l2frame_msg_sw_package_report_received_handle(StrMsg_HUITP
 
 	snd.swRelId = HUITP_ENDIAN_EXG16(rcv->swRelId);
 	snd.swVerId = HUITP_ENDIAN_EXG16(rcv->swVerId);
+	snd.upgradeFlag = rcv->upgradeFlag;
 	snd.segIndex = HUITP_ENDIAN_EXG16(rcv->segIndex);
 	snd.segTotal = HUITP_ENDIAN_EXG16(rcv->segTotal);
 	snd.segSplitLen = HUITP_ENDIAN_EXG16(rcv->segSplitLen);
@@ -1613,6 +1614,7 @@ OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 
 	pMsgProc.swRelId = HUITP_ENDIAN_EXG16(rcv.swRelId);
 	pMsgProc.swVerId = HUITP_ENDIAN_EXG16(rcv.swVerId);
+	pMsgProc.upgradeFlag = rcv.upgradeFlag;
 	pMsgProc.segIndex = HUITP_ENDIAN_EXG16(rcv.segIndex);
 	pMsgProc.segTotal = HUITP_ENDIAN_EXG16(rcv.segTotal);
 	pMsgProc.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segSplitLen);

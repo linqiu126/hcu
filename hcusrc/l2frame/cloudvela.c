@@ -1313,6 +1313,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 		pMsgProc.respValue.swRel = HUITP_ENDIAN_EXG16(rcv.swRel);
 		pMsgProc.respValue.swVer = HUITP_ENDIAN_EXG16(rcv.swVer);
 		pMsgProc.respValue.upgradeFlag = rcv.upgradeFlag;
+
 		#if (HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX < HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX)
 			#error HUITP and COMMSG parameter set error!
 		#endif
@@ -1382,7 +1383,6 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		pMsgProc.reportValue.swVer = HUITP_ENDIAN_EXG16(rcv.swVer);
 		pMsgProc.reportValue.upgradeFlag = rcv.upgradeFlag;
 		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.timeStamp);
-
 
 		#if (HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX < HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX)
 			#error HUITP and COMMSG parameter set error!
@@ -1482,9 +1482,13 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 		//StrIe_HUITP_IEID_uni_com_segment_t
 		pMsgProc.segValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_segment);
 		pMsgProc.segValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_segment_t) - 4);
+		pMsgProc.segValue.swRelId = HUITP_ENDIAN_EXG16(rcv.swRelId);
+		pMsgProc.segValue.swVerId = HUITP_ENDIAN_EXG16(rcv.swVerId);
+		pMsgProc.segValue.upgradeFlag = rcv.upgradeFlag;
 		pMsgProc.segValue.segIndex = HUITP_ENDIAN_EXG16(rcv.segIndex);
 		pMsgProc.segValue.segTotal = HUITP_ENDIAN_EXG16(rcv.segTotal);
-		pMsgProc.segValue.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segLen);
+		pMsgProc.segValue.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segSplitLen);
+
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -1544,9 +1548,13 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 		//StrIe_HUITP_IEID_uni_com_segment_t
 		pMsgProc.segValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_segment);
 		pMsgProc.segValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_segment_t) - 4);
+		pMsgProc.segValue.swRelId = HUITP_ENDIAN_EXG16(rcv.swRelId);
+		pMsgProc.segValue.swVerId = HUITP_ENDIAN_EXG16(rcv.swVerId);
+		pMsgProc.segValue.upgradeFlag = rcv.upgradeFlag;
 		pMsgProc.segValue.segIndex = HUITP_ENDIAN_EXG16(rcv.segIndex);
 		pMsgProc.segValue.segTotal = HUITP_ENDIAN_EXG16(rcv.segTotal);
-		pMsgProc.segValue.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segLen);
+		pMsgProc.segValue.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segSplitLen);
+
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));

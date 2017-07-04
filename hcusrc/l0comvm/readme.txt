@@ -14,8 +14,8 @@
 //= ZJL, 2017 July.3 CURRENT_SW_DELIVERY 219=>BFSC项目
 = 制作软件下载的中台假数据
 = 完善IAP中有关软件下载的内容，同时对软件版体进行了归一化
-
-
+= 为SW_PACKAGE增加了upgradeFlag，以便确保REL/VER/UPFLAG能唯一定位一个软件体
+= 为CLOUDVELA更新软件版本下载过程中的字段缺失问题
 
 //= ZJL, 2017 July.3 CURRENT_SW_DELIVERY 218=>BFSC项目
 = Upgrade on HUITP SPEC V2.8

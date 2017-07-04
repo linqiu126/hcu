@@ -28,11 +28,12 @@ extern HcuFsmStateItem_t HcuFsmSysswm[];
 
 typedef struct gTaskSysswmContextBody
 {
-	UINT32 totalSeg;
-	UINT32 segLen;
-	UINT32 cfmSegIndex;
 	UINT16 targetSwRel;
 	UINT16 targetSwVer;
+	UINT16 totalSeg;
+	UINT16 segSplitLen;
+	UINT16 cfmSegIndex;
+	UINT32 swCheckSum;
 	UINT32 retransTimes;
 }gTaskSysswmContextBody_t;
 typedef struct gTaskSysswmContext
@@ -57,6 +58,7 @@ typedef struct strTaskSysswmSwpkgSegment
 {
 	UINT16 swRel;
 	UINT16 swVer;
+	UINT8  upgradeFlag;
 	UINT16 segTotal;
 	UINT16 segIndex;
 	UINT16 segSplitLen;

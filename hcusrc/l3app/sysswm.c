@@ -199,6 +199,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * 
 	snd.swRel = zHcuSysEngPar.hwBurnId.swRelId;
 	snd.swVer = zHcuSysEngPar.hwBurnId.swVerId;
 	snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
+
 	strcpy(snd.desc, "");
 	snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t);
 	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
@@ -221,16 +222,13 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 
 	//处理接收到的反馈，并进行合理的处理
 	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
-		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive none-positive inventory confirm message, so no handle.\n");
-		return SUCCESS;
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-positive inventory confirm message, so no handle.\n");
 	}
 	if ((rcv.hwType != zHcuSysEngPar.hwBurnId.hwType) || (rcv.hwId != zHcuSysEngPar.hwBurnId.hwPemId) || (rcv.upgradeFlag != zHcuSysEngPar.hwBurnId.swUpgradeFlag)){
-		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive none-compliance hardware info, so no handle.\n");
-		return SUCCESS;
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-compliance hardware info, so no handle.\n");
 	}
 	if ((rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE) && (rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_TRIAL) && (rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH)){
-		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive none-compliance upgrade info, so no handle.\n");
-		return SUCCESS;
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-compliance upgrade info, so no handle.\n");
 	}
 
 	//处理软件升级过程：每一次都会重置下载过程
@@ -252,9 +250,13 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	strcpy(snd.comHead.funcFlag, "0");
 
 	snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+	snd.swRelId = 0;
+	snd.swVerId = 0;
+	snd.upgradeFlag = 0;
 	snd.segIndex = 0;
 	snd.segTotal = 0;
-	snd.segLen = 0;
+	snd.segSplitLen = 0;
+
 	snd.length = sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t);
 	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -284,44 +286,87 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_req(UINT32 dest_id, UINT32 src_id, void *
 OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
+	int i =0;
+	UINT16 res = 0;
 
 	//Receive message and copy to local variable
-	msg_struct_cloudvela_sysswm_sw_packag_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_sw_packag_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_sw_packag_confirm_t)))
+	msg_struct_cloudvela_sysswm_sw_package_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_sysswm_sw_package_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_sysswm_sw_package_confirm_t)))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+	if ((zHcuSysEngPar.hwBurnId.swUpgradeFlag != HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE) && \
+			(zHcuSysEngPar.hwBurnId.swUpgradeFlag != HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL) && \
+			(zHcuSysEngPar.hwBurnId.swUpgradeFlag != HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Not support upgradeFlag, so no handle.\n");
+	if (rcv.upgradeFlag != zHcuSysEngPar.hwBurnId.swUpgradeFlag)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive invalid upgradeFlag, so no handle.\n");
+
 	//具体的处理过程
-	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
-		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive none-positive sw package confirm message, so no handle.\n");
-		return SUCCESS;
-	}
+	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-positive sw package confirm message, so no handle.\n");
+
 	//接下来的这一段：第一段index=1，是必须的
-	if ((rcv.validLen > rcv.segLen) || (rcv.segIndex != (gTaskSysswmContext.bhSw.cfmSegIndex+1)) || (rcv.validLen > sizeof(rcv.body))){
-		HCU_DEBUG_PRINT_IPT("SYSSWM: Receive invalid segment sw package, so no handle.\n");
-		return SUCCESS;
-	}
+	if ((rcv.segValidLen > rcv.segSplitLen) || (rcv.segIndex == 0) || (rcv.segIndex != (gTaskSysswmContext.bhSw.cfmSegIndex+1)) || (rcv.segValidLen > sizeof(rcv.body)))
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive invalid segment sw package, so no handle.\n");
 
 	//重新覆盖关键参数，包括第一次写入
-	gTaskSysswmContext.bhSw.totalSeg = rcv.segTotal;
-	gTaskSysswmContext.bhSw.segLen = rcv.segLen;
+	if (rcv.segIndex == 1){
+		gTaskSysswmContext.bhSw.totalSeg = rcv.segTotal;
+		gTaskSysswmContext.bhSw.segSplitLen = rcv.segSplitLen;
+	}
+	else{
+		if ((gTaskSysswmContext.bhSw.totalSeg != rcv.segTotal) || (gTaskSysswmContext.bhSw.segSplitLen != rcv.segSplitLen))
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive invalid segment sw package, so no handle.\n");
+	}
+
+	//检查checksum
+	res = 0;
+	if (rcv.segIndex == rcv.segTotal){
+		for (i=0; i<rcv.segValidLen; i++){
+			res+= (UINT8)rcv.body[i];
+		}
+	}else{
+		for (i=0; i<rcv.segSplitLen; i++){
+			res+= (UINT8)rcv.body[i];
+		}
+	}
+	if (res != rcv.segCheckSum)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive invalid segment sw package, so no handle.\n");
 
 	//处理数据并写到硬盘
 	FILE *fp;
 	char stmp[200];
 	memset(stmp, 0, sizeof(stmp));
 	strcpy(stmp, zHcuSysEngPar.swm.hcuSwDownloadDir);
-	sprintf(stmp, "%shcusw_r%d_v%d.zip", zHcuSysEngPar.swm.hcuSwDownloadDir, gTaskSysswmContext.bhSw.targetSwRel, gTaskSysswmContext.bhSw.targetSwVer);
+	if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE)
+		sprintf(stmp, "%sHCU_HPT%d_PEM%d_REL%d_VER%d_STABLE.BIN", zHcuSysEngPar.swm.hcuSwDownloadDir, zHcuSysEngPar.hwBurnId.hwType,  zHcuSysEngPar.hwBurnId.hwPemId, \
+				gTaskSysswmContext.bhSw.targetSwRel, gTaskSysswmContext.bhSw.targetSwVer);
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL)
+		sprintf(stmp, "%sHCU_HPT%d_PEM%d_REL%d_VER%d_TRIAL.BIN", zHcuSysEngPar.swm.hcuSwDownloadDir, zHcuSysEngPar.hwBurnId.hwType,  zHcuSysEngPar.hwBurnId.hwPemId, \
+				gTaskSysswmContext.bhSw.targetSwRel, gTaskSysswmContext.bhSw.targetSwVer);
+	else
+		sprintf(stmp, "%sHCU_HPT%d_PEM%d_REL%d_VER%d_PATCH.BIN", zHcuSysEngPar.swm.hcuSwDownloadDir, zHcuSysEngPar.hwBurnId.hwType,  zHcuSysEngPar.hwBurnId.hwPemId, \
+				gTaskSysswmContext.bhSw.targetSwRel, gTaskSysswmContext.bhSw.targetSwVer);
+
 	//打开源文件：不存在就创建
 	if((fp=fopen(stmp, "wb+"))== NULL){
 		fclose(fp);
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Open file %s Error!\n", stmp);
 	}
 	fseek(fp, 0L, SEEK_END);
-	if (fwrite(rcv.body, 1, rcv.validLen, fp) != rcv.validLen){
-		fclose(fp);
-		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Write file %s Error!\n", stmp);
+	if (rcv.segIndex == rcv.segTotal){
+		if (fwrite(rcv.body, 1, rcv.segValidLen, fp) != rcv.segValidLen){
+			fclose(fp);
+			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Write file %s Error!\n", stmp);
+		}
+	}
+	else{
+		if (fwrite(rcv.body, 1, rcv.segSplitLen, fp) != rcv.segSplitLen){
+			fclose(fp);
+			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Write file %s Error!\n", stmp);
+		}
 	}
 
 	//如果检查一切正确，则证实需要＋１
@@ -358,7 +403,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.segIndex = gTaskSysswmContext.bhSw.cfmSegIndex;  //证实的作用，以便让后台发送下一段
 		snd.segTotal = rcv.segTotal;
-		snd.segLen = rcv.segLen;
+		snd.segSplitLen = rcv.segValidLen;
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -366,8 +411,9 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 
 	//数据收齐活了
 	else{
-		//硬盘文件，并实施升级过程
-		//执行过程，未来待完善
+		//先检查整个文件的CHECKSUM
+
+		//硬盘文件，并实施升级过程。执行过程，未来待完善
 
 		//升级系统区的软件版本
 		zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.bhSw.targetSwRel;
@@ -506,6 +552,7 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 	memset(&input, 0, sizeof(strTaskSysswmSwpkgSegment_t));
 	input.swRel = rcv.swRelId;
 	input.swVer = rcv.swVerId;
+	input.upgradeFlag = rcv.upgradeFlag;
 	input.segIndex = rcv.segIndex;
 	input.segTotal = rcv.segTotal;
 	input.segSplitLen = rcv.segSplitLen;
@@ -513,6 +560,7 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 	if (func_sysswm_read_ihu_sw_package_segment(&input) == SUCCESS){
 		snd.swRelId = rcv.swRelId;
 		snd.swVerId = rcv.swVerId;
+		snd.upgradeFlag = rcv.upgradeFlag;
 		snd.segIndex = rcv.segIndex;
 		snd.segTotal = rcv.segTotal;
 		snd.segSplitLen = rcv.segSplitLen;
@@ -523,6 +571,7 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 	else{
 		snd.swRelId = 0;
 		snd.swVerId = 0;
+		snd.upgradeFlag = 0;
 		snd.segIndex = 0;
 		snd.segTotal = 0;
 		snd.segSplitLen = 0;
@@ -669,6 +718,13 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 	        p6 = strstr(ptr->d_name, ".HEX");
 	        if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p4 == NULL) || (p5 == NULL) || (p6 == NULL))
 	        	continue;
+
+	        //判定升级标签
+	        if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE)  p7 = strstr(ptr->d_name, ".STABLE");
+	        else if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL)  p7 = strstr(ptr->d_name, ".TRIAL");
+	        else if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)  p7 = strstr(ptr->d_name, ".PATCH");
+	        else continue;
+	        if (p7 == NULL) continue;
 
 	        //读取标识swRel
 	        p4 = p4 + strlen("_REL");
@@ -864,7 +920,7 @@ UINT16 func_sysswm_caculate_file_whole_checksum(char *fname)
 	UINT8 tmp = 0;
 
 	//打开源文件
-	if((fp=fopen(fname, "wb+"))== NULL){
+	if((fp=fopen(fname, "rb+"))== NULL){
 		HcuErrorPrint("SYSSWM: Open %s Error!\n", fname);
 		return 0;
 	}
@@ -911,7 +967,7 @@ UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname)
 	int file_len=0;
 
 	//打开源文件
-	if((fp=fopen(fname, "wb+"))== NULL){
+	if((fp=fopen(fname, "rb+"))== NULL){
 		HcuErrorPrint("SYSSWM: Open %s Error!\n", fname);
 		return 0;
 	}

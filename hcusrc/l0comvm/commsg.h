@@ -1995,6 +1995,8 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_req
 	UINT16 swRel;
 	UINT16 swVer;
 	UINT8  upgradeFlag;
+	UINT16 	swCheckSum;
+	UINT32  swTotalLengthInBytes;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_inventory_req_t;
@@ -2044,6 +2046,8 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_confirm
 	UINT16 swRel;
 	UINT16 swVer;
 	UINT8  upgradeFlag;
+	UINT16 	swCheckSum;
+	UINT32  swTotalLengthInBytes;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_inventory_confirm_t;
@@ -2054,10 +2058,14 @@ typedef struct msg_struct_cloudvela_sysswm_sw_package_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT16 swRelId;
+	UINT16 swVerId;
+	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
-	UINT16 segLen;
-	UINT16 validLen;
+	UINT16 segSplitLen;
+	UINT16 segValidLen;
+	UINT16 segCheckSum;
 	UINT8  body[HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_sw_package_req_t;
@@ -2067,9 +2075,12 @@ typedef struct msg_struct_sysswm_cloudvela_sw_package_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT16 swRelId;
+	UINT16 swVerId;
+	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
-	UINT16 segLen;
+	UINT16 segSplitLen;
 	UINT32 length;
 }msg_struct_sysswm_cloudvela_sw_package_resp_t;
 
@@ -2078,24 +2089,31 @@ typedef struct msg_struct_sysswm_cloudvela_sw_package_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT16 swRelId;
+	UINT16 swVerId;
+	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
-	UINT16 segLen;
+	UINT16 segSplitLen;
 	UINT32 length;
 }msg_struct_sysswm_cloudvela_sw_package_report_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
-typedef struct msg_struct_cloudvela_sysswm_sw_packag_confirm
+typedef struct msg_struct_cloudvela_sysswm_sw_package_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
+	UINT16 swRelId;
+	UINT16 swVerId;
+	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
-	UINT16 segLen;
-	UINT16 validLen;
+	UINT16 segSplitLen;
+	UINT16 segValidLen;
+	UINT16 segCheckSum;
 	UINT8  body[HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT32 length;
-}msg_struct_cloudvela_sysswm_sw_packag_confirm_t;
+}msg_struct_cloudvela_sysswm_sw_package_confirm_t;
 
 
 //CANITF
@@ -2138,6 +2156,7 @@ typedef struct msg_struct_canitfleo_sysswm_sw_package_report
 {
 	UINT16 swRelId;
 	UINT16 swVerId;
+	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
 	UINT16 segSplitLen;
@@ -2154,6 +2173,7 @@ typedef struct msg_struct_sysswm_canitfleo_sw_package_confirm
 {
 	UINT16 swRelId;
 	UINT16 swVerId;
+	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
 	UINT16 segSplitLen;

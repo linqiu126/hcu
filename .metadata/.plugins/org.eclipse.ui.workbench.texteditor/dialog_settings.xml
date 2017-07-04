@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="len" key="selection"/>
+		<item value="TRIAL" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="len"/>
-			<item value="fread"/>
-			<item value="FILE"/>
-			<item value="func_sysswm_analysis_ihu_sw_package"/>
-			<item value="TRAIL"/>
-			<item value="PATCH"/>
-			<item value="inventory"/>
-			<item value="report"/>
+			<item value="TRIAL"/>
+			<item value="StrIe_HUITP_IEID_uni_inventory_element_t"/>
+			<item value="StrMsg_HUITP_MSGID_uni_inventory_resp_t"/>
+			<item value="sw_package"/>
+			<item value="StrIe_HUITP_IEID_uni_sw_package_body_t"/>
+			<item value="StrIe_HUITP_IEID_uni_com_segment_t"/>
+			<item value="INVENTORY"/>
+			<item value="sw_packag_"/>
 		</list>
 		<list key="replacehistory">
 			<item value="TRIAL"/>
