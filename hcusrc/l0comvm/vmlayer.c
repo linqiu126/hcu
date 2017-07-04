@@ -2891,6 +2891,7 @@ OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 	pRecord = malloc(file_len);
 	if (pRecord==NULL){
 		HcuErrorPrint("HCU-VM: Allocate memory fail!\n");
+		fclose(fp);
 		return FAILURE;
 	}
 	bytes_read=fread(pRecord, 1, file_len, fp);

@@ -1998,6 +1998,12 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_req
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_inventory_req_t;
+#define HCU_SYSMSG_SYSSWM_FW_UPGRADE_NONE 0
+#define HCU_SYSMSG_SYSSWM_FW_UPGRADE_NO 1
+#define HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE 2
+#define HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL 3
+#define HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH 4
+#define HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_INVALID 0xFF
 
 //MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP,
 typedef struct msg_struct_sysswm_cloudvela_inventory_resp

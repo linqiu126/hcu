@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN" key="selection"/>
+		<item value="len" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
-			<item value="HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN"/>
-			<item value="MAX"/>
-			<item value="HUITP_MSGID_sui_inventory_report"/>
-			<item value="sui_inventory"/>
-			<item value="MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT"/>
-			<item value="&#x09;msg_struct_can_uicomm_test_cmd_resp_t snd;&#x0A;&#x09;memset(&amp;snd, 0, sizeof(msg_struct_can_uicomm_test_cmd_resp_t));&#x0A;&#x09;snd.validFlag = HUITP_ENDIAN_EXG8(rcv-&gt;validFlag);&#x0A;&#x09;snd.errCode = HUITP_ENDIAN_EXG16(rcv-&gt;result.error_code);&#x0A;&#x09;snd.sensorid = nodeId;&#x0A;&#x09;snd.motor_speed = HUITP_ENDIAN_EXG32(rcv-&gt;motor_speed);&#x0A;&#x09;snd.sensor_weight = HUITP_ENDIAN_EXG32(rcv-&gt;sensor_weight);&#x0A;&#x09;snd.length = sizeof(msg_struct_can_uicomm_test_cmd_resp_t);&#x0A;&#x09;if (hcu_message_send(MSG_ID_CAN_UICOMM_TEST_CMD_RESP, TASK_ID_BFSCUICOMM, TASK_ID_CANITFLEO, &amp;snd, snd.length) == FAILURE)&#x0A;&#x09;&#x09;HCU_ERROR_PRINT_CANITFLEO(&quot;CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n&quot;, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);&#x0A;"/>
-			<item value="INVENTORY"/>
+			<item value="len"/>
+			<item value="fread"/>
+			<item value="FILE"/>
+			<item value="func_sysswm_analysis_ihu_sw_package"/>
+			<item value="TRAIL"/>
+			<item value="PATCH"/>
+			<item value="inventory"/>
+			<item value="report"/>
 		</list>
 		<list key="replacehistory">
+			<item value="TRIAL"/>
 			<item value="comAlgPar.TargetCombinationUpperWeight"/>
 			<item value="HCU_ERROR_PRINT_CANITFLEO"/>
 			<item value="&quot;USBCAN_DH: can_bandrate_to_timing_"/>
@@ -25,14 +26,13 @@
 			<item value="&quot;USBCAN_DH: CAN"/>
 			<item value="&quot;USBCAN_DH: usb_can_int"/>
 			<item value="&quot;USBCAN_DH"/>
-			<item value="&quot;USBCAN_DH: bsp_can_l2_frame_transmit"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1196" key="DIALOG_X_ORIGIN"/>
-		<item value="120" key="DIALOG_Y_ORIGIN"/>
+		<item value="1082" key="DIALOG_X_ORIGIN"/>
+		<item value="295" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

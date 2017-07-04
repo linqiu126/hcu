@@ -13,6 +13,9 @@
 
 //= ZJL, 2017 July.3 CURRENT_SW_DELIVERY 219=>BFSC项目
 = 制作软件下载的中台假数据
+= 完善IAP中有关软件下载的内容，同时对软件版体进行了归一化
+
+
 
 //= ZJL, 2017 July.3 CURRENT_SW_DELIVERY 218=>BFSC项目
 = Upgrade on HUITP SPEC V2.8

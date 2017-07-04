@@ -43,6 +43,28 @@ typedef struct gTaskSysswmContext
 
 #define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  10
 
+typedef struct strTaskSysswmSwpkgLable
+{
+	char fPathName[200];
+	UINT16 fileNameLen;
+	UINT16 hwType;
+	UINT16 hwId;
+	UINT16 swRel;
+	UINT16 swVer;
+}strTaskSysswmSwpkgLable_t;
+
+typedef struct strTaskSysswmSwpkgSegment
+{
+	UINT16 swRel;
+	UINT16 swVer;
+	UINT16 segTotal;
+	UINT16 segIndex;
+	UINT16 segSplitLen;
+	UINT16 segValidLen;
+	UINT16 segCheckSum;
+	UINT8* buf;
+}strTaskSysswmSwpkgSegment_t;
+
 //API
 extern OPSTAT fsm_sysswm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -59,6 +81,12 @@ extern OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_
 //Local API
 OPSTAT func_sysswm_int_init(void);
 OPSTAT func_sysswm_time_out_period_working_scan(void);
+OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, strTaskSysswmSwpkgLable_t* input);
+OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgradeFlag);
+OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *input);
+UINT16 func_sysswm_caculate_file_whole_checksum(char *fname);
+UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname);
+
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_SYSSWM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
