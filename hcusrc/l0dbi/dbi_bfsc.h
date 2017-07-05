@@ -9,6 +9,7 @@
 #define L0DBI_BFSC_H_
 
 #include "../l0comvm/vmlayer.h"
+#include "../l2codec/huitp.h"
 
 #define DBI_BFSC_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
 
@@ -19,6 +20,7 @@ extern OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint
 extern OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt);
 extern OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id);
 extern OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
+extern OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT8  sensorid);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

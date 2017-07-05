@@ -33,6 +33,6 @@ extern OPSTAT fsm_jsoninotify_init(UINT32 dest_id, UINT32 src_id, void * param_p
 extern OPSTAT fsm_jsoninotify_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
-OPSTAT func_jsoninotify_add_watch(char monitorJsonFile [] );
+OPSTAT func_jsoninotify_add_watch(char *monitorJsonFile);
 
 #endif /* L1HWOPT_JSONINOTIFY_H_ */

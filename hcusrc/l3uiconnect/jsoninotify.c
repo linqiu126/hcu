@@ -110,15 +110,17 @@ OPSTAT fsm_jsoninotify_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	return SUCCESS;
 }
 
-OPSTAT func_jsoninotify_add_watch(char monitorJsonFile [] )
+OPSTAT func_jsoninotify_add_watch(char *monitorJsonFile )
 {
 	int ret = 0;
-	//char *monitorJasonFile;
-	struct inotify_event *fileInotifyEvent;
 	int retInotifyInit;
 	int retInotifyWatch;
-	char inotifyReadBuf[BUFSIZ];
+	char inotifyReadBuf[HCU_SYSCFG_BFSC_CMDJSON_FILE_SIZE_MAX];
 	int retReadLen;
+
+	if(NULL == monitorJsonFile) 	{
+		HcuErrorPrint("JSONINOTIFY: func_jsoninotify_add_watch function input pointer (monitorJsonFile == NULL), return.\n");
+	}
 
 	msg_struct_inotify_uicomm_file_change_ind_t snd0;
 	memset(&snd0, 0, sizeof(msg_struct_inotify_uicomm_file_change_ind_t));
@@ -143,13 +145,14 @@ OPSTAT func_jsoninotify_add_watch(char monitorJsonFile [] )
 	 //监控文件修改事件
 	 while(1)
 	  {
-		 retReadLen = read(retInotifyInit, inotifyReadBuf, BUFSIZ - 1) ;
+		 retReadLen = read(retInotifyInit, inotifyReadBuf, HCU_SYSCFG_BFSC_CMDJSON_FILE_SIZE_MAX- 1) ;
 	 	 if(retReadLen > 0)
 	 	 {
 	 		    //JSON文件有修改，发送消息通知BFSCUI模块
 				ret = hcu_message_send(MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND, TASK_ID_BFSCUICOMM, TASK_ID_JSONINOTIFY, &snd0, snd0.length);
 				if (ret == FAILURE){
 					HcuErrorPrint("JSONINOTIFY: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_JSONINOTIFY].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+					close(retInotifyInit);
 					return FAILURE;
 				}
 
@@ -165,6 +168,7 @@ OPSTAT func_jsoninotify_add_watch(char monitorJsonFile [] )
 		 if( retInotifyInit < 0 )
 		 {
 			 HcuErrorPrint("TASK_ID_JSONINOTIFY: initialize json file inotify instance failure!\n");
+			 close(retInotifyInit);
 			 return FAILURE;
 		 }
 		 //重新添加要监控的文件到Inotify实例
@@ -172,6 +176,7 @@ OPSTAT func_jsoninotify_add_watch(char monitorJsonFile [] )
 		 if( retInotifyWatch < 0 )
 		 {
 			 HcuErrorPrint("TASK_ID_JSONINOTIFY: Inotify add watch failure, [file= %s]!\n", monitorJsonFile);
+			 close(retInotifyInit);
 			 return FAILURE;
 		 }
 	  }

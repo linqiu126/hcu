@@ -300,6 +300,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 {
 	MYSQL *sqlHandler;
     int result = 0;
+    UINT32 timestamp;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
@@ -321,6 +322,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     }
 
 	//UPDATE新的数据
+    timestamp = time(NULL);
     if( (0xFFFFFFFF == wmc_id) && (0xFFFFFFFF == wmc_weight_value) )
     {
         mysql_close(sqlHandler);
@@ -328,18 +330,18 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     }
     else if( (0xFFFFFFFF == wmc_id) && (0xFFFFFFFF != wmc_weight_value) )
     {
-        sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', value_%02d = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
-        		20170518, wmc_id, wmc_weight_value);
+        sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', value_%02d = '%d' WHERE (deviceid = '%s')", \
+        		timestamp, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
     }
     else if( (0xFFFFFFFF != wmc_id) && (0xFFFFFFFF == wmc_weight_value) )
     {
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
-				20170518, wmc_id, wmc_status, wmc_id, wmc_weight_value);
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = '%s')", \
+				timestamp, wmc_id, wmc_status, wmc_id, wmc_weight_value,zHcuSysEngPar.hwBurnId.equLable);
     }
     else
     {
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d', value_%02d = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
-				20170518, wmc_id, wmc_status, wmc_id, wmc_weight_value);
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d', value_%02d = '%d' WHERE (deviceid = '%s')", \
+				timestamp, wmc_id, wmc_status, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
     }
 
     result = mysql_query(sqlHandler, strsql);
@@ -380,8 +382,8 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
     }
 
 	//UPDATE新的数据
-    sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET curcomwgt = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
-		wgt);
+    sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET curcomwgt = '%d' WHERE (deviceid = '%s')", \
+		wgt, zHcuSysEngPar.hwBurnId.equLable);
 
     result = mysql_query(sqlHandler, strsql);
 	if(result){
@@ -399,6 +401,7 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
 OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
 {
 	MYSQL *sqlHandler;
+	UINT32 timestamp;
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
     uint32_t wmc_id =0 ;
@@ -422,10 +425,11 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     }
 
 	//REPLACE新的数据
+    timestamp = time(NULL);
     for(wmc_id = 1; wmc_id <= 16; wmc_id++)
     {
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = 'HCU_G301_BFSC_P0001')", \
-				20170518, wmc_id, 0);
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = '%s')", \
+				timestamp, wmc_id, 0, zHcuSysEngPar.hwBurnId.equLable);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
@@ -433,6 +437,48 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
 	        return FAILURE;
 		}
     }
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT8  sensorid)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	mysql_close(sqlHandler);
+        return FAILURE;
+    }
+
+    //零值校准数据
+    if (cmdid == SESOR_COMMAND_ID_CALIBRATION_ZERO){
+		sprintf(strsql, "REPLACE INTO `hcubfsccalibration` (deviceid, zeroadc_%02d) VALUES ('%s', '%d')", sensorid, zHcuSysEngPar.hwBurnId.equLable, adcvalue);
+		result = mysql_query(sqlHandler, strsql);
+    }
+    //满值校准数据
+    else if (cmdid == SESOR_COMMAND_ID_CALIBRATION_FULL){
+		sprintf(strsql, "REPLACE INTO `hcubfsccalibration` (deviceid, fulladc_%02d) VALUES ('%s', '%d')", sensorid, zHcuSysEngPar.hwBurnId.equLable, adcvalue);
+		result = mysql_query(sqlHandler, strsql);
+    }
+
+    if(result){
+    	    	mysql_close(sqlHandler);
+    	    	HcuErrorPrint("DBICOM: REPLACE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
+    	        return FAILURE;
+    		}
 
 	//释放记录集
     mysql_close(sqlHandler);

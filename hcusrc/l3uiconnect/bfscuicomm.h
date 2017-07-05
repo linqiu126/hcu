@@ -91,8 +91,7 @@ extern OPSTAT fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, 
 //Local API
 OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void);
 OPSTAT func_bfscuicomm_time_out_period_read_process(void);
-//OPSTAT  func_bfscuicomm_cmdfile_json_parse(char monitorJasonFile [], L3BfscuiJsonCmdParseResult_t parseResult );
-OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJasonFile, L3BfscuiJsonCmdParseResult_t *parseResult );
+OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCmdParseResult_t *parseResult );
 
 
 

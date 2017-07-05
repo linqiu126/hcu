@@ -1087,7 +1087,7 @@
 
 	//面对服务器，定义本地名字
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL 			"http://127.0.0.1/test.php"
-	#define HCU_SYSCFG_CLOUD_HCU_NAME 						"HCU_G801_BFSC_TMP01"  	//DEVICE NAME，而且必须缺最后两位
+	#define HCU_SYSCFG_CLOUD_HCU_NAME 						"HCU_G301_BFSC_P0001"  	//DEVICE NAME，而且必须缺最后两位
 	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_BFSC12"
 
 	//定义主服务器后台CLOUD地址信息：允许工程配置
@@ -1137,6 +1137,7 @@
 
 	//本项目特定部分
 	#define HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX 11  //下位机总共有16个秤盘
+	#define HCU_SYSCFG_BFSC_CMDJSON_FILE_SIZE_MAX  1000    //BFSCUI命令标志文件 （command.json）最大长度
 
 //奥普维尔的OTDR仪表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
