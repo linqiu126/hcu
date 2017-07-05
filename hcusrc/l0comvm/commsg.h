@@ -2491,16 +2491,16 @@ typedef struct msg_struct_l3bfsc_uicomm_cfg_resp
 typedef struct msg_struct_uicomm_can_test_cmd_req
 {
 	UINT8   cmdid;
-	UINT8  wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 comand_flags;
-	UINT8 led1_command;
-	UINT8 led2_command;
-	UINT8 led3_command;
-	UINT8 led4_command;
-	UINT32 motor_command;
-	UINT32 sensor_command;
-	UINT32 	length;
-
+	UINT8  	wsBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 	command_flags;
+	UINT32 	cmdvalue;
+	UINT16 	length;
+//	UINT8 led1_command;
+//	UINT8 led2_command;
+//	UINT8 led3_command;
+//	UINT8 led4_command;
+//	UINT32 motor_command;
+//	UINT32 sensor_command;
 }msg_struct_uicomm_can_test_cmd_req_t;
 
 //MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
@@ -2510,8 +2510,8 @@ typedef struct msg_struct_can_uicomm_test_cmd_resp
 	UINT8	sensorid;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
-	UINT32 	motor_speed;
-	UINT32 	sensor_weight;
+	UINT32  cmdvalue1;
+	UINT32  cmdvalue2;
 	UINT32 	length;
 }msg_struct_can_uicomm_test_cmd_resp_t;
 

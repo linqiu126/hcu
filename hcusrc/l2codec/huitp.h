@@ -19,6 +19,7 @@
  * 2017/06/20 v2.6: 修改L3BFSC对应的结构，增加Heart-Beat过程
  * 2017/06/30 V2.7: 修改CANITF接口上SW INVENTORY/SW PACKAGE的消息定义与结构
  * 2017/07/03 V2.8: 完善SW INVENTORY/SW PACKAGE的消息定义与结构
+ * 2017/07/03 V2.9: StrMsg_HUITP_MSGID_sui_bfsc_command_req update
  *
  *
  */
@@ -5304,35 +5305,44 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_fault_ind
 /*
 **	MSG_ID_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
 */
-#define SENSOR_COMMAND_ID_WEITGH_READ (0x0001)
-#define MOTOR_COMMAND_ID (0x0002)
-#define LED1_COMMAND_ID (0x0004)
-#define LED2_COMMAND_ID (0x0008)
-#define LED3_COMMAND_ID (0x0010)
-#define LED4_COMMAND_ID (0x0020)
+//#define SENSOR_COMMAND_ID_WEITGH_READ (0x0001)
+//#define MOTOR_COMMAND_ID (0x0002)
+//#define LED1_COMMAND_ID (0x0004)
+//#define LED2_COMMAND_ID (0x0008)
+//#define LED3_COMMAND_ID (0x0010)
+//#define LED4_COMMAND_ID (0x0020)
 
-#define LED_COMMNAD_ON						(1)
-#define LED_COMMNAD_OFF						(2)
-#define LED_COMMNAD_BINKING_HIGHSPEED		(3)
-#define LED_COMMNAD_BINKING_LOWSPEED		(4)
+#define CMDID_LED1_COMMNAD_ON						(1)
+#define CMDID_LED1_COMMNAD_OFF						(2)
+#define CMDID_LED1_COMMNAD_BINKING_HIGHSPEED		(3)
+#define CMDID_LED1_COMMNAD_BINKING_LOWSPEED			(4)
 
-#define SESOR_COMMAND_ID_IGORE						(0) //MUSR BE 0
-#define SESOR_COMMAND_ID_WEITGH_READ				(3)
-#define SESOR_COMMAND_ID_CALIBRATION_ZERO			(4)
-#define SESOR_COMMAND_ID_CALIBRATION_FULL			(5)
+#define CMDID_LED2_COMMNAD_ON						(5)
+#define CMDID_LED2_COMMNAD_OFF						(6)
+#define CMDID_LED2_COMMNAD_BINKING_HIGHSPEED		(7)
+#define CMDID_LED2_COMMNAD_BINKING_LOWSPEED			(8)
+
+#define CMDID_SENSOR_COMMAND_IGORE					(10) //MUSR BE 0
+#define CMDID_SENSOR_COMMAND_WEITGH_READ			(11)
+#define CMDID_SENSOR_COMMAND_CALIBRATION_ZERO		(12)
+#define CMDID_SENSOR_COMMAND_CALIBRATION_FULL		(13)
+
+#define CMDID_MOTOR_COMMAND							(20)
+
 
 //特殊命令过程（测试等过程）
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_req
 {
 	UINT16 msgid;
 	UINT16 length;
-	UINT32 comand_flags;
-	UINT8 led1_command;
-	UINT8 led2_command;
-	UINT8 led3_command;
-	UINT8 led4_command;
-	UINT32 motor_command;
-	UINT32 sensor_command;
+	UINT32 cmdid;
+	UINT32 cmdvalue;
+//	UINT8 led1_command;
+//	UINT8 led2_command;
+//	UINT8 led3_command;
+//	UINT8 led4_command;
+//	UINT32 motor_command;
+//	UINT32 sensor_command;
 }StrMsg_HUITP_MSGID_sui_bfsc_command_req_t;
 
 //HUITP_MSGID_sui_bfsc_command_resp                = 0x3B98,
@@ -5342,11 +5352,12 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_resp
 	UINT16 length;
 	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
     WmcErrorCode_t result;
-	UINT32 	motor_speed;
-	UINT32 	sensor_weight;
 	UINT8  validFlag;  //是否执行成功
 	UINT8  spare1;
 	UINT16 spare2;
+	UINT32 cmdid;
+	UINT32 cmdvalue1;
+	UINT32 cmdvalue2;
 }StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t;
 
 /*

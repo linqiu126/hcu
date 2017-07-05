@@ -464,13 +464,15 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT8  s
     }
 
     //零值校准数据
-    if (cmdid == SESOR_COMMAND_ID_CALIBRATION_ZERO){
+    if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_ZERO){
 		sprintf(strsql, "REPLACE INTO `hcubfsccalibration` (deviceid, zeroadc_%02d) VALUES ('%s', '%d')", sensorid, zHcuSysEngPar.hwBurnId.equLable, adcvalue);
+		HcuDebugPrint("strsql = %s\n", strsql);
 		result = mysql_query(sqlHandler, strsql);
     }
     //满值校准数据
-    else if (cmdid == SESOR_COMMAND_ID_CALIBRATION_FULL){
+    else if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_FULL){
 		sprintf(strsql, "REPLACE INTO `hcubfsccalibration` (deviceid, fulladc_%02d) VALUES ('%s', '%d')", sensorid, zHcuSysEngPar.hwBurnId.equLable, adcvalue);
+		HcuDebugPrint("strsql = %s\n", strsql);
 		result = mysql_query(sqlHandler, strsql);
     }
 

@@ -383,14 +383,8 @@ OPSTAT fsm_canitfleo_can_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	memset(&pMsgProc, 0, msgProcLen);
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfsc_command_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
-
-	pMsgProc.comand_flags = HUITP_ENDIAN_EXG32(rcv.comand_flags);
-	pMsgProc.led1_command = rcv.led1_command;
-	pMsgProc.led2_command = rcv.led2_command;
-	pMsgProc.led3_command = rcv.led3_command;
-	pMsgProc.led4_command = rcv.led4_command;
-	pMsgProc.motor_command = HUITP_ENDIAN_EXG32(rcv.motor_command);
-	pMsgProc.sensor_command = HUITP_ENDIAN_EXG32(rcv.sensor_command);
+	pMsgProc.cmdid = HUITP_ENDIAN_EXG32(rcv.cmdid);
+	pMsgProc.cmdvalue = HUITP_ENDIAN_EXG32(rcv.cmdvalue);
 
 	//发送消息
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
@@ -1105,8 +1099,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(StrMsg_HUITP
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->result.error_code);
 	snd.sensorid = nodeId;
-	snd.motor_speed = HUITP_ENDIAN_EXG32(rcv->motor_speed);
-	snd.sensor_weight = HUITP_ENDIAN_EXG32(rcv->sensor_weight);
+	snd.cmdid = HUITP_ENDIAN_EXG32(rcv->cmdid);
+	snd.cmdvalue1 = HUITP_ENDIAN_EXG32(rcv->cmdvalue1);
+	snd.cmdvalue2 = HUITP_ENDIAN_EXG32(rcv->cmdvalue2);
 	snd.length = sizeof(msg_struct_can_uicomm_test_cmd_resp_t);
 	if (hcu_message_send(MSG_ID_CAN_UICOMM_TEST_CMD_RESP, TASK_ID_BFSCUICOMM, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);

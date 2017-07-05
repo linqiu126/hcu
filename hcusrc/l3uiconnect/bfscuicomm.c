@@ -250,19 +250,20 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 	memcpy(&rcv, param_ptr, param_len);
 
 	//存入数据库表单，通知界面新的状态信息
+	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_can_test_cmd_resp: cmdid=%d, sensorid=%d, sensor_adc=%d\n", rcv.cmdid, rcv.sensorid, rcv.cmdvalue1);
 	switch(rcv.cmdid)
 	{
-		case SESOR_COMMAND_ID_CALIBRATION_ZERO:
-			adcvalue = rcv.sensor_weight;
+		case CMDID_SENSOR_COMMAND_CALIBRATION_ZERO:
+			adcvalue = rcv.cmdvalue1;
 			sensorid = rcv.sensorid;
-			ret = dbi_HcuBfsc_CalibrationDataUpdate(SESOR_COMMAND_ID_CALIBRATION_ZERO, adcvalue, sensorid);
+			ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_ZERO, adcvalue, sensorid);
 			break;
-		case SESOR_COMMAND_ID_CALIBRATION_FULL:
-			adcvalue = rcv.sensor_weight;
+		case CMDID_SENSOR_COMMAND_CALIBRATION_FULL:
+			adcvalue = rcv.cmdvalue1;
 			sensorid = rcv.sensorid;
-			ret = dbi_HcuBfsc_CalibrationDataUpdate(SESOR_COMMAND_ID_CALIBRATION_FULL, adcvalue, sensorid);
+			ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_FULL, adcvalue, sensorid);
 			break;
-		case SESOR_COMMAND_ID_WEITGH_READ:
+		case CMDID_SENSOR_COMMAND_WEITGH_READ:
 			break;
 		default:
 			break;
@@ -324,13 +325,13 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			snd.length = sizeof(msg_struct_uicomm_can_test_cmd_req_t);
 			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO)
 			{
-				snd.cmdid = SENSOR_COMMAND_ID_WEITGH_READ;
-				snd.sensor_command = SESOR_COMMAND_ID_CALIBRATION_ZERO;
+				snd.cmdid = CMDID_SENSOR_COMMAND_CALIBRATION_ZERO;
+				snd.cmdvalue = 0;
 			}
 			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)
 			{
-				snd.cmdid = SENSOR_COMMAND_ID_WEITGH_READ;
-				snd.sensor_command = SESOR_COMMAND_ID_CALIBRATION_FULL;
+				snd.cmdid = CMDID_SENSOR_COMMAND_CALIBRATION_FULL;
+				snd.cmdvalue = 100000;  //TBD
 			}
 
 			if (sensorid >=0 && sensorid < HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR)  snd.wsBitmap[sensorid] = 1;
@@ -440,7 +441,7 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCmdParseResult_t *parseResult )
 {
 	FILE *fileStream;
-	char inotifyReadBuf[HCU_SYSCFG_BFSC_CMDJSON_FILE_SIZE_MAX];
+	char inotifyReadBuf[1000];
 	UINT32  numread = 0;
 	UINT32  flag = 0, value = 0, errid = 0;
 	UINT8  sensorid = 0;
@@ -448,6 +449,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 	if((NULL == monitorJsonFile) || (NULL == parseResult))
 	{
 		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: (NULL == monitorJsonFile) || (NULL == parseResult), return.\n");
+		return FAILURE;
 	}
 
 	struct json_object *file_jsonobj = NULL;
@@ -455,7 +457,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 
     if ((fileStream = fopen( monitorJsonFile, "r" )) != NULL )  // 文件读取
     {
-			numread = fread( inotifyReadBuf, sizeof( char ), HCU_SYSCFG_BFSC_CMDJSON_FILE_SIZE_MAX-1, fileStream );
+			numread = fread( inotifyReadBuf, sizeof( char ), 1000-1, fileStream );
 			if (numread == 0){
 				errid = ferror(fileStream);
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s] [errid=%d] ! \n", monitorJsonFile, errid);
