@@ -191,7 +191,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 {
 	//int ret=0;
 	FILE *fileStream;
-	char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0},\"config_cmd\":{\"flag\":0,\"value\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0}}";
+	char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0,\"weight\":0},\"config_cmd\":{\"flag\":0,\"value\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0}}";
 
 	msg_struct_l3bfsc_uicomm_cfg_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
@@ -277,7 +277,7 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret = 0;
-	UINT32  fileChangeContent = 0;
+	UINT32  fileChangeContent = 0, weight = 0;
 	UINT8  sensorid = 0;
 
 	L3BfscuiJsonCmdParseResult_t parseResult;
@@ -318,6 +318,7 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		zCmdCalibrationFlag = parseResult.cmdCalibration.cmdFlag;
 		fileChangeContent = parseResult.cmdCalibration.cmdValue;
 		sensorid = parseResult.cmdCalibration.sensorid;
+		weight =  parseResult.cmdCalibration.weight;
 		//依赖文件变化的内容，分类发送控制命令：零值校准命令/满值校准命令
 		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)){
 			msg_struct_uicomm_can_test_cmd_req_t snd;
@@ -326,12 +327,12 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALZERO)
 			{
 				snd.cmdid = CMDID_SENSOR_COMMAND_CALIBRATION_ZERO;
-				snd.cmdvalue = 0;
+				snd.cmdvalue = weight;
 			}
 			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CALFULL)
 			{
 				snd.cmdid = CMDID_SENSOR_COMMAND_CALIBRATION_FULL;
-				snd.cmdvalue = 100000;  //TBD
+				snd.cmdvalue = weight;  //TBD
 			}
 
 			if (sensorid >=0 && sensorid < HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR)  snd.wsBitmap[sensorid] = 1;
@@ -443,7 +444,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 	FILE *fileStream;
 	char inotifyReadBuf[1000];
 	UINT32  numread = 0;
-	UINT32  flag = 0, value = 0, errid = 0;
+	UINT32  flag = 0, value = 0, errid = 0, weight = 0;
 	UINT8  sensorid = 0;
 
 	if((NULL == monitorJsonFile) || (NULL == parseResult))
@@ -453,7 +454,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 	}
 
 	struct json_object *file_jsonobj = NULL;
-	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL;
+	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL, *weight_jsonobj = NULL;
 
     if ((fileStream = fopen( monitorJsonFile, "r" )) != NULL )  // 文件读取
     {
@@ -492,13 +493,16 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 			  flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
 			  value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
 			  sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
-			  if ((flag_jsonobj != NULL) && (value_jsonobj != NULL) && (sensorid_jsonobj != NULL)){
+			  weight_jsonobj =  json_object_object_get(cmd_jsonobj, "weight");
+			  if ((flag_jsonobj != NULL) && (value_jsonobj != NULL) && (sensorid_jsonobj != NULL)&& (weight_jsonobj != NULL)){
 				  flag = json_object_get_int(flag_jsonobj);
 				  value = json_object_get_int(value_jsonobj);
 				  sensorid = json_object_get_int(sensorid_jsonobj);
+				  weight= json_object_get_int(weight_jsonobj);
 				  parseResult->cmdCalibration.cmdFlag = flag;
 				  parseResult->cmdCalibration.cmdValue = value;
 				  parseResult->cmdCalibration.sensorid = sensorid;
+				  parseResult->cmdCalibration.weight = weight;
 			  }
 		  }
 		 else
@@ -552,6 +556,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 		json_object_put(flag_jsonobj);
 		json_object_put(value_jsonobj);
 		json_object_put(sensorid_jsonobj);
+		json_object_put(weight_jsonobj);
 
         return SUCCESS;
     }

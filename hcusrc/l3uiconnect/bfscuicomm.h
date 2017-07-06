@@ -35,6 +35,7 @@ typedef struct L3BfscuiCalibrationCmd
 	UINT32  cmdFlag;
 	UINT32 cmdValue;
 	UINT8	sensorid;
+	UINT32  weight;
 }L3BfscuiCalibrationCmd_t;
 
 typedef struct L3BfscuiConfigCmd
