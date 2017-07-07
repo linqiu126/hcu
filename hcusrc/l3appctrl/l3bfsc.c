@@ -60,6 +60,7 @@ HcuFsmStateItem_t HcuFsmL3bfsc[] =
 
 	//等待启动反馈结果：等待MSG_ID_CAN_L3BFSC_SYS_START_RESP，完成后进入FSM_STATE_L3BFSC_OOS_SCAN
 	{MSG_ID_UICOMM_L3BFSC_CFG_REQ,     			FSM_STATE_L3BFSC_OPR_GO,          	fsm_l3bfsc_uicomm_config_req},
+	{MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,     		FSM_STATE_L3BFSC_OPR_GO,          	fsm_l3bfsc_canitf_config_resp},
 	{MSG_ID_CAN_L3BFSC_SYS_START_RESP,       	FSM_STATE_L3BFSC_OPR_GO,          	fsm_l3bfsc_canitf_sys_start_resp},
 	{MSG_ID_CAN_L3BFSC_SYS_STOP_RESP,     		FSM_STATE_L3BFSC_OPR_GO,          	fsm_l3bfsc_canitf_sys_stop_resp},
 

@@ -207,6 +207,10 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 			fputs(cmdJson, fileStream);
 			fclose(fileStream);
 		 }
+		char str[100];
+		memset(str, 0, sizeof(str));
+		sprintf(str, "chmod -R 777 %s", zHcuCmdflagJsonFile);
+		system(str);
 		HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d, fileStream=%x, zHcuCmdflagJsonFile = %d\n", rcv.validFlag, fileStream, zHcuCmdflagJsonFile);
 	}
 
@@ -425,17 +429,17 @@ OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 		}
 	}
-	else if (state == FSM_STATE_L3BFSC_OPR_GO) {
-		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
-		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
-		snd_start_req.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
-		snd_start_req.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
-		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd_start_req, snd_start_req.length) == FAILURE)
-			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-		}
-	else{
-
-	}
+//	else if (state == FSM_STATE_L3BFSC_OPR_GO) {
+//		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
+//		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
+//		snd_start_req.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
+//		snd_start_req.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_START;
+//		if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd_start_req, snd_start_req.length) == FAILURE)
+//			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+//		}
+//	else{
+//
+//	}
 	return SUCCESS;
 }
 
@@ -457,7 +461,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 	struct json_object *file_jsonobj = NULL;
 	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL, *weight_jsonobj = NULL;
 
-    if ((fileStream = fopen( monitorJsonFile, "r" )) != NULL )  // 文件读取
+    if ((fileStream = fopen( monitorJsonFile, "rt" )) != NULL )  // 文件读取
     {
 			numread = fread( inotifyReadBuf, sizeof( char ), 1000-1, fileStream );
 			if (numread == 0){
