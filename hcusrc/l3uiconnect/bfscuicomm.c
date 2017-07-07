@@ -205,8 +205,6 @@ OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	//FILE *fileStream;
-	//char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0,\"weight\":0},\"config_cmd\":{\"flag\":0,\"value\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0}}";
 
 	msg_struct_l3bfsc_uicomm_cfg_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
@@ -219,16 +217,6 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 	if(rcv.validFlag == TRUE){
 		//Update databse, to let START menu turn state from grey to active!!!
 
-//		//在系统/temp目录下创建空的command.json文件，用于通知界面HCU及下位机已经准备好了
-//		if ((fileStream = fopen( zHcuCmdflagJsonFile, "w+" )) != NULL ) {
-//			fputs(cmdJson, fileStream);
-//			fclose(fileStream);
-//		 }
-//		char str[100];
-//		memset(str, 0, sizeof(str));
-//		sprintf(str, "chmod -R 777 %s", zHcuCmdflagJsonFile);
-//		system(str);
-//		HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d, fileStream=%x, zHcuCmdflagJsonFile = %d\n", rcv.validFlag, fileStream, zHcuCmdflagJsonFile);
 	}
 
 	//收到L3BFSC指示秤台配置错误的反馈
@@ -274,14 +262,14 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 	switch(rcv.cmdid)
 	{
 		case CMDID_SENSOR_COMMAND_CALIBRATION_ZERO:
-			adcvalue = rcv.cmdvalue1;
 			sensorid = rcv.sensorid;
+			adcvalue = rcv.cmdvalue1;
 			weight = rcv.cmdvalue2;
 			ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_ZERO, adcvalue, weight, sensorid);
 			break;
 		case CMDID_SENSOR_COMMAND_CALIBRATION_FULL:
-			adcvalue = rcv.cmdvalue1;
 			sensorid = rcv.sensorid;
+			adcvalue = rcv.cmdvalue1;
 			weight = rcv.cmdvalue2;
 			ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_FULL, adcvalue, weight, sensorid);
 			break;
@@ -482,10 +470,14 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
     {
 			numread = fread( inotifyReadBuf, sizeof( char ), 1000-1, fileStream );
 			if (numread == 0){
-				errid = ferror(fileStream);
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s] [errid=%d] ! \n", monitorJsonFile, errid);
-				fclose( fileStream );
-				return FAILURE;
+				hcu_sleep(1);
+				numread = fread( inotifyReadBuf, sizeof( char ), 1000-1, fileStream );
+				if (numread == 0){
+					errid = ferror(fileStream);
+					HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s] [errid=%d] ! \n", monitorJsonFile, errid);
+					fclose( fileStream );
+					return FAILURE;
+				}
 			}
 			fclose( fileStream );
 
