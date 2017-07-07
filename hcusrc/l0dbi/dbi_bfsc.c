@@ -443,7 +443,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     return SUCCESS;
 }
 
-OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT8  sensorid)
+OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
 {
 	MYSQL *sqlHandler;
     int result = 0;
@@ -465,14 +465,12 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT8  s
 
     //零值校准数据
     if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_ZERO){
-		sprintf(strsql, "REPLACE INTO `hcubfsccalibration` (deviceid, zeroadc_%02d) VALUES ('%s', '%d')", sensorid, zHcuSysEngPar.hwBurnId.equLable, adcvalue);
-		HcuDebugPrint("strsql = %s\n", strsql);
+		sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (deviceid = '%s')", sensorid, adcvalue, zHcuSysEngPar.hwBurnId.equLable);
 		result = mysql_query(sqlHandler, strsql);
     }
     //满值校准数据
     else if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_FULL){
-		sprintf(strsql, "REPLACE INTO `hcubfsccalibration` (deviceid, fulladc_%02d) VALUES ('%s', '%d')", sensorid, zHcuSysEngPar.hwBurnId.equLable, adcvalue);
-		HcuDebugPrint("strsql = %s\n", strsql);
+    	sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d', fullwgt_%02d='%d'  WHERE (deviceid = '%s')", sensorid, adcvalue, sensorid, fullweight, zHcuSysEngPar.hwBurnId.equLable);
 		result = mysql_query(sqlHandler, strsql);
     }
 
@@ -487,6 +485,65 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT8  s
     return SUCCESS;
 }
 
+//获取校准ADC值并初始化到全局表 gTaskL3bfscContext
+OPSTAT dbi_HcuBfsc_CalibrationDataGet( UINT32 data[(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)*3] )
+{
+	MYSQL *sqlHandler;
+	MYSQL_RES *resPtr;
+	MYSQL_ROW sqlRow;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	mysql_close(sqlHandler);
+        return FAILURE;
+    }
+
+	//获取数据
+    sprintf(strsql, "SELECT * FROM `hcubfsccalibration` WHERE (`deviceid` = '%s')", zHcuSysEngPar.hwBurnId.equLable);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFSC: SELECT data error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//查具体的结果
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFSC: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+	//只读取第一条记录
+	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		mysql_free_result(resPtr);
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
+        return FAILURE;
+	}
+	else{
+		UINT8  index;
+		for (index = 1; index <= 3*(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1); index++){
+			if (sqlRow[index])  data[index-1] = (UINT32)atol(sqlRow[index]);
+		}
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
 
 
 

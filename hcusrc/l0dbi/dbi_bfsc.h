@@ -20,7 +20,8 @@ extern OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint
 extern OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt);
 extern OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id);
 extern OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
-extern OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT8  sensorid);
+extern OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid);
+extern OPSTAT dbi_HcuBfsc_CalibrationDataGet( UINT32 data[(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)*3] );
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

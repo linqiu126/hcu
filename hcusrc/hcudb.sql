@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 06, 2017 at 08:41 PM
+-- Generation Time: Jul 07, 2017 at 04:24 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -193,57 +193,54 @@ INSERT INTO `hcualcoholmq3alcodatainfo` (`sid`, `deviceid`, `timestamp`, `datafo
 
 CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
   `deviceid` varchar(20) NOT NULL,
-  `zeroadc_00` int(4) NOT NULL DEFAULT '0',
-  `fulladc_00` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_00` int(4) NOT NULL DEFAULT '0',
   `zeroadc_01` int(4) NOT NULL DEFAULT '0',
   `fulladc_01` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_01` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_01` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_02` int(4) NOT NULL DEFAULT '0',
   `fulladc_02` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_02` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_02` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_03` int(4) NOT NULL DEFAULT '0',
   `fulladc_03` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_03` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_03` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_04` int(4) NOT NULL DEFAULT '0',
   `fulladc_04` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_04` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_04` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_05` int(4) NOT NULL DEFAULT '0',
   `fulladc_05` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_05` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_05` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_06` int(4) NOT NULL DEFAULT '0',
   `fulladc_06` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_06` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_06` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_07` int(4) NOT NULL DEFAULT '0',
   `fulladc_07` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_07` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_07` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_08` int(4) NOT NULL DEFAULT '0',
   `fulladc_08` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_08` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_08` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_09` int(4) NOT NULL DEFAULT '0',
   `fulladc_09` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_09` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_09` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_10` int(4) NOT NULL DEFAULT '0',
   `fulladc_10` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_10` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_10` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_11` int(4) NOT NULL DEFAULT '0',
   `fulladc_11` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_11` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_11` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_12` int(4) NOT NULL DEFAULT '0',
   `fulladc_12` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_12` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_12` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_13` int(4) NOT NULL DEFAULT '0',
   `fulladc_13` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_13` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_13` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_14` int(4) NOT NULL DEFAULT '0',
   `fulladc_14` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_14` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_14` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_15` int(4) NOT NULL DEFAULT '0',
   `fulladc_15` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_15` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_15` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_16` int(4) NOT NULL DEFAULT '0',
   `fulladc_16` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_16` int(4) NOT NULL DEFAULT '0',
+  `fullwgt_16` int(4) NOT NULL DEFAULT '100000',
   PRIMARY KEY (`deviceid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -251,8 +248,8 @@ CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
 -- Dumping data for table `hcubfsccalibration`
 --
 
-INSERT INTO `hcubfsccalibration` (`deviceid`, `zeroadc_00`, `fulladc_00`, `fullwgt_00`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
-('HCU_G301_BFSC_P0001', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `hcubfsccalibration` (`deviceid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
+('HCU_G301_BFSC_P0001', 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000);
 
 -- --------------------------------------------------------
 
