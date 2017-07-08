@@ -12,6 +12,11 @@
 
 //= ZJL/LZH, 2017 July.7 CURRENT_SW_DELIVERY 220=>BFSC项目
 = Bug fix
+= 新装系统中的Json，编译工作正常
+= 
+
+
+
 
 //= ZJL, 2017 July.3 CURRENT_SW_DELIVERY 219=>BFSC项目
 = 制作软件下载的中台假数据
