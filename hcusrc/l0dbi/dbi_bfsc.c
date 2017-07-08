@@ -147,9 +147,7 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 
 
 
---
--- Database: `hcudb`
---
+
 
 -- --------------------------------------------------------
 
@@ -157,41 +155,41 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 -- Table structure for table `hcubfsccurrentinfo`
 --
 
-CREATE TABLE `hcubfsccurrentinfo` (
+CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
   `deviceid` varchar(20) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `status_01` int(1) DEFAULT NULL,
-  `value_01` int(2) DEFAULT NULL,
+  `value_01` int(4) DEFAULT NULL,
   `status_02` int(1) DEFAULT NULL,
-  `value_02` int(2) DEFAULT NULL,
+  `value_02` int(4) DEFAULT NULL,
   `status_03` int(1) DEFAULT NULL,
-  `value_03` int(2) DEFAULT NULL,
+  `value_03` int(4) DEFAULT NULL,
   `status_04` int(1) DEFAULT NULL,
-  `value_04` int(2) DEFAULT NULL,
+  `value_04` int(4) DEFAULT NULL,
   `status_05` int(1) DEFAULT NULL,
-  `value_05` int(2) DEFAULT NULL,
+  `value_05` int(4) DEFAULT NULL,
   `status_06` int(1) DEFAULT NULL,
-  `value_06` int(2) DEFAULT NULL,
+  `value_06` int(4) DEFAULT NULL,
   `status_07` int(1) DEFAULT NULL,
-  `value_07` int(2) DEFAULT NULL,
+  `value_07` int(4) DEFAULT NULL,
   `status_08` int(1) DEFAULT NULL,
-  `value_08` int(2) DEFAULT NULL,
+  `value_08` int(4) DEFAULT NULL,
   `status_09` int(1) DEFAULT NULL,
-  `value_09` int(2) DEFAULT NULL,
+  `value_09` int(4) DEFAULT NULL,
   `status_10` int(1) DEFAULT NULL,
-  `value_10` int(2) DEFAULT NULL,
+  `value_10` int(4) DEFAULT NULL,
   `status_11` int(1) DEFAULT NULL,
-  `value_11` int(2) DEFAULT NULL,
+  `value_11` int(4) DEFAULT NULL,
   `status_12` int(1) DEFAULT NULL,
-  `value_12` int(2) DEFAULT NULL,
+  `value_12` int(4) DEFAULT NULL,
   `status_13` int(1) DEFAULT NULL,
-  `value_13` int(2) DEFAULT NULL,
+  `value_13` int(4) DEFAULT NULL,
   `status_14` int(1) DEFAULT NULL,
-  `value_14` int(2) DEFAULT NULL,
+  `value_14` int(4) DEFAULT NULL,
   `status_15` int(1) DEFAULT NULL,
-  `value_15` int(2) DEFAULT NULL,
+  `value_15` int(4) DEFAULT NULL,
   `status_16` int(1) DEFAULT NULL,
-  `value_16` int(2) DEFAULT NULL,
+  `value_16` int(4) DEFAULT NULL,
   `curcomwgt` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -200,8 +198,7 @@ CREATE TABLE `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
-('HCU_G301_BFSC_P0001', 20170518, 1, 27639, 1, 23373, 1, 37718, 1, 26290, 1, 17153, 1, 20731, 1, 30501, 1, 23568, 1, 39125, 1, 22317, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
-
+('HCU_G301_BFSC_P0001', 20170518, 0, 35483, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 26959, 0, 39988, 0, 36037, 0, 39413, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566);
 
 
 
