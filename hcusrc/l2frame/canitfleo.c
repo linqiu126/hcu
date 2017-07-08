@@ -1103,6 +1103,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(StrMsg_HUITP
 	snd.cmdvalue1 = HUITP_ENDIAN_EXG32(rcv->cmdvalue1);
 	snd.cmdvalue2 = HUITP_ENDIAN_EXG32(rcv->cmdvalue2);
 	snd.length = sizeof(msg_struct_can_uicomm_test_cmd_resp_t);
+
+	HCU_DEBUG_PRINT_CRT("CANITFLEO: Test Cmd received, NodeID=%d, CmdId=%d, Value1=%d, Value2=%d\n", nodeId, snd.cmdid, snd.cmdvalue1, snd.cmdvalue2);
 	if (hcu_message_send(MSG_ID_CAN_UICOMM_TEST_CMD_RESP, TASK_ID_BFSCUICOMM, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
 
