@@ -724,6 +724,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 	gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP;
 	HCU_DEBUG_PRINT_CRT("CANITFLEO: Sensor ID = %d is set to be startup!\n", nodeId);
 
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, 0);	//数据清零
+
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_ACTIVED){
 		//Do nothing

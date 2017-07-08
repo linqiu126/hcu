@@ -320,21 +320,22 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 
 	//UPDATE新的数据
     timestamp = time(NULL);
-    if( (0xFFFFFFFF == wmc_id) && (0xFFFFFFFF == wmc_weight_value) )
+    if( (0xFFFFFFFF == wmc_id) || (0xFFFFFFFF == wmc_weight_value) )
     {
+    	HcuErrorPrint("DBICOM: Input data error!\n");
         mysql_close(sqlHandler);
         return SUCCESS;
     }
-    else if( (0xFFFFFFFF == wmc_id) && (0xFFFFFFFF != wmc_weight_value) )
-    {
-        sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', value_%02d = '%d' WHERE (deviceid = '%s')", \
-        		timestamp, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
-    }
-    else if( (0xFFFFFFFF != wmc_id) && (0xFFFFFFFF == wmc_weight_value) )
-    {
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = '%s')", \
-				timestamp, wmc_id, wmc_status, wmc_id, wmc_weight_value,zHcuSysEngPar.hwBurnId.equLable);
-    }
+//    else if((0xFFFFFFFF == wmc_id) && (0xFFFFFFFF != wmc_weight_value))
+//    {
+//        sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', value_%02d = '%d' WHERE (deviceid = '%s')", \
+//        		timestamp, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
+//    }
+//    else if((0xFFFFFFFF != wmc_id) && (0xFFFFFFFF == wmc_weight_value))
+//    {
+//		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = '%s')", \
+//				timestamp, wmc_id, wmc_status, zHcuSysEngPar.hwBurnId.equLable);
+//    }
     else
     {
 		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d', value_%02d = '%d' WHERE (deviceid = '%s')", \
