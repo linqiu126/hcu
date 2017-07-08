@@ -111,6 +111,24 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	zCmdTResumeFlag = 0;
 	zCmdTestFlag = 0;
 
+	//Create necessary exchange files
+
+	//在系统/temp目录下创建空的command.json文件，用于通知界面HCU及下位机已经准备好了
+	FILE *fileStream;
+	char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0,\"weight\":0},\"config_cmd\":{\"flag\":0,\"value\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0}}";
+	char str[100];
+	memset(str, 0, sizeof(str));
+	sprintf(str, "rm %s", zHcuCmdflagJsonFile);
+	system(str);
+	if ((fileStream = fopen( zHcuCmdflagJsonFile, "w+" )) != NULL ) {
+		fputs(cmdJson, fileStream);
+		fclose(fileStream);
+	 }
+	memset(str, 0, sizeof(str));
+	sprintf(str, "chmod -R 777 %s", zHcuCmdflagJsonFile);
+	system(str);
+	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
+
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_BFSCUICOMM, TIMER_ID_1S_BFSCUICOMM_PERIOD_READ, \
 			zHcuSysEngPar.timer.array[TIMER_ID_1S_BFSCUICOMM_PERIOD_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
@@ -190,8 +208,6 @@ OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	FILE *fileStream;
-	char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0,\"weight\":0},\"config_cmd\":{\"flag\":0,\"value\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0}}";
 
 	msg_struct_l3bfsc_uicomm_cfg_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
@@ -202,16 +218,8 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 	//收到正确且所有秤台齐活的反馈
 	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d\n", rcv.validFlag);
 	if(rcv.validFlag == TRUE){
-		//在系统/temp目录下创建空的command.json文件，用于通知界面HCU及下位机已经准备好了
-		if ((fileStream = fopen( zHcuCmdflagJsonFile, "w+" )) != NULL ) {
-			fputs(cmdJson, fileStream);
-			fclose(fileStream);
-		 }
-		char str[100];
-		memset(str, 0, sizeof(str));
-		sprintf(str, "chmod -R 777 %s", zHcuCmdflagJsonFile);
-		system(str);
-		HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d, fileStream=%x, zHcuCmdflagJsonFile = %d\n", rcv.validFlag, fileStream, zHcuCmdflagJsonFile);
+		//Update databse, to let START menu turn state from grey to active!!!
+
 	}
 
 	//收到L3BFSC指示秤台配置错误的反馈
@@ -257,14 +265,14 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 	switch(rcv.cmdid)
 	{
 		case CMDID_SENSOR_COMMAND_CALIBRATION_ZERO:
-			adcvalue = rcv.cmdvalue1;
 			sensorid = rcv.sensorid;
+			adcvalue = rcv.cmdvalue1;
 			weight = rcv.cmdvalue2;
 			ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_ZERO, adcvalue, weight, sensorid);
 			break;
 		case CMDID_SENSOR_COMMAND_CALIBRATION_FULL:
-			adcvalue = rcv.cmdvalue1;
 			sensorid = rcv.sensorid;
+			adcvalue = rcv.cmdvalue1;
 			weight = rcv.cmdvalue2;
 			ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_FULL, adcvalue, weight, sensorid);
 			break;
@@ -416,19 +424,19 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 
 OPSTAT func_bfscuicomm_time_out_period_read_process(void)
 {
-	UINT8 state = FsmGetState(TASK_ID_L3BFSC);
+//	UINT8 state = FsmGetState(TASK_ID_L3BFSC);
 
-	if ((state == FSM_STATE_L3BFSC_ACTIVED) || (state == FSM_STATE_L3BFSC_OPR_CFG)) {
-		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFSC
-		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFSC
-		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
-			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
-			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
-			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-		}
-	}
+//	if ((state == FSM_STATE_L3BFSC_ACTIVED) || (state == FSM_STATE_L3BFSC_OPR_CFG)) {
+//		//启动完成以后，等待一小会儿，然后将缺省的参数读入到系统内存，并发送CFG_REQ给L3BFSC
+//		//如果缺省参数读取不成功，等待人工干预并读取，然后再发送给L3BFSC
+//		if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+//			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+//			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+//			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+//			if (hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length) == FAILURE)
+//				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
+//		}
+//	}
 //	else if (state == FSM_STATE_L3BFSC_OPR_GO) {
 //		msg_struct_uicomm_l3bfsc_cmd_req_t snd_start_req;
 //		memset(&snd_start_req, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
@@ -465,10 +473,14 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
     {
 			numread = fread( inotifyReadBuf, sizeof( char ), 1000-1, fileStream );
 			if (numread == 0){
-				errid = ferror(fileStream);
-				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s] [errid=%d] ! \n", monitorJsonFile, errid);
-				fclose( fileStream );
-				return FAILURE;
+				hcu_sleep(1);
+				numread = fread( inotifyReadBuf, sizeof( char ), 1000-1, fileStream );
+				if (numread == 0){
+					errid = ferror(fileStream);
+					HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Read NULL command json file, [file=%s] [errid=%d] ! \n", monitorJsonFile, errid);
+					fclose( fileStream );
+					return FAILURE;
+				}
 			}
 			fclose( fileStream );
 
