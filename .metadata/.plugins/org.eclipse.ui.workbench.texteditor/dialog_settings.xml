@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="TIMER" key="selection"/>
+		<item value="command" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="command"/>
 			<item value="TIMER"/>
 			<item value="BFSC"/>
 			<item value="nodeId+1"/>
@@ -15,7 +16,6 @@
 			<item value="TRIAL"/>
 			<item value="StrIe_HUITP_IEID_uni_inventory_element_t"/>
 			<item value="StrMsg_HUITP_MSGID_uni_inventory_resp_t"/>
-			<item value="sw_package"/>
 		</list>
 		<list key="replacehistory">
 			<item value="TRIAL"/>

@@ -116,11 +116,14 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//在系统/temp目录下创建空的command.json文件，用于通知界面HCU及下位机已经准备好了
 	FILE *fileStream;
 	char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0,\"weight\":0},\"config_cmd\":{\"flag\":0,\"value\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0}}";
+	char str[100];
+	memset(str, 0, sizeof(str));
+	sprintf(str, "rm %s", zHcuCmdflagJsonFile);
+	system(str);
 	if ((fileStream = fopen( zHcuCmdflagJsonFile, "w+" )) != NULL ) {
 		fputs(cmdJson, fileStream);
 		fclose(fileStream);
 	 }
-	char str[100];
 	memset(str, 0, sizeof(str));
 	sprintf(str, "chmod -R 777 %s", zHcuCmdflagJsonFile);
 	system(str);
