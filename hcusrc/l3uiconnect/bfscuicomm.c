@@ -605,8 +605,8 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 3;
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
 	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 120000;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 10000; //MYC: 1200g to 1300g
+	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 1180000;
+	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 35000; //MYC: 1200g to 1300g
 	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
 	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
 	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;
