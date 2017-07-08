@@ -886,7 +886,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
 
 	//先更新本地数据库表单
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId+1, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+	HCU_DEBUG_PRINT_FAT("CANITFLEP: REPEAT WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
 
 	//先检查汇报事件/EMPTY_LOAD事件
 	if (HUITP_ENDIAN_EXG8(rcv->weight_ind.weight_event) == WEIGHT_EVENT_ID_EMPTY){
@@ -975,7 +976,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(StrMsg_HUITP_MS
 	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
 
 	//先更新本地数据库表单
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId+1, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+	HCU_DEBUG_PRINT_FAT("CANITFLEP: REPEAT WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
 
 	if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_NULL) && (wsEvent == WEIGHT_EVENT_ID_LOAD)){
 		if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_ACTIVED){
@@ -1034,7 +1036,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_ws_comb_out_received_handle(StrMsg_HUITP_
 	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
 
 	//先更新本地数据库表单
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId+1, 1, 0);	//数据清零
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, 0);	//数据清零
 
 	if (comType == HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT){
 		//gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START;
