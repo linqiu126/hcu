@@ -1298,8 +1298,10 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus noise req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 
 
-/*
+///
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+
+    //ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, currentModbusBuf.curLen); //use the separate serial port avoid the interferace with other sensors(noise read period is 1s)
 
 	if (FAILURE == ret)
 	{
@@ -1333,11 +1335,13 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+	//ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
 	ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
 	if (ret > 0)
 	{
+		 currentModbusBuf.curLen =ret;
 		 HCU_DEBUG_PRINT_INF("MODBUS: Len %d\n", ret);
-		 HCU_DEBUG_PRINT_INF("MODBUS: Received noise req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8]);
+		 HCU_DEBUG_PRINT_INF("MODBUS: Received noise req data succeed: %02X %02X %02X %02X %02X %02X %02X \n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
 	}
 	else
 	{
@@ -1362,22 +1366,21 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 		return FAILURE;
 	}
-*/
+///
 	//对信息进行MODBUS协议的解码，包括CRC16的判断
 	msg_struct_modbus_noise_data_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_modbus_noise_data_report_t));
 
-
+/*//
 	//放点假数据进行测试
-	currentModbusBuf.curLen = 9;
+	currentModbusBuf.curLen = 7;
 	//UINT8 sample[] = {0x06,0x03,0x04,0x12,0x34,0x56,0x78,0xF7,0xC7};
-	UINT8 sample[] = {0x0A,0x04,0x04,0x12,0x34,0x56,0x78,0x3A,0x70};
+	UINT8 sample[] = {0x07,0x04,0x02,0x01,0x16,0xB1,0x6E};
 	memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
 	HCU_DEBUG_PRINT_INF("MODBUS: Len %d\n", currentModbusBuf.curLen);
-	HCU_DEBUG_PRINT_INF("MODBUS: Received noise req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8]);
+	HCU_DEBUG_PRINT_INF("MODBUS: Received noise req data succeed: %02X %02X %02X %02X %02X %02X %02X \n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
 
-
-	//currentModbusBuf.curLen = ret;
+/*/
 
 	if (func_modbus_noise_msg_unpack(&currentModbusBuf, &rcv, &snd) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
@@ -1812,7 +1815,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 		t1 = (t1 << 16) & 0xFF0000;
 		t2 = (t2 << 8) & 0xFF00;
 		t3 = t3 & 0xFF;
-		snd->pm25.pm1d0Value = t0 + t1 + t2 + t3;
+		snd->pm25.pmTSPValue = t0 + t1 + t2 + t3;
 		t0 = buf->curBuf[index++];
 		t1 = buf->curBuf[index++];
 		t2 = buf->curBuf[index++];
@@ -1890,17 +1893,48 @@ OPSTAT func_modbus_winddir_msg_pack(msg_struct_winddir_modbus_data_read_t *inMsg
 	outMsg->curLen = outMsg->curLen + 1;
 
 	//取得功能码字，目前这是唯一支持的操作命令码字
-	outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU & 0x0FF);
+	}
+	else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
+	else
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
+
 	outMsg->curLen = outMsg->curLen + 1;
 
 	//根据不同的操作码字OPT，进行分支操作
 	switch(inMsg->optId){
 	case L3PO_winddir_data_req:
 		//取得寄存器地址
-		outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ  >> 8) & 0x0FF); //高位
-		outMsg->curLen = outMsg->curLen + 1;
-		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ & 0x0FF); //低位
-		outMsg->curLen = outMsg->curLen + 1;
+
+		if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ_YIGU  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ_YIGU & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else  //Default取SPSVIRGO
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+
 		outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_LENGTH_OF_REG >> 8) & 0x0FF) ; //长度高位 = 1个寄存器，2B长度
 		outMsg->curLen = outMsg->curLen + 1;
 		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_LENGTH_OF_REG & 0x0FF); //长度低位 = 1个寄存器，2B长度
@@ -1979,12 +2013,35 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	snd->winddir.equipid = buf->curBuf[index];
 	index++;
 
-	//检查功能码=03
-	if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-		return FAILURE;
+
+	if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
+	{
+		//检查功能码=04
+		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
 	}
+	else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+	else
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+
 	index++;
 
 	//检查CRC16
@@ -2069,17 +2126,47 @@ OPSTAT func_modbus_windspd_msg_pack(msg_struct_windspd_modbus_data_read_t *inMsg
 	outMsg->curLen = outMsg->curLen + 1;
 
 	//取得功能码字，目前这是唯一支持的操作命令码字
-	outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU & 0x0FF);
+	}
+	else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
+	else
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
+
 	outMsg->curLen = outMsg->curLen + 1;
 
 	//根据不同的操作码字OPT，进行分支操作
 	switch(inMsg->optId){
 	case L3PO_windspd_data_req:
 		//取得寄存器地址
-		outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ  >> 8) & 0x0FF); //高位
-		outMsg->curLen = outMsg->curLen + 1;
-		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ & 0x0FF); //低位
-		outMsg->curLen = outMsg->curLen + 1;
+
+		if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ_YIGU  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ_YIGU & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else  //Default取SPSVIRGO
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
 		outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_LENGTH_OF_REG >> 8) & 0x0FF) ; //长度高位 = 1个寄存器，2B长度
 		outMsg->curLen = outMsg->curLen + 1;
 		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_LENGTH_OF_REG & 0x0FF); //长度低位 = 1个寄存器，2B长度
@@ -2158,12 +2245,34 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	snd->windspd.equipid = buf->curBuf[index];
 	index++;
 
-	//检查功能码=03
-	if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-		return FAILURE;
+	if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
+	{
+		//检查功能码=04
+		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
 	}
+	else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+	else
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+
 	index++;
 
 	//检查CRC16
@@ -2678,7 +2787,7 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 {
 	UINT32 index=0;
 	UINT16 crc16_orin=0, crc16_gen=0;
-	UINT32 len=0, t0=0, t1=0, t2=0, t3=0;
+	UINT32 len=0, t0=0, t1=0;
 
 	//检查长度
 	if ((buf->curLen<=0) || (buf->curLen>HCU_SYSDIM_MSG_BODY_LEN_MAX)){
@@ -2727,13 +2836,11 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 		//T0-T4的四个寄存器数据顺序是串行的，跟PM25不太一样，故而这里只是顺序加总
 		t0 = buf->curBuf[index++];
 		t1 = buf->curBuf[index++];
-		t2 = buf->curBuf[index++];
-		t3 = buf->curBuf[index++];
-		t0 = (t0 <<24) & 0xFF000000;
-		t1 = (t1 << 16) & 0xFF0000;
-		t2 = (t2 << 8) & 0xFF00;
-		t3 = t3 & 0xFF;
-		snd->noise.noiseValue = t0 + t1 + t2 + t3;
+		t0 = (t0 <<8) & 0xFF00;
+		t1 = t1 & 0xFF;
+
+		snd->noise.noiseValue = t0 + t1;
+
 		break;
 
 	case L3PO_noise_set_switch:

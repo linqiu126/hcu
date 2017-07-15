@@ -361,8 +361,9 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	strcat(HKVisionOption.file_video, "hkvideo.txt");
 
 	//判断如果PM2.5超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
-	HCU_DEBUG_PRINT_INF("PM25: TSP = %d\n", (rcv.pm25.pm1d0Value));
-	if(rcv.pm25.pm10Value >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
+	HCU_DEBUG_PRINT_INF("PM25: TSP = %d\n\n\n\n", (rcv.pm25.pmTSPValue));
+	if(rcv.pm25.pmTSPValue >= (HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000))
+	//if(rcv.pm25.pmTSPValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
 		if(FAILURE == ret){
@@ -405,7 +406,9 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
-	if((rcv.pm25.pm1d0Value <= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000) && (gTaskPm25Context.AlarmFlag == TRUE))
+	if((rcv.pm25.pmTSPValue <= HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD*10000) && (gTaskPm25Context.AlarmFlag == TRUE))
+	//if((rcv.pm25.pmTSPValue <= zHcuSysEngPar.serialport.SeriesPortForGPS) && (gTaskPm25Context.AlarmFlag == TRUE)) //for debug
+
 	{
 		gTaskPm25Context.AlarmFlag = FALSE;
 
@@ -507,7 +510,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.pm25.equipid = rcv.pm25.equipid;
 		snd.pm25.timeStamp = rcv.pm25.timeStamp;
 		snd.pm25.dataFormat = rcv.pm25.dataFormat;
-		snd.pm25.pm1d0Value = rcv.pm25.pm1d0Value;
+		snd.pm25.pmTSPValue = rcv.pm25.pmTSPValue;
 		snd.pm25.pm2d5Value = rcv.pm25.pm2d5Value;
 		snd.pm25.pm10Value = rcv.pm25.pm10Value;
 		snd.pm25.gps.gpsx = rcv.pm25.gps.gpsx;
@@ -537,7 +540,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			record.onOffLine = DISC_DATA_SAMPLE_ONLINE;
 			record.timestamp = rcv.pm25.timeStamp;
 			record.dataFormat = rcv.pm25.dataFormat;
-			record.pm1d0Value = rcv.pm25.pm1d0Value;
+			record.pmTSPValue = rcv.pm25.pmTSPValue;
 			record.pm2d5Value = rcv.pm25.pm2d5Value;
 			record.pm10Value = rcv.pm25.pm10Value;
 			record.gpsx = rcv.pm25.gps.gpsx;
@@ -551,7 +554,7 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 			pm25Data.equipid = record.equipid;
 			pm25Data.timeStamp = record.timestamp;
 			pm25Data.dataFormat = record.dataFormat;
-			pm25Data.pm1d0Value = record.pm1d0Value;
+			pm25Data.pmTSPValue = record.pmTSPValue;
 			pm25Data.pm2d5Value = record.pm2d5Value;
 			pm25Data.pm10Value = record.pm10Value;
 			pm25Data.gps.gpsx = record.gpsx;
