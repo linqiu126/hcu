@@ -1857,7 +1857,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		pMsgProc.respPm01Value.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_pm01_value);
 		pMsgProc.respPm01Value.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_pm01_value_t) - 4);
 		pMsgProc.respPm01Value.dataFormat = rcv.pm25.dataFormat;
-		pMsgProc.respPm01Value.pm01Value = HUITP_ENDIAN_EXG32(rcv.pm25.pm1d0Value);
+		pMsgProc.respPm01Value.pm01Value = HUITP_ENDIAN_EXG32(rcv.pm25.pmTSPValue);
 		//StrIe_HUITP_IEID_uni_pm25_value_t
 		pMsgProc.respPm25Value.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_pm25_value);
 		pMsgProc.respPm25Value.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_pm25_value_t) - 4);
@@ -1890,7 +1890,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
-				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pm1d0Value, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
+				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pmTSPValue, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
 				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -1898,7 +1898,7 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
-				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pm1d0Value, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
+				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pmTSPValue, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
 				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 
@@ -2035,7 +2035,7 @@ OPSTAT fsm_cloudvela_pm25_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.reportPm01Value.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_pm01_value);
 		pMsgProc.reportPm01Value.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_pm01_value_t) - 4);
 		pMsgProc.reportPm01Value.dataFormat = rcv.pm25.dataFormat;
-		pMsgProc.reportPm01Value.pm01Value = HUITP_ENDIAN_EXG32(rcv.pm25.pm1d0Value);
+		pMsgProc.reportPm01Value.pm01Value = HUITP_ENDIAN_EXG32(rcv.pm25.pmTSPValue);
 		pMsgProc.reportPm01Value.timeStamp = HUITP_ENDIAN_EXG32(rcv.pm25.timeStamp);
 
 		//StrIe_HUITP_IEID_uni_pm25_value_t

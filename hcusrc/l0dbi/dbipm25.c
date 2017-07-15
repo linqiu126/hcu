@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm1d0value` int(4) NOT NULL,
+  `pmTSPValue` int(4) NOT NULL,
   `pm2d5value` int(4) NOT NULL,
   `pm10dvalue` int(4) NOT NULL,
   `ew` char(1) NOT NULL,
@@ -46,7 +46,7 @@ INSERT INTO `hcudb`.`hcupm25datainfo` (
 `deviceid` ,
 `timestamp` ,
 `dataformat`,
-`pm1d0value` ,
+`pmTSPValue` ,
 `pm2d5value` ,
 `pm10dvalue` ,
 `ew` ,
@@ -128,12 +128,12 @@ OPSTAT dbi_HcuPm25DataInfo_save(sensor_pm25_data_element_t *pm25Data)
     }
 
 
-    HcuDebugPrint("hcupm25datainfo: deviceid = %d, timestamp = %d, dataformat = %d, pm10dvalue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", pm25Data->equipid, pm25Data->timeStamp, pm25Data->dataFormat, pm25Data->pm10Value, pm25Data->gps.ew, pm25Data->gps.gpsx, pm25Data->gps.ns, pm25Data->gps.gpsy, pm25Data->gps.gpsz, pm25Data->onOffLineFlag);
+    HcuDebugPrint("hcupm25datainfo: deviceid = %d, timestamp = %d, dataformat = %d, pmTSPValue = %d, ew = %c, gpsx = %d, ns = %c, gpsy = %d, gpsz = %d, onofflineflag = %d\n\n\n", pm25Data->equipid, pm25Data->timeStamp, pm25Data->dataFormat, pm25Data->pmTSPValue, pm25Data->gps.ew, pm25Data->gps.gpsx, pm25Data->gps.ns, pm25Data->gps.gpsy, pm25Data->gps.gpsz, pm25Data->onOffLineFlag);
 
 
 	//存入新的数据
     sprintf(strsql, "INSERT INTO `hcupm25datainfo` (deviceid, timestamp, dataformat, pm1d0value, pm2d5value, pm10dvalue, ew, gpsx, ns, gpsy, gpsz, onofflineflag) VALUES \
-    		('%d', '%d', '%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", pm25Data->equipid, pm25Data->timeStamp, pm25Data->dataFormat, pm25Data->pm1d0Value, pm25Data->pm2d5Value, pm25Data->pm10Value, pm25Data->gps.ew, pm25Data->gps.gpsx, pm25Data->gps.ns, pm25Data->gps.gpsy, pm25Data->gps.gpsz, pm25Data->onOffLineFlag);
+    		('%d', '%d', '%d', '%d', '%d', '%d', '%c', '%d', '%c', '%d', '%d', '%d')", pm25Data->equipid, pm25Data->timeStamp, pm25Data->dataFormat, pm25Data->pmTSPValue, pm25Data->pm2d5Value, pm25Data->pm10Value, pm25Data->gps.ew, pm25Data->gps.gpsx, pm25Data->gps.ns, pm25Data->gps.gpsy, pm25Data->gps.gpsz, pm25Data->onOffLineFlag);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -337,7 +337,7 @@ OPSTAT dbi_HcuPm25DataInfo_inqury_1st_record(UINT32 deviceid, sensor_pm25_data_e
 		UINT32 index = 2;
 		if (sqlRow[index]) pm25Data->timeStamp = (UINT32)atol(sqlRow[index++]);
 		if (sqlRow[index]) pm25Data->dataFormat = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if (sqlRow[index]) pm25Data->pm1d0Value = (UINT32)atol(sqlRow[index++]);
+		if (sqlRow[index]) pm25Data->pmTSPValue = (UINT32)atol(sqlRow[index++]);
 		if (sqlRow[index]) pm25Data->pm2d5Value = (UINT32)atol(sqlRow[index++]);
 		if (sqlRow[index]) pm25Data->pm10Value = (UINT32)atol(sqlRow[index++]);
 		if (sqlRow[index]) pm25Data->gps.ew = (UINT32)atol(sqlRow[index++]);
