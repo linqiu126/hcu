@@ -117,18 +117,18 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//未来还需要支持传感器的地址可以被配置，随时被修改，通过后台命令
 	for (i=0;i<MAX_NUM_OF_SENSOR_NOISE_INSTALLED;i++){
 		gTaskNoiseContext.noise[i].sensorId = i;
-		if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
-		{
-			gTaskNoiseContext.noise[i].equId = MODBUS_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
-		}
-		else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
-		{
-			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
-		}
-		else  //Default取SPSVIRGO
-		{
-			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
-		}
+//		if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
+//		{
+//			gTaskNoiseContext.noise[i].equId = MODBUS_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
+//		}
+//		else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
+//		{
+//			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
+//		}
+//		else  //Default取SPSVIRGO
+//		{
+//			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
+//		}
 		gTaskNoiseContext.noise[i].hwAccess = SENSOR_NOISE_HW_ACCESS_IDLE;
 		gTaskNoiseContext.noise[i].hwStatus = SENSOR_NOISE_HW_STATUS_ACTIVE;  //假设缺省为活跃状态
 		gTaskNoiseContext.noise[i].busyCount = 0;
@@ -205,18 +205,18 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 				return FAILURE;
 			}//FsmSetState
 		}
-		if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
-		{
-			func_noise_time_out_read_data_from_spsvirgo();
-		}
-		else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
-		{
-			func_noise_time_out_read_data_from_modbus();
-		}
-		else //DEFAULT取标准高配置传感器
-		{
-			func_noise_time_out_read_data_from_spsvirgo();
-		}
+//		if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
+//		{
+//			func_noise_time_out_read_data_from_spsvirgo();
+//		}
+//		else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
+//		{
+//			func_noise_time_out_read_data_from_modbus();
+//		}
+//		else //DEFAULT取标准高配置传感器
+//		{
+//			func_noise_time_out_read_data_from_spsvirgo();
+//		}
 	}
 
 	//Spsvirgo received MODBUS time out message received

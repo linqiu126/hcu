@@ -10,12 +10,9 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
-<<<<<<< HEAD
 //= ZJL/LZH, 2017 July.15 CURRENT_SW_DELIVERY 221=>BFSC项目
 = Bug fix
 = 发现现象：组合的数据不够准确
-
-=======
 
 
 //= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 221=>AQYC项目
@@ -25,8 +22,6 @@
 //= ZJL/LZH, 2017 July.7 CURRENT_SW_DELIVERY 220=>BFSC项目
 = Bug fix
 = 新装系统中的Json，编译工作正常
->>>>>>> 351892350bb131008220ed53fcc9102cf975e74c
-
 
 //= ZJL/LZH, 2017 July.7 CURRENT_SW_DELIVERY 220=>BFSC项目
 = Bug fix

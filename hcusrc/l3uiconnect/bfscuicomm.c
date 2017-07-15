@@ -644,7 +644,6 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT32 config_index)
 	gTaskL3bfscContext.wgtSnrPar.RemainDetectionTimeSec = gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec ;
 
 	//测试数据
-<<<<<<< HEAD
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 1;
 	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 2;
 	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 9;
@@ -660,7 +659,6 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT32 config_index)
 	gTaskL3bfscContext.comAlgPar.CombinationSpeedMode = 0;
 	gTaskL3bfscContext.comAlgPar.CombinationAutoMode = 0;
 	gTaskL3bfscContext.comAlgPar.MovingAvrageSpeedCount = 0;
-=======
 	//	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 3;
 	//	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
 	//	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
@@ -705,7 +703,6 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT32 config_index)
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorTailorValue = staticdata[i++];
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = staticdata[i++];
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = staticdata[i++];
->>>>>>> 351892350bb131008220ed53fcc9102cf975e74c
 
 	gTaskL3bfscContext.comAlgPar.CombinationSpeedMode = 0;
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorPickupThread = 300;
