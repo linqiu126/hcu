@@ -1138,6 +1138,7 @@
 	//本项目特定部分
 	#define HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX 11  //下位机总共有16个秤盘
 	#define HCU_SYSCFG_BFSC_CMDJSON_FILE_SIZE_MAX  (1000)    //BFSCUI命令标志文件 （command.json）最大长度
+	#define HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX   100  //定义BFSC数据表单最大Column个数，方便数据库查询后的存取
 
 //奥普维尔的OTDR仪表
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)

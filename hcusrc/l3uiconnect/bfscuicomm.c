@@ -115,7 +115,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//在系统/temp目录下创建空的command.json文件，用于通知界面HCU及下位机已经准备好了
 	FILE *fileStream;
-	char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0,\"weight\":0},\"config_cmd\":{\"flag\":0,\"value\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0}}";
+	char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0,\"weight\":0},\"config_cmd\":{\"flag\":0,\"value\":0,\"index\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0}}";
 	char str[100];
 	memset(str, 0, sizeof(str));
 	sprintf(str, "rm %s", zHcuCmdflagJsonFile);
@@ -377,7 +377,9 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		fileChangeContent = parseResult.cmdConfig.cmdValue;
 		//依赖文件变化的内容，分类发送控制命令：CONFIG命令
 		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_CONFIG){
-			if (func_bfscuicomm_read_cfg_file_into_ctrl_table() == SUCCESS){
+			UINT32 config_index;
+			config_index = parseResult.cmdConfig.confindex;
+			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(config_index) == SUCCESS){
 					msg_struct_uicomm_l3bfsc_cfg_req_t snd;
 					memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
 					snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
@@ -469,7 +471,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 	FILE *fileStream;
 	char inotifyReadBuf[1000];
 	UINT32  numread = 0;
-	UINT32  flag = 0, value = 0, errid = 0, weight = 0;
+	UINT32  flag = 0, value = 0, errid = 0, weight = 0, confindex = 0;
 	UINT8  sensorid = 0;
 
 	if((NULL == monitorJsonFile) || (NULL == parseResult))
@@ -479,7 +481,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 	}
 
 	struct json_object *file_jsonobj = NULL;
-	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL, *weight_jsonobj = NULL;
+	 struct json_object *cmd_jsonobj = NULL, *flag_jsonobj = NULL, *value_jsonobj = NULL, *sensorid_jsonobj = NULL, *weight_jsonobj = NULL, *index_jsonobj = NULL;
 
     if ((fileStream = fopen( monitorJsonFile, "rt" )) != NULL )  // 文件读取
     {
@@ -541,11 +543,14 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 		 if (json_object_object_get_ex(file_jsonobj, "config_cmd", &cmd_jsonobj)){
 			 flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
 			 value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
-			 if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
+			 index_jsonobj =  json_object_object_get(cmd_jsonobj, "index");
+			 if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)&& (index_jsonobj != NULL)){
 				 flag = json_object_get_int(flag_jsonobj);
 				 value = json_object_get_int(value_jsonobj);
+				 confindex =  json_object_get_int(index_jsonobj);
 				 parseResult->cmdConfig.cmdFlag = flag;
 				 parseResult->cmdConfig.cmdValue = value;
+				 parseResult->cmdConfig.confindex = confindex;
 			 }
 		 }
 		 else
@@ -586,6 +591,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 		json_object_put(value_jsonobj);
 		json_object_put(sensorid_jsonobj);
 		json_object_put(weight_jsonobj);
+		json_object_put(index_jsonobj);
 
         return SUCCESS;
     }
@@ -597,108 +603,108 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 }
 
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
-OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
+OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT32 config_index)
 {
 	UINT32  calibrationdata[(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)*3];
+	UINT32 dynamicdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX], staticdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX];
+
+	//查询用户动态配置参数
+	if (dbi_HcuBfsc_DynamicConfigDataGet(config_index, dynamicdata) == FAILURE){
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Get DB algorithm data failed \n");
+	}
+
+	UINT8 i = 7;   //数据表单hcubfscconfigpara前7个参数为UI界面使用参数
+
+	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination  = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.CombinationBias =  dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec  = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.RemainScaleTreatment =  dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.CombinationAutoMode = dynamicdata[i++];
+	gTaskL3bfscContext.comAlgPar.MovingAvrageSpeedCount = dynamicdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  dynamicdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread = dynamicdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = dynamicdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyThread = dynamicdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.StardardReadyTimeMs = dynamicdata[i++];
+	gTaskL3bfscContext.motCtrPar.MotorSpeed = dynamicdata[i++];
+	gTaskL3bfscContext.motCtrPar.MotorDirection = dynamicdata[i++];
+	gTaskL3bfscContext.motCtrPar.MotorRollingStartMs = dynamicdata[i++];
+	gTaskL3bfscContext.motCtrPar.MotorRollingStopMs  = dynamicdata[i++];
+	gTaskL3bfscContext.motCtrPar.MotorRollingInveralMs = dynamicdata[i++];
+	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionVaration = dynamicdata[i++];
+	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs = dynamicdata[i++];
+	//重复参数
+	gTaskL3bfscContext.wgtSnrPar.RemainDetectionTimeSec = gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec ;
 
 	//测试数据
-	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 3;
-	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
-	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 118000;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 35000; //MYC: 1200g to 1300g
-	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
-	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
-	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;
-	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = 0;
-	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = 0;
-	gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec = 1;
-	gTaskL3bfscContext.comAlgPar.RemainScaleTreatment = 1;
-	gTaskL3bfscContext.comAlgPar.CombinationSpeedMode = 0;
-	gTaskL3bfscContext.comAlgPar.CombinationAutoMode = 0;
-	gTaskL3bfscContext.comAlgPar.MovingAvrageSpeedCount = 0;
+	//	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 3;
+	//	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
+	//	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
+	//	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 118000;
+	//	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 35000; //MYC: 1200g to 1300g
+	//	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
+	//	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
+	//	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;
+	//	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = 0;
+	//	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = 0;
+	//	gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec = 1;
+	//	gTaskL3bfscContext.comAlgPar.RemainScaleTreatment = 1;
+	//	gTaskL3bfscContext.comAlgPar.CombinationSpeedMode = 0;
+	//	gTaskL3bfscContext.comAlgPar.CombinationAutoMode = 0;
+	//	gTaskL3bfscContext.comAlgPar.MovingAvrageSpeedCount = 0;
 
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs = 1000;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread = 200;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyThread = 200;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1000;
+	//	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs = 1000;
+	//	gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadThread = 200;
+	//	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyThread = 200;
+	//	gTaskL3bfscContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1000;
+
+	//	gTaskL3bfscContext.motCtrPar.MotorSpeed = 0;
+	//	gTaskL3bfscContext.motCtrPar.MotorDirection = 0;
+	//	gTaskL3bfscContext.motCtrPar.MotorRollingStartMs = 0;
+	//	gTaskL3bfscContext.motCtrPar.MotorRollingStopMs = 0;
+	//	gTaskL3bfscContext.motCtrPar.MotorRollingInveralMs = 0;
+	//	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionVaration = 0;
+	//	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs = 0;
+
+	//查询系统静态配置参数
+	if (dbi_HcuBfsc_StaticConfigDataGet(staticdata) == FAILURE){
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Get DB algorithm data failed \n");
+	}
+
+	i =1;
+	gTaskL3bfscContext.wgtSnrPar.MaxAllowedWeight = staticdata[i++];
+
+	i++;  // calibration full weight
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcSampleFreq = staticdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcGain = staticdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorStaticZeroValue = staticdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorTailorValue = staticdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = staticdata[i++];
+	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = staticdata[i++];
+
+	gTaskL3bfscContext.comAlgPar.CombinationSpeedMode = 0;
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorPickupThread = 300;
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = 500;
-	gTaskL3bfscContext.wgtSnrPar.StardardReadyTimeMs = 300;
-	gTaskL3bfscContext.wgtSnrPar.RemainDetectionTimeSec = 10;
-	gTaskL3bfscContext.wgtSnrPar.MaxAllowedWeight = 1000000;
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorInitOrNot = 0;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcSampleFreq = 0;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcGain = 4;
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcBitwidth = 22;
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcValue = 0;
 
-	//查询校准数据
-	if (dbi_HcuBfsc_CalibrationDataGet(calibrationdata) == FAILURE){
-		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Get sensor calibration data failed \n");
-	}
-	int i;
-	for (i = 1; i <= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1; i++){
-		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue = calibrationdata[3*(i-1)];
-		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue = calibrationdata[3*(i-1)+1];
-		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullWeight = calibrationdata[3*(i-1)+2];
-	}
+	//gTaskL3bfscContext.wgtSnrPar.MaxAllowedWeight = 1000000;
+	//gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcSampleFreq = 0;
+	//gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcGain = 4;
 
-//	gTaskL3bfscContext.wgtSnrPar.calibration[0].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[0].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[0].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[1].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[1].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[1].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[2].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[2].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[2].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[3].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[3].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[3].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[4].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[4].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[4].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[5].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[5].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[5].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[6].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[6].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[6].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[7].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[7].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[7].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[8].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[8].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[8].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[9].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[9].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[9].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[10].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[10].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[10].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[11].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[11].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[11].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[12].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[12].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[12].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[13].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[13].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[13].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[14].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[14].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[14].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[15].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[15].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[15].WeightSensorCalibrationFullWeight = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[16].WeightSensorCalibrationZeroAdcValue = 100;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[16].WeightSensorCalibrationFullAdcValue = 100000;
-//	gTaskL3bfscContext.wgtSnrPar.calibration[16].WeightSensorCalibrationFullWeight = 100000;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorStaticZeroValue = 0;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorTailorValue = 0;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = 0;
-	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = 10000;
+	//	gTaskL3bfscContext.wgtSnrPar.WeightSensorStaticZeroValue = 0;
+	//	gTaskL3bfscContext.wgtSnrPar.WeightSensorTailorValue = 0;
+	//	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = 0;
+	//	gTaskL3bfscContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = 10000;
+
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorFilterCoeff[0] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorFilterCoeff[1] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorFilterCoeff[2] = 0;				// NOT for GUI
@@ -708,13 +714,68 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[2] = 0;				// NOT for GUI
 	gTaskL3bfscContext.wgtSnrPar.WeightSensorOutputValue[3] = 0;				// NOT for GUI
 
-	gTaskL3bfscContext.motCtrPar.MotorSpeed = 0;
-	gTaskL3bfscContext.motCtrPar.MotorDirection = 0;
-	gTaskL3bfscContext.motCtrPar.MotorRollingStartMs = 0;
-	gTaskL3bfscContext.motCtrPar.MotorRollingStopMs = 0;
-	gTaskL3bfscContext.motCtrPar.MotorRollingInveralMs = 0;
-	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionVaration = 0;
-	gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs = 0;
+	//查询校准数据
+	if (dbi_HcuBfsc_CalibrationDataGet(calibrationdata) == FAILURE){
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Get DB sensor calibration data failed \n");
+	}
+
+	for (i = 1; i <= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1; i++){
+		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue = calibrationdata[3*(i-1)];
+		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue = calibrationdata[3*(i-1)+1];
+		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullWeight = calibrationdata[3*(i-1)+2];
+	}
+
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[0].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[0].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[0].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[1].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[1].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[1].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[2].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[2].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[2].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[3].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[3].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[3].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[4].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[4].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[4].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[5].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[5].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[5].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[6].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[6].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[6].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[7].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[7].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[7].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[8].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[8].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[8].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[9].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[9].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[9].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[10].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[10].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[10].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[11].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[11].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[11].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[12].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[12].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[12].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[13].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[13].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[13].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[14].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[14].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[14].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[15].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[15].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[15].WeightSensorCalibrationFullWeight = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[16].WeightSensorCalibrationZeroAdcValue = 100;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[16].WeightSensorCalibrationFullAdcValue = 100000;
+	//	gTaskL3bfscContext.wgtSnrPar.calibration[16].WeightSensorCalibrationFullWeight = 100000;
 
 	return SUCCESS;
 }
