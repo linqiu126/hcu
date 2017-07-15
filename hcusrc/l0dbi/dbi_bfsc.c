@@ -540,9 +540,123 @@ OPSTAT dbi_HcuBfsc_CalibrationDataGet( UINT32 data[(HCU_SYSCFG_BFSC_SNR_WS_NBR_M
 	}
 
 	//释放记录集
+	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }
 
+OPSTAT dbi_HcuBfsc_DynamicConfigDataGet(UINT32 config_index, UINT32  dynamicdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX])
+	{
+		MYSQL *sqlHandler;
+		MYSQL_RES *resPtr;
+		MYSQL_ROW sqlRow;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
+		//建立数据库连接
+	    sqlHandler = mysql_init(NULL);
+	    if(!sqlHandler)
+	    {
+	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+	        return FAILURE;
+	    }
+	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+	    if (!sqlHandler){
+	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+	    	mysql_close(sqlHandler);
+	        return FAILURE;
+	    }
+		//获取数据
+	    sprintf(strsql, "SELECT * FROM `hcubfscconfigpara` WHERE (`currentconf` = 'Y' && `sid` = '%d')" , config_index);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){  //成功返回0
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFSC: SELECT data error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		//查具体的结果
+		resPtr = mysql_use_result(sqlHandler);
+		if (!resPtr){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFSC: mysql_use_result error!\n");
+	        return FAILURE;
+		}
 
+		//只读取第一条记录
+			if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+			{
+				mysql_free_result(resPtr);
+		    	mysql_close(sqlHandler);
+		    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
+		        return FAILURE;
+			}
+			else{
+				UINT8  index;
+				for (index =0; index < resPtr->field_count; index++){
+					if (sqlRow[index] && index<HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX)  dynamicdata[index] = (UINT32)atol(sqlRow[index]);
+				}
+			}
+
+		//释放记录集
+		mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+	}
+
+OPSTAT dbi_HcuBfsc_StaticConfigDataGet(UINT32  staticdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX])
+	{
+		MYSQL *sqlHandler;
+		MYSQL_RES *resPtr;
+		MYSQL_ROW sqlRow;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+		//建立数据库连接
+	    sqlHandler = mysql_init(NULL);
+	    if(!sqlHandler)
+	    {
+	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+	        return FAILURE;
+	    }
+	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+	    if (!sqlHandler){
+	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+	    	mysql_close(sqlHandler);
+	        return FAILURE;
+	    }
+		//获取数据
+	    sprintf(strsql, "SELECT * FROM `hcubfscstaticpara` WHERE (`deviceid` = '%s')", zHcuSysEngPar.hwBurnId.equLable);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){  //成功返回0
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFSC: SELECT data error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+		//查具体的结果
+		resPtr = mysql_use_result(sqlHandler);
+		if (!resPtr){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBIBFSC: mysql_use_result error!\n");
+	        return FAILURE;
+		}
+
+		//只读取第一条记录
+			if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+			{
+				mysql_free_result(resPtr);
+		    	mysql_close(sqlHandler);
+		    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
+		        return FAILURE;
+			}
+			else{
+				UINT8  index;
+				for (index =0; index < resPtr->field_count; index++){
+					if (sqlRow[index] && index<HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX)  staticdata[index] = (UINT32)atol(sqlRow[index]);
+				}
+			}
+
+		//释放记录集
+		mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+	}

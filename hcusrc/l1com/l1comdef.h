@@ -23,7 +23,7 @@ typedef struct HcuDiscDataSampleStorageArray
 	UINT32 timestamp;
 	UINT8  dataFormat;
 	UINT32 emcValue;
-	UINT32 pm1d0Value;
+	UINT32 pmTSPValue;
 	UINT32 pm2d5Value;
 	UINT32 pm10Value;
 	UINT32 windspdValue;
@@ -378,7 +378,7 @@ typedef enum
 	MODBUS_EMC_RTU_EQUIPMENT_ID = 0x05,
 	MODBUS_TEMP_RTU_EQUIPMENT_ID = 0x06,
 	MODBUS_HUMID_RTU_EQUIPMENT_ID = 0x06,
-	MODBUS_NOISE_RTU_EQUIPMENT_ID = 0x0A,  //暂时改不了，所以就先改为缺省的0A，未来再改动
+	MODBUS_NOISE_RTU_EQUIPMENT_ID = 0x07,
 	SPSVIRGO_NOISE_RTU_EQUIPMENT_ID = 0x41,
 	SPSVIRGO_NOISE_RTU_EQUIPMENT_IND = 0x64,
 	SPSVIRGO_NOISE_RTU_EQUIPMENT_END = 0x03,
@@ -438,18 +438,21 @@ typedef enum
 //WIND DIRECTION寄存器定义
 typedef enum
 {
+	WINDDIR_REG_DATA_READ_YIGU = 0x00,  //2B
 	WINDDIR_REG_DATA_READ = 0x07,  //2B
 	WINDDIR_LENGTH_OF_REG = 0x01, //2个寄存器，返回2B
-    //INDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x03,
+	WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU = 0x03, // 易谷风向风速
 	WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x04,//modify for KUANKE sensor
 }WinddirRegisterSelfDef;
 //WIND SPEED寄存器定义
 typedef enum
 {
+	WINDSPD_REG_DATA_READ_YIGU = 0x00,  //2B
 	WINDSPD_REG_DATA_READ = 0x06,  //2B
 	WINDSPD_LENGTH_OF_REG = 0x01, //2个寄存器，返回2B
-	//WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x03,
+	WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU = 0x03, // 易谷风向风速
 	WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x04,//modify for KUANKE sensor
+
 }WindSpdRegisterSelfDef;
 //TEMP寄存器定义
 typedef enum
@@ -469,7 +472,7 @@ typedef enum
 typedef enum
 {
 	NOISE_REG_DATA_READ = 0,  //2B
-	NOISE_LENGTH_OF_REG = 0x02, //2个寄存器，返回4B
+	NOISE_LENGTH_OF_REG = 0x01, //1个寄存器，返回2B
 	NOISE_CRC16_PRESENT = FALSE, //CRC16不存在，取值TRUE/FALSE
 	NOISE_FUNCTION_CODE = 0x57,
 	NOISE_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x04,
@@ -494,7 +497,6 @@ typedef enum
 	CLOUD_SENSOR_DATA_FOMAT_MAX = 0x10,
 	CLOUD_SENSOR_DATA_FOMAT_INVALID = 0xFF,
 }CloudDataFormatDef;
-
 
 //等待随机长度的时长，一分钟/60秒之类，然后再开始干活，以便减少所有传感器相互碰撞的几率，让所有任务分布更加平均
 #define TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES 60  //shall be 60second
@@ -897,10 +899,10 @@ typedef struct CloudBhItfDevReportStdZhb
 
 #ifdef TARGET_RASPBERRY_PI3B
 //#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyAMA0"
-#define HCU_SPS_COM_PORT_PATH_0  "/dev/hcu_serial0"
-#define HCU_SPS_COM_PORT_PATH_1  "/dev/hcu_serial1"
-//#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
-//#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
+//#define HCU_SPS_COM_PORT_PATH_0  "/dev/hcu_serial0"
+//#define HCU_SPS_COM_PORT_PATH_1  "/dev/hcu_serial1"
+#define HCU_SPS_COM_PORT_PATH_0  "/dev/ttyUSB0"
+#define HCU_SPS_COM_PORT_PATH_1  "/dev/ttyUSB1"
 //#define HCU_SPS_COM_PORT_PATH_2  "/dev/ttyS0"
 //#define HCU_SPS_COM_PORT_PATH_3  "/dev/ttyS1"
 #define HCU_SPS_COM_PORT_PATH_4  "/dev/ttyACM0"
