@@ -185,7 +185,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 			strcat(targetStr, tStr);
 		}
 		strcat(targetStr, "]\n");
-		//HCU_DEBUG_PRINT_INF(targetStr);
+		//HCU_DEBUG_PRINT_FAT(targetStr);
 	}
 
 	//更新LocUI数据库，以便本地界面实时展示数据
@@ -200,6 +200,10 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
 	HCU_DEBUG_PRINT_FAT("L3BFSC: Enter FSM_STATE_L3BFSC_ACTIVED status, Keeping refresh here!\n");
+
+	//测试组合程序
+	//hcu_sleep(2);
+	//func_l3bfsc_test_combine();
 
 	//返回
 	return SUCCESS;
@@ -1271,17 +1275,20 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 		memset(resBitmap, 0, sizeof(resBitmap));
 		for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
 			if (gTaskL3bfscContext.sensorWs[j].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
+				HCU_DEBUG_PRINT_FAT("L3BFSC: Search Algo => Index=%d, SensorId = %d\n", i, j);
 				t = ((i%gTaskL3bfscContext.searchSpaceTotalNbr) * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + j);// % Cycle;
-				result += gTaskL3bfscContext.sensorWs[j].sensorValue * (*(gTaskL3bfscContext.SearchCoefficientPointer + t));
+				result = result + gTaskL3bfscContext.sensorWs[j].sensorValue * (*(gTaskL3bfscContext.SearchCoefficientPointer + t));
 				if (*(gTaskL3bfscContext.SearchCoefficientPointer + t) == 1) resBitmap[j] = 1;
 			}
 		}
 		//HCU_DEBUG_PRINT_NOR("L3BFSC: Temp value Target=[%d], TargetUp=[%d], result=[%d]\n", zHcuL3BfscGenCtrlTable.comAlgPar.TargetCombinationWeight, zHcuL3BfscGenCtrlTable.comAlgPar.TargetCombinationUpperWeight, result);
 		//如果落入目标范围
-		searchNbr = func_l3bfsc_caculate_bitmap_valid_number(resBitmap);
+		searchNbr = func_l3bfsc_caculate_bitmap_valid_number(resBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+		HCU_DEBUG_PRINT_FAT("L3BFSC: WsSensorStart=%d, Index = %d, Result = %d, ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", WsSensorStart, i, result, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
+				gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
 		if ((result >= gTaskL3bfscContext.comAlgPar.TargetCombinationWeight) && \
-				(result <= (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) &&\
-				(searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) &&\
+				(result <= (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) && \
+				(searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) && \
 				(searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination)){
 			gTaskL3bfscContext.wsRrSearchStart = ((i+1) % gTaskL3bfscContext.searchSpaceTotalNbr);
 			memcpy(gTaskL3bfscContext.wsBitmap, resBitmap, sizeof(resBitmap));
@@ -1299,12 +1306,12 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 }
 
 
-UINT8 func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap)
+UINT8 func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap, UINT8 len)
 {
 	int i = 0;
 	UINT8 temp = 0;
 
-	for (i=0; i<sizeof(bitmap); i++){
+	for (i=0; i<len; i++){
 		temp += (UINT8)*bitmap;
 		bitmap++;
 	}
@@ -1943,5 +1950,20 @@ void func_l3bfsc_stm_main_recovery_from_fault(void)
 }
 
 
+void func_l3bfsc_test_combine(void)
+{
+	int res = 0;
+
+	//func_bfscuicomm_read_cfg_file_into_ctrl_table();
+
+	gTaskL3bfscContext.sensorWs[9].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
+	gTaskL3bfscContext.sensorWs[9].sensorValue = 5000;
+	gTaskL3bfscContext.sensorWs[10].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
+	gTaskL3bfscContext.sensorWs[10].sensorValue = 6000;
+
+	res = func_l3bfsc_ws_sensor_search_combination();
+
+	HCU_DEBUG_PRINT_FAT("L3BFSC: Test Combination result = %d\n", res);
+}
 
 

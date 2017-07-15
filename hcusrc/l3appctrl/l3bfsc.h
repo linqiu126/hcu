@@ -252,7 +252,7 @@ extern OPSTAT fsm_l3bfsc_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_
 //Local API
 OPSTAT func_l3bfsc_int_init(void);
 void func_l3bfsc_cacluate_sensor_ws_valid_value(void);
-UINT8 func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap);
+UINT8 func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap, UINT8 len);
 INT32 func_l3bfsc_ws_sensor_search_combination(void);
 void func_l3bfsc_ws_sensor_search_give_up(void);
 UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
@@ -271,6 +271,7 @@ void func_l3bfsc_stm_main_recovery_from_fault(void);  //提供了一种比RESTAR
 bool func_l3bfsc_cacluate_sensor_cfg_rcv_complete(void);
 bool func_l3bfsc_cacluate_sensor_start_rcv_complete(void);
 bool func_l3bfsc_cacluate_sensor_stop_rcv_complete(void);
+void func_l3bfsc_test_combine(void);
 
 
 

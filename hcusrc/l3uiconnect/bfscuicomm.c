@@ -602,11 +602,11 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table(void)
 	UINT32  calibrationdata[(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)*3];
 
 	//测试数据
-	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 3;
-	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
-	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 118000;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 35000; //MYC: 1200g to 1300g
+	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 1;
+	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 2;
+	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 9;
+	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 11000; //118000;
+	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 1000; //35000; //MYC: 1200g to 1300g
 	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
 	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
 	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;
