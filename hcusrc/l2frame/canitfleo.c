@@ -894,6 +894,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 	//先检查汇报事件/EMPTY_LOAD事件
 	if (HUITP_ENDIAN_EXG8(rcv->weight_ind.weight_event) == WEIGHT_EVENT_ID_EMPTY){
 		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALIID_EMPTY;
+		gTaskL3bfscContext.sensorWs[nodeId].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
 		gTaskL3bfscContext.sensorWs[nodeId].sensorRepTimes = 0;
 		return SUCCESS;
 	}

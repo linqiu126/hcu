@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="dbi_HcuBfsc_WmcStatusForceInvalid" key="selection"/>
+		<item value="gTaskL3bfscContext.SearchCoefficientPointer" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="gTaskL3bfscContext.SearchCoefficientPointer"/>
 			<item value="dbi_HcuBfsc_WmcStatusForceInvalid"/>
 			<item value="dbi_HcuBfsc_WmcStatusUpdate"/>
 			<item value="aws_id"/>
@@ -15,7 +16,6 @@
 			<item value="HUITP_MSGID_sui_bfsc_command_resp"/>
 			<item value="test_cmd"/>
 			<item value="L2_MSG"/>
-			<item value="message_send"/>
 		</list>
 		<list key="replacehistory">
 			<item value="TRIAL"/>
