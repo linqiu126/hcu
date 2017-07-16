@@ -361,7 +361,6 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 
 	//第一部分/zHcuSysEngPar总共三步分
 	if (ret == SUCCESS){
-		HCU_DEBUG_PRINT_NOR("HWINV: zHcuSysEngPar.cloud.cloudBhHcuName = %s\n", zHcuSysEngPar.hwBurnId.equLable);
 		HCU_DEBUG_PRINT_NOR("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
 		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 

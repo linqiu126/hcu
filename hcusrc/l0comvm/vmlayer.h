@@ -12,6 +12,7 @@
 #include "../l0comvm/sysdim.h"
 #include "../l0comvm/sysconfig.h"
 #include "../l0comvm/sysengpar.h"
+#include "../l2codec/huitp.h"
 
 
 /*
@@ -785,10 +786,6 @@ typedef struct HcuSysEngPhyBootCfg
 #define HCU_RUN_ERROR_LEVEL_3_CRITICAL 10000
 #define HCU_RUN_ERROR_LEVEL_4_DEAD 100000
 
-
-//定义污染值门限值
-#define HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD 3 //瞬时浓度报警值设为3.0mg/m3,当连续5min颗粒物平均浓度高于3.0mg/m3,在线监测系统应能发布报警提示
-#define HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD 65 //瞬时噪声报警值设为80 dB,在线监测系统应能发布报警提示
 
 //全局Counter，用于性能指标统计之用
 typedef struct HcuGlobalCounter

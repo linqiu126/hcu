@@ -2808,12 +2808,15 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 		HcuDebugPrint("HCU-MAIN: Read MAC address error!\n");
 		return EXIT_SUCCESS;
 	}
-
+/*// to be discussed
 	//对硬件类型进行相同性检查，如果不一致，必然发生了生产性错误，或者硬件搞错，或者Factory Load用错，应该严重警告
 	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES) && (zHcuSysEngPar.hwBurnId.hwType != HCU_SYSCFG_HW_PRODUCT_CAT_TYPE)){
+		HcuDebugPrint("HCU-VM: HW_TYPE=[%d].\n",	zHcuSysEngPar.hwBurnId.hwType);
+
 		HcuErrorPrint("HCU-VM: Fatal error, using wrong hardware type or factory load!!!\n");
 		return FAILURE;
 	}
+*/
 	//由于硬件部分并没有真正起作用，所以暂时需要从系统定义区重复写入，一旦批量生产这部分可以去掉
 	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO){
 		zHcuSysEngPar.hwBurnId.hwType  = HCU_SYSCFG_HW_PRODUCT_CAT_TYPE;
@@ -2849,7 +2852,7 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 	}
 
 	//初始化之后的系统标识信息
-	HcuDebugPrint("HCU-VM: Initialized Hardware Burn Physical Id/Address: CURRENT_PRJ=[%s], HW_LABLE=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[0x%x], SW_RELEASE_VER=[%d.%d], FW_UPGRADE_FLAG=[%d], ZHB_MN_LABLE=[%s].\n", \
+	HcuDebugPrint("HCU-VM: Initialized Hardware Burn Physical Id/Address: CURRENT_PRJ=[%s], HW_LABLE=[%s], HW_TYPE=[%d], PEM_ID=[%d], SW_RELEASE_VER=[%d.%d], FW_UPGRADE_FLAG=[%d], ZHB_MN_LABLE=[%s].\n", \
 			HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, \
 		zHcuSysEngPar.hwBurnId.equLable, \
 		zHcuSysEngPar.hwBurnId.hwType, \
