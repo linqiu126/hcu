@@ -327,7 +327,6 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 	}
 
 	//准备发送数据给L3
-	//snd.length = sizeof(msg_struct_modbus_winddir_data_report_t);
 	snd.usercmdid = rcv.cmdId;
 	snd.noise.equipid = rcv.equId;
 	snd.cmdIdBackType = rcv.cmdIdBackType;

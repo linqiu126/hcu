@@ -511,7 +511,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	HCU_DEBUG_PRINT_INF("MODBUS: Prepareing send modbus winddir req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
+	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus winddir req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 //
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
@@ -1444,7 +1444,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		break;
 	}
 
-	snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+	snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 	snd.noise.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
 	snd.noise.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
 	snd.noise.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
