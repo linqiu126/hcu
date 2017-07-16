@@ -12,8 +12,7 @@
 
 //= ZJL/LZH, 2017 July.15 CURRENT_SW_DELIVERY 221=>BFSC项目
 = Bug fix
-= 发现现象：组合的数据不够准确
-
+= 发现现象：组合的数据不够准确，最后发现是组合算法中的bug, fix完毕
 
 //= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 221=>AQYC项目
 = SW update to support low cost sensors(清易噪声/易谷风向风速/妙昕温湿度)
