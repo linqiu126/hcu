@@ -9,7 +9,7 @@
 #define L0COMVM_SYSVERSION_H_
 
 //硬件版本定义及状态
-#define HCU_CURRENT_HW_TYPE 5// HARDWARE PEM，表征PEM5
+#define HCU_CURRENT_HW_TYPE 2004// HARDWARE PEM，表征PEM6.1
 
 //SW version control, for internal usage
 #define HCU_CURRENT_SW_RELEASE 3 //R01 = 0x01 (XQ.HCU.SW.R01.456)
