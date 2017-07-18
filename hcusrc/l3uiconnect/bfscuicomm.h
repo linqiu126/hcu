@@ -27,34 +27,34 @@ enum FSM_STATE_BFSCUICOMM
 typedef struct L3BfscuiStartCmd
 {
 	UINT32  cmdFlag;
-	UINT32 cmdValue;
+	UINT32 	cmdValue;
 }L3BfscuiStartCmd_t;
 
 typedef struct L3BfscuiCalibrationCmd
 {
 	UINT32  cmdFlag;
-	UINT32 cmdValue;
+	UINT32 	cmdValue;
 	UINT8	sensorid;
-	UINT32  weight;
+	UINT32	weight;
 }L3BfscuiCalibrationCmd_t;
 
 typedef struct L3BfscuiConfigCmd
 {
 	UINT32  cmdFlag;
-	UINT32 cmdValue;
-	UINT32 confindex;
+	UINT32	cmdValue;
+	UINT32 	confindex;
 }L3BfscuiConfigCmd_t;
 
 typedef struct L3BfscuiResumeCmd
 {
 	UINT32  cmdFlag;
-	UINT32 cmdValue;
+	UINT32 	cmdValue;
 }L3BfscuiResumeCmd_t;
 
 typedef struct L3BfscuiTestCmd
 {
 	UINT32  cmdFlag;
-	UINT32 cmdValue;
+	UINT32 	cmdValue;
 } L3BfscuiTestCmd_t;
 
 typedef struct L3BfscuiJsonCmdParseResult
