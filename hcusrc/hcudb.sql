@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 4.5.4.1deb2ubuntu2
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 19, 2017 at 12:43 PM
--- Server version: 5.5.47-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.14
+-- Generation Time: Jul 19, 2017 at 01:06 PM
+-- Server version: 5.7.17-0ubuntu0.16.04.2
+-- PHP Version: 7.0.15-0ubuntu0.16.04.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `hcudb`
@@ -26,14 +26,13 @@ SET time_zone = "+00:00";
 -- Table structure for table `hcuairprsaltitudebmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuairprsaltitudebmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `altitudevalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+  `altitudevalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuairprsaltitudebmp180datainfo`
@@ -67,14 +66,13 @@ INSERT INTO `hcuairprsaltitudebmp180datainfo` (`sid`, `deviceid`, `timestamp`, `
 -- Table structure for table `hcuairprsbmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuairprsbmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `airprsvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+  `airprsvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuairprsbmp180datainfo`
@@ -108,8 +106,8 @@ INSERT INTO `hcuairprsbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataform
 -- Table structure for table `hcuairprsdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuairprsdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -119,9 +117,8 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -129,8 +126,8 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
 -- Table structure for table `hcualcoholdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcualcoholdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -140,9 +137,8 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -150,14 +146,13 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
 -- Table structure for table `hcualcoholmq3alcodatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcualcoholmq3alcodatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `alcoholvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+  `alcoholvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcualcoholmq3alcodatainfo`
@@ -191,7 +186,7 @@ INSERT INTO `hcualcoholmq3alcodatainfo` (`sid`, `deviceid`, `timestamp`, `datafo
 -- Table structure for table `hcubfsccalibration`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
+CREATE TABLE `hcubfsccalibration` (
   `deviceid` varchar(20) NOT NULL,
   `zeroadc_01` int(4) NOT NULL DEFAULT '0',
   `fulladc_01` int(4) NOT NULL DEFAULT '0',
@@ -240,8 +235,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
   `fullwgt_15` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_16` int(4) NOT NULL DEFAULT '0',
   `fulladc_16` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_16` int(4) NOT NULL DEFAULT '100000',
-  PRIMARY KEY (`deviceid`)
+  `fullwgt_16` int(4) NOT NULL DEFAULT '100000'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -257,8 +251,8 @@ INSERT INTO `hcubfsccalibration` (`deviceid`, `zeroadc_01`, `fulladc_01`, `fullw
 -- Table structure for table `hcubfscconfigpara`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfscconfigpara` (
+  `sid` int(4) NOT NULL,
   `confname` varchar(50) DEFAULT NULL,
   `currentconf` char(1) NOT NULL DEFAULT 'N',
   `baseconf` char(1) NOT NULL DEFAULT 'N',
@@ -289,10 +283,8 @@ CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
   `rollingstop` int(4) NOT NULL DEFAULT '500',
   `rollinginterval` int(4) NOT NULL DEFAULT '500',
   `failuredetectvaration` int(4) NOT NULL DEFAULT '500',
-  `failuredetecttime` int(4) NOT NULL DEFAULT '500',
-  PRIMARY KEY (`sid`),
-  UNIQUE KEY `confname` (`confname`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+  `failuredetecttime` int(4) NOT NULL DEFAULT '500'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfscconfigpara`
@@ -310,7 +302,7 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 -- Table structure for table `hcubfsccurrentinfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
+CREATE TABLE `hcubfsccurrentinfo` (
   `deviceid` varchar(20) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `status_01` int(4) DEFAULT NULL,
@@ -361,13 +353,12 @@ INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_0
 -- Table structure for table `hcubfscfb2ui`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscfb2ui` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfscfb2ui` (
+  `sid` int(4) NOT NULL,
   `cmdtype` int(1) NOT NULL,
   `validflag` int(1) NOT NULL,
-  `fbinfo` char(80) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+  `fbinfo` char(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfscfb2ui`
@@ -384,7 +375,7 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 -- Table structure for table `hcubfscstadatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
+CREATE TABLE `hcubfscstadatainfo` (
   `StaType` char(20) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `wsIncMatCnt` int(4) NOT NULL,
@@ -398,8 +389,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
   `wsTgvMatWgt` double(18,2) NOT NULL,
   `wsAvgTttTimes` int(4) NOT NULL,
   `wsAvgTttMatCnt` int(4) NOT NULL,
-  `wsAvgTttMatWgt` double(18,2) NOT NULL,
-  PRIMARY KEY (`StaType`)
+  `wsAvgTttMatWgt` double(18,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -417,12 +407,12 @@ INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncM
 -- Table structure for table `hcubfscstaticpara`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscstaticpara` (
+CREATE TABLE `hcubfscstaticpara` (
   `deviceid` varchar(20) NOT NULL,
   `calmaxallowedwgt` int(4) NOT NULL DEFAULT '0',
   `calfullwgt` int(4) NOT NULL DEFAULT '0',
-  `caladcsamplefreq` int(4) NOT NULL DEFAULT '0',
   `caladcgain` int(4) NOT NULL DEFAULT '0',
+  `caladcwordrate` int(4) NOT NULL DEFAULT '0',
   `snrstaticzerovalue` int(4) NOT NULL DEFAULT '0',
   `snrtailorvalue` int(4) NOT NULL DEFAULT '0',
   `snrdynzerothread` int(4) NOT NULL DEFAULT '0',
@@ -433,8 +423,8 @@ CREATE TABLE IF NOT EXISTS `hcubfscstaticpara` (
 -- Dumping data for table `hcubfscstaticpara`
 --
 
-INSERT INTO `hcubfscstaticpara` (`deviceid`, `calmaxallowedwgt`, `calfullwgt`, `caladcsamplefreq`, `caladcgain`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
-('HCU_G301_BFSC_P0001', 100000, 999, 100, 100, 99, 100, 100, 100);
+INSERT INTO `hcubfscstaticpara` (`deviceid`, `calmaxallowedwgt`, `calfullwgt`, `caladcgain`, `caladcwordrate`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
+('HCU_G301_BFSC_P0001', 100000, 999, 100, 0, 99, 100, 100, 100);
 
 -- --------------------------------------------------------
 
@@ -442,8 +432,8 @@ INSERT INTO `hcubfscstaticpara` (`deviceid`, `calmaxallowedwgt`, `calfullwgt`, `
 -- Table structure for table `hcuco1datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuco1datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -453,9 +443,8 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -463,8 +452,8 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
 -- Table structure for table `hcuemcdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuemcdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -474,9 +463,8 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12162 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -5838,8 +5826,8 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 -- Table structure for table `hcuhchodatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhchodatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -5849,9 +5837,8 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -5859,14 +5846,13 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
 -- Table structure for table `hcuhchoze08ch2odatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhchoze08ch2odatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `hchovalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `hchovalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -5874,8 +5860,8 @@ CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
 -- Table structure for table `hcuhsmmpdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhsmmpdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `hsmmpfdir` char(100) NOT NULL,
@@ -5886,9 +5872,8 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -5896,8 +5881,8 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
 -- Table structure for table `hcuhumiddatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumiddatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -5907,9 +5892,8 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -5917,14 +5901,13 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
 -- Table structure for table `hcuhumiddht11datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumiddht11datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumiddht11datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=696 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuhumiddht11datainfo`
@@ -5970,14 +5953,13 @@ INSERT INTO `hcuhumiddht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- Table structure for table `hcuhumidmth01datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidmth01datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumidmth01datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuhumidmth01datainfo`
@@ -5992,14 +5974,13 @@ INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- Table structure for table `hcuhumidrht03datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumidrht03datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6007,14 +5988,13 @@ CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
 -- Table structure for table `hcuhumidsht20datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumidsht20datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6022,8 +6002,8 @@ CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
 -- Table structure for table `hcuigmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuigmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -6053,9 +6033,8 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6063,8 +6042,8 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
 -- Table structure for table `hcuihmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuihmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -6098,9 +6077,8 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6108,8 +6086,8 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
 -- Table structure for table `hcuipmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuipmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -6139,9 +6117,8 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6149,8 +6126,8 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
 -- Table structure for table `hcuiwmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuiwmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -6180,9 +6157,8 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6190,14 +6166,13 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
 -- Table structure for table `hculightstrbh1750datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hculightstrbh1750datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `lightstrvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+  `lightstrvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hculightstrbh1750datainfo`
@@ -6231,8 +6206,8 @@ INSERT INTO `hculightstrbh1750datainfo` (`sid`, `deviceid`, `timestamp`, `datafo
 -- Table structure for table `hculightstrdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hculightstrdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -6242,9 +6217,8 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6252,8 +6226,8 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
 -- Table structure for table `hcunoisedatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcunoisedatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -6263,9 +6237,8 @@ CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6273,14 +6246,13 @@ CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
 -- Table structure for table `hcupm25bmpd300datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcupm25bmpd300datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm2d5value` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `pm2d5value` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6288,8 +6260,8 @@ CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
 -- Table structure for table `hcupm25datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcupm25datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -6301,9 +6273,8 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6311,14 +6282,13 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
 -- Table structure for table `hcupm25sharpdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcupm25sharpdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm2d5value` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `pm2d5value` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6326,7 +6296,7 @@ CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
 -- Table structure for table `hcuswdb`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuswdb` (
+CREATE TABLE `hcuswdb` (
   `dbver` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -6343,17 +6313,16 @@ INSERT INTO `hcuswdb` (`dbver`) VALUES
 -- Table structure for table `hcusysalarminfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysalarminfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcusysalarminfo` (
+  `sid` int(4) NOT NULL,
   `eqpid` int(4) NOT NULL,
   `alarmtype` int(4) NOT NULL,
   `alarmcontent` int(4) NOT NULL,
   `alarmseverity` int(4) NOT NULL,
   `alarmclearflag` int(4) NOT NULL,
   `alarmdesc` char(100) NOT NULL,
-  `timestamp` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+  `timestamp` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcusysalarminfo`
@@ -6372,7 +6341,7 @@ INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `ala
 -- Table structure for table `hcusysengpar`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysengpar` (
+CREATE TABLE `hcusysengpar` (
   `prjname` char(100) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
   `hcudbhost` char(20) NOT NULL,
@@ -6402,8 +6371,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `browselautostartupflag` int(1) NOT NULL,
   `browselprog` char(20) NOT NULL,
   `browselstartupaddress` char(128) NOT NULL,
-  `browselworkingoption` char(128) NOT NULL,
-  PRIMARY KEY (`prjname`)
+  `browselworkingoption` char(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -6430,12 +6398,11 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 -- Table structure for table `hcusysengtimer`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
+CREATE TABLE `hcusysengtimer` (
   `timerid` int(2) NOT NULL,
   `timername` char(40) NOT NULL,
   `granularity` int(1) NOT NULL,
-  `duration` int(1) NOT NULL,
-  PRIMARY KEY (`timerid`)
+  `duration` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -6517,8 +6484,8 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 -- Table structure for table `hcusyspmglobaldatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcusyspmglobaldatainfo` (
+  `sid` int(4) NOT NULL,
   `taskhcuvmec` int(4) NOT NULL,
   `taskhwinvec` int(4) NOT NULL,
   `tasksyspmec` int(4) NOT NULL,
@@ -6550,9 +6517,8 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `memoccupy` int(11) NOT NULL,
   `diskoccupy` int(11) NOT NULL,
   `cputemp` int(11) NOT NULL,
-  `timestamp` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=143 ;
+  `timestamp` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcusyspmglobaldatainfo`
@@ -6708,14 +6674,13 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 -- Table structure for table `hcutempbmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempbmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=702 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcutempbmp180datainfo`
@@ -6781,8 +6746,8 @@ INSERT INTO `hcutempbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- Table structure for table `hcutempdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -6792,9 +6757,8 @@ CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6802,14 +6766,13 @@ CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
 -- Table structure for table `hcutempdht11datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempdht11datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempdht11datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=713 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcutempdht11datainfo`
@@ -6875,14 +6838,13 @@ INSERT INTO `hcutempdht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`
 -- Table structure for table `hcutempmth01datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempmth01datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6890,14 +6852,13 @@ CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
 -- Table structure for table `hcutemprht03datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutemprht03datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6905,14 +6866,13 @@ CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
 -- Table structure for table `hcutempsht20datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempsht20datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6920,8 +6880,8 @@ CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
 -- Table structure for table `hcutoxicgasdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutoxicgasdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -6931,9 +6891,8 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -6941,14 +6900,13 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
 -- Table structure for table `hcutoxicgasmq135datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutoxicgasmq135datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `toxicgasvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+  `toxicgasvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcutoxicgasmq135datainfo`
@@ -6982,14 +6940,13 @@ INSERT INTO `hcutoxicgasmq135datainfo` (`sid`, `deviceid`, `timestamp`, `datafor
 -- Table structure for table `hcutoxicgaszp01vocdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutoxicgaszp01vocdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `toxicgasvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+  `toxicgasvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcutoxicgaszp01vocdatainfo`
@@ -7023,15 +6980,14 @@ INSERT INTO `hcutoxicgaszp01vocdatainfo` (`sid`, `deviceid`, `timestamp`, `dataf
 -- Table structure for table `hcutracemodulectr`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
+CREATE TABLE `hcutracemodulectr` (
   `moduleid` int(2) NOT NULL,
   `modulename` char(15) NOT NULL,
   `modulectrflag` int(1) NOT NULL,
   `moduletoallow` int(1) NOT NULL,
   `moduletorestrict` int(1) NOT NULL,
   `modulefromallow` int(1) NOT NULL,
-  `modulefromrestrict` int(1) NOT NULL,
-  PRIMARY KEY (`moduleid`)
+  `modulefromrestrict` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -7123,13 +7079,12 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 -- Table structure for table `hcutracemsgctr`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
+CREATE TABLE `hcutracemsgctr` (
   `msgid` int(2) NOT NULL,
   `msgname` char(70) NOT NULL,
   `msgctrflag` int(1) NOT NULL,
   `msgallow` int(1) NOT NULL,
-  `msgrestrict` int(1) NOT NULL,
-  PRIMARY KEY (`msgid`)
+  `msgrestrict` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -7373,8 +7328,8 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 -- Table structure for table `hcuwinddirdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuwinddirdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -7384,9 +7339,8 @@ CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -7394,8 +7348,8 @@ CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
 -- Table structure for table `hcuwindspddatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuwindspddatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -7405,10 +7359,494 @@ CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `hcuairprsaltitudebmp180datainfo`
+--
+ALTER TABLE `hcuairprsaltitudebmp180datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuairprsbmp180datainfo`
+--
+ALTER TABLE `hcuairprsbmp180datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuairprsdatainfo`
+--
+ALTER TABLE `hcuairprsdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcualcoholdatainfo`
+--
+ALTER TABLE `hcualcoholdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcualcoholmq3alcodatainfo`
+--
+ALTER TABLE `hcualcoholmq3alcodatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfsccalibration`
+--
+ALTER TABLE `hcubfsccalibration`
+  ADD PRIMARY KEY (`deviceid`);
+
+--
+-- Indexes for table `hcubfscconfigpara`
+--
+ALTER TABLE `hcubfscconfigpara`
+  ADD PRIMARY KEY (`sid`),
+  ADD UNIQUE KEY `confname` (`confname`);
+
+--
+-- Indexes for table `hcubfscfb2ui`
+--
+ALTER TABLE `hcubfscfb2ui`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfscstadatainfo`
+--
+ALTER TABLE `hcubfscstadatainfo`
+  ADD PRIMARY KEY (`StaType`);
+
+--
+-- Indexes for table `hcuco1datainfo`
+--
+ALTER TABLE `hcuco1datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuemcdatainfo`
+--
+ALTER TABLE `hcuemcdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhchodatainfo`
+--
+ALTER TABLE `hcuhchodatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhchoze08ch2odatainfo`
+--
+ALTER TABLE `hcuhchoze08ch2odatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhsmmpdatainfo`
+--
+ALTER TABLE `hcuhsmmpdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumiddatainfo`
+--
+ALTER TABLE `hcuhumiddatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumiddht11datainfo`
+--
+ALTER TABLE `hcuhumiddht11datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidmth01datainfo`
+--
+ALTER TABLE `hcuhumidmth01datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidrht03datainfo`
+--
+ALTER TABLE `hcuhumidrht03datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidsht20datainfo`
+--
+ALTER TABLE `hcuhumidsht20datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuigmcj188datainfo`
+--
+ALTER TABLE `hcuigmcj188datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuihmcj188datainfo`
+--
+ALTER TABLE `hcuihmcj188datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuipmcj188datainfo`
+--
+ALTER TABLE `hcuipmcj188datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuiwmcj188datainfo`
+--
+ALTER TABLE `hcuiwmcj188datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hculightstrbh1750datainfo`
+--
+ALTER TABLE `hculightstrbh1750datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hculightstrdatainfo`
+--
+ALTER TABLE `hculightstrdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcunoisedatainfo`
+--
+ALTER TABLE `hcunoisedatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25bmpd300datainfo`
+--
+ALTER TABLE `hcupm25bmpd300datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25datainfo`
+--
+ALTER TABLE `hcupm25datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25sharpdatainfo`
+--
+ALTER TABLE `hcupm25sharpdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcusysalarminfo`
+--
+ALTER TABLE `hcusysalarminfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcusysengpar`
+--
+ALTER TABLE `hcusysengpar`
+  ADD PRIMARY KEY (`prjname`);
+
+--
+-- Indexes for table `hcusysengtimer`
+--
+ALTER TABLE `hcusysengtimer`
+  ADD PRIMARY KEY (`timerid`);
+
+--
+-- Indexes for table `hcusyspmglobaldatainfo`
+--
+ALTER TABLE `hcusyspmglobaldatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempbmp180datainfo`
+--
+ALTER TABLE `hcutempbmp180datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempdatainfo`
+--
+ALTER TABLE `hcutempdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempdht11datainfo`
+--
+ALTER TABLE `hcutempdht11datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempmth01datainfo`
+--
+ALTER TABLE `hcutempmth01datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutemprht03datainfo`
+--
+ALTER TABLE `hcutemprht03datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempsht20datainfo`
+--
+ALTER TABLE `hcutempsht20datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgasdatainfo`
+--
+ALTER TABLE `hcutoxicgasdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgasmq135datainfo`
+--
+ALTER TABLE `hcutoxicgasmq135datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgaszp01vocdatainfo`
+--
+ALTER TABLE `hcutoxicgaszp01vocdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutracemodulectr`
+--
+ALTER TABLE `hcutracemodulectr`
+  ADD PRIMARY KEY (`moduleid`);
+
+--
+-- Indexes for table `hcutracemsgctr`
+--
+ALTER TABLE `hcutracemsgctr`
+  ADD PRIMARY KEY (`msgid`);
+
+--
+-- Indexes for table `hcuwinddirdatainfo`
+--
+ALTER TABLE `hcuwinddirdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuwindspddatainfo`
+--
+ALTER TABLE `hcuwindspddatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `hcuairprsaltitudebmp180datainfo`
+--
+ALTER TABLE `hcuairprsaltitudebmp180datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcuairprsbmp180datainfo`
+--
+ALTER TABLE `hcuairprsbmp180datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcuairprsdatainfo`
+--
+ALTER TABLE `hcuairprsdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcualcoholdatainfo`
+--
+ALTER TABLE `hcualcoholdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcualcoholmq3alcodatainfo`
+--
+ALTER TABLE `hcualcoholmq3alcodatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcubfscconfigpara`
+--
+ALTER TABLE `hcubfscconfigpara`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `hcubfscfb2ui`
+--
+ALTER TABLE `hcubfscfb2ui`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `hcuco1datainfo`
+--
+ALTER TABLE `hcuco1datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuemcdatainfo`
+--
+ALTER TABLE `hcuemcdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12162;
+--
+-- AUTO_INCREMENT for table `hcuhchodatainfo`
+--
+ALTER TABLE `hcuhchodatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhchoze08ch2odatainfo`
+--
+ALTER TABLE `hcuhchoze08ch2odatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhsmmpdatainfo`
+--
+ALTER TABLE `hcuhsmmpdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhumiddatainfo`
+--
+ALTER TABLE `hcuhumiddatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhumiddht11datainfo`
+--
+ALTER TABLE `hcuhumiddht11datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=696;
+--
+-- AUTO_INCREMENT for table `hcuhumidmth01datainfo`
+--
+ALTER TABLE `hcuhumidmth01datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `hcuhumidrht03datainfo`
+--
+ALTER TABLE `hcuhumidrht03datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuhumidsht20datainfo`
+--
+ALTER TABLE `hcuhumidsht20datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuigmcj188datainfo`
+--
+ALTER TABLE `hcuigmcj188datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuihmcj188datainfo`
+--
+ALTER TABLE `hcuihmcj188datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuipmcj188datainfo`
+--
+ALTER TABLE `hcuipmcj188datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuiwmcj188datainfo`
+--
+ALTER TABLE `hcuiwmcj188datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hculightstrbh1750datainfo`
+--
+ALTER TABLE `hculightstrbh1750datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hculightstrdatainfo`
+--
+ALTER TABLE `hculightstrdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcunoisedatainfo`
+--
+ALTER TABLE `hcunoisedatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcupm25bmpd300datainfo`
+--
+ALTER TABLE `hcupm25bmpd300datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcupm25datainfo`
+--
+ALTER TABLE `hcupm25datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcupm25sharpdatainfo`
+--
+ALTER TABLE `hcupm25sharpdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcusysalarminfo`
+--
+ALTER TABLE `hcusysalarminfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `hcusyspmglobaldatainfo`
+--
+ALTER TABLE `hcusyspmglobaldatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
+--
+-- AUTO_INCREMENT for table `hcutempbmp180datainfo`
+--
+ALTER TABLE `hcutempbmp180datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=702;
+--
+-- AUTO_INCREMENT for table `hcutempdatainfo`
+--
+ALTER TABLE `hcutempdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcutempdht11datainfo`
+--
+ALTER TABLE `hcutempdht11datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=713;
+--
+-- AUTO_INCREMENT for table `hcutempmth01datainfo`
+--
+ALTER TABLE `hcutempmth01datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcutemprht03datainfo`
+--
+ALTER TABLE `hcutemprht03datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcutempsht20datainfo`
+--
+ALTER TABLE `hcutempsht20datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcutoxicgasdatainfo`
+--
+ALTER TABLE `hcutoxicgasdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcutoxicgasmq135datainfo`
+--
+ALTER TABLE `hcutoxicgasmq135datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcutoxicgaszp01vocdatainfo`
+--
+ALTER TABLE `hcutoxicgaszp01vocdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT for table `hcuwinddirdatainfo`
+--
+ALTER TABLE `hcuwinddirdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hcuwindspddatainfo`
+--
+ALTER TABLE `hcuwindspddatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
