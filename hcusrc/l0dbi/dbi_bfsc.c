@@ -17,8 +17,8 @@
 -- Table structure for table `hcubfscconfigpara`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfscconfigpara` (
+  `sid` int(4) NOT NULL,
   `confname` varchar(50) DEFAULT NULL,
   `currentconf` char(1) NOT NULL DEFAULT 'N',
   `baseconf` char(1) NOT NULL DEFAULT 'N',
@@ -49,10 +49,8 @@ CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
   `rollingstop` int(4) NOT NULL DEFAULT '500',
   `rollinginterval` int(4) NOT NULL DEFAULT '500',
   `failuredetectvaration` int(4) NOT NULL DEFAULT '500',
-  `failuredetecttime` int(4) NOT NULL DEFAULT '500',
-  PRIMARY KEY (`sid`),
-  UNIQUE KEY `confname` (`confname`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+  `failuredetecttime` int(4) NOT NULL DEFAULT '500'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfscconfigpara`
@@ -61,9 +59,8 @@ CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
 INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `minscalenum`, `maxscalenum`, `minscalenumstart`, `targetweight`, `upperweightlimit`, `proximitmode`, `combinationbias`, `remaindetectind`, `remaindetecttime`, `remainobjtreat`, `prioritymode`, `automode`, `averagenum`, `loaddetecttime`, `loaddetectthread`, `emptydetecttime`, `emptydetectthread`, `standardreadytime`, `motorspeed`, `motordirection`, `rollingstart`, `rollingstop`, `rollinginterval`, `failuredetectvaration`, `failuredetecttime`) VALUES
 (1, 'apple', 'N', 'Y', 'System', 'apple60.svg', 'standard setting - apple', 1, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500),
 (2, 'tomato', 'N', 'Y', 'System', 'tomato4.svg', 'Standard setting - tomato', 1, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500),
-(4, 'tomato-1', 'N', 'N', 'Bofeng', 'tomato1.svg', 'tomato 1Kg', 9, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500),
+(4, 'tomato-1', 'Y', 'N', 'Bofeng', 'tomato1.svg', 'tomato 1Kg', 1, 16, 1, 15000, 5000, 0, 1, 0, 2, 0, 0, 0, 1, 400, 100, 400, 500, 0, 150, 0, 5000, 0, 0, 0, 0),
 (6, 'apple-1', 'N', 'N', 'Bofeng', 'apple60.svg', 'apple 1Kg', 1, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500);
-
 
 
 
@@ -183,6 +180,31 @@ INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_0
 ('HCU_G301_BFSC_P0001', 20170518, 0, 35483, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 26959, 0, 39988, 0, 36037, 0, 39413, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566);
 
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcubfscstaticpara`
+--
+
+CREATE TABLE `hcubfscstaticpara` (
+  `deviceid` varchar(20) NOT NULL,
+  `calmaxallowedwgt` int(4) NOT NULL DEFAULT '0',
+  `calfullwgt` int(4) NOT NULL DEFAULT '0',
+  `caladcgain` int(4) NOT NULL DEFAULT '0',
+  `caladcwordrate` int(4) NOT NULL DEFAULT '0',
+  `snrstaticzerovalue` int(4) NOT NULL DEFAULT '0',
+  `snrtailorvalue` int(4) NOT NULL DEFAULT '0',
+  `snrdynzerothread` int(4) NOT NULL DEFAULT '0',
+  `snrdynzerohysteresis` int(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='calibration and sensor configuration table';
+
+--
+-- Dumping data for table `hcubfscstaticpara`
+--
+
+INSERT INTO `hcubfscstaticpara` (`deviceid`, `calmaxallowedwgt`, `calfullwgt`, `caladcgain`, `caladcwordrate`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
+('HCU_G301_BFSC_P0001', 1000000, 100000, 6, 3, 0, 0, 499, 5000);
 
 
 
@@ -313,13 +335,11 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     }
 //    else if((0xFFFFFFFF == wmc_id) && (0xFFFFFFFF != wmc_weight_value))
 //    {
-//        sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', value_%02d = '%d' WHERE (deviceid = '%s')", \
-//        		timestamp, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
+//        sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', value_%02d = '%d' WHERE (deviceid = '%s')",  timestamp, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
 //    }
 //    else if((0xFFFFFFFF != wmc_id) && (0xFFFFFFFF == wmc_weight_value))
 //    {
-//		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = '%s')", \
-//				timestamp, wmc_id, wmc_status, zHcuSysEngPar.hwBurnId.equLable);
+//		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = '%s')",  timestamp, wmc_id, wmc_status, zHcuSysEngPar.hwBurnId.equLable);
 //    }
     else
     {
@@ -327,6 +347,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 				timestamp, wmc_id, wmc_status, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
     }
 
+    HCU_DEBUG_PRINT_CRT("DBICOM: REPLACE/UPDATE string = [%s]\n", strsql);
     result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

@@ -11,16 +11,19 @@
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
 
+
+
+//= ZJL/LZH, 2017 July.19 CURRENT_SW_DELIVERY 223=>BFSC项目
+= Bug fix on data base of CfgData
+
+
 //= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 222=>AQYC项目
 = SW update to support low cost sensors(清易噪声/易谷风向风速/妙昕温湿度)
 = Add picture&video capture once noise value exceed the threshold of alarm.
 
-
 //= ZJL/LZH, 2017 July.15 CURRENT_SW_DELIVERY 221=>BFSC项目
 = Bug fix
 = 发现现象：组合的数据不够准确，最后发现是组合算法中的bug, fix完毕
-
-
 
 //= ZJL/LZH, 2017 July.7 CURRENT_SW_DELIVERY 220=>BFSC项目
 = Bug fix
