@@ -14,7 +14,7 @@
 
 
 //= ZJL/LZH, 2017 July.19 CURRENT_SW_DELIVERY 223=>BFSC项目
-= Bug fix on data base of CfgData
+= Bug fix on data base of hcubfscconfigpara
 
 
 //= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 222=>AQYC项目

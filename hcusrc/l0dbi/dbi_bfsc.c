@@ -137,6 +137,8 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
   `deviceid` varchar(20) NOT NULL,
   `timestamp` int(4) NOT NULL,
+  `status_00` int(4) DEFAULT NULL,
+  `value_00` int(4) DEFAULT NULL,
   `status_01` int(4) DEFAULT NULL,
   `value_01` int(4) DEFAULT NULL,
   `status_02` int(4) DEFAULT NULL,
@@ -176,8 +178,8 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
 -- Dumping data for table `hcubfsccurrentinfo`
 --
 
-INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
-('HCU_G301_BFSC_P0001', 20170518, 0, 35483, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 26959, 0, 39988, 0, 36037, 0, 39413, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566);
+INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
+('HCU_G301_BFSC_P0001', 20170518, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 26959, 0, 39988, 0, 36037, 0, 39413, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566);
 
 
 
@@ -327,27 +329,16 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 
 	//UPDATE新的数据
     timestamp = time(NULL);
-    if( (0xFFFFFFFF == wmc_id) || (0xFFFFFFFF == wmc_weight_value) )
-    {
+    if( (0xFFFFFFFF == wmc_id) || (0xFFFFFFFF == wmc_weight_value) ){
     	HcuErrorPrint("DBICOM: Input data error!\n");
         mysql_close(sqlHandler);
         return SUCCESS;
     }
-//    else if((0xFFFFFFFF == wmc_id) && (0xFFFFFFFF != wmc_weight_value))
-//    {
-//        sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', value_%02d = '%d' WHERE (deviceid = '%s')",  timestamp, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
-//    }
-//    else if((0xFFFFFFFF != wmc_id) && (0xFFFFFFFF == wmc_weight_value))
-//    {
-//		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = '%s')",  timestamp, wmc_id, wmc_status, zHcuSysEngPar.hwBurnId.equLable);
-//    }
-    else
-    {
+    else{
 		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d', value_%02d = '%d' WHERE (deviceid = '%s')", \
 				timestamp, wmc_id, wmc_status, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
     }
 
-    HCU_DEBUG_PRINT_CRT("DBICOM: REPLACE/UPDATE string = [%s]\n", strsql);
     result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

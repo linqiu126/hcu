@@ -2,15 +2,15 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcubfscstaticpara" key="selection"/>
+		<item value="hcubfsccurrentinfo" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="hcubfsccurrentinfo"/>
 			<item value="hcubfscstaticpara"/>
 			<item value="int(1)"/>
-			<item value="hcubfsccurrentinfo"/>
 			<item value="dbi_HcuBfsc_WmcStatusUpdate"/>
 			<item value="func_l3bfsc_test_combine"/>
 			<item value="func_l3bfsc_caculate_bitmap_valid_number"/>
