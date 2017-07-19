@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcubfsccurrentinfo" key="selection"/>
+		<item value="func_canitfleo_l2frame_msg_sw_package_report_received_handle" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="func_canitfleo_l2frame_msg_sw_package_report_received_handle"/>
+			<item value="func_l3bfsc_cacluate_sensor_stop_rcv_complete"/>
+			<item value="-"/>
+			<item value="HCU_DEBUG_PRINT_FAT"/>
+			<item value="hcubfsccalibration"/>
 			<item value="hcubfsccurrentinfo"/>
 			<item value="hcubfscstaticpara"/>
 			<item value="int(1)"/>
-			<item value="dbi_HcuBfsc_WmcStatusUpdate"/>
-			<item value="func_l3bfsc_test_combine"/>
-			<item value="func_l3bfsc_caculate_bitmap_valid_number"/>
-			<item value="gTaskL3bfscContext.SearchCoefficientPointer"/>
-			<item value="func_l3bfsc_ws_sensor_search_combination"/>
 		</list>
 		<list key="replacehistory">
 			<item value="TRIAL"/>
@@ -32,7 +32,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1224" key="DIALOG_X_ORIGIN"/>
-		<item value="275" key="DIALOG_Y_ORIGIN"/>
+		<item value="1143" key="DIALOG_X_ORIGIN"/>
+		<item value="301" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

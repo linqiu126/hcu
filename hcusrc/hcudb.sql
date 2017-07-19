@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 19, 2017 at 02:26 PM
+-- Generation Time: Jul 19, 2017 at 02:54 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -240,8 +240,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
   `fullwgt_15` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_16` int(4) NOT NULL DEFAULT '0',
   `fulladc_16` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_16` int(4) NOT NULL DEFAULT '100000',
-  PRIMARY KEY (`deviceid`)
+  `fullwgt_16` int(4) NOT NULL DEFAULT '100000'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -249,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
 --
 
 INSERT INTO `hcubfsccalibration` (`deviceid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
-('HCU_G301_BFSC_P0001', 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000);
+('HCU_G301_BFSC_P0001', 434221, 506206, 100000, 474360, 515157, 100000, 455673, 508063, 100000, 447451, 519359, 100000, 432639, 504921, 100000, 442397, 514862, 100000, 443020, 515286, 100000, 468387, 543587, 100000, 438766, 510644, 100000, 450173, 520188, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000);
 
 -- --------------------------------------------------------
 
