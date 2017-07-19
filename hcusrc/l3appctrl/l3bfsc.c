@@ -575,13 +575,16 @@ OPSTAT fsm_l3bfsc_canitf_sys_stop_resp(UINT32 dest_id, UINT32 src_id, void * par
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
 		}
 
+		//将传感器强制设置为错误状态
+		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INIT_ERR;
+
 		//停止定时器
 		ret = hcu_timer_stop(TASK_ID_L3BFSC, TIMER_ID_1S_L3BFSC_SYS_STOP_WAIT_FB, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error stop timer!\n");
 		}
 		//设置状态机
-		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE){
+		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 		}
 	}
@@ -1296,6 +1299,10 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 			}
 			i = i % gTaskL3bfscContext.searchSpaceTotalNbr;
 			gTaskL3bfscContext.cur.wsCombTimes++;
+			HCU_DEBUG_PRINT_FAT("L3BFSC: ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
+			HCU_DEBUG_PRINT_FAT("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+					gTaskL3bfscContext.sensorWs[3].sensorValue, gTaskL3bfscContext.sensorWs[4].sensorValue, gTaskL3bfscContext.sensorWs[5].sensorValue, gTaskL3bfscContext.sensorWs[6].sensorValue,\
+					gTaskL3bfscContext.sensorWs[7].sensorValue, gTaskL3bfscContext.sensorWs[8].sensorValue, gTaskL3bfscContext.sensorWs[9].sensorValue, gTaskL3bfscContext.sensorWs[10].sensorValue);
 			return i;
 		}
 	}
