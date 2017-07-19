@@ -648,21 +648,21 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT32 config_index)
 	gTaskL3bfscContext.wgtSnrPar.RemainDetectionTimeSec = gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec ;
 
 	//测试数据
-	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 1;
-	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 2;
-	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 9;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 11000; //118000;
-	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 1000; //35000; //MYC: 1200g to 1300g
-	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
-	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
-	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;
-	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = 0;
-	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = 0;
-	gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec = 1;
-	gTaskL3bfscContext.comAlgPar.RemainScaleTreatment = 1;
-	gTaskL3bfscContext.comAlgPar.CombinationSpeedMode = 0;
-	gTaskL3bfscContext.comAlgPar.CombinationAutoMode = 0;
-	gTaskL3bfscContext.comAlgPar.MovingAvrageSpeedCount = 0;
+//	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 1;
+//	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 2;
+//	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 9;
+//	gTaskL3bfscContext.comAlgPar.TargetCombinationWeight = 11000; //118000;
+//	gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight = 1000; //35000; //MYC: 1200g to 1300g
+//	gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled = 0;
+//	gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode = 0;
+//	gTaskL3bfscContext.comAlgPar.CombinationBias = 1;
+//	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = 0;
+//	gTaskL3bfscContext.comAlgPar.IsRemainDetectionEnable = 0;
+//	gTaskL3bfscContext.comAlgPar.RemainDetectionTimeSec = 1;
+//	gTaskL3bfscContext.comAlgPar.RemainScaleTreatment = 1;
+//	gTaskL3bfscContext.comAlgPar.CombinationSpeedMode = 0;
+//	gTaskL3bfscContext.comAlgPar.CombinationAutoMode = 0;
+//	gTaskL3bfscContext.comAlgPar.MovingAvrageSpeedCount = 0;
 	//	gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination = 3;
 	//	gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination = 4;
 	//	gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination = 10;
