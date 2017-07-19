@@ -10,6 +10,8 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+//= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 223=>AQYC项目
+= bug fix for report data error(little endian for AQYC)
 
 //= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 222=>AQYC项目
 = SW update to support low cost sensors(清易噪声/易谷风向风速/妙昕温湿度)

@@ -18,6 +18,7 @@
 #include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
+#include "../l0comvm/sysconfig.h"
 
 //XML message pack/unpack
 extern OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_general_message_t *inputPar, UINT16 inputLen, CloudDataSendBuf_t *output);
@@ -92,7 +93,11 @@ extern OPSTAT func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle
 #define HUITP_CURRENT_PROCESSOR_ENDIAN_SMALL 1
 #define HUITP_CURRENT_PROCESSOR_ENDIAN_BIG 2
 
-#define HUITP_CURRENT_PROCESSOR_ENDIAN_SET HUITP_CURRENT_PROCESSOR_ENDIAN_BIG
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	#define HUITP_CURRENT_PROCESSOR_ENDIAN_SET HUITP_CURRENT_PROCESSOR_ENDIAN_BIG
+#else
+	#define HUITP_CURRENT_PROCESSOR_ENDIAN_SET HUITP_CURRENT_PROCESSOR_ENDIAN_SMALL
+#endif //bug fix by Shanchun on July.19th
 
 #if (HUITP_CURRENT_PROCESSOR_ENDIAN_SET == HUITP_CURRENT_PROCESSOR_ENDIAN_BIG)
 	#define HUITP_ENDIAN_EXG8(x) (x)

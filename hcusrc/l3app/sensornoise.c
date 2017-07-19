@@ -452,9 +452,9 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	strcat(HKVisionOption.user_key, ":");
 	strcat(HKVisionOption.user_key, "Bxxh!123");
 
-	strcat(HKVisionOption.url_photo, "http://192.168.111.64/Streaming/channels/1/picture");
-	strcat(HKVisionOption.url_video_start, "http://192.168.111.64/ISAPI/ContentMgmt/record/control/manual/start/tracks/1");
-	strcat(HKVisionOption.url_video_stop, "http://192.168.111.64/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1");
+	strcat(HKVisionOption.url_photo, "http://192.168.1.64/Streaming/channels/1/picture");
+	strcat(HKVisionOption.url_video_start, "http://192.168.1.64/ISAPI/ContentMgmt/record/control/manual/start/tracks/1");
+	strcat(HKVisionOption.url_video_stop, "http://192.168.1.64/ISAPI/ContentMgmt/record/control/manual/stop/tracks/1");
 
 
 	strcat(HKVisionOption.file_photo, zHcuVmCtrTab.clock.curPhotoDir);

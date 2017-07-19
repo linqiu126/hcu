@@ -1072,7 +1072,10 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 		memset(&pMsgProc, 0, msgProcLen);
 		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_alarm_info_report>>8)&0xFF;
 		pMsgProc.msgId.optId = HUITP_MSGID_uni_alarm_info_report&0xFF;
+		//HCU_DEBUG_PRINT_NOR("CLOUDVELA: pMsgProc.msgLen = %d\n\n",msgProcLen - 4);//debug by shanchun
 		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+		//HCU_DEBUG_PRINT_NOR("CLOUDVELA: pMsgProc.msgLen = %d\n\n",pMsgProc.msgLen);//debug by shanchun
+
 		//StrIe_HUITP_IEID_uni_com_report_t
 		pMsgProc.baseReport.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_report);
 		pMsgProc.baseReport.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_report_t) - 4);
