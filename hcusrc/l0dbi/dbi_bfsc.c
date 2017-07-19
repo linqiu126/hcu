@@ -310,6 +310,11 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (wmc_id >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
+    	HcuErrorPrint("DBICOM: Input nodeId too big than HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX = %d\n", HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+        return FAILURE;
+    }
+
     char s[20];
     memset(s, 0, sizeof(s));
 
