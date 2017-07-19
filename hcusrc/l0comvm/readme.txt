@@ -10,20 +10,22 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
-//= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 223=>AQYC项目
+//= ZSC, 2017 July.19 CURRENT_SW_DELIVERY 224=>AQYC项目
 = bug fix for report data error(little endian for AQYC)
+
+
+
+//= ZJL/LZH, 2017 July.19 CURRENT_SW_DELIVERY 223=>BFSC项目
+= Bug fix on data base of hcubfscconfigpara
+
 
 //= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 222=>AQYC项目
 = SW update to support low cost sensors(清易噪声/易谷风向风速/妙昕温湿度)
 = Add picture&video capture once noise value exceed the threshold of alarm.
 
-
 //= ZJL/LZH, 2017 July.15 CURRENT_SW_DELIVERY 221=>BFSC项目
 = Bug fix
-= 发现现象：组合的数据不够准确
-
-
-
+= 发现现象：组合的数据不够准确，最后发现是组合算法中的bug, fix完毕
 
 //= ZJL/LZH, 2017 July.7 CURRENT_SW_DELIVERY 220=>BFSC项目
 = Bug fix
@@ -138,10 +140,9 @@
 = 创建AdvanceTechBuntu目标机的编译环境
 = 清理HUITP FRAME的协议接口规范
 = 准备调整整个系统的状态机机制
-<<<<<<< HEAD
+
 = HUITP调整到v2.5
-=======
->>>>>>> dev
+
 
 
 //= ZSC, 2017 May.16, CURRENT_SW_DELIVERY 196=>AQYC项目

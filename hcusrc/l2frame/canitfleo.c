@@ -125,8 +125,7 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
 	//为了简化任务的执行，先禁止该定时器的启动
-//	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur,\
-//			TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+//	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 //	if (ret == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error start timer!\n");
 
 	//设置状态机到目标状态
@@ -869,6 +868,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(StrMsg_HUITP_MS
 	msg_struct_can_l3bfsc_sys_stop_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t));
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	HCU_DEBUG_PRINT_FAT("CANITFLEO: Receive STOP_RESP flag = %d\n", snd.validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 	snd.sensorid = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t);
@@ -890,7 +890,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 
 	//先更新本地数据库表单
 	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
-	HCU_DEBUG_PRINT_FAT("CANITFLEP: REPEAT WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
+	//HCU_DEBUG_PRINT_FAT("CANITFLEP: NEW WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
 
 	//先检查汇报事件/EMPTY_LOAD事件
 	if (HUITP_ENDIAN_EXG8(rcv->weight_ind.weight_event) == WEIGHT_EVENT_ID_EMPTY){
@@ -981,7 +981,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(StrMsg_HUITP_MS
 
 	//先更新本地数据库表单
 	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
-	HCU_DEBUG_PRINT_FAT("CANITFLEP: REPEAT WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
+	//HCU_DEBUG_PRINT_FAT("CANITFLEP: REPEAT WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
 
 	if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_NULL) && (wsEvent == WEIGHT_EVENT_ID_LOAD)){
 		if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_ACTIVED){
