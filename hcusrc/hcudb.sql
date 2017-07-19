@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: 2017-07-15 04:27:29
--- 服务器版本： 5.6.17
--- PHP Version: 5.5.12
+-- Host: localhost
+-- Generation Time: Jul 19, 2017 at 12:43 PM
+-- Server version: 5.5.47-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuairprsaltitudebmp180datainfo`
+-- Table structure for table `hcuairprsaltitudebmp180datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
--- 转存表中的数据 `hcuairprsaltitudebmp180datainfo`
+-- Dumping data for table `hcuairprsaltitudebmp180datainfo`
 --
 
 INSERT INTO `hcuairprsaltitudebmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `altitudevalue`) VALUES
@@ -64,7 +64,7 @@ INSERT INTO `hcuairprsaltitudebmp180datainfo` (`sid`, `deviceid`, `timestamp`, `
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuairprsbmp180datainfo`
+-- Table structure for table `hcuairprsbmp180datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
--- 转存表中的数据 `hcuairprsbmp180datainfo`
+-- Dumping data for table `hcuairprsbmp180datainfo`
 --
 
 INSERT INTO `hcuairprsbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `airprsvalue`) VALUES
@@ -105,7 +105,7 @@ INSERT INTO `hcuairprsbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataform
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuairprsdatainfo`
+-- Table structure for table `hcuairprsdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcualcoholdatainfo`
+-- Table structure for table `hcualcoholdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcualcoholmq3alcodatainfo`
+-- Table structure for table `hcualcoholmq3alcodatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
--- 转存表中的数据 `hcualcoholmq3alcodatainfo`
+-- Dumping data for table `hcualcoholmq3alcodatainfo`
 --
 
 INSERT INTO `hcualcoholmq3alcodatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `alcoholvalue`) VALUES
@@ -188,7 +188,7 @@ INSERT INTO `hcualcoholmq3alcodatainfo` (`sid`, `deviceid`, `timestamp`, `datafo
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcubfsccalibration`
+-- Table structure for table `hcubfsccalibration`
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
@@ -245,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `hcubfsccalibration`
+-- Dumping data for table `hcubfsccalibration`
 --
 
 INSERT INTO `hcubfsccalibration` (`deviceid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
@@ -254,7 +254,7 @@ INSERT INTO `hcubfsccalibration` (`deviceid`, `zeroadc_01`, `fulladc_01`, `fullw
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcubfscconfigpara`
+-- Table structure for table `hcubfscconfigpara`
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
@@ -265,18 +265,18 @@ CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
   `confowner` varchar(10) DEFAULT NULL,
   `conficon` varchar(20) DEFAULT NULL,
   `confdescription` varchar(100) DEFAULT NULL,
-  `minscalenum` int(1) NOT NULL DEFAULT '1',
-  `maxscalenum` int(1) NOT NULL DEFAULT '16',
-  `minscalenumstart` int(1) NOT NULL DEFAULT '1',
+  `minscalenum` int(4) NOT NULL DEFAULT '1',
+  `maxscalenum` int(4) NOT NULL DEFAULT '16',
+  `minscalenumstart` int(4) NOT NULL DEFAULT '1',
   `targetweight` int(4) NOT NULL DEFAULT '100000',
   `upperweightlimit` int(4) NOT NULL DEFAULT '100200',
-  `proximitmode` int(1) NOT NULL DEFAULT '0',
+  `proximitmode` int(4) NOT NULL DEFAULT '0',
   `combinationbias` int(4) NOT NULL DEFAULT '1',
-  `remaindetectind` int(1) NOT NULL DEFAULT '0',
+  `remaindetectind` int(4) NOT NULL DEFAULT '0',
   `remaindetecttime` int(4) NOT NULL DEFAULT '100',
-  `remainobjtreat` int(1) NOT NULL DEFAULT '0',
-  `prioritymode` int(1) NOT NULL DEFAULT '0',
-  `automode` int(1) NOT NULL DEFAULT '0',
+  `remainobjtreat` int(4) NOT NULL DEFAULT '0',
+  `prioritymode` int(4) NOT NULL DEFAULT '0',
+  `automode` int(4) NOT NULL DEFAULT '0',
   `averagenum` int(4) NOT NULL DEFAULT '1',
   `loaddetecttime` int(4) NOT NULL DEFAULT '500',
   `loaddetectthread` int(4) NOT NULL DEFAULT '50',
@@ -284,7 +284,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
   `emptydetectthread` int(4) NOT NULL DEFAULT '10',
   `standardreadytime` int(4) NOT NULL DEFAULT '500',
   `motorspeed` int(4) NOT NULL DEFAULT '500',
-  `motordirection` int(1) NOT NULL DEFAULT '0',
+  `motordirection` int(4) NOT NULL DEFAULT '0',
   `rollingstart` int(4) NOT NULL DEFAULT '500',
   `rollingstop` int(4) NOT NULL DEFAULT '500',
   `rollinginterval` int(4) NOT NULL DEFAULT '500',
@@ -295,7 +295,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
--- 转存表中的数据 `hcubfscconfigpara`
+-- Dumping data for table `hcubfscconfigpara`
 --
 
 INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `minscalenum`, `maxscalenum`, `minscalenumstart`, `targetweight`, `upperweightlimit`, `proximitmode`, `combinationbias`, `remaindetectind`, `remaindetecttime`, `remainobjtreat`, `prioritymode`, `automode`, `averagenum`, `loaddetecttime`, `loaddetectthread`, `emptydetecttime`, `emptydetectthread`, `standardreadytime`, `motorspeed`, `motordirection`, `rollingstart`, `rollingstop`, `rollinginterval`, `failuredetectvaration`, `failuredetecttime`) VALUES
@@ -307,49 +307,49 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcubfsccurrentinfo`
+-- Table structure for table `hcubfsccurrentinfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
   `deviceid` varchar(20) NOT NULL,
   `timestamp` int(4) NOT NULL,
-  `status_01` int(1) DEFAULT NULL,
-  `value_01` int(2) DEFAULT NULL,
-  `status_02` int(1) DEFAULT NULL,
-  `value_02` int(2) DEFAULT NULL,
-  `status_03` int(1) DEFAULT NULL,
-  `value_03` int(2) DEFAULT NULL,
-  `status_04` int(1) DEFAULT NULL,
-  `value_04` int(2) DEFAULT NULL,
-  `status_05` int(1) DEFAULT NULL,
-  `value_05` int(2) DEFAULT NULL,
-  `status_06` int(1) DEFAULT NULL,
-  `value_06` int(2) DEFAULT NULL,
-  `status_07` int(1) DEFAULT NULL,
-  `value_07` int(2) DEFAULT NULL,
-  `status_08` int(1) DEFAULT NULL,
-  `value_08` int(2) DEFAULT NULL,
-  `status_09` int(1) DEFAULT NULL,
-  `value_09` int(2) DEFAULT NULL,
-  `status_10` int(1) DEFAULT NULL,
-  `value_10` int(2) DEFAULT NULL,
-  `status_11` int(1) DEFAULT NULL,
-  `value_11` int(2) DEFAULT NULL,
-  `status_12` int(1) DEFAULT NULL,
-  `value_12` int(2) DEFAULT NULL,
-  `status_13` int(1) DEFAULT NULL,
-  `value_13` int(2) DEFAULT NULL,
-  `status_14` int(1) DEFAULT NULL,
-  `value_14` int(2) DEFAULT NULL,
-  `status_15` int(1) DEFAULT NULL,
-  `value_15` int(2) DEFAULT NULL,
-  `status_16` int(1) DEFAULT NULL,
-  `value_16` int(2) DEFAULT NULL,
+  `status_01` int(4) DEFAULT NULL,
+  `value_01` int(4) DEFAULT NULL,
+  `status_02` int(4) DEFAULT NULL,
+  `value_02` int(4) DEFAULT NULL,
+  `status_03` int(4) DEFAULT NULL,
+  `value_03` int(4) DEFAULT NULL,
+  `status_04` int(4) DEFAULT NULL,
+  `value_04` int(4) DEFAULT NULL,
+  `status_05` int(4) DEFAULT NULL,
+  `value_05` int(4) DEFAULT NULL,
+  `status_06` int(4) DEFAULT NULL,
+  `value_06` int(4) DEFAULT NULL,
+  `status_07` int(4) DEFAULT NULL,
+  `value_07` int(4) DEFAULT NULL,
+  `status_08` int(4) DEFAULT NULL,
+  `value_08` int(4) DEFAULT NULL,
+  `status_09` int(4) DEFAULT NULL,
+  `value_09` int(4) DEFAULT NULL,
+  `status_10` int(4) DEFAULT NULL,
+  `value_10` int(4) DEFAULT NULL,
+  `status_11` int(4) DEFAULT NULL,
+  `value_11` int(4) DEFAULT NULL,
+  `status_12` int(4) DEFAULT NULL,
+  `value_12` int(4) DEFAULT NULL,
+  `status_13` int(4) DEFAULT NULL,
+  `value_13` int(4) DEFAULT NULL,
+  `status_14` int(4) DEFAULT NULL,
+  `value_14` int(4) DEFAULT NULL,
+  `status_15` int(4) DEFAULT NULL,
+  `value_15` int(4) DEFAULT NULL,
+  `status_16` int(4) DEFAULT NULL,
+  `value_16` int(4) DEFAULT NULL,
   `curcomwgt` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `hcubfsccurrentinfo`
+-- Dumping data for table `hcubfsccurrentinfo`
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
@@ -358,7 +358,7 @@ INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_0
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcubfscfb2ui`
+-- Table structure for table `hcubfscfb2ui`
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfscfb2ui` (
@@ -370,7 +370,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscfb2ui` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- 转存表中的数据 `hcubfscfb2ui`
+-- Dumping data for table `hcubfscfb2ui`
 --
 
 INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
@@ -381,7 +381,7 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcubfscstadatainfo`
+-- Table structure for table `hcubfscstadatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
@@ -403,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `hcubfscstadatainfo`
+-- Dumping data for table `hcubfscstadatainfo`
 --
 
 INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
@@ -414,7 +414,7 @@ INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncM
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcubfscstaticpara`
+-- Table structure for table `hcubfscstaticpara`
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfscstaticpara` (
@@ -430,7 +430,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscstaticpara` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='calibration and sensor configuration table';
 
 --
--- 转存表中的数据 `hcubfscstaticpara`
+-- Dumping data for table `hcubfscstaticpara`
 --
 
 INSERT INTO `hcubfscstaticpara` (`deviceid`, `calmaxallowedwgt`, `calfullwgt`, `caladcsamplefreq`, `caladcgain`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
@@ -439,7 +439,7 @@ INSERT INTO `hcubfscstaticpara` (`deviceid`, `calmaxallowedwgt`, `calfullwgt`, `
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuco1datainfo`
+-- Table structure for table `hcuco1datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
@@ -460,7 +460,7 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuemcdatainfo`
+-- Table structure for table `hcuemcdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
@@ -479,7 +479,7 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12162 ;
 
 --
--- 转存表中的数据 `hcuemcdatainfo`
+-- Dumping data for table `hcuemcdatainfo`
 --
 
 INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emcvalue`, `EW`, `gpsx`, `NS`, `gpsy`, `gpsz`, `onofflineflag`) VALUES
@@ -5835,7 +5835,7 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuhchodatainfo`
+-- Table structure for table `hcuhchodatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
@@ -5856,7 +5856,7 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuhchoze08ch2odatainfo`
+-- Table structure for table `hcuhchoze08ch2odatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
@@ -5871,7 +5871,7 @@ CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuhsmmpdatainfo`
+-- Table structure for table `hcuhsmmpdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
@@ -5893,7 +5893,7 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuhumiddatainfo`
+-- Table structure for table `hcuhumiddatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
@@ -5914,7 +5914,7 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuhumiddht11datainfo`
+-- Table structure for table `hcuhumiddht11datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumiddht11datainfo` (
@@ -5927,7 +5927,7 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddht11datainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=696 ;
 
 --
--- 转存表中的数据 `hcuhumiddht11datainfo`
+-- Dumping data for table `hcuhumiddht11datainfo`
 --
 
 INSERT INTO `hcuhumiddht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `humidvalue`) VALUES
@@ -5967,7 +5967,7 @@ INSERT INTO `hcuhumiddht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuhumidmth01datainfo`
+-- Table structure for table `hcuhumidmth01datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidmth01datainfo` (
@@ -5980,7 +5980,7 @@ CREATE TABLE IF NOT EXISTS `hcuhumidmth01datainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
--- 转存表中的数据 `hcuhumidmth01datainfo`
+-- Dumping data for table `hcuhumidmth01datainfo`
 --
 
 INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `humidvalue`) VALUES
@@ -5989,7 +5989,7 @@ INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuhumidrht03datainfo`
+-- Table structure for table `hcuhumidrht03datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
@@ -6004,7 +6004,7 @@ CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuhumidsht20datainfo`
+-- Table structure for table `hcuhumidsht20datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
@@ -6019,7 +6019,7 @@ CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuigmcj188datainfo`
+-- Table structure for table `hcuigmcj188datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
@@ -6060,7 +6060,7 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuihmcj188datainfo`
+-- Table structure for table `hcuihmcj188datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
@@ -6105,7 +6105,7 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuipmcj188datainfo`
+-- Table structure for table `hcuipmcj188datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
@@ -6146,7 +6146,7 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuiwmcj188datainfo`
+-- Table structure for table `hcuiwmcj188datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
@@ -6187,7 +6187,7 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hculightstrbh1750datainfo`
+-- Table structure for table `hculightstrbh1750datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
@@ -6200,7 +6200,7 @@ CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
--- 转存表中的数据 `hculightstrbh1750datainfo`
+-- Dumping data for table `hculightstrbh1750datainfo`
 --
 
 INSERT INTO `hculightstrbh1750datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `lightstrvalue`) VALUES
@@ -6228,7 +6228,7 @@ INSERT INTO `hculightstrbh1750datainfo` (`sid`, `deviceid`, `timestamp`, `datafo
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hculightstrdatainfo`
+-- Table structure for table `hculightstrdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
@@ -6249,7 +6249,7 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcunoisedatainfo`
+-- Table structure for table `hcunoisedatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
@@ -6270,7 +6270,7 @@ CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcupm25bmpd300datainfo`
+-- Table structure for table `hcupm25bmpd300datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
@@ -6285,7 +6285,7 @@ CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcupm25datainfo`
+-- Table structure for table `hcupm25datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
@@ -6308,7 +6308,7 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcupm25sharpdatainfo`
+-- Table structure for table `hcupm25sharpdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
@@ -6323,7 +6323,7 @@ CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuswdb`
+-- Table structure for table `hcuswdb`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuswdb` (
@@ -6331,7 +6331,7 @@ CREATE TABLE IF NOT EXISTS `hcuswdb` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- 转存表中的数据 `hcuswdb`
+-- Dumping data for table `hcuswdb`
 --
 
 INSERT INTO `hcuswdb` (`dbver`) VALUES
@@ -6340,7 +6340,7 @@ INSERT INTO `hcuswdb` (`dbver`) VALUES
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcusysalarminfo`
+-- Table structure for table `hcusysalarminfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcusysalarminfo` (
@@ -6356,7 +6356,7 @@ CREATE TABLE IF NOT EXISTS `hcusysalarminfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
--- 转存表中的数据 `hcusysalarminfo`
+-- Dumping data for table `hcusysalarminfo`
 --
 
 INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `alarmseverity`, `alarmclearflag`, `alarmdesc`, `timestamp`) VALUES
@@ -6369,7 +6369,7 @@ INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `ala
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcusysengpar`
+-- Table structure for table `hcusysengpar`
 --
 
 CREATE TABLE IF NOT EXISTS `hcusysengpar` (
@@ -6407,7 +6407,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `hcusysengpar`
+-- Dumping data for table `hcusysengpar`
 --
 
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `svraddhttplocal`, `svraddsocketipdefault`, `svraddhttpdefault`, `svrnamedefault`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
@@ -6427,7 +6427,7 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcusysengtimer`
+-- Table structure for table `hcusysengtimer`
 --
 
 CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
@@ -6439,7 +6439,7 @@ CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `hcusysengtimer`
+-- Dumping data for table `hcusysengtimer`
 --
 
 INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`) VALUES
@@ -6514,7 +6514,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcusyspmglobaldatainfo`
+-- Table structure for table `hcusyspmglobaldatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
@@ -6555,7 +6555,7 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=143 ;
 
 --
--- 转存表中的数据 `hcusyspmglobaldatainfo`
+-- Dumping data for table `hcusyspmglobaldatainfo`
 --
 
 INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
@@ -6705,7 +6705,7 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutempbmp180datainfo`
+-- Table structure for table `hcutempbmp180datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
@@ -6718,7 +6718,7 @@ CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=702 ;
 
 --
--- 转存表中的数据 `hcutempbmp180datainfo`
+-- Dumping data for table `hcutempbmp180datainfo`
 --
 
 INSERT INTO `hcutempbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `tempvalue`) VALUES
@@ -6778,7 +6778,7 @@ INSERT INTO `hcutempbmp180datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutempdatainfo`
+-- Table structure for table `hcutempdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
@@ -6799,7 +6799,7 @@ CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutempdht11datainfo`
+-- Table structure for table `hcutempdht11datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempdht11datainfo` (
@@ -6812,7 +6812,7 @@ CREATE TABLE IF NOT EXISTS `hcutempdht11datainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=713 ;
 
 --
--- 转存表中的数据 `hcutempdht11datainfo`
+-- Dumping data for table `hcutempdht11datainfo`
 --
 
 INSERT INTO `hcutempdht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `tempvalue`) VALUES
@@ -6872,7 +6872,7 @@ INSERT INTO `hcutempdht11datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutempmth01datainfo`
+-- Table structure for table `hcutempmth01datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
@@ -6887,7 +6887,7 @@ CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutemprht03datainfo`
+-- Table structure for table `hcutemprht03datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
@@ -6902,7 +6902,7 @@ CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutempsht20datainfo`
+-- Table structure for table `hcutempsht20datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
@@ -6917,7 +6917,7 @@ CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutoxicgasdatainfo`
+-- Table structure for table `hcutoxicgasdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
@@ -6938,7 +6938,7 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutoxicgasmq135datainfo`
+-- Table structure for table `hcutoxicgasmq135datainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
@@ -6951,7 +6951,7 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
--- 转存表中的数据 `hcutoxicgasmq135datainfo`
+-- Dumping data for table `hcutoxicgasmq135datainfo`
 --
 
 INSERT INTO `hcutoxicgasmq135datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `toxicgasvalue`) VALUES
@@ -6979,7 +6979,7 @@ INSERT INTO `hcutoxicgasmq135datainfo` (`sid`, `deviceid`, `timestamp`, `datafor
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutoxicgaszp01vocdatainfo`
+-- Table structure for table `hcutoxicgaszp01vocdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
@@ -6992,7 +6992,7 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
--- 转存表中的数据 `hcutoxicgaszp01vocdatainfo`
+-- Dumping data for table `hcutoxicgaszp01vocdatainfo`
 --
 
 INSERT INTO `hcutoxicgaszp01vocdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `toxicgasvalue`) VALUES
@@ -7020,7 +7020,7 @@ INSERT INTO `hcutoxicgaszp01vocdatainfo` (`sid`, `deviceid`, `timestamp`, `dataf
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutracemodulectr`
+-- Table structure for table `hcutracemodulectr`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
@@ -7035,7 +7035,7 @@ CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `hcutracemodulectr`
+-- Dumping data for table `hcutracemodulectr`
 --
 
 INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `moduletoallow`, `moduletorestrict`, `modulefromallow`, `modulefromrestrict`) VALUES
@@ -7120,7 +7120,7 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcutracemsgctr`
+-- Table structure for table `hcutracemsgctr`
 --
 
 CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
@@ -7133,7 +7133,7 @@ CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 转存表中的数据 `hcutracemsgctr`
+-- Dumping data for table `hcutracemsgctr`
 --
 
 INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msgrestrict`) VALUES
@@ -7370,7 +7370,7 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuwinddirdatainfo`
+-- Table structure for table `hcuwinddirdatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
@@ -7391,7 +7391,7 @@ CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `hcuwindspddatainfo`
+-- Table structure for table `hcuwindspddatainfo`
 --
 
 CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (

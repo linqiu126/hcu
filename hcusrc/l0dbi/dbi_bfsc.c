@@ -11,76 +11,60 @@
 
 /*
 
---
--- 表的结构 `hcubfsccfgpar`
---
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsccfgpar`
+-- Table structure for table `hcubfscconfigpara`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsccfgpar` (
+CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
   `sid` int(4) NOT NULL AUTO_INCREMENT,
-  `MinScaleNumberCombination` int(4) NOT NULL,
-  `MaxScaleNumberCombination` int(4) NOT NULL,
-  `MinScaleNumberStartCombination` int(4) NOT NULL,
-  `TargetCombinationWeight` int(4) NOT NULL,
-  `TargetCombinationUpperWeight` int(4) NOT NULL,
-  `IsPriorityScaleEnabled` int(4) NOT NULL,
-  `IsProximitCombinationMode` int(4) NOT NULL,
-  `CombinationBias` int(4) NOT NULL,
-  `IsRemainDetectionEnable` int(4) NOT NULL,
-  `RemainDetectionTimeSec` int(4) NOT NULL,
-  `RemainScaleTreatment` int(4) NOT NULL,
-  `CombinationSpeedMode` int(4) NOT NULL,
-  `CombinationAutoMode` int(4) NOT NULL,
-  `MovingAvrageSpeedCount` int(4) NOT NULL,
-  `AlgSpare1` int(4) NOT NULL,
-  `AlgSpare2` int(4) NOT NULL,
-  `AlgSpare3` int(4) NOT NULL,
-  `AlgSpare4` int(4) NOT NULL,
-  `WeightSensorAdcParameter` int(4) NOT NULL,
-  `WeightSensorFilterMode` int(4) NOT NULL,
-  `filer_parameter1` int(4) NOT NULL,
-  `filer_parameter2` int(4) NOT NULL,
-  `filer_parameter3` int(4) NOT NULL,
-  `filer_parameter4` int(4) NOT NULL,
-  `WeightSensorAutoZeroThread` int(4) NOT NULL,
-  `WeightSensorFixCompesation` int(4) NOT NULL,
-  `WeightSensorLoadDetectionTimeMs` int(4) NOT NULL,
-  `WeightSensorLoadThread` int(4) NOT NULL,
-  `WeightSensorEmptyThread` int(4) NOT NULL,
-  `WeightSensorEmptyDetectionTimeMs` int(4) NOT NULL,
-  `WeightSensorPickupThread` int(4) NOT NULL,
-  `WeightSensorPickupDetectionTimeMs` int(4) NOT NULL,
-  `StardardReadyTimeMs` int(4) NOT NULL,
-  `MaxAllowedWeight` int(4) NOT NULL,
-  `WeightSpare1` int(4) NOT NULL,
-  `WeightSpare2` int(4) NOT NULL,
-  `WeightSpare3` int(4) NOT NULL,
-  `WeightSpare4` int(4) NOT NULL,
-  `MotorSpeed` int(4) NOT NULL,
-  `MotorDirection` int(4) NOT NULL,
-  `MotorRollingStartMs` int(4) NOT NULL,
-  `MotorRollingStopMs` int(4) NOT NULL,
-  `MotorRollingInveralMs` int(4) NOT NULL,
-  `MotorFailureDetectionVaration` int(4) NOT NULL,
-  `MotorFailureDetectionTimeMs` int(4) NOT NULL,
-  `MotorSpare1` int(4) NOT NULL,
-  `MotorSpare2` int(4) NOT NULL,
-  `MotorSpare3` int(4) NOT NULL,
-  `MotorSpare4` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+  `confname` varchar(50) DEFAULT NULL,
+  `currentconf` char(1) NOT NULL DEFAULT 'N',
+  `baseconf` char(1) NOT NULL DEFAULT 'N',
+  `confowner` varchar(10) DEFAULT NULL,
+  `conficon` varchar(20) DEFAULT NULL,
+  `confdescription` varchar(100) DEFAULT NULL,
+  `minscalenum` int(4) NOT NULL DEFAULT '1',
+  `maxscalenum` int(4) NOT NULL DEFAULT '16',
+  `minscalenumstart` int(4) NOT NULL DEFAULT '1',
+  `targetweight` int(4) NOT NULL DEFAULT '100000',
+  `upperweightlimit` int(4) NOT NULL DEFAULT '100200',
+  `proximitmode` int(4) NOT NULL DEFAULT '0',
+  `combinationbias` int(4) NOT NULL DEFAULT '1',
+  `remaindetectind` int(4) NOT NULL DEFAULT '0',
+  `remaindetecttime` int(4) NOT NULL DEFAULT '100',
+  `remainobjtreat` int(4) NOT NULL DEFAULT '0',
+  `prioritymode` int(4) NOT NULL DEFAULT '0',
+  `automode` int(4) NOT NULL DEFAULT '0',
+  `averagenum` int(4) NOT NULL DEFAULT '1',
+  `loaddetecttime` int(4) NOT NULL DEFAULT '500',
+  `loaddetectthread` int(4) NOT NULL DEFAULT '50',
+  `emptydetecttime` int(4) NOT NULL DEFAULT '500',
+  `emptydetectthread` int(4) NOT NULL DEFAULT '10',
+  `standardreadytime` int(4) NOT NULL DEFAULT '500',
+  `motorspeed` int(4) NOT NULL DEFAULT '500',
+  `motordirection` int(4) NOT NULL DEFAULT '0',
+  `rollingstart` int(4) NOT NULL DEFAULT '500',
+  `rollingstop` int(4) NOT NULL DEFAULT '500',
+  `rollinginterval` int(4) NOT NULL DEFAULT '500',
+  `failuredetectvaration` int(4) NOT NULL DEFAULT '500',
+  `failuredetecttime` int(4) NOT NULL DEFAULT '500',
+  PRIMARY KEY (`sid`),
+  UNIQUE KEY `confname` (`confname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
--- Dumping data for table `hcubfsccfgpar`
+-- Dumping data for table `hcubfscconfigpara`
 --
 
-INSERT INTO `hcubfsccfgpar` (`sid`, `MinScaleNumberCombination`, `MaxScaleNumberCombination`, `MinScaleNumberStartCombination`, `TargetCombinationWeight`, `TargetCombinationUpperWeight`, `IsPriorityScaleEnabled`, `IsProximitCombinationMode`, `CombinationBias`, `IsRemainDetectionEnable`, `RemainDetectionTimeSec`, `RemainScaleTreatment`, `CombinationSpeedMode`, `CombinationAutoMode`, `MovingAvrageSpeedCount`, `AlgSpare1`, `AlgSpare2`, `AlgSpare3`, `AlgSpare4`, `WeightSensorAdcParameter`, `WeightSensorFilterMode`, `filer_parameter1`, `filer_parameter2`, `filer_parameter3`, `filer_parameter4`, `WeightSensorAutoZeroThread`, `WeightSensorFixCompesation`, `WeightSensorLoadDetectionTimeMs`, `WeightSensorLoadThread`, `WeightSensorEmptyThread`, `WeightSensorEmptyDetectionTimeMs`, `WeightSensorPickupThread`, `WeightSensorPickupDetectionTimeMs`, `StardardReadyTimeMs`, `MaxAllowedWeight`, `WeightSpare1`, `WeightSpare2`, `WeightSpare3`, `WeightSpare4`, `MotorSpeed`, `MotorDirection`, `MotorRollingStartMs`, `MotorRollingStopMs`, `MotorRollingInveralMs`, `MotorFailureDetectionVaration`, `MotorFailureDetectionTimeMs`, `MotorSpare1`, `MotorSpare2`, `MotorSpare3`, `MotorSpare4`) VALUES
-(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `minscalenum`, `maxscalenum`, `minscalenumstart`, `targetweight`, `upperweightlimit`, `proximitmode`, `combinationbias`, `remaindetectind`, `remaindetecttime`, `remainobjtreat`, `prioritymode`, `automode`, `averagenum`, `loaddetecttime`, `loaddetectthread`, `emptydetecttime`, `emptydetectthread`, `standardreadytime`, `motorspeed`, `motordirection`, `rollingstart`, `rollingstop`, `rollinginterval`, `failuredetectvaration`, `failuredetecttime`) VALUES
+(1, 'apple', 'N', 'Y', 'System', 'apple60.svg', 'standard setting - apple', 1, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500),
+(2, 'tomato', 'N', 'Y', 'System', 'tomato4.svg', 'Standard setting - tomato', 1, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500),
+(4, 'tomato-1', 'N', 'N', 'Bofeng', 'tomato1.svg', 'tomato 1Kg', 9, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500),
+(6, 'apple-1', 'N', 'N', 'Bofeng', 'apple60.svg', 'apple 1Kg', 1, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500);
+
+
 
 
 
@@ -147,8 +131,6 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 
 
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -158,37 +140,37 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
   `deviceid` varchar(20) NOT NULL,
   `timestamp` int(4) NOT NULL,
-  `status_01` int(1) DEFAULT NULL,
+  `status_01` int(4) DEFAULT NULL,
   `value_01` int(4) DEFAULT NULL,
-  `status_02` int(1) DEFAULT NULL,
+  `status_02` int(4) DEFAULT NULL,
   `value_02` int(4) DEFAULT NULL,
-  `status_03` int(1) DEFAULT NULL,
+  `status_03` int(4) DEFAULT NULL,
   `value_03` int(4) DEFAULT NULL,
-  `status_04` int(1) DEFAULT NULL,
+  `status_04` int(4) DEFAULT NULL,
   `value_04` int(4) DEFAULT NULL,
-  `status_05` int(1) DEFAULT NULL,
+  `status_05` int(4) DEFAULT NULL,
   `value_05` int(4) DEFAULT NULL,
-  `status_06` int(1) DEFAULT NULL,
+  `status_06` int(4) DEFAULT NULL,
   `value_06` int(4) DEFAULT NULL,
-  `status_07` int(1) DEFAULT NULL,
+  `status_07` int(4) DEFAULT NULL,
   `value_07` int(4) DEFAULT NULL,
-  `status_08` int(1) DEFAULT NULL,
+  `status_08` int(4) DEFAULT NULL,
   `value_08` int(4) DEFAULT NULL,
-  `status_09` int(1) DEFAULT NULL,
+  `status_09` int(4) DEFAULT NULL,
   `value_09` int(4) DEFAULT NULL,
-  `status_10` int(1) DEFAULT NULL,
+  `status_10` int(4) DEFAULT NULL,
   `value_10` int(4) DEFAULT NULL,
-  `status_11` int(1) DEFAULT NULL,
+  `status_11` int(4) DEFAULT NULL,
   `value_11` int(4) DEFAULT NULL,
-  `status_12` int(1) DEFAULT NULL,
+  `status_12` int(4) DEFAULT NULL,
   `value_12` int(4) DEFAULT NULL,
-  `status_13` int(1) DEFAULT NULL,
+  `status_13` int(4) DEFAULT NULL,
   `value_13` int(4) DEFAULT NULL,
-  `status_14` int(1) DEFAULT NULL,
+  `status_14` int(4) DEFAULT NULL,
   `value_14` int(4) DEFAULT NULL,
-  `status_15` int(1) DEFAULT NULL,
+  `status_15` int(4) DEFAULT NULL,
   `value_15` int(4) DEFAULT NULL,
-  `status_16` int(1) DEFAULT NULL,
+  `status_16` int(4) DEFAULT NULL,
   `value_16` int(4) DEFAULT NULL,
   `curcomwgt` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -199,6 +181,9 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
 
 INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
 ('HCU_G301_BFSC_P0001', 20170518, 0, 35483, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 26959, 0, 39988, 0, 36037, 0, 39413, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566);
+
+
+
 
 
 
@@ -345,7 +330,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBICOM: REPLACE/UPDATE database error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
