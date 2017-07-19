@@ -1275,7 +1275,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 		memset(resBitmap, 0, sizeof(resBitmap));
 		for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
 			if (gTaskL3bfscContext.sensorWs[j].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
-				HCU_DEBUG_PRINT_FAT("L3BFSC: Search Algo => Index=%d, SensorId = %d\n", i, j);
+				//HCU_DEBUG_PRINT_FAT("L3BFSC: Search Algo => Index=%d, SensorId = %d\n", i, j);
 				t = ((i%gTaskL3bfscContext.searchSpaceTotalNbr) * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + j);// % Cycle;
 				result = result + gTaskL3bfscContext.sensorWs[j].sensorValue * (*(gTaskL3bfscContext.SearchCoefficientPointer + t));
 				if (*(gTaskL3bfscContext.SearchCoefficientPointer + t) == 1) resBitmap[j] = 1;

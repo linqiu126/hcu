@@ -2,16 +2,16 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_canitfleo_l2frame_msg_sw_package_report_received_handle" key="selection"/>
+		<item value="HCU_DEBUG_PRINT_FAT" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HCU_DEBUG_PRINT_FAT"/>
 			<item value="func_canitfleo_l2frame_msg_sw_package_report_received_handle"/>
 			<item value="func_l3bfsc_cacluate_sensor_stop_rcv_complete"/>
 			<item value="-"/>
-			<item value="HCU_DEBUG_PRINT_FAT"/>
 			<item value="hcubfsccalibration"/>
 			<item value="hcubfsccurrentinfo"/>
 			<item value="hcubfscstaticpara"/>
