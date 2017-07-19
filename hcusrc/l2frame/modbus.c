@@ -511,7 +511,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
-	HCU_DEBUG_PRINT_INF("MODBUS: Prepareing send modbus winddir req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
+	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus winddir req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 //
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
@@ -1444,7 +1444,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		break;
 	}
 
-	snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+	snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 	snd.noise.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
 	snd.noise.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
 	snd.noise.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
@@ -1893,18 +1893,22 @@ OPSTAT func_modbus_winddir_msg_pack(msg_struct_winddir_modbus_data_read_t *inMsg
 	outMsg->curLen = outMsg->curLen + 1;
 
 	//取得功能码字，目前这是唯一支持的操作命令码字
-//	if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
-//	{
-//		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU & 0x0FF);
-//	}
-//	else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
-//	{
-//		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
-//	}
-//	else
-//	{
-//		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
-//	}
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU & 0x0FF);
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
+	else
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
 
 	outMsg->curLen = outMsg->curLen + 1;
 
@@ -1913,27 +1917,34 @@ OPSTAT func_modbus_winddir_msg_pack(msg_struct_winddir_modbus_data_read_t *inMsg
 	case L3PO_winddir_data_req:
 		//取得寄存器地址
 
-//		if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
-//		{
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ_YIGU  >> 8) & 0x0FF); //高位
-//			outMsg->curLen = outMsg->curLen + 1;
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ_YIGU & 0x0FF); //低位
-//			outMsg->curLen = outMsg->curLen + 1;
-//		}
-//		else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
-//		{
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ  >> 8) & 0x0FF); //高位
-//			outMsg->curLen = outMsg->curLen + 1;
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ & 0x0FF); //低位
-//			outMsg->curLen = outMsg->curLen + 1;
-//		}
-//		else  //Default取SPSVIRGO
-//		{
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ  >> 8) & 0x0FF); //高位
-//			outMsg->curLen = outMsg->curLen + 1;
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ & 0x0FF); //低位
-//			outMsg->curLen = outMsg->curLen + 1;
-//		}
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ_YIGU  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ_YIGU & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else  //Default取SPSVIRGO
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDDIR_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
 
 		outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDDIR_LENGTH_OF_REG >> 8) & 0x0FF) ; //长度高位 = 1个寄存器，2B长度
 		outMsg->curLen = outMsg->curLen + 1;
@@ -2014,33 +2025,42 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	index++;
 
 
-//	if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
-//	{
-//		//检查功能码=04
-//		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
-//			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-//			return FAILURE;
-//		}
-//	}
-//	else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
-//	{
-//		//检查功能码=03
-//		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-//			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-//			return FAILURE;
-//		}
-//	}
-//	else
-//	{
-//		//检查功能码=03
-//		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-//			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-//			return FAILURE;
-//		}
-//	}
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+	{
+		//检查功能码=04
+		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+	else
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
 
 	index++;
 
@@ -2126,18 +2146,22 @@ OPSTAT func_modbus_windspd_msg_pack(msg_struct_windspd_modbus_data_read_t *inMsg
 	outMsg->curLen = outMsg->curLen + 1;
 
 	//取得功能码字，目前这是唯一支持的操作命令码字
-//	if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
-//	{
-//		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU & 0x0FF);
-//	}
-//	else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
-//	{
-//		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
-//	}
-//	else
-//	{
-//		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
-//	}
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU & 0x0FF);
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
+	else
+	{
+		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY & 0x0FF);
+	}
 
 	outMsg->curLen = outMsg->curLen + 1;
 
@@ -2146,27 +2170,34 @@ OPSTAT func_modbus_windspd_msg_pack(msg_struct_windspd_modbus_data_read_t *inMsg
 	case L3PO_windspd_data_req:
 		//取得寄存器地址
 
-//		if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
-//		{
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ_YIGU  >> 8) & 0x0FF); //高位
-//			outMsg->curLen = outMsg->curLen + 1;
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ_YIGU & 0x0FF); //低位
-//			outMsg->curLen = outMsg->curLen + 1;
-//		}
-//		else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
-//		{
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ  >> 8) & 0x0FF); //高位
-//			outMsg->curLen = outMsg->curLen + 1;
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ & 0x0FF); //低位
-//			outMsg->curLen = outMsg->curLen + 1;
-//		}
-//		else  //Default取SPSVIRGO
-//		{
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ  >> 8) & 0x0FF); //高位
-//			outMsg->curLen = outMsg->curLen + 1;
-//			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ & 0x0FF); //低位
-//			outMsg->curLen = outMsg->curLen + 1;
-//		}
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ_YIGU  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ_YIGU & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
+		else  //Default取SPSVIRGO
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_REG_DATA_READ  >> 8) & 0x0FF); //高位
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_REG_DATA_READ & 0x0FF); //低位
+			outMsg->curLen = outMsg->curLen + 1;
+		}
 		outMsg->curBuf[outMsg->curLen] = (UINT8)((WINDSPD_LENGTH_OF_REG >> 8) & 0x0FF) ; //长度高位 = 1个寄存器，2B长度
 		outMsg->curLen = outMsg->curLen + 1;
 		outMsg->curBuf[outMsg->curLen] = (UINT8)(WINDSPD_LENGTH_OF_REG & 0x0FF); //长度低位 = 1个寄存器，2B长度
@@ -2245,33 +2276,42 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	snd->windspd.equipid = buf->curBuf[index];
 	index++;
 
-//	if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_2)
-//	{
-//		//检查功能码=04
-//		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
-//			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-//			return FAILURE;
-//		}
-//	}
-//	else if (SENSOR_ACTIVE_CHOICE_FINAL == SENSOR_ACTIVE_CHOICE_G20_1)
-//	{
-//		//检查功能码=03
-//		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-//			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-//			return FAILURE;
-//		}
-//	}
-//	else
-//	{
-//		//检查功能码=03
-//		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-//			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
-//			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-//			return FAILURE;
-//		}
-//	}
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+	{
+		//检查功能码=04
+		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+	else
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
 
 	index++;
 
