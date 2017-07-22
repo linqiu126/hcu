@@ -230,6 +230,8 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_L3BFSC,        "L3BFSC",           &HcuFsmL3bfsc,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       &HcuFsmBfscuicomm,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_JSONINOTIFY,    "JSONINOTIFY",       &HcuFsmJsoninotify,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	//{TASK_ID_JSONINOTIFY,    "JSONINOTIFY",       NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	//{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       &HcuFsmL3opwlotdr,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #else

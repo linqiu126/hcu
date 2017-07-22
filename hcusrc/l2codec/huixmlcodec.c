@@ -82,7 +82,7 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_BIZ_ITG_STRING);
 	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING);
 	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING);
-	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_COMMON_STRING);
+	else if (gTaskCloudvelaContext.L2Link.msgType == HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID) strcat(output->curBuf, HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_STRING);
 	else {
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error Message Type input!\n");
 	}
