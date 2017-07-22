@@ -488,8 +488,10 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 	memset(&input, 0, sizeof(strTaskSysswmSwpkgLable_t));
 	input.fileNameLen = sizeof(input.fPathName);
 
+	HCU_DEBUG_PRINT_FAT("SYSSWM: Receive HW/PEM/REL/VER=[%d/%d/%d/%d]\n", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
 	//搜索
 	if (func_sysswm_analysis_ihu_sw_package(rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer, rcv.upgradeFlag, &input) == SUCCESS){
+		HCU_DEBUG_PRINT_FAT("SYSSWM: Filename1 = %s\n", input);
 		if (strlen(input.fPathName) != 0){
 			//分析数据
 			snd.swRel = input.swRel;
@@ -507,6 +509,7 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 	}
 	//不成功
 	else{
+		HCU_DEBUG_PRINT_FAT("SYSSWM: Filename2 = %s\n", input);
 		snd.swRel = 0;
 		snd.swVer = 0;
 		snd.swCheckSum = 0;
