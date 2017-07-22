@@ -1299,8 +1299,8 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 			}
 			i = i % gTaskL3bfscContext.searchSpaceTotalNbr;
 			gTaskL3bfscContext.cur.wsCombTimes++;
-			HCU_DEBUG_PRINT_FAT("L3BFSC: ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
-			HCU_DEBUG_PRINT_FAT("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+			HCU_DEBUG_PRINT_INF("L3BFSC: ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
+			HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
 					gTaskL3bfscContext.sensorWs[3].sensorValue, gTaskL3bfscContext.sensorWs[4].sensorValue, gTaskL3bfscContext.sensorWs[5].sensorValue, gTaskL3bfscContext.sensorWs[6].sensorValue,\
 					gTaskL3bfscContext.sensorWs[7].sensorValue, gTaskL3bfscContext.sensorWs[8].sensorValue, gTaskL3bfscContext.sensorWs[9].sensorValue, gTaskL3bfscContext.sensorWs[10].sensorValue);
 			return i;

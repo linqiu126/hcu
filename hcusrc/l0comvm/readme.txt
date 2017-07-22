@@ -10,14 +10,16 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+
+//= ZJL, 2017 July.22 CURRENT_SW_DELIVERY 225=>BFSC项目
+= 将.HEX文件下载格式改为.BIN文件格式
+
+
 //= ZSC, 2017 July.19 CURRENT_SW_DELIVERY 224=>AQYC项目
 = bug fix for report data error(little endian for AQYC)
 
-
-
 //= ZJL/LZH, 2017 July.19 CURRENT_SW_DELIVERY 223=>BFSC项目
 = Bug fix on data base of hcubfscconfigpara
-
 
 //= ZSC, 2017 July.15 CURRENT_SW_DELIVERY 222=>AQYC项目
 = SW update to support low cost sensors(清易噪声/易谷风向风速/妙昕温湿度)

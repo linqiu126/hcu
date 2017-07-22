@@ -528,7 +528,7 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 //软件下载方案，打算采用一种硬件版本，只存储STABLE/TRIAL/PATCH的最新版本，不存储中间版本的情形，从而简化升级路径
 //本地将根据硬件信息，读取文件名字，然后分段下载
 //为了简化，并借助于淘宝文件的技巧，所有下位机软件版本包都存在目录下，版本信息全部使用文件名的方式进行隔离
-//比如，采用IHU_HPT32769_PEM11_REL03_VER218_PATCH.HEX
+//比如，采用IHU_HPT32769_PEM11_REL03_VER218_PATCH.BIN
 OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
@@ -590,7 +590,7 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 
 //用来分析是否存在IHU软件体，是否存在
 //分析的结果，填入fname中
-//文件名字格式：IHU_HPT32769_PEM11_REL03_VER218_PATCH.HEX
+//文件名字格式：IHU_HPT32769_PEM11_REL03_VER218_PATCH.BIN
 //下载的软件版本，必须按照hwType+ugradeFlag进行搜索，全部删除后，再进行下载，不然会出现重复软件版本的问题
 //返回错误，或者strlen(fname)==0，表示没找到
 OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, strTaskSysswmSwpkgLable_t* input)
@@ -617,7 +617,7 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        p3 = strstr(ptr->d_name, "_PEM");
 	        p4 = strstr(ptr->d_name, "_REL");
 	        p5 = strstr(ptr->d_name, "_VER");
-	        p6 = strstr(ptr->d_name, ".HEX");
+	        p6 = strstr(ptr->d_name, ".BIN");
 	        if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p4 == NULL) || (p5 == NULL) || (p6 == NULL))
 	        	continue;
 	        //判定升级标签
@@ -715,7 +715,7 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 	        p3 = strstr(ptr->d_name, "_PEM");
 	        p4 = strstr(ptr->d_name, "_REL");
 	        p5 = strstr(ptr->d_name, "_VER");
-	        p6 = strstr(ptr->d_name, ".HEX");
+	        p6 = strstr(ptr->d_name, ".BIN");
 	        if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p4 == NULL) || (p5 == NULL) || (p6 == NULL))
 	        	continue;
 
@@ -862,7 +862,7 @@ OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgrade
 	        p3 = strstr(ptr->d_name, "_PEM");
 	        p4 = strstr(ptr->d_name, "_REL");
 	        p5 = strstr(ptr->d_name, "_VER");
-	        p6 = strstr(ptr->d_name, ".HEX");
+	        p6 = strstr(ptr->d_name, ".BIN");
 	        if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p4 == NULL) || (p5 == NULL) || (p6 == NULL))
 	        	continue;
 	        //判定升级标签
