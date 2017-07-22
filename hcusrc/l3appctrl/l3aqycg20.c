@@ -1308,7 +1308,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Temp database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staHour.a01001_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staHour.a01001_Min);
 	}
 
 	ret = dbi_HcuTempDataInfo_GetMax(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);
@@ -1317,7 +1317,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Temp database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1D maximum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01001_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1D maximum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01001_Max);
 	}
 
 	ret = dbi_HcuTempDataInfo_GetAvg(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);
@@ -1326,7 +1326,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Temp database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1D average data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01001_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1D average data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01001_Avg);
 	}
 
 
@@ -1340,7 +1340,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Humid database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01002_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01002_Min);
 	}
 
 	ret = dbi_HcuHumidDataInfo_GetMax(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);
@@ -1349,7 +1349,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Humid database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1D maximum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01002_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1D maximum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01002_Max);
 	}
 
 	ret = dbi_HcuHumidDataInfo_GetAvg(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);
@@ -1358,7 +1358,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Humid database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1D average data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01002_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1D average data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01002_Avg);
 	}
 
 
@@ -1372,7 +1372,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Windspd database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01007_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01007_Min);
 	}
 
 	ret = dbi_HcuWindspdDataInfo_GetMax(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);
@@ -1381,7 +1381,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get Windspd max data from Windspd database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1D maximum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01007_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1D maximum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01007_Max);
 	}
 
 	ret = dbi_HcuWindspdDataInfo_GetAvg(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);
@@ -1390,7 +1390,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Windspd database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1D average data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01007_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1D average data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01007_Avg);
 	}
 
 	//风向
@@ -1403,7 +1403,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Winddir database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01008_Min);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1D minimum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01008_Min);
 	}
 
 	ret = dbi_HcuWinddirDataInfo_GetMax(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);
@@ -1412,7 +1412,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Winddir database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1D maximum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01008_Max);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1D maximum data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01008_Max);
 	}
 
 	ret = dbi_HcuWinddirDataInfo_GetAvg(HCU_L3AQYC_STA_1D_REPORT_DURATION,&gTaskL3aqycq20Context.staDay);
@@ -1421,7 +1421,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Winddir database!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1D average data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01008_Avg);
+		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1D average data = %4.3f\n", gTaskL3aqycq20Context.staDay.a01008_Avg);
 	}
 
 	//气压
@@ -1449,6 +1449,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 		memcpy(&(snd.ul2Cloud.rtd), &(gTaskL3aqycq20Context.cur), sizeof(msgie_struct_zhbhjt_frame_data_pol_rtd_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 
+		/*
 		//test by shanchun
 		int i;
 		for(i=0; i< HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;i++){
@@ -1456,6 +1457,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.rtd[%d].PolFlag=[%c]\n",i, snd.ul2Cloud.rtd[i].PolFlag);
 			HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.rtd[%d].Rtd=[%4.2f]\n",i, snd.ul2Cloud.rtd[i].Rtd);
 		}
+		*/
 
 		snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
 
@@ -1548,6 +1550,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 			memcpy(&(snd.ul2Cloud.min), &(gTaskL3aqycq20Context.staHour), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 
+			/*
 			//test by shanchun
 			int i;
 			for(i=0; i< HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;i++){
@@ -1557,6 +1560,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Max=[%4.2f]\n",i, snd.ul2Cloud.min[i].Max);
 				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Min=[%4.2f]\n\n\n",i, snd.ul2Cloud.min[i].Min);
 			}
+			*/
 
 			snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
 
@@ -1580,6 +1584,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 			memcpy(&(snd.ul2Cloud.min), &(gTaskL3aqycq20Context.staDay), sizeof(msgie_struct_zhbhjt_frame_data_pol_min_hour_t)*HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX);
 
+			/*
 			//test by shanchun
 			int i;
 			for(i=0; i< HCU_SYSMSG_ZHBHJT_POLID_NBR_MAX;i++){
@@ -1589,6 +1594,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Max=[%4.2f]\n",i, snd.ul2Cloud.min[i].Max);
 				HCU_DEBUG_PRINT_INF("L3AQYCG20: snd.ul2Cloud.min[%d].Min=[%4.2f]\n\n\n",i, snd.ul2Cloud.min[i].Min);
 			}
+			*/
 
 			snd.length = sizeof(msg_struct_l3mod_llczhb_data_report_t);
 
