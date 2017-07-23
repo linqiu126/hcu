@@ -553,7 +553,7 @@
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET 		HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212
 */
 
-
+    //#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT  "http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php"
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"112.64.16.27"
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"UNICOM_HCU"

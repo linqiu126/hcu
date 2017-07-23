@@ -200,15 +200,15 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          HCU_SYSCFG_TASK_PNP_OFF,     1, 1, 1, 1, 1},
+	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_SYSCFG_TASK_PNP_OFF,     1, 1, 1, 1, 1},
 	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_WINDDIR,       "WINDDIR",          &HcuFsmWinddir,          HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_SYSCFG_TASK_PNP_OFF,     1, 1, 1, 1, 1},
 	{TASK_ID_LLCZHB,        "LLCZHB",           &HcuFsmLlczhb,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        &HcuFsmL3aqycg20,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
@@ -462,7 +462,7 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM,      "MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM",     1, 1, 1},
 	//CANITF
 	{MSG_ID_CANITFLEO_DATA_REPORT,                "MSG_ID_CANITFLEO_DATA_REPORT",               1, 1, 1},
-	{MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,    "MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT",   1, 1, 1},
+	{MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,    "MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT",   1, 1, 1}, //187
 	{MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM,   "MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM",  1, 1, 1},
 	{MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,   "MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT",  1, 1, 1},
 	{MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM,  "MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM", 1, 1, 1},
@@ -2821,8 +2821,8 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 */
 	//由于硬件部分并没有真正起作用，所以暂时需要从系统定义区重复写入，一旦批量生产这部分可以去掉
 	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO){
-		zHcuSysEngPar.hwBurnId.hwType  = HCU_SYSCFG_HW_PRODUCT_CAT_TYPE;
-		zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_TYPE; //PEM小型号
+		zHcuSysEngPar.hwBurnId.hwType  = HCU_CURRENT_HW_TYPE;
+		zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_PEM; //PEM小型号
 		zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
 		zHcuSysEngPar.hwBurnId.swVerId = HCU_CURRENT_SW_DELIVERY;
 		zHcuSysEngPar.hwBurnId.swUpgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_SET;

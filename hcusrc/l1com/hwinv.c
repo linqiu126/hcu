@@ -414,7 +414,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	//strncpy(zHcuSysEngPar.cloud.svrNameHome, HCU_SYSCFG_CLOUD_SVR_NAME_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)<sizeof(zHcuSysEngPar.cloud.svrNameHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)):(sizeof(zHcuSysEngPar.cloud.svrNameHome)));
 	zHcuSysEngPar.cloud.svrBhItfFrameStdHome = HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET;
 
-	HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.svrNameDefault = %s !\n", zHcuSysEngPar.cloud.svrNameDefault);
+	//HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.svrAddrSocketipHome = %s !\n", zHcuSysEngPar.cloud.svrAddrSocketipHome);
 
 	//读取HcuTraceModuleCtr表单到系统内存中
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);

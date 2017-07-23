@@ -270,7 +270,7 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	serveraddr.sin_family = AF_INET;
 	//serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
 	serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
-	HCU_DEBUG_PRINT_INF("ETHERNET: Server address = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	HCU_DEBUG_PRINT_INF("ETHERNET: External Server address = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipHome);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 	HCU_DEBUG_PRINT_INF("ETHERNET: Server port = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 
@@ -374,6 +374,8 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		//也就是说，默认情况下libcurl完成一个任务以后，出于重用连接的考虑不会马上关闭如果没有新的TCP请求来重用这个连接，那么只能等到CLOSE_WAIT超时
 		//这个时间默认在7200秒甚至更高，太多的CLOSE_WAIT连接会导致性能问题。这里设置为0就是为了重用
 		//curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0);
+
+		HCU_DEBUG_PRINT_INF("CURL: Internal Server address = %s\n\n", zHcuSysEngPar.cloud.svrAddrHttpHome);
 
 		//设置目标地址
 		curl_easy_setopt(curl, CURLOPT_URL, zHcuSysEngPar.cloud.svrAddrHttpHome);
