@@ -10,12 +10,14 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+//= ZJL, 2017 July.24 CURRENT_SW_DELIVERY 227=>BFSC项目
+= Bug fix on IHU BIN file analysis
+
 //= ZSC, 2017 July.23 CURRENT_SW_DELIVERY 226=>AQYC项目
 = HCUDB 更新hcutracemsgctr表单，增加几个BSFC新定义的消息
 
 //= ZJL, 2017 July.22 CURRENT_SW_DELIVERY 225=>BFSC项目
 = 将.HEX文件下载格式改为.BIN文件格式
-
 
 //= ZSC, 2017 July.19 CURRENT_SW_DELIVERY 224=>AQYC项目
 = bug fix for report data error(little endian for AQYC)

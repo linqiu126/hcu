@@ -488,10 +488,8 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 	memset(&input, 0, sizeof(strTaskSysswmSwpkgLable_t));
 	input.fileNameLen = sizeof(input.fPathName);
 
-	HCU_DEBUG_PRINT_FAT("SYSSWM: Receive HW/PEM/REL/VER=[%d/%d/%d/%d]\n", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
 	//搜索
 	if (func_sysswm_analysis_ihu_sw_package(rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer, rcv.upgradeFlag, &input) == SUCCESS){
-		HCU_DEBUG_PRINT_FAT("SYSSWM: Filename1 = %s\n", input);
 		if (strlen(input.fPathName) != 0){
 			//分析数据
 			snd.swRel = input.swRel;
@@ -509,7 +507,6 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 	}
 	//不成功
 	else{
-		HCU_DEBUG_PRINT_FAT("SYSSWM: Filename2 = %s\n", input);
 		snd.swRel = 0;
 		snd.swVer = 0;
 		snd.swCheckSum = 0;
@@ -608,11 +605,11 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 
 	if ((dir=opendir(zHcuSysEngPar.swm.hcuSwActiveDir)) == NULL)
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Open dir error!\n");
-
 	while ((ptr=readdir(dir)) != NULL)
 	{
-	    if(strcmp(ptr->d_name,".")==0 || strcmp(ptr->d_name,"..")==0)    ///current dir OR parrent dir
+	    if(strcmp(ptr->d_name,".")==0 || strcmp(ptr->d_name,"..")==0){    ///current dir OR parrent dir
 	        continue;
+	    }
 	    else if ((ptr->d_type == 8) || (ptr->d_type == 10)){    ///File or Link file
 	    	//判定关键字
 	        p1 = strstr(ptr->d_name, "IHU");
@@ -621,12 +618,13 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        p4 = strstr(ptr->d_name, "_REL");
 	        p5 = strstr(ptr->d_name, "_VER");
 	        p6 = strstr(ptr->d_name, ".BIN");
-	        if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p4 == NULL) || (p5 == NULL) || (p6 == NULL))
+	        if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p4 == NULL) || (p5 == NULL) || (p6 == NULL)){
 	        	continue;
+	        }
 	        //判定升级标签
-	        if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE)  p7 = strstr(ptr->d_name, ".STABLE");
-	        else if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL)  p7 = strstr(ptr->d_name, ".TRIAL");
-	        else if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)  p7 = strstr(ptr->d_name, ".PATCH");
+	        if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE)  p7 = strstr(ptr->d_name, "_STABLE");
+	        else if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL)  p7 = strstr(ptr->d_name, "_TRIAL");
+	        else if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)  p7 = strstr(ptr->d_name, "_PATCH");
 	        else continue;
 	        if (p7 == NULL) continue;
 
@@ -723,9 +721,9 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 	        	continue;
 
 	        //判定升级标签
-	        if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE)  p7 = strstr(ptr->d_name, ".STABLE");
-	        else if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL)  p7 = strstr(ptr->d_name, ".TRIAL");
-	        else if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)  p7 = strstr(ptr->d_name, ".PATCH");
+	        if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE)  p7 = strstr(ptr->d_name, "_STABLE");
+	        else if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL)  p7 = strstr(ptr->d_name, "_TRIAL");
+	        else if (input->upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)  p7 = strstr(ptr->d_name, "_PATCH");
 	        else continue;
 	        if (p7 == NULL) continue;
 
@@ -869,9 +867,9 @@ OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgrade
 	        if ((p1 == NULL) || (p2 == NULL) || (p3 == NULL) || (p4 == NULL) || (p5 == NULL) || (p6 == NULL))
 	        	continue;
 	        //判定升级标签
-	        if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE)  p7 = strstr(ptr->d_name, ".STABLE");
-	        else if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL)  p7 = strstr(ptr->d_name, ".TRIAL");
-	        else if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)  p7 = strstr(ptr->d_name, ".PATCH");
+	        if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE)  p7 = strstr(ptr->d_name, "_STABLE");
+	        else if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL)  p7 = strstr(ptr->d_name, "_TRIAL");
+	        else if (upgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)  p7 = strstr(ptr->d_name, "_PATCH");
 	        else continue;
 	        if (p7 == NULL) continue;
 
