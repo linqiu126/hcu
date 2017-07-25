@@ -543,7 +543,7 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 
 	//入参检查
 	if ((rcv.segIndex > rcv.segTotal) || (rcv.segIndex == 0) || (rcv.segSplitLen == 0) || (rcv.segSplitLen > HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)\
-			|| (rcv.segSplitLen > HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN))
+			|| (rcv.segTotal == 0) || (rcv.segSplitLen > HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 
 	//返回消息
@@ -585,6 +585,8 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 	if (hcu_message_send(MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 
+	HCU_DEBUG_PRINT_CRT("SYSSWM: Snd pkg REL=%d, VER=%d, FLAG=%d, INDEX=%d, SegTotal=%d, SegSplitLen=%d, SegValidLen=%d, ChkSum=%d, NodeId = %d\n",\
+			snd.swRelId, snd.swVerId, snd.upgradeFlag, snd.segIndex, snd.segTotal, snd.segSplitLen, snd.segValidLen, snd.segCheckSum, snd.nodeId);
 	return SUCCESS;
 }
 
@@ -755,10 +757,11 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 	    	int bytes_read = 0, i = 0;
 	    	int file_len=0;
 	    	UINT8 *pRecord;
+	    	UINT8 *ptr;
 	    	UINT8 tmp = 0;
 
 	    	//打开源文件
-	    	if((fp=fopen(fname, "wb+"))== NULL){
+	    	if((fp=fopen(fname, "rb"))== NULL){
 	    		closedir(dir);
 	    		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Open %s Error!\n", fname);
 	    	}
@@ -770,7 +773,7 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 	    	if (file_len <=0){
 	    		fclose(fp);
 	    		closedir(dir);
-	    		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Not file content!\n");
+	    		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: No file content, file_len =%d!\n", file_len);
 	    	}
 
 	    	//读取文件
@@ -780,6 +783,7 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 	    		closedir(dir);
 	    		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Allocate memory fail!\n");
 	    	}
+	    	ptr = pRecord;
 	    	bytes_read=fread(pRecord, 1, file_len, fp);
 	    	if (bytes_read != file_len){
 	    		free(pRecord);
@@ -790,7 +794,7 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 
 	    	//分段计算
 	    	res = 0;
-	    	if ((input->segTotal * input->segSplitLen < file_len) || (input->segIndex > input->segTotal) || (input->segIndex ==0)){
+	    	if (((input->segTotal-1) * input->segSplitLen > file_len) || (input->segTotal * input->segSplitLen < file_len) || (input->segIndex > input->segTotal) || (input->segIndex ==0)){
 	    		free(pRecord);
 	    		fclose(fp);
 	    		closedir(dir);
@@ -798,16 +802,16 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 	    	}
 
 	    	//访问数据：分段segIndex必须从１－Ｎ
-	    	pRecord += input->segSplitLen * (input->segIndex-1);
+	    	ptr += input->segSplitLen * (input->segIndex-1);
 	    	//最后一段
 	    	if (input->segIndex == input->segTotal){
 	    		input->segValidLen = file_len - ((input->segTotal-1) * input->segSplitLen);
-	    		memcpy(input->buf, pRecord, input->segValidLen);
+	    		memcpy(input->buf, ptr, input->segValidLen);
 	    	}
 	    	//正常段
 	    	else{
 	    		input->segValidLen = input->segSplitLen;
-	    		memcpy(input->buf, pRecord, input->segValidLen);
+	    		memcpy(input->buf, ptr, input->segValidLen);
 	    	}
 	    	//计算分段CHECKSUM
 	    	input->segCheckSum = 0;
@@ -815,7 +819,6 @@ OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *inpu
 	    		memcpy(&tmp, input->buf+i, 1);
 	    		input->segCheckSum += tmp;
 	    	}
-
 	        //找到第一个就结束，不再去寻找第二个，所以必须进行定期扫描
 	    	free(pRecord);
 	    	fclose(fp);
@@ -921,7 +924,7 @@ UINT16 func_sysswm_caculate_file_whole_checksum(char *fname)
 	UINT8 tmp = 0;
 
 	//打开源文件
-	if((fp=fopen(fname, "rb+"))== NULL){
+	if((fp=fopen(fname, "rb"))== NULL){
 		HcuErrorPrint("SYSSWM: Open %s Error!\n", fname);
 		return 0;
 	}
@@ -931,7 +934,7 @@ UINT16 func_sysswm_caculate_file_whole_checksum(char *fname)
 	file_len = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 	if (file_len <=0){
-		HcuErrorPrint("SYSSWM: Not file content!\n");
+		HcuErrorPrint("SYSSWM: No file content, file len = %d!\n", file_len);
 		fclose(fp);
 		return 0;
 	}
@@ -968,7 +971,7 @@ UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname)
 	int file_len=0;
 
 	//打开源文件
-	if((fp=fopen(fname, "rb+"))== NULL){
+	if((fp=fopen(fname, "rb"))== NULL){
 		HcuErrorPrint("SYSSWM: Open %s Error!\n", fname);
 		return 0;
 	}
@@ -978,7 +981,7 @@ UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname)
 	file_len = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 	if (file_len <=0){
-		HcuErrorPrint("SYSSWM: Not file content!\n");
+		HcuErrorPrint("SYSSWM: No file content, file len = %d!\n", file_len);
 		fclose(fp);
 		return 0;
 	}
