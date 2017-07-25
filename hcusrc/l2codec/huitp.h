@@ -2959,7 +2959,7 @@ typedef struct StrIe_HUITP_IEID_uni_sw_package_body
 	UINT16 segCheckSum;
 	UINT8  swPkgBody[HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN];
 }StrIe_HUITP_IEID_uni_sw_package_body_t;
-#define HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN 232
+#define HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN 233
 
 //HUITP_IEID_uni_sw_package_max,
 

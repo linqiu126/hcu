@@ -33,7 +33,7 @@ typedef struct gTaskSysswmContextBody
 	UINT16 totalSeg;
 	UINT16 segSplitLen;
 	UINT16 cfmSegIndex;
-	UINT32 swCheckSum;
+	UINT16 swCheckSum;
 	UINT32 retransTimes;
 }gTaskSysswmContextBody_t;
 typedef struct gTaskSysswmContext

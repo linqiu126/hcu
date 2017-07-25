@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="zHcuSysEngPar.swm.hcuSwActiveDir" key="selection"/>
+		<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
+			<item value="HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN"/>
+			<item value="SUI_SW_PACKAGE"/>
+			<item value="HUITP_MSGID_sui_sw_package_confirm"/>
+			<item value="inventory"/>
+			<item value="SUI"/>
+			<item value="swCheckSum"/>
 			<item value="zHcuSysEngPar.swm.hcuSwActiveDir"/>
-			<item value=".HEX"/>
-			<item value="search"/>
-			<item value="func_bfscuicomm_read_cfg_file_into_ctrl_table"/>
-			<item value="11000"/>
-			<item value="func_l3bfsc_caculate_bitmap_valid_number"/>
-			<item value="func_l3bfsc_ws_sensor_search_combination"/>
-			<item value="HCU_DEBUG_PRINT_FAT"/>
 		</list>
 		<list key="replacehistory">
 			<item value=".BIN"/>
