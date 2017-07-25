@@ -530,7 +530,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	msgId = HUITP_ENDIAN_EXG16(pBfscMsg->msgid);
 	msgLen = HUITP_ENDIAN_EXG16(pBfscMsg->length);
 	if (msgLen != (rcv.validDataLen-4))
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length!\n");
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length, decoded msgLen=%d, in buffer len=%d!\n", msgLen, rcv.validDataLen-4);
 
 	//按照消息类型进行分类处理
 	switch(msgId){
@@ -667,13 +667,13 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	}
 	break;
 
-	case HUITP_MSGID_uni_sw_package_report:
+	case HUITP_MSGID_sui_sw_package_report:
 	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_uni_sw_package_report \n");
-		StrMsg_HUITP_MSGID_uni_sw_package_report_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_report_t) - 4))
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_sw_package_report \n");
+		StrMsg_HUITP_MSGID_sui_sw_package_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_sw_package_report_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_sw_package_report_t*)(rcv.databuf);
+		snd = (StrMsg_HUITP_MSGID_sui_sw_package_report_t*)(rcv.databuf);
 		ret = func_canitfleo_l2frame_msg_sw_package_report_received_handle(snd, rcv.nodeId);
 	}
 	break;
@@ -1588,6 +1588,7 @@ OPSTAT fsm_canitfleo_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
 
+	HCU_DEBUG_PRINT_INF("CANITFLEO: Send INVERNTORY CONFIRM, REL/VER/UFLAG/CHKSUM/TLEN=[%d/%d/%d/%d/%d]\n", pMsgProc.swRel, pMsgProc.swVer, pMsgProc.upgradeFlag, pMsgProc.upgradeFlag, pMsgProc.swTotalLengthInBytes);
 	//返回
 	return SUCCESS;
 }
