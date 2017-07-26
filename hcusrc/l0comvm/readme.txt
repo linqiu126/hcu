@@ -12,6 +12,7 @@
 
 //= ZJL, 2017 July.24 CURRENT_SW_DELIVERY 227=>BFSC项目
 = Bug fix on IHU BIN file analysis
+= 规整所有服务器端口
 
 //= ZSC, 2017 July.23 CURRENT_SW_DELIVERY 226=>AQYC项目
 = HCUDB 更新hcutracemsgctr表单，增加几个BSFC新定义的消息
