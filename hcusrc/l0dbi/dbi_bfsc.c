@@ -654,7 +654,7 @@ OPSTAT dbi_HcuBfsc_DynamicConfigDataGet(UINT32 config_index, UINT32  dynamicdata
 			{
 				mysql_free_result(resPtr);
 		    	mysql_close(sqlHandler);
-		    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
+		    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error! strsql = %s\n", strsql);
 		        return FAILURE;
 			}
 			else{
@@ -712,7 +712,7 @@ OPSTAT dbi_HcuBfsc_StaticConfigDataGet(UINT32  staticdata[HCU_SYSCFG_BFSC_DB_COL
 			{
 				mysql_free_result(resPtr);
 		    	mysql_close(sqlHandler);
-		    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error!\n");
+		    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error! strsql = %s\n", strsql);
 		        return FAILURE;
 			}
 			else{

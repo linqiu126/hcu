@@ -335,7 +335,7 @@ typedef struct StrMsg_ZHBHJT_MSGID_uni_general_message
 //数据处理的宏
 #define ZHBHJT_PRINT_SIZE_AND_CRC(s)   do{UINT16 crc16=0;\
 	hcu_vm_calculate_crc_modbus((UINT8*)(s+6), strlen(s)-12, &crc16);\
-	printf("ZHB: SIZE=%04d, CRC=%04X\n", strlen(s)-12, crc16);\
+	printf("ZHB: SIZE=%04d, CRC=%04X\n", (int)(strlen(s)-12), crc16);\
 	}while(0)
 
 #endif /* _ZHBHJT_MSG_IE_DEFINITION_H_ */

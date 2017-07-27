@@ -10,6 +10,9 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+//= ZJL, 2017 July.27 CURRENT_SW_DELIVERY 228=>BFSC项目
+= Change BFSC/IAP project BIG Endian to SMALL Endian
+
 //= ZJL, 2017 July.24 CURRENT_SW_DELIVERY 227=>BFSC项目
 = Bug fix on IHU BIN file analysis
 = 规整所有服务器端口
