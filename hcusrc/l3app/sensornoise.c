@@ -507,8 +507,11 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 		}
 
-		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
+		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_ON for noise exceed threshold\n\n\n\n\n\n\n\n");//debug by shanchun
+
+		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+
 	}
 
 	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
@@ -540,8 +543,11 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
 		strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 
+		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_OFF for noise exceed threshold\n\n\n\n\n\n\n\n\n");//debug by shanchun
+
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+
 	}
 
 
@@ -831,7 +837,7 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 			strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 		}
 
-		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_PM25, &snd, snd.length) == FAILURE)
+		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 	}
 

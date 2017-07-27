@@ -1298,7 +1298,8 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus noise req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 
 
-///
+    //对于LC版本，此处需要改为sps232,sps485是调试用（与所有传感器共用一个端口）
+
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
     //ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps232.sp, currentModbusBuf.curBuf, currentModbusBuf.curLen); //use the separate serial port avoid the interferace with other sensors(noise read period is 1s)
