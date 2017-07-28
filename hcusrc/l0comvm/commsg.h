@@ -2451,12 +2451,12 @@ typedef struct msg_struct_inotify_uicomm_file_change_ind
 }msg_struct_inotify_uicomm_file_change_ind_t;
 
 //MSG_ID_UICOMM_L3BFSC_CMD_REQ,
-#define HCU_SYSMSG_BFSC_UICOMM_CMDID_INVALL  	0
-#define HCU_SYSMSG_BFSC_UICOMM_CMDID_START  	1
-#define HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP  		2
-#define HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND  	3
-#define HCU_SYSMSG_BFSC_UICOMM_CMDID_RESUME  	4
-#define HCU_SYSMSG_BFSC_UICOMM_CMDID_NULL  		255
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_INVALL  			0
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_START  			1
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP  				2
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND  			3
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_RESUME  			4
+#define HCU_SYSMSG_BFSC_UICOMM_CMDID_NULL  				255
 typedef struct msg_struct_uicomm_l3bfsc_cmd_req
 {
 	UINT8  cmdid;

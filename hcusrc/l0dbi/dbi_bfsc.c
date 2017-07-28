@@ -12,13 +12,12 @@
 /*
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `hcubfscconfigpara`
 --
 
 CREATE TABLE `hcubfscconfigpara` (
-  `sid` int(4) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `confname` varchar(50) DEFAULT NULL,
   `currentconf` char(1) NOT NULL DEFAULT 'N',
   `baseconf` char(1) NOT NULL DEFAULT 'N',
@@ -63,8 +62,6 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 (6, 'apple-1', 'N', 'N', 'Bofeng', 'apple60.svg', 'apple 1Kg', 1, 16, 1, 100000, 100200, 0, 1, 0, 100, 0, 0, 0, 1, 500, 50, 500, 10, 500, 500, 0, 500, 500, 500, 500, 500);
 
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -98,13 +95,7 @@ INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncM
 ('BFSC_STA_LOCAL_UI', 1487855819, 147, 76719.00, 35, 35, 0, 142, 0, 74453.00, 0.00, 35, 142, 74453.00),
 ('BFSC_STA_UP_2_NOW', 1487855816, 887, 464713.00, 195, 195, 0, 780, 0, 409172.00, 0.00, 195, 780, 409172.00);
 
-
---
--- 表的结构 `hcubfscfb2ui`
---
-
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `hcubfscfb2ui`
 --
@@ -127,16 +118,13 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 (3, 3, 0, 'Stop failure due to WS not reachable');
 
 
-
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `hcubfsccurrentinfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
-  `deviceid` varchar(20) NOT NULL,
-  `timestamp` int(4) NOT NULL,
+CREATE TABLE `hcubfsccurrentinfo` (
+  `timestamp` int(4) NOT NULL PRIMARY KEY,
   `status_00` int(4) DEFAULT NULL,
   `value_00` int(4) DEFAULT NULL,
   `status_01` int(4) DEFAULT NULL,
@@ -178,19 +166,15 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
 -- Dumping data for table `hcubfsccurrentinfo`
 --
 
-INSERT INTO `hcubfsccurrentinfo` (`deviceid`, `timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
-('HCU_G301_BFSC_P0001', 20170518, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 26959, 0, 39988, 0, 36037, 0, 39413, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566);
-
-
+INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
+(1501215098, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 1, 0, 1, 0, 1, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566);
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `hcubfscstaticpara`
 --
-
 CREATE TABLE `hcubfscstaticpara` (
-  `deviceid` varchar(20) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `calmaxallowedwgt` int(4) NOT NULL DEFAULT '0',
   `calfullwgt` int(4) NOT NULL DEFAULT '0',
   `caladcgain` int(4) NOT NULL DEFAULT '0',
@@ -205,18 +189,17 @@ CREATE TABLE `hcubfscstaticpara` (
 -- Dumping data for table `hcubfscstaticpara`
 --
 
-INSERT INTO `hcubfscstaticpara` (`deviceid`, `calmaxallowedwgt`, `calfullwgt`, `caladcgain`, `caladcwordrate`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
-('HCU_G301_BFSC_P0001', 1000000, 100000, 6, 3, 0, 0, 499, 5000);
+INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `caladcgain`, `caladcwordrate`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
+(1, 1000000, 100000, 6, 3, 0, 0, 499, 5000);
 
 
 -- --------------------------------------------------------
-
 --
 -- Table structure for table `hcubfsccalibration`
 --
 
 CREATE TABLE `hcubfsccalibration` (
-  `deviceid` varchar(20) NOT NULL,
+  `sid` int(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `zeroadc_01` int(4) NOT NULL DEFAULT '0',
   `fulladc_01` int(4) NOT NULL DEFAULT '0',
   `fullwgt_01` int(4) NOT NULL DEFAULT '100000',
@@ -271,10 +254,8 @@ CREATE TABLE `hcubfsccalibration` (
 -- Dumping data for table `hcubfsccalibration`
 --
 
-INSERT INTO `hcubfsccalibration` (`deviceid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
-('HCU_G301_BFSC_P0001', 434221, 506206, 100000, 474360, 515157, 100000, 455673, 508063, 100000, 447451, 519359, 100000, 432639, 504921, 100000, 442397, 514862, 100000, 443020, 515286, 100000, 468387, 543587, 100000, 438766, 510644, 100000, 450173, 520188, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000);
-
-
+INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
+(1, 434221, 506206, 100000, 474360, 515157, 100000, 455673, 508063, 100000, 447451, 519359, 100000, 432639, 504921, 100000, 442397, 514862, 100000, 443020, 515286, 100000, 468387, 543587, 100000, 438766, 510644, 100000, 450173, 520188, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000, 0, 0, 100000);
 
 
 */
@@ -405,8 +386,8 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
         return SUCCESS;
     }
     else{
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d', value_%02d = '%d' WHERE (deviceid = '%s')", \
-				timestamp, wmc_id, wmc_status, wmc_id, wmc_weight_value, zHcuSysEngPar.hwBurnId.equLable);
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d', value_%02d = '%d' WHERE (1)", \
+				timestamp, wmc_id, wmc_status, wmc_id, wmc_weight_value);
     }
 
     result = mysql_query(sqlHandler, strsql);
@@ -447,8 +428,7 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
     }
 
 	//UPDATE新的数据
-    sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET curcomwgt = '%d' WHERE (deviceid = '%s')", \
-		wgt, zHcuSysEngPar.hwBurnId.equLable);
+    sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET curcomwgt = '%d' WHERE (1)", wgt);
 
     result = mysql_query(sqlHandler, strsql);
 	if(result){
@@ -493,8 +473,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     timestamp = time(NULL);
     for(wmc_id = 1; wmc_id <= 16; wmc_id++)
     {
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (deviceid = '%s')", \
-				timestamp, wmc_id, 0, zHcuSysEngPar.hwBurnId.equLable);
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (1)", timestamp, wmc_id, 0);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
@@ -531,12 +510,12 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT32 f
     HcuDebugPrint("DBIBFSC: Receive calibration date: sensorid = %02d, adcvalue = %d, weight = %d!\n", sensorid,adcvalue,fullweight);
     //零值校准数据
     if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_ZERO){
-		sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (deviceid = '%s')", sensorid, adcvalue, zHcuSysEngPar.hwBurnId.equLable);
+		sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (1)", sensorid, adcvalue);
 		result = mysql_query(sqlHandler, strsql);
     }
     //满值校准数据
     else if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_FULL){
-    	sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d', fullwgt_%02d='%d'  WHERE (deviceid = '%s')", sensorid, adcvalue, sensorid, fullweight, zHcuSysEngPar.hwBurnId.equLable);
+    	sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d', fullwgt_%02d='%d'  WHERE (1)", sensorid, adcvalue, sensorid, fullweight);
 		result = mysql_query(sqlHandler, strsql);
     }
 
@@ -575,7 +554,7 @@ OPSTAT dbi_HcuBfsc_CalibrationDataGet( UINT32 data[(HCU_SYSCFG_BFSC_SNR_WS_NBR_M
     }
 
 	//获取数据
-    sprintf(strsql, "SELECT * FROM `hcubfsccalibration` WHERE (`deviceid` = '%s')", zHcuSysEngPar.hwBurnId.equLable);
+    sprintf(strsql, "SELECT * FROM `hcubfsccalibration` WHERE (1)");
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -692,7 +671,7 @@ OPSTAT dbi_HcuBfsc_StaticConfigDataGet(UINT32  staticdata[HCU_SYSCFG_BFSC_DB_COL
 	        return FAILURE;
 	    }
 		//获取数据
-	    sprintf(strsql, "SELECT * FROM `hcubfscstaticpara` WHERE (`deviceid` = '%s')", zHcuSysEngPar.hwBurnId.equLable);
+	    sprintf(strsql, "SELECT * FROM `hcubfscstaticpara` WHERE (1)");
 		result = mysql_query(sqlHandler, strsql);
 		if(result){  //成功返回0
 	    	mysql_close(sqlHandler);
@@ -708,22 +687,55 @@ OPSTAT dbi_HcuBfsc_StaticConfigDataGet(UINT32  staticdata[HCU_SYSCFG_BFSC_DB_COL
 		}
 
 		//只读取第一条记录
-			if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
-			{
-				mysql_free_result(resPtr);
-		    	mysql_close(sqlHandler);
-		    	HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error! strsql = %s\n", strsql);
-		        return FAILURE;
+		if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+		{
+			mysql_free_result(resPtr);
+			mysql_close(sqlHandler);
+			HcuErrorPrint("DBIBFSC: mysql_fetch_row NULL error! strsql = %s\n", strsql);
+			return FAILURE;
+		}
+		else{
+			UINT8  index;
+			for (index =0; index < resPtr->field_count; index++){
+				if (sqlRow[index] && index<HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX)  staticdata[index] = (UINT32)atol(sqlRow[index]);
 			}
-			else{
-				UINT8  index;
-				for (index =0; index < resPtr->field_count; index++){
-					if (sqlRow[index] && index<HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX)  staticdata[index] = (UINT32)atol(sqlRow[index]);
-				}
-			}
+		}
 
 		//释放记录集
 		mysql_free_result(resPtr);
 	    mysql_close(sqlHandler);
 	    return SUCCESS;
 	}
+
+OPSTAT dbi_HcuBfsc_TestCmdRespUpdate(UINT8 cmdid, UINT8 validFlag, char strInput[DBI_MAX_FBINFO_STRING_LENGTH])
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	mysql_close(sqlHandler);
+        return FAILURE;
+    }
+	//save data
+	sprintf(strsql, "UPDATE `hcubfscfb2ui` SET validflag = '%d', fbinfo = '%s' WHERE (sid = (SELECT MAX(sid) FROM `hcubfscfb2ui` WHERE cmdtype = %d))", validFlag, strInput, cmdid);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){  //成功返回0
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFSC: UPDATE data error: %s, strsql = %s\n", mysql_error(sqlHandler), strsql);
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}

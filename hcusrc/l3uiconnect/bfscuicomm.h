@@ -24,11 +24,22 @@ enum FSM_STATE_BFSCUICOMM
 //#define FSM_STATE_END   0xFE
 //#define FSM_STATE_INVALID 0xFF
 
-typedef struct L3BfscuiStartCmd
+typedef struct gTaskL3bfscuicommContext{
+	UINT8	bfscuiState; // 1 - UI START; 2 - UI STOP
+	//本地全局变量，分别用于标识开启命令，校准命令，和配置命令的变化，系统启动初始化为0, UI界面修改后自动累加，HCU对比Flag变化判断用户修改了那个Json文件
+	UINT32  cmdStartStopFlag;
+	UINT32  cmdCalibrationFlag;
+	UINT32  cmdTResumeFlag;
+	UINT32  cmdTestFlag;
+}gTaskL3bfscuicommContext_t;
+
+
+typedef struct L3BfscuiStartStopCmd
 {
 	UINT32  cmdFlag;
 	UINT32 	cmdValue;
-}L3BfscuiStartCmd_t;
+	UINT32	confindex;
+}L3BfscuiStartStopCmd_t;
 
 typedef struct L3BfscuiCalibrationCmd
 {
@@ -37,13 +48,6 @@ typedef struct L3BfscuiCalibrationCmd
 	UINT8	sensorid;
 	UINT32	weight;
 }L3BfscuiCalibrationCmd_t;
-
-typedef struct L3BfscuiConfigCmd
-{
-	UINT32  cmdFlag;
-	UINT32	cmdValue;
-	UINT32 	confindex;
-}L3BfscuiConfigCmd_t;
 
 typedef struct L3BfscuiResumeCmd
 {
@@ -55,27 +59,28 @@ typedef struct L3BfscuiTestCmd
 {
 	UINT32  cmdFlag;
 	UINT32 	cmdValue;
+	UINT8	sensorid;
+	UINT32	testCmd;
+	UINT32	testPara;
 } L3BfscuiTestCmd_t;
 
 typedef struct L3BfscuiJsonCmdParseResult
 {
-	L3BfscuiStartCmd_t  cmdStart;
+	L3BfscuiStartStopCmd_t  cmdStartStop;
 	L3BfscuiCalibrationCmd_t  cmdCalibration;
-	L3BfscuiConfigCmd_t  cmdConfig;
 	L3BfscuiResumeCmd_t  cmdResume;
 	L3BfscuiTestCmd_t  cmdTest;
 } L3BfscuiJsonCmdParseResult_t;
 
 //本地常量定义
-#define HCU_BFSCCOMM_JASON_CMD_START 		1
-#define HCU_BFSCCOMM_JASON_CMD_STOP 		2
-#define HCU_BFSCCOMM_JASON_CMD_CONFIG 		3
-#define HCU_BFSCCOMM_JASON_CMD_TEST 		4
-#define HCU_BFSCCOMM_JASON_CMD_CALZERO		5
-#define HCU_BFSCCOMM_JASON_CMD_CALFULL 		6
-#define HCU_BFSCCOMM_JASON_CMD_RESUME 		7
-#define HCU_BFSCCOMM_JASON_CMD_SUSPEND 		8
-
+#define HCU_BFSCCOMM_JASON_CMD_START 		(1)
+#define HCU_BFSCCOMM_JASON_CMD_STOP 		(2)
+#define HCU_BFSCCOMM_JASON_CMD_CONFIG 		(3)
+#define HCU_BFSCCOMM_JASON_CMD_TEST 		(4)
+#define HCU_BFSCCOMM_JASON_CMD_CALZERO		(5)
+#define HCU_BFSCCOMM_JASON_CMD_CALFULL 		(6)
+#define HCU_BFSCCOMM_JASON_CMD_RESUME 		(7)
+#define HCU_BFSCCOMM_JASON_CMD_SUSPEND 		(8)
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmBfscuicomm[];
