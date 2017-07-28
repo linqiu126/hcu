@@ -291,21 +291,22 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		validFlag = rcv.validFlag;
 		if (validFlag){
 			sensorid = rcv.sensorid;
+			errorcode = rcv.errCode;
 			cmdValue1 = rcv.cmdvalue1;
 			cmdValue2 = rcv.cmdvalue2;
 			sprintf(strResp, "Test command execute success! cmdValue1=%d, cmdValue2=%d", cmdValue1, cmdValue2);
 		}
-		else
-			sprintf(strResp, "Test command execute failure!");
+		else{
+			errorcode = rcv.errCode;
+			sprintf(strResp, "Test command execute failure! error code = %d", errorcode);
+		}
+
 
 		//Save command response result to DB
 		ret = dbi_HcuBfsc_TestCmdRespUpdate(rcv.cmdid, validFlag, strResp);
 		if (ret == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Save data error!\n");
 
 	}
-
-
-
 
 	//返回
 	return SUCCESS;
@@ -403,9 +404,9 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 	}
 
 	//暂停命令标志位发生了变化
-	if (parseResult.cmdResume.cmdFlag != gTaskL3bfscuicommContext.cmdTResumeFlag)
+	if (parseResult.cmdResume.cmdFlag != gTaskL3bfscuicommContext.cmdResumeFlag)
 	{
-		gTaskL3bfscuicommContext.cmdTResumeFlag = parseResult.cmdResume.cmdFlag;
+		gTaskL3bfscuicommContext.cmdResumeFlag = parseResult.cmdResume.cmdFlag;
 		fileChangeContent = parseResult.cmdResume.cmdValue;
 		//依赖文件变化的内容，分类发送控制命令：SUSPEND命令/RESUME命令
 		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)){
@@ -442,14 +443,13 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 			if(sensorid < HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
 				snd.wsBitmap[sensorid] = 1;
 			}
-			else if (sensorid == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
+			else if (sensorid == HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){ //set all sensor
 				memset(snd.wsBitmap, 1, sizeof(UINT8)*HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
 			}
 			else{
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: UI input sensorid out of range, [sensorid=%d]! \n", sensorid);
 				return FAILURE;
 			}
-
 
 			snd.cmdid = testcmd;
 			snd.cmdvalue = testpara;
@@ -537,7 +537,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 			//解析Start/Stop命令
 		   if ( json_object_object_get_ex(file_jsonobj, "start_cmd", &cmd_jsonobj)){
 			   UINT32 confindex = 0;
-			   struct json_obj *confindex_jsonobj = NULL;
+			   struct json_object *confindex_jsonobj = NULL;
 
 			   flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
 			   value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
@@ -593,7 +593,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 		 //解析Test命令
 		if (json_object_object_get_ex(file_jsonobj, "test_cmd", &cmd_jsonobj)){
 			UINT32 	testcmd = 0, testpara = 0;
-			struct json_obj *testcmd_jsonobj = NULL, *testpara_jsonobj = NULL;
+			struct json_object *testcmd_jsonobj = NULL, *testpara_jsonobj = NULL;
 
 			flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
 			value_jsonobj = json_object_object_get(cmd_jsonobj, "value");

@@ -29,7 +29,7 @@ typedef struct gTaskL3bfscuicommContext{
 	//本地全局变量，分别用于标识开启命令，校准命令，和配置命令的变化，系统启动初始化为0, UI界面修改后自动累加，HCU对比Flag变化判断用户修改了那个Json文件
 	UINT32  cmdStartStopFlag;
 	UINT32  cmdCalibrationFlag;
-	UINT32  cmdTResumeFlag;
+	UINT32  cmdResumeFlag;
 	UINT32  cmdTestFlag;
 }gTaskL3bfscuicommContext_t;
 
