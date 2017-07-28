@@ -7,7 +7,20 @@
 
 #ifndef _HUITP_H_
 #define _HUITP_H_
-#include "../l0comvm/vmlayer.h"
+typedef unsigned char             UINT8;
+typedef signed char               INT8;
+typedef char                      CHAR;
+typedef unsigned short            UINT16;
+typedef signed short              INT16;
+typedef unsigned int              UINT32;
+typedef	signed int                INT32;
+typedef unsigned long int         UINT64;
+typedef unsigned long long int    LP64;
+typedef signed long int           INT64;
+typedef unsigned long             ULONG;
+typedef signed long               SLONG;
+typedef UINT8                     BOOLEAN;
+typedef void                      VOID;
 
 //pack函数必须严格放在结构的里面，且不得包含任何其它包含文件，不然会发生意想不到的问题！！！
 #pragma pack (1) //强制1字节对齐
@@ -21,6 +34,7 @@
  * 2017/07/03 V2.8: 完善SW INVENTORY/SW PACKAGE的消息定义与结构
  * 2017/07/03 V2.9: StrMsg_HUITP_MSGID_sui_bfsc_command_req update
  *                  HUITP_SUI_IE长度改为233，为软件下载增加equEntry字段
+ *                  为云控锁CCL增加gen_picid字段，为了方便后台存储图像文件以及遍连
  *
  *
  *
@@ -1222,6 +1236,7 @@ typedef enum
 	HUITP_IEID_uni_ccl_general_value2               = 0x4E01, 
 	HUITP_IEID_uni_ccl_dcmi_value                   = 0x4E02,
 	HUITP_IEID_uni_ccl_report_type                  = 0x4E03,
+	HUITP_IEID_uni_ccl_gen_picid                    = 0x4E04,
 	HUITP_IEID_uni_ccl_state_max,
 
   //串口读取命令/返回结果
@@ -2442,8 +2457,8 @@ typedef struct StrIe_HUITP_IEID_uni_scale_weight_statistic
 
 
 //云控锁-锁
-//HUITP_IEID_uni_ccl_lock_min                     = 0x4000,  
-//HUITP_IEID_uni_ccl_lock_state                   = 0x4000,
+//HUITP_IEID_uni_ccl_lock_min                     = 0x4D00,  
+//HUITP_IEID_uni_ccl_lock_state                   = 0x4D00,
 #define HUITP_IEID_UNI_CCL_LOCK_MAX_NUMBER 4
 typedef struct StrIe_HUITP_IEID_uni_ccl_lock_state
 {
@@ -2458,7 +2473,7 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_lock_state
 #define HUITP_IEID_UNI_LOCK_STATE_CLOSE 2
 #define HUITP_IEID_UNI_LOCK_STATE_INVALID 0xFF
 
-//HUITP_IEID_uni_ccl_lock_auth_req                = 0x4001,
+//HUITP_IEID_uni_ccl_lock_auth_req                = 0x4D01,
 #define HUITP_IEID_UNI_CCL_LOCK_AUTH_REQ_MAX_LEN 20
 typedef struct StrIe_HUITP_IEID_uni_ccl_lock_auth_req
 {
@@ -2478,7 +2493,7 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_lock_auth_req
 #define HUITP_IEID_UNI_CCL_LOCK_AUTH_REQ_TYPE_PID 5
 #define HUITP_IEID_UNI_CCL_LOCK_AUTH_REQ_TYPE_INVALID 0xFF
 
-//HUITP_IEID_uni_ccl_lock_auth_resp               = 0x4002,
+//HUITP_IEID_uni_ccl_lock_auth_resp               = 0x4D02,
 typedef struct StrIe_HUITP_IEID_uni_ccl_lock_auth_resp
 {
 	UINT16 ieId;
@@ -2666,8 +2681,8 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_fall_state
 //HUITP_IEID_uni_ccl_fall_max,
 
 //云控锁-状态聚合
-//HUITP_IEID_uni_ccl_state_min                    = 0x4C00, 
-//HUITP_IEID_uni_ccl_general_value1               = 0x4C00,
+//HUITP_IEID_uni_ccl_state_min                    = 0x4E00, 
+//HUITP_IEID_uni_ccl_general_value1               = 0x4E00,
 typedef struct StrIe_HUITP_IEID_uni_ccl_general_value1
 {
 	UINT16 ieId;
@@ -2676,7 +2691,7 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_general_value1
 	UINT16 generalValue1;
 }StrIe_HUITP_IEID_uni_ccl_general_value1_t;
 
-//HUITP_IEID_uni_ccl_general_value2               = 0x4C01,
+//HUITP_IEID_uni_ccl_general_value2               = 0x4E01,
 typedef struct StrIe_HUITP_IEID_uni_ccl_general_value2
 {
 	UINT16 ieId;
@@ -2685,7 +2700,7 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_general_value2
 	UINT16 generalValue2;
 }StrIe_HUITP_IEID_uni_ccl_general_value2_t;
 
-//HUITP_IEID_uni_ccl_dcmi_value                  = 0x4C02,
+//HUITP_IEID_uni_ccl_dcmi_value                  = 0x4E02,
 typedef struct StrIe_HUITP_IEID_uni_ccl_dcmi_value
 {
 	UINT16 ieId;
@@ -2694,7 +2709,7 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_dcmi_value
 	UINT16 dcmiValue;
 }StrIe_HUITP_IEID_uni_ccl_dcmi_value_t;
 
-//HUITP_IEID_uni_ccl_report_type                 = 0x4C03,
+//HUITP_IEID_uni_ccl_report_type                 = 0x4E03,
 typedef struct StrIe_HUITP_IEID_uni_ccl_report_type
 {
 	UINT16 ieId;
@@ -2706,6 +2721,16 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_report_type
 #define HUITP_IEID_UNI_CCL_REPORT_TYPE_CLOSE_EVENT 2
 #define HUITP_IEID_UNI_CCL_REPORT_TYPE_FAULT_EVENT 3
 #define HUITP_IEID_UNI_CCL_REPORT_TYPE_INVALID 0xFF
+
+///HUITP_IEID_uni_ccl_gen_picid                    = 0x4E04,
+#define HUITP_IEID_UNI_CCL_GEN_PIC_ID_LEN_MAX		32
+typedef struct StrIe_HUITP_IEID_uni_ccl_gen_picid
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT8  picid[HUITP_IEID_UNI_CCL_GEN_PIC_ID_LEN_MAX];
+}StrIe_HUITP_IEID_uni_ccl_gen_picid_t;
+
 
 //HUITP_IEID_uni_ccl_state_max,
 
@@ -5321,29 +5346,21 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_fault_ind
 /*
 **	MSG_ID_L3BFSC_WMC_COMMAND_REQ,          //       = 0x3B17,
 */
-//#define CMDID_SENSOR_COMMAND_WEITGH_READ (0x0001)
-//#define CMDID_MOTOR_SPEED_READ (0x0002)
-//#define LED1_COMMAND_ID (0x0004)
-//#define LED2_COMMAND_ID (0x0008)
-//#define LED3_COMMAND_ID (0x0010)
-//#define LED4_COMMAND_ID (0x0020)
-
 #define CMDID_LED1_COMMNAD_ON									(1)
 #define CMDID_LED1_COMMNAD_OFF								(2)
 #define CMDID_LED1_COMMNAD_BINKING_HIGHSPEED	(3)
 #define CMDID_LED1_COMMNAD_BINKING_LOWSPEED		(4)
-
 #define CMDID_LED2_COMMNAD_ON									(5)
 #define CMDID_LED2_COMMNAD_OFF								(6)
 #define CMDID_LED2_COMMNAD_BINKING_HIGHSPEED		(7)
 #define CMDID_LED2_COMMNAD_BINKING_LOWSPEED			(8)
-
 #define CMDID_SENSOR_COMMAND_IGORE						(10) //MUSR BE 0
 #define CMDID_SENSOR_COMMAND_WEITGH_READ			(11)
 #define CMDID_SENSOR_COMMAND_CALIBRATION_ZERO	(12)
 #define CMDID_SENSOR_COMMAND_CALIBRATION_FULL	(13)
-
+#define CMDID_SENSOR_COMMAND_TARE_WEIGHT      (14)
 #define CMDID_MOTOR_COMMAND										(20)
+
 
 //特殊命令过程（测试等过程）
 typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_req
@@ -5352,12 +5369,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_req
 	UINT16 length;
 	UINT32 cmdid;
 	UINT32 cmdvalue;
-//	UINT8 led1_command;
-//	UINT8 led2_command;
-//	UINT8 led3_command;
-//	UINT8 led4_command;
-//	UINT32 motor_command;
-//	UINT32 sensor_command;
 }StrMsg_HUITP_MSGID_sui_bfsc_command_req_t;
 
 //HUITP_MSGID_sui_bfsc_command_resp                = 0x3B98,
@@ -6109,6 +6120,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_ccl_lock_auth_resp
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
 	StrIe_HUITP_IEID_uni_ccl_lock_auth_resp_t respState;
+	StrIe_HUITP_IEID_uni_ccl_gen_picid_t  respPic;
 }StrMsg_HUITP_MSGID_uni_ccl_lock_auth_resp_t;
 
 //HUITP_MSGID_uni_ccl_lock_max,

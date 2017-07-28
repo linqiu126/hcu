@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbi_bfsc.c \
+/home/hitpony/workspace/hcu/hcusrc/l0dbi/dbi_sysswm.c \
 /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbiairprs.c \
 /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbialcohol.c \
 /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbico1.c \
@@ -29,6 +30,7 @@ C_SRCS += \
 
 OBJS += \
 ./src/l0dbi/dbi_bfsc.o \
+./src/l0dbi/dbi_sysswm.o \
 ./src/l0dbi/dbiairprs.o \
 ./src/l0dbi/dbialcohol.o \
 ./src/l0dbi/dbico1.o \
@@ -53,6 +55,7 @@ OBJS += \
 
 C_DEPS += \
 ./src/l0dbi/dbi_bfsc.d \
+./src/l0dbi/dbi_sysswm.d \
 ./src/l0dbi/dbiairprs.d \
 ./src/l0dbi/dbialcohol.d \
 ./src/l0dbi/dbico1.d \
@@ -78,6 +81,13 @@ C_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 src/l0dbi/dbi_bfsc.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbi_bfsc.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross GCC Compiler'
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+src/l0dbi/dbi_sysswm.o: /home/hitpony/workspace/hcu/hcusrc/l0dbi/dbi_sysswm.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
