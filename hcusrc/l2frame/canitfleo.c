@@ -385,7 +385,6 @@ OPSTAT fsm_canitfleo_can_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 	pMsgProc.cmdid = HUITP_ENDIAN_EXG32(rcv.cmdid);
 	pMsgProc.cmdvalue = HUITP_ENDIAN_EXG32(rcv.cmdvalue);
-	HCU_DEBUG_PRINT_CRT("CANITFLEO: Send TEST CMD to Node, bitmap NodeID=0x%X, CmdId=%d, CmdValue=%d\n", bitmap, rcv.cmdid, rcv.cmdvalue);
 
 	//发送消息
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
@@ -620,7 +619,7 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t) - 4))
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_test_cmd_resp_received_handle(snd, rcv.nodeId);
+		ret = func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(snd, rcv.nodeId);
 	}
 	break;
 
@@ -805,10 +804,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(StrMsg_HU
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t));
-		snd.validFlag = rcv->validFlag;
+		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 		snd.sensorid = nodeId;
-		if (snd.validFlag != TRUE) HCU_DEBUG_PRINT_CRT("CANITFLEO: Receive CONFIG_RESP with FALSE status, NodeID = %d, ValidFlag=%d\n", nodeId, rcv->validFlag);
 		snd.length = sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t);
 		if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_CFG_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
@@ -1104,7 +1102,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_ws_comb_out_received_handle(StrMsg_HUITP_
 }
 
 //本消息将发送给UICOMM
-OPSTAT func_canitfleo_l2frame_msg_bfsc_test_cmd_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t *rcv, UINT8 nodeId)
+OPSTAT func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t *rcv, UINT8 nodeId)
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块

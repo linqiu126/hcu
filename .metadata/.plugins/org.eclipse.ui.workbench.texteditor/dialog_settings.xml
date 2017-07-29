@@ -2,12 +2,17 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
 		<item value="" key="selection"/>
+=======
+		<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212" key="selection"/>
+>>>>>>> 006a58b7b0daa068902a10465acc96d208af5bb9
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
 			<item value="dbi_HcuBfsc_WmcStatusUpdate"/>
 			<item value="CRT"/>
 			<item value="hcubfsccurrentinfo"/>
@@ -16,6 +21,16 @@
 			<item value="adc"/>
 			<item value="AdcVa"/>
 			<item value="HUITP_MSGID_sui_bfsc_command_resp"/>
+=======
+			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212"/>
+			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_JDAPP"/>
+			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_L2FRAME"/>
+			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_QQIOT"/>
+			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_WECHAT"/>
+			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_IOT_WEIXIN"/>
+			<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
+			<item value="HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN"/>
+>>>>>>> 006a58b7b0daa068902a10465acc96d208af5bb9
 		</list>
 		<list key="replacehistory">
 			<item value=".BIN"/>
