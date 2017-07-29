@@ -249,7 +249,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 			pMsgProc.weight_sensor_param.WeightSensorAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcValue);
 			pMsgProc.weight_sensor_param.WeightSensorCalibrationZeroAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue);
 			pMsgProc.weight_sensor_param.WeightSensorCalibrationFullAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue);
-			//HCU_DEBUG_PRINT_FAT("CANITFLEO: Calibration NodeId=%d, ZeroAdcValue=%d, FullAdcValue=%d\n", i, gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue, gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue);
+			HCU_DEBUG_PRINT_FAT("CANITFLEO: Calibration NodeId=%d, ZeroAdcValue=%d, FullAdcValue=%d\n", i, gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue, gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue);
 			pMsgProc.weight_sensor_param.WeightSensorCalibrationFullWeight = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullWeight);
 			pMsgProc.weight_sensor_param.WeightSensorStaticZeroValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorStaticZeroValue);
 			pMsgProc.weight_sensor_param.WeightSensorTailorValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorTailorValue);
@@ -805,7 +805,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(StrMsg_HU
 		snd.validFlag = rcv->validFlag;
 		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 		snd.sensorid = nodeId;
-		HCU_DEBUG_PRINT_FAT("CANITFLEO: Receive CONFIG-RESP NodeID = %d, ValidFlag=%d\n", nodeId, rcv->validFlag);
+		//HCU_DEBUG_PRINT_FAT("CANITFLEO: Receive CONFIG-RESP NodeID = %d, ValidFlag=%d\n", nodeId, rcv->validFlag);
 		snd.length = sizeof(msg_struct_can_l3bfsc_sys_cfg_resp_t);
 		if (hcu_message_send(MSG_ID_CAN_L3BFSC_SYS_CFG_RESP, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
