@@ -281,7 +281,7 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		sensorid = rcv.sensorid;
 		adcvalue = rcv.cmdvalue1;
 		weight = rcv.cmdvalue2;
-		ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_ZERO, adcvalue, weight, sensorid);
+		ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_FULL, adcvalue, weight, sensorid);
 		if (ret == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Save data error!\n");
 	}
 	//Common process for other test command, save the response to table 'hcubfscfb2ui'
