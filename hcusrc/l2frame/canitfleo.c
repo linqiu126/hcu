@@ -390,6 +390,7 @@ OPSTAT fsm_canitfleo_can_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
 
+	HCU_DEBUG_PRINT_CRT("CANITFLEO: Send TEST_CMD, CmdId=%d, CmdValue=%d, Node BitMap = 0x%X!\n", pMsgProc.cmdid, pMsgProc.cmdvalue, bitmap);
 	//返回
 	return SUCCESS;
 }

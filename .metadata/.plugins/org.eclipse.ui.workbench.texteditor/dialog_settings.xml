@@ -2,52 +2,26 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-<<<<<<< HEAD
-		<item value="" key="selection"/>
-=======
-		<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212" key="selection"/>
->>>>>>> 006a58b7b0daa068902a10465acc96d208af5bb9
-		<item value="true" key="casesensitive"/>
+		<item value="fsm_canitfleo_can_test_cmd_req" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-<<<<<<< HEAD
-			<item value="dbi_HcuBfsc_WmcStatusUpdate"/>
-			<item value="CRT"/>
-			<item value="hcubfsccurrentinfo"/>
-			<item value="current"/>
-			<item value="Adc"/>
-			<item value="adc"/>
-			<item value="AdcVa"/>
-			<item value="HUITP_MSGID_sui_bfsc_command_resp"/>
-=======
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_JDAPP"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_L2FRAME"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_QQIOT"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_WECHAT"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_IOT_WEIXIN"/>
-			<item value="HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN"/>
-			<item value="HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN"/>
->>>>>>> 006a58b7b0daa068902a10465acc96d208af5bb9
+			<item value="fsm_canitfleo_can_test_cmd_req"/>
+			<item value="_PATCH"/>
+			<item value="_TRIAL"/>
+			<item value=".TRIAL"/>
+			<item value="0x"/>
 		</list>
 		<list key="replacehistory">
-			<item value=".BIN"/>
-			<item value="TRIAL"/>
-			<item value="comAlgPar.TargetCombinationUpperWeight"/>
-			<item value="HCU_ERROR_PRINT_CANITFLEO"/>
-			<item value="&quot;USBCAN_DH: can_bandrate_to_timing_"/>
-			<item value="&quot;USBCAN_DH:  can_bandrate_to_timing_mapping "/>
-			<item value="&quot;USBCAN_DH: CAN"/>
-			<item value="&quot;USBCAN_DH: usb_can_int"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1143" key="DIALOG_X_ORIGIN"/>
-		<item value="301" key="DIALOG_Y_ORIGIN"/>
+		<item value="1025" key="DIALOG_X_ORIGIN"/>
+		<item value="272" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
