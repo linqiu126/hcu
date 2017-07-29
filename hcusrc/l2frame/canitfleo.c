@@ -386,6 +386,7 @@ OPSTAT fsm_canitfleo_can_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 	pMsgProc.cmdid = HUITP_ENDIAN_EXG32(rcv.cmdid);
 	pMsgProc.cmdvalue = HUITP_ENDIAN_EXG32(rcv.cmdvalue);
+	HCU_DEBUG_PRINT_CRT("CANITFLEO: Send TEST CMD to Node, bitmap NodeID=0x%X, CmdId=%d, CmdValue=%d\n", bitmap, rcv.cmdid, rcv.cmdvalue);
 
 	//发送消息
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
