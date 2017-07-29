@@ -223,7 +223,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 	}
 	//收到L3BFSC指示秤台配置错误的反馈
 	else if ((rcv.validFlag == FALSE) && (gTaskL3bfscuicommContext.bfscuiState == HCU_BFSCCOMM_JASON_CMD_START)){
-		hcu_sleep(2);
+		hcu_sleep(5);
 		msg_struct_uicomm_l3bfsc_cfg_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
 		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);

@@ -410,7 +410,7 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
-		HCU_DEBUG_PRINT_FAT("CANITFLEO: Receive SET CONFIG RESP single FALSE, NodeID=%d, ValidFlag=%d", rcv.sensorid, rcv.validFlag);
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Receive SET CONFIG RESP single FALSE, NodeID=%d, ValidFlag=%d\n", rcv.sensorid, rcv.validFlag);
 		//发送反馈给UICOMM
 		msg_struct_l3bfsc_uicomm_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
@@ -437,7 +437,7 @@ OPSTAT fsm_l3bfsc_canitf_config_resp(UINT32 dest_id, UINT32 src_id, void * param
 	//收到正确以及齐活的反馈
 	if (func_l3bfsc_cacluate_sensor_cfg_rcv_complete() == TRUE){
 		//发送反馈给UICOMM
-		HCU_DEBUG_PRINT_FAT("CANITFLEO: Receive SET CONFIG RESP All TRUE, NodeID=%d, ValidFlag=%d", rcv.sensorid, rcv.validFlag);
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Receive SET CONFIG RESP All TRUE, NodeID=%d, ValidFlag=%d\n", rcv.sensorid, rcv.validFlag);
 		msg_struct_l3bfsc_uicomm_cfg_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
 		snd.validFlag = TRUE;
