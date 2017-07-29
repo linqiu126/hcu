@@ -131,6 +131,15 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	memset(str, 0, sizeof(str));
 	sprintf(str, "chmod -R 777 %s", zHcuCmdflagJsonFile);
 	system(str);
+
+	//修改生成command.json link
+	sprintf(str, "rm /var/www/html/bfscui/command.json");
+	system(str);
+	sprintf(str, "ln /tmp/command.json /var/www/html/bfscui/command.json");
+	system(str);
+	sprintf(str, "chmod -R 777 /var/www/html/*");
+	system(str);
+
 	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
 
 	//启动周期性定时器
