@@ -102,19 +102,6 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	memset(&gTaskL3bfscuicommContext, 0, sizeof(gTaskL3bfscuicommContext_t));
 
-	//初始化校准数据，为了取得full weight
-	UINT32  calibrationdata[(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)*3];
-	int i;
-	if (dbi_HcuBfsc_CalibrationDataGet(calibrationdata) == FAILURE){
-		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Get DB sensor calibration data failed \n");
-	}
-
-	for (i = 1; i <= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1; i++){
-		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue = calibrationdata[3*(i-1)];
-		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue = calibrationdata[3*(i-1)+1];
-		gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullWeight = calibrationdata[3*(i-1)+2];
-	}
-
 	//Create necessary exchange files
 
 	//在系统/temp目录下创建空的command.json文件，用于通知界面HCU及下位机已经准备好了
@@ -131,15 +118,6 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	memset(str, 0, sizeof(str));
 	sprintf(str, "chmod -R 777 %s", zHcuCmdflagJsonFile);
 	system(str);
-
-	//修改生成command.json link
-	sprintf(str, "rm /var/www/html/bfscui/command.json");
-	system(str);
-	sprintf(str, "ln /tmp/command.json /var/www/html/bfscui/command.json");
-	system(str);
-	sprintf(str, "chmod -R 777 /var/www/html/*");
-	system(str);
-
 	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
 
 	//启动周期性定时器
@@ -245,7 +223,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 	}
 	//收到L3BFSC指示秤台配置错误的反馈
 	else if ((rcv.validFlag == FALSE) && (gTaskL3bfscuicommContext.bfscuiState == HCU_BFSCCOMM_JASON_CMD_START)){
-		hcu_sleep(5);
+		hcu_sleep(2);
 		msg_struct_uicomm_l3bfsc_cfg_req_t snd;
 		memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
 		snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
@@ -303,7 +281,7 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		sensorid = rcv.sensorid;
 		adcvalue = rcv.cmdvalue1;
 		weight = rcv.cmdvalue2;
-		ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_FULL, adcvalue, weight, sensorid);
+		ret = dbi_HcuBfsc_CalibrationDataUpdate(CMDID_SENSOR_COMMAND_CALIBRATION_ZERO, adcvalue, weight, sensorid);
 		if (ret == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Save data error!\n");
 	}
 	//Common process for other test command, save the response to table 'hcubfscfb2ui'

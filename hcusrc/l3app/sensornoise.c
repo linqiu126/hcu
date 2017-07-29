@@ -118,11 +118,7 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	for (i=0;i<MAX_NUM_OF_SENSOR_NOISE_INSTALLED;i++){
 		gTaskNoiseContext.noise[i].sensorId = i;
 
-		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004 )
-		{
-			gTaskNoiseContext.noise[i].equId = MODBUS_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
-		}
-		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
 		{
 			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
 		}
@@ -130,9 +126,13 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		{
 			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
 		}
-		else  //Default取SPSVIRGO
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004 )
 		{
-			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
+			gTaskNoiseContext.noise[i].equId = MODBUS_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
+		}
+		else  //Default取MODBUS(sps232)
+		{
+			gTaskNoiseContext.noise[i].equId = MODBUS_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
 		}
 
 		gTaskNoiseContext.noise[i].hwAccess = SENSOR_NOISE_HW_ACCESS_IDLE;
@@ -211,7 +211,11 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 				return FAILURE;
 			}//FsmSetState
 		}
-		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			func_noise_time_out_read_data_from_spsvirgo();
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
 		{
 			func_noise_time_out_read_data_from_spsvirgo();
 		}
@@ -221,7 +225,7 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 		}
 		else //DEFAULT取标准高配置传感器
 		{
-			func_noise_time_out_read_data_from_spsvirgo();
+			func_noise_time_out_read_data_from_modbus();
 		}
 	}
 

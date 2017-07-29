@@ -409,7 +409,7 @@ typedef enum
 	EMC_LENGTH_OF_REG = 0x01, //2个寄存器，返回2B
 	EMC_MODBUS_GENERIC_FUNC_DATA_INQUERY = 0x03,
 }EmcRegisterSelfDef;
-//PM25寄存器定义 => 型号SJFC200/T独享
+//PM25寄存器定义
 typedef enum
 {
 	PM25_REG_DATA_PM1D0 = 4,  //2B
@@ -430,9 +430,15 @@ typedef enum
 	//Added by shanchun for control cmd
 	PM25_MODBUS_GENERIC_FUNC_DATA_SET = 0x06,
 
-	//Added by shanchun for bug fix
+	// 型号SJFC200/T独享, Added by shanchun for bug fix
 	PM25_REG_DATA_PMTSP_HIGH = 0x9C,  //2B
 	PM25_REG_DATA_PMTSP_LOW = 0x46,  //2B
+
+	// 型号阿尔森4-20MA/RS485
+	PM25_LENGTH_OF_REG_NEW = 0x03, //3个寄存器，返回6B
+	PM25_REG_DATA_PMTSP_NEW_HIGH = 0x00,  //2B
+	PM25_REG_DATA_PMTSP_NEW_LOW = 0x00,  //2B
+
 
 }Pm25RegisterSjfc200tDef;
 //WIND DIRECTION寄存器定义
