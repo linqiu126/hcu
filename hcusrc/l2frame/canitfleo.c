@@ -724,7 +724,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(StrMsg_HUITP_
 	gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_STARTUP;
 	HCU_DEBUG_PRINT_CRT("CANITFLEO: Sensor ID = %d is set to be startup!\n", nodeId);
 
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, 0);	//数据清零
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_STARTUP, 0);
 
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) == FSM_STATE_L3BFSC_ACTIVED){
@@ -797,6 +797,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(StrMsg_HU
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
 
+	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_ERR, 0);
+	else dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_RCV, 0);
+
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_cfg_resp_t snd;
@@ -839,6 +842,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_start_resp_received_handle(StrMsg_HUITP_M
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_START_RCV, 0);
+
 	//系统初始化过程
 	if (FsmGetState(TASK_ID_L3BFSC) < FSM_STATE_L3BFSC_OOS_SCAN){
 		msg_struct_can_l3bfsc_sys_start_resp_t snd;
@@ -865,6 +871,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(StrMsg_HUITP_MS
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_STOP_RCV, 0);
+
 	msg_struct_can_l3bfsc_sys_stop_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_sys_stop_resp_t));
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
@@ -889,7 +897,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(StrMsg_HUITP
 	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
 
 	//先更新本地数据库表单
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_DATA_VALID, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
 	//HCU_DEBUG_PRINT_FAT("CANITFLEP: NEW WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
 
 	//先检查汇报事件/EMPTY_LOAD事件
@@ -980,7 +988,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(StrMsg_HUITP_MS
 	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
 
 	//先更新本地数据库表单
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_DATA_VALID, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
 	//HCU_DEBUG_PRINT_FAT("CANITFLEP: REPEAT WS EVENT, Receiveing NodeId/Weight = [%d/%d]", rcv->weight_ind.average_weight);
 
 	if ((comType == HUITP_IEID_SUI_BFSC_COMINETYPE_NULL) && (wsEvent == WEIGHT_EVENT_ID_LOAD)){
@@ -1040,7 +1048,7 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_ws_comb_out_received_handle(StrMsg_HUITP_
 	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
 
 	//先更新本地数据库表单
-	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, 1, 0);	//数据清零
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_DATA_VALID, 0);	//数据清零
 
 	if (comType == HUITP_IEID_SUI_BFSC_COMINETYPE_ROOLOUT){
 		//gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TTT_START;
@@ -1098,6 +1106,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(StrMsg_HUITP
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_TEST_CMD_RCV, 0);
+
 	msg_struct_can_uicomm_test_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_uicomm_test_cmd_resp_t));
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
@@ -1121,6 +1131,9 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_fault_ind_received_handle(StrMsg_HUITP_MS
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//只更新传感器的状态，不做其它处理
+
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_FAULT_RCV, 0);
+
 	if (gTaskL3bfscContext.sensorWs[nodeId].sensorStatus < HCU_L3BFSC_SENSOR_WS_STATUS_INIT_MAX)
 		gTaskL3bfscContext.sensorWs[nodeId].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_INIT_ERR;
 	else
@@ -1138,6 +1151,8 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(StrMsg_H
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_ERR_RESP_RCV, 0);
+
 	msg_struct_can_l3bfsc_error_inq_cmd_resp_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_error_inq_cmd_resp_t));
 	snd.sensorid = nodeId;
@@ -1190,6 +1205,8 @@ OPSTAT func_canitfleo_l2frame_msg_inventory_report_received_handle(StrMsg_HUITP_
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
 
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_INV_RPT_RCV, 0);
+
 	//准备组装发送消息
 	msg_struct_canitfleo_sysswm_inventory_report_t snd;
 	memset(&snd, 0, sizeof(msg_struct_canitfleo_sysswm_inventory_report_t));
@@ -1200,7 +1217,6 @@ OPSTAT func_canitfleo_l2frame_msg_inventory_report_received_handle(StrMsg_HUITP_
 	snd.swVer = HUITP_ENDIAN_EXG16(rcv->swVer);
 	snd.upgradeFlag = rcv->upgradeFlag;
 	snd.nodeId = nodeId;
-
 	snd.length = sizeof(msg_struct_canitfleo_sysswm_inventory_report_t);
 	if (hcu_message_send(MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT, TASK_ID_SYSSWM, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
@@ -1213,6 +1229,8 @@ OPSTAT func_canitfleo_l2frame_msg_sw_package_report_received_handle(StrMsg_HUITP
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
+
+	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_SW_PKG_RCV, HUITP_ENDIAN_EXG16(rcv->segIndex));
 
 	//准备组装发送消息
 	msg_struct_canitfleo_sysswm_sw_package_report_t snd;
