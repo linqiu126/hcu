@@ -12,6 +12,7 @@
 
 //= ZJL, 2017 July.29 CURRENT_SW_DELIVERY 230=>AQYC项目
 = 增加对阿尔森扬尘传感器和易谷分体风向风速传感器的支持
+= 修改hcudb,调整各传感器定时器值
 
 //= ZJL, 2017 July.28 CURRENT_SW_DELIVERY 229=>BFSC项目
 = 增加软件管理的数据表单
