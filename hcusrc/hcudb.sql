@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 29, 2017 at 05:39 PM
+-- Generation Time: Jul 29, 2017 at 06:03 PM
 -- Server version: 5.5.44-0+deb8u1
 -- PHP Version: 5.6.20-0+deb8u1
 
@@ -3195,8 +3195,8 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (35, 'TID_1S_IHM_PERIOD_READ', 1, 600),
 (36, 'TID_1S_IGM_PERIOD_READ', 1, 600),
 (37, 'TID_1S_IPM_PERIOD_READ', 1, 600),
-(38, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 111),
-(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 115),
+(38, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 600),
+(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 610),
 (40, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
 (41, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
 (42, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
