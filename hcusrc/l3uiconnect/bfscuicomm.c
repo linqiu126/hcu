@@ -217,6 +217,7 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 	//收到正确且所有秤台齐活的反馈
 	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: rcv.validFlag = %d\n", rcv.validFlag);
+	dbi_HcuBfsc_WmcCurComWgtUpdate(0);
 	if((rcv.validFlag == TRUE) && (gTaskL3bfscuicommContext.bfscuiState == HCU_BFSCCOMM_JASON_CMD_START)){
 		//Update databse, to let START menu turn state from grey to active!!!
 		msg_struct_uicomm_l3bfsc_cmd_req_t snd;
@@ -338,12 +339,13 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		return FAILURE;
 	}
 
+	dbi_HcuBfsc_WmcCurComWgtUpdate(0);
 	//开启命令标志位发生了变化，
 	if (parseResult.cmdStartStop.cmdFlag != gTaskL3bfscuicommContext.cmdStartStopFlag)
 	{
 		gTaskL3bfscuicommContext.cmdStartStopFlag = parseResult.cmdStartStop.cmdFlag;
 		fileChangeContent = parseResult.cmdStartStop.cmdValue;
-		//依赖文件变化的内容，分类发送控制命令：START/STOP命令,
+		//依赖文件变化的内容，分类发送控制命令：START/STOP命令
 		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START){
 			UINT32 config_index = 0;
 			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_START;
