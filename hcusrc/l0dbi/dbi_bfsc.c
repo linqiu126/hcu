@@ -473,7 +473,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     timestamp = time(NULL);
     for(wmc_id = 1; wmc_id <= 16; wmc_id++)
     {
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (1)", timestamp, wmc_id, 0);
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (1)", timestamp, wmc_id, DBI_BFSC_SNESOR_STATUS_INVALID);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);

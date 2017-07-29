@@ -135,7 +135,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//修改生成command.json link
 	sprintf(str, "rm /var/www/html/bfscui/command.json");
 	system(str);
-	sprintf(str, "ln /tmp/command.json /var/www/html/bfscui/command.json");
+	sprintf(str, "ln -s /tmp/command.json /var/www/html/bfscui/command.json");
 	system(str);
 	sprintf(str, "chmod -R 777 /var/www/html/*");
 	system(str);

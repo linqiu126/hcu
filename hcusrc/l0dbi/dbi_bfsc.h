@@ -14,6 +14,20 @@
 #define DBI_BFSC_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
 #define DBI_MAX_FBINFO_STRING_LENGTH 500 //String length for field fbinfo in table hcubfscfb2ui
 
+//为了表达传感器状态，需要定义一系列状态
+#define DBI_BFSC_SNESOR_STATUS_INVALID  		0
+#define DBI_BFSC_SNESOR_STATUS_DATA_VALID		1
+#define DBI_BFSC_SNESOR_STATUS_STARTUP  		2
+#define DBI_BFSC_SNESOR_STATUS_CONFIG_RCV  		3
+#define DBI_BFSC_SNESOR_STATUS_CONFIG_ERR  		4
+#define DBI_BFSC_SNESOR_STATUS_START_RCV  		5
+#define DBI_BFSC_SNESOR_STATUS_STOP_RCV  		6
+#define DBI_BFSC_SNESOR_STATUS_TEST_CMD_RCV  	7
+#define DBI_BFSC_SNESOR_STATUS_FAULT_RCV  		8
+#define DBI_BFSC_SNESOR_STATUS_ERR_RESP_RCV  	9
+#define DBI_BFSC_SNESOR_STATUS_INV_RPT_RCV  	10
+#define DBI_BFSC_SNESOR_STATUS_SW_PKG_RCV  		11
+
 //extern OPSTAT dbi_HcuBfsc_Cfgpar_read_into_syseng(UINT32 sid, HcuSysEngBfscCfgpar_t *bfscCfgpar);
 extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
 //extern OPSTAT dbi_HcuBfsc_ui_ctrl_exg_read(UINT32 *output);
