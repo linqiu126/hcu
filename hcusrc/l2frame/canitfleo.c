@@ -249,7 +249,7 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 			pMsgProc.weight_sensor_param.WeightSensorAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorAdcValue);
 			pMsgProc.weight_sensor_param.WeightSensorCalibrationZeroAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue);
 			pMsgProc.weight_sensor_param.WeightSensorCalibrationFullAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue);
-			HCU_DEBUG_PRINT_FAT("CANITFLEO: Calibration NodeId=%d, ZeroAdcValue=%d, FullAdcValue=%d\n", i, gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue, gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue);
+			//HCU_DEBUG_PRINT_FAT("CANITFLEO: Calibration NodeId=%d, ZeroAdcValue=%d, FullAdcValue=%d\n", i, gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationZeroAdcValue, gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullAdcValue);
 			pMsgProc.weight_sensor_param.WeightSensorCalibrationFullWeight = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.calibration[i].WeightSensorCalibrationFullWeight);
 			pMsgProc.weight_sensor_param.WeightSensorStaticZeroValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorStaticZeroValue);
 			pMsgProc.weight_sensor_param.WeightSensorTailorValue = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.wgtSnrPar.WeightSensorTailorValue);
