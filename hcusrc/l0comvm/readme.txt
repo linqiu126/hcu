@@ -10,6 +10,10 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+//= ZJL, 2017 July.29 CURRENT_SW_DELIVERY 230=>BFSC项目
+= 调试BFSC大小段问题
+
+
 //= ZJL, 2017 July.28 CURRENT_SW_DELIVERY 229=>BFSC项目
 = 增加软件管理的数据表单
 

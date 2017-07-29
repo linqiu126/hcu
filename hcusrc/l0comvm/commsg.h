@@ -2506,7 +2506,7 @@ typedef struct msg_struct_uicomm_can_test_cmd_req
 //MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
 typedef struct msg_struct_can_uicomm_test_cmd_resp
 {
-	UINT8   cmdid;
+	UINT32   cmdid;
 	UINT8	sensorid;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
