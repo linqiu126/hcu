@@ -487,7 +487,50 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     return SUCCESS;
 }
 
-OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
+//OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
+//{
+//	MYSQL *sqlHandler;
+//    int result = 0;
+//    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+//
+//	//建立数据库连接
+//    sqlHandler = mysql_init(NULL);
+//    if(!sqlHandler)
+//    {
+//    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+//        return FAILURE;
+//    }
+//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+//    if (!sqlHandler){
+//    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+//    	mysql_close(sqlHandler);
+//        return FAILURE;
+//    }
+//
+//    HcuDebugPrint("DBIBFSC: Receive calibration date: sensorid = %02d, adcvalue = %d, weight = %d!\n", sensorid,adcvalue,fullweight);
+//    //零值校准数据
+//    if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_ZERO){
+//		sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (1)", sensorid, adcvalue);
+//		result = mysql_query(sqlHandler, strsql);
+//    }
+//    //满值校准数据
+//    else if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_FULL){
+//    	sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d', fullwgt_%02d='%d'  WHERE (1)", sensorid, adcvalue, sensorid, fullweight);
+//		result = mysql_query(sqlHandler, strsql);
+//    }
+//
+//    if(result){
+//    	    	mysql_close(sqlHandler);
+//    	    	HcuErrorPrint("DBICOM: REPLACE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
+//    	        return FAILURE;
+//    		}
+//
+//	//释放记录集
+//    mysql_close(sqlHandler);
+//    return SUCCESS;
+//}
+
+OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
 {
 	MYSQL *sqlHandler;
     int result = 0;
@@ -509,15 +552,44 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT32 f
 
     HcuDebugPrint("DBIBFSC: Receive calibration date: sensorid = %02d, adcvalue = %d, weight = %d!\n", sensorid,adcvalue,fullweight);
     //零值校准数据
-    if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_ZERO){
-		sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (1)", sensorid, adcvalue);
-		result = mysql_query(sqlHandler, strsql);
+    sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (1)", sensorid, adcvalue);
+	result = mysql_query(sqlHandler, strsql);
+
+    if(result){
+    	    	mysql_close(sqlHandler);
+    	    	HcuErrorPrint("DBICOM: REPLACE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
+    	        return FAILURE;
+    		}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
     }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	mysql_close(sqlHandler);
+        return FAILURE;
+    }
+
+    HcuDebugPrint("DBIBFSC: Receive calibration date: sensorid = %02d, adcvalue = %d, weight = %d!\n", sensorid,adcvalue,fullweight);
     //满值校准数据
-    else if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_FULL){
-    	sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d', fullwgt_%02d='%d'  WHERE (1)", sensorid, adcvalue, sensorid, fullweight);
-		result = mysql_query(sqlHandler, strsql);
-    }
+    sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d', fullwgt_%02d='%d'  WHERE (1)", sensorid, adcvalue, sensorid, fullweight);
+	result = mysql_query(sqlHandler, strsql);
 
     if(result){
     	    	mysql_close(sqlHandler);

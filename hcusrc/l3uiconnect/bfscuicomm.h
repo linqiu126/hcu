@@ -8,7 +8,7 @@
 #ifndef L3UI_BFSCUICOMM_H_
 #define L3UI_BFSCUICOMM_H_
 
-#include "../l0comvm/vmlayer.h"
+#include "../l1com/l1comdef.h"
 #include "../l2codec/huitp.h"
 
 //State definition

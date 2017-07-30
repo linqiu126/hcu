@@ -8,7 +8,6 @@
 #ifndef L3APP_BFSC_H_
 #define L3APP_BFSC_H_
 
-#include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
 #include "../l0service/timer.h"
 

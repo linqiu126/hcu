@@ -8,7 +8,7 @@
 #ifndef L3APP_SENSORAIRPRS_H_
 #define L3APP_SENSORAIRPRS_H_
 
-#include "../l0comvm/vmlayer.h"
+#include "../l1com/l1comdef.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00

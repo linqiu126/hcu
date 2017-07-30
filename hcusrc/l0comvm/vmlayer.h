@@ -12,7 +12,6 @@
 #include "../l0comvm/sysdim.h"
 #include "../l0comvm/sysconfig.h"
 #include "../l0comvm/sysengpar.h"
-#include "../l2codec/huitp.h"
 
 
 /*

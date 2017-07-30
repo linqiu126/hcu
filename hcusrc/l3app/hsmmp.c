@@ -11,7 +11,6 @@
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
 #include "../l1com/hwinv.h"
-#include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
 #include <curl/curl.h>
 
