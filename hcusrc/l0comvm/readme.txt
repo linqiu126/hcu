@@ -14,6 +14,9 @@
 //= ZJL,, 2017 July.30 CURRENT_SW_DELIVERY 231=>BFSC项目
 = 下载分段机制
 = 删掉三个月的老旧告警数据，放入HWINV工作机制中
+= 去掉dbi_bfsc对于huitp.h的依赖
+= 清理vmlayer.h/l1comdef.h的包含关系，简化各种包含关系
+= 发现ADCZERO/ADCFULL的bug在合并的是否，丢掉了，重新找回来了
 
 //= ZSC, 2017 July.29 CURRENT_SW_DELIVERY 230=>AQYC项目
 = 增加对阿尔森扬尘传感器和易谷分体风向风速传感器的支持

@@ -8,7 +8,6 @@
 #ifndef L3APP_SENSORWINDSPD_H_
 #define L3APP_SENSORWINDSPD_H_
 
-#include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
 
 //如果将所有的操作都做成可重入的，则状态机很简单，但控制表就太复杂了，所以综合取舍，状态机做成单操作不可重入的，从而控制表将简单多了
