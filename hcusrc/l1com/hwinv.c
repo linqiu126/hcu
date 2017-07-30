@@ -432,6 +432,9 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	ret = dbi_HcuSysEngTimer_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Timer Control DB error!\n");
+
+	//HcuDebugPrint("HWINV: PM25 MODBUS FB TIMER VALUE = %d !\n\n\n\n\n\n\n\n\n\n\n", zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25_MODBUS_FB].dur);
+
 	HCU_DEBUG_PRINT_NOR("HWINV: Set Timer based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuDbVersion表单到系统内存中
