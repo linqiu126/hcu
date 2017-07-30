@@ -1123,6 +1123,8 @@ void func_hwinv_scan_db(void)
 		if (dbi_HcuIpmCj188DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuIpmQg376DataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 		if (dbi_HcuSyspmGlobalDataInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
+		//需要清理告警数据，不然超过2MB的数据库大小以后，将比较麻烦
+		if (dbi_HcuSysAlarmInfo_delete_3monold(HCU_SYSCFG_SNR_DATA_SAVE_DURATION_IN_DAYS) == FAILURE) zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;
 	}
 }
 

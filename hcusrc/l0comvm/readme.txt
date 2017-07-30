@@ -10,6 +10,10 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+//= ZJL,, 2017 July.30 CURRENT_SW_DELIVERY 231=>BFSC项目
+= 下载分段机制
+= 删掉三个月的老旧告警数据，放入HWINV工作机制中
+
 //= ZSC, 2017 July.29 CURRENT_SW_DELIVERY 230=>AQYC项目
 = 增加对阿尔森扬尘传感器和易谷分体风向风速传感器的支持
 = 修改hcudb,调整各传感器定时器值
