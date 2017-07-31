@@ -43,6 +43,7 @@ typedef struct gTaskSysswmContext
 	gTaskSysswmContextBody_t  	bhSw;
 	gTaskSysswmContextBody_t  	ihuSw;
 	UINT8	swDlSession;
+	UINT8	reTransTimes;
 }gTaskSysswmContext_t;
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT 	0
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE 	1
@@ -101,7 +102,7 @@ OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgrade
 OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *input);
 UINT16 func_sysswm_caculate_file_whole_checksum(char *fname);
 UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname);
-
+OPSTAT func_sysswm_send_cloudvela_sw_package_report(void);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_SYSSWM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

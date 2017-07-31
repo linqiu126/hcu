@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrIe_HUITP_IEID_uni_com_segment_t" key="selection"/>
+		<item value="hcu_timer_start" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="StrIe_HUITP_IEID_uni_com_segment_t"/>
-			<item value="StrIe_HUITP_IEID_uni_sw_package_body_t"/>
-			<item value="swPkg"/>
-			<item value="HBB"/>
-			<item value="gTaskSysswmContext.cloudSwPkg"/>
-			<item value="func_sysswm_time_out_period_working_scan_hcu_client"/>
-			<item value="func_sysswm_time_out_period_working_scan"/>
-			<item value="STABLE"/>
+			<item value="hcu_timer_start"/>
+			<item value="ihu_start_timer"/>
+			<item value="ihu_timer_start"/>
+			<item value="TIMER_ID_1S_SYSSWM_PERIOD_WORKING"/>
+			<item value="SYSSWM"/>
+			<item value="TIMER_ID"/>
+			<item value="HcuErrorDebug"/>
+			<item value="func_sysswm_send_cloudvela_sw_package_report"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
