@@ -1674,6 +1674,8 @@ typedef struct StrIe_HUITP_IEID_uni_com_segment
 {
 	UINT16 ieId;
 	UINT16 ieLen;
+	UINT16 hwType;
+	UINT16 hwPem;
 	UINT16 swRelId;
 	UINT16 swVerId;
 	UINT8  upgradeFlag;

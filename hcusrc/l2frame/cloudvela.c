@@ -1311,6 +1311,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 		//StrIe_HUITP_IEID_uni_inventory_element_t
 		pMsgProc.respValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_inventory_element);
 		pMsgProc.respValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_inventory_element_t) - 4);
+		pMsgProc.respValue.equEntry = rcv.equEntry;
 		pMsgProc.respValue.hwType = HUITP_ENDIAN_EXG16(rcv.hwType);
 		pMsgProc.respValue.hwId = HUITP_ENDIAN_EXG16(rcv.hwId);
 		pMsgProc.respValue.swRel = HUITP_ENDIAN_EXG16(rcv.swRel);
@@ -1380,6 +1381,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		//StrIe_HUITP_IEID_uni_inventory_element_t
 		pMsgProc.reportValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_inventory_element);
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_inventory_element_t) - 4);
+		pMsgProc.reportValue.equEntry = rcv.equEntry;
 		pMsgProc.reportValue.hwType = HUITP_ENDIAN_EXG16(rcv.hwType);
 		pMsgProc.reportValue.hwId = HUITP_ENDIAN_EXG16(rcv.hwId);
 		pMsgProc.reportValue.swRel = HUITP_ENDIAN_EXG16(rcv.swRel);
@@ -1485,6 +1487,9 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 		//StrIe_HUITP_IEID_uni_com_segment_t
 		pMsgProc.segValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_segment);
 		pMsgProc.segValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_segment_t) - 4);
+		pMsgProc.segValue.equEntry = rcv.equEntry;
+		pMsgProc.segValue.hwType = HUITP_ENDIAN_EXG16(rcv.hwType);
+		pMsgProc.segValue.hwPem = HUITP_ENDIAN_EXG16(rcv.hwPem);
 		pMsgProc.segValue.swRelId = HUITP_ENDIAN_EXG16(rcv.swRelId);
 		pMsgProc.segValue.swVerId = HUITP_ENDIAN_EXG16(rcv.swVerId);
 		pMsgProc.segValue.upgradeFlag = rcv.upgradeFlag;
@@ -1551,6 +1556,9 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 		//StrIe_HUITP_IEID_uni_com_segment_t
 		pMsgProc.segValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_segment);
 		pMsgProc.segValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_segment_t) - 4);
+		pMsgProc.segValue.equEntry = rcv.equEntry;
+		pMsgProc.segValue.hwType = HUITP_ENDIAN_EXG16(rcv.hwType);
+		pMsgProc.segValue.hwPem = HUITP_ENDIAN_EXG16(rcv.hwPem);
 		pMsgProc.segValue.swRelId = HUITP_ENDIAN_EXG16(rcv.swRelId);
 		pMsgProc.segValue.swVerId = HUITP_ENDIAN_EXG16(rcv.swVerId);
 		pMsgProc.segValue.upgradeFlag = rcv.upgradeFlag;

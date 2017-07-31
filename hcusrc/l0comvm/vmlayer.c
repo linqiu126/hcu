@@ -563,7 +563,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_IGM_PERIOD_READ,                    "TID_1S_IGM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_IPM_PERIOD_READ,                    "TID_1S_IPM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            311,    TIMER_RESOLUTION_1S},//for test(3600)
-	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           317,    TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           900,    TIMER_RESOLUTION_1S},//正常15一次，分别来轮４个软件体
 	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB,             "TID_1S_L3BFSC_SYS_CFG_WAIT_FB",          15,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_SYS_START_WAIT_FB,           "TID_1S_L3BFSC_SYS_START_WAIT_FB",        15,      TIMER_RESOLUTION_1S},
@@ -678,7 +678,9 @@ HcuSysEngPhyBootCfg_t zHcuSysEngPhyBootCfg[] = {
 	{2,		"<bootLoad3Valid>",         "</bootLoad3Valid>"},
 	{4,		"<spare5>",                 "</spare5>"},
 	{8,		"<cipherKey>",              "</cipherKey>"},
-	{8,		"<rsv>",                    "</rsv>"}
+	{8,		"<rsv>",                    "</rsv>"},
+	{2,		"<nodeHwType>",             "</nodeHwType>"},
+	{2,		"<nodeHwPemId>",            "</nodeHwPemId>"}
 };
 
 //系统设备传感器配置表
@@ -2987,6 +2989,8 @@ OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void)
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.cipherKey[8]));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.rsv[0]));
 	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.rsv[8]));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.nodeHwType));
+	hcu_vm_engpar_translate_phy_boot_cfg_into_mem(pRecord, ++index, (UINT8*)&(zHcuSysEngPar.hwBurnId.nodeHwPemId));
 
 	//关闭文件
 	free(pRecord);

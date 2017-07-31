@@ -2,29 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="#define" key="selection"/>
+		<item value="StrIe_HUITP_IEID_uni_com_segment_t" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="#define"/>
-			<item value="WHERE"/>
-			<item value="DELETE"/>
-			<item value="Update"/>
-			<item value="UPDATE"/>
-			<item value="REPLACE"/>
-			<item value="dbi_HcuBfsc_WmcCurComWgtUpdate"/>
-			<item value="force"/>
+			<item value="StrIe_HUITP_IEID_uni_com_segment_t"/>
+			<item value="StrIe_HUITP_IEID_uni_sw_package_body_t"/>
+			<item value="swPkg"/>
+			<item value="HBB"/>
+			<item value="gTaskSysswmContext.cloudSwPkg"/>
+			<item value="func_sysswm_time_out_period_working_scan_hcu_client"/>
+			<item value="func_sysswm_time_out_period_working_scan"/>
+			<item value="STABLE"/>
 		</list>
 		<list key="replacehistory">
+			<item value="ptrSwPkg"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1025" key="DIALOG_X_ORIGIN"/>
-		<item value="272" key="DIALOG_Y_ORIGIN"/>
+		<item value="1181" key="DIALOG_X_ORIGIN"/>
+		<item value="414" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

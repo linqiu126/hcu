@@ -206,6 +206,8 @@ typedef struct SysEngParElementHwBurnPhyIdAddr
 	UINT32  spare5;       //32
 	UINT8   cipherKey[16];
 	UINT8 	rsv[16];   //32
+	UINT16 	nodeHwType;
+	UINT16 	nodeHwPemId;
 }SysEngParElementHwBurnPhyIdAddr_t;
 
 

@@ -1288,6 +1288,7 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MS
 	memset(&snd, 0, sizeof(msg_struct_cloudvela_sysswm_inventory_req_t));
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = HUITP_ENDIAN_EXG16(rcv->baseReq.comReq);
+	snd.equEntry = rcv->reqValue.equEntry;
 	snd.hwType = HUITP_ENDIAN_EXG16(rcv->reqValue.hwType);
 	snd.hwId = HUITP_ENDIAN_EXG16(rcv->reqValue.hwId);
 	snd.swRel = HUITP_ENDIAN_EXG16(rcv->reqValue.swRel);
@@ -1327,6 +1328,7 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUIT
 	memset(&snd, 0, sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t));
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
+	snd.equEntry = rcv->confirmValue.equEntry;
 	snd.hwType = HUITP_ENDIAN_EXG16(rcv->confirmValue.hwType);
 	snd.hwId = HUITP_ENDIAN_EXG16(rcv->confirmValue.hwId);
 	snd.swRel = HUITP_ENDIAN_EXG16(rcv->confirmValue.swRel);
@@ -1369,6 +1371,9 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_M
 	memset(&snd, 0, sizeof(msg_struct_cloudvela_sysswm_sw_package_req_t));
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseReq = HUITP_ENDIAN_EXG16(rcv->baseReq.comReq);
+	snd.equEntry = rcv->segValue.equEntry;
+	snd.hwType = HUITP_ENDIAN_EXG16(rcv->segValue.hwType);
+	snd.hwPem = HUITP_ENDIAN_EXG16(rcv->segValue.hwPem);
 	snd.swRelId = HUITP_ENDIAN_EXG16(rcv->segValue.swRelId);
 	snd.swVerId = HUITP_ENDIAN_EXG16(rcv->segValue.swVerId);
 	snd.upgradeFlag = rcv->segValue.upgradeFlag;
@@ -1415,6 +1420,9 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUI
 	memset(&snd, 0, sizeof(msg_struct_cloudvela_sysswm_sw_package_confirm_t));
 	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
 	snd.baseConfirm = rcv->baseConfirm.comConfirm;
+	snd.equEntry = rcv->segValue.equEntry;
+	snd.hwType = HUITP_ENDIAN_EXG16(rcv->segValue.hwType);
+	snd.hwPem = HUITP_ENDIAN_EXG16(rcv->segValue.hwPem);
 	snd.swRelId = HUITP_ENDIAN_EXG16(rcv->segValue.swRelId);
 	snd.swVerId = HUITP_ENDIAN_EXG16(rcv->segValue.swVerId);
 	snd.upgradeFlag = rcv->segValue.upgradeFlag;

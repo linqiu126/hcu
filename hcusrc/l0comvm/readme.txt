@@ -13,13 +13,16 @@
 
 
 
+//= ZJL, 2017 July.31 CURRENT_SW_DELIVERY 233=>BFSC项目
+= 下载分段中，INVENTORY完成
+= 改动量较大，先checkin
 
 //= ZJL,, 2017 July.30 CURRENT_SW_DELIVERY 232=>BFSC项目
 = 下载分段机制继续
 = 建立起基本的DBI数据处理机制
 = 更新数据库表单
 
-//= ZJL,, 2017 July.30 CURRENT_SW_DELIVERY 231=>BFSC项目
+//= ZJL, 2017 July.30 CURRENT_SW_DELIVERY 231=>BFSC项目
 = 下载分段机制
 = 删掉三个月的老旧告警数据，放入HWINV工作机制中
 = 去掉dbi_bfsc对于huitp.h的依赖

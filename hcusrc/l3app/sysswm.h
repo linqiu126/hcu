@@ -38,11 +38,19 @@ typedef struct gTaskSysswmContextBody
 }gTaskSysswmContextBody_t;
 typedef struct gTaskSysswmContext
 {
+	HcuSysMsgIeL3SysSwmSwPkgElement_t  	cloudSwPkg;
+	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudSwDl;
 	gTaskSysswmContextBody_t  	bhSw;
 	gTaskSysswmContextBody_t  	ihuSw;
+	UINT8	swDlSession;
 }gTaskSysswmContext_t;
+#define HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT 	0
+#define HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE 	1
+#define HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL 	2
+#define HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH 	3
+#define HCU_SYSSWM_SW_DOWNLOAD_SESSION_MAX_NBR	 	4
 
-#define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  10
+#define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  3
 
 typedef struct strTaskSysswmSwpkgLable
 {
@@ -72,17 +80,22 @@ extern OPSTAT fsm_sysswm_task_entry(UINT32 dest_id, UINT32 src_id, void * param_
 extern OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+//CLOUDVELA
 extern OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_cloudvela_sw_package_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+//CANITFLEO
 extern OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 
 //Local API
 OPSTAT func_sysswm_int_init(void);
-OPSTAT func_sysswm_time_out_period_working_scan(void);
+OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void);
+OPSTAT func_sysswm_time_out_period_working_scan_ihu_stable(void);
+OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void);
+OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void);
 OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, strTaskSysswmSwpkgLable_t* input);
 OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgradeFlag);
 OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *input);

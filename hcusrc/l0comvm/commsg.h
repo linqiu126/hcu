@@ -1990,6 +1990,7 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  equEntry;
 	UINT16 hwType;
 	UINT16 hwId;
 	UINT16 swRel;
@@ -2012,6 +2013,7 @@ typedef struct msg_struct_sysswm_cloudvela_inventory_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  equEntry;
 	UINT16 hwType;
 	UINT16 hwId;
 	UINT16 swRel;
@@ -2026,6 +2028,7 @@ typedef struct msg_struct_sysswm_cloudvela_inventory_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  equEntry;
 	UINT16 hwType;
 	UINT16 hwId;
 	UINT16 swRel;
@@ -2041,6 +2044,7 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
+	UINT8  equEntry;
 	UINT16 hwType;
 	UINT16 hwId;
 	UINT16 swRel;
@@ -2058,6 +2062,9 @@ typedef struct msg_struct_cloudvela_sysswm_sw_package_req
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReq;
+	UINT8  equEntry;
+	UINT16 hwType;
+	UINT16 hwPem;
 	UINT16 swRelId;
 	UINT16 swVerId;
 	UINT8  upgradeFlag;
@@ -2075,6 +2082,9 @@ typedef struct msg_struct_sysswm_cloudvela_sw_package_resp
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseResp;
+	UINT8  equEntry;
+	UINT16 hwType;
+	UINT16 hwPem;
 	UINT16 swRelId;
 	UINT16 swVerId;
 	UINT8  upgradeFlag;
@@ -2089,6 +2099,9 @@ typedef struct msg_struct_sysswm_cloudvela_sw_package_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
+	UINT8  equEntry;
+	UINT16 hwType;
+	UINT16 hwPem;
 	UINT16 swRelId;
 	UINT16 swVerId;
 	UINT8  upgradeFlag;
@@ -2103,6 +2116,9 @@ typedef struct msg_struct_cloudvela_sysswm_sw_package_confirm
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseConfirm;
+	UINT8  equEntry;
+	UINT16 hwType;
+	UINT16 hwPem;
 	UINT16 swRelId;
 	UINT16 swVerId;
 	UINT8  upgradeFlag;
@@ -3777,6 +3793,17 @@ typedef struct HcuSysMsgIeL3SysSwmSwPkgElement
 	char	currentActive[2];
 	UINT32	updateTime;
 }HcuSysMsgIeL3SysSwmSwPkgElement_t;
+
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_NULL  			0
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT 		1
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_CLIENT 		2
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_SERVER 		3   //用于ＳＵＩ接口，HCU-IHU之间的软件下载
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_INVALID  		0xFF
+//必须跟以下定义相互兼容，不然将出现编解码问题
+//#define HUITP_IEID_UNI_EQU_ENTRY_NONE 0
+//#define HUITP_IEID_UNI_EQU_ENTRY_HCU 	1
+//#define HUITP_IEID_UNI_EQU_ENTRY_IHU 	2
+//#define HUITP_IEID_SUI_EQU_ENTRY_INVALID 0xFF
 
 typedef struct HcuSysMsgIeL3SysSwmSwDlElement
 {
