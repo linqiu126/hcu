@@ -106,9 +106,10 @@ OPSTAT fsm_syspm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSPM] = 0;
 	memset(&zHcuSysStaPm.statisCnt, 0, sizeof(HcuGlobalCounter_t));
-	memset(&gTaskSyspmContext, 0, sizeof(gTaskSyspmContext_t));
 
-	//启动周期性定时器
+	//HcuDebugPrint("PM: PM TIMER VALUE = %d !\n\n\n\n\n\n\n\n\n\n\n", zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSPM_PERIOD_WORKING].dur);
+
+
 	ret = hcu_timer_start(TASK_ID_SYSPM, TIMER_ID_1S_SYSPM_PERIOD_WORKING, \
 			zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSPM_PERIOD_WORKING].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){

@@ -108,6 +108,8 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	memset(&gTaskSysswmContext, 0, sizeof(gTaskSysswmContext_t));
 
 	//启动周期性定时器
+	//HcuDebugPrint("SWM: SWM TIMER VALUE = %d !\n\n\n\n\n\n\n\n\n\n\n", zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_PERIOD_WORKING].dur);
+
 	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, \
 	zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_PERIOD_WORKING].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){

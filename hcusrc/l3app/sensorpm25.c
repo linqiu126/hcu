@@ -247,6 +247,7 @@ void func_pm25_time_out_read_data_from_modbus(void)
 		}
 
 		//启动一次性定时器
+		//HcuDebugPrint("PM25: PM25 MODBUS FB TIMER VALUE = %d !\n\n\n\n\n\n\n\n\n\n\n", zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25_MODBUS_FB].dur);
 		ret = hcu_timer_start(TASK_ID_PM25, TIMER_ID_1S_PM25_MODBUS_FB, \
 				zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25_MODBUS_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 		if (ret == FAILURE){
@@ -300,6 +301,8 @@ void func_pm25_time_out_processing_no_rsponse(void)
 	//暂时啥也不干，未来在瞬时模式下也许需要回一个失败的消息，当然缺省情况下没有反应就是表示失败
 
 	//State Transfer to FSM_STATE_PM25_ACTIVE
+	HcuDebugPrint("PM25: GET TIME OUT, FSM STATE SET TO %d !\n\n\n\n\n\n\n\n\n\n\n", FSM_STATE_PM25_ACTIVED);
+
 	ret = FsmSetState(TASK_ID_PM25, FSM_STATE_PM25_ACTIVED);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;

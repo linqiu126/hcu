@@ -476,7 +476,23 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		break;
 	}
 
-	snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+	{
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+	{
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+	{
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FORMAT_NULL;
+	}
+	else //DEFAULT取标准高配置传感器
+	{
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FORMAT_NULL;
+	}
+
 	snd.pm25.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
 	snd.pm25.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
 	snd.pm25.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
@@ -1822,43 +1838,15 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 	case L3PO_pm25_data_req:
 		len = buf->curBuf[index];
 		index++;
-		if (len != PM25_LENGTH_OF_REG *2){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-			return FAILURE;
-		}
-/*//bug fix by shanchun
-		t0 = buf->curBuf[index++];
-		t1 = buf->curBuf[index++];
-		t2 = buf->curBuf[index++];
-		t3 = buf->curBuf[index++];
-		t0 = (t0 <<8) & 0xFF00;
-		t1 = t1 & 0xFF;
-		t2 = (t2 <<24) & 0xFF000000;
-		t3 = (t3 << 16) & 0xFF0000;
-		snd->pm25.pm1d0Value = t0 + t1 + t2 + t3;
-		t0 = buf->curBuf[index++];
-		t1 = buf->curBuf[index++];
-		t2 = buf->curBuf[index++];
-		t3 = buf->curBuf[index++];
-		t0 = (t0 <<8) & 0xFF00;
-		t1 = t1 & 0xFF;
-		t2 = (t2 <<24) & 0xFF000000;
-		t3 = (t3 << 16) & 0xFF0000;
-		snd->pm25.pm2d5Value = t0 + t1 + t2 + t3;
-		t0 = buf->curBuf[index++];
-		t1 = buf->curBuf[index++];
-		t2 = buf->curBuf[index++];
-		t3 = buf->curBuf[index++];
-		t0 = (t0 <<8) & 0xFF00;
-		t1 = t1 & 0xFF;
-		t2 = (t2 <<24) & 0xFF000000;
-		t3 = (t3 << 16) & 0xFF0000;
-		snd->pm25.pm10Value = t0 + t1 + t2 + t3;
-*/
 
 		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
 		{
+			if (len != PM25_LENGTH_OF_REG *2){
+				HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				return FAILURE;
+			}
+
 			t0 = buf->curBuf[index++];
 			t1 = buf->curBuf[index++];
 			t2 = buf->curBuf[index++];
@@ -1890,6 +1878,12 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
 		{
+			if (len != PM25_LENGTH_OF_REG *2){
+				HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				return FAILURE;
+			}
+
 			t0 = buf->curBuf[index++];
 			t1 = buf->curBuf[index++];
 			t2 = buf->curBuf[index++];
@@ -1921,6 +1915,12 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 		{
+			if (len != PM25_LENGTH_OF_REG_NEW *2){
+				HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				return FAILURE;
+			}
+
 			t0 = buf->curBuf[index++];
 			t1 = buf->curBuf[index++];
 			t0 = (t0 <<8) & 0xFF00;
@@ -1942,6 +1942,12 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 		else  //Default阿尔森4-20MA/RS485
 		{
+			if (len != PM25_LENGTH_OF_REG_NEW *2){
+				HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				return FAILURE;
+			}
+
 			t0 = buf->curBuf[index++];
 			t1 = buf->curBuf[index++];
 			t0 = (t0 <<8) & 0xFF00;
