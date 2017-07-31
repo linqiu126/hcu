@@ -26,6 +26,8 @@
 #define DBI_BFSC_SNESOR_STATUS_ERR_RESP_RCV  	9
 #define DBI_BFSC_SNESOR_STATUS_INV_RPT_RCV  	10
 #define DBI_BFSC_SNESOR_STATUS_SW_PKG_RCV  		11
+#define DBI_BFSC_SNESOR_STATUS_NULL  			0xFF
+
 
 extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
 extern OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wmc_status, uint32_t wmc_weight_value);

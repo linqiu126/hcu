@@ -3755,6 +3755,49 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 }HcuSysMsgIeL3bfscContextStaElement_t;
 
 
+/*
+ *
+ *
+ *   //软件下载数据结构
+ *
+ *
+ */
+#define		HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN		61
+typedef struct HcuSysMsgIeL3SysSwmSwPkgElement
+{
+	UINT8	equEntry;  			//标识是由谁去触发软件下载的标识
+	UINT16	hwType;
+	UINT16	hwPem;
+	UINT16	swRel;
+	UINT16	swVer;
+	UINT8	upgradeFlag;
+	UINT32	totalLen;
+	UINT16	checksum;
+	char	fileName[HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN];
+	char	currentActive[2];
+	UINT32	updateTime;
+}HcuSysMsgIeL3SysSwmSwPkgElement_t;
+
+typedef struct HcuSysMsgIeL3SysSwmSwDlElement
+{
+	UINT8	equEntry;  			//标识是由谁去触发软件下载的标识
+	UINT16	hwType;
+	UINT16	hwPem;
+	UINT16	swRel;
+	UINT16	swVer;
+	UINT8	upgradeFlag;
+	UINT32	totalLen;
+	UINT16	checksum;
+	UINT8	nodeId;
+	UINT16	segTotal;
+	UINT16	segIndex;
+	UINT16	segSplitLen;
+	UINT16 	segValidLen;
+	UINT16	segCkSum;
+	char	fileName[HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN];
+	UINT32	dlTime;
+}HcuSysMsgIeL3SysSwmSwDlElement_t;
+
 
 /*
  *

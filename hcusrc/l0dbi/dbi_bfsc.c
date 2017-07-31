@@ -393,7 +393,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: REPLACE/UPDATE database error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBICOM: UPDATE database error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
@@ -433,7 +433,7 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
     result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBICOM: UPDATE data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
@@ -477,7 +477,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
-	    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+	    	HcuErrorPrint("DBICOM: UPDATE data error: %s\n", mysql_error(sqlHandler));
 	        return FAILURE;
 		}
     }
@@ -557,7 +557,7 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullwe
 
     if(result){
     	    	mysql_close(sqlHandler);
-    	    	HcuErrorPrint("DBICOM: REPLACE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
+    	    	HcuErrorPrint("DBICOM: UPDATE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
     	        return FAILURE;
     		}
 
@@ -593,7 +593,7 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT32 fullwe
 
     if(result){
     	    	mysql_close(sqlHandler);
-    	    	HcuErrorPrint("DBICOM: REPLACE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
+    	    	HcuErrorPrint("DBICOM: UPDATE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
     	        return FAILURE;
     		}
 
