@@ -676,13 +676,6 @@ typedef struct CloudBhItfDevReportStdXml
 	char conGpsy[9];   //4B
 	char conGpsz[9];   //4B
 
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	//BFSC
-	char conBfsc[9];  //4B, 组合秤
-	char conBfscSensorNb[3];  //1B
-	char conBfscData[8 * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + 1]; //4B * HCU_BFSC_SENSOR_WS_NBR_MAX传感器数量
-#endif
-
 	//Added by Shanchun for alarm report
 	char conAlarmType[3];   //1B
 	char conAlarmContent[5];//2B

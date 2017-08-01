@@ -15,7 +15,6 @@
 #define L2FRAME_ZHBHJT212CODEC_H_
 
 #include "../l2codec/zhbhjt212msg.h"
-#include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
 
@@ -83,7 +82,9 @@ typedef struct ZHBHJT212MsgFormatStaticCfg
 //message pack/unpack
 extern OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_t *inputPar, CloudDataSendBuf_t *output);
 extern OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId);
-
+//这两个函数是从STDXML中移植过来的，纯粹是为了支持HEART-BEAT的特殊消息
+extern OPSTAT func_cloudvela_zhbhjt212_msg_heart_beat_pack(CloudDataSendBuf_t *buf);
+extern OPSTAT func_cloudvela_zhbhjt212_stdxml_msg_pack(CloudBhItfDevReportStdXml_t *xmlFormat, CloudDataSendBuf_t *buf);
 
 //Local APIs
 UINT8 func_cloudvela_zhbhjt212_search_polid_by_name(char *PolIdName);

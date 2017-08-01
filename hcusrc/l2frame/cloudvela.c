@@ -455,9 +455,8 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-		//if (func_cloudvela_stdzhb_msg_heart_beat_pack(&pMsgOutput) == FAILURE) //to remove or update for HJT212
-		//	HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+		if (func_cloudvela_zhbhjt212_msg_heart_beat_pack(&pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
 //	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
 //		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&pMsgOutput) == FAILURE)

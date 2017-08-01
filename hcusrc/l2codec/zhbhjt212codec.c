@@ -599,6 +599,272 @@ OPSTAT func_cloudvela_zhbhjt212_msg_pack(msg_struct_llczhb_cloudvela_frame_resp_
 	return SUCCESS;
 }
 
+//从ZHB中移植过来
+OPSTAT func_cloudvela_zhbhjt212_msg_heart_beat_pack(CloudDataSendBuf_t *buf)
+{
+	//参数检查，其它参数无所谓
+	if (buf == NULL)
+		HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Error CloudDataSendBuf_t pointer!\n");
+
+	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212)//add HJT212 for test
+	{
+		//初始化变量
+		CloudBhItfDevReportStdXml_t xmlFormat;
+		memset(&xmlFormat, 0, sizeof(CloudBhItfDevReportStdXml_t));
+
+		//pack数据到临时字符串中, 将数据打印到关键的数值中
+		sprintf(xmlFormat.conCmdId, "%02X", L3CI_heart_beat & 0xFF);
+		strcpy(xmlFormat.MsgType, HCU_CLOUDVELA_BH_MSG_TYPE_HEAT_BEAT_STRING);
+
+		if (func_cloudvela_zhbhjt212_stdxml_msg_pack(&xmlFormat, buf) == FAILURE){
+			HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT Pack message error!\n");
+		}
+
+		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_NOR_ON) != FALSE){
+			HcuDebugPrint("ZHBHJT: HEART_BEAT Frame XML Send data len=%d, String= [%s]\n", buf->curLen, buf->curBuf);
+		}
+	}
+
+	else{
+		HCU_ERROR_PRINT_ZHBHJTCODEC("ZHBHJT: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_cloudvela_zhbhjt212_stdxml_msg_pack(CloudBhItfDevReportStdXml_t *xmlFormat, CloudDataSendBuf_t *buf)
+{
+	//参数检查，其它参数无所谓
+	if (xmlFormat == NULL){
+		HcuErrorPrint("CLOUDVELA: Error CloudBhItfDevReportStdXml_t pointer!\n");
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+	if (buf == NULL){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		HcuErrorPrint("CLOUDVELA: Error CloudDataSendBuf_t pointer!\n");
+		return FAILURE;
+	}
+
+	//格式固定区域
+	strcpy(xmlFormat->xml_l, "<xml>");
+	strcpy(xmlFormat->xml_r, "</xml>");
+	strcpy(xmlFormat->ToUserName_l, "<ToUserName><![CDATA[");
+	strcpy(xmlFormat->ToUserName_r, "]]></ToUserName>");
+	strcpy(xmlFormat->FromUserName_l, "<FromUserName><![CDATA[");
+	strcpy(xmlFormat->FromUserName_r, "]]></FromUserName>");
+	strcpy(xmlFormat->CreateTime_l, "<CreateTime>");
+	strcpy(xmlFormat->CreateTime_r, "</CreateTime>");
+	strcpy(xmlFormat->MsgType_l, "<MsgType><![CDATA[");
+	strcpy(xmlFormat->MsgType_r, "]]></MsgType>");
+	strcpy(xmlFormat->Content_l, "<Content><![CDATA[");
+	strcpy(xmlFormat->Content_r, "]]></Content>");
+	strcpy(xmlFormat->FuncFlag_l, "<FuncFlag>");
+	strcpy(xmlFormat->FuncFlag_r, "</FuncFlag>");
+
+	//对于目前来说，数值固定内容
+	strcpy(xmlFormat->ToUserName, zHcuSysEngPar.cloud.svrNameDefault);
+	strcpy(xmlFormat->FromUserName, zHcuSysEngPar.hwBurnId.equLable);
+
+
+	UINT32 timeStamp = time(0);//by Shanchun: report local time to align with unpack method in Cloud
+    sprintf(zHcuVmCtrTab.clock.sSec, "%d", timeStamp);
+	//HcuDebugPrint("%s\n", zCurTimeDate.sSec);
+
+	//func_hwinv_scan_date(); //更新时间戳
+	strcpy(xmlFormat->CreateTime, zHcuVmCtrTab.clock.sSec);
+
+	//MsgType参数，必须由调用函数填入，因为它才能知晓这是什么样的内容体
+	//strcpy(xmlFormat->MsgType, CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT);
+	if (strlen(xmlFormat->FuncFlag) <=0 )	sprintf(xmlFormat->FuncFlag, "%1d", 0);
+
+	//准备接龙字符串成为一整串
+	char s[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+	memset(s, 0, sizeof(s));
+	char da[HCU_SYSMSG_COM_MSG_BODY_LEN_MAX];
+	memset(da, 0, sizeof(da));
+	char tmp[3] = "";
+
+	//固定头部分
+	strcat(s, xmlFormat->xml_l);
+	strcat(s, xmlFormat->ToUserName_l);
+	strcat(s, xmlFormat->ToUserName);
+	strcat(s, xmlFormat->ToUserName_r);
+	strcat(s, xmlFormat->FromUserName_l);
+	strcat(s, xmlFormat->FromUserName);
+	strcat(s, xmlFormat->FromUserName_r);
+	strcat(s, xmlFormat->CreateTime_l);
+	strcat(s, xmlFormat->CreateTime);
+	strcat(s, xmlFormat->CreateTime_r);
+	strcat(s, xmlFormat->MsgType_l);
+	strcat(s, xmlFormat->MsgType);
+	strcat(s, xmlFormat->MsgType_r);
+	strcat(s, xmlFormat->Content_l);
+
+	//顺序是编码的黄金规则，千万不能错，否则就无法解开了!!!
+	//char conCmdId[3];
+	strcat(s, xmlFormat->conCmdId);
+
+	//所有变长部分
+	//char conOptId[3]; //1B
+	strcat(da, xmlFormat->conOptId);
+
+	//char conEqpId[3];  //1B
+	strcat(da, xmlFormat->conEqpId);
+
+	//char conBackType[3]; //1B
+	strcat(da, xmlFormat->conBackType);// by Shanchun: move it after EqpId to align with Pack sequence in Cloud
+
+	//char conDataFormat[3]; //1B
+	strcat(da, xmlFormat->conDataFormat);
+
+	//char conEmc[5];   //2B
+	strcat(da, xmlFormat->conEmc);
+
+	//char conPm1d0[9];   //4B
+	strcat(da, xmlFormat->conPm1d0);
+
+	//char conPm2d5[9];   //4B
+	strcat(da, xmlFormat->conPm2d5);
+
+	//char conPm10d[9];   //4B
+	strcat(da, xmlFormat->conPm10d);
+
+	//char conWinddir[5];   //2B
+	strcat(da, xmlFormat->conWinddir);
+
+	//char conWindspd[5];   //2B
+	strcat(da, xmlFormat->conWindspd);
+
+	//char conTemp[5];   //2B
+	strcat(da, xmlFormat->conTemp);
+
+	//char conHumid[5];   //2B
+	strcat(da, xmlFormat->conHumid);
+
+	//char conNoise[9];   //4B
+	strcat(da, xmlFormat->conNoise);
+
+	//char conew; //1B
+	strcat(da, xmlFormat->conEW);
+
+	//char conGpsx[9];   //4B
+	strcat(da, xmlFormat->conGpsx);
+
+	//char conns; //1B
+	strcat(da, xmlFormat->conNS);
+
+	//char conGpsy[9];   //4B
+	strcat(da, xmlFormat->conGpsy);
+
+	//char conGpsz[9];   //4B
+	strcat(da, xmlFormat->conGpsz);
+
+	//char conAlarmType[3];   //1B
+	strcat(da, xmlFormat->conAlarmType);
+	//char conAlarmContent[5];//2B
+	strcat(da, xmlFormat->conAlarmContent);
+	//char conAlarmSeverity[3];//1B
+	strcat(da, xmlFormat->conAlarmSeverity);
+	//char conAlarmClearFlag[3];//1B
+	strcat(da, xmlFormat->conAlarmClearFlag);
+
+
+	//Adding by Shanchun for pm report
+	//char conPmCloudVelaConnCnt[5];   //2B
+	strcat(da, xmlFormat->conPmCloudVelaConnCnt);
+	//char conPmCloudVelaConnFailCnt[5];   //2B
+	strcat(da, xmlFormat->conPmCloudVelaConnFailCnt);
+	//char conPmCloudVelaDiscCnt[5];//2B
+	strcat(da, xmlFormat->conPmCloudVelaDiscCnt);
+	//char conPmSocketDiscCnt[5];//2B
+	strcat(da, xmlFormat->conPmSocketDiscCnt);
+	//char conPmTaskRestartCnt[5];//2B
+	strcat(da, xmlFormat->conPmTaskRestartCnt);
+	//char conPmCpuOccupy[5];//2B
+	strcat(da, xmlFormat->conPmCpuOccupy);
+	//char conPmMemOccupy[5];//2B
+	strcat(da, xmlFormat->conPmMemOccupy);
+	//char conPmDiskOccupy[5];//2B
+	strcat(da, xmlFormat->conPmDiskOccupy);
+
+
+	//Adding by Shanchun for control cmd
+	//char conPowerOnOff[3]; //1B
+	strcat(da, xmlFormat->conPowerOnOff);
+	//char conInterSample[3]; //1B
+	strcat(da, xmlFormat->conInterSample);
+	//char conMeausTimes[3]; //1B
+	strcat(da, xmlFormat->conMeausTimes);
+	//char conNewEquId[3]; //1B
+	strcat(da, xmlFormat->conNewEquId);
+	//char conWorkCycle[3]; //1B
+	strcat(da, xmlFormat->conWorkCycle);
+	//char conSwDownload[3]; //1B
+	strcat(da, xmlFormat->conSwDownload);
+
+	//Adding by Shanchun for inventory report
+	//char conHwMac[35];//17B
+	strcat(da, xmlFormat->conHwMac);
+	//char conHwType[3];//1B
+	strcat(da, xmlFormat->conHwType);
+	//char conHwVersion[5];//2B
+	strcat(da, xmlFormat->conHwVersion);
+	//char conSwRelease[3];//1B
+	strcat(da, xmlFormat->conSwRelease);
+	//char conSwDelivery[5];//2B
+	strcat(da, xmlFormat->conSwDelivery);
+	//char conDbDelivery[5];//2B
+	strcat(da, xmlFormat->conDbDelivery);
+
+
+	//char conSwInventory[3]; //1B
+	strcat(da, xmlFormat->conAvUpload);
+	//strcat(da, xmlFormat->conAvFileName);
+
+	//char conTimeStamp[9]; //4B
+	strcat(da, xmlFormat->conTimeStamp);
+
+	//char conNtimes[5];   //2B
+	strcat(da, xmlFormat->conNtimes);
+
+	HcuDebugPrint("CLOUDVELA: Send out data DA: %s!!!\n", da);
+
+	//获取变长部分的长度, Len=0的情况存在，比如Heart_Beat消息，这里为了统一处理函数的简化，不做过分的区别对待和处理，尽量让处理函数通用化
+	int len = 0;
+	len = strlen(da);
+	//if ((len < 0) || ((len % 2) != 0) || (len > MAX_HCU_MSG_BUF_LENGTH)){
+	if ((len < 0) || (len > HCU_SYSMSG_COM_MSG_BODY_LEN_MAX)){
+		HcuErrorPrint("CLOUDVELA: No data to be pack or too long length of data content %d!!!\n", len);
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;
+		return FAILURE;
+	}
+
+	len = len / 2;  //字节长度，而非字符串长度
+
+
+	//如果长度=0,则正好，包含一个长度域=0的东东，非常好！省得底层收到的长度=1的HEART_BEAT消息
+	//char conLen[3];  //1B
+	sprintf(tmp, "%02X", len & 0xFF);
+	strcat(s, tmp);
+
+	//变长部分
+	strcat(s, da);
+
+	//Finish content part
+	strcat(s, xmlFormat->Content_r);
+
+	//固定尾部分
+	strcat(s, xmlFormat->FuncFlag_l);
+	strcat(s, xmlFormat->FuncFlag);
+	strcat(s, xmlFormat->FuncFlag_r);
+	strcat(s, xmlFormat->xml_r);
+
+	//存入返回参量中
+	strcpy(buf->curBuf, s);
+	buf->curLen = strlen(s) + 4;
+	return SUCCESS;
+}
 
 //UNPACK函数入口
 OPSTAT func_cloudvela_zhbhjt212_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rcv, int expectMsgId)
