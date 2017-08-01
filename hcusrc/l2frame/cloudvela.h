@@ -8,12 +8,8 @@
 #ifndef L2FRAME_CLOUDVELA_H_
 #define L2FRAME_CLOUDVELA_H_
 
-#include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
-#include "../l2codec/bhcodecxml.h"
-#include "../l2codec/bhcodeczhb.h"
 #include "../l2codec/huixmlcodec.h"
-#include "../l0dbi/l0dbi_inc.h"
 #include "../l2codec/zhbhjt212codec.h"
 
 //State definition

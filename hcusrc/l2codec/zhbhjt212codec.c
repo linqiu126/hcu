@@ -1513,7 +1513,7 @@ void func_cloudvela_zhbhjt212_convert_ymd_wo_ms_to_u32time(char *in, UINT32 *out
 
 void func_cloudvela_zhbhjt212_test(void)
 {
-	int i=0, j=0, k=0, index = 0, gindex = 0;
+	//int i=0, j=0, k=0, index = 0, gindex = 0;
 	/*
 	UINT8 index = 0;
 	while(gZhbhjtMsgFormatCfgUlResp[index].cnCode != ZHBHJT_IE_uni_CNcode_MAX_9999){
@@ -1649,7 +1649,7 @@ void func_cloudvela_zhbhjt212_test(void)
 
 	//计算所有输入消息的CRC数据
 
-	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_PSWD);
+	/*ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_PSWD);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_PSWD);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_FT_TIME);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_GET_FT_TIME);
@@ -1674,7 +1674,7 @@ void func_cloudvela_zhbhjt212_test(void)
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_INIT_OT);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_INIT_WARNING);
 	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_INST_SMLP);
-	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_SLMP_CYCLE);
+	ZHBHJT_PRINT_SIZE_AND_CRC(ZHBHJT_MSG_TEST_DATA_SET_SLMP_CYCLE);*/
 
 	/*
 	printf("ZHB: %s\n", ZHBHJT_MSG_TEST_DATA_SET_PSWD);

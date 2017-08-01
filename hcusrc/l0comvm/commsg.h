@@ -578,25 +578,25 @@ typedef struct  sensor_modbus_opertion_general //
 	UINT32 interSample;  //sample_number
 	UINT32 meausTimes;   //sample_cycle
 }sensor_modbus_opertion_general_t;
-typedef struct sensor_zhb_transport_format_dl //
-{
-	char   qn[21]; //中环保标准，20c, QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求, 用于请求命令或通知命令
-	char   st[6];  //中环保标准，5c, ST=系统编号
-	char   cn[8];  //中环保标准，7c, 命令编号 CN
-	char   pw[7];  //中环保标准， 6c, PW=访问密码
-	char   mn[13]; //中环保标准， 12c, 设备唯一标识MN
-	UINT8  ansFlag;//中环保标准， 3c, 数据包是否拆分及应答标志 Flag，从云后台的接收方向
-}sensor_zhb_transport_format_dl_t;
-typedef struct  sensor_zhb_transport_format_ul //
-{
-	char   qn[21]; //中环保标准，20c, QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求, 用于请求命令或通知命令
-	char   st[6];  //中环保标准，5c, ST=系统编号
-	char   cn[8];  //中环保标准，7c, 命令编号 CN
-	char   pw[7];  //中环保标准， 6c, PW=访问密码
-	char   mn[13]; //中环保标准， 12c, 设备唯一标识MN
-	UINT32 pnmu;     //总包号，满足中环保标准要求
-	UINT32 pno;      //当前包号，满足中环保标准要求
-}sensor_zhb_transport_format_ul_t;
+//typedef struct sensor_zhb_transport_format_dl //
+//{
+//	char   qn[21]; //中环保标准，20c, QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求, 用于请求命令或通知命令
+//	char   st[6];  //中环保标准，5c, ST=系统编号
+//	char   cn[8];  //中环保标准，7c, 命令编号 CN
+//	char   pw[7];  //中环保标准， 6c, PW=访问密码
+//	char   mn[13]; //中环保标准， 12c, 设备唯一标识MN
+//	UINT8  ansFlag;//中环保标准， 3c, 数据包是否拆分及应答标志 Flag，从云后台的接收方向
+//}sensor_zhb_transport_format_dl_t;
+//typedef struct  sensor_zhb_transport_format_ul //
+//{
+//	char   qn[21]; //中环保标准，20c, QN=YYYYMMDDHHMMSSZZZ，用来唯一标识一个命令请求, 用于请求命令或通知命令
+//	char   st[6];  //中环保标准，5c, ST=系统编号
+//	char   cn[8];  //中环保标准，7c, 命令编号 CN
+//	char   pw[7];  //中环保标准， 6c, PW=访问密码
+//	char   mn[13]; //中环保标准， 12c, 设备唯一标识MN
+//	UINT32 pnmu;     //总包号，满足中环保标准要求
+//	UINT32 pno;      //当前包号，满足中环保标准要求
+//}sensor_zhb_transport_format_ul_t;
 typedef struct  sensor_emc_data_element //
 {
 	UINT32 equipid;
@@ -2546,7 +2546,7 @@ typedef struct  msg_struct_cloudvela_emc_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_emc_data_req_t;
 
@@ -2560,7 +2560,7 @@ typedef struct  msg_struct_emc_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_emc_data_element_t emc;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_emc_cloudvela_data_resp_t;
 
@@ -2574,7 +2574,7 @@ typedef struct  msg_struct_cloudvela_emc_ctrl_req
 	UINT8  optId;  //STDXML放弃，该域将去掉
 	UINT8  backType;  //STDXML放弃，该域将去掉
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_emc_ctrl_req_t;
 //cmdTag => huitp.h StrIe_HUITP_IEID_uni_com_snr_cmd_tag_t
@@ -2589,7 +2589,7 @@ typedef struct msg_struct_emc_cloudvela_ctrl_resp
 	UINT8  optId;  //STDXML放弃，该域将去掉
 	UINT8  backType;  //STDXML放弃，该域将去掉
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_emc_cloudvela_ctrl_resp_t;
 
@@ -2599,7 +2599,7 @@ typedef struct msg_struct_emc_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_emc_data_element_t emc;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_emc_cloudvela_data_report_t;
 
@@ -2620,7 +2620,7 @@ typedef struct  msg_struct_cloudvela_pm25_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_pm25_data_req_t;
 
@@ -2633,7 +2633,7 @@ typedef struct  msg_struct_pm25_cloudvela_data_resp_t //
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_pm25_data_element_t pm25;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_pm25_cloudvela_data_resp_t;
 
@@ -2647,7 +2647,7 @@ typedef struct  msg_struct_cloudvela_pm25_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_pm25_ctrl_req_t;
 
@@ -2661,7 +2661,7 @@ typedef struct msg_struct_pm25_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_pm25_cloudvela_ctrl_resp_t;
 
@@ -2671,7 +2671,7 @@ typedef struct msg_struct_pm25_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_pm25_data_element_t pm25;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_pm25_cloudvela_data_report_t;
 
@@ -2692,7 +2692,7 @@ typedef struct  msg_struct_cloudvela_temp_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_temp_data_req_t;
 
@@ -2705,7 +2705,7 @@ typedef struct msg_struct_temp_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_temp_data_element_t temp;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_temp_cloudvela_data_resp_t;
 
@@ -2719,7 +2719,7 @@ typedef struct  msg_struct_cloudvela_temp_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_temp_ctrl_req_t;
 
@@ -2733,7 +2733,7 @@ typedef struct msg_struct_temp_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_temp_cloudvela_ctrl_resp_t;
 
@@ -2743,7 +2743,7 @@ typedef struct msg_struct_temp_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_temp_data_element_t temp;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_temp_cloudvela_data_report_t;
 
@@ -2764,7 +2764,7 @@ typedef struct  msg_struct_cloudvela_humid_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_humid_data_req_t;
 
@@ -2777,7 +2777,7 @@ typedef struct msg_struct_humid_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_humid_data_element_t humid;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_humid_cloudvela_data_resp_t;
 
@@ -2791,7 +2791,7 @@ typedef struct  msg_struct_cloudvela_humid_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_humid_ctrl_req_t;
 
@@ -2805,7 +2805,7 @@ typedef struct msg_struct_humid_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_humid_cloudvela_ctrl_resp_t;
 
@@ -2815,7 +2815,7 @@ typedef struct msg_struct_humid_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_humid_data_element_t humid;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_humid_cloudvela_data_report_t;
 
@@ -2836,7 +2836,7 @@ typedef struct  msg_struct_cloudvela_winddir_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_winddir_data_req_t;
 
@@ -2849,7 +2849,7 @@ typedef struct msg_struct_winddir_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_winddir_data_element_t winddir;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_winddir_cloudvela_data_resp_t;
 
@@ -2863,7 +2863,7 @@ typedef struct  msg_struct_cloudvela_winddir_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_winddir_ctrl_req_t;
 
@@ -2877,7 +2877,7 @@ typedef struct msg_struct_winddir_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_winddir_cloudvela_ctrl_resp_t;
 
@@ -2887,7 +2887,7 @@ typedef struct msg_struct_winddir_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_winddir_data_element_t winddir;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_winddir_cloudvela_data_report_t;
 
@@ -2908,7 +2908,7 @@ typedef struct  msg_struct_cloudvela_windspd_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_windspd_data_req_t;
 
@@ -2921,7 +2921,7 @@ typedef struct msg_struct_windspd_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_windspd_data_element_t windspd;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_windspd_cloudvela_data_resp_t;
 
@@ -2935,7 +2935,7 @@ typedef struct  msg_struct_cloudvela_windspd_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_windspd_ctrl_req_t;
 
@@ -2949,7 +2949,7 @@ typedef struct msg_struct_windspd_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_windspd_cloudvela_ctrl_resp_t;
 
@@ -2959,7 +2959,7 @@ typedef struct msg_struct_windspd_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_windspd_data_element_t windspd;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_windspd_cloudvela_data_report_t;
 
@@ -2980,7 +2980,7 @@ typedef struct  msg_struct_cloudvela_hsmmp_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_data_req_t;
 
@@ -2993,7 +2993,7 @@ typedef struct msg_struct_hsmmp_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_hsmmp_link_element_t link;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_data_resp_t;
 
@@ -3007,7 +3007,7 @@ typedef struct  msg_struct_cloudvela_hsmmp_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_ctrl_req_t;
 
@@ -3021,7 +3021,7 @@ typedef struct msg_struct_hsmmp_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_ctrl_resp_t;
 
@@ -3031,7 +3031,7 @@ typedef struct msg_struct_hsmmp_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_hsmmp_link_element_t link;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_data_report_t;
 
@@ -3052,7 +3052,7 @@ typedef struct  msg_struct_cloudvela_noise_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_noise_data_req_t;
 
@@ -3065,7 +3065,7 @@ typedef struct msg_struct_noise_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_noise_data_element_t noise;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_noise_cloudvela_data_resp_t;
 
@@ -3079,7 +3079,7 @@ typedef struct  msg_struct_cloudvela_noise_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_noise_ctrl_req_t;
 
@@ -3093,7 +3093,7 @@ typedef struct msg_struct_noise_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_noise_cloudvela_ctrl_resp_t;
 
@@ -3103,7 +3103,7 @@ typedef struct msg_struct_noise_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_noise_data_element_t noise;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_noise_cloudvela_data_report_t;
 
@@ -3125,7 +3125,7 @@ typedef struct  msg_struct_cloudvela_ycjk_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_ycjk_data_req_t;
 
@@ -3138,7 +3138,7 @@ typedef struct msg_struct_ycjk_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_ycjk_data_element_t ycjk;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_ycjk_cloudvela_data_resp_t;
 
@@ -3152,7 +3152,7 @@ typedef struct  msg_struct_cloudvela_ycjk_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT8  sensorType;
 	UINT8  sensorId;
 	UINT32 sensorBitmap;
@@ -3169,7 +3169,7 @@ typedef struct msg_struct_ycjk_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT8  sensorType;
 	UINT8  sensorId;
 	UINT32 sensorBitmap;
@@ -3182,7 +3182,7 @@ typedef struct msg_struct_ycjk_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_ycjk_data_element_t ycjk;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_ycjk_cloudvela_data_report_t;
 
@@ -3470,7 +3470,7 @@ typedef struct  msg_struct_l3aqyc_exg_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_dl_t zhbDl;
+	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT8  sensorType;
 	UINT8  sensorId;
 	UINT32 sensorBitmap;
@@ -3487,7 +3487,7 @@ typedef struct msg_struct_l3aqyc_exg_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT8  sensorType;
 	UINT8  sensorId;
 	UINT32 sensorBitmap;
@@ -3500,7 +3500,7 @@ typedef struct msg_struct_l3aqyc_exg_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_ycjk_data_element_t ycjk;
-	sensor_zhb_transport_format_ul_t zhbUl;
+	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_l3aqyc_exg_data_report_t;
 

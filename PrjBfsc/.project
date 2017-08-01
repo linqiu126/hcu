@@ -781,26 +781,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l1hwopt/zeegbe.h</locationURI>
 		</link>
 		<link>
-			<name>src/l2codec/bhcodecxml.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/bhcodecxml.c</locationURI>
-		</link>
-		<link>
-			<name>src/l2codec/bhcodecxml.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/bhcodecxml.h</locationURI>
-		</link>
-		<link>
-			<name>src/l2codec/bhcodeczhb.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/bhcodeczhb.c</locationURI>
-		</link>
-		<link>
-			<name>src/l2codec/bhcodeczhb.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/bhcodeczhb.h</locationURI>
-		</link>
-		<link>
 			<name>src/l2codec/huitp.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huitp.h</locationURI>
