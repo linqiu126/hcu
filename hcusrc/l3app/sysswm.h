@@ -26,22 +26,11 @@ enum FSM_STATE_SYSSWM
 //Global variables
 extern HcuFsmStateItem_t HcuFsmSysswm[];
 
-typedef struct gTaskSysswmContextBody
-{
-	UINT16 targetSwRel;
-	UINT16 targetSwVer;
-	UINT16 totalSeg;
-	UINT16 segSplitLen;
-	UINT16 cfmSegIndex;
-	UINT16 swCheckSum;
-	UINT32 retransTimes;
-}gTaskSysswmContextBody_t;
+//软件系在的上下文
 typedef struct gTaskSysswmContext
 {
 	HcuSysMsgIeL3SysSwmSwPkgElement_t  	cloudSwPkg;
 	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudSwDl;
-	gTaskSysswmContextBody_t  	bhSw;
-	gTaskSysswmContextBody_t  	ihuSw;
 	UINT8	swDlSession;
 	UINT8	reTransTimes;
 }gTaskSysswmContext_t;
@@ -53,6 +42,7 @@ typedef struct gTaskSysswmContext
 
 #define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  3
 
+//文件操控的数据结构表单
 typedef struct strTaskSysswmSwpkgLable
 {
 	char fPathName[200];

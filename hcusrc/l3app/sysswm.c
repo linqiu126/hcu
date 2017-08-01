@@ -164,9 +164,11 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//PERIOD WORKING TIMER
 	else if ((rcv.timeId == TIMER_ID_1S_SYSSWM_PERIOD_WORKING) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		//先清理孤儿文件
-		if (dbi_HcuSysSwm_SwPkg_orphane_file_delete() == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete orphane file failure!\n");
+		if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES){
+			//先清理孤儿文件
+			if (dbi_HcuSysSwm_SwPkg_orphane_file_delete() == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete orphane file failure!\n");
+		}
 
 		//清理所有下载到一半的表单和文件
 		if (dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete() == FAILURE)
