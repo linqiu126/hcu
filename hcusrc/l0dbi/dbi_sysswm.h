@@ -19,6 +19,7 @@ extern OPSTAT dbi_HcuSysSwm_SwPkg_inquery_to_judge_existance(UINT8 equEntry, UIN
 extern OPSTAT dbi_HcuSysSwm_SwPkg_inquery_whole_record(UINT8 equEntry, UINT16 hwType, UINT16 hwPem, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, HcuSysMsgIeL3SysSwmSwPkgElement_t *prtSwPkg);
 extern OPSTAT dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver(UINT8 equEntry, UINT16 hwType, UINT16 hwPem, UINT8 upgradeFlag, HcuSysMsgIeL3SysSwmSwPkgElement_t *prtSwPkg);
 extern OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void);
+extern OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void);
 extern OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl);
 
 

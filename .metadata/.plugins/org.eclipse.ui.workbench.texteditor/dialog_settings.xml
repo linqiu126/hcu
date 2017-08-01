@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcu_timer_start" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="Download" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="hcu_timer_start"/>
-			<item value="ihu_start_timer"/>
-			<item value="ihu_timer_start"/>
-			<item value="TIMER_ID_1S_SYSSWM_PERIOD_WORKING"/>
-			<item value="SYSSWM"/>
-			<item value="TIMER_ID"/>
-			<item value="HcuErrorDebug"/>
-			<item value="func_sysswm_send_cloudvela_sw_package_report"/>
+			<item value="Download"/>
+			<item value="HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT"/>
+			<item value="HCU_SYSCFG_SWM_SERVER_FTP_PWD"/>
+			<item value="system"/>
+			<item value="dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete"/>
+			<item value="DELETE"/>
+			<item value="engP"/>
+			<item value="COMPLETE&quot;"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>

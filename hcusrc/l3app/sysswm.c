@@ -164,6 +164,15 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//PERIOD WORKING TIMER
 	else if ((rcv.timeId == TIMER_ID_1S_SYSSWM_PERIOD_WORKING) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//先清理孤儿文件
+		if (dbi_HcuSysSwm_SwPkg_orphane_file_delete() == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete orphane file failure!\n");
+
+		//清理所有下载到一半的表单和文件
+		if (dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete() == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete incomplete download file failure!\n");
+
+		//分类处理
 		if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT) && ((zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE) || \
 				(zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL) || (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)))
 			ret = func_sysswm_time_out_period_working_scan_hcu_client();
@@ -176,6 +185,12 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		gTaskSysswmContext.swDlSession++;
 		gTaskSysswmContext.swDlSession = (gTaskSysswmContext.swDlSession%HCU_SYSSWM_SW_DOWNLOAD_SESSION_MAX_NBR);
 	}
+
+	//下载短定时
+	else if ((rcv.timeId == TIMER_ID_1S_SYSSWM_SEG_DL_WAIT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+
+	}
+
 
 	return ret;
 }
@@ -223,7 +238,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * 
 
 OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
+	int ret=0;
 	char fname[HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN];
 
 	//Receive message and copy to local variable
@@ -238,6 +253,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-positive inventory confirm message, so no handle.\n");
 	}
 
+	ret = SUCCESS;
 	//1) 如果收到HCU_CLIENT
 	if (gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT){
 		if ((rcv.equEntry != HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT) || (rcv.hwType != zHcuSysEngPar.hwBurnId.hwType) || (rcv.hwId < zHcuSysEngPar.hwBurnId.hwPemId) || (rcv.upgradeFlag != zHcuSysEngPar.hwBurnId.swUpgradeFlag)){
@@ -262,7 +278,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwPkg.upgradeFlag = rcv.upgradeFlag;
 		gTaskSysswmContext.cloudSwPkg.checksum = rcv.swCheckSum;
 		gTaskSysswmContext.cloudSwPkg.totalLen = rcv.swTotalLengthInBytes;
-		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, "N", 1);
+		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START));
 		gTaskSysswmContext.cloudSwPkg.updateTime = time(0);
 		memset(fname, 0, sizeof(fname));
 		if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE)
@@ -295,33 +311,8 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwDl.segTotal = segTotal;
 
 		//生成消息并发送给后台
-		msg_struct_sysswm_cloudvela_sw_package_report_t snd;
-		memset(&snd, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t));
-
-		//L2信息
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
-		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
-				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
-		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
-
-		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
-		snd.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT;
-		snd.hwType = gTaskSysswmContext.cloudSwDl.hwType;
-		snd.hwPem = gTaskSysswmContext.cloudSwDl.hwPem;
-		snd.swRelId = gTaskSysswmContext.cloudSwDl.swRel;
-		snd.swVerId = gTaskSysswmContext.cloudSwDl.swVer;
-		snd.upgradeFlag = gTaskSysswmContext.cloudSwDl.upgradeFlag;
-		snd.segIndex = gTaskSysswmContext.cloudSwDl.segIndex;
-		snd.segTotal = gTaskSysswmContext.cloudSwDl.segTotal;
-		snd.segSplitLen = gTaskSysswmContext.cloudSwDl.segSplitLen;
-
-		snd.length = sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t);
-		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-
+		gTaskSysswmContext.cloudSwDl.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT;
+		ret = func_sysswm_send_cloudvela_sw_package_report();
 	}
 
 	//2) 如果收到IHU_CLIENT.STABLE / TRIAL / PATCH
@@ -342,7 +333,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwPkg.swVer = rcv.swVer;
 		gTaskSysswmContext.cloudSwPkg.checksum = rcv.swCheckSum;
 		gTaskSysswmContext.cloudSwPkg.totalLen = rcv.swTotalLengthInBytes;
-		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, "N", 1);
+		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START));
 		gTaskSysswmContext.cloudSwPkg.updateTime = time(0);
 		memset(fname, 0, sizeof(fname));
 		if (gTaskSysswmContext.cloudSwPkg.upgradeFlag == HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE)
@@ -374,32 +365,8 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwDl.segTotal = segTotal;
 
 		//生成消息并发送给后台
-		msg_struct_sysswm_cloudvela_sw_package_report_t snd;
-		memset(&snd, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t));
-
-		//L2信息
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
-		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
-				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
-		snd.comHead.timeStamp = time(0);
-		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
-
-		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
-		snd.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT;
-		snd.hwType = gTaskSysswmContext.cloudSwDl.hwType;
-		snd.hwPem = gTaskSysswmContext.cloudSwDl.hwPem;
-		snd.swRelId = gTaskSysswmContext.cloudSwDl.swRel;
-		snd.swVerId = gTaskSysswmContext.cloudSwDl.swVer;
-		snd.upgradeFlag = gTaskSysswmContext.cloudSwDl.upgradeFlag;
-		snd.segIndex = gTaskSysswmContext.cloudSwDl.segIndex;
-		snd.segTotal = gTaskSysswmContext.cloudSwDl.segTotal;
-		snd.segSplitLen = gTaskSysswmContext.cloudSwDl.segSplitLen;
-
-		snd.length = sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t);
-		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		gTaskSysswmContext.cloudSwDl.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_CLIENT;
+		ret = func_sysswm_send_cloudvela_sw_package_report();
 	}
 
 	else{
@@ -407,7 +374,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	}
 
 	//返回
-	return SUCCESS;
+	return ret;
 }
 
 //暂时不处理
@@ -564,7 +531,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	if (rcv.segIndex == rcv.segTotal){
 		if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.checksum)
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error!\n");
-		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, "C", 1);  //Complete of download
+		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE));  //Complete of download
 		gTaskSysswmContext.cloudSwPkg.updateTime = time(0);
 		//更新软件数据库
 		if (dbi_HcuSysSwm_SwPkg_save(&(gTaskSysswmContext.cloudSwPkg)) == FAILURE)
@@ -578,10 +545,8 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 		if (hcu_vm_engpar_update_phy_boot_sw_ver(zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId) == FAILURE)
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
-		//拷贝文件到目标区
-
-		//执行升级重启动
-
+		//拷贝文件到目标区并执行重启任务
+		func_sysswm_copy_exe_to_target_dir_and_restart();
 	}
 
 	else{
@@ -597,6 +562,9 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void)
 {
 	//int ret=0;
+
+	//停止定时器，防止上一次的操作还未结束
+	hcu_timer_stop(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_SEG_DL_WAIT, TIMER_RESOLUTION_1S);
 
 	//发送数据给后台
 	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) ){
@@ -634,6 +602,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void)
 OPSTAT func_sysswm_time_out_period_working_scan_ihu_stable(void)
 {
 	//int ret=0;
+
+	//停止定时器，防止上一次的操作还未结束
+	hcu_timer_stop(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_SEG_DL_WAIT, TIMER_RESOLUTION_1S);
 
 	//发送数据给后台
 	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) ){
@@ -676,6 +647,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void)
 {
 	//int ret=0;
 
+	//停止定时器，防止上一次的操作还未结束
+	hcu_timer_stop(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_SEG_DL_WAIT, TIMER_RESOLUTION_1S);
+
 	//发送数据给后台
 	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) ){
 		msg_struct_sysswm_cloudvela_inventory_report_t snd;
@@ -717,6 +691,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void)
 {
 	//int ret=0;
 
+	//停止定时器，防止上一次的操作还未结束
+	hcu_timer_stop(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_SEG_DL_WAIT, TIMER_RESOLUTION_1S);
+
 	//发送数据给后台
 	if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) ){
 		msg_struct_sysswm_cloudvela_inventory_report_t snd;
@@ -752,6 +729,19 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void)
 
 	//State no change
 	return SUCCESS;
+}
+
+OPSTAT func_sysswm_time_out_segment_download_wait_process(void)
+{
+	int ret = SUCCESS;
+
+	gTaskSysswmContext.reTransTimes++;
+	if (gTaskSysswmContext.reTransTimes < HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES){
+		ret = func_sysswm_send_cloudvela_sw_package_report();
+		hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_SEG_DL_WAIT, zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_SEG_DL_WAIT].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	}
+
+	return ret;
 }
 
 OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -1319,3 +1309,27 @@ OPSTAT func_sysswm_send_cloudvela_sw_package_report(void)
 	//返回
 	return SUCCESS;
 }
+
+//删去hcu_new, hcu两个执行文件
+//脚本程序将专注执行：CRON定时执行，监控hcu是否存在，如果不存在，cp hew_new hcu，stop hcu, start hcu
+//这样脚本程序将成为环境的一部分，而且是万能的，不需要根据不同项目进行复杂的配置
+void func_sysswm_copy_exe_to_target_dir_and_restart(void)
+{
+	char strOpr[200];
+
+	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES){
+		//先删掉hcu执行该文件
+		memset(strOpr, 0, sizeof(strOpr));
+		sprintf(strOpr, "rm %s hcu", zHcuSysEngPar.swm.hcuSwRunDir);
+		system(strOpr);
+		sprintf(strOpr, "rm %s hcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
+		system(strOpr);
+		//拷贝当前文件到目标目录
+		sprintf(strOpr, "cp %s%s %shcu_new", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.fileName, zHcuSysEngPar.swm.hcuSwRunDir);
+		system(strOpr);
+	}
+
+	return;
+}
+
+

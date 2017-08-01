@@ -3790,7 +3790,7 @@ typedef struct HcuSysMsgIeL3SysSwmSwPkgElement
 	UINT32	totalLen;
 	UINT16	checksum;
 	char	fileName[HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN];
-	char	currentActive[2];
+	char	currentActive[11];
 	UINT32	updateTime;
 }HcuSysMsgIeL3SysSwmSwPkgElement_t;
 
@@ -3804,6 +3804,10 @@ typedef struct HcuSysMsgIeL3SysSwmSwPkgElement
 //#define HUITP_IEID_UNI_EQU_ENTRY_HCU 	1
 //#define HUITP_IEID_UNI_EQU_ENTRY_IHU 	2
 //#define HUITP_IEID_SUI_EQU_ENTRY_INVALID 0xFF
+#define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START 		"START"
+#define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE 	"COMPLETE"
+#define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_RUNNING 	"RUNNING"
+
 
 typedef struct HcuSysMsgIeL3SysSwmSwDlElement
 {

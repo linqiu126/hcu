@@ -97,12 +97,16 @@ OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void);
 OPSTAT func_sysswm_time_out_period_working_scan_ihu_stable(void);
 OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void);
 OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void);
+OPSTAT func_sysswm_time_out_segment_download_wait_process(void);
 OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, strTaskSysswmSwpkgLable_t* input);
 OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgradeFlag);
 OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *input);
 UINT16 func_sysswm_caculate_file_whole_checksum(char *fname);
 UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname);
 OPSTAT func_sysswm_send_cloudvela_sw_package_report(void);
+void   func_sysswm_copy_exe_to_target_dir_and_restart(void);
+
+
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_SYSSWM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

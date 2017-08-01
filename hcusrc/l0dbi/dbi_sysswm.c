@@ -28,7 +28,7 @@ CREATE TABLE `hcusysswm_swpkg` (
   `totallen` int(4) NOT NULL DEFAULT '0',
   `checksum` int(2) NOT NULL DEFAULT '0',
   `filename` varchar(60) DEFAULT NULL,
-  `currentactive` char(1) NOT NULL DEFAULT 'N',
+  `currentactive` char(10) NOT NULL,
   `updatetime` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -440,6 +440,73 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
     mysql_close(sqlHandler);
     return SUCCESS;
 }
+
+
+OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
+{
+	MYSQL *sqlHandler;
+	MYSQL_RES *resPtr;
+	MYSQL_ROW sqlRow;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	HcuErrorPrint("DBISYSSWM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	mysql_close(sqlHandler);
+        return FAILURE;
+    }
+
+	//获取数据
+    sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//查具体的结果
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+	char strOpr[200];
+
+	//循环查找
+	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
+	{
+		memset(strOpr, 0, sizeof(strOpr));
+		if(sqlRow[9]) sprintf(strOpr, "rm %s %s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[9]);
+		system(strOpr);
+	}
+
+	//再删去所有的
+    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+	//释放记录集
+	mysql_free_result(resPtr);
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
 
 //下载过的最新记录的处理过程，暂时没有。处理起来比较复杂。
 //不执行3Month的自动删除，这跟硬件是否下载的记录重复相关，不能贸然去掉

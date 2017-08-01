@@ -346,6 +346,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -422,6 +423,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -497,6 +499,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -587,6 +590,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -664,6 +668,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -743,6 +748,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -820,6 +826,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -897,6 +904,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -973,6 +981,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -1049,6 +1058,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -1126,6 +1136,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"
@@ -1206,6 +1217,7 @@
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
 	#define  HCU_SYSCFG_SWM_LOCAL_BACKUP_DIR_DEFAULT "/var/hcu/hcu_sw_backup/"

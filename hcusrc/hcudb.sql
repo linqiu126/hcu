@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 31, 2017 at 11:57 AM
+-- Generation Time: Aug 01, 2017 at 11:53 AM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -3790,7 +3790,7 @@ CREATE TABLE IF NOT EXISTS `hcusysswm_swpkg` (
   `totallen` int(4) NOT NULL DEFAULT '0',
   `checksum` int(2) NOT NULL DEFAULT '0',
   `filename` varchar(60) DEFAULT NULL,
-  `currentactive` char(1) NOT NULL DEFAULT 'N',
+  `currentactive` char(10) NOT NULL,
   `updatetime` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
