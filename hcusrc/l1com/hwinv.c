@@ -472,7 +472,15 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_LPM_CJ_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	zHcuSysEngPar.codeDefineFix.test = 1;   //测试一下
+	char cmdStr[HCU_SYSENG_PAR_ELEMENT_UI_MAX_LEN] = "";
+	if ((zHcuSysEngPar.localUI.browselProg != NULL) && (zHcuSysEngPar.localUI.browselAutoStartUpFlag == TRUE)){
+		sprintf(cmdStr, "%s %s %s > /dev/null", zHcuSysEngPar.localUI.browselProg, zHcuSysEngPar.localUI.browselStartUpAddress, zHcuSysEngPar.localUI.browselWorkingOption);
+		int pid = fork();
+		if (pid == 0){
+			system(cmdStr);
+			exit(EXIT_FAILURE);
+		}
+	}
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 #else
 	#error Un-correct constant definition
@@ -585,7 +593,7 @@ void func_hwinv_scan_all(void)
 	func_hwinv_scan_ihm();
 	func_hwinv_scan_igm();
 	func_hwinv_scan_ipm();
-	func_hwinv_scan_local_ui();
+	//func_hwinv_scan_local_ui(); //暂时不让其不断重启重新刷新扫描
 	func_hwinv_scan_message_queue();
 }
 
@@ -1197,7 +1205,7 @@ void func_hwinv_scan_local_ui(void)
 		sprintf(cmdStr, "ps -all | grep %s > %s", zHcuSysEngPar.localUI.browselProg, outputStr);
 		system(cmdStr);
 		if (strstr(outputStr, zHcuSysEngPar.localUI.browselProg) == NULL){
-			sprintf(cmdStr, "%s %s %s > NULL", zHcuSysEngPar.localUI.browselProg, zHcuSysEngPar.localUI.browselStartUpAddress, zHcuSysEngPar.localUI.browselWorkingOption);
+			sprintf(cmdStr, "%s %s %s > /dev/null &", zHcuSysEngPar.localUI.browselProg, zHcuSysEngPar.localUI.browselStartUpAddress, zHcuSysEngPar.localUI.browselWorkingOption);
 			system(cmdStr);
 		}
 	}

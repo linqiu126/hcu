@@ -11,6 +11,9 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+//= ZJL, 2017 Aug.2 CURRENT_SW_DELIVERY 234=>BFSC项目
+= 全屏
+
 //= ZJL, 2017 Aug.1 CURRENT_SW_DELIVERY 234=>BFSC项目
 = 将IHU FTP下载机制搞完善
 = 继续保持文件机制，有一定的好处：测试条件下，可以满足人工放入的诉求

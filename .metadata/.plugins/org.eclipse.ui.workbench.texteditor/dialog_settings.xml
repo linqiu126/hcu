@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="TTT" key="selection"/>
+		<item value="%s %s %s" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="TTT"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212"/>
-			<item value="heart_beat"/>
-			<item value="sensor_zhb_transport_format_dl_t"/>
-			<item value="HcuMsgSeverDataSegHeader_t"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_PORT_XML"/>
-			<item value="HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB"/>
+			<item value="%s %s %s"/>
+			<item value="%s %s "/>
+			<item value="func_hwinv_scan_local_ui"/>
+			<item value="browselAutoStartUpFlag"/>
+			<item value="exit"/>
+			<item value="zHcuSysEngPar.localUI"/>
+			<item value="zHcuSysEngPar.localUI.browselAutoStartUpFlag"/>
+			<item value="system"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
