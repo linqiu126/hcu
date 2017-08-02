@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 01, 2017 at 11:53 AM
+-- Generation Time: Aug 02, 2017 at 10:12 AM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
-(1501215098, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 1, 0, 1, 0, 1, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566);
+(1501639630, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
 
 -- --------------------------------------------------------
 
@@ -335,7 +335,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
 
 INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
 ('BFSC_STA_24_HOUR', 1501126545, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-('BFSC_STA_LOCAL_UI', 1501215084, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+('BFSC_STA_LOCAL_UI', 1501639630, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
 ('BFSC_STA_UP_2_NOW', 1501126550, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
 
 -- --------------------------------------------------------
@@ -3162,9 +3162,9 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `svraddhttplocal`, `svraddsocketipdefault`, `svraddhttpdefault`, `svrnamedefault`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
 ('HCU_PRJ_AQYCG10_335D', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 1, 'http://127.0.0.1/test.php', '112.64.16.27', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 1, 'http://127.0.0.1/test.php', '112.64.16.27', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-kiosk'),
 ('HCU_PRJ_AQYC_OBSOLETE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 1, 'firefox', 'http://localhost/bfscui', '-kiosk'),
 ('HCU_PRJ_CXGLACM', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_CXILC', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_GQYBG40', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
@@ -3197,19 +3197,19 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (1, 'TID_1S_MIN', 1, 0),
 (2, 'TID_1S_SVRCON_INIT_FB', 1, 10),
 (3, 'TID_1S_LED_GALOWAG_SCAN', 1, 1),
-(4, 'TID_1S_EMC_PERIOD_READ', 1, 600),
+(4, 'TID_1S_EMC_PERIOD_READ', 1, 100),
 (5, 'TID_1S_EMC_MODBUS_FB', 1, 10),
-(6, 'TID_1S_PM25_PERIOD_READ', 1, 31),
+(6, 'TID_1S_PM25_PERIOD_READ', 1, 600),
 (7, 'TID_1S_PM25_MODBUS_FB', 1, 10),
-(8, 'TID_1S_WINDDIR_PERIOD_READ', 1, 13),
+(8, 'TID_1S_WINDDIR_PERIOD_READ', 1, 600),
 (9, 'TID_1S_WINDDIR_MODBUS_FB', 1, 10),
-(10, 'TID_1S_WINDSPD_PERIOD_READ', 1, 15),
+(10, 'TID_1S_WINDSPD_PERIOD_READ', 1, 600),
 (11, 'TID_1S_WINDSPD_MODBUS_FB', 1, 10),
-(12, 'TID_1S_TEMP_PERIOD_READ', 1, 17),
+(12, 'TID_1S_TEMP_PERIOD_READ', 1, 600),
 (13, 'TID_1S_TEMP_FB', 1, 10),
-(14, 'TID_1S_HUMID_PERIOD_READ', 1, 19),
+(14, 'TID_1S_HUMID_PERIOD_READ', 1, 600),
 (15, 'TID_1S_HUMID_MODBUS_FB', 1, 10),
-(16, 'TID_1S_NOISE_PERIOD_READ', 1, 7),
+(16, 'TID_1S_NOISE_PERIOD_READ', 1, 600),
 (17, 'TID_1S_NOISE_MODBUS_FB', 1, 10),
 (18, 'TID_1S_NOISE_SPSVIRGO_FB', 1, 10),
 (19, 'TID_1S_HSMMP_PERIOD_AVORION_READ', 1, 600),
@@ -3231,35 +3231,36 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (35, 'TID_1S_IHM_PERIOD_READ', 1, 600),
 (36, 'TID_1S_IGM_PERIOD_READ', 1, 600),
 (37, 'TID_1S_IPM_PERIOD_READ', 1, 600),
-(38, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 600),
-(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 610),
-(40, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
-(41, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
-(42, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
-(43, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
-(44, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 60),
-(45, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 60),
-(46, 'TIMER_ID_1S_L3BFSC_ERROR_INQ', 1, 15),
-(47, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 5),
-(48, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
-(49, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
-(57, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
-(58, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
-(59, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
-(60, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
-(61, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
-(62, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
-(63, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
-(64, 'TID_1S_MAX', 1, 0),
-(65, 'TID_10MS_MIN', 2, 0),
-(66, 'TID_10MS_SVRCON_TEST', 2, 10000),
-(67, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
-(68, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 40),
-(69, 'TID_10MS_MAX', 2, 0),
-(70, 'TID_1MS_MIN', 3, 0),
-(71, 'TID_1MS_SVRCON_TEST', 3, 100),
-(72, 'TID_1MS_MAX', 3, 0),
-(73, 'TID_MAX', 1, 0);
+(38, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 311),
+(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 900),
+(40, 'TID__1S_SYSSWM_SEG_DL_WAIT', 1, 10),
+(41, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
+(42, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
+(43, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
+(44, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
+(45, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 60),
+(46, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 60),
+(47, 'TIMER_ID_1S_L3BFSC_ERROR_INQ', 1, 15),
+(48, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 5),
+(49, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
+(50, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
+(58, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
+(59, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
+(60, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
+(61, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
+(62, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
+(63, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
+(64, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
+(65, 'TID_1S_MAX', 1, 0),
+(66, 'TID_10MS_MIN', 2, 0),
+(67, 'TID_10MS_SVRCON_TEST', 2, 10000),
+(68, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
+(69, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 40),
+(70, 'TID_10MS_MAX', 2, 0),
+(71, 'TID_1MS_MIN', 3, 0),
+(72, 'TID_1MS_SVRCON_TEST', 3, 100),
+(73, 'TID_1MS_MAX', 3, 0),
+(74, 'TID_MAX', 1, 0);
 
 -- --------------------------------------------------------
 
