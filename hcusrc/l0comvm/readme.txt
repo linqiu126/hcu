@@ -13,6 +13,36 @@
 
 //= ZJL, 2017 Aug.2 CURRENT_SW_DELIVERY 234=>BFSC项目
 = 全屏
+= 搞研华工控机步骤
+
+add one more in B to secure the result ...
+
+A: hcu auto start
+1. copy hcu.sh to /etc/init.d/
+2. #cd /etc/init.d
+3, #chmod 755 hcu.sh
+2. #update-rc.d hcu.sh defaults
+3. #mkdir /var/hcu
+4. copy working PrjBfsc to /var/hcu
+5. cd /var/hcu/
+6. #mv PrjBfsc hcu
+7. make sure /var/hcu/cfg/hcuboot.cfg exist
+
+restart computer, use following command to check whether hcu has been started automatically:
+#top
+there will be hcu process running
+or
+#ps -ef | grep hcu
+B.  After login (I will use WeChat to send picture to you)
+0. in user run "rm .config/chromium -R" delete all content of ... (new added)
+1. launch dish in GUI
+2. search for "start"
+3. run "startup applications"
+4. add Chromium, with following command
+/usr/bin/chromium-browser --password-store=basic --app=http://localhost/bfscui --start-fullscreen
+restart computer to check whether GUI has been pop up automatically
+
+
 
 //= ZJL, 2017 Aug.1 CURRENT_SW_DELIVERY 234=>BFSC项目
 = 将IHU FTP下载机制搞完善
