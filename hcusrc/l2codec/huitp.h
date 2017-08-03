@@ -1677,7 +1677,7 @@ typedef struct StrIe_HUITP_IEID_uni_com_segment
 	UINT16 hwType;
 	UINT16 hwPem;
 	UINT16 swRelId;
-	UINT16 swVerId;
+	UINT16 verId;
 	UINT8  upgradeFlag;
 	UINT8  equEntry;
 	UINT16 segIndex;
@@ -1685,9 +1685,10 @@ typedef struct StrIe_HUITP_IEID_uni_com_segment
 	UINT16 segSplitLen;
 }StrIe_HUITP_IEID_uni_com_segment_t;
 //equEntry定义
-#define HUITP_IEID_UNI_EQU_ENTRY_NONE 0
-#define HUITP_IEID_UNI_EQU_ENTRY_HCU 	1
-#define HUITP_IEID_UNI_EQU_ENTRY_IHU 	2
+#define HUITP_IEID_UNI_EQU_ENTRY_NONE 		0
+#define HUITP_IEID_UNI_EQU_ENTRY_HCU_SW 	1
+#define HUITP_IEID_UNI_EQU_ENTRY_HCU_DB 	2
+#define HUITP_IEID_UNI_EQU_ENTRY_IHU 		3
 #define HUITP_IEID_SUI_EQU_ENTRY_INVALID 0xFF
 
 //HUITP_IEID_uni_com_snr_cmd_tag                  = 0x0033,
@@ -2904,8 +2905,11 @@ typedef struct StrIe_HUITP_IEID_uni_inventory_element
 	UINT16 hwId;
 	UINT16 swRel;
 	UINT16 swVer;
+	UINT16 dbVer;
 	UINT16 	swCheckSum;
-	UINT32  swTotalLengthInBytes;
+	UINT32  swTotalLen;
+	UINT16 	dbCheckSum;
+	UINT32  dbTotalLen;
 	UINT8  upgradeFlag;
 	UINT8  equEntry;
 	char   desc[HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX];

@@ -222,7 +222,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * 
 	strcpy(snd.comHead.funcFlag, "0");
 
 	snd.baseResp = HUITP_IEID_UNI_COM_RESPONSE_YES;
-	snd.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT;
+	snd.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW;
 	snd.hwType = zHcuSysEngPar.hwBurnId.hwType;
 	snd.hwId = zHcuSysEngPar.hwBurnId.hwPemId;
 	snd.swRel = zHcuSysEngPar.hwBurnId.swRelId;
@@ -258,7 +258,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	ret = SUCCESS;
 	//1) 如果收到HCU_CLIENT
 	if (gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT){
-		if ((rcv.equEntry != HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT) || (rcv.hwType != zHcuSysEngPar.hwBurnId.hwType) || (rcv.hwId < zHcuSysEngPar.hwBurnId.hwPemId) || (rcv.upgradeFlag != zHcuSysEngPar.hwBurnId.swUpgradeFlag)){
+		if ((rcv.equEntry != HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW) || (rcv.hwType != zHcuSysEngPar.hwBurnId.hwType) || (rcv.hwId < zHcuSysEngPar.hwBurnId.hwPemId) || (rcv.upgradeFlag != zHcuSysEngPar.hwBurnId.swUpgradeFlag)){
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-compliance hardware info, so no handle.\n");
 		}
 		if ((rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE) && (rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_TRIAL) && (rcv.upgradeFlag != HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH)){
@@ -272,14 +272,14 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 
 		//将新版本存入数据库
 		memset(&(gTaskSysswmContext.cloudSwPkg), 0, sizeof(HcuSysMsgIeL3SysSwmSwPkgElement_t));
-		gTaskSysswmContext.cloudSwPkg.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT;
+		gTaskSysswmContext.cloudSwPkg.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW;
 		gTaskSysswmContext.cloudSwPkg.hwType = rcv.hwType;
 		gTaskSysswmContext.cloudSwPkg.hwPem = rcv.hwId;
 		gTaskSysswmContext.cloudSwPkg.swRel = rcv.swRel;
 		gTaskSysswmContext.cloudSwPkg.swVer = rcv.swVer;
 		gTaskSysswmContext.cloudSwPkg.upgradeFlag = rcv.upgradeFlag;
-		gTaskSysswmContext.cloudSwPkg.checksum = rcv.swCheckSum;
-		gTaskSysswmContext.cloudSwPkg.totalLen = rcv.swTotalLengthInBytes;
+		gTaskSysswmContext.cloudSwPkg.swCksum = rcv.swCheckSum;
+		gTaskSysswmContext.cloudSwPkg.swTotalLen = rcv.swTotalLen;
 		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START));
 		gTaskSysswmContext.cloudSwPkg.updateTime = time(0);
 		memset(fname, 0, sizeof(fname));
@@ -295,25 +295,25 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 
 		//刷新下载初始化Context
 		memset(&(gTaskSysswmContext.cloudSwDl), 0, sizeof(HcuSysMsgIeL3SysSwmSwDlElement_t));
-		gTaskSysswmContext.cloudSwDl.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT;
+		gTaskSysswmContext.cloudSwDl.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW;
 		gTaskSysswmContext.cloudSwDl.hwType = rcv.hwType;
 		gTaskSysswmContext.cloudSwDl.hwPem = rcv.hwId;
 		gTaskSysswmContext.cloudSwDl.swRel = rcv.swRel;
-		gTaskSysswmContext.cloudSwDl.swVer = rcv.swVer;
+		gTaskSysswmContext.cloudSwDl.verId = rcv.swVer;
 		gTaskSysswmContext.cloudSwDl.upgradeFlag = rcv.upgradeFlag;
 		gTaskSysswmContext.cloudSwDl.checksum = rcv.swCheckSum;
-		gTaskSysswmContext.cloudSwDl.totalLen = rcv.swTotalLengthInBytes;
+		gTaskSysswmContext.cloudSwDl.totalLen = rcv.swTotalLen;
 		gTaskSysswmContext.cloudSwDl.dlTime = time(0);
 		gTaskSysswmContext.cloudSwDl.segIndex = 1; //第一段
 		strncpy(gTaskSysswmContext.cloudSwDl.fileName, fname, HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
 		gTaskSysswmContext.cloudSwDl.segSplitLen = HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
 		UINT32 segTotal = 0;
-		segTotal = gTaskSysswmContext.cloudSwPkg.totalLen / HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
-		if (segTotal * HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.totalLen) segTotal++;
+		segTotal = gTaskSysswmContext.cloudSwPkg.swTotalLen / HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
+		if (segTotal * HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
 		gTaskSysswmContext.cloudSwDl.segTotal = segTotal;
 
 		//生成消息并发送给后台
-		gTaskSysswmContext.cloudSwDl.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT;
+		gTaskSysswmContext.cloudSwDl.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW;
 		ret = func_sysswm_send_cloudvela_sw_package_report();
 	}
 
@@ -333,8 +333,8 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwPkg.hwPem = rcv.hwId;
 		gTaskSysswmContext.cloudSwPkg.swRel = rcv.swRel;
 		gTaskSysswmContext.cloudSwPkg.swVer = rcv.swVer;
-		gTaskSysswmContext.cloudSwPkg.checksum = rcv.swCheckSum;
-		gTaskSysswmContext.cloudSwPkg.totalLen = rcv.swTotalLengthInBytes;
+		gTaskSysswmContext.cloudSwPkg.swCksum = rcv.swCheckSum;
+		gTaskSysswmContext.cloudSwPkg.swTotalLen = rcv.swTotalLen;
 		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START));
 		gTaskSysswmContext.cloudSwPkg.updateTime = time(0);
 		memset(fname, 0, sizeof(fname));
@@ -354,16 +354,16 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwDl.hwType = rcv.hwType;
 		gTaskSysswmContext.cloudSwDl.hwPem = rcv.hwId;
 		gTaskSysswmContext.cloudSwDl.swRel = rcv.swRel;
-		gTaskSysswmContext.cloudSwDl.swVer = rcv.swVer;
+		gTaskSysswmContext.cloudSwDl.verId = rcv.swVer;
 		gTaskSysswmContext.cloudSwDl.upgradeFlag = rcv.upgradeFlag;
 		gTaskSysswmContext.cloudSwDl.checksum = rcv.swCheckSum;
-		gTaskSysswmContext.cloudSwDl.totalLen = rcv.swTotalLengthInBytes;
+		gTaskSysswmContext.cloudSwDl.totalLen = rcv.swTotalLen;
 		gTaskSysswmContext.cloudSwDl.segIndex = 1;  //第一段
 		strncpy(gTaskSysswmContext.cloudSwDl.fileName, fname, HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
 		gTaskSysswmContext.cloudSwDl.segSplitLen = HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
 		UINT32 segTotal = 0;
-		segTotal = gTaskSysswmContext.cloudSwPkg.totalLen / HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
-		if (segTotal * HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.totalLen) segTotal++;
+		segTotal = gTaskSysswmContext.cloudSwPkg.swTotalLen / HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
+		if (segTotal * HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
 		gTaskSysswmContext.cloudSwDl.segTotal = segTotal;
 
 		//生成消息并发送给后台
@@ -416,7 +416,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//判定状态
 	if ((rcv.equEntry != gTaskSysswmContext.cloudSwDl.equEntry) || (rcv.hwType != gTaskSysswmContext.cloudSwDl.hwType) \
 			|| (rcv.hwPem != gTaskSysswmContext.cloudSwDl.hwPem) || (rcv.swRelId != gTaskSysswmContext.cloudSwDl.swRel) \
-			|| (rcv.swVerId != gTaskSysswmContext.cloudSwDl.swVer) || (rcv.upgradeFlag != gTaskSysswmContext.cloudSwDl.upgradeFlag)){
+			|| (rcv.verId != gTaskSysswmContext.cloudSwDl.verId) || (rcv.upgradeFlag != gTaskSysswmContext.cloudSwDl.upgradeFlag)){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
 		HcuErrorPrint("SYSSWM: Receive invalid key element, so no handle.\n");
 		ret = FAILURE;
@@ -449,7 +449,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	}
 	else{
 		gTaskSysswmContext.cloudSwDl.segValidLen = rcv.segValidLen;
-		if ((rcv.segTotal * rcv.segSplitLen * (rcv.segTotal-1) + rcv.segValidLen) != gTaskSysswmContext.cloudSwPkg.totalLen){
+		if ((rcv.segTotal * rcv.segSplitLen * (rcv.segTotal-1) + rcv.segValidLen) != gTaskSysswmContext.cloudSwPkg.swTotalLen){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
 			HcuErrorPrint("SYSSWM: Receive invalid seg total len sw package, so no handle.\n");
 			ret = FAILURE;
@@ -514,9 +514,9 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 		fseek(fp, 0L, SEEK_END);
 		int file_len = 0;
 		file_len = ftell(fp);
-		if (file_len != gTaskSysswmContext.cloudSwPkg.totalLen){
+		if (file_len != gTaskSysswmContext.cloudSwPkg.swTotalLen){
 			fclose(fp);
-			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Not correct file len, Actual download FileLen = %d, Inventory receive len = %d!\n", file_len, gTaskSysswmContext.cloudSwPkg.totalLen);
+			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Not correct file len, Actual download FileLen = %d, Inventory receive len = %d!\n", file_len, gTaskSysswmContext.cloudSwPkg.swTotalLen);
 		}
 	}
 	//中间段
@@ -531,7 +531,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 
 	//如果是最后一段，检查整体Checksum
 	if (rcv.segIndex == rcv.segTotal){
-		if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.checksum)
+		if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.swCksum)
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error!\n");
 		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE));  //Complete of download
 		gTaskSysswmContext.cloudSwPkg.updateTime = time(0);
@@ -584,7 +584,7 @@ OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void)
 		//CONTENT
 		//这里假设，每一次发现新的版本，必然更新到新版本，所以内存中的版本将跟数据库最新版本保持同步状态
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
-		snd.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT;
+		snd.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW;
 		snd.hwType = zHcuSysEngPar.hwBurnId.hwType;
 		snd.hwId = zHcuSysEngPar.hwBurnId.hwPemId;
 		snd.swRel = zHcuSysEngPar.hwBurnId.swRelId;
@@ -1294,7 +1294,7 @@ OPSTAT func_sysswm_send_cloudvela_sw_package_report(void)
 		snd.hwType = gTaskSysswmContext.cloudSwDl.hwType;
 		snd.hwPem = gTaskSysswmContext.cloudSwDl.hwPem;
 		snd.swRelId = gTaskSysswmContext.cloudSwDl.swRel;
-		snd.swVerId = gTaskSysswmContext.cloudSwDl.swVer;
+		snd.verId = gTaskSysswmContext.cloudSwDl.verId;
 		snd.upgradeFlag = gTaskSysswmContext.cloudSwDl.upgradeFlag;
 		snd.segIndex = gTaskSysswmContext.cloudSwDl.segIndex;
 		snd.segTotal = gTaskSysswmContext.cloudSwDl.segTotal;

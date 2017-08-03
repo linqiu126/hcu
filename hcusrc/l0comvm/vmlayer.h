@@ -918,7 +918,8 @@ void hcu_vm_task_delete_except_svrcon_and_hcumain(void);
 //获取系统设备唯一标示区的数据。由于敏感性，这块数据不能做成工程参数配置方式，而必须采用工厂烧录方式
 OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void);
 OPSTAT hcu_vm_engpar_read_phy_boot_cfg(void);
-extern OPSTAT hcu_vm_engpar_update_phy_boot_sw_ver(UINT16 relId, UINT16 verId);
+extern OPSTAT hcu_vm_engpar_update_phy_boot_sw_ver(UINT16 relId, UINT16 swVerId);
+extern OPSTAT hcu_vm_engpar_update_phy_boot_db_ver(UINT16 relId, UINT16 dbVerId);
 OPSTAT hcu_vm_ctrtab_read_sensor_init_cfg_into_mem(void);
 void   hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, UINT8 *target);
 extern UINT16 hcu_vm_search_task_static_cfg_table_of_row(int taskid);

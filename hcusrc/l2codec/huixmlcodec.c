@@ -1293,9 +1293,12 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MS
 	snd.hwId = HUITP_ENDIAN_EXG16(rcv->reqValue.hwId);
 	snd.swRel = HUITP_ENDIAN_EXG16(rcv->reqValue.swRel);
 	snd.swVer = HUITP_ENDIAN_EXG16(rcv->reqValue.swVer);
+	snd.dbVer = HUITP_ENDIAN_EXG16(rcv->reqValue.dbVer);
 	snd.upgradeFlag = rcv->reqValue.upgradeFlag;
 	snd.swCheckSum = HUITP_ENDIAN_EXG16(rcv->reqValue.swCheckSum);
-	snd.swTotalLengthInBytes = HUITP_ENDIAN_EXG32(rcv->reqValue.swTotalLengthInBytes);
+	snd.swTotalLen = HUITP_ENDIAN_EXG32(rcv->reqValue.swTotalLen);
+	snd.dbCheckSum = HUITP_ENDIAN_EXG16(rcv->reqValue.dbCheckSum);
+	snd.dbTotalLen = HUITP_ENDIAN_EXG32(rcv->reqValue.dbTotalLen);
 
 	strncpy(snd.desc, rcv->reqValue.desc, strlen(rcv->reqValue.desc)<sizeof(snd.desc)?strlen(rcv->reqValue.desc):sizeof(snd.desc));
 	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_req_t);
@@ -1333,9 +1336,12 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUIT
 	snd.hwId = HUITP_ENDIAN_EXG16(rcv->confirmValue.hwId);
 	snd.swRel = HUITP_ENDIAN_EXG16(rcv->confirmValue.swRel);
 	snd.swVer = HUITP_ENDIAN_EXG16(rcv->confirmValue.swVer);
+	snd.dbVer = HUITP_ENDIAN_EXG16(rcv->confirmValue.dbVer);
 	snd.upgradeFlag = rcv->confirmValue.upgradeFlag;
 	snd.swCheckSum = HUITP_ENDIAN_EXG16(rcv->confirmValue.swCheckSum);
-	snd.swTotalLengthInBytes = HUITP_ENDIAN_EXG32(rcv->confirmValue.swTotalLengthInBytes);
+	snd.swTotalLen = HUITP_ENDIAN_EXG32(rcv->confirmValue.swTotalLen);
+	snd.dbCheckSum = HUITP_ENDIAN_EXG16(rcv->confirmValue.dbCheckSum);
+	snd.dbTotalLen = HUITP_ENDIAN_EXG32(rcv->confirmValue.dbTotalLen);
 	strncpy(snd.desc, rcv->confirmValue.desc, strlen(rcv->confirmValue.desc)<sizeof(snd.desc)?strlen(rcv->confirmValue.desc):sizeof(snd.desc));
 	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t);
 	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
@@ -1375,7 +1381,7 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_req_received_handle(StrMsg_HUITP_M
 	snd.hwType = HUITP_ENDIAN_EXG16(rcv->segValue.hwType);
 	snd.hwPem = HUITP_ENDIAN_EXG16(rcv->segValue.hwPem);
 	snd.swRelId = HUITP_ENDIAN_EXG16(rcv->segValue.swRelId);
-	snd.swVerId = HUITP_ENDIAN_EXG16(rcv->segValue.swVerId);
+	snd.verId = HUITP_ENDIAN_EXG16(rcv->segValue.verId);
 	snd.upgradeFlag = rcv->segValue.upgradeFlag;
 	snd.segIndex = HUITP_ENDIAN_EXG16(rcv->segValue.segIndex);
 	snd.segTotal = HUITP_ENDIAN_EXG16(rcv->segValue.segTotal);
@@ -1424,7 +1430,7 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUI
 	snd.hwType = HUITP_ENDIAN_EXG16(rcv->segValue.hwType);
 	snd.hwPem = HUITP_ENDIAN_EXG16(rcv->segValue.hwPem);
 	snd.swRelId = HUITP_ENDIAN_EXG16(rcv->segValue.swRelId);
-	snd.swVerId = HUITP_ENDIAN_EXG16(rcv->segValue.swVerId);
+	snd.verId = HUITP_ENDIAN_EXG16(rcv->segValue.verId);
 	snd.upgradeFlag = rcv->segValue.upgradeFlag;
 	snd.segIndex = HUITP_ENDIAN_EXG16(rcv->segValue.segIndex);
 	snd.segTotal = HUITP_ENDIAN_EXG16(rcv->segValue.segTotal);

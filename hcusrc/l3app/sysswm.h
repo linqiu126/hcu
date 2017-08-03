@@ -31,6 +31,7 @@ typedef struct gTaskSysswmContext
 {
 	HcuSysMsgIeL3SysSwmSwPkgElement_t  	cloudSwPkg;
 	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudSwDl;
+	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudDbDl;
 	UINT8	swDlSession;
 	UINT8	reTransTimes;
 }gTaskSysswmContext_t;

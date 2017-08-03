@@ -117,7 +117,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 		//插入INSERT新的数据，确保记录是唯一的
 	    sprintf(strsql, "INSERT INTO `hcusysswm_swpkg` (equentry, hwtype, hwpem, swrel, swver, upgradeflag, totallen, checksum, filename, currentactive, updatetime) VALUES \
 	    		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s', '%d')", ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, \
-				ptrSwPkg->upgradeFlag, ptrSwPkg->totalLen, ptrSwPkg->checksum, ptrSwPkg->fileName, ptrSwPkg->currentActive, ptrSwPkg->updateTime);
+				ptrSwPkg->upgradeFlag, ptrSwPkg->swTotalLen, ptrSwPkg->swCksum, ptrSwPkg->fileName, ptrSwPkg->currentActive, ptrSwPkg->updateTime);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 			mysql_free_result(resPtr);
@@ -128,7 +128,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 	}else{
 		//UPDATE旧的数据
 		sprintf(strsql, "UPDATE `hcusysswm_swpkg` SET totallen = '%d', checksum = '%d', filename = '%s' , currentactive = '%s' , updatetime = '%d' WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
-				ptrSwPkg->totalLen, ptrSwPkg->checksum, ptrSwPkg->fileName, ptrSwPkg->currentActive, ptrSwPkg->updateTime, ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->upgradeFlag);
+				ptrSwPkg->swTotalLen, ptrSwPkg->swCksum, ptrSwPkg->fileName, ptrSwPkg->currentActive, ptrSwPkg->updateTime, ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->upgradeFlag);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 			mysql_free_result(resPtr);
@@ -266,8 +266,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_inquery_whole_record(UINT8 equEntry, UINT16 hwType, U
 		if(sqlRow[index]) ptrSwPkg->swRel = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 		if(sqlRow[index]) ptrSwPkg->swVer = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 		if(sqlRow[index]) ptrSwPkg->upgradeFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		if(sqlRow[index]) ptrSwPkg->totalLen = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-		if(sqlRow[index]) ptrSwPkg->checksum = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if(sqlRow[index]) ptrSwPkg->swTotalLen = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if(sqlRow[index]) ptrSwPkg->swCksum = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 		if(sqlRow[index]) strncpy(ptrSwPkg->fileName, sqlRow[index++], HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
 		if(sqlRow[index]) strncpy(ptrSwPkg->currentActive, sqlRow[index++], 1);
 		if(sqlRow[index]) ptrSwPkg->updateTime = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
@@ -350,8 +350,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver(UINT8 equEntry, UINT16 hwType, UIN
 			if(sqlRow[index]) ptrSwPkg->swRel = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if(sqlRow[index]) ptrSwPkg->swVer = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if(sqlRow[index]) ptrSwPkg->upgradeFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-			if(sqlRow[index]) ptrSwPkg->totalLen = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
-			if(sqlRow[index]) ptrSwPkg->checksum = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if(sqlRow[index]) ptrSwPkg->swTotalLen = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if(sqlRow[index]) ptrSwPkg->swCksum = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if(sqlRow[index]) strncpy(ptrSwPkg->fileName, sqlRow[index++], HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
 			if(sqlRow[index]) strncpy(ptrSwPkg->currentActive, sqlRow[index++], 1);
 			if(sqlRow[index]) ptrSwPkg->updateTime = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
@@ -536,7 +536,7 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 
 	//获取数据
     sprintf(strsql, "SELECT * FROM `hcusysswm_swdl` WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
-    		prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->swVer, prtSwDl->upgradeFlag);
+    		prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->verId, prtSwDl->upgradeFlag);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -557,7 +557,7 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 	{
 		//插入INSERT新的数据，确保记录是唯一的
 	    sprintf(strsql, "INSERT INTO `hcusysswm_swdl` (equentry, hwtype, hwpem, swrel, swver, upgradeflag, totallen, checksum, nodeid, segtotal, segindex, segsplitlen, segvalidlen, segcksum, filename, dltime) VALUES \
-	    		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%d')", prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->swVer, \
+	    		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%d')", prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->verId, \
 				prtSwDl->upgradeFlag, prtSwDl->totalLen, prtSwDl->checksum, prtSwDl->nodeId, prtSwDl->segTotal, prtSwDl->segIndex, prtSwDl->segSplitLen, prtSwDl->segValidLen, prtSwDl->segCkSum, prtSwDl->fileName, prtSwDl->dlTime);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
@@ -572,7 +572,7 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 		//UPDATE旧的数据
 		sprintf(strsql, "UPDATE `hcusysswm_swdl` SET totallen = '%d', checksum = '%d', nodeid = '%d', segtotal = '%d', segindex = '%d', segsplitlen = '%d', segvalidlen = '%d', segcksum = '%d', filename = '%s', dltime = '%d' WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
 				prtSwDl->totalLen, prtSwDl->checksum, prtSwDl->nodeId, prtSwDl->segTotal, prtSwDl->segIndex, prtSwDl->segSplitLen, prtSwDl->segValidLen, prtSwDl->segCkSum, prtSwDl->fileName, prtSwDl->dlTime, \
-				prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->swVer, prtSwDl->upgradeFlag);
+				prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->verId, prtSwDl->upgradeFlag);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 			mysql_free_result(resPtr);

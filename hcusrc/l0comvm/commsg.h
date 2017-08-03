@@ -1995,9 +1995,12 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_req
 	UINT16 hwId;
 	UINT16 swRel;
 	UINT16 swVer;
+	UINT16 dbVer;
 	UINT8  upgradeFlag;
 	UINT16 	swCheckSum;
-	UINT32  swTotalLengthInBytes;
+	UINT32  swTotalLen;
+	UINT16 	dbCheckSum;
+	UINT32  dbTotalLen;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_inventory_req_t;
@@ -2049,9 +2052,12 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_confirm
 	UINT16 hwId;
 	UINT16 swRel;
 	UINT16 swVer;
+	UINT16 dbVer;
 	UINT8  upgradeFlag;
 	UINT16 	swCheckSum;
-	UINT32  swTotalLengthInBytes;
+	UINT32  swTotalLen;
+	UINT16 	dbCheckSum;
+	UINT32  dbTotalLen;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_inventory_confirm_t;
@@ -2066,7 +2072,7 @@ typedef struct msg_struct_cloudvela_sysswm_sw_package_req
 	UINT16 hwType;
 	UINT16 hwPem;
 	UINT16 swRelId;
-	UINT16 swVerId;
+	UINT16 verId;
 	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
@@ -2086,7 +2092,7 @@ typedef struct msg_struct_sysswm_cloudvela_sw_package_resp
 	UINT16 hwType;
 	UINT16 hwPem;
 	UINT16 swRelId;
-	UINT16 swVerId;
+	UINT16 verId;
 	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
@@ -2103,7 +2109,7 @@ typedef struct msg_struct_sysswm_cloudvela_sw_package_report
 	UINT16 hwType;
 	UINT16 hwPem;
 	UINT16 swRelId;
-	UINT16 swVerId;
+	UINT16 verId;
 	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
@@ -2120,7 +2126,7 @@ typedef struct msg_struct_cloudvela_sysswm_sw_package_confirm
 	UINT16 hwType;
 	UINT16 hwPem;
 	UINT16 swRelId;
-	UINT16 swVerId;
+	UINT16 verId;
 	UINT8  upgradeFlag;
 	UINT16 segIndex;
 	UINT16 segTotal;
@@ -3786,18 +3792,23 @@ typedef struct HcuSysMsgIeL3SysSwmSwPkgElement
 	UINT16	hwPem;
 	UINT16	swRel;
 	UINT16	swVer;
+	UINT16	dbVer;
 	UINT8	upgradeFlag;
-	UINT32	totalLen;
-	UINT16	checksum;
+	UINT32	swTotalLen;
+	UINT16	swCksum;
+	UINT32	dbTotalLen;
+	UINT16	dbCksum;
 	char	fileName[HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN];
+	char	dbName[HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN];
 	char	currentActive[11];
 	UINT32	updateTime;
 }HcuSysMsgIeL3SysSwmSwPkgElement_t;
 
 #define HCU_SYSMSG_SYSSWM_EQU_ENTRY_NULL  			0
-#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT 		1
-#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_CLIENT 		2
-#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_SERVER 		3   //用于ＳＵＩ接口，HCU-IHU之间的软件下载
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW 	1
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB 	2
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_CLIENT 		3
+#define HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_SERVER 		4   //用于ＳＵＩ接口，HCU-IHU之间的软件下载
 #define HCU_SYSMSG_SYSSWM_EQU_ENTRY_INVALID  		0xFF
 //必须跟以下定义相互兼容，不然将出现编解码问题
 //#define HUITP_IEID_UNI_EQU_ENTRY_NONE 0
@@ -3805,6 +3816,7 @@ typedef struct HcuSysMsgIeL3SysSwmSwPkgElement
 //#define HUITP_IEID_UNI_EQU_ENTRY_IHU 	2
 //#define HUITP_IEID_SUI_EQU_ENTRY_INVALID 0xFF
 #define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START 		"START"
+#define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COM 	"HALF_COM"
 #define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE 	"COMPLETE"
 #define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_RUNNING 	"RUNNING"
 
@@ -3815,7 +3827,7 @@ typedef struct HcuSysMsgIeL3SysSwmSwDlElement
 	UINT16	hwType;
 	UINT16	hwPem;
 	UINT16	swRel;
-	UINT16	swVer;
+	UINT16	verId;
 	UINT8	upgradeFlag;
 	UINT32	totalLen;
 	UINT16	checksum;
