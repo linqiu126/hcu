@@ -2021,6 +2021,7 @@ typedef struct msg_struct_sysswm_cloudvela_inventory_resp
 	UINT16 hwId;
 	UINT16 swRel;
 	UINT16 swVer;
+	UINT16 dbVer;
 	UINT8  upgradeFlag;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
@@ -2036,6 +2037,7 @@ typedef struct msg_struct_sysswm_cloudvela_inventory_report
 	UINT16 hwId;
 	UINT16 swRel;
 	UINT16 swVer;
+	UINT16 dbVer;
 	UINT8  upgradeFlag;
 	UINT32 timeStamp;
 	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
@@ -3816,9 +3818,9 @@ typedef struct HcuSysMsgIeL3SysSwmSwPkgElement
 //#define HUITP_IEID_UNI_EQU_ENTRY_IHU 	2
 //#define HUITP_IEID_SUI_EQU_ENTRY_INVALID 0xFF
 #define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START 		"START"
-#define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COM 	"HALF_COM"
+#define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP 	"HALF_COMP"
 #define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE 	"COMPLETE"
-#define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_RUNNING 	"RUNNING"
+#define HCU_SYSMSG_SYSSWM_CUR_ACTIVE_RUNNING 	"RUNNING"  //暂时没有设置这个标识
 
 
 typedef struct HcuSysMsgIeL3SysSwmSwDlElement

@@ -31,7 +31,6 @@ typedef struct gTaskSysswmContext
 {
 	HcuSysMsgIeL3SysSwmSwPkgElement_t  	cloudSwPkg;
 	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudSwDl;
-	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudDbDl;
 	UINT8	swDlSession;
 	UINT8	reTransTimes;
 }gTaskSysswmContext_t;
@@ -96,7 +95,7 @@ UINT16 func_sysswm_caculate_file_whole_checksum(char *fname);
 UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname);
 OPSTAT func_sysswm_send_cloudvela_sw_package_report(void);
 void   func_sysswm_copy_exe_to_target_dir_and_restart(void);
-
+void   func_sysswm_copy_db_and_exe_to_target_dir_and_restart(void);
 
 
 //高级定义，简化程序的可读性

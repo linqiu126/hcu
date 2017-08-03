@@ -1315,6 +1315,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 		pMsgProc.respValue.hwId = HUITP_ENDIAN_EXG16(rcv.hwId);
 		pMsgProc.respValue.swRel = HUITP_ENDIAN_EXG16(rcv.swRel);
 		pMsgProc.respValue.swVer = HUITP_ENDIAN_EXG16(rcv.swVer);
+		pMsgProc.respValue.dbVer = HUITP_ENDIAN_EXG16(rcv.dbVer);
 		pMsgProc.respValue.upgradeFlag = rcv.upgradeFlag;
 
 		#if (HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX < HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX)
@@ -1385,6 +1386,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		pMsgProc.reportValue.hwId = HUITP_ENDIAN_EXG16(rcv.hwId);
 		pMsgProc.reportValue.swRel = HUITP_ENDIAN_EXG16(rcv.swRel);
 		pMsgProc.reportValue.swVer = HUITP_ENDIAN_EXG16(rcv.swVer);
+		pMsgProc.reportValue.dbVer = HUITP_ENDIAN_EXG16(rcv.dbVer);
 		pMsgProc.reportValue.upgradeFlag = rcv.upgradeFlag;
 		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.timeStamp);
 

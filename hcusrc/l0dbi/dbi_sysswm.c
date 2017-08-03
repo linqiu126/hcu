@@ -24,10 +24,14 @@ CREATE TABLE `hcusysswm_swpkg` (
   `hwpem` int(2) NOT NULL DEFAULT '0',
   `swrel` int(2) NOT NULL DEFAULT '0',
   `swver` int(2) NOT NULL DEFAULT '0',
+  `dbver` int(2) NOT NULL DEFAULT '0',
   `upgradeflag` int(1) NOT NULL DEFAULT '4',
-  `totallen` int(4) NOT NULL DEFAULT '0',
-  `checksum` int(2) NOT NULL DEFAULT '0',
+  `swtotallen` int(4) NOT NULL DEFAULT '0',
+  `swchecksum` int(2) NOT NULL DEFAULT '0',
+  `dbtotallen` int(4) NOT NULL DEFAULT '0',
+  `dbchecksum` int(2) NOT NULL DEFAULT '0',
   `filename` varchar(60) DEFAULT NULL,
+  `dbname` varchar(60) DEFAULT NULL,
   `currentactive` char(10) NOT NULL,
   `updatetime` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`sid`)
@@ -115,9 +119,9 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
 	{
 		//插入INSERT新的数据，确保记录是唯一的
-	    sprintf(strsql, "INSERT INTO `hcusysswm_swpkg` (equentry, hwtype, hwpem, swrel, swver, upgradeflag, totallen, checksum, filename, currentactive, updatetime) VALUES \
-	    		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s', '%d')", ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, \
-				ptrSwPkg->upgradeFlag, ptrSwPkg->swTotalLen, ptrSwPkg->swCksum, ptrSwPkg->fileName, ptrSwPkg->currentActive, ptrSwPkg->updateTime);
+	    sprintf(strsql, "INSERT INTO `hcusysswm_swpkg` (equentry, hwtype, hwpem, swrel, swver, dbver, upgradeflag, swtotallen, swchecksum, dbtotallen, dbhecksum, filename, dbname, currentactive, updatetime) VALUES \
+	    		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s', ''%s', '%d')", ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->dbVer, \
+				ptrSwPkg->upgradeFlag, ptrSwPkg->swTotalLen, ptrSwPkg->swCksum, ptrSwPkg->dbTotalLen, ptrSwPkg->dbCksum, ptrSwPkg->fileName, ptrSwPkg->dbName, ptrSwPkg->currentActive, ptrSwPkg->updateTime);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 			mysql_free_result(resPtr);
@@ -127,8 +131,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 		}
 	}else{
 		//UPDATE旧的数据
-		sprintf(strsql, "UPDATE `hcusysswm_swpkg` SET totallen = '%d', checksum = '%d', filename = '%s' , currentactive = '%s' , updatetime = '%d' WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
-				ptrSwPkg->swTotalLen, ptrSwPkg->swCksum, ptrSwPkg->fileName, ptrSwPkg->currentActive, ptrSwPkg->updateTime, ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->upgradeFlag);
+		sprintf(strsql, "UPDATE `hcusysswm_swpkg` SET swtotallen = '%d', swchecksum = '%d', dbtotallen = '%d', dbchecksum = '%d', filename = '%s', dbname = '%s', currentactive = '%s' , updatetime = '%d' WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
+				ptrSwPkg->swTotalLen, ptrSwPkg->swCksum, ptrSwPkg->dbTotalLen, ptrSwPkg->dbCksum, ptrSwPkg->fileName, ptrSwPkg->dbName, ptrSwPkg->currentActive, ptrSwPkg->updateTime, ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->upgradeFlag);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 			mysql_free_result(resPtr);
@@ -265,10 +269,14 @@ OPSTAT dbi_HcuSysSwm_SwPkg_inquery_whole_record(UINT8 equEntry, UINT16 hwType, U
 		if(sqlRow[index]) ptrSwPkg->hwPem = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 		if(sqlRow[index]) ptrSwPkg->swRel = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 		if(sqlRow[index]) ptrSwPkg->swVer = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if(sqlRow[index]) ptrSwPkg->dbVer = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 		if(sqlRow[index]) ptrSwPkg->upgradeFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		if(sqlRow[index]) ptrSwPkg->swTotalLen = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 		if(sqlRow[index]) ptrSwPkg->swCksum = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if(sqlRow[index]) ptrSwPkg->dbTotalLen = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+		if(sqlRow[index]) ptrSwPkg->dbCksum = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 		if(sqlRow[index]) strncpy(ptrSwPkg->fileName, sqlRow[index++], HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
+		if(sqlRow[index]) strncpy(ptrSwPkg->dbName, sqlRow[index++], HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
 		if(sqlRow[index]) strncpy(ptrSwPkg->currentActive, sqlRow[index++], 1);
 		if(sqlRow[index]) ptrSwPkg->updateTime = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 	}
@@ -349,10 +357,14 @@ OPSTAT dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver(UINT8 equEntry, UINT16 hwType, UIN
 			if(sqlRow[index]) ptrSwPkg->hwPem = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if(sqlRow[index]) ptrSwPkg->swRel = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if(sqlRow[index]) ptrSwPkg->swVer = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if(sqlRow[index]) ptrSwPkg->dbVer = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if(sqlRow[index]) ptrSwPkg->upgradeFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 			if(sqlRow[index]) ptrSwPkg->swTotalLen = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if(sqlRow[index]) ptrSwPkg->swCksum = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if(sqlRow[index]) ptrSwPkg->dbTotalLen = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
+			if(sqlRow[index]) ptrSwPkg->dbCksum = (UINT16)(atol(sqlRow[index++]) & 0xFFFF);
 			if(sqlRow[index]) strncpy(ptrSwPkg->fileName, sqlRow[index++], HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
+			if(sqlRow[index]) strncpy(ptrSwPkg->dbName, sqlRow[index++], HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
 			if(sqlRow[index]) strncpy(ptrSwPkg->currentActive, sqlRow[index++], 1);
 			if(sqlRow[index]) ptrSwPkg->updateTime = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		}
@@ -421,6 +433,29 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	            return FAILURE;
 	    	}
 
+	    	//读取不为空
+	    	if ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
+	    		continue;
+
+	    	//搜索文件名字是否出现在数据库中，不是则删掉
+	        sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`dbname` = '%s')", ptr->d_name);
+	    	result = mysql_query(sqlHandler, strsql);
+	    	if(result){
+	    		closedir(dir);
+	        	mysql_close(sqlHandler);
+	        	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+	            return FAILURE;
+	    	}
+
+	    	//查具体的结果
+	    	resPtr = mysql_use_result(sqlHandler);
+	    	if (!resPtr){
+	    		closedir(dir);
+	        	mysql_close(sqlHandler);
+	        	HcuErrorPrint("DBISYSSWM: mysql_use_result error!\n");
+	            return FAILURE;
+	    	}
+
 	    	//读取为空
 	    	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
 	    	{
@@ -428,6 +463,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	    		sprintf(fopr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, ptr->d_name);
 	    		system(fopr);
 	    	}
+
 	    }
 	    else if(ptr->d_type == 4)    ///dir
 	    {
@@ -493,6 +529,31 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 		system(strOpr);
 	}
 
+	//获取数据
+    sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//查具体的结果
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+	//循环查找
+	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
+	{
+		memset(strOpr, 0, sizeof(strOpr));
+		if(sqlRow[9]) sprintf(strOpr, "rm %s %s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[9]);
+		system(strOpr);
+	}
+
 	//再删去所有的
     sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START);
 	result = mysql_query(sqlHandler, strsql);
@@ -501,6 +562,14 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
     	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
+    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
 	//释放记录集
 	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
