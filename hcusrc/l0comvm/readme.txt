@@ -11,12 +11,11 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+//= ZJL, 2017 Aug.5 CURRENT_SW_DELIVERY 237=>BFSC项目
+= 完善BFSC的算法FEATURE：Proximity算法及优先级算法
 
 //= ZJL, 2017 Aug.3 CURRENT_SW_DELIVERY 236=>BFSC项目
 = 完善dbVer的内容
-
-
-
 
 //= ZJL, 2017 Aug.2 CURRENT_SW_DELIVERY 235=>BFSC项目
 = 全屏

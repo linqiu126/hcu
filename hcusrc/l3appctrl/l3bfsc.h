@@ -136,6 +136,15 @@ typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
 	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
 	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
 }gTaskL3bfscContextCombinationAlgorithmParamaters_t;
+//Proximity
+#define HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_DISABLE  				0
+#define HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_ABOVE_UP_LIMIT  		1
+#define HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_BELOW_DN_LIMIT  		2
+//Scale Priority
+#define HCU_L3BFSC_COMB_ALG_PAR_PRIORITY_DISABLE  				0
+#define HCU_L3BFSC_COMB_ALG_PAR_PRIORITY_ENABLE  				1
+
+
 
 typedef struct gTaskL3bfscContextCalibration
 {
@@ -185,6 +194,7 @@ typedef struct gTaskL3bfscContext
 {
 	//静态配置参数部分
 	gTaskL3bfscContextCombinationAlgorithmParamaters_t 	comAlgPar;
+	UINT8												comAlgParPriority[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
 	gTaskL3bfscContextWeightSensorParamaters_t			wgtSnrPar;
 	gTaskL3bfscContextMotorControlParamaters_t			motCtrPar;
 	UINT32  start24hStaTimeInUnix;		//系统配置的参数，表示24小时统计的日历起点
@@ -250,14 +260,17 @@ extern OPSTAT fsm_l3bfsc_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_
 
 //Local API
 OPSTAT func_l3bfsc_int_init(void);
-void func_l3bfsc_cacluate_sensor_ws_valid_value(void);
-UINT8 func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap, UINT8 len);
-INT32 func_l3bfsc_ws_sensor_search_combination(void);
-void func_l3bfsc_ws_sensor_search_give_up(void);
+void   func_l3bfsc_cacluate_sensor_ws_valid_value(void);
+UINT8  func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap, UINT8 len);
+INT32  func_l3bfsc_ws_sensor_search_combination(void);
+UINT32 func_l3bfsc_caculate_vector_multipy_result(UINT32 WsSensorStart, UINT8 *resBitmap);
+bool   func_l3bfsc_caculate_judge_search_result(UINT32 result, UINT8 searchNbr, UINT32 WsSensorStart);
+void   func_l3bfsc_caculate_execute_search_result(UINT32 i, UINT8* resBitmap);
+void   func_l3bfsc_ws_sensor_search_give_up(void);
 UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
-float func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
-UINT8 func_l3bfsc_count_numbers_of_startup_ws_sensors(void);
-BOOL func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void);
+float  func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
+UINT8  func_l3bfsc_count_numbers_of_startup_ws_sensors(void);
+BOOL   func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void);
 
 OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_start_req_process(void);

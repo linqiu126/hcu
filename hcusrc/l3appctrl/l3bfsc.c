@@ -1264,48 +1264,80 @@ OPSTAT fsm_l3bfsc_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 INT32 func_l3bfsc_ws_sensor_search_combination(void)
 {
 	UINT32 WsSensorStart = 0;
-	UINT32 i=0, j=0, t=0;
-	UINT32 result;
+	int i=0;
+
+	UINT32 result=0, result_Ul=0, result_Dl=0;
+	int promoxityUl=-1, promoxityDl=0;
+
 	UINT8 resBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
+	UINT8 resBitmap_Ul[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
+	UINT8 resBitmap_Dl[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
+
 	UINT8 searchNbr = 0;
 
 	//选取起始位置
 	WsSensorStart = gTaskL3bfscContext.wsRrSearchStart % gTaskL3bfscContext.searchSpaceTotalNbr;
+	memset(resBitmap_Ul, 0, sizeof(resBitmap_Ul));
+	memset(resBitmap_Dl, 0, sizeof(resBitmap_Dl));
 
 	//组合搜索
+	result_Ul=0; result_Dl=0; promoxityUl=0; promoxityDl=0;
+
 	for (i=WsSensorStart; i< (gTaskL3bfscContext.searchSpaceTotalNbr + WsSensorStart); i++){
-		result = 0;
+		i = i % gTaskL3bfscContext.searchSpaceTotalNbr;
+		//先计算单个矢量乘积结果
 		memset(resBitmap, 0, sizeof(resBitmap));
-		for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
-			if (gTaskL3bfscContext.sensorWs[j].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
-				//HCU_DEBUG_PRINT_FAT("L3BFSC: Search Algo => Index=%d, SensorId = %d\n", i, j);
-				t = ((i%gTaskL3bfscContext.searchSpaceTotalNbr) * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + j);// % Cycle;
-				result = result + gTaskL3bfscContext.sensorWs[j].sensorValue * (*(gTaskL3bfscContext.SearchCoefficientPointer + t));
-				if (*(gTaskL3bfscContext.SearchCoefficientPointer + t) == 1) resBitmap[j] = 1;
-			}
-		}
-		//如果落入目标范围
+		result = func_l3bfsc_caculate_vector_multipy_result(i, resBitmap);
+
+		//再计算矢量的有效非零数
 		searchNbr = func_l3bfsc_caculate_bitmap_valid_number(resBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
 		//HCU_DEBUG_PRINT_INF("L3BFSC: WsSensorStart=%d, Index = %d, Result = %d, ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", WsSensorStart, i, result, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
-		if ((result >= gTaskL3bfscContext.comAlgPar.TargetCombinationWeight) && \
-				(result <= (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) && \
-				(searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) && \
-				(searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination)){
-			gTaskL3bfscContext.wsRrSearchStart = ((i+1) % gTaskL3bfscContext.searchSpaceTotalNbr);
-			memcpy(gTaskL3bfscContext.wsBitmap, resBitmap, sizeof(resBitmap));
-			gTaskL3bfscContext.wsValueNbrTtt = 0;
-			for (j = 0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
-				gTaskL3bfscContext.wsValueNbrTtt += gTaskL3bfscContext.wsBitmap[j];
+
+		//在目标组合数量之内，寻求大中最小的
+		if ((searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) &&  (searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination)){
+			//寻求更大的
+			if ((result > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) && (result < result_Ul))
+			{
+				result_Ul = result;
+				promoxityUl = i;
+				memcpy(resBitmap_Ul, resBitmap, sizeof(resBitmap_Ul));
 			}
-			i = i % gTaskL3bfscContext.searchSpaceTotalNbr;
-			gTaskL3bfscContext.cur.wsCombTimes++;
-			HCU_DEBUG_PRINT_INF("L3BFSC: ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
-			HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
-					gTaskL3bfscContext.sensorWs[3].sensorValue, gTaskL3bfscContext.sensorWs[4].sensorValue, gTaskL3bfscContext.sensorWs[5].sensorValue, gTaskL3bfscContext.sensorWs[6].sensorValue,\
-					gTaskL3bfscContext.sensorWs[7].sensorValue, gTaskL3bfscContext.sensorWs[8].sensorValue, gTaskL3bfscContext.sensorWs[9].sensorValue, gTaskL3bfscContext.sensorWs[10].sensorValue);
+			//寻求小中最大的
+			else if ((result < gTaskL3bfscContext.comAlgPar.TargetCombinationWeight) && (result > result_Dl))
+			{
+				result_Dl = result;
+				promoxityDl = i;
+				memcpy(resBitmap_Dl, resBitmap, sizeof(resBitmap_Dl));
+			}
+		}
+
+		//再判定搜索结果是否满足条件
+		if (func_l3bfsc_caculate_judge_search_result(result, searchNbr, i) == TRUE)
+		{
+			func_l3bfsc_caculate_execute_search_result(i, resBitmap);
 			return i;
 		}
 	}
+
+	//没找到，但激活了上近似组合
+	if (gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode == HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_ABOVE_UP_LIMIT)
+	{
+		if ((result_Ul != 0) && (promoxityUl != -1)){
+			func_l3bfsc_caculate_execute_search_result(promoxityUl, resBitmap_Ul);
+			return promoxityUl;
+		}
+	}
+
+	//没找到，但激活了下近似组合
+	else if (gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode == HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_BELOW_DN_LIMIT)
+	{
+		if ((result_Dl != 0) && (promoxityDl != -1)){
+			func_l3bfsc_caculate_execute_search_result(promoxityDl, resBitmap_Dl);
+			return promoxityDl;
+		}
+	}
+
+	//没找到，收场
 	gTaskL3bfscContext.wsRrSearchStart = ((i+1) % gTaskL3bfscContext.searchSpaceTotalNbr);
 	return -1;
 }
@@ -1322,6 +1354,103 @@ UINT8 func_l3bfsc_caculate_bitmap_valid_number(UINT8 *bitmap, UINT8 len)
 	}
 	return temp;
 }
+
+
+//计算搜索一个矢量内的乘积之和
+//result = 0;
+//memset(resBitmap, 0, sizeof(resBitmap));
+//for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
+//	if (gTaskL3bfscContext.sensorWs[j].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
+//		//HCU_DEBUG_PRINT_FAT("L3BFSC: Search Algo => Index=%d, SensorId = %d\n", i, j);
+//		t = ((i%gTaskL3bfscContext.searchSpaceTotalNbr) * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + j);// % Cycle;
+//		result = result + gTaskL3bfscContext.sensorWs[j].sensorValue * (*(gTaskL3bfscContext.SearchCoefficientPointer + t));
+//		if (*(gTaskL3bfscContext.SearchCoefficientPointer + t) == 1) resBitmap[j] = 1;
+//	}
+//}
+
+UINT32 func_l3bfsc_caculate_vector_multipy_result(UINT32 WsSensorStart, UINT8 *resBitmap)
+{
+	UINT32 i=0, j=0, t=0, result=0;
+
+	result = 0;
+	memset(resBitmap, 0, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+	for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
+		if (gTaskL3bfscContext.sensorWs[j].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
+			//HCU_DEBUG_PRINT_FAT("L3BFSC: Search Algo => Index=%d, SensorId = %d\n", i, j);
+			t = ((i%gTaskL3bfscContext.searchSpaceTotalNbr) * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + j);// % Cycle;
+			result = result + gTaskL3bfscContext.sensorWs[j].sensorValue * (*(gTaskL3bfscContext.SearchCoefficientPointer + t));
+			if (*(gTaskL3bfscContext.SearchCoefficientPointer + t) == 1) resBitmap[j] = 1;
+		}
+	}
+
+	return result;
+}
+
+//判定搜索到的结果是否成功
+bool func_l3bfsc_caculate_judge_search_result(UINT32 result, UINT8 searchNbr, UINT32 WsSensorStart)
+{
+	int t=0, j=0;
+
+	//优先级算法没有被激活
+	if (gTaskL3bfscContext.comAlgPar.IsPriorityScaleEnabled == HCU_L3BFSC_COMB_ALG_PAR_PRIORITY_DISABLE)
+	{
+		if ((result >= gTaskL3bfscContext.comAlgPar.TargetCombinationWeight) && \
+				(result <= (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) && \
+				(searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) && \
+				(searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination))
+			return TRUE;
+		else
+			return FALSE;
+	}
+
+	//优先级算法被激活
+	//具体的优先级配置，还未定义参数，未来待完善
+	else{
+		//先寻找优先级是否为否
+		for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++)
+		{
+			t = ((WsSensorStart%gTaskL3bfscContext.searchSpaceTotalNbr) * HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + j);// % Cycle;
+			result = result + gTaskL3bfscContext.sensorWs[j].sensorValue * (*(gTaskL3bfscContext.SearchCoefficientPointer + t));
+			if ((gTaskL3bfscContext.comAlgParPriority[j] == 1) && (*(gTaskL3bfscContext.SearchCoefficientPointer + t) == 0))
+				return FALSE;
+		}
+		if ((result >= gTaskL3bfscContext.comAlgPar.TargetCombinationWeight) && \
+				(result <= (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) && \
+				(searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) && \
+				(searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination))
+			return TRUE;
+		else
+			return FALSE;
+
+		return TRUE;
+	}
+}
+
+
+//对于搜寻到的结果，执行记录工作
+void func_l3bfsc_caculate_execute_search_result(UINT32 i, UINT8* resBitmap)
+{
+	UINT32 j=0;
+
+	gTaskL3bfscContext.wsRrSearchStart = ((i+1) % gTaskL3bfscContext.searchSpaceTotalNbr);
+	memcpy(gTaskL3bfscContext.wsBitmap, resBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+	gTaskL3bfscContext.wsValueNbrTtt = 0;
+	for (j = 0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++){
+		gTaskL3bfscContext.wsValueNbrTtt += gTaskL3bfscContext.wsBitmap[j];
+	}
+	gTaskL3bfscContext.cur.wsCombTimes++;
+	//不值得再打印
+	//HCU_DEBUG_PRINT_INF("L3BFSC: ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
+	//HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+	//		gTaskL3bfscContext.sensorWs[3].sensorValue, gTaskL3bfscContext.sensorWs[4].sensorValue, gTaskL3bfscContext.sensorWs[5].sensorValue, gTaskL3bfscContext.sensorWs[6].sensorValue,\
+	//		gTaskL3bfscContext.sensorWs[7].sensorValue, gTaskL3bfscContext.sensorWs[8].sensorValue, gTaskL3bfscContext.sensorWs[9].sensorValue, gTaskL3bfscContext.sensorWs[10].sensorValue);
+}
+
+
+
+
+
+
 
 
 //丢弃必然成功

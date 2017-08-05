@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="dbi_HcuSysSwm_SwDownLoad_save" key="selection"/>
+		<item value="func_l3bfsc_caculate_judge_search_result" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="func_l3bfsc_caculate_judge_search_result"/>
+			<item value="gTaskL3bfscContextCombinationAlgorithmParamaters_t"/>
+			<item value="prox"/>
+			<item value="result"/>
+			<item value="IsProximitCombinationMode"/>
+			<item value="PROXI"/>
+			<item value="PROMI"/>
 			<item value="dbi_HcuSysSwm_SwDownLoad_save"/>
-			<item value="dbi_HcuSysSwm_SwPkg_inquery_whole_record"/>
-			<item value="dbi_HcuSysSwm_SwPkg_save"/>
-			<item value="fname"/>
-			<item value="swTot"/>
-			<item value="dbi_HcuSysSwm_SwPkg_orphane_file_delete"/>
-			<item value="wb+"/>
-			<item value="func_sysswm_send_cloudvela_sw_package_report"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
@@ -25,7 +25,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1214" key="DIALOG_X_ORIGIN"/>
-		<item value="272" key="DIALOG_Y_ORIGIN"/>
+		<item value="1186" key="DIALOG_X_ORIGIN"/>
+		<item value="238" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
