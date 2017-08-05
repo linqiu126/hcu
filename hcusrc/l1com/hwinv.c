@@ -807,9 +807,14 @@ void func_hwinv_scan_hard_disc(void)
 	//
 	unsigned long filesize = -1;
 	struct stat statbuff;
-	strcat(zHcuVmCtrTab.clock.curHcuDir, HCU_RECORD_FILE_NAME_HCUEXE);
-	HCU_DEBUG_PRINT_INF("HWINV: curHcuFile= %s\n\n\n",zHcuVmCtrTab.clock.curHcuDir);
-	if(stat(zHcuVmCtrTab.clock.curHcuDir, &statbuff) < 0){
+	char stmp[HCU_DIR_LENGTH_MAX];
+
+	//给curLogDir以及curYmDir赋值
+	strcpy(stmp, zHcuVmCtrTab.clock.curHcuDir);
+	strcat(stmp, HCU_RECORD_FILE_NAME_HCUEXE);
+
+	HCU_DEBUG_PRINT_INF("HWINV: curHcuFile= %s\n\n\n",stmp);
+	if(stat(stmp, &statbuff) < 0){
 		return;
 	}else{
 		filesize = statbuff.st_size;
@@ -818,7 +823,7 @@ void func_hwinv_scan_hard_disc(void)
 
 	if(filesize >= HCU_FILESIZE_TRESHOLD)
 	{
-		if(unlink(zHcuVmCtrTab.clock.curHcuDir) == FAILURE)
+		if(unlink(stmp) == FAILURE)
 		{
 			HCU_DEBUG_PRINT_INF("HWINV: Delete hcu log file failure\n\n\n");
 			return;
