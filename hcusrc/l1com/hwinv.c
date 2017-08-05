@@ -794,14 +794,37 @@ void func_hwinv_scan_hard_disc(void)
 	//if ((zHcuSysEngPar.debugMode & HCU_TRACE_DEBUG_FAT_ON) != FALSE){
 		//HcuDebugPrint("HWINV: Disk total = %dMB, free=%dMB, free/total ratio =%.2f%%\n", mbTotalsize, mbFreedisk,r);
 	//}
+	//HCU_DEBUG_PRINT_INF("HWINV: curLogDir= %s\n\n\n\n\n",zHcuVmCtrTab.clock.curLogDir);
+
 
 	if(r <= HCU_HARDDISK_TRESHOLD)
 	{
 		//hcu_delete_file("/home/pi/workspace/hcu/RasberryPi/log");
-		HcuDebugPrint("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%, removing log file to free the disk\n\n\n",mbTotalsize,mbFreedisk,r);
+		HCU_DEBUG_PRINT_INF("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%, removing log file to free the disk\n\n\n",mbTotalsize,mbFreedisk,r);
 		hcu_delete_file(zHcuVmCtrTab.clock.curLogDir);
 	}
 
+	//
+	unsigned long filesize = -1;
+	struct stat statbuff;
+	strcat(zHcuVmCtrTab.clock.curHcuDir, HCU_RECORD_FILE_NAME_HCUEXE);
+	HCU_DEBUG_PRINT_INF("HWINV: curHcuFile= %s\n\n\n",zHcuVmCtrTab.clock.curHcuDir);
+	if(stat(zHcuVmCtrTab.clock.curHcuDir, &statbuff) < 0){
+		return;
+	}else{
+		filesize = statbuff.st_size;
+		HCU_DEBUG_PRINT_INF("HWINV: the size of curHcuDir= %d\n\n\n",filesize);
+	}
+
+	if(filesize >= HCU_FILESIZE_TRESHOLD)
+	{
+		if(unlink(zHcuVmCtrTab.clock.curHcuDir) == FAILURE)
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Delete hcu log file failure\n\n\n");
+			return;
+		}
+		HCU_DEBUG_PRINT_INF("HWINV: Delete hcu log file successfully\n\n\n");
+	}
 }
 
 void func_hwinv_scan_gpio(void)

@@ -435,6 +435,10 @@ typedef struct HcuHwinvCtrlTable
 #define HCU_RECORD_FILE_NAME_EXTEND_H264 		".h264"
 #define HCU_RECORD_FILE_NAME_EXTEND_MKV			".mkv"
 #define HCU_RECORD_FILE_NAME_EXTEND_HK_PHOTO	".jpg"
+
+#define HCU_RECORD_FILE_NAME_HCUEXE	"/hcu.log"
+#define HCU_RECORD_FILE_NAME_HCUERR	"/hcuerr.log"
+#define HCU_FILESIZE_TRESHOLD 100000000
 #define HCU_HARDDISK_TRESHOLD 10
 
 /*
