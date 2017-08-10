@@ -11,6 +11,11 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+
+//= ZJL, 2017 Aug.10 CURRENT_SW_DELIVERY 238=>BFSC项目
+= 更新HUITP中有关倾倒传感器的ＩＥ定义
+
+
 //= ZJL, 2017 Aug.5 CURRENT_SW_DELIVERY 237=>BFSC项目
 = 完善BFSC的算法FEATURE：Proximity算法及优先级算法
 

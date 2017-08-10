@@ -35,7 +35,7 @@ typedef void                      VOID;
  * 2017/07/03 V2.9: StrMsg_HUITP_MSGID_sui_bfsc_command_req update
  *                  HUITP_SUI_IE长度改为233，为软件下载增加equEntry字段
  *                  为云控锁CCL增加gen_picid字段，为了方便后台存储图像文件以及遍连
- *
+ *					为了倾倒传感器的数据传输，增加新字段
  *
  *
  */
@@ -1213,6 +1213,7 @@ typedef enum
   //云控锁-倾倒
 	HUITP_IEID_uni_ccl_fall_min                     = 0x4B00, 
 	HUITP_IEID_uni_ccl_fall_state                   = 0x4B00, 
+	HUITP_IEID_uni_ccl_fall_value                   = 0x4B01,
 	HUITP_IEID_uni_ccl_fall_max,
 
   //云控锁-状态聚合-旧系统
@@ -2680,6 +2681,15 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_fall_state
 #define HUITP_IEID_UNI_FALL_STATE_DEACTIVE 1
 #define HUITP_IEID_UNI_FALL_STATE_ACTIVE 2
 #define HUITP_IEID_UNI_FALL_STATE_INVALID 0xFF
+
+//HUITP_IEID_uni_ccl_fall_value                   = 0x4B01,
+typedef struct StrIe_HUITP_IEID_uni_ccl_fall_value
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT16 fallValue;
+}StrIe_HUITP_IEID_uni_ccl_fall_value_t;
+
 
 //HUITP_IEID_uni_ccl_fall_max,
 
@@ -6157,6 +6167,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_ccl_state_resp
 	StrIe_HUITP_IEID_uni_ccl_temp_value_t tempValue;
 	StrIe_HUITP_IEID_uni_ccl_humid_value_t humidValue;
 	StrIe_HUITP_IEID_uni_ccl_bat_value_t batValue;
+	StrIe_HUITP_IEID_uni_ccl_fall_value_t fallValue;
 	StrIe_HUITP_IEID_uni_ccl_general_value1_t general1Value;
 	StrIe_HUITP_IEID_uni_ccl_general_value2_t general2Value;
 	StrIe_HUITP_IEID_uni_ccl_rssi_value_t rssiValue;
@@ -6180,6 +6191,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_ccl_state_report
 	StrIe_HUITP_IEID_uni_ccl_temp_value_t tempValue;
 	StrIe_HUITP_IEID_uni_ccl_humid_value_t humidValue;
 	StrIe_HUITP_IEID_uni_ccl_bat_value_t batValue;
+	StrIe_HUITP_IEID_uni_ccl_fall_value_t fallValue;
 	StrIe_HUITP_IEID_uni_ccl_general_value1_t general1Value;
 	StrIe_HUITP_IEID_uni_ccl_general_value2_t general2Value;
 	StrIe_HUITP_IEID_uni_ccl_rssi_value_t rssiValue;

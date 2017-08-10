@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_l3bfsc_caculate_judge_search_result" key="selection"/>
+		<item value="StrIe_HUITP_IEID_uni_ccl_fall" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="StrIe_HUITP_IEID_uni_ccl_fall"/>
+			<item value="StrIe_HUITP_IEID_uni_ccl_fall_value_t"/>
+			<item value="StrIe_HUITP_IEID_uni_ccl_fall_state_t"/>
+			<item value="HUITP_IEID_uni_ccl_fall_state                   = 0x4B00,"/>
+			<item value="HUITP_IEID_uni_ccl_fall_min"/>
 			<item value="func_l3bfsc_caculate_judge_search_result"/>
 			<item value="gTaskL3bfscContextCombinationAlgorithmParamaters_t"/>
 			<item value="prox"/>
-			<item value="result"/>
-			<item value="IsProximitCombinationMode"/>
-			<item value="PROXI"/>
-			<item value="PROMI"/>
-			<item value="dbi_HcuSysSwm_SwDownLoad_save"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
