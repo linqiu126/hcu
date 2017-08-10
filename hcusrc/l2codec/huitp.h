@@ -2687,6 +2687,7 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_fall_value
 {
 	UINT16 ieId;
 	UINT16 ieLen;
+	UINT8  dataFormat;
 	UINT16 fallValue;
 }StrIe_HUITP_IEID_uni_ccl_fall_value_t;
 

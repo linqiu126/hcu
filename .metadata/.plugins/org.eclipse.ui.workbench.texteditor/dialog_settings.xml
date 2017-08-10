@@ -2,14 +2,14 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrIe_HUITP_IEID_uni_ccl_fall" key="selection"/>
+		<item value="StrIe_HUITP_IEID_uni_ccl_fall_value_t" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="StrIe_HUITP_IEID_uni_ccl_fall"/>
 			<item value="StrIe_HUITP_IEID_uni_ccl_fall_value_t"/>
+			<item value="StrIe_HUITP_IEID_uni_ccl_fall"/>
 			<item value="StrIe_HUITP_IEID_uni_ccl_fall_state_t"/>
 			<item value="HUITP_IEID_uni_ccl_fall_state                   = 0x4B00,"/>
 			<item value="HUITP_IEID_uni_ccl_fall_min"/>
