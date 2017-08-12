@@ -68,12 +68,10 @@ OPSTAT dbi_HcuNoiseDataInfo_save(sensor_noise_data_element_t *noiseData)
         return FAILURE;
     }
 
-    HcuDebugPrint("DBINOISE: hcuDbHost = %s, hcuDbUser = %s, hcuDbPsw = %s, hcuDbName = %s, hcuDbPort = %s \n\n\n\n\n\n\n", zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort);
-
-
     sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
+        HcuDebugPrint("DBINOISE: hcuDbHost = %s, hcuDbUser = %s, hcuDbPsw = %s, hcuDbName = %s, hcuDbPort = %d \n\n\n\n\n\n\n", zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort);
     	HcuErrorPrint("DBINOISE: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
         return FAILURE;
     }
