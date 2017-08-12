@@ -391,6 +391,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	//zHcuSysEngPar.swm.hcuSwActiveDir
 	//遍历文件目录下的所有文件，获取文件名字
 	if ((dir=opendir(zHcuSysEngPar.swm.hcuSwActiveDir)) == NULL)
+	    HcuDebugPrint("DBISYSSWM: zHcuSysEngPar.swm.hcuSwActiveDir = %s\n\n\n", zHcuSysEngPar.swm.hcuSwActiveDir);
     	HcuErrorPrint("DBISYSSWM: Open dir error!\n");
         return FAILURE;
 

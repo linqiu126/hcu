@@ -70,7 +70,7 @@ OPSTAT dbi_HcuWinddirDataInfo_save(sensor_winddir_data_element_t *winddirData)
     sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed!\n");
+    	HcuErrorPrint("DBIWINDDIR: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 

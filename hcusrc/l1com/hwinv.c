@@ -50,6 +50,7 @@ HcuFsmStateItem_t HcuFsmHwinv[] =
  */
 
 //Global variables
+int count = 0;
 
 
 //Main Entry
@@ -111,7 +112,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//进入等待反馈状态
 	while(1){
 		func_hwinv_scan_all();
-		hcu_sleep(15);  //休息15S后，继续重复SCAN所有的硬件状态
+		hcu_sleep(30);  //休息15S后，继续重复SCAN所有的硬件状态
 		//收下消息，防止消息BUFFER爆满而出错
 		//如果出现阻塞现象，说明这里不应该收消息，注意观察
 		HcuMsgSruct_t rcv;
@@ -606,6 +607,7 @@ void func_hwinv_scan_date(void)
 	BOOL flagDay = FALSE;
 	BOOL flagHour = FALSE;
 	BOOL flagMin = FALSE;
+	count = count + 1;
 
 	//获取日历时间
 	lt=time(NULL);
@@ -739,10 +741,12 @@ void func_hwinv_scan_date(void)
 	strcpy(zHcuVmCtrTab.clock.curPhotoDir, HCU_RECORD_PHOTO_DIR_NAME_CLEAN);
 
 	//创建HKvision的照片存储目录，如果存在，就直接使用
+
 	dtmp = opendir(zHcuVmCtrTab.clock.curPhotoDir);
 	if (dtmp == NULL){
 		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0755) == -1){
-			HcuErrorPrint("HWINV: Create directory error!\n");
+		    HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curPhotoDir = %s\n\n\n", zHcuVmCtrTab.clock.curPhotoDir);
+			HcuErrorPrint("HWINV: Create directory error! count = %d\n", count);
 			return ;
 		}
 	}else{

@@ -123,7 +123,7 @@ OPSTAT dbi_HcuPm25DataInfo_save(sensor_pm25_data_element_t *pm25Data)
     sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIPM25: MySQL connection failed!\n");
+    	HcuErrorPrint("DBIPM25: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 

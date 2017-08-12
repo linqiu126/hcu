@@ -614,7 +614,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 
@@ -728,7 +728,7 @@ OPSTAT dbi_HcuTraceModuleCtr_inqury(HcuSysEngParTab_t *engPar)
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 
@@ -803,7 +803,7 @@ OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void)
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 
@@ -892,7 +892,7 @@ OPSTAT dbi_HcuTraceMsgCtr_inqury(HcuSysEngParTab_t *engPar)
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 
@@ -965,7 +965,7 @@ OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void)
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 
@@ -1102,7 +1102,7 @@ OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementHwBurnPhyIdAddr_t *hcuInv)
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 
@@ -1167,7 +1167,7 @@ OPSTAT dbi_HcuSysEngTimer_inqury(HcuSysEngParTab_t *engPar)
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 
@@ -1239,7 +1239,7 @@ OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void)
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: MySQL connection failed!\n");
+    	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 

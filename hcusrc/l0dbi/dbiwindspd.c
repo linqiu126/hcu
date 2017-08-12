@@ -70,7 +70,7 @@ OPSTAT dbi_HcuWindspdDataInfo_save(sensor_windspd_data_element_t *windspdData)
     sqlHandler = mysql_real_connect(sqlHandler, zHcuSysEngPar.dbi.hcuDbHost, zHcuSysEngPar.dbi.hcuDbUser, zHcuSysEngPar.dbi.hcuDbPsw, zHcuSysEngPar.dbi.hcuDbName, zHcuSysEngPar.dbi.hcuDbPort, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIWINDSPD: MySQL connection failed!\n");
+    	HcuErrorPrint("DBIWINDSPD: MySQL connection failed: %s\n", mysql_error(sqlHandler));
         return FAILURE;
     }
 
