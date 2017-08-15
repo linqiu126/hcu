@@ -804,7 +804,7 @@ void func_hwinv_scan_hard_disc(void)
 	if(r <= HCU_HARDDISK_TRESHOLD)
 	{
 		//hcu_delete_file("/home/pi/workspace/hcu/RasberryPi/log");
-		HCU_DEBUG_PRINT_INF("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%, removing log file to free the disk\n\n\n",mbTotalsize,mbFreedisk,r);
+		HCU_DEBUG_PRINT_INF("HWINV: / total = %dMB, free=%dMB, free/total=%.2f%%, removing log file to free the disk.\n",mbTotalsize,mbFreedisk,r);
 		hcu_delete_file(zHcuVmCtrTab.clock.curLogDir);
 	}
 
@@ -817,7 +817,7 @@ void func_hwinv_scan_hard_disc(void)
 	strcpy(stmp, zHcuVmCtrTab.clock.curHcuDir);
 	strcat(stmp, HCU_RECORD_FILE_NAME_HCUEXE);
 
-	HCU_DEBUG_PRINT_INF("HWINV: curHcuFile= %s\n\n\n",stmp);
+	HCU_DEBUG_PRINT_INF("HWINV: curHcuFile= %s\n",stmp);
 	if(stat(stmp, &statbuff) < 0){
 		return;
 	}else{
@@ -1417,10 +1417,8 @@ void hcu_delete_file(const char *path)
 				return;
 		while((dir_info = readdir(dir)) != NULL)
 		{
-			//HcuDebugPrint("is dir_into: %s \n\n\n\n\n\n\n\n\n\n\n", dir_info->d_name);
-
 			hcu_get_file_path(path,dir_info->d_name,file_path);
-			HcuDebugPrint("HWINV: is dir_into: %s \n\n\n", file_path);
+			HcuDebugPrint("HWINV: is dir_into: %s \n", file_path);
 			if(hcu_is_special_dir(dir_info->d_name))
 				continue;
 			hcu_delete_file(file_path);

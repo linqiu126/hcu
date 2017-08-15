@@ -1985,7 +1985,6 @@ typedef struct msg_struct_cloudvela_spspm_perfm_confirm
 }msg_struct_cloudvela_spspm_perfm_confirm_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ,
-#define HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX 50
 typedef struct msg_struct_cloudvela_sysswm_inventory_req
 {
 	msgie_struct_bh_com_head_t comHead;
@@ -2001,7 +2000,6 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_req
 	UINT32  swTotalLen;
 	UINT16 	dbCheckSum;
 	UINT32  dbTotalLen;
-	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_inventory_req_t;
 #define HCU_SYSMSG_SYSSWM_FW_UPGRADE_NONE 0
@@ -2023,7 +2021,6 @@ typedef struct msg_struct_sysswm_cloudvela_inventory_resp
 	UINT16 swVer;
 	UINT16 dbVer;
 	UINT8  upgradeFlag;
-	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_sysswm_cloudvela_inventory_resp_t;
 
@@ -2040,7 +2037,6 @@ typedef struct msg_struct_sysswm_cloudvela_inventory_report
 	UINT16 dbVer;
 	UINT8  upgradeFlag;
 	UINT32 timeStamp;
-	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_sysswm_cloudvela_inventory_report_t;
 
@@ -2060,7 +2056,6 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_confirm
 	UINT32  swTotalLen;
 	UINT16 	dbCheckSum;
 	UINT32  dbTotalLen;
-	char   desc[HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_inventory_confirm_t;
 

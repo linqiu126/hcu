@@ -1318,10 +1318,6 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 		pMsgProc.respValue.dbVer = HUITP_ENDIAN_EXG16(rcv.dbVer);
 		pMsgProc.respValue.upgradeFlag = rcv.upgradeFlag;
 
-		#if (HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX < HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX)
-			#error HUITP and COMMSG parameter set error!
-		#endif
-		strncpy(pMsgProc.respValue.desc, rcv.desc, strlen(rcv.desc)<sizeof(pMsgProc.respValue.desc)?strlen(rcv.desc):sizeof(pMsgProc.respValue.desc));
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -1390,10 +1386,6 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		pMsgProc.reportValue.upgradeFlag = rcv.upgradeFlag;
 		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.timeStamp);
 
-		#if (HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX < HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX)
-			#error HUITP and COMMSG parameter set error!
-		#endif
-		strncpy(pMsgProc.reportValue.desc, rcv.desc, strlen(rcv.desc)<sizeof(pMsgProc.reportValue.desc)?strlen(rcv.desc):sizeof(pMsgProc.reportValue.desc));
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));

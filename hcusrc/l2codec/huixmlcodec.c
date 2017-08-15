@@ -1300,7 +1300,6 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_req_received_handle(StrMsg_HUITP_MS
 	snd.dbCheckSum = HUITP_ENDIAN_EXG16(rcv->reqValue.dbCheckSum);
 	snd.dbTotalLen = HUITP_ENDIAN_EXG32(rcv->reqValue.dbTotalLen);
 
-	strncpy(snd.desc, rcv->reqValue.desc, strlen(rcv->reqValue.desc)<sizeof(snd.desc)?strlen(rcv->reqValue.desc):sizeof(snd.desc));
 	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_req_t);
 	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ].taskName);
@@ -1342,7 +1341,7 @@ OPSTAT func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(StrMsg_HUIT
 	snd.swTotalLen = HUITP_ENDIAN_EXG32(rcv->confirmValue.swTotalLen);
 	snd.dbCheckSum = HUITP_ENDIAN_EXG16(rcv->confirmValue.dbCheckSum);
 	snd.dbTotalLen = HUITP_ENDIAN_EXG32(rcv->confirmValue.dbTotalLen);
-	strncpy(snd.desc, rcv->confirmValue.desc, strlen(rcv->confirmValue.desc)<sizeof(snd.desc)?strlen(rcv->confirmValue.desc):sizeof(snd.desc));
+
 	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t);
 	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);

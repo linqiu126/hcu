@@ -230,7 +230,6 @@ OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * 
 	snd.dbVer = zHcuSysEngPar.hwBurnId.dbVerId;
 	snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
 
-	strcpy(snd.desc, "");
 	snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t);
 	if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -687,7 +686,6 @@ OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void)
 		snd.dbVer = zHcuSysEngPar.hwBurnId.dbVerId;
 		snd.upgradeFlag = zHcuSysEngPar.hwBurnId.swUpgradeFlag;
 		snd.timeStamp = time(0);
-		strcpy(snd.desc, "");
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -732,7 +730,6 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_stable(void)
 		snd.dbVer = gTaskSysswmContext.cloudSwPkg.dbVer;
 		snd.upgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE;
 		snd.timeStamp = time(0);
-		strcpy(snd.desc, "");
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -777,7 +774,6 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void)
 		snd.dbVer = gTaskSysswmContext.cloudSwPkg.dbVer;
 		snd.upgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_YES_TRIAL;
 		snd.timeStamp = time(0);
-		strcpy(snd.desc, "");
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
@@ -822,7 +818,6 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void)
 		snd.dbVer = gTaskSysswmContext.cloudSwPkg.dbVer;
 		snd.upgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH;
 		snd.timeStamp = time(0);
-		strcpy(snd.desc, "");
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);

@@ -26,7 +26,7 @@ typedef void                      VOID;
 #pragma pack (1) //强制1字节对齐
 /*
  *
- *  顺从并更新到技术规范《慧HUITP接口规范v2.9, LAST UPDATE@2007/7/26》
+ *  顺从并更新到技术规范《慧HUITP接口规范v2.10, LAST UPDATE@2007/8/15》
  *
  * 2017/06/10, MA Yuchu, modify  for BFSC, Weight Sensor parameters, based on v2.5, LAST UPDATE@2007/5/27
  * 2017/06/20 v2.6: 修改L3BFSC对应的结构，增加Heart-Beat过程
@@ -36,6 +36,9 @@ typedef void                      VOID;
  *                  HUITP_SUI_IE长度改为233，为软件下载增加equEntry字段
  *                  为云控锁CCL增加gen_picid字段，为了方便后台存储图像文件以及遍连
  *					为了倾倒传感器的数据传输，增加新字段
+ * 2017/8/15 V2.10: 去掉INVENTORY_xxx中有关desc的字段
+ *
+ *
  *
  *
  */
@@ -2907,7 +2910,6 @@ typedef struct StrIe_HUITP_IEID_uni_itf_485_value
 //软件清单
 //HUITP_IEID_uni_inventory_min                    = 0xA000,
 //HUITP_IEID_uni_inventory_hw_type                = 0xA000,
-#define HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX 50
 typedef struct StrIe_HUITP_IEID_uni_inventory_element
 {
 	UINT16 ieId;
@@ -2923,7 +2925,6 @@ typedef struct StrIe_HUITP_IEID_uni_inventory_element
 	UINT32  dbTotalLen;
 	UINT8  upgradeFlag;
 	UINT8  equEntry;
-	char   desc[HUITP_IEID_UNI_INVENTORY_ELEMENT_DESC_LEN_MAX];
 	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_inventory_element_t;
 //UpgradeFlag定义
