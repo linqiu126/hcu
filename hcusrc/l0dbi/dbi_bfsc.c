@@ -70,6 +70,7 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 
 CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
   `StaType` char(20) NOT NULL,
+  `configid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `wsIncMatCnt` int(4) NOT NULL,
   `wsIncMatWgt` double(18,2) NOT NULL,
@@ -90,10 +91,11 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
 -- Dumping data for table `hcubfscstadatainfo`
 --
 
-INSERT INTO `hcubfscstadatainfo` (`StaType`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
-('BFSC_STA_24_HOUR', 1487855761, 749, 392529.00, 162, 162, 0, 648, 0, 340166.00, 0.00, 46656, 186624, 1000000.00),
-('BFSC_STA_LOCAL_UI', 1487855819, 147, 76719.00, 35, 35, 0, 142, 0, 74453.00, 0.00, 35, 142, 74453.00),
-('BFSC_STA_UP_2_NOW', 1487855816, 887, 464713.00, 195, 195, 0, 780, 0, 409172.00, 0.00, 195, 780, 409172.00);
+INSERT INTO `hcubfscstadatainfo` (`StaType`, `configid`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
+('BFSC_STA_24_HOUR', 1, 1501126545, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+('BFSC_STA_LOCAL_UI', 1, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+('BFSC_STA_UP_2_NOW', 1, 1501641451, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
+
 
 -- --------------------------------------------------------
 --
@@ -263,7 +265,7 @@ INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01
 
 
 //根据VM初始化数据，写入数据库表单中初始化值，方便任务模块的增删，降低研发工作复杂度和工作量
-OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo)
+OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo)
 {
 	MYSQL *sqlHandler;
     int result = 0;
@@ -290,8 +292,8 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaEl
 
 	//REPLACE新的数据
     UINT32 tmp = time(0);
-    sprintf(strsql, "REPLACE INTO `hcubfscstadatainfo` (StaType, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
-    		('%s', '%d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
+    sprintf(strsql, "REPLACE INTO `hcubfscstadatainfo` (StaType, configid, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
+    		('%s', '%d', %d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
 			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
 			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
 	result = mysql_query(sqlHandler, strsql);

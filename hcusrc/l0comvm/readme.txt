@@ -11,11 +11,10 @@
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
 
-//= ZJL, 2017 Aug.1５ CURRENT_SW_DELIVERY 239=>BFSC项目
+//= ZJL, 2017 Aug.15 CURRENT_SW_DELIVERY 239=>BFSC项目
 = 更新HUITP中有关INVENTORY_xxx的DESC信息
 = 更新打印问题
-
-
+= 增加多套参数配置的configId
 
 //= ZJL, 2017 Aug.10 CURRENT_SW_DELIVERY 238=>BFSC项目
 = 更新HUITP中有关倾倒传感器的ＩＥ定义

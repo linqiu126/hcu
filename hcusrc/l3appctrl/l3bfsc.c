@@ -188,7 +188,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	}
 
 	//更新LocUI数据库，以便本地界面实时展示数据
-	if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+	if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 
 	//初始化界面交互数据
@@ -1929,7 +1929,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	gTaskL3bfscContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfscContext.staLocalUi.wsTttMatWgt;
 
 	//更新LocUI数据库，以便本地界面实时展示数据
-	if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+	if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 
 	//更新60Min各个统计表单
@@ -1950,7 +1950,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 	//60分钟到了，发送统计报告到后台：发送后台只需要一种统计报告即可，重复发送意义不大
 	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_60M_CYCLE) == 0){
 		//60分统计表更新数据库
-		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_60MIN, &(gTaskL3bfscContext.sta60Min)) == FAILURE)
+		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_60MIN, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta60Min)) == FAILURE)
 				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 
 		//再发送统计报告
@@ -2010,7 +2010,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 
 	//24小时统计表更新数据库
 	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_1M_CYCLE) == 0){
-		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_24HOUR, &(gTaskL3bfscContext.sta24H)) == FAILURE)
+		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_24HOUR, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta24H)) == FAILURE)
 				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 	}
 
@@ -2039,7 +2039,7 @@ OPSTAT func_l3bfsc_time_out_statistic_scan_process(void)
 
 	//更新连续数据库数据库：每5秒存储一次，不然数据库操作过于频繁
 	if ((gTaskL3bfscContext.elipseCnt % HCU_L3BFSC_STA_5S_CYCLE) == 0){
-		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_UP2NOW, &(gTaskL3bfscContext.staUp2Now)) == FAILURE)
+		if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_UP2NOW, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staUp2Now)) == FAILURE)
 				HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 	}
 
