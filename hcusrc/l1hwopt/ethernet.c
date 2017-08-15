@@ -44,8 +44,9 @@ HcuFsmStateItem_t HcuFsmEthernet[] =
 
 //Global Variables
 
-//Taks Global Variables
+//Task Global Variables
 extern gTaskCloudvelaContext_t gTaskCloudvelaContext;
+UINT32 ErrorCountForCurl = 0;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -406,12 +407,18 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 
 		if(curlRes != CURLE_OK){
 			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
-				HcuErrorPrint("ETHERNET: curl_easy_perform() failed: %s\n", curl_easy_strerror(curlRes));
+				ErrorCountForCurl = ErrorCountForCurl + 1;
+				HCU_DEBUG_PRINT_FAT("ETHERNET: curl_easy_perform() failed, ErrorCountForCurl=%d, ErrorCode=%s\n", ErrorCountForCurl, curl_easy_strerror(curlRes));
+				if(ErrorCountForCurl == HCU_FATAL_ERROR_THRESHOLD)
+				{
+					_exit(0);//HCU exit
+
+				}
 			}
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;
 			return FAILURE;
 		}else{
-			HCU_DEBUG_PRINT_INF("ETHERNET: Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n\n\n\n", receiveBuffer.length,  receiveBuffer.buf);
+			HCU_DEBUG_PRINT_INF("ETHERNET: Snd/Rcv pair operation curl_easy_perform data Len=%d, Buffer=%s\n\n\n", receiveBuffer.length,  receiveBuffer.buf);
 		}
 
 		//将数据发送给CLOUD，有关这个长度应该>0或者>1的问题，最后还是1，因为心跳握手帧只有二个字节的长度

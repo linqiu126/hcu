@@ -615,6 +615,7 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
     if (!sqlHandler){
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBICOM: MySQL connection failed: %s\n", mysql_error(sqlHandler));
+
         return FAILURE;
     }
 

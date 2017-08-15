@@ -49,8 +49,9 @@ HcuFsmStateItem_t HcuFsmHwinv[] =
  *
  */
 
-//Global variables
-int count = 0;
+//Task Global Variables
+UINT32 ErrorCountForDB = 0;
+UINT32 ErrorCountForFile = 0;
 
 
 //Main Entry
@@ -607,7 +608,7 @@ void func_hwinv_scan_date(void)
 	BOOL flagDay = FALSE;
 	BOOL flagHour = FALSE;
 	BOOL flagMin = FALSE;
-	count = count + 1;
+	ErrorCountForFile = ErrorCountForFile + 1;
 
 	//获取日历时间
 	lt=time(NULL);
@@ -744,9 +745,11 @@ void func_hwinv_scan_date(void)
 
 	dtmp = opendir(zHcuVmCtrTab.clock.curPhotoDir);
 	if (dtmp == NULL){
+
 		if (mkdir(HCU_RECORD_PHOTO_DIR_NAME_CLEAN, 0755) == -1){
-		    HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curPhotoDir = %s\n\n\n", zHcuVmCtrTab.clock.curPhotoDir);
-			HcuErrorPrint("HWINV: Create directory error! count = %d\n", count);
+		    //HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curPhotoDir = %s\n\n\n", zHcuVmCtrTab.clock.curPhotoDir);
+			HcuErrorPrint("HWINV: Create directory error! ErrorCountForFile = %d\n", ErrorCountForFile);
+
 			return ;
 		}
 	}else{
@@ -1049,6 +1052,16 @@ void func_hwinv_scan_eng_par(void)
 			(dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar) == SUCCESS) && (dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar) == SUCCESS)){
 		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 			HCU_DEBUG_PRINT_INF("HWINV: Retrieve all engineering data correctly from DATABASE parameters!\n");
+		}
+	}
+	else
+	{
+        ErrorCountForDB = ErrorCountForDB + 1;
+		HCU_DEBUG_PRINT_FAT("HWINV: Scan eng par from DB failed: %d\n", ErrorCountForDB);
+
+		if(ErrorCountForDB == HCU_FATAL_ERROR_THRESHOLD)
+		{
+			_exit(0);//HCU exit
 		}
 	}
 	//如果读数据库失败，则不做任何动作，只是原封不动的保留原先启动时的设置

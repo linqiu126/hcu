@@ -10,6 +10,10 @@
 [BUG#002]
 待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
 
+//= ZSC, 2017 Aug.1５ CURRENT_SW_DELIVERY 240=>AQYC项目
+= Curl发送失败或数据库访问失败测数超过门限值，程序退出（Workaround solution）
+
+
 
 //= ZJL, 2017 Aug.1５ CURRENT_SW_DELIVERY 239=>BFSC项目
 = 更新HUITP中有关INVENTORY_xxx的DESC信息
