@@ -72,8 +72,8 @@ CREATE TABLE `hcusysswm_swdl` (
 OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 {
 	MYSQL *sqlHandler;
-	MYSQL_RES *resPtr;
-	MYSQL_ROW sqlRow;
+	//MYSQL_RES *resPtr;
+	//MYSQL_ROW sqlRow;
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
@@ -97,7 +97,18 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
         return FAILURE;
     }
 
-	//获取数据
+	//插入INSERT新的数据，确保记录是唯一的
+    sprintf(strsql, "REPLACE INTO `hcusysswm_swpkg` (equentry, hwtype, hwpem, swrel, swver, dbver, upgradeflag, swtotallen, swchecksum, dbtotallen, dbchecksum, filename, dbname, currentactive, updatetime) VALUES \
+    		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s', '%s', '%d')", ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->dbVer, \
+			ptrSwPkg->upgradeFlag, ptrSwPkg->swTotalLen, ptrSwPkg->swCksum, ptrSwPkg->dbTotalLen, ptrSwPkg->dbCksum, ptrSwPkg->fileName, ptrSwPkg->dbName, ptrSwPkg->currentActive, ptrSwPkg->updateTime);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: REPLACE data error, err cause = %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+/*	//获取数据
     sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
     		ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->upgradeFlag);
 	result = mysql_query(sqlHandler, strsql);
@@ -140,7 +151,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 		 	HcuErrorPrint("DBISYSSWM: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
 		    return FAILURE;
 		}
-	}
+	}*/
 
 	//	//DELETE所有旧的数据
 	//    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')", ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->upgradeFlag);
@@ -153,7 +164,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 	//	}
 
 	//释放记录集
-	mysql_free_result(resPtr);
+	//mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }
@@ -391,7 +402,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	//zHcuSysEngPar.swm.hcuSwActiveDir
 	//遍历文件目录下的所有文件，获取文件名字
 	if ((dir=opendir(zHcuSysEngPar.swm.hcuSwActiveDir)) == NULL)
-	    HcuDebugPrint("DBISYSSWM: zHcuSysEngPar.swm.hcuSwActiveDir = %s\n\n\n", zHcuSysEngPar.swm.hcuSwActiveDir);
+	    HcuDebugPrint("DBISYSSWM: zHcuSysEngPar.swm.hcuSwActiveDir = %s\n", zHcuSysEngPar.swm.hcuSwActiveDir);
     	HcuErrorPrint("DBISYSSWM: Open dir error!\n");
         return FAILURE;
 
@@ -462,7 +473,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	    	{
 	    		memset(fopr, 0, sizeof(fopr));
 	    		sprintf(fopr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, ptr->d_name);
-	    		system(fopr);
+	    		if (access(&fopr[3], F_OK) == 0) system(fopr);
 	    	}
 
 	    }
@@ -527,7 +538,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 	{
 		memset(strOpr, 0, sizeof(strOpr));
 		if(sqlRow[9]) sprintf(strOpr, "rm %s %s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[9]);
-		system(strOpr);
+		//如果文件的确存在，再执行删除指令
+		if (access(&strOpr[3], F_OK) == 0) system(strOpr);
 	}
 
 	//获取数据
@@ -552,7 +564,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 	{
 		memset(strOpr, 0, sizeof(strOpr));
 		if(sqlRow[9]) sprintf(strOpr, "rm %s %s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[9]);
-		system(strOpr);
+		if (access(&strOpr[3], F_OK) == 0) system(strOpr);
 	}
 
 	//再删去所有的

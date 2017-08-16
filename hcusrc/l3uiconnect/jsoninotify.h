@@ -25,7 +25,8 @@ enum FSM_STATE_JSONINOTIFY
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmJsoninotify[];
-extern   char zHcuCmdflagJsonFile[] ;
+extern char zHcuCmdflagJsonFile[] ;
+extern char zHcuCmdLinkJsonFile[];
 
 //API
 extern OPSTAT fsm_jsoninotify_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

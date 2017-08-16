@@ -20,6 +20,8 @@
 = 更新打印问题
 = 增加多套参数配置的configId
 = 去掉HCU_SYSCFG_HW_TYPE，启动HCU_SYSCFG_HW_PRODUCT_CAT_TYPE
+= 数据库只能使用REPLACE模式
+= 软件下载的改进
 
 //= ZJL, 2017 Aug.10 CURRENT_SW_DELIVERY 238=>BFSC项目
 = 更新HUITP中有关倾倒传感器的ＩＥ定义

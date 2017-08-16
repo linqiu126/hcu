@@ -43,6 +43,8 @@ HcuFsmStateItem_t HcuFsmJsoninotify[] =
 };
 
 char zHcuCmdflagJsonFile[]  = "/tmp/command.json";
+char zHcuCmdLinkJsonFile[]  = "/var/www/html/bfscui/command.json";
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose

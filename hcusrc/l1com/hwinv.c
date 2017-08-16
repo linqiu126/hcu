@@ -1434,7 +1434,7 @@ void hcu_delete_file(const char *path)
 		while((dir_info = readdir(dir)) != NULL)
 		{
 			hcu_get_file_path(path,dir_info->d_name,file_path);
-			HcuDebugPrint("HWINV: is dir_into: %s \n", file_path);
+			HCU_DEBUG_PRINT_INF("HWINV: is dir_into: %s \n", file_path);
 			if(hcu_is_special_dir(dir_info->d_name))
 				continue;
 			hcu_delete_file(file_path);

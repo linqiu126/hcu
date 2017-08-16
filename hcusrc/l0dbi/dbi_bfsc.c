@@ -69,30 +69,29 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
-  `StaType` char(20) NOT NULL,
-  `configid` int(4) NOT NULL,
-  `timestamp` int(4) NOT NULL DEFAULT '0',
-  `wsIncMatCnt` int(4) NOT NULL DEFAULT '0',
-  `wsIncMatWgt` double(18,2) NOT NULL DEFAULT '0',
-  `wsCombTimes` int(4) NOT NULL DEFAULT '0',
-  `wsTttTimes` int(4) NOT NULL DEFAULT '0',
-  `wsTgvTimes` int(4) NOT NULL DEFAULT '0',
-  `wsTttMatCnt` int(4) NOT NULL DEFAULT '0',
-  `wsTgvMatCnt` int(4) NOT NULL DEFAULT '0',
-  `wsTttMatWgt` double(18,2) NOT NULL DEFAULT '0',
-  `wsTgvMatWgt` double(18,2) NOT NULL DEFAULT '0',
-  `wsAvgTttTimes` int(4) NOT NULL DEFAULT '0',
-  `wsAvgTttMatCnt` int(4) NOT NULL DEFAULT '0',
-  `wsAvgTttMatWgt` double(18,2) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `sid` int(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `statype` char(20) DEFAULT NULL,
+  `configid` int(4) DEFAULT NULL,
+  `timestamp` int(4) DEFAULT NULL,
+  `wsincmatcnt` int(4) DEFAULT NULL,
+  `wsincmatwgt` double(18,2) DEFAULT NULL,
+  `wscombtimes` int(4) DEFAULT NULL,
+  `wsttttimes` int(4) DEFAULT NULL,
+  `wstgvtimes` int(4) DEFAULT NULL,
+  `wstttmatcnt` int(4) DEFAULT NULL,
+  `wstgvmatcnt` int(4) DEFAULT NULL,
+  `wstttmatwgt` double(18,2) DEFAULT NULL,
+  `wstgvmatwgt` double(18,2) DEFAULT NULL,
+  `wsavgttttimes` int(4) DEFAULT NULL,
+  `wsavgtttmatcnt` int(4) DEFAULT NULL,
+  `wsavgtttmatwgt` double(18,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 --
 -- Dumping data for table `hcubfscstadatainfo`
 --
 
-INSERT INTO `hcubfscstadatainfo` (`sid`, `StaType`, `configid`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
+INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatcnt`, `wsincmatwgt`, `wscombtimes`, `wsttttimes`, `wstgvtimes`, `wstttmatcnt`, `wstgvmatcnt`, `wstttmatwgt`, `wstgvmatwgt`, `wsavgttttimes`, `wsavgtttmatcnt`, `wsavgtttmatwgt`) VALUES
 (1, 'BFSC_STA_24_HOUR', 1, 1501126545, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
 (2, 'BFSC_STA_LOCAL_UI', 0, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
 (3, 'BFSC_STA_LOCAL_UI', 1, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
@@ -272,44 +271,45 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 	MYSQL *sqlHandler;
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
-	MYSQL_RES *resPtr;
-	MYSQL_ROW sqlRow;
-
-	configId = 1;
+	//MYSQL_RES *resPtr;
+	//MYSQL_ROW sqlRow;
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     char s[20];
     memset(s, 0, sizeof(s));
     strncpy(s, StaType, strlen(StaType)<sizeof(s)?strlen(StaType):sizeof(s));
+    UINT32 tmp = time(0);
 
 	//建立数据库连接
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
         return FAILURE;
     }
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
-    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
         return FAILURE;
     }
 
-//	//REPLACE新的数据
-//    sprintf(strsql, "REPLACE INTO `hcubfscstadatainfo` (StaType, configid, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
-//    		('%s', '%d', %d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
-//			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
-//			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
-//	result = mysql_query(sqlHandler, strsql);
-//	if(result){
-//    	mysql_close(sqlHandler);
-//    	HcuErrorPrint("DBICOM: REPLACE data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
-//        return FAILURE;
-//	}
+	//REPLACE新的数据
+    sprintf(strsql, "REPLACE INTO `hcubfscstadatainfo` (StaType, configid, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
+    		('%s', '%d', '%d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
+			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
+			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFSC: REPLACE data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
+        return FAILURE;
+	}
 
-    //获取数据
-    sprintf(strsql, "SELECT * FROM `hcubfscstadatainfo` WHERE (`StaType` = '%s' AND `configid` = '%d')", s, configId);
+/*    //获取数据
+	configId = 3;
+    sprintf(strsql, "SELECT sid FROM `hcubfscstadatainfo` WHERE (`statype` = '%s' AND `configid` = '%d')", s, configId);
+    HCU_DEBUG_PRINT_FAT("StrSql = %s\n", strsql);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -326,12 +326,11 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 	}
 
 	//只读取第一条记录
-    UINT32 tmp = time(0);
     if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
 	{
 		//插入INSERT新的数据，确保记录是唯一的
     	//INSERT新的数据
-        sprintf(strsql, "INSERT INTO `hcubfscstadatainfo` (StaType, configid, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
+        sprintf(strsql, "INSERT INTO `hcubfscstadatainfo` (statype, configid, timestamp, wsincmatcnt, wsincmatwgt, wscombtimes, wsttttimes, wstgvtimes, wstttmatcnt, wstgvmatcnt, wstttmatwgt, wstgvmatwgt, wsavgttttimes, wsavgtttmatcnt, wsavgtttmatwgt) VALUES \
         		('%s', '%d', %d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
     			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
     			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
@@ -339,73 +338,56 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
     	if(result){
     		mysql_free_result(resPtr);
         	mysql_close(sqlHandler);
-        	HcuErrorPrint("DBICOM: INSERT data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
+        	HcuErrorPrint("DBIBFSC: INSERT data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
             return FAILURE;
     	}
 	}
-	else{
+	else
+	{
 		//UPDATE新的数据
-/*	    sprintf(strsql, "UPDATE `hcubfscstadatainfo` SET timestamp='%d', \
-			wsIncMatCnt='%d', \
-			wsIncMatWgt='%f', \
-			wsCombTimes='%d', \
-			wsTttTimes='%d', \
-			wsTgvTimes='%d', \
-			wsTttMatCnt='%d', \
-			wsTgvMatCnt='%d', \
-			wsTttMatWgt='%f', \
-			wsTgvMatWgt='%f', \
-			wsAvgTttTimes='%d', \
-			wsAvgTttMatCnt='%d', \
-			wsAvgTttMatWgt='%f', \
-			WHERE (`StaType`='%s' AND `configid`='%d')", \
-			(int)tmp, \
-			StaDatainfo->wsIncMatCnt, \
-			StaDatainfo->wsIncMatWgt, \
-			StaDatainfo->wsCombTimes, \
-			StaDatainfo->wsTttTimes, \
-			StaDatainfo->wsTgvTimes, \
-			StaDatainfo->wsTttMatCnt, \
-			StaDatainfo->wsTgvMatCnt, \
-			StaDatainfo->wsTttMatWgt, \
-			StaDatainfo->wsTgvMatWgt, \
-			StaDatainfo->wsAvgTttTimes, \
-			StaDatainfo->wsAvgTttMatCnt, \
-			StaDatainfo->wsAvgTttMatWgt, \
-			s, configId);*/
-		sprintf(strsql, "UPDATE `hcubfscstadatainfo` SET wsIncMatCnt = %d WHERE (`StaType` = '%s' AND `configid` = %d)", StaDatainfo->wsIncMatCnt,\
-				s, configId);
-/*
-	    sprintf(strsql, "UPDATE `hcubfscstadatainfo` SET wsIncMatCnt='%d' \
-			WHERE (`StaType`='%s' AND `configId`='%d')", \
-			StaDatainfo->wsIncMatCnt, \
-			StaDatainfo->wsIncMatWgt, \
-			StaDatainfo->wsCombTimes, \
-			StaDatainfo->wsTttTimes, \
-			StaDatainfo->wsTgvTimes, \
-			StaDatainfo->wsTttMatCnt, \
-			StaDatainfo->wsTgvMatCnt, \
-			StaDatainfo->wsTttMatWgt, \
-			StaDatainfo->wsTgvMatWgt, \
-			StaDatainfo->wsAvgTttTimes, \
-			StaDatainfo->wsAvgTttMatCnt, \
-			StaDatainfo->wsAvgTttMatWgt, \
-			s, configId);
-*/
+		sprintf(strsql, "UPDATE `hcubfscstadatainfo` SET timestamp='%d', \
+		wsincmatcnt='%d', \
+		wsincmatwgt='%f', \
+		wscombtimes='%d', \
+		wsttttimes='%d', \
+		wstgvtimes='%d', \
+		wstttmatcnt='%d', \
+		wstgvmatcnt='%d', \
+		wstttmatwgt='%f', \
+		wstgvmatwgt='%f', \
+		wsavgttttimes='%d', \
+		wsavgtttmatcnt='%d', \
+		wsavgtttmatwgt='%f' \
+		WHERE (`statype` = '%s' AND `configid` = '%d')", \
+		(int)tmp, \
+		StaDatainfo->wsIncMatCnt, \
+		StaDatainfo->wsIncMatWgt, \
+		StaDatainfo->wsCombTimes, \
+		StaDatainfo->wsTttTimes, \
+		StaDatainfo->wsTgvTimes, \
+		StaDatainfo->wsTttMatCnt, \
+		StaDatainfo->wsTgvMatCnt, \
+		StaDatainfo->wsTttMatWgt, \
+		StaDatainfo->wsTgvMatWgt, \
+		StaDatainfo->wsAvgTttTimes, \
+		StaDatainfo->wsAvgTttMatCnt, \
+		StaDatainfo->wsAvgTttMatWgt, \
+		s, configId);
+
 	    HCU_DEBUG_PRINT_FAT("StrSql = %s\n", strsql);
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 			mysql_free_result(resPtr);
 	    	mysql_close(sqlHandler);
-	    	HcuErrorPrint("DBICOM: UPDATE data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
+	    	HcuErrorPrint("DBIBFSC: UPDATE data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
 	        return FAILURE;
 		}
-	}
+	}*/
 
 	//释放记录集
-    mysql_free_result(resPtr);
+    //mysql_free_result(resPtr);
     mysql_close(sqlHandler);
-    //HCU_DEBUG_PRINT_CRT("DBICOM: MYSQL release result = %s\n", mysql_error(sqlHandler));
+    //HCU_DEBUG_PRINT_CRT("DBIBFSC: MYSQL release result = %s\n", mysql_error(sqlHandler));
     return SUCCESS;
 }
 
@@ -423,12 +405,12 @@ OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info)
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
         return FAILURE;
     }
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
-    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
     	return FAILURE;
     }
@@ -439,7 +421,7 @@ OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info)
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: REPLACE data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: REPLACE data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
@@ -459,7 +441,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     if (wmc_id >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
-    	HcuErrorPrint("DBICOM: Input nodeId too big than HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX = %d\n", HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+    	HcuErrorPrint("DBIBFSC: Input nodeId too big than HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX = %d\n", HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
         return FAILURE;
     }
 
@@ -470,12 +452,12 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
         return FAILURE;
     }
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
-    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
         return FAILURE;
     }
@@ -483,7 +465,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
 	//UPDATE新的数据
     timestamp = time(NULL);
     if( (0xFFFFFFFF == wmc_id) || (0xFFFFFFFF == wmc_weight_value) ){
-    	HcuErrorPrint("DBICOM: Input data error!\n");
+    	HcuErrorPrint("DBIBFSC: Input data error!\n");
         mysql_close(sqlHandler);
         return SUCCESS;
     }
@@ -495,7 +477,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wm
     result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: UPDATE database error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: UPDATE database error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
@@ -519,12 +501,12 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
         return FAILURE;
     }
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
-    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
         return FAILURE;
     }
@@ -535,7 +517,7 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
     result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: UPDATE data error: %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: UPDATE data error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 
@@ -561,12 +543,12 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
         return FAILURE;
     }
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
-    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
         return FAILURE;
     }
@@ -579,7 +561,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
 		result = mysql_query(sqlHandler, strsql);
 		if(result){
 	    	mysql_close(sqlHandler);
-	    	HcuErrorPrint("DBICOM: UPDATE data error: %s\n", mysql_error(sqlHandler));
+	    	HcuErrorPrint("DBIBFSC: UPDATE data error: %s\n", mysql_error(sqlHandler));
 	        return FAILURE;
 		}
     }
@@ -588,49 +570,6 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     mysql_close(sqlHandler);
     return SUCCESS;
 }
-
-//OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
-//{
-//	MYSQL *sqlHandler;
-//    int result = 0;
-//    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
-//
-//	//建立数据库连接
-//    sqlHandler = mysql_init(NULL);
-//    if(!sqlHandler)
-//    {
-//    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
-//        return FAILURE;
-//    }
-//    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-//    if (!sqlHandler){
-//    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-//    	mysql_close(sqlHandler);
-//        return FAILURE;
-//    }
-//
-//    HcuDebugPrint("DBIBFSC: Receive calibration date: sensorid = %02d, adcvalue = %d, weight = %d!\n", sensorid,adcvalue,fullweight);
-//    //零值校准数据
-//    if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_ZERO){
-//		sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (1)", sensorid, adcvalue);
-//		result = mysql_query(sqlHandler, strsql);
-//    }
-//    //满值校准数据
-//    else if (cmdid == CMDID_SENSOR_COMMAND_CALIBRATION_FULL){
-//    	sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d', fullwgt_%02d='%d'  WHERE (1)", sensorid, adcvalue, sensorid, fullweight);
-//		result = mysql_query(sqlHandler, strsql);
-//    }
-//
-//    if(result){
-//    	    	mysql_close(sqlHandler);
-//    	    	HcuErrorPrint("DBICOM: REPLACE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
-//    	        return FAILURE;
-//    		}
-//
-//	//释放记录集
-//    mysql_close(sqlHandler);
-//    return SUCCESS;
-//}
 
 OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
 {
@@ -642,12 +581,12 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullwe
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
         return FAILURE;
     }
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
-    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
         return FAILURE;
     }
@@ -659,7 +598,7 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullwe
 
     if(result){
     	    	mysql_close(sqlHandler);
-    	    	HcuErrorPrint("DBICOM: UPDATE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
+    	    	HcuErrorPrint("DBIBFSC: UPDATE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
     	        return FAILURE;
     		}
 
@@ -678,12 +617,12 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT32 fullwe
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
-    	HcuErrorPrint("DBICOM: MySQL init failed!\n");
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
         return FAILURE;
     }
     sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
     if (!sqlHandler){
-    	HcuErrorPrint("DBICOM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
         return FAILURE;
     }
@@ -695,7 +634,7 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT32 fullwe
 
     if(result){
     	    	mysql_close(sqlHandler);
-    	    	HcuErrorPrint("DBICOM: UPDATE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
+    	    	HcuErrorPrint("DBIBFSC: UPDATE data error [func=dbi_HcuBfsc_CalibrationDataUpdate]: %s\n", mysql_error(sqlHandler));
     	        return FAILURE;
     		}
 

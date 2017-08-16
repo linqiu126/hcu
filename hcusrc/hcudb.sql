@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 16, 2017 at 02:58 PM
+-- Generation Time: Aug 16, 2017 at 07:32 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
-(1501641409, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 6, 0, 6, 0, 6, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
+(1502882855, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
 
 -- --------------------------------------------------------
 
@@ -313,33 +313,49 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 
 CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
   `sid` int(4) NOT NULL AUTO_INCREMENT,
-  `StaType` char(20) NOT NULL,
-  `configid` int(4) NOT NULL,
-  `timestamp` int(4) NOT NULL DEFAULT '0',
-  `wsIncMatCnt` int(4) NOT NULL DEFAULT '0',
-  `wsIncMatWgt` double(18,2) NOT NULL DEFAULT '0.00',
-  `wsCombTimes` int(4) NOT NULL DEFAULT '0',
-  `wsTttTimes` int(4) NOT NULL DEFAULT '0',
-  `wsTgvTimes` int(4) NOT NULL DEFAULT '0',
-  `wsTttMatCnt` int(4) NOT NULL DEFAULT '0',
-  `wsTgvMatCnt` int(4) NOT NULL DEFAULT '0',
-  `wsTttMatWgt` double(18,2) NOT NULL DEFAULT '0.00',
-  `wsTgvMatWgt` double(18,2) NOT NULL DEFAULT '0.00',
-  `wsAvgTttTimes` int(4) NOT NULL DEFAULT '0',
-  `wsAvgTttMatCnt` int(4) NOT NULL DEFAULT '0',
-  `wsAvgTttMatWgt` double(18,2) NOT NULL DEFAULT '0.00',
+  `statype` char(20) DEFAULT NULL,
+  `configid` int(4) DEFAULT NULL,
+  `timestamp` int(4) DEFAULT NULL,
+  `wsincmatcnt` int(4) DEFAULT NULL,
+  `wsincmatwgt` double(18,2) DEFAULT NULL,
+  `wscombtimes` int(4) DEFAULT NULL,
+  `wsttttimes` int(4) DEFAULT NULL,
+  `wstgvtimes` int(4) DEFAULT NULL,
+  `wstttmatcnt` int(4) DEFAULT NULL,
+  `wstgvmatcnt` int(4) DEFAULT NULL,
+  `wstttmatwgt` double(18,2) DEFAULT NULL,
+  `wstgvmatwgt` double(18,2) DEFAULT NULL,
+  `wsavgttttimes` int(4) DEFAULT NULL,
+  `wsavgtttmatcnt` int(4) DEFAULT NULL,
+  `wsavgtttmatwgt` double(18,2) DEFAULT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `hcubfscstadatainfo`
 --
 
-INSERT INTO `hcubfscstadatainfo` (`sid`, `StaType`, `configid`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
-(1, 'BFSC_STA_24_HOUR', 1, 1501126545, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(2, 'BFSC_STA_LOCAL_UI', 0, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(3, 'BFSC_STA_LOCAL_UI', 1, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(4, 'BFSC_STA_UP_2_NOW', 1, 1501641451, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
+INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatcnt`, `wsincmatwgt`, `wscombtimes`, `wsttttimes`, `wstgvtimes`, `wstttmatcnt`, `wstgvmatcnt`, `wstttmatwgt`, `wstgvmatwgt`, `wsavgttttimes`, `wsavgtttmatcnt`, `wsavgtttmatwgt`) VALUES
+(1, 'BFSC_STA_24_HOUR', 1, 1501126545, 22, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(2, 'BFSC_STA_LOCAL_UI', 0, 1502873947, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(3, 'BFSC_STA_LOCAL_UI', 1, 1502874213, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(4, 'BFSC_STA_UP_2_NOW', 1, 1501641451, 22, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(5, 'BFSC_STA_LOCAL_UI', 0, 1502875238, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(6, 'BFSC_STA_LOCAL_UI', 0, 1502875263, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(7, 'BFSC_STA_LOCAL_UI', 0, 1502875634, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(8, 'BFSC_STA_LOCAL_UI', 0, 1502875837, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(9, 'BFSC_STA_LOCAL_UI', 0, 1502875944, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(10, 'BFSC_STA_LOCAL_UI', 0, 1502876062, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(11, 'BFSC_STA_LOCAL_UI', 0, 1502879457, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(12, 'BFSC_STA_LOCAL_UI', 0, 1502880276, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(13, 'BFSC_STA_LOCAL_UI', 0, 1502880467, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(14, 'BFSC_STA_LOCAL_UI', 0, 1502881194, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(15, 'BFSC_STA_LOCAL_UI', 0, 1502882173, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(16, 'BFSC_STA_LOCAL_UI', 0, 1502882316, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(17, 'BFSC_STA_LOCAL_UI', 0, 1502882344, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(18, 'BFSC_STA_LOCAL_UI', 0, 1502882378, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(19, 'BFSC_STA_LOCAL_UI', 0, 1502882637, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(20, 'BFSC_STA_LOCAL_UI', 0, 1502882855, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -3230,7 +3246,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (36, 'TID_1S_IGM_PERIOD_READ', 1, 600),
 (37, 'TID_1S_IPM_PERIOD_READ', 1, 600),
 (38, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 311),
-(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 30),
+(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 15),
 (40, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 10),
 (41, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
 (42, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
@@ -3301,7 +3317,7 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `cputemp` int(11) NOT NULL,
   `timestamp` int(4) NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=627 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=645 ;
 
 --
 -- Dumping data for table `hcusyspmglobaldatainfo`
@@ -3931,7 +3947,25 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (623, 0, 438, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 0, 11, 0, 15, 89, 0, 1502865070),
 (624, 0, 468, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 0, 11, 0, 15, 89, 0, 1502865382),
 (625, 0, 498, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 0, 11, 2, 15, 89, 0, 1502865692),
-(626, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 15, 89, 0, 1502866241);
+(626, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 15, 89, 0, 1502866241),
+(627, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 16, 90, 0, 1502875584),
+(628, 0, 33, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 17, 90, 0, 1502876384),
+(629, 0, 63, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 17, 90, 0, 1502876694),
+(630, 0, 96, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 17, 90, 0, 1502877006),
+(631, 0, 126, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 90, 0, 1502877316),
+(632, 0, 156, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 17, 90, 0, 1502877627),
+(633, 0, 189, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 17, 90, 0, 1502877938),
+(634, 0, 219, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 7, 17, 90, 0, 1502878249),
+(635, 0, 249, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 17, 90, 0, 1502878560),
+(636, 0, 282, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 17, 90, 0, 1502878871),
+(637, 0, 312, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 17, 90, 0, 1502879182),
+(638, 0, 33, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 17, 90, 0, 1502879779),
+(639, 0, 63, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 13, 17, 90, 0, 1502880089),
+(640, 0, 33, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 6, 17, 90, 0, 1502880788),
+(641, 0, 63, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 17, 90, 0, 1502881099),
+(642, 0, 33, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 17, 90, 0, 1502881516),
+(643, 0, 63, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 90, 0, 1502881826),
+(644, 0, 96, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 13, 17, 90, 0, 1502882137);
 
 -- --------------------------------------------------------
 
@@ -3984,7 +4018,14 @@ CREATE TABLE IF NOT EXISTS `hcusysswm_swpkg` (
   `currentactive` char(10) NOT NULL,
   `updatetime` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
+
+--
+-- Dumping data for table `hcusysswm_swpkg`
+--
+
+INSERT INTO `hcusysswm_swpkg` (`sid`, `equentry`, `hwtype`, `hwpem`, `swrel`, `swver`, `dbver`, `upgradeflag`, `swtotallen`, `swchecksum`, `dbtotallen`, `dbchecksum`, `filename`, `dbname`, `currentactive`, `updatetime`) VALUES
+(58, 1, 2049, 6, 3, 240, 23, 4, 3705145, 44162, 356450, 18450, 'HCU_HPT2049_PEM6_REL3_VER240_PATCH.HEX', 'HCU_HPT2049_PEM6_REL3_VER23_MYSQL.SQL', 'START', 1502883156);
 
 -- --------------------------------------------------------
 

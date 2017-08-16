@@ -110,7 +110,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	char str[100];
 	memset(str, 0, sizeof(str));
 	sprintf(str, "rm %s", zHcuCmdflagJsonFile);
-	system(str);
+	if (access(&str[3], F_OK) == 0) system(str);
 	if ((fileStream = fopen( zHcuCmdflagJsonFile, "w+" )) != NULL ) {
 		fputs(cmdJson, fileStream);
 		fclose(fileStream);
@@ -120,14 +120,14 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	system(str);
 
 	//修改生成command.json link
-	sprintf(str, "rm /var/www/html/bfscui/command.json");
-	system(str);
-	sprintf(str, "ln -s /tmp/command.json /var/www/html/bfscui/command.json");
+	sprintf(str, "rm %s", zHcuCmdLinkJsonFile);
+	if (access(&str[3], F_OK) == 0) system(str);
+	sprintf(str, "ln -s %s %s", zHcuCmdflagJsonFile, zHcuCmdLinkJsonFile);
 	system(str);
 	sprintf(str, "chmod -R 777 /var/www/html/*");
 	system(str);
 
-	HcuDebugPrint("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
+	HCU_DEBUG_PRINT_INF("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cfg_resp: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
 
 	//启动周期性定时器
 	ret = hcu_timer_start(TASK_ID_BFSCUICOMM, TIMER_ID_1S_BFSCUICOMM_PERIOD_READ, \
