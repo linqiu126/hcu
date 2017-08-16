@@ -314,8 +314,8 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	pIndexT2 = strstr(rcv->buf, HUITP_MSG_HUIXML_CONSTANT_CONTENT_R);
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_CONTENT_L);
 	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_CONTENT_L))>= pIndexT2) ||\
-		(dif > HUITP_MSG_BUF_WITH_HEAD_MAX_LEN) || (dif != ((dif/2)*2)))
-		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid content format!\n");
+		(dif != ((dif/2)*2)))
+		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid content format, dif = %d!\n", dif);
 	memset(msgContent, 0, sizeof(msgContent));
 	strncpy(msgContent, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_CONTENT_L), dif);
 		

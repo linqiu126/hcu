@@ -176,12 +176,12 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 		gTaskSysswmContext.swDlSession++;
 		gTaskSysswmContext.swDlSession = (gTaskSysswmContext.swDlSession % HCU_SYSSWM_SW_DOWNLOAD_SESSION_MAX_NBR);
-		HCU_DEBUG_PRINT_FAT("SYSSWM: Time out processing swDlSession=%d\n", gTaskSysswmContext.swDlSession);
 
 		//分类处理
 		if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT) && ((zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE) || \
 				(zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL) || (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)))
 			ret = func_sysswm_time_out_period_working_scan_hcu_client();
+		HCU_DEBUG_PRINT_FAT("SYSSWM: NodeHardware = 0x%x\n", zHcuSysEngPar.hwBurnId.nodeHwType);
 		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0))
 			ret = func_sysswm_time_out_period_working_scan_ihu_stable();
 		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0))
