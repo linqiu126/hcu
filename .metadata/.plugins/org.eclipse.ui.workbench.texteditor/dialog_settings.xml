@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="dbi_HcuBfsc_StaDatainfo_save" key="selection"/>
+		<item value="SYSSWM" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="dbi_HcuBfsc_StaDatainfo_save"/>
-			<item value="hcubfscstadatainfo"/>
-			<item value="sta"/>
-			<item value="TIMER_ID_1S_SYSSWM_PERIOD_WORKING"/>
 			<item value="SYSSWM"/>
-			<item value="dbi_HcuHcHoZe08ch2oDataInfo_delete_3monold"/>
-			<item value="dbi_HcuHchoZe08ch2oDataInfo_delete_3monold"/>
-			<item value="HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX"/>
+			<item value="zHcuSysEngPhyBootCfg"/>
+			<item value="SysEngParElementHwBurnPhyIdAddr_t"/>
+			<item value="hwBurnId"/>
+			<item value="nodeHwPemId"/>
+			<item value="hcu_vm_engpar_translate_phy_boot_cfg_into_mem"/>
+			<item value="func_sysswm_time_out_period_working_scan_hcu_client"/>
+			<item value="INVENTORY_REPORT"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
