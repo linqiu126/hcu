@@ -174,6 +174,10 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		if (dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete() == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete incomplete download file failure!\n");
 
+		gTaskSysswmContext.swDlSession++;
+		gTaskSysswmContext.swDlSession = (gTaskSysswmContext.swDlSession % HCU_SYSSWM_SW_DOWNLOAD_SESSION_MAX_NBR);
+		HCU_DEBUG_PRINT_FAT("SYSSWM: Time out processing swDlSession=%d\n", gTaskSysswmContext.swDlSession);
+
 		//分类处理
 		if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT) && ((zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE) || \
 				(zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL) || (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)))
@@ -184,8 +188,6 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 			ret = func_sysswm_time_out_period_working_scan_ihu_trial();
 		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0))
 			ret = func_sysswm_time_out_period_working_scan_ihu_patch();
-		gTaskSysswmContext.swDlSession++;
-		gTaskSysswmContext.swDlSession = (gTaskSysswmContext.swDlSession%HCU_SYSSWM_SW_DOWNLOAD_SESSION_MAX_NBR);
 	}
 
 	//下载短定时
@@ -261,6 +263,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	memset(&gTaskSysswmContext.cloudSwDl, 0, sizeof(HcuSysMsgIeL3SysSwmSwDlElement_t));
 	gTaskSysswmContext.reTransTimes = 0;
 
+	HCU_DEBUG_PRINT_FAT("SYSSWM: swDlSession = %d\n", gTaskSysswmContext.swDlSession);
 	//1) 如果收到HCU_CLIENT
 	if (gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT){
 		if ((rcv.equEntry != HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW) || (rcv.hwType != zHcuSysEngPar.hwBurnId.hwType) || (rcv.hwId < zHcuSysEngPar.hwBurnId.hwPemId) || (rcv.upgradeFlag != zHcuSysEngPar.hwBurnId.swUpgradeFlag)){

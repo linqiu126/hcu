@@ -69,32 +69,34 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 --
 
 CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
   `StaType` char(20) NOT NULL,
   `configid` int(4) NOT NULL,
-  `timestamp` int(4) NOT NULL,
-  `wsIncMatCnt` int(4) NOT NULL,
-  `wsIncMatWgt` double(18,2) NOT NULL,
-  `wsCombTimes` int(4) NOT NULL,
-  `wsTttTimes` int(4) NOT NULL,
-  `wsTgvTimes` int(4) NOT NULL,
-  `wsTttMatCnt` int(4) NOT NULL,
-  `wsTgvMatCnt` int(4) NOT NULL,
-  `wsTttMatWgt` double(18,2) NOT NULL,
-  `wsTgvMatWgt` double(18,2) NOT NULL,
-  `wsAvgTttTimes` int(4) NOT NULL,
-  `wsAvgTttMatCnt` int(4) NOT NULL,
-  `wsAvgTttMatWgt` double(18,2) NOT NULL,
-  PRIMARY KEY (`StaType`)
+  `timestamp` int(4) NOT NULL DEFAULT '0',
+  `wsIncMatCnt` int(4) NOT NULL DEFAULT '0',
+  `wsIncMatWgt` double(18,2) NOT NULL DEFAULT '0',
+  `wsCombTimes` int(4) NOT NULL DEFAULT '0',
+  `wsTttTimes` int(4) NOT NULL DEFAULT '0',
+  `wsTgvTimes` int(4) NOT NULL DEFAULT '0',
+  `wsTttMatCnt` int(4) NOT NULL DEFAULT '0',
+  `wsTgvMatCnt` int(4) NOT NULL DEFAULT '0',
+  `wsTttMatWgt` double(18,2) NOT NULL DEFAULT '0',
+  `wsTgvMatWgt` double(18,2) NOT NULL DEFAULT '0',
+  `wsAvgTttTimes` int(4) NOT NULL DEFAULT '0',
+  `wsAvgTttMatCnt` int(4) NOT NULL DEFAULT '0',
+  `wsAvgTttMatWgt` double(18,2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfscstadatainfo`
 --
 
-INSERT INTO `hcubfscstadatainfo` (`StaType`, `configid`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
-('BFSC_STA_24_HOUR', 1, 1501126545, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-('BFSC_STA_LOCAL_UI', 1, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-('BFSC_STA_UP_2_NOW', 1, 1501641451, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
+INSERT INTO `hcubfscstadatainfo` (`sid`, `StaType`, `configid`, `timestamp`, `wsIncMatCnt`, `wsIncMatWgt`, `wsCombTimes`, `wsTttTimes`, `wsTgvTimes`, `wsTttMatCnt`, `wsTgvMatCnt`, `wsTttMatWgt`, `wsTgvMatWgt`, `wsAvgTttTimes`, `wsAvgTttMatCnt`, `wsAvgTttMatWgt`) VALUES
+(1, 'BFSC_STA_24_HOUR', 1, 1501126545, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(2, 'BFSC_STA_LOCAL_UI', 0, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(3, 'BFSC_STA_LOCAL_UI', 1, 1501641455, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(4, 'BFSC_STA_UP_2_NOW', 1, 1501641451, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
 
 
 -- --------------------------------------------------------
@@ -270,6 +272,10 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 	MYSQL *sqlHandler;
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+	MYSQL_RES *resPtr;
+	MYSQL_ROW sqlRow;
+
+	configId = 1;
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
     char s[20];
@@ -290,20 +296,114 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
         return FAILURE;
     }
 
-	//REPLACE新的数据
-    UINT32 tmp = time(0);
-    sprintf(strsql, "REPLACE INTO `hcubfscstadatainfo` (StaType, configid, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
-    		('%s', '%d', %d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
-			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
-			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
+//	//REPLACE新的数据
+//    sprintf(strsql, "REPLACE INTO `hcubfscstadatainfo` (StaType, configid, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
+//    		('%s', '%d', %d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
+//			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
+//			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
+//	result = mysql_query(sqlHandler, strsql);
+//	if(result){
+//    	mysql_close(sqlHandler);
+//    	HcuErrorPrint("DBICOM: REPLACE data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
+//        return FAILURE;
+//	}
+
+    //获取数据
+    sprintf(strsql, "SELECT * FROM `hcubfscstadatainfo` WHERE (`StaType` = '%s' AND `configid` = '%d')", s, configId);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBICOM: REPLACE data error, staType = %s, err cause = %s\n", StaType, mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: SELECT data error, StaType = %s, ConfigId=%d,　Err Cause = %s\n", s, configId, mysql_error(sqlHandler));
         return FAILURE;
 	}
 
+	//查具体的结果
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFSC: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+	//只读取第一条记录
+    UINT32 tmp = time(0);
+    if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
+	{
+		//插入INSERT新的数据，确保记录是唯一的
+    	//INSERT新的数据
+        sprintf(strsql, "INSERT INTO `hcubfscstadatainfo` (StaType, configid, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
+        		('%s', '%d', %d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
+    			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
+    			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
+    	result = mysql_query(sqlHandler, strsql);
+    	if(result){
+    		mysql_free_result(resPtr);
+        	mysql_close(sqlHandler);
+        	HcuErrorPrint("DBICOM: INSERT data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
+            return FAILURE;
+    	}
+	}
+	else{
+		//UPDATE新的数据
+/*	    sprintf(strsql, "UPDATE `hcubfscstadatainfo` SET timestamp='%d', \
+			wsIncMatCnt='%d', \
+			wsIncMatWgt='%f', \
+			wsCombTimes='%d', \
+			wsTttTimes='%d', \
+			wsTgvTimes='%d', \
+			wsTttMatCnt='%d', \
+			wsTgvMatCnt='%d', \
+			wsTttMatWgt='%f', \
+			wsTgvMatWgt='%f', \
+			wsAvgTttTimes='%d', \
+			wsAvgTttMatCnt='%d', \
+			wsAvgTttMatWgt='%f', \
+			WHERE (`StaType`='%s' AND `configid`='%d')", \
+			(int)tmp, \
+			StaDatainfo->wsIncMatCnt, \
+			StaDatainfo->wsIncMatWgt, \
+			StaDatainfo->wsCombTimes, \
+			StaDatainfo->wsTttTimes, \
+			StaDatainfo->wsTgvTimes, \
+			StaDatainfo->wsTttMatCnt, \
+			StaDatainfo->wsTgvMatCnt, \
+			StaDatainfo->wsTttMatWgt, \
+			StaDatainfo->wsTgvMatWgt, \
+			StaDatainfo->wsAvgTttTimes, \
+			StaDatainfo->wsAvgTttMatCnt, \
+			StaDatainfo->wsAvgTttMatWgt, \
+			s, configId);*/
+		sprintf(strsql, "UPDATE `hcubfscstadatainfo` SET wsIncMatCnt = %d WHERE (`StaType` = '%s' AND `configid` = %d)", StaDatainfo->wsIncMatCnt,\
+				s, configId);
+/*
+	    sprintf(strsql, "UPDATE `hcubfscstadatainfo` SET wsIncMatCnt='%d' \
+			WHERE (`StaType`='%s' AND `configId`='%d')", \
+			StaDatainfo->wsIncMatCnt, \
+			StaDatainfo->wsIncMatWgt, \
+			StaDatainfo->wsCombTimes, \
+			StaDatainfo->wsTttTimes, \
+			StaDatainfo->wsTgvTimes, \
+			StaDatainfo->wsTttMatCnt, \
+			StaDatainfo->wsTgvMatCnt, \
+			StaDatainfo->wsTttMatWgt, \
+			StaDatainfo->wsTgvMatWgt, \
+			StaDatainfo->wsAvgTttTimes, \
+			StaDatainfo->wsAvgTttMatCnt, \
+			StaDatainfo->wsAvgTttMatWgt, \
+			s, configId);
+*/
+	    HCU_DEBUG_PRINT_FAT("StrSql = %s\n", strsql);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+			mysql_free_result(resPtr);
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBICOM: UPDATE data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
+	        return FAILURE;
+		}
+	}
+
 	//释放记录集
+    mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     //HCU_DEBUG_PRINT_CRT("DBICOM: MYSQL release result = %s\n", mysql_error(sqlHandler));
     return SUCCESS;
