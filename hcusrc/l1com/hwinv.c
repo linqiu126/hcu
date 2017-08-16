@@ -113,7 +113,7 @@ OPSTAT fsm_hwinv_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	//进入等待反馈状态
 	while(1){
 		func_hwinv_scan_all();
-		hcu_sleep(30);  //休息15S后，继续重复SCAN所有的硬件状态
+		hcu_sleep(15);  //休息15S后，继续重复SCAN所有的硬件状态
 		//收下消息，防止消息BUFFER爆满而出错
 		//如果出现阻塞现象，说明这里不应该收消息，注意观察
 		HcuMsgSruct_t rcv;
@@ -1059,9 +1059,12 @@ void func_hwinv_scan_eng_par(void)
         ErrorCountForDB = ErrorCountForDB + 1;
 		HCU_DEBUG_PRINT_FAT("HWINV: Scan eng par from DB failed: %d\n", ErrorCountForDB);
 
-		if(ErrorCountForDB == HCU_FATAL_ERROR_THRESHOLD)
+		if(ErrorCountForDB == HCU_FATAL_ERROR_DB_THRESHOLD)
 		{
-			_exit(0);//HCU exit
+			HCU_DEBUG_PRINT_FAT("HWINV: Scan eng par from DB failure reach the max, the system reboot!!!!\n\n\n");
+
+			//_exit(0);//HCU exit
+			system("reboot");
 		}
 	}
 	//如果读数据库失败，则不做任何动作，只是原封不动的保留原先启动时的设置

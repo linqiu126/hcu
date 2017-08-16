@@ -407,12 +407,17 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 
 		if(curlRes != CURLE_OK){
 			if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE){
-				ErrorCountForCurl = ErrorCountForCurl + 1;
-				HCU_DEBUG_PRINT_FAT("ETHERNET: curl_easy_perform() failed, ErrorCountForCurl=%d, ErrorCode=%s\n", ErrorCountForCurl, curl_easy_strerror(curlRes));
-				if(ErrorCountForCurl == HCU_FATAL_ERROR_THRESHOLD)
+				HCU_DEBUG_PRINT_FAT("ETHERNET: curl_easy_perform() failed, ErrorCode=%s\n", curl_easy_strerror(curlRes));
+				if ((curlRes == CURLE_COULDNT_RESOLVE_HOST) || (curlRes == CURLE_OUT_OF_MEMORY))
 				{
-					_exit(0);//HCU exit
+					ErrorCountForCurl = ErrorCountForCurl + 1;
+					if(ErrorCountForCurl == HCU_FATAL_ERROR_CURL_THRESHOLD)
+					{
+						HCU_DEBUG_PRINT_FAT("ETHERNET: curl_easy_perform() failure reach the max: %d, the system reboot!!!!\n\n\n", ErrorCountForCurl);
+						//_exit(0);//HCU exit
+						system("reboot");
 
+					}
 				}
 			}
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_ETHERNET]++;

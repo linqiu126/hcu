@@ -358,6 +358,10 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		{
 			HCU_DEBUG_PRINT_INF("MODBUS: Received 2003 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
 		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			HCU_DEBUG_PRINT_INF("MODBUS: Received 2003 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
+		}
 		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 		{
 			HCU_DEBUG_PRINT_INF("MODBUS: Received 2004 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10]);
@@ -481,6 +485,10 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 	}
 	else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+	{
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	}
+	else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
 	{
 		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 	}
@@ -1717,6 +1725,17 @@ OPSTAT func_modbus_pm25_msg_pack(msg_struct_pm25_modbus_data_read_t *inMsg, Seri
 			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_LENGTH_OF_REG & 0x0FF);
 			outMsg->curLen = outMsg->curLen + 1;
 		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_HIGH & 0x0FF);
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_LOW & 0x0FF);
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((PM25_LENGTH_OF_REG >> 8) & 0x0FF) ;
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_LENGTH_OF_REG & 0x0FF);
+			outMsg->curLen = outMsg->curLen + 1;
+		}
 		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 		{
 			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_NEW_HIGH & 0x0FF);
@@ -1913,7 +1932,45 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 			snd->pm25.pm10Value = t0 + t1 + t2 + t3;
 		}
 
-		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			if (len != PM25_LENGTH_OF_REG *2){
+				HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				return FAILURE;
+			}
+
+			t0 = buf->curBuf[index++];
+			t1 = buf->curBuf[index++];
+			t2 = buf->curBuf[index++];
+			t3 = buf->curBuf[index++];
+			t0 = (t0 <<24) & 0xFF000000;
+			t1 = (t1 << 16) & 0xFF0000;
+			t2 = (t2 << 8) & 0xFF00;
+			t3 = t3 & 0xFF;
+			snd->pm25.pmTSPValue = t0 + t1 + t2 + t3;
+			t0 = buf->curBuf[index++];
+			t1 = buf->curBuf[index++];
+			t2 = buf->curBuf[index++];
+			t3 = buf->curBuf[index++];
+			t0 = (t0 <<24) & 0xFF000000;
+			t1 = (t1 << 16) & 0xFF0000;
+			t2 = (t2 << 8) & 0xFF00;
+			t3 = t3 & 0xFF;
+			snd->pm25.pm2d5Value = t0 + t1 + t2 + t3;
+			t0 = buf->curBuf[index++];
+			t1 = buf->curBuf[index++];
+			t2 = buf->curBuf[index++];
+			t3 = buf->curBuf[index++];
+			t0 = (t0 <<24) & 0xFF000000;
+			t1 = (t1 << 16) & 0xFF0000;
+			t2 = (t2 << 8) & 0xFF00;
+			t3 = t3 & 0xFF;
+			snd->pm25.pm10Value = t0 + t1 + t2 + t3;
+		}
+
+
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)//阿尔森4-20MA/RS485
 		{
 			if (len != PM25_LENGTH_OF_REG_NEW *2){
 				HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
