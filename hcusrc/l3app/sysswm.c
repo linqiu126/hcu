@@ -181,7 +181,6 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT) && ((zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_STABLE) || \
 				(zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_TRIAL) || (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSMSG_SYSSWM_FW_UPGRADE_YES_PATCH)))
 			ret = func_sysswm_time_out_period_working_scan_hcu_client();
-		HCU_DEBUG_PRINT_FAT("SYSSWM: NodeHardware = 0x%x\n", zHcuSysEngPar.hwBurnId.nodeHwType);
 		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0))
 			ret = func_sysswm_time_out_period_working_scan_ihu_stable();
 		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0))
@@ -254,7 +253,8 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 
 	//处理接收到的反馈，并进行合理的处理
 	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
-		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-positive inventory confirm message, so no handle.\n");
+		HcuErrorPrint("SYSSWM: Receive none-positive inventory confirm message, so no handle, Session=%d.\n", gTaskSysswmContext.swDlSession);
+		return SUCCESS;
 	}
 
 	//一次INVENTORY都会重来
@@ -263,7 +263,6 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	memset(&gTaskSysswmContext.cloudSwDl, 0, sizeof(HcuSysMsgIeL3SysSwmSwDlElement_t));
 	gTaskSysswmContext.reTransTimes = 0;
 
-	HCU_DEBUG_PRINT_FAT("SYSSWM: swDlSession = %d\n", gTaskSysswmContext.swDlSession);
 	//1) 如果收到HCU_CLIENT
 	if (gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT){
 		if ((rcv.equEntry != HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW) || (rcv.hwType != zHcuSysEngPar.hwBurnId.hwType) || (rcv.hwId < zHcuSysEngPar.hwBurnId.hwPemId) || (rcv.upgradeFlag != zHcuSysEngPar.hwBurnId.swUpgradeFlag)){
@@ -437,7 +436,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
 		HcuErrorPrint("SYSSWM: Receive none-positive sw package confirm message, so no handle.\n");
-		ret = FAILURE;
+		return SUCCESS;
 	}
 
 	//接下来的这一段：第一段index=1，是必须的
