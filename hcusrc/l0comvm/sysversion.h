@@ -9,7 +9,6 @@
 #define L0COMVM_SYSVERSION_H_
 
 //硬件版本定义及状态
-#define HCU_CURRENT_HW_TYPE 2004
 #define HCU_CURRENT_HW_PEM 6
 
 //SW version control, for internal usage

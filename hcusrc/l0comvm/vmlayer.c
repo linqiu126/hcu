@@ -563,8 +563,8 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_IGM_PERIOD_READ,                    "TID_1S_IGM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_IPM_PERIOD_READ,                    "TID_1S_IPM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            311,     TIMER_RESOLUTION_1S},//for test(3600)
-	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           90,     TIMER_RESOLUTION_1S},//900, 正常15一次，分别来轮４个软件体
-	{TIMER_ID_1S_SYSSWM_SEG_DL_WAIT,             	 "TID__1S_SYSSWM_SEG_DL_WAIT",             10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           30,     TIMER_RESOLUTION_1S},//900, 正常15一次，分别来轮４个软件体
+	{TIMER_ID_1S_SYSSWM_SEG_DL_WAIT,             	 "TID_1S_SYSSWM_SEG_DL_WAIT",              10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB,             "TID_1S_L3BFSC_SYS_CFG_WAIT_FB",          15,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_SYS_START_WAIT_FB,           "TID_1S_L3BFSC_SYS_START_WAIT_FB",        15,      TIMER_RESOLUTION_1S},
@@ -747,7 +747,7 @@ OPSTAT hcu_vm_system_ctr_table_init(void)
 
 	//INIT HCU itself
 	HcuDebugPrint("HCU-VM: User task starting, compiled load Info: CURRENT_PRJ=[%s], PRODUCT_CAT=[0x%x], HW_TYPE=[%d], SW_REL=[%d], SW_DELIVER=[%d].\n", \
-			HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, HCU_SYSCFG_HW_PRODUCT_CAT_TYPE, HCU_CURRENT_HW_TYPE, HCU_CURRENT_SW_RELEASE, HCU_CURRENT_SW_DELIVERY);
+			HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE, HCU_SYSCFG_HW_PRODUCT_CAT_TYPE, HCU_SYSCFG_HW_PRODUCT_CAT_TYPE, HCU_CURRENT_SW_RELEASE, HCU_CURRENT_SW_DELIVERY);
 	HcuDebugPrint("HCU-VM: BXXH(TM) HCU(c) Application Layer start and initialized, build at %s, %s.\n", __DATE__, __TIME__);
 
 	//SYSTEM DIMENSION检查（注意：边界是MAX_TASK_NUM_IN_ONE_HCU-1）
@@ -2813,18 +2813,16 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 		HcuDebugPrint("HCU-MAIN: Read MAC address error!\n");
 		return EXIT_SUCCESS;
 	}
-/*// to be discussed
+// to be discussed
 	//对硬件类型进行相同性检查，如果不一致，必然发生了生产性错误，或者硬件搞错，或者Factory Load用错，应该严重警告
 	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES) && (zHcuSysEngPar.hwBurnId.hwType != HCU_SYSCFG_HW_PRODUCT_CAT_TYPE)){
 		HcuDebugPrint("HCU-VM: HW_TYPE=[%d].\n",	zHcuSysEngPar.hwBurnId.hwType);
-
 		HcuErrorPrint("HCU-VM: Fatal error, using wrong hardware type or factory load!!!\n");
 		return FAILURE;
 	}
-*/
 	//由于硬件部分并没有真正起作用，所以暂时需要从系统定义区重复写入，一旦批量生产这部分可以去掉
 	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO){
-		zHcuSysEngPar.hwBurnId.hwType  = HCU_CURRENT_HW_TYPE;
+		zHcuSysEngPar.hwBurnId.hwType  = HCU_SYSCFG_HW_PRODUCT_CAT_TYPE;
 		zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_PEM; //PEM小型号
 		zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
 		zHcuSysEngPar.hwBurnId.swVerId = HCU_CURRENT_SW_DELIVERY;

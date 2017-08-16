@@ -304,13 +304,8 @@ void func_syspm_get_diskoccupy(void)
 	size_t mbFreedisk = freeDisk>>20;
 
 	float r = (float)(mbTotalsize - mbFreedisk)*100/(mbTotalsize==0?0.01:mbTotalsize);
-
 	zHcuSysStaPm.statisCnt.disk_occupy = r;
-
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("SYSPM: Disk total = %dMB, free=%dMB, usage/total ratio =%.2f%%, diskoccupy=%d\n", mbTotalsize, mbFreedisk,r, zHcuSysStaPm.statisCnt.disk_occupy);
-	}
-
+	HCU_DEBUG_PRINT_NOR("SYSPM: Disk total = %dMB, free=%dMB, usage/total ratio =%.2f%%, diskoccupy=%d\n", mbTotalsize, mbFreedisk,r, zHcuSysStaPm.statisCnt.disk_occupy);
 }
 
 void func_syspm_cal_cpu_mem_disk_occupy(void)

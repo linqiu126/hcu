@@ -193,6 +193,7 @@ typedef struct gTaskL3bfscContextMotorControlParamaters
 typedef struct gTaskL3bfscContext
 {
 	//静态配置参数部分
+	UINT16												configId;  //用来标识系统工作在哪一套配置参数中
 	gTaskL3bfscContextCombinationAlgorithmParamaters_t 	comAlgPar;
 	UINT8												comAlgParPriority[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
 	gTaskL3bfscContextWeightSensorParamaters_t			wgtSnrPar;

@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="SYSSWM" key="selection"/>
+		<item value="dbi_HcuBfsc_StaDatainfo_save" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="dbi_HcuBfsc_StaDatainfo_save"/>
+			<item value="hcubfscstadatainfo"/>
+			<item value="sta"/>
+			<item value="TIMER_ID_1S_SYSSWM_PERIOD_WORKING"/>
 			<item value="SYSSWM"/>
 			<item value="dbi_HcuHcHoZe08ch2oDataInfo_delete_3monold"/>
 			<item value="dbi_HcuHchoZe08ch2oDataInfo_delete_3monold"/>
 			<item value="HCU_SYSMSG_SYSSWM_INVENTORY_ELEMENT_DESC_LEN_MAX"/>
-			<item value="msg_struct_sysswm_cloudvela_inventory_resp_t"/>
-			<item value="desc"/>
-			<item value="StrIe_HUITP_IEID_uni_inventory_element_t"/>
-			<item value="HUITP_MSGID_uni_inventory_req"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
@@ -25,7 +25,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1186" key="DIALOG_X_ORIGIN"/>
-		<item value="238" key="DIALOG_Y_ORIGIN"/>
+		<item value="1197" key="DIALOG_X_ORIGIN"/>
+		<item value="347" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

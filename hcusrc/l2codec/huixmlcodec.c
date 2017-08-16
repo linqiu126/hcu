@@ -540,7 +540,7 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	{
 		StrMsg_HUITP_MSGID_uni_inventory_confirm_t *snd;
 		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length, receive len = %d, expected len = %d!\n", msgLen, (sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t) - 4));
 		snd = (StrMsg_HUITP_MSGID_uni_inventory_confirm_t*)(&pMsgBuf);
 		ret = func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(snd);
 	}

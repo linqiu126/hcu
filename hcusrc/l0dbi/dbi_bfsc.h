@@ -29,7 +29,7 @@
 #define DBI_BFSC_SNESOR_STATUS_NULL  			0xFF
 
 
-extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
 extern OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wmc_status, uint32_t wmc_weight_value);
 extern OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt);
 extern OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id);

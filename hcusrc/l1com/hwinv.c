@@ -292,7 +292,7 @@ OPSTAT func_hwinv_global_par_init(void)
 	strcpy(zHcuVmCtrTab.clock.curHikvisionPureFname, zHcuVmCtrTab.clock.curHikvisionFname);
 	strcat(zHcuVmCtrTab.clock.curHikvisionFname, HCU_RECORD_FILE_NAME_EXTEND_HK_PHOTO);
 	HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curPhotoDir %s!\n", zHcuVmCtrTab.clock.curPhotoDir);
-	HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curHikvisionFname %s!\n\n", zHcuVmCtrTab.clock.curHikvisionFname);
+	HcuDebugPrint("HWINV: zHcuVmCtrTab.clock.curHikvisionFname %s!\n", zHcuVmCtrTab.clock.curHikvisionFname);
 
 	//初始化ETHERNET后台接口
 	zHcuVmCtrTab.hwinv.ethernet.hwBase.taskId = TASK_ID_ETHERNET;
