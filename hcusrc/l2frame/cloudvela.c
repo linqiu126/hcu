@@ -458,14 +458,6 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 		if (func_cloudvela_zhbhjt212_msg_heart_beat_pack(&pMsgOutput) == FAILURE)
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_heart_beat_pack(&pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}

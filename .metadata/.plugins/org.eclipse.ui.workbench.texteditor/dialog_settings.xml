@@ -2,19 +2,19 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HUITP_IE_BUF_MAX_LEN" key="selection"/>
+		<item value="INVENT_HWTYPE_P" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="HUITP_IE_BUF_MAX_LEN"/>
-			<item value="130"/>
-			<item value="HUITP_MSG_BUF_BODY_ONLY_MAX_LEN"/>
-			<item value="300"/>
-			<item value="inputLen"/>
-			<item value="IHU_SYSMSG_BH_BUF_BODY_LEN_MAX"/>
-			<item value="400248"/>
+			<item value="INVENT_HWTYPE_P"/>
+			<item value="950"/>
+			<item value="- 30"/>
+			<item value="-30"/>
+			<item value="-20"/>
+			<item value="#elif"/>
+			<item value=" 400"/>
 			<item value="400"/>
 		</list>
 		<list key="replacehistory">
@@ -24,8 +24,8 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="425" key="DIALOG_HEIGHT"/>
-		<item value="1197" key="DIALOG_X_ORIGIN"/>
-		<item value="311" key="DIALOG_Y_ORIGIN"/>
+		<item value="377" key="DIALOG_HEIGHT"/>
+		<item value="1131" key="DIALOG_X_ORIGIN"/>
+		<item value="332" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

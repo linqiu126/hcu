@@ -5,6 +5,9 @@
  *      Author: test
  */
 
+//pack函数必须严格放在结构的里面，且不得包含任何其它包含文件，不然会发生意想不到的问题！！！
+#pragma pack (1) //强制1字节对齐
+
 #ifndef _HUITP_H_
 #define _HUITP_H_
 typedef unsigned char             UINT8;
@@ -22,8 +25,6 @@ typedef signed long               SLONG;
 typedef UINT8                     BOOLEAN;
 typedef void                      VOID;
 
-//pack函数必须严格放在结构的里面，且不得包含任何其它包含文件，不然会发生意想不到的问题！！！
-#pragma pack (1) //强制1字节对齐
 /*
  *
  *  顺从并更新到技术规范《慧HUITP接口规范v2.10, LAST UPDATE@2007/8/15》
@@ -52,14 +53,21 @@ typedef void                      VOID;
 #define HUITP_USE_IN_IHU	2
 #define HUITP_USE_SET		HUITP_USE_IN_HCU
 
-//考虑到TCPIP中底层最长1500B的情形，这里先如此定义，不要超过这个限制，所以16进制的缓冲区最好不要超过500字节
-//注意后台的SwPkgBody_Buf数据结构，要以HUITP_IE_BUF_MAX_LEN长度为准，目前后台设置的长度
-//HCU -> 304=(344-40), IHU -> 94=(134-40)
+/*
+ *
+ *考虑到TCPIP中底层最长1500B的情形，这里先如此定义，不要超过这个限制，所以16进制的缓冲区最好不要超过500字节
+ *注意后台的SwPkgBody_Buf数据结构，要以HUITP_IE_BUF_MAX_LEN长度为准，目前后台设置的长度
+ *HCU -> 304=(344-40), IHU -> 94=(134-40)
+ *
+*/
 #if (HUITP_USE_SET == HUITP_USE_IN_HCU)
 	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 			344  //这个最大长度＝(1000-300)/2=350
-#else
+#elif (HUITP_USE_SET == HUITP_USE_IN_IHU)
 	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 			134  //这个主要受内部消息长度限制，(500-300)/2 = 100，所以100个有效长度就最大了
+#else
+	#error Error set HUITP_USE_SET!
 #endif
+
 //其它长度定义部分
 #define HUITP_MSG_BUF_BODY_ONLY_MAX_LEN 				HUITP_MSG_BUF_WITH_HEAD_MAX_LEN - 4 //MSG头+长度域共4BYTE
 #define HUITP_IE_BUF_OVERHEAD							40
@@ -3020,7 +3028,15 @@ typedef struct StrIe_HUITP_IEID_uni_inventory_element
 //软件版本体
 //HUITP_IEID_uni_sw_package_min                   = 0xA100,	
 //HUITP_IEID_uni_sw_package_body                  = 0xA100,
-#define HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN ((400 < HUITP_IE_BUF_MAX_LEN)? 400: HUITP_IE_BUF_MAX_LEN)
+//HCU内部设置为1000BYTE，这是尽力放大以提高效率
+//IHU内部消息长度设置为500BYTE，这里想办法设置更大，无以为继
+#if (HUITP_USE_SET == HUITP_USE_IN_HCU)
+	#define HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN ((880 < HUITP_IE_BUF_MAX_LEN)? 880: HUITP_IE_BUF_MAX_LEN)
+#elif (HUITP_USE_SET == HUITP_USE_IN_IHU)
+	#define HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN ((450 < HUITP_IE_BUF_MAX_LEN)? 450: HUITP_IE_BUF_MAX_LEN)
+#else
+	#error Error set HUITP_USE_SET!
+#endif
 typedef struct StrIe_HUITP_IEID_uni_sw_package_body
 {
 	UINT16 ieId;
