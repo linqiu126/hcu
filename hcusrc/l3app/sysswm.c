@@ -164,11 +164,9 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//PERIOD WORKING TIMER
 	else if ((rcv.timeId == TIMER_ID_1S_SYSSWM_PERIOD_WORKING) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES){
-			//先清理孤儿文件
-			if (dbi_HcuSysSwm_SwPkg_orphane_file_delete() == FAILURE)
-				HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete orphane file failure!\n");
-		}
+		//先清理孤儿文件
+		if (dbi_HcuSysSwm_SwPkg_orphane_file_delete() == FAILURE)
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete orphane file failure!\n");
 
 		//清理所有下载到一半的表单和文件
 		if (dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete() == FAILURE)
@@ -485,7 +483,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	}
 	if (res != rcv.segCheckSum){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
-		HcuErrorPrint("SYSSWM: Receive invalid segment sw package, so no handle.\n");
+		HcuErrorPrint("SYSSWM: Receive invalid segment sw package, so no handle. segIndex=%d, segTotal=%d, validLen=%d, Caculated Result = 0x%x, Received Cksum =0x%x\n", rcv.segIndex, rcv.segTotal, rcv.segValidLen, res, rcv.segCheckSum);
 		ret = FAILURE;
 	}
 
@@ -1415,17 +1413,15 @@ void func_sysswm_copy_exe_to_target_dir_and_restart(void)
 {
 	char strOpr[200];
 
-	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES){
-		//先删掉hcu执行该文件
-		memset(strOpr, 0, sizeof(strOpr));
-		sprintf(strOpr, "rm %s hcu", zHcuSysEngPar.swm.hcuSwRunDir);
-		system(strOpr);
-		sprintf(strOpr, "rm %s hcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
-		system(strOpr);
-		//拷贝当前文件到目标目录
-		sprintf(strOpr, "cp %s%s %shcu_new", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.fileName, zHcuSysEngPar.swm.hcuSwRunDir);
-		system(strOpr);
-	}
+	//先删掉hcu执行该文件
+	memset(strOpr, 0, sizeof(strOpr));
+	sprintf(strOpr, "rm %s hcu", zHcuSysEngPar.swm.hcuSwRunDir);
+	system(strOpr);
+	sprintf(strOpr, "rm %s hcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
+	system(strOpr);
+	//拷贝当前文件到目标目录
+	sprintf(strOpr, "cp %s%s %shcu_new", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.fileName, zHcuSysEngPar.swm.hcuSwRunDir);
+	system(strOpr);
 
 	return;
 }
@@ -1434,21 +1430,19 @@ void func_sysswm_copy_db_and_exe_to_target_dir_and_restart(void)
 {
 	char strOpr[200];
 
-	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES){
-		//先删掉hcu执行该文件
-		memset(strOpr, 0, sizeof(strOpr));
-		sprintf(strOpr, "rm %s hcu", zHcuSysEngPar.swm.hcuSwRunDir);
-		system(strOpr);
-		sprintf(strOpr, "rm %s hcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
-		system(strOpr);
-		sprintf(strOpr, "rm %s hcu_new.sql", zHcuSysEngPar.swm.hcuSwRunDir);
-		system(strOpr);
-		//拷贝当前文件到目标目录
-		sprintf(strOpr, "cp %s%s %shcu_new", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.fileName, zHcuSysEngPar.swm.hcuSwRunDir);
-		system(strOpr);
-		sprintf(strOpr, "cp %s%s %shcu_new.sql", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.dbName, zHcuSysEngPar.swm.hcuSwRunDir);
-		system(strOpr);
-	}
+	//先删掉hcu执行该文件
+	memset(strOpr, 0, sizeof(strOpr));
+	sprintf(strOpr, "rm %s hcu", zHcuSysEngPar.swm.hcuSwRunDir);
+	system(strOpr);
+	sprintf(strOpr, "rm %s hcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
+	system(strOpr);
+	sprintf(strOpr, "rm %s hcu_new.sql", zHcuSysEngPar.swm.hcuSwRunDir);
+	system(strOpr);
+	//拷贝当前文件到目标目录
+	sprintf(strOpr, "cp %s%s %shcu_new", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.fileName, zHcuSysEngPar.swm.hcuSwRunDir);
+	system(strOpr);
+	sprintf(strOpr, "cp %s%s %shcu_new.sql", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.dbName, zHcuSysEngPar.swm.hcuSwRunDir);
+	system(strOpr);
 
 	return;
 }

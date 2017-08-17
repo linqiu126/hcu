@@ -189,7 +189,7 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 			else
 			{
 				//先送物理设备标签的机制，待去掉
-				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n\n");
+				HCU_DEBUG_PRINT_INF("ETHERNET: Socket reconnected\n");
 				gTaskCloudvelaContext.defaultSvrSocketCon = TRUE;
 				/*
 				echolen = strlen(zHcuSysEngPar.hwBurnId.equLable);
@@ -336,7 +336,6 @@ OPSTAT hcu_ethernet_socket_link_disconnect(void)
 //这意味着，我们采取CURL机制发送数据给HOME服务器
 OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 {
-
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		if(gTaskCloudvelaContext.defaultSvrethConClientFd < 0) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "CLOUDVELA: socket id is not valid!\n");
 	}
@@ -344,9 +343,9 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 	//有关LINKID的处理还不完善。因为程序中大量的地方还未改过来，所以只在if中判定是否属于HOME，其它情况都当做DEFAULT业务部分
 	if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
 		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
-		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n\n");
+		HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "ETHERNET: Socket disconnected & Mismatch in number of send bytes!\n");
 	}else{
-		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n\n", buf->curBuf);
+		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n", buf->curBuf);
 	}
 
 	//返回

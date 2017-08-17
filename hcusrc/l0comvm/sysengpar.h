@@ -58,14 +58,17 @@ typedef struct SysEngParElementSeriesPort
 typedef struct SysEngParElementCloudvela
 {
 	char  svrAddrHttpLocal[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
+	//主服务器
 	char  svrAddrHttpDefault[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
 	char  svrAddrSocketipDefault[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
 	char  svrNameDefault[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];
 	UINT8 svrBhItfFrameStdDefault;
+	//HOME
 	char  svrAddrHttpHome[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
 	char  svrAddrSocketipHome[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];
 	char  svrNameHome[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];
 	UINT8 svrBhItfFrameStdHome;
+	//FTP服务器
 	char  cloudFtpAdd[HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX];//for HCU SW FTP by shanchun
 	char  cloudFtpUser[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];//for HCU SW FTP by shanchun
 	char  cloudFtpPwd[HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX];//for HCU SW FTP by shanchun

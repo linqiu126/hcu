@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="SYSSWM" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="HUITP_IE_BUF_MAX_LEN" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="SYSSWM"/>
-			<item value="zHcuSysEngPhyBootCfg"/>
-			<item value="SysEngParElementHwBurnPhyIdAddr_t"/>
-			<item value="hwBurnId"/>
-			<item value="nodeHwPemId"/>
-			<item value="hcu_vm_engpar_translate_phy_boot_cfg_into_mem"/>
-			<item value="func_sysswm_time_out_period_working_scan_hcu_client"/>
-			<item value="INVENTORY_REPORT"/>
+			<item value="HUITP_IE_BUF_MAX_LEN"/>
+			<item value="130"/>
+			<item value="HUITP_MSG_BUF_BODY_ONLY_MAX_LEN"/>
+			<item value="300"/>
+			<item value="inputLen"/>
+			<item value="IHU_SYSMSG_BH_BUF_BODY_LEN_MAX"/>
+			<item value="400248"/>
+			<item value="400"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
@@ -26,6 +26,6 @@
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="425" key="DIALOG_HEIGHT"/>
 		<item value="1197" key="DIALOG_X_ORIGIN"/>
-		<item value="347" key="DIALOG_Y_ORIGIN"/>
+		<item value="311" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

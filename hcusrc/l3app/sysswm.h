@@ -34,6 +34,7 @@ typedef struct gTaskSysswmContext
 	UINT8	swDlSession;
 	UINT8	reTransTimes;
 }gTaskSysswmContext_t;
+//将HCU_CLIENT改为１是为了第一个命中，方便测试
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT 	1
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE 	2
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL 	3

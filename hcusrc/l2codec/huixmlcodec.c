@@ -38,7 +38,7 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 	if ((inputLen <4) || (inputPar == NULL) || (inputLen > (HCU_SYSMSG_BH_BUF_BODY_LEN_MAX - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2) || \
 		(inputLen > (sizeof(StrMsg_HUITP_MSGID_uni_general_message_t) - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)))
 	{
-		HCU_DEBUG_PRINT_INF("HUITPXML: InputLen=%d, InputPar=%d, MaxLen=%d, size2=%d\n", inputLen, inputPar, (HCU_SYSMSG_BH_BUF_BODY_LEN_MAX - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
+		HCU_DEBUG_PRINT_FAT("HUITPXML: InputLen=%d, InputPar=%d, MaxLen=%d, size2=%d\n", inputLen, inputPar, (HCU_SYSMSG_BH_BUF_BODY_LEN_MAX - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error input pointer or message length!\n");
 	}
 	if (output == NULL) HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error CloudDataSendBuf_t pointer!\n");
@@ -69,10 +69,10 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 	else
 		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_INVALID;
 
-	HCU_DEBUG_PRINT_INF("HUITPXML: zHcuSysEngPar.cloud.svrNameDefault = %s !\n\n", zHcuSysEngPar.cloud.svrNameDefault);
-	HCU_DEBUG_PRINT_INF("HUITPXML: zHcuSysEngPar.cloud.svrNameHome = %s !\n\n", zHcuSysEngPar.cloud.svrNameHome);
-	HCU_DEBUG_PRINT_INF("HUITPXML: gTaskCloudvelaContext.L2Link.destUser = %s !\n\n", gTaskCloudvelaContext.L2Link.destUser);
-	HCU_DEBUG_PRINT_INF("HUITPXML: gTaskCloudvelaContext.linkId = %d !\n\n", gTaskCloudvelaContext.linkId);
+	HCU_DEBUG_PRINT_INF("HUITPXML: zHcuSysEngPar.cloud.svrNameDefault = %s !\n", zHcuSysEngPar.cloud.svrNameDefault);
+	HCU_DEBUG_PRINT_INF("HUITPXML: zHcuSysEngPar.cloud.svrNameHome = %s !\n", zHcuSysEngPar.cloud.svrNameHome);
+	HCU_DEBUG_PRINT_INF("HUITPXML: gTaskCloudvelaContext.L2Link.destUser = %s !\n", gTaskCloudvelaContext.L2Link.destUser);
+	HCU_DEBUG_PRINT_INF("HUITPXML: gTaskCloudvelaContext.linkId = %d !\n", gTaskCloudvelaContext.linkId);
 	
 	//Message Type content
 	strcat(output->curBuf, HUITP_MSG_HUIXML_CONSTANT_MSG_TYPE_L);
@@ -219,12 +219,13 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	pIndexT1 = strstr(rcv->buf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
 	pIndexT2 = strstr(rcv->buf, HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_R);
 	dif = pIndexT2 - pIndexT1  - strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L);
-	HCU_DEBUG_PRINT_NOR("HUITPXML: pIndexT1 = %s, pIndexT2 = %s, dif = %d\n\n",pIndexT1, pIndexT2, dif);//debug by shanchun
-	HCU_DEBUG_PRINT_NOR("HUITPXML: dif = %d\n\n",dif);//debug by shanchun
+	HCU_DEBUG_PRINT_INF("HUITPXML: pIndexT1 = %s, pIndexT2 = %s, dif = %d\n\n",pIndexT1, pIndexT2, dif);//debug by shanchun
+	HCU_DEBUG_PRINT_INF("HUITPXML: dif = %d\n\n",dif);//debug by shanchun
 
-
-	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L))>= pIndexT2) || (dif > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX))
+	if ((pIndexT1 == NULL) || (pIndexT2 == NULL) || ((pIndexT1 +strlen(HUITP_MSG_HUIXML_CONSTANT_XML_HEAD_L))>= pIndexT2) || (dif > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX)){
+		HCU_DEBUG_PRINT_FAT("HUITPXML: Rev=[%s]\n", rcv->buf);
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid head xml format!\n");
+	}
 	
 	//初始化接收的L2Link参数
 	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));

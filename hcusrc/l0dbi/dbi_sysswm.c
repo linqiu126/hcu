@@ -401,10 +401,10 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
 	//zHcuSysEngPar.swm.hcuSwActiveDir
 	//遍历文件目录下的所有文件，获取文件名字
-	if ((dir=opendir(zHcuSysEngPar.swm.hcuSwActiveDir)) == NULL)
-	    HcuDebugPrint("DBISYSSWM: zHcuSysEngPar.swm.hcuSwActiveDir = %s\n", zHcuSysEngPar.swm.hcuSwActiveDir);
-    	HcuErrorPrint("DBISYSSWM: Open dir error!\n");
+	if ((dir=opendir(zHcuSysEngPar.swm.hcuSwActiveDir)) == NULL){
+    	HcuErrorPrint("DBISYSSWM: Open dir error! zHcuSysEngPar.swm.hcuSwActiveDir = %s\n", zHcuSysEngPar.swm.hcuSwActiveDir);
         return FAILURE;
+	}
 
 	//建立数据库连接
     sqlHandler = mysql_init(NULL);
@@ -475,16 +475,17 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	    		sprintf(fopr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, ptr->d_name);
 	    		if (access(&fopr[3], F_OK) == 0) system(fopr);
 	    	}
-
 	    }
-	    else if(ptr->d_type == 4)    ///dir
+
+	    else if(ptr->d_type == 4)    //dir
 	    {
 	    }
 	}
 
 	//释放记录集
 	closedir(dir);
-	mysql_free_result(resPtr);
+	//执行Free就发送Memory Leak，太怪了
+	//if (resPtr!=NULL) mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }

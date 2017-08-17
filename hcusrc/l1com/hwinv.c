@@ -359,20 +359,10 @@ void func_hwinv_copy_right(void)
 OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 {
 	int ret = 0;
-	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
 
 	//第一部分/zHcuSysEngPar总共三步分
-	if (ret == SUCCESS){
-		HCU_DEBUG_PRINT_NOR("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
-		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
-
-	}else{
-		HCU_ERROR_PRINT_HWINV("HWINV: Read SysEng DB error!\n");
-	}
-
-	//第二部分/zHcuSysEngPar总共三步分
 	//满足独特条件，则使用SYSCONFIG.H覆盖工参核心数据
-	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO) && (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_GENERAL_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES)){
+	if (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_GENERAL_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES){
 		//通信部分
 		zHcuSysEngPar.comm.commBackHawlCon = HCU_SYSCFG_COMM_BACK_HAWL_CON;
 		//数据库部分
@@ -412,12 +402,10 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 
 	//后台服务器中固定的配置部分，通过系统配置SYSCONFIG.H读取到工参表中
 	zHcuSysEngPar.cloud.svrBhItfFrameStdDefault = HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET;
-	//strncpy(zHcuSysEngPar.cloud.svrAddrSocketipHome, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipHome)));
-	//strncpy(zHcuSysEngPar.cloud.svrAddrHttpHome, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome)));
-	//strncpy(zHcuSysEngPar.cloud.svrNameHome, HCU_SYSCFG_CLOUD_SVR_NAME_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)<sizeof(zHcuSysEngPar.cloud.svrNameHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)):(sizeof(zHcuSysEngPar.cloud.svrNameHome)));
+	strncpy(zHcuSysEngPar.cloud.svrAddrSocketipHome, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipHome)));
+	strncpy(zHcuSysEngPar.cloud.svrAddrHttpHome, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpHome)));
+	strncpy(zHcuSysEngPar.cloud.svrNameHome, HCU_SYSCFG_CLOUD_SVR_NAME_HOME, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)<sizeof(zHcuSysEngPar.cloud.svrNameHome))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_HOME)):(sizeof(zHcuSysEngPar.cloud.svrNameHome)));
 	zHcuSysEngPar.cloud.svrBhItfFrameStdHome = HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET;
-
-	//HcuDebugPrint("HWINV: zHcuSysEngPar.cloud.svrAddrSocketipHome = %s !\n", zHcuSysEngPar.cloud.svrAddrSocketipHome);
 
 	//读取HcuTraceModuleCtr表单到系统内存中
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);
@@ -436,8 +424,6 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Timer Control DB error!\n");
 
-	//HcuDebugPrint("HWINV: PM25 MODBUS FB TIMER VALUE = %d !\n\n\n\n\n\n\n\n\n\n\n", zHcuSysEngPar.timer.array[TIMER_ID_1S_PM25_MODBUS_FB].dur);
-
 	HCU_DEBUG_PRINT_NOR("HWINV: Set Timer based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuDbVersion表单到系统内存中
@@ -445,7 +431,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
 
-	//第三部分/zHcuSysEngPar总共三步分
+	//第二部分/zHcuSysEngPar总共三步分
 	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决
 	//zHcuSysEngPar.codeDefineFix部分
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
@@ -487,6 +473,16 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 #else
 	#error Un-correct constant definition
 #endif
+
+	//第三部分/zHcuSysEngPar总共三步分
+	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
+	if (ret == SUCCESS){
+		HCU_DEBUG_PRINT_NOR("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
+		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
+
+	}else{
+		HCU_ERROR_PRINT_HWINV("HWINV: Read SysEng DB error!\n");
+	}
 
     //返回
 	return SUCCESS;

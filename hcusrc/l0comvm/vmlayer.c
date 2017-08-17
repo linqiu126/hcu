@@ -563,7 +563,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_IGM_PERIOD_READ,                    "TID_1S_IGM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_IPM_PERIOD_READ,                    "TID_1S_IPM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            311,     TIMER_RESOLUTION_1S},//for test(3600)
-	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           60,      TIMER_RESOLUTION_1S},//900, 正常15一次，分别来轮４个软件体
+	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           15,      TIMER_RESOLUTION_1S},//900, 正常15一次，分别来轮４个软件体
 	{TIMER_ID_1S_SYSSWM_SEG_DL_WAIT,             	 "TID_1S_SYSSWM_SEG_DL_WAIT",              10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB,             "TID_1S_L3BFSC_SYS_CFG_WAIT_FB",          15,      TIMER_RESOLUTION_1S},
@@ -2717,7 +2717,7 @@ int hcu_vm_main_entry(void)
 	}
 
 	//智能初始化：将MODULE TRACE初始化表单存入数据库，降低研发工作复杂度
-	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO) && (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES)){
+	if (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MOD_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES){
 		if (dbi_HcuTraceModuleCtr_engpar_intelligence_init() == FAILURE){
 			HcuDebugPrint("HCU-MAIN: Init Module Trace set error!\n");
 			return EXIT_SUCCESS;
@@ -2725,7 +2725,7 @@ int hcu_vm_main_entry(void)
 	}
 
 	//智能初始化：将MSG TRACE初始化表单存入数据库，降低研发工作复杂度
-	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO) && (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MSG_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES)){
+	if (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_MSG_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES){
 		if (dbi_HcuTraceMsgCtr_engpar_intelligence_init() == FAILURE){
 			HcuDebugPrint("HCU-MAIN: Init Message Trace set error!\n");
 			return EXIT_SUCCESS;
@@ -2733,7 +2733,7 @@ int hcu_vm_main_entry(void)
 	}
 
 	//智能初始化：将TIMER初始化表单存入数据库，降低研发工作复杂度
-	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO) && (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_TIMER_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES)){
+	if (HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_TIMER_SET == HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES){
 		if (dbi_HcuSysEngTimer_engpar_intelligence_init() == FAILURE){
 			HcuDebugPrint("HCU-MAIN: Init Timer set error!\n");
 			return EXIT_SUCCESS;
@@ -2797,44 +2797,31 @@ int hcu_vm_main_entry(void)
 }
 
 //需要单独设计一种的存储设备敏感数据的方式
+//量产的参数改到最后
 OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 {
 	int ret = 0;
-	//硬件烧录区域，系统唯一标识部分，后面程序中访问到这些系统参数都必须从这个地方读取
-	//具体读取的过程，目前暂时空白，因为还未决定使用哪种方式来存储这个敏感信息
-	ret = hcu_vm_engpar_read_phy_boot_cfg();
-	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES) && (ret == FAILURE)){
-		HcuErrorPrint("HCU-VM: Massive production phase but not yet pop physical boot configuration!\n");
-		return FAILURE;
-	}
 
 	//读取宿主机eth0 Mac地址，且强制覆盖人工输入部分
 	if (hcu_hwinv_engpar_read_mac_address() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Read MAC address error!\n");
 		return EXIT_SUCCESS;
 	}
-    // to be discussed with Jianlin, it should be removed
-	/*
-	//对硬件类型进行相同性检查，如果不一致，必然发生了生产性错误，或者硬件搞错，或者Factory Load用错，应该严重警告
-	if ((HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_YES) && (zHcuSysEngPar.hwBurnId.hwType != HCU_SYSCFG_HW_PRODUCT_CAT_TYPE)){
-		HcuDebugPrint("HCU-VM: HW_TYPE=[%d].\n",	zHcuSysEngPar.hwBurnId.hwType);
-		HcuErrorPrint("HCU-VM: Fatal error, using wrong hardware type or factory load!!!\n");
-		return FAILURE;
-	}
-	*/
-	//由于硬件部分并没有真正起作用，所以暂时需要从系统定义区重复写入，一旦批量生产这部分可以去掉
-	if (HCU_SYSCFG_HW_MASSIVE_PRODUTION_SET == HCU_SYSCFG_HW_MASSIVE_PRODUTION_NO){
-		zHcuSysEngPar.hwBurnId.hwType  = HCU_SYSCFG_HW_PRODUCT_CAT_TYPE;
-		zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_PEM; //PEM小型号
-		zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
-		zHcuSysEngPar.hwBurnId.swVerId = HCU_CURRENT_SW_DELIVERY;
-		zHcuSysEngPar.hwBurnId.swUpgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_SET;
-		zHcuSysEngPar.hwBurnId.swUpgPollId = HCU_SYSCFG_HBB_FW_UPGRADE_METHOD_UART_GPRS;
-		zHcuSysEngPar.hwBurnId.dbVerId = 1;
-		//cipherKey[16];
-	}
 
+	//缺省参数
+	//由于硬件部分并没有真正起作用，所以暂时需要从系统定义区重复写入，一旦批量生产这部分可以去掉
+	zHcuSysEngPar.hwBurnId.hwType  = HCU_SYSCFG_HW_PRODUCT_CAT_TYPE;
+	zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_PEM; //PEM小型号
+	zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
+	zHcuSysEngPar.hwBurnId.swVerId = HCU_CURRENT_SW_DELIVERY;
+	zHcuSysEngPar.hwBurnId.swUpgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_SET;
+	zHcuSysEngPar.hwBurnId.swUpgPollId = HCU_SYSCFG_HBB_FW_UPGRADE_METHOD_UART_GPRS;
+	zHcuSysEngPar.hwBurnId.dbVerId = 1;
+	//cipherKey[16];
+
+	//缺省参数
 	//如果收到不合法的HCUID物理地址，则自动设置：标准名字长度为19位长度
+	//如果非量产，也强制随机化产品标签，防止固定地址
 	if (strlen(zHcuSysEngPar.hwBurnId.equLable) != (HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1)){
 		strncpy(zHcuSysEngPar.hwBurnId.equLable, HCU_SYSCFG_CLOUD_HCU_NAME, (sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)<sizeof(zHcuSysEngPar.hwBurnId.equLable))?(sizeof(HCU_SYSCFG_CLOUD_HCU_NAME)):(sizeof(zHcuSysEngPar.hwBurnId.equLable)));
 		//随机化最后两位
@@ -2854,6 +2841,14 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 		char s[3];
 		sprintf(s, "%02d", temp);
 		strncpy(&zHcuSysEngPar.hwBurnId.zhbMnLable[HCU_SYSENG_PAR_HWBURN_ZHBMN_LEN_MAX-3], s, 2);
+	}
+
+	//硬件烧录区域，系统唯一标识部分，后面程序中访问到这些系统参数都必须从这个地方读取
+	//具体读取的过程，目前暂时空白，因为还未决定使用哪种方式来存储这个敏感信息
+	ret = hcu_vm_engpar_read_phy_boot_cfg();
+	if (ret == FAILURE){
+		HcuErrorPrint("HCU-VM: Massive production phase but not yet pop physical boot configuration!\n");
+		return FAILURE;
 	}
 
 	//初始化之后的系统标识信息
