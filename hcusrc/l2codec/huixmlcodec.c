@@ -32,11 +32,15 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 {
 	//声明一个缓冲区长度，不能超越消息体内容的最长长度
 	char s[HCU_SYSMSG_BH_BUF_BODY_LEN_MAX - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN];
+
+	if (sizeof(StrMsg_HUITP_MSGID_uni_general_message_t) < sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t)){
+		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: HUITP_IE_BUF_OVERHEAD set too small! GenMsgLen=%d, SW_PACK_MSG_LEN=%d\n", sizeof(StrMsg_HUITP_MSGID_uni_general_message_t), sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t));
+	}
 	
 	//参数检查：特别要检查输入的数据长度，正常不能超过100，因为HUIXML的数据区= (500(最长消息长度)-300(XML头))/2=100，这在大多数情况下都够用的，但在
 	//文件传输的条件下有可能不够。幸好，文件下载使用FFP模式，不用再担心这个了。
 	if ((inputLen <4) || (inputPar == NULL) || (inputLen > (HCU_SYSMSG_BH_BUF_BODY_LEN_MAX - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2) || \
-		(inputLen > (sizeof(StrMsg_HUITP_MSGID_uni_general_message_t) - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)))
+		(inputLen > (HUITP_MSG_BUF_BODY_ONLY_MAX_LEN)))
 	{
 		HCU_DEBUG_PRINT_FAT("HUITPXML: InputLen=%d, InputPar=%d, MaxLen=%d, size2=%d\n", inputLen, inputPar, (HCU_SYSMSG_BH_BUF_BODY_LEN_MAX - HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN)/2, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error input pointer or message length!\n");

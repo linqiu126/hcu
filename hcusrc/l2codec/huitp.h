@@ -53,14 +53,17 @@ typedef void                      VOID;
 #define HUITP_USE_SET		HUITP_USE_IN_HCU
 
 //考虑到TCPIP中底层最长1500B的情形，这里先如此定义，不要超过这个限制，所以16进制的缓冲区最好不要超过500字节
+//注意后台的SwPkgBody_Buf数据结构，要以HUITP_IE_BUF_MAX_LEN长度为准，目前后台设置的长度
+//HCU -> 304=(344-40), IHU -> 94=(134-40)
 #if (HUITP_USE_SET == HUITP_USE_IN_HCU)
-	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 				330
+	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 			344  //这个最大长度＝(1000-300)/2=350
 #else
-	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 				134
+	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 			134  //这个主要受内部消息长度限制，(500-300)/2 = 100，所以100个有效长度就最大了
 #endif
 //其它长度定义部分
 #define HUITP_MSG_BUF_BODY_ONLY_MAX_LEN 				HUITP_MSG_BUF_WITH_HEAD_MAX_LEN - 4 //MSG头+长度域共4BYTE
-#define HUITP_IE_BUF_MAX_LEN 							HUITP_MSG_BUF_WITH_HEAD_MAX_LEN - 30 //MSG头4B，BASE_REQ 5B，IE头4B，为了安全，先减去30。在具体的消息定义中，如果独立IE较多，这个需要再检查
+#define HUITP_IE_BUF_OVERHEAD							40
+#define HUITP_IE_BUF_MAX_LEN 							HUITP_MSG_BUF_WITH_HEAD_MAX_LEN - HUITP_IE_BUF_OVERHEAD //MSG头4B，BASE_REQ 5B，IE头4B，为了安全，先减去30。在具体的消息定义中，如果独立IE较多，这个需要再检查
 #define HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN 			300  //人为定义，目前不包括具体内容在内的纯格式部分，已经达到210BYTE长度
 #define HUITP_MSG_HUIXML_HEAD_IN_CHAR_FIX_LEN 			200
 #define HUITP_MSG_HUIXML_HEAD_IN_CHAR_VARIABLE_LEN 		HUITP_MSG_HUIXML_HEAD_IN_CHAR_MAX_LEN - HUITP_MSG_HUIXML_HEAD_IN_CHAR_FIX_LEN
@@ -3026,6 +3029,7 @@ typedef struct StrIe_HUITP_IEID_uni_sw_package_body
 	UINT16 segCheckSum;
 	UINT8  swPkgBody[HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN];
 }StrIe_HUITP_IEID_uni_sw_package_body_t;
+
 #define HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN 233
 
 //HUITP_IEID_uni_sw_package_max,

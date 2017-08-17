@@ -596,8 +596,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 {
 	MYSQL *sqlHandler;
-	MYSQL_RES *resPtr;
-	MYSQL_ROW sqlRow;
+	//MYSQL_RES *resPtr;
+	//MYSQL_ROW sqlRow;
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
@@ -617,7 +617,18 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
         return FAILURE;
     }
 
-	//获取数据
+	//REPLACE的数据
+    sprintf(strsql, "REPLACE INTO `hcusysswm_swdl` (equentry, hwtype, hwpem, swrel, swver, upgradeflag, totallen, checksum, nodeid, segtotal, segindex, segsplitlen, segvalidlen, segcksum, filename, dltime) VALUES \
+    		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%d')", prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->verId, \
+			prtSwDl->upgradeFlag, prtSwDl->totalLen, prtSwDl->checksum, prtSwDl->nodeId, prtSwDl->segTotal, prtSwDl->segIndex, prtSwDl->segSplitLen, prtSwDl->segValidLen, prtSwDl->segCkSum, prtSwDl->fileName, prtSwDl->dlTime);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: INSERT data error, err cause = %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+/*	//获取数据
     sprintf(strsql, "SELECT * FROM `hcusysswm_swdl` WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
     		prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->verId, prtSwDl->upgradeFlag);
 	result = mysql_query(sqlHandler, strsql);
@@ -663,10 +674,10 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 		 	HcuErrorPrint("DBISYSSWM: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
 		    return FAILURE;
 		}
-	}
+	}*/
 
 	//释放记录集
-	mysql_free_result(resPtr);
+	//mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }

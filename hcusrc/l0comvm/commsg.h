@@ -2060,7 +2060,7 @@ typedef struct msg_struct_cloudvela_sysswm_inventory_confirm
 }msg_struct_cloudvela_sysswm_inventory_confirm_t;
 
 //MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ,
-#define HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 300
+#define HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 400
 typedef struct msg_struct_cloudvela_sysswm_sw_package_req
 {
 	msgie_struct_bh_com_head_t comHead;

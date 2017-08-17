@@ -315,10 +315,10 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwDl.dlTime = time(0);
 		gTaskSysswmContext.cloudSwDl.segIndex = 1; //第一段
 		strncpy(gTaskSysswmContext.cloudSwDl.fileName, fname, HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
-		gTaskSysswmContext.cloudSwDl.segSplitLen = HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
+		gTaskSysswmContext.cloudSwDl.segSplitLen = HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN;
 		UINT32 segTotal = 0;
-		segTotal = gTaskSysswmContext.cloudSwPkg.swTotalLen / HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
-		if (segTotal * HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
+		segTotal = gTaskSysswmContext.cloudSwPkg.swTotalLen / HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN;
+		if (segTotal * HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
 		gTaskSysswmContext.cloudSwDl.segTotal = segTotal;
 
 		//生成消息并发送给后台
@@ -368,10 +368,10 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwDl.totalLen = rcv.swTotalLen;
 		gTaskSysswmContext.cloudSwDl.segIndex = 1;  //第一段
 		strncpy(gTaskSysswmContext.cloudSwDl.fileName, fname, HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
-		gTaskSysswmContext.cloudSwDl.segSplitLen = HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
+		gTaskSysswmContext.cloudSwDl.segSplitLen = HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN;
 		UINT32 segTotal = 0;
-		segTotal = gTaskSysswmContext.cloudSwPkg.swTotalLen / HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
-		if (segTotal * HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
+		segTotal = gTaskSysswmContext.cloudSwPkg.swTotalLen / HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN;
+		if (segTotal * HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
 		gTaskSysswmContext.cloudSwDl.segTotal = segTotal;
 
 		//生成消息并发送给后台
@@ -481,6 +481,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 			res+= (UINT8)rcv.body[i];
 		}
 	}
+	HCU_DEBUG_PRINT_FAT("SYSSWM: Seg received. segIndex=%d, segTotal=%d, splitLen=%d, validLen=%d, Caculated Result = 0x%x, Received Cksum =0x%x\n", rcv.segIndex, rcv.segTotal, rcv.segSplitLen, rcv.segValidLen, res, rcv.segCheckSum);
 	if (res != rcv.segCheckSum){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
 		HcuErrorPrint("SYSSWM: Receive invalid segment sw package, so no handle. segIndex=%d, segTotal=%d, validLen=%d, Caculated Result = 0x%x, Received Cksum =0x%x\n", rcv.segIndex, rcv.segTotal, rcv.segValidLen, res, rcv.segCheckSum);
@@ -601,10 +602,10 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 			gTaskSysswmContext.cloudSwDl.segIndex = 1; //第一段
 
 			strncpy(gTaskSysswmContext.cloudSwDl.fileName, gTaskSysswmContext.cloudSwPkg.dbName, HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
-			gTaskSysswmContext.cloudSwDl.segSplitLen = HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
+			gTaskSysswmContext.cloudSwDl.segSplitLen = HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN;
 			UINT32 segTotal = 0;
-			segTotal = gTaskSysswmContext.cloudSwPkg.dbTotalLen / HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN;
-			if (segTotal * HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
+			segTotal = gTaskSysswmContext.cloudSwPkg.dbTotalLen / HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN;
+			if (segTotal * HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
 			gTaskSysswmContext.cloudSwDl.segTotal = segTotal;
 
 			//生成消息并发送给后台
