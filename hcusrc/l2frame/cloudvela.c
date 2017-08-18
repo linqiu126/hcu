@@ -420,8 +420,10 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 	//分格式类型组装
 	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML){
 		//这里就相当于L3，HEART-BEAT只支持业务服务器，必然采用SOCKET机制
+		memset(gTaskCloudvelaContext.L2Link.destUser, 0, sizeof(gTaskCloudvelaContext.L2Link.destUser));
 		strncpy(gTaskCloudvelaContext.L2Link.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
 			sizeof(gTaskCloudvelaContext.L2Link.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(gTaskCloudvelaContext.L2Link.destUser));
+
 		strncpy(gTaskCloudvelaContext.L2Link.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
 				sizeof(gTaskCloudvelaContext.L2Link.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(gTaskCloudvelaContext.L2Link.srcUser));
 		gTaskCloudvelaContext.L2Link.timeStamp = time(0);

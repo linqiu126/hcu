@@ -406,7 +406,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
         return FAILURE;
 	}
 
-	//建立数据库连接
+/*	//建立数据库连接
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
@@ -418,11 +418,25 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
     	HcuErrorPrint("DBISYSSWM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
         return FAILURE;
-    }
+    }*/
 
     //循环遍历
 	while ((ptr=readdir(dir)) != NULL)
 	{
+		//建立数据库连接
+	    sqlHandler = mysql_init(NULL);
+	    if(!sqlHandler)
+	    {
+	    	HcuErrorPrint("DBISYSSWM: MySQL init failed!\n");
+	        return FAILURE;
+	    }
+	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+	    if (!sqlHandler){
+	    	HcuErrorPrint("DBISYSSWM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+	    	mysql_close(sqlHandler);
+	        return FAILURE;
+	    }
+
 	    if(strcmp(ptr->d_name,".")==0 || strcmp(ptr->d_name,"..")==0)    ///current dir OR parrent dir
 	        continue;
 	    else if ((ptr->d_type == 8) || (ptr->d_type == 10)){    ///File or Link file
@@ -480,13 +494,17 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	    else if(ptr->d_type == 4)    //dir
 	    {
 	    }
+
+	    //CLOSE
+	    if (resPtr!=NULL) mysql_free_result(resPtr);
+	    mysql_close(sqlHandler);
 	}
 
 	//释放记录集
 	closedir(dir);
 	//执行Free就发送Memory Leak，太怪了
 	//if (resPtr!=NULL) mysql_free_result(resPtr);
-    mysql_close(sqlHandler);
+    //mysql_close(sqlHandler);
     return SUCCESS;
 }
 

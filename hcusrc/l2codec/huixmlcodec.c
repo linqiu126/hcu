@@ -191,6 +191,7 @@ OPSTAT func_cloudvela_huitpxml_msg_pack(UINT16 msgId, StrMsg_HUITP_MSGID_uni_gen
 
 	//存入返回参量中：这个长度用于控制输出的字符串
 	output->curLen = strlen(output->curBuf);
+	//HCU_DEBUG_PRINT_FAT("HUIXML: Msg = [%s]\n\n\n", output->curBuf);
 
 	//返回
 	return SUCCESS;

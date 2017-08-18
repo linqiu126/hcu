@@ -273,6 +273,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		}
 
 		//如果版本号不适合
+		HCU_DEBUG_PRINT_FAT("SYSSWM: Rcv REL/VER=[%d/%d], BurnId REL/VER=[%d/%d]\n", rcv.swRel, rcv.swVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId);
 		if ((rcv.swRel < zHcuSysEngPar.hwBurnId.swRelId) || ((rcv.swRel == zHcuSysEngPar.hwBurnId.swRelId) && (rcv.swVer <= zHcuSysEngPar.hwBurnId.swVerId))){
 			return SUCCESS;
 		}
@@ -316,8 +317,9 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		gTaskSysswmContext.cloudSwDl.totalLen = rcv.swTotalLen;
 		gTaskSysswmContext.cloudSwDl.dlTime = time(0);
 		gTaskSysswmContext.cloudSwDl.segIndex = 1; //第一段
-		strncpy(gTaskSysswmContext.cloudSwDl.fileName, fname, HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
 		gTaskSysswmContext.cloudSwDl.segSplitLen = HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN;
+		strncpy(gTaskSysswmContext.cloudSwDl.fileName, gTaskSysswmContext.cloudSwPkg.fileName, strlen(gTaskSysswmContext.cloudSwPkg.fileName));
+
 		UINT32 segTotal = 0;
 		segTotal = gTaskSysswmContext.cloudSwPkg.swTotalLen / HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN;
 		if (segTotal * HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN < gTaskSysswmContext.cloudSwPkg.swTotalLen) segTotal++;
@@ -435,7 +437,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//具体的处理过程
 	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
-		HcuErrorPrint("SYSSWM: Receive none-positive sw package confirm message, so no handle.\n");
+		HcuErrorPrint("SYSSWM: Receive none-positive sw package confirm message, so no handle. SegTotal Received=%d\n", rcv.segTotal);
 		return SUCCESS;
 	}
 
@@ -452,22 +454,25 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	if (rcv.segIndex < rcv.segTotal){
 		if (rcv.segValidLen != rcv.segSplitLen){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
-			HcuErrorPrint("SYSSWM: Receive invalid seg valid len sw package, so no handle.\n");
+			HcuErrorPrint("SYSSWM: Receive invalid seg valid len sw package, so no handle. Rcc ValidLen=%d, SplitLen=%d\n", rcv.segValidLen, rcv.segSplitLen);
 			ret = FAILURE;
 		}
 		gTaskSysswmContext.cloudSwDl.segValidLen = rcv.segValidLen;
 	}
 	else{
 		gTaskSysswmContext.cloudSwDl.segValidLen = rcv.segValidLen;
-		int totalLen = rcv.segTotal * rcv.segSplitLen * (rcv.segTotal-1) + rcv.segValidLen;
-		if ((rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB) && (totalLen != gTaskSysswmContext.cloudSwPkg.dbTotalLen)){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
-			HcuErrorPrint("SYSSWM: Receive invalid seg total len db package, so no handle.\n");
-			ret = FAILURE;
+		int totalLen = rcv.segSplitLen * (rcv.segTotal-1) + rcv.segValidLen;
+		//if ((rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB) && (totalLen != gTaskSysswmContext.cloudSwPkg.dbTotalLen)){
+		if (rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB){
+			 if (totalLen != gTaskSysswmContext.cloudSwPkg.dbTotalLen){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
+				HcuErrorPrint("SYSSWM: Receive invalid seg total len db package, so no handle.  Caculated Total Len=%d, Exptected Len=%d.\n", totalLen, gTaskSysswmContext.cloudSwPkg.dbTotalLen);
+				ret = FAILURE;
+			 }
 		}
 		else if (totalLen != gTaskSysswmContext.cloudSwPkg.swTotalLen){
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
-			HcuErrorPrint("SYSSWM: Receive invalid seg total len sw package, so no handle.\n");
+			HcuErrorPrint("SYSSWM: Receive invalid seg total len sw package, so no handle. Caculated Total Len=%d, Exptected Len=%d.\n", totalLen, gTaskSysswmContext.cloudSwPkg.swTotalLen);
 			ret = FAILURE;
 		}
 	}
@@ -510,19 +515,28 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	FILE *fp;
 	char stmp[200];
 	memset(stmp, 0, sizeof(stmp));
-	strcpy(stmp, zHcuSysEngPar.swm.hcuSwDownloadDir);
+	strcpy(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
 	strcat(stmp, gTaskSysswmContext.cloudSwDl.fileName);
+
+	//如果是第一段，果断删掉已经存在的文件
+	if (rcv.segIndex == 1){
+		if (access(stmp, F_OK) == 0){
+			char stmp2[200];
+			memset(stmp2, 0, sizeof(stmp2));
+			sprintf(stmp2, "rm %s", stmp);
+			HCU_DEBUG_PRINT_FAT("SYSSWM: Rm file = [%s]\n", stmp2);
+			system(stmp2);
+		}
+	}
 
 	//打开源文件：不存在就创建
 	if (rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB){
 		if((fp=fopen(stmp, "at+"))== NULL){
-			fclose(fp);
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Open file %s Error!\n", stmp);
 		}
 	}
 	else{
 		if((fp=fopen(stmp, "ab+"))== NULL){
-			fclose(fp);
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Open file %s Error!\n", stmp);
 		}
 	}
@@ -565,7 +579,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//最后一段HCU_SW
 	if ((rcv.segIndex == rcv.segTotal) && (rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW)){
 		if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.swCksum)
-			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error!\n");
+			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error! Caculated Cksum=0x%x, RecvChsum=0x%x\n", func_sysswm_caculate_file_whole_checksum(stmp), gTaskSysswmContext.cloudSwPkg.swCksum);
 		if (gTaskSysswmContext.cloudSwPkg.dbVer > zHcuSysEngPar.hwBurnId.dbVerId){
 			strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP));  //Complete of download
 		}else{
@@ -618,7 +632,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//最后一段HCU_DB
 	else if ((rcv.segIndex == rcv.segTotal) && (rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB)){
 		if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.dbCksum)
-			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error!\n");
+			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error!, Caculated=0x%x, Exptected=0x%x\n", func_sysswm_caculate_file_whole_checksum(stmp), gTaskSysswmContext.cloudSwPkg.dbCksum);
 		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE));  //Complete of download
 		gTaskSysswmContext.cloudSwPkg.updateTime = time(0);
 		//更新软件数据库
@@ -1419,10 +1433,10 @@ void func_sysswm_copy_exe_to_target_dir_and_restart(void)
 
 	//先删掉hcu执行该文件
 	memset(strOpr, 0, sizeof(strOpr));
-	sprintf(strOpr, "rm %s hcu", zHcuSysEngPar.swm.hcuSwRunDir);
-	system(strOpr);
-	sprintf(strOpr, "rm %s hcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
-	system(strOpr);
+	sprintf(strOpr, "rm %shcu", zHcuSysEngPar.swm.hcuSwRunDir);
+	if (access(&strOpr[3], F_OK) == 0) system(strOpr);
+	sprintf(strOpr, "rm %shcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
+	if (access(&strOpr[3], F_OK) == 0) system(strOpr);
 	//拷贝当前文件到目标目录
 	sprintf(strOpr, "cp %s%s %shcu_new", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.fileName, zHcuSysEngPar.swm.hcuSwRunDir);
 	system(strOpr);
@@ -1436,12 +1450,12 @@ void func_sysswm_copy_db_and_exe_to_target_dir_and_restart(void)
 
 	//先删掉hcu执行该文件
 	memset(strOpr, 0, sizeof(strOpr));
-	sprintf(strOpr, "rm %s hcu", zHcuSysEngPar.swm.hcuSwRunDir);
-	system(strOpr);
-	sprintf(strOpr, "rm %s hcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
-	system(strOpr);
-	sprintf(strOpr, "rm %s hcu_new.sql", zHcuSysEngPar.swm.hcuSwRunDir);
-	system(strOpr);
+	sprintf(strOpr, "rm %shcu", zHcuSysEngPar.swm.hcuSwRunDir);
+	if (access(&strOpr[3], F_OK) == 0) system(strOpr);
+	sprintf(strOpr, "rm %shcu_new", zHcuSysEngPar.swm.hcuSwRunDir);
+	if (access(&strOpr[3], F_OK) == 0) system(strOpr);
+	sprintf(strOpr, "rm %shcu_new.sql", zHcuSysEngPar.swm.hcuSwRunDir);
+	if (access(&strOpr[3], F_OK) == 0) system(strOpr);
 	//拷贝当前文件到目标目录
 	sprintf(strOpr, "cp %s%s %shcu_new", zHcuSysEngPar.swm.hcuSwActiveDir, gTaskSysswmContext.cloudSwPkg.fileName, zHcuSysEngPar.swm.hcuSwRunDir);
 	system(strOpr);
