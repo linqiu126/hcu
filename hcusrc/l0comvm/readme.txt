@@ -7,11 +7,13 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
-[BUG#002]
-待完善网络连接中先汇报HCU EQUIPMENT-LABLE/HCUNAME的工作机制
+
 
 //= ZJL, 2017 Aug.18 CURRENT_SW_DELIVERY 242=>BFSC项目
 =改进下载过程中的错误
+=swDL数据表单直接换成先删去，然后再REPLACE
+=cfg文件存储还有问题
+
 
 
 //= ZJL, 2017 Aug.16 CURRENT_SW_DELIVERY 241=>BFSC项目

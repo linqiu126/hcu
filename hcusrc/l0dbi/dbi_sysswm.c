@@ -635,6 +635,16 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
         return FAILURE;
     }
 
+	//DELETE旧的数据
+	sprintf(strsql, "DELETE from `hcusysswm_swdl` WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
+			prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->verId, prtSwDl->upgradeFlag);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+	 	mysql_close(sqlHandler);
+	 	HcuErrorPrint("DBISYSSWM: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
+	    return FAILURE;
+	}
+
 	//REPLACE的数据
     sprintf(strsql, "REPLACE INTO `hcusysswm_swdl` (equentry, hwtype, hwpem, swrel, swver, upgradeflag, totallen, checksum, nodeid, segtotal, segindex, segsplitlen, segvalidlen, segcksum, filename, dltime) VALUES \
     		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%d')", prtSwDl->equEntry, prtSwDl->hwType, prtSwDl->hwPem, prtSwDl->swRel, prtSwDl->verId, \
@@ -642,7 +652,7 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBISYSSWM: INSERT data error, err cause = %s\n", mysql_error(sqlHandler));
+    	HcuErrorPrint("DBISYSSWM: REPLACE data error, err cause = %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
 

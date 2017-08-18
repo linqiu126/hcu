@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="system" key="selection"/>
+		<item value="Default" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="Default"/>
+			<item value="default"/>
 			<item value="system"/>
 			<item value="system(strOpr)"/>
 			<item value="hcu_new"/>
 			<item value="SELECT *"/>
 			<item value="hcusysswm_swpkg"/>
 			<item value="//fclose"/>
-			<item value="gTaskSysswmContext.cloudSwDl.fileName"/>
-			<item value="zHcuSysEngPar.swm."/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
