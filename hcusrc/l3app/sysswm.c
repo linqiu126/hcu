@@ -189,9 +189,11 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//下载短定时
 	else if ((rcv.timeId == TIMER_ID_1S_SYSSWM_SEG_DL_WAIT) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-
+		gTaskSysswmContext.reTransTimes++;
+		if (gTaskSysswmContext.reTransTimes < HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES){
+			return func_sysswm_send_cloudvela_sw_package_report();
+		}
 	}
-
 
 	return ret;
 }
@@ -1380,6 +1382,7 @@ OPSTAT func_sysswm_send_cloudvela_sw_package_report(void)
 			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
 		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+
 		snd.comHead.timeStamp = time(0);
 		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
 		strcpy(snd.comHead.funcFlag, "0");

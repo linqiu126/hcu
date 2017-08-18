@@ -210,11 +210,12 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	UINT64 msgCreateTime;
 	char msgToUser[HCU_SYSDIM_FILE_NAME_LEN_MAX], msgFromUser[HCU_SYSDIM_FILE_NAME_LEN_MAX], msgFuncFlag[HCU_SYSDIM_FILE_NAME_LEN_MAX];
 	char msgTmp[HCU_SYSDIM_FILE_NAME_LEN_MAX];
-	char msgContent[HUITP_MSG_BUF_WITH_HEAD_MAX_LEN];
+	char msgContent[HCU_SYSMSG_BH_BUF_BODY_LEN_MAX];
 	
 	//检查参数
 	if (rcv == NULL) HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid received data buffer!\n");
 
+	//HCU_DEBUG_PRINT_FAT("HUIXML: RCV=[%s]\n", rcv->buf);
 	//控制命令不带XML格式头，接收的内容以裸控制命令，所以必须是偶数字节
 	if ((rcv->length > HCU_SYSMSG_BH_BUF_BODY_LEN_MAX) || (rcv->length < 8))
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid data length by XML content format!\n");
@@ -323,7 +324,7 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Received message error, invalid content format, dif = %d!\n", dif);
 	memset(msgContent, 0, sizeof(msgContent));
 	strncpy(msgContent, pIndexT1+strlen(HUITP_MSG_HUIXML_CONSTANT_CONTENT_L), dif);
-		
+
 	//msgContent中解出msgId/msgLen
 	index = 0;
 	memset(tmp, 0, sizeof(tmp));
@@ -1445,7 +1446,7 @@ OPSTAT func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(StrMsg_HUI
 	if (HUITP_IEID_UNI_SW_PACKAGE_BODY_MAX_LEN > HCU_SYSMSG_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)
 		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: HUITP and COMMSG parameter set error!\n");
 	memcpy(snd.body, rcv->body.swPkgBody, sizeof(rcv->body.swPkgBody)<sizeof(snd.body)?sizeof(rcv->body.swPkgBody):sizeof(snd.body));
-	snd.length = sizeof(msg_struct_cloudvela_sysswm_inventory_confirm_t);
+	snd.length = sizeof(msg_struct_cloudvela_sysswm_sw_package_confirm_t);
 	if (hcu_message_send(MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM, TASK_ID_SYSSWM, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
 

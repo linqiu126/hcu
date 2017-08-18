@@ -463,10 +463,8 @@ OPSTAT func_cloudvela_hb_link_active_send_signal(void)
 	}
 
 	//Send out
-
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
-
 
 	//State no change
 	return SUCCESS;
@@ -1432,7 +1430,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, might link failure!\n");
 
 	//返回
 	return SUCCESS;

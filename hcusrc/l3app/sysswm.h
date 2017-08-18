@@ -41,7 +41,7 @@ typedef struct gTaskSysswmContext
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH 	0
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_MAX_NBR	 	4
 
-#define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  3
+#define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  4
 
 //文件操控的数据结构表单
 typedef struct strTaskSysswmSwpkgLable

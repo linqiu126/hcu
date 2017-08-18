@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="INVENT_HWTYPE_P" key="selection"/>
+		<item value="func_sysswm_send_cloudvela_sw_package_report" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="INVENT_HWTYPE_P"/>
-			<item value="950"/>
-			<item value="- 30"/>
-			<item value="-30"/>
-			<item value="-20"/>
-			<item value="#elif"/>
-			<item value=" 400"/>
-			<item value="400"/>
+			<item value="func_sysswm_send_cloudvela_sw_package_report"/>
+			<item value="SYSSWM"/>
+			<item value="func_cloudvela_huitpxml_msg_pack"/>
+			<item value="msg_struct_cloudvela_sysswm_inventory_confirm_t"/>
+			<item value="func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle"/>
+			<item value="func_cloudvela_huitpxml_msg_sw_package_req_received_handle"/>
+			<item value="msgContent"/>
+			<item value="func_cloudvela_huitpxml_msg_unpack"/>
 		</list>
 		<list key="replacehistory">
 			<item value="ptrSwPkg"/>
