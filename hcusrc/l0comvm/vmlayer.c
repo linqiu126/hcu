@@ -3110,7 +3110,14 @@ OPSTAT hcu_vm_engpar_update_phy_boot_sw_ver(UINT16 relId, UINT16 swVerId)
 	}
 	memcpy(pRecord, pRecordNew, len);
 
-	//将pRecord回写到文件中
+	//将pRecord回写到文件中：先关闭原有文件，再重新以写的方式打开
+	fclose(fp);
+	if((fp=fopen(HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE, "wt+"))== NULL){
+		HcuErrorPrint("HCU-VM: Open/write %s Error!\n", HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE);
+		free(pRecord);
+		free(pRecordNew);
+		return FAILURE;
+	}
 	if (fwrite(pRecord, 1, len, fp) != len){
 		  HcuErrorPrint("HCU-VM: Write file fail!\n");
 		  free(pRecord);
@@ -3243,7 +3250,14 @@ OPSTAT hcu_vm_engpar_update_phy_boot_db_ver(UINT16 relId, UINT16 dbVerId)
 	}
 	memcpy(pRecord, pRecordNew, len);
 
-	//将pRecord回写到文件中
+	//将pRecord回写到文件中：先关闭原有文件，再重新以写的方式打开
+	fclose(fp);
+	if((fp=fopen(HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE, "wt+"))== NULL){
+		HcuErrorPrint("HCU-VM: Open/write %s Error!\n", HCU_SYSCFG_HBB_PHY_BOOT_CFG_FILE);
+		free(pRecord);
+		free(pRecordNew);
+		return FAILURE;
+	}
 	if (fwrite(pRecord, 1, len, fp) != len){
 		  HcuErrorPrint("HCU-VM: Write file fail!\n");
 		  free(pRecord);

@@ -294,15 +294,24 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
         return FAILURE;
     }
 
+	//DELETE旧的数据
+    sprintf(strsql, "REPLACE FROM `hcubfscstadatainfo` WHERE (`statype` = '%s', `configid` = '%d')", s, configId);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFSC: DELETE data error, statype = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
 	//REPLACE新的数据
-    sprintf(strsql, "REPLACE INTO `hcubfscstadatainfo` (StaType, configid, timestamp, wsIncMatCnt, wsIncMatWgt, wsCombTimes, wsTttTimes, wsTgvTimes, wsTttMatCnt, wsTgvMatCnt, wsTttMatWgt, wsTgvMatWgt, wsAvgTttTimes, wsAvgTttMatCnt, wsAvgTttMatWgt) VALUES \
+    sprintf(strsql, "REPLACE INTO `hcubfscstadatainfo` (statype, configid, timestamp, wsincmatcnt, wsincmatwgt, wscombtimes, wsttttimes, wstgvtimes, wstttmatcnt, wstgvmatcnt, wstttmatwgt, wstgvmatwgt, wsavgttttimes, wsavgtttmatcnt, wsavgtttmatwgt) VALUES \
     		('%s', '%d', '%d', '%d', '%f', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%d', '%d', '%f')", s, configId, tmp, StaDatainfo->wsIncMatCnt, StaDatainfo->wsIncMatWgt, \
 			StaDatainfo->wsCombTimes, StaDatainfo->wsTttTimes, StaDatainfo->wsTgvTimes, StaDatainfo->wsTttMatCnt, StaDatainfo->wsTgvMatCnt, StaDatainfo->wsTttMatWgt, \
 			StaDatainfo->wsTgvMatWgt, StaDatainfo->wsAvgTttTimes, StaDatainfo->wsAvgTttMatCnt, StaDatainfo->wsAvgTttMatWgt);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBIBFSC: REPLACE data error, staType = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
+    	HcuErrorPrint("DBIBFSC: REPLACE data error, statype = %s, configId=%d, err cause = %s\n", StaType, configId, mysql_error(sqlHandler));
         return FAILURE;
 	}
 

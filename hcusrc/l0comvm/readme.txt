@@ -13,8 +13,7 @@
 =改进下载过程中的错误
 =swDL数据表单直接换成先删去，然后再REPLACE
 =cfg文件存储还有问题
-
-
+=改进了BFSC的数据表单REPLACE过程，并修正了其中的BUG
 
 //= ZJL, 2017 Aug.16 CURRENT_SW_DELIVERY 241=>BFSC项目
 =继续更新软件下载中的错误
