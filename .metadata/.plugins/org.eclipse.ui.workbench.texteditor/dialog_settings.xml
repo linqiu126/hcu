@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="configId" key="selection"/>
+		<item value="hcu_service_ftp_sw_download_by_ftp" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="configId"/>
-			<item value="StaType"/>
-			<item value="DELETE"/>
-			<item value="fp"/>
-			<item value="func_sysswm_time_out_period_working_scan_ihu_stable"/>
-			<item value="Default"/>
-			<item value="default"/>
-			<item value="system"/>
+			<item value="hcu_service_ftp_sw_download_by_ftp"/>
+			<item value="func_sysswm_sw_download_process_swpkg_db_refresh"/>
+			<item value="func_sysswm_ftp_file_big_size_process_hcu_sw_and_db"/>
+			<item value="func_sysswm_ftp_file_big_size_process_hcu_sw"/>
+			<item value="func_sysswm_time_out_segment_download_wait_process"/>
+			<item value="func_sysswm_swpkg_last_seg_process_hcu_db"/>
+			<item value="func_sysswm_swpkg_last_seg_process_hcu_sw"/>
+			<item value="func_sysswm_hcu_big_file_size_download_process"/>
 		</list>
 		<list key="replacehistory">
+			<item value="L0SVRFTP:"/>
 			<item value="ptrSwPkg"/>
 		</list>
 	</section>
@@ -25,7 +26,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="377" key="DIALOG_HEIGHT"/>
-		<item value="1131" key="DIALOG_X_ORIGIN"/>
-		<item value="332" key="DIALOG_Y_ORIGIN"/>
+		<item value="1189" key="DIALOG_X_ORIGIN"/>
+		<item value="431" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

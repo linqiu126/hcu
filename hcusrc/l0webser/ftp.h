@@ -11,29 +11,30 @@
 #include "../l0comvm/vmlayer.h"
 
 /*FTP OPERATION CODE*/
-typedef enum FTP_STATE
+typedef enum HCU_FTP_SVR_STATE
 {
-	FTP_UPLOAD_SUCCESS,
-	FTP_UPLOAD_FAILED,
-	FTP_DOWNLOAD_SUCCESS,
-	FTP_DOWNLOAD_FAILED
-}FTP_STATE;
+	HCU_FTP_SVR_UPLOAD_SUCCESS,
+	HCU_FTP_SVR_UPLOAD_FAILED,
+	HCU_FTP_SVR_DOWNLOAD_SUCCESS,
+	HCU_FTP_SVR_DOWNLOAD_FAILED
+}HCU_FTP_SVR_STATE;
 
 /*FTP OPERATIONS OPTIONS*/
-typedef struct FTP_OPT
+typedef struct HcuFtpServiceOptType
 {
 	char url[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*url of ftp*/
 	char user_key[HCU_SYSDIM_FILE_NAME_LEN_MAX];		 /*username:password*/
 	char file[HCU_SYSDIM_FILE_NAME_LEN_MAX];		     /*filepath*/
-}FTP_OPT;
+}HcuFtpServiceOptType_t;
 
 
 /*upload file to ftp server*/
-FTP_STATE ftp_upload(const FTP_OPT ftp_option);
+HCU_FTP_SVR_STATE func_ftp_svr_upload(const HcuFtpServiceOptType_t ftp_option);
 
 /*download file from ftp server*/
-FTP_STATE ftp_download(const FTP_OPT ftp_option);
+HCU_FTP_SVR_STATE func_ftp_svr_download(const HcuFtpServiceOptType_t ftp_option);
 
+//向上提供的标准服务
 OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename);
 
 #endif /* L0WEBSER_FTP_H_ */

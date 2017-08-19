@@ -41,7 +41,8 @@ typedef struct gTaskSysswmContext
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH 	0
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_MAX_NBR	 	4
 
-#define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  4
+#define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  	4
+#define HCU_SYSSWM_SW_PACKAGE_FTP_DOWNLOAD_FILE_SIZE_THREADHOLD  200000
 
 //文件操控的数据结构表单
 typedef struct strTaskSysswmSwpkgLable
@@ -97,7 +98,16 @@ UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname);
 OPSTAT func_sysswm_send_cloudvela_sw_package_report(void);
 void   func_sysswm_copy_exe_to_target_dir_and_restart(void);
 void   func_sysswm_copy_db_and_exe_to_target_dir_and_restart(void);
+OPSTAT func_sysswm_sw_download_process_swpkg_db_refresh(char *stmp);
+OPSTAT func_sysswm_db_download_process_swpkg_db_refresh(char *stmp);
+OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp);
+OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp);
+OPSTAT func_sysswm_swpkg_last_seg_process_ihu_sw(char *stmp);
+OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void);
+OPSTAT func_sysswm_ftp_file_big_size_process_ihu_sw(void);
 
+//External APIs
+extern OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_SYSSWM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

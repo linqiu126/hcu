@@ -8,6 +8,8 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Aug.19 CURRENT_SW_DELIVERY 243=>BFSC项目
+= 增加并完善FTP工作机制
 
 //= ZJL, 2017 Aug.18 CURRENT_SW_DELIVERY 242=>BFSC项目
 =改进下载过程中的错误

@@ -1124,7 +1124,7 @@
 	#define HCU_SYSCFG_CLOUD_HCU_NAME 						"HCU_G801_BFSC_RND01"  	//DEVICE NAME，而且必须缺最后两位
 	#define HCU_SYSCFG_CLOUD_ZHBMN_NAME 					"ABCDEFG_BFSC12"
 
-	//定义主服务器后台CLOUD地址信息：允许工程配置
+	//定义DEFAULT主服务器后台CLOUD地址信息：允许工程配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT 		"121.40.118.33"
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT 				"XHZN_HCU"
@@ -1132,17 +1132,19 @@
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ITF_STD_SET 		HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_DEFAULT_ST_CODE			22 //工作在缺省的污染物体系编码中
 
-	//定义家服务器后台CLOUD地址信息：程序写死，不得配置
+	//定义HOME家服务器后台CLOUD地址信息：程序写死，不得配置
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_HOME 			"http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php"
 	#define HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_HOME 		"121.40.118.33"
 	#define HCU_SYSCFG_CLOUD_SVR_NAME_HOME 					"XHZN_HCU"
 	#define HCU_SYSCFG_CLOUD_SVR_PORT_HOME					HCU_SYSCFG_CLOUD_BH_ITF_PORT_HUITP_XML
 	#define HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET 			HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML
 
-	//定义后台SW_SWM的地址
+	//定义FTP后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+
+	//HCU工作目录
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
