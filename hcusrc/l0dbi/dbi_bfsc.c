@@ -295,7 +295,7 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
     }
 
 	//DELETE旧的数据
-    sprintf(strsql, "REPLACE FROM `hcubfscstadatainfo` WHERE (`statype` = '%s', `configid` = '%d')", s, configId);
+    sprintf(strsql, "DELETE FROM `hcubfscstadatainfo` WHERE (`statype` = '%s' AND `configid` = '%d')", s, configId);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
