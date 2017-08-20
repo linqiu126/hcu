@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 16, 2017 at 07:32 PM
+-- Generation Time: Aug 20, 2017 at 12:46 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
-(1502882855, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
+(1503199385, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
 
 -- --------------------------------------------------------
 
@@ -308,6 +308,134 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hcubfsclanguagedict`
+--
+
+CREATE TABLE IF NOT EXISTS `hcubfsclanguagedict` (
+  `sid` int(4) NOT NULL AUTO_INCREMENT,
+  `english` varchar(200) NOT NULL,
+  `chinese` varchar(200) DEFAULT NULL,
+  `french` varchar(200) DEFAULT NULL,
+  `japanese` varchar(200) DEFAULT NULL,
+  `german` varchar(200) DEFAULT NULL,
+  `arabic` varchar(200) DEFAULT NULL,
+  `thai` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=78 ;
+
+--
+-- Dumping data for table `hcubfsclanguagedict`
+--
+
+INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japanese`, `german`, `arabic`, `thai`) VALUES
+(1, 'MaxAllowedWeight', '最大允许重量', NULL, NULL, NULL, NULL, NULL),
+(2, 'Command ID', '命令编号', NULL, NULL, NULL, NULL, NULL),
+(3, 'Please select test command', '请选择要执行的命令', NULL, NULL, NULL, NULL, NULL),
+(4, 'Max allowed weight upper limit in gram', '最大允许重量上限，单位克', NULL, NULL, NULL, NULL, NULL),
+(5, 'Sensor ID', '秤台编号', NULL, NULL, NULL, NULL, NULL),
+(6, 'CalFullWeight', '满值校准重量', NULL, NULL, NULL, NULL, NULL),
+(7, 'Please select the sensor you want to test', '请选择你要测试的秤台', NULL, NULL, NULL, NULL, NULL),
+(8, 'Weight sensor calibration full weight in gram', '满值校准使用的砝码重量，单位克', NULL, NULL, NULL, NULL, NULL),
+(9, 'General Parameter', '通用参数', NULL, NULL, NULL, NULL, NULL),
+(10, 'SensorAdcGain', '称重传感器ADC增益', NULL, NULL, NULL, NULL, NULL),
+(11, 'Motor speed parameter for motor test', '当测试马达时该参数为马达速度', NULL, NULL, NULL, NULL, NULL),
+(12, 'Weight sensor ADC gain configuration', '秤台传感器ADC增益配置', NULL, NULL, NULL, NULL, NULL),
+(13, 'Test Command Setting', '测试命令设置', NULL, NULL, NULL, NULL, NULL),
+(14, 'AdcWordRate', 'ADC码字速率', NULL, NULL, NULL, NULL, NULL),
+(15, 'Weight sensor ADC Amp word rate', '秤台传感器ADC放大器码字速率', NULL, NULL, NULL, NULL, NULL),
+(16, 'CalibrationPara', '校准参数', NULL, NULL, NULL, NULL, NULL),
+(17, 'StaticZeroValue', '静态零值', NULL, NULL, NULL, NULL, NULL),
+(18, 'Weight sensor static zero value', NULL, NULL, NULL, NULL, NULL, NULL),
+(19, 'TailorValue', NULL, NULL, NULL, NULL, NULL, NULL),
+(20, 'Weight sensor tailor value', NULL, NULL, NULL, NULL, NULL, NULL),
+(21, 'DynZeroThreadValue', NULL, NULL, NULL, NULL, NULL, NULL),
+(22, 'Weight sensor dynamic zero thread value', NULL, NULL, NULL, NULL, NULL, NULL),
+(23, 'DynZeroHysteresis', NULL, NULL, NULL, NULL, NULL, NULL),
+(24, 'Weight sensor dynamic zero hysteresis time in ms', NULL, NULL, NULL, NULL, NULL, NULL),
+(25, 'WeightSensorPara', '称重传感器参数', NULL, NULL, NULL, NULL, NULL),
+(26, 'MinScaleNum', NULL, NULL, NULL, NULL, NULL, NULL),
+(27, 'Min scale number for combination searching', NULL, NULL, NULL, NULL, NULL, NULL),
+(28, 'MaxScaleNum', NULL, NULL, NULL, NULL, NULL, NULL),
+(29, 'Max scale number for combination searching', NULL, NULL, NULL, NULL, NULL, NULL),
+(30, 'MinScaleNumStart', NULL, NULL, NULL, NULL, NULL, NULL),
+(31, 'Min scale number for starting combination search', NULL, NULL, NULL, NULL, NULL, NULL),
+(32, 'TargetWeight', NULL, NULL, NULL, NULL, NULL, NULL),
+(33, 'Target package weight(mg)', NULL, NULL, NULL, NULL, NULL, NULL),
+(34, 'UpperWeightLimit', NULL, NULL, NULL, NULL, NULL, NULL),
+(35, 'Upper limit of target package weight(mg)', NULL, NULL, NULL, NULL, NULL, NULL),
+(36, 'ProximitMode', NULL, NULL, NULL, NULL, NULL, NULL),
+(37, 'Proximit mode of combination', NULL, NULL, NULL, NULL, NULL, NULL),
+(38, 'CombinationBias', NULL, NULL, NULL, NULL, NULL, NULL),
+(39, 'Object num of each scale', NULL, NULL, NULL, NULL, NULL, NULL),
+(40, 'RemainDetectInd', NULL, NULL, NULL, NULL, NULL, NULL),
+(41, 'Indicator for taking away overtime remain object', NULL, NULL, NULL, NULL, NULL, NULL),
+(42, 'RemainDetectTime', NULL, NULL, NULL, NULL, NULL, NULL),
+(43, 'Remain dectection timer in seconds', NULL, NULL, NULL, NULL, NULL, NULL),
+(44, 'RemainObjTreatment', NULL, NULL, NULL, NULL, NULL, NULL),
+(45, 'How to treat remained object', NULL, NULL, NULL, NULL, NULL, NULL),
+(46, 'PriorityMode', NULL, NULL, NULL, NULL, NULL, NULL),
+(47, 'Priority mode for comnination algo', NULL, NULL, NULL, NULL, NULL, NULL),
+(48, 'AutoMode', NULL, NULL, NULL, NULL, NULL, NULL),
+(49, 'Object input mode', NULL, NULL, NULL, NULL, NULL, NULL),
+(50, 'AverageingNum', NULL, NULL, NULL, NULL, NULL, NULL),
+(51, 'Combination sample number for speed averageing', NULL, NULL, NULL, NULL, NULL, NULL),
+(52, 'AlgorithmPara', NULL, NULL, NULL, NULL, NULL, NULL),
+(53, 'LoadDetectTime', NULL, NULL, NULL, NULL, NULL, NULL),
+(54, 'Load stable detection time in ms', NULL, NULL, NULL, NULL, NULL, NULL),
+(55, 'LoadDetectThread', NULL, NULL, NULL, NULL, NULL, NULL),
+(56, 'Load stable detection limit in gram', NULL, NULL, NULL, NULL, NULL, NULL),
+(57, 'EmptyDetectTime', NULL, NULL, NULL, NULL, NULL, NULL),
+(58, 'Load empty detection time in ms', NULL, NULL, NULL, NULL, NULL, NULL),
+(59, 'EmptyDetectThread', NULL, NULL, NULL, NULL, NULL, NULL),
+(60, 'Load empty detection limit in gram', NULL, NULL, NULL, NULL, NULL, NULL),
+(61, 'StandardReadyTime', NULL, NULL, NULL, NULL, NULL, NULL),
+(62, 'Standard ready time in ms', NULL, NULL, NULL, NULL, NULL, NULL),
+(63, 'MotorSpeed', '马达速度', NULL, NULL, NULL, NULL, NULL),
+(64, 'Motor speed', NULL, NULL, NULL, NULL, NULL, NULL),
+(65, 'MotorDirection', NULL, NULL, NULL, NULL, NULL, NULL),
+(66, 'Motor direction: Clockwise or Counter-Clockwise', NULL, NULL, NULL, NULL, NULL, NULL),
+(67, 'RollingStart', NULL, NULL, NULL, NULL, NULL, NULL),
+(68, 'How long do the motor rolling for start action (ms)', NULL, NULL, NULL, NULL, NULL, NULL),
+(69, 'RollingStop', NULL, NULL, NULL, NULL, NULL, NULL),
+(70, 'How long do the motor rolling for stop action (ms)', NULL, NULL, NULL, NULL, NULL, NULL),
+(71, 'RollingInterval', NULL, NULL, NULL, NULL, NULL, NULL),
+(72, 'How long the motor will stay in still before roll back (ms)', NULL, NULL, NULL, NULL, NULL, NULL),
+(73, 'FailureDetectVaration', NULL, NULL, NULL, NULL, NULL, NULL),
+(74, '% of the MotorSpeed', NULL, NULL, NULL, NULL, NULL, NULL),
+(75, 'FailureDetectTime', NULL, NULL, NULL, NULL, NULL, NULL),
+(76, 'Motor failure detection time of out of speed (ms)', NULL, NULL, NULL, NULL, NULL, NULL),
+(77, 'MotorControlPara', '马达控制参数', NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hcubfsclanguagelist`
+--
+
+CREATE TABLE IF NOT EXISTS `hcubfsclanguagelist` (
+  `lang_name` varchar(20) NOT NULL,
+  `lang_icon` varchar(20) NOT NULL,
+  `lang_abbr` varchar(20) NOT NULL,
+  `defaultflag` tinyint(1) NOT NULL,
+  PRIMARY KEY (`lang_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `hcubfsclanguagelist`
+--
+
+INSERT INTO `hcubfsclanguagelist` (`lang_name`, `lang_icon`, `lang_abbr`, `defaultflag`) VALUES
+('ARABIC', 'Arabia.svg', 'ar', 0),
+('CHINESE', 'China.svg', 'ch', 1),
+('ENGLISH', 'UK.svg', 'en', 0),
+('FRENCH', 'France.svg', 'fr', 0),
+('GERMAN', 'Germany.svg', 'de', 0),
+('JAPANESE', 'Japan.svg', 'jp', 0),
+('THAI', 'Thailand.svg', 'th', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `hcubfscstadatainfo`
 --
 
@@ -329,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
   `wsavgtttmatcnt` int(4) DEFAULT NULL,
   `wsavgtttmatwgt` double(18,2) DEFAULT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
 
 --
 -- Dumping data for table `hcubfscstadatainfo`
@@ -337,25 +465,9 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
 
 INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatcnt`, `wsincmatwgt`, `wscombtimes`, `wsttttimes`, `wstgvtimes`, `wstttmatcnt`, `wstgvmatcnt`, `wstttmatwgt`, `wstgvmatwgt`, `wsavgttttimes`, `wsavgtttmatcnt`, `wsavgtttmatwgt`) VALUES
 (1, 'BFSC_STA_24_HOUR', 1, 1501126545, 22, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(2, 'BFSC_STA_LOCAL_UI', 0, 1502873947, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
 (3, 'BFSC_STA_LOCAL_UI', 1, 1502874213, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
 (4, 'BFSC_STA_UP_2_NOW', 1, 1501641451, 22, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(5, 'BFSC_STA_LOCAL_UI', 0, 1502875238, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(6, 'BFSC_STA_LOCAL_UI', 0, 1502875263, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(7, 'BFSC_STA_LOCAL_UI', 0, 1502875634, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(8, 'BFSC_STA_LOCAL_UI', 0, 1502875837, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(9, 'BFSC_STA_LOCAL_UI', 0, 1502875944, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(10, 'BFSC_STA_LOCAL_UI', 0, 1502876062, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(11, 'BFSC_STA_LOCAL_UI', 0, 1502879457, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(12, 'BFSC_STA_LOCAL_UI', 0, 1502880276, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(13, 'BFSC_STA_LOCAL_UI', 0, 1502880467, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(14, 'BFSC_STA_LOCAL_UI', 0, 1502881194, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(15, 'BFSC_STA_LOCAL_UI', 0, 1502882173, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(16, 'BFSC_STA_LOCAL_UI', 0, 1502882316, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(17, 'BFSC_STA_LOCAL_UI', 0, 1502882344, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(18, 'BFSC_STA_LOCAL_UI', 0, 1502882378, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(19, 'BFSC_STA_LOCAL_UI', 0, 1502882637, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(20, 'BFSC_STA_LOCAL_UI', 0, 1502882855, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
+(21, 'BFSC_STA_LOCAL_UI', 0, 1503199385, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -3246,8 +3358,8 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (36, 'TID_1S_IGM_PERIOD_READ', 1, 600),
 (37, 'TID_1S_IPM_PERIOD_READ', 1, 600),
 (38, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 311),
-(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 15),
-(40, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 10),
+(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 30),
+(40, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 3),
 (41, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
 (42, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
 (43, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
@@ -3317,7 +3429,7 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `cputemp` int(11) NOT NULL,
   `timestamp` int(4) NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=645 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=660 ;
 
 --
 -- Dumping data for table `hcusyspmglobaldatainfo`
@@ -3965,7 +4077,22 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (641, 0, 63, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 17, 90, 0, 1502881099),
 (642, 0, 33, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 17, 90, 0, 1502881516),
 (643, 0, 63, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 90, 0, 1502881826),
-(644, 0, 96, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 13, 17, 90, 0, 1502882137);
+(644, 0, 96, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 13, 17, 90, 0, 1502882137),
+(645, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 23, 13, 82, 0, 1503199704),
+(646, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 6, 13, 82, 0, 1503200016),
+(647, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 7, 13, 82, 0, 1503200327),
+(648, 0, 249, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 19, 18, 83, 0, 1503200638),
+(649, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 18, 83, 0, 1503200949),
+(650, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 18, 18, 83, 0, 1503201260),
+(651, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 17, 83, 0, 1503201571),
+(652, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 12, 17, 83, 0, 1503201882),
+(653, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503202193),
+(654, 0, 624, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 17, 83, 0, 1503202504),
+(655, 0, 684, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503202815),
+(656, 0, 747, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503203126),
+(657, 0, 810, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 17, 83, 0, 1503203437),
+(658, 0, 873, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503203748),
+(659, 0, 933, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503204059);
 
 -- --------------------------------------------------------
 

@@ -713,7 +713,7 @@ OPSTAT dbi_HcuBfsc_CalibrationDataGet( UINT32 data[(HCU_SYSCFG_BFSC_SNR_WS_NBR_M
     return SUCCESS;
 }
 
-OPSTAT dbi_HcuBfsc_DynamicConfigDataGet(UINT32 config_index, UINT32  dynamicdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX])
+OPSTAT dbi_HcuBfsc_DynamicConfigDataGet(UINT16 config_index, UINT32  dynamicdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX])
 	{
 		MYSQL *sqlHandler;
 		MYSQL_RES *resPtr;

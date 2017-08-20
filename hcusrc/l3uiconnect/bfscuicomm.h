@@ -37,15 +37,15 @@ typedef struct gTaskL3bfscuicommContext{
 typedef struct L3BfscuiStartStopCmd
 {
 	UINT32  cmdFlag;
-	UINT32 	cmdValue;
-	UINT32	confindex;
+	UINT32  cmdValue;
+	UINT16  confindex;
 }L3BfscuiStartStopCmd_t;
 
 typedef struct L3BfscuiCalibrationCmd
 {
 	UINT32  cmdFlag;
-	UINT32 	cmdValue;
-	UINT8	sensorid;
+	UINT32  cmdValue;
+	UINT8	 sensorid;
 	UINT32	weight;
 }L3BfscuiCalibrationCmd_t;
 
@@ -58,7 +58,7 @@ typedef struct L3BfscuiResumeCmd
 typedef struct L3BfscuiTestCmd
 {
 	UINT32  cmdFlag;
-	UINT32 	cmdValue;
+	UINT32 cmdValue;
 	UINT8	sensorid;
 	UINT32	testCmd;
 	UINT32	testPara;
@@ -96,7 +96,7 @@ extern OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, vo
 extern OPSTAT fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
-OPSTAT  func_bfscuicomm_read_cfg_file_into_ctrl_table(UINT32 config_index);
+OPSTAT  func_bfscuicomm_read_cfg_file_into_ctrl_table(UINT16 config_index);
 OPSTAT  func_bfscuicomm_time_out_period_read_process(void);
 OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCmdParseResult_t *parseResult );
 

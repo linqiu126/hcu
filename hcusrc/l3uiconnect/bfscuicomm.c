@@ -347,7 +347,7 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		fileChangeContent = parseResult.cmdStartStop.cmdValue;
 		//依赖文件变化的内容，分类发送控制命令：START/STOP命令
 		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_START){
-			UINT32 config_index = 0;
+			UINT16 config_index = 0;
 			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_START;
 			config_index = parseResult.cmdStartStop.confindex;
 			if (func_bfscuicomm_read_cfg_file_into_ctrl_table(config_index) == SUCCESS){
@@ -547,7 +547,7 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 
 			//解析Start/Stop命令
 		   if ( json_object_object_get_ex(file_jsonobj, "start_cmd", &cmd_jsonobj)){
-			   UINT32 confindex = 0;
+			   UINT16 config_index = 0;
 			   struct json_object *confindex_jsonobj = NULL;
 
 			   flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
@@ -557,10 +557,10 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 			   if ((flag_jsonobj != NULL) && (value_jsonobj != NULL)){
 				   flag = json_object_get_int(flag_jsonobj);
 				   value = json_object_get_int(value_jsonobj);
-				   confindex = json_object_get_int(confindex_jsonobj);
+				   config_index = json_object_get_int(confindex_jsonobj);
 				   parseResult->cmdStartStop.cmdFlag = flag;
 				   parseResult->cmdStartStop.cmdValue = value;
-				   parseResult->cmdStartStop.confindex = confindex;
+				   parseResult->cmdStartStop.confindex = config_index;
 			   }
 			   json_object_put(confindex_jsonobj);  //释放Json Object指针
 		   }
@@ -647,10 +647,13 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 }
 
 //扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
-OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT32 config_index)
+OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 {
 	UINT32  calibrationdata[(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)*3];
 	UINT32 dynamicdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX], staticdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX];
+
+	//Update config id to gTaskL3bfscContext
+	gTaskL3bfscContext.configId = config_index;
 
 	//查询用户动态配置参数
 	if (dbi_HcuBfsc_DynamicConfigDataGet(config_index, dynamicdata) == FAILURE){
