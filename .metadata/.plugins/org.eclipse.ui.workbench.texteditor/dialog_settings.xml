@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="DELETE" key="selection"/>
+		<item value="SYSSWM" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="SYSSWM"/>
 			<item value="DELETE"/>
 			<item value="hcu_service_ftp_sw_download_by_ftp"/>
 			<item value="func_sysswm_sw_download_process_swpkg_db_refresh"/>
@@ -15,7 +16,6 @@
 			<item value="func_sysswm_ftp_file_big_size_process_hcu_sw"/>
 			<item value="func_sysswm_time_out_segment_download_wait_process"/>
 			<item value="func_sysswm_swpkg_last_seg_process_hcu_db"/>
-			<item value="func_sysswm_swpkg_last_seg_process_hcu_sw"/>
 		</list>
 		<list key="replacehistory">
 			<item value="L0SVRFTP:"/>

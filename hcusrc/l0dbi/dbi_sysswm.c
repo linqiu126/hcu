@@ -97,6 +97,16 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
         return FAILURE;
     }
 
+    //先删除旧数据
+	sprintf(strsql, "DELETE from `hcusysswm_swpkg` WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
+			ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->upgradeFlag);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+	 	mysql_close(sqlHandler);
+	 	HcuErrorPrint("DBISYSSWM: DELETE data error, err cause = %s\n", mysql_error(sqlHandler));
+	    return FAILURE;
+	}
+
 	//插入INSERT新的数据，确保记录是唯一的
     sprintf(strsql, "REPLACE INTO `hcusysswm_swpkg` (equentry, hwtype, hwpem, swrel, swver, dbver, upgradeflag, swtotallen, swchecksum, dbtotallen, dbchecksum, filename, dbname, currentactive, updatetime) VALUES \
     		('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s', '%s', '%d')", ptrSwPkg->equEntry, ptrSwPkg->hwType, ptrSwPkg->hwPem, ptrSwPkg->swRel, ptrSwPkg->swVer, ptrSwPkg->dbVer, \
@@ -641,7 +651,7 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
 	 	mysql_close(sqlHandler);
-	 	HcuErrorPrint("DBISYSSWM: UPDATE data error, err cause = %s\n", mysql_error(sqlHandler));
+	 	HcuErrorPrint("DBISYSSWM: DELETE data error, err cause = %s\n", mysql_error(sqlHandler));
 	    return FAILURE;
 	}
 
