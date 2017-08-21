@@ -193,7 +193,6 @@ typedef struct gTaskL3bfscContextMotorControlParamaters
 typedef struct gTaskL3bfscContext
 {
 	//静态配置参数部分
-	UINT16												configId;  //用来标识系统工作在哪一套配置参数中
 	gTaskL3bfscContextCombinationAlgorithmParamaters_t 	comAlgPar;
 	UINT8												comAlgParPriority[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
 	gTaskL3bfscContextWeightSensorParamaters_t			wgtSnrPar;
@@ -214,6 +213,7 @@ typedef struct gTaskL3bfscContext
 	UINT8 	wsValueNbrTgu;  			//待出料有值秤盘数量
 	UINT8 	wsValueNbrActive;		    //激活的秤盘数量
 	UINT8 	wsBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];  //组合出的秤盘标示
+	UINT16												configId;  //用来标识系统工作在哪一套配置参数中
 	//实时统计部分：均以一个统计周期为单位
 	HcuSysMsgIeL3bfscContextStaElement_t cur;  		//当前统计基础颗粒中的数值
 	gTaskL3bfscContextStaEleMid_t  curAge;		//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
