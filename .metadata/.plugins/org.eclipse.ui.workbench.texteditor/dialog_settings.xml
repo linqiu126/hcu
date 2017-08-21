@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="gTaskL3bfscContext" key="selection"/>
+		<item value="#pragma pack" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="#pragma pack"/>
+			<item value="START"/>
+			<item value="start"/>
+			<item value="callback"/>
 			<item value="gTaskL3bfscContext"/>
 			<item value="func_bfscuicomm_read_cfg_file_into_ctrl_table"/>
 			<item value="configId"/>
 			<item value="WeightSensorLoadDetectionTimeMs"/>
-			<item value="TIMER_ID_1S_SYSSWM_PERIOD_WORKING"/>
-			<item value="#if"/>
-			<item value="SYSSWM"/>
-			<item value="DELETE"/>
 		</list>
 		<list key="replacehistory">
 			<item value="L0SVRFTP:"/>
