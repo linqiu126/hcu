@@ -1338,7 +1338,8 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	}
 
 	//没找到，收场
-	gTaskL3bfscContext.wsRrSearchStart = ((i+1) % gTaskL3bfscContext.searchSpaceTotalNbr);
+	if(gTaskL3bfscContext.searchSpaceTotalNbr==0) HCU_DEBUG_PRINT_FAT("L3BFSC: ERROR! Search Space TOTAL NBR == 0! \n");
+	gTaskL3bfscContext.wsRrSearchStart = ((i+1) % ((gTaskL3bfscContext.searchSpaceTotalNbr==0)?1:gTaskL3bfscContext.searchSpaceTotalNbr));
 	return -1;
 }
 
