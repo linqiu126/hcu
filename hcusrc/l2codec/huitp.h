@@ -6,7 +6,7 @@
  */
 
 //pack函数必须严格放在结构的里面，且不得包含任何其它包含文件，不然会发生意想不到的问题！！！
-#pragma pack (1) //强制1字节对齐
+
 
 #ifndef _HUITP_H_
 #define _HUITP_H_
@@ -25,6 +25,7 @@ typedef signed long               SLONG;
 typedef UINT8                     BOOLEAN;
 typedef void                      VOID;
 
+#pragma pack (1) //强制1字节对齐
 /*
  *
  *  顺从并更新到技术规范《慧HUITP接口规范v2.10, LAST UPDATE@2007/8/15》

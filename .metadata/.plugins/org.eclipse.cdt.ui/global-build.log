@@ -3469,3 +3469,1153 @@ Invoking: Cross G++ Linker
 g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o ./src/l3uiconnect/jsoninotify.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbi_sysswm.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -ljson-c -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
 Finished building target: PrjBfsc
  
+21:09:58 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3uiconnect/bfscuicomm.d" -MT"src/l3uiconnect/bfscuicomm.o" -o "src/l3uiconnect/bfscuicomm.o" "/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c"
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c: In function ‘func_bfscuicomm_cmdfile_json_parse’:
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:553:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:554:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:555:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       confindex_jsonobj = json_object_object_get(cmd_jsonobj, "confindex");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:572:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:573:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:574:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:592:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:593:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:609:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:610:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:611:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:612:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    testcmd_jsonobj =  json_object_object_get(cmd_jsonobj, "testcmd");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:613:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    testpara_jsonobj =  json_object_object_get(cmd_jsonobj, "testpara");
+    ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1446:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o ./src/l3uiconnect/jsoninotify.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbi_sysswm.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -ljson-c -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+21:19:26 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:83:31: error: conflicting type qualifiers for ‘gTaskL3bfscContext’
+ volatile gTaskL3bfscContext_t gTaskL3bfscContext; //波峰秤盘的总控表
+                               ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:0:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:227:29: note: previous declaration of ‘gTaskL3bfscContext’ was here
+ extern gTaskL3bfscContext_t gTaskL3bfscContext;
+                             ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_init’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:146:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&gTaskL3bfscContext, 0, sizeof(gTaskL3bfscContext_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct gTaskL3bfscContext_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:191:2: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_canitf_ws_new_ready_event’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:975:5: warning: passing argument 2 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+     memcpy(snd1.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+     ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1022:4: warning: passing argument 2 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+    memcpy(snd2.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+    ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1438:2: warning: passing argument 1 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memcpy(gTaskL3bfscContext.wsBitmap, resBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1446:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_ws_sensor_search_give_up’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1463:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(gTaskL3bfscContext.wsBitmap, 0, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile UINT8 *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_time_out_statistic_scan_process’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1908:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1934:2: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1955:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_60MIN, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta60Min)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1995:3: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   memset(&(gTaskL3bfscContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2015:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_24HOUR, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta24H)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2021:3: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2044:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_UP2NOW, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staUp2Now)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2057:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&(gTaskL3bfscContext.cur), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+make: *** [src/l3appctrl/l3bfsc.o] 错误 1
+21:19:43 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:83:31: error: conflicting type qualifiers for ‘gTaskL3bfscContext’
+ gTaskL3bfscContext_t volatile gTaskL3bfscContext; //波峰秤盘的总控表
+                               ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:0:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:227:29: note: previous declaration of ‘gTaskL3bfscContext’ was here
+ extern gTaskL3bfscContext_t gTaskL3bfscContext;
+                             ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_init’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:146:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&gTaskL3bfscContext, 0, sizeof(gTaskL3bfscContext_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct gTaskL3bfscContext_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:191:2: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_canitf_ws_new_ready_event’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:975:5: warning: passing argument 2 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+     memcpy(snd1.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+     ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1022:4: warning: passing argument 2 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+    memcpy(snd2.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+    ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1438:2: warning: passing argument 1 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memcpy(gTaskL3bfscContext.wsBitmap, resBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1446:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_ws_sensor_search_give_up’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1463:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(gTaskL3bfscContext.wsBitmap, 0, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile UINT8 *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_time_out_statistic_scan_process’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1908:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1934:2: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1955:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_60MIN, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta60Min)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1995:3: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   memset(&(gTaskL3bfscContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2015:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_24HOUR, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta24H)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2021:3: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2044:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_UP2NOW, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staUp2Now)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2057:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&(gTaskL3bfscContext.cur), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+make: *** [src/l3appctrl/l3bfsc.o] 错误 1
+21:20:19 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:83:31: error: conflicting type qualifiers for ‘gTaskL3bfscContext’
+ gTaskL3bfscContext_t volatile gTaskL3bfscContext; //波峰秤盘的总控表
+                               ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:0:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:227:29: note: previous declaration of ‘gTaskL3bfscContext’ was here
+ extern gTaskL3bfscContext_t gTaskL3bfscContext;
+                             ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_init’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:146:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&gTaskL3bfscContext, 0, sizeof(gTaskL3bfscContext_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct gTaskL3bfscContext_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:191:2: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_canitf_ws_new_ready_event’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:975:5: warning: passing argument 2 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+     memcpy(snd1.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+     ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1022:4: warning: passing argument 2 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+    memcpy(snd2.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+    ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1438:2: warning: passing argument 1 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memcpy(gTaskL3bfscContext.wsBitmap, resBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1446:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_ws_sensor_search_give_up’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1463:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(gTaskL3bfscContext.wsBitmap, 0, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile UINT8 *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_time_out_statistic_scan_process’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1908:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1934:2: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1955:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_60MIN, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta60Min)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1995:3: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   memset(&(gTaskL3bfscContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2015:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_24HOUR, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta24H)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2021:3: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2044:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_UP2NOW, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staUp2Now)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2057:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&(gTaskL3bfscContext.cur), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+make: *** [src/l3appctrl/l3bfsc.o] 错误 1
+21:20:37 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:83:31: error: conflicting type qualifiers for ‘gTaskL3bfscContext’
+ volatile gTaskL3bfscContext_t gTaskL3bfscContext; //波峰秤盘的总控表
+                               ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:0:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:227:29: note: previous declaration of ‘gTaskL3bfscContext’ was here
+ extern gTaskL3bfscContext_t gTaskL3bfscContext;
+                             ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_init’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:146:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&gTaskL3bfscContext, 0, sizeof(gTaskL3bfscContext_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct gTaskL3bfscContext_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:191:2: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘fsm_l3bfsc_canitf_ws_new_ready_event’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:975:5: warning: passing argument 2 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+     memcpy(snd1.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+     ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1022:4: warning: passing argument 2 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+    memcpy(snd2.sensorBitmap, gTaskL3bfscContext.wsBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+    ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘const void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1438:2: warning: passing argument 1 of ‘memcpy’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memcpy(gTaskL3bfscContext.wsBitmap, resBitmap, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:46:14: note: expected ‘void * __restrict__’ but argument is of type ‘volatile UINT8 *’
+ extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1446:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_ws_sensor_search_give_up’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1463:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(gTaskL3bfscContext.wsBitmap, 0, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile UINT8 *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_time_out_statistic_scan_process’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1908:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1934:2: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1955:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_60MIN, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta60Min)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1995:3: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   memset(&(gTaskL3bfscContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2015:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_24HOUR, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.sta24H)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2021:3: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2044:3: warning: passing argument 3 of ‘dbi_HcuBfsc_StaDatainfo_save’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+   if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_UP2NOW, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staUp2Now)) == FAILURE)
+   ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/l0dbi_inc.h:36:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:12,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0dbi/../l0dbi/dbi_bfsc.h:32:15: note: expected ‘struct HcuSysMsgIeL3bfscContextStaElement_t *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
+               ^
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:2057:2: warning: passing argument 1 of ‘memset’ discards ‘volatile’ qualifier from pointer target type [enabled by default]
+  memset(&(gTaskL3bfscContext.cur), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+  ^
+In file included from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/../l0comvm/commsg.h:21:0,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/../l0comvm/vmlayer.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/../l1com/l1comdef.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.h:11,
+                 from /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:9:
+/usr/include/string.h:66:14: note: expected ‘void *’ but argument is of type ‘volatile struct HcuSysMsgIeL3bfscContextStaElement_t *’
+ extern void *memset (void *__s, int __c, size_t __n) __THROW __nonnull ((1));
+              ^
+make: *** [src/l3appctrl/l3bfsc.o] 错误 1
+21:20:55 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1446:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o ./src/l3uiconnect/jsoninotify.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbi_sysswm.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -ljson-c -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+21:25:26 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1448:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o ./src/l3uiconnect/jsoninotify.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbi_sysswm.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -ljson-c -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+21:27:09 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3uiconnect/bfscuicomm.d" -MT"src/l3uiconnect/bfscuicomm.o" -o "src/l3uiconnect/bfscuicomm.o" "/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c"
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c: In function ‘func_bfscuicomm_cmdfile_json_parse’:
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:555:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:556:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:557:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       confindex_jsonobj = json_object_object_get(cmd_jsonobj, "confindex");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:574:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:575:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:576:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:594:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:595:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:611:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:612:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:613:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:614:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    testcmd_jsonobj =  json_object_object_get(cmd_jsonobj, "testcmd");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:615:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    testpara_jsonobj =  json_object_object_get(cmd_jsonobj, "testpara");
+    ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o ./src/l3uiconnect/jsoninotify.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbi_sysswm.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -ljson-c -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+21:29:31 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3uiconnect/bfscuicomm.d" -MT"src/l3uiconnect/bfscuicomm.o" -o "src/l3uiconnect/bfscuicomm.o" "/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c"
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c: In function ‘func_bfscuicomm_cmdfile_json_parse’:
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:555:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:556:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:557:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       confindex_jsonobj = json_object_object_get(cmd_jsonobj, "confindex");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:574:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:575:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:576:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:594:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:595:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:611:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:612:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:613:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:614:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    testcmd_jsonobj =  json_object_object_get(cmd_jsonobj, "testcmd");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:615:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    testpara_jsonobj =  json_object_object_get(cmd_jsonobj, "testpara");
+    ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1448:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/hsmmp.d" -MT"src/l3app/hsmmp.o" -o "src/l3app/hsmmp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/hsmmp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sensoremc.d" -MT"src/l3app/sensoremc.o" -o "src/l3app/sensoremc.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensoremc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sensorhumid.d" -MT"src/l3app/sensorhumid.o" -o "src/l3app/sensorhumid.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorhumid.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sensornoise.d" -MT"src/l3app/sensornoise.o" -o "src/l3app/sensornoise.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c"
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c: In function ‘fsm_noise_data_report_from_modbus’:
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c:478:3: warning: implicit declaration of function ‘hcu_hsmmp_photo_capture_start’ [-Wimplicit-function-declaration]
+   ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
+   ^
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c:486:4: warning: implicit declaration of function ‘hcu_hsmmp_video_capture_start’ [-Wimplicit-function-declaration]
+    if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c:527:3: warning: implicit declaration of function ‘hcu_hsmmp_video_capture_stop’ [-Wimplicit-function-declaration]
+   ret = hcu_hsmmp_video_capture_stop(HKVisionOption);
+   ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensornoise.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sensorpm25.d" -MT"src/l3app/sensorpm25.o" -o "src/l3app/sensorpm25.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sensorpm25sharp.d" -MT"src/l3app/sensorpm25sharp.o" -o "src/l3app/sensorpm25sharp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c"
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c: In function ‘func_pm25sharp_read_data’:
+/home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c:236:2: warning: implicit declaration of function ‘hcu_sps485_serial_port_get’ [-Wimplicit-function-declaration]
+  nread = hcu_sps485_serial_port_get(&gTaskPm25sharpContext.serialPort, &received_single_byte, 1);
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorpm25sharp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sensortemp.d" -MT"src/l3app/sensortemp.o" -o "src/l3app/sensortemp.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensortemp.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sensorwinddir.d" -MT"src/l3app/sensorwinddir.o" -o "src/l3app/sensorwinddir.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwinddir.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sensorwindspd.d" -MT"src/l3app/sensorwindspd.o" -o "src/l3app/sensorwindspd.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sensorwindspd.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/syspm.d" -MT"src/l3app/syspm.o" -o "src/l3app/syspm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/syspm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3app/sysswm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3app/sysswm.d" -MT"src/l3app/sysswm.o" -o "src/l3app/sysswm.o" "/home/hitpony/workspace/hcu/hcusrc/l3app/sysswm.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3app/sysswm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/cloudvela.d" -MT"src/l2frame/cloudvela.o" -o "src/l2frame/cloudvela.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c"
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_syspm_alarm_report’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:1104:1: warning: multi-line comment [-Wcomment]
+ //  if (FAILURE == func_cloudvela_stdzhb_msg_alarm_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, cmdId, optId, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_sysswm_inventory_report’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:1402:1: warning: multi-line comment [-Wcomment]
+ //  if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:1422:1: warning: multi-line comment [-Wcomment]
+ //  if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_emc_data_resp’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:1632:1: warning: multi-line comment [-Wcomment]
+ //  if (func_cloudvela_stdzhb_msg_emc_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,\
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:1639:1: warning: multi-line comment [-Wcomment]
+ //  if (func_cloudvela_stdzhb_msg_emc_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,\
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_winddir_data_resp’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:2138:1: warning: multi-line comment [-Wcomment]
+ //    rcv.winddir.dataFormat, rcv.winddir.winddirValue, rcv.winddir.gps.gpsx, rcv.winddir.gps.gpsy, rcv.winddir.gps.gpsz, rcv.winddir.gps.ns, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:2146:1: warning: multi-line comment [-Wcomment]
+ //    rcv.winddir.dataFormat, rcv.winddir.winddirValue, rcv.winddir.gps.gpsx, rcv.winddir.gps.gpsy, rcv.winddir.gps.gpsz, rcv.winddir.gps.ns, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_windspd_data_resp’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:2369:1: warning: multi-line comment [-Wcomment]
+ //    rcv.windspd.dataFormat, rcv.windspd.windspdValue, rcv.windspd.gps.gpsx, rcv.windspd.gps.gpsy, rcv.windspd.gps.gpsz,\
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:2376:1: warning: multi-line comment [-Wcomment]
+ //    rcv.windspd.dataFormat, rcv.windspd.windspdValue, rcv.windspd.gps.gpsx, rcv.windspd.gps.gpsy, rcv.windspd.gps.gpsz,\
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_temp_data_resp’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:2597:1: warning: multi-line comment [-Wcomment]
+ //    rcv.temp.dataFormat, rcv.temp.tempValue, rcv.temp.gps.gpsx, rcv.temp.gps.gpsy, rcv.temp.gps.gpsz, rcv.temp.gps.ns, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:2604:1: warning: multi-line comment [-Wcomment]
+ //    rcv.temp.dataFormat, rcv.temp.tempValue, rcv.temp.gps.gpsx, rcv.temp.gps.gpsy, rcv.temp.gps.gpsz, rcv.temp.gps.ns, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_humid_data_resp’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:2827:1: warning: multi-line comment [-Wcomment]
+ //    rcv.humid.dataFormat, rcv.humid.humidValue, rcv.humid.gps.gpsx, rcv.humid.gps.gpsy, rcv.humid.gps.gpsz, rcv.humid.gps.ns, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:2835:1: warning: multi-line comment [-Wcomment]
+ //    rcv.humid.dataFormat, rcv.humid.humidValue, rcv.humid.gps.gpsx, rcv.humid.gps.gpsy, rcv.humid.gps.gpsz, rcv.humid.gps.ns, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_hsmmp_data_resp’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:3059:1: warning: multi-line comment [-Wcomment]
+ //    rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:3066:1: warning: multi-line comment [-Wcomment]
+ //    rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c: In function ‘fsm_cloudvela_noise_data_resp’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:3287:1: warning: multi-line comment [-Wcomment]
+ //    rcv.noise.dataFormat, rcv.noise.noiseValue, rcv.noise.gps.gpsx, rcv.noise.gps.gpsy, rcv.noise.gps.gpsz, rcv.noise.gps.ns, \
+ ^
+/home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c:3295:1: warning: multi-line comment [-Wcomment]
+ //    rcv.noise.dataFormat, rcv.noise.noiseValue, rcv.noise.gps.gpsx, rcv.noise.gps.gpsy, rcv.noise.gps.gpsz, rcv.noise.gps.ns, \
+ ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/cloudvela.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/l2usbcan.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/l2usbcan.d" -MT"src/l2frame/l2usbcan.o" -o "src/l2frame/l2usbcan.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/l2usbcan.c"
+/home/hitpony/workspace/hcu/hcusrc/l2frame/l2usbcan.c: In function ‘func_zlg_usbcan_s2n’:
+/home/hitpony/workspace/hcu/hcusrc/l2frame/l2usbcan.c:30:5: warning: suggest parentheses around assignment used as truth value [-Wparentheses]
+     for (s += 2; c = (char)*s; s++)
+     ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/l2usbcan.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/llczhb.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/llczhb.d" -MT"src/l2frame/llczhb.o" -o "src/l2frame/llczhb.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/llczhb.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/llczhb.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/modbus.d" -MT"src/l2frame/modbus.o" -o "src/l2frame/modbus.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/modbus.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/spsvirgo.d" -MT"src/l2frame/spsvirgo.o" -o "src/l2frame/spsvirgo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/spsvirgo.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2codec/huixmlcodec.d" -MT"src/l2codec/huixmlcodec.o" -o "src/l2codec/huixmlcodec.o" "/home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2codec/huixmlcodec.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2codec/zhbhjt212codec.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2codec/zhbhjt212codec.d" -MT"src/l2codec/zhbhjt212codec.o" -o "src/l2codec/zhbhjt212codec.o" "/home/hitpony/workspace/hcu/hcusrc/l2codec/zhbhjt212codec.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2codec/zhbhjt212codec.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l1hwopt/ethernet.d" -MT"src/l1hwopt/ethernet.o" -o "src/l1hwopt/ethernet.o" "/home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l1hwopt/ethernet.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l0main/hcu.d" -MT"src/l0main/hcu.o" -o "src/l0main/hcu.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcu.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o ./src/l3uiconnect/jsoninotify.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbi_sysswm.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -ljson-c -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 
+21:34:47 **** Incremental Build of configuration Debug for project PrjBfsc ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3uiconnect/bfscuicomm.d" -MT"src/l3uiconnect/bfscuicomm.o" -o "src/l3uiconnect/bfscuicomm.o" "/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c"
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c: In function ‘func_bfscuicomm_cmdfile_json_parse’:
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:553:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:554:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:555:7: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+       confindex_jsonobj = json_object_object_get(cmd_jsonobj, "confindex");
+       ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:572:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:573:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:574:6: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+      sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+      ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:592:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:593:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:609:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    flag_jsonobj = json_object_object_get(cmd_jsonobj, "flag");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:610:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    value_jsonobj = json_object_object_get(cmd_jsonobj, "value");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:611:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    sensorid_jsonobj =  json_object_object_get(cmd_jsonobj, "sensorid");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:612:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    testcmd_jsonobj =  json_object_object_get(cmd_jsonobj, "testcmd");
+    ^
+/home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c:613:4: warning: ‘json_object_object_get’ is deprecated (declared at /usr/local/include/json-c/json_object.h:290) [-Wdeprecated-declarations]
+    testpara_jsonobj =  json_object_object_get(cmd_jsonobj, "testpara");
+    ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3uiconnect/bfscuicomm.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l3appctrl/l3bfsc.d" -MT"src/l3appctrl/l3bfsc.o" -o "src/l3appctrl/l3bfsc.o" "/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c"
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c: In function ‘func_l3bfsc_caculate_execute_search_result’:
+/home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c:1444:2: warning: multi-line comment [-Wcomment]
+  //HCU_DEBUG_PRINT_INF("L3BFSC: 1=%d/2=%d/3=%d/4=%d/5=%d/6=%d/7=%d/8=%d/9=%d/10=%d\n", gTaskL3bfscContext.sensorWs[1].sensorValue, gTaskL3bfscContext.sensorWs[2].sensorValue, \
+  ^
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l3appctrl/l3bfsc.c
+ 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+Invoking: Cross GCC Compiler
+gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/root/ffmpeg_build/include -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"src/l2frame/canitfleo.d" -MT"src/l2frame/canitfleo.o" -o "src/l2frame/canitfleo.o" "/home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l2frame/canitfleo.c
+ 
+Building target: PrjBfsc
+Invoking: Cross G++ Linker
+g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc"  ./src/l4bi/aiqiyc.o  ./src/l3uiconnect/bfscuicomm.o ./src/l3uiconnect/jsoninotify.o  ./src/l3appctrl/l3bfsc.o  ./src/l3app/hsmmp.o ./src/l3app/sensorairprs.o ./src/l3app/sensoralcohol.o ./src/l3app/sensorco1.o ./src/l3app/sensoremc.o ./src/l3app/sensorhcho.o ./src/l3app/sensorhumid.o ./src/l3app/sensorigm.o ./src/l3app/sensorihm.o ./src/l3app/sensoripm.o ./src/l3app/sensoriwm.o ./src/l3app/sensorlightstr.o ./src/l3app/sensornoise.o ./src/l3app/sensorpm25.o ./src/l3app/sensorpm25sharp.o ./src/l3app/sensortemp.o ./src/l3app/sensortoxicgas.o ./src/l3app/sensorwinddir.o ./src/l3app/sensorwindspd.o ./src/l3app/svrcon.o ./src/l3app/syspm.o ./src/l3app/sysswm.o  ./src/l2frame/avorion.o ./src/l2frame/canitfleo.o ./src/l2frame/canlib.o ./src/l2frame/cloudvela.o ./src/l2frame/i2cbuslibra.o ./src/l2frame/l2packet.o ./src/l2frame/l2usbcan.o ./src/l2frame/llczhb.o ./src/l2frame/modbus.o ./src/l2frame/nbiotcj188.o ./src/l2frame/nbiotqg376.o ./src/l2frame/spibusaries.o ./src/l2frame/spsvirgo.o  ./src/l2codec/huixmlcodec.o ./src/l2codec/zhbhjt212codec.o  ./src/l1hwopt/usb_adc/usb-daq-v20.o ./src/l1hwopt/usb_adc/usb_daq_test.o  ./src/l1hwopt/adc.o ./src/l1hwopt/apigprs.o ./src/l1hwopt/ble.o ./src/l1hwopt/camera.o ./src/l1hwopt/con3g4g.o ./src/l1hwopt/ethernet.o ./src/l1hwopt/gpio.o ./src/l1hwopt/gps.o ./src/l1hwopt/i2c.o ./src/l1hwopt/lcd.o ./src/l1hwopt/led.o ./src/l1hwopt/microphone.o ./src/l1hwopt/motor.o ./src/l1hwopt/pwm.o ./src/l1hwopt/relay.o ./src/l1hwopt/spi.o ./src/l1hwopt/sps232.o ./src/l1hwopt/sps485.o ./src/l1hwopt/spsapi.o ./src/l1hwopt/switch.o ./src/l1hwopt/usbnet.o ./src/l1hwopt/wifi.o ./src/l1hwopt/zeegbe.o  ./src/l1com/hwinv.o  ./src/l0webser/ftp.o ./src/l0webser/get_time.o ./src/l0webser/http_session.o ./src/l0webser/init_socket.o ./src/l0webser/webserver.o  ./src/l0service/configxml.o ./src/l0service/mmc.o ./src/l0service/sysinfo.o ./src/l0service/timer.o ./src/l0service/trace.o  ./src/l0main/hcu.o  ./src/l0dbi/dbi_bfsc.o ./src/l0dbi/dbi_sysswm.o ./src/l0dbi/dbiairprs.o ./src/l0dbi/dbialcohol.o ./src/l0dbi/dbico1.o ./src/l0dbi/dbicom.o ./src/l0dbi/dbiemc.o ./src/l0dbi/dbihcho.o ./src/l0dbi/dbihsmmp.o ./src/l0dbi/dbihumid.o ./src/l0dbi/dbiigm.o ./src/l0dbi/dbiihm.o ./src/l0dbi/dbiipm.o ./src/l0dbi/dbiiwm.o ./src/l0dbi/dbilightstr.o ./src/l0dbi/dbinbiot.o ./src/l0dbi/dbinoise.o ./src/l0dbi/dbipm25.o ./src/l0dbi/dbisysperfm.o ./src/l0dbi/dbitemp.o ./src/l0dbi/dbitoxicgas.o ./src/l0dbi/dbiwinddir.o ./src/l0dbi/dbiwindspd.o  ./src/l0comvm/vmlayer.o   -lrt -ljson-c -lmysqlclient -lpthread -lcurl -lxml2 -lavcodec -lavformat -lavutil -lavdevice -lavfilter -lswscale -lm -lSDL2 -lsqlite3
+Finished building target: PrjBfsc
+ 

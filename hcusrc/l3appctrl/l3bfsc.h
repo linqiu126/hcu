@@ -100,8 +100,6 @@ typedef struct L3BfscSensorWsInfo
 #define HCU_L3BFSC_STA_DBI_TABLE_24HOUR   	"BFSC_STA_24_HOUR"
 #define HCU_L3BFSC_STA_DBI_TABLE_UP2NOW   	"BFSC_STA_UP_2_NOW"
 
-
-//#pragma pack (1) //强制1字节对齐
 //临时数据暂存内容
 typedef struct gTaskL3bfscContextStaEleMid
 {
@@ -225,7 +223,6 @@ typedef struct gTaskL3bfscContext
 	HcuSysMsgIeL3bfscContextStaElement_t sta24H;		//24H统计结果
 	HcuSysMsgIeL3bfscContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
 }gTaskL3bfscContext_t;
-//#pragma pack () //取消字节对齐
 
 extern gTaskL3bfscContext_t gTaskL3bfscContext;
 

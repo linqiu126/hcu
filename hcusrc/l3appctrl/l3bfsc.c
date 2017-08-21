@@ -1137,8 +1137,6 @@ OPSTAT fsm_l3bfsc_uicomm_config_req(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
 	}
 
-	HCU_DEBUG_PRINT_FAT("L3BFSC: CfgId=%d, LoadMs=%d, Addr=0x%x\n\n", gTaskL3bfscContext.configId, gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs, &gTaskL3bfscContext);
-
 	//返回
 	return SUCCESS;
 }
