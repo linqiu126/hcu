@@ -270,6 +270,8 @@ OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 			pMsgProc.motor_control_param.MotorFailureDetectionVaration = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.motCtrPar.MotorFailureDetectionVaration);
 			pMsgProc.motor_control_param.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfscContext.motCtrPar.MotorFailureDetectionTimeMs);
 
+			HCU_DEBUG_PRINT_FAT("CANITFLEO: CfgId=%d, LoadMsMem=%d, LoadMsMsg=%d\n\n", gTaskL3bfscContext.configId, gTaskL3bfscContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs, pMsgProc.weight_sensor_param.WeightSensorLoadDetectionTimeMs);
+
 			//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
 			if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
