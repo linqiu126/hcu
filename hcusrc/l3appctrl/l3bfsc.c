@@ -1298,7 +1298,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 		//HCU_DEBUG_PRINT_INF("L3BFSC: WsSensorStart=%d, Index = %d, Result = %d, ComTarget/Max=[%d/%d], Nbr Min/Max = [%d/%d], SearchNbr=%d\n", WsSensorStart, i, result, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight, gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination, gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination, searchNbr);
 
 		//在目标组合数量之内，寻求大中最小的
-		if ((searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) &&  (searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination)){
+/*		if ((searchNbr >= gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination) &&  (searchNbr <= gTaskL3bfscContext.comAlgPar.MaxScaleNumberCombination)){
 			//寻求更大的
 			if ((result > (gTaskL3bfscContext.comAlgPar.TargetCombinationWeight + gTaskL3bfscContext.comAlgPar.TargetCombinationUpperWeight)) && (result < result_Ul))
 			{
@@ -1313,7 +1313,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 				promoxityDl = i;
 				memcpy(resBitmap_Dl, resBitmap, sizeof(resBitmap_Dl));
 			}
-		}
+		}*/
 
 		//再判定搜索结果是否满足条件
 		if (func_l3bfsc_caculate_judge_search_result(result, searchNbr, i) == TRUE)
@@ -1325,7 +1325,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	}//整个搜索空间循环结束
 	HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search Accomplish one round, Index=%d, SearchSpace=%d, StartPoint = %d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr, WsSensorStart);
 
-	//没找到，但激活了上近似组合
+/*	//没找到，但激活了上近似组合
 	if (gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode == HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_ABOVE_UP_LIMIT)
 	{
 		HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Proximity UP One time, Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
@@ -1343,7 +1343,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 			func_l3bfsc_caculate_execute_search_result(promoxityDl, resBitmap_Dl);
 			return promoxityDl;
 		}
-	}
+	}*/
 
 	//没找到，收场
 	if(gTaskL3bfscContext.searchSpaceTotalNbr==0) HCU_DEBUG_PRINT_FAT("L3BFSC: ERROR! Search Space TOTAL NBR == 0! \n");
@@ -1417,6 +1417,7 @@ bool func_l3bfsc_caculate_judge_search_result(UINT32 result, UINT8 searchNbr, UI
 	//优先级算法被激活
 	//具体的优先级配置，还未定义参数，未来待完善
 	else{
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Priority Algo enter!\n");
 		//先寻找优先级是否为否
 		for (j=0; j<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; j++)
 		{
