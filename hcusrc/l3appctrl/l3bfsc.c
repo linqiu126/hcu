@@ -1339,7 +1339,9 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 
 	//没找到，收场
 	if(gTaskL3bfscContext.searchSpaceTotalNbr==0) HCU_DEBUG_PRINT_FAT("L3BFSC: ERROR! Search Space TOTAL NBR == 0! \n");
-	gTaskL3bfscContext.wsRrSearchStart = ((i+1) % ((gTaskL3bfscContext.searchSpaceTotalNbr==0)?1:gTaskL3bfscContext.searchSpaceTotalNbr));
+	HCU_DEBUG_PRINT_FAT("L3BFSC: Algo Search Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
+	gTaskL3bfscContext.wsRrSearchStart = (i+1) % ((gTaskL3bfscContext.searchSpaceTotalNbr==0)?\
+			((UINT32)pow(2, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)):gTaskL3bfscContext.searchSpaceTotalNbr);
 	return -1;
 }
 

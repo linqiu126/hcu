@@ -8,6 +8,11 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Aug.22 CURRENT_SW_DELIVERY 244=>BFSC项目
+=调查BFSC现场的算法DUMP问题
+
+
+
 //= ZJL, 2017 Aug.19 CURRENT_SW_DELIVERY 243=>BFSC项目
 = 增加并完善FTP工作机制
 =FTP下载之前，是否需要将本地文件删去？待完善

@@ -9,13 +9,13 @@
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
 			<item value="HCU_DEBUG_PRINT_FAT"/>
-			<item value="gTaskL3bfscContext"/>
-			<item value="#pragma pack"/>
-			<item value="START"/>
-			<item value="start"/>
-			<item value="callback"/>
-			<item value="func_bfscuicomm_read_cfg_file_into_ctrl_table"/>
-			<item value="configId"/>
+			<item value="comAlgParPriority"/>
+			<item value="func_l3bfsc_caculate_execute_search_result"/>
+			<item value="IsProximitCombinationMode"/>
+			<item value="Priority"/>
+			<item value="priority"/>
+			<item value="func_l3bfsc_ws_sensor_search_combination"/>
+			<item value="func_l3bfsc_caculate_judge_search_result"/>
 		</list>
 		<list key="replacehistory">
 			<item value="L0SVRFTP:"/>
