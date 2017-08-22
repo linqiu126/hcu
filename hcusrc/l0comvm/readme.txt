@@ -10,7 +10,7 @@
 
 //= ZJL, 2017 Aug.22 CURRENT_SW_DELIVERY 244=>BFSC项目
 =调查BFSC现场的算法DUMP问题
-
+=下载期望消息长点，内部消息改为了1000。但此时，即便将内部消息缓冲区改为了163840，也抗不住太多的下位机消息过来。故而修改消息长度为800。
 
 
 //= ZJL, 2017 Aug.19 CURRENT_SW_DELIVERY 243=>BFSC项目
