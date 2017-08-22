@@ -1267,7 +1267,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	int i=0;
 
 	UINT32 result=0, result_Ul=0, result_Dl=0;
-	int promoxityUl=-1, promoxityDl=0;
+	int promoxityUl=-1, promoxityDl=-1;
 
 	UINT8 resBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
 	UINT8 resBitmap_Ul[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
@@ -1285,7 +1285,6 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 
 	for (i=WsSensorStart; i< (gTaskL3bfscContext.searchSpaceTotalNbr + WsSensorStart); i++){
 		i = i % gTaskL3bfscContext.searchSpaceTotalNbr;
-		HCU_DEBUG_PRINT_FAT("L3BFSC: BEGIN Algo Search Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
 		//先计算单个矢量乘积结果
 		memset(resBitmap, 0, sizeof(resBitmap));
 		result = func_l3bfsc_caculate_vector_multipy_result(i, resBitmap);
@@ -1316,13 +1315,16 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 		if (func_l3bfsc_caculate_judge_search_result(result, searchNbr, i) == TRUE)
 		{
 			func_l3bfsc_caculate_execute_search_result(i, resBitmap);
+			HCU_DEBUG_PRINT_FAT("L3BFSC: Combine SUCCESS one time, Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
 			return i;
 		}
-	}
+	}//整个搜索空间循环结束
+	HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search Accomplish one round, Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
 
 	//没找到，但激活了上近似组合
 	if (gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode == HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_ABOVE_UP_LIMIT)
 	{
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Proximity UP One time, Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
 		if ((result_Ul != 0) && (promoxityUl != -1)){
 			func_l3bfsc_caculate_execute_search_result(promoxityUl, resBitmap_Ul);
 			return promoxityUl;
@@ -1332,6 +1334,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	//没找到，但激活了下近似组合
 	else if (gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode == HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_BELOW_DN_LIMIT)
 	{
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Proximity DL One time, Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
 		if ((result_Dl != 0) && (promoxityDl != -1)){
 			func_l3bfsc_caculate_execute_search_result(promoxityDl, resBitmap_Dl);
 			return promoxityDl;
@@ -1340,7 +1343,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 
 	//没找到，收场
 	if(gTaskL3bfscContext.searchSpaceTotalNbr==0) HCU_DEBUG_PRINT_FAT("L3BFSC: ERROR! Search Space TOTAL NBR == 0! \n");
-	HCU_DEBUG_PRINT_FAT("L3BFSC: End Algo Search Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
+	HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search UNSUCCESS and Return, Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
 	gTaskL3bfscContext.wsRrSearchStart = (i+1) % ((gTaskL3bfscContext.searchSpaceTotalNbr==0)?\
 			((UINT32)pow(2, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)):gTaskL3bfscContext.searchSpaceTotalNbr);
 	return -1;
