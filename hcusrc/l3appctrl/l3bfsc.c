@@ -885,7 +885,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//正常处理
 	gTaskL3bfscContext.cur.wsIncMatCnt++;
 	gTaskL3bfscContext.cur.wsIncMatWgt += rcv.sensorWsValue;
-	HCU_DEBUG_PRINT_INF("L3BFSC: Sensor Input Id = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
+	HCU_DEBUG_PRINT_FAT("L3BFSC: Sensor Input Id = %d, Status = %d\n", rcv.sensorid, gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus);
 
 	//将重复次数清零：这个参数用于增加该传感器被算法命中的概率
 	gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorRepTimes = 0;
@@ -897,13 +897,13 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		if (gTaskL3bfscContext.wsValueNbrFree>0) gTaskL3bfscContext.wsValueNbrFree--;
 		gTaskL3bfscContext.wsValueNbrWeight++;
 		gTaskL3bfscContext.wsValueNbrWeight = gTaskL3bfscContext.wsValueNbrWeight % (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + 1);
-		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Normally status!\n");
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Receive EVENT, Normally status!\n");
 	}
 
 	//重复来临
 	else if (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB){
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
-		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Repeat status!\n");
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Receive EVENT, Repeat status!\n");
 	}
 
 	//恢复错误
@@ -912,13 +912,13 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_COMB;
 		gTaskL3bfscContext.wsValueNbrWeight++;
 		gTaskL3bfscContext.wsValueNbrWeight = gTaskL3bfscContext.wsValueNbrWeight % (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX + 1);
-		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Error recover status!\n");
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Receive EVENT, Error recover status!\n");
 	}
 
 	//错误来临：进入ERROR_INQ流程 (TTT/TGU或者其它状态）
 	else
 	{
-		HCU_DEBUG_PRINT_NOR("L3BFSC: Receive EVENT, Error status!\n");
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Receive EVENT, Error status!\n");
 		//为了全局控制表统计的正确性
 		if (gTaskL3bfscContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_VALID_TO_TTT) {
 			if (gTaskL3bfscContext.wsValueNbrTtt > 0) gTaskL3bfscContext.wsValueNbrTtt--;
@@ -959,7 +959,9 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//是否要进入搜索
 	if (gTaskL3bfscContext.wsValueNbrWeight >= gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination){
 		//组合失败
+		HCU_DEBUG_PRINT_FAT("L3BFSC: Enter Combination search!\n");
 		if (func_l3bfsc_ws_sensor_search_combination() == -1){
+			HCU_DEBUG_PRINT_FAT("L3BFSC: Combination search finished, None find!\n");
 			if (gTaskL3bfscContext.wsValueNbrWeight >= (HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)){
 				//得到抛弃的传感器
 				func_l3bfsc_ws_sensor_search_give_up();
@@ -1011,6 +1013,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//返回有意义的数值
 		else{
+			HCU_DEBUG_PRINT_FAT("L3BFSC: Combination search finished, Success!\n");
 			//发送出料命令
 			gTaskL3bfscContext.cur.wsTttTimes++;
 			gTaskL3bfscContext.cur.wsTttMatCnt += func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number();
@@ -1283,6 +1286,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 	//组合搜索
 	result_Ul=0; result_Dl=0; promoxityUl=0; promoxityDl=0;
 
+	HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search START, Index=%d, SearchSpace=%d, Start Point = %d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr, WsSensorStart);
 	for (i=WsSensorStart; i< (gTaskL3bfscContext.searchSpaceTotalNbr + WsSensorStart); i++){
 		i = i % gTaskL3bfscContext.searchSpaceTotalNbr;
 		//先计算单个矢量乘积结果
@@ -1319,7 +1323,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 			return i;
 		}
 	}//整个搜索空间循环结束
-	HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search Accomplish one round, Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
+	HCU_DEBUG_PRINT_FAT("L3BFSC: Combine Search Accomplish one round, Index=%d, SearchSpace=%d, StartPoint = %d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr, WsSensorStart);
 
 	//没找到，但激活了上近似组合
 	if (gTaskL3bfscContext.comAlgPar.IsProximitCombinationMode == HCU_L3BFSC_COMB_ALG_PAR_PROXIMITY_ABOVE_UP_LIMIT)

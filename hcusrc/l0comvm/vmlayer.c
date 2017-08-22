@@ -8,9 +8,6 @@
 #include "vmlayer.h"
 #include "../l0service/trace.h"
 
-//#include <unistd.h>
-#include <stdio.h>
-
 /*
  *
  *   全局变量，存储所有任务的状态信息，以便后面使用
@@ -561,7 +558,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_IGM_PERIOD_READ,                    "TID_1S_IGM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_IPM_PERIOD_READ,                    "TID_1S_IPM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            311,     TIMER_RESOLUTION_1S},//for test(3600)
-	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           900,     TIMER_RESOLUTION_1S},//900, 正常15一次，分别来轮４个软件体
+	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           40,     TIMER_RESOLUTION_1S},//900, 正常15一次，分别来轮４个软件体
 	{TIMER_ID_1S_SYSSWM_SEG_DL_WAIT,             	 "TID_1S_SYSSWM_SEG_DL_WAIT",              3,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB,             "TID_1S_L3BFSC_SYS_CFG_WAIT_FB",          15,      TIMER_RESOLUTION_1S},

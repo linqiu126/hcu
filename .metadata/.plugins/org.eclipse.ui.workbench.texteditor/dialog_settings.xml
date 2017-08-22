@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_l3bfsc_caculate_execute_search_result" key="selection"/>
+		<item value="SYSSWM" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="SYSSWM"/>
 			<item value="func_l3bfsc_caculate_execute_search_result"/>
 			<item value="17"/>
 			<item value="func_l3bfsc_ws_sensor_search_combination"/>
@@ -15,7 +16,6 @@
 			<item value="comAlgParPriority"/>
 			<item value="IsProximitCombinationMode"/>
 			<item value="Priority"/>
-			<item value="priority"/>
 		</list>
 		<list key="replacehistory">
 			<item value="L0SVRFTP:"/>
