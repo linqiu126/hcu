@@ -1172,7 +1172,7 @@
 	#define HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_GENERAL_SET HCU_SYSCFG_INIT_SET_BY_VM_STATIC_TABLE_YES
 
 	//本项目特定部分
-	#define HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX 13  //下位机总共有16个秤盘
+	#define HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX 17  //下位机总共有16个秤盘
 	#define HCU_SYSCFG_BFSC_CMDJSON_FILE_SIZE_MAX  (1000)    //BFSCUI命令标志文件 （command.json）最大长度
 	#define HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX   100  //定义BFSC数据表单最大Column个数，方便数据库查询后的存取
 

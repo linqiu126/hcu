@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_l3bfsc_caculate_judge_search_result" key="selection"/>
+		<item value="13" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="13"/>
+			<item value="WsSensorStart"/>
 			<item value="func_l3bfsc_caculate_judge_search_result"/>
-			<item value="func_l3bfsc_caculate_bitmap_valid_number"/>
+			<item value="i"/>
 			<item value="func_l3bfsc_caculate_vector_multipy_result"/>
-			<item value="TIMER_ID_1S_SYSSWM_PERIOD_WORKING"/>
-			<item value="SYSSWM"/>
+			<item value="func_l3bfsc_caculate_bitmap_valid_number"/>
 			<item value="func_l3bfsc_caculate_execute_search_result"/>
-			<item value="17"/>
-			<item value="func_l3bfsc_ws_sensor_search_combination"/>
+			<item value="promoxityUl"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_DEBUG_PRINT_NOR"/>
 			<item value="L0SVRFTP:"/>
 			<item value="ptrSwPkg"/>
 		</list>
@@ -26,7 +27,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="377" key="DIALOG_HEIGHT"/>
-		<item value="1189" key="DIALOG_X_ORIGIN"/>
-		<item value="431" key="DIALOG_Y_ORIGIN"/>
+		<item value="1202" key="DIALOG_X_ORIGIN"/>
+		<item value="100" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
