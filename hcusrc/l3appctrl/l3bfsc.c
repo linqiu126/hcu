@@ -1285,6 +1285,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 
 	for (i=WsSensorStart; i< (gTaskL3bfscContext.searchSpaceTotalNbr + WsSensorStart); i++){
 		i = i % gTaskL3bfscContext.searchSpaceTotalNbr;
+		HCU_DEBUG_PRINT_FAT("L3BFSC: BEGIN Algo Search Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
 		//先计算单个矢量乘积结果
 		memset(resBitmap, 0, sizeof(resBitmap));
 		result = func_l3bfsc_caculate_vector_multipy_result(i, resBitmap);
@@ -1339,7 +1340,7 @@ INT32 func_l3bfsc_ws_sensor_search_combination(void)
 
 	//没找到，收场
 	if(gTaskL3bfscContext.searchSpaceTotalNbr==0) HCU_DEBUG_PRINT_FAT("L3BFSC: ERROR! Search Space TOTAL NBR == 0! \n");
-	HCU_DEBUG_PRINT_FAT("L3BFSC: Algo Search Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
+	HCU_DEBUG_PRINT_FAT("L3BFSC: End Algo Search Index=%d, SearchSpace=%d\n", i, gTaskL3bfscContext.searchSpaceTotalNbr);
 	gTaskL3bfscContext.wsRrSearchStart = (i+1) % ((gTaskL3bfscContext.searchSpaceTotalNbr==0)?\
 			((UINT32)pow(2, HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)):gTaskL3bfscContext.searchSpaceTotalNbr);
 	return -1;

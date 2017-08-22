@@ -2,19 +2,19 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HCU_DEBUG_PRINT_FAT" key="selection"/>
+		<item value="func_l3bfsc_ws_sensor_search_combination" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="func_l3bfsc_ws_sensor_search_combination"/>
 			<item value="HCU_DEBUG_PRINT_FAT"/>
 			<item value="comAlgParPriority"/>
 			<item value="func_l3bfsc_caculate_execute_search_result"/>
 			<item value="IsProximitCombinationMode"/>
 			<item value="Priority"/>
 			<item value="priority"/>
-			<item value="func_l3bfsc_ws_sensor_search_combination"/>
 			<item value="func_l3bfsc_caculate_judge_search_result"/>
 		</list>
 		<list key="replacehistory">
