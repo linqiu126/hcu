@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="13" key="selection"/>
+		<item value="SYSSWM" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="SYSSWM"/>
 			<item value="13"/>
 			<item value="WsSensorStart"/>
 			<item value="func_l3bfsc_caculate_judge_search_result"/>
@@ -15,7 +16,6 @@
 			<item value="func_l3bfsc_caculate_vector_multipy_result"/>
 			<item value="func_l3bfsc_caculate_bitmap_valid_number"/>
 			<item value="func_l3bfsc_caculate_execute_search_result"/>
-			<item value="promoxityUl"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_DEBUG_PRINT_NOR"/>
