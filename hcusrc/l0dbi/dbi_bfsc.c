@@ -580,6 +580,47 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     return SUCCESS;
 }
 
+OPSTAT  dbi_HcuBfsc_WmcStatusForceSuspend(UINT8 sensorid)
+{
+		MYSQL *sqlHandler;
+		UINT32 timestamp;
+	    int result = 0;
+	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+	    char s[20];
+	    memset(s, 0, sizeof(s));
+
+		//建立数据库连接
+	    sqlHandler = mysql_init(NULL);
+	    if(!sqlHandler)
+	    {
+	    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+	        return FAILURE;
+	    }
+	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+	    if (!sqlHandler){
+	    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+	    	mysql_close(sqlHandler);
+	        return FAILURE;
+	    }
+
+		//REPLACE新的数据
+	    timestamp = time(NULL);
+
+		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (1)", timestamp, sensorid, DBI_BFSC_SNESOR_STATUS_SUSPEND);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+			mysql_close(sqlHandler);
+			HcuErrorPrint("DBIBFSC: UPDATE data error: %s\n", mysql_error(sqlHandler));
+			return FAILURE;
+		}
+
+		//释放记录集
+	    mysql_close(sqlHandler);
+	    return SUCCESS;
+}
+
 OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
 {
 	MYSQL *sqlHandler;

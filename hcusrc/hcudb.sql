@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 21, 2017 at 02:08 PM
+-- Generation Time: Aug 23, 2017 at 04:01 PM
 -- Server version: 5.5.47-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
-(1503199385, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
+(1503389434, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 2, 0, 2, 0, 2, 0, 2, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
 
 -- --------------------------------------------------------
 
@@ -321,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsclanguagedict` (
   `arabic` varchar(200) DEFAULT NULL,
   `thai` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=55 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=70 ;
 
 --
 -- Dumping data for table `hcubfsclanguagedict`
@@ -329,59 +329,74 @@ CREATE TABLE IF NOT EXISTS `hcubfsclanguagedict` (
 
 INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japanese`, `german`, `arabic`, `thai`) VALUES
 (1, 'MaxAllowedWeight', '重量传感器校准参数', NULL, NULL, NULL, NULL, NULL),
-(2, 'Command ID', '命令 ID', NULL, NULL, NULL, NULL, NULL),
+(2, 'Command ID', '命令字', NULL, NULL, NULL, NULL, NULL),
 (3, 'Max allowed weight upper limit (0.01 grams)', '最大允许称重上限值 (0.01g)', NULL, NULL, NULL, NULL, NULL),
-(4, 'Please select test command', '请选择测试命令', NULL, NULL, NULL, NULL, NULL),
+(4, 'Please select test command', '请选择要测试的命令字', NULL, NULL, NULL, NULL, NULL),
 (5, 'CalFullWeight', '校准满载重量', NULL, NULL, NULL, NULL, NULL),
-(6, 'Sensor ID', '传感器 ID', NULL, NULL, NULL, NULL, NULL),
+(6, 'Sensor ID', '秤台编号', NULL, NULL, NULL, NULL, NULL),
 (7, 'Weight sensor full weight when calibration(0.01 grams)', '校准时称重传感器满载值 (0.01g)', NULL, NULL, NULL, NULL, NULL),
-(8, 'Please select the sensor you want to test', '请选择你想要测试的称台', NULL, NULL, NULL, NULL, NULL),
+(8, 'Please select the sensor you want to test', '请选择你想要测试的称台编号', NULL, NULL, NULL, NULL, NULL),
 (9, 'CalibrationPara', '重量传感器校准参数', NULL, NULL, NULL, NULL, NULL),
-(10, 'General Parameter', '常用参数', NULL, NULL, NULL, NULL, NULL),
+(10, 'General Parameter', '通用参数', NULL, NULL, NULL, NULL, NULL),
 (11, 'StaticZeroValue', '静态偏置重量', NULL, NULL, NULL, NULL, NULL),
-(12, 'Motor speed parameter for motor test', '马达测试的马达速度参数', NULL, NULL, NULL, NULL, NULL),
+(12, 'Motor speed parameter for motor test', '马达速度参数，马达测试命令时有效', NULL, NULL, NULL, NULL, NULL),
 (13, 'Weight sensor static bias zero value (0.01 grams)', '称台的静态时的重量偏置值 (0.01g)', NULL, NULL, NULL, NULL, NULL),
 (14, 'Test Command Setting', '测试命令设置', NULL, NULL, NULL, NULL, NULL),
 (15, 'TailorValue', '皮重量', NULL, NULL, NULL, NULL, NULL),
 (16, 'Weight sensor tailor value (0.01 grams)', '称台和被称物品的皮重量 (0.01g)', NULL, NULL, NULL, NULL, NULL),
-(17, 'DynZeroThresholdValue', '动态归零的门限值', NULL, NULL, NULL, NULL, NULL),
-(18, 'Weight sensor threshold value to active dynamic zeroing (0.01 grams)', '激活动态归零功能的门限 (0.01g)', NULL, NULL, NULL, NULL, NULL),
+(17, 'DynZeroThresholdValue', '动态归零阈值', NULL, NULL, NULL, NULL, NULL),
+(18, 'Weight sensor threshold value to active dynamic zeroing (0.01 grams)', '激活动态归零功能的重量门限 (0.01g)', NULL, NULL, NULL, NULL, NULL),
 (19, 'DynZeroHysteresis', '动态归零的迟滞', NULL, NULL, NULL, NULL, NULL),
 (20, 'Weight sensor hysteresis time to active dynamic zeroing (ms)', '激活动态归零功能的保持时间 (毫秒)', NULL, NULL, NULL, NULL, NULL),
 (21, 'WeightSensorPara', '重量传感器参数', NULL, NULL, NULL, NULL, NULL),
-(22, 'MinScaleNum', '每个组合允许的最小称台个数', NULL, NULL, NULL, NULL, NULL),
+(22, 'MinScaleNum', '最小称台数', NULL, NULL, NULL, NULL, NULL),
 (23, 'Min scale number for combination allowed', '每个组合允许的最小称台个数', NULL, NULL, NULL, NULL, NULL),
-(24, 'MaxScaleNum', '每个组合允许的最大称台个数', NULL, NULL, NULL, NULL, NULL),
+(24, 'MaxScaleNum', '最大称台数', NULL, NULL, NULL, NULL, NULL),
 (25, 'Max scale number for combination allowed', '每个组合允许的最大称台个数', NULL, NULL, NULL, NULL, NULL),
-(26, 'MinScaleNumStart', '开始组合搜索的称台个数', NULL, NULL, NULL, NULL, NULL),
-(27, 'Min scale number for starting combination search', '开始组合搜索的称台个数', NULL, NULL, NULL, NULL, NULL),
+(26, 'MinScaleNumStart', '搜索开始称台数', NULL, NULL, NULL, NULL, NULL),
+(27, 'Min scale number for starting combination search', '开始组合搜索的最小称台个数', NULL, NULL, NULL, NULL, NULL),
 (28, 'TargetWeight', '目标重量值', NULL, NULL, NULL, NULL, NULL),
-(29, 'Target weight per package (0.01 grams)', '组合目标重量值 (0.01g)', NULL, NULL, NULL, NULL, NULL),
-(30, 'UpperWeightLimit', '目标重量值的上限', NULL, NULL, NULL, NULL, NULL),
-(31, 'Upper delta weight of target (0.01 grams)', '组合目标重量值的上余量 (0.01g)', NULL, NULL, NULL, NULL, NULL),
+(29, 'Target weight per package (0.01 grams)', '组合每包目标重量值 (0.01g)', NULL, NULL, NULL, NULL, NULL),
+(30, 'UpperWeightLimit', '目标重量偏差上限', NULL, NULL, NULL, NULL, NULL),
+(31, 'Upper delta weight of target (0.01 grams)', '组合重量允许偏离目标的上限量 (0.01g)', NULL, NULL, NULL, NULL, NULL),
 (32, 'ProximityMode', '组合的模糊估计模式', NULL, NULL, NULL, NULL, NULL),
 (33, 'Proximity mode of combination', '如果在重量范围之内找不到组合是否驱动模糊模式', NULL, NULL, NULL, NULL, NULL),
-(34, 'RemainDetectTime', '检测长时间不被组合的时间', NULL, NULL, NULL, NULL, NULL),
-(35, 'Detection timer of not being combined (ms)', '检测长时间不被组合的时间 (毫秒)', NULL, NULL, NULL, NULL, NULL),
-(36, 'PriorityMode', '特定称台优先模式', NULL, NULL, NULL, NULL, NULL),
-(37, 'Priority mode for combination', '可以选择特定的称台被优先组合', NULL, NULL, NULL, NULL, NULL),
+(34, 'RemainDetectTime', '未被组合检测时间', NULL, NULL, NULL, NULL, NULL),
+(35, 'Detection timer of not being combined (ms)', '判断秤台超时未被组合的检测时间 (毫秒)', NULL, NULL, NULL, NULL, NULL),
+(36, 'CombinationAlgoMode', '组合算法模式', NULL, NULL, NULL, NULL, NULL),
+(37, 'Priority mode for combination algorithm', '组合算法优选搜索模式', NULL, NULL, NULL, NULL, NULL),
 (38, 'AlgorithmPara', '组合算法参数', NULL, NULL, NULL, NULL, NULL),
-(39, 'LoadDetectTime', '称台稳定的检测时间', NULL, NULL, NULL, NULL, NULL),
-(40, 'Load stable detection time (ms)', '判断称台稳定的时间 (毫秒)', NULL, NULL, NULL, NULL, NULL),
-(41, 'LoadDetectThreshold', '称台稳定的重量抖动门限', NULL, NULL, NULL, NULL, NULL),
-(42, 'Fluctuation limit of load stable detection (0.01 grams)', '判断称台稳定的重量变化的抖动门限 (毫秒)', NULL, NULL, NULL, NULL, NULL),
-(43, 'EmptyDetectTime', '空称的检测时间', NULL, NULL, NULL, NULL, NULL),
-(44, 'Load empty detection time (ms)', '判断称台为空的时间 (毫秒)', NULL, NULL, NULL, NULL, NULL),
-(45, 'EmptyDetectThreshold', '空称的检测重量门限', NULL, NULL, NULL, NULL, NULL),
-(46, 'Fluctuation limit of load empty detection (0.01 grams)', '判断称台为空的重量门限 (0.01g)', NULL, NULL, NULL, NULL, NULL),
+(39, 'LoadDetectTime', '秤台稳定检测时间', NULL, NULL, NULL, NULL, NULL),
+(40, 'Load stable detection time (ms)', '判断秤台重量稳定的检测时间 (毫秒)', NULL, NULL, NULL, NULL, NULL),
+(41, 'LoadDetectThreshold', '秤台允许抖动阈值', NULL, NULL, NULL, NULL, NULL),
+(42, 'Fluctuation limit of load stable detection (0.01 grams)', '判断秤台稳定的重量允许抖动阈值 (0.01g)', NULL, NULL, NULL, NULL, NULL),
+(43, 'EmptyDetectTime', '空秤检测时间', NULL, NULL, NULL, NULL, NULL),
+(44, 'Load empty detection time (ms)', '判断称台为空的检测时间 (毫秒)', NULL, NULL, NULL, NULL, NULL),
+(45, 'EmptyDetectThreshold', '空秤允许抖动阈值', NULL, NULL, NULL, NULL, NULL),
+(46, 'Fluctuation limit of load empty detection (0.01 grams)', '判断称台为空的重量阈值 (0.01g)', NULL, NULL, NULL, NULL, NULL),
 (47, 'MotorSpeed', '马达速度', NULL, NULL, NULL, NULL, NULL),
 (48, 'Motor speed (rpm)', '电机的转速 (每分钟转数)', NULL, NULL, NULL, NULL, NULL),
 (49, 'MotorDirection', '马达方向', NULL, NULL, NULL, NULL, NULL),
-(50, 'Motor direction: Clockwise or Counter-Clockwise', '电机的方向 (顺时针或者逆时针)', NULL, NULL, NULL, NULL, NULL),
-(51, 'RollingLastTime', '马达启动延时时间', NULL, NULL, NULL, NULL, NULL),
+(50, 'Motor direction: Clockwise or Counter-Clockwise', '电机的转动方向 (顺时针或者逆时针)', NULL, NULL, NULL, NULL, NULL),
+(51, 'RollingLastTime', '马达启动延迟时间', NULL, NULL, NULL, NULL, NULL),
 (52, 'The last time of motor rolling (ms)', '每次电机转动的最大保护时间 (毫秒)', NULL, NULL, NULL, NULL, NULL),
 (53, 'MotorControlPara', '马达参数', NULL, NULL, NULL, NULL, NULL),
-(54, 'OFFLINE', '离线', NULL, NULL, NULL, NULL, NULL);
+(54, 'OFFLINE', '离线', NULL, NULL, NULL, NULL, NULL),
+(55, 'ProductName', '产品名称', NULL, NULL, NULL, NULL, NULL),
+(56, 'Please select product name for data export', '请选择要数据导出的产品', NULL, NULL, NULL, NULL, NULL),
+(57, 'StatDataType', '统计数据类型', NULL, NULL, NULL, NULL, NULL),
+(58, 'Please select statistic data type you want to export', '请选择要导出的统计数据类型', NULL, NULL, NULL, NULL, NULL),
+(59, 'Export Data Setting', '数据导出设置', NULL, NULL, NULL, NULL, NULL),
+(60, 'Data export success', '数据导出成功', NULL, NULL, NULL, NULL, NULL),
+(61, 'ONLINE', '在线', NULL, NULL, NULL, NULL, NULL),
+(62, 'Data export failure', '数据导出失败', NULL, NULL, NULL, NULL, NULL),
+(63, 'CONFIG OK', '配置成功', NULL, NULL, NULL, NULL, NULL),
+(64, 'CONFIG NOK', '配置失败', NULL, NULL, NULL, NULL, NULL),
+(65, 'START OK', '启动成功', NULL, NULL, NULL, NULL, NULL),
+(66, 'STOP', '暂停', NULL, NULL, NULL, NULL, NULL),
+(67, 'FAULT', '设备异常', NULL, NULL, NULL, NULL, NULL),
+(68, 'SW UPGRADE', '软件更新', NULL, NULL, NULL, NULL, NULL),
+(69, 'INVALID', '无效', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3406,7 +3421,7 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `cputemp` int(11) NOT NULL,
   `timestamp` int(4) NOT NULL,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=660 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=666 ;
 
 --
 -- Dumping data for table `hcusyspmglobaldatainfo`
@@ -4069,7 +4084,13 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (656, 0, 747, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503203126),
 (657, 0, 810, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 17, 83, 0, 1503203437),
 (658, 0, 873, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503203748),
-(659, 0, 933, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503204059);
+(659, 0, 933, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 17, 83, 0, 1503204059),
+(660, 0, 3732, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 33, 42, 16, 33, 0, 1503387842),
+(661, 0, 3795, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 34, 15, 15, 33, 0, 1503388154),
+(662, 0, 3855, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 35, 4, 15, 33, 0, 1503388464),
+(663, 0, 3918, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 35, 82, 16, 33, 0, 1503388775),
+(664, 0, 3981, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 35, 2, 16, 33, 0, 1503389086),
+(665, 0, 4041, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 13, 16, 33, 0, 1503389397);
 
 -- --------------------------------------------------------
 
@@ -4123,13 +4144,6 @@ CREATE TABLE IF NOT EXISTS `hcusysswm_swpkg` (
   `updatetime` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=59 ;
-
---
--- Dumping data for table `hcusysswm_swpkg`
---
-
-INSERT INTO `hcusysswm_swpkg` (`sid`, `equentry`, `hwtype`, `hwpem`, `swrel`, `swver`, `dbver`, `upgradeflag`, `swtotallen`, `swchecksum`, `dbtotallen`, `dbchecksum`, `filename`, `dbname`, `currentactive`, `updatetime`) VALUES
-(58, 1, 2049, 6, 3, 240, 23, 4, 3705145, 44162, 356450, 18450, 'HCU_HPT2049_PEM6_REL3_VER240_PATCH.HEX', 'HCU_HPT2049_PEM6_REL3_VER23_MYSQL.SQL', 'START', 1502883156);
 
 -- --------------------------------------------------------
 

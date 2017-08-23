@@ -250,7 +250,10 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * para
 //启动停止反馈
 OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
+	int ret=0;
+	UINT8  	sensorid = 0;
+	UINT8	validFlag = 0;
+	UINT8	cmdid = 0;
 
 	msg_struct_l3bfsc_uicomm_cmd_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_uicomm_cmd_resp_t));
@@ -258,7 +261,27 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+	sensorid = rcv.sensorid;
+	validFlag = rcv.validFlag;
+	cmdid = rcv.cmdid;
+
+	if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
+		HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: fsm_bfscuicomm_l3bfsc_cmd_resp's sensorid out of range, [sensorid=%d]! \n", sensorid);
+		return FAILURE;
+	}
+
 	//存入数据库表单，通知界面新的状态信息
+	if((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND)){
+		ret = dbi_HcuBfsc_WmcStatusForceSuspend(sensorid);
+		if (ret == FAILURE) {
+			HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Save data error!\n");
+			return FAILURE;
+		}
+	}
+	else{
+		HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Invalid command response!\n");
+		return FAILURE;
+	}
 
 	//返回
 	return SUCCESS;
@@ -284,6 +307,10 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		sensorid = rcv.sensorid;
 		adcvalue = rcv.cmdvalue1;
 		weight = rcv.cmdvalue2;
+		if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: fsm_bfscuicomm_can_test_cmd_resp's sensorid out of range, [sensorid=%d]! \n", sensorid);
+			return FAILURE;
+		}
 		ret = dbi_HcuBfsc_CalibrationDataUpdate_adczero(adcvalue, weight, sensorid);
 		if (ret == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Save data error!\n");
 	}
@@ -291,6 +318,10 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		sensorid = rcv.sensorid;
 		adcvalue = rcv.cmdvalue1;
 		weight = rcv.cmdvalue2;
+		if(sensorid < 1 || sensorid >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX){
+			HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: fsm_bfscuicomm_can_test_cmd_resp's sensorid out of range, [sensorid=%d]! \n", sensorid);
+			return FAILURE;
+		}
 		ret = dbi_HcuBfsc_CalibrationDataUpdate_adcfull(adcvalue, weight, sensorid);
 		if (ret == FAILURE) HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Save data error!\n");
 	}
