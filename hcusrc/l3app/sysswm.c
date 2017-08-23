@@ -172,6 +172,10 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		if (dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete() == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete incomplete download file failure!\n");
 
+		//清理上下文
+		memset(&gTaskSysswmContext.cloudSwPkg, 0, sizeof(HcuSysMsgIeL3SysSwmSwPkgElement_t));
+		memset(&gTaskSysswmContext.cloudSwDl, 0, sizeof(HcuSysMsgIeL3SysSwmSwDlElement_t));
+		gTaskSysswmContext.reTransTimes = 0;
 		gTaskSysswmContext.swDlSession++;
 		gTaskSysswmContext.swDlSession = (gTaskSysswmContext.swDlSession % HCU_SYSSWM_SW_DOWNLOAD_SESSION_MAX_NBR);
 
@@ -256,9 +260,6 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 
 	//一次INVENTORY都会重来
 	ret = SUCCESS;
-	memset(&gTaskSysswmContext.cloudSwPkg, 0, sizeof(HcuSysMsgIeL3SysSwmSwPkgElement_t));
-	memset(&gTaskSysswmContext.cloudSwDl, 0, sizeof(HcuSysMsgIeL3SysSwmSwDlElement_t));
-	gTaskSysswmContext.reTransTimes = 0;
 
 	//1) 如果收到HCU_CLIENT
 	if (gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT){
@@ -335,7 +336,9 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 	else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE) || (gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL) || (gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH)){
 		if ((gTaskSysswmContext.cloudSwPkg.equEntry != HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_CLIENT) || (rcv.equEntry != HCU_SYSMSG_SYSSWM_EQU_ENTRY_IHU_CLIENT) || (rcv.hwType != gTaskSysswmContext.cloudSwPkg.hwType) \
 				|| (rcv.hwId < gTaskSysswmContext.cloudSwPkg.hwPem) || (rcv.upgradeFlag != gTaskSysswmContext.cloudSwPkg.upgradeFlag)){
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-compliance hardware info, so no handle.\n");
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive none-compliance hardware info, so no handle. Entry=%d, hwType=%d, hwId=%d, Flag=%d. Context Entry=%d, heType=%d, heId=%d, Flag=%d\n", \
+					rcv.equEntry, rcv.hwType, rcv.hwId, rcv.upgradeFlag, gTaskSysswmContext.cloudSwPkg.equEntry, \
+					gTaskSysswmContext.cloudSwPkg.hwType, gTaskSysswmContext.cloudSwPkg.hwPem, gTaskSysswmContext.cloudSwPkg.upgradeFlag);
 		}
 
 		//如果版本号不适合
@@ -344,7 +347,6 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		}
 
 		//将新版本存入数据库
-		gTaskSysswmContext.cloudSwPkg.hwPem = rcv.hwId;
 		gTaskSysswmContext.cloudSwPkg.swRel = rcv.swRel;
 		gTaskSysswmContext.cloudSwPkg.swVer = rcv.swVer;
 		gTaskSysswmContext.cloudSwPkg.swCksum = rcv.swCheckSum;
@@ -729,8 +731,7 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void)
 		snd.timeStamp = time(0);
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-	}
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);	}
 
 	//State no change
 	return SUCCESS;
@@ -1433,6 +1434,10 @@ OPSTAT func_sysswm_db_download_process_swpkg_db_refresh(char *stmp)
 
 OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp)
 {
+	bool flag = FALSE;
+	//先判定是否需要升级DB
+	flag = ((gTaskSysswmContext.cloudSwPkg.swRel == zHcuSysEngPar.hwBurnId.swRelId) && (gTaskSysswmContext.cloudSwPkg.dbVer <= zHcuSysEngPar.hwBurnId.dbVerId));
+
 	//swpkg数据表单刷新
 	if (func_sysswm_sw_download_process_swpkg_db_refresh(stmp) == FAILURE) return FAILURE;
 
@@ -1445,7 +1450,7 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
 	//拷贝文件到目标区并执行重启任务
-	if (gTaskSysswmContext.cloudSwPkg.dbVer <= zHcuSysEngPar.hwBurnId.dbVerId)
+	if (flag == TRUE)
 	{
 		func_sysswm_copy_exe_to_target_dir_and_restart();
 	}

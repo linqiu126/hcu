@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="SYSSWM" key="selection"/>
+		<item value="func_sysswm_time_out_period_working_scan_hcu_client" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="func_sysswm_time_out_period_working_scan_hcu_client"/>
+			<item value="func_sysswm_time_out_period_working_scan_ihu_stable"/>
+			<item value="dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver"/>
+			<item value="memset(&amp;gTaskSysswmContext.cloudSwPkg, 0, sizeof(HcuSysMsgIeL3SysSwmSwPkgElement_t)"/>
 			<item value="SYSSWM"/>
 			<item value="13"/>
 			<item value="WsSensorStart"/>
 			<item value="func_l3bfsc_caculate_judge_search_result"/>
-			<item value="i"/>
-			<item value="func_l3bfsc_caculate_vector_multipy_result"/>
-			<item value="func_l3bfsc_caculate_bitmap_valid_number"/>
-			<item value="func_l3bfsc_caculate_execute_search_result"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_DEBUG_PRINT_NOR"/>
@@ -27,7 +27,7 @@
 		<item value="309" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|9.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 		<item value="377" key="DIALOG_HEIGHT"/>
-		<item value="1202" key="DIALOG_X_ORIGIN"/>
-		<item value="100" key="DIALOG_Y_ORIGIN"/>
+		<item value="1192" key="DIALOG_X_ORIGIN"/>
+		<item value="124" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

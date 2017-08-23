@@ -326,6 +326,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver(UINT8 equEntry, UINT16 hwType, UIN
     memset(ptrSwPkg, 0, sizeof(HcuSysMsgIeL3SysSwmSwPkgElement_t));
     ptrSwPkg->equEntry = equEntry;
     ptrSwPkg->hwType = hwType;
+    ptrSwPkg->hwPem = hwPem;
+    ptrSwPkg->upgradeFlag = upgradeFlag;
 
 	//建立数据库连接
     sqlHandler = mysql_init(NULL);
