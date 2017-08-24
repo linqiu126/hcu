@@ -123,7 +123,7 @@ OPSTAT fsm_bfscuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	sprintf(str, "rm %s", zHcuCmdLinkJsonFile);
 	if (access(&str[3], F_OK) == 0) system(str);
 	sprintf(str, "ln -s %s %s", zHcuCmdflagJsonFile, zHcuCmdLinkJsonFile);
-	system(str);
+	if (system(str) < 0) printf("\n");
 	sprintf(str, "chmod -R 777 /var/www/html/*");
 	system(str);
 

@@ -94,7 +94,7 @@ HCU_FTP_SVR_STATE func_ftp_svr_upload(const HcuFtpServiceOptType_t ftp_option)
 	curl = curl_init();
 	curl_set_upload_opt(curl, ftp_option.url, ftp_option.user_key, fp);
 	curlRes = curl_perform(curl);
-	HcuDebugPrint("L0SVRFTP: curl perform result [%d]\n\n\n", curlRes);
+	HcuDebugPrint("L0SVRFTP: curl perform result [%d]\n", curlRes);
 
 	if(CURLE_OK == curlRes)
 		state = HCU_FTP_SVR_UPLOAD_SUCCESS;
@@ -160,7 +160,7 @@ OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename)
 	strcat(ftp_opt.url, filename);
 	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.url: %s \n", ftp_opt.url);
 
-	//直接改为了ActiveDir，而没有使用Download目录
+	//直接使用上层传来的目录结构
 	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwActiveDir);
 	strcat(ftp_opt.file, filename);
 	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.file: %s \n", ftp_opt.file);

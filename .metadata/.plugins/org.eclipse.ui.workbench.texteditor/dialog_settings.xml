@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="RESUME" key="selection"/>
+		<item value="func_sysswm_ftp_file_big_size_process_ihu_sw" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="RESUME"/>
-			<item value="func_sysswm_swpkg_last_seg_process_hcu_sw"/>
+			<item value="func_sysswm_ftp_file_big_size_process_ihu_sw"/>
 			<item value="func_sysswm_sw_download_process_swpkg_db_refresh"/>
 			<item value="func_sysswm_caculate_file_whole_checksum"/>
-			<item value="hcu_service_ftp_sw_download_by_ftp"/>
-			<item value="177"/>
-			<item value="free"/>
-			<item value="func_sysswm_time_out_period_working_scan_hcu_client"/>
+			<item value="ln"/>
+			<item value="ln "/>
+			<item value="rm %s"/>
+			<item value="hcusysswm_swpkg"/>
+			<item value="atol"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_DEBUG_PRINT_NOR"/>

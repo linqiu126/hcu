@@ -545,6 +545,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
         return FAILURE;
     }
 
+    //STEP1: START文件
 	//获取数据
     sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START);
 	result = mysql_query(sqlHandler, strsql);
@@ -568,11 +569,13 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
 	{
 		memset(strOpr, 0, sizeof(strOpr));
-		if(sqlRow[9]) sprintf(strOpr, "rm %s %s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[9]);
-		//如果文件的确存在，再执行删除指令
+		if(sqlRow[12]) sprintf(strOpr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[12]);
+		if (access(&strOpr[3], F_OK) == 0) system(strOpr);
+		if(sqlRow[13]) sprintf(strOpr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[13]);
 		if (access(&strOpr[3], F_OK) == 0) system(strOpr);
 	}
 
+	//STEP2: HALF_COMPL文件
 	//获取数据
     sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP);
 	result = mysql_query(sqlHandler, strsql);
@@ -594,10 +597,13 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
 	{
 		memset(strOpr, 0, sizeof(strOpr));
-		if(sqlRow[9]) sprintf(strOpr, "rm %s %s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[9]);
+		if(sqlRow[12]) sprintf(strOpr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[12]);
+		if (access(&strOpr[3], F_OK) == 0) system(strOpr);
+		if(sqlRow[13]) sprintf(strOpr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[13]);
 		if (access(&strOpr[3], F_OK) == 0) system(strOpr);
 	}
 
+	//STEP3: START/HALF_COMPL记录
 	//再删去所有的
     sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_START);
 	result = mysql_query(sqlHandler, strsql);
@@ -612,6 +618,44 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
     	mysql_close(sqlHandler);
     	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
         return FAILURE;
+	}
+
+	//STEP4: 所有文件不存在的COMP记录
+    sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//查具体的结果
+	resPtr = mysql_use_result(sqlHandler);
+	if (!resPtr){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: mysql_use_result error!\n");
+        return FAILURE;
+	}
+
+	//循环查找
+	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
+	{
+		memset(strOpr, 0, sizeof(strOpr));
+		UINT32 sid = 0;
+		//软件体积不存在：下一次再清理数据库文件，不然还需要分为HCU/IHU，导致更为复杂的情况
+		if(sqlRow[12]) sprintf(strOpr, "%s%s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[12]);
+		//不存在，删去记录
+		if (access(strOpr, F_OK) != 0){
+			if(sqlRow[0]) sid = (UINT32)(atol(sqlRow[0]) & 0xFFFFFFFF);
+			HCU_DEBUG_PRINT_FAT("SYSSWM: strOpr = %s, sid = %d, access result=%d\n", strOpr, sid, access(strOpr, F_OK));
+		    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`sid` = '%d')", sid);
+			result = mysql_query(sqlHandler, strsql);
+			if(result){
+		    	mysql_close(sqlHandler);
+		    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+		        return FAILURE;
+			}
+		}
 	}
 
 	//释放记录集

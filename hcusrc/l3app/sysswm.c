@@ -271,7 +271,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		}
 
 		//如果版本号不适合
-		HCU_DEBUG_PRINT_FAT("SYSSWM: Rcv REL/VER=[%d/%d], BurnId REL/VER=[%d/%d]\n", rcv.swRel, rcv.swVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId);
+		HCU_DEBUG_PRINT_CRT("SYSSWM: HCU Rcv REL/VER/DBVER=[%d/%d/%d], BurnId REL/VER=[%d/%d/%d]\n", rcv.swRel, rcv.swVer, rcv.dbVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
 		if ((rcv.swRel < zHcuSysEngPar.hwBurnId.swRelId) || ((rcv.swRel == zHcuSysEngPar.hwBurnId.swRelId) && (rcv.swVer <= zHcuSysEngPar.hwBurnId.swVerId))){
 			return SUCCESS;
 		}
@@ -342,6 +342,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		}
 
 		//如果版本号不适合
+		HCU_DEBUG_PRINT_CRT("SYSSWM: IHU Rcv REL/VER=[%d/%d], BurnId REL/VER=[%d/%d]\n", rcv.swRel, rcv.swVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId);
 		if ((rcv.swRel < gTaskSysswmContext.cloudSwPkg.swRel) || ((rcv.swRel == gTaskSysswmContext.cloudSwPkg.swRel) && (rcv.swVer <= gTaskSysswmContext.cloudSwPkg.swVer))){
 			return SUCCESS;
 		}
@@ -471,7 +472,6 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	else{
 		gTaskSysswmContext.cloudSwDl.segValidLen = rcv.segValidLen;
 		int totalLen = rcv.segSplitLen * (rcv.segTotal-1) + rcv.segValidLen;
-		//if ((rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB) && (totalLen != gTaskSysswmContext.cloudSwPkg.dbTotalLen)){
 		if (rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB){
 			 if (totalLen != gTaskSysswmContext.cloudSwPkg.dbTotalLen){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
@@ -497,7 +497,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 			res+= (UINT8)rcv.body[i];
 		}
 	}
-	HCU_DEBUG_PRINT_FAT("SYSSWM: Seg received. segIndex=%d, segTotal=%d, splitLen=%d, validLen=%d, Caculated Result = 0x%x, Received Cksum =0x%x\n", rcv.segIndex, rcv.segTotal, rcv.segSplitLen, rcv.segValidLen, res, rcv.segCheckSum);
+	HCU_DEBUG_PRINT_FAT("SYSSWM: Download progressing: segIndex=%d, segTotal=%d, splitLen=%d, validLen=%d, Caculated Result = 0x%x, Received Cksum =0x%x\n", rcv.segIndex, rcv.segTotal, rcv.segSplitLen, rcv.segValidLen, res, rcv.segCheckSum);
 	if (res != rcv.segCheckSum){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
 		HcuErrorPrint("SYSSWM: Receive invalid segment sw package, so no handle. segIndex=%d, segTotal=%d, validLen=%d, Caculated Result = 0x%x, Received Cksum =0x%x\n", rcv.segIndex, rcv.segTotal, rcv.segValidLen, res, rcv.segCheckSum);
@@ -533,12 +533,14 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 			char stmp2[200];
 			memset(stmp2, 0, sizeof(stmp2));
 			sprintf(stmp2, "rm %s", stmp);
-			HCU_DEBUG_PRINT_FAT("SYSSWM: Rm file = [%s]\n", stmp2);
+			//HCU_DEBUG_PRINT_FAT("SYSSWM: Rm file = [%s]\n", stmp2);
 			system(stmp2);
 		}
 	}
 
 	//打开源文件：不存在就创建
+	//at+, ab+，代表TEXT/BIN文件格式
+	//本地统一使用ab+，不同的方式将导致checksum的不一致
 	if (rcv.equEntry == HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_DB){
 		if((fp=fopen(stmp, "at+"))== NULL){
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Open file %s Error!\n", stmp);
@@ -1405,7 +1407,7 @@ void func_sysswm_copy_db_and_exe_to_target_dir_and_restart(void)
 OPSTAT func_sysswm_sw_download_process_swpkg_db_refresh(char *stmp)
 {
 	if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.swCksum)
-		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error! Caculated Cksum=0x%x, RecvChsum=0x%x\n", func_sysswm_caculate_file_whole_checksum(stmp), gTaskSysswmContext.cloudSwPkg.swCksum);
+		HCU_ERROR_PRINT_SYSSWM("SYSSWM: SW package checksum error! Caculated Cksum=0x%x, RecvChsum=0x%x\n", func_sysswm_caculate_file_whole_checksum(stmp), gTaskSysswmContext.cloudSwPkg.swCksum);
 	if (gTaskSysswmContext.cloudSwPkg.dbVer > zHcuSysEngPar.hwBurnId.dbVerId){
 		strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP));  //Complete of download
 	}else{
@@ -1422,7 +1424,7 @@ OPSTAT func_sysswm_sw_download_process_swpkg_db_refresh(char *stmp)
 OPSTAT func_sysswm_db_download_process_swpkg_db_refresh(char *stmp)
 {
 	if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.dbCksum)
-		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error!, Caculated=0x%x, Exptected=0x%x\n", func_sysswm_caculate_file_whole_checksum(stmp), gTaskSysswmContext.cloudSwPkg.dbCksum);
+		HCU_ERROR_PRINT_SYSSWM("SYSSWM: db file checksum error!, Caculated=0x%x, Exptected=0x%x\n", func_sysswm_caculate_file_whole_checksum(stmp), gTaskSysswmContext.cloudSwPkg.dbCksum);
 	strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE));  //Complete of download
 	gTaskSysswmContext.cloudSwPkg.updateTime = time(0);
 	//更新软件数据库
@@ -1434,12 +1436,17 @@ OPSTAT func_sysswm_db_download_process_swpkg_db_refresh(char *stmp)
 
 OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp)
 {
+	char s[200];
 	bool flag = FALSE;
 	//先判定是否需要升级DB
 	flag = ((gTaskSysswmContext.cloudSwPkg.swRel == zHcuSysEngPar.hwBurnId.swRelId) && (gTaskSysswmContext.cloudSwPkg.dbVer <= zHcuSysEngPar.hwBurnId.dbVerId));
 
 	//swpkg数据表单刷新
 	if (func_sysswm_sw_download_process_swpkg_db_refresh(stmp) == FAILURE) return FAILURE;
+
+	//修改下载后的文件属性
+	sprintf(s, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
+	system(s);
 
 	//升级系统区的软件版本
 	zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.cloudSwPkg.swRel;
@@ -1486,8 +1493,14 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp)
 
 OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp)
 {
+	char s[200];
+
 	//swpkg数据表单刷新
 	if (func_sysswm_db_download_process_swpkg_db_refresh(stmp) == FAILURE) return FAILURE;
+
+	//修改下载后的文件属性
+	sprintf(s, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
+	system(s);
 
 	//升级系统区的软件版本
 	zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.cloudSwPkg.swRel;
@@ -1505,6 +1518,8 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp)
 
 OPSTAT func_sysswm_swpkg_last_seg_process_ihu_sw(char *stmp)
 {
+	char s[200];
+
 	if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.swCksum)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error!\n");
 	strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE));  //Complete of download
@@ -1513,15 +1528,23 @@ OPSTAT func_sysswm_swpkg_last_seg_process_ihu_sw(char *stmp)
 	if (dbi_HcuSysSwm_SwPkg_save(&(gTaskSysswmContext.cloudSwPkg)) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: After download complete, save sw pakcage error!\n");
 
+	//修改下载后的文件属性
+	sprintf(s, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
+	system(s);
+
 	return SUCCESS;
 }
 
 OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 {
 	char stmp[200];
+	bool flag = FALSE;
+	//先判定是否需要升级DB
+	flag = ((gTaskSysswmContext.cloudSwPkg.swRel == zHcuSysEngPar.hwBurnId.swRelId) && (gTaskSysswmContext.cloudSwPkg.dbVer <= zHcuSysEngPar.hwBurnId.dbVerId));
+
 	memset(stmp, 0, sizeof(stmp));
+	//File Name Only
 	strcat(stmp, gTaskSysswmContext.cloudSwPkg.fileName);
-	HCU_DEBUG_PRINT_FAT("SYSSWM: File");
 	if (hcu_service_ftp_sw_download_by_ftp(stmp) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: File Download Error! Filename=[%s]\n", stmp);
 
@@ -1544,10 +1567,10 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
 	//拷贝文件到目标区并执行重启任务
-	if (gTaskSysswmContext.cloudSwPkg.dbVer <= zHcuSysEngPar.hwBurnId.dbVerId)
+	if (flag == TRUE)
 	{
 		func_sysswm_copy_exe_to_target_dir_and_restart();
-		HCU_DEBUG_PRINT_NOR("SYSSWM: File download and process SW_PKG only success!\n");
+		HCU_DEBUG_PRINT_CRT("SYSSWM: HCU File FTP download and process SW_PKG only success!\n");
 	}
 	//继续传输DB文件
 	else{
@@ -1573,12 +1596,19 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 
 		//执行HCU_DB软件下载
 		memset(stmp, 0, sizeof(stmp));
-		strcat(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
-		strcat(stmp, gTaskSysswmContext.cloudSwPkg.fileName);
+		//File Name Only
+		strcat(stmp, gTaskSysswmContext.cloudSwDl.fileName);
 		if (hcu_service_ftp_sw_download_by_ftp(stmp) == FAILURE)
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: File Download Error!\n");
 
+		//修改下载后的文件属性
+		sprintf(stmp, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
+		system(stmp);
+
 		//swpkg数据表单刷新
+		memset(stmp, 0, sizeof(stmp));
+		strcpy(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
+		strcat(stmp, gTaskSysswmContext.cloudSwDl.fileName);
 		if (func_sysswm_db_download_process_swpkg_db_refresh(stmp) == FAILURE) return FAILURE;
 
 		//升级系统区的软件版本
@@ -1591,7 +1621,7 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 
 		//拷贝文件到目标区并执行重启任务
 		func_sysswm_copy_db_and_exe_to_target_dir_and_restart();
-		HCU_DEBUG_PRINT_NOR("SYSSWM: File download and process SW_PKG+DB_VER success!\n");
+		HCU_DEBUG_PRINT_CRT("SYSSWM: HCU File FTP download and process SW_PKG+DB_VER success!\n");
 	}//继续传输DB文件
 
 	return SUCCESS;
@@ -1601,12 +1631,18 @@ OPSTAT func_sysswm_ftp_file_big_size_process_ihu_sw(void)
 {
 	char stmp[200];
 	memset(stmp, 0, sizeof(stmp));
-	//strcat(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
 	strcat(stmp, gTaskSysswmContext.cloudSwPkg.fileName);
 	if (hcu_service_ftp_sw_download_by_ftp(stmp) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: File Download Error!\n");
 
+	//修改下载后的文件属性
+	sprintf(stmp, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
+	system(stmp);
+
 	//检查checksum
+	memset(stmp, 0, sizeof(stmp));
+	strcpy(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
+	strcat(stmp, gTaskSysswmContext.cloudSwPkg.fileName);
 	if (func_sysswm_caculate_file_whole_checksum(stmp) != gTaskSysswmContext.cloudSwPkg.swCksum)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Check whole file checksum error!\n");
 	strncpy(gTaskSysswmContext.cloudSwPkg.currentActive, HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE, sizeof(HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE));  //Complete of download
@@ -1615,6 +1651,7 @@ OPSTAT func_sysswm_ftp_file_big_size_process_ihu_sw(void)
 	if (dbi_HcuSysSwm_SwPkg_save(&(gTaskSysswmContext.cloudSwPkg)) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: After download complete, save sw pakcage error!\n");
 
+	HCU_DEBUG_PRINT_CRT("SYSSWM: IHU File FTP download and process SW_PKG only success!\n");
 	return SUCCESS;
 }
 
