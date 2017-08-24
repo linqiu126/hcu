@@ -108,7 +108,7 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	memset(&gTaskSysswmContext, 0, sizeof(gTaskSysswmContext_t));
 
 	//启动周期性定时器：因为BFSC项目的缘故，暂时不启动下载过程
-//#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE != HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE != HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, \
 	zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_PERIOD_WORKING].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
@@ -116,7 +116,7 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuErrorPrint("SYSSWM: Error start period timer!\n");
 		return FAILURE;
 	}
-//#endif
+#endif
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_ACTIVED) == FAILURE)
@@ -446,7 +446,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//具体的处理过程
 	if (rcv.baseConfirm != HUITP_IEID_UNI_COM_CONFIRM_POSITIVE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
-		HcuErrorPrint("SYSSWM: Receive none-positive sw package confirm message, so no handle. SegTotal Received=%d\n", rcv.segTotal);
+		HcuErrorPrint("SYSSWM: Receive none-positive sw package confirm message, so no handle. SegTotal Received=%d, UpgradeFlag=%d, Ver=%d\n", rcv.segTotal, rcv.upgradeFlag, rcv.verId);
 		return SUCCESS;
 	}
 
@@ -1520,12 +1520,19 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 {
 	char stmp[200];
 	memset(stmp, 0, sizeof(stmp));
-	strcat(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
 	strcat(stmp, gTaskSysswmContext.cloudSwPkg.fileName);
+	HCU_DEBUG_PRINT_FAT("SYSSWM: File");
 	if (hcu_service_ftp_sw_download_by_ftp(stmp) == FAILURE)
-		HCU_ERROR_PRINT_SYSSWM("SYSSWM: File Download Error!\n");
+		HCU_ERROR_PRINT_SYSSWM("SYSSWM: File Download Error! Filename=[%s]\n", stmp);
+
+	//修改下载后的文件属性
+	sprintf(stmp, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
+	system(stmp);
 
 	//swpkg数据表单刷新
+	memset(stmp, 0, sizeof(stmp));
+	strcpy(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
+	strcat(stmp, gTaskSysswmContext.cloudSwPkg.fileName);
 	if (func_sysswm_sw_download_process_swpkg_db_refresh(stmp) == FAILURE) return FAILURE;
 
 	//升级系统区的软件版本
@@ -1540,6 +1547,7 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 	if (gTaskSysswmContext.cloudSwPkg.dbVer <= zHcuSysEngPar.hwBurnId.dbVerId)
 	{
 		func_sysswm_copy_exe_to_target_dir_and_restart();
+		HCU_DEBUG_PRINT_NOR("SYSSWM: File download and process SW_PKG only success!\n");
 	}
 	//继续传输DB文件
 	else{
@@ -1583,6 +1591,7 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 
 		//拷贝文件到目标区并执行重启任务
 		func_sysswm_copy_db_and_exe_to_target_dir_and_restart();
+		HCU_DEBUG_PRINT_NOR("SYSSWM: File download and process SW_PKG+DB_VER success!\n");
 	}//继续传输DB文件
 
 	return SUCCESS;
@@ -1592,7 +1601,7 @@ OPSTAT func_sysswm_ftp_file_big_size_process_ihu_sw(void)
 {
 	char stmp[200];
 	memset(stmp, 0, sizeof(stmp));
-	strcat(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
+	//strcat(stmp, zHcuSysEngPar.swm.hcuSwActiveDir);
 	strcat(stmp, gTaskSysswmContext.cloudSwPkg.fileName);
 	if (hcu_service_ftp_sw_download_by_ftp(stmp) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: File Download Error!\n");

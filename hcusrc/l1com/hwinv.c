@@ -1055,7 +1055,7 @@ void func_hwinv_scan_eng_par(void)
         ErrorCountForDB = ErrorCountForDB + 1;
 		HCU_DEBUG_PRINT_FAT("HWINV: Scan eng par from DB failed: %d\n", ErrorCountForDB);
 
-		if(ErrorCountForDB == HCU_FATAL_ERROR_DB_THRESHOLD)
+		if(ErrorCountForDB >= HCU_FATAL_ERROR_DB_THRESHOLD)
 		{
 			HCU_DEBUG_PRINT_FAT("HWINV: Scan eng par from DB failure reach the max, the system reboot!!!!\n\n\n");
 

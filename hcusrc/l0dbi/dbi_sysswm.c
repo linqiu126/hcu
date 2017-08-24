@@ -173,7 +173,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 	//        return FAILURE;
 	//	}
 
-	//释放记录集
+	//释放记录集：不再需要Free resPtr
 	//mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
@@ -716,7 +716,7 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 		}
 	}*/
 
-	//释放记录集
+	//释放记录集：不再需要free resPtr
 	//mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;

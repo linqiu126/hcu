@@ -90,12 +90,6 @@ HCU_FTP_SVR_STATE func_ftp_svr_upload(const HcuFtpServiceOptType_t ftp_option)
 		HcuErrorPrint("L0SVRFTP: Open file failed at %s\n\n\n", ftp_option.file);
 		return HCU_FTP_SVR_UPLOAD_FAILED;
 	}
-	else
-	{
-		//HcuDebugPrint("L0SVRFTP: Open file succeed at %s:%d\n\n\n\n\n\n", __FILE__, __LINE__);
-		HcuDebugPrint("L0SVRFTP: Open file succeed at %s\n\n\n", ftp_option.file);
-
-	}
 
 	curl = curl_init();
 	curl_set_upload_opt(curl, ftp_option.url, ftp_option.user_key, fp);
@@ -116,34 +110,35 @@ HCU_FTP_SVR_STATE func_ftp_svr_download(const HcuFtpServiceOptType_t ftp_option)
 {
 	HCU_FTP_SVR_STATE state;
 	CURL *curl;
-
 	CURLcode curlRes;
 
+	//打开本地文件
 	FILE *fp = fopen(ftp_option.file, "w");
-	if(NULL == fp)
-	{
-		//HcuErrorPrint("L0SVRFTP: Open file failed at %s:%d\n\n\n\n\n\n", __FILE__, __LINE__);
-		HcuErrorPrint("L0SVRFTP: Open file failed at %s\n\n\n", ftp_option.file);
+	if(NULL == fp){
+		HcuErrorPrint("L0SVRFTP: Open file failed at %s\n", ftp_option.file);
 		return HCU_FTP_SVR_UPLOAD_FAILED;
 	}
-	else
-	{
-		//HcuDebugPrint("L0SVRFTP: Open file succeed at %s:%d\n\n\n\n\n\n", __FILE__, __LINE__);
-		HcuDebugPrint("L0SVRFTP: Open file succeed at %s\n\n\n", ftp_option.file);
 
+	//初始化CURL连接
+	curl = curl_init();
+	if (curl == NULL){
+		fclose(fp);
+		HcuErrorPrint("L0SVRFTP: Open curl error!\n");
+		return HCU_FTP_SVR_DOWNLOAD_FAILED;
 	}
 
-	curl = curl_init();
+	//下载
 	curl_set_download_opt(curl, ftp_option.url, ftp_option.user_key, fp);
-
 	curlRes = curl_perform(curl);
-	HcuDebugPrint("L0SVRFTP: curl perform result [%d]\n\n\n", curlRes);
-
-	if(CURLE_OK == curlRes)
+	if(CURLE_OK == curlRes){
 		state = HCU_FTP_SVR_DOWNLOAD_SUCCESS;
-	else
+	}
+	else{
+		HcuErrorPrint("L0SVRFTP: curl perform error result [%d]\n", curlRes);
 		state = HCU_FTP_SVR_DOWNLOAD_FAILED;
+	}
 
+	//CLOSE
 	curl_exit(curl);
 	fclose(fp);
 	return state;
@@ -161,20 +156,17 @@ OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename)
 	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
 	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.user_key: %s \n", ftp_opt.user_key);
 
-	//char filetmp[64] = "swdownload.txt";
-	//ftp_opt.url = zHcuSysEngPar.cloud.cloudFtpAdd;
 	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
 	strcat(ftp_opt.url, filename);
 	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.url: %s \n", ftp_opt.url);
 
-	//ftp_opt.file = zHcuSysEngPar.swDownload.hcuSwDownloadDir;
 	//直接改为了ActiveDir，而没有使用Download目录
 	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwActiveDir);
 	strcat(ftp_opt.file, filename);
 	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.file: %s \n", ftp_opt.file);
 
 	if(HCU_FTP_SVR_DOWNLOAD_SUCCESS == func_ftp_svr_download(ftp_opt)){
-		HCU_DEBUG_PRINT_NOR("L0SVRFTP: HCU SW Download success.\n");
+		HCU_DEBUG_PRINT_INF("L0SVRFTP: HCU SW Download success.\n");
 		return SUCCESS;
 	}else{
 		HCU_ERROR_PRINT_TASK(TASK_ID_SVRCON, "L0SVRFTP: HCU SW Download failed.\n");

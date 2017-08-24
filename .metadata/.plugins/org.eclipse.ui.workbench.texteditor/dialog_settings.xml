@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="func_sysswm_time_out_period_working_scan_hcu_client" key="selection"/>
+		<item value="RESUME" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="RESUME"/>
+			<item value="func_sysswm_swpkg_last_seg_process_hcu_sw"/>
+			<item value="func_sysswm_sw_download_process_swpkg_db_refresh"/>
+			<item value="func_sysswm_caculate_file_whole_checksum"/>
+			<item value="hcu_service_ftp_sw_download_by_ftp"/>
+			<item value="177"/>
+			<item value="free"/>
 			<item value="func_sysswm_time_out_period_working_scan_hcu_client"/>
-			<item value="func_sysswm_time_out_period_working_scan_ihu_stable"/>
-			<item value="dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver"/>
-			<item value="memset(&amp;gTaskSysswmContext.cloudSwPkg, 0, sizeof(HcuSysMsgIeL3SysSwmSwPkgElement_t)"/>
-			<item value="SYSSWM"/>
-			<item value="13"/>
-			<item value="WsSensorStart"/>
-			<item value="func_l3bfsc_caculate_judge_search_result"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_DEBUG_PRINT_NOR"/>
