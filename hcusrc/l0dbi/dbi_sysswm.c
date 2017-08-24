@@ -174,7 +174,6 @@ OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *ptrSwPkg)
 	//	}
 
 	//释放记录集：不再需要Free resPtr
-	//mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }
@@ -227,9 +226,9 @@ OPSTAT dbi_HcuSysSwm_SwPkg_inquery_to_judge_existance(UINT8 equEntry, UINT16 hwT
 	{
 		if(sqlRow[0]) *sid = (UINT32)(atol(sqlRow[0]) & 0xFFFFFFFF);
 	}
+	mysql_free_result(resPtr);
 
 	//释放记录集
-	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }
@@ -301,9 +300,9 @@ OPSTAT dbi_HcuSysSwm_SwPkg_inquery_whole_record(UINT8 equEntry, UINT16 hwType, U
 		if(sqlRow[index]) strncpy(ptrSwPkg->currentActive, sqlRow[index++], 1);
 		if(sqlRow[index]) ptrSwPkg->updateTime = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 	}
+	mysql_free_result(resPtr);
 
 	//释放记录集
-	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }
@@ -392,9 +391,9 @@ OPSTAT dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver(UINT8 equEntry, UINT16 hwType, UIN
 			if(sqlRow[index]) ptrSwPkg->updateTime = (UINT32)(atol(sqlRow[index++]) & 0xFFFFFFFF);
 		}
 	}
+	mysql_free_result(resPtr);
 
 	//释放记录集
-	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }
@@ -418,7 +417,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
         return FAILURE;
 	}
 
-/*	//建立数据库连接
+	//建立数据库连接
     sqlHandler = mysql_init(NULL);
     if(!sqlHandler)
     {
@@ -430,28 +429,15 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
     	HcuErrorPrint("DBISYSSWM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
     	mysql_close(sqlHandler);
         return FAILURE;
-    }*/
+    }
 
     //循环遍历
 	while ((ptr=readdir(dir)) != NULL)
 	{
-		//建立数据库连接
-	    sqlHandler = mysql_init(NULL);
-	    if(!sqlHandler)
-	    {
-	    	HcuErrorPrint("DBISYSSWM: MySQL init failed!\n");
-	        return FAILURE;
-	    }
-	    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
-	    if (!sqlHandler){
-	    	HcuErrorPrint("DBISYSSWM: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
-	    	mysql_close(sqlHandler);
-	        return FAILURE;
-	    }
-
 	    if(strcmp(ptr->d_name,".")==0 || strcmp(ptr->d_name,"..")==0)    ///current dir OR parrent dir
 	        continue;
 	    else if ((ptr->d_type == 8) || (ptr->d_type == 10)){    ///File or Link file
+	    	//STEP1: 搜索软件体
 	    	//搜索文件名字是否出现在数据库中，不是则删掉
 	        sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`filename` = '%s')", ptr->d_name);
 	    	result = mysql_query(sqlHandler, strsql);
@@ -472,9 +458,13 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	    	}
 
 	    	//读取不为空
-	    	if ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
-	    		continue;
+	    	if ((sqlRow = mysql_fetch_row(resPtr)) != NULL){
+		    	mysql_free_result(resPtr);
+		    	continue;
+	    	}
 
+
+	    	//STEP2: 搜索数据库表单体
 	    	//搜索文件名字是否出现在数据库中，不是则删掉
 	        sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`dbname` = '%s')", ptr->d_name);
 	    	result = mysql_query(sqlHandler, strsql);
@@ -494,29 +484,27 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	            return FAILURE;
 	    	}
 
-	    	//读取为空
-	    	if ((sqlRow = mysql_fetch_row(resPtr)) == NULL)
-	    	{
-	    		memset(fopr, 0, sizeof(fopr));
-	    		sprintf(fopr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, ptr->d_name);
-	    		if (access(&fopr[3], F_OK) == 0) system(fopr);
+	    	//读取不为空
+	    	if((sqlRow = mysql_fetch_row(resPtr)) != NULL){
+		    	mysql_free_result(resPtr);
+	    		continue;
 	    	}
+
+	    	//STEP3: 孤儿文件，所以干掉
+			memset(fopr, 0, sizeof(fopr));
+			sprintf(fopr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, ptr->d_name);
+			//HCU_DEBUG_PRINT_FAT("DBISYSSWM: Cmd = %s\n", fopr);
+			if (access(&fopr[3], F_OK) == 0) system(fopr);
 	    }
 
 	    else if(ptr->d_type == 4)    //dir
 	    {
 	    }
-
-	    //CLOSE
-	    if (resPtr!=NULL) mysql_free_result(resPtr);
-	    mysql_close(sqlHandler);
 	}
 
 	//释放记录集
 	closedir(dir);
-	//执行Free就发送Memory Leak，太怪了
-	//if (resPtr!=NULL) mysql_free_result(resPtr);
-    //mysql_close(sqlHandler);
+    mysql_close(sqlHandler);
     return SUCCESS;
 }
 
@@ -528,6 +516,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 	MYSQL_ROW sqlRow;
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+    UINT32 selTab[DBI_SYSSWM_SELETION_RESULT_MAX];
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
 
@@ -574,6 +563,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 		if(sqlRow[13]) sprintf(strOpr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[13]);
 		if (access(&strOpr[3], F_OK) == 0) system(strOpr);
 	}
+	mysql_free_result(resPtr);
 
 	//STEP2: HALF_COMPL文件
 	//获取数据
@@ -602,6 +592,7 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 		if(sqlRow[13]) sprintf(strOpr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, sqlRow[13]);
 		if (access(&strOpr[3], F_OK) == 0) system(strOpr);
 	}
+	mysql_free_result(resPtr);
 
 	//STEP3: START/HALF_COMPL记录
 	//再删去所有的
@@ -638,6 +629,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 	}
 
 	//循环查找
+	memset(selTab, 0, DBI_SYSSWM_SELETION_RESULT_MAX*sizeof(UINT32));
+	int index = 0;
 	while ((sqlRow = mysql_fetch_row(resPtr)) != NULL)
 	{
 		memset(strOpr, 0, sizeof(strOpr));
@@ -647,19 +640,23 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 		//不存在，删去记录
 		if (access(strOpr, F_OK) != 0){
 			if(sqlRow[0]) sid = (UINT32)(atol(sqlRow[0]) & 0xFFFFFFFF);
-			HCU_DEBUG_PRINT_FAT("SYSSWM: strOpr = %s, sid = %d, access result=%d\n", strOpr, sid, access(strOpr, F_OK));
-		    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`sid` = '%d')", sid);
-			result = mysql_query(sqlHandler, strsql);
-			if(result){
-		    	mysql_close(sqlHandler);
-		    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
-		        return FAILURE;
-			}
+			//HCU_DEBUG_PRINT_FAT("SYSSWM: strOpr = %s, sid = %d, access result=%d\n", strOpr, sid, access(strOpr, F_OK));
+			if (index < DBI_SYSSWM_SELETION_RESULT_MAX) selTab[index++] = sid;
+		}
+	}
+	mysql_free_result(resPtr);
+	int i = 0;
+	for (i=0; i<index; i++){
+	    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`sid` = '%d')", selTab[i]);
+		result = mysql_query(sqlHandler, strsql);
+		if(result){
+	    	mysql_close(sqlHandler);
+	    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+	        return FAILURE;
 		}
 	}
 
 	//释放记录集
-	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
 }
@@ -670,8 +667,6 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
 OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 {
 	MYSQL *sqlHandler;
-	//MYSQL_RES *resPtr;
-	//MYSQL_ROW sqlRow;
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
@@ -711,6 +706,13 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
     	HcuErrorPrint("DBISYSSWM: REPLACE data error, err cause = %s\n", mysql_error(sqlHandler));
         return FAILURE;
 	}
+
+	//释放记录集：不再需要free resPtr
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
+
+
 
 /*	//获取数据
     sprintf(strsql, "SELECT * FROM `hcusysswm_swdl` WHERE (`equentry` = '%d' AND `hwtype` = '%d' AND `hwpem` = '%d' AND `swrel` = '%d' AND `swver` = '%d' AND `upgradeflag` = '%d')",\
@@ -759,14 +761,4 @@ OPSTAT dbi_HcuSysSwm_SwDownLoad_save(HcuSysMsgIeL3SysSwmSwDlElement_t *prtSwDl)
 		    return FAILURE;
 		}
 	}*/
-
-	//释放记录集：不再需要free resPtr
-	//mysql_free_result(resPtr);
-    mysql_close(sqlHandler);
-    return SUCCESS;
-}
-
-
-
-
 

@@ -12,7 +12,8 @@
 //= ZJL, 2017 Aug.23 CURRENT_SW_DELIVERY 245=>BFSC项目
 =调测IHU软件下载
 =遇到问题：　l0dbi/dbi_sysswm.c: 543 : DBISYSSWM: MySQL connection failed, Err Code = !
-
+= 完善了FTP下载过程
+= 对于数据表单的多次连续操作，彻底解决了，可参考文档：　http://www.jb51.net/article/27085.htm
 
 //= ZJL, 2017 Aug.22 CURRENT_SW_DELIVERY 244=>BFSC项目
 =调查BFSC现场的算法DUMP问题
