@@ -451,14 +451,13 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 		gTaskL3bfscuicommContext.cmdResumeFlag = parseResult.cmdResume.cmdFlag;
 		fileChangeContent = parseResult.cmdResume.cmdValue;
 		//依赖文件变化的内容，分类发送控制命令：SUSPEND命令/RESUME命令
-		if ((fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME) || (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)){
-			msg_struct_uicomm_l3bfsc_cmd_req_t snd;
-			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t));
-			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cmd_req_t);
-			if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_RESUME;
-			else if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_SUSPEND)  snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND;
-
-			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CMD_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
+		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_RESUME) {
+			//Re-configure/start all weight sensor
+			gTaskL3bfscuicommContext.bfscuiState = HCU_BFSCCOMM_JASON_CMD_START;
+			msg_struct_uicomm_l3bfsc_cfg_req_t snd;
+			memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t));
+			snd.length = sizeof(msg_struct_uicomm_l3bfsc_cfg_req_t);
+			ret = hcu_message_send(MSG_ID_UICOMM_L3BFSC_CFG_REQ, TASK_ID_L3BFSC, TASK_ID_BFSCUICOMM, &snd, snd.length);
 			if (ret == FAILURE){
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
 				return FAILURE;
