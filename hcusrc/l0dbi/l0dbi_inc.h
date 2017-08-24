@@ -37,5 +37,13 @@
 #endif
 
 
+/*
+ *  mysql多次调用存储过程的问题
+ *
+ * 　解决之道，见下面的文章
+ *  http://www.jb51.net/article/27085.htm
+ *
+ */
+
 
 #endif /* L0DBI_INC_H_ */

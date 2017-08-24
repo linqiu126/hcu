@@ -10,8 +10,8 @@
 
 #include "../l0comvm/vmlayer.h"
 
-#define DBI_SYSSWM_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
-
+#define DBI_SYSSWM_DATA_SAVE_DAYS_MIN 	90  //最短90天，不能再短
+#define DBI_SYSSWM_SELETION_RESULT_MAX 	100
 
 //Local APIs
 extern OPSTAT dbi_HcuSysSwm_SwPkg_save(HcuSysMsgIeL3SysSwmSwPkgElement_t *prtSwPkg);

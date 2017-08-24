@@ -271,7 +271,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		}
 
 		//如果版本号不适合
-		HCU_DEBUG_PRINT_CRT("SYSSWM: HCU Rcv REL/VER/DBVER=[%d/%d/%d], BurnId REL/VER=[%d/%d/%d]\n", rcv.swRel, rcv.swVer, rcv.dbVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
+		HCU_DEBUG_PRINT_CRT("SYSSWM: Session=%d, HCU Rcv REL/VER/DBVER=[%d/%d/%d], BurnId REL/VER/DBVER=[%d/%d/%d]\n", gTaskSysswmContext.swDlSession, rcv.swRel, rcv.swVer, rcv.dbVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
 		if ((rcv.swRel < zHcuSysEngPar.hwBurnId.swRelId) || ((rcv.swRel == zHcuSysEngPar.hwBurnId.swRelId) && (rcv.swVer <= zHcuSysEngPar.hwBurnId.swVerId))){
 			return SUCCESS;
 		}
@@ -342,7 +342,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		}
 
 		//如果版本号不适合
-		HCU_DEBUG_PRINT_CRT("SYSSWM: IHU Rcv REL/VER=[%d/%d], BurnId REL/VER=[%d/%d]\n", rcv.swRel, rcv.swVer, zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId);
+		HCU_DEBUG_PRINT_CRT("SYSSWM: Session=%d, IHU Rcv REL/VER=[%d/%d], Original REL/VER=[%d/%d]\n", gTaskSysswmContext.swDlSession, rcv.swRel, rcv.swVer, gTaskSysswmContext.cloudSwPkg.swRel, gTaskSysswmContext.cloudSwPkg.swVer);
 		if ((rcv.swRel < gTaskSysswmContext.cloudSwPkg.swRel) || ((rcv.swRel == gTaskSysswmContext.cloudSwPkg.swRel) && (rcv.swVer <= gTaskSysswmContext.cloudSwPkg.swVer))){
 			return SUCCESS;
 		}
