@@ -192,7 +192,7 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 
 	//初始化界面交互数据
-	dbi_HcuBfsc_WmcStatusForceInvalid(0);
+	dbi_HcuBfsc_WmcStatusForceInvalid();
 	dbi_HcuBfsc_WmcCurComWgtUpdate(0);
 	HCU_DEBUG_PRINT_INF("L3BFSC: dbi_HcuBfsc_WmcStatusForceInvalid() set.\n");
 
