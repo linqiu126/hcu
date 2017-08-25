@@ -64,7 +64,7 @@ typedef void                      VOID;
 #if (HUITP_USE_SET == HUITP_USE_IN_HCU)
 	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 			344  //这个最大长度＝(1000-300)/2=350
 #elif (HUITP_USE_SET == HUITP_USE_IN_IHU)
-	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 			134  //这个主要受内部消息长度限制，(500-300)/2 = 100，所以100个有效长度就最大了
+	#define HUITP_MSG_BUF_WITH_HEAD_MAX_LEN 			124  //这个主要受内部消息长度限制，(500-300)/2 = 100，所以100个有效长度就最大了
 #else
 	#error Error set HUITP_USE_SET!
 #endif
