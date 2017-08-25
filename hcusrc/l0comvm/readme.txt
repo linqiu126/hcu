@@ -12,6 +12,7 @@
 //= ZJL, 2017 Aug.25 CURRENT_SW_DELIVERY 246=>BFSC项目
 = 增加HUITP中EQULABLE的消息对
 = 改进ALARMINFO中对于DESC的描述
+=将BFSC的下载过程关闭，将下载时间改为900s=15分钟，算是正式交付
 
 //= ZJL, 2017 Aug.23 CURRENT_SW_DELIVERY 245=>BFSC项目
 =调测IHU软件下载

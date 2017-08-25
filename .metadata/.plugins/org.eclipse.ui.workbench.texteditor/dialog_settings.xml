@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="char   alarmDesc[HUITP_IEID_UNI_ALARM_INFO_ELEMENT_DESC_LEN_MAX]" key="selection"/>
+		<item value="SYSSWM" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="SYSSWM"/>
 			<item value="char   alarmDesc[HUITP_IEID_UNI_ALARM_INFO_ELEMENT_DESC_LEN_MAX]"/>
 			<item value="alarmDesc[HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX]"/>
 			<item value="HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX"/>
@@ -15,7 +16,6 @@
 			<item value="dbname"/>
 			<item value="ln"/>
 			<item value="func_sysswm_ftp_file_big_size_process_ihu_sw"/>
-			<item value="func_sysswm_sw_download_process_swpkg_db_refresh"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_DEBUG_PRINT_NOR"/>
