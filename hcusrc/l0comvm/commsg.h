@@ -1892,7 +1892,6 @@ typedef struct msg_struct_cloudvela_spspm_alarm_req
 }msg_struct_cloudvela_spspm_alarm_req_t;
 
 //MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,
-#define HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX 100
 typedef struct msg_struct_spspm_cloudvela_alarm_resp
 {
 	msgie_struct_bh_com_head_t comHead;
@@ -1903,7 +1902,6 @@ typedef struct msg_struct_spspm_cloudvela_alarm_resp
 	UINT32 equID;
 	UINT32 causeId;
 	UINT32 alarmContent;
-	char   alarmDesc[HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX];
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_alarm_resp_t;
@@ -1919,7 +1917,6 @@ typedef struct msg_struct_spspm_cloudvela_alarm_report
 	UINT32 equID;
 	UINT32 causeId;
 	UINT32 alarmContent;
-	char   alarmDesc[HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX];
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_spspm_cloudvela_alarm_report_t;

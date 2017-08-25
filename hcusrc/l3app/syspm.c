@@ -413,7 +413,6 @@ OPSTAT fsm_syspm_com_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_pt
 		snd.causeId = 0;
 		snd.timeStamp = rcv.timeStamp;
 		snd.alarmContent = rcv.alarmContent;
-		strncpy(snd.alarmDesc, rcv.alarmDesc, strlen(rcv.alarmDesc) < sizeof(snd.alarmDesc)? strlen(rcv.alarmDesc): sizeof(snd.alarmDesc));
 		snd.length = sizeof(msg_struct_spspm_cloudvela_alarm_report_t);
 		if (hcu_message_send(MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSPM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSPM, "SYSPM:: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);

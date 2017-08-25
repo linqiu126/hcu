@@ -39,7 +39,7 @@ typedef void                      VOID;
  *                  为云控锁CCL增加gen_picid字段，为了方便后台存储图像文件以及遍连
  *					为了倾倒传感器的数据传输，增加新字段
  * 2017/8/15 V2.10: 去掉INVENTORY_xxx中有关desc的字段
- *
+ *                  增加标签管理消息
  *
  *
  *
@@ -842,8 +842,19 @@ typedef enum
 	//HCU-IHU SUI新增内容
 	HUITP_MSGID_sui_sw_package_report                = 0xA190,
 	HUITP_MSGID_sui_sw_package_confirm               = 0xA110,
-
 	HUITP_MSGID_uni_sw_package_max,
+
+	//标签管理
+	HUITP_MSGID_uni_equlable_min                     = 0xA200,
+	HUITP_MSGID_uni_equlable_apply_req               = 0xA200,
+	HUITP_MSGID_uni_equlable_apply_resp              = 0xA280,
+	HUITP_MSGID_uni_equlable_apply_report            = 0xA281,
+	HUITP_MSGID_uni_equlable_apply_confirm           = 0xA201,
+	HUITP_MSGID_uni_equlable_inservice_req           = 0xA202,
+	HUITP_MSGID_uni_equlable_inservice_resp          = 0xA282,
+	HUITP_MSGID_uni_equlable_inservice_report        = 0xA283,
+	HUITP_MSGID_uni_equlable_inservice_confirm       = 0xA203,
+	HUITP_MSGID_uni_equlable_max,
 
   //ALARM REPORT
 	HUITP_MSGID_uni_alarm_info_min                   = 0xB000, 
@@ -1333,6 +1344,13 @@ typedef enum
 	HUITP_IEID_uni_sw_package_min                   = 0xA100,	
 	HUITP_IEID_uni_sw_package_body                  = 0xA100, 
 	HUITP_IEID_uni_sw_package_max,
+
+	//标签管理
+	HUITP_IEID_uni_equlable_min                   	= 0xA200,
+	HUITP_IEID_uni_equlable_apply_user_info       	= 0xA200,
+	HUITP_IEID_uni_equlable_apply_allocation       	= 0xA201,
+	HUITP_IEID_uni_equlable_inservice_info       	= 0xA202,
+	HUITP_IEID_uni_equlable_max,
 
   //ALARM REPORT
 	HUITP_IEID_uni_alarm_info_min                   = 0xB000, 
@@ -3051,6 +3069,54 @@ typedef struct StrIe_HUITP_IEID_uni_sw_package_body
 
 //HUITP_IEID_uni_sw_package_max,
 
+//标签管理
+//HUITP_IEID_uni_equlable_min                   	= 0xA200,
+//HUITP_IEID_uni_equlable_apply_user_info       	= 0xA200,
+typedef struct StrIe_HUITP_IEID_uni_equlable_apply_user_info
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	char   facCode[20];  //比如FAC#123
+	char   pdCode[5];    //比如G201
+	char   pjCode[5];    //比如AQYC
+	char   userCode[3];  //比如SH或TMP或者TUK
+	char   uAccount[20];
+	char   uPsd[20];
+	UINT8  productType;  //HCU, IHU
+	UINT8  formalFlag;   //Y, N
+	UINT16 applyNbr;     //比如20，最小1，最大99
+}StrIe_HUITP_IEID_uni_equlable_apply_user_info_t;
+#define HUITP_IEID_UNI_EQULABLE_APPLY_USER_INFO_NONE 0
+#define HUITP_IEID_UNI_EQULABLE_APPLY_USER_INFO_HCU 1
+#define HUITP_IEID_UNI_EQULABLE_APPLY_USER_INFO_IHU 2
+#define HUITP_IEID_SUI_EQULABLE_APPLY_USER_INFO_INVALID 0xFF
+
+//HUITP_IEID_uni_equlable_apply_allocation       	= 0xA201,
+typedef struct StrIe_HUITP_IEID_uni_equlable_apply_allocation
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT8  allocateRes;  //TRUE/FALSE
+	UINT16 allocateNbr;     //比如20，最小1，最大99
+	char   lableStart[20];
+	char   lableEnd[20];
+}StrIe_HUITP_IEID_uni_equlable_apply_allocation_t;
+
+//HUITP_IEID_uni_equlable_inservice_info       	= 0xA202,
+typedef struct StrIe_HUITP_IEID_uni_equlable_inservice_info
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	char   lable[20];  //IHU_G801_BFSC_TUK01
+	UINT8  startStopFlag;
+}StrIe_HUITP_IEID_uni_equlable_inservice_info_t;
+#define HUITP_IEID_UNI_EQULABLE_INSERVICE_INFO_NONE 0
+#define HUITP_IEID_UNI_EQULABLE_INSERVICE_INFO_START 1
+#define HUITP_IEID_UNI_EQULABLE_INSERVICE_INFO_STOP 2
+#define HUITP_IEID_SUI_EQULABLE_INSERVICE_INFO_INVALID 0xFF
+
+//HUITP_IEID_uni_equlable_max,
+
 //ALARM REPORT
 //HUITP_IEID_uni_alarm_info_min                   = 0xB000, 
 //HUITP_IEID_uni_alarm_info_element               = 0xB000,
@@ -3065,7 +3131,6 @@ typedef struct StrIe_HUITP_IEID_uni_alarm_info_element
 	UINT32 equID;
 	UINT32 causeId;
 	UINT32 alarmContent;
-	char   alarmDesc[HUITP_IEID_UNI_ALARM_INFO_ELEMENT_DESC_LEN_MAX];
 	UINT32 timeStamp;
 }StrIe_HUITP_IEID_uni_alarm_info_element_t;
 
@@ -6858,6 +6923,82 @@ typedef struct StrMsg_HUITP_MSGID_sui_sw_package_confirm
 
 
 //HUITP_MSGID_uni_sw_package_max,
+
+//标签管理
+//HUITP_MSGID_uni_equlable_min                     = 0xA200,
+//HUITP_MSGID_uni_equlable_apply_req               = 0xA200,
+typedef struct StrMsg_HUITP_MSGID_uni_equlable_apply_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+	StrIe_HUITP_IEID_uni_equlable_apply_user_info_t userInfo;
+}StrMsg_HUITP_MSGID_uni_equlable_apply_req_t;
+
+//HUITP_MSGID_uni_equlable_apply_resp              = 0xA280,
+typedef struct StrMsg_HUITP_MSGID_uni_equlable_apply_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
+	StrIe_HUITP_IEID_uni_equlable_apply_allocation_t allocatInfo;
+}StrMsg_HUITP_MSGID_uni_equlable_apply_resp_t;
+
+//HUITP_MSGID_uni_equlable_apply_report            = 0xA281,
+typedef struct StrMsg_HUITP_MSGID_uni_equlable_apply_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_equlable_apply_user_info_t userInfo;
+}StrMsg_HUITP_MSGID_uni_equlable_apply_report_t;
+
+//HUITP_MSGID_uni_equlable_apply_confirm           = 0xA201,
+typedef struct StrMsg_HUITP_MSGID_uni_equlable_apply_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+	StrIe_HUITP_IEID_uni_equlable_apply_allocation_t allocatInfo;
+}StrMsg_HUITP_MSGID_uni_equlable_apply_confirm_t;
+
+//HUITP_MSGID_uni_equlable_inservice_req           = 0xA202,
+typedef struct StrMsg_HUITP_MSGID_uni_equlable_inservice_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+	StrIe_HUITP_IEID_uni_equlable_inservice_info_t insvInfo;
+}StrMsg_HUITP_MSGID_uni_equlable_inservice_req_t;
+
+//HUITP_MSGID_uni_equlable_inservice_resp          = 0xA282,
+typedef struct StrMsg_HUITP_MSGID_uni_equlable_inservice_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
+	StrIe_HUITP_IEID_uni_equlable_inservice_info_t insvInfo;
+}StrMsg_HUITP_MSGID_uni_equlable_inservice_resp_t;
+
+//HUITP_MSGID_uni_equlable_inservice_report        = 0xA283,
+typedef struct StrMsg_HUITP_MSGID_uni_equlable_inservice_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_equlable_inservice_info_t insvInfo;
+}StrMsg_HUITP_MSGID_uni_equlable_inservice_report_t;
+
+//HUITP_MSGID_uni_equlable_inservice_confirm       = 0xA203,
+typedef struct StrMsg_HUITP_MSGID_uni_equlable_inservice_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+	StrIe_HUITP_IEID_uni_equlable_inservice_info_t insvInfo;
+}StrMsg_HUITP_MSGID_uni_equlable_inservice_confirm_t;
+
+//HUITP_MSGID_uni_equlable_max,
 
 //ALARM REPORT
 //HUITP_MSGID_uni_alarm_info_min                   = 0xB000, 

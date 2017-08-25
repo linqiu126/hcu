@@ -9,6 +9,10 @@
 
 
 
+//= ZJL, 2017 Aug.25 CURRENT_SW_DELIVERY 246=>BFSC项目
+= 增加HUITP中EQULABLE的消息对
+= 改进ALARMINFO中对于DESC的描述
+
 //= ZJL, 2017 Aug.23 CURRENT_SW_DELIVERY 245=>BFSC项目
 =调测IHU软件下载
 =遇到问题：　l0dbi/dbi_sysswm.c: 543 : DBISYSSWM: MySQL connection failed, Err Code = !

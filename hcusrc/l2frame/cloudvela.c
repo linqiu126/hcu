@@ -1003,10 +1003,6 @@ OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.respValue.equID = HUITP_ENDIAN_EXG32(rcv.equID);
 		pMsgProc.respValue.causeId = HUITP_ENDIAN_EXG32(rcv.causeId);
 		pMsgProc.respValue.alarmContent = HUITP_ENDIAN_EXG32(rcv.alarmContent);
-		#if (HUITP_IEID_UNI_ALARM_INFO_ELEMENT_DESC_LEN_MAX < HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX)
-			#error HUITP and COMMSG parameter set error!
-		#endif
-		strncpy(pMsgProc.respValue.alarmDesc, rcv.alarmDesc, strlen(rcv.alarmDesc));
 		pMsgProc.respValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.timeStamp);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
@@ -1076,10 +1072,6 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 		pMsgProc.reportValue.equID = HUITP_ENDIAN_EXG32(rcv.equID);
 		pMsgProc.reportValue.causeId = HUITP_ENDIAN_EXG32(rcv.causeId);
 		pMsgProc.reportValue.alarmContent = HUITP_ENDIAN_EXG32(rcv.alarmContent);
-		#if (HUITP_IEID_UNI_ALARM_INFO_ELEMENT_DESC_LEN_MAX < HCU_SYSMSG_SPSPM_ALARM_DESC_LEN_MAX)
-			#error HUITP and COMMSG parameter set error!
-		#endif
-		strncpy(pMsgProc.reportValue.alarmDesc, rcv.alarmDesc, strlen(rcv.alarmDesc));
 		pMsgProc.reportValue.timeStamp = HUITP_ENDIAN_EXG32(rcv.timeStamp);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
