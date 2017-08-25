@@ -536,7 +536,7 @@ OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt)
 }
 
 //
-OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
+OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(void)
 {
 	MYSQL *sqlHandler;
 	UINT32 timestamp;
@@ -564,7 +564,7 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
 
 	//REPLACE新的数据
     timestamp = time(NULL);
-    for(wmc_id = 1; wmc_id <= 16; wmc_id++)
+    for(wmc_id = 1; wmc_id < HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; wmc_id++)
     {
 		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (1)", timestamp, wmc_id, DBI_BFSC_SNESOR_STATUS_INVALID);
 		result = mysql_query(sqlHandler, strsql);
@@ -580,11 +580,12 @@ OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(uint32_t aws_id)
     return SUCCESS;
 }
 
-OPSTAT  dbi_HcuBfsc_WmcStatusForceSuspend(UINT8 sensorid)
+OPSTAT  dbi_HcuBfsc_WmcStatusForceSuspend(void)
 {
 		MYSQL *sqlHandler;
 		UINT32 timestamp;
 	    int result = 0;
+	    UINT8 wmc_id = 0;
 	    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
 	    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
@@ -607,15 +608,15 @@ OPSTAT  dbi_HcuBfsc_WmcStatusForceSuspend(UINT8 sensorid)
 
 		//REPLACE新的数据
 	    timestamp = time(NULL);
-
-		sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (1)", timestamp, sensorid, DBI_BFSC_SNESOR_STATUS_SUSPEND);
-		result = mysql_query(sqlHandler, strsql);
-		if(result){
-			mysql_close(sqlHandler);
-			HcuErrorPrint("DBIBFSC: UPDATE data error: %s\n", mysql_error(sqlHandler));
-			return FAILURE;
-		}
-
+	    for(wmc_id = 1; wmc_id < HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; wmc_id++){
+			sprintf(strsql, "UPDATE `hcubfsccurrentinfo` SET timestamp = '%d', status_%02d = '%d' WHERE (1)", timestamp, wmc_id, DBI_BFSC_SNESOR_STATUS_SUSPEND);
+			result = mysql_query(sqlHandler, strsql);
+			if(result){
+				mysql_close(sqlHandler);
+				HcuErrorPrint("DBIBFSC: UPDATE data error: %s\n", mysql_error(sqlHandler));
+				return FAILURE;
+			}
+	    }
 		//释放记录集
 	    mysql_close(sqlHandler);
 	    return SUCCESS;
