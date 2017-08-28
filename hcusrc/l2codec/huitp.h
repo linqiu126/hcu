@@ -1115,7 +1115,7 @@ typedef enum
 
   //图片
 	HUITP_IEID_uni_picture_min                      = 0x2F00, 
-	HUITP_IEID_uni_picture_value                    = 0x2F00,
+	HUITP_IEID_uni_picture_ind                    = 0x2F00,
 	HUITP_IEID_uni_picture_segment                  = 0x2F01,
 	HUITP_IEID_uni_picture_format                  	= 0x2F02,	
 	HUITP_IEID_uni_picture_body                     = 0x2F03,
@@ -2105,14 +2105,18 @@ typedef struct StrIe_HUITP_IEID_uni_video_value
 
 //图片
 //HUITP_IEID_uni_picture_min                      = 0x2F00, 
-//HUITP_IEID_uni_picture_value                    = 0x2F00,
-typedef struct StrIe_HUITP_IEID_uni_picture_value
+//HUITP_IEID_uni_picture_ind                    = 0x2F00,
+typedef struct StrIe_HUITP_IEID_uni_picture_ind
 {
 	UINT16 ieId;
 	UINT16 ieLen;
-	UINT8  dataFormat;
-	UINT32 pictureValue;
-}StrIe_HUITP_IEID_uni_picture_value_t;
+	UINT8  flag;
+}StrIe_HUITP_IEID_uni_picture_ind_t;
+#define HUITP_IEID_UNI_PICTURE_IND_FLAG_NULL                   0
+#define HUITP_IEID_UNI_PICTURE_IND_FLAG_REMOTE_CURL_TRIGGER    1  //指示远程拍照
+#define HUITP_IEID_UNI_PICTURE_IND_FLAG_NOT_PREPARED           2  //本地摄像头未准备好
+#define HUITP_IEID_UNI_PICTURE_IND_FLAG_SEND_DATA_ONLY         3  //本地拍摄完成，将准备通过数据传送到后台
+#define HUITP_IEID_UNI_PICTURE_IND_FLAG_INVALID                0xFF
 
 //HUITP_IEID_uni_picture_segment                  = 0x2F01,
 typedef struct StrIe_HUITP_IEID_uni_picture_segment
@@ -4588,7 +4592,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_picture_data_resp
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
-	StrIe_HUITP_IEID_uni_picture_value_t respValue;
+	StrIe_HUITP_IEID_uni_picture_ind_t respInd;
 }StrMsg_HUITP_MSGID_uni_picture_data_resp_t;
  
 //HUITP_MSGID_uni_picture_data_report                  = 0x2F81,
@@ -4597,7 +4601,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_picture_data_report
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_picture_value_t reportValue;
+	StrIe_HUITP_IEID_uni_picture_ind_t reportInd;
 }StrMsg_HUITP_MSGID_uni_picture_data_report_t;
 
 //HUITP_MSGID_uni_picture_data_confirm                     = 0x2F01,
