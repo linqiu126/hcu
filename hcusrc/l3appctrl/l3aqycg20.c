@@ -1621,7 +1621,20 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//CONTENT: TBD
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.ycjk.equipid = 1;
-		//...等其它内容
+		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a01001_Avg;
+		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a01002_Avg;
+		snd.ycjk.winddirValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a01008_Avg;
+		snd.ycjk.windspdValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a01007_Avg;
+		snd.ycjk.tspValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a34001_Avg;
+		snd.ycjk.pm2d5Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
+		snd.ycjk.pm10Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
+		snd.ycjk.noiseValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a50001_Avg;
+		snd.ycjk.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2; //no need, caculate directly for l3aqycg20??
+		snd.ycjk.timeStamp = time(0);
+
+		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%d, Humid=%d, Windir=%d, Windspd=%d, tspValue=%d, pm2d5Value=%d, pm10Value=%d, noiseValue=%d\n\n\n\n\n\n\n\n",snd.ycjk.tempValue, snd.ycjk.humidValue, snd.ycjk.winddirValue, snd.ycjk.windspdValue, snd.ycjk.tspValue, snd.ycjk.pm2d5Value, snd.ycjk.pm10Value, snd.ycjk.noiseValue);
+
+
 		snd.length = sizeof(msg_struct_ycjk_cloudvela_data_report_t);
 
 		//发送后台

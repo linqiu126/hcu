@@ -607,7 +607,7 @@ OPSTAT dbi_HcuPm25DataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
     duration = dur;
 
     //Get the minimum data
-    sprintf(strsql, "SELECT MIN(pm10dvalue) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+    sprintf(strsql, "SELECT MIN(pm1d0value) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -673,7 +673,7 @@ OPSTAT dbi_HcuPm25DataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
     duration = dur;
 
     //Get the minimum data
-    sprintf(strsql, "SELECT MAX(pm10dvalue) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+    sprintf(strsql, "SELECT MAX(pm1d0value) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -739,7 +739,7 @@ OPSTAT dbi_HcuPm25DataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
     duration = dur;
 
     //Get the minimum data
-    sprintf(strsql, "SELECT AVG(pm10dvalue) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
+    sprintf(strsql, "SELECT AVG(pm1d0value) FROM `hcupm25datainfo` WHERE (%d - `timestamp` < '%d')", cursec, duration);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

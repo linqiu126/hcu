@@ -70,6 +70,7 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_syspm_perfm_report},
 	{MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT,  FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_sysswm_inventory_report},
 	{MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT, FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_sysswm_sw_package_report},
+	{MSG_ID_YCJK_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_ycjk_data_report},
 
     //通用服务能力处理部分，UL上行链路处理部分，DL下行在解包函数中自动路由完成
 	{MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_alarm_resp},
@@ -3714,7 +3715,7 @@ OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.reportValue.humidValue = HUITP_ENDIAN_EXG32(rcv.ycjk.humidValue);
 		pMsgProc.reportValue.winddirValue = HUITP_ENDIAN_EXG32(rcv.ycjk.winddirValue);
 		pMsgProc.reportValue.windspdValue = HUITP_ENDIAN_EXG32(rcv.ycjk.windspdValue);
-		pMsgProc.reportValue.pm1d0Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm1d0Value);
+		//pMsgProc.reportValue.pm1d0Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm1d0Value);
 		pMsgProc.reportValue.pm2d5Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm2d5Value);
 		pMsgProc.reportValue.pm10Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm10Value);
 		pMsgProc.reportValue.tspValue = HUITP_ENDIAN_EXG32(rcv.ycjk.tspValue);
