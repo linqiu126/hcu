@@ -40,7 +40,7 @@ typedef void                      VOID;
  *					为了倾倒传感器的数据传输，增加新字段
  * 2017/8/15 V2.10: 去掉INVENTORY_xxx中有关desc的字段
  *                  增加标签管理消息
- *
+ * 2017/8/28 V2.11: 改善YCJK的字段IE内容体
  *
  *
  */
@@ -2170,16 +2170,15 @@ typedef struct StrIe_HUITP_IEID_uni_ycjk_value
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT32 emcValue;
-	UINT32 tempValue;
-	UINT32 humidValue;
-	UINT32 winddirValue;
-	UINT32 windspdValue;
-	UINT32 noiseValue;
-	UINT32 pm1d0Value;
-	UINT32 pm2d5Value;
-	UINT32 pm10Value;
-	UINT32 airprsValue;
+	INT32  tempValue;
+	INT32  humidValue;
+	INT32  winddirValue;
+	INT32  windspdValue;
+	INT32  noiseValue;
+	INT32  pm1d0Value;
+	INT32  pm2d5Value;
+	INT32  pm10Value;
+	INT32  tspValue;
 }StrIe_HUITP_IEID_uni_ycjk_value_t;
 
 //HUITP_IEID_uni_ycjk_sensor_selection            = 0x3001,

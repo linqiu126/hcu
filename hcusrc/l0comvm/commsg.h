@@ -749,17 +749,16 @@ typedef struct  sensor_noise_data_element //
 typedef struct  sensor_ycjk_data_element //
 {
 	UINT32 equipid;
-	UINT8 dataFormat;
-	UINT32 emcValue;
-	UINT32 tempValue;
-	UINT32 humidValue;
-	UINT32 winddirValue;
-	UINT32 windspdValue;
-	UINT32 pm1d0Value;
-	UINT32 pm2d5Value;
-	UINT32 pm10Value;
-	UINT32 noiseValue;
-	UINT32 airprsValue;
+	UINT8  dataFormat;
+	INT32  tempValue;
+	INT32  humidValue;
+	INT32  winddirValue;
+	INT32  windspdValue;
+	INT32  noiseValue;
+	INT32  pm1d0Value;
+	INT32  pm2d5Value;
+	INT32  pm10Value;
+	INT32  tspValue;
 	msgie_struct_com_gps_pos_t gps;
 	UINT32 timeStamp;
 	UINT32 nTimes;

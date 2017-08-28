@@ -3490,7 +3490,6 @@ OPSTAT fsm_cloudvela_ycjk_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		pMsgProc.respValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_ycjk_value);
 		pMsgProc.respValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_ycjk_value_t) - 4);
 		pMsgProc.respValue.dataFormat = rcv.ycjk.dataFormat;
-		pMsgProc.respValue.emcValue = HUITP_ENDIAN_EXG32(rcv.ycjk.emcValue);
 		pMsgProc.respValue.tempValue = HUITP_ENDIAN_EXG32(rcv.ycjk.tempValue);
 		pMsgProc.respValue.humidValue = HUITP_ENDIAN_EXG32(rcv.ycjk.humidValue);
 		pMsgProc.respValue.winddirValue = HUITP_ENDIAN_EXG32(rcv.ycjk.winddirValue);
@@ -3498,7 +3497,7 @@ OPSTAT fsm_cloudvela_ycjk_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		pMsgProc.respValue.pm1d0Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm1d0Value);
 		pMsgProc.respValue.pm2d5Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm2d5Value);
 		pMsgProc.respValue.pm10Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm10Value);
-		pMsgProc.respValue.airprsValue = HUITP_ENDIAN_EXG32(rcv.ycjk.airprsValue);
+		pMsgProc.respValue.tspValue = HUITP_ENDIAN_EXG32(rcv.ycjk.tspValue);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -3653,7 +3652,6 @@ OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.reportValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_ycjk_value);
 		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_ycjk_value_t) - 4);
 		pMsgProc.reportValue.dataFormat = rcv.ycjk.dataFormat;
-		pMsgProc.reportValue.emcValue = HUITP_ENDIAN_EXG32(rcv.ycjk.emcValue);
 		pMsgProc.reportValue.tempValue = HUITP_ENDIAN_EXG32(rcv.ycjk.tempValue);
 		pMsgProc.reportValue.humidValue = HUITP_ENDIAN_EXG32(rcv.ycjk.humidValue);
 		pMsgProc.reportValue.winddirValue = HUITP_ENDIAN_EXG32(rcv.ycjk.winddirValue);
@@ -3661,7 +3659,7 @@ OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.reportValue.pm1d0Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm1d0Value);
 		pMsgProc.reportValue.pm2d5Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm2d5Value);
 		pMsgProc.reportValue.pm10Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm10Value);
-		pMsgProc.reportValue.airprsValue = HUITP_ENDIAN_EXG32(rcv.ycjk.airprsValue);
+		pMsgProc.reportValue.tspValue = HUITP_ENDIAN_EXG32(rcv.ycjk.tspValue);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
