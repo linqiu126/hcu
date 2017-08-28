@@ -3553,7 +3553,7 @@ OPSTAT fsm_cloudvela_ycjk_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		pMsgProc.respValue.humidValue = HUITP_ENDIAN_EXG32(rcv.ycjk.humidValue);
 		pMsgProc.respValue.winddirValue = HUITP_ENDIAN_EXG32(rcv.ycjk.winddirValue);
 		pMsgProc.respValue.windspdValue = HUITP_ENDIAN_EXG32(rcv.ycjk.windspdValue);
-		pMsgProc.respValue.pm1d0Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm1d0Value);
+		//pMsgProc.respValue.pm1d0Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm1d0Value);
 		pMsgProc.respValue.pm2d5Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm2d5Value);
 		pMsgProc.respValue.pm10Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm10Value);
 		pMsgProc.respValue.tspValue = HUITP_ENDIAN_EXG32(rcv.ycjk.tspValue);
