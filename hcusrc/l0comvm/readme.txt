@@ -14,6 +14,7 @@
 =增加PICTURE实时汇报过程(1小时为单位)
 =具体JCJK内容填写，待完善
 =JCJK的定时器，STA_DATA还未启动，待完善
+= SYSCONFIG.H中产品命名，修改后跟HUITP.H中保持一致
 
 //= ZJL, 2017 Aug.25 CURRENT_SW_DELIVERY 246=>BFSC项目
 = 增加HUITP中EQULABLE的消息对
