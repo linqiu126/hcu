@@ -39,33 +39,93 @@
 #endif
 
 
-#define PDR_PIC_X_WIDTH 960
-#define PDR_PIC_Y_HEIGHT 540
-typedef struct strPdrPixel{
-	unsigned char R;
-	unsigned char G;
-	unsigned char B;
-}strPdrPIxel_t;
-strPdrPIxel_t zStg1PicSource[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
-unsigned char zStg2GrayPic[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
-unsigned char zStg3BinPicture[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
-char zInputFile[256];
-#define PDR_FILE_EXTENTION_1 ".bmp"
-#define PDR_FILE_EXTENTION_2 ".BMP"
-#define PDR_STATISTIC_DIM  20
-float zStgStatisticFigure[PDR_STATISTIC_DIM];
-
-void picture_pre_distribution_process(unsigned int width, unsigned int height);
-
-
-
-int main(int argc, char **argv)
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#include "MQTTClient.h"
+#define ADDRESS     "tcp://localhost:1883"
+#define CLIENTID    "ExampleClientPub"
+#define TOPIC       "MQTT Examples"
+#define PAYLOAD     "Hello World!"
+#define QOS         1
+#define TIMEOUT     10000L
+int main(int argc, char* argv[])
 {
-	int i =0;
-	int j = 10;
-	int t = 0;
-	t = j/i;
-	printf("Test result = %d\r\n");
+    MQTTClient client;
+    MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+    MQTTClient_message pubmsg = MQTTClient_message_initializer;
+    MQTTClient_deliveryToken token;
+    int rc;
+    MQTTClient_create(&client, ADDRESS, CLIENTID,
+        MQTTCLIENT_PERSISTENCE_NONE, NULL);
+    conn_opts.keepAliveInterval = 20;
+    conn_opts.cleansession = 1;
+    if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
+    {
+        printf("Failed to connect, return code %d\n", rc);
+        exit(EXIT_FAILURE);
+    }
+    pubmsg.payload = PAYLOAD;
+    pubmsg.payloadlen = strlen(PAYLOAD);
+    pubmsg.qos = QOS;
+    pubmsg.retained = 0;
+    MQTTClient_publishMessage(client, TOPIC, &pubmsg, &token);
+    printf("Waiting for up to %d seconds for publication of %s\n"
+            "on topic %s for client with ClientID: %s\n",
+            (int)(TIMEOUT/1000), PAYLOAD, TOPIC, CLIENTID);
+    rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
+    printf("Message with delivery token %d delivered\n", token);
+    MQTTClient_disconnect(client, 10000);
+    MQTTClient_destroy(&client);
+    return rc;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//int main(int argc, char **argv)
+//{
+//
+//
+//	return 1;
+//}
+//
+
+
+
+//#define PDR_PIC_X_WIDTH 960
+//#define PDR_PIC_Y_HEIGHT 540
+//typedef struct strPdrPixel{
+//	unsigned char R;
+//	unsigned char G;
+//	unsigned char B;
+//}strPdrPIxel_t;
+//strPdrPIxel_t zStg1PicSource[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
+//unsigned char zStg2GrayPic[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
+//unsigned char zStg3BinPicture[PDR_PIC_Y_HEIGHT][PDR_PIC_X_WIDTH];
+//char zInputFile[256];
+//#define PDR_FILE_EXTENTION_1 ".bmp"
+//#define PDR_FILE_EXTENTION_2 ".BMP"
+//#define PDR_STATISTIC_DIM  20
+//float zStgStatisticFigure[PDR_STATISTIC_DIM];
+//
+//void picture_pre_distribution_process(unsigned int width, unsigned int height);
+
 
 //	unsigned int i=0, j=0;
 //	char strTemp[10];
@@ -131,130 +191,126 @@ int main(int argc, char **argv)
 //
 //    //算法处理
 
-	return 1;
-}
-
-
-void picture_pre_distribution_process(unsigned int width, unsigned int height)
-{
-	int i=0, j=0;
-    double tResultAvg = 0;
-    double tResultVar = 0;
-    double tt;
-    unsigned int iRes = 0, iVar = 0;
-    //求统计均值
-    for (j=0; j<height; j++){
-		for (i=0; i<width; i++){
-			tResultAvg += (((float)zStg1PicSource[j][i].R + (float)zStg1PicSource[j][i].G + (float)zStg1PicSource[j][i].B))/3;
-		}
-    }
-    tResultAvg = tResultAvg/width/height;
-    iRes = (unsigned long)(tResultAvg+0.5) & 0xFFFFFFFF;
-    //求绝对方差
-    for (j=0; j<height; j++){
-		for (i=0; i<width; i++){
-			tt = ((float)zStg1PicSource[j][i].R + (float)zStg1PicSource[j][i].G +(float)zStg1PicSource[j][i].B)/3 - tResultAvg;
-			if (tt >=0) tResultVar += tt;
-			else tResultVar -=tt;
-		}
-    }
-    tResultVar = tResultVar/width/height;
-    iVar = (unsigned long)(tResultVar+0.5) & 0xFFFFFFFF;
-    //求统计方差分布情况
-    float difBase = tResultVar;
-    memset(zStgStatisticFigure, 0, sizeof(zStgStatisticFigure));
-    for (j=0; j<height; j++){
-		for (i=0; i<width; i++){
-			int t2 = 0;
-			t2 = (int)(((float)(zStg1PicSource[j][i].R + zStg1PicSource[j][i].G + zStg1PicSource[j][i].B) - tResultAvg) / difBase +0.5);
-			t2 = t2 + (int)PDR_STATISTIC_DIM/2;
-			if (t2 < 0) zStgStatisticFigure[0]++;
-			else if (t2 >= PDR_STATISTIC_DIM) zStgStatisticFigure[PDR_STATISTIC_DIM-1]++;
-			else zStgStatisticFigure[t2]++;
-		}
-    }
-    //计算百分比
-    for (i=0; i<PDR_STATISTIC_DIM; i++) {
-    	zStgStatisticFigure[i] = zStgStatisticFigure[i]/width/height*100;
-    }
-    printf("Color Picture Statistic Result, Average = [%d], Var = [%d], \nDistribution: ", iRes, iVar);
-    for (i=0; i<PDR_STATISTIC_DIM; i++) {
-    	printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
-    }
-    printf("\n");
-
-    //灰度化处理
-    for (j=0; j<height; j++){
-		for (i=0; i<width; i++){
-			zStg2GrayPic[j][i] = (unsigned char)(0.3*(float)zStg1PicSource[j][i].R + 0.51*(float)zStg1PicSource[j][i].G + 0.19*(float)zStg1PicSource[j][i].B);
-		}
-    }
-    //求统计均值
-    for (j=0; j<height; j++){
-		for (i=0; i<width; i++){
-			tResultAvg += (float)zStg2GrayPic[j][i];
-		}
-    }
-    tResultAvg = tResultAvg/width/height;
-    iRes = (unsigned int)(tResultAvg+0.5) & 0xFF;
-    //求绝对方差
-    for (j=0; j<height; j++){
-		for (i=0; i<width; i++){
-			tt = (float)zStg2GrayPic[j][i] - tResultAvg;
-			if (tt >=0) tResultVar += tt;
-			else tResultVar -=tt;
-		}
-    }
-    tResultVar = tResultVar/width/height;
-    iVar = (unsigned long)(tResultVar+0.5) & 0xFFFFFFFF;
-    //求统计方差分布情况
-    memset(zStgStatisticFigure, 0, sizeof(zStgStatisticFigure));
-    for (j=0; j<height; j++){
-		for (i=0; i<width; i++){
-			int t2 = 0;
-			t2 = (int)((float)zStg2GrayPic[j][i] +0.5);
-			t2 = t2 + (int)PDR_STATISTIC_DIM/2;
-			if (t2 < 0) zStgStatisticFigure[0]++;
-			else if (t2 >= PDR_STATISTIC_DIM) zStgStatisticFigure[PDR_STATISTIC_DIM-1]++;
-			else zStgStatisticFigure[t2]++;
-		}
-    }
-    //计算百分比
-    for (i=0; i<PDR_STATISTIC_DIM; i++) {
-    	zStgStatisticFigure[i] = zStgStatisticFigure[i]/width/height*100;
-    }
-    printf("Color Picture Statistic Result, Average = [%d], Var = [%d], \nDistribution: ", iRes, iVar);
-    for (i=0; i<PDR_STATISTIC_DIM; i++) {
-    	printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
-    }
-    printf("\n");
-
-
-
-
-    //二值处理
-    for (j=0; j<height; j++){
-		for (i=0; i<width; i++){
-			if (abs((zStg1PicSource[j][i].R + zStg1PicSource[j][i].G + zStg1PicSource[j][i].B) - iRes) <= iVar){
-				zStg3BinPicture[j][i] = 0;
-			}
-			else{
-				zStg3BinPicture[j][i] = 1;
-			}
-		}
-    }
-
-
-    //检查并打印
-    printf("Convert result => \n");
-/*    for(j = 0; j < height; j++){
-    	printf("Picture read column [%d],", j);
-    	for (i=0; i<width; i++){
-            printf(" %02x", zStg2BinPicture[j][i]);
-    	}
-    	printf("\n");
- 	 }*/
-}
+//void picture_pre_distribution_process(unsigned int width, unsigned int height)
+//{
+//	int i=0, j=0;
+//    double tResultAvg = 0;
+//    double tResultVar = 0;
+//    double tt;
+//    unsigned int iRes = 0, iVar = 0;
+//    //求统计均值
+//    for (j=0; j<height; j++){
+//		for (i=0; i<width; i++){
+//			tResultAvg += (((float)zStg1PicSource[j][i].R + (float)zStg1PicSource[j][i].G + (float)zStg1PicSource[j][i].B))/3;
+//		}
+//    }
+//    tResultAvg = tResultAvg/width/height;
+//    iRes = (unsigned long)(tResultAvg+0.5) & 0xFFFFFFFF;
+//    //求绝对方差
+//    for (j=0; j<height; j++){
+//		for (i=0; i<width; i++){
+//			tt = ((float)zStg1PicSource[j][i].R + (float)zStg1PicSource[j][i].G +(float)zStg1PicSource[j][i].B)/3 - tResultAvg;
+//			if (tt >=0) tResultVar += tt;
+//			else tResultVar -=tt;
+//		}
+//    }
+//    tResultVar = tResultVar/width/height;
+//    iVar = (unsigned long)(tResultVar+0.5) & 0xFFFFFFFF;
+//    //求统计方差分布情况
+//    float difBase = tResultVar;
+//    memset(zStgStatisticFigure, 0, sizeof(zStgStatisticFigure));
+//    for (j=0; j<height; j++){
+//		for (i=0; i<width; i++){
+//			int t2 = 0;
+//			t2 = (int)(((float)(zStg1PicSource[j][i].R + zStg1PicSource[j][i].G + zStg1PicSource[j][i].B) - tResultAvg) / difBase +0.5);
+//			t2 = t2 + (int)PDR_STATISTIC_DIM/2;
+//			if (t2 < 0) zStgStatisticFigure[0]++;
+//			else if (t2 >= PDR_STATISTIC_DIM) zStgStatisticFigure[PDR_STATISTIC_DIM-1]++;
+//			else zStgStatisticFigure[t2]++;
+//		}
+//    }
+//    //计算百分比
+//    for (i=0; i<PDR_STATISTIC_DIM; i++) {
+//    	zStgStatisticFigure[i] = zStgStatisticFigure[i]/width/height*100;
+//    }
+//    printf("Color Picture Statistic Result, Average = [%d], Var = [%d], \nDistribution: ", iRes, iVar);
+//    for (i=0; i<PDR_STATISTIC_DIM; i++) {
+//    	printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+//    }
+//    printf("\n");
+//
+//    //灰度化处理
+//    for (j=0; j<height; j++){
+//		for (i=0; i<width; i++){
+//			zStg2GrayPic[j][i] = (unsigned char)(0.3*(float)zStg1PicSource[j][i].R + 0.51*(float)zStg1PicSource[j][i].G + 0.19*(float)zStg1PicSource[j][i].B);
+//		}
+//    }
+//    //求统计均值
+//    for (j=0; j<height; j++){
+//		for (i=0; i<width; i++){
+//			tResultAvg += (float)zStg2GrayPic[j][i];
+//		}
+//    }
+//    tResultAvg = tResultAvg/width/height;
+//    iRes = (unsigned int)(tResultAvg+0.5) & 0xFF;
+//    //求绝对方差
+//    for (j=0; j<height; j++){
+//		for (i=0; i<width; i++){
+//			tt = (float)zStg2GrayPic[j][i] - tResultAvg;
+//			if (tt >=0) tResultVar += tt;
+//			else tResultVar -=tt;
+//		}
+//    }
+//    tResultVar = tResultVar/width/height;
+//    iVar = (unsigned long)(tResultVar+0.5) & 0xFFFFFFFF;
+//    //求统计方差分布情况
+//    memset(zStgStatisticFigure, 0, sizeof(zStgStatisticFigure));
+//    for (j=0; j<height; j++){
+//		for (i=0; i<width; i++){
+//			int t2 = 0;
+//			t2 = (int)((float)zStg2GrayPic[j][i] +0.5);
+//			t2 = t2 + (int)PDR_STATISTIC_DIM/2;
+//			if (t2 < 0) zStgStatisticFigure[0]++;
+//			else if (t2 >= PDR_STATISTIC_DIM) zStgStatisticFigure[PDR_STATISTIC_DIM-1]++;
+//			else zStgStatisticFigure[t2]++;
+//		}
+//    }
+//    //计算百分比
+//    for (i=0; i<PDR_STATISTIC_DIM; i++) {
+//    	zStgStatisticFigure[i] = zStgStatisticFigure[i]/width/height*100;
+//    }
+//    printf("Color Picture Statistic Result, Average = [%d], Var = [%d], \nDistribution: ", iRes, iVar);
+//    for (i=0; i<PDR_STATISTIC_DIM; i++) {
+//    	printf("[%d-%5.2f\%] ", i, zStgStatisticFigure[i]);
+//    }
+//    printf("\n");
+//
+//
+//
+//
+//    //二值处理
+//    for (j=0; j<height; j++){
+//		for (i=0; i<width; i++){
+//			if (abs((zStg1PicSource[j][i].R + zStg1PicSource[j][i].G + zStg1PicSource[j][i].B) - iRes) <= iVar){
+//				zStg3BinPicture[j][i] = 0;
+//			}
+//			else{
+//				zStg3BinPicture[j][i] = 1;
+//			}
+//		}
+//    }
+//
+//
+//    //检查并打印
+//    printf("Convert result => \n");
+///*    for(j = 0; j < height; j++){
+//    	printf("Picture read column [%d],", j);
+//    	for (i=0; i<width; i++){
+//            printf(" %02x", zStg2BinPicture[j][i]);
+//    	}
+//    	printf("\n");
+// 	 }*/
+//}
 
 
 
