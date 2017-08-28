@@ -434,6 +434,8 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_HSMMP_CLOUDVELA_CTRL_RESP,
 	MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT,
 	MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM,
+	MSG_ID_PICTURE_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_PICTURE_DATA_CONFIRM,
 	MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
 	MSG_ID_NOISE_CLOUDVELA_DATA_RESP,
 	MSG_ID_CLOUDVELA_NOISE_CTRL_REQ,
@@ -3042,6 +3044,24 @@ typedef struct msg_struct_cloudvela_hsmmp_data_confirm
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_data_confirm_t;
 
+//MSG_ID_PICTURE_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_picture_cloudvela_data_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	sensor_hsmmp_link_element_t link;
+	UINT8  flag;
+	UINT32 length;
+}msg_struct_picture_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_PICTURE_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_picture_data_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 length;
+}msg_struct_cloudvela_picture_data_confirm_t;
+
 //MSG_ID_CLOUDVELA_NOISE_DATA_REQ,
 typedef struct  msg_struct_cloudvela_noise_data_req
 {
@@ -3181,7 +3201,6 @@ typedef struct msg_struct_ycjk_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_ycjk_data_element_t ycjk;
-	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_ycjk_cloudvela_data_report_t;
 

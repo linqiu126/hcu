@@ -103,6 +103,7 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_HSMMP_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_ctrl_resp},
 	{MSG_ID_HSMMP_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_resp},
 	{MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hsmmp_data_report},
+	{MSG_ID_PICTURE_CLOUDVELA_DATA_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_picture_data_report},
 	{MSG_ID_NOISE_CLOUDVELA_DATA_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_data_resp},
 	{MSG_ID_NOISE_CLOUDVELA_CTRL_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_ctrl_resp},
 	{MSG_ID_NOISE_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_noise_data_report},
@@ -3211,6 +3212,63 @@ OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * par
 //	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
 //		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 //	}
+	else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+	}
+
+	//Send out
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+
+	//State no change
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_picture_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_picture_cloudvela_data_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_picture_cloudvela_data_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_picture_cloudvela_data_report_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PICTURE message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//申明发送消息
+	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+
+	//分格式类型组装
+	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
+		memcpy(&(gTaskCloudvelaContext.L2Link), &(rcv.comHead), sizeof(msgie_struct_bh_com_head_t));
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_uni_picture_data_report_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_picture_data_report_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_picture_data_report>>8)&0xFF;
+		pMsgProc.msgId.optId = HUITP_MSGID_uni_picture_data_report&0xFF;
+		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+		//StrIe_HUITP_IEID_uni_com_report_t
+		pMsgProc.baseReport.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_report);
+		pMsgProc.baseReport.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_report_t) - 4);
+		pMsgProc.baseReport.comReport = rcv.baseReport;
+		//StrIe_HUITP_IEID_uni_picture_ind_t
+		pMsgProc.reportInd.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_picture_ind);
+		pMsgProc.reportInd.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_picture_ind_t) - 4);
+		pMsgProc.reportInd.flag = rcv.flag;
+
+		//Pack message
+		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
+		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
+		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_picture_data_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+	}
+
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}

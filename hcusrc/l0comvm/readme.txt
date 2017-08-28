@@ -11,9 +11,9 @@
 
 //= ZJL, 2017 Aug.28 CURRENT_SW_DELIVERY 247=>BFSC项目
 =改善YCJK的数据汇报格式部分，HUITP升级到2.11
-
-
-
+=增加PICTURE实时汇报过程(1小时为单位)
+=具体JCJK内容填写，待完善
+=JCJK的定时器，STA_DATA还未启动，待完善
 
 //= ZJL, 2017 Aug.25 CURRENT_SW_DELIVERY 246=>BFSC项目
 = 增加HUITP中EQULABLE的消息对

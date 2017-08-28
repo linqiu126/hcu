@@ -446,8 +446,6 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		return FAILURE;
 	}
 
-
-
 	//For HKvision option setting
 	HKVisionOption_t HKVisionOption;
 	memset( (void *)&HKVisionOption, 0, sizeof(HKVisionOption_t));
@@ -664,13 +662,15 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				snd.noise.onOffLineFlag = rcv.noise.onOffLineFlag;
 				snd.length = sizeof(msg_struct_noise_cloudvela_data_resp_t);
 
-				ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
-				if (ret == FAILURE){
-					zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-					HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-					return FAILURE;
+				//发送后台
+				if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+					ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
+					if (ret == FAILURE){
+						zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+						HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+						return FAILURE;
+					}
 				}
-				///////////
 
 				//Save to disk as request：在线是为了备份，离线是为了重发给后台
 				//该函数，有待完成
@@ -985,13 +985,15 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		snd.noise.onOffLineFlag = rcv.noise.onOffLineFlag;
 		snd.length = sizeof(msg_struct_noise_cloudvela_data_resp_t);
 
-		ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-			return FAILURE;
+		//发送后台
+		if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+			ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+				HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+				return FAILURE;
+			}
 		}
-		///////////
 
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成

@@ -318,6 +318,7 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 	memcpy(&rcv, param_ptr, param_len);
 
 	UINT32 timeCurrent;
+	timeCurrent = time(0);
 	msg_struct_l3mod_llczhb_ctrl_resp_t sndResp;
 	msg_struct_l3mod_llczhb_data_report_t sndReport;
 
@@ -381,7 +382,6 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_MIN_RPT_2051:
 		//取得开始和结束时间，计算开始和结束时间和当前时间的差值，并同时起采集数据起始时间和结束时间的定时器，
 		//数据从聚合表中获得，聚合表由内部定义Timer定时从数据库中取数据计算（暂定一分钟），为简化设计，可依据Flag值来判断是否上传发送
-		timeCurrent = time(0);
 		HcuErrorPrint("L3AQYCG20: BeginTime=%d  EndTime=%d at min report request message,current Time=%d !\n\n",rcv.dl2Self.gapTime.BeginTime, rcv.dl2Self.gapTime.EndTime,timeCurrent);
 		gTaskL3aqycq20Context.timeBegin_Min = rcv.dl2Self.gapTime.BeginTime - timeCurrent;
 		gTaskL3aqycq20Context.timeEnd_Min = rcv.dl2Self.gapTime.EndTime - timeCurrent;
@@ -407,7 +407,6 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_HOUR_RPT_2061:
-		timeCurrent = time(0);
 		HcuErrorPrint("L3AQYCG20: BeginTime=%d  EndTime=%d at min report request message,current Time=%d !\n\n",rcv.dl2Self.gapTime.BeginTime, rcv.dl2Self.gapTime.EndTime,timeCurrent);
 		gTaskL3aqycq20Context.timeBegin_Hour = rcv.dl2Self.gapTime.BeginTime - timeCurrent;
 		gTaskL3aqycq20Context.timeEnd_Hour = rcv.dl2Self.gapTime.EndTime - timeCurrent;
@@ -462,6 +461,7 @@ OPSTAT fsm_l3aqycg20_llczhb_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 		break;
 
 	case HCU_SYSMSG_ZHBHJT_ACTION_GET_POL_ALA_2071://取污染物报警记录(需要确定是否是取指定时间段内的历史记录？如果是，需要查询PM10和noise在指定时间段内的报警数据并上报，待实现。。)
+		timeCurrent = time(0);
 		HcuErrorPrint("L3AQYCG20: BeginTime=%d  EndTime=%d at min report request message,current Time=%d !\n\n",rcv.dl2Self.gapTime.BeginTime, rcv.dl2Self.gapTime.EndTime,timeCurrent);
 		gTaskL3aqycq20Context.timeBegin_Ala = rcv.dl2Self.gapTime.BeginTime;
 		gTaskL3aqycq20Context.timeEnd_Ala = rcv.dl2Self.gapTime.EndTime;
@@ -1604,6 +1604,30 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 			}
 		}
 	}
+
+	//使用HUITP发送MSG_ID_YCJK_CLOUDVELA_DATA_REPORT报告给后台
+	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_3M_REPORT_CYCLE) == 0) && ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP) == TRUE)){
+		//发送
+		msg_struct_ycjk_cloudvela_data_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_ycjk_cloudvela_data_report_t));
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT: TBD
+		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		snd.ycjk.equipid = 1;
+		//...等其它内容
+		snd.length = sizeof(msg_struct_ycjk_cloudvela_data_report_t);
+
+		//发送后台
+		if (hcu_message_send(MSG_ID_YCJK_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3AQYCG20, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_L3AQYCG20("L3AQYCG20: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+	}//使用HUITP发送MSG_ID_YCJK_CLOUDVELA_DATA_REPORT报告给后台
 
 	//返回
 	return SUCCESS;

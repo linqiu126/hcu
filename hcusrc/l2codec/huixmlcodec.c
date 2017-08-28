@@ -1027,6 +1027,17 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	break;
 
 	//HSMMP
+	case HUITP_MSGID_uni_picture_data_confirm:
+	{
+		StrMsg_HUITP_MSGID_uni_picture_data_confirm_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_picture_data_confirm_t) - 4))
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_uni_picture_data_confirm_t*)(&pMsgBuf);
+		ret = func_cloudvela_huitpxml_msg_picture_data_confirm_received_handle(snd);
+	}
+	break;
+
+	//HSMMP
 	case HUITP_MSGID_uni_hsmmp_ctrl_req:
 	{
 		StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t *snd;
@@ -2974,6 +2985,33 @@ OPSTAT func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle(StrMsg_HUI
 	//返回
 	return SUCCESS;
 }
+
+OPSTAT func_cloudvela_huitpxml_msg_picture_data_confirm_received_handle(StrMsg_HUITP_MSGID_uni_picture_data_confirm_t *rcv)
+{
+	//int ret = 0;
+
+	//先处理大小端问题
+	rcv->msgLen = HUITP_ENDIAN_EXG16(rcv->msgLen);
+	rcv->baseConfirm.ieId = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieId);
+	rcv->baseConfirm.ieLen = HUITP_ENDIAN_EXG16(rcv->baseConfirm.ieLen);
+
+	//IE参数检查
+	if ((rcv->baseConfirm.ieId != HUITP_IEID_uni_com_confirm) || (rcv->baseConfirm.ieLen != (sizeof(StrIe_HUITP_IEID_uni_com_confirm_t) - 4)))
+		HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Cloud raw message content unpack error!\n");
+
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+	msg_struct_cloudvela_picture_data_confirm_t snd;
+	memset(&snd, 0, sizeof(msg_struct_cloudvela_picture_data_confirm_t));
+	memcpy(&(snd.comHead), &(gTaskCloudvelaContext.L2Link), sizeof(msgie_struct_bh_com_head_t));
+	snd.baseConfirm = rcv->baseConfirm.comConfirm;
+	snd.length = sizeof(msg_struct_cloudvela_picture_data_confirm_t);
+	if (hcu_message_send(MSG_ID_CLOUDVELA_PICTURE_DATA_CONFIRM, TASK_ID_HSMMP, TASK_ID_CLOUDVELA, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName, zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName);
+
+	//返回
+	return SUCCESS;
+}
+
 
 OPSTAT func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t *rcv)
 {

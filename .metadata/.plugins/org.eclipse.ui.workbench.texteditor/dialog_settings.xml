@@ -2,22 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="StrIe_HUITP_IEID_uni_picture_ind_t" key="selection"/>
+		<item value="MSG_ID_YCJK_CLOUDVELA_DATA_REPORT" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="StrIe_HUITP_IEID_uni_picture_ind_t"/>
-			<item value="HUITP_IEID_uni_picture_value"/>
-			<item value="StrIe_HUITP_IEID_uni_picture_value_t"/>
-			<item value="HUITP_MSGID_uni_picture_data_req"/>
-			<item value="picture"/>
-			<item value="ycjk"/>
-			<item value="HUITP_IEID_uni_ycjk_value"/>
-			<item value="jcjk"/>
+			<item value="MSG_ID_YCJK_CLOUDVELA_DATA_REPORT"/>
+			<item value="YCJ"/>
+			<item value="YC"/>
+			<item value="YCJH"/>
+			<item value="YCJK"/>
+			<item value="INDI"/>
+			<item value="INVIDI"/>
+			<item value="TIMER_ID_1S_L3AQYCG20_PERIOD_READ"/>
 		</list>
 		<list key="replacehistory">
+			<item value="HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL"/>
 			<item value="HUITP_IEID_uni_picture_ind"/>
 			<item value="HCU_DEBUG_PRINT_NOR"/>
 			<item value="L0SVRFTP:"/>

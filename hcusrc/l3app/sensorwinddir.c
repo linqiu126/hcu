@@ -406,13 +406,16 @@ OPSTAT fsm_winddir_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void *
 		snd.winddir.onOffLineFlag = rcv.winddir.onOffLineFlag;
 		snd.length = sizeof(msg_struct_winddir_cloudvela_data_resp_t);
 
-		ret = hcu_message_send(MSG_ID_WINDDIR_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_WINDDIR, &snd, snd.length);
-		if (ret == FAILURE){
-			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-			HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
-			return FAILURE;
+		//发送后台
+		if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+			ret = hcu_message_send(MSG_ID_WINDDIR_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_WINDDIR, &snd, snd.length);
+			if (ret == FAILURE){
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+				HcuErrorPrint("NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+				return FAILURE;
+			}
 		}
-		///////////
+
 		//Save to disk as request：在线是为了备份，离线是为了重发给后台
 		//该函数，有待完成
 		if (rcv.cmdIdBackType == L3CI_cmdid_back_type_period){

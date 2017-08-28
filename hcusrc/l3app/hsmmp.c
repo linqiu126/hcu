@@ -48,6 +48,7 @@ HcuFsmStateItem_t HcuFsmHsmmp[] =
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,			FSM_STATE_HSMMP_ACTIVED,      	  	fsm_hsmmp_l3aqyc_exg_ctrl_req},
 	{MSG_ID_SPSVIRGO_HSMMP_DATA_RX,     	FSM_STATE_HSMMP_ACTIVED,          	fsm_hsmmp_audio_data_rx},
 	{MSG_ID_AVORION_HSMMP_DATA_RX,      	FSM_STATE_HSMMP_ACTIVED,         	fsm_hsmmp_avorion_data_rx},
+	{MSG_ID_CLOUDVELA_PICTURE_DATA_CONFIRM, FSM_STATE_HSMMP_ACTIVED,         	fsm_hsmmp_picture_data_confirm},
 
 	//来自CLOUD的控制协议，可以在不同的激活状态下起作用，但起作用必须等待下一轮硬件空闲的时候
     //Waiting for feedback from
@@ -122,6 +123,17 @@ OPSTAT fsm_hsmmp_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 		return FAILURE;
 	}
 
+	//启动周期性定时器
+	i = rand()%TIMER_DURATION_REDUCE_COLLAPTION_IN_1_MINUTES;
+	hcu_sleep(i);
+	ret = hcu_timer_start(TASK_ID_HSMMP, TIMER_ID_1S_HSMMP_PERIOD_CURL_PICTURE, \
+			zHcuSysEngPar.timer.array[TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+		HcuErrorPrint("HSMMP: Error start timer!\n");
+		return FAILURE;
+	}
+
 	//设置状态机到目标状态
 	//State Transfer to FSM_STATE_HSMMP_ACTIVED
 	if (FsmSetState(TASK_ID_HSMMP, FSM_STATE_HSMMP_ACTIVED) == FAILURE){
@@ -172,19 +184,18 @@ OPSTAT fsm_hsmmp_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//定时长时钟进行链路检测的
 	if ((rcv.timeId == TIMER_ID_1S_HSMMP_PERIOD_AVORION_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_hsmmp_time_out_period();
+		ret = func_hsmmp_time_out_period_avorion_read();
 	}
 
 	//定时短时钟进行离线数据回送
 	else if ((rcv.timeId == TIMER_ID_1S_HSMMP_AVORION_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 		ret = func_hsmmp_time_out_wait_for_cammera_fb();
 	}
-/*
-	//For disk size checking by shanchun
-	if ((rcv.timeId == TIMER_ID_1S_HSMMP_FILESIZE_READ) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-		ret = func_hsmmp_time_out_disksize();
+
+	//定时超长时钟进行照片回送
+	else if ((rcv.timeId == TIMER_ID_1S_HSMMP_PERIOD_CURL_PICTURE) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		ret = func_hsmmp_time_out_period_curl_picture();
 	}
-*/
 
 	//这里的ret=FAILURE並不算严重，只不过造成状态机返回差错而已，并不会造成程序崩溃和数据混乱，所以只是程序的自我保护而已
 	return ret;
@@ -221,6 +232,11 @@ OPSTAT fsm_hsmmp_l3aqyc_exg_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param
 
 
 OPSTAT fsm_hsmmp_avorion_data_rx(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+OPSTAT fsm_hsmmp_picture_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	return SUCCESS;
 }
@@ -328,8 +344,6 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			hsmmpData.gps.ew = record.ew;
 			hsmmpData.gps.ns = record.ns;
 			hsmmpData.onOffLineFlag = record.onOffLine;
-			//printf("HSMMP: hsmmpData address = 0x%08x\n", (UINT32)&hsmmpData);
-			//printf("HSMMP: hsmmpFdir = %s, hsmmpFname = %s, hsmmpLink = %s\n", hsmmpData.hsmmpFdir, hsmmpData.hsmmpFname, hsmmpData.hsmmpLink);
 			ret = dbi_HcuHsmmpDataInfo_save(&hsmmpData);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
@@ -358,8 +372,7 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 			snd.useroptid = L3PO_hsmmp_data_report;
 			snd.link.equipid = rcv.hsmmp.equipid; //如果是0，可能会被L2编码拒绝，未来再优化完善
 			snd.cmdIdBackType = L3CI_cmdid_back_type_period;
-			//ZHB格式的参数应该在这里一并填入
-			//snd.cn =
+
 			ret = hcu_message_send(MSG_ID_HSMMP_CLOUDVELA_DATA_RESP, TASK_ID_CLOUDVELA, TASK_ID_HSMMP, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
@@ -406,8 +419,8 @@ OPSTAT fsm_hsmmp_avorion_data_read_fb(UINT32 dest_id, UINT32 src_id, void * para
 	return SUCCESS;
 }
 
-//长周期，定时工作模式
-OPSTAT func_hsmmp_time_out_period(void)
+//长周期
+OPSTAT func_hsmmp_time_out_period_avorion_read(void)
 {
 	int ret=0;
 
@@ -484,6 +497,49 @@ OPSTAT func_hsmmp_time_out_period(void)
 	}
 	return SUCCESS;
 }
+
+OPSTAT func_hsmmp_time_out_period_curl_picture(void)
+{
+	int ret=0;
+
+	//在线模式
+	if (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE){
+		msg_struct_picture_cloudvela_data_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_picture_cloudvela_data_report_t));
+		snd.length = sizeof(msg_struct_picture_cloudvela_data_report_t);
+		//L2信息
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//LINK层参数
+		snd.link.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
+		snd.link.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
+		snd.link.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
+		snd.link.gps.ew = zHcuVmCtrTab.hwinv.gps.EW;
+		snd.link.gps.ns = zHcuVmCtrTab.hwinv.gps.NS;
+		snd.link.timeStampStart = time(0);
+		snd.link.timeStampEnd = time(0);
+
+		//强行注入参数
+		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		snd.flag = HUITP_IEID_UNI_PICTURE_IND_FLAG_REMOTE_CURL_TRIGGER;
+
+		ret = hcu_message_send(MSG_ID_PICTURE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_HSMMP, &snd, snd.length);
+		if (ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_HSMMP]++;
+			HcuErrorPrint("HSMMP: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HSMMP].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+			return FAILURE;
+		}
+	}
+
+	return SUCCESS;
+}
+
 
 //不支持多个传感器同时工作，这里只架设有一个摄像头
 //如果超时，说明摄像头工作不太正常，记录在案，并停止摄像头工作即可，其它的也不用干啥
