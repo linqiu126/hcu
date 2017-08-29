@@ -632,7 +632,37 @@ OPSTAT dbi_HcuPm25DataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+		//////////
+
+		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		{
+			if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		{
+			if (sqlRow[index]) PM10data->a34001_Min = (UINT32)atol(sqlRow[index]);
+
+		}
+		else //DEFAULT取标准低配置传感器
+		{
+			if (sqlRow[index]) PM10data->a34001_Min = (UINT32)atol(sqlRow[index]);
+		}
+
+        //////////
+
+
+		//if (sqlRow[index]) PM10data->a34001_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		//HCU_DEBUG_PRINT_INF("DBIPM25: min=%4.3f\n", PM10data->a34001_Min);
 	}
 
@@ -698,7 +728,36 @@ OPSTAT dbi_HcuPm25DataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+		//////////
+
+		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		{
+			if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		{
+			if (sqlRow[index]) PM10data->a34001_Max = (UINT32)atol(sqlRow[index]);
+
+		}
+		else //DEFAULT取标准低配置传感器
+		{
+			if (sqlRow[index]) PM10data->a34001_Max = (UINT32)atol(sqlRow[index]);
+		}
+
+        //////////
+
+		//if (sqlRow[index]) PM10data->a34001_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		//HCU_DEBUG_PRINT_INF("DBIPM25: max=%4.3f\n", PM10data->a34001_Max);
 	}
 
@@ -764,7 +823,36 @@ OPSTAT dbi_HcuPm25DataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElement
 	}
 	else{
 
-		if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+		//////////
+
+		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		{
+			if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		{
+			if (sqlRow[index]) PM10data->a34001_Avg = (UINT32)atol(sqlRow[index]);
+
+		}
+		else //DEFAULT取标准低配置传感器
+		{
+			if (sqlRow[index]) PM10data->a34001_Avg = (UINT32)atol(sqlRow[index]);
+		}
+
+        //////////
+
+		//if (sqlRow[index]) PM10data->a34001_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		//HCU_DEBUG_PRINT_INF("DBIPM25: avg=%4.3f\n", PM10data->a34001_Avg);
 	}
 

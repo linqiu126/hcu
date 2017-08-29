@@ -216,6 +216,8 @@ OPSTAT fsm_l3aqycg20_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 
 	//周期性聚合表生成
 	else if ((rcv.timeId == TIMER_ID_1S_L3AQYCG20_PERIOD_STA_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation process\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		//周期性聚合表生成
 		if (func_l3aqyc_time_out_aggregation_process() == FAILURE)
 			HcuErrorPrint("L3AQYCG20: Error process time out message!\n");
@@ -837,7 +839,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from PM25 database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a34001_Min);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a34001_Min);
 	}
 
 	ret = dbi_HcuPm25DataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -846,7 +848,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from PM25 database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a34001_Max);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a34001_Max);
 	}
 
 	ret = dbi_HcuPm25DataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -855,7 +857,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from PM25 database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a34001_Avg);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get PM10 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a34001_Avg);
 	}
 
 	//噪声
@@ -868,7 +870,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Noise database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a50001_Min);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a50001_Min);
 	}
 
 	ret = dbi_HcuNoiseDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -877,7 +879,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Noise database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a50001_Max);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a50001_Max);
 	}
 
 	ret = dbi_HcuNoiseDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -886,7 +888,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Noise database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a50001_Avg);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Noise 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a50001_Avg);
 	}
 
 
@@ -900,7 +902,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Temp database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01001_Min);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01001_Min);
 	}
 
 	ret = dbi_HcuTempDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -909,7 +911,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Temp database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01001_Max);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01001_Max);
 	}
 
 	ret = dbi_HcuTempDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -918,7 +920,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Temp database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01001_Avg);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Temp 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01001_Avg);
 	}
 
 
@@ -932,7 +934,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Humid database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01002_Min);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01002_Min);
 	}
 
 	ret = dbi_HcuHumidDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -941,7 +943,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Humid database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01002_Max);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01002_Max);
 	}
 
 	ret = dbi_HcuHumidDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -950,7 +952,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Humid database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01002_Avg);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Humid 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01002_Avg);
 	}
 
 
@@ -964,7 +966,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Windspd database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01007_Min);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01007_Min);
 	}
 
 	ret = dbi_HcuWindspdDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -973,7 +975,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get Windspd max data from Windspd database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01007_Max);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01007_Max);
 	}
 
 	ret = dbi_HcuWindspdDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -982,7 +984,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Windspd database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01007_Avg);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Windspd 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01007_Avg);
 	}
 
 	//风向
@@ -995,7 +997,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get min data from Winddir database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01008_Min);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1M minimum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01008_Min);
 	}
 
 	ret = dbi_HcuWinddirDataInfo_GetMax(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -1004,7 +1006,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get max data from Winddir database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01008_Max);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1M maximum data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01008_Max);
 	}
 
 	ret = dbi_HcuWinddirDataInfo_GetAvg(HCU_L3AQYC_STA_5M_REPORT_DURATION,&gTaskL3aqycq20Context.staMin);
@@ -1013,7 +1015,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		HcuErrorPrint("L3AQYCG20: Can not get avg data from Winddir database!\n");
 	}
 	else{
-		//HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01008_Avg);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 get Winddir 1M average data = %4.3f\n", gTaskL3aqycq20Context.staMin.a01008_Avg);
 	}
 
 	//气压
@@ -1605,8 +1607,15 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		}
 	}
 
+
+	HCU_DEBUG_PRINT_INF("L3AQYCG20 aggregation report to default cloud\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
 	//使用HUITP发送MSG_ID_YCJK_CLOUDVELA_DATA_REPORT报告给后台
-	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_3M_REPORT_CYCLE) == 0) && ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP) == TRUE)){
+	//
+	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1M_REPORT_CYCLE) == 0) && (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP)){
+
+	    HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation report to default cloud\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
 		//发送
 		msg_struct_ycjk_cloudvela_data_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_ycjk_cloudvela_data_report_t));
@@ -1621,14 +1630,14 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//CONTENT: TBD
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.ycjk.equipid = 1;
-		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a01001_Avg;
-		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a01002_Avg;
-		snd.ycjk.winddirValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a01008_Avg;
-		snd.ycjk.windspdValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a01007_Avg;
-		snd.ycjk.tspValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a34001_Avg;
-		snd.ycjk.pm2d5Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
-		snd.ycjk.pm10Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
-		snd.ycjk.noiseValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*(INT32)gTaskL3aqycq20Context.staMin.a50001_Avg;
+		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01001_Avg;
+		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01002_Avg;
+		snd.ycjk.winddirValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01008_Avg;
+		snd.ycjk.windspdValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01007_Avg;
+		snd.ycjk.tspValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;
+		snd.ycjk.pm2d5Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
+		snd.ycjk.pm10Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
+		snd.ycjk.noiseValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a50001_Avg;
 		snd.ycjk.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2; //no need, caculate directly for l3aqycg20??
 		snd.ycjk.timeStamp = time(0);
 
