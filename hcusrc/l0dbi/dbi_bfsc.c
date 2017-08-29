@@ -622,7 +622,7 @@ OPSTAT  dbi_HcuBfsc_WmcStatusForceSuspend(void)
 	    return SUCCESS;
 }
 
-OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
+OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT8  sensorid)
 {
 	MYSQL *sqlHandler;
     int result = 0;
@@ -642,7 +642,6 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullwe
         return FAILURE;
     }
 
-    HcuDebugPrint("DBIBFSC: Receive calibration date: sensorid = %02d, adcvalue = %d, weight = %d!\n", sensorid,adcvalue,fullweight);
     //零值校准数据
     sprintf(strsql, "UPDATE `hcubfsccalibration` SET zeroadc_%02d = '%d' WHERE (1)", sensorid, adcvalue);
 	result = mysql_query(sqlHandler, strsql);
@@ -658,7 +657,7 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT32 fullwe
     return SUCCESS;
 }
 
-OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid)
+OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT8  sensorid)
 {
 	MYSQL *sqlHandler;
     int result = 0;
@@ -678,9 +677,8 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT32 fullwe
         return FAILURE;
     }
 
-    HcuDebugPrint("DBIBFSC: Receive calibration date: sensorid = %02d, adcvalue = %d, weight = %d!\n", sensorid,adcvalue,fullweight);
     //满值校准数据
-    sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d', fullwgt_%02d='%d'  WHERE (1)", sensorid, adcvalue, sensorid, fullweight);
+    sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d''  WHERE (1)", sensorid, adcvalue);
 	result = mysql_query(sqlHandler, strsql);
 
     if(result){
