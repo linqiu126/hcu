@@ -221,6 +221,24 @@ OPSTAT func_l3bfsc_int_init(void)
 {
 	if (hcu_sps232_qr_printer_init() == FAILURE)
 		HcuDebugPrint("L3BFSC: Init QR Printer not success, but not impact whole system working!\n");
+
+	//测试一把试试，正式场所不需要
+	//打印二维码／条形码：二维码＋条形码的内容
+/*
+	char s[100];
+	time_t lt;
+	struct tm *cu;
+	memset(s, 0, sizeof(s));
+
+	//初始本地时间
+	lt=time(NULL);
+	cu = localtime(&lt);
+	cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
+	sprintf(s, "BOFENGZHINENG-%s-%4.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfscContext.configName, (float)gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
+			(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+	hcu_sps232_send_char_to_ext_printer(s, strlen(s));
+*/
+
 	return SUCCESS;
 }
 
@@ -692,7 +710,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 		}
-		//打印二维码／条形码：二维码＋条形码的内容，固定格式：待定
+		//打印二维码／条形码：二维码＋条形码的内容
 		char s[100];
 		time_t lt;
 		struct tm *cu;
@@ -702,7 +720,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 		lt=time(NULL);
 		cu = localtime(&lt);
 		cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
-		sprintf(s, "%s-%4.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfscContext.configName, (float)gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
+		sprintf(s, "BOFENGZHINENG-%s-%4.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfscContext.configName, (float)gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
 				(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
 		hcu_sps232_send_char_to_ext_printer(s, strlen(s));
 	}
