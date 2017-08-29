@@ -3743,8 +3743,12 @@ OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * para
 	}
 
 	//Send out
-	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+	}
+	else{
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send ycjk report successfully !\n\n");
+	}
 
 	//State no change
 	return SUCCESS;
