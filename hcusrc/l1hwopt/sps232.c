@@ -414,7 +414,7 @@ OPSTAT hcu_sps232_qr_printer_init(void)
 	gSerialPortForQrPrinter.vMin = HCU_INVALID_U8;
 	gSerialPortForQrPrinter.c_lflag = 0;
 
-	ret = hcu_sps485_serial_init(&gSerialPortForQrPrinter);
+	ret = hcu_spsapi_serial_init(&gSerialPortForQrPrinter);
 	if (FAILURE == ret)
 	{
 		HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
@@ -427,6 +427,27 @@ OPSTAT hcu_sps232_qr_printer_init(void)
 	return SUCCESS;
 }
 
+//	PMJ_M[0] = 0x20;	//英展，耐撕
+//	PMJ_M[1] = weightdata/10000+0x30;
+//	PMJ_M[2] = (weightdata/1000)%10+0x30;
+//	PMJ_M[3] = 0X2E;	//.
+//	PMJ_M[4] = (weightdata/100)%10+0x30;
+//	PMJ_M[5] = (weightdata/10)%10+0x30;
+//	PMJ_M[6] = 0X20;	//space
+//	PMJ_M[7] = 0X6B;  //K
+//	PMJ_M[8] = 0X67;  //G
+//	PMJ_M[9] = 0x0D;  //
+//	PMJ_M[10] = 0x0A;  //
+//
+//	if(PMJ_M[1] == 0X30)
+//	{
+//		PMJ_M[1] = 0X20;
+//	}
+//	for(i=0;i<11;i++)	//10
+//	{
+//			UART1_SendByte(PMJ_M[i]);
+////            OSTimeDlyHMSM(0, 0, 0, 10, OS_OPT_TIME_DLY, &os_err);
+//	}
 void hcu_sps232_send_char_to_ext_printer(char *s, int len)
 {
 	char output[130];
@@ -439,11 +460,11 @@ void hcu_sps232_send_char_to_ext_printer(char *s, int len)
 
 	//固定格式，待完善
 	memset(output, 0, sizeof(output));
-	sprintf(output, "%s", s);
+	sprintf(output, " %s\r\n", s);
 
 	//选择打印机串口
 	if (hcu_spsapi_serial_port_send(&gSerialPortForQrPrinter, (UINT8*)output, strlen(output)) == FAILURE){
-        HcuErrorPrint("SPS232: unction hcu_sps232_send_char_to_ext_printer send data error!\n");
+        HcuErrorPrint("SPS232: Function hcu_sps232_send_char_to_ext_printer send data error!\n");
         return;
 	}
 	return;

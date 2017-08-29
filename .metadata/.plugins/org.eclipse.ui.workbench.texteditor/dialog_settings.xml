@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="//打印二维码／条形码：二维" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="serial_port_send"/>
+			<item value="//打印二维码／条形码：二维"/>
 			<item value="printer"/>
+			<item value="serial_port_send"/>
 			<item value="hcusysengpar"/>
 			<item value="zHcuSysEngPar.serialport.SeriesPortForModbus"/>
 			<item value="HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT"/>
 			<item value="zHcuVmCtrTab.clock.sSec"/>
 			<item value="printe"/>
-			<item value="ptiner"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL"/>
