@@ -50,6 +50,7 @@ typedef struct SysEngParElementSeriesPort
 	UINT32 SeriesPortForModbus;
 	UINT32 SeriesPortForGPS;
 	UINT32 SeriesPortForPm25Sharp;
+	UINT32 SeriesPortForQrPrinter;
 }SysEngParElementSeriesPort_t;
 
 //后台服务器地址部分

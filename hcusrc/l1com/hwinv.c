@@ -375,6 +375,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		zHcuSysEngPar.serialport.SeriesPortForModbus = HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT;
 		//zHcuSysEngPar.serialport.SeriesPortForGPS = HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT;
 		zHcuSysEngPar.serialport.SeriesPortForPm25Sharp = HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT;
+		zHcuSysEngPar.serialport.SeriesPortForQrPrinter = HCU_SYSCFG_SERIESPORT_NUM_FOR_QRPRINTER_DEFAULT;
 		//后台部分
 		strncpy(zHcuSysEngPar.cloud.svrAddrHttpLocal, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpLocal))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_LOCAL)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpLocal)));
 		strncpy(zHcuSysEngPar.cloud.svrAddrSocketipDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault)));

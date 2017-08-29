@@ -857,7 +857,6 @@ extern UINT16 hcu_vm_calculate_crc_u16(unsigned char *data,int len);
 extern void   hcu_vm_calculate_crc_modbus(UINT8* pDataIn, UINT32 iLenIn, UINT16* pCRCOut);
 extern UINT16 hcu_vm_calculate_crc_one_char(UINT8 cDataIn, UINT16 wCRCIn);
 extern UINT16 hcu_vm_calculate_crc_ccitt(unsigned char *q, int len);
-
 extern void   hcu_vm_set_local_time(UINT32 newTimeInUnix);
 
 //UINT32转Float
@@ -930,6 +929,9 @@ void   hcu_vm_engpar_translate_phy_boot_cfg_into_mem(char *pRecord, int index, U
 extern UINT16 hcu_vm_search_task_static_cfg_table_of_row(int taskid);
 extern UINT16 hcu_vm_search_msg_static_cfg_table_of_row(int msgid);
 extern UINT16 hcu_vm_search_timer_static_cfg_table_of_row(int timerid);
+
+//向外提供的服务性API
+
 
 /*
  *

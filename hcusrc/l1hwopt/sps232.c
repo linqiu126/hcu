@@ -42,7 +42,7 @@ HcuFsmStateItem_t HcuFsmSps232[] =
 };
 
 //Global variables
-
+SerialPortCom_t gSerialPortForQrPrinter;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -397,101 +397,48 @@ UINT8 func_sps232_check_sum_pm25sharp(UINT8 *s, UINT8 len)
 	return tmp;
 }
 
-/*
-//读取PM25SHARP传感器的串口数据
-OPSTAT func_sps232_read_data_pm25sharp(void)
+
+//初始化二维码打印机
+OPSTAT hcu_sps232_qr_printer_init(void)
 {
-#ifdef TARGET_RASPBERRY_PI3B
+	OPSTAT ret = 0;
 
-	int nread;
-	int i=0,j=0,sum=0,counter=0;
-	int counter_good_frame = 0;
-	int counter_bad_frame = 0;
-	int counter_total_frame = 0;
-	float vo;
-	float pm25value;
-	unsigned char received_single_byte;
-	unsigned char pm25_frame_received_buff[7];
-	int start_time, end_time;
-	float average_pm25=0, sum_2s = 0;
+	//初始化全局变量
+	gSerialPortForQrPrinter.id = zHcuSysEngPar.serialport.SeriesPortForQrPrinter;
+	gSerialPortForQrPrinter.nSpeed = HCU_SYSCFG_SERIESPORT_BAUTRATE_DEFAULT;
+	gSerialPortForQrPrinter.nBits = 8;
+	gSerialPortForQrPrinter.nEvent = 'N';
+	gSerialPortForQrPrinter.nStop = 1;
+	gSerialPortForQrPrinter.fd = HCU_INVALID_U16;
+	gSerialPortForQrPrinter.vTime = HCU_INVALID_U8;
+	gSerialPortForQrPrinter.vMin = HCU_INVALID_U8;
+	gSerialPortForQrPrinter.c_lflag = 0;
 
-	//起始时间
-	start_time = time((time_t*)NULL);
-
-	//读取数据
-	nread = hcu_spsapi_serial_port_get(&gSerialPortForSPS232, &received_single_byte, 1);
-	if (nread <=0)
+	ret = hcu_sps485_serial_init(&gSerialPortForQrPrinter);
+	if (FAILURE == ret)
 	{
-		HcuErrorPrint("SPS232: Sensor PM25Sharp Read data error!\n");
-		zHcuRunErrCnt[TASK_ID_SPS232]++;
-		return FAILURE;
+		HcuErrorPrint("SPS232: Init Serial Port Failure, Exit.\n");
+		return ret;
 	}
 
-	//帧解码，起始位是0xAA
-	if(received_single_byte == 0xaa){
-	  j=0;
-	  pm25_frame_received_buff[j] = received_single_byte;
-	}
-	else{
-	  j++;
-	  pm25_frame_received_buff[j] = received_single_byte;
-	}
-
-	if(j==6)
-	{
-	  sum = pm25_frame_received_buff[1]+ pm25_frame_received_buff[2]+ pm25_frame_received_buff[3] + pm25_frame_received_buff[4];
-	  //log_debug(logfile,"Bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-	  if(pm25_frame_received_buff[5]==sum && pm25_frame_received_buff[6]== 0xff ) //终止位是0xFF
-	  {
-		  vo=(pm25_frame_received_buff[1]*256.0+pm25_frame_received_buff[2])/1024.00*5.000;
-		  pm25value = vo*700;
-		  //log_debug(logfile,"pm25 value is:%f",pm25value);
-		  //2秒内的平均值求取
-		  counter++;
-		  sum_2s = sum_2s + pm25value;
-		  end_time = time((time_t*)NULL);
-		  if((end_time - start_time) > 2)
-		  {
-			  //log_debug(logfile,"Last bytes received: %02x %02x %02x %02x %02x %02x %02x ", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-			  HcuDebugPrint("SPS232: Sensor PM25Sharp sast bytes received: %02x %02x %02x %02x %02x %02x %02x \n", pm25_frame_received_buff[0], pm25_frame_received_buff[1], pm25_frame_received_buff[2], pm25_frame_received_buff[3], pm25_frame_received_buff[4], pm25_frame_received_buff[5], pm25_frame_received_buff[6]);
-			  zHcuSps232Pm25Sharp = sum_2s / counter;
-			  HcuDebugPrint("SPS232: Sensor PM25Sharp start_time is %d, end_time is %d, counter in 2 seconds is %d, sum_2s is %f, average_pm25 value is:%f \n", start_time, end_time, counter, sum_2s, average_pm25);
-			  counter = 0;
-			  sum_2s = 0;
-			  start_time = time((time_t*)NULL);
-			  HcuDebugPrint("SPS232: Sensor PM25Sharp counter_good_frame is: %d, counter_total_frame is: %d.\n",counter_good_frame, counter_total_frame);
-		  }
-		  counter_good_frame++;
-		  //log_debug(logfile,"counter_good_frame is: %d.",counter_good_frame);
-	  }
-	  else
-	  {
-		  counter_bad_frame++;
-		  HcuDebugPrint("SPS232: Sensor PM25Sharp counter_bad_frame is: %d.",counter_bad_frame);
-	  }
-	  counter_total_frame++;
-	  //log_debug(logfile,"counter_total_frame is: %d.\n",counter_total_frame);
-	  //PM25计算和输出完成之后相关变量清零
-	  j=0;
-	  received_single_byte='\0';
-	  for(i=0;i<7;i++){
-		  pm25_frame_received_buff[i]=0;
-	  }
-
-	}
-	else
-	{
-
-	}
-
-
+	hcu_spsapi_SerialPortSetVtimeVmin(&gSerialPortForQrPrinter, 10, 5);
+	HCU_DEBUG_PRINT_NOR("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  gSerialPortForQrPrinter.vTime, gSerialPortForQrPrinter.vMin);
 
 	return SUCCESS;
-#else
-    //对于其他平台, 暂时啥都不做
-    return SUCCESS;
-#endif
 }
-*/
+
+void hcu_sps232_send_char_to_ext_printer(char *s, int len)
+{
+	//入参检查
+	if (s==NULL) return;
+
+	//选择打印机串口
+
+	//循环打印
+
+}
+
+
+
 
 

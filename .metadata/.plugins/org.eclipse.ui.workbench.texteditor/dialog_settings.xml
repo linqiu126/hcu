@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="2007" key="selection"/>
+		<item value="fsm_l3bfsc_canitf_ws_comb_out_fb" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="2007"/>
-			<item value="007"/>
-			<item value="MSG_ID_YCJK_CLOUDVELA_DATA_REPORT"/>
-			<item value="YCJ"/>
-			<item value="YC"/>
-			<item value="YCJH"/>
-			<item value="YCJK"/>
-			<item value="INDI"/>
+			<item value="fsm_l3bfsc_canitf_ws_comb_out_fb"/>
+			<item value="GPS"/>
+			<item value="zHcuSysEngPar.serialport.SeriesPortForModbus"/>
+			<item value="#define HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT"/>
+			<item value="serialport"/>
+			<item value="zHcuSysEngPar.serialport"/>
+			<item value="HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT"/>
+			<item value="HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT"/>
 		</list>
 		<list key="replacehistory">
 			<item value="HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL"/>

@@ -283,7 +283,9 @@ bool func_l3bfsc_cacluate_sensor_start_rcv_complete(void);
 bool func_l3bfsc_cacluate_sensor_stop_rcv_complete(void);
 void func_l3bfsc_test_combine(void);
 
-
+//External APIs
+extern OPSTAT hcu_sps232_qr_printer_init(void);
+extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_L3BFSC(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFSC]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

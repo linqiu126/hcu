@@ -219,6 +219,8 @@ OPSTAT fsm_l3bfsc_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 OPSTAT func_l3bfsc_int_init(void)
 {
+	if (hcu_sps232_qr_printer_init() == FAILURE)
+		HcuDebugPrint("L3BFSC: Init QR Printer not success, but not impact whole system working!\n");
 	return SUCCESS;
 }
 
@@ -690,6 +692,11 @@ OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 		}
+		//打印二维码／条形码：二维码＋条形码的内容，具体需要客户给出
+		char s[100];
+		memset(s, 0, sizeof(s));
+		sprintf(s, "BFSC-%f-%d", gTaskL3bfscContext.cur.wsTttMatWgt, 1);
+		hcu_sps232_send_char_to_ext_printer(s, strlen(s));
 	}
 
 	//返回

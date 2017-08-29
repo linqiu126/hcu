@@ -58,6 +58,10 @@ extern OPSTAT fsm_sps232_task_entry(UINT32 dest_id, UINT32 src_id, void * param_
 extern OPSTAT fsm_sps232_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sps232_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
+//Global APIs
+extern OPSTAT hcu_sps232_qr_printer_init(void);
+extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
+
 //Local API
 OPSTAT func_sps232_int_init(void);
 
