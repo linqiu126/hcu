@@ -8,6 +8,9 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Aug.29 CURRENT_SW_DELIVERY 248=>BFSC项目
+=继续更新HUITP v2.11，增加产品标签的名字，用来支持双线分选组合称
+
 
 //= ZJL, 2017 Aug.28 CURRENT_SW_DELIVERY 247=>BFSC项目
 =改善YCJK的数据汇报格式部分，HUITP升级到2.11
