@@ -210,6 +210,7 @@ typedef struct gTaskL3bfscContext
 	UINT8 	wsValueNbrActive;		    //激活的秤盘数量
 	UINT8 	wsBitmap[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];  //组合出的秤盘标示
 	UINT16												configId;  //用来标识系统工作在哪一套配置参数中
+	char    configName[20];
 	//实时统计部分：均以一个统计周期为单位
 	HcuSysMsgIeL3bfscContextStaElement_t cur;  		//当前统计基础颗粒中的数值
 	gTaskL3bfscContextStaEleMid_t  curAge;		//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真

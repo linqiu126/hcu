@@ -10,7 +10,11 @@
 
 //= ZJL, 2017 Aug.29 CURRENT_SW_DELIVERY 248=>BFSC项目
 =继续更新HUITP v2.11，增加产品标签的名字，用来支持双线分选组合称
-
+=增加打印机制
+= 修改数据库中的全局工参表单，增加SerialPortForQrPrinter参数
+=增加hcu_sps232_qr_printer_init / hcu_sps232_send_char_to_ext_printer，分别在L3BFSC初始化和组合出料完成以后使用
+=连上RS232串口打印机，就可以打印了，需要工厂实际测试效果
+=固定格式：待完善
 
 //= ZJL, 2017 Aug.28 CURRENT_SW_DELIVERY 247=>BFSC项目
 =改善YCJK的数据汇报格式部分，HUITP升级到2.11

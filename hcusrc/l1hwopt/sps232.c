@@ -429,13 +429,24 @@ OPSTAT hcu_sps232_qr_printer_init(void)
 
 void hcu_sps232_send_char_to_ext_printer(char *s, int len)
 {
+	char output[130];
+
 	//入参检查
-	if (s==NULL) return;
+	if ((s==NULL) || (strlen(s) != len) || (len > (sizeof(output)-30))){
+		HcuErrorPrint("SPS232: Function hcu_sps232_send_char_to_ext_printer input parameter error!\n");
+		return;
+	}
+
+	//固定格式，待完善
+	memset(output, 0, sizeof(output));
+	sprintf(output, "%s", s);
 
 	//选择打印机串口
-
-	//循环打印
-
+	if (hcu_spsapi_serial_port_send(&gSerialPortForQrPrinter, (UINT8*)output, strlen(output)) == FAILURE){
+        HcuErrorPrint("SPS232: unction hcu_sps232_send_char_to_ext_printer send data error!\n");
+        return;
+	}
+	return;
 }
 
 

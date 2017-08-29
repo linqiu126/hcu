@@ -42,7 +42,6 @@ HcuFsmStateItem_t HcuFsmSps485[] =
 };
 
 //Global variables
-//SerialPort_t gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -100,7 +99,6 @@ OPSTAT fsm_sps485_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuVmCtrTab.hwinv.sps485.modbus.vTime = HCU_INVALID_U8;
 	zHcuVmCtrTab.hwinv.sps485.modbus.vMin = HCU_INVALID_U8;
 	zHcuVmCtrTab.hwinv.sps485.modbus.c_lflag = 0;
-	//gSerialPort = {zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.BautRateForMODBUSPort, 8, 'N', 1, HCU_INVALID_U16, 0, 1, 0};//initial config date for serial port
 	ret = hcu_sps485_serial_init(&zHcuVmCtrTab.hwinv.sps485.modbus);
 	if (FAILURE == ret){
 		gTaskL3aqycq20Context.eqtStatus.a34001_RS = OFF;

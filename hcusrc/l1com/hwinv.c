@@ -373,7 +373,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		zHcuSysEngPar.dbi.hcuDbPort = HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT;
 		//Series Port config by Shanchun
 		zHcuSysEngPar.serialport.SeriesPortForModbus = HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT;
-		//zHcuSysEngPar.serialport.SeriesPortForGPS = HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT;
+		zHcuSysEngPar.serialport.SeriesPortForGPS = HCU_SYSCFG_SERIESPORT_NUM_FOR_GPS_DEFAULT;
 		zHcuSysEngPar.serialport.SeriesPortForPm25Sharp = HCU_SYSCFG_SERIESPORT_NUM_FOR_PM25HARP_DEFAULT;
 		zHcuSysEngPar.serialport.SeriesPortForQrPrinter = HCU_SYSCFG_SERIESPORT_NUM_FOR_QRPRINTER_DEFAULT;
 		//后台部分
@@ -478,7 +478,6 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	//第三部分/zHcuSysEngPar总共三步分
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
 	if (ret == SUCCESS){
-		HCU_DEBUG_PRINT_NOR("HWINV: SeriesPortForGPS = %d, SeriesPortForModbus = %d, SeriesPortForPm25Sharp = %d\n",zHcuSysEngPar.serialport.SeriesPortForGPS, zHcuSysEngPar.serialport.SeriesPortForModbus, zHcuSysEngPar.serialport.SeriesPortForPm25Sharp);
 		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 
 	}else{
