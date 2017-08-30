@@ -92,6 +92,7 @@
 									<listOptionValue builtIn="false" value="m"/>
 									<listOptionValue builtIn="false" value="SDL2"/>
 									<listOptionValue builtIn="false" value="sqlite3"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="paho-mqtt3c"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1071349470" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>
@@ -208,6 +209,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="m"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="usb"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="paho-mqtt3c"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.498405068" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>
@@ -296,6 +298,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="SDLmain"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="m"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="SDL2"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="paho-mqtt3c"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1979197805" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>
@@ -413,6 +416,7 @@
 									<listOptionValue builtIn="false" value="m"/>
 									<listOptionValue builtIn="false" value="sqlite3"/>
 									<listOptionValue builtIn="false" value="usbcan"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="paho-mqtt3c"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1054801959" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>
@@ -475,6 +479,18 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1016107742.1773140440;cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1016107742.1773140440.;cdt.managedbuild.tool.gnu.cross.c.compiler.2021409018;cdt.managedbuild.tool.gnu.c.compiler.input.914881284">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1754290045.898002622.1751584036;cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1754290045.898002622.1751584036.;cdt.managedbuild.tool.gnu.cross.c.compiler.975943335;cdt.managedbuild.tool.gnu.c.compiler.input.447433077">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.50817867.1849246618.598220168;cdt.managedbuild.config.gnu.cross.exe.release.50817867.1849246618.598220168.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.1659424329;cdt.managedbuild.tool.gnu.cpp.compiler.input.633499512">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.50817867.1849246618.598220168;cdt.managedbuild.config.gnu.cross.exe.release.50817867.1849246618.598220168.;cdt.managedbuild.tool.gnu.cross.c.compiler.1576898016;cdt.managedbuild.tool.gnu.c.compiler.input.1781724215">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1754290045.898002622.1751584036;cdt.managedbuild.config.gnu.cross.exe.debug.1873467400.1754290045.898002622.1751584036.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.1290497423;cdt.managedbuild.tool.gnu.cpp.compiler.input.390095084">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>

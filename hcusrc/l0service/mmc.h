@@ -13,9 +13,10 @@
 //State definition
 //#define FSM_STATE_ENTRY  0x00
 //#define FSM_STATE_IDLE  0x01
+//#define FSM_STATE_COMMON  	0x02
 enum FSM_STATE_MMC
 {
-	FSM_STATE_MMC_INITED = 0x02,
+	FSM_STATE_MMC_INITED = FSM_STATE_COMMON + 1,
 	FSM_STATE_MMC_ACTIVED,  //所有人机命令在此状态下直接送达各个线程任务模块
 	FSM_STATE_MMC_MAX,
 };
@@ -23,7 +24,7 @@ enum FSM_STATE_MMC
 //#define FSM_STATE_INVALID 0xFF
 
 //Global variables
-extern HcuFsmStateItem_t FsmMmc[];
+extern HcuFsmStateItem_t HcuFsmMmc[];
 
 //API
 extern OPSTAT fsm_mmc_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);

@@ -678,7 +678,7 @@ OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT8  sensor
     }
 
     //满值校准数据
-    sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d''  WHERE (1)", sensorid, adcvalue);
+    sprintf(strsql, "UPDATE `hcubfsccalibration` SET fulladc_%02d = '%d'  WHERE (1)", sensorid, adcvalue);
 	result = mysql_query(sqlHandler, strsql);
 
     if(result){

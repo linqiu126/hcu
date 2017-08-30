@@ -51,6 +51,7 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_CONFIG,
 	TASK_ID_TIMER,
 	TASK_ID_MMC, //Man Machine Communication
+	TASK_ID_MQTT,
 	TASK_ID_GPIO,
 	TASK_ID_I2C,
 	TASK_ID_SPI,
@@ -550,6 +551,7 @@ extern HcuFsmStateItem_t HcuFsmTrace[];                             //状态机
 extern HcuFsmStateItem_t HcuFsmConfig[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmTimer[];                             //状态机
 extern HcuFsmStateItem_t HcuFsmMmc[];                               //状态机
+extern HcuFsmStateItem_t HcuFsmMqtt[];                              //状态机
 extern HcuFsmStateItem_t HcuFsmGpio[];                              //状态机
 extern HcuFsmStateItem_t HcuFsmI2c[];                               //状态机
 extern HcuFsmStateItem_t HcuFsmSpi[];                               //状态机

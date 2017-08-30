@@ -2,27 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="//打印二维码／条形码：二维" key="selection"/>
+		<item value="17" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="//打印二维码／条形码：二维"/>
-			<item value="printer"/>
-			<item value="serial_port_send"/>
-			<item value="hcusysengpar"/>
-			<item value="zHcuSysEngPar.serialport.SeriesPortForModbus"/>
-			<item value="HCU_SYSCFG_SERIESPORT_NUM_FOR_MODBUS_DEFAULT"/>
-			<item value="zHcuVmCtrTab.clock.sSec"/>
-			<item value="printe"/>
+			<item value="17"/>
+			<item value="hcu_mqtt_msg_rcv"/>
+			<item value="HcuFsmMmc"/>
+			<item value="HcuFsmI2c"/>
+			<item value="MMC"/>
+			<item value="mmc"/>
+			<item value="Mmc"/>
+			<item value="timer"/>
 		</list>
 		<list key="replacehistory">
-			<item value="HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL"/>
-			<item value="HUITP_IEID_uni_picture_ind"/>
-			<item value="HCU_DEBUG_PRINT_NOR"/>
-			<item value="L0SVRFTP:"/>
-			<item value="ptrSwPkg"/>
+			<item value="mqtt"/>
+			<item value="Mqtt"/>
+			<item value="MQTT"/>
+			<item value="HcuErrorPrint(&quot;MQTT: "/>
+			<item value="HCU_DEBUG_PRINT_NOR(&quot;MQTT: "/>
+			<item value="func_mqtt_msg_rcv_connlost"/>
+			<item value="func_mqtt_msg_rcv_msgarrvd"/>
+			<item value="func_mqtt_msg_rcv_delivered"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

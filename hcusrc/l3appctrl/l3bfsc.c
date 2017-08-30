@@ -720,7 +720,7 @@ OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 		lt=time(NULL);
 		cu = localtime(&lt);
 		cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
-		sprintf(s, "BOFENGZHINENG-%s-%4.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfscContext.configName, (float)gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
+		sprintf(s, "BOFENGZHINENG-%s-%4.2fg-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfscContext.configName, (float)gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
 				(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
 		hcu_sps232_send_char_to_ext_printer(s, strlen(s));
 	}

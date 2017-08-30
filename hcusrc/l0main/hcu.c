@@ -16,6 +16,8 @@
 #include "../l0service/sysinfo.h"
 #include "../l0service/timer.h"
 #include "../l0service/trace.h"
+#include "../l0service/mqtt.h"
+
 
 #include "../l1com/l1comdef.h"
 #include "../l1com/hwinv.h"

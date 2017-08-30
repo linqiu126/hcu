@@ -63,7 +63,8 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_TRACE,         "TRACE",            NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_CONFIG,        "CONFIG",           NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_TIMER,         "TIMER",            &HcuFsmTimer,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_MMC,           "MMC",              NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_MMC,           "MMC",              &HcuFsmMmc,              HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_MQTT,          "MQTT",             &HcuFsmMqtt,             HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_GPIO,          "GPIO",             &HcuFsmGpio,             HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_I2C,           "I2C",              &HcuFsmI2c,              HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_SPI,           "SPI",              &HcuFsmSpi,              HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
@@ -145,6 +146,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_RELAY,         "RELAY",            &HcuFsmRelay,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_MOTOR,         "MOTOR",            &HcuFsmMotor,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_ZEEGBE,        "ZEEGBE",           &HcuFsmZeegbe,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_MQTT,          "MQTT",             &HcuFsmMqtt,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_BLE,           "BLE",              &HcuFsmBle,              HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
@@ -187,6 +189,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG10_335D_ID)
 	{TASK_ID_L3AQYCG10,     "L3AQYCG10",        &HcuFsmL3aqycg10,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+	{TASK_ID_MQTT,          "MQTT",             &HcuFsmMqtt,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_SPS232,        "SPS232",           &HcuFsmSps232,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_SPS485,        "SPS485",           &HcuFsmSps485,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
@@ -221,6 +224,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_NBIOT_HPM_QG_ID)
 	{TASK_ID_L3NBHPM,       "L3NBHPM",          &HcuFsmL3nbhpm,          HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	{TASK_ID_MQTT,          "MQTT",             &HcuFsmMqtt,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
