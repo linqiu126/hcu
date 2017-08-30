@@ -263,13 +263,24 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 	validFlag = rcv.validFlag;
 	cmdid = rcv.cmdid;
 
+	HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
+
 	//存入数据库表单，通知界面新的状态信息
-	if((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND)){
+	if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFSC_UICOMM_CMDID_START)){
+		//do nothing
+	}
+	else if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFSC_UICOMM_CMDID_STOP)){
+		//do nothing
+	}
+	else if((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND)){
 		ret = dbi_HcuBfsc_WmcStatusForceSuspend();
 		if (ret == FAILURE) {
 			HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Save data error!\n");
 			return FAILURE;
 		}
+	}
+	else if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFSC_UICOMM_CMDID_RESUME)){
+		//do nothing
 	}
 	else{
 		HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: Invalid command response!\n");
@@ -332,7 +343,6 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 			errorcode = rcv.errCode;
 			sprintf(strResp, "Test command execute failure! error code = %d", errorcode);
 		}
-
 
 		//Save command response result to DB
 		ret = dbi_HcuBfsc_TestCmdRespUpdate(rcv.cmdid, validFlag, strResp);
