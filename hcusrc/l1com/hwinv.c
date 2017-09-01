@@ -435,10 +435,9 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	//第二部分/zHcuSysEngPar总共三步分
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
 	if (ret == SUCCESS){
-		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
-	}else{
 		HCU_ERROR_PRINT_HWINV("HWINV: Read SysEng DB error!\n");
 	}
+	HCU_DEBUG_PRINT_FAT("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 
 	//第三部分/zHcuSysEngPar总共三步分
 	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决
