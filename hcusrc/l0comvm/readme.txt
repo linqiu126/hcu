@@ -8,6 +8,11 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 251=>BFSC项目
+= 去掉hcuswdb数据表表单
+
+
+
 //= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 250=>BFSC项目
 =ADVANTECH版本下USBCAN出现问题后，强行退出程序
 =清理UICOMM中打印返回的问题

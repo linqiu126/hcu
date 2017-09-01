@@ -85,7 +85,7 @@ OPSTAT fsm_mqtt_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 
 	//正式进入无限循环等待工作
 	if (hcu_mqtt_msg_rcv() != 0){
-		HcuDebugPrint("MQTT: Exit MQTT receiving cycle!\n");
+		HcuDebugPrint("MQTT: Exit MQTT receiving cycle. So far continue to work!\n");
 		//exit(EXIT_FAILURE);
 	}
 	return SUCCESS;
@@ -114,7 +114,7 @@ int hcu_mqtt_msg_send_syn_mode(char *topic, char *input)
 
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
-        HcuErrorPrint("MQTT: Failed to connect, return code %d\n", rc);
+        HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
         //exit(EXIT_FAILURE);
     }
     pubmsg.payload = input;
@@ -185,7 +185,7 @@ int hcu_mqtt_msg_send_asy_mode(char *topic, char *input)
 
   if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
   {
-	  HcuErrorPrint("MQTT: Failed to connect, return code %d\n", rc);
+	  HcuErrorPrint("MQTT: Failed to connect, return code %d. So far continue to work!\n", rc);
       //exit(EXIT_FAILURE);
   }
   pubmsg.payload = input;
@@ -258,7 +258,7 @@ int hcu_mqtt_msg_rcv(void)
 
   if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
   {
-      HcuErrorPrint("MQTT: Failed to connect, return code %d\n", rc);
+      HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
       //exit(EXIT_FAILURE);
   }
   HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_UI_TO_HCU, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);

@@ -637,10 +637,10 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		if(sqlRow[index]) engPar->debugMode = (UINT8)(atol(sqlRow[index++]) & 0xFF);
 		//TRACE部分
 		if(sqlRow[index]) engPar->traceMode = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		HcuDebugPrint("DBICOM: Sysengpar read in, Index=%d, TraceMode=%d\n", index-1, engPar->traceMode);
+		//HcuDebugPrint("DBICOM: Sysengpar read in, Index=%d, TraceMode=%d\n", index-1, engPar->traceMode);
 		//LocalUI本地界面启动部分
 		if(sqlRow[index]) engPar->localUI.browselAutoStartUpFlag = (UINT8)(atol(sqlRow[index++]) & 0xFF);
-		HcuDebugPrint("DBICOM: Sysengpar read in, Index=%d, browselAutoStartUpFlag=%d\n", index-1, engPar->localUI.browselAutoStartUpFlag);
+		//HcuDebugPrint("DBICOM: Sysengpar read in, Index=%d, browselAutoStartUpFlag=%d\n", index-1, engPar->localUI.browselAutoStartUpFlag);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselProg, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_PROG_LEN-1);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselStartUpAddress, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_ADD_LEN-1);
 		if(sqlRow[index]) strncpy(engPar->localUI.browselWorkingOption, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_LOCAL_UI_OPTION_LEN-1);
