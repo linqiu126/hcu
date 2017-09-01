@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="hcu_hwinv_engpar_read_mac_address" key="selection"/>
+		<item value="dbi_HcuDbVersion_inqury" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="dbi_HcuDbVersion_inqury"/>
+			<item value="hcuswdb"/>
+			<item value="engpar"/>
+			<item value="engoar"/>
 			<item value="hcu_hwinv_engpar_read_mac_address"/>
 			<item value="hcu_vm_engpar_read_phy_boot_cfg"/>
 			<item value="hcu_hwinv_engpar_read_pop_data_into_mem"/>
 			<item value="hcu_vm_engpar_get_phy_burn_block_data"/>
-			<item value="main"/>
-			<item value="hcu_sleep"/>
-			<item value="Set basic engineering data correctly"/>
-			<item value="engpar"/>
 		</list>
 		<list key="replacehistory">
 			<item value="mqtt"/>

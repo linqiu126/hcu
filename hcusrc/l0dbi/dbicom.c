@@ -20,6 +20,12 @@
 -- --------------------------------------------------------
 
 --
+-- Database: `hcudb`
+--
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `hcusysengpar`
 --
 
@@ -1027,7 +1033,7 @@ void dbi_display_row(MYSQL *sqlHandler, MYSQL_ROW sqlRow)
 }
 
 //查询当前HCU使用的数据库版本号
-OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementHwBurnPhyIdAddr_t *hcuInv)
+/*OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementHwBurnPhyIdAddr_t *hcuInv)
 {
 	MYSQL *sqlHandler;
 	MYSQL_RES *resPtr;
@@ -1084,7 +1090,7 @@ OPSTAT dbi_HcuDbVersion_inqury(SysEngParElementHwBurnPhyIdAddr_t *hcuInv)
 	mysql_free_result(resPtr);
     mysql_close(sqlHandler);
     return SUCCESS;
-}
+}*/
 
 //查询所有基于模块控制的TRACE记录，并存入全局控制变量
 OPSTAT dbi_HcuSysEngTimer_inqury(HcuSysEngParTab_t *engPar)

@@ -426,11 +426,11 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Timer Control DB error!\n");
 	HcuDebugPrint("HWINV: Set Timer based engineering data correctly from DATABASE parameters!\n");
 
-	//读取HcuDbVersion表单到系统内存中
-	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.hwBurnId);
-	if (ret == FAILURE)
-		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
-	HcuDebugPrint("HWINV: Set HCUDB based engineering data correctly from SYSTEM-CFG parameters!\n");
+//	//读取HcuDbVersion表单到系统内存中
+//	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.hwBurnId);
+//	if (ret == FAILURE)
+//		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
+//	HcuDebugPrint("HWINV: Set HCUDB based engineering data correctly from SYSTEM-CFG parameters!\n");
 
 	//第二部分/zHcuSysEngPar总共三步分
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
