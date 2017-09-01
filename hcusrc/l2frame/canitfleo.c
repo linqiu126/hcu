@@ -157,7 +157,7 @@ OPSTAT func_canitfleo_int_init(void)
 		return SUCCESS;
 	}
 	else{
-		EXIT(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 		return FAILURE;
 	}
 #endif
