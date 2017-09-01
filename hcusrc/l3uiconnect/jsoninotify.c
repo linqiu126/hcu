@@ -7,7 +7,6 @@
 
 #include "jsoninotify.h"
 #include "../l0service/trace.h"
-
 #include <sys/inotify.h>
 
 /*

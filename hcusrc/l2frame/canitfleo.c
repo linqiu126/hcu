@@ -153,10 +153,13 @@ OPSTAT func_canitfleo_int_init(void)
 	INT32 ret;
 	ret = hcu_canitfleo_usbcan_interface_init();
 
-	if(SUCCESS == ret)
+	if(SUCCESS == ret){
 		return SUCCESS;
-	else
+	}
+	else{
+		EXIT(EXIT_FAILURE);
 		return FAILURE;
+	}
 #endif
 		return SUCCESS;
 }

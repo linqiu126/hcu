@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="17" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HCU_ERROR_PRINT_BFSCUICOMM"/>
+			<item value="DEBUG"/>
+			<item value="hcu_canitfleo_usbcan_interface_init"/>
 			<item value="17"/>
 			<item value="hcu_mqtt_msg_rcv"/>
 			<item value="HcuFsmMmc"/>
 			<item value="HcuFsmI2c"/>
 			<item value="MMC"/>
-			<item value="mmc"/>
-			<item value="Mmc"/>
-			<item value="timer"/>
 		</list>
 		<list key="replacehistory">
 			<item value="mqtt"/>
