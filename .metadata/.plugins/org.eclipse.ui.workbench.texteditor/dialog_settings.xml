@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="burn_" key="selection"/>
-		<item value="true" key="casesensitive"/>
+		<item value="WeightSensorParamaters_t" key="selection"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="burn_"/>
-			<item value="burn_cfg"/>
-			<item value="cali"/>
-			<item value="cal"/>
-			<item value="configId"/>
-			<item value="dbi_HcuBfsc_StaDatainfo_save"/>
-			<item value="EXIT_FAILURE"/>
-			<item value="dbi_HcuDbVersion_inqury"/>
+			<item value="WeightSensorParamaters_t"/>
+			<item value="HUITP_MSGID_sui_bfsc_set_config_req"/>
+			<item value="BFSC"/>
+			<item value="parse"/>
+			<item value="MSG_ID_COM_PM_REPORT"/>
+			<item value="MSG_ID_COM_PROCESS_REBOOT"/>
+			<item value="RPI_GPIO_PIN_EXT_WATCHDOG_DATA"/>
+			<item value="RPI_GPIO_READ_REPEAT_TIMES"/>
 		</list>
 		<list key="replacehistory">
+			<item value="RPI_GPIO_PIN_EXT_WATCHDOG_FEED"/>
+			<item value="RPI_GPIO_READ_REPEAT_TIMES"/>
+			<item value="RPI_GPIO_PIN_EXT_WATCHDOG_DATA"/>
+			<item value="_HCWD_H_"/>
 			<item value="mqtt"/>
 			<item value="Mqtt"/>
 			<item value="MQTT"/>
 			<item value="HcuErrorPrint(&quot;MQTT: "/>
-			<item value="HCU_DEBUG_PRINT_NOR(&quot;MQTT: "/>
-			<item value="func_mqtt_msg_rcv_connlost"/>
-			<item value="func_mqtt_msg_rcv_msgarrvd"/>
-			<item value="func_mqtt_msg_rcv_delivered"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

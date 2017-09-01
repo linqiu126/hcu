@@ -256,8 +256,8 @@ OPSTAT fsm_bfscuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 	validFlag = rcv.validFlag;
 	cmdid = rcv.cmdid;
-
-	HCU_ERROR_PRINT_TASK(TASK_ID_BFSCUICOMM, "TASK_ID_BFSCUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
+	//测试用的打印命令
+	HCU_DEBUG_PRINT_NOR("TASK_ID_BFSCUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
 
 	//存入数据库表单，通知界面新的状态信息
 	if ((rcv.validFlag == TRUE) && (cmdid == HCU_SYSMSG_BFSC_UICOMM_CMDID_START)){

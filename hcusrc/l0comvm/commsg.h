@@ -260,6 +260,8 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_COM_PROCESS_REBOOT,  //L2->重新创建任务和进程, 包括装载数据。还有一种层次，是L3->重新RESET硬件
 	MSG_ID_COM_ALARM_REPORT,
 	MSG_ID_COM_PM_REPORT,
+	MSG_ID_COM_MQTT_SEND,
+	MSG_ID_COM_MQTT_RCV,
 
 	//Service Control message
 
@@ -1037,6 +1039,18 @@ typedef struct msg_struct_com_pm_report
 	UINT32 timeStamp;
 	UINT32 length;
 }msg_struct_com_pm_report_t;
+
+//MSG_ID_COM_MQTT_SEND,
+typedef struct msg_struct_com_mqtt_send
+{
+	UINT32 length;
+}msg_struct_com_mqtt_send_t;
+
+//MSG_ID_COM_MQTT_RCV,
+typedef struct msg_struct_com_mqtt_rcv
+{
+	UINT32 length;
+}msg_struct_com_mqtt_rcv_t;
 
 #define HCU_SYSMSG_HWINV_PHY_STATUS_NULL 0
 #define HCU_SYSMSG_HWINV_PHY_STATUS_DEACTIVE_TO_ACTIVE 1

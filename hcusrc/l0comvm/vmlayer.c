@@ -258,6 +258,9 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	//ALAMR-PM
 	{MSG_ID_COM_ALARM_REPORT,                     "MSG_ID_COM_ALARM_REPORT",                    1, 1, 1},
 	{MSG_ID_COM_PM_REPORT,                        "MSG_ID_COM_PM_REPORT",                       1, 1, 1},
+	//MQTT
+	{MSG_ID_COM_MQTT_SEND,                     	  "MSG_ID_COM_MQTT_SEND",                       1, 1, 1},
+	{MSG_ID_COM_MQTT_RCV,                         "MSG_ID_COM_MQTT_RCV",                        1, 1, 1},
 	//Service Control message
 	//ETHERNET
 	{MSG_ID_ETHERNET_CLOUDVELA_DATA_RX,           "MSG_ID_ETHERNET_CLOUDVELA_DATA_RX",          1, 1, 1},

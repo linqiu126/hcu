@@ -10,8 +10,8 @@
 
 //= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 251=>BFSC项目
 = 去掉hcuswdb数据表表单
-
-
+= 增加了一个独立的项目HCWD，专门用于数采仪的硬件看门狗监控
+= 为MQTT增加一个编解码的MQTT_JSON_MESSAGE
 
 //= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 250=>BFSC项目
 =ADVANTECH版本下USBCAN出现问题后，强行退出程序

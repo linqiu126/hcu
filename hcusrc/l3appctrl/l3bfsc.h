@@ -167,7 +167,7 @@ typedef struct gTaskL3bfscContextWeightSensorParamaters
 	UINT32  WeightSensorAdcValue;								// NOT for GUI
 	gTaskL3bfscContextCalibration_t  calibration[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
 	UINT32	WeightSensorStaticZeroValue;
-	UINT32	WeightSensorTailorValue;
+	UINT32	WeightSensorTailorValue;				//皮重，分为每种
 	UINT32	WeightSensorDynamicZeroThreadValue;
 	UINT32	WeightSensorDynamicZeroHysteresisMs;
 	UINT32  WeightSensorFilterCoeff[4];				// NOT for GUI
