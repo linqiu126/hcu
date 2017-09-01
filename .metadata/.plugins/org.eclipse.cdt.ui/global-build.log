@@ -2710,3 +2710,31 @@ Invoking: GCC C Linker
 gcc  -o "PrjHcwd"  ./src/hcwd.o   
 Finished building target: PrjHcwd
  
+15:20:00 **** Clean-only build of configuration Debug for project PrjHcwd ****
+make clean 
+rm -rf  ./src/hcwd.o  ./src/hcwd.d  PrjHcwd
+ 
+15:20:00 **** Build of configuration Debug for project PrjHcwd ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"l0main/hcwd.d" -MT"l0main/hcwd.o" -o "l0main/hcwd.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c
+ 
+Building target: PrjHcwd
+Invoking: GCC C Linker
+gcc  -o "PrjHcwd"  ./l0main/hcwd.o   
+Finished building target: PrjHcwd
+ 
+15:22:24 **** Incremental Build of configuration Debug for project PrjHcwd ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"l0main/hcwd.d" -MT"l0main/hcwd.o" -o "l0main/hcwd.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c
+ 
+Building target: PrjHcwd
+Invoking: GCC C Linker
+gcc  -o "PrjHcwd"  ./l0main/hcwd.o   
+Finished building target: PrjHcwd
+ 
