@@ -86,7 +86,7 @@ OPSTAT fsm_mqtt_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	//正式进入无限循环等待工作
 	if (hcu_mqtt_msg_rcv() != 0){
 		HcuDebugPrint("MQTT: Exit MQTT receiving cycle!\n");
-		exit(EXIT_FAILURE);
+		//exit(EXIT_FAILURE);
 	}
 	return SUCCESS;
 }
