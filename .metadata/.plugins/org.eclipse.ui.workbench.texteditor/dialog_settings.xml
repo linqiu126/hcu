@@ -9,11 +9,11 @@
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
 			<item value="exit"/>
+			<item value="hcu_mqtt_msg_rcv"/>
 			<item value="HCU_ERROR_PRINT_BFSCUICOMM"/>
 			<item value="DEBUG"/>
 			<item value="hcu_canitfleo_usbcan_interface_init"/>
 			<item value="17"/>
-			<item value="hcu_mqtt_msg_rcv"/>
 			<item value="HcuFsmMmc"/>
 			<item value="HcuFsmI2c"/>
 		</list>

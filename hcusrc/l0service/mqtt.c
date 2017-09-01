@@ -115,7 +115,7 @@ int hcu_mqtt_msg_send_syn_mode(char *topic, char *input)
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
         HcuErrorPrint("MQTT: Failed to connect, return code %d\n", rc);
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
     pubmsg.payload = input;
     pubmsg.payloadlen = strlen(input);
@@ -186,7 +186,7 @@ int hcu_mqtt_msg_send_asy_mode(char *topic, char *input)
   if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
   {
 	  HcuErrorPrint("MQTT: Failed to connect, return code %d\n", rc);
-      exit(EXIT_FAILURE);
+      //exit(EXIT_FAILURE);
   }
   pubmsg.payload = input;
   pubmsg.payloadlen = strlen(input);
@@ -259,7 +259,7 @@ int hcu_mqtt_msg_rcv(void)
   if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
   {
       HcuErrorPrint("MQTT: Failed to connect, return code %d\n", rc);
-      exit(EXIT_FAILURE);
+      //exit(EXIT_FAILURE);
   }
   HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_UI_TO_HCU, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
   HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_BH_TRANS, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
