@@ -2698,3 +2698,15 @@ Finished building target: PrjBfsc
 14:14:44 **** Incremental Build of configuration Debug for project PrjBfsc ****
 make all 
 make: 没有什么可以做的为 `all'。
+15:07:35 **** Build of configuration Debug for project PrjHcwd ****
+make all 
+Building file: /home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/hcwd.d" -MT"src/hcwd.o" -o "src/hcwd.o" "/home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c"
+Finished building: /home/hitpony/workspace/hcu/hcusrc/l0main/hcwd.c
+ 
+Building target: PrjHcwd
+Invoking: GCC C Linker
+gcc  -o "PrjHcwd"  ./src/hcwd.o   
+Finished building target: PrjHcwd
+ 
