@@ -398,7 +398,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		zHcuSysEngPar.debugMode = HCU_SYSCFG_TRACE_DEBUG_SET;
 		//TRACE部分
 		zHcuSysEngPar.traceMode = HCU_SYSCFG_TRACE_MSG_SET;
-		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from SYSTEM DEFAULT parameters!\n");
+		HcuDebugPrint("HWINV: Set basic engineering data correctly from SYSTEM DEFAULT parameters!\n");
 	}
 
 	//后台服务器中固定的配置部分，通过系统配置SYSCONFIG.H读取到工参表中
@@ -412,32 +412,32 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	ret = dbi_HcuTraceModuleCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Trace Module Control DB error!\n");
-	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Module based engineering data correctly from DATABASE parameters!\n");
+	HcuDebugPrint("HWINV: Set Trace Module based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuTraceMsgCtr表单到系统内存中
 	ret = dbi_HcuTraceMsgCtr_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Trace Message Control DB error!\n");
-	HCU_DEBUG_PRINT_NOR("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
+	HcuDebugPrint("HWINV: Set Trace Message based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuSysEngTimer表单到系统内存中
 	ret = dbi_HcuSysEngTimer_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Timer Control DB error!\n");
-	HCU_DEBUG_PRINT_NOR("HWINV: Set Timer based engineering data correctly from DATABASE parameters!\n");
+	HcuDebugPrint("HWINV: Set Timer based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuDbVersion表单到系统内存中
 	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.hwBurnId);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
-	HCU_DEBUG_PRINT_NOR("HWINV: Set HCUDB based engineering data correctly from SYSTEM-CFG parameters!\n");
+	HcuDebugPrint("HWINV: Set HCUDB based engineering data correctly from SYSTEM-CFG parameters!\n");
 
 	//第二部分/zHcuSysEngPar总共三步分
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
-	if (ret == SUCCESS){
+	if (ret == FAILURE){
 		HCU_ERROR_PRINT_HWINV("HWINV: Read SysEng DB error!\n");
 	}
-	HCU_DEBUG_PRINT_FAT("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
+	HcuDebugPrint("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
 
 	//第三部分/zHcuSysEngPar总共三步分
 	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决
