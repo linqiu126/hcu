@@ -424,15 +424,23 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	ret = dbi_HcuSysEngTimer_inqury(&zHcuSysEngPar);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read Timer Control DB error!\n");
-
 	HCU_DEBUG_PRINT_NOR("HWINV: Set Timer based engineering data correctly from DATABASE parameters!\n");
 
 	//读取HcuDbVersion表单到系统内存中
 	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.hwBurnId);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
+	HCU_DEBUG_PRINT_NOR("HWINV: Set BURNINFO based engineering data correctly from SYSTEM-CFG parameters!\n");
 
 	//第二部分/zHcuSysEngPar总共三步分
+	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
+	if (ret == SUCCESS){
+		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
+	}else{
+		HCU_ERROR_PRINT_HWINV("HWINV: Read SysEng DB error!\n");
+	}
+
+	//第三部分/zHcuSysEngPar总共三步分
 	//考虑到数据库控制的复杂性，暂时不再增加更多的字段，其余字段将依靠程序定义来解决
 	//zHcuSysEngPar.codeDefineFix部分
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
@@ -474,15 +482,6 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 #else
 	#error Un-correct constant definition
 #endif
-
-	//第三部分/zHcuSysEngPar总共三步分
-	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);
-	if (ret == SUCCESS){
-		HCU_DEBUG_PRINT_NOR("HWINV: Set basic engineering data correctly from DATABASE parameters!\n");
-
-	}else{
-		HCU_ERROR_PRINT_HWINV("HWINV: Read SysEng DB error!\n");
-	}
 
     //返回
 	return SUCCESS;
