@@ -430,7 +430,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 	ret = dbi_HcuDbVersion_inqury(&zHcuSysEngPar.hwBurnId);
 	if (ret == FAILURE)
 		HCU_ERROR_PRINT_HWINV("HWINV: Read HCUDB version DB error!\n");
-	HCU_DEBUG_PRINT_NOR("HWINV: Set BURNINFO based engineering data correctly from SYSTEM-CFG parameters!\n");
+	HCU_DEBUG_PRINT_NOR("HWINV: Set HCUDB based engineering data correctly from SYSTEM-CFG parameters!\n");
 
 	//第二部分/zHcuSysEngPar总共三步分
 	ret = dbi_HcuSysEngPar_inqury(&zHcuSysEngPar, HCU_CURRENT_WORKING_PROJECT_NAME_UNIQUE);

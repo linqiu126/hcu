@@ -2815,7 +2815,7 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 	//读取宿主机eth0 Mac地址，且强制覆盖人工输入部分
 	if (hcu_hwinv_engpar_read_mac_address() == FAILURE){
 		HcuDebugPrint("HCU-MAIN: Read MAC address error!\n");
-		return EXIT_SUCCESS;
+		//return SUCCESS;
 	}
 
 	//缺省参数
