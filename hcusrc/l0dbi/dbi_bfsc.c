@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
 --
 
 INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
-(1, 434221, 506206, 100000, 474360, 515157, 100000, 455673, 508063, 100000, 447451, 519359, 100000, 432639, 504921, 100000, 442397, 514862, 100000, 443020, 515286, 100000, 468387, 543587, 100000, 438766, 510644, 100000, 450173, 520188, 100000, 450173, 520188, 100000, 450173, 520188, 100000, 450173, 520188, 100000, 450173, 520188, 100000, 450173, 520188, 100000, 450173, 520188, 100000);
+(1, 469766, 541706, 100000, 459562, 532218, 100000, 463213, 535540, 100000, 466429, 538960, 100000, 451004, 523020, 100000, 476088, 549336, 100000, 448084, 519687, 100000, 464022, 535865, 100000, 464715, 537256, 100000, 472162, 544166, 100000, 448185, 519955, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000);
 
 
 
@@ -277,6 +277,12 @@ OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL
 	//MYSQL_ROW sqlRow;
 
     //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    if (configId == 0){
+    	HcuErrorPrint("DBIBFSC: Function dbi_HcuBfsc_StaDatainfo_save() ConfigId=0, no processing!\n");
+    	return SUCCESS;
+    }
+
+    //正式启动
     char s[20];
     memset(s, 0, sizeof(s));
     strncpy(s, StaType, strlen(StaType)<sizeof(s)?strlen(StaType):sizeof(s));

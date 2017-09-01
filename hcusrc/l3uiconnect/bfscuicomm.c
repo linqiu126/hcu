@@ -645,6 +645,14 @@ OPSTAT func_bfscuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 
 	//Update config id to gTaskL3bfscContext
 	gTaskL3bfscContext.configId = config_index;
+	memset(&(gTaskL3bfscContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.staOneMin), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.sta15Min), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.sta2H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.sta8H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
+	memset(&(gTaskL3bfscContext.staUp2Now), 0, sizeof(HcuSysMsgIeL3bfscContextStaElement_t));
 
 	//查询用户动态配置参数
 	if (dbi_HcuBfsc_DynamicConfigDataGet(config_index, dynamicdata) == FAILURE){
