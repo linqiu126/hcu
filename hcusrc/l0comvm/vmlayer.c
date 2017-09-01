@@ -2824,9 +2824,9 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 	zHcuSysEngPar.hwBurnId.hwPemId = HCU_CURRENT_HW_PEM; //PEM小型号
 	zHcuSysEngPar.hwBurnId.swRelId = HCU_CURRENT_SW_RELEASE;
 	zHcuSysEngPar.hwBurnId.swVerId = HCU_CURRENT_SW_DELIVERY;
+	zHcuSysEngPar.hwBurnId.dbVerId = HCU_CURRENT_DB_DELIVERY;
 	zHcuSysEngPar.hwBurnId.swUpgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_SET;
 	zHcuSysEngPar.hwBurnId.swUpgPollId = HCU_SYSCFG_HBB_FW_UPGRADE_METHOD_UART_GPRS;
-	zHcuSysEngPar.hwBurnId.dbVerId = 1;
 	//cipherKey[16];
 
 	//缺省参数
