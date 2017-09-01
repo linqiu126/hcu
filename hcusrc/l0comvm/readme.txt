@@ -8,6 +8,9 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 252=>BFSC项目
+= 先为MQTT的编解码做了一个基础的处理方式
+
 //= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 251=>BFSC项目
 = 去掉hcuswdb数据表表单
 = 增加了一个独立的项目HCWD，专门用于数采仪的硬件看门狗监控

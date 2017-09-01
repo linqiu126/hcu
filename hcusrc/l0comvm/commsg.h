@@ -1041,14 +1041,25 @@ typedef struct msg_struct_com_pm_report
 }msg_struct_com_pm_report_t;
 
 //MSG_ID_COM_MQTT_SEND,
+#define HCU_SYSMSG_MQTT_DESC_MAX_LEN  200
 typedef struct msg_struct_com_mqtt_send
 {
+	UINT32 destId;
+	UINT32 topicId;
+	UINT32 cmdId;
+	INT32  cmdValue;
+	char   jsonCont[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
 	UINT32 length;
 }msg_struct_com_mqtt_send_t;
 
 //MSG_ID_COM_MQTT_RCV,
 typedef struct msg_struct_com_mqtt_rcv
 {
+	UINT32 srcId;
+	UINT32 topicId;
+	UINT32 cmdId;
+	INT32  cmdValue;
+	char   jsonCont[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
 	UINT32 length;
 }msg_struct_com_mqtt_rcv_t;
 

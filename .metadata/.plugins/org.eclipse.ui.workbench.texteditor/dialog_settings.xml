@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="WeightSensorParamaters_t" key="selection"/>
+		<item value="HCU_ERROR_PRINT_BFSCUICOMM" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="WeightSensorParamaters_t"/>
-			<item value="HUITP_MSGID_sui_bfsc_set_config_req"/>
-			<item value="BFSC"/>
+			<item value="HCU_ERROR_PRINT_BFSCUICOMM"/>
 			<item value="parse"/>
-			<item value="MSG_ID_COM_PM_REPORT"/>
-			<item value="MSG_ID_COM_PROCESS_REBOOT"/>
-			<item value="RPI_GPIO_PIN_EXT_WATCHDOG_DATA"/>
-			<item value="RPI_GPIO_READ_REPEAT_TIMES"/>
+			<item value="parase"/>
+			<item value="cmd_jsonobj"/>
+			<item value="json_object_object_get"/>
+			<item value="file_jsonobj"/>
+			<item value="json_tokener_parse"/>
+			<item value="hcu_message_send"/>
 		</list>
 		<list key="replacehistory">
 			<item value="RPI_GPIO_PIN_EXT_WATCHDOG_FEED"/>
