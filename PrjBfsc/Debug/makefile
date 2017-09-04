@@ -57,7 +57,7 @@ all: PrjBfsc
 PrjBfsc: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/usr/local/lib -L/usr/local/sqlite3/lib -o "PrjBfsc" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -67,6 +67,5 @@ clean:
 	-@echo ' '
 
 .PHONY: all clean dependents
-.SECONDARY:
 
 -include ../makefile.targets

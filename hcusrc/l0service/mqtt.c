@@ -124,7 +124,8 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     struct json_object *jsonobj = NULL;
     jsonobj = json_object_new_object();
     //不能用简单的==NULL来判定
-    if (is_error(jsonobj))
+    //if (is_error(jsonobj))
+    if (jsonobj == NULL)
     	HcuErrorPrint("MQTT: Failed to create json object!\n");
     //json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
     json_object_object_add(jsonobj, "CommandId", json_object_new_int(in->cmdId));
@@ -213,8 +214,9 @@ int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in)
   struct json_object *jsonobj = NULL;
   jsonobj = json_object_new_object();
   //不能用简单的==NULL来判定
-  if (is_error(jsonobj))
-  	HcuErrorPrint("MQTT: Failed to create json object!\n");
+  //if (is_error(jsonobj))
+  if (jsonobj == NULL)
+	  HcuErrorPrint("MQTT: Failed to create json object!\n");
   //json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
   json_object_object_add(jsonobj, "CommandId", json_object_new_int(in->cmdId));
   json_object_object_add(jsonobj, "CommandValue", json_object_new_int(in->cmdValue));
@@ -275,7 +277,8 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
   snd.topicId = func_mqtt_topicid_translate_to_id(topicName);
   jsonobj = json_tokener_parse(message->payload);
   //不能用简单的==NULL来判定
-  if (is_error(jsonobj))
+  //if (is_error(jsonobj))
+  if (jsonobj == NULL)
 	  HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Failed to create json object!\n");
   cmdid_jsonobj = json_object_object_get(jsonobj, "CommandId");
   cmdval_jsonobj = json_object_object_get(jsonobj, "CommandValue");
