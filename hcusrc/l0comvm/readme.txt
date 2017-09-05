@@ -8,6 +8,9 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Sep.5 CURRENT_SW_DELIVERY 253=>BFDF项目
+= 创建BFDF双线分选组合称流水线项目
+
 //= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 252=>BFSC项目
 = 先为MQTT的编解码做了一个基础的处理方式
 
