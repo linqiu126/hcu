@@ -308,17 +308,12 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
   //发送命令给L3AQYCG20
-<<<<<<< HEAD
   if (hcu_message_send(MSG_ID_COM_MQTT_RCV, L3AQYCG20, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
 	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[L3AQYCG20].taskName);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 //  //发送命令给BFSCUICOMM
 //  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFSCUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
 //	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
-=======
-  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_L3AQYCG20, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
-	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
->>>>>>> da5b7a3027b64b6bb4b55746198864587b78077f
 #else
 	#error Set project name id error!
 #endif
