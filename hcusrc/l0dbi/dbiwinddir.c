@@ -270,9 +270,30 @@ OPSTAT dbi_HcuWinddirDataInfo_GetMin(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	}
 	else{
 
-		if (sqlRow[index]) winddirData->a01008_Min = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		//HCU_DEBUG_PRINT_INF("DBIWINDDIR: min=%4.3f\n", winddirData->a01008_Min);
-	}
+		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = (UINT32)atol(sqlRow[index]);
+
+		}
+		else //DEFAULT取标准低配置传感器
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = (UINT32)atol(sqlRow[index]);
+		}	}
 
 	//释放记录集
 	mysql_free_result(resPtr);
@@ -335,10 +356,30 @@ OPSTAT dbi_HcuWinddirDataInfo_GetMax(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
         return FAILURE;
 	}
 	else{
+		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 
-		if (sqlRow[index]) winddirData->a01008_Max = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
-		//HCU_DEBUG_PRINT_INF("DBIWINDDIR: max=%4.3f\n", winddirData->a01008_Max);
-	}
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = (UINT32)atol(sqlRow[index]);
+
+		}
+		else //DEFAULT取标准低配置传感器
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = (UINT32)atol(sqlRow[index]);
+		}	}
 
 	//释放记录集
 	mysql_free_result(resPtr);
@@ -402,7 +443,34 @@ OPSTAT dbi_HcuWinddirDataInfo_GetAvg(UINT32 dur, HcuSysMsgIeL3aqycContextStaElem
 	}
 	else{
 
-		if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
+
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = (UINT32)atol(sqlRow[index]);
+
+		}
+		else //DEFAULT取标准低配置传感器
+		{
+			if (sqlRow[index]) winddirData->a01008_Avg = (UINT32)atol(sqlRow[index]);
+		}
+
+
+
+		//if (sqlRow[index]) winddirData->a01008_Avg = ((UINT32)atol(sqlRow[index]))*DB_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 		//HCU_DEBUG_PRINT_INF("DBIWINDDIR: avg=%4.3f\n", winddirData->a01008_Avg);
 	}
 

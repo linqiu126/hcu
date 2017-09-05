@@ -125,9 +125,11 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	struct sockaddr_in serveraddr;
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	//serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
-	serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	//serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server address in init = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server port in init = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 	//UINT32 echolen;
 
 	//Heart beat checking in LLC
@@ -269,11 +271,11 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	struct sockaddr_in serveraddr;
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	//serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
-	serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
-	HCU_DEBUG_PRINT_INF("ETHERNET: External Server address = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipHome);
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	//serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
-	HCU_DEBUG_PRINT_INF("ETHERNET: Server port = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server address in linksetup = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server port in linksetup = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 
 	//Heart beat checking in LLC
 	int keepAlive = HCU_CLOUDSRV_SOCKET_KEEPALIVE; // set KeepAlive

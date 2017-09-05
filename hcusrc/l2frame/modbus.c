@@ -482,23 +482,23 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
 	{
-		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 	}
 	else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
 	{
-		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 	}
 	else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
 	{
-		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 	}
 	else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 	{
-		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FORMAT_NULL;
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 	}
 	else //DEFAULT取标准高配置传感器
 	{
-		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FORMAT_NULL;
+		snd.pm25.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
 	}
 
 	snd.pm25.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
@@ -889,7 +889,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		break;
 	}
 
-	snd.windspd.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	snd.windspd.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 	snd.windspd.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
 	snd.windspd.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
 	snd.windspd.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
@@ -1087,7 +1087,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		break;
 	}
 
-	snd.temp.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	snd.temp.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 	snd.temp.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
 	snd.temp.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
 	snd.temp.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
@@ -1283,7 +1283,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		break;
 	}
 
-	snd.humid.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	snd.humid.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 	snd.humid.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
 	snd.humid.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
 	snd.humid.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
@@ -1485,7 +1485,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		break;
 	}
 
-	snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+	snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 	snd.noise.gps.gpsx = zHcuVmCtrTab.hwinv.gps.gpsX;
 	snd.noise.gps.gpsy = zHcuVmCtrTab.hwinv.gps.gpsY;
 	snd.noise.gps.gpsz = zHcuVmCtrTab.hwinv.gps.gpsZ;
@@ -2488,7 +2488,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 			return FAILURE;
 		}
 	}
-	if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+	else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 	{
 		//检查功能码=03
 		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
