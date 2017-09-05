@@ -542,6 +542,12 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,
 	MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,
 
+	//L3HATE:测试环境对应的消息
+	MSG_ID_ETH_L3HATE_FRAME_RCV,
+	MSG_ID_SPS_L3HATE_FRAME_RCV,
+	MSG_ID_CAN_L3HATE_FRAME_RCV,
+
+	//END
 	MSG_ID_COM_MAX, //Ending point
 
 }; //end of HCU_INTER_TASK_MSG_ID
@@ -3787,6 +3793,25 @@ typedef struct  msg_struct_l3mod_exg_data_report
 	UINT8  actionId;
 	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 }msg_struct_l3mod_exg_data_report_t;
+
+//L3HATE:测试环境对应的消息
+//MSG_ID_ETH_L3HATE_FRAME_RCV,
+typedef struct  msg_struct_l3hate_eth_frame_rcv
+{
+	UINT32 length;
+}msg_struct_l3hate_eth_frame_rcv_t;
+
+//MSG_ID_SPS_L3HATE_FRAME_RCV,
+typedef struct  msg_struct_l3hate_sps_frame_rcv
+{
+	UINT32 length;
+}msg_struct_l3hate_sps_frame_rcv_t;
+
+//MSG_ID_CAN_L3HATE_FRAME_RCV,
+typedef struct  msg_struct_l3hate_can_frame_rcv
+{
+	UINT32 length;
+}msg_struct_l3hate_can_frame_rcv_t;
 
 
 /*

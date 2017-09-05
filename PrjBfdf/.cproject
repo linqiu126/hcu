@@ -29,6 +29,7 @@
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1176430407" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TARGET_LINUX_X86"/>
+									<listOptionValue builtIn="false" value="HATE_TRIGGER_ENABLE"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.659800720" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -37,7 +38,7 @@
 								<option id="gnu.cpp.compiler.option.debugging.level.767895609" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1910297629" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
-								<option id="gnu.c.link.option.libs.1932057186" superClass="gnu.c.link.option.libs" valueType="libs">
+								<option id="gnu.c.link.option.libs.1932057186" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rt"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="json-c"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="mysqlclient"/>
@@ -99,6 +100,9 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1202366123" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.1152560621" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.72048173" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.697711642" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="HATE_TRIGGER_ENABLE"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1047519723" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1941101683" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
@@ -106,7 +110,7 @@
 								<option id="gnu.cpp.compiler.option.debugging.level.413437716" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.222119749" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
-								<option id="gnu.c.link.option.libs.1926401114" superClass="gnu.c.link.option.libs" valueType="libs">
+								<option id="gnu.c.link.option.libs.1926401114" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rt"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="json-c"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="mysqlclient"/>
@@ -172,6 +176,7 @@
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1303692795" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TARGET_RASPBERRY_PI3B"/>
 									<listOptionValue builtIn="false" value="TARGET_LINUX_X86"/>
+									<listOptionValue builtIn="false" value="HATE_TRIGGER_ENABLE"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1984873775" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -180,7 +185,7 @@
 								<option id="gnu.cpp.compiler.option.debugging.level.1882374892" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.2095878512" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
-								<option id="gnu.c.link.option.libs.1084964906" superClass="gnu.c.link.option.libs" valueType="libs">
+								<option id="gnu.c.link.option.libs.1084964906" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rt"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="json-c"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="mysqlclient"/>
@@ -252,6 +257,7 @@
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1899652501" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TARGET_LINUX_X86"/>
 									<listOptionValue builtIn="false" value="TARGET_LINUX_X86_ADVANTECH"/>
+									<listOptionValue builtIn="false" value="HATE_TRIGGER_ENABLE"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1283736822" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -260,7 +266,7 @@
 								<option id="gnu.cpp.compiler.option.debugging.level.401210090" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1099614088" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
-								<option id="gnu.c.link.option.libs.1253594552" superClass="gnu.c.link.option.libs" valueType="libs">
+								<option id="gnu.c.link.option.libs.1253594552" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rt"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="json-c"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="mysqlclient"/>

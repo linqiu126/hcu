@@ -135,6 +135,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_JSONINOTIFY,   "JSONINOTIFY",      NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3BFDF,        "L3BFDF",           NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3HATE,        "L3HATE",           NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 //END所有项目任务初始化清单
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
@@ -240,6 +241,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3BFDF,        "L3BFDF",           &HcuFsmL3bfdf,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #else
 	#error Un-correct constant definition
 #endif
@@ -525,6 +527,10 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,                "MSG_ID_ZHBL3MOD_EXG_CTRL_REQ",               1, 1, 1},
 	{MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,               "MSG_ID_ZHBL3MOD_EXG_CTRL_RESP",              1, 1, 1},
 	{MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,             "MSG_ID_ZHBL3MOD_EXG_DATA_REPORT",            1, 1, 1},
+	//L3HATE:测试环境对应的消息
+	{MSG_ID_ETH_L3HATE_FRAME_RCV,             	  "MSG_ID_ETH_L3HATE_FRAME_RCV",                1, 1, 1},
+	{MSG_ID_SPS_L3HATE_FRAME_RCV,             	  "MSG_ID_SPS_L3HATE_FRAME_RCV",                1, 1, 1},
+	{MSG_ID_CAN_L3HATE_FRAME_RCV,             	  "MSG_ID_CAN_L3HATE_FRAME_RCV",                1, 1, 1},
 	//END FLAG
 	{MSG_ID_COM_MAX,                              "MSG_ID_COM_MAX",                             0, 0, 0},    //Ending
 };

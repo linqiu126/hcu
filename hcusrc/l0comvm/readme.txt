@@ -8,6 +8,10 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Sep.5 CURRENT_SW_DELIVERY 254=>BFDF项目
+= 增加HATE_TRIGGER_ENENABLE标识，用于将项目转变为测试目的
+
+
 //= ZJL, 2017 Sep.5 CURRENT_SW_DELIVERY 253=>BFDF项目
 = 创建BFDF双线分选组合称流水线项目
 
