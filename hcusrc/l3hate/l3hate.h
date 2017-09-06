@@ -1,8 +1,8 @@
 /*
  * l3hate.h
  *
- *  Created on: 2015年11月22日
- *      Author: test
+ *  Created on: 2017年9月4日
+ *      Author: ZHANG Jianlin
  */
 
 #ifndef L3APP_HATE_H_
@@ -10,7 +10,9 @@
 
 #include "../l1com/l1comdef.h"
 #include "../l0service/timer.h"
-
+#include "../l0service/trace.h"
+#include "../l1com/hwinv.h"
+#include "../l2frame/cloudvela.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -61,43 +63,51 @@ typedef struct gTaskL3hateTestCaseSet
 	UINT32	tcId;
 	gTaskL3hateTestCaseElement_t tce[HATE_TCE_STEPS_MAX_NBR];
 }gTaskL3hateTestCaseSet_t;
-extern gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_MIN;
-extern gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_MAX;
-extern gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_COM_RESTART_ALL_MODULES;
 
 //TEST CASE LIB
 typedef struct gTaskL3hateTestCaseLib
 {
 	gTaskL3hateTestCaseSet_t *tcSet;
 }gTaskL3hateTestCaseLib_t;
-//extern gTaskL3hateTestCaseSet_t zHcuTcLibTable[HATE_TCID_MAX+1];
 extern gTaskL3hateTestCaseLib_t zHcuTcLibTable[HATE_TCID_MAX+1];
-
-
 
 //任务上下文
 typedef struct gTaskL3hateContext
 {
 	UINT32	tcId;	//TestCaseId
 	UINT32  stepId; //运行到哪一步
+	void    *par;   //全局参数指针，用来传递入口参数的，其实就是接收到的消息数据
 }gTaskL3hateContext_t;
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3hate[];
 extern gTaskL3hateContext_t gTaskL3hateContext;
 
+//运行引擎的事件
+#define HATE_TC_RUN_ENGINE_EVENT_NONE  		0
+#define HATE_TC_RUN_ENGINE_EVENT_NEW_START  1
+#define HATE_TC_RUN_ENGINE_EVENT_ETH_TRG  	2
+#define HATE_TC_RUN_ENGINE_EVENT_SPS_TRG  	3
+#define HATE_TC_RUN_ENGINE_EVENT_CAN_TRG  	4
+#define HATE_TC_RUN_ENGINE_EVENT_TIME_OUT  	5
+#define HATE_TC_RUN_ENGINE_EVENT_INVALID  	0xFF
+
 //API
 extern OPSTAT fsm_l3hate_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3hate_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3hate_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3hate_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3hate_start_new_tc(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3hate_eth_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3hate_sps_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3hate_can_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
+//Global APIs
+void   hcu_l3hate_test_case_log_file(char *s);
+
 //Local API
 OPSTAT func_l3hate_int_init(void);
-OPSTAT func_l3hate_tc_snd_restart_all_modues(void);
+void   func_l3hate_test_case_run_engine(UINT8 event);
 
 //引用外部函数
 
