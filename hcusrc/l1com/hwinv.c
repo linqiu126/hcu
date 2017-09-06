@@ -478,6 +478,16 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		}
 	}
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+//	char cmdStr[HCU_SYSENG_PAR_ELEMENT_UI_MAX_LEN] = "";
+//	if ((zHcuSysEngPar.localUI.browselProg != NULL) && (zHcuSysEngPar.localUI.browselAutoStartUpFlag == TRUE)){
+//		sprintf(cmdStr, "%s %s %s > /dev/null", zHcuSysEngPar.localUI.browselProg, zHcuSysEngPar.localUI.browselStartUpAddress, zHcuSysEngPar.localUI.browselWorkingOption);
+//		int pid = fork();
+//		if (pid == 0){
+//			system(cmdStr);
+//			exit(EXIT_FAILURE);
+//		}
+//	}
 #else
 	#error Un-correct constant definition
 #endif

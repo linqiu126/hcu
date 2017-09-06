@@ -1,0 +1,54 @@
+/*
+ * hate_bfdf.c
+ *
+ *  Created on: 2017年9月4日
+ *      Author: ZHANG Jianlin
+ */
+
+#include "hate_common.h"
+
+//TEST CASE FUNCTIONS
+OPSTAT func_l3hate_bfdf_tc_snd_startup_ind_incoming(void)
+{
+	return SUCCESS;
+}
+
+//TEST CASE ELEMENT
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_BFDF_STARTUP_IND_COMING = {
+	HATE_TCID_COM_RESTART_ALL_MODULES,
+	{{HATE_TCE_CTRL_START, NULL},
+	{HATE_TCE_CTRL_SND, func_l3hate_bfdf_tc_snd_startup_ind_incoming},
+	{HATE_TCE_CTRL_CMPL, NULL}}
+};
+
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_BFDF_WS_NEW_EVENT_COMING = {
+	HATE_TCID_COM_RESTART_ALL_MODULES,
+	{{HATE_TCE_CTRL_START, NULL},
+	{HATE_TCE_CTRL_CMPL, NULL}}
+};
+
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_BFDF_CONFIG_ALL_NODES = {
+	HATE_TCID_COM_RESTART_ALL_MODULES,
+	{{HATE_TCE_CTRL_START, NULL},
+	{HATE_TCE_CTRL_CMPL, NULL}}
+};
+
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_BFDF_START_ALL_NODES = {
+	HATE_TCID_COM_RESTART_ALL_MODULES,
+	{{HATE_TCE_CTRL_START, NULL},
+	{HATE_TCE_CTRL_CMPL, NULL}}
+};
+
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_BFDF_STOP_ALL_NODES = {
+	HATE_TCID_COM_RESTART_ALL_MODULES,
+	{{HATE_TCE_CTRL_START, NULL},
+	{HATE_TCE_CTRL_CMPL, NULL}}
+};
+
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_BFDF_SUSPEND_ALL_NODES = {
+	HATE_TCID_COM_RESTART_ALL_MODULES,
+	{{HATE_TCE_CTRL_START, NULL},
+	{HATE_TCE_CTRL_CMPL, NULL}}
+};
+
+

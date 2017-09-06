@@ -134,6 +134,8 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_JSONINOTIFY,   "JSONINOTIFY",      NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3BFDF,        "L3BFDF",           NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3HATE,        "L3HATE",           NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 //END所有项目任务初始化清单
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TEST_MODE_ID)
@@ -233,6 +235,13 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_JSONINOTIFY,   "JSONINOTIFY",      &HcuFsmJsoninotify,      HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       &HcuFsmL3opwlotdr,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	{TASK_ID_MQTT,          "MQTT",             &HcuFsmMqtt,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_L3BFDF,        "L3BFDF",           &HcuFsmL3bfdf,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #else
 	#error Un-correct constant definition
 #endif
@@ -518,6 +527,11 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_ZHBL3MOD_EXG_CTRL_REQ,                "MSG_ID_ZHBL3MOD_EXG_CTRL_REQ",               1, 1, 1},
 	{MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,               "MSG_ID_ZHBL3MOD_EXG_CTRL_RESP",              1, 1, 1},
 	{MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,             "MSG_ID_ZHBL3MOD_EXG_DATA_REPORT",            1, 1, 1},
+	//L3HATE:测试环境对应的消息
+	{MSG_ID_L3HATE_TC_START,             	  	  "MSG_ID_L3HATE_TC_START",                     1, 1, 1},
+	{MSG_ID_ETH_L3HATE_FRAME_RCV,             	  "MSG_ID_ETH_L3HATE_FRAME_RCV",                1, 1, 1},
+	{MSG_ID_SPS_L3HATE_FRAME_RCV,             	  "MSG_ID_SPS_L3HATE_FRAME_RCV",                1, 1, 1},
+	{MSG_ID_CAN_L3HATE_FRAME_RCV,             	  "MSG_ID_CAN_L3HATE_FRAME_RCV",                1, 1, 1},
 	//END FLAG
 	{MSG_ID_COM_MAX,                              "MSG_ID_COM_MAX",                             0, 0, 0},    //Ending
 };
@@ -594,6 +608,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_L3NBHPM_PERIOD_READ,                "TID_1S_L3NBHPM_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3NBLPM_PERIOD_READ,                "TID_1S_L3NBLPM_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3OPWLOTDR_PERIOD_READ,             "TID_1S_L3OPWLOTDR_PERIOD_READ",          600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3HATE_WORK_CTRL_FB,             	 "TID_1S_L3HATE_WORK_CTRL_FB",             5,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_MAX,                                "TID_1S_MAX",                             0,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_10MS_MIN,                              "TID_10MS_MIN",                           0,       TIMER_RESOLUTION_10MS},
 	{TIMER_ID_10MS_SVRCON_TEST,                      "TID_10MS_SVRCON_TEST",                   10000,   TIMER_RESOLUTION_10MS},
@@ -644,6 +659,17 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          5,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     40,      TIMER_RESOLUTION_10MS},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 100,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB,             "TID_1S_L3BFSC_SYS_CFG_WAIT_FB",          15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_SYS_START_WAIT_FB,           "TID_1S_L3BFSC_SYS_START_WAIT_FB",        15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_SYS_STOP_WAIT_FB,            "TID_1S_L3BFSC_SYS_STOP_WAIT_FB",         15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_TTT_WAIT_FB,                 "TID_1S_L3BFSC_TTT_WAIT_FB",              60,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,                 "TID_1S_L3BFSC_TGU_WAIT_FB",              60,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_ERROR_INQ,          		 "TID_1S_L3BFSC_ERROR_INQ",                15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          5,       TIMER_RESOLUTION_1S},
+	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     40,      TIMER_RESOLUTION_10MS},
 #else
 	#error Un-correct constant definition
 #endif
@@ -738,6 +764,9 @@ HcuVmCtrCodabStaticCfg_t zHcuVmCtrCodabStaticCfg[] = {
 	{SENSOR_ID_GPIOTEMPDHT11,           "SNR_gpioTempDht11",             HCU_SYSCFG_SENSOR_PRESENT_YES},
 	{SENSOR_ID_GPIOHUMIDDHT11,          "SNR_gpioHumidDht11",            HCU_SYSCFG_SENSOR_PRESENT_YES},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	{SENSOR_ID_GPIOTEMPDHT11,           "SNR_gpioTempDht11",             HCU_SYSCFG_SENSOR_PRESENT_YES},
+	{SENSOR_ID_GPIOHUMIDDHT11,          "SNR_gpioHumidDht11",            HCU_SYSCFG_SENSOR_PRESENT_YES},
 #else
 	#error Un-correct constant definition
 #endif

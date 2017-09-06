@@ -7,8 +7,19 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
-//= ZSC, 2017 Sep.5 CURRENT_SW_DELIVERY 253=>AQYC项目
+//= ZSC, 2017 Sep.5 CURRENT_SW_DELIVERY 256=>AQYC项目
 = Add Aggregation report instead single sensor report to default server(socket instead of Curl)
+
+
+//= ZJL, 2017 Sep.6 CURRENT_SW_DELIVERY 255=>BFDF项目
+= 创建测试引擎
+= 创建测试表单库
+
+//= ZJL, 2017 Sep.5 CURRENT_SW_DELIVERY 254=>BFDF项目
+= 增加HATE_TRIGGER_ENENABLE标识，用于将项目转变为测试目的
+
+//= ZJL, 2017 Sep.5 CURRENT_SW_DELIVERY 253=>BFDF项目
+= 创建BFDF双线分选组合称流水线项目
 
 //= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 252=>BFSC项目
 = 先为MQTT的编解码做了一个基础的处理方式

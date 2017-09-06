@@ -121,6 +121,8 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_BFSCUICOMM,
 	TASK_ID_JSONINOTIFY,
 	TASK_ID_L3OPWLOTDR,
+	TASK_ID_L3BFDF,
+	TASK_ID_L3HATE,
 	TASK_ID_MAX,
 	TASK_ID_INVALID = 0xFFFFFFFF,
 }; //end of HCU_TASK_NAME_ID
@@ -619,8 +621,10 @@ extern HcuFsmStateItem_t HcuFsmL3nblpm[];                           //状态机
 extern HcuFsmStateItem_t HcuFsmL3nbhpm[];                           //状态机
 extern HcuFsmStateItem_t HcuFsmL3bfsc[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmBfscuicomm[];                        //状态机
-extern HcuFsmStateItem_t HcuFsmJsoninotify[];                        //状态机
+extern HcuFsmStateItem_t HcuFsmJsoninotify[];                       //状态机
 extern HcuFsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
+extern HcuFsmStateItem_t HcuFsmL3bfdf[];                            //状态机
+extern HcuFsmStateItem_t HcuFsmL3hate[];                            //状态机
 
 //任务配置的基础配置信息
 typedef struct HcuVmCtrTaskStaticCfg
@@ -730,6 +734,7 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_L3NBHPM_PERIOD_READ,
 	TIMER_ID_1S_L3NBLPM_PERIOD_READ,
 	TIMER_ID_1S_L3OPWLOTDR_PERIOD_READ,
+	TIMER_ID_1S_L3HATE_WORK_CTRL_FB,
 	TIMER_ID_1S_MAX,
 	TIMER_ID_10MS_MIN,
 	TIMER_ID_10MS_SVRCON_TEST,
