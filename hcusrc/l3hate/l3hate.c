@@ -55,6 +55,42 @@ HcuFsmStateItem_t HcuFsmL3hate[] =
 //Task Level Global variables
 gTaskL3hateContext_t gTaskL3hateContext;
 
+//TEST CASE ELEMENT
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_MIN = {
+	HATE_TCID_MIN, {{HATE_TCE_CTRL_NONE, NULL}}
+};
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_MAX = {
+	HATE_TCID_MAX, {{HATE_TCE_CTRL_NONE, NULL}}
+};
+gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_COM_RESTART_ALL_MODULES = {
+	HATE_TCID_COM_RESTART_ALL_MODULES,
+	{{HATE_TCE_CTRL_START, NULL},
+	{HATE_TCE_CTRL_SND, func_l3hate_tc_snd_restart_all_modues},
+	{HATE_TCE_CTRL_CMPL, NULL}}
+};
+//TEST CASE LIBARY
+gTaskL3hateTestCaseLib_t zHcuTcLibTable[HATE_TCID_MAX+1] = {
+	//START
+	{&zHcuTc_HATE_TCID_MIN},
+	//FORMAL TEST CASE
+	{&zHcuTc_HATE_TCID_COM_RESTART_ALL_MODULES},
+	//END_FLAG
+	{&zHcuTc_HATE_TCID_MAX}
+};
+
+/*
+gTaskL3hateTestCaseSet_t zHcuTcLibTable[HATE_TCID_MAX+1] = {
+	//START
+	{HATE_TCID_MIN, {{HATE_TCE_CTRL_NONE, NULL}}},
+	//FORMAL TEST CASE
+	{HATE_TCID_COM_RESTART_ALL_MODULES, {{HATE_TCE_CTRL_START, NULL}, {HATE_TCE_CTRL_SND, func_l3hate_tc_snd_restart_all_modues}, {HATE_TCE_CTRL_CMPL, NULL}}},
+	//END_FLAG
+	{HATE_TCID_MAX, {{HATE_TCE_CTRL_NONE, NULL}}},
+};
+*/
+
+//{HATE_TCE_CTRL_SND, func_l3hate_tc_snd_restart_all_modues},
+
 //Main Entry
 /***************************************************************************************************************************
  *
@@ -107,14 +143,22 @@ OPSTAT fsm_l3hate_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3HATE] = 0;
 	memset(&gTaskL3hateContext, 0, sizeof(gTaskL3hateContext_t));
 
-	//启动定时器
-
-
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3HATE, FSM_STATE_L3HATE_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_L3HATE("L3HATE: Error Set FSM State!\n");
 	HCU_DEBUG_PRINT_FAT("L3HATE: Enter FSM_STATE_L3HATE_ACTIVED status, Keeping refresh here!\n");
 
+	//发送MSG_ID_L3HATE_TC_START给自己：如果没有设置该标示，则不会自动发送消息给自己
+#ifdef HATE_TRIGGER_ENABLE
+	hcu_sleep(3);
+	msg_struct_l3hate_tc_start_t snd1;
+	memset(&snd1, 0, sizeof(msg_struct_l3hate_tc_start_t));
+	snd1.length = sizeof(msg_struct_l3hate_tc_start_t);
+	if (hcu_message_send(MSG_ID_L3HATE_TC_START, TASK_ID_L3HATE, TASK_ID_L3HATE, &snd1, snd1.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+#endif
 	//返回
 	return SUCCESS;
 }
@@ -177,5 +221,10 @@ OPSTAT fsm_l3hate_can_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	return SUCCESS;
 }
 
+//TEST CASE FUNCTIONS
+OPSTAT func_l3hate_tc_snd_restart_all_modues(void)
+{
+	return SUCCESS;
+}
 
 

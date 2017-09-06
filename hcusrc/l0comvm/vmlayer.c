@@ -528,6 +528,7 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,               "MSG_ID_ZHBL3MOD_EXG_CTRL_RESP",              1, 1, 1},
 	{MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,             "MSG_ID_ZHBL3MOD_EXG_DATA_REPORT",            1, 1, 1},
 	//L3HATE:测试环境对应的消息
+	{MSG_ID_L3HATE_TC_START,             	  	  "MSG_ID_L3HATE_TC_START",                     1, 1, 1},
 	{MSG_ID_ETH_L3HATE_FRAME_RCV,             	  "MSG_ID_ETH_L3HATE_FRAME_RCV",                1, 1, 1},
 	{MSG_ID_SPS_L3HATE_FRAME_RCV,             	  "MSG_ID_SPS_L3HATE_FRAME_RCV",                1, 1, 1},
 	{MSG_ID_CAN_L3HATE_FRAME_RCV,             	  "MSG_ID_CAN_L3HATE_FRAME_RCV",                1, 1, 1},
@@ -607,6 +608,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_L3NBHPM_PERIOD_READ,                "TID_1S_L3NBHPM_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3NBLPM_PERIOD_READ,                "TID_1S_L3NBLPM_PERIOD_READ",             600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3OPWLOTDR_PERIOD_READ,             "TID_1S_L3OPWLOTDR_PERIOD_READ",          600,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3HATE_WORK_CTRL_FB,             	 "TID_1S_L3HATE_WORK_CTRL_FB",             5,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_MAX,                                "TID_1S_MAX",                             0,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_10MS_MIN,                              "TID_10MS_MIN",                           0,       TIMER_RESOLUTION_10MS},
 	{TIMER_ID_10MS_SVRCON_TEST,                      "TID_10MS_SVRCON_TEST",                   10000,   TIMER_RESOLUTION_10MS},

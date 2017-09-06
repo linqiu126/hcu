@@ -543,6 +543,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,
 
 	//L3HATE:测试环境对应的消息
+	MSG_ID_L3HATE_TC_START,
 	MSG_ID_ETH_L3HATE_FRAME_RCV,
 	MSG_ID_SPS_L3HATE_FRAME_RCV,
 	MSG_ID_CAN_L3HATE_FRAME_RCV,
@@ -3795,6 +3796,12 @@ typedef struct  msg_struct_l3mod_exg_data_report
 }msg_struct_l3mod_exg_data_report_t;
 
 //L3HATE:测试环境对应的消息
+//MSG_ID_L3HATE_TC_START,
+typedef struct  msg_struct_l3hate_tc_start
+{
+	UINT32 length;
+}msg_struct_l3hate_tc_start_t;
+
 //MSG_ID_ETH_L3HATE_FRAME_RCV,
 typedef struct  msg_struct_l3hate_eth_frame_rcv
 {
