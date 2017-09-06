@@ -12,6 +12,7 @@
 //= ZJL, 2017 Sep.6 CURRENT_SW_DELIVERY 255=>BFDF项目
 = 创建测试引擎
 = 创建测试表单库
+= 创建基本的HATE工作逻辑
 
 //= ZJL, 2017 Sep.5 CURRENT_SW_DELIVERY 254=>BFDF项目
 = 增加HATE_TRIGGER_ENENABLE标识，用于将项目转变为测试目的

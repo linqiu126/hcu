@@ -14,7 +14,7 @@
 //SW version control, for internal usage
 #define HCU_CURRENT_SW_RELEASE 3 //R01 = 0x01 (XQ.HCU.SW.R01.456)
 #define HCU_CURRENT_SW_DELIVERY 255 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
-#define HCU_CURRENT_DB_DELIVERY 196 //UPDATE once modified.
+#define HCU_CURRENT_DB_DELIVERY 97 //UPDATE once modified.
 
 //= ZJL, 2015 Nov.1, CURRENT_SW_DELIVERY 1
 //= ZJL, 2015 Nov.3, CURRENT_SW_DELIVERY 2

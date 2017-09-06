@@ -50,6 +50,7 @@ HcuFsmStateItem_t HcuFsmL3hate[] =
 	{MSG_ID_ETH_L3HATE_FRAME_RCV,				FSM_STATE_L3HATE_ACTIVED,      	  	fsm_l3hate_eth_frame_rcv},
 	{MSG_ID_SPS_L3HATE_FRAME_RCV,				FSM_STATE_L3HATE_ACTIVED,      	  	fsm_l3hate_sps_frame_rcv},
 	{MSG_ID_CAN_L3HATE_FRAME_RCV,				FSM_STATE_L3HATE_ACTIVED,      	  	fsm_l3hate_can_frame_rcv},
+	//链路逻辑处理：待定
 
 
     //结束点，固定定义，不要改动
@@ -62,13 +63,15 @@ HcuFsmStateItem_t HcuFsmL3hate[] =
 gTaskL3hateContext_t gTaskL3hateContext;
 
 //TEST CASE LIBARY
-gTaskL3hateTestCaseLib_t zHcuTcLibTable[HATE_TCID_MAX+1] = {
+//测试库集合，是所有可能存在或者不用的总库表单
+gTaskL3hateTestCaseLib_t zHcuHateTcLibTable[HATE_TCID_MAX+1] = {
 	//START
 	{&zHcuTc_HATE_TCID_MIN},
 	//FORMAL TEST CASE
 	{&zHcuTc_HATE_TCID_COM_RESTART_ALL_MODULES},
 	{&zHcuTc_HATE_TCID_COM_SETUP_BH_CONNECT},
 	{&zHcuTc_HATE_TCID_COM_DISCON_BH_LINK},
+	{&zHcuTc_HATE_TCID_COM_BH_HEAT_BEAT_START},
 	//分项目测试库函数
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
 
@@ -87,6 +90,32 @@ gTaskL3hateTestCaseLib_t zHcuTcLibTable[HATE_TCID_MAX+1] = {
 #endif
 	//END_FLAG
 	{&zHcuTc_HATE_TCID_MAX}
+};
+
+//各个分项目中真实安排的测试内容
+UINT32 zHcuHateTcCampaign[] = {
+	//START
+	HATE_TCID_MIN,
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	HATE_TCID_COM_RESTART_ALL_MODULES,
+	HATE_TCID_COM_SETUP_BH_CONNECT,
+	HATE_TCID_COM_DISCON_BH_LINK,
+	//HATE_TCID_COM_BH_HEAT_BEAT_START,
+	//HATE_TCID_BFDF_STARTUP_IND_COMING,
+	HATE_TCID_BFDF_WS_NEW_EVENT_COMING,
+	HATE_TCID_BFDF_CONFIG_ALL_NODES,
+	HATE_TCID_BFDF_START_ALL_NODES,
+	HATE_TCID_BFDF_STOP_ALL_NODES,
+	HATE_TCID_BFDF_SUSPEND_ALL_NODES,
+#else
+	#error Un-correct constant definition
+#endif
+	//END_FLAG
+	HATE_TCID_MAX,
 };
 
 //Main Entry
@@ -256,14 +285,231 @@ OPSTAT fsm_l3hate_can_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 	return SUCCESS;
 }
 
+//主要运行的测试引擎
 void func_l3hate_test_case_run_engine(UINT8 event)
 {
+	UINT32 tcLibId = 0;
+
+	//停止定时器
+	HATE_STOP_WORK_TIMER;
+
+	//分类处理
+	if (event == HATE_TC_RUN_ENGINE_EVENT_NEW_START){
+		gTaskL3hateContext.tcIndex++;
+		HCU_DEBUG_PRINT_FAT("L3HATE: New test case start, TCID in Campaign = %d\n", gTaskL3hateContext.tcIndex);
+		func_l3hate_reset_all_modules();
+		hcu_sleep(3);
+		if (zHcuHateTcCampaign[gTaskL3hateContext.tcIndex] == HATE_TCID_MIN) gTaskL3hateContext.tcIndex++;
+		if (zHcuHateTcCampaign[gTaskL3hateContext.tcIndex] >= HATE_TCID_MAX){
+			hcu_l3hate_test_case_log_file("FINISHED. TCID in TcCampaign reach MAX.");
+			return;
+		}
+		//搜索测试行号
+		tcLibId = func_l3hate_search_test_case_number_in_lib(zHcuHateTcCampaign[gTaskL3hateContext.tcIndex]);
+		if ((tcLibId == HATE_TCID_MIN) || (tcLibId >= HATE_TCID_MAX)){
+			hcu_l3hate_test_case_log_file("FINISHED. TCID in TcLib reach MAX.");
+			return;
+		}
+		//执行第一步
+		gTaskL3hateContext.stepId = 0;
+		func_l3hate_test_case_run_execution_new(tcLibId);
+		return;
+	}
+	else if ((event == HATE_TC_RUN_ENGINE_EVENT_ETH_TRG) || (event == HATE_TC_RUN_ENGINE_EVENT_SPS_TRG) || (event == HATE_TC_RUN_ENGINE_EVENT_CAN_TRG)){
+		tcLibId = func_l3hate_search_test_case_number_in_lib(zHcuHateTcCampaign[gTaskL3hateContext.tcIndex]);
+		if ((tcLibId == HATE_TCID_MIN) || (tcLibId >= HATE_TCID_MAX)){
+			hcu_l3hate_test_case_log_file("FINISHED. TCID in TcLib reach MAX.");
+			return;
+		}
+		func_l3hate_test_case_run_execution_rcv(tcLibId);
+	}
+	else if (event == HATE_TC_RUN_ENGINE_EVENT_TIME_OUT){
+		tcLibId = func_l3hate_search_test_case_number_in_lib(zHcuHateTcCampaign[gTaskL3hateContext.tcIndex]);
+		if ((tcLibId == HATE_TCID_MIN) || (tcLibId >= HATE_TCID_MAX)){
+			hcu_l3hate_test_case_log_file("FINISHED. TCID in TcLib reach MAX.");
+			return;
+		}
+		hcu_l3hate_test_case_log_file("FINISHED. Time out to wait feedback.");
+		func_l3hate_test_case_execute_error_process(tcLibId);
+	}
+	else{
+		hcu_l3hate_test_case_log_file("FINISHED. TCID Exception.");
+		return;
+	}
+
+	//返回
 	return;
 }
 
-void hcu_l3hate_test_case_log_file(char *s)
+OPSTAT hcu_l3hate_test_case_log_file(char *s)
 {
+	char smtp[HATE_LOG_RECORD_MAX];
+	FILE *fp;
+
+	sprintf(smtp, "HATE: %s %s %s\r\n", __DATE__, __TIME__, s);
+	if((fp=fopen(HATE_LOG_FILE_NAME, "at+"))== NULL){
+		HCU_ERROR_PRINT_L3HATE("L3HATE: Open file %s Error!\n", HATE_LOG_FILE_NAME);
+	}
+	fseek(fp, 0L, SEEK_END);
+	if (fwrite(smtp, 1, strlen(smtp), fp) != strlen(smtp)){
+		fclose(fp);
+		HCU_ERROR_PRINT_L3HATE("L3HATE: Write file %s Error!\n", HATE_LOG_FILE_NAME);
+	}
+
+	fclose(fp);
+	return SUCCESS;
+}
+
+void func_l3hate_reset_all_modules(void)
+{
+	int task_id = 0;
+	msg_struct_com_restart_t snd;
+
+	for (task_id = TASK_ID_MIN + 1; task_id < TASK_ID_MAX; task_id++){
+		if ((zHcuVmCtrTab.task[task_id].pnpState == HCU_SYSCFG_TASK_PNP_ON) && (task_id != TASK_ID_SVRCON) && (task_id != TASK_ID_TIMER) && (task_id != TASK_ID_L3HATE)){
+			memset(&snd, 0, sizeof(msg_struct_com_restart_t));
+			snd.length = sizeof(msg_struct_com_restart_t);
+			if (hcu_message_send(MSG_ID_COM_RESTART, task_id, TASK_ID_L3HATE, &snd, snd.length) == FAILURE){
+				HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName, zHcuVmCtrTab.task[task_id].taskName);
+				return;
+			}
+		}
+	}
+
+	//返回
 	return;
 }
+
+//搜索zHcuTcLibTable中的实际标号
+//输入参数是zHcuHateTcCampaign[]中搜索的结果
+//返回的i指得是zHcuHateTcLibTable[]中的index
+UINT32 func_l3hate_search_test_case_number_in_lib(int tcCgnIndex)
+{
+	int i = 0;
+
+	//为了加快效率，先探测是否属于全排列
+	if (zHcuHateTcLibTable[tcCgnIndex].tcSet->tcId == tcCgnIndex) return tcCgnIndex;
+	//不行再遍历
+	while(zHcuHateTcLibTable[i].tcSet->tcId != HATE_TCID_MAX){
+		if(zHcuHateTcLibTable[i].tcSet->tcId == tcCgnIndex)
+			return i;
+		i++;
+	}
+	return i; //最大行号，就是HATE_TCID_MAX
+}
+
+void func_l3hate_test_case_execute_error_process(UINT32 tcLibId)
+{
+	char smtp[100];
+
+	sprintf(smtp, "#TEST NOK#, TC INDEX in Campaign = %d, TC ID in Lib = %d, TC STEP = %d.", gTaskL3hateContext.tcIndex, tcLibId, gTaskL3hateContext.stepId);
+	hcu_l3hate_test_case_log_file(smtp);
+
+	//发送给自己
+	msg_struct_l3hate_tc_start_t snd1;
+	memset(&snd1, 0, sizeof(msg_struct_l3hate_tc_start_t));
+	snd1.length = sizeof(msg_struct_l3hate_tc_start_t);
+	hcu_sleep(1);
+	if (hcu_message_send(MSG_ID_L3HATE_TC_START, TASK_ID_L3HATE, TASK_ID_L3HATE, &snd1, snd1.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return;
+	}
+
+	return;
+}
+
+void func_l3hate_test_case_execute_success_process(UINT32 tcLibId)
+{
+	char smtp[100];
+
+	sprintf(smtp, "#TEST OK#, TC INDEX in Campaign = %d, TC ID in Lib = %d, TC STEP = %d.", gTaskL3hateContext.tcIndex, tcLibId, gTaskL3hateContext.stepId);
+	hcu_l3hate_test_case_log_file(smtp);
+
+	//发送给自己
+	msg_struct_l3hate_tc_start_t snd1;
+	memset(&snd1, 0, sizeof(msg_struct_l3hate_tc_start_t));
+	snd1.length = sizeof(msg_struct_l3hate_tc_start_t);
+	hcu_sleep(1);
+	if (hcu_message_send(MSG_ID_L3HATE_TC_START, TASK_ID_L3HATE, TASK_ID_L3HATE, &snd1, snd1.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return;
+	}
+
+	return;
+}
+
+void func_l3hate_test_case_run_execution_new(UINT32 tcLibId)
+{
+	if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].ctrl != HATE_TCE_CTRL_START){
+		hcu_l3hate_test_case_log_file("FINISHED. Illeagal TEST CASE Set.");
+		func_l3hate_test_case_execute_error_process(tcLibId);
+		return;
+	}
+	gTaskL3hateContext.stepId++;
+	while(zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].ctrl != HATE_TCE_CTRL_CMPL){
+		if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].ctrl == HATE_TCE_CTRL_SND){
+			if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].hateFunc() == FAILURE){
+				func_l3hate_test_case_execute_error_process(tcLibId);
+				return;
+			}
+			else{
+				gTaskL3hateContext.stepId++;
+				continue;
+			}
+		}//SND
+		else if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].ctrl == HATE_TCE_CTRL_RCV){
+			HATE_START_WORK_TIMER;
+			return;
+		}//RCV
+		else{
+			func_l3hate_test_case_execute_error_process(tcLibId);
+			return;
+		}
+	}
+	//正常运行结束了
+	func_l3hate_test_case_execute_success_process(tcLibId);
+	return;
+}
+
+void func_l3hate_test_case_run_execution_rcv(UINT32 tcLibId)
+{
+	//先执行接收功能
+	if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].hateFunc() == FAILURE){
+		func_l3hate_test_case_execute_error_process(tcLibId);
+		return;
+	}
+
+	//继续执行
+	gTaskL3hateContext.stepId++;
+	if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].ctrl != HATE_TCE_CTRL_START){
+		hcu_l3hate_test_case_log_file("FINISHED. Illeagal TEST CASE Set.");
+		func_l3hate_test_case_execute_error_process(tcLibId);
+		return;
+	}
+	while(zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].ctrl != HATE_TCE_CTRL_CMPL){
+		if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].ctrl == HATE_TCE_CTRL_SND){
+			if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].hateFunc() == FAILURE){
+				func_l3hate_test_case_execute_error_process(tcLibId);
+				return;
+			}
+			else{
+				gTaskL3hateContext.stepId++;
+				continue;
+			}
+		}//SND
+		else if (zHcuHateTcLibTable[tcLibId].tcSet->tce[gTaskL3hateContext.stepId].ctrl == HATE_TCE_CTRL_RCV){
+			HATE_START_WORK_TIMER;
+			return;
+		}//RCV
+		else{
+			func_l3hate_test_case_execute_error_process(tcLibId);
+			return;
+		}
+	}
+	//正常运行结束了
+	func_l3hate_test_case_execute_success_process(tcLibId);
+	return;
+}
+
 
 

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
--- http://www.phpmyadmin.net
+-- version 4.6.6deb4
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Sep 01, 2017 at 01:10 PM
--- Server version: 5.5.47-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.14
+-- Host: localhost:3306
+-- Generation Time: 2017-09-06 21:41:17
+-- 服务器版本： 5.7.19-0ubuntu0.17.04.1
+-- PHP Version: 7.0.22-0ubuntu0.17.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `hcudb`
@@ -23,41 +23,39 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuairprsaltitudebmp180datainfo`
+-- 表的结构 `hcuairprsaltitudebmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuairprsaltitudebmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `altitudevalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `altitudevalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuairprsbmp180datainfo`
+-- 表的结构 `hcuairprsbmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuairprsbmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `airprsvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `airprsvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuairprsdatainfo`
+-- 表的结构 `hcuairprsdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuairprsdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -67,18 +65,17 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcualcoholdatainfo`
+-- 表的结构 `hcualcoholdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcualcoholdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -88,33 +85,31 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcualcoholmq3alcodatainfo`
+-- 表的结构 `hcualcoholmq3alcodatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcualcoholmq3alcodatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `alcoholvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `alcoholvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsccalibration`
+-- 表的结构 `hcubfsccalibration`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfsccalibration` (
+  `sid` int(4) NOT NULL,
   `zeroadc_01` int(4) NOT NULL DEFAULT '0',
   `fulladc_01` int(4) NOT NULL DEFAULT '0',
   `fullwgt_01` int(4) NOT NULL DEFAULT '100000',
@@ -162,12 +157,11 @@ CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
   `fullwgt_15` int(4) NOT NULL DEFAULT '100000',
   `zeroadc_16` int(4) NOT NULL DEFAULT '0',
   `fulladc_16` int(4) NOT NULL DEFAULT '0',
-  `fullwgt_16` int(4) NOT NULL DEFAULT '100000',
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+  `fullwgt_16` int(4) NOT NULL DEFAULT '100000'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfsccalibration`
+-- 转存表中的数据 `hcubfsccalibration`
 --
 
 INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
@@ -176,11 +170,11 @@ INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscconfigpara`
+-- 表的结构 `hcubfscconfigpara`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfscconfigpara` (
+  `sid` int(4) NOT NULL,
   `confname` varchar(50) NOT NULL,
   `currentconf` char(1) NOT NULL DEFAULT 'N',
   `baseconf` char(1) NOT NULL DEFAULT 'N',
@@ -211,13 +205,11 @@ CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
   `rollingstop` int(4) NOT NULL DEFAULT '500',
   `rollinginterval` int(4) NOT NULL DEFAULT '500',
   `failuredetectvaration` int(4) NOT NULL DEFAULT '500',
-  `failuredetecttime` int(4) NOT NULL DEFAULT '500',
-  PRIMARY KEY (`sid`),
-  UNIQUE KEY `confname` (`confname`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+  `failuredetecttime` int(4) NOT NULL DEFAULT '500'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfscconfigpara`
+-- 转存表中的数据 `hcubfscconfigpara`
 --
 
 INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `minscalenum`, `maxscalenum`, `minscalenumstart`, `targetweight`, `upperweightlimit`, `proximitmode`, `combinationbias`, `remaindetectind`, `remaindetecttime`, `remainobjtreat`, `prioritymode`, `automode`, `averagenum`, `loaddetecttime`, `loaddetectthread`, `emptydetecttime`, `emptydetectthread`, `standardreadytime`, `motorspeed`, `motordirection`, `rollingstart`, `rollingstop`, `rollinginterval`, `failuredetectvaration`, `failuredetecttime`) VALUES
@@ -232,10 +224,10 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsccurrentinfo`
+-- 表的结构 `hcubfsccurrentinfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
+CREATE TABLE `hcubfsccurrentinfo` (
   `timestamp` int(4) NOT NULL,
   `status_00` int(4) DEFAULT NULL,
   `value_00` int(4) DEFAULT NULL,
@@ -271,12 +263,11 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
   `value_15` int(4) DEFAULT NULL,
   `status_16` int(4) DEFAULT NULL,
   `value_16` int(4) DEFAULT NULL,
-  `curcomwgt` int(4) DEFAULT NULL,
-  PRIMARY KEY (`timestamp`)
+  `curcomwgt` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfsccurrentinfo`
+-- 转存表中的数据 `hcubfsccurrentinfo`
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
@@ -285,19 +276,18 @@ INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscfb2ui`
+-- 表的结构 `hcubfscfb2ui`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscfb2ui` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfscfb2ui` (
+  `sid` int(4) NOT NULL,
   `cmdtype` int(1) NOT NULL,
   `validflag` int(1) NOT NULL,
-  `fbinfo` char(80) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+  `fbinfo` char(80) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfscfb2ui`
+-- 转存表中的数据 `hcubfscfb2ui`
 --
 
 INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
@@ -308,23 +298,22 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsclanguagedict`
+-- 表的结构 `hcubfsclanguagedict`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsclanguagedict` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfsclanguagedict` (
+  `sid` int(4) NOT NULL,
   `english` varchar(200) NOT NULL,
   `chinese` varchar(200) DEFAULT NULL,
   `french` varchar(200) DEFAULT NULL,
   `japanese` varchar(200) DEFAULT NULL,
   `german` varchar(200) DEFAULT NULL,
   `arabic` varchar(200) DEFAULT NULL,
-  `thai` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=72 ;
+  `thai` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfsclanguagedict`
+-- 转存表中的数据 `hcubfsclanguagedict`
 --
 
 INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japanese`, `german`, `arabic`, `thai`) VALUES
@@ -403,19 +392,18 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsclanguagelist`
+-- 表的结构 `hcubfsclanguagelist`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsclanguagelist` (
+CREATE TABLE `hcubfsclanguagelist` (
   `lang_name` varchar(20) NOT NULL,
   `lang_icon` varchar(20) NOT NULL,
   `lang_abbr` varchar(20) NOT NULL,
-  `defaultflag` tinyint(1) NOT NULL,
-  PRIMARY KEY (`lang_name`)
+  `defaultflag` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfsclanguagelist`
+-- 转存表中的数据 `hcubfsclanguagelist`
 --
 
 INSERT INTO `hcubfsclanguagelist` (`lang_name`, `lang_icon`, `lang_abbr`, `defaultflag`) VALUES
@@ -430,11 +418,11 @@ INSERT INTO `hcubfsclanguagelist` (`lang_name`, `lang_icon`, `lang_abbr`, `defau
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscstadatainfo`
+-- 表的结构 `hcubfscstadatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfscstadatainfo` (
+  `sid` int(4) NOT NULL,
   `statype` char(20) DEFAULT NULL,
   `configid` int(4) DEFAULT NULL,
   `timestamp` int(4) DEFAULT NULL,
@@ -449,12 +437,11 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
   `wstgvmatwgt` double(18,2) DEFAULT NULL,
   `wsavgttttimes` int(4) DEFAULT NULL,
   `wsavgtttmatcnt` int(4) DEFAULT NULL,
-  `wsavgtttmatwgt` double(18,2) DEFAULT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
+  `wsavgtttmatwgt` double(18,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfscstadatainfo`
+-- 转存表中的数据 `hcubfscstadatainfo`
 --
 
 INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatcnt`, `wsincmatwgt`, `wscombtimes`, `wsttttimes`, `wstgvtimes`, `wstttmatcnt`, `wstgvmatcnt`, `wstttmatwgt`, `wstgvmatwgt`, `wsavgttttimes`, `wsavgtttmatcnt`, `wsavgtttmatwgt`) VALUES
@@ -466,11 +453,11 @@ INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscstaticpara`
+-- 表的结构 `hcubfscstaticpara`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscstaticpara` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcubfscstaticpara` (
+  `sid` int(4) NOT NULL,
   `calmaxallowedwgt` int(4) NOT NULL DEFAULT '0',
   `calfullwgt` int(4) NOT NULL DEFAULT '0',
   `caladcgain` int(4) NOT NULL DEFAULT '0',
@@ -478,12 +465,11 @@ CREATE TABLE IF NOT EXISTS `hcubfscstaticpara` (
   `snrstaticzerovalue` int(4) NOT NULL DEFAULT '0',
   `snrtailorvalue` int(4) NOT NULL DEFAULT '0',
   `snrdynzerothread` int(4) NOT NULL DEFAULT '0',
-  `snrdynzerohysteresis` int(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='calibration and sensor configuration table' AUTO_INCREMENT=2 ;
+  `snrdynzerohysteresis` int(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='calibration and sensor configuration table';
 
 --
--- Dumping data for table `hcubfscstaticpara`
+-- 转存表中的数据 `hcubfscstaticpara`
 --
 
 INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `caladcgain`, `caladcwordrate`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
@@ -492,11 +478,11 @@ INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `calad
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuco1datainfo`
+-- 表的结构 `hcuco1datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuco1datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -506,18 +492,17 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuemcdatainfo`
+-- 表的结构 `hcuemcdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuemcdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -527,12 +512,11 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12205 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcuemcdatainfo`
+-- 转存表中的数据 `hcuemcdatainfo`
 --
 
 INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emcvalue`, `EW`, `gpsx`, `NS`, `gpsy`, `gpsz`, `onofflineflag`) VALUES
@@ -583,11 +567,11 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhchodatainfo`
+-- 表的结构 `hcuhchodatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhchodatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -597,33 +581,31 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhchoze08ch2odatainfo`
+-- 表的结构 `hcuhchoze08ch2odatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhchoze08ch2odatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `hchovalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `hchovalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhsmmpdatainfo`
+-- 表的结构 `hcuhsmmpdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhsmmpdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `hsmmpfdir` char(100) NOT NULL,
@@ -634,18 +616,17 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumiddatainfo`
+-- 表的结构 `hcuhumiddatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumiddatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -655,42 +636,39 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumiddht11datainfo`
+-- 表的结构 `hcuhumiddht11datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumiddht11datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumiddht11datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumidmth01datainfo`
+-- 表的结构 `hcuhumidmth01datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidmth01datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumidmth01datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcuhumidmth01datainfo`
+-- 转存表中的数据 `hcuhumidmth01datainfo`
 --
 
 INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `humidvalue`) VALUES
@@ -699,41 +677,39 @@ INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumidrht03datainfo`
+-- 表的结构 `hcuhumidrht03datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumidrht03datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumidsht20datainfo`
+-- 表的结构 `hcuhumidsht20datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuhumidsht20datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `humidvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `humidvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuigmcj188datainfo`
+-- 表的结构 `hcuigmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuigmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -763,18 +739,17 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuihmcj188datainfo`
+-- 表的结构 `hcuihmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuihmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -808,18 +783,17 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuipmcj188datainfo`
+-- 表的结构 `hcuipmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuipmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -849,18 +823,17 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuiwmcj188datainfo`
+-- 表的结构 `hcuiwmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuiwmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -890,33 +863,31 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
   `accuamount` float(8,2) NOT NULL,
   `remainamount` float(8,2) NOT NULL,
   `keyver` int(1) NOT NULL,
-  `switchctrl` int(1) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `switchctrl` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hculightstrbh1750datainfo`
+-- 表的结构 `hculightstrbh1750datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hculightstrbh1750datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `lightstrvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `lightstrvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hculightstrdatainfo`
+-- 表的结构 `hculightstrdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hculightstrdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -926,18 +897,17 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcunoisedatainfo`
+-- 表的结构 `hcunoisedatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcunoisedatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -947,33 +917,31 @@ CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcupm25bmpd300datainfo`
+-- 表的结构 `hcupm25bmpd300datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcupm25bmpd300datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm2d5value` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `pm2d5value` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcupm25datainfo`
+-- 表的结构 `hcupm25datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcupm25datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -985,45 +953,42 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcupm25sharpdatainfo`
+-- 表的结构 `hcupm25sharpdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcupm25sharpdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `pm2d5value` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `pm2d5value` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysalarminfo`
+-- 表的结构 `hcusysalarminfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysalarminfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcusysalarminfo` (
+  `sid` int(4) NOT NULL,
   `eqpid` int(4) NOT NULL,
   `alarmtype` int(4) NOT NULL,
   `alarmcontent` int(4) NOT NULL,
   `alarmseverity` int(4) NOT NULL,
   `alarmclearflag` int(4) NOT NULL,
   `alarmdesc` char(100) NOT NULL,
-  `timestamp` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2195 ;
+  `timestamp` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusysalarminfo`
+-- 转存表中的数据 `hcusysalarminfo`
 --
 
 INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `alarmseverity`, `alarmclearflag`, `alarmdesc`, `timestamp`) VALUES
@@ -3221,10 +3186,10 @@ INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `ala
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysengpar`
+-- 表的结构 `hcusysengpar`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysengpar` (
+CREATE TABLE `hcusysengpar` (
   `prjname` char(100) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
   `hcudbhost` char(20) NOT NULL,
@@ -3255,19 +3220,18 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
   `browselautostartupflag` int(1) NOT NULL,
   `browselprog` char(20) NOT NULL,
   `browselstartupaddress` char(128) NOT NULL,
-  `browselworkingoption` char(128) NOT NULL,
-  PRIMARY KEY (`prjname`)
+  `browselworkingoption` char(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusysengpar`
+-- 转存表中的数据 `hcusysengpar`
 --
 
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `seriesportforqrprinter`, `svraddhttplocal`, `svraddsocketipdefault`, `svraddhttpdefault`, `svrnamedefault`, `cloudftpadd`, `cloudftpuser`, `cloudftppwd`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuswdownloaddir`, `hcuswactivedir`, `hcuswbackupdir`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
 ('HCU_PRJ_AQYCG10_335D', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 1, 1, 'http://127.0.0.1/test.php', '112.64.16.27', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'ftp://121.40.118.33/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-kiosk'),
 ('HCU_PRJ_AQYC_OBSOLETE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 1, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk'),
+('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen'),
 ('HCU_PRJ_CXGLACM', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_CXILC', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_GQYBG40', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
@@ -3275,24 +3239,24 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 ('HCU_PRJ_NBIOT_LPM_CJ', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_OPWL_OTDR', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
 ('HCU_PRJ_TBSWRG30', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
-('HCU_PRJ_TEST_MODE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-');
+('HCU_PRJ_TEST_MODE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'ftp://121.40.185.177', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFDF_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'ftp://121.40.185.177/', 'forlinx', 'Forlinx321', 'avorion', 'Avorion321', '/var/hcu/hcu_sw_download/', '/var/hcu/hcu_sw_active/', '/var/hcu/hcu_sw_backup/', '121.40.118.33', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysengtimer`
+-- 表的结构 `hcusysengtimer`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
+CREATE TABLE `hcusysengtimer` (
   `timerid` int(2) NOT NULL,
   `timername` char(40) NOT NULL,
   `granularity` int(1) NOT NULL,
-  `duration` int(1) NOT NULL,
-  PRIMARY KEY (`timerid`)
+  `duration` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusysengtimer`
+-- 转存表中的数据 `hcusysengtimer`
 --
 
 INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`) VALUES
@@ -3317,62 +3281,71 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (18, 'TID_1S_NOISE_SPSVIRGO_FB', 1, 10),
 (19, 'TID_1S_HSMMP_PERIOD_AVORION_READ', 1, 600),
 (20, 'TID_1S_HSMMP_AVORION_FB', 1, 10),
-(21, 'TID_1S_CLOUDVELA_PERIOD_LINK_HBT', 1, 10),
-(22, 'TID_1S_NBIOTCJ188_PERIOD_LINK_HBT', 1, 600),
-(23, 'TID_1S_NBIOTCJ188_SEND_DATA_BACK', 1, 10),
-(24, 'TID_1S_NBIOTQG376_PERIOD_LINK_HBT', 1, 600),
-(25, 'TID_1S_NBIOTQG376_SEND_DATA_BACK', 1, 10),
-(26, 'TID_1S_LLCZHB_LINK_CTRL', 1, 10),
-(27, 'TID_1S_AIRPRS_PERIOD_READ', 1, 600),
-(28, 'TID_1S_CO1_PERIOD_READ', 1, 600),
-(29, 'TID_1S_LIGHTSTR_PERIOD_READ', 1, 600),
-(30, 'TID_1S_ALCOHOL_PERIOD_READ', 1, 600),
-(31, 'TID_1S_HCHO_PERIOD_READ', 1, 600),
-(32, 'TID_1S_TOXICGAS_PERIOD_READ', 1, 600),
-(33, 'TID_1S_PM25SHARP_PERIOD_READ', 1, 600),
-(34, 'TID_1S_IWM_PERIOD_READ', 1, 600),
-(35, 'TID_1S_IHM_PERIOD_READ', 1, 600),
-(36, 'TID_1S_IGM_PERIOD_READ', 1, 600),
-(37, 'TID_1S_IPM_PERIOD_READ', 1, 600),
-(38, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 311),
-(39, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 30),
-(40, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 3),
-(41, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
-(42, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
-(43, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
-(44, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
-(45, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 60),
-(46, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 60),
-(47, 'TIMER_ID_1S_L3BFSC_ERROR_INQ', 1, 15),
-(48, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 5),
-(49, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
-(50, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
-(58, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
-(59, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
-(60, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
-(61, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
-(62, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
-(63, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
-(64, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
-(65, 'TID_1S_MAX', 1, 0),
-(66, 'TID_10MS_MIN', 2, 0),
-(67, 'TID_10MS_SVRCON_TEST', 2, 10000),
-(68, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
-(69, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 40),
-(70, 'TID_10MS_MAX', 2, 0),
-(71, 'TID_1MS_MIN', 3, 0),
-(72, 'TID_1MS_SVRCON_TEST', 3, 100),
-(73, 'TID_1MS_MAX', 3, 0),
-(74, 'TID_MAX', 1, 0);
+(21, 'TID_ID_1S_HSMMP_PERIOD_CURL_PICTURE', 1, 3600),
+(22, 'TID_1S_CLOUDVELA_PERIOD_LINK_HBT', 1, 10),
+(23, 'TID_1S_NBIOTCJ188_PERIOD_LINK_HBT', 1, 600),
+(24, 'TID_1S_NBIOTCJ188_SEND_DATA_BACK', 1, 10),
+(25, 'TID_1S_NBIOTQG376_PERIOD_LINK_HBT', 1, 600),
+(26, 'TID_1S_NBIOTQG376_SEND_DATA_BACK', 1, 10),
+(27, 'TID_1S_LLCZHB_LINK_CTRL', 1, 10),
+(28, 'TID_1S_AIRPRS_PERIOD_READ', 1, 600),
+(29, 'TID_1S_CO1_PERIOD_READ', 1, 600),
+(30, 'TID_1S_LIGHTSTR_PERIOD_READ', 1, 600),
+(31, 'TID_1S_ALCOHOL_PERIOD_READ', 1, 600),
+(32, 'TID_1S_HCHO_PERIOD_READ', 1, 600),
+(33, 'TID_1S_TOXICGAS_PERIOD_READ', 1, 600),
+(34, 'TID_1S_PM25SHARP_PERIOD_READ', 1, 600),
+(35, 'TID_1S_IWM_PERIOD_READ', 1, 600),
+(36, 'TID_1S_IHM_PERIOD_READ', 1, 600),
+(37, 'TID_1S_IGM_PERIOD_READ', 1, 600),
+(38, 'TID_1S_IPM_PERIOD_READ', 1, 600),
+(39, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 311),
+(40, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 900),
+(41, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 3),
+(42, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
+(43, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
+(44, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
+(45, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
+(46, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 60),
+(47, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 60),
+(48, 'TID_1S_L3BFSC_ERROR_INQ', 1, 15),
+(49, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 5),
+(50, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
+(51, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
+(52, 'TID_1S_L3AQYCG20_PERIOD_STA_SCAN', 1, 30),
+(53, 'TID_1S_L3AQYCG20_START_MIN_REPORT', 1, 60),
+(54, 'TID_1S_L3AQYCG20_STOP_MIN_REPORT', 1, 60),
+(55, 'TID_1S_L3AQYCG20_START_HOUR_REPORT', 1, 60),
+(56, 'TID_1S_L3AQYCG20_STOP_HOUR_REPORT', 1, 60),
+(57, 'TID_1S_L3AQYCG20_START_DAY_REPORT', 1, 60),
+(58, 'TID_1S_L3AQYCG20_STOP_DAY_REPORT', 1, 60),
+(59, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
+(60, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
+(61, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
+(62, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
+(63, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
+(64, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
+(65, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
+(66, 'TID_1S_L3HATE_WORK_CTRL_FB', 1, 5),
+(67, 'TID_1S_MAX', 1, 0),
+(68, 'TID_10MS_MIN', 2, 0),
+(69, 'TID_10MS_SVRCON_TEST', 2, 10000),
+(70, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
+(71, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 40),
+(72, 'TID_10MS_MAX', 2, 0),
+(73, 'TID_1MS_MIN', 3, 0),
+(74, 'TID_1MS_SVRCON_TEST', 3, 100),
+(75, 'TID_1MS_MAX', 3, 0),
+(76, 'TID_MAX', 1, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusyspmglobaldatainfo`
+-- 表的结构 `hcusyspmglobaldatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcusyspmglobaldatainfo` (
+  `sid` int(4) NOT NULL,
   `taskhcuvmec` int(4) NOT NULL,
   `taskhwinvec` int(4) NOT NULL,
   `tasksyspmec` int(4) NOT NULL,
@@ -3404,12 +3377,11 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `memoccupy` int(11) NOT NULL,
   `diskoccupy` int(11) NOT NULL,
   `cputemp` int(11) NOT NULL,
-  `timestamp` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=666 ;
+  `timestamp` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusyspmglobaldatainfo`
+-- 转存表中的数据 `hcusyspmglobaldatainfo`
 --
 
 INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
@@ -4075,16 +4047,51 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (662, 0, 3855, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 35, 4, 15, 33, 0, 1503388464),
 (663, 0, 3918, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 35, 82, 16, 33, 0, 1503388775),
 (664, 0, 3981, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 35, 2, 16, 33, 0, 1503389086),
-(665, 0, 4041, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 13, 16, 33, 0, 1503389397);
+(665, 0, 4041, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 38, 13, 16, 33, 0, 1503389397),
+(666, 0, 264, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 2, 0, 7, 32, 0, 1504691507),
+(667, 0, 327, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 3, 2, 7, 32, 0, 1504691818),
+(668, 0, 390, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 4, 0, 7, 32, 0, 1504692129),
+(669, 0, 453, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 5, 0, 7, 32, 0, 1504692440),
+(670, 0, 513, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 6, 0, 7, 32, 0, 1504692751),
+(671, 0, 576, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 7, 1, 7, 32, 0, 1504693062),
+(672, 0, 639, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 8, 1, 7, 32, 0, 1504693373),
+(673, 0, 699, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 9, 1, 7, 32, 0, 1504693684),
+(674, 0, 762, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 12, 1, 7, 32, 0, 1504694209),
+(675, 0, 825, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 12, 1, 7, 32, 0, 1504694521),
+(676, 0, 888, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 12, 0, 7, 32, 0, 1504694831),
+(677, 0, 948, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 15, 1, 7, 32, 0, 1504695856),
+(678, 0, 1011, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 15, 1, 7, 32, 0, 1504696168),
+(679, 0, 1074, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 15, 0, 7, 32, 0, 1504696479),
+(680, 0, 1134, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 15, 0, 7, 32, 0, 1504696790),
+(681, 0, 1197, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 15, 1, 7, 32, 0, 1504697100),
+(682, 0, 1260, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 15, 1, 7, 32, 0, 1504697412),
+(683, 0, 1323, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 15, 1, 7, 32, 0, 1504697723),
+(684, 0, 1383, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 21, 0, 0, 15, 0, 7, 32, 0, 1504698034),
+(685, 0, 1446, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 22, 1, 0, 25, 0, 7, 32, 0, 1504699361),
+(686, 0, 1509, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 22, 1, 0, 25, 0, 7, 32, 0, 1504699671),
+(687, 0, 1569, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 22, 1, 0, 25, 0, 7, 32, 0, 1504699983),
+(688, 0, 1632, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 22, 1, 0, 25, 15, 7, 32, 0, 1504700293),
+(689, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 32, 0, 0, 0, 0, 7, 32, 0, 1504700870),
+(690, 0, 135, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 57, 0, 0, 1, 0, 7, 32, 0, 1504701180),
+(691, 0, 198, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 57, 0, 0, 1, 0, 7, 32, 0, 1504701491),
+(692, 0, 258, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 57, 0, 0, 1, 0, 7, 32, 0, 1504701802),
+(693, 0, 321, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 57, 0, 0, 1, 0, 7, 32, 0, 1504702114),
+(694, 0, 384, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 57, 0, 0, 1, 0, 7, 32, 0, 1504702425),
+(695, 0, 447, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 57, 0, 0, 1, 0, 7, 32, 0, 1504702736),
+(696, 0, 507, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 57, 0, 0, 1, 0, 7, 32, 0, 1504703047),
+(697, 0, 570, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 57, 0, 0, 1, 7, 7, 32, 0, 1504703357),
+(698, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 32, 0, 0, 0, 0, 8, 32, 0, 1504704021),
+(699, 0, 135, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 60, 0, 0, 1, 19, 8, 32, 0, 1504704331),
+(700, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 32, 0, 0, 0, 10, 8, 32, 0, 1504704713);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysswm_swdl`
+-- 表的结构 `hcusysswm_swdl`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysswm_swdl` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcusysswm_swdl` (
+  `sid` int(4) NOT NULL,
   `equentry` int(1) NOT NULL DEFAULT '1',
   `hwtype` int(2) NOT NULL DEFAULT '0',
   `hwpem` int(2) NOT NULL DEFAULT '0',
@@ -4100,18 +4107,17 @@ CREATE TABLE IF NOT EXISTS `hcusysswm_swdl` (
   `segvalidlen` int(2) NOT NULL DEFAULT '0',
   `segcksum` int(2) NOT NULL DEFAULT '0',
   `filename` varchar(60) DEFAULT NULL,
-  `dltime` int(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `dltime` int(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysswm_swpkg`
+-- 表的结构 `hcusysswm_swpkg`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysswm_swpkg` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcusysswm_swpkg` (
+  `sid` int(4) NOT NULL,
   `equentry` int(1) NOT NULL DEFAULT '1',
   `hwtype` int(2) NOT NULL DEFAULT '0',
   `hwpem` int(2) NOT NULL DEFAULT '0',
@@ -4126,33 +4132,31 @@ CREATE TABLE IF NOT EXISTS `hcusysswm_swpkg` (
   `filename` varchar(60) DEFAULT NULL,
   `dbname` varchar(60) DEFAULT NULL,
   `currentactive` char(10) NOT NULL,
-  `updatetime` int(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `updatetime` int(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempbmp180datainfo`
+-- 表的结构 `hcutempbmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempbmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempdatainfo`
+-- 表的结构 `hcutempdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4162,78 +4166,73 @@ CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempdht11datainfo`
+-- 表的结构 `hcutempdht11datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempdht11datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempdht11datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempmth01datainfo`
+-- 表的结构 `hcutempmth01datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempmth01datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutemprht03datainfo`
+-- 表的结构 `hcutemprht03datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutemprht03datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempsht20datainfo`
+-- 表的结构 `hcutempsht20datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutempsht20datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `tempvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `tempvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutoxicgasdatainfo`
+-- 表的结构 `hcutoxicgasdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutoxicgasdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4243,59 +4242,55 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
   `ns` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutoxicgasmq135datainfo`
+-- 表的结构 `hcutoxicgasmq135datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutoxicgasmq135datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `toxicgasvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `toxicgasvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutoxicgaszp01vocdatainfo`
+-- 表的结构 `hcutoxicgaszp01vocdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcutoxicgaszp01vocdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
-  `toxicgasvalue` int(4) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `toxicgasvalue` int(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutracemodulectr`
+-- 表的结构 `hcutracemodulectr`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
+CREATE TABLE `hcutracemodulectr` (
   `moduleid` int(2) NOT NULL,
   `modulename` char(15) NOT NULL,
   `modulectrflag` int(1) NOT NULL,
   `moduletoallow` int(1) NOT NULL,
   `moduletorestrict` int(1) NOT NULL,
   `modulefromallow` int(1) NOT NULL,
-  `modulefromrestrict` int(1) NOT NULL,
-  PRIMARY KEY (`moduleid`)
+  `modulefromrestrict` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcutracemodulectr`
+-- 转存表中的数据 `hcutracemodulectr`
 --
 
 INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `moduletoallow`, `moduletorestrict`, `modulefromallow`, `modulefromrestrict`) VALUES
@@ -4306,94 +4301,96 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 (4, 'CONFIG', 1, 1, 1, 1, 1),
 (5, 'TIMER', 1, 1, 1, 1, 1),
 (6, 'MMC', 1, 1, 1, 1, 1),
-(7, 'GPIO', 1, 1, 1, 1, 1),
-(8, 'I2C', 1, 1, 1, 1, 1),
-(9, 'SPI', 1, 1, 1, 1, 1),
-(10, 'PWM', 1, 1, 1, 1, 1),
-(11, 'ADC', 1, 1, 1, 1, 1),
-(12, 'SWITCH', 1, 1, 1, 1, 1),
-(13, 'RELAY', 1, 1, 1, 1, 1),
-(14, 'MOTOR', 1, 1, 1, 1, 1),
-(15, 'ZEEGBE', 1, 1, 1, 1, 1),
-(16, 'GPRS', 1, 1, 1, 1, 1),
-(17, 'SPS232', 1, 1, 1, 1, 1),
-(18, 'SPS485', 1, 1, 1, 1, 1),
-(19, 'BLE', 1, 1, 1, 1, 1),
-(20, 'ETHERNET', 1, 1, 1, 1, 1),
-(21, 'WIFI', 1, 1, 1, 1, 1),
-(22, 'USBNET', 1, 1, 1, 1, 1),
-(23, '3G4G', 1, 1, 1, 1, 1),
-(24, 'HARDDISK', 1, 1, 1, 1, 1),
-(25, 'CAMERA', 1, 1, 1, 1, 1),
-(26, 'MICROPHONE', 1, 1, 1, 1, 1),
-(27, 'FLASH', 1, 1, 1, 1, 1),
-(28, 'GPS', 1, 1, 1, 1, 1),
-(29, 'LCD', 1, 1, 1, 1, 1),
-(30, 'LED', 1, 1, 1, 1, 1),
-(31, 'HWINV', 1, 1, 1, 1, 1),
-(32, 'SPSVIRGO', 1, 1, 1, 1, 1),
-(33, 'CLOUDVELA', 1, 1, 1, 1, 1),
-(34, 'MODBUS', 1, 1, 1, 1, 1),
-(35, 'AVORION', 1, 1, 1, 1, 1),
-(36, 'I2CBUSLIBRA', 1, 1, 1, 1, 1),
-(37, 'SPIBUSARIES', 1, 1, 1, 1, 1),
-(38, 'NBIOTCJ188', 1, 1, 1, 1, 1),
-(39, 'NBIOTQG376', 1, 1, 1, 1, 1),
-(40, 'LLCZHB', 1, 1, 1, 1, 1),
-(41, 'HSMMP', 1, 1, 1, 1, 1),
-(42, 'EMC', 1, 1, 1, 1, 1),
-(43, 'HUMID', 1, 1, 1, 1, 1),
-(44, 'PM25', 1, 1, 1, 1, 1),
-(45, 'TEMP', 1, 1, 1, 1, 1),
-(46, 'WINDDIR', 1, 1, 1, 1, 1),
-(47, 'WINDSPD', 1, 1, 1, 1, 1),
-(48, 'NOISE', 1, 1, 1, 1, 1),
-(49, 'AIRPRS', 1, 1, 1, 1, 1),
-(50, 'CO1', 1, 1, 1, 1, 1),
-(51, 'LIGHTSTR', 1, 1, 1, 1, 1),
-(52, 'ALCOHOL', 1, 1, 1, 1, 1),
-(53, 'HCHO', 1, 1, 1, 1, 1),
-(54, 'TOXICGAS', 1, 1, 1, 1, 1),
-(55, 'IWM', 1, 1, 1, 1, 1),
-(56, 'IHM', 1, 1, 1, 1, 1),
-(57, 'IGM', 1, 1, 1, 1, 1),
-(58, 'IPM', 1, 1, 1, 1, 1),
-(59, 'SVRCON', 1, 1, 1, 1, 1),
-(60, 'SYSPM', 1, 1, 1, 1, 1),
-(61, 'SYSSWM', 1, 1, 1, 1, 1),
-(62, 'PM25SHARP', 1, 1, 1, 1, 1),
-(63, 'CANITFLEO', 1, 1, 1, 1, 1),
-(64, 'L3AQYCG10', 1, 1, 1, 1, 1),
-(65, 'L3AQYCG20', 1, 1, 1, 1, 1),
-(66, 'L3TBSWRG30', 1, 1, 1, 1, 1),
-(67, 'L3GQYBG40', 1, 1, 1, 1, 1),
-(68, 'L3CXILC', 1, 1, 1, 1, 1),
-(69, 'L3CXGLACM', 1, 1, 1, 1, 1),
-(70, 'L3NBLPM', 1, 1, 1, 1, 1),
-(71, 'L3NBHPM', 1, 1, 1, 1, 1),
-(72, 'L3BFSC', 1, 1, 1, 1, 1),
-(73, 'BFSCUICOMM', 1, 1, 1, 1, 1),
-(74, 'JSONINOTIFY', 1, 1, 1, 1, 1),
-(75, 'L3OPWLOTDR', 1, 1, 1, 1, 1),
-(76, 'TASKMAX', 1, 1, 1, 1, 1);
+(7, 'MQTT', 1, 1, 1, 1, 1),
+(8, 'GPIO', 1, 1, 1, 1, 1),
+(9, 'I2C', 1, 1, 1, 1, 1),
+(10, 'SPI', 1, 1, 1, 1, 1),
+(11, 'PWM', 1, 1, 1, 1, 1),
+(12, 'ADC', 1, 1, 1, 1, 1),
+(13, 'SWITCH', 1, 1, 1, 1, 1),
+(14, 'RELAY', 1, 1, 1, 1, 1),
+(15, 'MOTOR', 1, 1, 1, 1, 1),
+(16, 'ZEEGBE', 1, 1, 1, 1, 1),
+(17, 'GPRS', 1, 1, 1, 1, 1),
+(18, 'SPS232', 1, 1, 1, 1, 1),
+(19, 'SPS485', 1, 1, 1, 1, 1),
+(20, 'BLE', 1, 1, 1, 1, 1),
+(21, 'ETHERNET', 1, 1, 1, 1, 1),
+(22, 'WIFI', 1, 1, 1, 1, 1),
+(23, 'USBNET', 1, 1, 1, 1, 1),
+(24, '3G4G', 1, 1, 1, 1, 1),
+(25, 'HARDDISK', 1, 1, 1, 1, 1),
+(26, 'CAMERA', 1, 1, 1, 1, 1),
+(27, 'MICROPHONE', 1, 1, 1, 1, 1),
+(28, 'FLASH', 1, 1, 1, 1, 1),
+(29, 'GPS', 1, 1, 1, 1, 1),
+(30, 'LCD', 1, 1, 1, 1, 1),
+(31, 'LED', 1, 1, 1, 1, 1),
+(32, 'HWINV', 1, 1, 1, 1, 1),
+(33, 'SPSVIRGO', 1, 1, 1, 1, 1),
+(34, 'CLOUDVELA', 1, 1, 1, 1, 1),
+(35, 'MODBUS', 1, 1, 1, 1, 1),
+(36, 'AVORION', 1, 1, 1, 1, 1),
+(37, 'I2CBUSLIBRA', 1, 1, 1, 1, 1),
+(38, 'SPIBUSARIES', 1, 1, 1, 1, 1),
+(39, 'NBIOTCJ188', 1, 1, 1, 1, 1),
+(40, 'NBIOTQG376', 1, 1, 1, 1, 1),
+(41, 'LLCZHB', 1, 1, 1, 1, 1),
+(42, 'HSMMP', 1, 1, 1, 1, 1),
+(43, 'EMC', 1, 1, 1, 1, 1),
+(44, 'HUMID', 1, 1, 1, 1, 1),
+(45, 'PM25', 1, 1, 1, 1, 1),
+(46, 'TEMP', 1, 1, 1, 1, 1),
+(47, 'WINDDIR', 1, 1, 1, 1, 1),
+(48, 'WINDSPD', 1, 1, 1, 1, 1),
+(49, 'NOISE', 1, 1, 1, 1, 1),
+(50, 'AIRPRS', 1, 1, 1, 1, 1),
+(51, 'CO1', 1, 1, 1, 1, 1),
+(52, 'LIGHTSTR', 1, 1, 1, 1, 1),
+(53, 'ALCOHOL', 1, 1, 1, 1, 1),
+(54, 'HCHO', 1, 1, 1, 1, 1),
+(55, 'TOXICGAS', 1, 1, 1, 1, 1),
+(56, 'IWM', 1, 1, 1, 1, 1),
+(57, 'IHM', 1, 1, 1, 1, 1),
+(58, 'IGM', 1, 1, 1, 1, 1),
+(59, 'IPM', 1, 1, 1, 1, 1),
+(60, 'SVRCON', 1, 1, 1, 1, 1),
+(61, 'SYSPM', 1, 1, 1, 1, 1),
+(62, 'SYSSWM', 1, 1, 1, 1, 1),
+(63, 'PM25SHARP', 1, 1, 1, 1, 1),
+(64, 'CANITFLEO', 1, 1, 1, 1, 1),
+(65, 'L3AQYCG10', 1, 1, 1, 1, 1),
+(66, 'L3AQYCG20', 1, 1, 1, 1, 1),
+(67, 'L3TBSWRG30', 1, 1, 1, 1, 1),
+(68, 'L3GQYBG40', 1, 1, 1, 1, 1),
+(69, 'L3CXILC', 1, 1, 1, 1, 1),
+(70, 'L3CXGLACM', 1, 1, 1, 1, 1),
+(71, 'L3NBLPM', 1, 1, 1, 1, 1),
+(72, 'L3NBHPM', 1, 1, 1, 1, 1),
+(73, 'L3BFSC', 1, 1, 1, 1, 1),
+(74, 'BFSCUICOMM', 1, 1, 1, 1, 1),
+(75, 'JSONINOTIFY', 1, 1, 1, 1, 1),
+(76, 'L3OPWLOTDR', 1, 1, 1, 1, 1),
+(77, 'L3BFDF', 1, 1, 1, 1, 1),
+(78, 'L3HATE', 1, 1, 1, 1, 1),
+(79, 'TASKMAX', 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutracemsgctr`
+-- 表的结构 `hcutracemsgctr`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
+CREATE TABLE `hcutracemsgctr` (
   `msgid` int(2) NOT NULL,
   `msgname` char(70) NOT NULL,
   `msgctrflag` int(1) NOT NULL,
   `msgallow` int(1) NOT NULL,
-  `msgrestrict` int(1) NOT NULL,
-  PRIMARY KEY (`msgid`)
+  `msgrestrict` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcutracemsgctr`
+-- 转存表中的数据 `hcutracemsgctr`
 --
 
 INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msgrestrict`) VALUES
@@ -4410,236 +4407,244 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (10, 'MSG_ID_COM_PROCESS_REBOOT', 1, 1, 1),
 (11, 'MSG_ID_COM_ALARM_REPORT', 1, 1, 1),
 (12, 'MSG_ID_COM_PM_REPORT', 1, 1, 1),
-(13, 'MSG_ID_ETHERNET_CLOUDVELA_DATA_RX', 1, 1, 1),
-(14, 'MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX', 1, 1, 1),
-(15, 'MSG_ID_ETHERNET_NBIOTQG376_DATA_RX', 1, 1, 1),
-(16, 'MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX', 1, 1, 1),
-(17, 'MSG_ID_WIFI_CLOUDVELA_DATA_RX', 1, 1, 1),
-(18, 'MSG_ID_USBNET_CLOUDVELA_DATA_RX', 1, 1, 1),
-(19, 'MSG_ID_3G4G_CLOUDVELA_DATA_RX', 1, 1, 1),
-(20, 'MSG_ID_SPS232_MODBUS_DATA_RX', 1, 1, 1),
-(21, 'MSG_ID_SPS485_MODBUS_DATA_RX', 1, 1, 1),
-(22, 'MSG_ID_SPSVIRGO_HSMMP_DATA_RX', 1, 1, 1),
-(23, 'MSG_ID_SPSVIRGO_NOISE_DATA_REPORT', 1, 1, 1),
-(24, 'MSG_ID_SPSVIRGO_NOISE_CONTROL_FB', 1, 1, 1),
-(25, 'MSG_ID_AVORION_HSMMP_DATA_READ_FB', 1, 1, 1),
-(26, 'MSG_ID_AVORION_HSMMP_DATA_RX', 1, 1, 1),
-(27, 'MSG_ID_BLE_HSMMP_DATA_RX', 1, 1, 1),
-(28, 'MSG_ID_BLE_MODBUS_DATA_RX', 1, 1, 1),
-(29, 'MSG_ID_LCD_AVORION_DATA_RX', 1, 1, 1),
-(30, 'MSG_ID_CAMERA_AVORION_DATA_RX', 1, 1, 1),
-(31, 'MSG_ID_MICROPHONE_AVORION_DATA_RX', 1, 1, 1),
-(32, 'MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG', 1, 1, 1),
-(33, 'MSG_ID_NBIOTCJ188_IWM_DATA_REQ', 1, 1, 1),
-(34, 'MSG_ID_IWM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
-(35, 'MSG_ID_NBIOTCJ188_IWM_CTRL_REQ', 1, 1, 1),
-(36, 'MSG_ID_IWM_NBIOTCJ188_CTRL_RESP', 1, 1, 1),
-(37, 'MSG_ID_NBIOTCJ188_IHM_DATA_REQ', 1, 1, 1),
-(38, 'MSG_ID_IHM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
-(39, 'MSG_ID_NBIOTCJ188_IHM_CTRL_REQ', 1, 1, 1),
-(40, 'MSG_ID_IHM_NBIOTCJ188_CTRL_RESP', 1, 1, 1),
-(41, 'MSG_ID_NBIOTCJ188_IGM_DATA_REQ', 1, 1, 1),
-(42, 'MSG_ID_IGM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
-(43, 'MSG_ID_NBIOTCJ188_IGM_CTRL_REQ', 1, 1, 1),
-(44, 'MSG_ID_IGM_NBIOTCJ188_CTRL_RESP', 1, 1, 1),
-(45, 'MSG_ID_NBIOTCJ188_IPM_DATA_REQ', 1, 1, 1),
-(46, 'MSG_ID_IPM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
-(47, 'MSG_ID_NBIOTCJ188_IPM_CTRL_REQ', 1, 1, 1),
-(48, 'MSG_ID_IPM_NBIOTCJ188_CTRL_RESP', 1, 1, 1),
-(49, 'MSG_ID_NBIOTQG376_IPM_DATA_REQ', 1, 1, 1),
-(50, 'MSG_ID_IPM_NBIOTQG376_DATA_RESP', 1, 1, 1),
-(51, 'MSG_ID_NBIOTQG376_IPM_CTRL_REQ', 1, 1, 1),
-(52, 'MSG_ID_IPM_NBIOTQG376_CTRL_RESP', 1, 1, 1),
-(53, 'MSG_ID_MODBUS_EMC_DATA_REPORT', 1, 1, 1),
-(54, 'MSG_ID_MODBUS_EMC_CONTROL_FB', 1, 1, 1),
-(55, 'MSG_ID_MODBUS_PM25_DATA_REPORT', 1, 1, 1),
-(56, 'MSG_ID_MODBUS_PM25_CONTROL_FB', 1, 1, 1),
-(57, 'MSG_ID_MODBUS_WINDDIR_DATA_REPORT', 1, 1, 1),
-(58, 'MSG_ID_MODBUS_WINDDIR_CONTROL_FB', 1, 1, 1),
-(59, 'MSG_ID_MODBUS_WINDSPD_DATA_REPORT', 1, 1, 1),
-(60, 'MSG_ID_MODBUS_WINDSPD_CONTROL_FB', 1, 1, 1),
-(61, 'MSG_ID_MODBUS_TEMP_DATA_REPORT', 1, 1, 1),
-(62, 'MSG_ID_MODBUS_TEMP_CONTROL_FB', 1, 1, 1),
-(63, 'MSG_ID_MODBUS_HUMID_DATA_REPORT', 1, 1, 1),
-(64, 'MSG_ID_MODBUS_HUMID_CONTROL_FB', 1, 1, 1),
-(65, 'MSG_ID_MODBUS_NOISE_DATA_REPORT', 1, 1, 1),
-(66, 'MSG_ID_MODBUS_NOISE_CONTROL_FB', 1, 1, 1),
-(67, 'MSG_ID_EMC_MODBUS_DATA_READ', 1, 1, 1),
-(68, 'MSG_ID_EMC_MODBUS_CONTROL_CMD', 1, 1, 1),
-(69, 'MSG_ID_PM25_MODBUS_DATA_READ', 1, 1, 1),
-(70, 'MSG_ID_PM25_MODBUS_CONTROL_CMD', 1, 1, 1),
-(71, 'MSG_ID_WINDDIR_MODBUS_DATA_READ', 1, 1, 1),
-(72, 'MSG_ID_WINDDIR_MODBUS_CONTROL_CMD', 1, 1, 1),
-(73, 'MSG_ID_WINDSPD_MODBUS_DATA_READ', 1, 1, 1),
-(74, 'MSG_ID_WINDSPD_MODBUS_CONTROL_CMD', 1, 1, 1),
-(75, 'MSG_ID_TEMP_MODBUS_DATA_READ', 1, 1, 1),
-(76, 'MSG_ID_TEMP_SPIBUSARIES_DATA_READ', 1, 1, 1),
-(77, 'MSG_ID_TEMP_MODBUS_CONTROL_CMD', 1, 1, 1),
-(78, 'MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD', 1, 1, 1),
-(79, 'MSG_ID_HUMID_MODBUS_DATA_READ', 1, 1, 1),
-(80, 'MSG_ID_HUMID_MODBUS_CONTROL_CMD', 1, 1, 1),
-(81, 'MSG_ID_HSMMP_AVORION_DATA_READ', 1, 1, 1),
-(82, 'MSG_ID_HSMMP_AVORION_STOP', 1, 1, 1),
-(83, 'MSG_ID_NOISE_SPSVIRGO_DATA_READ', 1, 1, 1),
-(84, 'MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD', 1, 1, 1),
-(85, 'MSG_ID_NOISE_SPSVIRGO_STOP', 1, 1, 1),
-(86, 'MSG_ID_NOISE_MODBUS_DATA_READ', 1, 1, 1),
-(87, 'MSG_ID_NOISE_MODBUS_CONTROL_CMD', 1, 1, 1),
-(88, 'MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ', 1, 1, 1),
-(89, 'MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP', 1, 1, 1),
-(90, 'MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT', 1, 1, 1),
-(91, 'MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM', 1, 1, 1),
-(92, 'MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ', 1, 1, 1),
-(93, 'MSG_ID_SYSPM_CLOUDVELA_PERFM_RESP', 1, 1, 1),
-(94, 'MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT', 1, 1, 1),
-(95, 'MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM', 1, 1, 1),
-(96, 'MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ', 1, 1, 1),
-(97, 'MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP', 1, 1, 1),
-(98, 'MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT', 1, 1, 1),
-(99, 'MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM', 1, 1, 1),
-(100, 'MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ', 1, 1, 1),
-(101, 'MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP', 1, 1, 1),
-(102, 'MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT', 1, 1, 1),
-(103, 'MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM', 1, 1, 1),
-(104, 'MSG_ID_CLOUDVELA_EMC_DATA_REQ', 1, 1, 1),
-(105, 'MSG_ID_EMC_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(106, 'MSG_ID_CLOUDVELA_EMC_CTRL_REQ', 1, 1, 1),
-(107, 'MSG_ID_EMC_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(108, 'MSG_ID_EMC_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(109, 'MSG_ID_CLOUDVELA_EMC_DATA_CONFIRM', 1, 1, 1),
-(110, 'MSG_ID_CLOUDVELA_PM25_DATA_REQ', 1, 1, 1),
-(111, 'MSG_ID_PM25_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(112, 'MSG_ID_CLOUDVELA_PM25_CTRL_REQ', 1, 1, 1),
-(113, 'MSG_ID_PM25_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(114, 'MSG_ID_PM25_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(115, 'MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM', 1, 1, 1),
-(116, 'MSG_ID_CLOUDVELA_TEMP_DATA_REQ', 1, 1, 1),
-(117, 'MSG_ID_TEMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(118, 'MSG_ID_CLOUDVELA_TEMP_CTRL_REQ', 1, 1, 1),
-(119, 'MSG_ID_TEMP_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(120, 'MSG_ID_TEMP_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(121, 'MSG_ID_CLOUDVELA_TEMP_DATA_CONFIRM', 1, 1, 1),
-(122, 'MSG_ID_CLOUDVELA_HUMID_DATA_REQ', 1, 1, 1),
-(123, 'MSG_ID_HUMID_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(124, 'MSG_ID_CLOUDVELA_HUMID_CTRL_REQ', 1, 1, 1),
-(125, 'MSG_ID_HUMID_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(126, 'MSG_ID_HUMID_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(127, 'MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM', 1, 1, 1),
-(128, 'MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ', 1, 1, 1),
-(129, 'MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(130, 'MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ', 1, 1, 1),
-(131, 'MSG_ID_WINDDIR_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(132, 'MSG_ID_WINDDIR_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(133, 'MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM', 1, 1, 1),
-(134, 'MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ', 1, 1, 1),
-(135, 'MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(136, 'MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ', 1, 1, 1),
-(137, 'MSG_ID_WINDSPD_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(138, 'MSG_ID_WINDSPD_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(139, 'MSG_ID_CLOUDVELA_WINDSPD_DATA_CONFIRM', 1, 1, 1),
-(140, 'MSG_ID_CLOUDVELA_HSMMP_DATA_REQ', 1, 1, 1),
-(141, 'MSG_ID_HSMMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(142, 'MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ', 1, 1, 1),
-(143, 'MSG_ID_HSMMP_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(144, 'MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(145, 'MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM', 1, 1, 1),
-(146, 'MSG_ID_CLOUDVELA_NOISE_DATA_REQ', 1, 1, 1),
-(147, 'MSG_ID_NOISE_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(148, 'MSG_ID_CLOUDVELA_NOISE_CTRL_REQ', 1, 1, 1),
-(149, 'MSG_ID_NOISE_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(150, 'MSG_ID_NOISE_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(151, 'MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM', 1, 1, 1),
-(152, 'MSG_ID_CLOUDVELA_YCJK_DATA_REQ', 1, 1, 1),
-(153, 'MSG_ID_YCJK_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(154, 'MSG_ID_CLOUDVELA_YCJK_CTRL_REQ', 1, 1, 1),
-(155, 'MSG_ID_YCJK_CLOUDVELA_CTRL_RESP', 1, 1, 1),
-(156, 'MSG_ID_YCJK_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(157, 'MSG_ID_CLOUDVELA_YCJK_DATA_CONFIRM', 1, 1, 1),
-(158, 'MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ', 1, 1, 1),
-(159, 'MSG_ID_AIRPRS_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(160, 'MSG_ID_AIRPRS_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(161, 'MSG_ID_CLOUDVELA_AIRPRS_DATA_CONFIRM', 1, 1, 1),
-(162, 'MSG_ID_CLOUDVELA_ALCOHOL_DATA_REQ', 1, 1, 1),
-(163, 'MSG_ID_ALCOHOL_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(164, 'MSG_ID_ALCOHOL_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(165, 'MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM', 1, 1, 1),
-(166, 'MSG_ID_CLOUDVELA_CO1_DATA_REQ', 1, 1, 1),
-(167, 'MSG_ID_CO1_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(168, 'MSG_ID_CO1_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(169, 'MSG_ID_CLOUDVELA_CO1_DATA_CONFIRM', 1, 1, 1),
-(170, 'MSG_ID_CLOUDVELA_HCHO_DATA_REQ', 1, 1, 1),
-(171, 'MSG_ID_HCHO_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(172, 'MSG_ID_HCHO_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(173, 'MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM', 1, 1, 1),
-(174, 'MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ', 1, 1, 1),
-(175, 'MSG_ID_LIGHTSTR_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(176, 'MSG_ID_LIGHTSTR_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(177, 'MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM', 1, 1, 1),
-(178, 'MSG_ID_CLOUDVELA_PM25SP_DATA_REQ', 1, 1, 1),
-(179, 'MSG_ID_PM25SP_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(180, 'MSG_ID_PM25SP_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(181, 'MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM', 1, 1, 1),
-(182, 'MSG_ID_CLOUDVELA_TOXICGAS_DATA_REQ', 1, 1, 1),
-(183, 'MSG_ID_TOXICGAS_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(184, 'MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(185, 'MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM', 1, 1, 1),
-(186, 'MSG_ID_CANITFLEO_DATA_REPORT', 1, 1, 1),
-(187, 'MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT', 1, 1, 1),
-(188, 'MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM', 1, 1, 1),
-(189, 'MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT', 1, 1, 1),
-(190, 'MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM', 1, 1, 1),
-(191, 'MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ', 1, 1, 1),
-(192, 'MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP', 1, 1, 1),
-(193, 'MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT', 1, 1, 1),
-(194, 'MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM', 1, 1, 1),
-(195, 'MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT', 1, 1, 1),
-(196, 'MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM', 1, 1, 1),
-(197, 'MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ', 1, 1, 1),
-(198, 'MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP', 1, 1, 1),
-(199, 'MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT', 1, 1, 1),
-(200, 'MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM', 1, 1, 1),
-(201, 'MSG_ID_L3BFSC_CAN_SYS_CFG_REQ', 1, 1, 1),
-(202, 'MSG_ID_CAN_L3BFSC_SYS_CFG_RESP', 1, 1, 1),
-(203, 'MSG_ID_L3BFSC_CAN_SYS_START_REQ', 1, 1, 1),
-(204, 'MSG_ID_CAN_L3BFSC_SYS_START_RESP', 1, 1, 1),
-(205, 'MSG_ID_L3BFSC_CAN_SYS_STOP_REQ', 1, 1, 1),
-(206, 'MSG_ID_CAN_L3BFSC_SYS_STOP_RESP', 1, 1, 1),
-(207, 'MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT', 1, 1, 1),
-(208, 'MSG_ID_L3BFSC_CAN_WS_COMB_OUT', 1, 1, 1),
-(209, 'MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB', 1, 1, 1),
-(210, 'MSG_ID_L3BFSC_CAN_WS_GIVE_UP', 1, 1, 1),
-(211, 'MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB', 1, 1, 1),
-(212, 'MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ', 1, 1, 1),
-(213, 'MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP', 1, 1, 1),
-(214, 'MSG_ID_USBCAN_L2FRAME_RCV', 1, 1, 1),
-(215, 'MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND', 1, 1, 1),
-(216, 'MSG_ID_UICOMM_L3BFSC_CMD_REQ', 1, 1, 1),
-(217, 'MSG_ID_L3BFSC_UICOMM_CMD_RESP', 1, 1, 1),
-(218, 'MSG_ID_UICOMM_L3BFSC_CFG_REQ', 1, 1, 1),
-(219, 'MSG_ID_L3BFSC_UICOMM_CFG_RESP', 1, 1, 1),
-(220, 'MSG_ID_UICOMM_CAN_TEST_CMD_REQ', 1, 1, 1),
-(221, 'MSG_ID_CAN_UICOMM_TEST_CMD_RESP', 1, 1, 1),
-(222, 'MSG_ID_L3AQYC_EXG_CTRL_REQ', 1, 1, 1),
-(223, 'MSG_ID_L3AQYC_EXG_CTRL_RESP', 1, 1, 1),
-(224, 'MSG_ID_L3AQYC_EXG_DATA_REPORT', 1, 1, 1),
-(225, 'MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ', 1, 1, 1),
-(226, 'MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP', 1, 1, 1),
-(227, 'MSG_ID_LLCZHB_L3MOD_CTRL_REQ', 1, 1, 1),
-(228, 'MSG_ID_L3MOD_LLCZHB_CTRL_RESP', 1, 1, 1),
-(229, 'MSG_ID_L3MOD_LLCZHB_DATA_REPORT', 1, 1, 1),
-(230, 'MSG_ID_ZHBL3MOD_EXG_CTRL_REQ', 1, 1, 1),
-(231, 'MSG_ID_ZHBL3MOD_EXG_CTRL_RESP', 1, 1, 1),
-(232, 'MSG_ID_ZHBL3MOD_EXG_DATA_REPORT', 1, 1, 1),
-(233, 'MSG_ID_COM_MAX', 0, 0, 0);
+(13, 'MSG_ID_COM_MQTT_SEND', 1, 1, 1),
+(14, 'MSG_ID_COM_MQTT_RCV', 1, 1, 1),
+(15, 'MSG_ID_ETHERNET_CLOUDVELA_DATA_RX', 1, 1, 1),
+(16, 'MSG_ID_ETHERNET_NBIOTCJ188_DATA_RX', 1, 1, 1),
+(17, 'MSG_ID_ETHERNET_NBIOTQG376_DATA_RX', 1, 1, 1),
+(18, 'MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX', 1, 1, 1),
+(19, 'MSG_ID_WIFI_CLOUDVELA_DATA_RX', 1, 1, 1),
+(20, 'MSG_ID_USBNET_CLOUDVELA_DATA_RX', 1, 1, 1),
+(21, 'MSG_ID_3G4G_CLOUDVELA_DATA_RX', 1, 1, 1),
+(22, 'MSG_ID_SPS232_MODBUS_DATA_RX', 1, 1, 1),
+(23, 'MSG_ID_SPS485_MODBUS_DATA_RX', 1, 1, 1),
+(24, 'MSG_ID_SPSVIRGO_HSMMP_DATA_RX', 1, 1, 1),
+(25, 'MSG_ID_SPSVIRGO_NOISE_DATA_REPORT', 1, 1, 1),
+(26, 'MSG_ID_SPSVIRGO_NOISE_CONTROL_FB', 1, 1, 1),
+(27, 'MSG_ID_AVORION_HSMMP_DATA_READ_FB', 1, 1, 1),
+(28, 'MSG_ID_AVORION_HSMMP_DATA_RX', 1, 1, 1),
+(29, 'MSG_ID_BLE_HSMMP_DATA_RX', 1, 1, 1),
+(30, 'MSG_ID_BLE_MODBUS_DATA_RX', 1, 1, 1),
+(31, 'MSG_ID_LCD_AVORION_DATA_RX', 1, 1, 1),
+(32, 'MSG_ID_CAMERA_AVORION_DATA_RX', 1, 1, 1),
+(33, 'MSG_ID_MICROPHONE_AVORION_DATA_RX', 1, 1, 1),
+(34, 'MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG', 1, 1, 1),
+(35, 'MSG_ID_NBIOTCJ188_IWM_DATA_REQ', 1, 1, 1),
+(36, 'MSG_ID_IWM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
+(37, 'MSG_ID_NBIOTCJ188_IWM_CTRL_REQ', 1, 1, 1),
+(38, 'MSG_ID_IWM_NBIOTCJ188_CTRL_RESP', 1, 1, 1),
+(39, 'MSG_ID_NBIOTCJ188_IHM_DATA_REQ', 1, 1, 1),
+(40, 'MSG_ID_IHM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
+(41, 'MSG_ID_NBIOTCJ188_IHM_CTRL_REQ', 1, 1, 1),
+(42, 'MSG_ID_IHM_NBIOTCJ188_CTRL_RESP', 1, 1, 1),
+(43, 'MSG_ID_NBIOTCJ188_IGM_DATA_REQ', 1, 1, 1),
+(44, 'MSG_ID_IGM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
+(45, 'MSG_ID_NBIOTCJ188_IGM_CTRL_REQ', 1, 1, 1),
+(46, 'MSG_ID_IGM_NBIOTCJ188_CTRL_RESP', 1, 1, 1),
+(47, 'MSG_ID_NBIOTCJ188_IPM_DATA_REQ', 1, 1, 1),
+(48, 'MSG_ID_IPM_NBIOTCJ188_DATA_RESP', 1, 1, 1),
+(49, 'MSG_ID_NBIOTCJ188_IPM_CTRL_REQ', 1, 1, 1),
+(50, 'MSG_ID_IPM_NBIOTCJ188_CTRL_RESP', 1, 1, 1),
+(51, 'MSG_ID_NBIOTQG376_IPM_DATA_REQ', 1, 1, 1),
+(52, 'MSG_ID_IPM_NBIOTQG376_DATA_RESP', 1, 1, 1),
+(53, 'MSG_ID_NBIOTQG376_IPM_CTRL_REQ', 1, 1, 1),
+(54, 'MSG_ID_IPM_NBIOTQG376_CTRL_RESP', 1, 1, 1),
+(55, 'MSG_ID_MODBUS_EMC_DATA_REPORT', 1, 1, 1),
+(56, 'MSG_ID_MODBUS_EMC_CONTROL_FB', 1, 1, 1),
+(57, 'MSG_ID_MODBUS_PM25_DATA_REPORT', 1, 1, 1),
+(58, 'MSG_ID_MODBUS_PM25_CONTROL_FB', 1, 1, 1),
+(59, 'MSG_ID_MODBUS_WINDDIR_DATA_REPORT', 1, 1, 1),
+(60, 'MSG_ID_MODBUS_WINDDIR_CONTROL_FB', 1, 1, 1),
+(61, 'MSG_ID_MODBUS_WINDSPD_DATA_REPORT', 1, 1, 1),
+(62, 'MSG_ID_MODBUS_WINDSPD_CONTROL_FB', 1, 1, 1),
+(63, 'MSG_ID_MODBUS_TEMP_DATA_REPORT', 1, 1, 1),
+(64, 'MSG_ID_MODBUS_TEMP_CONTROL_FB', 1, 1, 1),
+(65, 'MSG_ID_MODBUS_HUMID_DATA_REPORT', 1, 1, 1),
+(66, 'MSG_ID_MODBUS_HUMID_CONTROL_FB', 1, 1, 1),
+(67, 'MSG_ID_MODBUS_NOISE_DATA_REPORT', 1, 1, 1),
+(68, 'MSG_ID_MODBUS_NOISE_CONTROL_FB', 1, 1, 1),
+(69, 'MSG_ID_EMC_MODBUS_DATA_READ', 1, 1, 1),
+(70, 'MSG_ID_EMC_MODBUS_CONTROL_CMD', 1, 1, 1),
+(71, 'MSG_ID_PM25_MODBUS_DATA_READ', 1, 1, 1),
+(72, 'MSG_ID_PM25_MODBUS_CONTROL_CMD', 1, 1, 1),
+(73, 'MSG_ID_WINDDIR_MODBUS_DATA_READ', 1, 1, 1),
+(74, 'MSG_ID_WINDDIR_MODBUS_CONTROL_CMD', 1, 1, 1),
+(75, 'MSG_ID_WINDSPD_MODBUS_DATA_READ', 1, 1, 1),
+(76, 'MSG_ID_WINDSPD_MODBUS_CONTROL_CMD', 1, 1, 1),
+(77, 'MSG_ID_TEMP_MODBUS_DATA_READ', 1, 1, 1),
+(78, 'MSG_ID_TEMP_SPIBUSARIES_DATA_READ', 1, 1, 1),
+(79, 'MSG_ID_TEMP_MODBUS_CONTROL_CMD', 1, 1, 1),
+(80, 'MSG_ID_TEMP_SPIBUSARIES_CONTROL_CMD', 1, 1, 1),
+(81, 'MSG_ID_HUMID_MODBUS_DATA_READ', 1, 1, 1),
+(82, 'MSG_ID_HUMID_MODBUS_CONTROL_CMD', 1, 1, 1),
+(83, 'MSG_ID_HSMMP_AVORION_DATA_READ', 1, 1, 1),
+(84, 'MSG_ID_HSMMP_AVORION_STOP', 1, 1, 1),
+(85, 'MSG_ID_NOISE_SPSVIRGO_DATA_READ', 1, 1, 1),
+(86, 'MSG_ID_NOISE_SPSVIRGO_CONTROL_CMD', 1, 1, 1),
+(87, 'MSG_ID_NOISE_SPSVIRGO_STOP', 1, 1, 1),
+(88, 'MSG_ID_NOISE_MODBUS_DATA_READ', 1, 1, 1),
+(89, 'MSG_ID_NOISE_MODBUS_CONTROL_CMD', 1, 1, 1),
+(90, 'MSG_ID_CLOUDVELA_SYSPM_ALARM_REQ', 1, 1, 1),
+(91, 'MSG_ID_SYSPM_CLOUDVELA_ALARM_RESP', 1, 1, 1),
+(92, 'MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT', 1, 1, 1),
+(93, 'MSG_ID_CLOUDVELA_SYSPM_ALARM_CONFIRM', 1, 1, 1),
+(94, 'MSG_ID_CLOUDVELA_SYSPM_PERFM_REQ', 1, 1, 1),
+(95, 'MSG_ID_SYSPM_CLOUDVELA_PERFM_RESP', 1, 1, 1),
+(96, 'MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT', 1, 1, 1),
+(97, 'MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM', 1, 1, 1),
+(98, 'MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_REQ', 1, 1, 1),
+(99, 'MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP', 1, 1, 1),
+(100, 'MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT', 1, 1, 1),
+(101, 'MSG_ID_CLOUDVELA_SYSSWM_INVENTORY_CONFIRM', 1, 1, 1),
+(102, 'MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_REQ', 1, 1, 1),
+(103, 'MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP', 1, 1, 1),
+(104, 'MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT', 1, 1, 1),
+(105, 'MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM', 1, 1, 1),
+(106, 'MSG_ID_CLOUDVELA_EMC_DATA_REQ', 1, 1, 1),
+(107, 'MSG_ID_EMC_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(108, 'MSG_ID_CLOUDVELA_EMC_CTRL_REQ', 1, 1, 1),
+(109, 'MSG_ID_EMC_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(110, 'MSG_ID_EMC_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(111, 'MSG_ID_CLOUDVELA_EMC_DATA_CONFIRM', 1, 1, 1),
+(112, 'MSG_ID_CLOUDVELA_PM25_DATA_REQ', 1, 1, 1),
+(113, 'MSG_ID_PM25_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(114, 'MSG_ID_CLOUDVELA_PM25_CTRL_REQ', 1, 1, 1),
+(115, 'MSG_ID_PM25_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(116, 'MSG_ID_PM25_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(117, 'MSG_ID_CLOUDVELA_PM25_DATA_CONFIRM', 1, 1, 1),
+(118, 'MSG_ID_CLOUDVELA_TEMP_DATA_REQ', 1, 1, 1),
+(119, 'MSG_ID_TEMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(120, 'MSG_ID_CLOUDVELA_TEMP_CTRL_REQ', 1, 1, 1),
+(121, 'MSG_ID_TEMP_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(122, 'MSG_ID_TEMP_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(123, 'MSG_ID_CLOUDVELA_TEMP_DATA_CONFIRM', 1, 1, 1),
+(124, 'MSG_ID_CLOUDVELA_HUMID_DATA_REQ', 1, 1, 1),
+(125, 'MSG_ID_HUMID_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(126, 'MSG_ID_CLOUDVELA_HUMID_CTRL_REQ', 1, 1, 1),
+(127, 'MSG_ID_HUMID_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(128, 'MSG_ID_HUMID_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(129, 'MSG_ID_CLOUDVELA_HUMID_DATA_CONFIRM', 1, 1, 1),
+(130, 'MSG_ID_CLOUDVELA_WINDDIR_DATA_REQ', 1, 1, 1),
+(131, 'MSG_ID_WINDDIR_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(132, 'MSG_ID_CLOUDVELA_WINDDIR_CTRL_REQ', 1, 1, 1),
+(133, 'MSG_ID_WINDDIR_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(134, 'MSG_ID_WINDDIR_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(135, 'MSG_ID_CLOUDVELA_WINDDIR_DATA_CONFIRM', 1, 1, 1),
+(136, 'MSG_ID_CLOUDVELA_WINDSPD_DATA_REQ', 1, 1, 1),
+(137, 'MSG_ID_WINDSPD_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(138, 'MSG_ID_CLOUDVELA_WINDSPD_CTRL_REQ', 1, 1, 1),
+(139, 'MSG_ID_WINDSPD_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(140, 'MSG_ID_WINDSPD_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(141, 'MSG_ID_CLOUDVELA_WINDSPD_DATA_CONFIRM', 1, 1, 1),
+(142, 'MSG_ID_CLOUDVELA_HSMMP_DATA_REQ', 1, 1, 1),
+(143, 'MSG_ID_HSMMP_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(144, 'MSG_ID_CLOUDVELA_HSMMP_CTRL_REQ', 1, 1, 1),
+(145, 'MSG_ID_HSMMP_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(146, 'MSG_ID_HSMMP_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(147, 'MSG_ID_CLOUDVELA_HSMMP_DATA_CONFIRM', 1, 1, 1),
+(148, 'MSG_ID_PICTURE_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(149, 'MSG_ID_CLOUDVELA_PICTURE_DATA_CONFIRM', 1, 1, 1),
+(150, 'MSG_ID_CLOUDVELA_NOISE_DATA_REQ', 1, 1, 1),
+(151, 'MSG_ID_NOISE_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(152, 'MSG_ID_CLOUDVELA_NOISE_CTRL_REQ', 1, 1, 1),
+(153, 'MSG_ID_NOISE_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(154, 'MSG_ID_NOISE_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(155, 'MSG_ID_CLOUDVELA_NOISE_DATA_CONFIRM', 1, 1, 1),
+(156, 'MSG_ID_CLOUDVELA_YCJK_DATA_REQ', 1, 1, 1),
+(157, 'MSG_ID_YCJK_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(158, 'MSG_ID_CLOUDVELA_YCJK_CTRL_REQ', 1, 1, 1),
+(159, 'MSG_ID_YCJK_CLOUDVELA_CTRL_RESP', 1, 1, 1),
+(160, 'MSG_ID_YCJK_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(161, 'MSG_ID_CLOUDVELA_YCJK_DATA_CONFIRM', 1, 1, 1),
+(162, 'MSG_ID_CLOUDVELA_AIRPRS_DATA_REQ', 1, 1, 1),
+(163, 'MSG_ID_AIRPRS_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(164, 'MSG_ID_AIRPRS_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(165, 'MSG_ID_CLOUDVELA_AIRPRS_DATA_CONFIRM', 1, 1, 1),
+(166, 'MSG_ID_CLOUDVELA_ALCOHOL_DATA_REQ', 1, 1, 1),
+(167, 'MSG_ID_ALCOHOL_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(168, 'MSG_ID_ALCOHOL_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(169, 'MSG_ID_CLOUDVELA_ALCOHOL_DATA_CONFIRM', 1, 1, 1),
+(170, 'MSG_ID_CLOUDVELA_CO1_DATA_REQ', 1, 1, 1),
+(171, 'MSG_ID_CO1_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(172, 'MSG_ID_CO1_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(173, 'MSG_ID_CLOUDVELA_CO1_DATA_CONFIRM', 1, 1, 1),
+(174, 'MSG_ID_CLOUDVELA_HCHO_DATA_REQ', 1, 1, 1),
+(175, 'MSG_ID_HCHO_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(176, 'MSG_ID_HCHO_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(177, 'MSG_ID_CLOUDVELA_HCHO_DATA_CONFIRM', 1, 1, 1),
+(178, 'MSG_ID_CLOUDVELA_LIGHTSTR_DATA_REQ', 1, 1, 1),
+(179, 'MSG_ID_LIGHTSTR_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(180, 'MSG_ID_LIGHTSTR_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(181, 'MSG_ID_CLOUDVELA_LIGHTSTR_DATA_CONFIRM', 1, 1, 1),
+(182, 'MSG_ID_CLOUDVELA_PM25SP_DATA_REQ', 1, 1, 1),
+(183, 'MSG_ID_PM25SP_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(184, 'MSG_ID_PM25SP_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(185, 'MSG_ID_CLOUDVELA_PM25SP_DATA_CONFIRM', 1, 1, 1),
+(186, 'MSG_ID_CLOUDVELA_TOXICGAS_DATA_REQ', 1, 1, 1),
+(187, 'MSG_ID_TOXICGAS_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(188, 'MSG_ID_TOXICGAS_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(189, 'MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM', 1, 1, 1),
+(190, 'MSG_ID_CANITFLEO_DATA_REPORT', 1, 1, 1),
+(191, 'MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT', 1, 1, 1),
+(192, 'MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM', 1, 1, 1),
+(193, 'MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT', 1, 1, 1),
+(194, 'MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM', 1, 1, 1),
+(195, 'MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ', 1, 1, 1),
+(196, 'MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP', 1, 1, 1),
+(197, 'MSG_ID_L3BFSC_CLOUDVELA_DATA_REPORT', 1, 1, 1),
+(198, 'MSG_ID_CLOUDVELA_L3BFSC_DATA_CONFIRM', 1, 1, 1),
+(199, 'MSG_ID_L3BFSC_CLOUDVELA_EVENT_REPORT', 1, 1, 1),
+(200, 'MSG_ID_CLOUDVELA_L3BFSC_EVENT_CONFIRM', 1, 1, 1),
+(201, 'MSG_ID_CLOUDVELA_L3BFSC_CTRL_REQ', 1, 1, 1),
+(202, 'MSG_ID_L3BFSC_CLOUDVELA_CMD_RESP', 1, 1, 1),
+(203, 'MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT', 1, 1, 1),
+(204, 'MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM', 1, 1, 1),
+(205, 'MSG_ID_L3BFSC_CAN_SYS_CFG_REQ', 1, 1, 1),
+(206, 'MSG_ID_CAN_L3BFSC_SYS_CFG_RESP', 1, 1, 1),
+(207, 'MSG_ID_L3BFSC_CAN_SYS_START_REQ', 1, 1, 1),
+(208, 'MSG_ID_CAN_L3BFSC_SYS_START_RESP', 1, 1, 1),
+(209, 'MSG_ID_L3BFSC_CAN_SYS_STOP_REQ', 1, 1, 1),
+(210, 'MSG_ID_CAN_L3BFSC_SYS_STOP_RESP', 1, 1, 1),
+(211, 'MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT', 1, 1, 1),
+(212, 'MSG_ID_L3BFSC_CAN_WS_COMB_OUT', 1, 1, 1),
+(213, 'MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB', 1, 1, 1),
+(214, 'MSG_ID_L3BFSC_CAN_WS_GIVE_UP', 1, 1, 1),
+(215, 'MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB', 1, 1, 1),
+(216, 'MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ', 1, 1, 1),
+(217, 'MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP', 1, 1, 1),
+(218, 'MSG_ID_USBCAN_L2FRAME_RCV', 1, 1, 1),
+(219, 'MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND', 1, 1, 1),
+(220, 'MSG_ID_UICOMM_L3BFSC_CMD_REQ', 1, 1, 1),
+(221, 'MSG_ID_L3BFSC_UICOMM_CMD_RESP', 1, 1, 1),
+(222, 'MSG_ID_UICOMM_L3BFSC_CFG_REQ', 1, 1, 1),
+(223, 'MSG_ID_L3BFSC_UICOMM_CFG_RESP', 1, 1, 1),
+(224, 'MSG_ID_UICOMM_CAN_TEST_CMD_REQ', 1, 1, 1),
+(225, 'MSG_ID_CAN_UICOMM_TEST_CMD_RESP', 1, 1, 1),
+(226, 'MSG_ID_L3AQYC_EXG_CTRL_REQ', 1, 1, 1),
+(227, 'MSG_ID_L3AQYC_EXG_CTRL_RESP', 1, 1, 1),
+(228, 'MSG_ID_L3AQYC_EXG_DATA_REPORT', 1, 1, 1),
+(229, 'MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ', 1, 1, 1),
+(230, 'MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP', 1, 1, 1),
+(231, 'MSG_ID_LLCZHB_L3MOD_CTRL_REQ', 1, 1, 1),
+(232, 'MSG_ID_L3MOD_LLCZHB_CTRL_RESP', 1, 1, 1),
+(233, 'MSG_ID_L3MOD_LLCZHB_DATA_REPORT', 1, 1, 1),
+(234, 'MSG_ID_ZHBL3MOD_EXG_CTRL_REQ', 1, 1, 1),
+(235, 'MSG_ID_ZHBL3MOD_EXG_CTRL_RESP', 1, 1, 1),
+(236, 'MSG_ID_ZHBL3MOD_EXG_DATA_REPORT', 1, 1, 1),
+(237, 'MSG_ID_L3HATE_TC_START', 1, 1, 1),
+(238, 'MSG_ID_ETH_L3HATE_FRAME_RCV', 1, 1, 1),
+(239, 'MSG_ID_SPS_L3HATE_FRAME_RCV', 1, 1, 1),
+(240, 'MSG_ID_CAN_L3HATE_FRAME_RCV', 1, 1, 1),
+(241, 'MSG_ID_COM_MAX', 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuwinddirdatainfo`
+-- 表的结构 `hcuwinddirdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuwinddirdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4649,18 +4654,17 @@ CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuwindspddatainfo`
+-- 表的结构 `hcuwindspddatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
-  `sid` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hcuwindspddatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4670,10 +4674,554 @@ CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
   `NS` char(1) NOT NULL,
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
-  `onofflineflag` int(2) NOT NULL,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `onofflineflag` int(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `hcuairprsaltitudebmp180datainfo`
+--
+ALTER TABLE `hcuairprsaltitudebmp180datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuairprsbmp180datainfo`
+--
+ALTER TABLE `hcuairprsbmp180datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuairprsdatainfo`
+--
+ALTER TABLE `hcuairprsdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcualcoholdatainfo`
+--
+ALTER TABLE `hcualcoholdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcualcoholmq3alcodatainfo`
+--
+ALTER TABLE `hcualcoholmq3alcodatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfsccalibration`
+--
+ALTER TABLE `hcubfsccalibration`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfscconfigpara`
+--
+ALTER TABLE `hcubfscconfigpara`
+  ADD PRIMARY KEY (`sid`),
+  ADD UNIQUE KEY `confname` (`confname`);
+
+--
+-- Indexes for table `hcubfsccurrentinfo`
+--
+ALTER TABLE `hcubfsccurrentinfo`
+  ADD PRIMARY KEY (`timestamp`);
+
+--
+-- Indexes for table `hcubfscfb2ui`
+--
+ALTER TABLE `hcubfscfb2ui`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfsclanguagedict`
+--
+ALTER TABLE `hcubfsclanguagedict`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfsclanguagelist`
+--
+ALTER TABLE `hcubfsclanguagelist`
+  ADD PRIMARY KEY (`lang_name`);
+
+--
+-- Indexes for table `hcubfscstadatainfo`
+--
+ALTER TABLE `hcubfscstadatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcubfscstaticpara`
+--
+ALTER TABLE `hcubfscstaticpara`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuco1datainfo`
+--
+ALTER TABLE `hcuco1datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuemcdatainfo`
+--
+ALTER TABLE `hcuemcdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhchodatainfo`
+--
+ALTER TABLE `hcuhchodatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhchoze08ch2odatainfo`
+--
+ALTER TABLE `hcuhchoze08ch2odatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhsmmpdatainfo`
+--
+ALTER TABLE `hcuhsmmpdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumiddatainfo`
+--
+ALTER TABLE `hcuhumiddatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumiddht11datainfo`
+--
+ALTER TABLE `hcuhumiddht11datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidmth01datainfo`
+--
+ALTER TABLE `hcuhumidmth01datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidrht03datainfo`
+--
+ALTER TABLE `hcuhumidrht03datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuhumidsht20datainfo`
+--
+ALTER TABLE `hcuhumidsht20datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuigmcj188datainfo`
+--
+ALTER TABLE `hcuigmcj188datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuihmcj188datainfo`
+--
+ALTER TABLE `hcuihmcj188datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuipmcj188datainfo`
+--
+ALTER TABLE `hcuipmcj188datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuiwmcj188datainfo`
+--
+ALTER TABLE `hcuiwmcj188datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hculightstrbh1750datainfo`
+--
+ALTER TABLE `hculightstrbh1750datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hculightstrdatainfo`
+--
+ALTER TABLE `hculightstrdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcunoisedatainfo`
+--
+ALTER TABLE `hcunoisedatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25bmpd300datainfo`
+--
+ALTER TABLE `hcupm25bmpd300datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25datainfo`
+--
+ALTER TABLE `hcupm25datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcupm25sharpdatainfo`
+--
+ALTER TABLE `hcupm25sharpdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcusysalarminfo`
+--
+ALTER TABLE `hcusysalarminfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcusysengtimer`
+--
+ALTER TABLE `hcusysengtimer`
+  ADD PRIMARY KEY (`timerid`);
+
+--
+-- Indexes for table `hcusyspmglobaldatainfo`
+--
+ALTER TABLE `hcusyspmglobaldatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcusysswm_swdl`
+--
+ALTER TABLE `hcusysswm_swdl`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcusysswm_swpkg`
+--
+ALTER TABLE `hcusysswm_swpkg`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempbmp180datainfo`
+--
+ALTER TABLE `hcutempbmp180datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempdatainfo`
+--
+ALTER TABLE `hcutempdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempdht11datainfo`
+--
+ALTER TABLE `hcutempdht11datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempmth01datainfo`
+--
+ALTER TABLE `hcutempmth01datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutemprht03datainfo`
+--
+ALTER TABLE `hcutemprht03datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutempsht20datainfo`
+--
+ALTER TABLE `hcutempsht20datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgasdatainfo`
+--
+ALTER TABLE `hcutoxicgasdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgasmq135datainfo`
+--
+ALTER TABLE `hcutoxicgasmq135datainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutoxicgaszp01vocdatainfo`
+--
+ALTER TABLE `hcutoxicgaszp01vocdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcutracemodulectr`
+--
+ALTER TABLE `hcutracemodulectr`
+  ADD PRIMARY KEY (`moduleid`);
+
+--
+-- Indexes for table `hcutracemsgctr`
+--
+ALTER TABLE `hcutracemsgctr`
+  ADD PRIMARY KEY (`msgid`);
+
+--
+-- Indexes for table `hcuwinddirdatainfo`
+--
+ALTER TABLE `hcuwinddirdatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- Indexes for table `hcuwindspddatainfo`
+--
+ALTER TABLE `hcuwindspddatainfo`
+  ADD PRIMARY KEY (`sid`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `hcuairprsaltitudebmp180datainfo`
+--
+ALTER TABLE `hcuairprsaltitudebmp180datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuairprsbmp180datainfo`
+--
+ALTER TABLE `hcuairprsbmp180datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuairprsdatainfo`
+--
+ALTER TABLE `hcuairprsdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcualcoholdatainfo`
+--
+ALTER TABLE `hcualcoholdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcualcoholmq3alcodatainfo`
+--
+ALTER TABLE `hcualcoholmq3alcodatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcubfsccalibration`
+--
+ALTER TABLE `hcubfsccalibration`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- 使用表AUTO_INCREMENT `hcubfscconfigpara`
+--
+ALTER TABLE `hcubfscconfigpara`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+--
+-- 使用表AUTO_INCREMENT `hcubfscfb2ui`
+--
+ALTER TABLE `hcubfscfb2ui`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- 使用表AUTO_INCREMENT `hcubfsclanguagedict`
+--
+ALTER TABLE `hcubfsclanguagedict`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+--
+-- 使用表AUTO_INCREMENT `hcubfscstadatainfo`
+--
+ALTER TABLE `hcubfscstadatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+--
+-- 使用表AUTO_INCREMENT `hcubfscstaticpara`
+--
+ALTER TABLE `hcubfscstaticpara`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- 使用表AUTO_INCREMENT `hcuco1datainfo`
+--
+ALTER TABLE `hcuco1datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuemcdatainfo`
+--
+ALTER TABLE `hcuemcdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12205;
+--
+-- 使用表AUTO_INCREMENT `hcuhchodatainfo`
+--
+ALTER TABLE `hcuhchodatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuhchoze08ch2odatainfo`
+--
+ALTER TABLE `hcuhchoze08ch2odatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuhsmmpdatainfo`
+--
+ALTER TABLE `hcuhsmmpdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuhumiddatainfo`
+--
+ALTER TABLE `hcuhumiddatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuhumiddht11datainfo`
+--
+ALTER TABLE `hcuhumiddht11datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuhumidmth01datainfo`
+--
+ALTER TABLE `hcuhumidmth01datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- 使用表AUTO_INCREMENT `hcuhumidrht03datainfo`
+--
+ALTER TABLE `hcuhumidrht03datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuhumidsht20datainfo`
+--
+ALTER TABLE `hcuhumidsht20datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuigmcj188datainfo`
+--
+ALTER TABLE `hcuigmcj188datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuihmcj188datainfo`
+--
+ALTER TABLE `hcuihmcj188datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuipmcj188datainfo`
+--
+ALTER TABLE `hcuipmcj188datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuiwmcj188datainfo`
+--
+ALTER TABLE `hcuiwmcj188datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hculightstrbh1750datainfo`
+--
+ALTER TABLE `hculightstrbh1750datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hculightstrdatainfo`
+--
+ALTER TABLE `hculightstrdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcunoisedatainfo`
+--
+ALTER TABLE `hcunoisedatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcupm25bmpd300datainfo`
+--
+ALTER TABLE `hcupm25bmpd300datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcupm25datainfo`
+--
+ALTER TABLE `hcupm25datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcupm25sharpdatainfo`
+--
+ALTER TABLE `hcupm25sharpdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcusysalarminfo`
+--
+ALTER TABLE `hcusysalarminfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2195;
+--
+-- 使用表AUTO_INCREMENT `hcusyspmglobaldatainfo`
+--
+ALTER TABLE `hcusyspmglobaldatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=701;
+--
+-- 使用表AUTO_INCREMENT `hcusysswm_swdl`
+--
+ALTER TABLE `hcusysswm_swdl`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcusysswm_swpkg`
+--
+ALTER TABLE `hcusysswm_swpkg`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutempbmp180datainfo`
+--
+ALTER TABLE `hcutempbmp180datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutempdatainfo`
+--
+ALTER TABLE `hcutempdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutempdht11datainfo`
+--
+ALTER TABLE `hcutempdht11datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutempmth01datainfo`
+--
+ALTER TABLE `hcutempmth01datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutemprht03datainfo`
+--
+ALTER TABLE `hcutemprht03datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutempsht20datainfo`
+--
+ALTER TABLE `hcutempsht20datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutoxicgasdatainfo`
+--
+ALTER TABLE `hcutoxicgasdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutoxicgasmq135datainfo`
+--
+ALTER TABLE `hcutoxicgasmq135datainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcutoxicgaszp01vocdatainfo`
+--
+ALTER TABLE `hcutoxicgaszp01vocdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuwinddirdatainfo`
+--
+ALTER TABLE `hcuwinddirdatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- 使用表AUTO_INCREMENT `hcuwindspddatainfo`
+--
+ALTER TABLE `hcuwindspddatainfo`
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
