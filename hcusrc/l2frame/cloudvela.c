@@ -3715,10 +3715,11 @@ OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		pMsgProc.reportValue.humidValue = HUITP_ENDIAN_EXG32(rcv.ycjk.humidValue);
 		pMsgProc.reportValue.winddirValue = HUITP_ENDIAN_EXG32(rcv.ycjk.winddirValue);
 		pMsgProc.reportValue.windspdValue = HUITP_ENDIAN_EXG32(rcv.ycjk.windspdValue);
-		//pMsgProc.reportValue.pm1d0Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm1d0Value);
+		pMsgProc.reportValue.pm1d0Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm1d0Value);
 		pMsgProc.reportValue.pm2d5Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm2d5Value);
 		pMsgProc.reportValue.pm10Value = HUITP_ENDIAN_EXG32(rcv.ycjk.pm10Value);
 		pMsgProc.reportValue.tspValue = HUITP_ENDIAN_EXG32(rcv.ycjk.tspValue);
+		pMsgProc.reportValue.noiseValue = HUITP_ENDIAN_EXG32(rcv.ycjk.noiseValue);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -3744,16 +3745,16 @@ OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * para
 
 	//Send out
 	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE){
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send ycjk report failure !\n\n\n");
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
 	}
 	else{
-		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send ycjk report successfully !\n\n");
+		HCU_DEBUG_PRINT_NOR("CLOUDVELA: Send ycjk report successfully !\n\n\n");
 	}
 
 	//State no change
 	return SUCCESS;
 }
-
 
 /***************************************************************************************************************************
  *

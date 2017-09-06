@@ -7,6 +7,8 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+//= ZSC, 2017 Sep.5 CURRENT_SW_DELIVERY 256=>AQYC项目
+= Add Aggregation report instead single sensor report to default server(socket instead of Curl)
 
 
 //= ZJL, 2017 Sep.6 CURRENT_SW_DELIVERY 255=>BFDF项目

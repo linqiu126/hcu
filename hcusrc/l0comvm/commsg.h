@@ -766,7 +766,7 @@ typedef struct  sensor_ycjk_data_element //
 	INT32  winddirValue;
 	INT32  windspdValue;
 	INT32  noiseValue;
-	//INT32  pm1d0Value;
+	INT32  pm1d0Value;
 	INT32  pm2d5Value;
 	INT32  pm10Value;
 	INT32  tspValue;
