@@ -350,6 +350,10 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	{
 		currentModbusBuf.curLen =ret;
 		HCU_DEBUG_PRINT_INF("MODBUS: Len %d  \n", ret);
+		//UINT16 hwType = 0;
+		//hwType = zHcuSysEngPar.hwBurnId.hwType & 0xFFFF;
+		//HCU_DEBUG_PRINT_INF("MODBUS: zHcuSysEngPar.hwBurnId.hwType in Dec 0X%x  \n", hwType);
+		//HCU_DEBUG_PRINT_INF("MODBUS: zHcuSysEngPar.hwBurnId.hwType in Hex %d  \n\n\n", hwType);
 		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
 		{
 			HCU_DEBUG_PRINT_INF("MODBUS: Received 2002 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
@@ -360,7 +364,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		}
 		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2006)
 		{
-			HCU_DEBUG_PRINT_INF("MODBUS: Received 2003 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
+			HCU_DEBUG_PRINT_INF("MODBUS: Received 2006 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16]);
 		}
 		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 		{

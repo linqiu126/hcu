@@ -2875,6 +2875,11 @@ OPSTAT hcu_vm_engpar_get_phy_burn_block_data(void)
 		zHcuSysEngPar.hwBurnId.swUpgradeFlag,\
 		zHcuSysEngPar.hwBurnId.zhbMnLable);
 
+	UINT16 hwType = 0;
+	hwType = zHcuSysEngPar.hwBurnId.hwType & 0xFFFF;
+	HCU_DEBUG_PRINT_INF("HCU-VM: zHcuSysEngPar.hwBurnId.hwType in Hex 0X%x  \n", hwType);
+	HCU_DEBUG_PRINT_INF("HCU-VM: zHcuSysEngPar.hwBurnId.hwType in Dec %d  \n\n\n", zHcuSysEngPar.hwBurnId.hwType);
+
 	return SUCCESS;
 }
 
