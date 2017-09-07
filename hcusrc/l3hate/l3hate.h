@@ -120,8 +120,10 @@ UINT32 func_l3hate_search_test_case_number_in_lib(int tcCgnIndex);
 void   func_l3hate_test_case_execute_error_process(UINT32 tcLibId);
 void   func_l3hate_test_case_execute_success_process(UINT32 tcLibId);
 
-
 //引用外部函数
+extern OPSTAT hcu_ethernet_hate_data_send(CloudDataSendBuf_t *buf);
+extern OPSTAT hcu_canitfleo_hate_send_data(char *buf, int len, UINT8 node);
+
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_L3HATE(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3HATE]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

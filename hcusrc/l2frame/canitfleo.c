@@ -1283,6 +1283,20 @@ OPSTAT hcu_canitfleo_usbcan_interface_init(void)
 //发送API
 OPSTAT hcu_canitfleo_usbcan_l2frame_send(UINT8 *buffer, UINT32 length, UINT32 wmc_id_bitmap)
 {
+	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	msg_struct_l3hate_can_frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3hate_can_frame_rcv_t));
+	memcpy(snd.dataBuf, buffer, length);
+	snd.bufValidLen = length;
+	snd.length = sizeof(msg_struct_l3hate_can_frame_rcv_t);
+	if (hcu_message_send(MSG_ID_CAN_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+#endif
+
+	//业务执行
 	return hcu_bsp_usbcan_l2frame_transmit(&(gTaskCanitfleoContext.can1), buffer, length, wmc_id_bitmap);
 }
 
@@ -1655,5 +1669,28 @@ OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 }
 
 #endif  //BFSC //correct for compiling error for AQYC by Shanchun
+
+
+OPSTAT hcu_canitfleo_hate_send_data(char *buf, int len, UINT8 node)
+{
+	//发送给CANITFLEO模块
+	msg_struct_bfsc_usbcan_l2frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t));
+	snd.nodeId = node;
+	snd.validDataLen = len;
+	memcpy(snd.databuf, buf, len);
+
+	snd.length = sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t);
+	if (hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+		return FAILURE;
+	}
+
+	return SUCCESS;
+}
+
+
+
 
 

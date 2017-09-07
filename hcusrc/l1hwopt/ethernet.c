@@ -341,7 +341,18 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		if(gTaskCloudvelaContext.defaultSvrethConClientFd < 0) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "CLOUDVELA: socket id is not valid!\n");
 	}
-
+	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	msg_struct_l3hate_eth_frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3hate_eth_frame_rcv_t));
+	memcpy(snd.dataBuf, buf->curBuf, buf->curLen);
+	snd.bufValidLen = buf->curLen;
+	snd.length = sizeof(msg_struct_l3hate_eth_frame_rcv_t);
+	if (hcu_message_send(MSG_ID_ETH_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_ETHERNET, &snd, snd.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+#endif
 	//有关LINKID的处理还不完善。因为程序中大量的地方还未改过来，所以只在if中判定是否属于HOME，其它情况都当做DEFAULT业务部分
 	if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
 		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
@@ -360,6 +371,19 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 {
 	int ret = 0;
+
+	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	msg_struct_l3hate_eth_frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3hate_eth_frame_rcv_t));
+	memcpy(snd.dataBuf, buf->curBuf, buf->curLen);
+	snd.bufValidLen = buf->curLen;
+	snd.length = sizeof(msg_struct_l3hate_eth_frame_rcv_t);
+	if (hcu_message_send(MSG_ID_ETH_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_ETHERNET, &snd, snd.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+#endif
 
 	//初始化MSGSEND参数
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
@@ -440,6 +464,24 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		}
 
 	}//End of working condition
+
+	//返回
+	return SUCCESS;
+}
+
+//HATE测试环境
+OPSTAT hcu_ethernet_hate_data_send(CloudDataSendBuf_t *buf)
+{
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
+	memcpy(receiveBuffer.buf, buf->curBuf, buf->curLen);
+	//这个长度如果设置为实际长度，行不行？
+	receiveBuffer.length = buf->curLen;
+
+	if (hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
 
 	//返回
 	return SUCCESS;
