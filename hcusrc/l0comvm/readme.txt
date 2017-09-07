@@ -8,6 +8,9 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Sep.7 CURRENT_SW_DELIVERY 258=>BFHS项目
+= 增加BFHS高速分选称项目
+
 //= ZJL, 2017 Sep.7 CURRENT_SW_DELIVERY 257=>BFDF项目
 = MQTT的初始化改为延时无限循环
 = htop用来查阅线程树形结构

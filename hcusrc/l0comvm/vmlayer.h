@@ -122,6 +122,7 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_JSONINOTIFY,
 	TASK_ID_L3OPWLOTDR,
 	TASK_ID_L3BFDF,
+	TASK_ID_L3BFHS,
 	TASK_ID_L3HATE,
 	TASK_ID_MAX,
 	TASK_ID_INVALID = 0xFFFFFFFF,
@@ -624,6 +625,7 @@ extern HcuFsmStateItem_t HcuFsmBfscuicomm[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmJsoninotify[];                       //状态机
 extern HcuFsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmL3bfdf[];                            //状态机
+extern HcuFsmStateItem_t HcuFsmL3bfhs[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmL3hate[];                            //状态机
 
 //任务配置的基础配置信息

@@ -14,6 +14,8 @@
 	#include "../l3hate/hate_bfsc.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	#include "../l3hate/hate_bfdf.h"
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	#include "../l3hate/hate_bfhs.h"
 #else
 	#error Un-correct constant definition
 #endif
@@ -85,6 +87,8 @@ gTaskL3hateTestCaseLib_t zHcuHateTcLibTable[HATE_TCID_MAX+1] = {
 	{&zHcuTc_HATE_TCID_BFDF_STOP_ALL_NODES},
 	{&zHcuTc_HATE_TCID_BFDF_SUSPEND_ALL_NODES},
 
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+
 #else
 	#error Un-correct constant definition
 #endif
@@ -111,6 +115,8 @@ UINT32 zHcuHateTcCampaign[] = {
 	HATE_TCID_BFDF_START_ALL_NODES,
 	HATE_TCID_BFDF_STOP_ALL_NODES,
 	HATE_TCID_BFDF_SUSPEND_ALL_NODES,
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+
 #else
 	#error Un-correct constant definition
 #endif

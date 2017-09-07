@@ -135,6 +135,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_JSONINOTIFY,   "JSONINOTIFY",      NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3BFDF,        "L3BFDF",           NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_L3BFHS,        "L3BFHS",           NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3HATE,        "L3HATE",           NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 //END所有项目任务初始化清单
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYC_OBSOLETE_ID)
@@ -243,6 +244,13 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3BFDF,        "L3BFDF",           &HcuFsmL3bfdf,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	{TASK_ID_MQTT,          "MQTT",             &HcuFsmMqtt,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_L3BFHS,        "L3BFHS",           &HcuFsmL3bfhs,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #else
 	#error Un-correct constant definition
@@ -672,6 +680,17 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_L3BFSC_ERROR_INQ,          		 "TID_1S_L3BFSC_ERROR_INQ",                15,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          5,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     40,      TIMER_RESOLUTION_10MS},
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	{TIMER_ID_1S_EMC_PERIOD_READ,                    "TID_1S_EMC_PERIOD_READ",                 100,     TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB,             "TID_1S_L3BFSC_SYS_CFG_WAIT_FB",          15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_SYS_START_WAIT_FB,           "TID_1S_L3BFSC_SYS_START_WAIT_FB",        15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_SYS_STOP_WAIT_FB,            "TID_1S_L3BFSC_SYS_STOP_WAIT_FB",         15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_TTT_WAIT_FB,                 "TID_1S_L3BFSC_TTT_WAIT_FB",              60,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,                 "TID_1S_L3BFSC_TGU_WAIT_FB",              60,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_L3BFSC_ERROR_INQ,          		 "TID_1S_L3BFSC_ERROR_INQ",                15,      TIMER_RESOLUTION_1S},
+	{TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,             "TID_1S_BFSCUICOMM_PERIOD_READ",          5,       TIMER_RESOLUTION_1S},
+	{TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,        "TID_10MS_CANITFLEO_SIMULATION_DATA",     40,      TIMER_RESOLUTION_10MS},
 #else
 	#error Un-correct constant definition
 #endif
@@ -767,6 +786,9 @@ HcuVmCtrCodabStaticCfg_t zHcuVmCtrCodabStaticCfg[] = {
 	{SENSOR_ID_GPIOHUMIDDHT11,          "SNR_gpioHumidDht11",            HCU_SYSCFG_SENSOR_PRESENT_YES},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	{SENSOR_ID_GPIOTEMPDHT11,           "SNR_gpioTempDht11",             HCU_SYSCFG_SENSOR_PRESENT_YES},
+	{SENSOR_ID_GPIOHUMIDDHT11,          "SNR_gpioHumidDht11",            HCU_SYSCFG_SENSOR_PRESENT_YES},
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	{SENSOR_ID_GPIOTEMPDHT11,           "SNR_gpioTempDht11",             HCU_SYSCFG_SENSOR_PRESENT_YES},
 	{SENSOR_ID_GPIOHUMIDDHT11,          "SNR_gpioHumidDht11",            HCU_SYSCFG_SENSOR_PRESENT_YES},
 #else
