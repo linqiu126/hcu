@@ -8,6 +8,8 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Sep.7 CURRENT_SW_DELIVERY 257=>BFDF项目
+= MQTT的初始化改为延时无限循环
 
 //= ZSC, 2017 Sep.6 CURRENT_SW_DELIVERY 256=>AQYC项目
 = Add Aggregation report instead single sensor report to default server(socket instead of Curl)

@@ -355,6 +355,7 @@ int hcu_mqtt_msg_rcv(void)
   //退出条件，未来待完善
   do
   {
+	  hcu_usleep(100);
       ch = getchar();
   } while(ch!='Q' && ch != 'q');
 
