@@ -49,6 +49,7 @@
 #include <libxml/parser.h>
 #include <libxml/xmlstring.h>
 #include <linux/netdevice.h>
+#include <sys/prctl.h>
 #include <netinet/tcp.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

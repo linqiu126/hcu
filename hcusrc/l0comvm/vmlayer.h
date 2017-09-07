@@ -957,7 +957,7 @@ extern OPSTAT hcu_hwinv_engpar_read_mac_address(void);
 extern OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void);
 extern OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void);
 extern OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void);
-
+int pthread_setname_np(pthread_t thread, const char *name);
 
 /*
  *

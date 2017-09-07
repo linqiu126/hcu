@@ -952,6 +952,14 @@ UINT32 hcu_task_create(UINT32 task_id, void *(*task_func)(void *), void *arg, in
 		return FAILURE;
 	}
 
+	//设置thread的名字
+	err=pthread_setname_np(zHcuVmCtrTab.task[task_id].ThrId, zHcuVmCtrTab.task[task_id].taskName);
+	if(err != 0)
+	{
+		HcuDebugPrint("HCU-VM: pthread_setname_np() nok!! taskid = %d, err=%d, errno=%d, %s\n", task_id, err, errno, strerror(err));
+		return FAILURE;
+	}
+
 	//zHcuTaskInfo[task_id].TaskName to be added in another way, TBD
 	zHcuVmCtrTab.task[task_id].TaskId = task_id;
 	zHcuVmCtrTab.task[task_id].processId = getpid(); //进程号存入
