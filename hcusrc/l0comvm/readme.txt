@@ -13,6 +13,7 @@
 = htop用来查阅线程树形结构
 = top -H -p12345用来查单个线程的运行状态
 = VM中增加了线程名字的信息
+= 将HATE机制增加到所有项目中去
 
 //= ZSC, 2017 Sep.6 CURRENT_SW_DELIVERY 256=>AQYC项目
 = Add Aggregation report instead single sensor report to default server(socket instead of Curl)

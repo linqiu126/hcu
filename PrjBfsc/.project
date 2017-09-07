@@ -91,6 +91,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>src/l3hate</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>src/l3uiconnect</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -1179,6 +1184,36 @@
 			<name>src/l3appctrl/l3bfsc.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3bfsc.h</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_bfsc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_bfsc.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_bfsc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_bfsc.h</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_common.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_common.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_common.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_common.h</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/l3hate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/l3hate.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/l3hate.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/l3hate.h</locationURI>
 		</link>
 		<link>
 			<name>src/l3uiconnect/bfscuicomm.c</name>

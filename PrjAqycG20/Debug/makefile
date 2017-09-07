@@ -9,6 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/l4bi/subdir.mk
+-include src/l3hate/subdir.mk
 -include src/l3appctrl/subdir.mk
 -include src/l3app/subdir.mk
 -include src/l2frame/subdir.mk
@@ -66,6 +67,5 @@ clean:
 	-@echo ' '
 
 .PHONY: all clean dependents
-.SECONDARY:
 
 -include ../makefile.targets

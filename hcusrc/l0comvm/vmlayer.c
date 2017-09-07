@@ -121,7 +121,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_SYSPM,         "SYSPM",            &HcuFsmSyspm,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_SYSSWM,        "SYSSWM",           &HcuFsmSysswm,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_PM25SHARP,     "PM25SHARP",        &HcuFsmPm25sharp,        HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
-	{TASK_ID_CANITFLEO,     "CANITFLEO",        &HcuFsmCanitfleo,        HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_CANITFLEO,     "CANITFLEO",        NULL,        			 HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3AQYCG10,     "L3AQYCG10",        NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       NULL,                    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
@@ -202,17 +202,18 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_SPSVIRGO,      "SPSVIRGO",         &HcuFsmSpsvirgo,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_MODBUS,        "MODBUS",           &HcuFsmModbus,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          HCU_SYSCFG_TASK_PNP_OFF,     1, 1, 1, 1, 1},
-	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_SYSCFG_TASK_PNP_OFF,     1, 1, 1, 1, 1},
+	{TASK_ID_AVORION,       "AVORION",          &HcuFsmAvorion,          HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_PM25,          "PM25",             &HcuFsmPm25,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_TEMP,          "TEMP",             &HcuFsmTemp,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_WINDDIR,       "WINDDIR",          &HcuFsmWinddir,          HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_WINDSPD,       "WINDSPD",          &HcuFsmWindspd,          HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
-	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_SYSCFG_TASK_PNP_OFF,     1, 1, 1, 1, 1},
+	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_LLCZHB,        "LLCZHB",           &HcuFsmLlczhb,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        &HcuFsmL3aqycg20,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
 	{TASK_ID_L3TBSWRG30,    "L3TBSWRG30",       &HcuFsmL3tbswrg30,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_GQYBG40_ID)
@@ -233,6 +234,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_L3BFSC,        "L3BFSC",           &HcuFsmL3bfsc,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_BFSCUICOMM,    "BFSCUICOMM",       &HcuFsmBfscuicomm,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_JSONINOTIFY,   "JSONINOTIFY",      &HcuFsmJsoninotify,      HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	{TASK_ID_L3OPWLOTDR,    "L3OPWLOTDR",       &HcuFsmL3opwlotdr,       HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)

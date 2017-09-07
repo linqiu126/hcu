@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include src/l4bi/subdir.mk
 -include src/l3uiconnect/subdir.mk
+-include src/l3hate/subdir.mk
 -include src/l3appctrl/subdir.mk
 -include src/l3app/subdir.mk
 -include src/l2frame/subdir.mk
