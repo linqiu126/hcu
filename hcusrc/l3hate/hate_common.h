@@ -22,6 +22,9 @@ extern gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_COM_BH_HEAT_BEAT_START;
 
 //Local API
 OPSTAT func_l3hate_common_tc_snd_restart_all_modues(void);
+OPSTAT func_l3hate_common_tc_HATE_TCID_COM_SETUP_BH_CONNECT_s1_snd_heart_beat_req(void);
+OPSTAT func_l3hate_common_tc_HATE_TCID_COM_SETUP_BH_CONNECT_r1_rcv_heart_beat_fb(void);
+
 
 //引用外部函数
 

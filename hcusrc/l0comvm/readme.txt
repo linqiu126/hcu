@@ -10,6 +10,7 @@
 
 //= ZJL, 2017 Sep.7 CURRENT_SW_DELIVERY 258=>BFHS项目
 = 增加BFHS高速分选称项目
+= 完善BFDF的测试部分，整个HATE测试环境基本上差不多了
 
 //= ZJL, 2017 Sep.7 CURRENT_SW_DELIVERY 257=>BFDF项目
 = MQTT的初始化改为延时无限循环

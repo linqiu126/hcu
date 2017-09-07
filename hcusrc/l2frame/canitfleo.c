@@ -1294,10 +1294,11 @@ OPSTAT hcu_canitfleo_usbcan_l2frame_send(UINT8 *buffer, UINT32 length, UINT32 wm
 		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
 		return FAILURE;
 	}
-#endif
-
+	return SUCCESS;
+#else
 	//业务执行
 	return hcu_bsp_usbcan_l2frame_transmit(&(gTaskCanitfleoContext.can1), buffer, length, wmc_id_bitmap);
+#endif
 }
 
 
@@ -1671,7 +1672,7 @@ OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 #endif  //BFSC //correct for compiling error for AQYC by Shanchun
 
 
-OPSTAT hcu_canitfleo_hate_send_data(char *buf, int len, UINT8 node)
+OPSTAT hcu_canitfleo_hate_send_data(UINT8 *buf, int len, UINT8 node)
 {
 	//发送给CANITFLEO模块
 	msg_struct_bfsc_usbcan_l2frame_rcv_t snd;

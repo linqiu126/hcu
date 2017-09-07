@@ -349,10 +349,10 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 	snd.bufValidLen = buf->curLen;
 	snd.length = sizeof(msg_struct_l3hate_eth_frame_rcv_t);
 	if (hcu_message_send(MSG_ID_ETH_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_ETHERNET, &snd, snd.length) == FAILURE){
-		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
 		return FAILURE;
 	}
-#endif
+#else
 	//有关LINKID的处理还不完善。因为程序中大量的地方还未改过来，所以只在if中判定是否属于HOME，其它情况都当做DEFAULT业务部分
 	if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
 		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
@@ -360,6 +360,7 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 	}else{
 		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n", buf->curBuf);
 	}
+#endif
 
 	//返回
 	return SUCCESS;
@@ -370,8 +371,6 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 //CURL发送给后台HOME服务器，不采用主动从服务器接受命令的形式，而是采用HCU主动链接和汇报，然后带回命令的方式
 OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 {
-	int ret = 0;
-
 	//HATE测试环境
 #ifdef HATE_TRIGGER_ENABLE
 	msg_struct_l3hate_eth_frame_rcv_t snd;
@@ -383,7 +382,8 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
 		return FAILURE;
 	}
-#endif
+#else
+	int ret = 0;
 
 	//初始化MSGSEND参数
 	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
@@ -464,7 +464,7 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		}
 
 	}//End of working condition
-
+#endif
 	//返回
 	return SUCCESS;
 }

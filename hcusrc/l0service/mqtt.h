@@ -86,6 +86,7 @@ extern OPSTAT fsm_mqtt_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 extern int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in);
 extern int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in);
 extern int hcu_mqtt_msg_rcv(void);
+extern OPSTAT hcu_mqtt_hate_data_send(void *context, char *topicName, int payloadLen, char *payload);
 
 //Local APIs
 void func_mqtt_msg_send_asy_delivered(void *context, MQTTClient_deliveryToken dt);

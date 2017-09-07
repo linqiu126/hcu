@@ -49,6 +49,8 @@ extern OPSTAT fsm_spsvirgo_restart(UINT32 dest_id, UINT32 src_id, void * param_p
 extern OPSTAT fsm_spsvirgo_stop_work(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_spsvirgo_noise_control_cmd(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT hcu_sps_hate_data_send(UINT8 *buf, UINT32 bufLen);
+
 
 //Local API
 OPSTAT func_spsvirgo_int_init(void);

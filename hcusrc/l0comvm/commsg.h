@@ -548,6 +548,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_ETH_L3HATE_FRAME_RCV,
 	MSG_ID_SPS_L3HATE_FRAME_RCV,
 	MSG_ID_CAN_L3HATE_FRAME_RCV,
+	MSG_ID_MQTT_L3HATE_FRAME_RCV,
 
 	//END
 	MSG_ID_COM_MAX, //Ending point
@@ -3828,6 +3829,13 @@ typedef struct  msg_struct_l3hate_can_frame_rcv
 	UINT32 length;
 }msg_struct_l3hate_can_frame_rcv_t;
 
+//MSG_ID_MQTT_L3HATE_FRAME_RCV,
+typedef struct  msg_struct_l3hate_mqtt_frame_rcv
+{
+	UINT8  dataBuf[HCU_SYSMSG_COM_BUF_NET_LEN_MAX];
+	UINT32 bufValidLen;
+	UINT32 length;
+}msg_struct_l3hate_mqtt_frame_rcv_t;
 
 /*
  *

@@ -35,12 +35,19 @@ enum HCU_HATE_TCID_ENUM
 	HATE_TCID_COM_SETUP_BH_CONNECT,
 	HATE_TCID_COM_DISCON_BH_LINK,
 	HATE_TCID_COM_BH_HEAT_BEAT_START,
+	HATE_TCID_AQYC_SET_PM25_WORK_CYCLE,
+	HATE_TCID_BFSC_STARTUP_IND_COMING,
+	HATE_TCID_BFSC_WS_NEW_EVENT_COMING,
+	HATE_TCID_BFSC_CONFIG_ALL_NODES,
 	HATE_TCID_BFDF_STARTUP_IND_COMING,
 	HATE_TCID_BFDF_WS_NEW_EVENT_COMING,
 	HATE_TCID_BFDF_CONFIG_ALL_NODES,
 	HATE_TCID_BFDF_START_ALL_NODES,
 	HATE_TCID_BFDF_STOP_ALL_NODES,
 	HATE_TCID_BFDF_SUSPEND_ALL_NODES,
+	HATE_TCID_BFHS_STARTUP_IND_COMING,
+	HATE_TCID_BFHS_WS_NEW_EVENT_COMING,
+	HATE_TCID_BFHS_CONFIG_ALL_NODES,
 	HATE_TCID_MAX,
 	HATE_TCID_INVALID = 0xFFFFFFFF,
 }; //end of HCU_HATE_TCID_ENUM
@@ -94,7 +101,8 @@ extern gTaskL3hateContext_t gTaskL3hateContext;
 #define HATE_TC_RUN_ENGINE_EVENT_ETH_TRG  	2
 #define HATE_TC_RUN_ENGINE_EVENT_SPS_TRG  	3
 #define HATE_TC_RUN_ENGINE_EVENT_CAN_TRG  	4
-#define HATE_TC_RUN_ENGINE_EVENT_TIME_OUT  	5
+#define HATE_TC_RUN_ENGINE_EVENT_MQTT_TRG  	5
+#define HATE_TC_RUN_ENGINE_EVENT_TIME_OUT  	6
 #define HATE_TC_RUN_ENGINE_EVENT_INVALID  	0xFF
 
 //API
@@ -106,6 +114,7 @@ extern OPSTAT fsm_l3hate_start_new_tc(UINT32 dest_id, UINT32 src_id, void * para
 extern OPSTAT fsm_l3hate_eth_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3hate_sps_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3hate_can_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3hate_mqtt_frame_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Global APIs
 extern OPSTAT hcu_l3hate_test_case_log_file(char *s);
@@ -121,8 +130,11 @@ void   func_l3hate_test_case_execute_error_process(UINT32 tcLibId);
 void   func_l3hate_test_case_execute_success_process(UINT32 tcLibId);
 
 //引用外部函数
-extern OPSTAT hcu_ethernet_hate_data_send(CloudDataSendBuf_t *buf);
-extern OPSTAT hcu_canitfleo_hate_send_data(char *buf, int len, UINT8 node);
+//目前已经支持了４种方式的发送与接收，方便进行HATE级测试
+extern OPSTAT hcu_ethernet_hate_data_send(CloudDataSendBuf_t *buf);  //异步消息方式
+extern OPSTAT hcu_canitfleo_hate_send_data(UINT8 *buf, int len, UINT8 node);  //异步消息方式
+extern OPSTAT hcu_sps_hate_data_send(UINT8 *buf, UINT32 bufLen);  //同步缓冲区方式
+extern OPSTAT hcu_mqtt_hate_data_send(void *context, char *topicName, int payloadLen, char *payload); //MQTT方式
 
 
 //高级定义，简化程序的可读性

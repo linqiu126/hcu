@@ -102,7 +102,21 @@ OPSTAT fsm_mqtt_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 //MQTT同步模式发送消息
 int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
 {
-    MQTTClient client;
+	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	msg_struct_l3hate_mqtt_frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3hate_mqtt_frame_rcv_t));
+	memcpy(snd.dataBuf, in->jsonCont, strlen((char*)in->jsonCont));
+	snd.bufValidLen = strlen((char*)in->jsonCont);
+	snd.length = sizeof(msg_struct_l3hate_mqtt_frame_rcv_t);
+	if (hcu_message_send(MSG_ID_MQTT_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_MQTT, &snd, snd.length) == FAILURE){
+		HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+	return SUCCESS;
+#else
+
+	MQTTClient client;
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
     MQTTClient_message pubmsg = MQTTClient_message_initializer;
     MQTTClient_deliveryToken token;
@@ -146,6 +160,7 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     MQTTClient_disconnect(client, 10000);
     MQTTClient_destroy(&client);
     return rc;
+#endif
 }
 
 /** @endcode
@@ -415,6 +430,14 @@ UINT32 func_mqtt_topicid_translate_to_id(char *input)
 	else return MQTT_TPID_MAX;
 }
 
+//HATE测试环境
+OPSTAT hcu_mqtt_hate_data_send(void *context, char *topicName, int payloadLen, char *payload)
+{
+	MQTTClient_message message;
+	message.payloadlen = payloadLen;
+	memcpy(message.payload, payload, message.payloadlen);
+	return func_mqtt_msg_rcv_msgarrvd(context, topicName, payloadLen, &message);
+}
 
 
 

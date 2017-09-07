@@ -13,8 +13,12 @@
 #include "../l0service/trace.h"
 #include "../l3hate/l3hate.h"
 
+//GLOBAL VARIABLES
+extern gTaskL3hateTestCaseSet_t zHcuTc_HATE_TCID_AQYC_SET_PM25_WORK_CYCLE;
 
 //Local API
+OPSTAT func_l3hate_aqyc_tc_snd_set_pm25_work_cycle(void);
+OPSTAT func_l3hate_aqyc_tc_rcv_set_pm25_work_cycle_result(void);
 
 //引用外部函数
 
