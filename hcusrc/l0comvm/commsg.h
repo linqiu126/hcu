@@ -3805,10 +3805,10 @@ typedef struct  msg_struct_l3hate_tc_start
 }msg_struct_l3hate_tc_start_t;
 
 //MSG_ID_ETH_L3HATE_FRAME_RCV,
-#define HCU_SYSMSG_COM_BUF_NET_LEN_MAX  	HCU_SYSMSG_COM_MSG_BODY_LEN_MAX - 8
+#define HCU_SYSMSG_HATE_BUF_LEN_MAX  	HCU_SYSMSG_COM_MSG_BODY_LEN_MAX - 8
 typedef struct  msg_struct_l3hate_eth_frame_rcv
 {
-	UINT8  dataBuf[HCU_SYSMSG_COM_BUF_NET_LEN_MAX];
+	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];
 	UINT32 bufValidLen;
 	UINT32 length;
 }msg_struct_l3hate_eth_frame_rcv_t;
@@ -3816,7 +3816,7 @@ typedef struct  msg_struct_l3hate_eth_frame_rcv
 //MSG_ID_SPS_L3HATE_FRAME_RCV,
 typedef struct  msg_struct_l3hate_sps_frame_rcv
 {
-	UINT8  dataBuf[HCU_SYSMSG_COM_BUF_NET_LEN_MAX];
+	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];
 	UINT32 bufValidLen;
 	UINT32 length;
 }msg_struct_l3hate_sps_frame_rcv_t;
@@ -3824,7 +3824,7 @@ typedef struct  msg_struct_l3hate_sps_frame_rcv
 //MSG_ID_CAN_L3HATE_FRAME_RCV,
 typedef struct  msg_struct_l3hate_can_frame_rcv
 {
-	UINT8  dataBuf[HCU_SYSMSG_COM_BUF_NET_LEN_MAX];
+	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];
 	UINT32 bufValidLen;
 	UINT32 length;
 }msg_struct_l3hate_can_frame_rcv_t;
@@ -3832,7 +3832,7 @@ typedef struct  msg_struct_l3hate_can_frame_rcv
 //MSG_ID_MQTT_L3HATE_FRAME_RCV,
 typedef struct  msg_struct_l3hate_mqtt_frame_rcv
 {
-	UINT8  dataBuf[HCU_SYSMSG_COM_BUF_NET_LEN_MAX];
+	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];
 	UINT32 bufValidLen;
 	UINT32 length;
 }msg_struct_l3hate_mqtt_frame_rcv_t;

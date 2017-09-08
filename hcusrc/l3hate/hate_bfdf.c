@@ -23,8 +23,11 @@ OPSTAT func_l3hate_bfdf_tc_HATE_TCID_BFDF_STARTUP_IND_COMING_snd_s1_startup_ind(
 	return SUCCESS;
 }
 
+//测试目的：以下内容并没有真实意义，就是为了测试网络侧发送过来的消息而已
 OPSTAT func_l3hate_bfdf_tc_HATE_TCID_BFDF_WS_NEW_EVENT_COMING_snd_s1_ws_new_event(void)
 {
+	CloudDataSendBuf_t tmp;
+	hcu_ethernet_socket_data_send(&tmp);
 	return SUCCESS;
 }
 

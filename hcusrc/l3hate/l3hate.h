@@ -69,6 +69,7 @@ typedef struct gTaskL3hateTestCaseElement
 #define HATE_TCE_CTRL_CMPL  4
 #define HATE_TCE_CTRL_INVALID  0xFF
 #define HATE_TCE_STEPS_MAX_NBR  	30
+
 typedef struct gTaskL3hateTestCaseSet
 {
 	UINT32	tcId;
@@ -82,11 +83,12 @@ typedef struct gTaskL3hateTestCaseLib
 }gTaskL3hateTestCaseLib_t;
 extern gTaskL3hateTestCaseLib_t zHcuHateTcLibTable[HATE_TCID_MAX+1];
 extern UINT32 zHcuHateTcCampaign[];
+#define HATE_TC_CAMPAIGN_MAX_NBR  100
 
 //任务上下文
 typedef struct gTaskL3hateContext
 {
-	UINT32	tcIndex;	//TestCaseId
+	UINT32	tcCampaignId;	//TestCaseId in Test Campaign list
 	UINT32  stepId; //运行到哪一步
 	void    *par;   //全局参数指针，用来传递入口参数的，其实就是接收到的消息数据
 }gTaskL3hateContext_t;

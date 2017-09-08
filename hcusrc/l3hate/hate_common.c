@@ -30,7 +30,9 @@ OPSTAT func_l3hate_common_tc_HATE_TCID_COM_SETUP_BH_CONNECT_s1_snd_heart_beat_re
 {
 	CloudDataSendBuf_t data;
 	memset(&data, 0, sizeof(CloudDataSendBuf_t));
-	strcpy(data.curBuf, "<xml>111</xml>");
+	strcpy(data.curBuf, "<xml><ToUserName><![CDATA[]]></ToUserName>\
+<FromUserName><![CDATA[XHZN_HCU]]></FromUserName><CreateTime>1477323943</CreateTime><MsgType><![CDATA[huitp_text]]></MsgType><Content><![CDATA[\
+400183]]></Content><FuncFlag>XXXX</FuncFlag></xml>");
 	data.curLen = strlen(data.curBuf);
 
 	if (hcu_ethernet_hate_data_send(&data) == FAILURE) return FAILURE;
