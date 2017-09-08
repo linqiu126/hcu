@@ -76,6 +76,116 @@ typedef struct L3BfdfSensorWsInfo
 
 #define HCU_L3BFDF_SENSOR_WS_STATUS_INVALID1  		255  	//秤盘无效
 
+//称重板
+typedef struct L3BfdfWgtBoardInfo
+{
+	UINT8  wgtStatus; 	//无效，空料，有料数值错误，有料待组合，有料待出料
+	UINT8  cfgRcvFlag;   	//用来保存CFG_RESP是否收到
+	UINT8  startRcvFlag;  	//用来保存START_RESP是否收到
+	UINT8  stopRcvFlag;   	//用来保存STOP_RESP是否收到
+}L3BfdfWgtBoardInfo_t;
+#define HCU_L3BFDF_WGT_BOARD_STATUS_NONE			0
+#define HCU_L3BFDF_WGT_BOARD_STATUS_OFFLINE			1
+#define HCU_L3BFDF_WGT_BOARD_STATUS_HW_ERROR		2
+#define HCU_L3BFDF_WGT_BOARD_STATUS_OFFLINE_MAX		9
+#define HCU_L3BFDF_WGT_BOARD_STATUS_INIT_MIN		10
+#define HCU_L3BFDF_WGT_BOARD_STATUS_STARTUP			11		//下位机上线
+#define HCU_L3BFDF_WGT_BOARD_STATUS_CFG_REQ 		12  	//配置开始
+#define HCU_L3BFDF_WGT_BOARD_STATUS_CFG_CMPL 		13  	//配置完成
+#define HCU_L3BFDF_WGT_BOARD_STATUS_START_REQ 		14  	//启动开始
+#define HCU_L3BFDF_WGT_BOARD_STATUS_STOP_REQ 		15  	//停止开始
+#define HCU_L3BFDF_WGT_BOARD_STATUS_STOP_CMPL 		16  	//停止完成
+#define HCU_L3BFDF_WGT_BOARD_STATUS_INIT_ERR 		17  	//初始化错误
+#define HCU_L3BFDF_WGT_BOARD_STATUS_INIT_MAX		29
+#define HCU_L3BFDF_WGT_BOARD_STATUS_WORK_MIN 		30
+#define HCU_L3BFDF_WGT_BOARD_STATUS_VALID 			31
+#define HCU_L3BFDF_WGT_BOARD_STATUS_VALID_ERROR 	32
+#define HCU_L3BFDF_WGT_BOARD_STATUS_SUSPEND 		33
+#define HCU_L3BFDF_WGT_BOARD_STATUS_WORK_MAX 		49
+#define HCU_L3BFDF_WGT_BOARD_STATUS_INVALID  		255
+
+//分选组合板
+typedef struct L3BfdfSncBoardInfo
+{
+	UINT8  sncId;
+	UINT8  sncStatus; 	//无效，空料，有料数值错误，有料待组合，有料待出料
+	UINT8  cfgRcvFlag;   	//用来保存CFG_RESP是否收到
+	UINT8  startRcvFlag;  	//用来保存START_RESP是否收到
+	UINT8  stopRcvFlag;   	//用来保存STOP_RESP是否收到
+}L3BfdfSncBoardInfo_t;
+#define HCU_L3BFDF_SNG_BOARD_STATUS_NONE			0
+#define HCU_L3BFDF_SNG_BOARD_STATUS_OFFLINE			1
+#define HCU_L3BFDF_SNG_BOARD_STATUS_HW_ERROR		2
+#define HCU_L3BFDF_SNG_BOARD_STATUS_OFFLINE_MAX		9
+#define HCU_L3BFDF_SNG_BOARD_STATUS_INIT_MIN		10
+#define HCU_L3BFDF_SNG_BOARD_STATUS_STARTUP			11		//下位机上线
+#define HCU_L3BFDF_SNG_BOARD_STATUS_CFG_REQ 		12  	//配置开始
+#define HCU_L3BFDF_SNG_BOARD_STATUS_CFG_CMPL 		13  	//配置完成
+#define HCU_L3BFDF_SNG_BOARD_STATUS_START_REQ 		14  	//启动开始
+#define HCU_L3BFDF_SNG_BOARD_STATUS_STOP_REQ 		15  	//停止开始
+#define HCU_L3BFDF_SNG_BOARD_STATUS_STOP_CMPL 		16  	//停止完成
+#define HCU_L3BFDF_SNG_BOARD_STATUS_INIT_ERR 		17  	//初始化错误
+#define HCU_L3BFDF_SNG_BOARD_STATUS_INIT_MAX		29
+#define HCU_L3BFDF_SNG_BOARD_STATUS_WORK_MIN 		30
+#define HCU_L3BFDF_SNG_BOARD_STATUS_VALID 			31
+#define HCU_L3BFDF_SNG_BOARD_STATUS_VALID_ERROR 	32
+#define HCU_L3BFDF_SNG_BOARD_STATUS_SUSPEND 		33
+#define HCU_L3BFDF_SNG_BOARD_STATUS_WORK_MAX 		49
+#define HCU_L3BFDF_SNG_BOARD_STATUS_INVALID  		255
+
+//分组信息
+typedef struct L3BfdfGroupInfo
+{
+	UINT8  	groupId;
+	UINT8	groupStatus;
+	UINT8	totalHopperNbr;
+	UINT8	firstHopperId;	//系统配置以后，最初从哪一个料斗开始
+	UINT8	fillHopperId;	//优先从哪一个料斗开始查找，从而加速查找
+	float	targetWeight;
+	float	upperLimit;
+}L3BfdfGroupInfo_t;
+//分组状态定义
+#define HCU_L3BFDF_GROUP_STATUS_NONE			0
+#define HCU_L3BFDF_GROUP_STATUS_DISABLE			1
+#define HCU_L3BFDF_GROUP_STATUS_ACTIVE			2
+#define HCU_L3BFDF_GROUP_STATUS_INVALID  		255
+
+//料斗信息
+typedef struct L3BfdfHopperInfo
+{
+	UINT8  hopperId;
+	UINT32 hopperValue;
+	UINT8  hopperStatus;
+	UINT8  groupId;
+	UINT8  preHopperId;
+	UINT8  nextHopperId;
+}L3BfdfHopperInfo_t;
+//料斗状态定义
+#define HCU_L3BFDF_HOPPER_STATUS_NONE			0
+#define HCU_L3BFDF_HOPPER_STATUS_OFFLINE		1
+#define HCU_L3BFDF_HOPPER_STATUS_HW_ERROR		2
+#define HCU_L3BFDF_HOPPER_STATUS_OFFLINE_MAX	9
+#define HCU_L3BFDF_HOPPER_STATUS_INIT_MIN		10
+#define HCU_L3BFDF_HOPPER_STATUS_STARTUP		11		//下位机上线
+#define HCU_L3BFDF_HOPPER_STATUS_CFG_REQ 		12  	//配置开始
+#define HCU_L3BFDF_HOPPER_STATUS_CFG_CMPL 		13  	//配置完成
+#define HCU_L3BFDF_HOPPER_STATUS_START_REQ 		14  	//启动开始
+#define HCU_L3BFDF_HOPPER_STATUS_STOP_REQ 		15  	//停止开始
+#define HCU_L3BFDF_HOPPER_STATUS_STOP_CMPL 		16  	//停止完成
+#define HCU_L3BFDF_HOPPER_STATUS_INIT_ERR 		17  	//初始化错误
+#define HCU_L3BFDF_HOPPER_STATUS_INIT_MAX		29
+#define HCU_L3BFDF_HOPPER_STATUS_WORK_MIN 		30
+#define HCU_L3BFDF_HOPPER_STATUS_VALIID_EMPTY 	31      //秤盘空
+#define HCU_L3BFDF_HOPPER_STATUS_VALID_ERROR 	32 		//秤盘有料数值错误
+#define HCU_L3BFDF_HOPPER_STATUS_VALID_TO_COMB 	33 		//秤盘有料待组合
+#define HCU_L3BFDF_HOPPER_STATUS_VALID_TO_TTT 	34		//秤盘有料待出料
+#define HCU_L3BFDF_HOPPER_STATUS_VALID_TTT_START 35		//秤盘有料开始出
+#define HCU_L3BFDF_HOPPER_STATUS_VALID_TO_TGU 	36		//秤盘有料待抛弃
+#define HCU_L3BFDF_HOPPER_STATUS_VALID_TGU_START 37		//秤盘有料开始出抛
+#define HCU_L3BFDF_HOPPER_STATUS_WORK_MAX 		49
+#define HCU_L3BFDF_HOPPER_STATUS_INVALID  		255
+
+
 //统计周期，为了计算滑动平均数据
 #define HCU_L3BFDF_STA_CYCLE_DUR  60000 //1分钟，相当于60S
 #define HCU_L3BFDF_STA_UNIT_DUR  500 //500ms的单位，这是统计周期颗粒度，跟TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN保持一致
@@ -223,6 +333,13 @@ typedef struct gTaskL3bfdfContext
 //	HcuSysMsgIeL3bfdfContextStaElement_t sta8H;		//8H统计结果
 //	HcuSysMsgIeL3bfdfContextStaElement_t sta24H;		//24H统计结果
 //	HcuSysMsgIeL3bfdfContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
+
+	//BFDF设计部分
+	L3BfdfWgtBoardInfo_t  	wgt[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX];
+	L3BfdfSncBoardInfo_t  	snc[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX];
+	UINT8					totalGroupNbr[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX]; //分成多少个组
+	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
+	L3BfdfHopperInfo_t  	hopper[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 }gTaskL3bfdfContext_t;
 
 extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
