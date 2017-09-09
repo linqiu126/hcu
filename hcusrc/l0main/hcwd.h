@@ -42,6 +42,7 @@
 //CONST Variables
 #define RPI_GPIO_PIN_EXT_WATCHDOG_FEED 24  						//BCM-Pin#35 (WDI) => WiPi#24
 #define RPI_GPIO_PIN_EXT_WATCHDOG_SHUT_DOWN_TRIGGER 23  		//BCM-Pin#33 (PWDOWN) => WiPi#23
+//#define RPI_GPIO_PIN_EXT_WATCHDOG_SHUT_DOWN_TRIGGER 25  		//BCM-Pin#37 (PWDOWN) => WiPi#25
 #define RPI_GPIO_READ_REPEAT_TIMES 10
 
 //Local APIs
@@ -53,7 +54,7 @@ bool func_hcwd_read_ext_soft_shut_trigger_value(void);
 
 
 //bug fix by shanchun
-#define RPI_GPIO_HIGH_TIME 10
+#define RPI_GPIO_HIGH_TIME 3
 UINT8 func_gpio_read_pin_data_from_ext_watchdog(UINT32 pin);
 
 

@@ -123,10 +123,13 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.1325576983" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.1609825861" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.dialect.std.308742638" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.391452603" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="TARGET_RASPBERRY_PI3B"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1643036158" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.211158592" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug">
-								<option id="gnu.c.link.option.libs.81878349" superClass="gnu.c.link.option.libs" valueType="libs">
+								<option id="gnu.c.link.option.libs.81878349" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="wiringPi"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1127562428" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
@@ -159,6 +162,9 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="PrjHcwd.cdt.managedbuild.target.gnu.exe.249505434" name="Executable" projectType="cdt.managedbuild.target.gnu.exe"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.5851329;cdt.managedbuild.config.gnu.exe.debug.5851329.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.978918783;cdt.managedbuild.tool.gnu.c.compiler.input.718310803">
@@ -167,8 +173,8 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.392379187;cdt.managedbuild.config.gnu.exe.release.392379187.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.1800425026;cdt.managedbuild.tool.gnu.c.compiler.input.800595380">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.5851329.2055868555;cdt.managedbuild.config.gnu.exe.debug.5851329.2055868555.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1222208536;cdt.managedbuild.tool.gnu.c.compiler.input.1643036158">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
