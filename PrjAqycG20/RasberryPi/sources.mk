@@ -24,6 +24,7 @@ C_UPPER_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/l4bi \
+src/l3hate \
 src/l3appctrl \
 src/l3app \
 src/l2frame \

@@ -5,8 +5,6 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 /home/pi/workspace/hcu/hcusrc/l2frame/avorion.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/canitfleo.c \
-/home/pi/workspace/hcu/hcusrc/l2frame/canlib.c \
 /home/pi/workspace/hcu/hcusrc/l2frame/cloudvela.c \
 /home/pi/workspace/hcu/hcusrc/l2frame/i2cbuslibra.c \
 /home/pi/workspace/hcu/hcusrc/l2frame/llczhb.c \
@@ -18,8 +16,6 @@ C_SRCS += \
 
 OBJS += \
 ./src/l2frame/avorion.o \
-./src/l2frame/canitfleo.o \
-./src/l2frame/canlib.o \
 ./src/l2frame/cloudvela.o \
 ./src/l2frame/i2cbuslibra.o \
 ./src/l2frame/llczhb.o \
@@ -31,8 +27,6 @@ OBJS += \
 
 C_DEPS += \
 ./src/l2frame/avorion.d \
-./src/l2frame/canitfleo.d \
-./src/l2frame/canlib.d \
 ./src/l2frame/cloudvela.d \
 ./src/l2frame/i2cbuslibra.d \
 ./src/l2frame/llczhb.d \
@@ -45,20 +39,6 @@ C_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 src/l2frame/avorion.o: /home/pi/workspace/hcu/hcusrc/l2frame/avorion.c
-	@echo 'Building file: $<'
-	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_RASPBERRY_PI3B -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
-src/l2frame/canitfleo.o: /home/pi/workspace/hcu/hcusrc/l2frame/canitfleo.c
-	@echo 'Building file: $<'
-	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_RASPBERRY_PI3B -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
-src/l2frame/canlib.o: /home/pi/workspace/hcu/hcusrc/l2frame/canlib.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_RASPBERRY_PI3B -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
