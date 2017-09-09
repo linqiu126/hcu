@@ -51,4 +51,10 @@ void func_hcwd_read_ext_trigger_and_soft_shut_down(void);
 bool func_hcwd_read_ext_soft_shut_trigger_value(void);
 
 
+
+//bug fix by shanchun
+#define RPI_GPIO_HIGH_TIME 10
+UINT8 func_gpio_read_pin_data_from_ext_watchdog(UINT32 pin);
+
+
 #endif /* _HCWD_H_ */
