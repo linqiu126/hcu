@@ -48,6 +48,9 @@ HcuFsmStateItem_t HcuFsmSyspm[] =
 	{MSG_ID_CLOUDVELA_SYSPM_PERFM_CONFIRM,      FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_cloudvela_perfm_confirm},
 	{MSG_ID_COM_ALARM_REPORT,      				FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_com_alarm_report},
 	{MSG_ID_COM_PM_REPORT,      				FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_com_pm_report},
+	{MSG_ID_CLOUDVELA_TEST_COMMAND_REQ,         FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_cloudvela_test_command_req},
+	{MSG_ID_CLOUDVELA_TEST_COMMAND_CONFIRM,     FSM_STATE_SYSPM_ACTIVED,                 fsm_syspm_cloudvela_test_command_confirm},
+
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            					FSM_STATE_END,             				NULL},  //Ending
@@ -473,6 +476,35 @@ OPSTAT fsm_syspm_com_pm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 	//State no change
 	return SUCCESS;
 }
+
+OPSTAT fsm_syspm_cloudvela_test_command_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_cloudvela_test_command_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_req_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive TEST_COMMAND_REQ message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_syspm_cloudvela_test_command_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_cloudvela_test_command_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_confirm_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("SYSPM: Receive TEST_COMMAND_CONFIRM message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+
+
+	return SUCCESS;
+}
+
+
 
 
 

@@ -54,11 +54,14 @@ endif
 # All Target
 all: PrjBfsc
 
+dependents:
+	-cd /home/hitpony/workspace/hcuvm/Debug && $(MAKE) all
+
 # Tool invocations
-PrjBfsc: $(OBJS) $(USER_OBJS)
+PrjBfsc: $(OBJS) $(USER_OBJS) /home/hitpony/workspace/hcuvm/Debug/libhcuvm.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	g++ -L/usr/local/lib -L/usr/local/sqlite3/lib -o "PrjBfsc" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L"/home/hitpony/workspace/hcuvm/Debug" -L/usr/local/lib -L/usr/local/sqlite3/lib -Xlinker -R/usr/lib -Wl,--out-implib=libhcuvm -o "PrjBfsc" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -68,5 +71,6 @@ clean:
 	-@echo ' '
 
 .PHONY: all clean dependents
+/home/hitpony/workspace/hcuvm/Debug/libhcuvm.so:
 
 -include ../makefile.targets

@@ -3,6 +3,7 @@
 	<name>PrjBfsc</name>
 	<comment></comment>
 	<projects>
+		<project>hcuvm</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

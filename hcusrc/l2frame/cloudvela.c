@@ -58,7 +58,6 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
 	{MSG_ID_HWINV_CLOUDVELA_PHY_STATUS_CHG,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_hwinv_phy_status_chg},
 
-
 	{MSG_ID_NOISE_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_noise_data_report},
 	{MSG_ID_TEMP_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_temp_data_report},
 	{MSG_ID_HUMID_CLOUDVELA_DATA_REPORT,   		FSM_STATE_CLOUDVELA_OFFLINE, 		fsm_cloudvela_humid_data_report},
@@ -77,6 +76,8 @@ HcuFsmStateItem_t HcuFsmCloudvela[] =
 	{MSG_ID_SYSPM_CLOUDVELA_ALARM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_alarm_report},
 	{MSG_ID_SYSPM_CLOUDVELA_PERFM_RESP,   		FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_perfm_resp},
 	{MSG_ID_SYSPM_CLOUDVELA_PERFM_REPORT,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_perfm_report},
+	{MSG_ID_CLOUDVELA_TEST_COMMAND_RESP,        FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_test_command_resp},
+	{MSG_ID_CLOUDVELA_TEST_COMMAND_REPORT,      FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_syspm_test_command_report},
 	{MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_RESP,   	FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_sysswm_inventory_resp},
 	{MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT,  FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_sysswm_inventory_report},
 	{MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,   FSM_STATE_CLOUDVELA_ONLINE, 		fsm_cloudvela_sysswm_sw_package_resp},
@@ -543,12 +544,7 @@ OPSTAT func_cloudvela_hb_link_passive_rcv_signal_for_react(UINT16 randval)
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -925,16 +921,7 @@ OPSTAT fsm_cloudvela_socket_data_rx(UINT32 dest_id, UINT32 src_id, void * param_
 			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
 		}
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdxml_msg_unpack(&rcv) == FAILURE){
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
-//		}
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_unpack(&rcv) == FAILURE){
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Unpack receive message error from [%s] module!\n", zHcuVmCtrTab.task[src_id].taskName);
-//		}
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set zHcuSysEngPar.cloud.cloudBhItfFrameStd rightly!\n");
 	}
@@ -1017,12 +1004,7 @@ OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * para
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1084,26 +1066,9 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-///*
-//		UINT32 optId=0, cmdId=0, backType=0;
-//		//命令字
-//		cmdId = L3CI_alarm;
-//		backType = L3CI_cmdid_back_type_instance;
-//	    optId = L3PO_hcualarm_report;
-//
-//		if (FAILURE == func_cloudvela_stdzhb_msg_alarm_pack(CLOUDVELA_BH_MSG_TYPE_ALARM_REPORT_UINT8, cmdId, optId, \
-//				backType, rcv.alarmType, rcv.alarmContent, rcv.equID, rcv.alarmServerity, rcv.alarmClearFlag, rcv.alarmDesc,\
-//				rcv.timeStamp, &pMsgOutput))
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//*/
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1172,12 +1137,7 @@ OPSTAT fsm_cloudvela_syspm_perfm_resp(UINT32 dest_id, UINT32 src_id, void * para
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1240,14 +1200,133 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 	}
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
-		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
+	else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+	}
+
+	HCU_DEBUG_PRINT_NOR("CLOUDVELA: PM HUITP XML Send data len=%d, String= [%s]\n", pMsgOutput.curLen, pMsgOutput.curBuf);//add by shanchun for debug
+
+	//Send out
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_syspm_test_command_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_cloudvela_test_command_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_resp_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//申明发送消息
+	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+
+	//分格式类型组装
+	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
+		memcpy(&(gTaskCloudvelaContext.L2Link), &(rcv.comHead), sizeof(msgie_struct_bh_com_head_t));
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_uni_test_command_resp_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_test_command_resp_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_test_command_resp>>8)&0xFF;
+		pMsgProc.msgId.optId = HUITP_MSGID_uni_test_command_resp&0xFF;
+		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+		//StrIe_HUITP_IEID_uni_com_resp_t
+		pMsgProc.baseResp.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_resp);
+		pMsgProc.baseResp.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_resp_t) - 4);
+		pMsgProc.baseResp.comResp = rcv.baseResp;
+		//StrIe_HUITP_IEID_uni_test_command_value_t
+		pMsgProc.respValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_test_command_value);
+		pMsgProc.respValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_test_command_value_t) - 4);
+		pMsgProc.respValue.testCmdId = HUITP_ENDIAN_EXG32(rcv.testCmdId);
+		pMsgProc.respValue.testCmdPar1 = HUITP_ENDIAN_EXG32(rcv.testCmdPar1);
+		pMsgProc.respValue.testCmdPar2 = HUITP_ENDIAN_EXG32(rcv.testCmdPar2);
+		pMsgProc.respValue.testCmdPar3 = HUITP_ENDIAN_EXG32(rcv.testCmdPar3);
+		pMsgProc.respValue.testCmdPar4 = HUITP_ENDIAN_EXG32(rcv.testCmdPar4);
+		strncpy(pMsgProc.respValue.testCmdDesc, rcv.desc, strlen(rcv.desc)<HUITP_IEID_UNI_TEST_CMD_DESC_MAX_LEN?strlen(rcv.desc):HUITP_IEID_UNI_TEST_CMD_DESC_MAX_LEN);
+
+		//Pack message
+		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
+		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
+		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_test_command_resp, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+	}
+
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+
+	else{
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
+	}
+
+	//Send out
+	if (func_cloudvela_send_data_to_cloud(&pMsgOutput) == FAILURE)
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Send message error!\n");
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_cloudvela_syspm_test_command_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_cloudvela_test_command_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_report_t)))
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//申明发送消息
+	CloudDataSendBuf_t pMsgOutput;
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+
+	//分格式类型组装
+	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
+		memcpy(&(gTaskCloudvelaContext.L2Link), &(rcv.comHead), sizeof(msgie_struct_bh_com_head_t));
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_uni_test_command_report_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_test_command_report_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_test_command_report>>8)&0xFF;
+		pMsgProc.msgId.optId = HUITP_MSGID_uni_test_command_report&0xFF;
+		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+		//StrIe_HUITP_IEID_uni_com_report_t
+		pMsgProc.baseReport.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_report);
+		pMsgProc.baseReport.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_report_t) - 4);
+		pMsgProc.baseReport.comReport = rcv.baseReport;
+		//StrIe_HUITP_IEID_uni_test_command_value_t
+		pMsgProc.reportValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_test_command_value);
+		pMsgProc.reportValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_test_command_value_t) - 4);
+		pMsgProc.reportValue.testCmdId = HUITP_ENDIAN_EXG32(rcv.testCmdId);
+		pMsgProc.reportValue.testCmdPar1 = HUITP_ENDIAN_EXG32(rcv.testCmdPar1);
+		pMsgProc.reportValue.testCmdPar2 = HUITP_ENDIAN_EXG32(rcv.testCmdPar2);
+		pMsgProc.reportValue.testCmdPar3 = HUITP_ENDIAN_EXG32(rcv.testCmdPar3);
+		pMsgProc.reportValue.testCmdPar4 = HUITP_ENDIAN_EXG32(rcv.testCmdPar4);
+		strncpy(pMsgProc.reportValue.testCmdDesc, rcv.desc, strlen(rcv.desc)<HUITP_IEID_UNI_TEST_CMD_DESC_MAX_LEN?strlen(rcv.desc):HUITP_IEID_UNI_TEST_CMD_DESC_MAX_LEN);
+
+		//Pack message
+		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
+		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
+		memcpy(&pMsgInput, &pMsgProc, msgProcLen);
+		if (func_cloudvela_huitpxml_msg_pack(HUITP_MSGID_uni_test_command_report, &pMsgInput, msgProcLen, &pMsgOutput) == FAILURE)
+			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
+	}
+
+	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
+	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1311,12 +1390,7 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1380,44 +1454,6 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		/*
-//		UINT32 optId=0, cmdId=0, backType=0;
-//		//命令字
-//		cmdId = L3CI_hcu_inventory;
-//		backType = L3CI_cmdid_back_type_period;
-//	    optId = L3PO_hcuinventory_report;
-//	    SysEngParElementHwBurnPhyIdAddr_t test;
-//	    memset(&test, 0, sizeof(SysEngParElementHwBurnPhyIdAddr_t));
-//	    test.hwType = rcv.hwType;
-//	    test.hwPemId = rcv.hwId;
-//	    test.swRelId = rcv.swRel;
-//	    test.swVerId = rcv.swRel;
-//		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
-//				&test, &pMsgOutput))
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//
-//		*/
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		/*
-//		UINT32 optId=0, cmdId=0, backType=0;
-//		//命令字
-//		cmdId = L3CI_hcu_inventory;
-//		backType = L3CI_cmdid_back_type_period;
-//	    optId = L3PO_hcuinventory_report;
-//	    SysEngParElementHwBurnPhyIdAddr_t test;
-//	    memset(&test, 0, sizeof(SysEngParElementHwBurnPhyIdAddr_t));
-//	    test.hwType = rcv.hwType;
-//	    test.hwPemId = rcv.hwId;
-//	    test.swRelId = rcv.swRel;
-//	    test.swVerId = rcv.swRel;
-//		if (FAILURE == func_cloudvela_stdzhb_msg_hcu_inventory_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, cmdId, optId, backType, \
-//				&test, &pMsgOutput))
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//		*/
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1483,12 +1519,7 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1552,12 +1583,7 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1622,19 +1648,6 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_emc_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,\
-//				rcv.emc.equipid, rcv.emc.dataFormat, rcv.emc.emcValue, rcv.emc.gps.gpsx, rcv.emc.gps.gpsy, rcv.emc.gps.gpsz, rcv.emc.gps.ns,\
-//				rcv.emc.gps.ew, rcv.emc.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_emc_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,\
-//				rcv.emc.equipid, rcv.emc.dataFormat, rcv.emc.emcValue, rcv.emc.gps.gpsx, rcv.emc.gps.gpsy, rcv.emc.gps.gpsz, rcv.emc.gps.ns,\
-//				rcv.emc.gps.ew, rcv.emc.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1713,13 +1726,6 @@ OPSTAT fsm_cloudvela_emc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1779,13 +1785,6 @@ OPSTAT fsm_cloudvela_emc_data_report(UINT32 dest_id, UINT32 src_id, void * param
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1864,31 +1863,8 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol! here only test double link\n\n\n\n");//debug by shanchun
-/*
-		gTaskCloudvelaContext.linkId = HCU_SYSCFG_CLOUD_BH_LINK_HOME;
-
-		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
-				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pm1d0Value, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
-				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &pMsgOutput) == FAILURE)
-			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-*/
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
-//				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pmTSPValue, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
-//				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_pm25_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType,
-//				rcv.pm25.equipid, rcv.pm25.dataFormat, rcv.pm25.pmTSPValue, rcv.pm25.pm2d5Value, rcv.pm25.pm10Value, rcv.pm25.gps.gpsx, rcv.pm25.gps.gpsy,
-//				rcv.pm25.gps.gpsz, rcv.pm25.gps.ns, rcv.pm25.gps.ew, rcv.pm25.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -1966,17 +1942,6 @@ OPSTAT fsm_cloudvela_pm25_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_pm25_cmd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdId, rcv.optId, rcv.backType,
-//				rcv.opt.equId, rcv.opt.powerOnOff, rcv.opt.interSample, rcv.opt.meausTimes, rcv.opt.newEquId, rcv.opt.workCycle, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_pm25_cmd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_CONTROL_UINT8, rcv.cmdId, rcv.optId, rcv.backType,
-//				rcv.opt.equId, rcv.opt.powerOnOff, rcv.opt.interSample, rcv.opt.meausTimes, rcv.opt.newEquId, rcv.opt.workCycle, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2050,13 +2015,6 @@ OPSTAT fsm_cloudvela_pm25_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2127,21 +2085,6 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_winddir_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.winddir.equipid,
-//				rcv.winddir.dataFormat, rcv.winddir.winddirValue, rcv.winddir.gps.gpsx, rcv.winddir.gps.gpsy, rcv.winddir.gps.gpsz, rcv.winddir.gps.ns, \
-//				rcv.winddir.gps.ew, rcv.winddir.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_winddir_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.winddir.equipid,
-//				rcv.winddir.dataFormat, rcv.winddir.winddirValue, rcv.winddir.gps.gpsx, rcv.winddir.gps.gpsy, rcv.winddir.gps.gpsz, rcv.winddir.gps.ns, \
-//				rcv.winddir.gps.ew, rcv.winddir.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2219,13 +2162,6 @@ OPSTAT fsm_cloudvela_winddir_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2285,13 +2221,6 @@ OPSTAT fsm_cloudvela_winddir_data_report(UINT32 dest_id, UINT32 src_id, void * p
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2358,19 +2287,6 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_windspd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.windspd.equipid,
-//				rcv.windspd.dataFormat, rcv.windspd.windspdValue, rcv.windspd.gps.gpsx, rcv.windspd.gps.gpsy, rcv.windspd.gps.gpsz,\
-//				rcv.windspd.gps.ns, rcv.windspd.gps.ew, rcv.windspd.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_windspd_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.windspd.equipid,
-//				rcv.windspd.dataFormat, rcv.windspd.windspdValue, rcv.windspd.gps.gpsx, rcv.windspd.gps.gpsy, rcv.windspd.gps.gpsz,\
-//				rcv.windspd.gps.ns, rcv.windspd.gps.ew, rcv.windspd.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2448,13 +2364,6 @@ OPSTAT fsm_cloudvela_windspd_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2513,13 +2422,6 @@ OPSTAT fsm_cloudvela_windspd_data_report(UINT32 dest_id, UINT32 src_id, void * p
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2586,19 +2488,6 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_temp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.temp.equipid,
-//				rcv.temp.dataFormat, rcv.temp.tempValue, rcv.temp.gps.gpsx, rcv.temp.gps.gpsy, rcv.temp.gps.gpsz, rcv.temp.gps.ns, \
-//				rcv.temp.gps.ew, rcv.temp.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_temp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.temp.equipid,
-//				rcv.temp.dataFormat, rcv.temp.tempValue, rcv.temp.gps.gpsx, rcv.temp.gps.gpsy, rcv.temp.gps.gpsz, rcv.temp.gps.ns, \
-//				rcv.temp.gps.ew, rcv.temp.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2676,13 +2565,6 @@ OPSTAT fsm_cloudvela_temp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2741,13 +2623,6 @@ OPSTAT fsm_cloudvela_temp_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2816,20 +2691,6 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_humid_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.humid.equipid,
-//				rcv.humid.dataFormat, rcv.humid.humidValue, rcv.humid.gps.gpsx, rcv.humid.gps.gpsy, rcv.humid.gps.gpsz, rcv.humid.gps.ns, \
-//				rcv.humid.gps.ew, rcv.humid.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_humid_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.humid.equipid,
-//				rcv.humid.dataFormat, rcv.humid.humidValue, rcv.humid.gps.gpsx, rcv.humid.gps.gpsy, rcv.humid.gps.gpsz, rcv.humid.gps.ns, \
-//				rcv.humid.gps.ew, rcv.humid.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2907,13 +2768,6 @@ OPSTAT fsm_cloudvela_humid_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -2972,13 +2826,6 @@ OPSTAT fsm_cloudvela_humid_data_report(UINT32 dest_id, UINT32 src_id, void * par
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3036,6 +2883,11 @@ OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		strncpy(pMsgProc.respValue.linkName, rcv.link.linkName, strlen(rcv.link.linkName)<sizeof(pMsgProc.respValue.linkName)?strlen(rcv.link.linkName):sizeof(pMsgProc.respValue.linkName));
 		pMsgProc.respValue.timeStampStart = HUITP_ENDIAN_EXG32(rcv.link.timeStampStart);
 		pMsgProc.respValue.timeStampEnd = HUITP_ENDIAN_EXG32(rcv.link.timeStampEnd);
+		//StrIe_HUITP_IEID_uni_hsmmp_motive_t
+		pMsgProc.respMotive.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_hsmmp_motive);
+		pMsgProc.respMotive.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_hsmmp_motive_t) - 4);
+		pMsgProc.respMotive.motive = rcv.motive;
+		pMsgProc.respMotive.value = HUITP_ENDIAN_EXG32(rcv.motiveValue);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -3048,19 +2900,6 @@ OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_hsmmp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
-//				rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, \
-//				rcv.link.linkName, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_hsmmp_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.link.equipid,
-//				rcv.link.gps.gpsx, rcv.link.gps.gpsy, rcv.link.gps.gpsz, rcv.link.gps.ns, rcv.link.gps.ew, rcv.link.timeStampStart, \
-//				rcv.link.linkName, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3128,6 +2967,11 @@ OPSTAT fsm_cloudvela_hsmmp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 		pMsgProc.modbusAddr.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_modbus_address_t) - 4);
 		pMsgProc.modbusAddr.oldValue = HUITP_ENDIAN_EXG32(rcv.opt.equId);
 		pMsgProc.modbusAddr.newValue = HUITP_ENDIAN_EXG32(rcv.opt.newEquId);
+		//StrIe_HUITP_IEID_uni_hsmmp_motive_t
+		pMsgProc.respMotive.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_hsmmp_motive);
+		pMsgProc.respMotive.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_hsmmp_motive_t) - 4);
+		pMsgProc.respMotive.motive = rcv.motive;
+		pMsgProc.respMotive.value = HUITP_ENDIAN_EXG32(rcv.motiveValue);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
@@ -3140,13 +2984,6 @@ OPSTAT fsm_cloudvela_hsmmp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3206,13 +3043,6 @@ OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3333,20 +3163,6 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		if (func_cloudvela_stdzhb_msg_noise_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.noise.equipid,
-//				rcv.noise.dataFormat, rcv.noise.noiseValue, rcv.noise.gps.gpsx, rcv.noise.gps.gpsy, rcv.noise.gps.gpsz, rcv.noise.gps.ns, \
-//				rcv.noise.gps.ew, rcv.noise.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		if (func_cloudvela_stdzhb_msg_noise_pack(CLOUDVELA_BH_MSG_TYPE_DEVICE_REPORT_UINT8, rcv.usercmdid, rcv.useroptid, rcv.cmdIdBackType, rcv.noise.equipid,
-//				rcv.noise.dataFormat, rcv.noise.noiseValue, rcv.noise.gps.gpsx, rcv.noise.gps.gpsy, rcv.noise.gps.gpsz, rcv.noise.gps.ns, \
-//				rcv.noise.gps.ew, rcv.noise.timeStamp, &pMsgOutput) == FAILURE)
-//			HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Package message error!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3424,13 +3240,6 @@ OPSTAT fsm_cloudvela_noise_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3489,13 +3298,6 @@ OPSTAT fsm_cloudvela_noise_data_report(UINT32 dest_id, UINT32 src_id, void * par
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		//HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3569,14 +3371,6 @@ OPSTAT fsm_cloudvela_ycjk_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3660,13 +3454,6 @@ OPSTAT fsm_cloudvela_ycjk_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3732,13 +3519,6 @@ OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3825,12 +3605,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3905,12 +3680,7 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -3972,12 +3742,7 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4039,12 +3804,7 @@ OPSTAT fsm_cloudvela_l3bfsc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * para
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4113,12 +3873,7 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212){
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
+
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4314,13 +4069,6 @@ OPSTAT fsm_cloudvela_airprs_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4378,13 +4126,6 @@ OPSTAT fsm_cloudvela_airprs_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4442,13 +4183,6 @@ OPSTAT fsm_cloudvela_alcohol_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4506,13 +4240,6 @@ OPSTAT fsm_cloudvela_alcohol_data_report(UINT32 dest_id, UINT32 src_id, void * p
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4570,13 +4297,6 @@ OPSTAT fsm_cloudvela_co1_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4634,13 +4354,6 @@ OPSTAT fsm_cloudvela_co1_data_report(UINT32 dest_id, UINT32 src_id, void * param
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4698,13 +4411,6 @@ OPSTAT fsm_cloudvela_hcho_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4762,13 +4468,6 @@ OPSTAT fsm_cloudvela_hcho_data_report(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4826,13 +4525,6 @@ OPSTAT fsm_cloudvela_lightstr_data_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4890,13 +4582,6 @@ OPSTAT fsm_cloudvela_lightstr_data_report(UINT32 dest_id, UINT32 src_id, void * 
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -4964,13 +4649,6 @@ OPSTAT fsm_cloudvela_pm25sp_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -5038,13 +4716,6 @@ OPSTAT fsm_cloudvela_pm25sp_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -5102,13 +4773,6 @@ OPSTAT fsm_cloudvela_toxicgas_data_resp(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}
@@ -5166,13 +4830,6 @@ OPSTAT fsm_cloudvela_toxicgas_data_report(UINT32 dest_id, UINT32 src_id, void * 
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
 	}
 
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_XML){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
-//
-//	else if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB){
-//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not support transmit protocol!\n");
-//	}
 	else{
 		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly!\n");
 	}

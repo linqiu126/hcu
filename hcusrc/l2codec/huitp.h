@@ -928,6 +928,14 @@ typedef enum
 	HUITP_MSGID_uni_sync_trigger_confirm             = 0xF601, 
 	HUITP_MSGID_uni_sync_trigger_max,
 
+	//测试命令
+	HUITP_MSGID_uni_test_command_min                 = 0xF700,
+	HUITP_MSGID_uni_test_command_req                 = 0xF700,
+	HUITP_MSGID_uni_test_command_resp                = 0xF780,
+	HUITP_MSGID_uni_test_command_report              = 0xF781,
+	HUITP_MSGID_uni_test_command_confirm             = 0xF701,
+	HUITP_MSGID_uni_test_command_max,
+
   //CMD CONTROL
 	HUITP_MSGID_uni_cmd_ctrl_min                     = 0xFD00,  
 	HUITP_MSGID_uni_cmd_ctrl_req                     = 0xFD00,  
@@ -1100,7 +1108,8 @@ typedef enum
 
   //相机Camer or audio high speed
 	HUITP_IEID_uni_hsmmp_min                        = 0x2C00, 
-	HUITP_IEID_uni_hsmmp_value                      = 0x2C00, 
+	HUITP_IEID_uni_hsmmp_value                      = 0x2C00,
+	HUITP_IEID_uni_hsmmp_motive                     = 0x2C01,
 	HUITP_IEID_uni_hsmmp_max,
 
   //声音
@@ -1110,7 +1119,7 @@ typedef enum
 
   //视频
 	HUITP_IEID_uni_video_min                        = 0x2D00, 
-	HUITP_IEID_uni_video_value                      = 0x2D00, 
+	HUITP_IEID_uni_video_value                      = 0x2D00,
 	HUITP_IEID_uni_video_max,
 
   //图片
@@ -1396,6 +1405,11 @@ typedef enum
 	HUITP_IEID_uni_sync_trigger_min                 = 0xF600,	
 	HUITP_IEID_uni_sync_trigger_value               = 0xF600,	
 	HUITP_IEID_uni_sync_trigger_max,
+
+	//测试命令
+	HUITP_IEID_uni_test_command_min                 = 0xF600,
+	HUITP_IEID_uni_test_command_value               = 0xF600,
+	HUITP_IEID_uni_test_command_max,
 
   //CMD CONTROL
 	HUITP_IEID_uni_cmd_ctrl_min                     = 0xFD00,  
@@ -2074,6 +2088,23 @@ typedef struct StrIe_HUITP_IEID_uni_hsmmp_value
 	UINT32 timeStampStart;
 	UINT32 timeStampEnd;
 }StrIe_HUITP_IEID_uni_hsmmp_value_t;
+
+//HUITP_IEID_uni_hsmmp_motive                     = 0x2C01,
+typedef struct StrIe_HUITP_IEID_uni_hsmmp_motive
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT8  motive;
+	UINT32 value;
+}StrIe_HUITP_IEID_uni_hsmmp_motive_t;
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_NULL                   0
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_MOVEUP                 1
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_MOVEDOWN               2
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_MOVELEFT               3
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_MOVERIGHT              4
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_ZOOMIN                 5
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_ZOOMOUT                 6
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_INVALID                0xFF
 
 //HUITP_IEID_uni_hsmmp_max,
 
@@ -3255,6 +3286,31 @@ typedef struct StrIe_HUITP_IEID_uni_sync_trigger_value
 
 //HUITP_IEID_uni_sync_trigger_max,
 
+//测试命令
+//HUITP_IEID_uni_test_command_min                 = 0xF600,
+//HUITP_IEID_uni_test_command_value               = 0xF600,
+#define HUITP_IEID_UNI_TEST_CMD_DESC_MAX_LEN	50
+typedef struct StrIe_HUITP_IEID_uni_test_command_value
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   testCmdDesc[HUITP_IEID_UNI_TEST_CMD_DESC_MAX_LEN];
+}StrIe_HUITP_IEID_uni_test_command_value_t;
+#define HUITP_IEID_UNI_TEST_CMD_ID_NULL			0
+#define HUITP_IEID_UNI_TEST_CMD_ID_PING			1
+#define HUITP_IEID_UNI_TEST_CMD_ID_READ_ALL		2
+#define HUITP_IEID_UNI_TEST_CMD_ID_READ_LABLE	3
+#define HUITP_IEID_UNI_TEST_CMD_ID_INVALID		0xFFFFFFFF
+
+
+//HUITP_IEID_uni_test_command_max,
+
+
 //CMD CONTROL
 //HUITP_IEID_uni_cmd_ctrl_min                     = 0xFD00,  
 //HUITP_IEID_uni_cmd_ctrl_send                    = 0xFD00,
@@ -4399,6 +4455,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_data_resp
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
 	StrIe_HUITP_IEID_uni_hsmmp_value_t respValue;
+	StrIe_HUITP_IEID_uni_hsmmp_motive_t respMotive;
 }StrMsg_HUITP_MSGID_uni_hsmmp_data_resp_t;
  
 //HUITP_MSGID_uni_hsmmp_data_report                  = 0x2C81,
@@ -4430,6 +4487,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req
 	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
 	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
 	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+	StrIe_HUITP_IEID_uni_hsmmp_motive_t reqMotive;
 }StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t;
 
 //HUITP_MSGID_uni_hsmmp_ctrl_resp                  = 0x2C82,
@@ -4444,6 +4502,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_resp
 	StrIe_HUITP_IEID_uni_com_sample_cycle_t sampleCycle;
 	StrIe_HUITP_IEID_uni_com_sample_number_t sampleNbr;
 	StrIe_HUITP_IEID_uni_com_modbus_address_t modbusAddr;
+	StrIe_HUITP_IEID_uni_hsmmp_motive_t respMotive;
 }StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_resp_t;
 
 //HUITP_MSGID_uni_hsmmp_max,
@@ -6612,13 +6671,13 @@ typedef struct StrMsg_HUITP_MSGID_uni_itf_can_req
 }StrMsg_HUITP_MSGID_uni_itf_can_req_t;
 
 //HUITP_MSGID_uni_itf_can_resp                     = 0x5780, 
-typedef struct StrMsg_HUITP_MSGID_uni_itf_cam_resp
+typedef struct StrMsg_HUITP_MSGID_uni_itf_can_resp
 {
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
 	StrIe_HUITP_IEID_uni_itf_can_value_t respValue;
-}StrMsg_HUITP_MSGID_uni_itf_cam_resp_t;
+}StrMsg_HUITP_MSGID_uni_itf_can_resp_t;
 
 //HUITP_MSGID_uni_itf_can_report                   = 0x5781,
 typedef struct StrMsg_HUITP_MSGID_uni_itf_can_report
@@ -7348,6 +7407,47 @@ typedef struct StrMsg_HUITP_MSGID_uni_sync_trigger_confirm
 }StrMsg_HUITP_MSGID_uni_sync_trigger_confirm_t;
 
 //HUITP_MSGID_uni_sync_trigger_max,
+
+//测试命令
+//HUITP_MSGID_uni_test_command_min                 = 0xF700,
+//HUITP_MSGID_uni_test_command_req                 = 0xF700,
+typedef struct StrMsg_HUITP_MSGID_uni_test_command_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+	StrIe_HUITP_IEID_uni_test_command_value_t reqValue;
+}StrMsg_HUITP_MSGID_uni_test_command_req_t;
+
+//HUITP_MSGID_uni_test_command_resp                = 0xF780,
+typedef struct StrMsg_HUITP_MSGID_uni_test_command_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
+	StrIe_HUITP_IEID_uni_test_command_value_t respValue;
+}StrMsg_HUITP_MSGID_uni_test_command_resp_t;
+
+//HUITP_MSGID_uni_test_command_report              = 0xF781,
+typedef struct StrMsg_HUITP_MSGID_uni_test_command_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_test_command_value_t reportValue;
+}StrMsg_HUITP_MSGID_uni_test_command_report_t;
+
+//HUITP_MSGID_uni_test_command_confirm             = 0xF701,
+typedef struct StrMsg_HUITP_MSGID_uni_test_command_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+	StrIe_HUITP_IEID_uni_test_command_value_t confirmValue;
+}StrMsg_HUITP_MSGID_uni_test_command_confirm_t;
+
+//HUITP_MSGID_uni_test_command_max,
+
 
 //CMD CONTROL
 //HUITP_MSGID_uni_cmd_ctrl_min                     = 0xFD00,  

@@ -393,6 +393,10 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,
 	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT,
 	MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
+	MSG_ID_CLOUDVELA_TEST_COMMAND_REQ,
+	MSG_ID_CLOUDVELA_TEST_COMMAND_RESP,
+	MSG_ID_CLOUDVELA_TEST_COMMAND_REPORT,
+	MSG_ID_CLOUDVELA_TEST_COMMAND_CONFIRM,
 
 	//SENSOR-CLOUDVELA
 	MSG_ID_CLOUDVELA_EMC_DATA_REQ,
@@ -2166,6 +2170,62 @@ typedef struct msg_struct_cloudvela_sysswm_sw_package_confirm
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_sw_package_confirm_t;
 
+//MSG_ID_CLOUDVELA_TEST_COMMAND_REQ,
+#define HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN 50
+typedef struct msg_struct_cloudvela_test_command_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   desc[HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN];
+	UINT32 length;
+}msg_struct_cloudvela_test_command_req_t;
+
+//MSG_ID_CLOUDVELA_TEST_COMMAND_RESP,
+typedef struct msg_struct_cloudvela_test_command_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   desc[HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN];
+	UINT32 length;
+}msg_struct_cloudvela_test_command_resp_t;
+
+//MSG_ID_CLOUDVELA_TEST_COMMAND_REPORT,
+typedef struct msg_struct_cloudvela_test_command_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   desc[HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN];
+	UINT32 length;
+}msg_struct_cloudvela_test_command_report_t;
+
+//MSG_ID_CLOUDVELA_TEST_COMMAND_CONFIRM,
+typedef struct msg_struct_cloudvela_test_command_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   desc[HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN];
+	UINT32 length;
+}msg_struct_cloudvela_test_command_confirm_t;
 
 //CANITF
 //MSG_ID_CANITFLEO_DATA_REPORT,
@@ -3015,7 +3075,6 @@ typedef struct  msg_struct_cloudvela_hsmmp_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_data_req_t;
 
@@ -3028,7 +3087,8 @@ typedef struct msg_struct_hsmmp_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_hsmmp_link_element_t link;
-	//sensor_zhb_transport_format_ul_t zhbUl;
+	UINT8  motive;  //为了支持读取的角度
+	UINT32 motiveValue;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_data_resp_t;
 
@@ -3042,7 +3102,8 @@ typedef struct  msg_struct_cloudvela_hsmmp_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	//sensor_zhb_transport_format_dl_t zhbDl;
+	UINT8  motive;
+	UINT32 motiveValue;
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_ctrl_req_t;
 
@@ -3056,7 +3117,8 @@ typedef struct msg_struct_hsmmp_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	//sensor_zhb_transport_format_ul_t zhbUl;
+	UINT8  motive;
+	UINT32 motiveValue;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_ctrl_resp_t;
 
