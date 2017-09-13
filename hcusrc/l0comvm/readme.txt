@@ -9,6 +9,8 @@
 
 
 
+//= ZJL, 2017 Sep.13 CURRENT_SW_DELIVERY 262=>AQYC项目
+＝　去掉了VMLAYER源代码，增加了新的库libhcuvm
 
 //= ZJL, 2017 Sep.12 CURRENT_SW_DELIVERY 261=>AQYC项目
 = 将所有产品CODE改为了十进制

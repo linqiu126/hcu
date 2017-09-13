@@ -151,9 +151,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0comvm/sysversion.h</locationURI>
 		</link>
 		<link>
-			<name>src/l0comvm/vmlayer.c</name>
+			<name>src/l0comvm/vm_config.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0comvm/vmlayer.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0comvm/vm_config.c</locationURI>
 		</link>
 		<link>
 			<name>src/l0comvm/vmlayer.h</name>
@@ -444,11 +444,6 @@
 			<name>src/l0service/sysinfo.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0service/sysinfo.h</locationURI>
-		</link>
-		<link>
-			<name>src/l0service/timer.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0service/timer.c</locationURI>
 		</link>
 		<link>
 			<name>src/l0service/timer.h</name>

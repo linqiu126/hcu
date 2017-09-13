@@ -8,7 +8,6 @@ C_SRCS += \
 /home/hitpony/workspace/hcu/hcusrc/l0service/mmc.c \
 /home/hitpony/workspace/hcu/hcusrc/l0service/mqtt.c \
 /home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c \
-/home/hitpony/workspace/hcu/hcusrc/l0service/timer.c \
 /home/hitpony/workspace/hcu/hcusrc/l0service/trace.c 
 
 OBJS += \
@@ -16,7 +15,6 @@ OBJS += \
 ./src/l0service/mmc.o \
 ./src/l0service/mqtt.o \
 ./src/l0service/sysinfo.o \
-./src/l0service/timer.o \
 ./src/l0service/trace.o 
 
 C_DEPS += \
@@ -24,7 +22,6 @@ C_DEPS += \
 ./src/l0service/mmc.d \
 ./src/l0service/mqtt.d \
 ./src/l0service/sysinfo.d \
-./src/l0service/timer.d \
 ./src/l0service/trace.d 
 
 
@@ -51,13 +48,6 @@ src/l0service/mqtt.o: /home/hitpony/workspace/hcu/hcusrc/l0service/mqtt.c
 	@echo ' '
 
 src/l0service/sysinfo.o: /home/hitpony/workspace/hcu/hcusrc/l0service/sysinfo.c
-	@echo 'Building file: $<'
-	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
-src/l0service/timer.o: /home/hitpony/workspace/hcu/hcusrc/l0service/timer.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
 	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

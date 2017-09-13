@@ -4,20 +4,20 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-/home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c 
+/home/hitpony/workspace/hcu/hcusrc/l0comvm/vm_config.c 
 
 OBJS += \
-./src/l0comvm/vmlayer.o 
+./src/l0comvm/vm_config.o 
 
 C_DEPS += \
-./src/l0comvm/vmlayer.d 
+./src/l0comvm/vm_config.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-src/l0comvm/vmlayer.o: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vmlayer.c
+src/l0comvm/vm_config.o: /home/hitpony/workspace/hcu/hcusrc/l0comvm/vm_config.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -DTARGET_LINUX_X86 -I"/home/hitpony/workspace/hcuvm" -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	gcc -DTARGET_LINUX_X86 -I/usr/include/libxml2 -I/usr/include/curl -I/usr/local/sqlite3/include -O0 -lpthread -g3 -Wall -c -fmessage-length=0  -Wl,--hash-style=sysv -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
