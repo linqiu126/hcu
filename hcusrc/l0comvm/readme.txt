@@ -10,9 +10,11 @@
 
 
 
+//= ZJL, 2017 Sep.12 CURRENT_SW_DELIVERY 261=>AQYC项目
+= 将所有产品CODE改为了十进制
+
 //= ZJL, 2017 Sep.12 CURRENT_SW_DELIVERY 260=>AQYC项目
 = 更新AQYC对应的HUITP规范，支持TEST_COMMAND过程，并放在PM模块中了
-
 
 //= ZJL, 2017 Sep.8 CURRENT_SW_DELIVERY 259=>BFDF项目
 = 建立起初始数据表单结构
