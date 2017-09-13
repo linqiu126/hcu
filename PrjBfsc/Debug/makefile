@@ -55,7 +55,7 @@ endif
 all: PrjBfsc
 
 dependents:
-	-cd /home/hitpony/workspace/hcuvm/Debug && $(MAKE) all
+	-cd /home/hitpony/workspace/hcuvm/Debug && $(MAKE) clean all
 
 # Tool invocations
 PrjBfsc: $(OBJS) $(USER_OBJS) /home/hitpony/workspace/hcuvm/Debug/libhcuvm.so
