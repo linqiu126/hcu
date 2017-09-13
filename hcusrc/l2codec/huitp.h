@@ -859,7 +859,12 @@ typedef enum
 	HUITP_MSGID_uni_equlable_inservice_confirm       = 0xA203,
 	HUITP_MSGID_uni_equlable_max,
 
-  //ALARM REPORT
+	//HCU-IHU SUI新增内容 MYC 2017/09/10
+	HUITP_MSGID_sui_flash_raw_cmd_req                = 0xA290,
+	HUITP_MSGID_sui_flash_raw_cmd_rsp                = 0xA210,
+	HUITP_MSGID_sui_flash_raw_cmd_max,
+
+	//ALARM REPORT
 	HUITP_MSGID_uni_alarm_info_min                   = 0xB000, 
 	HUITP_MSGID_uni_alarm_info_req                   = 0xB000, 
 	HUITP_MSGID_uni_alarm_info_resp                  = 0xB080, 
@@ -6995,9 +7000,36 @@ typedef struct StrMsg_HUITP_MSGID_sui_sw_package_confirm
 	UINT8  swPkgBody[HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN];
 }StrMsg_HUITP_MSGID_sui_sw_package_confirm_t;
 
+//HUITP_MSGID_sui_flash_raw_cmd_req = 0xA290,
+#define HUITP_IEID_SUI_FLASH_RAW_CMD_MAX_LEN 236
+typedef struct StrMsg_HUITP_MSGID_flash_raw_command_req
+{
+	UINT16  msgid;
+	UINT16  length;
+  UINT8   flashRawCommandMode;
+	UINT8   flashRawCommand;
+	UINT8   flashSectorIdToErase;
+	UINT8   flashSectorNumberToErase;
+	UINT32  flashAddressToAccess;
+	UINT32  flashValidLengthToAccess;
+  UINT8   data[HUITP_IEID_SUI_FLASH_RAW_CMD_MAX_LEN];
+}StrMsg_HUITP_MSGID_flash_raw_command_req_t;
+
+//HUITP_MSGID_sui_flash_raw_cmd_rsp = 0xA210,
+typedef struct StrMsg_HUITP_MSGID_flash_raw_command_resp
+{
+	UINT16  msgid;
+	UINT16  length;
+    UINT8   flashRawCommandModeResp;
+	UINT8   flashRawCommandResp;
+	UINT8   flashSectorIdToErase;
+	UINT8   flashSectorNumberToErase;
+	UINT32  flashAddressToAccess;
+	UINT32  flashValidLengthToAccess;
+  UINT8   data[HUITP_IEID_SUI_FLASH_RAW_CMD_MAX_LEN];
+}StrMsg_HUITP_MSGID_flash_raw_command_resp_t;
 
 //HUITP_MSGID_uni_sw_package_max,
-
 //标签管理
 //HUITP_MSGID_uni_equlable_min                     = 0xA200,
 //HUITP_MSGID_uni_equlable_apply_req               = 0xA200,
