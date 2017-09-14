@@ -2121,9 +2121,9 @@ typedef struct StrIe_HUITP_IEID_uni_hsmmp_pos_status
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  dataFormat;
-	UINT32 xPos;
-	UINT32 yPos;
-	UINT32 zoomPos;
+	INT32 xPos;
+	INT32 yPos;
+	INT32 zoomPos;
 }StrIe_HUITP_IEID_uni_hsmmp_pos_status_t;
 
 //HUITP_IEID_uni_hsmmp_max,
