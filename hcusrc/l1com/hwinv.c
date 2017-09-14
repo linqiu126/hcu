@@ -550,22 +550,33 @@ OPSTAT hcu_hwinv_engpar_create_storage_dir_env(void)
 
 OPSTAT hcu_hwinv_engpar_read_mac_address(void)
 {
-	/////////////////////////////////////////////////////////////////////////
+	//初始化
     struct ifreq ifreq;
 	int sock = 0;
-	//memset(&zHcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
 	sock = socket(AF_INET,SOCK_STREAM,0);
 	if(sock < 0) HCU_ERROR_PRINT_HWINV("HWINV: error sock when get mac address!\n");
 
-	strcpy(ifreq.ifr_name,"eth0");
-	if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0) HCU_ERROR_PRINT_HWINV("HWINV: error ioctl when get mac address!\n");
+	//取得一个命令执行的结果
+    FILE *pf;
+    char buffer[4096];
+    pf = popen("/sbin/ifconfig", "r");
+    fread(buffer, sizeof(buffer), 1, pf);
+    pclose(pf);
 
+    //得到网口device信息
+    char *p;
+    p = strstr(buffer, ":");
+    if ((p == NULL) || (p < buffer)) HCU_ERROR_PRINT_HWINV("HWINV: error find eth device!\n");
+	strncpy(ifreq.ifr_name, buffer, p-buffer);
+
+    //获取MAC地址
+    if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0) HCU_ERROR_PRINT_HWINV("HWINV: error ioctl when get mac address!\n");
 	int j = 0;
 	for(j = 0; j < 6; j++){
 		sprintf(zHcuSysEngPar.hwBurnId.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
 	}
 	zHcuSysEngPar.hwBurnId.hw_mac[strlen(zHcuSysEngPar.hwBurnId.hw_mac) - 1] = 0;
-	HCU_DEBUG_PRINT_INF("HWINV: eth0 MAC address= %s\n\n", zHcuSysEngPar.hwBurnId.hw_mac);
+	HCU_DEBUG_PRINT_FAT("HWINV: eth0 device name = %s, eth0 MAC address= %s\n\n", ifreq.ifr_name, zHcuSysEngPar.hwBurnId.hw_mac);
 
     //返回
 	return SUCCESS;
