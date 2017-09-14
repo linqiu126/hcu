@@ -579,10 +579,10 @@ OPSTAT hcu_hwinv_engpar_read_mac_address(void)
     if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0) HCU_ERROR_PRINT_HWINV("HWINV: error ioctl when get mac address!\n");
 	int j = 0;
 	for(j = 0; j < 6; j++){
-		sprintf(zHcuSysEngPar.hwBurnId.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+		sprintf(zHcuSysEngPar.hwBurnId.hw_mac+3*j, "%02X:", (ifreq.ifr_hwaddr.sa_data[j]&0xFF));
 	}
 	zHcuSysEngPar.hwBurnId.hw_mac[strlen(zHcuSysEngPar.hwBurnId.hw_mac) - 1] = 0;
-	HCU_DEBUG_PRINT_FAT("HWINV: eth0 device name = %s, eth0 MAC address= %s\n\n", ifreq.ifr_name, zHcuSysEngPar.hwBurnId.hw_mac);
+	HCU_DEBUG_PRINT_FAT("HWINV: eth0 device name = %s, eth0 MAC address= %s\n", ifreq.ifr_name, zHcuSysEngPar.hwBurnId.hw_mac);
 
     //返回
 	return SUCCESS;
