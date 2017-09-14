@@ -8,10 +8,13 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+[RESTRICITON1] SYSSWM清理目录
+
 //= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 263=>AQYC项目
 = 完善HUITP中有关TEST_COMMAND和HSMMP_DATA_RESP消息的定义
 = 完善MAC地址的读取
 = 在传递Inventory_Report时，将MAC_ADDRESS存入了FuncFlag
+= [RESTRICITON2] 判定目录是否存在，放开了
 
 //= ZJL, 2017 Sep.13 CURRENT_SW_DELIVERY 262=>AQYC项目
 ＝　去掉了VMLAYER源代码，增加了新的库libhcuvm
