@@ -559,15 +559,21 @@ OPSTAT hcu_hwinv_engpar_read_mac_address(void)
 	//取得一个命令执行的结果
     FILE *pf;
     char buffer[4096];
-    pf = popen("/sbin/ifconfig", "r");
+    pf = popen("dmesg | grep eth", "r");
     fread(buffer, sizeof(buffer), 1, pf);
     pclose(pf);
 
     //得到网口device信息
-    char *p;
-    p = strstr(buffer, ":");
-    if ((p == NULL) || (p < buffer)) HCU_ERROR_PRINT_HWINV("HWINV: error find eth device!\n");
-	strncpy(ifreq.ifr_name, buffer, p-buffer);
+    char *p0, *p1, *p2;
+    p1 = strstr(buffer, ": renamed from eth0");
+    if ((p1 == NULL) || (p1 < buffer)){
+    	strcpy(ifreq.ifr_name, "eth0");
+    }else{
+    	p0 = p1-10;
+    	p2 = strstr(p0, " ");
+    	if ((p2 == NULL) || (p2>p1)) HCU_ERROR_PRINT_HWINV("HWINV: error find MAC device!\n");
+    	strncpy(ifreq.ifr_name, p2+1, p1-p2-1);
+    }
 
     //获取MAC地址
     if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0) HCU_ERROR_PRINT_HWINV("HWINV: error ioctl when get mac address!\n");
