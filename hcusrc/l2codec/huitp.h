@@ -1118,6 +1118,7 @@ typedef enum
 	HUITP_IEID_uni_hsmmp_min                        = 0x2C00, 
 	HUITP_IEID_uni_hsmmp_value                      = 0x2C00,
 	HUITP_IEID_uni_hsmmp_motive                     = 0x2C01,
+	HUITP_IEID_uni_hsmmp_pos_status                 = 0x2C02,
 	HUITP_IEID_uni_hsmmp_max,
 
   //声音
@@ -1415,8 +1416,8 @@ typedef enum
 	HUITP_IEID_uni_sync_trigger_max,
 
 	//测试命令
-	HUITP_IEID_uni_test_command_min                 = 0xF600,
-	HUITP_IEID_uni_test_command_value               = 0xF600,
+	HUITP_IEID_uni_test_command_min                 = 0xF700,
+	HUITP_IEID_uni_test_command_value               = 0xF700,
 	HUITP_IEID_uni_test_command_max,
 
   //CMD CONTROL
@@ -2111,8 +2112,19 @@ typedef struct StrIe_HUITP_IEID_uni_hsmmp_motive
 #define HUITP_IEID_UNI_HSMMP_MOTIVE_MOVELEFT               3
 #define HUITP_IEID_UNI_HSMMP_MOTIVE_MOVERIGHT              4
 #define HUITP_IEID_UNI_HSMMP_MOTIVE_ZOOMIN                 5
-#define HUITP_IEID_UNI_HSMMP_MOTIVE_ZOOMOUT                 6
+#define HUITP_IEID_UNI_HSMMP_MOTIVE_ZOOMOUT                6
 #define HUITP_IEID_UNI_HSMMP_MOTIVE_INVALID                0xFF
+
+//HUITP_IEID_uni_hsmmp_pos_status                 = 0x2C02,
+typedef struct StrIe_HUITP_IEID_uni_hsmmp_pos_status
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT8  dataFormat;
+	UINT32 xPos;
+	UINT32 yPos;
+	UINT32 zoomPos;
+}StrIe_HUITP_IEID_uni_hsmmp_pos_status_t;
 
 //HUITP_IEID_uni_hsmmp_max,
 
@@ -3300,8 +3312,8 @@ typedef struct StrIe_HUITP_IEID_uni_sync_trigger_value
 //HUITP_IEID_uni_sync_trigger_max,
 
 //测试命令
-//HUITP_IEID_uni_test_command_min                 = 0xF600,
-//HUITP_IEID_uni_test_command_value               = 0xF600,
+//HUITP_IEID_uni_test_command_min                 = 0xF700,
+//HUITP_IEID_uni_test_command_value               = 0xF700,
 #define HUITP_IEID_UNI_TEST_CMD_DESC_MAX_LEN	50
 typedef struct StrIe_HUITP_IEID_uni_test_command_value
 {
@@ -4468,7 +4480,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_hsmmp_data_resp
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
 	StrIe_HUITP_IEID_uni_hsmmp_value_t respValue;
-	StrIe_HUITP_IEID_uni_hsmmp_motive_t respMotive;
+	StrIe_HUITP_IEID_uni_hsmmp_pos_status_t respPosStatus;
 }StrMsg_HUITP_MSGID_uni_hsmmp_data_resp_t;
  
 //HUITP_MSGID_uni_hsmmp_data_report                  = 0x2C81,

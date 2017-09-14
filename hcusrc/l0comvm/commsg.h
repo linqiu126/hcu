@@ -3087,8 +3087,10 @@ typedef struct msg_struct_hsmmp_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_hsmmp_link_element_t link;
-	UINT8  motive;  //为了支持读取的角度
-	UINT32 motiveValue;
+	UINT8  dataFormat;
+	UINT32 xPos;
+	UINT32 yPos;
+	UINT32 zoomPos;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_data_resp_t;
 

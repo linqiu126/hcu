@@ -8,6 +8,8 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 263=>AQYC项目
+= 完善HUITP中有关TEST_COMMAND和HSMMP_DATA_RESP消息的定义
 
 //= ZJL, 2017 Sep.13 CURRENT_SW_DELIVERY 262=>AQYC项目
 ＝　去掉了VMLAYER源代码，增加了新的库libhcuvm

@@ -2884,10 +2884,12 @@ OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 		pMsgProc.respValue.timeStampStart = HUITP_ENDIAN_EXG32(rcv.link.timeStampStart);
 		pMsgProc.respValue.timeStampEnd = HUITP_ENDIAN_EXG32(rcv.link.timeStampEnd);
 		//StrIe_HUITP_IEID_uni_hsmmp_motive_t
-		pMsgProc.respMotive.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_hsmmp_motive);
-		pMsgProc.respMotive.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_hsmmp_motive_t) - 4);
-		pMsgProc.respMotive.motive = rcv.motive;
-		pMsgProc.respMotive.value = HUITP_ENDIAN_EXG32(rcv.motiveValue);
+		pMsgProc.respPosStatus.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_hsmmp_pos_status);
+		pMsgProc.respPosStatus.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_hsmmp_pos_status_t) - 4);
+		pMsgProc.respPosStatus.dataFormat = rcv.dataFormat;
+		pMsgProc.respPosStatus.xPos = HUITP_ENDIAN_EXG32(rcv.xPos);
+		pMsgProc.respPosStatus.yPos = HUITP_ENDIAN_EXG32(rcv.yPos);
+		pMsgProc.respPosStatus.zoomPos = HUITP_ENDIAN_EXG32(rcv.zoomPos);
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
