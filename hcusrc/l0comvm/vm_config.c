@@ -546,6 +546,7 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_ETH_L3HATE_FRAME_RCV,             	  "MSG_ID_ETH_L3HATE_FRAME_RCV",                1, 1, 1},
 	{MSG_ID_SPS_L3HATE_FRAME_RCV,             	  "MSG_ID_SPS_L3HATE_FRAME_RCV",                1, 1, 1},
 	{MSG_ID_CAN_L3HATE_FRAME_RCV,             	  "MSG_ID_CAN_L3HATE_FRAME_RCV",                1, 1, 1},
+	{MSG_ID_MQTT_L3HATE_FRAME_RCV,             	  "MSG_ID_MQTT_L3HATE_FRAME_RCV",               1, 1, 1},
 	//END FLAG
 	{MSG_ID_COM_MAX,                              "MSG_ID_COM_MAX",                             0, 0, 0},    //Ending
 };
@@ -596,7 +597,7 @@ HcuSysEngTimerStaticCfg_t zHcuSysEngTimerStaticCfg[] = {
 	{TIMER_ID_1S_IGM_PERIOD_READ,                    "TID_1S_IGM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_IPM_PERIOD_READ,                    "TID_1S_IPM_PERIOD_READ",                 600,     TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_SYSPM_PERIOD_WORKING,               "TID_1S_SYSPM_PERIOD_WORKING",            311,     TIMER_RESOLUTION_1S},//for test(3600)
-	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           900,     TIMER_RESOLUTION_1S},//900, 正常15一次，分别来轮４个软件体
+	{TIMER_ID_1S_SYSSWM_PERIOD_WORKING,              "TID_1S_SYSSWM_PERIOD_WORKING",           180,     TIMER_RESOLUTION_1S},//900, 正常15一次，分别来轮４个软件体
 	{TIMER_ID_1S_SYSSWM_SEG_DL_WAIT,             	 "TID_1S_SYSSWM_SEG_DL_WAIT",              3,       TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_CANITFLEO_WORKING_SCAN,             "TID_1S_CANITFLEO_WORKING_SCAN",          10,      TIMER_RESOLUTION_1S},
 	{TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB,             "TID_1S_L3BFSC_SYS_CFG_WAIT_FB",          15,      TIMER_RESOLUTION_1S},
