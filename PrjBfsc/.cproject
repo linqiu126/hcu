@@ -428,8 +428,7 @@
 									<listOptionValue builtIn="false" value="sqlite3"/>
 									<listOptionValue builtIn="false" value="usbcan"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="paho-mqtt3c"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="libhcuvm"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="-L/usr/lib/"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="hcuvm"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1054801959" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/local/lib"/>
