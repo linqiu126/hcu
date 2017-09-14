@@ -221,7 +221,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_req(UINT32 dest_id, UINT32 src_id, void * 
 			sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 	snd.comHead.timeStamp = time(0);
 	snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-	strcpy(snd.comHead.funcFlag, "0");
+	strncpy(snd.comHead.funcFlag, zHcuSysEngPar.hwBurnId.hw_mac, strlen(zHcuSysEngPar.hwBurnId.hw_mac)<IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX?strlen(zHcuSysEngPar.hwBurnId.hw_mac):IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX);
 
 	snd.baseResp = HUITP_IEID_UNI_COM_RESPONSE_YES;
 	snd.equEntry = HCU_SYSMSG_SYSSWM_EQU_ENTRY_HCU_CLIENT_SW;
@@ -630,7 +630,7 @@ OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void)
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 		snd.comHead.timeStamp = time(0);
 		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
+		strncpy(snd.comHead.funcFlag, zHcuSysEngPar.hwBurnId.hw_mac, strlen(zHcuSysEngPar.hwBurnId.hw_mac)<IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX?strlen(zHcuSysEngPar.hwBurnId.hw_mac):IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX);
 
 		//CONTENT
 		//这里假设，每一次发现新的版本，必然更新到新版本，所以内存中的版本将跟数据库最新版本保持同步状态
@@ -670,7 +670,7 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_stable(void)
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 		snd.comHead.timeStamp = time(0);
 		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
+		strncpy(snd.comHead.funcFlag, zHcuSysEngPar.hwBurnId.hw_mac, strlen(zHcuSysEngPar.hwBurnId.hw_mac)<IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX?strlen(zHcuSysEngPar.hwBurnId.hw_mac):IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX);
 
 		//CONTENT
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
@@ -714,7 +714,7 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void)
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 		snd.comHead.timeStamp = time(0);
 		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
+		strncpy(snd.comHead.funcFlag, zHcuSysEngPar.hwBurnId.hw_mac, strlen(zHcuSysEngPar.hwBurnId.hw_mac)<IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX?strlen(zHcuSysEngPar.hwBurnId.hw_mac):IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX);
 
 		//CONTENT
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
@@ -757,7 +757,7 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void)
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 		snd.comHead.timeStamp = time(0);
 		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
+		strncpy(snd.comHead.funcFlag, zHcuSysEngPar.hwBurnId.hw_mac, strlen(zHcuSysEngPar.hwBurnId.hw_mac)<IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX?strlen(zHcuSysEngPar.hwBurnId.hw_mac):IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX);
 
 		//CONTENT
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
@@ -1338,7 +1338,7 @@ OPSTAT func_sysswm_send_cloudvela_sw_package_report(void)
 
 		snd.comHead.timeStamp = time(0);
 		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
-		strcpy(snd.comHead.funcFlag, "0");
+		strncpy(snd.comHead.funcFlag, zHcuSysEngPar.hwBurnId.hw_mac, strlen(zHcuSysEngPar.hwBurnId.hw_mac)<IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX?strlen(zHcuSysEngPar.hwBurnId.hw_mac):IHU_SYSMSG_BH_COM_HEAD_NAME_LEN_MAX);
 
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.equEntry = gTaskSysswmContext.cloudSwDl.equEntry;
