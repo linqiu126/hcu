@@ -31,10 +31,12 @@ typedef struct gTaskSysswmContext
 {
 	HcuSysMsgIeL3SysSwmSwPkgElement_t  	cloudSwPkg;
 	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudSwDl;
-	UINT8	swDlSession;
-	UINT8	reTransTimes;
-	UINT32	swDlMaxTimes;
-	UINT32	swDlCntTimes;
+	UINT16	swRelSave;			//用于恢复之前数据的临时记录
+	UINT16	swVerSave;			//用于恢复之前数据的临时记录
+	UINT8	swDlSession;		//下载时哪一个下载过程
+	UINT8	reTransTimes;		//重传次数
+	UINT32	swDlMaxTimes;		//下载的最大计数器
+	UINT32	swDlCntTimes;		//下载的当期计数器
 }gTaskSysswmContext_t;
 //将HCU_CLIENT改为１是为了第一个命中，方便测试
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT 	1

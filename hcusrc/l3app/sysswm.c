@@ -1456,6 +1456,10 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp)
 	sprintf(s, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
 	system(s);
 
+	//保留老旧数据一般ＤＢ出错时恢复
+	gTaskSysswmContext.swRelSave = zHcuSysEngPar.hwBurnId.swRelId;
+	gTaskSysswmContext.swVerSave = zHcuSysEngPar.hwBurnId.swVerId;
+
 	//升级系统区的软件版本
 	zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.cloudSwPkg.swRel;
 	zHcuSysEngPar.hwBurnId.swVerId = gTaskSysswmContext.cloudSwPkg.swVer;
@@ -1504,7 +1508,14 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp)
 	char s[200];
 
 	//swpkg数据表单刷新
-	if (func_sysswm_db_download_process_swpkg_db_refresh(stmp) == FAILURE) return FAILURE;
+	if (func_sysswm_db_download_process_swpkg_db_refresh(stmp) == FAILURE){
+		//将软件版本信息恢复
+		zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.swRelSave;
+		zHcuSysEngPar.hwBurnId.swVerId = gTaskSysswmContext.swVerSave;
+		//恢复BOOT区老旧参数
+		hcu_vm_engpar_update_phy_boot_sw_ver(zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId);
+		return FAILURE;
+	}
 
 	//修改下载后的文件属性
 	sprintf(s, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
@@ -1566,6 +1577,10 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 	strcat(stmp, gTaskSysswmContext.cloudSwPkg.fileName);
 	if (func_sysswm_sw_download_process_swpkg_db_refresh(stmp) == FAILURE) return FAILURE;
 
+	//临时存储老旧数据，一旦DB不成功，可以恢复回来
+	gTaskSysswmContext.swRelSave = zHcuSysEngPar.hwBurnId.swRelId;
+	gTaskSysswmContext.swVerSave = zHcuSysEngPar.hwBurnId.swVerId;
+
 	//升级系统区的软件版本
 	zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.cloudSwPkg.swRel;
 	zHcuSysEngPar.hwBurnId.swVerId = gTaskSysswmContext.cloudSwPkg.swVer;
@@ -1606,8 +1621,14 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 		memset(stmp, 0, sizeof(stmp));
 		//File Name Only
 		strcat(stmp, gTaskSysswmContext.cloudSwDl.fileName);
-		if (hcu_service_ftp_sw_download_by_ftp(stmp) == FAILURE)
+		if (hcu_service_ftp_sw_download_by_ftp(stmp) == FAILURE){
+			//将软件版本信息恢复
+			zHcuSysEngPar.hwBurnId.swRelId = gTaskSysswmContext.swRelSave;
+			zHcuSysEngPar.hwBurnId.swVerId = gTaskSysswmContext.swVerSave;
+			//恢复BOOT区老旧参数
+			hcu_vm_engpar_update_phy_boot_sw_ver(zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId);
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: File Download Error!\n");
+		}
 
 		//修改下载后的文件属性
 		sprintf(stmp, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
