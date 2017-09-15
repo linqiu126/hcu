@@ -158,12 +158,12 @@ OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename)
 
 	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
 	strcat(ftp_opt.url, filename);
-	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.url: %s \n", ftp_opt.url);
+	HCU_DEBUG_PRINT_CRT("L0SVRFTP: ftp_opt.url: %s \n", ftp_opt.url);
 
 	//直接使用上层传来的目录结构
 	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwActiveDir);
 	strcat(ftp_opt.file, filename);
-	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.file: %s \n", ftp_opt.file);
+	HCU_DEBUG_PRINT_CRT("L0SVRFTP: ftp_opt.file: %s \n", ftp_opt.file);
 
 	if(HCU_FTP_SVR_DOWNLOAD_SUCCESS == func_ftp_svr_download(ftp_opt)){
 		HCU_DEBUG_PRINT_INF("L0SVRFTP: HCU SW Download success.\n");
