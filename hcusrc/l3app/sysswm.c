@@ -533,7 +533,7 @@ OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 			char stmp2[200];
 			memset(stmp2, 0, sizeof(stmp2));
 			sprintf(stmp2, "rm %s", stmp);
-			//HCU_DEBUG_PRINT_FAT("SYSSWM: Rm file = [%s]\n", stmp2);
+			HCU_DEBUG_PRINT_FAT("SYSSWM: Rm file = [%s]\n", stmp2);
 			system(stmp2);
 		}
 	}
@@ -1192,6 +1192,7 @@ OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgrade
 	        continue;
 	    else if ((ptr->d_type == 8) || (ptr->d_type == 10)){    ///File or Link file
 	    	//判定关键字
+	    	if (ptr->d_name == NULL) continue;
 	        p1 = strstr(ptr->d_name, "IHU");
 	        p2 = strstr(ptr->d_name, "_HPT");
 	        p3 = strstr(ptr->d_name, "_PEM");
@@ -1228,6 +1229,7 @@ OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgrade
 	        else{
 		        sprintf(str, "rm %s/%s", zHcuSysEngPar.swm.hcuSwActiveDir, ptr->d_name);
 	        }
+	        HCU_DEBUG_PRINT_CRT("SYSSWM: Rm files = %s\n", str);
 	        system(str);
 	    }
 	    else if(ptr->d_type == 4)    ///dir

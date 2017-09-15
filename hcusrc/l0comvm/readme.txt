@@ -8,12 +8,11 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
-[RESTRICITON1] SYSSWM清理目录
-
 
 //= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 264=>AQYC项目
 = SWM_FTP去掉相应的工参配置
 = hcuengpar表单改变了
+[RESTRICITON1] SYSSWM清理目录
 
 //= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 263=>AQYC项目
 = 完善HUITP中有关TEST_COMMAND和HSMMP_DATA_RESP消息的定义
