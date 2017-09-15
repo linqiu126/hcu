@@ -12,7 +12,7 @@
 #include "../l0service/trace.h"
 #include "../l1com/hwinv.h"
 #include "../l2frame/cloudvela.h"
-
+#include "../l3app/sysswm.h"
 
 /*
 ** FSM of the L3BFSC
@@ -200,6 +200,9 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");
 	HCU_DEBUG_PRINT_FAT("L3BFSC: Enter FSM_STATE_L3BFSC_ACTIVED status, Keeping refresh here!\n");
+
+	//启动周期性定时器：因为BFSC项目的缘故，暂时不启动下载过程
+	gTaskSysswmContext.swDlMaxTimes = HCU_L3BFSC_SW_DOWNLOAD_MAX_TIMES;
 
 	//测试组合程序
 	//hcu_sleep(2);

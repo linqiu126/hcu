@@ -33,6 +33,8 @@ enum FSM_STATE_L3BFSC
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfsc[];
 
+#define HCU_L3BFSC_SW_DOWNLOAD_MAX_TIMES	4
+
 //大量编辑性错误，不得不采用这种方式
 #ifndef HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
 	#define HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX 16  //下位机总共有16个秤盘

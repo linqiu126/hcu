@@ -33,6 +33,8 @@ typedef struct gTaskSysswmContext
 	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudSwDl;
 	UINT8	swDlSession;
 	UINT8	reTransTimes;
+	UINT32	swDlMaxTimes;
+	UINT32	swDlCntTimes;
 }gTaskSysswmContext_t;
 //将HCU_CLIENT改为１是为了第一个命中，方便测试
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT 	1
@@ -43,6 +45,10 @@ typedef struct gTaskSysswmContext
 
 #define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  	4
 #define HCU_SYSSWM_SW_PACKAGE_FTP_DOWNLOAD_FILE_SIZE_THREADHOLD  2000  //200000，正常放200KB的
+
+#define HCU_SYSSWM_SW_DOWNLOAD_MAX_TIMES	0x7FFFFFFF
+
+extern gTaskSysswmContext_t gTaskSysswmContext;
 
 //文件操控的数据结构表单
 typedef struct strTaskSysswmSwpkgLable

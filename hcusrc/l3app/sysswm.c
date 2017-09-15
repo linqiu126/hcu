@@ -106,9 +106,9 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM] = 0;
 	memset(&gTaskSysswmContext, 0, sizeof(gTaskSysswmContext_t));
+	gTaskSysswmContext.swDlMaxTimes = HCU_SYSSWM_SW_DOWNLOAD_MAX_TIMES;
 
 	//启动周期性定时器：因为BFSC项目的缘故，暂时不启动下载过程
-//#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE != HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, \
 	zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_PERIOD_WORKING].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
@@ -116,7 +116,6 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HcuErrorPrint("SYSSWM: Error start period timer!\n");
 		return FAILURE;
 	}
-//#endif
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_SYSSWM, FSM_STATE_SYSSWM_ACTIVED) == FAILURE)
@@ -164,6 +163,13 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//PERIOD WORKING TIMER
 	else if ((rcv.timeId == TIMER_ID_1S_SYSSWM_PERIOD_WORKING) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		//先判定是否要干活
+		gTaskSysswmContext.swDlCntTimes++;
+		if (gTaskSysswmContext.swDlCntTimes > gTaskSysswmContext.swDlMaxTimes){
+			hcu_timer_stop(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, TIMER_RESOLUTION_1S);
+			return SUCCESS;
+		}
+
 		//先清理孤儿文件
 		if (dbi_HcuSysSwm_SwPkg_orphane_file_delete() == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Delete orphane file failure!\n");

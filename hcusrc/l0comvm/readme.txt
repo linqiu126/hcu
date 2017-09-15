@@ -12,7 +12,8 @@
 //= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 264=>AQYC项目
 = SWM_FTP去掉相应的工参配置
 = hcuengpar表单改变了
-[RESTRICITON1] SYSSWM清理目录
+= [RESTRICITON1] SYSSWM清理目录
+= 给SYSSWM增加了一个新的控制机制：超越最大限度就不执行下载了
 
 //= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 263=>AQYC项目
 = 完善HUITP中有关TEST_COMMAND和HSMMP_DATA_RESP消息的定义
