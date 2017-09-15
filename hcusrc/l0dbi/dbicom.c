@@ -29,6 +29,60 @@
 -- 表的结构 `hcusysengpar`
 --
 
+
+//NEW ONES
+CREATE TABLE `hcusysengpar` (
+  `prjname` char(100) NOT NULL,
+  `commbackhawlcon` int(1) NOT NULL,
+  `hcudbhost` char(20) NOT NULL,
+  `hcudbuser` char(20) NOT NULL,
+  `hcudbpsw` char(20) NOT NULL,
+  `hcudbname` char(20) NOT NULL,
+  `hcudbport` int(1) NOT NULL,
+  `seriesportformodbus` int(1) NOT NULL,
+  `seriesportforgps` int(1) NOT NULL,
+  `seriesportforpm25sharp` int(1) NOT NULL,
+  `seriesportforqrprinter` int(1) NOT NULL,
+  `svraddhttplocal` char(200) NOT NULL,
+  `svraddsocketipdefault` char(200) NOT NULL,
+  `svraddhttpdefault` char(200) NOT NULL,
+  `svrnamedefault` char(12) NOT NULL,
+  `cloudftppwdvideo` char(12) NOT NULL,
+  `cloudftpuservideo` char(12) NOT NULL,
+  `hcuvideoserverdir` char(64) NOT NULL,
+  `hcuvideoserverhttp` char(64) NOT NULL,
+  `debugmode` int(1) NOT NULL,
+  `tracemode` int(1) NOT NULL,
+  `browselautostartupflag` int(1) NOT NULL,
+  `browselprog` char(20) NOT NULL,
+  `browselstartupaddress` char(128) NOT NULL,
+  `browselworkingoption` char(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `hcusysengpar`
+--
+
+INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `seriesportforqrprinter`, `svraddhttplocal`, `svraddsocketipdefault`, `svraddhttpdefault`, `svrnamedefault`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`) VALUES
+('HCU_PRJ_AQYCG10_335D', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 1, 1, 'http://127.0.0.1/test.php', '112.64.16.27', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-kiosk'),
+('HCU_PRJ_AQYC_OBSOLETE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen'),
+('HCU_PRJ_CXGLACM', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_CXILC', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_GQYBG40', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_HPM_QG', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_NBIOT_LPM_CJ', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_OPWL_OTDR', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TBSWRG30', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_TEST_MODE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-'),
+('HCU_PRJ_BFDF_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen'),
+('HCU_PRJ_BFHS_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen');
+
+
+
+
+//OLD ONES
 CREATE TABLE `hcusysengpar` (
   `prjname` char(100) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
@@ -618,16 +672,16 @@ OPSTAT dbi_HcuSysEngPar_inqury(HcuSysEngParTab_t *engPar, char *prjname)
 		if(sqlRow[index]) strncpy(engPar->cloud.svrNameDefault, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
 
 		//For HCU SW download
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpAdd, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUser, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
-		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwd, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
+//		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpAdd, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_ADDR_LEN_MAX-1);
+//		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUser, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
+//		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwd, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
 
 		//For HCU video upload
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpUserVideo, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
 		if(sqlRow[index]) strncpy(engPar->cloud.cloudFtpPwdVideo, sqlRow[index++], HCU_SYSENG_PAR_CLOUD_NAME_LEN_MAX-1);
-		if(sqlRow[index]) strncpy(engPar->swm.hcuSwDownloadDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->swm.hcuSwActiveDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
-		if(sqlRow[index]) strncpy(engPar->swm.hcuSwBackupDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+//		if(sqlRow[index]) strncpy(engPar->swm.hcuSwDownloadDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+//		if(sqlRow[index]) strncpy(engPar->swm.hcuSwActiveDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
+//		if(sqlRow[index]) strncpy(engPar->swm.hcuSwBackupDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_SWDOWNLOAD_LEN-1);
 
 		//视频服务器部分
 		if(sqlRow[index]) strncpy(engPar->videoSev.hcuVideoServerDir, sqlRow[index++], HCU_SYSENG_PAR_ELEMENT_VIDEO_SERVER_LEN-1);

@@ -8,7 +8,6 @@
 #ifndef L1COM_HWINV_H_
 #define L1COM_HWINV_H_
 
-#include "../l0main/hcu.h"
 #include "../l0comvm/vmlayer.h"
 #include "../l0service/sysinfo.h"
 #include "../l0dbi/l0dbi_inc.h"

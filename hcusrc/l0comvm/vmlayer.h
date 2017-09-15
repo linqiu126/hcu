@@ -785,6 +785,7 @@ typedef struct HcuSysEngPhyBootCfg
 	const char right[30];
 }HcuSysEngPhyBootCfg_t;
 
+extern HcuSysEngPhyBootCfg_t zHcuSysEngPhyBootCfg[];
 /*
  *
  *   三大表单之三： 系统运行统计性能表HcuSysStaPm_t定义区
