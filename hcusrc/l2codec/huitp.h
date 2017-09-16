@@ -2157,11 +2157,14 @@ typedef struct StrIe_HUITP_IEID_uni_video_value
 //图片
 //HUITP_IEID_uni_picture_min                      = 0x2F00, 
 //HUITP_IEID_uni_picture_ind                    = 0x2F00,
+#define HUITP_IEID_UNI_PICTURE_NAME_MAX_LEN    	 100
 typedef struct StrIe_HUITP_IEID_uni_picture_ind
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT8  flag;
+	UINT32 eventId;
+	char   picName[HUITP_IEID_UNI_PICTURE_NAME_MAX_LEN];
 }StrIe_HUITP_IEID_uni_picture_ind_t;
 #define HUITP_IEID_UNI_PICTURE_IND_FLAG_NULL                   0
 #define HUITP_IEID_UNI_PICTURE_IND_FLAG_REMOTE_CURL_TRIGGER    1  //指示远程拍照

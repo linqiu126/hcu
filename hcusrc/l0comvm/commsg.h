@@ -3130,7 +3130,6 @@ typedef struct msg_struct_hsmmp_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_hsmmp_link_element_t link;
-	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_data_report_t;
 
@@ -3143,12 +3142,15 @@ typedef struct msg_struct_cloudvela_hsmmp_data_confirm
 }msg_struct_cloudvela_hsmmp_data_confirm_t;
 
 //MSG_ID_PICTURE_CLOUDVELA_DATA_REPORT,
+#define HCU_SYSMSG_PICTURE_NAME_MAX_LEN    	 100
 typedef struct msg_struct_picture_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_hsmmp_link_element_t link;
 	UINT8  flag;
+	UINT32 eventId;
+	char   picName[HCU_SYSMSG_PICTURE_NAME_MAX_LEN];
 	UINT32 length;
 }msg_struct_picture_cloudvela_data_report_t;
 

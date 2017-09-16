@@ -9,13 +9,16 @@
 
 
 
-//= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 264=>AQYC项目
+//= ZJL, 2017 Sep.16 CURRENT_SW_DELIVERY 265=>BFSC项目
+= 修改HUITP的picture定义
+
+
+//= ZJL, 2017 Sep.15 CURRENT_SW_DELIVERY 264=>BFSC项目
 = SWM_FTP去掉相应的工参配置
 = hcuengpar表单改变了
 = [RESTRICITON1] SYSSWM清理目录
 = 给SYSSWM增加了一个新的控制机制：超越最大限度就不执行下载了
 = 给DB下载增加保护：一旦软件下载成功，但数据库下载不成功，则将软件的版本恢复回滚到之前的情况
-
 
 //= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 263=>AQYC项目
 = 完善HUITP中有关TEST_COMMAND和HSMMP_DATA_RESP消息的定义

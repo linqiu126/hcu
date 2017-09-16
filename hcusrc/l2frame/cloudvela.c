@@ -3089,7 +3089,8 @@ OPSTAT fsm_cloudvela_picture_data_report(UINT32 dest_id, UINT32 src_id, void * p
 		pMsgProc.reportInd.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_picture_ind);
 		pMsgProc.reportInd.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_picture_ind_t) - 4);
 		pMsgProc.reportInd.flag = rcv.flag;
-
+		pMsgProc.reportInd.eventId = rcv.eventId;
+		strncpy(pMsgProc.reportInd.picName, rcv.picName, strlen(rcv.picName)<sizeof(pMsgProc.reportInd.picName)?strlen(rcv.picName):sizeof(pMsgProc.reportInd.picName));
 		//Pack message
 		StrMsg_HUITP_MSGID_uni_general_message_t pMsgInput;
 		memset(&pMsgInput, 0, sizeof(StrMsg_HUITP_MSGID_uni_general_message_t));
