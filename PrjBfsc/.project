@@ -106,9 +106,24 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>src/l0autorun/hcu.sh</name>
+			<name>src/l0autorun/U17 Guidance.txt</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/hcu.sh</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/U17%20Guidance.txt</locationURI>
+		</link>
+		<link>
+			<name>src/l0autorun/hcu_advantech.sh</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/hcu_advantech.sh</locationURI>
+		</link>
+		<link>
+			<name>src/l0autorun/hcu_raspy.sh</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/hcu_raspy.sh</locationURI>
+		</link>
+		<link>
+			<name>src/l0autorun/hcuupgrade.sh</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/hcuupgrade.sh</locationURI>
 		</link>
 		<link>
 			<name>src/l0comvm/commsg.h</name>
