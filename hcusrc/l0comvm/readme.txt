@@ -9,9 +9,12 @@
 
 
 
+//= ZJL, 2017 Sep.18 CURRENT_SW_DELIVERY 266=>BFDF项目
+= 开始编写料斗的双链数据结构操作函数
+
+
 //= ZJL, 2017 Sep.16 CURRENT_SW_DELIVERY 265=>BFSC项目
 = 修改HUITP的picture定义
-
 
 //= ZJL, 2017 Sep.15 CURRENT_SW_DELIVERY 264=>BFSC项目
 = SWM_FTP去掉相应的工参配置
