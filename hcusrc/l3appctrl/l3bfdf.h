@@ -8,6 +8,7 @@
 #ifndef L3APP_BFDF_H_
 #define L3APP_BFDF_H_
 
+#include "../l0comvm/sysconfig.h"
 #include "../l1com/l1comdef.h"
 #include "../l0service/timer.h"
 
@@ -136,11 +137,11 @@ typedef struct L3BfdfSncBoardInfo
 //分组信息
 typedef struct L3BfdfGroupInfo
 {
-	UINT8  	groupId;
+	UINT16  groupId;
 	UINT8	groupStatus;
-	UINT8	totalHopperNbr;
-	UINT8	firstHopperId;	//系统配置以后，最初从哪一个料斗开始
-	UINT8	fillHopperId;	//优先从哪一个料斗开始查找，从而加速查找
+	UINT16	totalHopperNbr;
+	UINT16	firstHopperId;	//系统配置以后，最初从哪一个料斗开始
+	UINT16	fillHopperId;	//优先从哪一个料斗开始查找，从而加速查找
 	float	targetWeight;
 	float	upperLimit;
 }L3BfdfGroupInfo_t;
@@ -153,12 +154,12 @@ typedef struct L3BfdfGroupInfo
 //料斗信息
 typedef struct L3BfdfHopperInfo
 {
-	UINT8  hopperId;
-	UINT32 hopperValue;
-	UINT8  hopperStatus;
-	UINT8  groupId;
-	UINT8  preHopperId;
-	UINT8  nextHopperId;
+	UINT16 hopperId;
+	float  hopperValue;
+	UINT16 hopperStatus;
+	UINT16 groupId;
+	UINT16 preHopperId;
+	UINT16 nextHopperId;
 }L3BfdfHopperInfo_t;
 //料斗状态定义
 #define HCU_L3BFDF_HOPPER_STATUS_NONE			0
@@ -173,6 +174,8 @@ typedef struct L3BfdfHopperInfo
 #define HCU_L3BFDF_HOPPER_STATUS_STOP_REQ 		15  	//停止开始
 #define HCU_L3BFDF_HOPPER_STATUS_STOP_CMPL 		16  	//停止完成
 #define HCU_L3BFDF_HOPPER_STATUS_INIT_ERR 		17  	//初始化错误
+#define HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC   18
+#define HCU_L3BFDF_HOPPER_STATUS_INIT_ALLOC     19
 #define HCU_L3BFDF_HOPPER_STATUS_INIT_MAX		29
 #define HCU_L3BFDF_HOPPER_STATUS_WORK_MIN 		30
 #define HCU_L3BFDF_HOPPER_STATUS_VALIID_EMPTY 	31      //秤盘空
@@ -284,6 +287,23 @@ typedef struct gTaskL3bfdfContextWeightSensorParamaters
 	UINT32  WeightSensorOutputValue[4];
 }gTaskL3bfdfContextWeightSensorParamaters_t;
 
+//全局定义
+#ifndef HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX
+	#define HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX	2  	//流水线数量
+#endif
+
+#ifndef HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX
+	#define HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX	4
+#endif
+
+#ifndef HCU_SYSCFG_BFDF_HOPPER_NBR_MAX
+	#define HCU_SYSCFG_BFDF_HOPPER_NBR_MAX	32
+#endif
+
+#ifndef HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD
+	#define HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD	8
+#endif
+
 typedef struct gTaskL3bfdfContextMotorControlParamaters
 {
 	UINT32	MotorSpeed;
@@ -337,7 +357,7 @@ typedef struct gTaskL3bfdfContext
 	//BFDF设计部分
 	L3BfdfWgtBoardInfo_t  	wgt[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX];
 	L3BfdfSncBoardInfo_t  	snc[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX];
-	UINT8					totalGroupNbr[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX]; //分成多少个组
+	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX]; //分成多少个组
 	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 	L3BfdfHopperInfo_t  	hopper[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 }gTaskL3bfdfContext_t;
@@ -400,6 +420,17 @@ bool func_l3bfdf_cacluate_sensor_cfg_rcv_complete(void);
 bool func_l3bfdf_cacluate_sensor_start_rcv_complete(void);
 bool func_l3bfdf_cacluate_sensor_stop_rcv_complete(void);
 void func_l3bfdf_test_combine(void);
+
+
+//核心双链数据处理
+bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
+bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hopperNewId);
+bool func_l3bfdf_hopper_remove_by_tail(UINT8 streamId, UINT16 groupId);
+bool func_l3bfdf_hopper_insert_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId, UINT16 hopperNewId);
+bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId);
+
+
+
 
 //External APIs
 extern OPSTAT hcu_sps232_qr_printer_init(void);

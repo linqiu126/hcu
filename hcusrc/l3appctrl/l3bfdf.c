@@ -2094,3 +2094,224 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 //}
 
 
+//streamId是0开始计数的
+//groupId是从1开始计数的
+bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup)
+{
+	int i = 0;
+	//入参检查
+	if ((streamId >= HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX) || (nbrGroup == 0) || (nbrGroup > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+		return FALSE;
+
+	gTaskL3bfdfContext.totalGroupNbr[streamId] = nbrGroup;
+
+	//循环赋值
+	for (i=1; i<=nbrGroup; i++){
+		gTaskL3bfdfContext.group[streamId][i].groupId = 0;
+		gTaskL3bfdfContext.group[streamId][i].groupStatus = HCU_L3BFDF_GROUP_STATUS_ACTIVE;
+	}
+	return TRUE;
+}
+
+//正常在某一个GroupId的末尾增加一个hopperId
+//GroupId/HopperId都不得等于0
+//整个增加函数采用强行格式化模式，而不是检测返回错误模式，从而简化和提升可靠性．数据不一致之后还有可能纠偏回来．
+bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hopperNewId)
+{
+	UINT16 fHopper = 0;
+
+	//入参检查：注意起点和终点
+	if ((streamId >= HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX) || (groupId >HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) || (hopperNewId >HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+		return FALSE;
+
+	//强制增加GroupId到最大数量计量单位上
+	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]) gTaskL3bfdfContext.totalGroupNbr[streamId] = groupId;
+
+	//强制修改该GroupId数据
+	gTaskL3bfdfContext.group[streamId][groupId].groupId = groupId;
+
+	//强制修改该HopperId的GroupId
+	fHopper = gTaskL3bfdfContext.group[streamId][groupId].firstHopperId;
+	if (fHopper > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return FAILURE;
+
+	//如果是第一次填入：指针指向自己
+	if (fHopper == 0){
+		gTaskL3bfdfContext.group[streamId][groupId].firstHopperId = hopperNewId;
+		gTaskL3bfdfContext.group[streamId][groupId].fillHopperId = hopperNewId;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId = hopperNewId;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].preHopperId = hopperNewId;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].groupId = groupId;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_ALLOC;
+	}
+	else{
+		UINT16 tailHopper = gTaskL3bfdfContext.hopper[streamId][fHopper].preHopperId;
+		//尾巴指针
+		gTaskL3bfdfContext.hopper[streamId][tailHopper].nextHopperId = hopperNewId;
+		//新增指针
+		gTaskL3bfdfContext.hopper[streamId][hopperNewId].nextHopperId = fHopper;
+		gTaskL3bfdfContext.hopper[streamId][hopperNewId].preHopperId = tailHopper;
+		gTaskL3bfdfContext.hopper[streamId][hopperNewId].groupId = groupId;
+		gTaskL3bfdfContext.hopper[streamId][hopperNewId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_ALLOC;
+		//首指针
+		gTaskL3bfdfContext.hopper[streamId][fHopper].preHopperId = hopperNewId;
+	}
+	gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr++;
+
+	return TRUE;
+}
+
+bool func_l3bfdf_hopper_remove_by_tail(UINT8 streamId, UINT16 groupId)
+{
+	UINT16 fHopper = 0;
+
+	//入参检查：注意起点和终点
+	if ((streamId >= HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX) || (groupId >HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+		return FALSE;
+
+	//GroupId
+	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]) return FALSE;
+
+	//HopperId -> GroupId
+	if (gTaskL3bfdfContext.group[streamId][groupId].groupId != groupId) return FALSE;
+
+	//First HopperId
+	fHopper = gTaskL3bfdfContext.group[streamId][groupId].firstHopperId;
+	if ((fHopper == 0) || (fHopper > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)) return FALSE;
+
+	//Hopper总数
+	if ((gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr == 0) || (gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)) return FALSE;
+
+	//最后一个指针
+	if (gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr == 1){
+		gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr = 0;
+		gTaskL3bfdfContext.group[streamId][groupId].firstHopperId = 0;
+		gTaskL3bfdfContext.group[streamId][groupId].fillHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].groupId = 0;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].preHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC;
+	}
+	else{
+		UINT16 tailHooper = gTaskL3bfdfContext.hopper[streamId][fHopper].preHopperId;
+		UINT16 tailHooper2 = gTaskL3bfdfContext.hopper[streamId][tailHooper].preHopperId;
+		//尾巴指针清零
+		gTaskL3bfdfContext.hopper[streamId][tailHooper].nextHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][tailHooper].preHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][tailHooper].groupId = 0;
+		gTaskL3bfdfContext.hopper[streamId][tailHooper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC;
+		//尾巴前指针
+		gTaskL3bfdfContext.hopper[streamId][tailHooper2].nextHopperId = fHopper;
+		//首指针
+		gTaskL3bfdfContext.hopper[streamId][fHopper].preHopperId = tailHooper2;
+		//数量更新
+		gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr--;
+	}
+
+	return TRUE;
+}
+
+//不存在GroupId中是空的情况，因为hopperId必须要从GroupId中找到，不然就算错误
+bool func_l3bfdf_hopper_insert_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId, UINT16 hopperNewId)
+{
+	UINT16 fHopper = 0;
+
+	//入参检查：注意起点和终点
+	if ((streamId >= HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX) || (groupId >HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) || (hopperId >HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) || (hopperNewId >HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+		return FALSE;
+
+	//强制增加GroupId到最大数量计量单位上
+	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]) gTaskL3bfdfContext.totalGroupNbr[streamId] = groupId;
+
+	//强制修改该GroupId数据
+	gTaskL3bfdfContext.group[streamId][groupId].groupId = groupId;
+
+	//强制修改该HopperId的GroupId
+	fHopper = gTaskL3bfdfContext.group[streamId][groupId].firstHopperId;
+	if ((fHopper == 0) || (fHopper > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)) return FAILURE;
+
+	//遍历到hopperId
+	UINT16 curHopper = fHopper;
+	UINT16 cnt = 0;
+	while(curHopper != hopperId){
+		cnt++;
+		if (cnt > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return FALSE;
+		curHopper = gTaskL3bfdfContext.hopper[streamId][curHopper].nextHopperId;
+	}
+
+	//添加到curHopper后面
+	UINT16 nextHopper = gTaskL3bfdfContext.hopper[streamId][curHopper].nextHopperId;
+	gTaskL3bfdfContext.hopper[streamId][curHopper].nextHopperId = hopperNewId;
+	gTaskL3bfdfContext.hopper[streamId][hopperNewId].nextHopperId = nextHopper;
+	gTaskL3bfdfContext.hopper[streamId][hopperNewId].preHopperId = curHopper;
+	gTaskL3bfdfContext.hopper[streamId][hopperNewId].groupId = groupId;
+	gTaskL3bfdfContext.hopper[streamId][hopperNewId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_ALLOC;
+	gTaskL3bfdfContext.hopper[streamId][nextHopper].preHopperId = hopperNewId;
+
+	gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr++;
+	return TRUE;
+}
+
+bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId)
+{
+	UINT16 fHopper = 0;
+
+	//入参检查：注意起点和终点
+	if ((streamId >= HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX) || (groupId >HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) || (hopperId >HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+		return FALSE;
+
+	//GroupId
+	if (groupId > gTaskL3bfdfContext.totalGroupNbr[streamId]) return FALSE;
+
+	//HopperId -> GroupId
+	if (gTaskL3bfdfContext.group[streamId][groupId].groupId != groupId) return FALSE;
+
+	//First HopperId
+	fHopper = gTaskL3bfdfContext.group[streamId][groupId].firstHopperId;
+	if ((fHopper == 0) || (fHopper > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)) return FALSE;
+
+	//Hopper总数
+	if ((gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr == 0) || (gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX)) return FALSE;
+
+	//遍历到hopperId
+	UINT16 curHopper = fHopper;
+	UINT16 cnt = 0;
+	while(curHopper != hopperId){
+		cnt++;
+		if (cnt > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return FALSE;
+		curHopper = gTaskL3bfdfContext.hopper[streamId][curHopper].nextHopperId;
+	}
+
+	//最后一个指针
+	if (gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr == 1){
+		gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr = 0;
+		gTaskL3bfdfContext.group[streamId][groupId].firstHopperId = 0;
+		gTaskL3bfdfContext.group[streamId][groupId].fillHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].groupId = 0;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].nextHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].preHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][fHopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC;
+	}
+	else{
+		UINT16 preHopper = gTaskL3bfdfContext.hopper[streamId][curHopper].preHopperId;
+		UINT16 nextHopper = gTaskL3bfdfContext.hopper[streamId][curHopper].nextHopperId;
+		//前一个，后一个
+		gTaskL3bfdfContext.hopper[streamId][preHopper].nextHopperId = nextHopper;
+		gTaskL3bfdfContext.hopper[streamId][nextHopper].preHopperId = preHopper;
+		//本身清理
+		gTaskL3bfdfContext.hopper[streamId][curHopper].nextHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][curHopper].preHopperId = 0;
+		gTaskL3bfdfContext.hopper[streamId][curHopper].groupId = 0;
+		gTaskL3bfdfContext.hopper[streamId][curHopper].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC;
+
+		//数量更新
+		gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr--;
+	}
+
+	return TRUE;
+}
+
+
+
+
+
+
