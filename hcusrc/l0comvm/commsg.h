@@ -551,8 +551,11 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,
 	MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP,
 	MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,
+	MSG_ID_CAN_L3BFDF_SNC_PULLIN_REQ,
+	MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,
 	MSG_ID_L3BFDF_CAN_WS_COMB_OUT,
 	MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,
+	MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
 
 	//BFHS
 	MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,
@@ -573,6 +576,13 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_UICOMM_CFG_RESP,  		//配置结果
 	MSG_ID_UICOMM_CAN_TEST_CMD_REQ,  		//测试命令
 	MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
+
+	//BFDF
+	MSG_ID_UICOMM_L3BFDF_CMD_REQ,
+	MSG_ID_L3BFDF_UICOMM_CMD_RESP,
+	//BFHS
+	MSG_ID_UICOMM_L3BFHS_CMD_REQ,
+	MSG_ID_L3BFHS_UICOMM_CMD_RESP,
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -2841,6 +2851,56 @@ typedef struct msg_struct_can_uicomm_test_cmd_resp
 	UINT32 	length;
 }msg_struct_can_uicomm_test_cmd_resp_t;
 
+
+//BFDF
+//MSG_ID_UICOMM_L3BFDF_CMD_REQ,
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_INVALL  			0
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START  		1
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP  				2
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND  			3
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME  			4
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_NULL  				255
+typedef struct msg_struct_uicomm_l3bfdf_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 length;
+}msg_struct_uicomm_l3bfdf_cmd_req_t;
+
+//MSG_ID_L3BFDF_UICOMM_CMD_RESP,
+typedef struct msg_struct_l3bfdf_uicomm_cmd_resp
+{
+	UINT8   cmdid;
+	UINT8   validFlag;  //是否执行成功
+	UINT16  errCode;
+	UINT8	sensorid;
+	UINT32  length;
+}msg_struct_l3bfdf_uicomm_cmd_resp_t;
+
+//BFHS
+//MSG_ID_UICOMM_L3BFHS_CMD_REQ,
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_INVALL  			0
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START  		1
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP  				2
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND  			3
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME  			4
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_NULL  				255
+typedef struct msg_struct_uicomm_l3bfhs_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 length;
+}msg_struct_uicomm_l3bfhs_cmd_req_t;
+
+//MSG_ID_L3BFHS_UICOMM_CMD_RESP,
+typedef struct msg_struct_l3bfhs_uicomm_cmd_resp
+{
+	UINT8   cmdid;
+	UINT8   validFlag;  //是否执行成功
+	UINT16  errCode;
+	UINT8	sensorid;
+	UINT32  length;
+}msg_struct_l3bfhs_uicomm_cmd_resp_t;
+
+
 //BFDF项目
 //MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
 #define HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR		8
@@ -2904,6 +2964,23 @@ typedef struct msg_struct_can_l3bfdf_new_ready_event
 	UINT32 length;
 }msg_struct_can_l3bfdf_new_ready_event_t;
 
+//MSG_ID_CAN_L3BFDF_SNC_PULLIN_REQ,
+typedef struct msg_struct_l3bfdf_can_snc_pullin_req
+{
+	UINT8  boardId;
+	UINT16 hopperId;
+	UINT32 length;
+}msg_struct_l3bfdf_can_snc_pullin_req_t;
+
+//MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,
+typedef struct msg_struct_can_l3bfdf_snc_pullin_resp
+{
+	UINT8  boardId;
+	UINT16 hopperId;
+	UINT32 length;
+}msg_struct_can_l3bfdf_snc_pullin_resp_t;
+
+
 //MSG_ID_L3BFDF_CAN_WS_COMB_OUT,  		//出料
 typedef struct msg_struct_l3bfdf_can_ws_comb_out
 {
@@ -2922,6 +2999,13 @@ typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 	UINT32 length;
 }msg_struct_can_l3bfdf_ws_comb_out_fb_t;
 
+//MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
+typedef struct msg_struct_can_l3bfdf_basket_clearn_ind
+{
+	UINT8  boardId;
+	UINT16 hopperId;
+	UINT32 length;
+}msg_struct_can_l3bfdf_basket_clearn_ind_t;
 
 //BFHS项目
 //MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,

@@ -21,11 +21,9 @@ enum FSM_STATE_L3BFDF
 {
 	FSM_STATE_L3BFDF_INITED = FSM_STATE_COMMON + 1,
 	FSM_STATE_L3BFDF_ACTIVED,
-	FSM_STATE_L3BFDF_OPR_CFG,  	//配置状态
-	FSM_STATE_L3BFDF_OPR_GO,  	//人工命令启动状态
 	FSM_STATE_L3BFDF_OOS_SCAN,  //进料组合态
 	FSM_STATE_L3BFDF_OOS_TTT,  	//出料流程态
-	FSM_STATE_L3BFDF_OOS_TGU,  	//放弃物料态
+	FSM_STATE_L3BFDF_SUSPEND,
 	FSM_STATE_L3BFDF_MAX,
 };
 //#define FSM_STATE_END   0xFE
@@ -186,8 +184,20 @@ extern OPSTAT fsm_l3bfdf_task_entry(UINT32 dest_id, UINT32 src_id, void * param_
 extern OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfdf_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
+
+
+//CLOUDVELA后台通信部分
+extern OPSTAT fsm_l3bfdf_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfdf_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfdf_cloudvela_event_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfdf_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfdf_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //API启动及命令控制部分
+void func_l3bfdf_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
+
 
 
 //Local API
