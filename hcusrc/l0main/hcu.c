@@ -106,8 +106,10 @@
 	#include "../l3appctrl/l3opwlotdr.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	#include "../l3appctrl/l3bfdf.h"
+	#include "../l3uiconnect/bfdfuicomm.h"
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	#include "../l3appctrl/l3bfhs.h"
+	#include "../l3uiconnect/bfhsuicomm.h"
 //小技巧，不要这部分，以便加强编译检查
 #else
 	#error Un-correct constant definition

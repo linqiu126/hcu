@@ -120,6 +120,8 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_L3BFSC,
 	TASK_ID_BFSCUICOMM,
 	TASK_ID_JSONINOTIFY,
+	TASK_ID_BFDFUICOMM,
+	TASK_ID_BFHSUICOMM,
 	TASK_ID_L3OPWLOTDR,
 	TASK_ID_L3BFDF,
 	TASK_ID_L3BFHS,
@@ -623,6 +625,8 @@ extern HcuFsmStateItem_t HcuFsmL3nbhpm[];                           //状态机
 extern HcuFsmStateItem_t HcuFsmL3bfsc[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmBfscuicomm[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmJsoninotify[];                       //状态机
+extern HcuFsmStateItem_t HcuFsmBfdfuicomm[];                        //状态机
+extern HcuFsmStateItem_t HcuFsmBfhsuicomm[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmL3bfdf[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmL3bfhs[];                            //状态机

@@ -95,6 +95,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>src/l3uiconnect</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>src/l4bi</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -1313,6 +1318,16 @@
 			<name>src/l3ui/yii.bat</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3ui/yii.bat</locationURI>
+		</link>
+		<link>
+			<name>src/l3uiconnect/bfhsuicomm.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3uiconnect/bfhsuicomm.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3uiconnect/bfhsuicomm.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3uiconnect/bfhsuicomm.h</locationURI>
 		</link>
 		<link>
 			<name>src/l4bi/aiqiyc.c</name>

@@ -9,6 +9,9 @@
 
 
 
+//= ZJL, 2017 Sep.19 CURRENT_SW_DELIVERY 267=>BFDF项目
+= 继续搭建BFDF程序框架，创建基础内部消息
+
 //= ZJL, 2017 Sep.18 CURRENT_SW_DELIVERY 266=>BFDF项目
 = 开始编写料斗的双链数据结构操作函数
 = 简化BFDF程序遗传，制作程序框架

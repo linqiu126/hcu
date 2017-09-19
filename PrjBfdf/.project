@@ -1200,6 +1200,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/l3hate.h</locationURI>
 		</link>
 		<link>
+			<name>src/l3uiconnect/bfdfuicomm.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3uiconnect/bfdfuicomm.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3uiconnect/bfdfuicomm.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3uiconnect/bfdfuicomm.h</locationURI>
+		</link>
+		<link>
 			<name>src/l4bi/aiqiyc.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l4bi/aiqiyc.c</locationURI>
