@@ -81,7 +81,11 @@ HcuFsmStateItem_t HcuFsmModbus[] =
 //Task level global variables，该任务是单入的，所以两个传感器同时操作是不可以的
 UINT32 currentSensorEqpId;  //当前正在工作的传感器
 SerialModbusMsgBuf_t currentModbusBuf;
-gTaskL3aqycq20Context_t		gTaskL3aqycq20Context; //MYC added 2017/03/27 temp
+gTaskL3aqycq20Context_t		gTaskL3aqycq20Context;
+
+gTaskModbusContext_t CurrentModusContext;
+
+
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -130,6 +134,8 @@ OPSTAT fsm_modbus_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	currentSensorEqpId = 0;
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS] = 0;
+
+	memset(&CurrentModusContext, 0, sizeof(gTaskModbusContext_t));
 
 	//基本上不设置状态机，所有操作均为同步式，这样就不需要状态机了
 	ret = FsmSetState(TASK_ID_MODBUS, FSM_STATE_MODBUS_ACTIVED);
@@ -308,12 +314,13 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 //
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
-	if (FAILURE == ret)
+	if ((FAILURE == ret) && (OFF == CurrentModusContext.TspHW_AlarmFlag))
 	{
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
 		gTaskL3aqycq20Context.eqtStatus.a34001_RS = OFF;
+		CurrentModusContext.TspHW_AlarmFlag = ON;
 
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
@@ -334,9 +341,14 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 		return FAILURE;
 	}
+	else if ((FAILURE == ret) && (ON == CurrentModusContext.TspHW_AlarmFlag))
+	{
+		return FAILURE;
+	}
 
 	else
 	{
+		CurrentModusContext.TspHW_AlarmFlag = OFF;
 		HCU_DEBUG_PRINT_INF("MODBUS: Send PM25 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -379,7 +391,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	{
 		HCU_DEBUG_PRINT_INF("MODBUS: Can not read data from serial port, return of read %d\n", ret);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-
+		/*
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -396,7 +408,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_MODBUS, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
-
+		*/
 		return FAILURE;
 
 	}
@@ -558,11 +570,14 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 //
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
-	if (FAILURE == ret)
+	if ((FAILURE == ret) && (OFF == CurrentModusContext.WindDirHW_AlarmFlag))
 	{
-		gTaskL3aqycq20Context.eqtStatus.a01008_RS = OFF;
+
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+
+		gTaskL3aqycq20Context.eqtStatus.a01008_RS = OFF;
+		CurrentModusContext.WindDirHW_AlarmFlag = ON;
 
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
@@ -583,8 +598,14 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		return FAILURE;
 	}
 
+	else if ((FAILURE == ret) && (ON == CurrentModusContext.WindDirHW_AlarmFlag))
+	{
+		return FAILURE;
+	}
+
 	else
 	{
+		CurrentModusContext.WindDirHW_AlarmFlag = OFF;
 		HCU_DEBUG_PRINT_INF("MODBUS: Send  winddir req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -604,7 +625,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		HCU_DEBUG_PRINT_INF("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 
-
+		/*
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -621,6 +642,7 @@ OPSTAT fsm_modbus_winddir_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_MODBUS, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message erro//route to L3 or direct to cloudvela, TBDr, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+		*/
 		return FAILURE;
 	}
 //
@@ -752,9 +774,11 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 //
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
-	if (FAILURE == ret)
+	if ((FAILURE == ret) && (OFF == CurrentModusContext.WindSpdHW_AlarmFlag))
 	{
 		gTaskL3aqycq20Context.eqtStatus.a01007_RS = OFF;
+		CurrentModusContext.WindSpdHW_AlarmFlag = ON;
+
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
 
@@ -778,8 +802,15 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		return FAILURE;
 
 	}
+
+	else if ((FAILURE == ret) && (ON == CurrentModusContext.WindSpdHW_AlarmFlag))
+	{
+		return FAILURE;
+	}
+
 	else
 	{
+		CurrentModusContext.WindSpdHW_AlarmFlag = OFF;
 		HCU_DEBUG_PRINT_INF("MODBUS: Send windspd req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -799,6 +830,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HCU_DEBUG_PRINT_INF("MODBUS: Can not read data from serial port, return of read %d \n",  ret);
 
+		/*
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -815,7 +847,7 @@ OPSTAT fsm_modbus_windspd_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_MODBUS, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
-
+		*/
 		return FAILURE;
 	}
 //
@@ -947,11 +979,14 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 //
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
-	if (FAILURE == ret)
+	if ((FAILURE == ret) && (OFF == CurrentModusContext.TempHW_AlarmFlag))
 	{
-		gTaskL3aqycq20Context.eqtStatus.a01001_RS = OFF;
+
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+
+		gTaskL3aqycq20Context.eqtStatus.a01001_RS = OFF;
+		CurrentModusContext.TempHW_AlarmFlag = ON;
 
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
@@ -973,8 +1008,14 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		return FAILURE;
 	}
 
+	else if ((FAILURE == ret) && (ON == CurrentModusContext.TempHW_AlarmFlag))
+	{
+		return FAILURE;
+	}
+
 	else
 	{
+	  CurrentModusContext.TempHW_AlarmFlag = OFF;
 	  HCU_DEBUG_PRINT_INF("MODBUS: Send temp req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -994,7 +1035,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	{
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HCU_DEBUG_PRINT_INF("MODBUS: Can not read data from serial port, return of read %d \n", ret);
-
+		/*
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -1011,7 +1052,7 @@ OPSTAT fsm_modbus_temp_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_MODBUS, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
-
+		*/
 		return FAILURE;
 	}
 //
@@ -1146,11 +1187,14 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 //
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
-	if (FAILURE == ret)
+	if ((FAILURE == ret) && (OFF == CurrentModusContext.HumidHW_AlarmFlag))
 	{
-		gTaskL3aqycq20Context.eqtStatus.a01002_RS = OFF;
+
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+
+		gTaskL3aqycq20Context.eqtStatus.a01002_RS = OFF;
+		CurrentModusContext.HumidHW_AlarmFlag = ON;
 
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
@@ -1172,8 +1216,14 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		return FAILURE;
 	}
 
+	else if ((FAILURE == ret) && (ON == CurrentModusContext.HumidHW_AlarmFlag))
+	{
+		return FAILURE;
+	}
+
 	else
 	{
+		CurrentModusContext.HumidHW_AlarmFlag = OFF;
 		HCU_DEBUG_PRINT_INF("MODBUS: Send humuid req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -1193,7 +1243,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
 
-
+		/*
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -1210,7 +1260,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_MODBUS, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
-
+		*/
 		return FAILURE;
 	}
 //
@@ -1348,10 +1398,13 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
     ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
-	if (FAILURE == ret)
+	if ((FAILURE == ret) && (OFF == CurrentModusContext.NoiseHW_AlarmFlag))
 	{
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Error send command to serials port!\n");
+
+		CurrentModusContext.NoiseHW_AlarmFlag = ON;
+
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -1371,8 +1424,15 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		return FAILURE;
 
 	}
+
+	else if ((FAILURE == ret) && (ON == CurrentModusContext.NoiseHW_AlarmFlag))
+	{
+		return FAILURE;
+	}
+
 	else
 	{
+		CurrentModusContext.NoiseHW_AlarmFlag = OFF;
 		HCU_DEBUG_PRINT_INF("MODBUS: Send noise req data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
 
@@ -1392,7 +1452,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	{
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		HcuErrorPrint("MODBUS: Can not read data from serial port, return of read %d \n", ret);
-
+		/*
 		msg_struct_com_alarm_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -1409,6 +1469,7 @@ OPSTAT fsm_modbus_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_MODBUS, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_TASK(TASK_ID_MODBUS, "MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+		*/
 		return FAILURE;
 	}
 ///
