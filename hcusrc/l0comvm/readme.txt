@@ -11,7 +11,7 @@
 
 //= ZJL, 2017 Sep.18 CURRENT_SW_DELIVERY 266=>BFDF项目
 = 开始编写料斗的双链数据结构操作函数
-
+= 简化BFDF程序遗传，制作程序框架
 
 //= ZJL, 2017 Sep.16 CURRENT_SW_DELIVERY 265=>BFSC项目
 = 修改HUITP的picture定义
