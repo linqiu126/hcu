@@ -213,6 +213,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Error send command to serials port!\n");
 
+			/*
 			msg_struct_com_alarm_report_t snd;
 			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -229,6 +230,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
 				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+		    */
 
 			return FAILURE;
 		}else{
@@ -254,7 +256,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		{
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
 			HcuErrorPrint("SPSVIRGO: Can not read data from serial port, return of read %d \n", ret);
-
+			/*
 			msg_struct_com_alarm_report_t snd;
 			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
 
@@ -271,7 +273,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 
 			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
 				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
-
+			*/
 			return FAILURE;
 		}
 //

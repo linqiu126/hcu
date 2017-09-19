@@ -1615,7 +1615,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 	//使用HUITP发送MSG_ID_YCJK_CLOUDVELA_DATA_REPORT报告给后台
 	//
-	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1M_REPORT_CYCLE) == 0) && (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP)){
+	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_3M_REPORT_CYCLE) == 0) && (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP)){
 
 	    HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation report to default cloud\n\n\n\n\n\n");
 

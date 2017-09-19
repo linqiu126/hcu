@@ -31,6 +31,16 @@ enum FSM_STATE_MODBUS
 //Global variables
 extern HcuFsmStateItem_t HcuFsmModbus[];
 
+typedef struct gTaskModbusContext
+{
+	UINT32 NoiseHW_AlarmFlag;
+	UINT32 TspHW_AlarmFlag;
+	UINT32 TempHW_AlarmFlag;
+	UINT32 HumidHW_AlarmFlag;
+	UINT32 WindDirHW_AlarmFlag;
+	UINT32 WindSpdHW_AlarmFlag;
+}gTaskModbusContext_t;
+
 typedef struct SerialModbusMsgBuf
 {
 	UINT32 curLen;
