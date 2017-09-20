@@ -2776,13 +2776,14 @@ typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 
 //MSG_ID_USBCAN_L2FRAME_RCV,
 #define HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE 256
+#define HCU_SYSMSG_USBCAN_MAX_RX_BUF_SIZE 	HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE
 typedef struct msg_struct_bfsc_usbcan_l2frame_rcv
 {
 	UINT8  nodeId;
 	UINT8  databuf[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE+1];  //为了防止尾巴重叠
 	UINT32 validDataLen;
 	UINT32 length;
-}msg_struct_bfsc_usbcan_l2frame_rcv_t;
+}msg_struct_usbcan_l2frame_rcv_t;
 
 //BFSCUICOMM
 //BFSCUI Json文件修改通知
@@ -3000,12 +3001,12 @@ typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 }msg_struct_can_l3bfdf_ws_comb_out_fb_t;
 
 //MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
-typedef struct msg_struct_can_l3bfdf_basket_clearn_ind
+typedef struct msg_struct_can_l3bfdf_basket_clean_ind
 {
 	UINT8  boardId;
 	UINT16 hopperId;
 	UINT32 length;
-}msg_struct_can_l3bfdf_basket_clearn_ind_t;
+}msg_struct_can_l3bfdf_basket_clean_ind_t;
 
 //BFHS项目
 //MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,
