@@ -100,37 +100,9 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFDFUICOMM] = 0;
-
 	memset(&gTaskL3bfdfuicommContext, 0, sizeof(gTaskL3bfdfuicommContext_t));
 
-	//Create necessary exchange files
-
-	//在系统/temp目录下创建空的command.json文件，用于通知界面HCU及下位机已经准备好了
-/*
-	FILE *fileStream;
-	char cmdJson[] = "{\"start_cmd\":{\"flag\":0,\"value\":0,\"confindex\":0},\"calibration_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0},\"resume_cmd\":{\"flag\":0,\"value\":0},\"test_cmd\":{\"flag\":0,\"value\":0,\"sensorid\":0,\"testcmd\":0,\"testpara\":0}}";
-	char str[100];
-	memset(str, 0, sizeof(str));
-	sprintf(str, "rm %s", zHcuCmdflagJsonFile);
-	if (access(&str[3], F_OK) == 0) system(str);
-	if ((fileStream = fopen( zHcuCmdflagJsonFile, "w+" )) != NULL ) {
-		fputs(cmdJson, fileStream);
-		fclose(fileStream);
-	 }
-	memset(str, 0, sizeof(str));
-	sprintf(str, "chmod -R 777 %s", zHcuCmdflagJsonFile);
-	system(str);
-
-	//修改生成command.json link
-	sprintf(str, "rm %s", zHcuCmdLinkJsonFile);
-	if (access(&str[3], F_OK) == 0) system(str);
-	sprintf(str, "ln -s %s %s", zHcuCmdflagJsonFile, zHcuCmdLinkJsonFile);
-	if (system(str) < 0) printf("\n");
-	sprintf(str, "chmod -R 777 /var/www/html/*");
-	system(str);
-
-	HCU_DEBUG_PRINT_INF("BFDFUICOMM: fsm_bfdfuicomm_l3bfdf_cfg_resp: fileStream=%x, zHcuCmdflagJsonFile = %d\n", fileStream, zHcuCmdflagJsonFile);
-*/
+	//启动MQTT服务内容
 
 	//启动周期性定时器
 /*
@@ -149,7 +121,19 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//延迟并启动系统，进入测试模式
-
+	hcu_sleep(3);
+	//设置configIndex=1
+	func_bfdfuicomm_read_cfg_file_into_ctrl_table(1);
+	//发送启动消息给L3BFDF
+	msg_struct_uicomm_l3bfdf_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_cmd_req_t));
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_cmd_req_t);
+	ret = hcu_message_send(MSG_ID_UICOMM_L3BFDF_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM, &snd, snd.length);
+	if (ret == FAILURE){
+		HcuErrorPrint("BFDFUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+		return FAILURE;
+	}
 
 	//返回
 	return SUCCESS;
@@ -746,6 +730,78 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	return SUCCESS;
 }*/
 
+//扫描文件是否有DEFAULT参数，并配置进入系统参数控制表
+OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
+{
+	//Update config id to gTaskL3bfdfContext
+	gTaskL3bfdfContext.configId = config_index;
 
+	//查询用户动态配置参数
+	gTaskL3bfdfContext.comAlgPar.MinScaleNumberCombination = 1;
+	gTaskL3bfdfContext.comAlgPar.MaxScaleNumberCombination  = 1;
+	gTaskL3bfdfContext.comAlgPar.MinScaleNumberStartCombination = 1;
+	gTaskL3bfdfContext.comAlgPar.TargetCombinationWeight = 1;
+	gTaskL3bfdfContext.comAlgPar.TargetCombinationUpperWeight = 1;
+	gTaskL3bfdfContext.comAlgPar.IsProximitCombinationMode = 1;
+	gTaskL3bfdfContext.comAlgPar.CombinationBias =  1;
+	gTaskL3bfdfContext.comAlgPar.IsRemainDetectionEnable = 1;
+	gTaskL3bfdfContext.comAlgPar.RemainDetectionTimeSec  = 1;
+	gTaskL3bfdfContext.comAlgPar.RemainScaleTreatment =  1;
+	gTaskL3bfdfContext.comAlgPar.IsPriorityScaleEnabled = 1;
+	gTaskL3bfdfContext.comAlgPar.CombinationAutoMode = 1;
+	gTaskL3bfdfContext.comAlgPar.MovingAvrageSpeedCount = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyThread = 1;
+	gTaskL3bfdfContext.wgtSnrPar.StardardReadyTimeMs = 1;
+	gTaskL3bfdfContext.motCtrPar.MotorSpeed = 1;
+	gTaskL3bfdfContext.motCtrPar.MotorDirection = 1;
+	gTaskL3bfdfContext.motCtrPar.MotorRollingStartMs = 1;
+	gTaskL3bfdfContext.motCtrPar.MotorRollingStopMs  = 1;
+	gTaskL3bfdfContext.motCtrPar.MotorRollingInveralMs = 1;
+	gTaskL3bfdfContext.motCtrPar.MotorFailureDetectionVaration = 1;
+	gTaskL3bfdfContext.motCtrPar.MotorFailureDetectionTimeMs = 1;
+
+	gTaskL3bfdfContext.wgtSnrPar.MaxAllowedWeight = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcGain = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcSampleFreq = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorStaticZeroValue = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorTailorValue = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = 1;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = 1;
+
+	gTaskL3bfdfContext.comAlgPar.CombinationSpeedMode = 0;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupThread = 300;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = 500;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorInitOrNot = 0;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcBitwidth = 22;
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcValue = 0;
+
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[0] = 0;				// NOT for GUI
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[1] = 0;				// NOT for GUI
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[2] = 0;				// NOT for GUI
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[3] = 0;				// NOT for GUI
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[0] = 1;				// NOT for GUI
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[1] = 0;				// NOT for GUI
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[2] = 0;				// NOT for GUI
+	gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[3] = 0;				// NOT for GUI
+
+	//查询校准数据
+	gTaskL3bfdfContext.wgtSnrPar.calibration[0][0].WeightSensorCalibrationZeroAdcValue = 1;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[0][0].WeightSensorCalibrationFullAdcValue = 1000;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[0][0].WeightSensorCalibrationFullWeight = 100;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[0][1].WeightSensorCalibrationZeroAdcValue = 1;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[0][0].WeightSensorCalibrationFullAdcValue = 1000;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[0][1].WeightSensorCalibrationFullWeight = 100;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationZeroAdcValue = 1;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationFullAdcValue = 1000;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationFullWeight = 100;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[1][1].WeightSensorCalibrationZeroAdcValue = 1;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationFullAdcValue = 1000;
+	gTaskL3bfdfContext.wgtSnrPar.calibration[1][1].WeightSensorCalibrationFullWeight = 100;
+
+	return SUCCESS;
+}
 
 

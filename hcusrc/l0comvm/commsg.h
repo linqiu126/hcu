@@ -2777,7 +2777,7 @@ typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
 //MSG_ID_USBCAN_L2FRAME_RCV,
 #define HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE 256
 #define HCU_SYSMSG_USBCAN_MAX_RX_BUF_SIZE 	HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE
-typedef struct msg_struct_bfsc_usbcan_l2frame_rcv
+typedef struct msg_struct_usbcan_l2frame_rcv
 {
 	UINT8  nodeId;
 	UINT8  databuf[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE+1];  //为了防止尾巴重叠
@@ -2905,6 +2905,7 @@ typedef struct msg_struct_l3bfhs_uicomm_cmd_resp
 //BFDF项目
 //MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
 #define HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR		8
+#define HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR		4
 #define HCU_SYSMSG_BFDF_ERR_CODE_INVALIID	  	0
 #define HCU_SYSMSG_BFDF_ERR_CODE_UNSPECIFIC  	1
 #define HCU_SYSMSG_BFDF_ERR_CODE_TIME_OUT  		2
@@ -2912,7 +2913,7 @@ typedef struct msg_struct_l3bfhs_uicomm_cmd_resp
 
 typedef struct msg_struct_l3bfdf_can_sys_cfg_req
 {
-	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR][HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
 	UINT32 length;
 }msg_struct_l3bfdf_can_sys_cfg_req_t;
 
@@ -2928,7 +2929,7 @@ typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
 //MSG_ID_L3BFDF_CAN_SYS_SUSPEND_REQ,
 typedef struct msg_struct_l3bfdf_can_sys_suspend_req
 {
-	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR][HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
 	UINT32 length;
 }msg_struct_l3bfdf_can_sys_suspend_req_t;
 
@@ -2944,7 +2945,7 @@ typedef struct msg_struct_can_l3bfdf_sys_suspend_resp
 //MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,
 typedef struct msg_struct_l3bfdf_can_sys_resume_req
 {
-	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR][HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
 	UINT32 length;
 }msg_struct_l3bfdf_can_sys_resume_req_t;
 

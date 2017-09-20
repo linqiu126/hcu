@@ -29,7 +29,6 @@
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1176430407" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TARGET_LINUX_X86"/>
-									<listOptionValue builtIn="false" value="HATE_TRIGGER_ENABLE"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.659800720" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>

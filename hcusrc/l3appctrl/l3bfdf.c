@@ -128,9 +128,11 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF] = 0;
-//	#if ((HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX > HUITP_SCALE_WEIGHT_SENSOR_NBR_MAX) || (HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX > HCU_SYSMSG_L3BFDF_MAX_SENSOR_NBR))
-//		#error L3BFDF module level configuration number error!
-//	#endif
+	//严格检查内部消息设置的大小，是否越界
+	#if ((HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR < HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR < HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX))
+		#error L3BFDF module level configuration number error!
+	#endif
+
 //	//严格防止HUITP消息跟内部消息在关键结构上定义的不一致
 //	if ((sizeof(StrIe_HUITP_IEID_uni_scale_weight_sta_element_t)) != (sizeof(msgie_struct_bfdf_scale_weight_sta_element_t)))
 //		HCU_ERROR_PRINT_L3BFDF("L3BFDF: module message definition on statistic element error!\n");
@@ -214,13 +216,12 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		}
 	}
 
-//	//配置初始化：一次性工作
-//	else if ((rcv.timeId == TIMER_ID_1S_L3BFDF_SYS_CFG_WAIT_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-//		if (func_l3bfdf_time_out_sys_cfg_req_process() == FAILURE){
-//			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
-//		}
-//	}
-//	}
+	//配置初始化：一次性工作
+	else if ((rcv.timeId == TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		if (func_l3bfdf_time_out_sys_cfg_req_process() == FAILURE){
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
+		}
+	}
 
 	//返回
 	return SUCCESS;
@@ -233,10 +234,10 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
  ***************************************************************************************************************************/
 OPSTAT fsm_l3bfdf_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0, i = 0;
+	int ret=0, i = 0, j = 0;
 	//UINT8 state = 0;
-	//int total=0;
-	//char s[200], tmp[20];
+	int total=0;
+	char s[200], tmp[20];
 
 	msg_struct_uicomm_l3bfdf_cmd_req_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfdf_cmd_req_t));
@@ -249,50 +250,53 @@ OPSTAT fsm_l3bfdf_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	//state = FsmGetState(TASK_ID_L3BFDF);
 
 	//启动命令
-	if ((rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START) || (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME)){
-/*		msg_struct_l3bfdf_can_sys_start_req_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_sys_start_req_t));
-		snd.length = sizeof(msg_struct_l3bfdf_can_sys_start_req_t);
+	if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START){
+		msg_struct_l3bfdf_can_sys_cfg_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t));
+		snd.length = sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t);
 		total=0;
-		for (i = 0; i< HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX; i++){
-			//所有的配置过后的传感器
-			if (gTaskL3bfdfContext.sensorWs[i].sensorStatus >= HCU_L3BFDF_SENSOR_WS_STATUS_CFG_CMPL){
-				snd.wsBitmap[i] = TRUE;
-				gTaskL3bfdfContext.sensorWs[i].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_START_REQ;
-				gTaskL3bfdfContext.sensorWs[i].startRcvFlag = FALSE;
-				total++;
+		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){
+			for (i = 0; i< HCU_L3BFDF_NODE_BOARD_NBR_MAX; i++){
+				//所有的配置过后的传感器
+				if (gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus > HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MIN){
+					snd.boardBitmap[j][i] = TRUE;
+					gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ;
+					gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;
+					total++;
+				}
+				else snd.boardBitmap[j][i] = FALSE;
 			}
-			else snd.wsBitmap[i] = FALSE;
 		}
 
 		memset(s, 0, sizeof(s));
 		sprintf(s, "L3BFDF: Total start sensor number = %d, bitmap = ", total);
-		for (i=0; i<HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX; i++){
-			memset(tmp, 0, sizeof(tmp));
-			sprintf(tmp, "%d/", snd.wsBitmap[i]);
-			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){
+			for (i=0; i<HCU_L3BFDF_NODE_BOARD_NBR_MAX; i++){
+				memset(tmp, 0, sizeof(tmp));
+				sprintf(tmp, "%d/", snd.boardBitmap[j][i]);
+				if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+			}
 		}
 		strcat(s, "\n");
 		HCU_DEBUG_PRINT_CRT(s);
 
 		HCU_DEBUG_PRINT_CRT("L3BFDF: Total sensor to be start = %d\n", total);
-		ret = hcu_message_send(MSG_ID_L3BFDF_CAN_SYS_START_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFDF, &snd, snd.length);
-		if (ret == FAILURE) HCU_ERROR_PRINT_L3BFDF("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+		if (hcu_message_send(MSG_ID_L3BFDF_CAN_SYS_CFG_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE)
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 
 		//启动定时器
-		ret = hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_SYS_START_WAIT_FB, \
-				zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFDF_SYS_START_WAIT_FB].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error start timer!\n");
-		}
+		hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB, zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	}
 
-		//设置新状态
-		if (FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OPR_GO) == FAILURE){
-			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error Set FSM State!\n");
-		}*/
+	//SUSPEND
+	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND){
 
 	}
 
+	//RESUME
+	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME){
+
+	}
 	//停止命令：针对所有的传感器来说的
 	else if (rcv.cmdid == HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP){
 /*		msg_struct_l3bfdf_can_sys_stop_req_t snd;
@@ -995,6 +999,62 @@ OPSTAT fsm_l3bfdf_canitf_basket_clearn_ind(UINT32 dest_id, UINT32 src_id, void *
 	//返回
 	return SUCCESS;
 }
+
+/***************************************************************************************************************************
+ *
+ * 　TIME_OUT处理过程
+ *
+ ***************************************************************************************************************************/
+OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void)
+{
+	int ret = 0, i=0;
+	int total = 0;
+
+/*
+	//先判定成功的数量是否达到最小数，如果是，就认为是成功了
+	for (i=0; i<HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+		if (gTaskL3bfscContext.sensorWs[i].sensorStatus == HCU_L3BFSC_SENSOR_WS_STATUS_CFG_CMPL) total++;
+	}
+	if (total < gTaskL3bfscContext.comAlgPar.MinScaleNumberCombination){
+		//发送反馈给UICOMM
+		msg_struct_l3bfsc_uicomm_cfg_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
+		snd.validFlag = FALSE;
+		snd.sensorid = HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
+		snd.errCode = HCU_SYSMSG_BFSC_ERR_CODE_TIME_OUT;
+		snd.length = sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t);
+		ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CFG_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
+		if (ret == FAILURE){
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+		}
+		//设置状态机
+		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE){
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
+		}
+	}
+
+	//如果超过最小数量，则可以继续执行
+	else{
+		//发送反馈给UICOMM
+		msg_struct_l3bfsc_uicomm_cfg_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
+		snd.validFlag = TRUE;
+		snd.length = sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t);
+		ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CFG_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
+		if (ret == FAILURE){
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+		}
+		//设置状态机
+		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
+		}
+	}
+*/
+
+	//返回
+	return SUCCESS;
+}
+
 
 /***************************************************************************************************************************
  *

@@ -9,6 +9,10 @@
 
 
 
+
+//= ZJL, 2017 Sep.20 CURRENT_SW_DELIVERY 269=>BFDF项目
+= 写启动部分的代码
+
 //= ZJL, 2017 Sep.20 CURRENT_SW_DELIVERY 268=>BFDF项目
 = 创建消息处理框架函数
 = 对BFSC项目有微调，需要REGRESSION该项目的基本工作内容

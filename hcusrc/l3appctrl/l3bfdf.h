@@ -32,34 +32,32 @@ enum FSM_STATE_L3BFDF
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfdf[];
 
-//称重板
-typedef struct L3BfdfWgtBoardInfo
+//统一下位机板子的控制信息
+typedef struct L3BfdfNodeBoardInfo
 {
-	UINT8  wgtStatus; 	//无效，空料，有料数值错误，有料待组合，有料待出料
+	UINT8  nodeStatus; 	//无效，空料，有料数值错误，有料待组合，有料待出料
 	UINT8  cfgRcvFlag;   	//用来保存CFG_RESP是否收到
-	UINT8  startRcvFlag;  	//用来保存START_RESP是否收到
-	UINT8  stopRcvFlag;   	//用来保存STOP_RESP是否收到
-}L3BfdfWgtBoardInfo_t;
-#define HCU_L3BFDF_WGT_BOARD_STATUS_NONE			0
-#define HCU_L3BFDF_WGT_BOARD_STATUS_OFFLINE			1
-#define HCU_L3BFDF_WGT_BOARD_STATUS_HW_ERROR		2
-#define HCU_L3BFDF_WGT_BOARD_STATUS_OFFLINE_MAX		9
-#define HCU_L3BFDF_WGT_BOARD_STATUS_INIT_MIN		10
-#define HCU_L3BFDF_WGT_BOARD_STATUS_STARTUP			11		//下位机上线
-#define HCU_L3BFDF_WGT_BOARD_STATUS_CFG_REQ 		12  	//配置开始
-#define HCU_L3BFDF_WGT_BOARD_STATUS_CFG_CMPL 		13  	//配置完成
-#define HCU_L3BFDF_WGT_BOARD_STATUS_START_REQ 		14  	//启动开始
-#define HCU_L3BFDF_WGT_BOARD_STATUS_STOP_REQ 		15  	//停止开始
-#define HCU_L3BFDF_WGT_BOARD_STATUS_STOP_CMPL 		16  	//停止完成
-#define HCU_L3BFDF_WGT_BOARD_STATUS_INIT_ERR 		17  	//初始化错误
-#define HCU_L3BFDF_WGT_BOARD_STATUS_INIT_MAX		29
-#define HCU_L3BFDF_WGT_BOARD_STATUS_WORK_MIN 		30
-#define HCU_L3BFDF_WGT_BOARD_STATUS_VALID 			31
-#define HCU_L3BFDF_WGT_BOARD_STATUS_VALID_ERROR 	32
-#define HCU_L3BFDF_WGT_BOARD_STATUS_SUSPEND 		33
-#define HCU_L3BFDF_WGT_BOARD_STATUS_WORK_MAX 		49
-#define HCU_L3BFDF_WGT_BOARD_STATUS_INVALID  		255
+	UINT8  resumeRcvFlag;  	//用来保存RESUME_RESP是否收到
+	UINT8  suspendRcvFlag;  //用来保存SUSPEND_RESP是否收到
+}L3BfdfNodeBoardInfo_t;
+#define HCU_L3BFDF_NODE_BOARD_STATUS_NONE			0
+#define HCU_L3BFDF_NODE_BOARD_STATUS_OFFLINE		1
+#define HCU_L3BFDF_NODE_BOARD_STATUS_HW_ERROR		2
+#define HCU_L3BFDF_NODE_BOARD_STATUS_OFFLINE_MAX	9
+#define HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MIN		10
+#define HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP		11		//下位机上线
+#define HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ 	12  	//配置开始
+#define HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_CMPL 13  	//配置完成
+#define HCU_L3BFDF_NODE_BOARD_STATUS_INIT_ERR 		17  	//初始化错误
+#define HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MAX		29
+#define HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MIN 		30
+#define HCU_L3BFDF_NODE_BOARD_STATUS_VALID 			31
+#define HCU_L3BFDF_NODE_BOARD_STATUS_VALID_ERROR 	32
+#define HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND 		33
+#define HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MAX 		49
+#define HCU_L3BFDF_NODE_BOARD_STATUS_INVALID  		255
 
+/*
 //分选组合板
 typedef struct L3BfdfSncBoardInfo
 {
@@ -88,6 +86,7 @@ typedef struct L3BfdfSncBoardInfo
 #define HCU_L3BFDF_SNG_BOARD_STATUS_SUSPEND 		33
 #define HCU_L3BFDF_SNG_BOARD_STATUS_WORK_MAX 		49
 #define HCU_L3BFDF_SNG_BOARD_STATUS_INVALID  		255
+*/
 
 //分组信息
 typedef struct L3BfdfGroupInfo
@@ -157,22 +156,88 @@ typedef struct L3BfdfHopperInfo
 	#define HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD	8
 #endif
 
+//配置参数
+typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
+{
+	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
+	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
+	UINT32	MinScaleNumberStartCombination;			//开始查找的最小个数，就是说大于这个个数就开始搜索
+	UINT32	TargetCombinationWeight;				//组合目标重量
+	UINT32	TargetCombinationUpperWeight;			//组合目标重量上限
+	UINT32	IsPriorityScaleEnabled;					// 1: Enable, 0: Disable
+	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
+	UINT32	CombinationBias;						      //每个Scale要求放几个物品
+	UINT32	IsRemainDetectionEnable;				  //Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	RemainScaleTreatment;					    // 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
+	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
+	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
+	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
+}gTaskL3bfscContextCombinationAlgorithmParamaters_t;
+typedef struct gTaskL3bfscContextCalibration
+{
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;
+}gTaskL3bfscContextCalibration_t;
+#define HCU_L3BFDF_CALIBRATION_WGT_BELT_POINT 	240
+typedef struct gTaskL3bfscContextWeightSensorParamaters
+{
+	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorEmptyThread;
+	UINT32	WeightSensorEmptyDetectionTimeMs;
+	UINT32	WeightSensorPickupThread;						// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+	UINT32	StardardReadyTimeMs;								//???
+	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	UINT32  RemainDetectionTimeSec;
+	UINT32	WeightSensorInitOrNot;							// NOT for GUI
+	UINT32	WeightSensorAdcSampleFreq;
+	UINT32	WeightSensorAdcGain;
+	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
+	UINT32  WeightSensorAdcValue;								// NOT for GUI
+	gTaskL3bfscContextCalibration_t  calibration[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_L3BFDF_CALIBRATION_WGT_BELT_POINT];
+	UINT32	WeightSensorStaticZeroValue;
+	UINT32	WeightSensorTailorValue;				//皮重，分为每种
+	UINT32	WeightSensorDynamicZeroThreadValue;
+	UINT32	WeightSensorDynamicZeroHysteresisMs;
+	UINT32  WeightSensorFilterCoeff[4];				// NOT for GUI
+	UINT32  WeightSensorOutputValue[4];
+}gTaskL3bfscContextWeightSensorParamaters_t;
+typedef struct gTaskL3bfscContextMotorControlParamaters
+{
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorRollingStartMs;						//how long do the motor rolling for start action
+	UINT32	MotorRollingStopMs;							//how long do the motor rolling for stop action
+	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+}gTaskL3bfscContextMotorControlParamaters_t;
+
+#define HCU_L3BFDF_NODE_BOARD_NBR_MAX 	HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+1
+
 //主体上下文
 typedef struct gTaskL3bfdfContext
 {
 	//静态配置参数部分
-	UINT32  start24hStaTimeInUnix;									//系统配置的参数，表示24小时统计的日历起点
-
-	//动态部分
 	UINT16	configId;  												//用来标识系统工作在哪一套配置参数中
 	char    configName[20];
-	L3BfdfWgtBoardInfo_t  	wgt[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX];
-	L3BfdfSncBoardInfo_t  	snc[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX];
+	UINT32  start24hStaTimeInUnix;									//系统配置的参数，表示24小时统计的日历起点
+	gTaskL3bfscContextCombinationAlgorithmParamaters_t 	comAlgPar;
+	gTaskL3bfscContextWeightSensorParamaters_t			wgtSnrPar;
+	gTaskL3bfscContextMotorControlParamaters_t			motCtrPar;
+
+	//动态部分
+	//nodeDyn的编制原则是：0一定表达WGT板子，1-HCU_L3BFDF_NODE_BOARD_NBR_MAX表达一条流水先上的总共的板子数量
+	L3BfdfNodeBoardInfo_t  	nodeDyn[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_L3BFDF_NODE_BOARD_NBR_MAX];
 	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX]; //分成多少个组
 	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 	L3BfdfHopperInfo_t  	hopper[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 
 	//实时统计部分：均以一个统计周期为单位
+
 }gTaskL3bfdfContext_t;
 extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
 
@@ -208,6 +273,8 @@ void func_l3bfdf_stm_main_recovery_from_fault(void);  //提供了一种比RESTAR
 
 //Local API
 OPSTAT func_l3bfdf_int_init(void);
+OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void);
+
 
 
 //核心双链数据处理
