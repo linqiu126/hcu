@@ -801,6 +801,104 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationFullAdcValue = 1000;
 	gTaskL3bfdfContext.wgtSnrPar.calibration[1][1].WeightSensorCalibrationFullWeight = 100;
 
+	//分配Hooper数据：暂时没有考虑相应板子的启动状态
+	//Hopper初始化
+	func_l3bfdf_hopper_state_init(0);
+	func_l3bfdf_hopper_state_init(1);
+
+	int nbrGroup = 0;
+	nbrGroup = rand()%10+1;
+	func_l3bfdf_group_allocation(0, nbrGroup);
+	func_l3bfdf_hopper_add_by_group_in_average_distribution(0, nbrGroup);
+	nbrGroup = rand()%10+1;
+	func_l3bfdf_group_allocation(1, nbrGroup);
+	func_l3bfdf_hopper_add_by_group_in_normal_distribution(1, nbrGroup);
+
+	int i = 0;
+	char s[800];
+	char tmp[40];
+	memset(s, 0, sizeof(s));
+	sprintf(s, "BFDFUICOMM: Stream[0] Total Group number = %d, bitmap = ", gTaskL3bfdfContext.totalGroupNbr[0]);
+	for (i = 0; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "[%d/%d/%d/%d/%d]", gTaskL3bfdfContext.hopper[0][i].groupId, gTaskL3bfdfContext.hopper[0][i].hopperId, gTaskL3bfdfContext.hopper[0][i].nextHopperId, gTaskL3bfdfContext.hopper[0][i].preHopperId, gTaskL3bfdfContext.hopper[0][i].hopperStatus);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+	sprintf(s, "BFDFUICOMM: Stream[1] Total Group number = %d, bitmap = ", gTaskL3bfdfContext.totalGroupNbr[1]);
+	for (i = 0; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "[%d/%d/%d/%d/%d]", gTaskL3bfdfContext.hopper[1][i].groupId, gTaskL3bfdfContext.hopper[1][i].hopperId, gTaskL3bfdfContext.hopper[1][i].nextHopperId, gTaskL3bfdfContext.hopper[1][i].preHopperId, gTaskL3bfdfContext.hopper[1][i].hopperStatus);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+
+	//Audit一次
+	int stream = 0;
+	int fHopper = 0;
+	int nextHopper = 0;
+	int tmpHopper = 0;
+	sprintf(s, "BFDFUICOMM: Stream[%d] Total Group number = %d, Group[x-y/y/y] = ", stream, gTaskL3bfdfContext.totalGroupNbr[stream]);
+	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[stream]; i++)
+	{
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "[%d-%d-", i, gTaskL3bfdfContext.group[stream][i].totalHopperNbr);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		fHopper = gTaskL3bfdfContext.group[stream][i].firstHopperId;
+		if (fHopper == 0){
+			strcat(s, "] ");
+			continue;
+		}
+		tmpHopper = fHopper;
+		sprintf(tmp, "%d/", fHopper);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		nextHopper = gTaskL3bfdfContext.hopper[stream][tmpHopper].nextHopperId;
+		while(nextHopper!=fHopper){
+			sprintf(tmp, "%d/", nextHopper);
+			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+			tmpHopper = gTaskL3bfdfContext.hopper[stream][nextHopper].nextHopperId;
+			nextHopper = tmpHopper;
+			//HcuDebugPrint("TEST: nextHopperid = %d, fHopper=%d\n", nextHopper, fHopper);
+		}
+		strcat(s, "] ");
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+
+	stream = 1;
+	sprintf(s, "BFDFUICOMM: Stream[%d] Total Group number = %d, Group[x-y/y/y] = ", stream, gTaskL3bfdfContext.totalGroupNbr[stream]);
+	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[stream]; i++)
+	{
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "[%d-%d-", i, gTaskL3bfdfContext.group[stream][i].totalHopperNbr);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		fHopper = gTaskL3bfdfContext.group[stream][i].firstHopperId;
+		if (fHopper == 0){
+			strcat(s, "] ");
+			continue;
+		}
+		tmpHopper = fHopper;
+		sprintf(tmp, "%d/", fHopper);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		nextHopper = gTaskL3bfdfContext.hopper[stream][tmpHopper].nextHopperId;
+		while(nextHopper!=fHopper){
+			sprintf(tmp, "%d/", nextHopper);
+			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+			tmpHopper = gTaskL3bfdfContext.hopper[stream][nextHopper].nextHopperId;
+			nextHopper = tmpHopper;
+			//HcuDebugPrint("TEST: nextHopperid = %d, fHopper=%d\n", nextHopper, fHopper);
+		}
+		strcat(s, "] ");
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+
+	//Audit过程
+	int res = func_l3bfdf_hopper_dual_chain_audit();
+	if (res < 0) HCU_ERROR_PRINT_BFDFUICOMM("BSDFUICOMM: Audit error, errCode = %d\n", res);
+
 	return SUCCESS;
 }
 

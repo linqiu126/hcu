@@ -118,27 +118,13 @@ typedef struct L3BfdfHopperInfo
 //料斗状态定义
 #define HCU_L3BFDF_HOPPER_STATUS_NONE			0
 #define HCU_L3BFDF_HOPPER_STATUS_OFFLINE		1
-#define HCU_L3BFDF_HOPPER_STATUS_HW_ERROR		2
 #define HCU_L3BFDF_HOPPER_STATUS_OFFLINE_MAX	9
 #define HCU_L3BFDF_HOPPER_STATUS_INIT_MIN		10
-#define HCU_L3BFDF_HOPPER_STATUS_STARTUP		11		//下位机上线
-#define HCU_L3BFDF_HOPPER_STATUS_CFG_REQ 		12  	//配置开始
-#define HCU_L3BFDF_HOPPER_STATUS_CFG_CMPL 		13  	//配置完成
-#define HCU_L3BFDF_HOPPER_STATUS_START_REQ 		14  	//启动开始
-#define HCU_L3BFDF_HOPPER_STATUS_STOP_REQ 		15  	//停止开始
-#define HCU_L3BFDF_HOPPER_STATUS_STOP_CMPL 		16  	//停止完成
-#define HCU_L3BFDF_HOPPER_STATUS_INIT_ERR 		17  	//初始化错误
-#define HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC   18
-#define HCU_L3BFDF_HOPPER_STATUS_INIT_ALLOC     19
+#define HCU_L3BFDF_HOPPER_STATUS_INIT_UNALLOC   11
+#define HCU_L3BFDF_HOPPER_STATUS_INIT_ALLOC     12
 #define HCU_L3BFDF_HOPPER_STATUS_INIT_MAX		29
 #define HCU_L3BFDF_HOPPER_STATUS_WORK_MIN 		30
-#define HCU_L3BFDF_HOPPER_STATUS_VALIID_EMPTY 	31      //秤盘空
-#define HCU_L3BFDF_HOPPER_STATUS_VALID_ERROR 	32 		//秤盘有料数值错误
-#define HCU_L3BFDF_HOPPER_STATUS_VALID_TO_COMB 	33 		//秤盘有料待组合
-#define HCU_L3BFDF_HOPPER_STATUS_VALID_TO_TTT 	34		//秤盘有料待出料
-#define HCU_L3BFDF_HOPPER_STATUS_VALID_TTT_START 35		//秤盘有料开始出
-#define HCU_L3BFDF_HOPPER_STATUS_VALID_TO_TGU 	36		//秤盘有料待抛弃
-#define HCU_L3BFDF_HOPPER_STATUS_VALID_TGU_START 37		//秤盘有料开始出抛
+#define HCU_L3BFDF_HOPPER_STATUS_VALID          31
 #define HCU_L3BFDF_HOPPER_STATUS_WORK_MAX 		49
 #define HCU_L3BFDF_HOPPER_STATUS_INVALID  		255
 
@@ -230,9 +216,9 @@ typedef struct gTaskL3bfdfContext
 	//动态部分
 	//nodeDyn的编制原则是：0一定表达WGT板子，1-HCU_L3BFDF_NODE_BOARD_NBR_MAX表达一条流水先上的总共的板子数量
 	L3BfdfNodeBoardInfo_t  	nodeDyn[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX];
-	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX]; //分成多少个组
-	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
-	L3BfdfHopperInfo_t  	hopper[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
+	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX]; //分成多少个组，这个数据不包括第一组，特别注意！
+	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
+	L3BfdfHopperInfo_t  	hopper[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 
 	//实时统计部分：均以一个统计周期为单位
 
@@ -276,12 +262,19 @@ bool func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 
 
 //核心双链数据处理
-bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
-bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hopperNewId);
-bool func_l3bfdf_hopper_remove_by_tail(UINT8 streamId, UINT16 groupId);
-bool func_l3bfdf_hopper_insert_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId, UINT16 hopperNewId);
-bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId);
+extern bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
+extern bool func_l3bfdf_hopper_state_init(UINT8 streamId);
+extern bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hopperNewId);
+extern bool func_l3bfdf_hopper_add_by_group(UINT8 streamId, UINT16 groupId, UINT16 nbrHopper);
+extern bool func_l3bfdf_hopper_add_by_group_in_average_distribution(UINT8 streamId, UINT16 nbrGroup);
+extern bool func_l3bfdf_hopper_add_by_group_in_normal_distribution(UINT8 streamId, UINT16 nbrGroup);
+extern bool func_l3bfdf_hopper_remove_by_tail(UINT8 streamId, UINT16 groupId);
+extern bool func_l3bfdf_hopper_insert_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId, UINT16 hopperNewId);
+extern bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId);
+extern int  func_l3bfdf_hopper_dual_chain_audit(void);
 
+//基础函数
+double gaussian(double u, double n);
 
 //External APIs
 extern OPSTAT hcu_sps232_qr_printer_init(void);

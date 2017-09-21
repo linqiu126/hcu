@@ -10,6 +10,8 @@
 
 #include "../l1com/l1comdef.h"
 #include "../l2codec/huitp.h"
+#include "../l3appctrl/l3bfdf.h"
+
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00

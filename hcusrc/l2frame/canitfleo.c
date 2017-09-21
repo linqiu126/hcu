@@ -1488,16 +1488,16 @@ OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 
 OPSTAT func_canitfleo_working_scan_process(void)
 {
-	gTaskL3bfdfContext.nodeDyn[0][0].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[0][1].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[0][2].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[0][3].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[0][4].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[1][0].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[1][1].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[1][2].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[1][3].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
-	gTaskL3bfdfContext.nodeDyn[1][4].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][1].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][2].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][3].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][4].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][1].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][2].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][3].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][4].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
 
 	return SUCCESS;
 }
