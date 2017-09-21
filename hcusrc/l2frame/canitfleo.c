@@ -82,7 +82,10 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 	#include "../l3appctrl/l3bfsc.h"
 	extern gTaskL3bfscContext_t gTaskL3bfscContext;
 #endif
-
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	#include "../l3appctrl/l3bfdf.h"
+	extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
+#endif
 //Task Global variables
 gTaskCanitfleoContext_t gTaskCanitfleoContext;
 
@@ -136,13 +139,13 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
 	//为了简化任务的执行，先禁止该定时器的启动
-//	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-//	if (ret == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error start timer!\n");
-
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error start timer!\n");
+#endif
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error Set FSM State!\n");
-
 	HCU_DEBUG_PRINT_FAT("CANITFLEO: Enter FSM_STATE_CANITFLEO_ACTIVED status, Keeping refresh here!\n");
 
 	return SUCCESS;
@@ -206,15 +209,15 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
 			if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error Set FSM State!\n");
 		}
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 		func_canitfleo_working_scan_process();
 #endif
 	}
 
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	//测试目的，正式程序中可以去掉
 	else if ((rcv.timeId == TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
-		//func_canitfleo_bfsc_simulation_data_process();
+		func_canitfleo_bfdf_simulation_data_process();
 	}
 #endif
 	return SUCCESS;
@@ -752,34 +755,6 @@ OPSTAT func_canitfleo_l2frame_msg_sw_package_report_received_handle(StrMsg_HUITP
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
 
 	//返回
-	return SUCCESS;
-}
-
-//发送测试数据给L3BFSC
-OPSTAT func_canitfleo_bfsc_simulation_data_process(void)
-{
-//	int ret = 0;
-
-	//这里的定时工作，是为了测试目标。
-	//这里的定时已经启动，是为了定时产生假测试数据，喂给L3BFSC模块，以便测试算法
-	msg_struct_can_l3bfsc_new_ready_event_t snd;
-	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
-	snd.length = sizeof(msg_struct_can_l3bfsc_new_ready_event_t);
-	gTaskCanitfleoContext.sensorIdRoundBing++;
-	gTaskCanitfleoContext.sensorIdRoundBing = (gTaskCanitfleoContext.sensorIdRoundBing % HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
-	snd.sensorid = gTaskCanitfleoContext.sensorIdRoundBing;
-	snd.sensorid = rand() % HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
-	snd.sensorWsValue = 500 + (rand()%50);
-
-	if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-
-	return SUCCESS;
-}
-
-
-OPSTAT func_canitfleo_working_scan_process(void)
-{
 	return SUCCESS;
 }
 
@@ -1358,6 +1333,28 @@ OPSTAT fsm_canitfleo_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+
+	//为了测试目的，直接返回
+	msg_struct_can_l3bfdf_sys_cfg_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t));
+	snd.validFlag = TRUE;
+	snd.length = sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t);
+	int i=0, j=0;
+	for (i = 0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
+	{
+		for (j = 0; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
+		{
+			snd.streamId = i;
+			snd.boardId = j;
+			hcu_usleep(rand()%10000);
+			if (hcu_message_send(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+		}
+	}
+
+	//启动测试定时器
+	hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA, zHcuSysEngPar.timer.array[TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
+
 	//返回
 	return SUCCESS;
 }
@@ -1488,6 +1485,46 @@ OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	//返回
 	return SUCCESS;
 }
+
+OPSTAT func_canitfleo_working_scan_process(void)
+{
+	gTaskL3bfdfContext.nodeDyn[0][0].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][1].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][2].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][3].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][4].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][0].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][1].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][2].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][3].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][4].nodeStatus = HCU_L3BFDF_HOPPER_STATUS_STARTUP;
+
+	return SUCCESS;
+}
+
+//发送测试数据给L3BFDF
+OPSTAT func_canitfleo_bfdf_simulation_data_process(void)
+{
+//	int ret = 0;
+
+	//这里的定时工作，是为了测试目标。
+	//这里的定时已经启动，是为了定时产生假测试数据，喂给L3BFSC模块，以便测试算法
+	msg_struct_can_l3bfdf_new_ready_event_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_new_ready_event_t));
+	snd.length = sizeof(msg_struct_can_l3bfdf_new_ready_event_t);
+	gTaskCanitfleoContext.sensorIdRoundBing++;
+	gTaskCanitfleoContext.sensorIdRoundBing = (gTaskCanitfleoContext.sensorIdRoundBing % HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX);
+	//snd.streamId = gTaskCanitfleoContext.sensorIdRoundBing;
+	snd.streamId = rand() % HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX;
+	snd.sensorWsValue = 500 + (rand()%50);
+
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
+	return SUCCESS;
+}
+
+
 #endif//BFDF项目部分
 
 

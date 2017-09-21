@@ -216,8 +216,6 @@ typedef struct gTaskL3bfscContextMotorControlParamaters
 	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
 }gTaskL3bfscContextMotorControlParamaters_t;
 
-#define HCU_L3BFDF_NODE_BOARD_NBR_MAX 	HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX+1
-
 //主体上下文
 typedef struct gTaskL3bfdfContext
 {
@@ -231,7 +229,7 @@ typedef struct gTaskL3bfdfContext
 
 	//动态部分
 	//nodeDyn的编制原则是：0一定表达WGT板子，1-HCU_L3BFDF_NODE_BOARD_NBR_MAX表达一条流水先上的总共的板子数量
-	L3BfdfNodeBoardInfo_t  	nodeDyn[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_L3BFDF_NODE_BOARD_NBR_MAX];
+	L3BfdfNodeBoardInfo_t  	nodeDyn[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX];
 	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX]; //分成多少个组
 	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 	L3BfdfHopperInfo_t  	hopper[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
@@ -274,7 +272,7 @@ void func_l3bfdf_stm_main_recovery_from_fault(void);  //提供了一种比RESTAR
 //Local API
 OPSTAT func_l3bfdf_int_init(void);
 OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void);
-
+bool func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 
 
 //核心双链数据处理

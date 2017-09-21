@@ -121,7 +121,7 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	}
 
 	//延迟并启动系统，进入测试模式
-	hcu_sleep(3);
+	hcu_sleep(4);
 	//设置configIndex=1
 	func_bfdfuicomm_read_cfg_file_into_ctrl_table(1);
 	//发送启动消息给L3BFDF
@@ -253,7 +253,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 	validFlag = rcv.validFlag;
 	cmdid = rcv.cmdid;
 	//测试用的打印命令
-	HCU_DEBUG_PRINT_NOR("TASK_ID_BFDFUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
+	HCU_DEBUG_PRINT_CRT("TASK_ID_BFDFUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
 
 /*
 	//存入数据库表单，通知界面新的状态信息
