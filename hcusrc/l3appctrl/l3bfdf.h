@@ -57,36 +57,6 @@ typedef struct L3BfdfNodeBoardInfo
 #define HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MAX 		49
 #define HCU_L3BFDF_NODE_BOARD_STATUS_INVALID  		255
 
-/*
-//分选组合板
-typedef struct L3BfdfSncBoardInfo
-{
-	UINT8  sncId;
-	UINT8  sncStatus; 	//无效，空料，有料数值错误，有料待组合，有料待出料
-	UINT8  cfgRcvFlag;   	//用来保存CFG_RESP是否收到
-	UINT8  startRcvFlag;  	//用来保存START_RESP是否收到
-	UINT8  stopRcvFlag;   	//用来保存STOP_RESP是否收到
-}L3BfdfSncBoardInfo_t;
-#define HCU_L3BFDF_SNG_BOARD_STATUS_NONE			0
-#define HCU_L3BFDF_SNG_BOARD_STATUS_OFFLINE			1
-#define HCU_L3BFDF_SNG_BOARD_STATUS_HW_ERROR		2
-#define HCU_L3BFDF_SNG_BOARD_STATUS_OFFLINE_MAX		9
-#define HCU_L3BFDF_SNG_BOARD_STATUS_INIT_MIN		10
-#define HCU_L3BFDF_SNG_BOARD_STATUS_STARTUP			11		//下位机上线
-#define HCU_L3BFDF_SNG_BOARD_STATUS_CFG_REQ 		12  	//配置开始
-#define HCU_L3BFDF_SNG_BOARD_STATUS_CFG_CMPL 		13  	//配置完成
-#define HCU_L3BFDF_SNG_BOARD_STATUS_START_REQ 		14  	//启动开始
-#define HCU_L3BFDF_SNG_BOARD_STATUS_STOP_REQ 		15  	//停止开始
-#define HCU_L3BFDF_SNG_BOARD_STATUS_STOP_CMPL 		16  	//停止完成
-#define HCU_L3BFDF_SNG_BOARD_STATUS_INIT_ERR 		17  	//初始化错误
-#define HCU_L3BFDF_SNG_BOARD_STATUS_INIT_MAX		29
-#define HCU_L3BFDF_SNG_BOARD_STATUS_WORK_MIN 		30
-#define HCU_L3BFDF_SNG_BOARD_STATUS_VALID 			31
-#define HCU_L3BFDF_SNG_BOARD_STATUS_VALID_ERROR 	32
-#define HCU_L3BFDF_SNG_BOARD_STATUS_SUSPEND 		33
-#define HCU_L3BFDF_SNG_BOARD_STATUS_WORK_MAX 		49
-#define HCU_L3BFDF_SNG_BOARD_STATUS_INVALID  		255
-*/
 
 //分组信息
 typedef struct L3BfdfGroupInfo
@@ -96,8 +66,12 @@ typedef struct L3BfdfGroupInfo
 	UINT16	totalHopperNbr;
 	UINT16	firstHopperId;	//系统配置以后，最初从哪一个料斗开始
 	UINT16	fillHopperId;	//优先从哪一个料斗开始查找，从而加速查找
-	float	targetWeight;
-	float	upperLimit;
+	double	targetWeight;
+	double	targetUpLimit;
+	double  rangeLow;
+	double  rangeHigh;
+	double  rangeAvg;
+	double  rangeSigma;
 }L3BfdfGroupInfo_t;
 //分组状态定义
 #define HCU_L3BFDF_GROUP_STATUS_NONE			0
@@ -109,7 +83,7 @@ typedef struct L3BfdfGroupInfo
 typedef struct L3BfdfHopperInfo
 {
 	UINT16 hopperId;
-	float  hopperValue;
+	double  hopperValue;
 	UINT16 hopperStatus;
 	UINT16 groupId;
 	UINT16 preHopperId;
@@ -219,6 +193,7 @@ typedef struct gTaskL3bfdfContext
 	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX]; //分成多少个组，这个数据不包括第一组，特别注意！
 	L3BfdfGroupInfo_t		group[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
 	L3BfdfHopperInfo_t  	hopper[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
+	//板子的编制，也必须从１-N，0表示垃圾桶
 
 	//实时统计部分：均以一个统计周期为单位
 
@@ -228,7 +203,7 @@ extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
 //统计打印报告的频率调整
 #define HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY 10
 
-//API通用部分
+//FSM通用部分
 extern OPSTAT fsm_l3bfdf_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -242,7 +217,6 @@ extern OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, vo
 extern OPSTAT fsm_l3bfdf_canitf_snc_pulliin_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_basket_clearn_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
-
 //CLOUDVELA后台通信部分
 extern OPSTAT fsm_l3bfdf_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -253,12 +227,10 @@ extern OPSTAT fsm_l3bfdf_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_
 //API启动及命令控制部分
 void func_l3bfdf_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
 
-
-
 //Local API
 OPSTAT func_l3bfdf_int_init(void);
 OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void);
-bool func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
+bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 
 
 //核心双链数据处理
@@ -272,6 +244,17 @@ extern bool func_l3bfdf_hopper_remove_by_tail(UINT8 streamId, UINT16 groupId);
 extern bool func_l3bfdf_hopper_insert_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId, UINT16 hopperNewId);
 extern bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hopperId);
 extern int  func_l3bfdf_hopper_dual_chain_audit(void);
+extern bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, UINT16 nbrGroup, double wgtMin, double wgtMax);
+extern bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, double targetWgt, double ulRatio);
+extern bool func_l3bfdf_print_all_hopper_status_by_id(UINT8 streamId);
+extern bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId);
+
+//核心搜索算法
+UINT16 func_l3bfdf_new_ws_search_group(UINT8 streamId, double weight);
+UINT16 func_l3bfdf_new_ws_search_hoper_lack_one(UINT8 streamId, UINT16 gid, double weight);
+
+
+
 
 //基础函数
 double gaussian(double u, double n);

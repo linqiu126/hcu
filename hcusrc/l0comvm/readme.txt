@@ -9,6 +9,10 @@
 
 
 
+//= ZJL, 2017 Sep.22 CURRENT_SW_DELIVERY 270=>BFDF项目
+= 增加每一组的目标范围
+
+
 
 //= ZJL, 2017 Sep.20 CURRENT_SW_DELIVERY 269=>BFDF项目
 = 写启动部分的代码

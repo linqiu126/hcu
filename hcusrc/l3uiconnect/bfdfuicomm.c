@@ -807,95 +807,31 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	func_l3bfdf_hopper_state_init(1);
 
 	int nbrGroup = 0;
+	//第0个流水线，分配组别
 	nbrGroup = rand()%10+1;
 	func_l3bfdf_group_allocation(0, nbrGroup);
 	func_l3bfdf_hopper_add_by_group_in_average_distribution(0, nbrGroup);
+	//设置小组重量范围
+	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 100.00, 1000.00);
+	//设置重量目标
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 10000, 0.3);
+
+	//第1个小组
 	nbrGroup = rand()%10+1;
 	func_l3bfdf_group_allocation(1, nbrGroup);
 	func_l3bfdf_hopper_add_by_group_in_normal_distribution(1, nbrGroup);
+	func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 200.00, 2000.00);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 20000, 0.4);
 
-	int i = 0;
-	char s[800];
-	char tmp[40];
-	memset(s, 0, sizeof(s));
-	sprintf(s, "BFDFUICOMM: Stream[0] Total Group number = %d, bitmap = ", gTaskL3bfdfContext.totalGroupNbr[0]);
-	for (i = 0; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
-		memset(tmp, 0, sizeof(tmp));
-		sprintf(tmp, "[%d/%d/%d/%d/%d]", gTaskL3bfdfContext.hopper[0][i].groupId, gTaskL3bfdfContext.hopper[0][i].hopperId, gTaskL3bfdfContext.hopper[0][i].nextHopperId, gTaskL3bfdfContext.hopper[0][i].preHopperId, gTaskL3bfdfContext.hopper[0][i].hopperStatus);
-		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-	}
-	strcat(s, "\n");
-	HCU_DEBUG_PRINT_CRT(s);
-	sprintf(s, "BFDFUICOMM: Stream[1] Total Group number = %d, bitmap = ", gTaskL3bfdfContext.totalGroupNbr[1]);
-	for (i = 0; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
-		memset(tmp, 0, sizeof(tmp));
-		sprintf(tmp, "[%d/%d/%d/%d/%d]", gTaskL3bfdfContext.hopper[1][i].groupId, gTaskL3bfdfContext.hopper[1][i].hopperId, gTaskL3bfdfContext.hopper[1][i].nextHopperId, gTaskL3bfdfContext.hopper[1][i].preHopperId, gTaskL3bfdfContext.hopper[1][i].hopperStatus);
-		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-	}
-	strcat(s, "\n");
-	HCU_DEBUG_PRINT_CRT(s);
+	//打印
+	func_l3bfdf_print_all_hopper_status_by_id(0);
+	func_l3bfdf_print_all_hopper_status_by_id(1);
 
-	//Audit一次
-	int stream = 0;
-	int fHopper = 0;
-	int nextHopper = 0;
-	int tmpHopper = 0;
-	sprintf(s, "BFDFUICOMM: Stream[%d] Total Group number = %d, Group[x-y/y/y] = ", stream, gTaskL3bfdfContext.totalGroupNbr[stream]);
-	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[stream]; i++)
-	{
-		memset(tmp, 0, sizeof(tmp));
-		sprintf(tmp, "[%d-%d-", i, gTaskL3bfdfContext.group[stream][i].totalHopperNbr);
-		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-		fHopper = gTaskL3bfdfContext.group[stream][i].firstHopperId;
-		if (fHopper == 0){
-			strcat(s, "] ");
-			continue;
-		}
-		tmpHopper = fHopper;
-		sprintf(tmp, "%d/", fHopper);
-		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-		nextHopper = gTaskL3bfdfContext.hopper[stream][tmpHopper].nextHopperId;
-		while(nextHopper!=fHopper){
-			sprintf(tmp, "%d/", nextHopper);
-			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-			tmpHopper = gTaskL3bfdfContext.hopper[stream][nextHopper].nextHopperId;
-			nextHopper = tmpHopper;
-			//HcuDebugPrint("TEST: nextHopperid = %d, fHopper=%d\n", nextHopper, fHopper);
-		}
-		strcat(s, "] ");
-	}
-	strcat(s, "\n");
-	HCU_DEBUG_PRINT_CRT(s);
+	//手工浏览一遍双链表
+	func_l3bfdf_print_all_hopper_status_by_chain(0);
+	func_l3bfdf_print_all_hopper_status_by_chain(1);
 
-	stream = 1;
-	sprintf(s, "BFDFUICOMM: Stream[%d] Total Group number = %d, Group[x-y/y/y] = ", stream, gTaskL3bfdfContext.totalGroupNbr[stream]);
-	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[stream]; i++)
-	{
-		memset(tmp, 0, sizeof(tmp));
-		sprintf(tmp, "[%d-%d-", i, gTaskL3bfdfContext.group[stream][i].totalHopperNbr);
-		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-		fHopper = gTaskL3bfdfContext.group[stream][i].firstHopperId;
-		if (fHopper == 0){
-			strcat(s, "] ");
-			continue;
-		}
-		tmpHopper = fHopper;
-		sprintf(tmp, "%d/", fHopper);
-		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-		nextHopper = gTaskL3bfdfContext.hopper[stream][tmpHopper].nextHopperId;
-		while(nextHopper!=fHopper){
-			sprintf(tmp, "%d/", nextHopper);
-			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
-			tmpHopper = gTaskL3bfdfContext.hopper[stream][nextHopper].nextHopperId;
-			nextHopper = tmpHopper;
-			//HcuDebugPrint("TEST: nextHopperid = %d, fHopper=%d\n", nextHopper, fHopper);
-		}
-		strcat(s, "] ");
-	}
-	strcat(s, "\n");
-	HCU_DEBUG_PRINT_CRT(s);
-
-	//Audit过程
+	//自动Audit过程
 	int res = func_l3bfdf_hopper_dual_chain_audit();
 	if (res < 0) HCU_ERROR_PRINT_BFDFUICOMM("BSDFUICOMM: Audit error, errCode = %d\n", res);
 
