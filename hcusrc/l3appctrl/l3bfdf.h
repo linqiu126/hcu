@@ -84,10 +84,12 @@ typedef struct L3BfdfHopperInfo
 {
 	UINT16 hopperId;
 	double  hopperValue;
+	double  hopperLastMat;
 	UINT16 hopperStatus;
 	UINT16 groupId;
 	UINT16 preHopperId;
 	UINT16 nextHopperId;
+	UINT8  basketStatus;
 }L3BfdfHopperInfo_t;
 //料斗状态定义
 #define HCU_L3BFDF_HOPPER_STATUS_NONE			0
@@ -99,8 +101,17 @@ typedef struct L3BfdfHopperInfo
 #define HCU_L3BFDF_HOPPER_STATUS_INIT_MAX		29
 #define HCU_L3BFDF_HOPPER_STATUS_WORK_MIN 		30
 #define HCU_L3BFDF_HOPPER_STATUS_VALID          31
+#define HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT     32
+#define HCU_L3BFDF_HOPPER_STATUS_FULL_PRE       33  //已经满了，就等待拨杆反馈
+#define HCU_L3BFDF_HOPPER_STATUS_FULL           34  //真正满了
+#define HCU_L3BFDF_HOPPER_STATUS_VALID_ERR      35
 #define HCU_L3BFDF_HOPPER_STATUS_WORK_MAX 		49
-#define HCU_L3BFDF_HOPPER_STATUS_INVALID  		255
+#define HCU_L3BFDF_HOPPER_STATUS_INVALID  		0xFF
+
+#define HCU_L3BFDF_HOPPER_BASKET_NONE			0
+#define HCU_L3BFDF_HOPPER_BASKET_EMPTY			1
+#define HCU_L3BFDF_HOPPER_BASKET_FULL			2
+#define HCU_L3BFDF_HOPPER_BASKET_INVALID  		0xFF
 
 //全局定义：为了解决编译不成功的问题
 #ifndef HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX
@@ -215,7 +226,7 @@ extern OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, v
 extern OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfdf_canitf_snc_pulliin_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_l3bfdf_canitf_basket_clearn_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //CLOUDVELA后台通信部分
 extern OPSTAT fsm_l3bfdf_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -230,12 +241,14 @@ void func_l3bfdf_stm_main_recovery_from_fault(void);  //提供了一种比RESTAR
 //Local API
 OPSTAT func_l3bfdf_int_init(void);
 OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void);
+OPSTAT func_l3bfdf_time_out_comb_out_req_process(void);
 bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 
 
 //核心双链数据处理
 extern bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
-extern bool func_l3bfdf_hopper_state_init(UINT8 streamId);
+extern bool func_l3bfdf_hopper_state_set_init(UINT8 streamId);
+extern bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId);
 extern bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hopperNewId);
 extern bool func_l3bfdf_hopper_add_by_group(UINT8 streamId, UINT16 groupId, UINT16 nbrHopper);
 extern bool func_l3bfdf_hopper_add_by_group_in_average_distribution(UINT8 streamId, UINT16 nbrGroup);
@@ -252,8 +265,8 @@ extern bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId);
 //核心搜索算法
 UINT16 func_l3bfdf_new_ws_search_group(UINT8 streamId, double weight);
 UINT16 func_l3bfdf_new_ws_search_hoper_lack_one(UINT8 streamId, UINT16 gid, double weight);
-
-
+bool   func_l3bfdf_new_ws_send_out_pullin_message(UINT8 streamId, UINT16 hopperId);
+bool   func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperId);
 
 
 //基础函数

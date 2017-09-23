@@ -803,8 +803,8 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 
 	//分配Hooper数据：暂时没有考虑相应板子的启动状态
 	//Hopper初始化
-	func_l3bfdf_hopper_state_init(0);
-	func_l3bfdf_hopper_state_init(1);
+	func_l3bfdf_hopper_state_set_init(0);
+	func_l3bfdf_hopper_state_set_init(1);
 
 	int nbrGroup = 0;
 	//第0个流水线，分配组别

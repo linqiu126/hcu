@@ -551,7 +551,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,
 	MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP,
 	MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,
-	MSG_ID_CAN_L3BFDF_SNC_PULLIN_REQ,
+	MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ,
 	MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,
 	MSG_ID_L3BFDF_CAN_WS_COMB_OUT,
 	MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,
@@ -2971,11 +2971,10 @@ typedef struct msg_struct_can_l3bfdf_new_ready_event
 	UINT32 length;
 }msg_struct_can_l3bfdf_new_ready_event_t;
 
-//MSG_ID_CAN_L3BFDF_SNC_PULLIN_REQ,
+//MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ,
 typedef struct msg_struct_l3bfdf_can_snc_pullin_req
 {
 	UINT8  streamId;
-	UINT8  boardId;
 	UINT16 hopperId;
 	UINT32 length;
 }msg_struct_l3bfdf_can_snc_pullin_req_t;
@@ -2984,8 +2983,9 @@ typedef struct msg_struct_l3bfdf_can_snc_pullin_req
 typedef struct msg_struct_can_l3bfdf_snc_pullin_resp
 {
 	UINT8  streamId;
-	UINT8  boardId;
 	UINT16 hopperId;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
 	UINT32 length;
 }msg_struct_can_l3bfdf_snc_pullin_resp_t;
 
@@ -2994,7 +2994,6 @@ typedef struct msg_struct_can_l3bfdf_snc_pullin_resp
 typedef struct msg_struct_l3bfdf_can_ws_comb_out
 {
 	UINT8  streamId;
-	UINT8  boardId;
 	UINT16 hopperId;
 	UINT32 length;
 }msg_struct_l3bfdf_can_ws_comb_out_t;
@@ -3003,7 +3002,6 @@ typedef struct msg_struct_l3bfdf_can_ws_comb_out
 typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 {
 	UINT8  streamId;
-	UINT8  boardId;
 	UINT16 hopperId;
 	UINT16 errCode;
 	UINT8  validFlag; //是否执行成功
