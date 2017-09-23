@@ -989,7 +989,21 @@ typedef struct msgie_struct_bfsc_scale_weight_sta_element
 	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
 	UINT32 errNbr;			//出错次数
 }msgie_struct_bfsc_scale_weight_sta_element_t;
-
+typedef struct msgie_struct_bfdf_scale_weight_sta_element
+{
+	UINT32 combTimes;		//组合总次数
+	UINT32 tttTimes;		//组合出料次数
+	UINT32 tgvTimes;		//组合放弃次数
+	UINT32 combMatNbr;  	//组合的物料数量
+	UINT32 tttMatNbr;		//组合出料的物料数量
+	UINT32 tgvMatNbr;		//组合放弃的物料数量
+	UINT32 combAvgSpeed;	//组合平均速度
+	UINT32 totalWeight;		//总共处理的物料总重量
+	UINT32 totalMatNbr;  	//总共处理的物料总数量
+	UINT32 totalWorkMin;	//连续工作的总分钟数
+	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
+	UINT32 errNbr;			//出错次数
+}msgie_struct_bfdf_scale_weight_sta_element_t;
 
 
 
@@ -2494,6 +2508,7 @@ typedef struct msg_struct_l3bfdf_cloudvela_data_resp
 	UINT8  type;			//数据汇报的类型
 	UINT8  dataFormat;
 	msgie_struct_bh_com_head_t comHead;
+	msgie_struct_bfdf_scale_weight_sta_element_t sta;
 	UINT32 length;
 }msg_struct_l3bfdf_cloudvela_data_resp_t;
 
@@ -2504,6 +2519,7 @@ typedef struct msg_struct_l3bfdf_cloudvela_data_report
 	UINT8  type;			//数据汇报的类型
 	UINT8  dataFormat;
 	msgie_struct_bh_com_head_t comHead;
+	msgie_struct_bfdf_scale_weight_sta_element_t sta;
 	UINT32 length;
 }msg_struct_l3bfdf_cloudvela_data_report_t;
 
@@ -2558,6 +2574,7 @@ typedef struct msg_struct_l3bfdf_cloudvela_statistic_report
 	UINT8  staRepType;
 	UINT8  dataFormat;
 	msgie_struct_bh_com_head_t comHead;
+	msgie_struct_bfdf_scale_weight_sta_element_t sta;
 	UINT32 length;
 }msg_struct_l3bfdf_cloudvela_statistic_report_t;
 

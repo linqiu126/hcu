@@ -253,7 +253,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 	validFlag = rcv.validFlag;
 	cmdid = rcv.cmdid;
 	//测试用的打印命令
-	HCU_DEBUG_PRINT_CRT("BFDFUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
+	HCU_DEBUG_PRINT_CRT("BFDFUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag, cmdid);
 
 /*
 	//存入数据库表单，通知界面新的状态信息

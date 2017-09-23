@@ -230,6 +230,13 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		}
 	}
 
+	//周期性统计扫描定时器
+	else if ((rcv.timeId == TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
+		if (func_l3bfdf_time_out_statistic_scan_process() == FAILURE){
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error process time out message!\n");
+		}
+	}
+
 	//返回
 	return SUCCESS;
 }
@@ -481,6 +488,9 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 		//发送反馈给UICOMM
 		msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
 		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+		snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
+		snd.streamId = rcv.streamId;
+		snd.sensorid = rcv.boardId;
 		snd.validFlag = TRUE;
 		snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
 		if (hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE)
@@ -488,7 +498,6 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 
 		//停止定时器
 		hcu_timer_stop(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB, TIMER_RESOLUTION_1S);
-
 		//设置状态机
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_SCAN);
 
@@ -685,6 +694,10 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error, StreamId = %d, WsWeight=%d!\n", rcv.streamId, rcv.sensorWsValue);
 	}
 
+	//正常处理
+	gTaskL3bfdfContext.cur.wsIncMatCnt++;
+	gTaskL3bfdfContext.cur.wsIncMatWgt += rcv.sensorWsValue;
+
 	//先做Audit
 	int res = func_l3bfdf_hopper_dual_chain_audit();
 	if (res <0) HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Audit error, errCode = %d\n", res);
@@ -701,6 +714,11 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	{
 		if (func_l3bfdf_new_ws_send_out_pullin_message(rcv.streamId, 0) == FALSE)
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+		//更新统计信息
+		gTaskL3bfdfContext.cur.wsTgvTimes++;
+		gTaskL3bfdfContext.cur.wsTgvMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
+
 		return SUCCESS;
 	}
 
@@ -719,6 +737,10 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			gTaskL3bfdfContext.hopper[rcv.streamId][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
 		}
+		//更新统计信息
+		gTaskL3bfdfContext.cur.wsCombTimes++;
+		gTaskL3bfdfContext.cur.wsTttMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
 		//设置状态
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_TTT);
 		//还需要继续处理收到的称重事件
@@ -739,6 +761,11 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		//循环将fillHopper后移
 		fillHopper = gTaskL3bfdfContext.group[rcv.streamId][gId].fillHopperId;
 		gTaskL3bfdfContext.group[rcv.streamId][gId].fillHopperId = gTaskL3bfdfContext.hopper[rcv.streamId][fillHopper].nextHopperId;
+		//更新统计信息
+		gTaskL3bfdfContext.cur.wsCombTimes++;
+		gTaskL3bfdfContext.cur.wsTttMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
+
 		return SUCCESS;
 	}
 
@@ -750,8 +777,9 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		if (func_l3bfdf_new_ws_send_out_pullin_message(rcv.streamId, 0) == FALSE)
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 		//更新统计数据
-
-		return SUCCESS;
+		gTaskL3bfdfContext.cur.wsTgvTimes++;
+		gTaskL3bfdfContext.cur.wsTgvMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
 	}
 
 	//正确找到
@@ -770,200 +798,17 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		}
 		//减少Index
 		gTaskL3bfdfContext.hopper[rcv.streamId][outHopperId].matLackIndex--;
-		return SUCCESS;
+
+		//更新统计信息
+		gTaskL3bfdfContext.cur.wsCombTimes++;
+		gTaskL3bfdfContext.cur.wsTttMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
 	}
-
-/*
-	//正常处理
-	gTaskL3bfdfContext.cur.wsIncMatCnt++;
-	gTaskL3bfdfContext.cur.wsIncMatWgt += rcv.sensorWsValue;
-	HCU_DEBUG_PRINT_FAT("L3BFDF: Sensor Input Id = %d, Status = %d\n", rcv.sensorid, gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus);
-
-	//将重复次数清零：这个参数用于增加该传感器被算法命中的概率
-	gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorRepTimes = 0;
-
-	//根据不同情况进行处理：正常空闲态
-	if (gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFDF_SENSOR_WS_STATUS_VALIID_EMPTY){
-		gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
-		gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TO_COMB;
-		if (gTaskL3bfdfContext.wsValueNbrFree>0) gTaskL3bfdfContext.wsValueNbrFree--;
-		gTaskL3bfdfContext.wsValueNbrWeight++;
-		gTaskL3bfdfContext.wsValueNbrWeight = gTaskL3bfdfContext.wsValueNbrWeight % (HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX + 1);
-		HCU_DEBUG_PRINT_NOR("L3BFDF: Receive EVENT, Normally status!\n");
-	}
-
-	//重复来临
-	else if (gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TO_COMB){
-		gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
-		HCU_DEBUG_PRINT_NOR("L3BFDF: Receive EVENT, Repeat status!\n");
-	}
-
-	//恢复错误
-	else if (gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFDF_SENSOR_WS_STATUS_VALID_ERROR){
-		gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorValue = rcv.sensorWsValue;
-		gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TO_COMB;
-		gTaskL3bfdfContext.wsValueNbrWeight++;
-		gTaskL3bfdfContext.wsValueNbrWeight = gTaskL3bfdfContext.wsValueNbrWeight % (HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX + 1);
-		HCU_DEBUG_PRINT_NOR("L3BFDF: Receive EVENT, Error recover status!\n");
-	}
-
-	//错误来临：进入ERROR_INQ流程 (TTT/TGU或者其它状态）
-	else
-	{
-		HCU_DEBUG_PRINT_NOR("L3BFDF: Receive EVENT, Error status!\n");
-		//为了全局控制表统计的正确性
-		if (gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TO_TTT) {
-			if (gTaskL3bfdfContext.wsValueNbrTtt > 0) gTaskL3bfdfContext.wsValueNbrTtt--;
-		}
-		else if (gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus == HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TO_TGU) {
-			if (gTaskL3bfdfContext.wsValueNbrTgu > 0) gTaskL3bfdfContext.wsValueNbrTgu--;
-		}
-		gTaskL3bfdfContext.sensorWs[rcv.sensorid].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_ERROR;
-
-		//启动定时器
-		ret = hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_ERROR_INQ, \
-				zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFDF_ERROR_INQ].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-		if (ret == FAILURE){
-			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Error start period timer!\n");
-		}
-
-		//发送查询命令
-		msg_struct_l3bfdf_can_error_inq_cmd_req_t snd0;
-		memset(&snd0, 0, sizeof(msg_struct_l3bfdf_can_error_inq_cmd_req_t));
-		snd0.length = sizeof(msg_struct_l3bfdf_can_error_inq_cmd_req_t);
-		snd0.sensorid = rcv.sensorid;
-		ret = hcu_message_send(MSG_ID_L3BFDF_CAN_ERROR_INQ_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFDF, &snd0, snd0.length);
-		if (ret == FAILURE) {
-			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-		}
-
-		return SUCCESS;
-	}
-
-	//重新统计各个参数
-	func_l3bfdf_cacluate_sensor_ws_valid_value();
-
-	//这里不可能出现以下情况
-	if ((gTaskL3bfdfContext.wsValueNbrTtt !=0) && (gTaskL3bfdfContext.wsValueNbrTgu !=0)){
-		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Wrong TTT/TGU figure during SCAN mode!\n");
-	}
-
-	//是否要进入搜索
-	if (gTaskL3bfdfContext.wsValueNbrWeight >= gTaskL3bfdfContext.comAlgPar.MinScaleNumberStartCombination){
-		//组合失败
-		HCU_DEBUG_PRINT_NOR("L3BFDF: Enter Combination search!\n");
-		if (func_l3bfdf_ws_sensor_search_combination() == -1){
-			HCU_DEBUG_PRINT_NOR("L3BFDF: Combination search finished, None find!\n");
-			if (gTaskL3bfdfContext.wsValueNbrWeight >= (HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX-1)){
-				//得到抛弃的传感器
-				func_l3bfdf_ws_sensor_search_give_up();
-
-				gTaskL3bfdfContext.cur.wsTgvTimes++;
-				gTaskL3bfdfContext.cur.wsTgvMatCnt += func_l3bfdf_cacluate_sensor_ws_bitmap_valid_number();
-				gTaskL3bfdfContext.cur.wsTgvMatWgt += func_l3bfdf_cacluate_sensor_ws_bitmap_valid_weight();
-
-				//发送抛弃命令
-				msg_struct_l3bfdf_can_ws_give_up_t snd1;
-				memset(&snd1, 0, sizeof(msg_struct_l3bfdf_can_ws_give_up_t));
-				snd1.length = sizeof(msg_struct_l3bfdf_can_ws_give_up_t);
-				memcpy(snd1.sensorBitmap, gTaskL3bfdfContext.wsBitmap, HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX);
-				ret = hcu_message_send(MSG_ID_L3BFDF_CAN_WS_GIVE_UP, TASK_ID_CANITFLEO, TASK_ID_L3BFDF, &snd1, snd1.length);
-				if (ret == FAILURE){
-					HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-				}
-
-				//更新传感器状态
-				for (i=0; i<HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX; i++){
-					if (gTaskL3bfdfContext.wsBitmap[i] == 1) gTaskL3bfdfContext.sensorWs[i].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TGU_START;
-				}
-
-				//测试打印
-				char targetStr[100];
-				char tStr[10];
-				sprintf(targetStr, "L3BFDF: Send out TGU_OUT bitmap [%d]=[", gTaskL3bfdfContext.wsValueNbrTgu);
-				for (i=0; i<HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX; i++){
-					sprintf(tStr, "%d", *(gTaskL3bfdfContext.wsBitmap+i));
-					strcat(targetStr, tStr);
-				}
-				strcat(targetStr, "]\n");
-				HCU_DEBUG_PRINT_CRT(targetStr);
-
-				//启动定时器
-				ret = hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_TGU_WAIT_FB, \
-						zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFDF_TGU_WAIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-				if (ret == FAILURE){
-					HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Error start timer!\n");
-				}
-
-				//进入TGU状态，设置新状态
-				if (FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_TGU) == FAILURE){
-					HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Error Set FSM State!\n");
-				}
-			} //== HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX
-			//对于未到最大物料压秤的情形，不予理睬
-		}//-1
-
-		//返回有意义的数值
-		else{
-			HCU_DEBUG_PRINT_NOR("L3BFDF: Combination search finished, Success!\n");
-			//发送出料命令
-			gTaskL3bfdfContext.cur.wsTttTimes++;
-			gTaskL3bfdfContext.cur.wsTttMatCnt += func_l3bfdf_cacluate_sensor_ws_bitmap_valid_number();
-			gTaskL3bfdfContext.cur.wsTttMatWgt += func_l3bfdf_cacluate_sensor_ws_bitmap_valid_weight();
-
-			msg_struct_l3bfdf_can_ws_comb_out_t snd2;
-			memset(&snd2, 0, sizeof(msg_struct_l3bfdf_can_ws_comb_out_t));
-			snd2.length = sizeof(msg_struct_l3bfdf_can_ws_comb_out_t);
-			memcpy(snd2.sensorBitmap, gTaskL3bfdfContext.wsBitmap, HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX);
-			snd2.combnbr = gTaskL3bfdfContext.wsValueNbrTtt;
-			ret = hcu_message_send(MSG_ID_L3BFDF_CAN_WS_COMB_OUT, TASK_ID_CANITFLEO, TASK_ID_L3BFDF, &snd2, snd2.length);
-			if (ret == FAILURE){
-				HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-			}
-
-			//更新传感器状态
-			for (i=0; i<HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX; i++){
-				if (gTaskL3bfdfContext.wsBitmap[i] == 1) gTaskL3bfdfContext.sensorWs[i].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TTT_START;
-			}
-
-			//测试打印
-			char targetStr[100];
-			char tStr[10];
-			sprintf(targetStr, "L3BFDF: Send out TTT_OUT bitmap [%d]=[", gTaskL3bfdfContext.wsValueNbrTtt);
-			for (i=0; i<HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX; i++){
-				sprintf(tStr, "%d", *(gTaskL3bfdfContext.wsBitmap+i));
-				strcat(targetStr, tStr);
-			}
-			strcat(targetStr, "]\n");
-			HCU_DEBUG_PRINT_CRT(targetStr);
-
-			//GET comb total value and store into DB
-			int totalWgt = 0;
-			for (i=0; i<HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX; i++){
-				if (gTaskL3bfdfContext.wsBitmap[i] == 1)
-				totalWgt+= gTaskL3bfdfContext.sensorWs[i].sensorValue;
-			}
-			dbi_HcuBfsc_WmcCurComWgtUpdate(totalWgt);
-
-			//启动定时器
-			ret = hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_TTT_WAIT_FB, \
-					zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFDF_TTT_WAIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
-			if (ret == FAILURE){
-				HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Error start timer!\n");
-			}
-
-			//进入TTT状态
-			if (FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_TTT) == FAILURE){
-				HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Error Set FSM State!\n");
-			}
-		}//返回有意义的数值
-	} //>= gTaskL3bfdfContext.comAlgPar.MinScaleNumberStartCombination
-	//对于不足以启动搜索的情形，不予理睬
-*/
 
 	//返回
 	return SUCCESS;
 }
+
 
 //组合出料反馈
 OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -1158,31 +1003,31 @@ OPSTAT func_l3bfdf_time_out_comb_out_req_process(void)
 
 /*
 	//发送STOP_REQ给所有下位机
-	msg_struct_l3bfsc_can_sys_stop_req_t snd1;
-	memset(&snd1, 0, sizeof(msg_struct_l3bfsc_can_sys_stop_req_t));
-	snd1.length = sizeof(msg_struct_l3bfsc_can_sys_stop_req_t);
+	msg_struct_l3bfdf_can_sys_stop_req_t snd1;
+	memset(&snd1, 0, sizeof(msg_struct_l3bfdf_can_sys_stop_req_t));
+	snd1.length = sizeof(msg_struct_l3bfdf_can_sys_stop_req_t);
 	//所有传感器
-	for (i = 0; i< HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX; i++){
+	for (i = 0; i< HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX; i++){
 		snd1.wsBitmap[i] = TRUE;
 	}
-	ret = hcu_message_send(MSG_ID_L3BFSC_CAN_SYS_STOP_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFSC, &snd1, snd1.length);
-	if (ret == FAILURE) HCU_ERROR_PRINT_L3BFSC("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+	ret = hcu_message_send(MSG_ID_L3BFDF_CAN_SYS_STOP_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFDF, &snd1, snd1.length);
+	if (ret == FAILURE) HCU_ERROR_PRINT_L3BFDF("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 
 	//设置状态机
-	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OPR_GO) == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
+	if (FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OPR_GO) == FAILURE){
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Error Set FSM State!\n");
 	}
 
 	//延时发送SUSPEND给界面，以防止界面SUSPEND被STOP_RESP覆盖
 	hcu_sleep(2);
-	msg_struct_l3bfsc_uicomm_cmd_resp_t snd;
-	memset(&snd, 0, sizeof(msg_struct_l3bfsc_uicomm_cmd_resp_t));
-	snd.cmdid = HCU_SYSMSG_BFSC_UICOMM_CMDID_SUSPEND;
+	msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND;
 	snd.validFlag = TRUE;
-	snd.length = sizeof(msg_struct_l3bfsc_uicomm_cmd_resp_t);
-	ret = hcu_message_send(MSG_ID_L3BFSC_UICOMM_CMD_RESP, TASK_ID_BFSCUICOMM, TASK_ID_L3BFSC, &snd, snd.length);
+	snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
+	ret = hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length);
 	if (ret == FAILURE){
-		HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
 	}
 
 */
@@ -1213,27 +1058,6 @@ bool func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void)
 	return TRUE;
 }
 
-
-/***************************************************************************************************************************
- *
- * 　高级简化技巧
- *
- ***************************************************************************************************************************/
-//由于错误，直接从差错中转入扫描状态
-//它提供了一种比RESTART更快更低级的方式，让L3状态机直接返回到扫描状态
-void func_l3bfdf_stm_main_recovery_from_fault(void)
-{
-	//控制其它模块进入正常状态
-
-	//状态转移到SLEEP状态
-	FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_SCAN);
-
-	//初始化模块的任务资源
-	//初始化定时器：暂时决定不做，除非该模块重新RESTART
-	//初始化模块级全局变量：暂时决定不做，除非该模块重新RESTART
-
-	return;
-}
 
 
 /***************************************************************************************************************************
@@ -1299,23 +1123,41 @@ bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId)
 	UINT16 nbrDeep=0;
 
 	//入参检查
-	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX)
+	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX){
+		HcuDebugPrint("L3BFDF: Stream=%d\n", streamId);
 		return FALSE;
+	}
+
+	//0号特别
+	gTaskL3bfdfContext.hopper[streamId][0].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID;
+	gTaskL3bfdfContext.hopper[streamId][0].basketStatus = HCU_L3BFDF_HOPPER_BASKET_EMPTY;
+	gTaskL3bfdfContext.hopper[streamId][0].matLackIndex = 0;
 
 	//状态设置, 初始化物料数量
-	for (i=0; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
+	for (i=1; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
 		gTaskL3bfdfContext.hopper[streamId][i].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID;
 		gTaskL3bfdfContext.hopper[streamId][i].basketStatus = HCU_L3BFDF_HOPPER_BASKET_EMPTY;
-		gTaskL3bfdfContext.hopper[streamId][i].matLackIndex = 0;
+
 		gid = gTaskL3bfdfContext.hopper[streamId][i].groupId;
 		targetWgt = gTaskL3bfdfContext.group[streamId][gid].targetWeight + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit/2.0;
 		avgWgt = gTaskL3bfdfContext.group[streamId][gid].rangeAvg;
 		sigWgt = gTaskL3bfdfContext.group[streamId][gid].rangeSigma;
 		gTaskL3bfdfContext.hopper[streamId][i].matLackNbr = (UINT32)(targetWgt/avgWgt==0?0.01:avgWgt)&0xFFFF;
 		nbrDeep = (UINT32)(avgWgt/(sigWgt==0?0.01:sigWgt))&0xFFFF;
+		if ((sigWgt == 0) || (avgWgt == 0)){
+			HcuDebugPrint("L3BFDF: Zero sigWgt/avgWgt, Stream/Hopper/Gid=[%d/%d/%d], RangAvg/Sig/Min/Max=[%f/%f/%f/%f]\n", streamId, i, gid, avgWgt, sigWgt, \
+					gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh);
+			return FALSE;
+		}
 
 		//这里的目标，还要更好的进行比较
-		if (gTaskL3bfdfContext.hopper[streamId][i].matLackNbr <= nbrDeep) return FALSE;
+		if (gTaskL3bfdfContext.hopper[streamId][i].matLackNbr <= nbrDeep){
+			HcuDebugPrint("L3BFDF: Stream/Hopper=[%d/%d], LackNbr=%d, nbrDeep=%d\n", streamId, i, gTaskL3bfdfContext.hopper[streamId][i].matLackNbr, nbrDeep);
+			return FALSE;
+		}
+
+		//初始化控制参数
+		gTaskL3bfdfContext.hopper[streamId][i].matLackIndex = gTaskL3bfdfContext.hopper[streamId][i].matLackNbr;
 	}
 
 	return TRUE;
@@ -1730,9 +1572,7 @@ bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, UINT16 n
 		return FALSE;
 	if (wgtMin >= wgtMax) return FALSE;
 	if (nbrGroup <=0) return FALSE;
-
-	if (nbrGroup == 1) gap = 0;
-	else gap = (wgtMax - wgtMin) / (nbrGroup - 1);
+	gap = (wgtMax - wgtMin) / nbrGroup;
 
 	for (i=1; i<=nbrGroup; i++){
 		gTaskL3bfdfContext.group[streamId][i].rangeLow = wgtMin + (i-1)*gap;
@@ -1957,9 +1797,6 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, doub
 	return 0;
 }
 
-
-
-
 //入料消息发送
 bool func_l3bfdf_new_ws_send_out_pullin_message(UINT8 streamId, UINT16 hopperId)
 {
@@ -2022,9 +1859,214 @@ bool func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperI
 	gTaskL3bfdfContext.hopper[streamId][hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
 	hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_TTT_WAIT_FB, zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFDF_TTT_WAIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 
+	//更新统计信息
+	gTaskL3bfdfContext.cur.wsTttTimes++;
+
 	//没找到，返回0
 	return TRUE;
 }
+
+
+/***************************************************************************************************************************
+ *
+ * 　周期性扫描过程
+ *
+ ***************************************************************************************************************************/
+//周期性统计扫描定时器
+OPSTAT func_l3bfdf_time_out_statistic_scan_process(void)
+{
+	int ret = 0;
+
+	//首先增加时间流逝的计数器
+	gTaskL3bfdfContext.elipseCnt++;
+	gTaskL3bfdfContext.elipse24HourCnt++;
+
+	//采取老化算法 x(n+1) = x(n) * (1-1/120) + latest，从而得到最新的数据，但该数据最好使用float，然后再转换为UINT32存入到数据库表单中
+	memset(&(gTaskL3bfdfContext.staLocalUi), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
+	//先存储临时数据
+	gTaskL3bfdfContext.curAge.wsIncMatCntMid = gTaskL3bfdfContext.curAge.wsIncMatCntMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsIncMatCnt;
+	gTaskL3bfdfContext.curAge.wsIncMatWgtMid = gTaskL3bfdfContext.curAge.wsIncMatWgtMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsIncMatWgt;
+	gTaskL3bfdfContext.curAge.wsCombTimesMid = gTaskL3bfdfContext.curAge.wsCombTimesMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsCombTimes;
+	gTaskL3bfdfContext.curAge.wsTttTimesMid = gTaskL3bfdfContext.curAge.wsTttTimesMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsTttTimes;
+	gTaskL3bfdfContext.curAge.wsTgvTimesMid = gTaskL3bfdfContext.curAge.wsTgvTimesMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsTgvTimes;
+	gTaskL3bfdfContext.curAge.wsTttMatCntMid = gTaskL3bfdfContext.curAge.wsTttMatCntMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsTttMatCnt;
+	gTaskL3bfdfContext.curAge.wsTgvMatCntMid = gTaskL3bfdfContext.curAge.wsTgvMatCntMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsTgvMatCnt;
+	gTaskL3bfdfContext.curAge.wsTttMatWgtMid = gTaskL3bfdfContext.curAge.wsTttMatWgtMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsTttMatWgt;
+	gTaskL3bfdfContext.curAge.wsTgvMatWgtMid = gTaskL3bfdfContext.curAge.wsTgvMatWgtMid*(float)HCU_L3BFDF_STA_AGEING_COEF + (float)HCU_L3BFDF_STA_AGEING_COEF_ALPHA*gTaskL3bfdfContext.cur.wsTgvMatWgt;
+	//再输出结果
+	gTaskL3bfdfContext.staLocalUi.wsIncMatCnt = (UINT32)(gTaskL3bfdfContext.curAge.wsIncMatCntMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsIncMatWgt = (UINT32)(gTaskL3bfdfContext.curAge.wsIncMatWgtMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsCombTimes = (UINT32)(gTaskL3bfdfContext.curAge.wsCombTimesMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsTttTimes  = (UINT32)(gTaskL3bfdfContext.curAge.wsTttTimesMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsTgvTimes  = (UINT32)(gTaskL3bfdfContext.curAge.wsTgvTimesMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsTttMatCnt = (UINT32)(gTaskL3bfdfContext.curAge.wsTttMatCntMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsTgvMatCnt = (UINT32)(gTaskL3bfdfContext.curAge.wsTgvMatCntMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsTttMatWgt = (UINT32)(gTaskL3bfdfContext.curAge.wsTttMatWgtMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsTgvMatWgt = (UINT32)(gTaskL3bfdfContext.curAge.wsTgvMatWgtMid + 0.5);
+	gTaskL3bfdfContext.staLocalUi.wsAvgTttTimes = gTaskL3bfdfContext.staLocalUi.wsTttTimes;
+	gTaskL3bfdfContext.staLocalUi.wsAvgTttMatCnt = gTaskL3bfdfContext.staLocalUi.wsTttMatCnt;
+	gTaskL3bfdfContext.staLocalUi.wsAvgTttMatWgt = gTaskL3bfdfContext.staLocalUi.wsTttMatWgt;
+
+	//更新LocUI数据库，以便本地界面实时展示数据
+/*
+	if (dbi_HcuBfdf_StaDatainfo_save(HCU_L3BFDF_STA_DBI_TABLE_LOCALUI, gTaskL3bfdfContext.configId, &(gTaskL3bfdfContext.staLocalUi)) == FAILURE)
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Save data to DB error!\n");
+*/
+
+	//更新60Min各个统计表单
+	gTaskL3bfdfContext.sta60Min.wsIncMatCnt += gTaskL3bfdfContext.cur.wsIncMatCnt;
+	gTaskL3bfdfContext.sta60Min.wsIncMatWgt += gTaskL3bfdfContext.cur.wsIncMatWgt;
+	gTaskL3bfdfContext.sta60Min.wsCombTimes += gTaskL3bfdfContext.cur.wsCombTimes;
+	gTaskL3bfdfContext.sta60Min.wsTttTimes  += gTaskL3bfdfContext.cur.wsTttTimes;
+	gTaskL3bfdfContext.sta60Min.wsTgvTimes  += gTaskL3bfdfContext.cur.wsTgvTimes;
+	gTaskL3bfdfContext.sta60Min.wsTttMatCnt += gTaskL3bfdfContext.cur.wsTttMatCnt;
+	gTaskL3bfdfContext.sta60Min.wsTgvMatCnt += gTaskL3bfdfContext.cur.wsTgvMatCnt;
+	gTaskL3bfdfContext.sta60Min.wsTttMatWgt += gTaskL3bfdfContext.cur.wsTttMatWgt;
+	gTaskL3bfdfContext.sta60Min.wsTgvMatWgt += gTaskL3bfdfContext.cur.wsTgvMatWgt;
+	float timeRun60MinRatio = (float) HCU_L3BFDF_STA_60M_CYCLE / (float)(((gTaskL3bfdfContext.elipseCnt%HCU_L3BFDF_STA_60M_CYCLE)==0)?HCU_L3BFDF_STA_60M_CYCLE:(gTaskL3bfdfContext.elipseCnt%HCU_L3BFDF_STA_60M_CYCLE));
+	gTaskL3bfdfContext.sta60Min.wsAvgTttTimes = (UINT32)(gTaskL3bfdfContext.sta60Min.wsTttTimes*timeRun60MinRatio);
+	gTaskL3bfdfContext.sta60Min.wsAvgTttMatCnt = (UINT32)(gTaskL3bfdfContext.sta60Min.wsTttMatCnt*timeRun60MinRatio);
+	gTaskL3bfdfContext.sta60Min.wsAvgTttMatWgt = (UINT32)(gTaskL3bfdfContext.sta60Min.wsTttMatWgt*timeRun60MinRatio);
+
+	//60分钟到了，发送统计报告到后台：发送后台只需要一种统计报告即可，重复发送意义不大
+	if ((gTaskL3bfdfContext.elipseCnt % HCU_L3BFDF_STA_60M_CYCLE) == 0){
+		//60分统计表更新数据库
+/*
+		if (dbi_HcuBfdf_StaDatainfo_save(HCU_L3BFDF_STA_DBI_TABLE_60MIN, gTaskL3bfdfContext.configId, &(gTaskL3bfdfContext.sta60Min)) == FAILURE)
+				HCU_ERROR_PRINT_L3BFDF("L3BFDF: Save data to DB error!\n");
+*/
+
+		//再发送统计报告
+		msg_struct_l3bfdf_cloudvela_statistic_report_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_cloudvela_statistic_report_t));
+
+		//L2信息
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
+				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
+		snd.comHead.timeStamp = time(0);
+		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_DEVICE_REPORT_ID;
+		strcpy(snd.comHead.funcFlag, "0");
+
+		//CONTENT
+		snd.dataFormat = HUITP_IEID_UNI_COM_FORMAT_TYPE_FLOAT_WITH_NF2;
+		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
+		snd.staRepType = HUITP_IEID_UNI_SCALE_WEIGHT_STATISTIC_REPORT_60M;
+		snd.sta.combTimes = gTaskL3bfdfContext.sta60Min.wsCombTimes;
+		snd.sta.tttTimes = gTaskL3bfdfContext.sta60Min.wsTttTimes;
+		snd.sta.tgvTimes = gTaskL3bfdfContext.sta60Min.wsTgvTimes;
+		snd.sta.combMatNbr = gTaskL3bfdfContext.sta60Min.wsIncMatCnt;
+		snd.sta.tttMatNbr = gTaskL3bfdfContext.sta60Min.wsTttMatCnt;
+		snd.sta.tgvMatNbr = gTaskL3bfdfContext.sta60Min.wsTgvMatCnt;
+		snd.sta.combAvgSpeed = gTaskL3bfdfContext.sta60Min.wsAvgTttTimes;
+		snd.sta.totalWeight = (UINT32)(gTaskL3bfdfContext.sta60Min.wsIncMatWgt*100);
+		snd.sta.totalMatNbr = gTaskL3bfdfContext.sta60Min.wsIncMatCnt;
+		snd.sta.totalWorkMin = (time(0) - gTaskL3bfdfContext.startWorkTimeInUnix)/60;
+		snd.sta.timeInUnix = time(0);
+		snd.sta.errNbr = 0;
+
+		snd.length = sizeof(msg_struct_l3bfdf_cloudvela_statistic_report_t);
+		ret = hcu_message_send(MSG_ID_L3BFDF_CLOUDVELA_STATISTIC_REPORT, TASK_ID_CLOUDVELA, TASK_ID_L3BFDF, &snd, snd.length);
+		if (ret == FAILURE){
+			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+		}
+
+		//然后将60分钟统计数据表单清零，以便再次计数
+		memset(&(gTaskL3bfdfContext.sta60Min), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
+	}
+
+	//更新24小时统计表单
+	gTaskL3bfdfContext.sta24H.wsIncMatCnt += gTaskL3bfdfContext.cur.wsIncMatCnt;
+	gTaskL3bfdfContext.sta24H.wsIncMatWgt += gTaskL3bfdfContext.cur.wsIncMatWgt;
+	gTaskL3bfdfContext.sta24H.wsCombTimes += gTaskL3bfdfContext.cur.wsCombTimes;
+	gTaskL3bfdfContext.sta24H.wsTttTimes  += gTaskL3bfdfContext.cur.wsTttTimes;
+	gTaskL3bfdfContext.sta24H.wsTgvTimes  += gTaskL3bfdfContext.cur.wsTgvTimes;
+	gTaskL3bfdfContext.sta24H.wsTttMatCnt += gTaskL3bfdfContext.cur.wsTttMatCnt;
+	gTaskL3bfdfContext.sta24H.wsTgvMatCnt += gTaskL3bfdfContext.cur.wsTgvMatCnt;
+	gTaskL3bfdfContext.sta24H.wsTttMatWgt += gTaskL3bfdfContext.cur.wsTttMatWgt;
+	gTaskL3bfdfContext.sta24H.wsTgvMatWgt += gTaskL3bfdfContext.cur.wsTgvMatWgt;
+	float timeRun24HourRatio = (float) HCU_L3BFDF_STA_24H_CYCLE / (float)(((gTaskL3bfdfContext.elipse24HourCnt%HCU_L3BFDF_STA_24H_CYCLE)==0)?HCU_L3BFDF_STA_24H_CYCLE:(gTaskL3bfdfContext.elipseCnt%HCU_L3BFDF_STA_24H_CYCLE));
+	gTaskL3bfdfContext.sta24H.wsAvgTttTimes = (UINT32)(gTaskL3bfdfContext.sta24H.wsTttTimes*timeRun24HourRatio);
+	gTaskL3bfdfContext.sta24H.wsAvgTttMatCnt = (UINT32)(gTaskL3bfdfContext.sta24H.wsTttMatCnt*timeRun24HourRatio);
+	gTaskL3bfdfContext.sta24H.wsAvgTttMatWgt = (UINT32)(gTaskL3bfdfContext.sta24H.wsTttMatWgt*timeRun24HourRatio);
+
+	//24小时统计表更新数据库
+/*	if ((gTaskL3bfdfContext.elipseCnt % HCU_L3BFDF_STA_1M_CYCLE) == 0){
+		if (dbi_HcuBfdf_StaDatainfo_save(HCU_L3BFDF_STA_DBI_TABLE_24HOUR, gTaskL3bfdfContext.configId, &(gTaskL3bfdfContext.sta24H)) == FAILURE)
+				HCU_ERROR_PRINT_L3BFDF("L3BFDF: Save data to DB error!\n");
+	}*/
+
+	//24小时到了，然后将24小时统计数据表单清零，以便再次计数
+	if (((time(0)-gTaskL3bfdfContext.start24hStaTimeInUnix) % HCU_L3BFDF_STA_24H_IN_SECOND) == 0){
+		memset(&(gTaskL3bfdfContext.sta24H), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
+		gTaskL3bfdfContext.elipse24HourCnt = 0;
+		printf("this is a test, to show enter into wrong loop!\n");
+	}
+
+	//24小时到了，应该发送单独的统计报告，未来完善
+
+	//增加数据到连续统计数据中
+	gTaskL3bfdfContext.staUp2Now.wsIncMatCnt += gTaskL3bfdfContext.cur.wsIncMatCnt;
+	gTaskL3bfdfContext.staUp2Now.wsIncMatWgt += gTaskL3bfdfContext.cur.wsIncMatWgt;
+	gTaskL3bfdfContext.staUp2Now.wsCombTimes += gTaskL3bfdfContext.cur.wsCombTimes;
+	gTaskL3bfdfContext.staUp2Now.wsTttTimes  += gTaskL3bfdfContext.cur.wsTttTimes;
+	gTaskL3bfdfContext.staUp2Now.wsTgvTimes  += gTaskL3bfdfContext.cur.wsTgvTimes;
+	gTaskL3bfdfContext.staUp2Now.wsTttMatCnt += gTaskL3bfdfContext.cur.wsTttMatCnt;
+	gTaskL3bfdfContext.staUp2Now.wsTgvMatCnt += gTaskL3bfdfContext.cur.wsTgvMatCnt;
+	gTaskL3bfdfContext.staUp2Now.wsTttMatWgt += gTaskL3bfdfContext.cur.wsTttMatWgt;
+	gTaskL3bfdfContext.staUp2Now.wsTgvMatWgt += gTaskL3bfdfContext.cur.wsTgvMatWgt;
+	gTaskL3bfdfContext.staUp2Now.wsAvgTttTimes = gTaskL3bfdfContext.staUp2Now.wsTttTimes;
+	gTaskL3bfdfContext.staUp2Now.wsAvgTttMatCnt = gTaskL3bfdfContext.staUp2Now.wsTttMatCnt;
+	gTaskL3bfdfContext.staUp2Now.wsAvgTttMatWgt = gTaskL3bfdfContext.staUp2Now.wsTttMatWgt;
+
+	//更新连续数据库数据库：每5秒存储一次，不然数据库操作过于频繁
+/*
+	if ((gTaskL3bfdfContext.elipseCnt % HCU_L3BFDF_STA_5S_CYCLE) == 0){
+		if (dbi_HcuBfdf_StaDatainfo_save(HCU_L3BFDF_STA_DBI_TABLE_UP2NOW, gTaskL3bfdfContext.configId, &(gTaskL3bfdfContext.staUp2Now)) == FAILURE)
+				HCU_ERROR_PRINT_L3BFDF("L3BFDF: Save data to DB error!\n");
+	}
+*/
+
+	//重要的统计功能挂载
+/*
+	if ((gTaskL3bfdfContext.elipseCnt%HCU_L3BFDF_STATISTIC_PRINT_FREQUENCY) == 0)
+	HCU_DEBUG_PRINT_CRT("L3BFDF: Control statistics, Running Free/Weight/Ttt/Tgu = [%d, %d, %d, %d], Total Up2Now Inc Cnt = [%d], Combination Rate = [%5.2f\%], Give-up Rate = [%5.2f\%], Local UI Shows AvgSpeed of [TTT Times/MatCnt/MatWgt] = %d/%d/%5.2f.\n",\
+			gTaskL3bfdfContext.wsValueNbrFree, gTaskL3bfdfContext.wsValueNbrWeight,\
+			gTaskL3bfdfContext.wsValueNbrTtt, gTaskL3bfdfContext.wsValueNbrTgu, gTaskL3bfdfContext.staUp2Now.wsIncMatCnt, \
+			(float)(gTaskL3bfdfContext.staUp2Now.wsTttMatCnt)/(float)((gTaskL3bfdfContext.staUp2Now.wsIncMatCnt==0)?0.01:gTaskL3bfdfContext.staUp2Now.wsIncMatCnt) * 100, \
+			(float)(gTaskL3bfdfContext.staUp2Now.wsTgvMatCnt)/(float)((gTaskL3bfdfContext.staUp2Now.wsIncMatCnt==0)?0.01:gTaskL3bfdfContext.staUp2Now.wsIncMatCnt) * 100, \
+			gTaskL3bfdfContext.staLocalUi.wsAvgTttTimes, gTaskL3bfdfContext.staLocalUi.wsAvgTttMatCnt, gTaskL3bfdfContext.staLocalUi.wsAvgTttMatWgt);
+*/
+	//将当前基础统计周期的数据清零
+	memset(&(gTaskL3bfdfContext.cur), 0, sizeof(HcuSysMsgIeL3bfdfContextStaElement_t));
+
+	//返回
+	return SUCCESS;
+}
+
+/***************************************************************************************************************************
+ *
+ * 　高级简化技巧
+ *
+ ***************************************************************************************************************************/
+//由于错误，直接从差错中转入扫描状态
+//它提供了一种比RESTART更快更低级的方式，让L3状态机直接返回到扫描状态
+void func_l3bfdf_stm_main_recovery_from_fault(void)
+{
+	//控制其它模块进入正常状态
+
+	//状态转移到SLEEP状态
+	FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_SCAN);
+
+	//初始化模块的任务资源
+	//初始化定时器：暂时决定不做，除非该模块重新RESTART
+	//初始化模块级全局变量：暂时决定不做，除非该模块重新RESTART
+
+	return;
+}
+
+
 
 
 

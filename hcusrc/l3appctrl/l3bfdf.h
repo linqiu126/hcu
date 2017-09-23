@@ -299,6 +299,7 @@ void func_l3bfdf_stm_main_recovery_from_fault(void);  //提供了一种比RESTAR
 OPSTAT func_l3bfdf_int_init(void);
 OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void);
 OPSTAT func_l3bfdf_time_out_comb_out_req_process(void);
+OPSTAT func_l3bfdf_time_out_statistic_scan_process(void);
 bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 
 
