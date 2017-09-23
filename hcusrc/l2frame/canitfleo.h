@@ -93,6 +93,7 @@ OPSTAT fsm_canitfleo_l3bfdf_suspend_req(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT fsm_canitfleo_l3bfdf_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT fsm_canitfleo_l3bfdf_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT fsm_canitfleo_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+OPSTAT fsm_canitfleo_l3bfdf_snc_pullin_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 
 //Socket CAN APIs

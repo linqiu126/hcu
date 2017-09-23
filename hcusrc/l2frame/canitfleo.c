@@ -69,6 +69,7 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 	{MSG_ID_L3BFDF_CAN_SYS_SUSPEND_REQ,     FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_suspend_req},      //人工命令
 	{MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,      FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_resume_req},   	//人工命令
 	{MSG_ID_UICOMM_CAN_TEST_CMD_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_test_cmd_req},   	//测试性命令
+	{MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ,      FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_snc_pullin_req},  	//拨杆指令
 	{MSG_ID_L3BFDF_CAN_WS_COMB_OUT,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_ws_comb_out},  	//组合指令
 	{MSG_ID_USBCAN_L2FRAME_RCV,      		FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_usbcan_l2frame_receive},  //收到L2送过来的帧
 #endif
@@ -1415,9 +1416,50 @@ OPSTAT fsm_canitfleo_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * pa
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
+	//测试反馈
+	msg_struct_can_l3bfdf_ws_comb_out_fb_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
+	snd.validFlag = TRUE;
+	snd.streamId = rcv.streamId;
+	snd.hopperId = rcv.hopperId;
+	snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
 	//返回
 	return SUCCESS;
 }
+
+OPSTAT fsm_canitfleo_l3bfdf_snc_pullin_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfdf_can_ws_comb_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_can_ws_comb_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_can_ws_comb_out_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//测试反馈
+	if (rcv.hopperId == 0){
+		//抛弃物料
+		return SUCCESS;
+	}
+
+	msg_struct_can_l3bfdf_snc_pullin_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_snc_pullin_resp_t));
+	snd.validFlag = TRUE;
+	snd.streamId = rcv.streamId;
+	snd.hopperId = rcv.hopperId;
+	snd.length = sizeof(msg_struct_can_l3bfdf_snc_pullin_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
+	//返回
+	return SUCCESS;
+}
+
 
 //收到底层驱动USBCAN送过来的数据帧
 OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)

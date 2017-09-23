@@ -253,7 +253,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 	validFlag = rcv.validFlag;
 	cmdid = rcv.cmdid;
 	//测试用的打印命令
-	HCU_DEBUG_PRINT_CRT("TASK_ID_BFDFUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
+	HCU_DEBUG_PRINT_CRT("BFDFUICOMM: rcv.validFlag= %d, cmdid = %d!\n", validFlag,cmdid);
 
 /*
 	//存入数据库表单，通知界面新的状态信息
@@ -803,8 +803,8 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 
 	//分配Hooper数据：暂时没有考虑相应板子的启动状态
 	//Hopper初始化
-	func_l3bfdf_hopper_state_init(0);
-	func_l3bfdf_hopper_state_init(1);
+	func_l3bfdf_hopper_state_set_init(0);
+	func_l3bfdf_hopper_state_set_init(1);
 
 	int nbrGroup = 0;
 	//第0个流水线，分配组别
@@ -814,14 +814,14 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	//设置小组重量范围
 	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 100.00, 1000.00);
 	//设置重量目标
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 10000, 0.3);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 100000, 0.3);
 
-	//第1个小组
+	//第1个流水线，分配组别
 	nbrGroup = rand()%10+1;
 	func_l3bfdf_group_allocation(1, nbrGroup);
 	func_l3bfdf_hopper_add_by_group_in_normal_distribution(1, nbrGroup);
 	func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 200.00, 2000.00);
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 20000, 0.4);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 200000, 0.4);
 
 	//打印
 	func_l3bfdf_print_all_hopper_status_by_id(0);
