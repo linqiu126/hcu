@@ -88,7 +88,7 @@ extern void hcu_get_file_path(const char *path, const char *file_name, char *fil
 extern void hcu_delete_file(const char *path);//file delete
 
 //External APIs
-
+extern OPSTAT hcu_write_errlog(const char* log);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_HWINV(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_HWINV]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

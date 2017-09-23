@@ -193,6 +193,8 @@
 //定义致命错误次数门限值，错误累计次数超过此值，程序退出或重启
 #define HCU_FATAL_ERROR_CURL_THRESHOLD 90
 #define HCU_FATAL_ERROR_DB_THRESHOLD 12
+#define HCU_SYSCFG_REBOOT_LOG_FILE  "/var/hcu/reboot.log"
+#define HCU_SYSCFG_REBOOT_LOG_DIR  "/var/hcu"
 
 /*
  *
