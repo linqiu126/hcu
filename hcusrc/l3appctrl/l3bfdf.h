@@ -55,8 +55,7 @@ typedef struct L3BfdfNodeBoardInfo
 #define HCU_L3BFDF_NODE_BOARD_STATUS_VALID_ERROR 	32
 #define HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND 		33
 #define HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MAX 		49
-#define HCU_L3BFDF_NODE_BOARD_STATUS_INVALID  		255
-
+#define HCU_L3BFDF_NODE_BOARD_STATUS_INVALID  		0xFF
 
 //分组信息
 typedef struct L3BfdfGroupInfo
@@ -83,13 +82,15 @@ typedef struct L3BfdfGroupInfo
 typedef struct L3BfdfHopperInfo
 {
 	UINT16 hopperId;
-	double  hopperValue;
-	double  hopperLastMat;
-	UINT16 hopperStatus;
 	UINT16 groupId;
+	UINT16 hopperStatus;
 	UINT16 preHopperId;
 	UINT16 nextHopperId;
 	UINT8  basketStatus;
+	UINT16 matLackNbr;		//用来计算在特定组别的情况下，采用欠缺算法，需要从多少个开始操控．当打开自动调配小组时，这个参数需要动态刷新．本项目估计暂时不需要．
+	UINT16 matLackIndex;     //具体控制欠n的数量
+	double  hopperValue;    //料斗总重量
+	double  hopperLastMat;  //用来存储称重台到物料入料之间的期间，物料的重量．冲入则需要状态和算法控制．
 }L3BfdfHopperInfo_t;
 //料斗状态定义
 #define HCU_L3BFDF_HOPPER_STATUS_NONE			0
@@ -128,7 +129,7 @@ typedef struct L3BfdfHopperInfo
 #endif
 
 //配置参数
-typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
+typedef struct gTaskL3bfdfContextCombinationAlgorithmParamaters
 {
 	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
 	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
@@ -144,15 +145,15 @@ typedef struct gTaskL3bfscContextCombinationAlgorithmParamaters
 	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
 	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
 	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
-}gTaskL3bfscContextCombinationAlgorithmParamaters_t;
-typedef struct gTaskL3bfscContextCalibration
+}gTaskL3bfdfContextCombinationAlgorithmParamaters_t;
+typedef struct gTaskL3bfdfContextCalibration
 {
 	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
 	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
 	UINT32	WeightSensorCalibrationFullWeight;
-}gTaskL3bfscContextCalibration_t;
+}gTaskL3bfdfContextCalibration_t;
 #define HCU_L3BFDF_CALIBRATION_WGT_BELT_POINT 	240
-typedef struct gTaskL3bfscContextWeightSensorParamaters
+typedef struct gTaskL3bfdfContextWeightSensorParamaters
 {
 	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
 	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
@@ -168,15 +169,15 @@ typedef struct gTaskL3bfscContextWeightSensorParamaters
 	UINT32	WeightSensorAdcGain;
 	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
 	UINT32  WeightSensorAdcValue;								// NOT for GUI
-	gTaskL3bfscContextCalibration_t  calibration[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_L3BFDF_CALIBRATION_WGT_BELT_POINT];
+	gTaskL3bfdfContextCalibration_t  calibration[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_L3BFDF_CALIBRATION_WGT_BELT_POINT];
 	UINT32	WeightSensorStaticZeroValue;
 	UINT32	WeightSensorTailorValue;				//皮重，分为每种
 	UINT32	WeightSensorDynamicZeroThreadValue;
 	UINT32	WeightSensorDynamicZeroHysteresisMs;
 	UINT32  WeightSensorFilterCoeff[4];				// NOT for GUI
 	UINT32  WeightSensorOutputValue[4];
-}gTaskL3bfscContextWeightSensorParamaters_t;
-typedef struct gTaskL3bfscContextMotorControlParamaters
+}gTaskL3bfdfContextWeightSensorParamaters_t;
+typedef struct gTaskL3bfdfContextMotorControlParamaters
 {
 	UINT32	MotorSpeed;
 	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
@@ -185,7 +186,48 @@ typedef struct gTaskL3bfscContextMotorControlParamaters
 	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
 	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
 	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
-}gTaskL3bfscContextMotorControlParamaters_t;
+}gTaskL3bfdfContextMotorControlParamaters_t;
+
+//统计信息
+typedef struct gTaskL3bfdfContextStaEleMid
+{
+	double	wsIncMatCntMid;  			//物料数量
+	double	wsIncMatWgtMid;  			//物料重量
+	double	wsCombTimesMid;  			//总共成功素搜到目标的次数
+	double	wsTttTimesMid;  			//TTT次数
+	double	wsTgvTimesMid;  			//TGV次数
+	double	wsTttMatCntMid;				//TTT物料数量
+	double	wsTgvMatCntMid;				//TGV物料数量
+	double	wsTttMatWgtMid;				//TTT物料重量
+	double	wsTgvMatWgtMid;				//TGV物料重量
+	double	wsAvgTttTimesMid;			//TTT平均次数
+	double	wsAvgTttMatCntMid;			//TTT平均物料数
+	double	wsAvgTttMatWgtMid;			//TTT平均重量
+}gTaskL3bfdfContextStaEleMid_t;
+
+//统计周期，为了计算滑动平均数据
+#define HCU_L3BFDF_STA_CYCLE_DUR  60000 //1分钟，相当于60S
+#define HCU_L3BFDF_STA_UNIT_DUR  500 //500ms的单位，这是统计周期颗粒度，跟TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN保持一致
+#define HCU_L3BFDF_STA_BASE_CYCLE  (HCU_L3BFDF_STA_CYCLE_DUR / HCU_L3BFDF_STA_UNIT_DUR)
+#define HCU_L3BFDF_STA_5S_CYCLE  (5000 / HCU_L3BFDF_STA_UNIT_DUR)
+#define HCU_L3BFDF_STA_1M_CYCLE  (60 * 1000 / HCU_L3BFDF_STA_UNIT_DUR)
+#define HCU_L3BFDF_STA_15M_CYCLE  (15 * 60 * 1000 / HCU_L3BFDF_STA_UNIT_DUR)
+#define HCU_L3BFDF_STA_60M_CYCLE  (60 * 60 * 1000 / HCU_L3BFDF_STA_UNIT_DUR)
+#define HCU_L3BFDF_STA_2H_CYCLE  (2* 60 * 60 * 1000 / HCU_L3BFDF_STA_UNIT_DUR)
+#define HCU_L3BFDF_STA_8H_CYCLE  (8* 60 * 60 * 1000 / HCU_L3BFDF_STA_UNIT_DUR)
+#define HCU_L3BFDF_STA_24H_CYCLE  (24* 60 * 60 * 1000 / HCU_L3BFDF_STA_UNIT_DUR)
+#define HCU_L3BFDF_STA_AGEING_COEF_ALPHA   20  //老化系数，越大表示最近的权重越大，100%的情况就是120，相当于当前周期的统计数据除以统计周期
+#define HCU_L3BFDF_STA_AGEING_COEF (float)(((float)(HCU_L3BFDF_STA_BASE_CYCLE-HCU_L3BFDF_STA_AGEING_COEF_ALPHA))/(float)HCU_L3BFDF_STA_BASE_CYCLE)
+#define HCU_L3BFDF_STA_24H_IN_SECOND  (24*3600)
+
+#define HCU_L3BFDF_STA_DBI_TABLE_LOCALUI   	"BFDF_STA_LOCAL_UI"
+#define HCU_L3BFDF_STA_DBI_TABLE_ONEMIN   	"BFDF_STA_ONE_MIN"
+#define HCU_L3BFDF_STA_DBI_TABLE_15MIN   	"BFDF_STA_15_MIN"
+#define HCU_L3BFDF_STA_DBI_TABLE_60MIN   	"BFDF_STA_60_MIN"
+#define HCU_L3BFDF_STA_DBI_TABLE_2HOUR   	"BFDF_STA_2_HOUR"
+#define HCU_L3BFDF_STA_DBI_TABLE_8HOUR   	"BFDF_STA_8_HOUR"
+#define HCU_L3BFDF_STA_DBI_TABLE_24HOUR   	"BFDF_STA_24_HOUR"
+#define HCU_L3BFDF_STA_DBI_TABLE_UP2NOW   	"BFDF_STA_UP_2_NOW"
 
 //主体上下文
 typedef struct gTaskL3bfdfContext
@@ -194,9 +236,9 @@ typedef struct gTaskL3bfdfContext
 	UINT16	configId;  												//用来标识系统工作在哪一套配置参数中
 	char    configName[20];
 	UINT32  start24hStaTimeInUnix;									//系统配置的参数，表示24小时统计的日历起点
-	gTaskL3bfscContextCombinationAlgorithmParamaters_t 	comAlgPar;
-	gTaskL3bfscContextWeightSensorParamaters_t			wgtSnrPar;
-	gTaskL3bfscContextMotorControlParamaters_t			motCtrPar;
+	gTaskL3bfdfContextCombinationAlgorithmParamaters_t 	comAlgPar;
+	gTaskL3bfdfContextWeightSensorParamaters_t			wgtSnrPar;
+	gTaskL3bfdfContextMotorControlParamaters_t			motCtrPar;
 
 	//动态部分
 	//nodeDyn的编制原则是：0一定表达WGT板子，1-HCU_L3BFDF_NODE_BOARD_NBR_MAX表达一条流水先上的总共的板子数量
@@ -207,6 +249,21 @@ typedef struct gTaskL3bfdfContext
 	//板子的编制，也必须从１-N，0表示垃圾桶
 
 	//实时统计部分：均以一个统计周期为单位
+	UINT32  startWorkTimeInUnix;		//表示该系统开始工作的时间日程点
+	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是500ms为统计周期
+	UINT32  elipse24HourCnt;			//24小时的日历计数器
+	HcuSysMsgIeL3bfdfContextStaElement_t cur;  		//当前统计基础颗粒中的数值
+	gTaskL3bfdfContextStaEleMid_t  		 curAge;		//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
+
+	//统计报告部分
+	HcuSysMsgIeL3bfdfContextStaElement_t staLocalUi;  //滑动平均给本地UI的数据
+	HcuSysMsgIeL3bfdfContextStaElement_t staOneMin;  	//1分钟统计结果
+	HcuSysMsgIeL3bfdfContextStaElement_t sta15Min;   	//15分钟统计结果
+	HcuSysMsgIeL3bfdfContextStaElement_t sta60Min;	//60分钟统计结果
+	HcuSysMsgIeL3bfdfContextStaElement_t sta2H;		//2H统计结果
+	HcuSysMsgIeL3bfdfContextStaElement_t sta8H;		//8H统计结果
+	HcuSysMsgIeL3bfdfContextStaElement_t sta24H;		//24H统计结果
+	HcuSysMsgIeL3bfdfContextStaElement_t staUp2Now;	//连续工作到目前的统计结果
 
 }gTaskL3bfdfContext_t;
 extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
@@ -264,7 +321,9 @@ extern bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId);
 
 //核心搜索算法
 UINT16 func_l3bfdf_new_ws_search_group(UINT8 streamId, double weight);
-UINT16 func_l3bfdf_new_ws_search_hoper_lack_one(UINT8 streamId, UINT16 gid, double weight);
+UINT16 func_l3bfdf_new_ws_search_hopper_full(UINT8 streamId);
+UINT16 func_l3bfdf_new_ws_search_hopper_lack_one(UINT8 streamId, UINT16 gid, double weight);
+UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, double weight);
 bool   func_l3bfdf_new_ws_send_out_pullin_message(UINT8 streamId, UINT16 hopperId);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperId);
 

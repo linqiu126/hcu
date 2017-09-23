@@ -4413,6 +4413,21 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 	float	wsAvgTttMatWgt;			//TTT平均重量
 }HcuSysMsgIeL3bfscContextStaElement_t;
 
+typedef struct HcuSysMsgIeL3bfdfContextStaElement
+{
+	UINT32	wsIncMatCnt;  			//物料数量
+	float	wsIncMatWgt;  			//物料重量
+	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
+	UINT32	wsTttTimes;  			//TTT次数
+	UINT32	wsTgvTimes;  			//TGV次数
+	UINT32	wsTttMatCnt;			//TTT物料数量
+	UINT32	wsTgvMatCnt;			//TGV物料数量
+	float	wsTttMatWgt;			//TTT物料重量
+	float	wsTgvMatWgt;			//TGV物料重量
+	UINT32	wsAvgTttTimes;			//TTT平均次数
+	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
+	float	wsAvgTttMatWgt;			//TTT平均重量
+}HcuSysMsgIeL3bfdfContextStaElement_t;
 
 /*
  *
