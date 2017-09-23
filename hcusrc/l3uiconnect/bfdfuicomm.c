@@ -801,35 +801,39 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationFullAdcValue = 1000;
 	gTaskL3bfdfContext.wgtSnrPar.calibration[1][1].WeightSensorCalibrationFullWeight = 100;
 
+	int i =0;
 	//分配Hooper数据：暂时没有考虑相应板子的启动状态
 	//Hopper初始化
-	func_l3bfdf_hopper_state_set_init(0);
-	func_l3bfdf_hopper_state_set_init(1);
+	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		func_l3bfdf_hopper_state_set_init(i);
+	}
 
 	int nbrGroup = 0;
 	//第0个流水线，分配组别
-	nbrGroup = rand()%10+1;
+	nbrGroup = rand()%3+1;
 	func_l3bfdf_group_allocation(0, nbrGroup);
 	func_l3bfdf_hopper_add_by_group_in_average_distribution(0, nbrGroup);
 	//设置小组重量范围
 	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 100.00, 1000.00);
 	//设置重量目标
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 100000, 0.3);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 10000, 0.3);
 
 	//第1个流水线，分配组别
-	nbrGroup = rand()%10+1;
+/*	nbrGroup = rand()%3+1;
 	func_l3bfdf_group_allocation(1, nbrGroup);
-	func_l3bfdf_hopper_add_by_group_in_normal_distribution(1, nbrGroup);
+	func_l3bfdf_hopper_add_by_group_in_average_distribution(1, nbrGroup);
 	func_l3bfdf_group_auto_alloc_init_range_in_average(1, nbrGroup, 200.00, 2000.00);
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 200000, 0.4);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(1, 20000, 0.4);*/
 
 	//打印
-	func_l3bfdf_print_all_hopper_status_by_id(0);
-	func_l3bfdf_print_all_hopper_status_by_id(1);
+	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		func_l3bfdf_print_all_hopper_status_by_id(i);
+	}
 
 	//手工浏览一遍双链表
-	func_l3bfdf_print_all_hopper_status_by_chain(0);
-	func_l3bfdf_print_all_hopper_status_by_chain(1);
+	for (i = 0; i< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		func_l3bfdf_print_all_hopper_status_by_chain(i);
+	}
 
 	//自动Audit过程
 	int res = func_l3bfdf_hopper_dual_chain_audit();

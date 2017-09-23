@@ -182,7 +182,7 @@ OPSTAT func_l3bfdf_int_init(void)
 	lt=time(NULL);
 	cu = localtime(&lt);
 	cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
-	sprintf(s, "BOFENGZHINENG-%s-%4.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfdfContext.configName, (float)gTaskL3bfdfContext.comAlgPar.TargetCombinationWeight, \
+	sprintf(s, "BOFENGZHINENG-%s-%5.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfdfContext.configName, (float)gTaskL3bfdfContext.comAlgPar.TargetCombinationWeight, \
 			(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
 	hcu_sps232_send_char_to_ext_printer(s, strlen(s));
 */
@@ -680,6 +680,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	//int ret=0;
 	double weight = 0;
 	UINT16 outHopperId = 0;
+	int i=0;
 
 	//入参检查
 	msg_struct_can_l3bfdf_new_ready_event_t rcv;
@@ -698,13 +699,27 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	gTaskL3bfdfContext.cur.wsIncMatCnt++;
 	gTaskL3bfdfContext.cur.wsIncMatWgt += rcv.sensorWsValue;
 
+	HCU_DEBUG_PRINT_CRT("L3BFDF: Statistic Total Inc/Comb/Ttt=%d/%d/%d, CombR=%5.2f%, TttR=%5.2f%, TgvR=%5.2f%\n", \
+			gTaskL3bfdfContext.cur.wsIncMatCnt, gTaskL3bfdfContext.cur.wsCombTimes, gTaskL3bfdfContext.cur.wsTttTimes,\
+			(float)gTaskL3bfdfContext.cur.wsCombTimes/(float)gTaskL3bfdfContext.cur.wsIncMatCnt*100, \
+			(float)gTaskL3bfdfContext.cur.wsTttTimes/(float)gTaskL3bfdfContext.cur.wsIncMatCnt*100, \
+			(float)gTaskL3bfdfContext.cur.wsTgvTimes/(float)gTaskL3bfdfContext.cur.wsIncMatCnt*100);
+
 	//先做Audit
 	int res = func_l3bfdf_hopper_dual_chain_audit();
 	if (res <0) HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Audit error, errCode = %d\n", res);
 
 	//手工浏览一遍双链表，进行打印
-	//func_l3bfdf_print_all_hopper_status_by_chain(0);
-	//func_l3bfdf_print_all_hopper_status_by_chain(1);
+/*
+	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		func_l3bfdf_print_all_hopper_status_by_chain(i);
+	}
+*/
+
+	//打印所有Hopper的仓位情况
+	for (i=0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++){
+		func_l3bfdf_print_all_hopper_ratio_by_weight(i);
+	}
 
 	//超界限，扔进垃圾桶
 	UINT16 gidMin = 1;
@@ -712,6 +727,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 	weight = (double)rcv.sensorWsValue / 100.0;
 	if ((weight < gTaskL3bfdfContext.group[rcv.streamId][gidMin].rangeLow) || (weight > gTaskL3bfdfContext.group[rcv.streamId][gidMax].rangeHigh))
 	{
+		//HCU_DEBUG_PRINT_CRT("L3BFDF: NEW EVENT S/W=%d/%f, Low/High=%f/%f\n", rcv.streamId, weight, gTaskL3bfdfContext.group[rcv.streamId][gidMin].rangeLow, gTaskL3bfdfContext.group[rcv.streamId][gidMax].rangeHigh);
 		if (func_l3bfdf_new_ws_send_out_pullin_message(rcv.streamId, 0) == FALSE)
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 		//更新统计信息
@@ -739,7 +755,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		}
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsCombTimes++;
-		gTaskL3bfdfContext.cur.wsTttMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTttMatCnt++;
 		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
 		//设置状态
 		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_TTT);
@@ -763,7 +779,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.group[rcv.streamId][gId].fillHopperId = gTaskL3bfdfContext.hopper[rcv.streamId][fillHopper].nextHopperId;
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsCombTimes++;
-		gTaskL3bfdfContext.cur.wsTttMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTttMatCnt++;
 		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
 
 		return SUCCESS;
@@ -778,7 +794,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 		//更新统计数据
 		gTaskL3bfdfContext.cur.wsTgvTimes++;
-		gTaskL3bfdfContext.cur.wsTgvMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTgvMatCnt++;
 		gTaskL3bfdfContext.cur.wsTgvMatWgt += weight;
 	}
 
@@ -791,7 +807,12 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 		gTaskL3bfdfContext.hopper[rcv.streamId][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_PULLIN_OUT;
 		//留待入料成功后，加入到目标重量区
 		gTaskL3bfdfContext.hopper[rcv.streamId][outHopperId].hopperLastMat = weight;
+
 		//欠一满不可能，不然该料斗已经成功进入出料状态了
+		//这里可能有潜在的问题，需要再进一步测试和实验
+		//核心问题与思路是：计算最大的倒推N，得到负数，但每一次并没有落入真正的n区间，而是因为小于0被归零了，这样，可能造成最终聚合成总重量，并不是N个，而是比N大
+		//但这里的计算还是以N进行计算的．所以在第一次跨越0时，可能需要重新计算最大N值，而且还要重新将Index赋给N
+
 		if (gTaskL3bfdfContext.hopper[rcv.streamId][outHopperId].matLackIndex <= 1){
 			gTaskL3bfdfContext.hopper[rcv.streamId][outHopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Hopper Status error, Stream/HopperId=[%d/%d]!\n", rcv.streamId, outHopperId);
@@ -801,7 +822,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 
 		//更新统计信息
 		gTaskL3bfdfContext.cur.wsCombTimes++;
-		gTaskL3bfdfContext.cur.wsTttMatCnt ++;
+		gTaskL3bfdfContext.cur.wsTttMatCnt++;
 		gTaskL3bfdfContext.cur.wsTttMatWgt += weight;
 	}
 
@@ -848,7 +869,7 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].matLackIndex = gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].matLackNbr;
 
 	//打印二维码／条形码：二维码＋条形码的内容
-	char s[100];
+/*	char s[100];
 	time_t lt;
 	struct tm *cu;
 	memset(s, 0, sizeof(s));
@@ -857,9 +878,9 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 	lt=time(NULL);
 	cu = localtime(&lt);
 	cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
-	sprintf(s, "BOFENGZHINENG-%s-%4.2fg-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfdfContext.configName, (float)gTaskL3bfdfContext.comAlgPar.TargetCombinationWeight, \
+	sprintf(s, "BOFENGZHINENG-%s-%5.2fg-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfdfContext.configName, (float)gTaskL3bfdfContext.comAlgPar.TargetCombinationWeight, \
 			(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
-	hcu_sps232_send_char_to_ext_printer(s, strlen(s));
+	hcu_sps232_send_char_to_ext_printer(s, strlen(s));*/
 
 	//返回
 	return SUCCESS;
@@ -1078,9 +1099,10 @@ bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup)
 	gTaskL3bfdfContext.totalGroupNbr[streamId] = nbrGroup;
 
 	//循环赋值
-	for (i=1; i<=nbrGroup; i++){
-		gTaskL3bfdfContext.group[streamId][i].groupId = 0;
-		gTaskL3bfdfContext.group[streamId][i].groupStatus = HCU_L3BFDF_GROUP_STATUS_ACTIVE;
+	for (i=0; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
+		gTaskL3bfdfContext.group[streamId][i].groupId = i;
+		if (i<=nbrGroup) gTaskL3bfdfContext.group[streamId][i].groupStatus = HCU_L3BFDF_GROUP_STATUS_ACTIVE;
+		else gTaskL3bfdfContext.group[streamId][i].groupStatus = HCU_L3BFDF_GROUP_STATUS_DISABLE;
 	}
 	return TRUE;
 }
@@ -1145,7 +1167,7 @@ bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId)
 		gTaskL3bfdfContext.hopper[streamId][i].matLackNbr = (UINT32)(targetWgt/avgWgt==0?0.01:avgWgt)&0xFFFF;
 		nbrDeep = (UINT32)(avgWgt/(sigWgt==0?0.01:sigWgt))&0xFFFF;
 		if ((sigWgt == 0) || (avgWgt == 0)){
-			HcuDebugPrint("L3BFDF: Zero sigWgt/avgWgt, Stream/Hopper/Gid=[%d/%d/%d], RangAvg/Sig/Min/Max=[%f/%f/%f/%f]\n", streamId, i, gid, avgWgt, sigWgt, \
+			HcuDebugPrint("L3BFDF: Zero sigWgt/avgWgt, Stream/Gid/Hopper=[%d/%d/%d], RangAvg/Sig/Min/Max=[%f/%f/%f/%f]\n", streamId, gid, i, avgWgt, sigWgt, \
 					gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh);
 			return FALSE;
 		}
@@ -1159,6 +1181,30 @@ bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId)
 		//初始化控制参数
 		gTaskL3bfdfContext.hopper[streamId][i].matLackIndex = gTaskL3bfdfContext.hopper[streamId][i].matLackNbr;
 	}
+
+	return TRUE;
+}
+
+//设置单个料斗状态
+bool func_l3bfdf_hopper_state_set_single_hopper_N_coef(UINT8 streamId, UINT16 hid)
+{
+	UINT16 gid = 0;
+	double targetWgt = 0;
+	double avgWgt=0;
+	double sigWgt=0;
+	UINT16 nbrDeep=0;
+
+	//入参检查
+	if ((streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (hid==0) || (hid >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+		return FALSE;
+
+	//状态设置, 初始化物料数量
+	gid = gTaskL3bfdfContext.hopper[streamId][hid].groupId;
+	targetWgt = gTaskL3bfdfContext.group[streamId][gid].targetWeight + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit/2.0;
+	targetWgt -= gTaskL3bfdfContext.hopper[streamId][hid].hopperValue;
+	avgWgt = gTaskL3bfdfContext.group[streamId][gid].rangeAvg;
+	sigWgt = gTaskL3bfdfContext.group[streamId][gid].rangeSigma;
+	gTaskL3bfdfContext.hopper[streamId][hid].matLackIndex = (UINT32)(targetWgt/avgWgt==0?0.01:avgWgt)&0xFFFF;
 
 	return TRUE;
 }
@@ -1462,7 +1508,7 @@ bool func_l3bfdf_hopper_del_by_middle(UINT8 streamId, UINT16 groupId, UINT16 hop
 int func_l3bfdf_hopper_dual_chain_audit(void)
 {
 	UINT8  streamId = 0;
-	UINT16 groupId = 0;
+	UINT16 gid = 0;
 	UINT16 fHopper=0, nextHopper=0, tmpHopper=0, preHopper=0;
 	UINT16 tmp=0;
 	int cnt = 0;
@@ -1475,27 +1521,28 @@ int func_l3bfdf_hopper_dual_chain_audit(void)
 
 		//检查总量
 		tmp=0;
-		for (groupId = 0; groupId <= gTaskL3bfdfContext.totalGroupNbr[streamId]; groupId++)
+		for (gid = 0; gid <= gTaskL3bfdfContext.totalGroupNbr[streamId]; gid++)
 		{
-			if (gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -2;
-			if (gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr == 0) return -3;
-			//HcuDebugPrint("L3BFDF: S/G=%d/%d, Total Hopper=%d\n", streamId, groupId, gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr);
-			tmp += gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr;
+			if (gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -2;
+			if (gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr == 0) return -3;
+			//HcuDebugPrint("L3BFDF: S/G=%d/%d, Total Hopper=%d\n", streamId, gid, gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr);
+			tmp += gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr;
 		}
 		if (tmp != HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -4;
-		for (groupId = gTaskL3bfdfContext.totalGroupNbr[streamId]+1; groupId < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; groupId++)
+		for (gid = gTaskL3bfdfContext.totalGroupNbr[streamId]+1; gid < HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; gid++)
 		{
-			if (gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr != 0) return -5;
+			if (gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr != 0) return -5;
 		}
 
 		//按照GroupId进行循环
-		for (groupId = 0; groupId <= gTaskL3bfdfContext.totalGroupNbr[streamId]; groupId++)
+		for (gid = 0; gid <= gTaskL3bfdfContext.totalGroupNbr[streamId]; gid++)
 		{
-			if (gTaskL3bfdfContext.group[streamId][groupId].groupId != groupId) return -10;
-			if (gTaskL3bfdfContext.group[streamId][groupId].firstHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -11;
-			if (gTaskL3bfdfContext.group[streamId][groupId].fillHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -12;
-			fHopper = gTaskL3bfdfContext.group[streamId][groupId].firstHopperId;
-			if ((groupId == 0) && (fHopper == 0)){
+			//HcuDebugPrint("L3BFDF: groupId Index = %d, access = %d\n", gid, gTaskL3bfdfContext.group[streamId][gid].groupId);
+			if (gTaskL3bfdfContext.group[streamId][gid].groupId != gid) return -10;
+			if (gTaskL3bfdfContext.group[streamId][gid].firstHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -11;
+			if (gTaskL3bfdfContext.group[streamId][gid].fillHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -12;
+			fHopper = gTaskL3bfdfContext.group[streamId][gid].firstHopperId;
+			if ((gid == 0) && (fHopper == 0)){
 				if (gTaskL3bfdfContext.group[streamId][0].totalHopperNbr != 1) return -13;
 				if (gTaskL3bfdfContext.hopper[streamId][0].groupId != 0) return -14;
 				if (gTaskL3bfdfContext.hopper[streamId][0].hopperId != 0) return -15;
@@ -1503,13 +1550,13 @@ int func_l3bfdf_hopper_dual_chain_audit(void)
 				if (gTaskL3bfdfContext.hopper[streamId][0].preHopperId != 0) return -17;
 				continue;
 			}
-			if ((groupId != 0) && (fHopper == 0)){
-				if (gTaskL3bfdfContext.group[streamId][groupId].totalHopperNbr != 0) return -18;
+			if ((gid != 0) && (fHopper == 0)){
+				if (gTaskL3bfdfContext.group[streamId][gid].totalHopperNbr != 0) return -18;
 				continue;
 			}
 			nextHopper = fHopper;
 			cnt = 1;
-			if (gTaskL3bfdfContext.hopper[streamId][nextHopper].groupId != groupId) return -20;
+			if (gTaskL3bfdfContext.hopper[streamId][nextHopper].groupId != gid) return -20;
 			if (gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperId != nextHopper) return -21;
 			if (gTaskL3bfdfContext.hopper[streamId][nextHopper].nextHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -22;
 			if (gTaskL3bfdfContext.hopper[streamId][nextHopper].preHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -23;
@@ -1518,7 +1565,7 @@ int func_l3bfdf_hopper_dual_chain_audit(void)
 			{
 				cnt++;
 				tmpHopper = gTaskL3bfdfContext.hopper[streamId][nextHopper].nextHopperId;
-				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].groupId != groupId) return -30;
+				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].groupId != gid) return -30;
 				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].hopperId != tmpHopper) return -31;
 				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].nextHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -32;
 				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].preHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -33;
@@ -1532,7 +1579,7 @@ int func_l3bfdf_hopper_dual_chain_audit(void)
 			{
 				cnt++;
 				tmpHopper = gTaskL3bfdfContext.hopper[streamId][preHopper].preHopperId;
-				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].groupId != groupId) return -40;
+				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].groupId != gid) return -40;
 				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].hopperId != tmpHopper) return -41;
 				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].nextHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -42;
 				if (gTaskL3bfdfContext.hopper[streamId][tmpHopper].preHopperId > HCU_SYSCFG_BFDF_HOPPER_NBR_MAX) return -43;
@@ -1599,8 +1646,8 @@ bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, doubl
 	else if (ulRatio < 10) ratio = 1 + ulRatio/10;
 	else ratio = 2;
 
-	for (i=1; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
-		gTaskL3bfdfContext.group[streamId][i].targetWeight = targetWgt * (rand()%100+100) / 100.0;
+	for (i=1; i<= gTaskL3bfdfContext.totalGroupNbr[streamId]; i++){
+		gTaskL3bfdfContext.group[streamId][i].targetWeight = targetWgt * (rand()%100+100) / 100.0 / sqrt(1+gTaskL3bfdfContext.totalGroupNbr[streamId]-i);
 		gTaskL3bfdfContext.group[streamId][i].targetUpLimit = targetWgt * ratio;
 	}
 
@@ -1618,7 +1665,7 @@ bool func_l3bfdf_print_all_hopper_status_by_id(UINT8 streamId)
 	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) return FALSE;
 
 	memset(s, 0, sizeof(s));
-	sprintf(s, "BFDFUICOMM: Stream[%d] Total Group number = %d, bitmap = ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId]);
+	sprintf(s, "L3BFDF: Stream[%d] Total Group number = %d, bitmap = ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId]);
 	for (i = 0; i<HCU_SYSCFG_BFDF_HOPPER_NBR_MAX; i++){
 		memset(tmp, 0, sizeof(tmp));
 		sprintf(tmp, "[%d/%d/%d/%d/%d]", gTaskL3bfdfContext.hopper[streamId][i].groupId, gTaskL3bfdfContext.hopper[streamId][i].hopperId, gTaskL3bfdfContext.hopper[streamId][i].nextHopperId, gTaskL3bfdfContext.hopper[streamId][i].preHopperId, gTaskL3bfdfContext.hopper[streamId][i].hopperStatus);
@@ -1643,7 +1690,7 @@ bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId)
 	//入参检查：注意起点和终点
 	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) return FALSE;
 
-	sprintf(s, "BFDFUICOMM: Stream[%d] Total Group number = %d, Group[x-y/y/y] = ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId]);
+	sprintf(s, "L3BFDF: Stream[%d] Total Group number = %d, Group[x-y/y/y] = ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId]);
 	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[streamId]; i++)
 	{
 		memset(tmp, 0, sizeof(tmp));
@@ -1672,6 +1719,47 @@ bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId)
 	return TRUE;
 }
 
+//打印信息
+bool func_l3bfdf_print_all_hopper_ratio_by_weight(UINT8 streamId)
+{
+	int i = 0;
+	int fHopper = 0;
+	int nextHopper = 0;
+	int tmpHopper = 0;
+	char s[800];
+	char tmp[40];
+
+	//入参检查：注意起点和终点
+	if (streamId >= HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) return FALSE;
+
+	sprintf(s, "L3BFDF: Stream[%d] Total Group number = %d, Group[x-y/y/y] = ", streamId, gTaskL3bfdfContext.totalGroupNbr[streamId]);
+	for (i = 0; i<= gTaskL3bfdfContext.totalGroupNbr[streamId]; i++)
+	{
+		memset(tmp, 0, sizeof(tmp));
+		sprintf(tmp, "[%d-%d-", i, gTaskL3bfdfContext.group[streamId][i].totalHopperNbr);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		fHopper = gTaskL3bfdfContext.group[streamId][i].firstHopperId;
+		if (fHopper == 0){
+			strcat(s, "] ");
+			continue;
+		}
+		tmpHopper = fHopper;
+		sprintf(tmp, "%5.2f/", 100*gTaskL3bfdfContext.hopper[streamId][fHopper].hopperValue/gTaskL3bfdfContext.group[streamId][gTaskL3bfdfContext.hopper[streamId][fHopper].groupId].targetWeight);
+		if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+		nextHopper = gTaskL3bfdfContext.hopper[streamId][tmpHopper].nextHopperId;
+		while(nextHopper!=fHopper){
+			sprintf(tmp, "%5.2f/", 100*gTaskL3bfdfContext.hopper[streamId][nextHopper].hopperValue/gTaskL3bfdfContext.group[streamId][gTaskL3bfdfContext.hopper[streamId][nextHopper].groupId].targetWeight);
+			if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
+			tmpHopper = gTaskL3bfdfContext.hopper[streamId][nextHopper].nextHopperId;
+			nextHopper = tmpHopper;
+			//HcuDebugPrint("TEST: nextHopperid = %d, fHopper=%d\n", nextHopper, fHopper);
+		}
+		strcat(s, "] ");
+	}
+	strcat(s, "\n");
+	HCU_DEBUG_PRINT_CRT(s);
+	return TRUE;
+}
 
 //寻找重物在小组的组别
 UINT16 func_l3bfdf_new_ws_search_group(UINT8 streamId, double weight)
@@ -1773,7 +1861,10 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, doub
 		cWg = gTaskL3bfdfContext.hopper[sid][fH].hopperValue + weight;
 		hMin = tWg - (tAvg+tSigma)*gTaskL3bfdfContext.hopper[sid][fH].matLackIndex;
 		hMax = tWg+tLm -(tAvg-tSigma)*gTaskL3bfdfContext.hopper[sid][fH].matLackIndex;
-		if ((cWg >= hMin) && (cWg <= hMax)) return fH;
+		//HCU_DEBUG_PRINT_CRT("L3BFDF: S/G/H=%d/%d/%d, tWg/tLmt/tAvg/tSigma=%f/%f/%f/%f, cWg/hMin/hMax=%f/%f/%f\n", sid, gid, fH, tWg, tLm, tAvg, tSigma, cWg, hMin, hMax);
+
+		if ((hMin < 0) || (hMax < 0)) func_l3bfdf_hopper_state_set_single_hopper_N_coef(sid, fH);
+		if ((hMin < 0) || (hMax < 0) || ((cWg >= hMin) && (cWg <= hMax))) return fH;
 	}
 
 	//顺着双链表，查找满足条件的料斗
@@ -1787,7 +1878,10 @@ UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, doub
 			cWg = gTaskL3bfdfContext.hopper[sid][nextHopper].hopperValue + weight;
 			hMin = tWg - (tAvg+tSigma)*gTaskL3bfdfContext.hopper[sid][nextHopper].matLackIndex;
 			hMax = tWg+tLm -(tAvg-tSigma)*gTaskL3bfdfContext.hopper[sid][nextHopper].matLackIndex;
-			if ((cWg >= hMin) && (cWg <= hMax)) return nextHopper;
+			//HCU_DEBUG_PRINT_CRT("L3BFDF: S/G/H=%d/%d/%d, tWg/tLmt/tAvg/tSigma=%f/%f/%f/%f, cWg/hMin/hMax=%f/%f/%f\n", sid, gid, nextHopper, tWg, tLm, tAvg, tSigma, cWg, hMin, hMax);
+
+			if ((hMin < 0) || (hMax < 0)) func_l3bfdf_hopper_state_set_single_hopper_N_coef(sid, nextHopper);
+			if ((hMin < 0) || (hMax < 0) || ((cWg >= hMin) && (cWg <= hMax))) return nextHopper;
 		}
 		tmpHopper = gTaskL3bfdfContext.hopper[sid][nextHopper].nextHopperId;
 		nextHopper = tmpHopper;

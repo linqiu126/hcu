@@ -307,6 +307,7 @@ bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 extern bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
 extern bool func_l3bfdf_hopper_state_set_init(UINT8 streamId);
 extern bool func_l3bfdf_hopper_state_set_valid(UINT8 streamId);
+extern bool func_l3bfdf_hopper_state_set_single_hopper_N_coef(UINT8 streamId, UINT16 hid);
 extern bool func_l3bfdf_hopper_add_by_tail(UINT8 streamId, UINT16 groupId, UINT16 hopperNewId);
 extern bool func_l3bfdf_hopper_add_by_group(UINT8 streamId, UINT16 groupId, UINT16 nbrHopper);
 extern bool func_l3bfdf_hopper_add_by_group_in_average_distribution(UINT8 streamId, UINT16 nbrGroup);
@@ -319,6 +320,7 @@ extern bool func_l3bfdf_group_auto_alloc_init_range_in_average(UINT8 streamId, U
 extern bool func_l3bfdf_group_auto_alloc_init_target_with_uplimit(UINT8 streamId, double targetWgt, double ulRatio);
 extern bool func_l3bfdf_print_all_hopper_status_by_id(UINT8 streamId);
 extern bool func_l3bfdf_print_all_hopper_status_by_chain(UINT8 streamId);
+extern bool func_l3bfdf_print_all_hopper_ratio_by_weight(UINT8 streamId);
 
 //核心搜索算法
 UINT16 func_l3bfdf_new_ws_search_group(UINT8 streamId, double weight);
