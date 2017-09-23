@@ -1094,11 +1094,17 @@ void func_hwinv_scan_eng_par(void)
 		{
 			HCU_DEBUG_PRINT_FAT("HWINV: Scan eng par from DB failure reach the max, the system reboot!!!!\n\n\n");
 
+			int ret = 0;
+			ret = hcu_write_errlog("Scan eng par from DB failure reach the max, the system reboot!");
+			if (ret == FAILURE)
+				HCU_ERROR_PRINT_HWINV("HWINV: write reboot log failure in: %s!\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+
 			//_exit(0);//HCU exit
 			system("reboot");
 		}
 	}
 	//如果读数据库失败，则不做任何动作，只是原封不动的保留原先启动时的设置
+
 }
 
 void func_hwinv_scan_dir(void)
@@ -1472,6 +1478,65 @@ void hcu_delete_file(const char *path)
 			rmdir(file_path);
 		}
 	}
+
+}
+
+
+/****************************************************************
+函数说明	:写入Log  日志
+用途功能	:如果是日志文件，将会在str前加上当前时间(格式如：2011-04-12 12:10:20)
+****************************************************************/
+OPSTAT hcu_write_errlog(const char* log)
+{
+	 	time_t tDate;
+	    struct tm *eventTime;
+	    time(&tDate);//得到系统时间
+	    eventTime = localtime(&tDate);//将时间格式化为struct tm结构
+	    int iYear = eventTime->tm_year + 1900;
+	    int iMon = eventTime->tm_mon + 1;
+	    int iDay = eventTime->tm_mday;
+	    int iHour = eventTime->tm_hour;
+	    int iMin = eventTime->tm_min;
+	    int iSec = eventTime->tm_sec;
+	    char sDate[16];
+	    sprintf(sDate, "%04d-%02d-%02d", iYear, iMon, iDay);
+	    char sTime[16];
+	    sprintf(sTime, "%02d:%02d:%02d", iHour, iMin, iSec);
+	    char s[200];
+	    char file[200];
+	    sprintf(s, "%s %s [%s]\n", sDate, sTime, log);//将s格式化为yyyy-mm-dd hh:mi:se [x]
+
+		//sprintf(s, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
+		//system(s);
+
+		sprintf(file, "chmod 777 -R %s", HCU_SYSCFG_REBOOT_LOG_DIR);
+		system(file);
+
+	    FILE *fd = fopen(HCU_SYSCFG_REBOOT_LOG_FILE, "w");//以追加的方式打开文件
+		if(NULL == fd)
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Open file failed at %s\n\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+			//return FAILURE;
+		}
+		else
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Open file succeed at %s\n\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+			sprintf(file, "chmod 777  %s", HCU_SYSCFG_REBOOT_LOG_FILE);
+			system(file);
+		}
+
+	    fd = fopen(HCU_SYSCFG_REBOOT_LOG_FILE, "a+");//以追加的方式打开文件
+		if(NULL == fd)
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Open file failed at %s\n\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+			//return FAILURE;
+		}
+		else
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Open file succeed at %s\n\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+		    fputs(s, fd);//想log文件中写入一条数据
+		    fclose(fd);//关闭文件
+		}
 
 }
 
