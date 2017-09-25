@@ -9,6 +9,11 @@
 
 
 
+
+//= ZJL, 2017 Sep.25 CURRENT_SW_DELIVERY 271=>BFDF项目
+= 完成基础分选组合算法的测试
+
+
 //= ZJL, 2017 Sep.22 CURRENT_SW_DELIVERY 270=>BFDF项目
 = 增加每一组的目标范围
 = 搭建分组与组合的核心过程

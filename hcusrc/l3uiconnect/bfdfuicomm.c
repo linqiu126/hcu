@@ -810,13 +810,13 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 
 	int nbrGroup = 0;
 	//第0个流水线，分配组别
-	nbrGroup = rand()%3+1;
+	nbrGroup = rand()%5+1;
 	func_l3bfdf_group_allocation(0, nbrGroup);
 	func_l3bfdf_hopper_add_by_group_in_average_distribution(0, nbrGroup);
 	//设置小组重量范围
 	func_l3bfdf_group_auto_alloc_init_range_in_average(0, nbrGroup, 100.00, 1000.00);
 	//设置重量目标
-	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 10000, 0.3);
+	func_l3bfdf_group_auto_alloc_init_target_with_uplimit(0, 10000, 0.01);
 
 	//第1个流水线，分配组别
 /*	nbrGroup = rand()%3+1;
