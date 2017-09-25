@@ -1208,10 +1208,12 @@ bool func_l3bfdf_hopper_state_set_single_hopper_N_coef(UINT8 streamId, UINT16 hi
 	gid = gTaskL3bfdfContext.hopper[streamId][hid].groupId;
 	targetWgt = gTaskL3bfdfContext.group[streamId][gid].targetWeight + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit - gTaskL3bfdfContext.hopper[streamId][hid].hopperValue;
 	avgWgt = gTaskL3bfdfContext.group[streamId][gid].rangeAvg;
-	if (avgWgt==0)
+	if (avgWgt==0){
 		gTaskL3bfdfContext.hopper[streamId][hid].matLackIndex = (UINT32)(targetWgt)&0xFFFF;
+		HcuErrorPrint("L3BFDF: Taking care, data set error!\n");
+	}
 	else
-		gTaskL3bfdfContext.hopper[streamId][hid].matLackIndex = (UINT32)(targetWgt/avgWgt)&0xFFFF;
+		gTaskL3bfdfContext.hopper[streamId][hid].matLackIndex = (UINT32)((double)targetWgt/(double)avgWgt)&0xFFFF;
 	if (avgWgt == 0) HcuErrorPrint("L3BFDF: Max Weight caculation error!\n");
 
 /*
@@ -1939,7 +1941,7 @@ bool func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, dou
 	if (gTaskL3bfdfContext.group[streamId][gid].rangeLow == 0) gTaskL3bfdfContext.group[streamId][gid].rangeLow = 1.00;  //5g是动态归零值
 
 	//目标重量
-	targetWgtL = gTaskL3bfdfContext.group[streamId][gid].targetWeight + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit - gTaskL3bfdfContext.hopper[streamId][hid].hopperValue - weight;
+	targetWgtL = gTaskL3bfdfContext.group[streamId][gid].targetWeight - gTaskL3bfdfContext.hopper[streamId][hid].hopperValue - weight;
 	targetWgtH = targetWgtL + gTaskL3bfdfContext.group[streamId][gid].targetUpLimit;
 
 	//求最大最小范围
@@ -1950,17 +1952,19 @@ bool func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, dou
 
 	//不相等的情况下，是否覆盖整数
 /*
-	HcuDebugPrint("L3BFDF: max/min/umax/umin = %6.2f/%6.2f/%d/%d, weight/RangeL/H/Cur/Target=%6.2f/%6.2f/%6.2f/%6.2f/%6.2f\n", max, min, umax, umin, weight, \
+	HcuDebugPrint("L3BFDF: max/min/umax/umin = %6.2f/%6.2f/%d/%d, weight/RangeL/H/Cur/Target/Up=%6.2f/%6.2f/%6.2f/%6.2f/%6.2f/%6.2f\n", max, min, umax, umin, weight, \
 			gTaskL3bfdfContext.group[streamId][gid].rangeLow, gTaskL3bfdfContext.group[streamId][gid].rangeHigh, \
-			gTaskL3bfdfContext.hopper[streamId][hid].hopperValue, gTaskL3bfdfContext.group[streamId][gid].targetWeight);
+			gTaskL3bfdfContext.hopper[streamId][hid].hopperValue, gTaskL3bfdfContext.group[streamId][gid].targetWeight, \
+			gTaskL3bfdfContext.group[streamId][gid].targetWeight+gTaskL3bfdfContext.group[streamId][gid].targetUpLimit);
 */
 
 	//当最后两个Lack1/2的时候
 	index = gTaskL3bfdfContext.hopper[streamId][hid].matLackIndex;
-	if ((index > 2) && (index <= 4) && ((max-min)>0.2)) return TRUE;
+	if ((index > 2) && (index <= 4) && ((umax - umin) >=1) && ((max-min)>0.04)) return TRUE;
+	if ((index == 2) && ((umax - umin) >=1) && ((max-min) > 0.02)) return TRUE;
 
 	//其他情况下
-	if (((index > 4) || (index <= 2)) && ((umax - umin) >=1)) return TRUE;
+	if (((index > 4) || (index <= 1)) && ((umax - umin) >=1)) return TRUE;
 
 	//最终不成功
 	return FALSE;
