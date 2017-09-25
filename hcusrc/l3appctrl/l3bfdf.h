@@ -88,7 +88,9 @@ typedef struct L3BfdfHopperInfo
 	UINT16 nextHopperId;
 	UINT8  basketStatus;
 	UINT16 matLackNbr;		//用来计算在特定组别的情况下，采用欠缺算法，需要从多少个开始操控．当打开自动调配小组时，这个参数需要动态刷新．本项目估计暂时不需要．
+	//UINT16 matLackNbrMin;
 	UINT16 matLackIndex;     //具体控制欠n的数量
+	//UINT16 matLackIndexMin;
 	double  hopperValue;    //料斗总重量
 	double  hopperLastMat;  //用来存储称重台到物料入料之间的期间，物料的重量．冲入则需要状态和算法控制．
 }L3BfdfHopperInfo_t;
@@ -327,6 +329,7 @@ UINT16 func_l3bfdf_new_ws_search_group(UINT8 streamId, double weight);
 UINT16 func_l3bfdf_new_ws_search_hopper_full(UINT8 streamId);
 UINT16 func_l3bfdf_new_ws_search_hopper_lack_one(UINT8 streamId, UINT16 gid, double weight);
 UINT16 func_l3bfdf_new_ws_search_hopper_valid_normal(UINT8 sid, UINT16 gid, double weight);
+bool   func_l3bfdf_hopper_search_target_N_is_blank(UINT8 streamId, UINT16 hid, double weight);
 bool   func_l3bfdf_new_ws_send_out_pullin_message(UINT8 streamId, UINT16 hopperId);
 bool   func_l3bfdf_new_ws_send_out_comb_out_message(UINT8 streamId, UINT16 hopperId);
 
