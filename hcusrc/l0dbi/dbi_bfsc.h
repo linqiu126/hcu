@@ -33,10 +33,11 @@
 extern OPSTAT dbi_HcuBfsc_StaDatainfo_save(char *StaType, UINT16 configId, HcuSysMsgIeL3bfscContextStaElement_t *StaDatainfo);
 extern OPSTAT dbi_HcuBfsc_WmcStatusUpdate(uint32_t aws_id, uint32_t wmc_id, uint32_t wmc_status, uint32_t wmc_weight_value);
 extern OPSTAT dbi_HcuBfsc_WmcCurComWgtUpdate(uint32_t wgt);
+extern OPSTAT dbi_HcuBfsc_hcusw_ver_Update(char *input, int len);
+extern OPSTAT dbi_HcuBfsc_ihusw_ver_Update(char *input, int len);
 extern OPSTAT dbi_HcuBfsc_WmcStatusForceInvalid(void);
-extern OPSTAT  dbi_HcuBfsc_WmcStatusForceSuspend(void);
+extern OPSTAT dbi_HcuBfsc_WmcStatusForceSuspend(void);
 extern OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
-//extern OPSTAT dbi_HcuBfsc_CalibrationDataUpdate(UINT8 cmdid, UINT32  adcvalue, UINT32 fullweight, UINT8  sensorid);
 extern OPSTAT dbi_HcuBfsc_CalibrationDataGet( UINT32 data[(HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX-1)*3] );
 extern OPSTAT dbi_HcuBfsc_DynamicConfigDataGet(UINT16 config_index, UINT32  dynamicdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX]);
 extern OPSTAT dbi_HcuBfsc_StaticConfigDataGet(UINT32  staticdata[HCU_SYSCFG_BFSC_DB_COLUMN_NUM_MAX]);

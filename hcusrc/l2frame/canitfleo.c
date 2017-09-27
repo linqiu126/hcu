@@ -728,6 +728,20 @@ OPSTAT func_canitfleo_l2frame_msg_inventory_report_received_handle(StrMsg_HUITP_
 	if (hcu_message_send(MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT, TASK_ID_SYSSWM, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
 
+	//刷界面中IHU版本信息
+	char input[50];
+	memset(input, 0, 50);
+	if (zHcuSysEngPar.hwBurnId.nodeHwType != 0){
+		memset(input, 0, 50);
+		sprintf(input, "IHU-SW-R%d.V%d.", snd.swRel, snd.swVer);
+		if (snd.upgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO");
+		else if (snd.upgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE");
+		else if (snd.upgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL");
+		else if (snd.upgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH");
+		else strcat(input, "UPG_ERROR");
+		dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+	}
+
 	//返回
 	return SUCCESS;
 }

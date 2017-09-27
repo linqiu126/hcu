@@ -9,10 +9,14 @@
 
 
 
+//= ZJL, 2017 Sep.27 CURRENT_SW_DELIVERY 272=>BFDF项目
+= 界面显示软件版本
+= [bug fix]升级完成后，不能删掉hcu文件
+= upgrade.sh更新：去掉crontab
+= BFSC的软件版本下载改为无限次
 
 //= ZJL, 2017 Sep.25 CURRENT_SW_DELIVERY 271=>BFDF项目
 = 完成基础分选组合算法的测试
-
 
 //= ZJL, 2017 Sep.22 CURRENT_SW_DELIVERY 270=>BFDF项目
 = 增加每一组的目标范围

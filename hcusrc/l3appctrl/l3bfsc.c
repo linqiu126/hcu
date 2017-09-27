@@ -191,11 +191,28 @@ OPSTAT fsm_l3bfsc_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	if (dbi_HcuBfsc_StaDatainfo_save(HCU_L3BFSC_STA_DBI_TABLE_LOCALUI, gTaskL3bfscContext.configId, &(gTaskL3bfscContext.staLocalUi)) == FAILURE)
 			HCU_ERROR_PRINT_L3BFSC("L3BFSC: Save data to DB error!\n");
 
-	//初始化界面交互数据
+	//初始化无效界面交互数据
 	dbi_HcuBfsc_WmcStatusForceInvalid();
 	dbi_HcuBfsc_WmcCurComWgtUpdate(0);
 	HCU_DEBUG_PRINT_INF("L3BFSC: dbi_HcuBfsc_WmcStatusForceInvalid() set.\n");
 
+	//初始化HCU版本信息
+	char input[50];
+	memset(input, 0, 50);
+	sprintf(input, "HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
+	if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH");
+	else strcat(input, "UPG_ERROR");
+	dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+
+	//初始化IHU版本信息
+	if (zHcuSysEngPar.hwBurnId.nodeHwType != 0){
+		memset(input, 0, 50);
+		sprintf(input, "IHU-SW-R*.V*.*");
+		dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+	}
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_L3BFSC("L3BFSC: Error Set FSM State!\n");

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: 2017-09-15 10:27:43
+-- Generation Time: 2017-09-27 14:57:59
 -- 服务器版本： 5.7.19-0ubuntu0.17.04.1
 -- PHP Version: 7.0.22-0ubuntu0.17.04.1
 
@@ -263,15 +263,17 @@ CREATE TABLE `hcubfsccurrentinfo` (
   `value_15` int(4) DEFAULT NULL,
   `status_16` int(4) DEFAULT NULL,
   `value_16` int(4) DEFAULT NULL,
-  `curcomwgt` int(4) DEFAULT NULL
+  `curcomwgt` int(4) DEFAULT NULL,
+  `hcusw` char(50) DEFAULT NULL,
+  `ihusw` char(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- 转存表中的数据 `hcubfsccurrentinfo`
 --
 
-INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`) VALUES
-(1505442321, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0);
+INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`, `hcusw`, `ihusw`) VALUES
+(1501215098, 0, 35483, 0, 36906, 0, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 1, 0, 1, 0, 1, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 128566, '', '');
 
 -- --------------------------------------------------------
 
