@@ -39,7 +39,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1910297629" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.libs.1932057186" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
 									<listOptionValue builtIn="false" value="rt"/>
-									<listOptionValue builtIn="false" value="hcuvm"/>
 									<listOptionValue builtIn="false" value="json-c"/>
 									<listOptionValue builtIn="false" value="mysqlclient"/>
 									<listOptionValue builtIn="false" value="pthread"/>

@@ -14,6 +14,8 @@
 = [bug fix]升级完成后，不能删掉hcu文件
 = upgrade.sh更新：去掉crontab
 = BFSC的软件版本下载改为无限次
+= 改进VM，暂时不用hcuvm机制，恢复vmlayer程序
+
 
 //= ZJL, 2017 Sep.25 CURRENT_SW_DELIVERY 271=>BFDF项目
 = 完成基础分选组合算法的测试

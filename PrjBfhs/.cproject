@@ -40,7 +40,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1984582383" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug">
 								<option id="gnu.c.link.option.libs.1907005598" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
 									<listOptionValue builtIn="false" value="rt"/>
-									<listOptionValue builtIn="false" value="hcuvm"/>
 									<listOptionValue builtIn="false" value="json-c"/>
 									<listOptionValue builtIn="false" value="mysqlclient"/>
 									<listOptionValue builtIn="false" value="pthread"/>

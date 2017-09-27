@@ -1470,6 +1470,7 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp)
 	if (hcu_vm_engpar_update_phy_boot_sw_ver(zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//升级HCU版本
 	char input[50];
 	memset(input, 0, 50);
@@ -1480,6 +1481,7 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp)
 	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH => New Ver!");
 	else strcat(input, "UPG_ERROR => New Ver!");
 	dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+#endif
 
 	//拷贝文件到目标区并执行重启任务
 	if (flag == TRUE)
@@ -1542,6 +1544,7 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp)
 	if (hcu_vm_engpar_update_phy_boot_db_ver(zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.dbVerId) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	//升级HCU版本
 	char input[50];
 	memset(input, 0, 50);
@@ -1552,6 +1555,7 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp)
 	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH => New Ver!");
 	else strcat(input, "UPG_ERROR => New Ver!");
 	dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+#endif
 
 	//拷贝文件到目标区并执行重启任务
 	func_sysswm_copy_db_and_exe_to_target_dir_and_restart();
@@ -1613,6 +1617,19 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 	if (hcu_vm_engpar_update_phy_boot_sw_ver(zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId) == FAILURE)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+		//升级HCU版本
+		char input[50];
+		memset(input, 0, 50);
+		sprintf(input, "HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
+		if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO => New Ver!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE => New Ver!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL => New Ver!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH => New Ver!");
+		else strcat(input, "UPG_ERROR => New Ver!");
+		dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+#endif
+
 	//拷贝文件到目标区并执行重启任务
 	if (flag == TRUE)
 	{
@@ -1671,6 +1688,19 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 		//升级BOOT区参数
 		if (hcu_vm_engpar_update_phy_boot_db_ver(zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.dbVerId) == FAILURE)
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+		//升级HCU版本
+		char input[50];
+		memset(input, 0, 50);
+		sprintf(input, "HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
+		if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO => New Ver!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE => New Ver!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL => New Ver!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH => New Ver!");
+		else strcat(input, "UPG_ERROR => New Ver!");
+		dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+#endif
 
 		//拷贝文件到目标区并执行重启任务
 		func_sysswm_copy_db_and_exe_to_target_dir_and_restart();
