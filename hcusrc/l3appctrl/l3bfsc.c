@@ -244,20 +244,7 @@ OPSTAT func_l3bfsc_int_init(void)
 
 	//测试一把试试，正式场所不需要
 	//打印二维码／条形码：二维码＋条形码的内容
-/*
-	char s[100];
-	time_t lt;
-	struct tm *cu;
-	memset(s, 0, sizeof(s));
-
-	//初始本地时间
-	lt=time(NULL);
-	cu = localtime(&lt);
-	cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
-	sprintf(s, "BOFENGZHINENG-%s-%4.2f-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfscContext.configName, (float)gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
-			(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
-	hcu_sps232_send_char_to_ext_printer(s, strlen(s));
-*/
+	//func_l3bfsc_print_qr_code();
 
 	return SUCCESS;
 }
@@ -730,19 +717,16 @@ OPSTAT fsm_l3bfsc_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 		}
-		//打印二维码／条形码：二维码＋条形码的内容
-		char s[100];
-		time_t lt;
-		struct tm *cu;
-		memset(s, 0, sizeof(s));
 
-		//初始本地时间
-		lt=time(NULL);
-		cu = localtime(&lt);
-		cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
-		sprintf(s, "BOFENGZHINENG-%s-%4.2fg-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfscContext.configName, (float)gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
-				(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
-		hcu_sps232_send_char_to_ext_printer(s, strlen(s));
+		//刷新数据库表单
+		if (dbi_HcuBfsc_FlowSheetUpdate(gTaskL3bfscContext.configId, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
+				gTaskL3bfscContext.wsTttTgvWeightTotal, gTaskL3bfscContext.wsTttTgvNbrTotal) == FAILURE)
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error save flow sheet into database!\n");
+		gTaskL3bfscContext.wsTttTgvWeightTotal = 0;
+		gTaskL3bfscContext.wsTttTgvNbrTotal = 0;
+
+		//打印二维码／条形码：二维码＋条形码的内容
+		func_l3bfsc_print_qr_code();
 	}
 
 	//返回
@@ -819,6 +803,16 @@ OPSTAT fsm_l3bfsc_canitf_ws_give_up_fb(UINT32 dest_id, UINT32 src_id, void * par
 		if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_SCAN) == FAILURE){
 			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 		}
+
+		//刷新数据库表单
+		if (dbi_HcuBfsc_FlowSheetUpdate(gTaskL3bfscContext.configId, gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
+				gTaskL3bfscContext.wsTttTgvWeightTotal, gTaskL3bfscContext.wsTttTgvNbrTotal) == FAILURE)
+			HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error save flow sheet into database!\n");
+		gTaskL3bfscContext.wsTttTgvWeightTotal = 0;
+		gTaskL3bfscContext.wsTttTgvNbrTotal = 0;
+
+		//打印二维码／条形码：二维码＋条形码的内容
+		func_l3bfsc_print_qr_code();
 	}
 
 	//返回
@@ -1060,6 +1054,11 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 				if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_TGU) == FAILURE){
 					HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 				}
+
+				//刷新出料总重量：如果此时不存，后面单个重量传感器数据可能会被清零
+				gTaskL3bfscContext.wsTttTgvWeightTotal = func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight();
+				gTaskL3bfscContext.wsTttTgvNbrTotal = func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number();
+
 			} //== HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
 			//对于未到最大物料压秤的情形，不予理睬
 		}//-1
@@ -1117,6 +1116,11 @@ OPSTAT fsm_l3bfsc_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
 			if (FsmSetState(TASK_ID_L3BFSC, FSM_STATE_L3BFSC_OOS_TTT) == FAILURE){
 				HCU_ERROR_PRINT_L3BFSC_RECOVERY("L3BFSC: Error Set FSM State!\n");
 			}
+
+			//刷新出料总重量：如果此时不存，后面单个重量传感器数据可能会被清零
+			gTaskL3bfscContext.wsTttTgvWeightTotal = func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight();
+			gTaskL3bfscContext.wsTttTgvNbrTotal = func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number();
+
 		}//返回有意义的数值
 	} //>= gTaskL3bfscContext.comAlgPar.MinScaleNumberStartCombination
 	//对于不足以启动搜索的情形，不予理睬
@@ -1620,6 +1624,25 @@ BOOL func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void)
 	}
 
 	//返回
+	return TRUE;
+}
+
+//打印二维码／条形码：二维码＋条形码的内容
+BOOL func_l3bfsc_print_qr_code(void)
+{
+	char s[100];
+	time_t lt;
+	struct tm *cu;
+	memset(s, 0, sizeof(s));
+
+	//初始本地时间
+	lt=time(NULL);
+	cu = localtime(&lt);
+	cu->tm_mon = cu->tm_mon + 1; //月份是从0-11的，+1是为了符合正常逻辑
+	sprintf(s, "BOFENGZHINENG-%s-%4.2fg-%04d.%02d.%02d.%02d:%02d:%02d", gTaskL3bfscContext.configName, (float)gTaskL3bfscContext.comAlgPar.TargetCombinationWeight, \
+			(UINT16)(1900+cu->tm_year), (UINT8)cu->tm_mon, (UINT8)cu->tm_mday, (UINT8)cu->tm_hour, (UINT8)cu->tm_min, (UINT8)cu->tm_sec);
+	hcu_sps232_send_char_to_ext_printer(s, strlen(s));
+
 	return TRUE;
 }
 
