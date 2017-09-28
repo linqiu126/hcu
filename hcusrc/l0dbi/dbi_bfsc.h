@@ -44,6 +44,7 @@ extern OPSTAT dbi_HcuBfsc_StaticConfigDataGet(UINT32  staticdata[HCU_SYSCFG_BFSC
 extern OPSTAT dbi_HcuBfsc_TestCmdRespUpdate(UINT8 cmdid, UINT8 validFlag, char strInput[DBI_MAX_FBINFO_STRING_LENGTH]);
 extern OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adczero(UINT32  adcvalue, UINT8  sensorid);
 extern OPSTAT dbi_HcuBfsc_CalibrationDataUpdate_adcfull(UINT32  adcvalue, UINT8  sensorid);
+extern OPSTAT dbi_HcuBfsc_FlowSheetUpdate(UINT16 configId, UINT32 targetWgt, UINT32 realWgt, UINT32 pkgNum);
 
 //引用外部的API
 extern void dbi_display_header(MYSQL_RES *resPtr);

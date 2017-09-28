@@ -990,3 +990,37 @@ OPSTAT dbi_HcuBfsc_TestCmdRespUpdate(UINT8 cmdid, UINT8 validFlag, char strInput
     mysql_close(sqlHandler);
     return SUCCESS;
 }
+
+OPSTAT dbi_HcuBfsc_FlowSheetUpdate(UINT16 configId, UINT32 targetWgt, UINT32 realWgt, UINT32 pkgNum)
+{
+	MYSQL *sqlHandler;
+    int result = 0;
+    char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
+
+	//建立数据库连接
+    sqlHandler = mysql_init(NULL);
+    if(!sqlHandler)
+    {
+    	HcuErrorPrint("DBIBFSC: MySQL init failed!\n");
+        return FAILURE;
+    }
+    sqlHandler = mysql_real_connect(sqlHandler, HCU_SYSCFG_LOCAL_DB_HOST_DEFAULT, HCU_SYSCFG_LOCAL_DB_USER_DEFAULT, HCU_SYSCFG_LOCAL_DB_PSW_DEFAULT, HCU_SYSCFG_LOCAL_DB_NAME_DEFAULT, HCU_SYSCFG_LOCAL_DB_PORT_DEFAULT, NULL, 0);  //unix_socket and clientflag not used.
+    if (!sqlHandler){
+    	HcuErrorPrint("DBIBFSC: MySQL connection failed, Err Code = %s!\n", mysql_error(sqlHandler));
+    	mysql_close(sqlHandler);
+        return FAILURE;
+    }
+	//save data
+    sprintf(strsql, "INSERT INTO `hcubfscflowsheet` (configid, targetwgt, realwgt, pkgnum) VALUES ('%d', '%d', '%d', '%d')", configId,targetWgt,realWgt,pkgNum);
+	result = mysql_query(sqlHandler, strsql);
+
+	if(result){  //成功返回0
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBIBFSC: HcuBfsc_FlowSheetUpdate error: %s, strsql = %s\n", mysql_error(sqlHandler), strsql);
+        return FAILURE;
+	}
+
+	//释放记录集
+    mysql_close(sqlHandler);
+    return SUCCESS;
+}
