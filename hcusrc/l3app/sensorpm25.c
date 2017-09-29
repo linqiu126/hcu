@@ -319,6 +319,7 @@ void func_pm25_time_out_processing_no_rsponse(void)
 OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
+    char file[200];
 	//这种申明方法，已经分配了完整的内存空间，不用再MALLOC单独申请内存了
 	HcuDiscDataSampleStorageArray_t record;
 
@@ -369,9 +370,21 @@ OPSTAT fsm_pm25_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 	//if(rcv.pm25.pmTSPValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
-		if(FAILURE == ret){
+		if(FAILURE == ret)
+		{
+			sprintf(file, "sudo rm %s", HKVisionOption.file_photo);
+			system(file);
+
 			HcuErrorPrint("PM25: Start HK photo capture error!\n\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_PM25]++;
+		}
+		else
+		{
+			if ( FAILURE == hcu_service_ftp_picture_upload_by_ftp(HKVisionOption.file_photo_pure, HKVisionOption.file_photo))
+				HcuErrorPrint("PM25: Picture Upload Error! Filename=[%s]\n", HKVisionOption.file_photo);
+			else
+				HCU_DEBUG_PRINT_INF("PM25: Picture Upload Successfully! Filename=[%s]\n", HKVisionOption.file_photo);
+
 		}
 
 		if(FALSE == gTaskPm25Context.AlarmFlag)

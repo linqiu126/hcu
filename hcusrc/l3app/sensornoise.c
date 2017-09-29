@@ -424,6 +424,7 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
+    char file[200];
 	//这种申明方法，已经分配了完整的内存空间，不用再MALLOC单独申请内存了
 	HcuDiscDataSampleStorageArray_t record;
 
@@ -475,8 +476,21 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	{
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
 		if(FAILURE == ret){
+
+			sprintf(file, "sudo rm %s", HKVisionOption.file_photo);
+			system(file);
+
 			HcuErrorPrint("NOISE: Start HK photo capture error!\n\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
+
+
+		}
+		else
+		{
+			if ( FAILURE == hcu_service_ftp_picture_upload_by_ftp(HKVisionOption.file_photo_pure, HKVisionOption.file_photo))
+				HcuErrorPrint("NOISE: Picture Upload Error! Filename=[%s]\n", HKVisionOption.file_photo);
+			else
+				HCU_DEBUG_PRINT_INF("NOISE: Picture Upload Successfully! Filename=[%s]\n", HKVisionOption.file_photo);
 		}
 
 		if(FALSE == gTaskNoiseContext.AlarmFlag)

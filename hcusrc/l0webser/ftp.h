@@ -36,5 +36,6 @@ HCU_FTP_SVR_STATE func_ftp_svr_download(const HcuFtpServiceOptType_t ftp_option)
 
 //向上提供的标准服务
 OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename);
+OPSTAT hcu_service_ftp_picture_upload_by_ftp(char *purefilename, char *dirfilename);
 
 #endif /* L0WEBSER_FTP_H_ */
