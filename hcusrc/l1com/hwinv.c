@@ -381,6 +381,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		strncpy(zHcuSysEngPar.cloud.svrAddrSocketipDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault)));
 		strncpy(zHcuSysEngPar.cloud.svrAddrHttpDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpDefault)));
 		strncpy(zHcuSysEngPar.cloud.svrNameDefault, HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrNameDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrNameDefault)));
+
 		//SWM_FTP service
 		strncpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS, (sizeof(HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS)<sizeof(zHcuSysEngPar.cloud.cloudFtpAdd))?(sizeof(HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS)):(sizeof(zHcuSysEngPar.cloud.cloudFtpAdd)));
 		strncpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_SYSCFG_SWM_SERVER_FTP_USER, (sizeof(HCU_SYSCFG_SWM_SERVER_FTP_USER)<sizeof(zHcuSysEngPar.cloud.cloudFtpUser))?(sizeof(HCU_SYSCFG_SWM_SERVER_FTP_USER)):(sizeof(zHcuSysEngPar.cloud.cloudFtpUser)));

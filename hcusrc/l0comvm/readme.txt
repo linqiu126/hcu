@@ -7,6 +7,10 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+//= ZSC, 2017 Oct.1 CURRENT_SW_DELIVERY 273=>AQYC项目
+= 告警机制改进
+= 记录系统异常重启log（/var/hcu/reboot.log）
+= 噪声/扬尘门限值告警照片FTP上传后台服务器
 
 
 //= ZJL, 2017 Sep.27 CURRENT_SW_DELIVERY 272=>BFDF项目
