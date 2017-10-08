@@ -244,12 +244,12 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			snd.usercmdid = L3CI_alarm;
 			snd.useroptid = L3PO_hcualarm_report;
 			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+			snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+			snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_OFF;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_HUMID_NO_CONNECT;
+			snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_SENSOR;
+			snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_NO_CONNECT;
 
 			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
 				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message erro//route to L3 or direct to cloudvela, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
@@ -289,12 +289,12 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			snd.usercmdid = L3CI_alarm;
 			snd.useroptid = L3PO_hcualarm_report;
 			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_ON;
+			snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+			snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_ON;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_HUMID_NO_CONNECT;
+			snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_SENSOR;
+			snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_NO_CONNECT;
 
 			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
 				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message erro//route to L3 or direct to cloudvela, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);

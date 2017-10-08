@@ -597,7 +597,7 @@ void func_hwinv_scan_all(void)
 	func_hwinv_scan_rtc();
 	func_hwinv_scan_memroy();
 	func_hwinv_scan_main_board();
-	func_hwinv_scan_hard_disc();
+	//func_hwinv_scan_hard_disc();
 	func_hwinv_scan_gpio();
 	func_hwinv_scan_sps232();
 	func_hwinv_scan_sps485();

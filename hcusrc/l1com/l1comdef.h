@@ -520,6 +520,7 @@ typedef enum
 	FILE_OPERATION_TYPE_INVALID = 0xFF,
 }FileOperationTypeEnum;
 
+/*
 //for alarm report added by ZSC
 typedef enum
 {
@@ -560,6 +561,7 @@ typedef enum
 	ALARM_CLEAR_FLAG_OFF = 0,
 	ALARM_CLEAR_FLAG_ON,
 }AlarmClearFlagEnum;
+*/
 
 //公共定义的设备缺省标识，暂时以335D设备为模版
 #define	HCU_DEFAULT_DEVICE_ETHERNET "eth0"

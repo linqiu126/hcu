@@ -4857,7 +4857,7 @@ OPSTAT fsm_cloudvela_llczhb_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 	//if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault != HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212)  //bug
 	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault != HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212)  //bug
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly! zHcuSysEngPar.cloud.svrBhItfFrameStdDefault = d%\n", zHcuSysEngPar.cloud.svrBhItfFrameStdDefault);
+		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Not set back-haul transmit protocol rightly! zHcuSysEngPar.cloud.svrBhItfFrameStdDefault = %d\n", zHcuSysEngPar.cloud.svrBhItfFrameStdDefault);
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;

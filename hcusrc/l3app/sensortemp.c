@@ -512,7 +512,8 @@ OPSTAT fsm_temp_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * pa
 		snd.length = sizeof(msg_struct_temp_cloudvela_data_resp_t);
 
 		//发送后台
-		if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+		//if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+		if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
 			ret = hcu_message_send(MSG_ID_TEMP_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_TEMP, &snd, snd.length);
 			if (ret == FAILURE){
 				zHcuSysStaPm.taskRunErrCnt[TASK_ID_TEMP]++;

@@ -474,6 +474,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	if(rcv.noise.noiseValue >= (HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD*10))
 	//if(rcv.noise.noiseValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{
+/*
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
 		if(FAILURE == ret){
 
@@ -492,7 +493,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			else
 				HCU_DEBUG_PRINT_INF("NOISE: Picture Upload Successfully! Filename=[%s]\n", HKVisionOption.file_photo);
 		}
-
+*/
 		if(FALSE == gTaskNoiseContext.AlarmFlag)
 		{
 			if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
@@ -511,19 +512,20 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-		snd.alarmServerity = ALARM_SEVERITY_HIGH;
-		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_OFF;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.noise.equipid;
-		snd.alarmType = ALARM_TYPE_NOISE_VALUE;
-		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_NOISE_VALUE;
+		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+/*
 		if(FAILURE == ret){
 			strcpy(snd.alarmDesc, "NOISE: Start HK photo capture error!");
 		}else{
 			strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 		}
-
-		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_ON for noise exceed threshold\n\n\n\n\n\n\n\n");//debug by shanchun
+*/
+		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_ON for noise exceed threshold\n\n\n");//debug by shanchun
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
@@ -551,15 +553,15 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-		snd.alarmServerity = ALARM_SEVERITY_HIGH;
-		snd.alarmClearFlag = ALARM_CLEAR_FLAG_ON;
+		snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_ON;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.noise.equipid;
-		snd.alarmType = ALARM_TYPE_NOISE_VALUE;
-		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
+		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_NOISE_VALUE;
+		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+		//strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 
-		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_OFF for noise exceed threshold\n\n\n\n\n\n\n\n\n");//debug by shanchun
+		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_OFF for noise exceed threshold\n\n\n");//debug by shanchun
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
@@ -677,7 +679,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				snd.length = sizeof(msg_struct_noise_cloudvela_data_resp_t);
 
 				//发送后台
-				if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+				if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
 					ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
 					if (ret == FAILURE){
 						zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
@@ -819,12 +821,13 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 	if(rcv.noise.noiseValue >= (HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD*10))
 	//if(rcv.noise.noiseValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{
+/*
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
 		if(FAILURE == ret){
 			HcuErrorPrint("NOISE: Start HK photo capture error!\n\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		}
-
+*/
 		if(FALSE == gTaskNoiseContext.AlarmFlag)
 		{
 			if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
@@ -843,18 +846,19 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-		snd.alarmServerity = ALARM_SEVERITY_HIGH;
-		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_OFF;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.noise.equipid;
-		snd.alarmType = ALARM_TYPE_NOISE_VALUE;
-		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_NOISE_VALUE;
+		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+/*
 		if(FAILURE == ret){
 			strcpy(snd.alarmDesc, "NOISE: Start HK photo capture error!");
 		}else{
 			strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 		}
-
+*/
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 	}
@@ -880,13 +884,13 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-		snd.alarmServerity = ALARM_SEVERITY_HIGH;
-		snd.alarmClearFlag = ALARM_CLEAR_FLAG_ON;
+		snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_ON;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.noise.equipid;
-		snd.alarmType = ALARM_TYPE_NOISE_VALUE;
-		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
+		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_NOISE_VALUE;
+		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+		//strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);

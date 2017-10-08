@@ -1617,7 +1617,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	//
 	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_3M_REPORT_CYCLE) == 0) && (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP)){
 
-	    HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation report to default cloud\n\n\n\n\n\n");
+	    HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation report to default cloud\n\n\n");
 
 		//发送
 		msg_struct_ycjk_cloudvela_data_report_t snd;

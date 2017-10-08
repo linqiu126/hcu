@@ -300,7 +300,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE)
 			sprintf(fname, "HCU_HPT%d_PEM%d_REL%d_VER%d_STABLE.HEX", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
 		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSCFG_HBB_FW_UPGRADE_YES_TRIAL)
-			sprintf(fname, "HCU_HPT%d_PEM%d_REL%d_VER%d_TRIAL.HEX", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
+			sprintf(fname, "HCU_HPT%d_PEM%d_REL%d_VER%d_TRAIL.HEX", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
 		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH)
 			sprintf(fname, "HCU_HPT%d_PEM%d_REL%d_VER%d_PATCH.HEX", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
 		strncpy(gTaskSysswmContext.cloudSwPkg.fileName, fname, HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);
@@ -364,7 +364,7 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		if (gTaskSysswmContext.cloudSwPkg.upgradeFlag == HCU_SYSCFG_HBB_FW_UPGRADE_YES_STABLE)
 			sprintf(fname, "IHU_HPT%d_PEM%d_REL%d_VER%d_STABLE.BIN", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
 		else if (gTaskSysswmContext.cloudSwPkg.upgradeFlag == HCU_SYSCFG_HBB_FW_UPGRADE_YES_TRIAL)
-			sprintf(fname, "IHU_HPT%d_PEM%d_REL%d_VER%d_TRIAL.BIN", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
+			sprintf(fname, "IHU_HPT%d_PEM%d_REL%d_VER%d_TRAIL.BIN", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
 		else if (gTaskSysswmContext.cloudSwPkg.upgradeFlag == HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH)
 			sprintf(fname, "IHU_HPT%d_PEM%d_REL%d_VER%d_PATCH.BIN", rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer);
 		strncpy(gTaskSysswmContext.cloudSwPkg.fileName, fname, HCU_SYSMSG_SYSSWM_SW_PKG_FILE_NAME_MAX_LEN-1);

@@ -349,10 +349,10 @@
 	#define HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET 			HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML
 
 	//定义后台SW_SWM的地址
-	//#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.185.177/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -430,8 +430,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -510,8 +511,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -604,10 +606,10 @@
 	#define HCU_SYSCFG_CLOUD_SVR_HOME_ITF_STD_SET 			HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML
 
 	//定义后台SW_SWM的地址
-	//#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/" //for HCU SW FTP by shanchun
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -685,8 +687,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -767,8 +770,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -847,8 +851,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -927,8 +932,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -1006,8 +1012,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -1085,8 +1092,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
@@ -1251,8 +1259,9 @@
 
 	//定义后台SW_SWM的地址
 	#define  HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS "ftp://121.40.118.33/hcu_sw_active/"
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "forlinx"    //for HCU SW FTP by shanchun
-	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Forlinx321" //for HCU SW FTP by shanchun
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_USER "avorion"
+	#define  HCU_SYSCFG_SWM_SERVER_FTP_PWD "Avorion321"
+
 	#define  HCU_SYSCFG_SWM_LOCAL_RUN_DIR_DEFAULT "/var/hcu/"
 	#define  HCU_SYSCFG_SWM_LOCAL_DOWNLOAD_DIR_DEFAULT "/var/hcu/hcu_sw_download/"
 	#define  HCU_SYSCFG_SWM_LOCAL_ACTIVE_DIR_DEFAULT "/var/hcu/hcu_sw_active/"
