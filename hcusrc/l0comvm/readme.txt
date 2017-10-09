@@ -7,11 +7,19 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+
+
+
+//= ZJL, 2017 Oct.9 CURRENT_SW_DELIVERY 274=>BFDF项目
+= 为复旦医疗部分增加HUITP格式定义
+
+
+
+
 //= ZSC, 2017 Oct.1 CURRENT_SW_DELIVERY 273=>AQYC项目
 = 告警机制改进
 = 记录系统异常重启log（/var/hcu/reboot.log）
 = 噪声/扬尘门限值告警照片FTP上传后台服务器
-
 
 //= ZJL, 2017 Sep.27 CURRENT_SW_DELIVERY 272=>BFDF项目
 = 界面显示软件版本
@@ -19,7 +27,6 @@
 = upgrade.sh更新：去掉crontab
 = BFSC的软件版本下载改为无限次
 = 改进VM，暂时不用hcuvm机制，恢复vmlayer程序
-
 
 //= ZJL, 2017 Sep.25 CURRENT_SW_DELIVERY 271=>BFDF项目
 = 完成基础分选组合算法的测试

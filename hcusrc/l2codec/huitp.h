@@ -43,7 +43,8 @@ typedef void                      VOID;
  * 2017/8/28 V2.11: 改善YCJK的字段IE内容体
  *                  增加TEST_COMMAND消息过程
  *                  将产品CODE全部改为十进制格式
- *
+ * 2017/10/8 V2.12: ZSC修改完善
+ *                  为复旦医疗增加数据格式
  *
  *
  */
@@ -567,6 +568,28 @@ typedef enum
 	HUITP_MSGID_uni_bfsc_comb_scale_ctrl_resp        = 0x3B83,
 	HUITP_MSGID_uni_bfsc_statistic_report            = 0x3B84,
 	HUITP_MSGID_uni_bfsc_statistic_confirm           = 0x3B04,
+	HUITP_MSGID_uni_bfdf_comb_scale_data_req         = 0x3B05,
+	HUITP_MSGID_uni_bfdf_comb_scale_data_resp        = 0x3B85,
+	HUITP_MSGID_uni_bfdf_comb_scale_data_report      = 0x3B86,
+	HUITP_MSGID_uni_bfdf_comb_scale_data_confirm     = 0x3B06,
+	HUITP_MSGID_uni_bfdf_comb_scale_event_report     = 0x3B87,
+	HUITP_MSGID_uni_bfdf_comb_scale_event_confirm    = 0x3B07,
+	HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req         = 0x3B08,
+	HUITP_MSGID_uni_bfdf_comb_scale_ctrl_resp        = 0x3B88,
+	HUITP_MSGID_uni_bfdf_statistic_report            = 0x3B89,
+	HUITP_MSGID_uni_bfdf_statistic_confirm           = 0x3B09,
+	HUITP_MSGID_uni_bfhs_comb_scale_data_req         = 0x3B0A,
+	HUITP_MSGID_uni_bfhs_comb_scale_data_resp        = 0x3B8A,
+	HUITP_MSGID_uni_bfhs_comb_scale_data_report      = 0x3B8B,
+	HUITP_MSGID_uni_bfhs_comb_scale_data_confirm     = 0x3B0B,
+	HUITP_MSGID_uni_bfhs_comb_scale_event_report     = 0x3B8C,
+	HUITP_MSGID_uni_bfhs_comb_scale_event_confirm    = 0x3B0C,
+	HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req         = 0x3B0D,
+	HUITP_MSGID_uni_bfhs_comb_scale_ctrl_resp        = 0x3B8D,
+	HUITP_MSGID_uni_bfhs_statistic_report            = 0x3B8E,
+	HUITP_MSGID_uni_bfhs_statistic_confirm           = 0x3B0E,
+
+
 	//HCU-IHU SUI新增内容
 	//上电过程
 	HUITP_MSGID_sui_bfsc_startup_ind                 = 0x3B90,
@@ -719,15 +742,23 @@ typedef enum
 	HUITP_MSGID_uni_ccl_lock_auth_resp               = 0x4D10,
 	HUITP_MSGID_uni_ccl_lock_max,
 
-  //云控锁-状态聚合
+    //云控锁-状态聚合
 	HUITP_MSGID_uni_ccl_state_min                    = 0x4E00, 
 	HUITP_MSGID_uni_ccl_state_req                    = 0x4E00, 
 	HUITP_MSGID_uni_ccl_state_resp                   = 0x4E80, 
 	HUITP_MSGID_uni_ccl_state_report                 = 0x4E81, 
 	HUITP_MSGID_uni_ccl_state_confirm                = 0x4E01,
-	HUITP_MSGID_uni_ccl_state_pic_report         		 = 0x4E82, 
-	HUITP_MSGID_uni_ccl_state_pic_confirm        		 = 0x4E02,	
+	HUITP_MSGID_uni_ccl_state_pic_report             = 0x4E82,
+	HUITP_MSGID_uni_ccl_state_pic_confirm        	 = 0x4E02,
 	HUITP_MSGID_uni_ccl_state_max,
+
+    //复旦项目
+	HUITP_MSGID_uni_fdu_wqgl_min                    = 0x4F00,
+	HUITP_MSGID_uni_fdu_wqgl_data_req               = 0x4F00,
+	HUITP_MSGID_uni_fdu_wqgl_data_resp              = 0x4F80,
+	HUITP_MSGID_uni_fdu_wqgl_data_report            = 0x4F81,
+	HUITP_MSGID_uni_fdu_wqgl_data_confirm           = 0x4F01,
+	HUITP_MSGID_uni_fdu_wqgl_max,
 
 	//串口读取命令/返回结果
 	HUITP_MSGID_uni_itf_sps_min                      = 0x5000, 
@@ -1292,6 +1323,11 @@ typedef enum
 	HUITP_IEID_uni_ccl_report_type                  = 0x4E03,
 	HUITP_IEID_uni_ccl_gen_picid                    = 0x4E04,
 	HUITP_IEID_uni_ccl_state_max,
+
+    //复旦项目
+	HUITP_IEID_uni_fdu_wqgl_min                    = 0x4F00,
+	HUITP_IEID_uni_fdu_wqgl_sports_wrist_data      = 0x4F00,
+	HUITP_IEID_uni_fdu_wqgl_max,
 
   //串口读取命令/返回结果
 	HUITP_IEID_uni_itf_sps_min                      = 0x5000, 
@@ -2843,9 +2879,35 @@ typedef struct StrIe_HUITP_IEID_uni_ccl_gen_picid
 	UINT16 ieLen;
 	UINT8  picid[HUITP_IEID_UNI_CCL_GEN_PIC_ID_LEN_MAX];
 }StrIe_HUITP_IEID_uni_ccl_gen_picid_t;
-
-
 //HUITP_IEID_uni_ccl_state_max,
+
+//复旦项目
+//HUITP_IEID_uni_fdu_wqgl_min                    = 0x4F00,
+//HUITP_IEID_uni_fdu_wqgl_sports_wrist_data      = 0x4F00,
+typedef struct StrIe_HUITP_IEID_uni_fdu_wqgl_sports_wrist_data
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT32 equId;
+	UINT32 rfId;
+	UINT32 reportTime;
+	UINT32 sampleTime;
+	UINT8  dataFormat;
+	UINT32 temp;
+	UINT32 miles;
+	UINT16 curHbRate;
+	UINT16 hbRateMax;
+	UINT16 hbRateMin;
+	UINT32 hbRateAvg;
+	UINT32 bloodPress;
+	UINT32 sleepLvl;
+	UINT32 airPress;
+	UINT32 energyLvl;
+	UINT32 waterDrink;
+	UINT8  skinAttached;
+}StrIe_HUITP_IEID_uni_fdu_wqgl_sports_wrist_data_t;
+
+//HUITP_IEID_uni_fdu_wqgl_max,
 
 //串口读取命令/返回结果
 //HUITP_IEID_uni_itf_sps_min                      = 0x5000, 
@@ -5301,6 +5363,26 @@ typedef struct StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t;
 
+//HUITP_MSGID_uni_bfdf_comb_scale_data_req         = 0x3B05,
+//HUITP_MSGID_uni_bfdf_comb_scale_data_resp        = 0x3B85,
+//HUITP_MSGID_uni_bfdf_comb_scale_data_report      = 0x3B86,
+//HUITP_MSGID_uni_bfdf_comb_scale_data_confirm     = 0x3B06,
+//HUITP_MSGID_uni_bfdf_comb_scale_event_report     = 0x3B87,
+//HUITP_MSGID_uni_bfdf_comb_scale_event_confirm    = 0x3B07,
+//HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req         = 0x3B08,
+//HUITP_MSGID_uni_bfdf_comb_scale_ctrl_resp        = 0x3B88,
+//HUITP_MSGID_uni_bfdf_statistic_report            = 0x3B89,
+//HUITP_MSGID_uni_bfdf_statistic_confirm           = 0x3B09,
+//HUITP_MSGID_uni_bfhs_comb_scale_data_req         = 0x3B0A,
+//HUITP_MSGID_uni_bfhs_comb_scale_data_resp        = 0x3B8A,
+//HUITP_MSGID_uni_bfhs_comb_scale_data_report      = 0x3B8B,
+//HUITP_MSGID_uni_bfhs_comb_scale_data_confirm     = 0x3B0B,
+//HUITP_MSGID_uni_bfhs_comb_scale_event_report     = 0x3B8C,
+//HUITP_MSGID_uni_bfhs_comb_scale_event_confirm    = 0x3B0C,
+//HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req         = 0x3B0D,
+//HUITP_MSGID_uni_bfhs_comb_scale_ctrl_resp        = 0x3B8D,
+//HUITP_MSGID_uni_bfhs_statistic_report            = 0x3B8E,
+//HUITP_MSGID_uni_bfhs_statistic_confirm           = 0x3B0E,
 
 //HCU-IHU SUI新增内容
 //以下FRAME消息结构体，由于特殊原因，并没有采用TLV结构，以便节省消息长度
@@ -6449,6 +6531,43 @@ typedef struct StrMsg_HUITP_MSGID_uni_ccl_state_pic_confirm
 
 //HUITP_MSGID_uni_ccl_state_max,
 
+//复旦项目
+//HUITP_MSGID_uni_fdu_wqgl_min                    = 0x4F00,
+//HUITP_MSGID_uni_fdu_wqgl_data_req               = 0x4F00,
+typedef struct StrMsg_HUITP_MSGID_uni_fdu_wqgl_data_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+}StrMsg_HUITP_MSGID_uni_fdu_wqgl_data_req_t;
+
+//HUITP_MSGID_uni_fdu_wqgl_data_resp              = 0x4F80,
+typedef struct StrMsg_HUITP_MSGID_uni_fdu_wqgl_data_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
+	StrIe_HUITP_IEID_uni_fdu_wqgl_sports_wrist_data_t wrist;
+}StrMsg_HUITP_MSGID_uni_fdu_wqgl_data_resp_t;
+
+//HUITP_MSGID_uni_fdu_wqgl_data_report            = 0x4F81,
+typedef struct StrMsg_HUITP_MSGID_uni_fdu_wqgl_data_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_fdu_wqgl_sports_wrist_data_t wrist;
+}StrMsg_HUITP_MSGID_uni_fdu_wqgl_data_report_t;
+
+//HUITP_MSGID_uni_fdu_wqgl_data_confirm           = 0x4F01,
+typedef struct StrMsg_HUITP_MSGID_uni_fdu_wqgl_data_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+}StrMsg_HUITP_MSGID_uni_fdu_wqgl_data_confirm_t;
+
+//HUITP_MSGID_uni_fdu_wqgl_max,
 
 //串口读取命令/返回结果
 //HUITP_MSGID_uni_itf_sps_min                      = 0x5000, 
