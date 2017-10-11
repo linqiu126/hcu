@@ -852,6 +852,18 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		snd.swTotalLengthInBytes = 0;
 	}
 
+/*	//采用数据库的方式进行操纵
+	//数据库中搜寻
+	memset(&(gTaskSysswmContext.cloudSwPkg), 0, sizeof(HcuSysMsgIeL3SysSwmSwPkgElement_t));
+	if (dbi_HcuSysSwm_SwPkg_inquery_max_sw_ver(snd.equEntry, snd.hwType, snd.hwId, HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH, &(gTaskSysswmContext.cloudSwPkg)) == FAILURE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Inquery max REL/VER ID error from database!\n");
+	snd.hwId = gTaskSysswmContext.cloudSwPkg.hwPem; //找到的最新的PEMID对应的软件版本
+	snd.swRel = gTaskSysswmContext.cloudSwPkg.swRel;
+	snd.swVer = gTaskSysswmContext.cloudSwPkg.swVer;
+	snd.dbVer = gTaskSysswmContext.cloudSwPkg.dbVer;
+	snd.upgradeFlag = HCU_SYSCFG_HBB_FW_UPGRADE_YES_PATCH;
+	snd.timeStamp = time(0);*/
+
 	//固定填入的信息
 	snd.upgradeFlag = rcv.upgradeFlag;
 	snd.timeStamp = time(0);
@@ -943,7 +955,14 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	char *p1, *p2, *p3, *p4, *p5, *p6, *p7;
 	UINT32 res = 0;
 	char s[6];
+	UINT16 tmpRel=0;
+	UINT16 tmpVer=0;
 
+	//首先强制赋值
+	input->swRel = 0;
+	input->swVer = 0;
+
+	//继续搜寻最大的
 	if ((dir=opendir(zHcuSysEngPar.swm.hcuSwActiveDir)) == NULL)
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Open dir error!\n");
 	while ((ptr=readdir(dir)) != NULL)
@@ -992,7 +1011,7 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        strncpy(s, p4, p5-p4);
 	        res = strtoul(s, NULL, 10);
 	        if (res < swRel) continue;  //这里的软件版本，如果目标PEM版本高于实际硬件，是可以前向兼容的，不允许后项兼容的
-	        input->swRel = res  & 0xFFFF;
+	        tmpRel = res & 0xFFFF;
 	        //读取标识swVer
 	        p5 = p5 + strlen("_VER");
 	        if (((p7-p5) <=0) || ((p7-p5) > 5)) continue;
@@ -1000,21 +1019,16 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        strncpy(s, p5, p7-p5);
 	        res = strtoul(s, NULL, 10);
 	        if (res < swVer) continue;  //这里的软件版本，如果目标PEM版本高于实际硬件，是可以前向兼容的，不允许后项兼容的
-	        input->swVer = res  & 0xFFFF;
+	        tmpVer = res  & 0xFFFF;
 
-	        //找到了，干活，返回完整的文件目录和文件名字
-	        if (zHcuSysEngPar.swm.hcuSwActiveDir[strlen(zHcuSysEngPar.swm.hcuSwActiveDir)-1] == '/'){
-	        	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
-	        	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+	        //找到合适的目标
+	        if (tmpRel > input->swRel){
+	        	input->swRel = tmpRel;
+	        	input->swVer = tmpVer;
 	        }
-	        else{
-	        	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
-	        	strcat(input->fPathName, "/");
-	        	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+	        else if ((tmpRel == input->swRel) &&(tmpVer > input->swVer)){
+		        input->swVer = tmpVer;
 	        }
-	        //找到第一个就结束，不再去寻找第二个，所以必须进行定期扫描
-	        closedir(dir);
-	        return SUCCESS;
 	    }
 	    else if(ptr->d_type == 4)    ///dir
 	    {
@@ -1027,8 +1041,28 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        //readFileList(base);
 	    }
 	}
-	closedir(dir);
-	return FAILURE;
+
+	//找到了合法的
+	if ((input->swRel > 0) || (input->swVer > 0))
+	{
+	    //找到了，干活，返回完整的文件目录和文件名字
+	    if (zHcuSysEngPar.swm.hcuSwActiveDir[strlen(zHcuSysEngPar.swm.hcuSwActiveDir)-1] == '/'){
+	    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
+	    	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+	    }
+	    else{
+	    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
+	    	strcat(input->fPathName, "/");
+	    	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+	    }
+	    //找到第一个就结束，不再去寻找第二个，所以必须进行定期扫描
+	    closedir(dir);
+	    return SUCCESS;
+	}
+	else{
+		closedir(dir);
+		return FAILURE;
+	}
 }
 
 //具体读取某一个文件的一个分段
