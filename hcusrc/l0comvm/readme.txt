@@ -9,12 +9,11 @@
 
 
 
+//= ZJL, 2017 Oct.11 CURRENT_SW_DELIVERY 275=>BFSC项目
+= 更新hcu_advance.sh脚本
 
 //= ZJL, 2017 Oct.9 CURRENT_SW_DELIVERY 274=>BFDF项目
 = 为复旦医疗部分增加HUITP格式定义
-
-
-
 
 //= ZSC, 2017 Oct.1 CURRENT_SW_DELIVERY 273=>AQYC项目
 = 告警机制改进

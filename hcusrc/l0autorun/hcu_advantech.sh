@@ -40,11 +40,32 @@ do_start()
 		/bin/mv -f /var/hcu/hcu.log /var/hcu/hcu.log.old	
 		/bin/mv -f /var/hcu/hcuerr.log /var/hcu/hcuerr.log.old	
 		/sbin/insmod /lib/usbcan.ko                
+
 		sleep 10
+		sudo cd /var/hcu
+		if [ -f "/var/hcu/hcu_new" ]; then 
+			echo "$(date +%Y-%m-%d_%H:%M:%S)  hcu_new exits."
+			#sudo systemctl stop hcu
+			#echo "$(date +%Y-%m-%d_%H:%M:%S)  hcu service stopped."
+			sudo rm /var/hcu/hcu
+			echo "$(date +%Y-%m-%d_%H:%M:%S)  old hcu removed."
+			sudo mv /var/hcu/hcu_new /var/hcu/hcu
+			sudo chmod 777 /var/hcu/hcu
+			echo "$(date +%Y-%m-%d_%H:%M:%S)  new hcu replaced."
+			#sudo systemctl start hcu
+			#echo "$(date +%Y-%m-%d_%H:%M:%S)  hcu service started."
+		fi
+
+		#upgrade sql file, so far not yet deal with
+		if [ -f "/var/hcu/hcu_new.sql" ]; then
+			sudo rm /var/hcu/hcu_new.sql
+		fi
+
 		#echo 123456 | sudo -S /var/hcu/hcu > /var/hcu/hcu.log &
-		echo 123456 | sudo -S /var/hcu/hcu &
+		#echo 123456 | sudo -S /var/hcu/hcu &
+		sudo -S /var/hcu/hcu &
 		#sleep 5
-                #chromium-browser --app=http://localhost/bfscui --start-fullscreen --no-sandbox &
+    			#chromium-browser --app=http://localhost/bfscui --start-fullscreen --no-sandbox &
 	fi
 }
 
