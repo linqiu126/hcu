@@ -192,10 +192,11 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 			ret = func_sysswm_time_out_period_working_scan_ihu_stable();
 		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0))
 			ret = func_sysswm_time_out_period_working_scan_ihu_trial();
-		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0))
+		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0)){
 			ret = func_sysswm_time_out_period_working_scan_ihu_patch();
-		//重新设置定时器
-		hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_PERIOD_WORKING].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+			//重新设置定时器
+			hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_PERIOD_WORKING].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		}
 	}
 
 	//下载短定时
