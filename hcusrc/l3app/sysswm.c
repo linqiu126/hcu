@@ -108,9 +108,8 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	memset(&gTaskSysswmContext, 0, sizeof(gTaskSysswmContext_t));
 	gTaskSysswmContext.swDlMaxTimes = HCU_SYSSWM_SW_DOWNLOAD_MAX_TIMES;
 
-	//启动周期性定时器：因为BFSC项目的缘故，暂时不启动下载过程
-	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, \
-	zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_PERIOD_WORKING].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+	//启动周期性定时器：第一次将时钟降低到15秒
+	ret = hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, 15, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;
 		HcuErrorPrint("SYSSWM: Error start period timer!\n");
@@ -195,6 +194,8 @@ OPSTAT fsm_sysswm_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 			ret = func_sysswm_time_out_period_working_scan_ihu_trial();
 		else if ((gTaskSysswmContext.swDlSession == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH) && (zHcuSysEngPar.hwBurnId.nodeHwType != 0))
 			ret = func_sysswm_time_out_period_working_scan_ihu_patch();
+		//重新设置定时器
+		hcu_timer_start(TASK_ID_SYSSWM, TIMER_ID_1S_SYSSWM_PERIOD_WORKING, zHcuSysEngPar.timer.array[TIMER_ID_1S_SYSSWM_PERIOD_WORKING].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
 	}
 
 	//下载短定时
