@@ -9,6 +9,10 @@
 
 
 
+
+//= ZJL, 2017 Oct.13 CURRENT_SW_DELIVERY 276=>BFDF项目
+= 完善MQTT的定义
+
 //= ZJL, 2017 Oct.11 CURRENT_SW_DELIVERY 275=>BFSC项目
 = 更新hcu_advance.sh脚本
 

@@ -366,9 +366,9 @@ int hcu_mqtt_msg_rcv(void)
       HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
       //exit(EXIT_FAILURE);
   }
-  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_UI_TO_HCU, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
+  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_UI2HCU, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
   HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_BH_TRANS, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
-  MQTTClient_subscribe(client, MQTT_TOPIC_UI_TO_HCU, MQTT_QOS_CONST);
+  MQTTClient_subscribe(client, MQTT_TOPIC_UI2HCU, MQTT_QOS_CONST);
   MQTTClient_subscribe(client, MQTT_TOPIC_BH_TRANS, MQTT_QOS_CONST);
 
   //退出条件，未来待完善
@@ -389,6 +389,7 @@ void func_mqtt_clientid_translate_to_text(UINT32 clId, char *output)
 	if (clId <= MQTT_CLID_MIN) strncpy(output, MQTT_CLIENTID_MIN, strlen(MQTT_CLIENTID_MIN));
 	else if (clId == MQTT_CLID_HCU) strncpy(output, MQTT_CLIENTID_HCU, strlen(MQTT_CLIENTID_HCU));
 	else if (clId == MQTT_CLID_CTRL_UI) strncpy(output, MQTT_CLIENTID_CTRL_UI, strlen(MQTT_CLIENTID_CTRL_UI));
+	else if (clId == MQTT_CLID_FINGER_UI) strncpy(output, MQTT_CLIENTID_FINGER_UI, strlen(MQTT_CLIENTID_FINGER_UI));
 	else if (clId == MQTT_CLID_QR_PRINTER) strncpy(output, MQTT_CLIENTID_QR_PRINTER, strlen(MQTT_CLIENTID_QR_PRINTER));
 	else if (clId == MQTT_CLID_DATABASE) strncpy(output, MQTT_CLIENTID_DATABASE, strlen(MQTT_CLIENTID_DATABASE));
 	else if (clId == MQTT_CLID_BH_PROTO) strncpy(output, MQTT_CLIENTID_BH_PROTO, strlen(MQTT_CLIENTID_BH_PROTO));
@@ -400,33 +401,35 @@ UINT32 func_mqtt_clientid_translate_to_id(char *input)
 	if (strcmp(input, MQTT_CLIENTID_MIN) == 0) return MQTT_CLID_MIN;
 	else if (strcmp(input, MQTT_CLIENTID_HCU) == 0) return MQTT_CLID_HCU;
 	else if (strcmp(input, MQTT_CLIENTID_CTRL_UI) == 0) return MQTT_CLID_CTRL_UI;
+	else if (strcmp(input, MQTT_CLIENTID_FINGER_UI) == 0) return MQTT_CLID_FINGER_UI;
 	else if (strcmp(input, MQTT_CLIENTID_QR_PRINTER) == 0) return MQTT_CLID_QR_PRINTER;
 	else if (strcmp(input, MQTT_CLIENTID_DATABASE) == 0) return MQTT_CLID_DATABASE;
 	else if (strcmp(input, MQTT_CLIENTID_BH_PROTO) == 0) return MQTT_CLID_BH_PROTO;
 	else return MQTT_CLID_MAX;
 }
 
-
 //TOPICID to CONTEXT transfer
 void func_mqtt_topicid_translate_to_text(UINT32 tpId, char *output)
 {
 	if (tpId <= MQTT_TPID_MIN) strncpy(output, MQTT_TOPIC_MIN, strlen(MQTT_TOPIC_MIN));
-	else if (tpId == MQTT_TPID_UI_TO_HCU) strncpy(output, MQTT_TOPIC_UI_TO_HCU, strlen(MQTT_TOPIC_UI_TO_HCU));
-	else if (tpId == MQTT_TPID_UI_FROM_HCU) strncpy(output, MQTT_TOPIC_UI_FROM_HCU, strlen(MQTT_TOPIC_UI_FROM_HCU));
-	else if (tpId == MQTT_TPID_UI_QR_PRINT) strncpy(output, MQTT_TOPIC_QR_PRINT, strlen(MQTT_TOPIC_QR_PRINT));
-	else if (tpId == MQTT_TPID_UI_DATABASE) strncpy(output, MQTT_TOPIC_DATABASE, strlen(MQTT_TOPIC_DATABASE));
-	else if (tpId == MQTT_TPID_UI_BH_TRANS) strncpy(output, MQTT_TOPIC_BH_TRANS, strlen(MQTT_TOPIC_BH_TRANS));
+	else if (tpId == MQTT_TPID_UI2HCU) strncpy(output, MQTT_TOPIC_UI2HCU, strlen(MQTT_TOPIC_UI2HCU));
+	else if (tpId == MQTT_TPID_HCU2UI) strncpy(output, MQTT_TOPIC_HCU2UI, strlen(MQTT_TOPIC_HCU2UI));
+	else if (tpId == MQTT_TPID_CTRL2FINGER_UI) strncpy(output, MQTT_TOPIC_CTRL2FINGER_UI, strlen(MQTT_TOPIC_CTRL2FINGER_UI));
+	else if (tpId == MQTT_TPID_QR_PRINT) strncpy(output, MQTT_TOPIC_QR_PRINT, strlen(MQTT_TOPIC_QR_PRINT));
+	else if (tpId == MQTT_TPID_DATABASE) strncpy(output, MQTT_TOPIC_DATABASE, strlen(MQTT_TOPIC_DATABASE));
+	else if (tpId == MQTT_TPID_BH_TRANS) strncpy(output, MQTT_TOPIC_BH_TRANS, strlen(MQTT_TOPIC_BH_TRANS));
 	else strncpy(output, MQTT_TOPIC_MAX, strlen(MQTT_TOPIC_MAX));
 }
 
 UINT32 func_mqtt_topicid_translate_to_id(char *input)
 {
 	if (strcmp(input, MQTT_TOPIC_MIN) == 0) return MQTT_TPID_MIN;
-	else if (strcmp(input, MQTT_TOPIC_UI_TO_HCU) == 0) return MQTT_TPID_UI_TO_HCU;
-	else if (strcmp(input, MQTT_TOPIC_UI_FROM_HCU) == 0) return MQTT_TPID_UI_FROM_HCU;
-	else if (strcmp(input, MQTT_TOPIC_QR_PRINT) == 0) return MQTT_TPID_UI_QR_PRINT;
-	else if (strcmp(input, MQTT_TOPIC_DATABASE) == 0) return MQTT_TPID_UI_DATABASE;
-	else if (strcmp(input, MQTT_TOPIC_BH_TRANS) == 0) return MQTT_TPID_UI_BH_TRANS;
+	else if (strcmp(input, MQTT_TOPIC_UI2HCU) == 0) return MQTT_TPID_UI2HCU;
+	else if (strcmp(input, MQTT_TOPIC_HCU2UI) == 0) return MQTT_TPID_HCU2UI;
+	else if (strcmp(input, MQTT_TOPIC_CTRL2FINGER_UI) == 0) return MQTT_TPID_CTRL2FINGER_UI;
+	else if (strcmp(input, MQTT_TOPIC_QR_PRINT) == 0) return MQTT_TPID_QR_PRINT;
+	else if (strcmp(input, MQTT_TOPIC_DATABASE) == 0) return MQTT_TPID_DATABASE;
+	else if (strcmp(input, MQTT_TOPIC_BH_TRANS) == 0) return MQTT_TPID_BH_TRANS;
 	else return MQTT_TPID_MAX;
 }
 
