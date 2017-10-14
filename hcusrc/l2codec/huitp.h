@@ -5372,25 +5372,182 @@ typedef struct StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm
 }StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t;
 
 //HUITP_MSGID_uni_bfdf_comb_scale_data_req         = 0x3B05,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+	StrIe_HUITP_IEID_uni_scale_weight_req_t dataReq;
+}StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t;
+
 //HUITP_MSGID_uni_bfdf_comb_scale_data_resp        = 0x3B85,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
+	StrIe_HUITP_IEID_uni_scale_weight_value_t respValue;
+}StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_resp_t;
+
 //HUITP_MSGID_uni_bfdf_comb_scale_data_report      = 0x3B86,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_scale_weight_value_t reportValue;
+}StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_report_t;
+
 //HUITP_MSGID_uni_bfdf_comb_scale_data_confirm     = 0x3B06,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+}StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t;
+
 //HUITP_MSGID_uni_bfdf_comb_scale_event_report     = 0x3B87,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_scale_weight_event_t reportEvent;
+}StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_report_t;
+
 //HUITP_MSGID_uni_bfdf_comb_scale_event_confirm    = 0x3B07,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+}StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t;
+
 //HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req         = 0x3B08,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+	StrIe_HUITP_IEID_uni_scale_weight_cmd_t cmdReq;
+	StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t cfgReq;
+}StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t;
+
 //HUITP_MSGID_uni_bfdf_comb_scale_ctrl_resp        = 0x3B88,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
+	StrIe_HUITP_IEID_uni_scale_weight_cmd_t cmdResp;
+	StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t cfgResp;
+}StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_resp_t;
+
 //HUITP_MSGID_uni_bfdf_statistic_report            = 0x3B89,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_statistic_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_scale_weight_statistic_t staRep;
+}StrMsg_HUITP_MSGID_uni_bfdf_statistic_report_t;
+
 //HUITP_MSGID_uni_bfdf_statistic_confirm           = 0x3B09,
+typedef struct StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+}StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t;
+
 //HUITP_MSGID_uni_bfhs_comb_scale_data_req         = 0x3B0A,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+	StrIe_HUITP_IEID_uni_scale_weight_req_t dataReq;
+}StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t;
+
 //HUITP_MSGID_uni_bfhs_comb_scale_data_resp        = 0x3B8A,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
+	StrIe_HUITP_IEID_uni_scale_weight_value_t respValue;
+}StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_resp_t;
+
 //HUITP_MSGID_uni_bfhs_comb_scale_data_report      = 0x3B8B,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_scale_weight_value_t reportValue;
+}StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_report_t;
+
 //HUITP_MSGID_uni_bfhs_comb_scale_data_confirm     = 0x3B0B,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+}StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t;
+
 //HUITP_MSGID_uni_bfhs_comb_scale_event_report     = 0x3B8C,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_scale_weight_event_t reportEvent;
+}StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_report_t;
+
 //HUITP_MSGID_uni_bfhs_comb_scale_event_confirm    = 0x3B0C,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+}StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t;
+
 //HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req         = 0x3B0D,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_req_t baseReq;
+	StrIe_HUITP_IEID_uni_scale_weight_cmd_t cmdReq;
+	StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t cfgReq;
+}StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t;
+
 //HUITP_MSGID_uni_bfhs_comb_scale_ctrl_resp        = 0x3B8D,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_resp
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_resp_t baseResp;
+	StrIe_HUITP_IEID_uni_scale_weight_cmd_t cmdResp;
+	StrIe_HUITP_IEID_uni_scale_weight_cfg_par_t cfgResp;
+}StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_resp_t;
+
 //HUITP_MSGID_uni_bfhs_statistic_report            = 0x3B8E,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_statistic_report
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_report_t baseReport;
+	StrIe_HUITP_IEID_uni_scale_weight_statistic_t staRep;
+}StrMsg_HUITP_MSGID_uni_bfhs_statistic_report_t;
+
 //HUITP_MSGID_uni_bfhs_statistic_confirm           = 0x3B0E,
+typedef struct StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm
+{
+	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
+	UINT16 msgLen;
+	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
+}StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t;
 
 //HCU-IHU SUI新增内容
 //以下FRAME消息结构体，由于特殊原因，并没有采用TLV结构，以便节省消息长度

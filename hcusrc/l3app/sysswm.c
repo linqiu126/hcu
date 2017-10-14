@@ -1026,13 +1026,6 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        {
 	        	input->swRel = tmpRel;
 	        	input->swVer = tmpVer;
-	        }
-	        else if ((tmpRel == input->swRel) && (tmpVer > input->swVer))
-	        {
-		        input->swVer = tmpVer;
-	        }
-	        //满足条件，写入fPathName
-	       if ((tmpRel > input->swRel) || ((tmpRel == input->swRel) && (tmpVer > input->swVer))){
 			    //找到了，干活，返回完整的文件目录和文件名字
 			    if (zHcuSysEngPar.swm.hcuSwActiveDir[strlen(zHcuSysEngPar.swm.hcuSwActiveDir)-1] == '/'){
 			    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
@@ -1046,7 +1039,24 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 			    //恢复0值
 	        	tmpRel=0;
 	        	tmpVer=0;
-	       }//写入完成
+	        }
+	        else if ((tmpRel == input->swRel) && (tmpVer > input->swVer))
+	        {
+		        input->swVer = tmpVer;
+			    //找到了，干活，返回完整的文件目录和文件名字
+			    if (zHcuSysEngPar.swm.hcuSwActiveDir[strlen(zHcuSysEngPar.swm.hcuSwActiveDir)-1] == '/'){
+			    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
+			    	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+			    }
+			    else{
+			    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
+			    	strcat(input->fPathName, "/");
+			    	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+			    }
+			    //恢复0值
+	        	tmpRel=0;
+	        	tmpVer=0;
+	        }
 	    }
 	    else if(ptr->d_type == 4)    ///dir
 	    {
