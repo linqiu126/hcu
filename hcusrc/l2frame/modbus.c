@@ -3904,7 +3904,7 @@ float hcu_hex2float(unsigned char *p)
         for (i=23+e-1;i>=0;i--)
         {
             j++;
-            y=(float)(((c>>i)&0x01)*getS(2,j));
+            y=(float)(((c>>i)&0x01)*hcu_getS(2,j));
             if (y>0.0)
             {
                 v+=1.0/y;
