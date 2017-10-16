@@ -7,7 +7,11 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+//= ZSC, 2017 Oct.16 CURRENT_SW_DELIVERY 278=>AQYC项目
+= 增加风向校准（hcudb 更新到199版本：工参配置中增加风险校准值字段）
+= 增加上报传感器异常值的修正
 
+<<<<<<< HEAD
 ［注意］/var/www/html/bfscui需要修改为bfui，从而达成与项目无关的目标，脚步也如此了
 
 
@@ -16,6 +20,9 @@
 = 更新数据库表单的下载处理脚本
 
 //= ZJL, 2017 Oct.15 CURRENT_SW_DELIVERY 277=>AQYC项目
+=======
+//= ZSC, 2017 Oct.15 CURRENT_SW_DELIVERY 277=>AQYC项目
+>>>>>>> 209761590bbd787e79b89174540a2675e17659a1
 = 增加支持朗亿粉尘仪
 
 //= ZJL, 2017 Oct.13 CURRENT_SW_DELIVERY 276=>BFDF项目

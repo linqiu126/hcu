@@ -1635,6 +1635,30 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//CONTENT: TBD
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.ycjk.equipid = 1;
+		if(snd.ycjk.tempValue > HCU_L3AQYC_A01001_RANGE_MAX){
+			snd.ycjk.tempValue = HCU_L3AQYC_A01001_RANGE_MAX;
+		}
+		if(snd.ycjk.humidValue > HCU_L3AQYC_A01002_RANGE_MAX){
+			snd.ycjk.humidValue = HCU_L3AQYC_A01002_RANGE_MAX;
+		}
+		if(snd.ycjk.winddirValue > HCU_L3AQYC_A01008_RANGE_MAX){
+			snd.ycjk.winddirValue = HCU_L3AQYC_A01008_RANGE_MAX;
+		}
+		if(snd.ycjk.humidValue > HCU_L3AQYC_A01002_RANGE_MAX){
+			snd.ycjk.humidValue = HCU_L3AQYC_A01002_RANGE_MAX;
+		}
+		if(snd.ycjk.tspValue > HCU_L3AQYC_A34001_RANGE_MAX){
+			snd.ycjk.tspValue = HCU_L3AQYC_A34001_RANGE_MAX;
+			snd.ycjk.pm1d0Value = HCU_L3AQYC_A34001_RANGE_MAX;
+			snd.ycjk.pm2d5Value = HCU_L3AQYC_A34001_RANGE_MAX;
+			snd.ycjk.pm10Value = HCU_L3AQYC_A34001_RANGE_MAX;
+
+
+		}
+		if(snd.ycjk.noiseValue > HCU_L3AQYC_A50001_RANGE_MAX){
+			snd.ycjk.noiseValue = HCU_L3AQYC_A50001_RANGE_MAX;
+		}
+
 		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01001_Avg;
 		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01002_Avg;
 		snd.ycjk.winddirValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01008_Avg;

@@ -320,6 +320,7 @@ typedef struct HcuSysEngParTab
 	SysEngParElementLocalUi_t 				localUI;
 	SysEngParElementProgramCodeDefineFix_t 	codeDefineFix;
 	SysEngParElementHwBurnPhyIdAddr_t 		hwBurnId;
+	UINT8 winddircalibration;
 }HcuSysEngParTab_t;
 
 
