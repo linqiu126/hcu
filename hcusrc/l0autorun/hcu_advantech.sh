@@ -47,7 +47,7 @@ do_start()
 		if [ -f "/var/hcu/hcu_new" ]; then 
 			#执行顺序
 			#先tar -uzip
-			#然后将界面目录替换性拷贝到目标 /var/www/html/bfui/
+			#然后将界面目录替换性拷贝到目标 /var/www/html/localui/
 			#将hcu_new中的执行文件拷贝覆盖hcu执行程序
 			#最终清理hcu_new以及tar -unzip的现场垃圾文件
 
