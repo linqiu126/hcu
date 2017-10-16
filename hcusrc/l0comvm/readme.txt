@@ -8,9 +8,15 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+［注意］/var/www/html/bfscui需要修改为bfui，从而达成与项目无关的目标，脚步也如此了
+
+
+//= ZJL, 2017 Oct.16 CURRENT_SW_DELIVERY 278=>BFSC项目
+= 修正软件下载的bug
+= 更新数据库表单的下载处理脚本
+
 //= ZJL, 2017 Oct.15 CURRENT_SW_DELIVERY 277=>AQYC项目
 = 增加支持朗亿粉尘仪
-
 
 //= ZJL, 2017 Oct.13 CURRENT_SW_DELIVERY 276=>BFDF项目
 = 完善MQTT的定义

@@ -946,7 +946,7 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 //文件名字格式：IHU_HPT32769_PEM11_REL03_VER218_PATCH.BIN
 //下载的软件版本，必须按照hwType+ugradeFlag进行搜索，全部删除后，再进行下载，不然会出现重复软件版本的问题
 //返回错误，或者strlen(fname)==0，表示没找到
-OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, strTaskSysswmSwpkgLable_t* input)
+OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, strTaskSysswmSwpkgLable_t* output)
 {
 	//zHcuSysEngPar.swm.hcuSwActiveDir
 	//遍历文件目录下的所有文件，获取文件名字
@@ -959,8 +959,8 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	UINT16 tmpVer=0;
 
 	//首先强制赋值
-	input->swRel = 0;
-	input->swVer = 0;
+	output->swRel = 0;
+	output->swVer = 0;
 
 	//继续搜寻最大的
 	if ((dir=opendir(zHcuSysEngPar.swm.hcuSwActiveDir)) == NULL)
@@ -995,7 +995,7 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        strncpy(s, p2, p3-p2);
 	        res = strtoul(s, NULL, 10);
 	        if (res != hwType) continue;
-	        input->hwType = res & 0xFFFF;
+	        output->hwType = res & 0xFFFF;
 	        //读取标识hwId
 	        p3 = p3 + strlen("_PEM");
 	        if (((p4-p3) <=0) || ((p4-p3) > 5)) continue;
@@ -1003,7 +1003,7 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        strncpy(s, p3, p4-p3);
 	        res = strtoul(s, NULL, 10);
 	        if (res < hwId) continue; //这里的软件版本，如果目标PEM版本高于实际硬件，是可以前向兼容的，不允许后项兼容的
-	        input->hwId = res  & 0xFFFF;
+	        output->hwId = res  & 0xFFFF;
 	        //读取标识swRel
 	        p4 = p4 + strlen("_REL");
 	        if (((p5-p4) <=0) || ((p5-p4) > 5)) continue;
@@ -1022,36 +1022,38 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	        tmpVer = res  & 0xFFFF;
 
 	        //找到合适的目标
-	        if (tmpRel > input->swRel)
+	        if (tmpRel > output->swRel)
 	        {
-	        	input->swRel = tmpRel;
-	        	input->swVer = tmpVer;
+	        	output->swRel = tmpRel;
+	        	output->swVer = tmpVer;
 			    //找到了，干活，返回完整的文件目录和文件名字
+	        	memset(output->fPathName, 0, sizeof(output->fPathName));
 			    if (zHcuSysEngPar.swm.hcuSwActiveDir[strlen(zHcuSysEngPar.swm.hcuSwActiveDir)-1] == '/'){
-			    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
-			    	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+			    	strncpy(output->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<output->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):output->fileNameLen);
+			    	strncat(output->fPathName, ptr->d_name, (strlen(ptr->d_name) < output->fileNameLen - strlen(output->fPathName))?strlen(ptr->d_name):output->fileNameLen - strlen(output->fPathName));
 			    }
 			    else{
-			    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
-			    	strcat(input->fPathName, "/");
-			    	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+			    	strncpy(output->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<output->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):output->fileNameLen);
+			    	strcat(output->fPathName, "/");
+			    	strncat(output->fPathName, ptr->d_name, (strlen(ptr->d_name) < output->fileNameLen - strlen(output->fPathName))?strlen(ptr->d_name):output->fileNameLen - strlen(output->fPathName));
 			    }
 			    //恢复0值
 	        	tmpRel=0;
 	        	tmpVer=0;
 	        }
-	        else if ((tmpRel == input->swRel) && (tmpVer > input->swVer))
+	        else if ((tmpRel == output->swRel) && (tmpVer > output->swVer))
 	        {
-		        input->swVer = tmpVer;
+	        	output->swVer = tmpVer;
 			    //找到了，干活，返回完整的文件目录和文件名字
+		        memset(output->fPathName, 0, sizeof(output->fPathName));
 			    if (zHcuSysEngPar.swm.hcuSwActiveDir[strlen(zHcuSysEngPar.swm.hcuSwActiveDir)-1] == '/'){
-			    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
-			    	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+			    	strncpy(output->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<output->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):output->fileNameLen);
+			    	strncat(output->fPathName, ptr->d_name, (strlen(ptr->d_name) < output->fileNameLen - strlen(output->fPathName))?strlen(ptr->d_name):output->fileNameLen - strlen(output->fPathName));
 			    }
 			    else{
-			    	strncpy(input->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<input->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):input->fileNameLen);
-			    	strcat(input->fPathName, "/");
-			    	strncat(input->fPathName, ptr->d_name, (strlen(ptr->d_name) < input->fileNameLen - strlen(input->fPathName))?strlen(ptr->d_name):input->fileNameLen - strlen(input->fPathName));
+			    	strncpy(output->fPathName, zHcuSysEngPar.swm.hcuSwActiveDir, (strlen(zHcuSysEngPar.swm.hcuSwActiveDir)<output->fileNameLen)?strlen(zHcuSysEngPar.swm.hcuSwActiveDir):output->fileNameLen);
+			    	strcat(output->fPathName, "/");
+			    	strncat(output->fPathName, ptr->d_name, (strlen(ptr->d_name) < output->fileNameLen - strlen(output->fPathName))?strlen(ptr->d_name):output->fileNameLen - strlen(output->fPathName));
 			    }
 			    //恢复0值
 	        	tmpRel=0;
@@ -1073,7 +1075,7 @@ OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 sw
 	//结束
 	closedir(dir);
 	//找到了合法的
-	if ((input->swRel > 0) || (input->swVer > 0))
+	if ((output->swRel > 0) || (output->swVer > 0))
 	{
 	    return SUCCESS;
 	}
