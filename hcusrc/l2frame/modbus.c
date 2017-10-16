@@ -1930,6 +1930,17 @@ OPSTAT func_modbus_pm25_msg_pack(msg_struct_pm25_modbus_data_read_t *inMsg, Seri
 			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_LENGTH_OF_REG_NEW & 0x0FF);
 			outMsg->curLen = outMsg->curLen + 1;
 		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//测试朗亿LPM1051
+		{
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_NEW_HIGH & 0x0FF);
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_NEW_HIGH & 0x0FF);
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)((PM25_LENGTH_OF_REG_NEW_LY >> 8) & 0x0FF) ;
+			outMsg->curLen = outMsg->curLen + 1;
+			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_LENGTH_OF_REG_NEW_LY & 0x0FF);
+			outMsg->curLen = outMsg->curLen + 1;
+		}
 		else  //Default阿尔森4-20MA/RS485
 		{
 			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_NEW_HIGH & 0x0FF);
@@ -2178,6 +2189,28 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 			t0 = (t0 <<8) & 0xFF00;
 			t1 = t1 & 0xFF;
 			snd->pm25.pmTSPValue = t0 + t1;
+		}
+
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//测试朗亿LPM1051
+		{
+			if (len != PM25_LENGTH_OF_REG_NEW_LY *2){
+				HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				return FAILURE;
+			}
+
+			//unsigned char a[ ] = {0x3D, 0x44, 0x3A, 0xDA, 0x00, 0x00, 0x00, 0x00};
+			unsigned char a[ ] = {buf->curBuf[index++], buf->curBuf[index++], buf->curBuf[index++], buf->curBuf[index++], 0x00, 0x00, 0x00, 0x00};
+
+			int i;
+			for (i=0;i<8;i++) printf("%2X ",0xff & a[i]);
+
+			float TSP = hcu_hex2float(a);
+			printf("%f\n\n\n",TSP);
+			snd->pm25.pm2d5Value = 1000*TSP;
+			snd->pm25.pm10Value = 1000*TSP;
+			snd->pm25.pmTSPValue = 1000*TSP;
+
 		}
 
 		else  //Default阿尔森4-20MA/RS485
@@ -3798,4 +3831,94 @@ OPSTAT func_modbus_pm25_cmd_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 	return SUCCESS;
 }
+
+
+
+
+long long int hcu_getS(int e,int m)
+{
+    long long int s=e;
+    int i;
+    for (i=1;i<m;i++)
+    {
+        s*=e;
+    }
+    return s;
+}
+
+float hcu_hex2float(unsigned char *p)
+{
+    long long int a=0x00000000;
+
+    a=a|p[0];
+    a=(a<<8)|p[1];
+    a=(a<<8)|p[2];
+    a=(a<<8)|p[3];
+
+    //获得符号位，1表示负数，0表示正数
+    int s=(a>>31)&0xFF;
+    int e=(a>>23)&0x0FF;
+    //获得指数
+    e=e-127;
+    //获得底数
+    long long int m=a&0x7FFFFF|0x800000;
+    long long int c=0;
+    float v = 0.0f, y = 1.0f;
+    //向右移动
+    if (e>0)
+    {
+        //获得整数的二进制
+        c=(m>>(23-e))&0xFFFFFFF;
+        long int b=0;
+        int i;
+        for (i=0;i<23-e;i++)
+        {
+            b=(b<<1)|0x01;
+        }
+        //获得小数的二进制
+        b=b&m;
+        int j=0;
+        //int i;
+        for (i=23-e-1;i>=0;i--)
+        {
+            j++;
+            y=(double)(((b>>i)&0x01)*hcu_getS(2,j));
+            if (y>0.0)
+            {
+                v+=1.0/y;
+            }
+        }
+        v=c+v;
+        if (s>0)
+        {
+            v=-v;
+        }
+    }
+    else
+    {
+        //向左移动
+        e=-e;
+        c=m;
+        int j=0;
+        int i;
+        for (i=23+e-1;i>=0;i--)
+        {
+            j++;
+            y=(float)(((c>>i)&0x01)*getS(2,j));
+            if (y>0.0)
+            {
+                v+=1.0/y;
+            }
+        }
+        if (s>0)
+        {
+            v=-v;
+        }
+    }
+
+    //result = v;
+    return v;
+}
+
+
 

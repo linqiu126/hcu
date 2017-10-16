@@ -439,6 +439,9 @@ typedef enum
 	PM25_REG_DATA_PMTSP_NEW_HIGH = 0x00,  //2B
 	PM25_REG_DATA_PMTSP_NEW_LOW = 0x00,  //2B
 
+	// 型号朗亿LPM1051
+	PM25_LENGTH_OF_REG_NEW_LY = 0x02, //2个寄存器，返回4B
+
 
 }Pm25RegisterSjfc200tDef;
 //WIND DIRECTION寄存器定义

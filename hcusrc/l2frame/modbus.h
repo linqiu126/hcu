@@ -96,5 +96,7 @@ extern UINT32 hcu_sps485_serial_init(SerialPortCom_t *sp);
 extern UINT32 hcu_sps485_serial_port_get(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 Len);
 extern UINT32 hcu_sps485_serial_port_send(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Len);
 
+long long int hcu_getS(int e,int m);
+float hcu_hex2float(unsigned char *p);
 
 #endif /* L2FRAME_MODBUS_H_ */
