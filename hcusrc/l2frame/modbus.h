@@ -99,4 +99,7 @@ extern UINT32 hcu_sps485_serial_port_send(SerialPortCom_t *sp, UINT8 *rcv_buf, U
 long long int hcu_getS(int e,int m);
 float hcu_hex2float(unsigned char *p);
 
+
+#define MODBUS_WINDDIR_CALIBRATION_MAX 360
+
 #endif /* L2FRAME_MODBUS_H_ */
