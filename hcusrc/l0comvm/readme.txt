@@ -10,7 +10,7 @@
 
 //= ZJL, 2017 Oct.15 CURRENT_SW_DELIVERY 277=>AQYC项目
 = 增加支持朗亿粉尘仪
-= 增加风向校准（更新hcudb, 在配置参数表中增加风向校准字段）
+
 
 //= ZJL, 2017 Oct.13 CURRENT_SW_DELIVERY 276=>BFDF项目
 = 完善MQTT的定义

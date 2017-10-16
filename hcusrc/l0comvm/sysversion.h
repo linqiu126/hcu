@@ -14,7 +14,7 @@
 //SW version control, for internal usage
 #define HCU_CURRENT_SW_RELEASE 3 //R01 = 0x01 (XQ.HCU.SW.R01.456)
 #define HCU_CURRENT_SW_DELIVERY 277 //001 = 0x01 (XQ.HCU.SW.R01.456), starting from 100 as 2015/11/02
-#define HCU_CURRENT_DB_DELIVERY 199 //UPDATE once modified.
+#define HCU_CURRENT_DB_DELIVERY 198 //UPDATE once modified.
 #define HCU_CURRENT_VM_DELIVERY 4  //表达LIB-HCUVM
 
 
