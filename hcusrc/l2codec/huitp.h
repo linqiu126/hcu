@@ -45,6 +45,10 @@ typedef void                      VOID;
  *                  将产品CODE全部改为十进制格式
  * 2017/10/8 V2.12: ZSC修改完善
  *                  为复旦医疗增加数据格式
+ * 2017/10/16 V3.0: BFDF/BFHS新建消息
+ *
+ *
+ *
  *
  *
  */
@@ -589,8 +593,7 @@ typedef enum
 	HUITP_MSGID_uni_bfhs_statistic_report            = 0x3B8E,
 	HUITP_MSGID_uni_bfhs_statistic_confirm           = 0x3B0E,
 
-
-	//HCU-IHU SUI新增内容
+	//HCU-IHU BFSC SUI新增内容
 	//上电过程
 	HUITP_MSGID_sui_bfsc_startup_ind                 = 0x3B90,
 	//配置过程
@@ -620,6 +623,58 @@ typedef enum
 	//心跳过程
 	HUITP_MSGID_sui_bfsc_heart_beat_report           = 0x3BA0,
 	HUITP_MSGID_sui_bfsc_heart_beat_confirm          = 0x3B20,
+
+	//HCU-IHU BFDF SUI新增内容
+	//上电过程
+	HUITP_MSGID_sui_bfdf_startup_ind                 = 0x3BB0,
+	//配置过程
+	HUITP_MSGID_sui_bfdf_set_config_req              = 0x3B31,
+	HUITP_MSGID_sui_bfdf_set_config_resp             = 0x3BB1,
+	//暂停过程
+	HUITP_MSGID_sui_bfdf_suspend_req                 = 0x3B32,
+	HUITP_MSGID_sui_bfdf_suspend_resp                = 0x3BB2,
+	HUITP_MSGID_sui_bfdf_resume_req                  = 0x3B33,
+	HUITP_MSGID_sui_bfdf_resume_resp                 = 0x3BB3,
+	//重量汇报过程
+	HUITP_MSGID_sui_bfdf_new_ws_event                = 0x3BB4,
+	//特殊命令过程（测试等过程）
+	HUITP_MSGID_sui_bfdf_command_req                 = 0x3B35,
+	HUITP_MSGID_sui_bfdf_command_resp                = 0x3BB5,
+	//差错过程
+	HUITP_MSGID_sui_bfdf_fault_ind                   = 0x3BB6,
+	//心跳过程
+	HUITP_MSGID_sui_bfdf_heart_beat_report           = 0x3BB7,
+	HUITP_MSGID_sui_bfdf_heart_beat_confirm          = 0x3B37,
+	//组合出料过程
+	HUITP_MSGID_sui_bfdf_ws_comb_out_req             = 0x3B38,
+	HUITP_MSGID_sui_bfdf_ws_comb_out_resp            = 0x3BB8,
+	//推杆过程
+	HUITP_MSGID_sui_bfdf_snc_pullin_req             = 0x3B39,
+	HUITP_MSGID_sui_bfdf_snc_pullin_resp            = 0x3BB9,
+	//篮筐清零报告
+	HUITP_MSGID_sui_bfdf_basket_clean_ind           = 0x3BBA,
+
+	//HCU-IHU BFHS SUI新增内容
+	//上电过程
+	HUITP_MSGID_sui_bfhs_startup_ind                 = 0x3BC0,
+	//配置过程
+	HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B41,
+	HUITP_MSGID_sui_bfhs_set_config_resp             = 0x3BC1,
+	//暂停过程
+	HUITP_MSGID_sui_bfhs_suspend_req                 = 0x3B42,
+	HUITP_MSGID_sui_bfhs_suspend_resp                = 0x3BC2,
+	HUITP_MSGID_sui_bfhs_resume_req                  = 0x3B43,
+	HUITP_MSGID_sui_bfhs_resume_resp                 = 0x3BC3,
+	//重量汇报过程
+	HUITP_MSGID_sui_bfhs_new_ws_event                = 0x3BC4,
+	//特殊命令过程（测试等过程）
+	HUITP_MSGID_sui_bfhs_command_req                 = 0x3B45,
+	HUITP_MSGID_sui_bfhs_command_resp                = 0x3BC5,
+	//差错过程
+	HUITP_MSGID_sui_bfhs_fault_ind                   = 0x3BC6,
+	//心跳过程
+	HUITP_MSGID_sui_bfhs_heart_beat_report           = 0x3BC7,
+	HUITP_MSGID_sui_bfhs_heart_beat_confirm          = 0x3B47,
 
 	//统一结束符
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
@@ -5549,6 +5604,8 @@ typedef struct StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
 }StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t;
 
+
+
 //HCU-IHU SUI新增内容
 //以下FRAME消息结构体，由于特殊原因，并没有采用TLV结构，以便节省消息长度
 
@@ -5978,6 +6035,246 @@ typedef enum IHU_ERROR_CODE
 	ERROR_CODE_MAX, //Ending point
 
 }error_code_t; //end of IHU_INTER_TASK_MSG_ID
+
+
+
+//HCU-IHU BFDF SUI新增内容
+//上电过程
+//HUITP_MSGID_sui_bfdf_startup_ind                 = 0x3BB0,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_startup_ind
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t;
+
+//配置过程
+//HUITP_MSGID_sui_bfdf_set_config_req              = 0x3B31,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_set_config_req_t;
+
+//HUITP_MSGID_sui_bfdf_set_config_resp             = 0x3BB1,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t;
+
+//暂停过程
+//HUITP_MSGID_sui_bfdf_suspend_req                 = 0x3B32,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_suspend_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_suspend_req_t;
+
+//HUITP_MSGID_sui_bfdf_suspend_resp                = 0x3BB2,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t;
+
+//HUITP_MSGID_sui_bfdf_resume_req                  = 0x3B33,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_resume_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_resume_req_t;
+
+//HUITP_MSGID_sui_bfdf_resume_resp                 = 0x3BB3,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_resume_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t;
+
+//重量汇报过程
+//HUITP_MSGID_sui_bfdf_new_ws_event                = 0x3BB4,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t;
+
+//特殊命令过程（测试等过程）
+//HUITP_MSGID_sui_bfdf_command_req                 = 0x3B35,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_command_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_command_req_t;
+
+//HUITP_MSGID_sui_bfdf_command_resp                = 0x3BB5,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_command_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t;
+
+//差错过程
+//HUITP_MSGID_sui_bfdf_fault_ind                   = 0x3BB6,
+typedef struct StrMsg_HUITP_HUITP_MSGID_sui_bfdf_fault_ind
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t;
+
+//心跳过程
+//HUITP_MSGID_sui_bfdf_heart_beat_report           = 0x3BB7,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t;
+
+//HUITP_MSGID_sui_bfdf_heart_beat_confirm          = 0x3B37,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_confirm
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_confirm_t;
+
+//组合出料过程
+//HUITP_MSGID_sui_bfdf_ws_comb_out_req             = 0x3B38,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_req_t;
+
+//HUITP_MSGID_sui_bfdf_ws_comb_out_resp            = 0x3BB8,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t;
+
+//推杆过程
+//HUITP_MSGID_sui_bfdf_snc_pullin_req             = 0x3B39,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_req_t;
+
+//HUITP_MSGID_sui_bfdf_snc_pullin_resp            = 0x3BB9,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t;
+
+//篮筐清零报告
+//HUITP_MSGID_sui_bfdf_basket_clean_ind           = 0x3BBA,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t;
+
+//HCU-IHU BFHS SUI新增内容
+//上电过程
+//HUITP_MSGID_sui_bfhs_startup_ind                 = 0x3BC0,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_startup_ind
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t;
+
+//配置过程
+//HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B41,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_set_config_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_set_config_req_t;
+
+//HUITP_MSGID_sui_bfhs_set_config_resp             = 0x3BC1,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t;
+
+//暂停过程
+//HUITP_MSGID_sui_bfhs_suspend_req                 = 0x3B42,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_suspend_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_suspend_req_t;
+
+//HUITP_MSGID_sui_bfhs_suspend_resp                = 0x3BC2,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t;
+
+//HUITP_MSGID_sui_bfhs_resume_req                  = 0x3B43,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_resume_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_resume_req_t;
+
+//HUITP_MSGID_sui_bfhs_resume_resp                 = 0x3BC3,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_resume_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t;
+
+//重量汇报过程
+//HUITP_MSGID_sui_bfhs_new_ws_event                = 0x3BC4,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t;
+
+//特殊命令过程（测试等过程）
+//HUITP_MSGID_sui_bfhs_command_req                 = 0x3B45,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_command_req_t;
+
+//HUITP_MSGID_sui_bfhs_command_resp                = 0x3BC5,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t;
+
+//差错过程
+//HUITP_MSGID_sui_bfhs_fault_ind                   = 0x3BC6,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_fault_ind
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t;
+
+//心跳过程
+//HUITP_MSGID_sui_bfhs_heart_beat_report           = 0x3BC7,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t;
+
+//HUITP_MSGID_sui_bfhs_heart_beat_confirm          = 0x3B47,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_confirm
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_confirm_t;
+
+
 
 //统一结束符
 //HUITP_MSGID_uni_bfsc_comb_scale_max,

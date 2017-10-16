@@ -10,6 +10,9 @@
 
 ［注意］/var/www/html/bfscui需要修改为localui，从而达成与项目无关的目标，脚步也如此了
 
+//= ZJL, 2017 Oct.16 CURRENT_SW_DELIVERY 280=>BFHS项目
+= 增加HUITP定义中的BFDF和BFHS部分
+= 升级脚步更新为ZIP下载
 
 //= ZJL, 2017 Oct.16 CURRENT_SW_DELIVERY 279=>BFSC项目
 = 修正软件下载的bug
