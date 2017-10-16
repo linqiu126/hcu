@@ -42,7 +42,7 @@ HcuFsmStateItem_t HcuFsmJsoninotify[] =
 };
 
 char zHcuCmdflagJsonFile[]  = "/tmp/command.json";
-char zHcuCmdLinkJsonFile[]  = "/var/www/html/bfscui/command.json";
+char zHcuCmdLinkJsonFile[]  = "/var/www/html/localui/command.json";
 
 
 //Main Entry

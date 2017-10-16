@@ -64,6 +64,7 @@ do_start()
 			fi
 			
 			rm -r /var/hcu/temp
+			rm /var/hcu/hcu_new
 			echo "$(date +%Y-%m-%d_%H:%M:%S)  directory /var/hcu/temp removed."		
 		
 			#先停止hcu服务
