@@ -2529,7 +2529,7 @@ typedef struct msg_struct_cloudvela_l3bfdf_data_confirm
 	UINT8  baseConfirm;
 	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
-}msg_struct_cloudvela_l3bfdfa_confirm_t;
+}msg_struct_cloudvela_l3bfdf_data_confirm_t;
 
 //MSG_ID_L3BFDF_CLOUDVELA_EVENT_REPORT,
 typedef struct msg_struct_l3bfdf_cloudvela_event_report
@@ -2621,7 +2621,7 @@ typedef struct msg_struct_cloudvela_l3bfhs_data_confirm
 	UINT8  baseConfirm;
 	msgie_struct_bh_com_head_t comHead;
 	UINT32 length;
-}msg_struct_cloudvela_l3bfdhs_confirm_t;
+}msg_struct_cloudvela_l3bfhs_data_confirm_t;
 
 //MSG_ID_L3BFHS_CLOUDVELA_EVENT_REPORT,
 typedef struct msg_struct_l3bfhs_cloudvela_event_report

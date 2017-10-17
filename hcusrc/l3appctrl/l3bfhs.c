@@ -40,12 +40,14 @@ HcuFsmStateItem_t HcuFsmL3bfhs[] =
 	{MSG_ID_COM_HEART_BEAT_FB,       			FSM_STATE_COMMON,          			fsm_com_do_nothing},
     {MSG_ID_COM_RESTART,						FSM_STATE_COMMON,            		fsm_l3bfhs_restart},
 	{MSG_ID_COM_TIME_OUT,       				FSM_STATE_COMMON,          			fsm_l3bfhs_time_out},
-//	{MSG_ID_CLOUDVELA_L3BFHS_DATA_REQ,          FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_data_req},
-//	{MSG_ID_CLOUDVELA_L3BFHS_DATA_CONFIRM,      FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_data_confirm},
-//	{MSG_ID_CLOUDVELA_L3BFHS_EVENT_CONFIRM,     FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_event_confirm},
-//	{MSG_ID_CLOUDVELA_L3BFHS_CTRL_REQ,          FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_ctrl_req},
-//	{MSG_ID_CLOUDVELA_L3BFHS_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_statistic_confirm},
-//	//这个命令，有些命令可以在任何状态下执行：比如STOP，但有些命令必须在配置状态下，比如START
+	{MSG_ID_CLOUDVELA_L3BFHS_DATA_REQ,          FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_data_req},
+	{MSG_ID_CLOUDVELA_L3BFHS_DATA_CONFIRM,      FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_data_confirm},
+	{MSG_ID_CLOUDVELA_L3BFHS_EVENT_CONFIRM,     FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_event_confirm},
+	{MSG_ID_CLOUDVELA_L3BFHS_CTRL_REQ,          FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_ctrl_req},
+	{MSG_ID_CLOUDVELA_L3BFHS_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfhs_cloudvela_statistic_confirm},
+
+
+	//这个命令，有些命令可以在任何状态下执行：比如STOP，但有些命令必须在配置状态下，比如START
 //	{MSG_ID_UICOMM_L3BFHS_CMD_REQ,       		FSM_STATE_COMMON,          			fsm_l3bfhs_uicomm_cmd_req},
 //	//考虑到单个错误的查询不能影响大部队的组合，所以差错不采用独立的状态机控制，而做为公共事件进行处理
 //	{MSG_ID_CAN_L3BFHS_ERROR_INQ_CMD_RESP,      FSM_STATE_COMMON,         			fsm_l3bfhs_canitf_error_inq_cmd_resp},  //只能触发数据存储，不进入组合算法的执行
@@ -804,83 +806,83 @@ OPSTAT fsm_l3bfhs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 //	//返回
 //	return SUCCESS;
 //}
-//
-///***************************************************************************************************************************
-// *
-// *  CLOUDVELA部分的消息处理
-// *
-// ***************************************************************************************************************************/
-////后台来的命令，发送到CANITFLEO模块，执行命令后，再返回给后台
-////由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
-//OPSTAT fsm_l3bfhs_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-//{
-//	return SUCCESS;
-//}
-//
-////由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
-//OPSTAT fsm_l3bfhs_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-//{
-//	return SUCCESS;
-//}
-//
-////由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
-//OPSTAT fsm_l3bfhs_cloudvela_event_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-//{
-//	return SUCCESS;
-//}
-//
-////由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
-//OPSTAT fsm_l3bfhs_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-//{
-//	//int ret=0;
-//
-//	//入参检查
-//	msg_struct_cloudvela_l3bfhs_ctrl_req_t rcv;
-//	memset(&rcv, 0, sizeof(msg_struct_cloudvela_l3bfhs_ctrl_req_t));
-//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_l3bfhs_ctrl_req_t))){
+
+/***************************************************************************************************************************
+ *
+ *  CLOUDVELA部分的消息处理
+ *
+ ***************************************************************************************************************************/
+//后台来的命令，发送到CANITFLEO模块，执行命令后，再返回给后台
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfhs_cloudvela_data_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfhs_cloudvela_data_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfhs_cloudvela_event_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfhs_cloudvela_ctrl_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	//入参检查
+	msg_struct_cloudvela_l3bfhs_ctrl_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_cloudvela_l3bfhs_ctrl_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_l3bfhs_ctrl_req_t))){
+		HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Receive message error!\n");
+	}
+	memcpy(&rcv, param_ptr, param_len);
+//	if (rcv.cmdid != L3CI_bfhs_comb_scale){
 //		HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Receive message error!\n");
 //	}
-//	memcpy(&rcv, param_ptr, param_len);
-////	if (rcv.cmdid != L3CI_bfhs_comb_scale){
-////		HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Receive message error!\n");
-////	}
-//
-//	//将命令发送到传感器下位机
-////	msg_struct_l3bfhs_can_general_cmd_req_t snd;
-////	memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_general_cmd_req_t));
-////	snd.length = sizeof(msg_struct_l3bfhs_can_general_cmd_req_t);
-//
-//	//这里只支持一种启动和停止命令，其它的暂时不支持
-//	//if ((rcv.optid != L3PO_bfhs_start_cmd) && (rcv.optid != L3PO_bfhs_stop_cmd)){
-////	if ((rcv.scaleWeightCmd != L3PO_bfhs_start_cmd) && (rcv.scaleWeightCmd != L3PO_bfhs_stop_cmd)){
-////				HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Can not supported command coming from cloud!\n");
-////	}
-//
-////	snd.optid = rcv.optid;
-////	snd.optpar = rcv.optopr;
-//	//这里如此设置，表示是为了全局所有的传感器
-////	snd.sensorid = HCU_SYSCFG_BFHS_SNR_WS_NBR_MAX;
-////	ret = hcu_message_send(MSG_ID_L3BFHS_CAN_GENERAL_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFHS, &snd, snd.length);
-////	if (ret == FAILURE){
-////		HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-////	}
-//
-//	//状态不转移
-//
-//	//短时钟不启动
-//
-//	//返回
-//	return SUCCESS;
-//}
-//
-////由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
-//OPSTAT fsm_l3bfhs_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-//{
-//	return SUCCESS;
-//}
-//
-//
-//
+
+	//将命令发送到传感器下位机
+//	msg_struct_l3bfhs_can_general_cmd_req_t snd;
+//	memset(&snd, 0, sizeof(msg_struct_l3bfhs_can_general_cmd_req_t));
+//	snd.length = sizeof(msg_struct_l3bfhs_can_general_cmd_req_t);
+
+	//这里只支持一种启动和停止命令，其它的暂时不支持
+	//if ((rcv.optid != L3PO_bfhs_start_cmd) && (rcv.optid != L3PO_bfhs_stop_cmd)){
+//	if ((rcv.scaleWeightCmd != L3PO_bfhs_start_cmd) && (rcv.scaleWeightCmd != L3PO_bfhs_stop_cmd)){
+//				HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Can not supported command coming from cloud!\n");
+//	}
+
+//	snd.optid = rcv.optid;
+//	snd.optpar = rcv.optopr;
+	//这里如此设置，表示是为了全局所有的传感器
+//	snd.sensorid = HCU_SYSCFG_BFHS_SNR_WS_NBR_MAX;
+//	ret = hcu_message_send(MSG_ID_L3BFHS_CAN_GENERAL_CMD_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFHS, &snd, snd.length);
+//	if (ret == FAILURE){
+//		HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+//	}
+
+	//状态不转移
+
+	//短时钟不启动
+
+	//返回
+	return SUCCESS;
+}
+
+//由于是内部消息命令执行，为了简化整个执行，不设置超时状态，以简化整个状态机的设计
+OPSTAT fsm_l3bfhs_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	return SUCCESS;
+}
+
+
+
 ///***************************************************************************************************************************
 // *
 // *  CANITF下位机传感器处理的结果
@@ -2055,42 +2057,27 @@ OPSTAT fsm_l3bfhs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 //
 //
 //
-///***************************************************************************************************************************
-// *
-// * 　高级简化技巧
-// *
-// ***************************************************************************************************************************/
-////由于错误，直接从差错中转入扫描状态
-////它提供了一种比RESTART更快更低级的方式，让L3状态机直接返回到扫描状态
-//void func_l3bfhs_stm_main_recovery_from_fault(void)
-//{
-//	//控制其它模块进入正常状态
-//
-//	//状态转移到SLEEP状态
-//	FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_OOS_SCAN);
-//
-//	//初始化模块的任务资源
-//	//初始化定时器：暂时决定不做，除非该模块重新RESTART
-//	//初始化模块级全局变量：暂时决定不做，除非该模块重新RESTART
-//
-//	return;
-//}
-//
-//
-//void func_l3bfhs_test_combine(void)
-//{
-//	int res = 0;
-//
-//	//func_bfhsuicomm_read_cfg_file_into_ctrl_table();
-//
-//	gTaskL3bfhsContext.sensorWs[9].sensorStatus = HCU_L3BFHS_SENSOR_WS_STATUS_VALID_TO_COMB;
-//	gTaskL3bfhsContext.sensorWs[9].sensorValue = 5000;
-//	gTaskL3bfhsContext.sensorWs[10].sensorStatus = HCU_L3BFHS_SENSOR_WS_STATUS_VALID_TO_COMB;
-//	gTaskL3bfhsContext.sensorWs[10].sensorValue = 6000;
-//
-//	res = func_l3bfhs_ws_sensor_search_combination();
-//
-//	HCU_DEBUG_PRINT_FAT("L3BFHS: Test Combination result = %d\n", res);
-//}
+/***************************************************************************************************************************
+ *
+ * 　高级简化技巧
+ *
+ ***************************************************************************************************************************/
+//由于错误，直接从差错中转入扫描状态
+//它提供了一种比RESTART更快更低级的方式，让L3状态机直接返回到扫描状态
+void func_l3bfhs_stm_main_recovery_from_fault(void)
+{
+	//控制其它模块进入正常状态
+
+	//状态转移到SLEEP状态
+	FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_OOS_SCAN);
+
+	//初始化模块的任务资源
+	//初始化定时器：暂时决定不做，除非该模块重新RESTART
+	//初始化模块级全局变量：暂时决定不做，除非该模块重新RESTART
+
+	return;
+}
+
+
 
 

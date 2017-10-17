@@ -10,6 +10,10 @@
 
 ［注意］/var/www/html/bfscui需要修改为localui，从而达成与项目无关的目标，脚步也如此了
 
+//= ZJL, 2017 Oct.17 CURRENT_SW_DELIVERY 281=>BFHS项目
+= 增加BFDF/BFHS的CLOUDVELA编解码函数
+= BFHS中的基础处理函数
+
 //= ZJL, 2017 Oct.16 CURRENT_SW_DELIVERY 280=>BFHS项目
 = 增加HUITP定义中的BFDF和BFHS部分
 = 升级脚步更新为ZIP下载
