@@ -231,7 +231,7 @@ extern OPSTAT fsm_l3bfhs_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_
 
 //Local API
 OPSTAT func_l3bfhs_int_init(void);
-OPSTAT func_l3bfhs_time_out_sys_cfg_req_process(void);
+OPSTAT func_l3bfhs_time_out_sys_cfg_suspend_resume_process(void);
 OPSTAT func_l3bfhs_time_out_sys_start_req_process(void);
 OPSTAT func_l3bfhs_time_out_sys_stop_req_process(void);
 OPSTAT func_l3bfhs_time_out_error_inq_process(void);

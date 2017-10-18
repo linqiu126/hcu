@@ -209,19 +209,19 @@ OPSTAT fsm_l3bfhs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 		}
 	}
 
-//	//配置初始化：一次性工作
-//	else if ((rcv.timeId == TIMER_ID_1S_L3BFHS_SYS_CFG_WAIT_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-//		if (func_l3bfhs_time_out_sys_cfg_req_process() == FAILURE){
-//			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Error process time out message!\n");
-//		}
-//	}
-//
-//	//启动命令：一次性工作
-//	else if ((rcv.timeId == TIMER_ID_1S_L3BFHS_SYS_START_WAIT_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
-//		if (func_l3bfhs_time_out_sys_start_req_process() == FAILURE){
-//			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Error process time out message!\n");
-//		}
-//	}
+	//配置初始化：一次性工作
+	else if ((rcv.timeId == TIMER_ID_1S_L3BFHS_CFG_RESUME_WAIT_FB) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
+		if (func_l3bfhs_time_out_sys_cfg_suspend_resume_process() == FAILURE){
+			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Error process time out message!\n");
+		}
+	}
+
+	//周期性统计扫描定时器
+	else if ((rcv.timeId == TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
+		if (func_l3bfhs_time_out_statistic_scan_process() == FAILURE){
+			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Error process time out message!\n");
+		}
+	}
 
 	//返回
 	return SUCCESS;
@@ -642,10 +642,16 @@ OPSTAT fsm_l3bfhs_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 /***************************************************************************************************************************
  *
- * 　超时处理过程
+ * 　TIME_OUT处理过程
  *
  ***************************************************************************************************************************/
+OPSTAT func_l3bfhs_time_out_sys_cfg_suspend_resume_process(void)
+{
+	//直接进入重新配置模式
 
+	//返回
+	return SUCCESS;
+}
 
 /***************************************************************************************************************************
  *

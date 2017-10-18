@@ -8,7 +8,9 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
-［注意］/var/www/html/bfscui需要修改为localui，从而达成与项目无关的目标，脚步也如此了
+//= ZJL, 2017 Oct.18 CURRENT_SW_DELIVERY 282=>BFSC项目
+= 更新软件下载的版本显示
+
 
 //= ZJL, 2017 Oct.17 CURRENT_SW_DELIVERY 281=>BFHS项目
 = 增加BFDF/BFHS的CLOUDVELA编解码函数
