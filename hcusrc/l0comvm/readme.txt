@@ -10,7 +10,7 @@
 
 //= ZJL, 2017 Oct.18 CURRENT_SW_DELIVERY 282=>BFSC项目
 = 更新软件下载的版本显示
-
+= 将HCU/IHU软件下载的信息更新到按钮区域
 
 //= ZJL, 2017 Oct.17 CURRENT_SW_DELIVERY 281=>BFHS项目
 = 增加BFDF/BFHS的CLOUDVELA编解码函数

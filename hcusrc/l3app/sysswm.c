@@ -122,7 +122,7 @@ OPSTAT fsm_sysswm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	HCU_DEBUG_PRINT_FAT("SYSSWM: Enter FSM_STATE_SYSSWM_ACTIVED status, Keeping refresh here!\n");
 
 	//刷新右下角当前版本信息
-	func_sysswm_sw_exist_trigger_ui();
+	func_sysswm_sw_init_info_trigger_ui();
 
 	//返回
 	return SUCCESS;
@@ -269,6 +269,9 @@ OPSTAT fsm_sysswm_cloudvela_inventory_confirm(UINT32 dest_id, UINT32 src_id, voi
 		HcuErrorPrint("SYSSWM: Receive none-positive inventory confirm message, so no handle, Session=%d.\n", gTaskSysswmContext.swDlSession);
 		return SUCCESS;
 	}
+
+	//刷新版本界面
+	func_sysswm_sw_inventory_confirm_info_trigger_ui(gTaskSysswmContext.swDlSession, rcv.swRel, rcv.swVer, rcv.dbVer);
 
 	//一次INVENTORY都会重来
 	ret = SUCCESS;
@@ -658,6 +661,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void)
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+
+		//刷新版本界面
+		func_sysswm_sw_inventory_req_info_trigger_ui(HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT, snd.swRel, snd.swVer, snd.dbVer);
 	} //if ((FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_ONLINE) || (FsmGetState(TASK_ID_CLOUDVELA) == FSM_STATE_CLOUDVELA_OFFLINE) )
 
 	//State no change
@@ -702,6 +708,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_stable(void)
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+
+		//刷新版本界面
+		func_sysswm_sw_inventory_req_info_trigger_ui(HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE, snd.swRel, snd.swVer, snd.dbVer);
 	}
 
 	//State no change
@@ -745,7 +754,11 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void)
 		snd.timeStamp = time(0);
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
-			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);	}
+			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+
+		//刷新版本界面
+		func_sysswm_sw_inventory_req_info_trigger_ui(HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL, snd.swRel, snd.swVer, snd.dbVer);
+	}
 
 	//State no change
 	return SUCCESS;
@@ -789,6 +802,9 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void)
 		snd.length = sizeof(msg_struct_sysswm_cloudvela_inventory_report_t);
 		if (hcu_message_send(MSG_ID_SYSSWM_CLOUDVELA_INVENTORY_REPORT, TASK_ID_CLOUDVELA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CLOUDVELA].taskName);
+
+		//刷新版本界面
+		func_sysswm_sw_inventory_req_info_trigger_ui(HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH, snd.swRel, snd.swVer, snd.dbVer);
 	}
 
 	//State no change
@@ -1530,7 +1546,7 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_sw(char *stmp)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
 	//更新版本按钮
-	func_sysswm_sw_upgrade_trigger_ui();
+	func_sysswm_hcusw_upgrade_info_trigger_ui();
 
 	//拷贝文件到目标区并执行重启任务
 	if (flag == TRUE)
@@ -1594,7 +1610,7 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
 	//更新版本按钮
-	func_sysswm_sw_upgrade_trigger_ui();
+	func_sysswm_hcusw_upgrade_info_trigger_ui();
 
 	//拷贝文件到目标区并执行重启任务
 	func_sysswm_copy_db_and_exe_to_target_dir_and_restart();
@@ -1618,6 +1634,10 @@ OPSTAT func_sysswm_swpkg_last_seg_process_ihu_sw(char *stmp)
 	sprintf(s, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
 	system(s);
 
+	//刷新界面
+	func_sysswm_ihusw_upgrade_info_trigger_ui(gTaskSysswmContext.swDlSession, gTaskSysswmContext.cloudSwPkg.swRel, gTaskSysswmContext.cloudSwPkg.swVer, gTaskSysswmContext.cloudSwPkg.dbVer);
+
+	//返回
 	return SUCCESS;
 }
 
@@ -1657,7 +1677,7 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
 	//更新版本按钮
-	func_sysswm_sw_upgrade_trigger_ui();
+	func_sysswm_hcusw_upgrade_info_trigger_ui();
 
 	//拷贝文件到目标区并执行重启任务
 	if (flag == TRUE)
@@ -1719,7 +1739,7 @@ OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void)
 			HCU_ERROR_PRINT_SYSSWM("SYSSWM: Update local configure file REL/VER ID error!\n");
 
 		//更新版本按钮
-		func_sysswm_sw_upgrade_trigger_ui();
+		func_sysswm_hcusw_upgrade_info_trigger_ui();
 
 		//拷贝文件到目标区并执行重启任务
 		func_sysswm_copy_db_and_exe_to_target_dir_and_restart();
@@ -1754,47 +1774,159 @@ OPSTAT func_sysswm_ftp_file_big_size_process_ihu_sw(void)
 		HCU_ERROR_PRINT_SYSSWM("SYSSWM: After download complete, save sw pakcage error!\n");
 
 	HCU_DEBUG_PRINT_CRT("SYSSWM: IHU File FTP download and process SW_PKG only success!\n");
+
+	//刷新界面
+	func_sysswm_ihusw_upgrade_info_trigger_ui(gTaskSysswmContext.swDlSession, gTaskSysswmContext.cloudSwPkg.swRel, gTaskSysswmContext.cloudSwPkg.swVer, gTaskSysswmContext.cloudSwPkg.dbVer);
+
+	//返回
 	return SUCCESS;
 }
 
-void func_sysswm_sw_upgrade_trigger_ui(void)
+//刷入初始化软件版本信息
+void func_sysswm_sw_init_info_trigger_ui(void)
 {
-		//升级HCU版本
-		char input[50];
-		memset(input, 0, 50);
-		sprintf(input, "NEW: HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
-		if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO!");
-		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE!");
-		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL!");
-		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH!");
-		else strcat(input, "UPG_ERROR!");
+	//当前HCU版本
+	char input[50];
+	memset(input, 0, 50);
+	sprintf(input, "NOW: HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
+	if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO!");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE!");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL!");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH!");
+	else strcat(input, "UPG_ERROR!");
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-		dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+	dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-		//dbi_HcuBfdf_hcusw_ver_Update(input, strlen(input));
+	//dbi_HcuBfdf_hcusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-		//dbi_HcuBfhs_hcusw_ver_Update(input, strlen(input));
+	//dbi_HcuBfhs_hcusw_ver_Update(input, strlen(input));
 #endif
 }
 
-void func_sysswm_sw_exist_trigger_ui(void)
+//刷入更新软件版本信息
+void func_sysswm_hcusw_upgrade_info_trigger_ui(void)
 {
-		//当前HCU版本
-		char input[50];
-		memset(input, 0, 50);
-		sprintf(input, "NOW: HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
+	//升级HCU版本
+	char input[50];
+	memset(input, 0, 50);
+	sprintf(input, "NEW: HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
+	if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO!");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE!");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL!");
+	else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH!");
+	else strcat(input, "UPG_ERROR!");
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	//dbi_HcuBfdf_hcusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	//dbi_HcuBfhs_hcusw_ver_Update(input, strlen(input));
+#endif
+}
+
+//刷入更新软件版本信息
+void func_sysswm_ihusw_upgrade_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver)
+{
+	//升级HCU版本
+	char input[50];
+	memset(input, 0, 50);
+	sprintf(input, "NEW: IHU-SW-R%d.V%d.DB%d.", swrel, swver, dbver);
+	if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE) strcat(input, "STABLE!");
+		else if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL) strcat(input, "TRIAL!");
+		else if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH) strcat(input, "PATCH!");
+		else strcat(input, "ERROR!");
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	//dbi_HcuBfhs_ihusw_ver_Update(input, strlen(input));
+#endif
+}
+
+//刷入inventory request软件版本信息
+void func_sysswm_sw_inventory_req_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver)
+{
+	//当前HCU版本
+	char input[50];
+	memset(input, 0, 50);
+	if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT)
+	{
+		sprintf(input, "NOW: Inventory Req HCU-SW-R%d.V%d.DB%d.", swrel, swver, dbver);
 		if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO!");
 		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE!");
 		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL!");
 		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH!");
 		else strcat(input, "UPG_ERROR!");
+	}
+	else if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE) sprintf(input, "NOW: Inventory Req IHU-SW-R%d.V%d.DB%d.STABLE!", swrel, swver, dbver);
+	else if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL) sprintf(input, "NOW: Inventory Req IHU-SW-R%d.V%d.DB%d.TRIAL!", swrel, swver, dbver);
+	else if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH) sprintf(input, "NOW: Inventory Req IHU-SW-R%d.V%d.DB%d.PATCH!", swrel, swver, dbver);
+	else sprintf(input, "NOW: Inventory Req ERROR-SW-R%d.V%d.DB%d.PATCH!", swrel, swver, dbver);
+
+	if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT){
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-		dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+	dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-		//dbi_HcuBfdf_hcusw_ver_Update(input, strlen(input));
+	//dbi_HcuBfdf_hcusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-		//dbi_HcuBfhs_hcusw_ver_Update(input, strlen(input));
+	//dbi_HcuBfhs_hcusw_ver_Update(input, strlen(input));
 #endif
+	}
+
+	else{
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	//dbi_HcuBfhs_ihusw_ver_Update(input, strlen(input));
+#endif
+	}
 }
+
+//刷入inventory confirm软件版本信息
+void func_sysswm_sw_inventory_confirm_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver)
+{
+	//当前HCU版本
+	char input[50];
+	memset(input, 0, 50);
+	if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT)
+	{
+		sprintf(input, "NOW: Inventory confirm HCU-SW-R%d.V%d.DB%d.", swrel, swver, dbver);
+		if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL!");
+		else if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH!");
+		else strcat(input, "UPG_ERROR!");
+	}
+	else if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE) sprintf(input, "NOW: Inventory confirm IHU-SW-R%d.V%d.DB%d.STABLE!", swrel, swver, dbver);
+	else if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL) sprintf(input, "NOW: Inventory confirm IHU-SW-R%d.V%d.DB%d.TRIAL!", swrel, swver, dbver);
+	else if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH) sprintf(input, "NOW: Inventory confirm IHU-SW-R%d.V%d.DB%d.PATCH!", swrel, swver, dbver);
+	else sprintf(input, "NOW: Inventory confirm ERROR-SW-R%d.V%d.DB%d.PATCH!", swrel, swver, dbver);
+
+	if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT){
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	dbi_HcuBfsc_hcusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	//dbi_HcuBfdf_hcusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	//dbi_HcuBfhs_hcusw_ver_Update(input, strlen(input));
+#endif
+	}
+
+	else{
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	//dbi_HcuBfhs_ihusw_ver_Update(input, strlen(input));
+#endif
+	}
+}
+
+
 
 

@@ -113,8 +113,12 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp);
 OPSTAT func_sysswm_swpkg_last_seg_process_ihu_sw(char *stmp);
 OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void);
 OPSTAT func_sysswm_ftp_file_big_size_process_ihu_sw(void);
-void func_sysswm_sw_upgrade_trigger_ui(void);
-void func_sysswm_sw_exist_trigger_ui(void);
+void func_sysswm_hcusw_init_info_trigger_ui(void);
+void func_sysswm_hcusw_upgrade_info_trigger_ui(void);
+void func_sysswm_ihusw_upgrade_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver);
+void func_sysswm_sw_inventory_req_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver);
+void func_sysswm_sw_inventory_confirm_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver);
+
 
 //External APIs
 extern OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename);
