@@ -6197,6 +6197,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp
 {
 	UINT16 	msgid;
 	UINT16 	length;
+	UINT8   validFlag;
 }StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t;
 
 //暂停过程

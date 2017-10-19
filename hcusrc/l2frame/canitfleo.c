@@ -1611,21 +1611,148 @@ OPSTAT func_canitfleo_bfhs_simulation_data_process(void)
 //接收消息处理部分
 OPSTAT func_canitfleo_l2frame_msg_bfhs_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t *rcv, UINT8 nodeId)
 {
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+
+	//Firstly Register state
+	gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
+	HCU_DEBUG_PRINT_CRT("CANITFLEO: Sensor ID = %d is set to be startup!\n", nodeId);
+
+	//dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_STARTUP, 0);
+
+	//系统初始化过程
+	if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_ACTIVED){
+		//Do nothing
+	}
+
+	//系统已经在工作状态：发送CFG给IHU
+	else{
+		//生成bitmap
+		UINT32 bitmap = 0;
+		bitmap = (1<<nodeId);
+
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_sui_bfhs_set_config_req_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfhs_set_config_req_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_set_config_req);
+		pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+//		pMsgProc.weight_sensor_param.WeightSensorLoadDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.WeightSensorLoadThread = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorLoadThread);
+//		pMsgProc.weight_sensor_param.WeightSensorEmptyThread = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorEmptyThread);
+//		pMsgProc.weight_sensor_param.WeightSensorEmptyDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.WeightSensorPickupThread = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorPickupThread);
+//		pMsgProc.weight_sensor_param.WeightSensorPickupDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.StardardReadyTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.StardardReadyTimeMs);
+//		pMsgProc.weight_sensor_param.MaxAllowedWeight = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.MaxAllowedWeight);
+//		pMsgProc.weight_sensor_param.RemainDetectionTimeSec = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.RemainDetectionTimeSec);
+//		pMsgProc.weight_sensor_param.WeightSensorInitOrNot = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorInitOrNot);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcSampleFreq = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcSampleFreq);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcGain = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcGain);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcBitwidth = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcBitwidth);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationZeroAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationZeroAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationFullAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationFullAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationFullWeight = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationFullWeight);
+//		pMsgProc.weight_sensor_param.WeightSensorStaticZeroValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorStaticZeroValue);
+//		pMsgProc.weight_sensor_param.WeightSensorTailorValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorTailorValue);
+//		pMsgProc.weight_sensor_param.WeightSensorDynamicZeroThreadValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue);
+//		pMsgProc.weight_sensor_param.WeightSensorDynamicZeroHysteresisMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[0] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[0]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[1] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[1]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[2] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[2]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[3] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[3]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[0] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[0]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[1] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[1]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[2] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[2]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[3] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[3]);
+//		pMsgProc.motor_control_param.MotorSpeed = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorSpeed);
+//		pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorDirection);
+//		pMsgProc.motor_control_param.MotorRollingStartMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorRollingStartMs);
+//		pMsgProc.motor_control_param.MotorRollingStopMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorRollingStopMs);
+//		pMsgProc.motor_control_param.MotorRollingInveralMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorRollingInveralMs);
+//		pMsgProc.motor_control_param.MotorFailureDetectionVaration = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorFailureDetectionVaration);
+//		pMsgProc.motor_control_param.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorFailureDetectionTimeMs);
+
+		//发送消息
+		if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+		//更新传感器状态
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
+	}
+
 	return SUCCESS;
 }
 
 OPSTAT func_canitfleo_l2frame_msg_bfhs_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *rcv, UINT8 nodeId)
 {
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	if (rcv->validFlag == FALSE){
+		//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_ERR, 0);
+	}
+	else{
+		//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_RCV, 0);
+	}
+
+	//进入工作过程
+	msg_struct_can_l3bfhs_sys_cfg_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t));
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	//snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_CFG_RESP, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+
+	//更新状态
+	gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_CMPL;
+
 	return SUCCESS;
 }
 
 OPSTAT func_canitfleo_l2frame_msg_bfhs_suspend_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t *rcv, UINT8 nodeId)
 {
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_SUSPEND_RCV, 0);
+
+	//系统初始化过程
+	msg_struct_can_l3bfhs_sys_suspend_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_sys_suspend_resp_t));
+//		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfhs_sys_suspend_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_SUSPEND_RESP, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+
+	//系统已经在工作状态：可以正式工作了
+	else{
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_SUSPEND;
+	}
+
 	return SUCCESS;
 }
 
 OPSTAT func_canitfleo_l2frame_msg_bfhs_resume_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t *rcv, UINT8 nodeId)
 {
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_RESUME_RCV, 0);
+
+	//系统初始化过程
+	msg_struct_can_l3bfhs_sys_resume_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_sys_resume_resp_t));
+//		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfhs_sys_resume_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+
+	//系统已经在工作状态：可以正式工作了
+	else{
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_VALID;
+	}
+
 	return SUCCESS;
 }
 
