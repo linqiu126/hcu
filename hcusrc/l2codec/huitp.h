@@ -5976,11 +5976,11 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_confirm
 #define HUITP_IEID_SUI_BFSC_HEATT_BEAT_WMC_STATE_INVALID 	0xFF
 
 //Common head defintion
-typedef struct StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header
+typedef struct StrMsg_HUITP_MSGID_sui_common_msg_header
 {
 	UINT16 msgid;
 	UINT16 length;
-}StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t;
+}StrMsg_HUITP_MSGID_sui_common_msg_header_t;
 
 /* Can ID for communication between AWS and WMC */
 /* 1: AWS to WMC: 1 to n, n = 0 ... 15       */

@@ -183,6 +183,7 @@ OPSTAT func_canitfleo_int_init(void)
 	INT32 ret;
 	ret = hcu_canitfleo_usbcan_interface_init();
 
+	//这一块的启动与否，关系到程序是否自动退出来
 /*
 	if(SUCCESS == ret){
 		return SUCCESS;
@@ -571,9 +572,9 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 
 	//解码MSGID/MSGLEN
 	UINT16 msgId = 0, msgLen = 0;
-	StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *pBfscMsg = (StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *)(rcv.databuf);
-	msgId = HUITP_ENDIAN_EXG16(pBfscMsg->msgid);
-	msgLen = HUITP_ENDIAN_EXG16(pBfscMsg->length);
+	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);
+	msgId = HUITP_ENDIAN_EXG16(pComMsg->msgid);
+	msgLen = HUITP_ENDIAN_EXG16(pComMsg->length);
 	if (msgLen != (rcv.validDataLen-4))
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length, decoded msgLen=%d, in buffer len=%d!\n", msgLen, rcv.validDataLen-4);
 
@@ -1519,9 +1520,9 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	//解码MSGID/MSGLEN
 /*
 	UINT16 msgId = 0, msgLen = 0;
-	StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *pBfscMsg = (StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *)(rcv.databuf);
-	msgId = HUITP_ENDIAN_EXG16(pBfscMsg->msgid);
-	msgLen = HUITP_ENDIAN_EXG16(pBfscMsg->length);
+	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);
+	msgId = HUITP_ENDIAN_EXG16(pComMsg->msgid);
+	msgLen = HUITP_ENDIAN_EXG16(pComMsg->length);
 	if (msgLen != (rcv.validDataLen-4))
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length, decoded msgLen=%d, in buffer len=%d!\n", msgLen, rcv.validDataLen-4);
 
@@ -1702,9 +1703,9 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 	//解码MSGID/MSGLEN
 /*
 	UINT16 msgId = 0, msgLen = 0;
-	StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *pBfscMsg = (StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *)(rcv.databuf);
-	msgId = HUITP_ENDIAN_EXG16(pBfscMsg->msgid);
-	msgLen = HUITP_ENDIAN_EXG16(pBfscMsg->length);
+	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);
+	msgId = HUITP_ENDIAN_EXG16(pComMsg->msgid);
+	msgLen = HUITP_ENDIAN_EXG16(pComMsg->length);
 	if (msgLen != (rcv.validDataLen-4))
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length, decoded msgLen=%d, in buffer len=%d!\n", msgLen, rcv.validDataLen-4);
 
@@ -1751,11 +1752,6 @@ OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, vo
 	return SUCCESS;
 }
 
-OPSTAT func_canitfleo_working_scan_process(void)
-{
-	return SUCCESS;
-}
-
 //发送测试数据给L3BFHS
 OPSTAT func_canitfleo_bfhs_simulation_data_process(void)
 {
@@ -1779,7 +1775,9 @@ OPSTAT func_canitfleo_bfhs_simulation_data_process(void)
 
 
 //多项目共享部分
-#if ((HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID) || (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID))
+#if ((HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID) || \
+		(HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID) || \
+		(HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID))
 /*
  *  USBCAN BSP函数映射：硬件在两个CAN接口之间跳动，待固定住哪个CAN接口
  *
