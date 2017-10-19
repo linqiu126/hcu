@@ -151,7 +151,7 @@ typedef struct gTaskL3bfhsContext
 	UINT32  start24hStaTimeInUnix;		//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分
-	UINT32  sessionId;
+	UINT32  sessionId;					//批次数据
 	char    operatorName[HCU_L3BFHS_CONTEXT_OPERATOR_NAME_LEN_MAX];
 	UINT16	configId;  					//用来标识系统工作在哪一套配置参数中
 	char    configName[HCU_L3BFHS_CONTEXT_CONFIG_NAME_LEN_MAX];

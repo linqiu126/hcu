@@ -839,6 +839,10 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	int res = func_l3bfdf_hopper_dual_chain_audit();
 	if (res < 0) HCU_ERROR_PRINT_BFDFUICOMM("BSDFUICOMM: Audit error, errCode = %d\n", res);
 
+	//批次数据更新
+	//读取数据库，更新批次数据
+	gTaskL3bfdfContext.sessionId = 1;
+
 	return SUCCESS;
 }
 

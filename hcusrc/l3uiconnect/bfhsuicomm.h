@@ -25,7 +25,7 @@ enum FSM_STATE_BFHSUICOMM
 //#define FSM_STATE_INVALID 0xFF
 
 typedef struct gTaskL3bfhsuicommContext{
-	UINT8	bfscuiState; // 1 - UI START; 2 - UI STOP
+	UINT8	bfhsuiState; // 1 - UI START; 2 - UI STOP
 	//本地全局变量，分别用于标识开启命令，校准命令，和配置命令的变化，系统启动初始化为0, UI界面修改后自动累加，HCU对比Flag变化判断用户修改了那个Json文件
 	UINT32  cmdStartStopFlag;
 	UINT32  cmdCalibrationFlag;
@@ -34,53 +34,53 @@ typedef struct gTaskL3bfhsuicommContext{
 }gTaskL3bfhsuicommContext_t;
 
 
-typedef struct L3BfscuiStartStopCmd
+typedef struct L3BfhsuiStartStopCmd
 {
 	UINT32  cmdFlag;
 	UINT32  cmdValue;
 	UINT16  confindex;
-}L3BfscuiStartStopCmd_t;
+}L3BfhsuiStartStopCmd_t;
 
-typedef struct L3BfscuiCalibrationCmd
+typedef struct L3BfhsuiCalibrationCmd
 {
 	UINT32  cmdFlag;
 	UINT32  cmdValue;
 	UINT8	 sensorid;
 	UINT32	weight;
-}L3BfscuiCalibrationCmd_t;
+}L3BfhsuiCalibrationCmd_t;
 
-typedef struct L3BfscuiResumeCmd
+typedef struct L3BfhsuiResumeCmd
 {
 	UINT32  cmdFlag;
 	UINT32 	cmdValue;
-}L3BfscuiResumeCmd_t;
+}L3BfhsuiResumeCmd_t;
 
-typedef struct L3BfscuiTestCmd
+typedef struct L3BfhsuiTestCmd
 {
 	UINT32  cmdFlag;
 	UINT32 cmdValue;
 	UINT8	sensorid;
 	UINT32	testCmd;
 	UINT32	testPara;
-} L3BfscuiTestCmd_t;
+} L3BfhsuiTestCmd_t;
 
-typedef struct L3BfscuiJsonCmdParseResult
+typedef struct L3BfhsuiJsonCmdParseResult
 {
-	L3BfscuiStartStopCmd_t  cmdStartStop;
-	L3BfscuiCalibrationCmd_t  cmdCalibration;
-	L3BfscuiResumeCmd_t  cmdResume;
-	L3BfscuiTestCmd_t  cmdTest;
-} L3BfscuiJsonCmdParseResult_t;
+	L3BfhsuiStartStopCmd_t  cmdStartStop;
+	L3BfhsuiCalibrationCmd_t  cmdCalibration;
+	L3BfhsuiResumeCmd_t  cmdResume;
+	L3BfhsuiTestCmd_t  cmdTest;
+} L3BfhsuiJsonCmdParseResult_t;
 
 //本地常量定义
-#define HCU_BFSCCOMM_JASON_CMD_START 		(1)
-#define HCU_BFSCCOMM_JASON_CMD_STOP 		(2)
-#define HCU_BFSCCOMM_JASON_CMD_CONFIG 		(3)
-#define HCU_BFSCCOMM_JASON_CMD_TEST 		(4)
-#define HCU_BFSCCOMM_JASON_CMD_CALZERO		(5)
-#define HCU_BFSCCOMM_JASON_CMD_CALFULL 		(6)
-#define HCU_BFSCCOMM_JASON_CMD_RESUME 		(7)
-#define HCU_BFSCCOMM_JASON_CMD_SUSPEND 		(8)
+#define HCU_BFHSCOMM_JASON_CMD_START 		(1)
+#define HCU_BFHSCOMM_JASON_CMD_STOP 		(2)
+#define HCU_BFHSCOMM_JASON_CMD_CONFIG 		(3)
+#define HCU_BFHSCOMM_JASON_CMD_TEST 		(4)
+#define HCU_BFHSCOMM_JASON_CMD_CALZERO		(5)
+#define HCU_BFHSCOMM_JASON_CMD_CALFULL 		(6)
+#define HCU_BFHSCOMM_JASON_CMD_RESUME 		(7)
+#define HCU_BFHSCOMM_JASON_CMD_SUSPEND 		(8)
 
 //Global variables
 extern HcuFsmStateItem_t HcuFsmBfhsuicomm[];
@@ -90,20 +90,16 @@ extern OPSTAT fsm_bfhsuicomm_task_entry(UINT32 dest_id, UINT32 src_id, void * pa
 extern OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_l3bfsc_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_l3bfhs_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_bfhsuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //Local API
 OPSTAT  func_bfhsuicomm_read_cfg_file_into_ctrl_table(UINT16 config_index);
 OPSTAT  func_bfhsuicomm_time_out_period_read_process(void);
-OPSTAT  func_bfhsuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCmdParseResult_t *parseResult );
-
 
 
 //External APIs
-extern OPSTAT dbi_HcuBfsc_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
+extern OPSTAT dbi_HcuBfhs_Fb2Ui_save(UINT32 cmdType, UINT32 validFlag, char *info);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_BFHSUICOMM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_BFHSUICOMM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

@@ -232,17 +232,22 @@ typedef struct gTaskL3bfdfContextStaEleMid
 #define HCU_L3BFDF_STA_DBI_TABLE_UP2NOW   	"BFDF_STA_UP_2_NOW"
 
 //主体上下文
+#define HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX    20
+#define HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX    	20
 typedef struct gTaskL3bfdfContext
 {
 	//静态配置参数部分
-	UINT16	configId;  												//用来标识系统工作在哪一套配置参数中
-	char    configName[20];
-	UINT32  start24hStaTimeInUnix;									//系统配置的参数，表示24小时统计的日历起点
 	gTaskL3bfdfContextCombinationAlgorithmParamaters_t 	comAlgPar;
 	gTaskL3bfdfContextWeightSensorParamaters_t			wgtSnrPar;
 	gTaskL3bfdfContextMotorControlParamaters_t			motCtrPar;
+	UINT32  start24hStaTimeInUnix;									//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分
+	UINT32  sessionId;								//批次数据
+	char    operatorName[HCU_L3BFDF_CONTEXT_OPERATOR_NAME_LEN_MAX];
+	UINT16	configId;  								//用来标识系统工作在哪一套配置参数中
+	char    configName[HCU_L3BFDF_CONTEXT_CONFIG_NAME_LEN_MAX];
+
 	//nodeDyn的编制原则是：0一定表达WGT板子，1-HCU_L3BFDF_NODE_BOARD_NBR_MAX表达一条流水先上的总共的板子数量
 	L3BfdfNodeBoardInfo_t  	nodeDyn[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX][HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX];
 	UINT16					totalGroupNbr[HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX]; //分成多少个组，这个数据不包括第一组，特别注意！
