@@ -147,7 +147,6 @@ OPSTAT fsm_canitfleo_l3bfhs_suspend_req(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT fsm_canitfleo_l3bfhs_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT fsm_canitfleo_l3bfhs_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 //Local API
-OPSTAT func_canitfleo_bfhs_simulation_data_process();
 OPSTAT func_canitfleo_bfhs_simulation_data_process(void);
 OPSTAT func_canitfleo_l2frame_msg_bfhs_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t *rcv, UINT8 nodeId);
 OPSTAT func_canitfleo_l2frame_msg_bfhs_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *rcv, UINT8 nodeId);
@@ -159,6 +158,13 @@ OPSTAT func_canitfleo_l2frame_msg_bfhs_fault_ind_received_handle(StrMsg_HUITP_MS
 OPSTAT func_canitfleo_l2frame_msg_bfhs_heart_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t *rcv, UINT8 nodeId);
 
 
+/*
+ *
+ *  公共支撑函数部分
+ *
+ *
+ *
+ */
 
 //Socket CAN APIs
 OPSTAT func_canitfleo_socketcan_receive(int socket, canid_t *canid, char *canframe_hex, char *canid_canframe_char);

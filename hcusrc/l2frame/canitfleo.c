@@ -1383,6 +1383,60 @@ OPSTAT func_canitfleo_bfdf_simulation_data_process(void)
 	return SUCCESS;
 }
 
+OPSTAT func_canitfleo_l2frame_msg_bfdf_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_suspend_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_resume_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_new_ws_event_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_ws_comb_out_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_command_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_fault_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_heart_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_snc_pullin_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
 
 #endif//BFDF项目部分
 
@@ -1554,6 +1608,46 @@ OPSTAT func_canitfleo_bfhs_simulation_data_process(void)
 	return SUCCESS;
 }
 
+//接收消息处理部分
+OPSTAT func_canitfleo_l2frame_msg_bfhs_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_suspend_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_resume_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_new_ws_event_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_command_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_fault_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_heart_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
 
 #endif//BFHS项目部分
 
@@ -1718,9 +1812,218 @@ OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void 
 #endif
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	case HUITP_MSGID_sui_bfdf_startup_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_startup_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_startup_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_set_config_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_set_config_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_set_config_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_suspend_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_start_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_suspend_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_resume_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_stop_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_resume_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_new_ws_event:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_new_ws_event \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_new_ws_event_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_ws_comb_out_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_ws_comb_out_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_ws_comb_out_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_command_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_command_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_command_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_fault_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_fault_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_fault_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_heart_beat_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_heart_beat_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_snc_pullin_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_snc_pullin_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_basket_clean_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_basket_clean_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
 #endif
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	case HUITP_MSGID_sui_bfhs_startup_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_startup_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_startup_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_set_config_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_set_config_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_set_config_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_suspend_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_start_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_suspend_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_resume_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_stop_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_resume_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_new_ws_event:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_new_ws_event \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_new_ws_event_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_command_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_command_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_command_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_fault_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_fault_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_fault_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_heart_beat_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_heart_beat_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
 #endif
 
 	case HUITP_MSGID_sui_inventory_report:
