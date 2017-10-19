@@ -98,6 +98,10 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 	#include "../l3appctrl/l3bfdf.h"
 	extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
 #endif
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	#include "../l3appctrl/l3bfhs.h"
+	extern gTaskL3bfhsContext_t gTaskL3bfhsContext;
+#endif
 //Task Global variables
 gTaskCanitfleoContext_t gTaskCanitfleoContext;
 
