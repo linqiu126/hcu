@@ -8,6 +8,10 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+
+//= ZJL, 2017 Oct.19 CURRENT_SW_DELIVERY 283=>BFHS项目
+= 完成BFHS主任务的状态机工作流程
+
 //= ZJL, 2017 Oct.18 CURRENT_SW_DELIVERY 282=>BFSC项目
 = 更新软件下载的版本显示
 = 将HCU/IHU软件下载的信息更新到按钮区域

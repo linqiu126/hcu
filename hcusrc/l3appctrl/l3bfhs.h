@@ -30,35 +30,6 @@ enum FSM_STATE_L3BFHS
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfhs[];
 
-typedef struct L3BfhsSensorWsInfo
-{
-	UINT8  sensorWsId;
-	UINT32 sensorValue;
-	UINT32 sensorRepTimes;
-	UINT8  sensorStatus; //无效，空料，有料数值错误，有料待组合，有料待出料
-	UINT8  cfgRcvFlag;   //用来保存CFG_RESP是否收到
-	UINT8  startRcvFlag;  //用来保存START_RESP是否收到
-	UINT8  stopRcvFlag;   //用来保存STOP_RESP是否收到
-}L3BfhsSensorWsInfo_t;
-//秤盘状态定义
-#define HCU_L3BFHS_SENSOR_WS_STATUS_INVALID			0  		//秤盘无效
-#define HCU_L3BFHS_SENSOR_WS_STATUS_OFFLINE		 	1
-#define HCU_L3BFHS_SENSOR_WS_STATUS_HW_ERROR		2
-#define HCU_L3BFHS_SENSOR_WS_STATUS_OFFLINE_MAX		9
-#define HCU_L3BFHS_SENSOR_WS_STATUS_INIT_MIN		10
-#define HCU_L3BFHS_SENSOR_WS_STATUS_STARTUP		 	11		//下位机上线
-#define HCU_L3BFHS_SENSOR_WS_STATUS_CFG_REQ 		12  	//配置开始
-#define HCU_L3BFHS_SENSOR_WS_STATUS_SUSPEND_REQ 	13  	//暂停开始
-#define HCU_L3BFHS_SENSOR_WS_STATUS_INIT_ERR 		17  	//初始化错误
-#define HCU_L3BFHS_SENSOR_WS_STATUS_INIT_MAX		29
-#define HCU_L3BFHS_SENSOR_WS_STATUS_WORK_MIN 		30
-#define HCU_L3BFHS_SENSOR_WS_STATUS_VALIID_EMPTY 	31      //秤盘空
-#define HCU_L3BFHS_SENSOR_WS_STATUS_VALID_ERROR 	32 		//秤盘有料数值错误
-#define HCU_L3BFHS_SENSOR_WS_STATUS_VALID_TO_COMB 	33 		//秤盘有料待组合
-#define HCU_L3BFHS_SENSOR_WS_STATUS_WORK_MAX 		49
-
-#define HCU_L3BFHS_SENSOR_WS_STATUS_INVALID1  		255  	//秤盘无效
-
 //统计周期，为了计算滑动平均数据
 #define HCU_L3BFHS_STA_CYCLE_DUR  60000 //1分钟，相当于60S
 #define HCU_L3BFHS_STA_UNIT_DUR  500 //500ms的单位，这是统计周期颗粒度，跟TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN保持一致
@@ -231,9 +202,9 @@ extern OPSTAT fsm_l3bfhs_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_
 
 //Local API
 OPSTAT func_l3bfhs_int_init(void);
-OPSTAT func_l3bfhs_time_out_sys_cfg_suspend_resume_process(void);
-OPSTAT func_l3bfhs_time_out_sys_start_req_process(void);
-OPSTAT func_l3bfhs_time_out_sys_stop_req_process(void);
+OPSTAT func_l3bfhs_time_out_sys_cfg_start_wait_fb_process(void);
+OPSTAT func_l3bfhs_time_out_sys_suspend_wait_fb_process(void);
+OPSTAT func_l3bfhs_time_out_sys_resume_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_error_inq_process(void);
 OPSTAT func_l3bfhs_time_out_statistic_scan_process(void);
 void func_l3bfhs_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式

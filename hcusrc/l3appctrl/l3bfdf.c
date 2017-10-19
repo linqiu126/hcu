@@ -300,7 +300,7 @@ OPSTAT fsm_l3bfdf_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 
 		//启动定时器
-		hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB, zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
+		hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB, zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
 	}
 
 	//SUSPEND
@@ -506,6 +506,15 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 			if (func_l3bfdf_hopper_state_set_valid(i) == FALSE)
 				HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Init global parameter error!\n");
 		}
+
+		//批次Session+1：它的初始化应该存入数据库表单
+		gTaskL3bfdfContext.sessionId++;
+		//将session+1的结果存入数据库
+
+		//启动统计扫描定时器
+		hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
+		//设置工作启动时间
+		gTaskL3bfdfContext.startWorkTimeInUnix = time(0);
 	}
 
 	//收到正确以及没有齐活的反馈：直接返回
@@ -650,15 +659,6 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Error stop timer!\n");
 		}
-
-		//启动统计扫描定时器
-		ret = hcu_timer_start(TASK_ID_L3BFDF, TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN, \
-			zHcuSysEngPar.timer.array[TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
-		if (ret == FAILURE)
-			HCU_ERROR_PRINT_L3BFDF("L3BFDF: Error start period timer!\n");
-
-		//设置工作启动时间
-		gTaskL3bfdfContext.startWorkTimeInUnix = time(0);
 
 		//设置状态机
 		if (FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_SCAN) == FAILURE){

@@ -565,8 +565,6 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ,
 	MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP,
 	MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,
-	MSG_ID_L3BFHS_CAN_WS_COMB_OUT,
-	MSG_ID_CAN_L3BFHS_WS_COMB_OUT_FB,
 
 	//BFSC项目：BFSCUICOMM
 	MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,    //JSON文件变更通知
@@ -2916,7 +2914,6 @@ typedef struct msg_struct_l3bfhs_uicomm_cmd_resp
 	UINT8   cmdid;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
-	UINT8	sensorid;
 	UINT32  length;
 }msg_struct_l3bfhs_uicomm_cmd_resp_t;
 
@@ -3068,8 +3065,6 @@ typedef struct msg_struct_l3bfhs_can_sys_suspend_req
 //MSG_ID_CAN_L3BFHS_SYS_START_RESP,
 typedef struct msg_struct_can_l3bfhs_sys_suspend_resp
 {
-	UINT8  streamId;
-	UINT8  boardId;
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
 	UINT32 length;
@@ -3085,8 +3080,6 @@ typedef struct msg_struct_l3bfhs_can_sys_resume_req
 //MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP,
 typedef struct msg_struct_can_l3bfhs_sys_resume_resp
 {
-	UINT8  streamId;
-	UINT8  boardId;
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
 	UINT32 length;
@@ -3095,32 +3088,9 @@ typedef struct msg_struct_can_l3bfhs_sys_resume_resp
 //MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,  	//传感器新数据事件
 typedef struct msg_struct_can_l3bfhs_new_ready_event
 {
-	UINT8  streamId;
-	UINT8  boardId;
 	UINT32 sensorWsValue;
 	UINT32 length;
 }msg_struct_can_l3bfhs_new_ready_event_t;
-
-//MSG_ID_L3BFHS_CAN_WS_COMB_OUT,  		//出料
-typedef struct msg_struct_l3bfhs_can_ws_comb_out
-{
-	UINT8  streamId;
-	UINT8  boardId;
-	UINT16 hopperId;
-	UINT32 length;
-}msg_struct_l3bfhs_can_ws_comb_out_t;
-
-//MSG_ID_CAN_L3BFHS_WS_COMB_OUT_FB,  		//出料确认
-typedef struct msg_struct_can_l3bfhs_ws_comb_out_fb
-{
-	UINT8  streamId;
-	UINT8  boardId;
-	UINT16 hopperId;
-	UINT16 errCode;
-	UINT8  validFlag; //是否执行成功
-	UINT32 length;
-}msg_struct_can_l3bfhs_ws_comb_out_fb_t;
-
 
 
 

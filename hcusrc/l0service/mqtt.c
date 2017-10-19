@@ -367,9 +367,9 @@ int hcu_mqtt_msg_rcv(void)
       //exit(EXIT_FAILURE);
   }
   HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_UI2HCU, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
-  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_BH_TRANS, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
+  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_BHTRANS, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
   MQTTClient_subscribe(client, MQTT_TOPIC_UI2HCU, MQTT_QOS_CONST);
-  MQTTClient_subscribe(client, MQTT_TOPIC_BH_TRANS, MQTT_QOS_CONST);
+  MQTTClient_subscribe(client, MQTT_TOPIC_BHTRANS, MQTT_QOS_CONST);
 
   //退出条件，未来待完善
   do
@@ -388,11 +388,13 @@ void func_mqtt_clientid_translate_to_text(UINT32 clId, char *output)
 {
 	if (clId <= MQTT_CLID_MIN) strncpy(output, MQTT_CLIENTID_MIN, strlen(MQTT_CLIENTID_MIN));
 	else if (clId == MQTT_CLID_HCU) strncpy(output, MQTT_CLIENTID_HCU, strlen(MQTT_CLIENTID_HCU));
-	else if (clId == MQTT_CLID_CTRL_UI) strncpy(output, MQTT_CLIENTID_CTRL_UI, strlen(MQTT_CLIENTID_CTRL_UI));
-	else if (clId == MQTT_CLID_FINGER_UI) strncpy(output, MQTT_CLIENTID_FINGER_UI, strlen(MQTT_CLIENTID_FINGER_UI));
-	else if (clId == MQTT_CLID_QR_PRINTER) strncpy(output, MQTT_CLIENTID_QR_PRINTER, strlen(MQTT_CLIENTID_QR_PRINTER));
+	else if (clId == MQTT_CLID_CTRLUI) strncpy(output, MQTT_CLIENTID_CTRLUI, strlen(MQTT_CLIENTID_CTRLUI));
+	else if (clId == MQTT_CLID_FINGERUI) strncpy(output, MQTT_CLIENTID_FINGERUI, strlen(MQTT_CLIENTID_FINGERUI));
+	else if (clId == MQTT_CLID_QRPRINTER) strncpy(output, MQTT_CLIENTID_QRPRINTER, strlen(MQTT_CLIENTID_QRPRINTER));
 	else if (clId == MQTT_CLID_DATABASE) strncpy(output, MQTT_CLIENTID_DATABASE, strlen(MQTT_CLIENTID_DATABASE));
-	else if (clId == MQTT_CLID_BH_PROTO) strncpy(output, MQTT_CLIENTID_BH_PROTO, strlen(MQTT_CLIENTID_BH_PROTO));
+	else if (clId == MQTT_CLID_BHPROTO) strncpy(output, MQTT_CLIENTID_BHPROTO, strlen(MQTT_CLIENTID_BHPROTO));
+	else if (clId == MQTT_CLID_LOGERR) strncpy(output, MQTT_CLIENTID_LOGERR, strlen(MQTT_CLIENTID_LOGERR));
+	else if (clId == MQTT_CLID_LOGTRACE) strncpy(output, MQTT_CLIENTID_LOGTRACE, strlen(MQTT_CLIENTID_LOGTRACE));
 	else strncpy(output, MQTT_CLIENTID_MAX, strlen(MQTT_CLIENTID_MAX));
 }
 
@@ -400,11 +402,13 @@ UINT32 func_mqtt_clientid_translate_to_id(char *input)
 {
 	if (strcmp(input, MQTT_CLIENTID_MIN) == 0) return MQTT_CLID_MIN;
 	else if (strcmp(input, MQTT_CLIENTID_HCU) == 0) return MQTT_CLID_HCU;
-	else if (strcmp(input, MQTT_CLIENTID_CTRL_UI) == 0) return MQTT_CLID_CTRL_UI;
-	else if (strcmp(input, MQTT_CLIENTID_FINGER_UI) == 0) return MQTT_CLID_FINGER_UI;
-	else if (strcmp(input, MQTT_CLIENTID_QR_PRINTER) == 0) return MQTT_CLID_QR_PRINTER;
+	else if (strcmp(input, MQTT_CLIENTID_CTRLUI) == 0) return MQTT_CLID_CTRLUI;
+	else if (strcmp(input, MQTT_CLIENTID_FINGERUI) == 0) return MQTT_CLID_FINGERUI;
+	else if (strcmp(input, MQTT_CLIENTID_QRPRINTER) == 0) return MQTT_CLID_QRPRINTER;
 	else if (strcmp(input, MQTT_CLIENTID_DATABASE) == 0) return MQTT_CLID_DATABASE;
-	else if (strcmp(input, MQTT_CLIENTID_BH_PROTO) == 0) return MQTT_CLID_BH_PROTO;
+	else if (strcmp(input, MQTT_CLIENTID_BHPROTO) == 0) return MQTT_CLID_BHPROTO;
+	else if (strcmp(input, MQTT_CLIENTID_LOGERR) == 0) return MQTT_CLID_LOGERR;
+	else if (strcmp(input, MQTT_CLIENTID_LOGTRACE) == 0) return MQTT_CLID_LOGTRACE;
 	else return MQTT_CLID_MAX;
 }
 
@@ -414,10 +418,12 @@ void func_mqtt_topicid_translate_to_text(UINT32 tpId, char *output)
 	if (tpId <= MQTT_TPID_MIN) strncpy(output, MQTT_TOPIC_MIN, strlen(MQTT_TOPIC_MIN));
 	else if (tpId == MQTT_TPID_UI2HCU) strncpy(output, MQTT_TOPIC_UI2HCU, strlen(MQTT_TOPIC_UI2HCU));
 	else if (tpId == MQTT_TPID_HCU2UI) strncpy(output, MQTT_TOPIC_HCU2UI, strlen(MQTT_TOPIC_HCU2UI));
-	else if (tpId == MQTT_TPID_CTRL2FINGER_UI) strncpy(output, MQTT_TOPIC_CTRL2FINGER_UI, strlen(MQTT_TOPIC_CTRL2FINGER_UI));
-	else if (tpId == MQTT_TPID_QR_PRINT) strncpy(output, MQTT_TOPIC_QR_PRINT, strlen(MQTT_TOPIC_QR_PRINT));
+	else if (tpId == MQTT_TPID_CTRL2FINGERUI) strncpy(output, MQTT_TOPIC_CTRL2FINGERUI, strlen(MQTT_TOPIC_CTRL2FINGERUI));
+	else if (tpId == MQTT_TPID_QRPRINT) strncpy(output, MQTT_TOPIC_QRPRINT, strlen(MQTT_TOPIC_QRPRINT));
 	else if (tpId == MQTT_TPID_DATABASE) strncpy(output, MQTT_TOPIC_DATABASE, strlen(MQTT_TOPIC_DATABASE));
-	else if (tpId == MQTT_TPID_BH_TRANS) strncpy(output, MQTT_TOPIC_BH_TRANS, strlen(MQTT_TOPIC_BH_TRANS));
+	else if (tpId == MQTT_TPID_BHTRANS) strncpy(output, MQTT_TOPIC_BHTRANS, strlen(MQTT_TOPIC_BHTRANS));
+	else if (tpId == MQTT_TPID_LOGERR) strncpy(output, MQTT_TOPIC_LOGERR, strlen(MQTT_TOPIC_LOGERR));
+	else if (tpId == MQTT_TPID_LOGTRACE) strncpy(output, MQTT_TOPIC_LOGTRACE, strlen(MQTT_TOPIC_LOGTRACE));
 	else strncpy(output, MQTT_TOPIC_MAX, strlen(MQTT_TOPIC_MAX));
 }
 
@@ -426,10 +432,12 @@ UINT32 func_mqtt_topicid_translate_to_id(char *input)
 	if (strcmp(input, MQTT_TOPIC_MIN) == 0) return MQTT_TPID_MIN;
 	else if (strcmp(input, MQTT_TOPIC_UI2HCU) == 0) return MQTT_TPID_UI2HCU;
 	else if (strcmp(input, MQTT_TOPIC_HCU2UI) == 0) return MQTT_TPID_HCU2UI;
-	else if (strcmp(input, MQTT_TOPIC_CTRL2FINGER_UI) == 0) return MQTT_TPID_CTRL2FINGER_UI;
-	else if (strcmp(input, MQTT_TOPIC_QR_PRINT) == 0) return MQTT_TPID_QR_PRINT;
+	else if (strcmp(input, MQTT_TOPIC_CTRL2FINGERUI) == 0) return MQTT_TPID_CTRL2FINGERUI;
+	else if (strcmp(input, MQTT_TOPIC_QRPRINT) == 0) return MQTT_TPID_QRPRINT;
 	else if (strcmp(input, MQTT_TOPIC_DATABASE) == 0) return MQTT_TPID_DATABASE;
-	else if (strcmp(input, MQTT_TOPIC_BH_TRANS) == 0) return MQTT_TPID_BH_TRANS;
+	else if (strcmp(input, MQTT_TOPIC_BHTRANS) == 0) return MQTT_TPID_BHTRANS;
+	else if (strcmp(input, MQTT_TOPIC_LOGERR) == 0) return MQTT_TPID_LOGERR;
+	else if (strcmp(input, MQTT_TOPIC_LOGTRACE) == 0) return MQTT_TPID_LOGTRACE;
 	else return MQTT_TPID_MAX;
 }
 
