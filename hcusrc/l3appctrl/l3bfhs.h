@@ -30,6 +30,30 @@ enum FSM_STATE_L3BFHS
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfhs[];
 
+typedef struct L3BfhsNodeBoardInfo
+{
+	UINT8  nodeStatus; 	//无效，空料，有料数值错误，有料待组合，有料待出料
+	UINT8  cfgRcvFlag;   	//用来保存CFG_RESP是否收到
+	UINT8  resumeRcvFlag;  	//用来保存RESUME_RESP是否收到
+	UINT8  suspendRcvFlag;  //用来保存SUSPEND_RESP是否收到
+}L3BfhsNodeBoardInfo_t;
+#define HCU_L3BFHS_NODE_BOARD_STATUS_NONE			0
+#define HCU_L3BFHS_NODE_BOARD_STATUS_OFFLINE		1
+#define HCU_L3BFHS_NODE_BOARD_STATUS_HW_ERROR		2
+#define HCU_L3BFHS_NODE_BOARD_STATUS_OFFLINE_MAX	9
+#define HCU_L3BFHS_NODE_BOARD_STATUS_INIT_MIN		10
+#define HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP		11		//下位机上线
+#define HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ 	12  	//配置开始
+#define HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_CMPL 13  	//配置完成
+#define HCU_L3BFHS_NODE_BOARD_STATUS_INIT_ERR 		17  	//初始化错误
+#define HCU_L3BFHS_NODE_BOARD_STATUS_INIT_MAX		29
+#define HCU_L3BFHS_NODE_BOARD_STATUS_WORK_MIN 		30
+#define HCU_L3BFHS_NODE_BOARD_STATUS_VALID 			31
+#define HCU_L3BFHS_NODE_BOARD_STATUS_VALID_ERROR 	32
+#define HCU_L3BFHS_NODE_BOARD_STATUS_SUSPEND 		33
+#define HCU_L3BFHS_NODE_BOARD_STATUS_WORK_MAX 		49
+#define HCU_L3BFHS_NODE_BOARD_STATUS_INVALID  		0xFF
+
 //统计周期，为了计算滑动平均数据
 #define HCU_L3BFHS_STA_CYCLE_DUR  60000 //1分钟，相当于60S
 #define HCU_L3BFHS_STA_UNIT_DUR  500 //500ms的单位，这是统计周期颗粒度，跟TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN保持一致
@@ -158,6 +182,7 @@ typedef struct gTaskL3bfhsContext
 	UINT32  startWorkTimeInUnix;		//表示该系统开始工作的时间日程点
 	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是500ms为统计周期
 	UINT32  elipse24HourCnt;			//24小时的日历计数器
+	L3BfhsNodeBoardInfo_t	sensorWs[1];   //固定为0
 
 	//实时统计部分：均以一个统计周期为单位
 	HcuSysMsgIeL3bfhsContextStaElement_t cur;  			//当前统计基础颗粒中的数值
