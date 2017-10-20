@@ -163,8 +163,8 @@ CREATE TABLE `hcubfsccurrentinfo` (
   `status_16` int(4) DEFAULT NULL,
   `value_16` int(4) DEFAULT NULL,
   `curcomwgt` int(4) DEFAULT NULL,
-  `hcusw` char(50) DEFAULT NULL,
-  `ihusw` char(50) DEFAULT NULL
+  `hcusw` char(100) DEFAULT NULL,
+  `ihusw` char(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -551,7 +551,12 @@ OPSTAT dbi_HcuBfsc_hcusw_ver_Update(char *input, int len)
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
-    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    //入参检查
+    if (len > 100){
+    	HcuErrorPrint("DBIBFSC: Input parameter error!\n");
+        return FAILURE;
+    }
+
     char s[20];
     memset(s, 0, sizeof(s));
 
@@ -590,7 +595,12 @@ OPSTAT dbi_HcuBfsc_ihusw_ver_Update(char *input, int len)
     int result = 0;
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
-    //入参检查：不涉及到生死问题，参数也没啥大问题，故而不需要检查，都可以存入数据库表单中
+    //入参检查
+    if (len > 100){
+    	HcuErrorPrint("DBIBFSC: Input parameter error!\n");
+        return FAILURE;
+    }
+
     char s[20];
     memset(s, 0, sizeof(s));
 
