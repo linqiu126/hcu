@@ -49,8 +49,6 @@ HcuFsmStateItem_t HcuFsmSysswm[] =
 	{MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,     	FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_canitfleo_inventory_report},
 	{MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,     FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_canitfleo_sw_package_report},
 
-
-
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
@@ -1837,7 +1835,7 @@ void func_sysswm_ihusw_upgrade_info_trigger_ui(UINT8 session, UINT16 swrel, UINT
 		else strcat(input, "ERROR!");
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+	if (HCU_SYSSWM_UPGRADE_FLAG_MATCH == TRUE) dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
@@ -1877,7 +1875,7 @@ void func_sysswm_sw_inventory_req_info_trigger_ui(UINT8 session, UINT16 swrel, U
 
 	else{
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+		if (HCU_SYSSWM_UPGRADE_FLAG_MATCH == TRUE) dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
@@ -1918,7 +1916,7 @@ void func_sysswm_sw_inventory_confirm_info_trigger_ui(UINT8 session, UINT16 swre
 
 	else{
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+		if (HCU_SYSSWM_UPGRADE_FLAG_MATCH == TRUE) dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
