@@ -40,6 +40,7 @@ extern OPSTAT fsm_ethernet_restart(UINT32 dest_id, UINT32 src_id, void * param_p
 extern OPSTAT hcu_ethernet_phy_link_setup(void);
 extern OPSTAT hcu_ethernet_phy_link_disconnect(void);
 extern OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf);
+extern OPSTAT hcu_ethernet_hate_data_send(CloudDataSendBuf_t *buf);
 
 //API for NBIOT CJ188/QG376
 extern OPSTAT hcu_ethernet_socket_link_setup(void);

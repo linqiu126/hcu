@@ -2,7 +2,7 @@
  * ethernet.c
  *
  *  Created on: 2015年11月22日
- *      Author: test
+ *      Author: zsc
  */
 
 #include "../l1hwopt/ethernet.h"
@@ -125,9 +125,11 @@ OPSTAT fsm_ethernet_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32
 	struct sockaddr_in serveraddr;
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	//serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
-	serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	//serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server address in init = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server port in init = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 	//UINT32 echolen;
 
 	//Heart beat checking in LLC
@@ -269,11 +271,11 @@ OPSTAT hcu_ethernet_socket_link_setup(void)
 	struct sockaddr_in serveraddr;
 	bzero((char *)&serveraddr,sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	//serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
-	serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
-	HCU_DEBUG_PRINT_INF("ETHERNET: External Server address = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipHome);
+	serveraddr.sin_addr.s_addr = inet_addr(zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	//serveraddr.sin_addr.s_addr = inet_addr(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT);
 	serveraddr.sin_port = htons(HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
-	HCU_DEBUG_PRINT_INF("ETHERNET: Server port = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server address in linksetup = %s\n\n", zHcuSysEngPar.cloud.svrAddrSocketipDefault);
+	HCU_DEBUG_PRINT_INF("ETHERNET: Server port in linksetup = %d\n\n", HCU_SYSCFG_CLOUD_SVR_PORT_DEFAULT);
 
 	//Heart beat checking in LLC
 	int keepAlive = HCU_CLOUDSRV_SOCKET_KEEPALIVE; // set KeepAlive
@@ -339,7 +341,18 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		if(gTaskCloudvelaContext.defaultSvrethConClientFd < 0) HCU_ERROR_PRINT_TASK(TASK_ID_ETHERNET, "CLOUDVELA: socket id is not valid!\n");
 	}
-
+	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	msg_struct_l3hate_eth_frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3hate_eth_frame_rcv_t));
+	memcpy(snd.dataBuf, buf->curBuf, buf->curLen);
+	snd.bufValidLen = buf->curLen;
+	snd.length = sizeof(msg_struct_l3hate_eth_frame_rcv_t);
+	if (hcu_message_send(MSG_ID_ETH_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_ETHERNET, &snd, snd.length) == FAILURE){
+		HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+#else
 	//有关LINKID的处理还不完善。因为程序中大量的地方还未改过来，所以只在if中判定是否属于HOME，其它情况都当做DEFAULT业务部分
 	if (send(gTaskCloudvelaContext.defaultSvrethConClientFd, buf->curBuf, buf->curLen, 0) != buf->curLen){
 		gTaskCloudvelaContext.defaultSvrSocketCon = FALSE;
@@ -347,6 +360,7 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 	}else{
 		HCU_DEBUG_PRINT_INF("ETHERNET: Socket connected, send message to socket server success: %s!\n", buf->curBuf);
 	}
+#endif
 
 	//返回
 	return SUCCESS;
@@ -357,6 +371,18 @@ OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf)
 //CURL发送给后台HOME服务器，不采用主动从服务器接受命令的形式，而是采用HCU主动链接和汇报，然后带回命令的方式
 OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 {
+	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	msg_struct_l3hate_eth_frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3hate_eth_frame_rcv_t));
+	memcpy(snd.dataBuf, buf->curBuf, buf->curLen);
+	snd.bufValidLen = buf->curLen;
+	snd.length = sizeof(msg_struct_l3hate_eth_frame_rcv_t);
+	if (hcu_message_send(MSG_ID_ETH_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_ETHERNET, &snd, snd.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+#else
 	int ret = 0;
 
 	//初始化MSGSEND参数
@@ -438,6 +464,24 @@ OPSTAT hcu_ethernet_curl_data_send(CloudDataSendBuf_t *buf)
 		}
 
 	}//End of working condition
+#endif
+	//返回
+	return SUCCESS;
+}
+
+//HATE测试环境
+OPSTAT hcu_ethernet_hate_data_send(CloudDataSendBuf_t *buf)
+{
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+	memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));
+	memcpy(receiveBuffer.buf, buf->curBuf, buf->curLen);
+	//这个长度如果设置为实际长度，行不行？
+	receiveBuffer.length = buf->curLen;
+
+	if (hcu_message_send(MSG_ID_ETHERNET_CLOUDVELA_SOCKET_DATA_RX, TASK_ID_CLOUDVELA, TASK_ID_ETHERNET, receiveBuffer.buf, receiveBuffer.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_ETHERNET].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
 
 	//返回
 	return SUCCESS;

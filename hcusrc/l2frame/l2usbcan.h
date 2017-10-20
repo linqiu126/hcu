@@ -263,8 +263,11 @@ typedef struct HcuUsbCanHandleTypeDef
 /*
  * @brief  L2 Frame over CAN Interface between CAN and CANITFLOE
  */
-#define WMC_NODE_NUMBER HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
-
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	#define WMC_NODE_NUMBER HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
+#else
+	#define WMC_NODE_NUMBER 0
+#endif
 typedef struct HcuCanL2framItfDef
 {
 	UINT32 can_id_tx_wmc_bitmap;

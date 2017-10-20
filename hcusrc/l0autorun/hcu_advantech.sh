@@ -40,11 +40,56 @@ do_start()
 		/bin/mv -f /var/hcu/hcu.log /var/hcu/hcu.log.old	
 		/bin/mv -f /var/hcu/hcuerr.log /var/hcu/hcuerr.log.old	
 		/sbin/insmod /lib/usbcan.ko                
+
+		#执行hcu/DB/UI的升级
 		sleep 10
+		sudo cd /var/hcu
+		if [ -f "/var/hcu/hcu_new" ]; then 
+			#unzip hcu_new
+			unzip /var/hcu/hcu_new -d /var/hcu/temp
+			
+			#hcu program part
+			if [ -f "/var/hcu/temp/hcu" ]; then
+				rm /var/hcu/hcu
+				cp /var/hcu/temp/hcu /var/hcu/hcu
+				chmod 777 /var/hcu/hcu
+				echo "$(date +%Y-%m-%d_%H:%M:%S)  hcu upgraded."
+			fi
+			
+			#localui part
+			if [ -d "/var/hcu/temp/localui" ]; then
+			  rm -r /var/www/html/localui
+			  cp -r /var/hcu/temp/localui /var/www/html/localui
+			  echo "$(date +%Y-%m-%d_%H:%M:%S)  localui upgraded."
+			fi
+			
+			rm -r /var/hcu/temp
+			rm /var/hcu/hcu_new
+			echo "$(date +%Y-%m-%d_%H:%M:%S)  directory /var/hcu/temp removed."		
+		
+			#先停止hcu服务
+			echo "$(date +%Y-%m-%d_%H:%M:%S)  hcu_new exits."
+			#sudo systemctl stop hcu
+			#echo "$(date +%Y-%m-%d_%H:%M:%S)  hcu service stopped."
+			#sudo rm /var/hcu/hcu
+			#sudo mv /var/hcu/hcu_new /var/hcu/hcu
+			#sudo chmod 777 /var/hcu/hcu
+			#sudo systemctl start hcu
+			#echo "$(date +%Y-%m-%d_%H:%M:%S)  hcu service started."
+		fi
+
+		#upgrade sql file
+		if [ -f "/var/hcu/hcu_new.sql" ]; then
+			mysql -uroot -p123456 hcudb < /var/hcu/hcu_new.sql
+			echo "$(date +%Y-%m-%d_%H:%M:%S)  Data from /var/hcu/hcu_new.sql inserted."
+			sudo rm /var/hcu/hcu_new.sql
+		fi
+
 		#echo 123456 | sudo -S /var/hcu/hcu > /var/hcu/hcu.log &
-		echo 123456 | sudo -S /var/hcu/hcu &
+		#echo 123456 | sudo -S /var/hcu/hcu &
+		sudo -S /var/hcu/hcu &
 		#sleep 5
-                #chromium-browser --app=http://localhost/bfscui --start-fullscreen --no-sandbox &
+    		#chromium-browser --app=http://localhost/bfscui --start-fullscreen --no-sandbox &
 	fi
 }
 

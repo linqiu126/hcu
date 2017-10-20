@@ -768,8 +768,8 @@ void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc)
 	can_l2frame_itf_rx_buffer[pdesc->wmc_id].can_l2frame_len = pdesc->RxXferCount;
 
 	//发送给CANITFLEO模块
-	msg_struct_bfsc_usbcan_l2frame_rcv_t snd;
-	memset(&snd, 0, sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t));
+	msg_struct_usbcan_l2frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_usbcan_l2frame_rcv_t));
 	snd.nodeId = pdesc->wmc_id;
 
 	/* 2017/06/03, MA Yuchu: -4 and +4 is to remove the 4 byted L2 Frame Header FE CC L1 L2 */
@@ -783,7 +783,7 @@ void func_usbcan_loopback_callback(HCU_HUITP_L2FRAME_Desc_t *pdesc)
 //			snd.databuf[0], snd.databuf[1], snd.databuf[2], snd.databuf[3],
 //			snd.databuf[4], snd.databuf[5], snd.databuf[6], snd.databuf[7]);
 
-	snd.length = sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t);
+	snd.length = sizeof(msg_struct_usbcan_l2frame_rcv_t);
 	if (hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
 		HcuErrorPrint("USBCAN: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);

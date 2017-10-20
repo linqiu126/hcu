@@ -91,6 +91,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>src/l3hate</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>src/l3uiconnect</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -101,9 +106,24 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>src/l0autorun/hcu.sh</name>
+			<name>src/l0autorun/U17 Guidance.txt</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/hcu.sh</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/U17%20Guidance.txt</locationURI>
+		</link>
+		<link>
+			<name>src/l0autorun/hcu_advantech.sh</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/hcu_advantech.sh</locationURI>
+		</link>
+		<link>
+			<name>src/l0autorun/hcu_raspy.sh</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/hcu_raspy.sh</locationURI>
+		</link>
+		<link>
+			<name>src/l0autorun/hcuupgrade.sh</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0autorun/hcuupgrade.sh</locationURI>
 		</link>
 		<link>
 			<name>src/l0comvm/commsg.h</name>
@@ -139,6 +159,11 @@
 			<name>src/l0comvm/sysversion.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0comvm/sysversion.h</locationURI>
+		</link>
+		<link>
+			<name>src/l0comvm/vm_config.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l0comvm/vm_config.c</locationURI>
 		</link>
 		<link>
 			<name>src/l0comvm/vmlayer.c</name>
@@ -1179,6 +1204,36 @@
 			<name>src/l3appctrl/l3bfsc.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3appctrl/l3bfsc.h</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_bfsc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_bfsc.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_bfsc.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_bfsc.h</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_common.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_common.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/hate_common.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/hate_common.h</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/l3hate.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/l3hate.c</locationURI>
+		</link>
+		<link>
+			<name>src/l3hate/l3hate.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l3hate/l3hate.h</locationURI>
 		</link>
 		<link>
 			<name>src/l3uiconnect/bfscuicomm.c</name>

@@ -381,6 +381,7 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		strncpy(zHcuSysEngPar.cloud.svrAddrSocketipDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_SOCKETIP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrSocketipDefault)));
 		strncpy(zHcuSysEngPar.cloud.svrAddrHttpDefault, HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrAddrHttpDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_ADDR_HTTP_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrAddrHttpDefault)));
 		strncpy(zHcuSysEngPar.cloud.svrNameDefault, HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT, (sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT)<sizeof(zHcuSysEngPar.cloud.svrNameDefault))?(sizeof(HCU_SYSCFG_CLOUD_SVR_NAME_DEFAULT)):(sizeof(zHcuSysEngPar.cloud.svrNameDefault)));
+
 		//SWM_FTP service
 		strncpy(zHcuSysEngPar.cloud.cloudFtpAdd, HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS, (sizeof(HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS)<sizeof(zHcuSysEngPar.cloud.cloudFtpAdd))?(sizeof(HCU_SYSCFG_SWM_SERVER_FTP_ADDRESS)):(sizeof(zHcuSysEngPar.cloud.cloudFtpAdd)));
 		strncpy(zHcuSysEngPar.cloud.cloudFtpUser, HCU_SYSCFG_SWM_SERVER_FTP_USER, (sizeof(HCU_SYSCFG_SWM_SERVER_FTP_USER)<sizeof(zHcuSysEngPar.cloud.cloudFtpUser))?(sizeof(HCU_SYSCFG_SWM_SERVER_FTP_USER)):(sizeof(zHcuSysEngPar.cloud.cloudFtpUser)));
@@ -478,6 +479,26 @@ OPSTAT hcu_hwinv_engpar_read_pop_data_into_mem(void)
 		}
 	}
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+//	char cmdStr[HCU_SYSENG_PAR_ELEMENT_UI_MAX_LEN] = "";
+//	if ((zHcuSysEngPar.localUI.browselProg != NULL) && (zHcuSysEngPar.localUI.browselAutoStartUpFlag == TRUE)){
+//		sprintf(cmdStr, "%s %s %s > /dev/null", zHcuSysEngPar.localUI.browselProg, zHcuSysEngPar.localUI.browselStartUpAddress, zHcuSysEngPar.localUI.browselWorkingOption);
+//		int pid = fork();
+//		if (pid == 0){
+//			system(cmdStr);
+//			exit(EXIT_FAILURE);
+//		}
+//	}
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+//	char cmdStr[HCU_SYSENG_PAR_ELEMENT_UI_MAX_LEN] = "";
+//	if ((zHcuSysEngPar.localUI.browselProg != NULL) && (zHcuSysEngPar.localUI.browselAutoStartUpFlag == TRUE)){
+//		sprintf(cmdStr, "%s %s %s > /dev/null", zHcuSysEngPar.localUI.browselProg, zHcuSysEngPar.localUI.browselStartUpAddress, zHcuSysEngPar.localUI.browselWorkingOption);
+//		int pid = fork();
+//		if (pid == 0){
+//			system(cmdStr);
+//			exit(EXIT_FAILURE);
+//		}
+//	}
 #else
 	#error Un-correct constant definition
 #endif
@@ -497,31 +518,31 @@ OPSTAT hcu_hwinv_engpar_create_storage_dir_env(void)
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
 	}else{
-		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
+		HCU_DEBUG_PRINT_CRT("HWINV: Create successfully for video server directory: %s\n", zHcuSysEngPar.videoSev.hcuVideoServerDir);
 	}
-/*
+
     //create HCU SW download/active/backup local directory by Shanchun
 	ret = hcu_hwinv_create_multi_dir(zHcuSysEngPar.swm.hcuSwDownloadDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW download local directory: %s\n", zHcuSysEngPar.swm.hcuSwDownloadDir);
 	}else{
-		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW download local directory: %s\n", zHcuSysEngPar.swm.hcuSwDownloadDir);
+		HCU_DEBUG_PRINT_CRT("HWINV: Create successfully for HCU SW download local directory: %s\n", zHcuSysEngPar.swm.hcuSwDownloadDir);
 	}
 
 	ret = hcu_hwinv_create_multi_dir(zHcuSysEngPar.swm.hcuSwActiveDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW active local directory: %s\n", zHcuSysEngPar.swm.hcuSwActiveDir);
 	}else{
-		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW active local directory: %s\n", zHcuSysEngPar.swm.hcuSwActiveDir);
+		HCU_DEBUG_PRINT_CRT("HWINV: Create successfully for HCU SW active local directory: %s\n", zHcuSysEngPar.swm.hcuSwActiveDir);
 	}
 
 	ret = hcu_hwinv_create_multi_dir(zHcuSysEngPar.swm.hcuSwBackupDir);
     if (ret == FAILURE){
     	HcuErrorPrint("HWINV: Can't create HCU SW backup local directory: %s\n", zHcuSysEngPar.swm.hcuSwBackupDir);
 	}else{
-		HCU_DEBUG_PRINT_INF("HWINV: Create successfully for HCU SW backup local directory: %s\n", zHcuSysEngPar.swm.hcuSwBackupDir);
+		HCU_DEBUG_PRINT_CRT("HWINV: Create successfully for HCU SW backup local directory: %s\n", zHcuSysEngPar.swm.hcuSwBackupDir);
 	}
-*/
+
     //为所有的存储预留空间配额，并检查是否足够。如果不足，要么出错，要么清理。
 
     //返回
@@ -530,22 +551,39 @@ OPSTAT hcu_hwinv_engpar_create_storage_dir_env(void)
 
 OPSTAT hcu_hwinv_engpar_read_mac_address(void)
 {
-	/////////////////////////////////////////////////////////////////////////
+	//初始化
     struct ifreq ifreq;
 	int sock = 0;
-	//memset(&zHcuInventoryInfo, 0, sizeof(HcuInventoryInfo_t));
 	sock = socket(AF_INET,SOCK_STREAM,0);
 	if(sock < 0) HCU_ERROR_PRINT_HWINV("HWINV: error sock when get mac address!\n");
 
-	strcpy(ifreq.ifr_name,"eth0");
-	if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0) HCU_ERROR_PRINT_HWINV("HWINV: error ioctl when get mac address!\n");
+	//取得一个命令执行的结果
+    FILE *pf;
+    char buffer[4096];
+    pf = popen("dmesg | grep eth", "r");
+    fread(buffer, sizeof(buffer), 1, pf);
+    pclose(pf);
 
+    //得到网口device信息
+    char *p0, *p1, *p2;
+    p1 = strstr(buffer, ": renamed from eth0");
+    if ((p1 == NULL) || (p1 < buffer)){
+    	strcpy(ifreq.ifr_name, "eth0");
+    }else{
+    	p0 = p1-10;
+    	p2 = strstr(p0, " ");
+    	if ((p2 == NULL) || (p2>p1)) HCU_ERROR_PRINT_HWINV("HWINV: error find MAC device!\n");
+    	strncpy(ifreq.ifr_name, p2+1, p1-p2-1);
+    }
+
+    //获取MAC地址
+    if(ioctl(sock,SIOCGIFHWADDR,&ifreq) < 0) HCU_ERROR_PRINT_HWINV("HWINV: error ioctl when get mac address!\n");
 	int j = 0;
 	for(j = 0; j < 6; j++){
-		sprintf(zHcuSysEngPar.hwBurnId.hw_mac+3*j, "%02X:", ifreq.ifr_hwaddr.sa_data[j]);
+		sprintf(zHcuSysEngPar.hwBurnId.hw_mac+3*j, "%02X:", (ifreq.ifr_hwaddr.sa_data[j]&0xFF));
 	}
 	zHcuSysEngPar.hwBurnId.hw_mac[strlen(zHcuSysEngPar.hwBurnId.hw_mac) - 1] = 0;
-	HCU_DEBUG_PRINT_INF("HWINV: eth0 MAC address= %s\n\n", zHcuSysEngPar.hwBurnId.hw_mac);
+	HCU_DEBUG_PRINT_CRT("HWINV: eth0 device name = %s, eth0 MAC address= %s\n", ifreq.ifr_name, zHcuSysEngPar.hwBurnId.hw_mac);
 
     //返回
 	return SUCCESS;
@@ -559,7 +597,7 @@ void func_hwinv_scan_all(void)
 	func_hwinv_scan_rtc();
 	func_hwinv_scan_memroy();
 	func_hwinv_scan_main_board();
-	func_hwinv_scan_hard_disc();
+	//func_hwinv_scan_hard_disc();
 	func_hwinv_scan_gpio();
 	func_hwinv_scan_sps232();
 	func_hwinv_scan_sps485();
@@ -1057,11 +1095,17 @@ void func_hwinv_scan_eng_par(void)
 		{
 			HCU_DEBUG_PRINT_FAT("HWINV: Scan eng par from DB failure reach the max, the system reboot!!!!\n\n\n");
 
+			int ret = 0;
+			ret = hcu_write_errlog("Scan eng par from DB failure reach the max, the system reboot!");
+			if (ret == FAILURE)
+				HCU_ERROR_PRINT_HWINV("HWINV: write reboot log failure in: %s!\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+
 			//_exit(0);//HCU exit
 			system("reboot");
 		}
 	}
 	//如果读数据库失败，则不做任何动作，只是原封不动的保留原先启动时的设置
+
 }
 
 void func_hwinv_scan_dir(void)
@@ -1435,6 +1479,65 @@ void hcu_delete_file(const char *path)
 			rmdir(file_path);
 		}
 	}
+
+}
+
+
+/****************************************************************
+函数说明	:写入Log  日志
+用途功能	:如果是日志文件，将会在str前加上当前时间(格式如：2011-04-12 12:10:20)
+****************************************************************/
+OPSTAT hcu_write_errlog(const char* log)
+{
+	 	time_t tDate;
+	    struct tm *eventTime;
+	    time(&tDate);//得到系统时间
+	    eventTime = localtime(&tDate);//将时间格式化为struct tm结构
+	    int iYear = eventTime->tm_year + 1900;
+	    int iMon = eventTime->tm_mon + 1;
+	    int iDay = eventTime->tm_mday;
+	    int iHour = eventTime->tm_hour;
+	    int iMin = eventTime->tm_min;
+	    int iSec = eventTime->tm_sec;
+	    char sDate[16];
+	    sprintf(sDate, "%04d-%02d-%02d", iYear, iMon, iDay);
+	    char sTime[16];
+	    sprintf(sTime, "%02d:%02d:%02d", iHour, iMin, iSec);
+	    char s[200];
+	    char file[200];
+	    sprintf(s, "%s %s [%s]\n", sDate, sTime, log);//将s格式化为yyyy-mm-dd hh:mi:se [x]
+
+		//sprintf(s, "chmod -R 777 %s", zHcuSysEngPar.swm.hcuSwActiveDir);
+		//system(s);
+
+		sprintf(file, "chmod 777 -R %s", HCU_SYSCFG_REBOOT_LOG_DIR);
+		system(file);
+
+	    FILE *fd = fopen(HCU_SYSCFG_REBOOT_LOG_FILE, "w");//以追加的方式打开文件
+		if(NULL == fd)
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Open file failed at %s\n\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+			//return FAILURE;
+		}
+		else
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Open file succeed at %s\n\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+			sprintf(file, "chmod 777  %s", HCU_SYSCFG_REBOOT_LOG_FILE);
+			system(file);
+		}
+
+	    fd = fopen(HCU_SYSCFG_REBOOT_LOG_FILE, "a+");//以追加的方式打开文件
+		if(NULL == fd)
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Open file failed at %s\n\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+			//return FAILURE;
+		}
+		else
+		{
+			HCU_DEBUG_PRINT_INF("HWINV: Open file succeed at %s\n\n", HCU_SYSCFG_REBOOT_LOG_FILE);
+		    fputs(s, fd);//想log文件中写入一条数据
+		    fclose(fd);//关闭文件
+		}
 
 }
 

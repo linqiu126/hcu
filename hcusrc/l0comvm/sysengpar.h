@@ -162,9 +162,8 @@ typedef struct SysEngParElementProgramCodeDefineFix
 	UINT8 test;
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_OPWL_OTDR_ID)
 	UINT8 test;
-//小技巧，不要这部分，以便加强编译检查
-#else
-	#error Un-correct constant definition
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	UINT8 test;
 #endif
 }SysEngParElementProgramCodeDefineFix_t;
 
@@ -321,6 +320,7 @@ typedef struct HcuSysEngParTab
 	SysEngParElementLocalUi_t 				localUI;
 	SysEngParElementProgramCodeDefineFix_t 	codeDefineFix;
 	SysEngParElementHwBurnPhyIdAddr_t 		hwBurnId;
+	UINT8 winddircalibration;
 }HcuSysEngParTab_t;
 
 

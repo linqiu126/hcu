@@ -1,0 +1,1699 @@
+﻿===== BASE =====
+*** all based on
+"2016-03-18-raspbian-jessie.img"
+
+*** all with root
+
+*** all with latest via:
+apt-get update
+apt-get upgrade
+
+*** ssh
+ssh to pi3, login via pi/123456
+
+*** display/touch
+/boot/config.txt.default -> default display with normal HDMI output to TV
+/boot/config.txt.800x480 -> display for 800x480 LCD touch screen
+
+For default:
+cp /boot/config.txt.default /boot/config.txt
+
+For 800x480:
+cp /boot/config.txt.800x480 /boot/config.txt
+
+===== su passwd =====
+sudo passwd root
+sudo passwd pi
+
+all set to "123456"
+
+===== resize ======
+fdisk /dev/mmcblk0
+
+Delete 2nd partition (d, 2)
+re-create 2nd partition (n, p), 
+start sector 131072
+end sector (default)
+write and exit: (w)
+
+Reboot
+
+resize2fs /dev/mmcblk0p2
+
+===== install mate =====
+apt-get install mate
+apt-get update
+apt-get install mate --fix-missing
+(Must in above sequence)
+(then reboot, can display chinese)
+
+===== lamp =====
+apt-get install apache2
+apt-get install php5
+apt-get install php5-dev php5-curl php5-mysql php5-gd php5-gmp php5-imap php5-ldap php5-mcrypt libapache2-mod-php5
+apt-get install mysql-server mysql-client libmysqlclient-dev
+
+===== zoneminder phpadmin =====
+apt-get install zoneminder phpmyadmin libxml2-dev eclipse-cdt
+apt-get install libswscale-dev libpostproc-dev libavdevice-dev libavresample-dev libavcodec-dev libavformat-dev libavfilter-dev
+apt-get install libresample1-dev -> don't know????
+
+===== phpmyadmin =====
+apt-get install phpmyadmin
+cp /etc/phpmyadmin
+cp apache.conf /etc/apache2/conf-available/
+cd /etc/apache2/conf-available$
+mv apache.conf phpmyadmin.conf
+sudo a2enconf phpmyadmin
+service apache2 reload
+
+===== zoneminder =====
+mysql -uroot -p < /usr/share/zoneminder/db/zm_create.sql
+(can not insert, use phpmyadmin to drop the db of zm, and re-run this command)
+
+mysql -uroot -p -e "grant select,insert,update,delete,create,alter,index,lock tables on zm.* to 'zmuser'@localhost identified by 'zmpass';"
+
+root@raspberrypi:/etc/zm# cp apache.conf /etc/apache2/conf-available/
+root@raspberrypi:/etc/zm# cd /etc/apache2/conf-available/
+root@raspberrypi:/etc/apache2/conf-available# mv apache.conf zoneminder.conf
+root@raspberrypi:/etc/apache2/conf-available# sudo a2enconf zoneminder
+
+sudo a2enmod cgi
+sudo chown -R www-data:www-data /usr/share/zoneminder/
+sudo a2enmod rewrite
+sudo chown www-data:www-data /etc/zm/zm.conf
+
+vi /etc/php5/apache2/php.ini
+Look for [Date] and inside it you will see a date.timezone that is commented. remove the comment and specific your timezone. Please make sure the timezone is valid (see this: http://php.net/manual/en/timezones.php)
+Asia/Shanghai
+sudo service apache2 reload
+sudo systemctl restart zoneminder
+(failed, restart Jessie)
+
+sudo a2enconf javascript-common
+(or can not add new monitor)
+
+===== Eclipse =====
+apt-get install libcurl4-openssl-dev
+apt-get install sqlite3 libsqlite3-dev
+
+===== ffmpeg =====
+dwnload source code
+cd /usr/src
+cd ffmpeg
+wget http://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
+tar xvf ffmpeg-snapshot.tar.bz2
+cd ffmpeg
+./configure --enable-shared
+make
+(this will takes for 30min in Pi3)
+make install
+
+it will be installed in /usr/local
+
+===== hcu.sh =====
+ln -s /home/pi/workspace/hcu/RasberryPi/hcu ./hcu
+
+Edit /etc/profile
+Add
+#MYC
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+Open Issue
+hcu can be run, but access to hcudb failure!
+
+===== 800x480 Touch Screen =====
+1. 800x480
+https://learn.adafruit.com/adafruit-5-800x480-tft-hdmi-monitor-touchscreen-backpack/raspberry-pi-config
+
+2. Touch Drive XPT2046
+https://www.raspberrypi.org/forums/viewtopic.php?f=44&t=143581&p=947933&hilit=xpt2046#p947933
+
+3. Calibration:
+https://github.com/notro/fbtft/wiki/FBTFT-on-Raspian
+
+wget http://tronnes.org/downloads/xinput-calibrator_0.7.5-1_armhf.deb
+sudo dpkg -i -B xinput-calibrator_0.7.5-1_armhf.deb
+
+sudo wget -O /etc/X11/Xsession.d/xinput_calibrator_pointercal https://raw.github.com/tias/xinput_calibrator/master/scripts/xinput_calibrator_pointercal.sh
+echo "sudo /bin/sh /etc/X11/Xsession.d/xinput_calibrator_pointercal" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
+
+
+Calibrating EVDEV driver for "ADS7846 Touchscreen" id=6
+	current calibration values (from XInput): min_x=0, max_x=4095 and min_y=0, max_y=4095
+
+Doing dynamic recalibration:
+	Setting new calibration data: 105, 3933, 137, 3953
+
+--> Making the calibration permanent <--
+  copy the snippet below into '/etc/X11/xorg.conf.d/99-calibration.conf'
+Section "InputClass"
+	Identifier	"calibration"
+	MatchProduct	"ADS7846 Touchscreen"
+	Option	"Calibration"	"105 3933 137 3953"
+EndSection
+
+modify /etc/modules:
+x-min, x-max, y-min, y-max
+
+/boot/config.txt.default -> default display with normal HDMI output to TV
+/boot/config.txt.800x480 -> display for 800x480 LCD touch screen
+
+Issue: Calibration can be found in Menu -> Prerefereces -> Calibrate Touchscreen, but the output need to modified in
+/etc/modules
+/boot/config.txt(.800x480)
+
+===== UART =====
+http://www.briandorey.com/post/Raspberry-Pi-3-UART-Boot-Overlay-Part-Two
+
+*** For Raspbian Jessie releases after 18th March 2016
+
+Add device tree to /boot/config.txt to disable the Raspberry Pi 3 bluetooth.
+sudo nano /boot/config.txt
+Add at the end of the file
+dtoverlay=pi3-miniuart-bt
+Exit the editor saving your changes and then:
+sudo reboot
+
+Three files have all been updated
+/boot/config.txt
+/boot/config.txt.default
+/boot/config.txt.800x480
+
+*** Disabling the Serial Console
+
+To disable the serial console, you need to edit the /boot/cmdline.txt file
+sudo nano /boot/cmdline.txt
+Change the file to the following:
+dwc_otg.lpm_enable=0  console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4  elevator=deadline fsck.repair=yes   rootwait
+
+*** Serial Testing
+
+With the serial console disabled you can use the UART pins for serial communications to a host machine or other serial devices.
+
+I tested the communications with a Putty serial terminal on the PC via a USB-Serial adapter which uses a FTDI serial chip and tested at the following baud rates: 115200, 56700, 9600, 1200
+
+On the Raspberry Pi I used minicom to communicate via /dev/ttyAMA0
+
+Install minicom using:
+
+sudo apt-get install minicom
+
+Then test with serial port at 115200 baud
+
+sudo minicom -D /dev/ttyAMA0 -b115200
+
+If everything is working OK anything you type on the minicom window will appear on the host terminal and also the other way around.
+
+===== hcu.sh =====
+2016/05/07
+
+*** auto start
+cd /etc/rc5.d
+update-rc.d hcu.sh defaults
+mv S03hcu.sh S10hcu.sh
+cd ../rc4.d
+(repear)
+
+in hcu.sh add "sleep 10" in start
+
+*** mysql
+give hcudb access for testuser
+add pm25sharp into hcudb.sql
+
+*** yii2basic
+/var/www/html/yii2basic support PM25sharp
+
+*** hcu 
+update to version 79Demo
+update hcudb.sql
+update l3ui same as yii2basic to support PM25 walemeter
+
+===== GPIO/SPI/I2C =====
+0: link
+http://wiringpi.com/
+
+API/lib installation:
+http://wiringpi.com/download-and-install/
+
+Programming API Ref:
+http://wiringpi.com/reference/
+
+http://www.xuebuyuan.com/2040363.html
+http://blog.csdn.net/xukai871105/article/details/15029843
+
+1. rasp-config
+enable spi/i2c
+reboot
+
+https://pwfee.com/2015/10/dht11
+
+#首先安装依赖包
+sudo apt-get install libi2c-dev
+sudo apt-get install git-core
+#获取安装包
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+git pull origin
+
+#编译并安装
+./build
+#检查安装
+gpio -v
+gpio readall
+
+2. apt-get install i2c-tools
+
+3. vi /etc/modules                # 使用nano打开文件
+
+add following three line
+
+i2c-bcm2708
+i2c-dev
+snd-bcm2835
+
+ensure /etc/modprobe.d/raspi-blacklist.conf
+make sure no spi/i2c in the blacklist
+
+4. check whether the mod has been loaded
+lsmod
+
+make sure following exist
+spi-bcm2708
+i2c-bcm2708
+
+5. Set I2C Bandrate
+
+cd /etc/modprobe.d
+vi custom.conf
+options i2c_bcm2708 baudrate=32000
+
+reboot
+
+6. check i2c
+i2cdetect -l
+i2cdetect -y 1
+
+7. Example Project in Eclipse
+pi-gpio-test
+pi-i2c-test
+
+===== USB to RS232/485 =====
+No driver needed, and can directly used as "/dev/ttyUSB0/"
+
+===== hcu 2016/ 14th, May =====
+Update to 083 version
+
+===== hcu 2016/ 15th, May =====
+Update to 084 version (update hcudb to 84, update yii2basic)
+Update to 085 version (no need to update hcudb and yii2basic, same as 84)
+
+= 2016/6/1: Add Chinese input method.
+sudo apt-get update
+sudo apt-get install fcitx fcitx-googlepinyin fcitx-module-cloudpinyin fcitx-sunpinyin
+sudo apt-get install scim
+sudo apt-get install ttf-wqy-microhei
+sudo dpkg-reconfigure locales
+==> 选择GZ1232
+==> 增加git控制能力，暂时只放了一个账户
+
+
+==Git使用方法==
+代码的后续维护和操作
+?git status
+git checkout -b feature
+?查看是否有改动需要提交
+?git add .
+?git commit -m 'Create @ 2015/11/17 some comment to be added for submit'
+?git checkout dev
+?git merge feature
+?将feature上的改动同步到dev
+git pull origin dev
+	----resolve conflict if something happened, and commit again
+	git add .
+	git commit -m 'Create @ 2015/11/17 some comment to be added for submit'
+?git push origin dev
+?将dev分支提交到github
+?git checkout feature
+?commit之后，切换回feature分支继续改动
+
+linux
+git clone git@github.com:Baxianxiahai/hcu.git
+git pull origin dev:dev
+
+。新CLONE一个账户
+1) ssh-keygen -t rsa -C "smdzjl@sina.cn", 回车, 回车，回车
+2) cat ~/.ssh/id_rsa.pub, 拷贝所有内容到github.com
+3) 登陆http://github.com, 右上角，setting, ssh-key, new SSH key
+4) cd /home/pi/workspace
+5) git clone git@github.com:Baxianxiahai/hcu.git
+6) git checkout -b feature
+
+==2016/6/16==
+> 串口的配置，配置为ttyAMA0, 9600, 8N1，为了测试ZE08CH2O甲醛传感器
+> 串口的属性配置为minicom-s，选择第三项进行的
+> 程序为最新的R01.99版本，数据库和L3UI均更新到最新版本
+
+
+==2016/7/24==
+> 增加USB的配置，以便支持DAC/ADC-USB的程序功能
+> apt-get install libusb.*
+> 程序中配置增加了usb库功能
+
+
+RASBERRY_PI_U15_F00, 2016/04/26
+    - Raspberry Pi 3B image with LAMP, Eclipse, Zoneminder and HCU project installed
+    - Known issues:
+        1) hcu.sh not added to auto startup scripts
+        2) hcu connect to mysql failure, reason unknown, even though testuser has been created
+ 
+RASPBIAN_JESSIE_F01, 2016/05/01
+    - Raspberry Pi 3B image with LAMP, Eclipse, Zoneminder
+    - Known issues:
+        1) HCU project can not be built because no ffmpeg can not be installed via apt-get
+        2) ffmpeg already been built successfully via "configure" and "make", but not yet "make install"
+ 
+RASPBIAN_JESSIE_F03, 2016/05/02, MD5:56f91ff10d2bdb2555e408bf5edd113d
+    - Raspberry Pi 3B image with LAMP, Eclipse, Zoneminder and HCU project installed and build
+    - ffmpeg is installed in /usr/local/lib, via "make install" in /usr/src/ffmpeg
+    - Switch to 800x480, if want to switch back, cp /boot/config.txt.default config.txt
+    - Support touch screen
+    - Known issues:
+        1) hcu can be run, but can not connect to mysql with "root"
+        2) hcu is not added to the startup script
+        2) touch screen conner can not be touched, need to calibrate, but don't know how
+ 
+RASPBIAN_JESSIE_F04, 2016/05/02, MD5: 2cd2434c4efca1a2aa90c3b2bdf41d96
+    - (refer to Pi-Jessie.txt in the Raspbian desktop for detailed setup)
+    - Raspberry Pi 3B image with LAMP, Eclipse, Zoneminder and HCU project installed and build
+    - ffmpeg is installed in /usr/local/lib, via "make install" in /usr/src/ffmpeg
+    - Add Touch calibration program "xinput-calibrate"
+    - Map BLE to PL01(UART1) to free MiniUART in GPIO 14/15 from UART1 to work as UART0
+    - Disable Console on UART0, so that UART0 in GPIO 14/15 can be full reused by user
+    - Add minicom to test UART, via "minicom -D /dev/ttyAMA0 -b115200"
+    - Switch to 800x480, if want to switch back, cp /boot/config.txt.default config.txt
+    - Support touch screen
+    - Known issues (TODO):
+        1) hcu can be run, but can not connect to mysql with "root"
+        2) hcu is not added to the startup script
+ 
+RASPBIAN_JESSIE_F05, 2016/05/07, MD5: f56094add610ed488d26713a480ced78
+    - (refer to Pi-Jessie.txt in the Raspbian desktop for detailed setup)
+    - hcu can be run, but can connect to mysql with "root"
+    - hcu is added to the startup script
+    - /home/workspace/hcu has update to hcu.R01.79Demo, to support PM25sharp, but GPS not working as conflict in UART0 (/dev/ttyAMA0)
+    - /home/workspace/hcu has update to hcu.R01.79Demo, include new hcudb.sql supporting PM25sharp
+    - /home/workspace/hcu has update to hcu.R01.79Demo, include new l3ui, same as new "yii2basic" below
+    - /var/www/html/yii2basic updated to support walemeter for PM25 for Demo
+    - Known issues (TODO)
+        1) hcu project for Raspberry_Pi can not access to GPS as the UART0 used for PM25Sharp
+        2) UART0 sending function still not tested yet.
+ 
+RASPBIAN_JESSIE_F06 (SKIP AS READ SDCARD ERROR)
+RASPBIAN_JESSIE_F07, 2016/05/14, MD5: 7b0f564be6045f097c61453a532426e9 (SKIP AS CAN NOT 7z/ZIP, READFILE ERROR)
+RASPBIAN_JESSIE_F08, 2016/05/15, MD5: 80b016374011f3cf40e7b13fb6ff4acd (SKIP TO DOUBLE CONFIRM THE MD5)
+RASPBIAN_JESSIE_F09, 2016/05/15, MD5: 80b016374011f3cf40e7b13fb6ff4acd (OK NOW)
+    - (refer to Pi-Jessie.txt in the Raspbian desktop for detailed setup)
+    - Install wiringPi lib to support gpio/spi/i2c
+    - Configure/enable gpio/spi/i2c in OS driver level
+    - In Eclipse, add two example program for GPIO and I2C read for Temperature/Humidity sensor
+    - hcu is updated to 083 (yii2basic and hcudb update to 083 version)
+    - Known issues (TODO)
+        1) hcu project for Raspberry_Pi can not access to GPS as the UART0 used for PM25Sharp
+        2) UART0 sending function still not tested yet.
+ 
+RASPBIAN_JESSIE_F10, 2016/05/15, MD5: 5cea54f22d9dc253948778ea89189ef5
+RASPBIAN_JESSIE_F11, 2016/05/15, MD5: 5cea54f22d9dc253948778ea89189ef5
+    - update hcu to 084, update hcudb to mysql, update yii2basic from 084 version
+    - update hcu to 085 (no hcudb and yii2basic update, same as 084)
+    - correct one bug in /etc/init.d/hcu.sh for directory for /home/pi/hcu.log and /home/pi/hcuerr.log
+    - Known issues (TODO)
+        1) hcu project for Raspberry_Pi can not access to GPS as the UART0 used for PM25Sharp
+        2) UART0 sending function still not tested yet.
+
+
+2017-08-16
+    - ntp服务器的增加 sudo vi /etc/ntp.conf
+    - 每日停止ngrok服务，让脚本自动再启一次，防止假活
+      30 5 * * * sudo systemctl stop ngrok
+    - 增加keep-hcu-alive.sh脚本，/var/hcu目录
+    - 增加mod_cfg_ngrokport.sh
+    - 每两天启动一次
+      30 4 */2 * * sudo reboot
+ 
+2017-07-10
+    - 增加纳贤800wifi
+        sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+    - 增加树莓派温度检测文件
+        temp.sh
+        /opt/vc/bin/vcgencmd measure_temp
+    - 打开wlan0
+    - 设置msg queue
+        sudo vi /etc/sysctl.conf
+        文件最后增加 kernel.msgmnb=1048576
+        sudo sysctl -p
+        使用ipcs -l或者ipcs -u来查看效果
+    - hcuswdb.sh / hcuswdb-now.sh，小慧云服务器有备份
+        scp root@121.40.118.33:/var/ftp/hcu/hcuswdb.sh /var/hcu/hcuswdb/hcuswdb.sh 
+        scp root@121.40.118.33:/var/ftp/hcu/hcuswdb-now.sh /var/hcu/hcuswdb/hcuswdb-now.sh
+    - udevadm关于hcu_serial0和hcu_serial1的确定，用checkusb.sh检查
+        sudo vi /etc/udev/rules.d/60-usb-serial.rules
+        KERNELS=="1-1.4", SUBSYSTEMS=="usb", DRIVERS=="usb", ATTRS{idVendor}=="10c4", SYMLINK+="hcu_serial0"
+        KERNELS=="1-1.3", SUBSYSTEMS=="usb", DRIVERS=="usb", ATTRS{idVendor}=="067b", SYMLINK+="hcu_serial1"
+        sudo udevadm trigger
+    - crontab增加ngrok和hcu的每分钟保护
+    - 停止umtskeeper服务
+        sudo systemctl stop umtskeeper
+        sudo systemctl disable umtskeeper
+    - mysql hcudb对应的服务器地址检查，目前小慧服务器
+    - /var/hcu/hcu.sh对应的服务器地址检查
+        目前基本信息上报小慧云
+        启动运行hcu 增加sudo
+    - 反向代理到4G路由器，复用原先摄像头service部分
+        sudo nano /etc/nginx/nginx.conf
+        service 8000 => 192.168.1.1:80
+    - 设置CoreDump: 
+        将core dump打开，并且在本地程序下生成coredump文件
+        1.sudo vi /etc/security/limits.conf，里面有很详细的注释，如果没有就插入
+            * soft nofile 51200
+            * hard nofile 51200
+        2.sudo vi /etc/pam.d/common-session，加入一行
+            session required pam_limits.so
+        3.sudo vi /etc/profile，文件最后加入
+            ulimit -SHn 51200
+            ulimit -c unlimited
+        完事以后，使用gdb xxx core就可以查看文件错误
+    - 母卡的名字改成sh002，端口30101开始
+    - image_version文件夹更新成F28
+ 
+2017-06-12
+    四信路由器部分修改
+    树莓派的ETH0改为DHCP获得IP
+    sudo vi /etc/network/interfaces
+    iface eth0 inet manual
+    auto eth0
+ 
+    树莓派的WLAN0关闭
+    sudo vi /etc/network/interfaces
+    allow-hotplug wlan0
+    iface wlan0 inet manual
+    #    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+ 
+    树莓派修改反向代理设置 => 
+    sudo vi /etc/nginx/nginx.conf
+    stream {
+            upstream video {
+                    server 192.168.1.64:80 weight=1 max_fails=3 fail_timeout=30s;
+            }
+            upstream rtsp {
+                    server 192.168.1.64:554 weight=1 max_fails=3 fail_timeout=30s;
+            }
+            upstream service {
+                    server 192.168.1.64:8000 weight=1 max_fails=3 fail_timeout=30s;
+            }
+ 
+2017/05/20
+    F27 based on F26
+    1. 需要从置城的sh008中拷贝出来，加入F28中，F27并未包含 -- add protection during hcu & hcudb.sql upgrade, hcuswdb.sh updated
+    2. 增加每分钟检查umtskeeper是否在运行的脚本
+    3. 增加每分钟检查ngrok是否在运行的脚本
+    4. 暂时加入创建/dev/hcu_serial0和/dev/hcu_serial1的文件，当实际并未出现时仍需要修改
+        sudo vi /etc/udev/rules.d/60-usb-serial.rules
+            KERNELS=="1-1.5", SUBSYSTEMS=="usb", DRIVERS=="usb", ATTRS{idVendor}=="10c4", SYMLINK+="hcu_serial0"
+            KERNELS=="1-1.3", SUBSYSTEMS=="usb", DRIVERS=="usb", ATTRS{idVendor}=="067b", SYMLINK+="hcu_serial1"
+        sudo udevadm trigger
+        udevadm info --name=/dev/ttyUSB0 --attribute-walk | grep cp210x
+        udevadm info --name=/dev/ttyUSB1 --attribute-walk | grep pl2303
+ 
+2017/02/24
+    F26 based on F25
+    1. crontab, run hcuswdb.ch every 30 minutes
+    2. updated hcu.sh, fix bug of ngrok port reporting to xiaohuiyun
+    3. fixed bug of hcuswdb.sh, use systemctl to stop and start hcu while upgrade
+    4. modify hcu.sh, sleep ramdom seconds to trigger sw upgrade
+ 
+2017/02/20
+    F25 based on F24
+    1. optimized directory to /var/hcu
+    2. use systemd startup for hcu, instead of init method
+    3. copied hcuboot.cfg in, hcu name inside will be used to set db locally and in xiaohuiyun
+    4. report wlan0 mac, wlan0 ip, eth0 and ngrok parameters to xiaohuiyun database when start up each time
+     
+2017/02/16
+    F24 based on F23
+    1. add wifi home connection of ZSC
+    2. optimized hcuswdb.sh to download and upgrade target hcu and db
+    3. Protection of regular restart of ngrok daily @04:40
+    4. sudo mkdir -p /var/hcu/cfg, sudo chmod 777 -R /var/hcu, move below program and log there
+        - sudo nano /etc/init.d/hcu.sh, replace /home/pi with /var/hcu
+        - cp /home/pi/hcu /var/hcu/hcu
+        - mkdir /var/hcu/image_version, cp /home/pi/image_version/* /var/hcu/image_version/, rm -r /var/hcu/image_version
+        - crontab -e
+        - mv ngrok directory from /home/pi to /var/hcu
+        - sudo nano /etc/systemd/system/ngrok.service
+        - hcuboot.cfg
+        - mv /home/pi/umtskeeper /var/hcu/umtskeeper
+        - cp F24.txt to /var/hcu/image_version
+ 
+2017/02/14
+    F23 based on F22 small
+    1. 增加NFS功能，默认关闭
+    2. 增加wireshark功能，如需使用，VNC登录，开启命令窗口，gksu wireshark
+    3. 完善脚本，根据/home/pi/image_version更新小慧云数据库iot_inventory中的image_version字段
+ 
+2017/01/12
+    RASPBIAN_JESSIE_F22_Eclipse_Reinstall_Zoneminder_remove-small.IMG based on RASPBIAN_JESSIE_F22_Eclipse_Reinstall_Zoneminder_remove.IMG
+    1. image缩小到10G，以便后期适应稍小一些的Micro-SD卡
+    2. 新的Micro-SD写入这个image之后，需要采取扩展的操作
+        sudo raspi-config --expand-rootfs
+        sudo restart
+ 
+2017/01/08
+    RASPBIAN_JESSIE_F22_Eclipse_Reinstall_Zoneminder_remove.IMG based on RASPBIAN_JESSIE_F22_Eclipse_Reinstall_Zoneminder_remove.IMG
+    1. sudo apt-get update
+    2. sudo apt-get upgrade
+    3. sudo apt-get remove eclipse-cdt
+    4. sudo apt-get install eclipse-cdt
+    5. sudo apt-get remove zoneminder
+ 
+2016/12/29
+    RASPBIAN_JESSIE_F21_HCUSWDB_AUTO_UPDATE.IMG based on RASPBIAN_JESSIE_F20_CleanInstallfromF14_NO_CANBUS.IMG
+    1. 增加HCU程序自动更新功能，crontab每天检查一次
+    2. 增加MYSQL数据库自动更新功能，crontab每天检查一次
+    3. 每天凌晨自动重启ngrok服务
+ 
+ 
+2016/12/14
+    RASPBIAN_JESSIE_F20_CleanInstallfromF14_NO_CANBUS.IMG based on RASPBIAN_JESSIE_F14.(USB_ADC).IMG
+    1. 接电视机、键盘、鼠标，增加xiaomi_65AB的WIFI接入
+    2. 更新hcu到版本 11d1460 bug fix for socket msg receive handling
+    3. 增加串口调试功能，用TTL转USB可通过GPIO连接，速率115200，8/N/1
+    - 树莓派关闭I2C功能，因发现I2C功能和串口调试功能有冲突，只能二选一
+    4. 添加FecundGroup的Wifi接入
+    5. 安装tightvncserver远程桌面，分辨率1600x900
+    6. 增加ngrok客户端，默认和小慧云服务器开机进行连接，提供http://pi.ngrok.hkrob.com:8080域名，以及30001、30002、30003、30004、30005端口
+    7. ETH0配置固定IP192.168.111.1，配额和网线连接的海康威视摄像头IP192.168.111.64进行工作
+    8. 增加华为3G上网卡开机启动功能
+    9. sudo apt-get update && sudo apt-get upgrade
+    10. 安装nginx1.9.12
+    11. 启动eclipse缓慢问题仍出现，未解决
+ 
+2016/12/06
+    RASPBIAN_JESSIE_F18_ETH0GW.IMG
+    - 增加华为3G上网卡开机启动功能
+ 
+2016/12/04
+    基于RASPBIAN_JESSIE_F17_SocketCAN.IMG
+    - 增加ngrok客户端，默认和小慧云服务器开机进行连接，提供http://pi.ngrok.hkrob.com:8080域名，以及30001、30002、30003、30004、30005端口
+    - ETH0配置固定IP192.168.111.1，配额和网线连接的海康威视摄像头IP192.168.111.64进行工作
+    - ~/workspace/hcu更新gitignore，忽略五个目录的二进制文件，Debug/*，Linux_Arm_A8/*，RasberryPi/*，Release/*，RemoteSystemsTempFiles/*
+ 
+2016/10/25
+    基于RASPBIAN_JESSIE_F14.(USB_ADC).IMG
+    - 增加串口调试功能，用TTL转USB可通过GPIO连接，速率115200，8/N/1
+    - 树莓派关闭I2C功能，因发现I2C功能和串口调试功能有冲突，只能二选一
+    - 添加了Xiaomi_65AB和FecundGroup的Wifi接入
+    - 运行sudo apt-get update
+    - 运行sudo apt-get upgrade，耗时2~3个小时
+    - 运行sudo rai-update，耗时1～2小时
+    - hcu版本R112，2016-10-31
+    - 安装tightvncserver远程桌面，分辨率1600x900
+
+
+//2017/6/24: Version7
+= 将MsgQue扩大
+    1.永久修改
+    root用户下修改/etc/sysctl.conf 文件。
+    参数msgmax,msgmni,msgmnb都已经成功修改  更改的方法：  在配置文件/etc/sysctl.conf中加上  kernel.msgmax=value  kernel.msgmni=value  kernel.msgmnb=value  然后运行sysctl -p  即可进行修改  
+    max queues system wide = // msgmni
+    max size of message (bytes) = //msgmax
+    default max size of queue (bytes) = //msgmnb
+使用ipcs -l或者ipcs -u来查看效果
+ 
+= 将core dump打开，并且在本地程序下生成coredump文件
+    1.打开/etc/security/limits.conf，里面有很详细的注释，找到如下设置(如果没有就插入)
+    * soft nofile 51200
+    * hard nofile 51200
+    2.编辑/etc/pam.d/common-session，加入一行
+    session required pam_limits.so
+    3.编辑/etc/profile，加入
+    ulimit -SHn 51200
+    ulimit -c unlimited
+完事以后，使用gdb xxx core就可以查看文件错误
+ 
+ 
+//2017/6/29: Version8
+= 安装Json-c
+    //获取源代码
+    [root]# yum install git
+    [root]# git clone https://github.com/json-c/json-c.git
+ 
+    //编译安装
+    [root]# cd json-c
+    [root]# ./autogen.sh
+    [root]# ./configure
+    [root]# make
+    [root]# make install
+ 
+= 查阅mysql占用了多少open files
+mysqladmin -uroot -p123456 processlist
+mysqladmin -uroot -p123456 status
+mysqladmin -uroot -p123456 variables | grep max_connections
+ 
+mysql -h localhost -u root -p123456
+  show processlist;
+  show status;
+ 
+= 2017/7/8: Version 9
+    24. json-c
+    - apt-get install autoconf
+    - apt-get install shtool
+    connect
+    https://github.com/json-c/json-c/tree/json-c-0.12
+    down load full packget of json-c-0.12.zip, and extract to one directory
+    enter the directory, and become root via "su" command, then:
+    #./configure
+    #make
+    #make install
+    25. inotify
+    apt-get install inotify-tools
+ 
+ 
+Notes:
+======
+=　打开root权限的文件夹：　nautilus
+ 
+
+
+
+================================
+2017/8/19 安装MTQQ
+================================
+Ref1: http://blog.csdn.net/zhang89xiao/article/details/51734536
+Ref2: http://blog.csdn.net/zhang89xiao/article/details/51734536
+ 
+PART1)　安装mosquitto服务器组件
+-------
+- 下载最新软件包　mosquitto-1.4.9.tar.gz  (LTS14 - 1.3.5)
+http://mosquitto.org/files/source/
+ 
+# 编译
+make
+# 安装
+sudo make install
+# 程序配置
+mv /etc/mosquitto/mosquitto.conf.example /etc/mosquitto/mosquitto.conf
+#配置项说明
+    # 服务进程的PID
+    #pid_file /var/run/mosquitto.pid
+    # 服务进程的系统用户
+    #user mosquitto
+    # 服务绑定的IP地址
+    #bind_address
+    # 服务绑定的端口号
+    #port 1883
+    # 允许的最大连接数，-1表示没有限制
+    #max_connections -1
+    # 允许匿名用户
+    #allow_anonymous true
+# 启动
+    mosquitto -c /etc/mosquitto/mosquitto.conf -d
+    或者采用以下方式启动，二选一    
+    sudo /etc/init.d/mosquitto start
+    成功将启动1883端口监听
+# 客户端测试
+    新建两个shell端口A/B
+    A 订阅主题：
+    mosquitto_sub -v -t location
+    mosquitto_sub -t 主题 -i 订阅端
+    B 推送消息：
+    mosquitto_pub -t location -h localhost -m "new location"
+    mosquitto_pub -t 主题 -i 发布端 -h 主机 -m 你好
+出现问题
+    【1】编译找不到openssl/ssl.h
+    【解决方法】——安装openssl
+    sudo yum install openssl-devel
+    【2】编译过程找不到ares.h
+    sudo yum install libc-ares-dev
+    mosquitto_internal.h:51:20: error: ares.h: No such file or directory
+    其实是因为它新加的功能的原因。打开config.mk文件。
+    吧WITH_SRV:=yes 改成WITH_SRV:=no 就可以编译了
+    【3】编译过程找不到uuid/uuid.h
+    yum install libuuid-devel
+    【4】使用过程中找不到libmosquitto.so.1
+    error while loading shared libraries: libmosquitto.so.1: cannot open shared object file: No such file or directory
+    【解决方法】——修改libmosquitto.so位置
+    # 创建链接
+    sudo ln -s /usr/local/lib/libmosquitto.so.1 /usr/lib/libmosquitto.so.1
+    # 更新动态链接库
+    sudo ldconfig
+    ＃ Error: Invalid user 'mosquitto'.  
+    groupadd mosquitto
+    useradd -g mosquitto mosquitto
+    【LTS16安装错误】
+    安装openssl-devel
+    centos：
+    yum install openssl-devel
+    ubuntu：
+    sudo apt-get install openssl
+    sudo apt-get install libssl-dev
+    apt-get install libc-ares-dev
+    apt-get install libc-ares2
+    如果不成功，可以试试 apt-get update --fix--missing
+=参考文件
+http://blog.csdn.net/fh15138451783/article/details/53160173
+http://www.cnblogs.com/littleatp/p/4835879.html
+ 
+PART2) 安装mqtt client组件
+-------
+=安装Eclipse Paho MQTTClient组件
+    Linux  https://www.eclipse.org/paho/clients/c/
+ 
+    The C client is built for Linux/Unix/Mac with make and gcc. To build:
+    git clone https://github.com/eclipse/paho.mqtt.c.git
+    cd org.eclipse.paho.mqtt.c.git
+    make
+    To install:
+    sudo make install
+ 
+- 增加编译库　paho-mqtt3c
+ 
+PART3) 配置conf以便启动服务进程
+-------
+ 
+ 
+ 
+ 
+代码的后续维护和操作
+◦git status
+git checkout -b feature
+◾查看是否有改动需要提交
+◦git add .
+◦git commit -m 'Create @ 2015/11/17 some comment to be added for submit'
+◦git checkout dev
+◦git merge feature
+◾将feature上的改动同步到dev
+git pull origin dev
+	----resolve conflict if something happened, and commit again
+	git add .
+	git commit -m 'Create @ 2015/11/17 some comment to be added for submit'
+◦git push origin dev
+◾将dev分支提交到github
+◦git checkout feature
+◾commit之后，切换回feature分支继续改动
+
+linux
+git clone git@github.com:Baxianxiahai/hcu.git
+git pull origin dev:dev
+
+。新CLONE一个账户
+1) ssh-keygen -t rsa -C "smdzjl@sina.cn", 回车, 回车，回车
+2) cat ~/.ssh/id_rsa.pub, 拷贝所有内容到github.com
+3) 登陆http://github.com, 右上角，setting, ssh-key, new SSH key
+4) cd /home/pi/workspace
+5) git clone git@github.com:Baxianxiahai/hcu.git
+6) git checkout -b feature
+
+
+
+Debug
+rt
+json-c
+mysqlclient
+pthread
+curl
+xml2
+avcodec
+avformat
+avutil
+avdevice
+avdevice
+avfilter
+swscale
+m
+SDL2
+sqlite3
+paho-mqtt3c
+
+/usr/local/lib
+/root/ffmpeg_build/lib
+/usr/local/sqlite3/lib
+
+
+Release
+avcodec
+avformat
+avutil
+avdevice
+avfilter
+swscale
+SDL
+SDLmain
+m
+SDL2
+
+/usr/local/lib
+
+
+Linux_Arm_A8
+rt
+mysqlclient
+pthread
+xml2
+curl
+avcodec
+avfilter
+fdk-aac
+x264
+postproc
+avformat
+avutil
+avdevice
+swscale
+swresample
+m
+sqlite3
+ncurses
+stdc++
+c
+
+/usr/local/arm/linux_arm_a8_curl/lib
+/root/ffmpeg_build_arm/lib
+Linux_Arm_A8/
+/usr/local/arm/linux_arm_a8/lib
+/usr/local/mysql_arm/lib
+/usr/local/sqlite_arm/lib
+/usr/local/sqlite3_arm/lib
+/usr/local/ncurses5_arm/lib
+
+RasberryPi
+rt
+wiringPi
+mysqlclient
+pthread
+curl
+xml2
+avcodec
+avformat
+avutil
+avdevice
+avfilter
+swscale
+m
+sqlite3
+usb
+
+/usr/local/lib
+
+
+
+24. Successfully Backup & Restore procedure
+
+=== Files needed ===
+1) ubuntu-16.04.2-desktop-amd64.iso -> Ubuntu Live CD
+2) ubuntu-16.04.2-server-amd64.iso -> target system to be installed in SSD
+3) Partition 2 image: "Disk Image of sda2 (2017-04-15 1501).img"
+4) Partition 1 image: "Disk Image of sda1 (2017-04-15 1500).img"
+5) BFSC_UBUNTU_Fxx.IMG(or .7z): disk imgae created by Win32DiskImager in windows with
+   5.2) partition 1: ubuntu-16.04.2-desktop-amd64.iso  -> This is the Ubuntu Live
+   5.1) partition 2: rootfs with "Disk Image of sda2 (2017-04-15 1501).img" and "Disk Image of sda1 (2017-04-15 1500).img"
+6) isotousb_setup.exe, ISO to USB Tools from "www.isotousb.com: use to create bootable usbdisk from ISO file
+7) Win32DiskImager-0.9.5-binary.zip, Win32DiskImager: use to create/restore usb disk image
+
+=== You need to have two usb disk === 
+1) one to install burn Ubuntu Server (>2G is OK), to install OS, (Not Related to the backu, but used to have the initial OS setup in SSD)
+2) the other one (>32G), to save Ubuntu Live and also the backup partition image
+
+=== The Backup Procedure ====
+1) Source: OS/Ubuntu to be backup has been installed in CFast2.0 SSD Harddisk, and all HCU SW are deployed in it
+2) Saved In: The two partition of SSD Harddisk will be saved as two image file in the 2nd partition in Ubuntu Live usb disk
+
+=== Backup ====
+Step 1: Find a blank 32G usb disk
+Step 2: Insert the USB disk into any Ubuntu (could be the system to be backup in SSD), run "sudo gnome-disks &"
+Step 3: use gnome-disks to delete all partition in usb disk, and create two partitions: 
+   1) 1.7G ext4 named as "ubuntu", format it, it will be used to save "Ubuntu Live" (step 4)
+   2) all remaining as ext4 named as "rootfs", format it, it will be used to save the partition image in the SSD. (step 5 ~ 10)
+Step 4: In windows, use "ISO to USB" to burn "ubuntu-16.04.2-desktop-amd64" into USB disk of "ubuntu" (1st) partition
+Step 5: (If not) Insert the SSD HD (with Ok system to be backup) into AdvanTech, insert USB disk just burned with "Ubuntu Live".
+Step 6: Reboot AdvanTech and press ESC to BIOS, change the boot sequence to "boot from USB disk with "ubuntu Live""
+Step 7: !!!! In Grub memu after boot from Ubuntu Live, select "Try Ubuntu without installing" to boot Ubuntu Live, (NOT to install)
+Step 8: In the Ubuntu Live, click "dish", enter "terminal", run a terminal
+Step 9: In the terminial command prompt, run "sudo gnome-disks &", (must use sudo)
+Step 10: Carefully select for each of following two partition, run "Create Partition Image", save image to "rootfs"
+   1) 537M, FAT
+   2) 27G, ext4
+Step 11: Inter the USB disk back to windows, and create a "32G" usb disk image using "Win32DiskImager".
+
+=== Restore ===
+Step 1: Boot from Ubuntu Server usb disk, and install an Ubuntu server to SSD (choose "entire disk" during the Ubuntu installation !!!!)
+Step 2: After that, try to boot from SSD hardisk with ubuntu just installed, see whether it is working (should be working)
+Setp 3: Insert the usb disk created by above backup procedure into Advantech in Step 10) of Backup
+Step 4: reboot the machine and press ESC in BIOS, change the boot sequence to be boot from usb disk with Ubuntu Live
+Step 5: In the Ubuntu Live, click "dish", enter "terminal", run a terminal
+Step 6: In the ternimal command prompt, run "sudo gnome-disks &", (must use sudo)
+Step 7: Carefully select for each of following two partition, run "Restore Partition Image", get image from "rootfs", and 
+        make sure they are been restored one by one, and both needs to be restored !!!
+       1) 537M, FAT
+       2) 27G, ext4
+Step 8: reboot the machine, and entering BIOS and let the system to boot from SSD Ubuntu
+Step 9: Backup system should show !!!
+
+
+
+. Download ubuntu-14.04.5-server-amd64.iso
+
+ubuntu-14.04.5-server-amd64.iso
+ubuntu-16.04.2-server-amd64.iso -> select this
+
+
+2. How to make a ISO into USB disk:
+https://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows
+- download tools: https://rufus.akeo.ie/
+- Burn according to the instruction below: https://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows
+
+3. If you met with the follow error after boot from USB and start instalation:
+"Your installation CD-ROM couldn't be mounted..."
+
+http://askubuntu.com/questions/671159/bootable-usb-needs-cd-rom
+
+Just to note - I managed to go over this problem like this:
+
+Once I get the "Your installation CD-ROM couldn't be mounted..." message and I'm back at the main Ubuntu Server install screen, I simply plugged the USB thumbdrive out, then plugged it in again, and then after pressing the "detect CD" option, I got "The CD-ROM autodetection was successful... The installation will now continue." ... and so the installation continued.
+
+4. Install will continue, several options
+- No auto update
+- Install LAMP, OpenSSH, Java, etc
+- Choose one of the Eth port, make sure DHCP is working
+- Choose SCSI disk
+
+5. Reboot to tty1, no GUI
+6. Install GUI:
+
+https://linuxconfig.org/how-to-install-gui-desktop-environment-on-ubuntu-linux-14-04-lts-trusty-thar
+
+Choose: UNITY
+sudo apt-get install ubuntu-destop
+
+7. xinput-calibration, to calibrate touch screen
+sudo apt-get install xinput-calibrator
+
+sudo passwd root
+
+8. sudo apt-get install eclipse-cdt
+
+9. in Unity install Calibration Touchscreen
+
+10. in Unity intall Unity Tweak Tool
+apt-get install software-center
+
+11. sudo apt-get install fcitx
+
+12. Eclipse
+- sudo apt-get install openjdk-8-jdk
+- sudo apt-get install openjdk-8-jre
+- nano /etc/profile
+add following
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$CLASSPATH
+export PATH=:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$PATH
+
+- download explipse from www.eclipse.org
+
+extract to /usr/share/eclipse
+
+run /usr/share/eclipse/eclipse
+
+13. vncserver
+
+http://www.geekpills.com/operating-system/linux/configure-vnc-server-ubuntu-16-04
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-16-04
+
+13'result in loop login, very dangourouse
+- when login, press Ctrl+Alt+F1, switch to console login
+- root login
+- Delete /home/test/.Xauthourity
+
+http://www.linuxidc.com/Linux/2014-04/100677.htm
+sudo unity-control-center --overview
+
+14. Touch Calibration
+sudo xinput_calibrator
+output is:
+
+Calibrating EVDEV driver for "DIALOGUE INC PenMount USB" id=13
+    current calibration values (from XInput): min_x=933, max_x=95 and min_y=97, max_y=938
+
+Doing dynamic recalibration:
+    Setting calibration data: 935, 97, 96, 933
+    --> Making the calibration permanent <--
+  copy the snippet below into '/etc/X11/xorg.conf.d/99-calibration.conf' (/usr/share/X11/xorg.conf.d/ in some distro's)
+Section "InputClass"
+    Identifier    "calibration"
+    MatchProduct    "DIALOGUE INC PenMount USB"
+    Option    "Calibration"    "935 97 96 933"
+    Option    "SwapAxes"    "0"
+EndSection
+
+I/n Ubuntu LTS 16.04, new created file /usr/share/X11/xorg.conf.d/99-calibration.conf, copy the above:
+
+Section "InputClass"
+    Identifier    "calibration"
+    MatchProduct    "DIALOGUE INC PenMount USB"
+    Option    "Calibration"    "935 97 96 933"
+    Option    "SwapAxes"    "0"
+EndSection
+
+8. sudo apt-get install eclipse-cdt
+
+9. apt-get install onboard
+
+10. FFMPEG & CURL
+apt-get install ffmpeg
+
+apt-get install libcurl4-openssl-dev
+apt-get install libcurl4-nss-dev
+apt-get install libcurl4-gnutls-dev
+
+
+apt-get install libavformat-dev
+apt-get install libavcodec-dev
+apt-get install libswscale-dev
+apt-get install libavdevice-dev
+ 
+apt autoremove
+
+apt-get install libmysqlclient-dev
+apt-get install libsqlite3-dev
+
+apt-get install libusb-dev
+
+apt-get install libxml2-dev
+
+11. As the CAN need to have exact kernal version, so install linux kernal version of 4.4.0-38
+
+apt-get install linux-image-4.4.0-38
+apt-get install linux-headers-4.4.0-38
+apt-get install linux-signed-image-4.4.0-38
+apt-get install linux-tools-4.4.0-38
+apt-get install linux-image-extra-4.4.0-38
+
+reboot
+
+cd /boot/grub/
+vi grub.cfg -> change default kernal
+vi menu.lst 
+
+=== not sure whether it is useful ===
+   20  grub-install 
+   21  grub-mkconfig 
+   22  grub-mkimage 
+   23  grub-probe
+   24  grub-menulst2cfg 
+   25  grub-menulst2cfg -h
+
+
+12.=== CAN Interface ===
+
+use following driver:
+- usbcan_ubuntu16.04_4.4.0-38_x64_2016_11_02_redist
+
+Install the module to kernal via (need to install everytime reboot, TO)
+inmod usbcan.ko
+
+Test program can work via:
+
+./cantest 4 1 3 0x1C00 1 100 100
+
+root@ubuntu:/home/test/workspace/cantest/Debug# ./cantest
+test [DevType] [DevIdx] [ChMask] [Baud] [TxType] [TxSleep] [TxFrames]
+    example: test 16 0 3 0x1400 2 3 1000
+                  |  | | |      | | |
+                  |  | | |      | | |1000 frames / channel
+                  |  | | |      | |
+                  |  | | |      | |tx > sleep(3ms) > tx > sleep(3ms) ....
+                  |  | | |      |
+                  |  | | |      |0-normal, 1-single, 2-self_test, 3-single_self_test, 4-single_no_wait....
+                  |  | | |
+                  |  | | |0x1400-1M, 0x1c03-125K, ....
+                  |  | |
+                  |  | |bit0-CAN1, bit1-CAN2, bit2-CAN3, bit3-CAN4, 3=CAN1+CAN2, 7=CAN1+CAN2+CAN3
+                  |  |
+                  |  |Card0
+                  |
+                  |5-pci9820, 14-pci9840, 16-pci9820i, ....
+
+DevType: wharever is OK
+DevIdx: MUST BE 1
+ChMask: 1 for CAN0 (Tested OK), 2 for CAN1 (Not Tested)
+Baud: 1M: 0x1400, 500K: 0x1c00, 250K:: 0x1c01
+TxType: MUST BE 1, if 2 it is for self loop test
+TxSleep: in ms, so set to 1000 means 1 second
+TxFrames: Number of frame to send
+
+13. VNCServer
+(Not recorded)
+
+14. Kiosk for Ubuntu
+(not tested yet TODO)
+
+http://www.techpository.com/linux-how-to-setup-a-ubuntu-kiosk/
+http://askubuntu.com/questions/124759/customize-ubuntu-for-a-library-internet-kiosk
+http://www.instructables.com/id/Setting-Up-Ubuntu-as-a-Kiosk-Web-Appliance/?ALLSTEPS
+http://www.linuxidc.com/Linux/2014-09/106336.htm
+
+15.
+
+E: 无法获得锁 /var/lib/dpkg/lock - open (11: 资源暂时不可用)
+E: 无法锁定管理目录(/var/lib/dpkg/)，是否有其他进程正占用它？
+
+
+/home/test/Downloads/ubuntu-installation.txt
+
+16.
+
+已成功修复启动。
+
+请纸录以下URL：
+http://paste2.org/wkU5pg2V
+
+
+如果您仍然遇到引导问题，请在此 URL 处留言：
+boot.repair@gmail.com 或您最喜爱的论坛。
+
+现在您可以重新启动计算机。
+
+17. backup  （不可用）
+
+backup：
+tar cvpjf backup.tar.bz2 --exclude=/proc --exclude=/lost+found --exclude=/backup.tar.bz2 --exclude=/mnt --exclude=/sys --exclude=/home/test/workspace/hcu /
+
+restore：
+tar xvpfj backup.tar.bz2 -C /
+
+这个恢复了一次，但是导致系统启动不了，同事修复boot repair之后无法进入Unity界面
+
+Backup/Restore:
+https://ubuntuforums.org/showthread.php?t=35087
+
+
+18. 问题
+环境是研华工控机：
+Step 1: CFast SSD A安装Ubuntu
+Step 2: 启动A，可以OK
+Step 3：换一张不好的CFast SSD B，不能启动，B卡是有故障不能启动的
+Step 4：换回A，A不能启动了
+（非常奇怪）
+
+Step 1: CFast SSD A安装Ubuntu
+Step 2: 启动A，可以OK
+Step 3：将A通过读卡器插入Windows
+Step 4：将A插回工控机，仍然是OK的
+
+Step 1: CFast SSD A安装Ubuntu
+Step 2: 启动A，可以OK
+Step 3：将A通过读卡器插入Windows
+Step 4：用Ghost做了一次镜像（Option：Image All）（32G，快速压缩，35分钟）
+Step 5：启动A，可以OK
+Step 6: 通过Ghost制作CFast SSD B（32G，45分钟）
+Step 7: SSD B启动失败（出现找不到grubx64.efi错误）（BIOS选择的是EFI）
+Step 8：换回SSD A启动失败（出现找不到grubx64.efi错误）（BIOS选择的是EFI）
+Step 9：将SSD A插入读卡器，插入工控机的USB扩展口，进入BIOS，选择ubuntu（奇怪的是出现三个启动选项，ubuntu, windows, LEXAR）
+Step 10: 挂接在读卡器的SSD A可以正常启动了
+Step 11：将SSD A插回到工控机的CFast SSD接口，进入BIOS，选择ubuntu（奇怪的是出现三个启动选项，ubuntu, windows, LEXAR）
+Step 12：挂接在CFast SSD接口的SSD A可以正常启动了（神奇）
+Step 13：拔出卡A再次插入A，仍然是OK的
+
+Step 14：将SSD B插入读卡器，插入工控机的USB扩展口，进入BIOS，选择ubuntu（奇怪的是出现三个启动选项，ubuntu, windows, LEXAR）
+Step 15: 挂接在读卡器的SSD B无法启动，进入grub的界面
+Step 11：将SSD B插回到工控机的CFast SSD接口，进入BIOS，选择ubuntu（奇怪的是出现三个启动选项，ubuntu, windows, LEXAR）
+Step 12：挂接在CFast SSD接口的SSD B无法启动，进入grub的界面
+
+Step 13：将SSD A插回到工控机的CFast SSD接口，进入BIOS，选择P1（奇怪的是出现2个启动选项，P1，UEFI）
+Step 14：A无法启动，也不会进入Grub界面
+Step 15：将SSD A插入读卡器，插入工控机的USB扩展口，进入BIOS，选择ubuntu（奇怪的是出现三个启动选项，ubuntu, windows, LEXAR）
+Step 16：A可以正常启动（神奇）
+Step 17：将SSD A插回到工控机的CFast SSD接口，进入BIOS，选择ubuntu（奇怪的是出现三个启动选项，ubuntu, windows, LEXAR）
+Step 18：A可以正常启动（神奇）
+
+Step 19：尝试修复Ghost复制的SSD B
+Step 20：将SSD B插入CFast，无法启动
+Step 21：将Boot-Repair的U盘插入USB扩展口，启动BootRepair过程，但是无法修复
+
+总结1：安装好了的ubuntu的SSD硬盘，如果在CFast卡槽可以正常启动，会被上一次的启动的情况改写
+- 上一次启动正常（本卡重复拔出插入，包括改BIOS启动顺序），本次启动会正常，Boot不会被破坏
+- 上一次启动不正常（换了一个不能启动的卡，甚至空白卡），SSD会被改写，本次启动就会被破坏
+总结2：总结1不好的SSD无法再在CFast卡槽启动，但是可以通过连接在USB扩展读卡器的修复！！！（神奇！！！）
+总结3：Ghost目前无法100%复制，通过Ghost Image All选项备份的SSD硬盘，无法通过USB的扩展读卡器修复 -> 需要找100%的磁盘镜像工具，备份方法！！！
+ 
+总结4：安装好了的ubuntu的SSD硬盘，如果在USB通过读卡器可以正常启动，始终会正常启动（不会被破坏，即使前一次是否时空盘，还是不能启动的Ghost复制盘）
+
+总结5：目前没有发现好的SSD卡，由于插入Windows，以及制作Ghost的过程破坏启动
+
+总结6：通过Ghost的复制的SSD无法用BootRepair修复启动 -> 需要找100%的磁盘镜像工具，备份方法！！！
+
+19. Grub (not used)
+http://askubuntu.com/questions/100232/how-do-i-change-the-grub-boot-order
+https://www.linux.com/learn/how-rescue-non-booting-grub-2-linux
+
+20. cloneZilla.org (!!!! NOK !!!!, will destroy some of the file system)
+
+22. sudo apt-get install chromium-browser
+
+23. strange things:
+
+Findings:
+1. Insert in SSD Card, 32G will be 62533296 sector
+2. Intert in SSD USB reader, 32G will be 62533280 sector, DIFF!!!! from 62533296
+
+----------------------------------
+#fdisk -l
+
+Disk /dev/sda: 29.8 GiB, 32017047552 bytes, 62533296 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 40D31CEB-947E-4D5B-AEDB-F385BD10A89D
+
+Device        Start      End  Sectors  Size Type
+/dev/sda1      2048  1050623  1048576  512M EFI System
+/dev/sda2   1050624 54372351 53321728 25.4G Linux filesystem
+/dev/sda3  54372352 62531583  8159232  3.9G Linux swap
+
+
+GPT PMBR size mismatch (62533295 != 62533279) will be corrected by w(rite).
+The backup GPT table is corrupt, but the primary appears OK, so that will be used.
+Disk /dev/sdb: 29.8 GiB, 32017039360 bytes, 62533280 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 35C09BD5-4198-4EEF-880A-CA8E027ECDEC
+
+Device        Start      End  Sectors  Size Type
+/dev/sdb1      2048  1050623  1048576  512M EFI System
+/dev/sdb2   1050624 54372351 53321728 25.4G Linux filesystem
+/dev/sdb3  54372352 62531583  8159232  3.9G Linux swap
+
+24. Successfully Backup & Restore procedure
+
+=== Files needed ===
+1) ubuntu-16.04.2-desktop-amd64.iso -> Ubuntu Live CD
+2) ubuntu-16.04.2-server-amd64.iso -> target system to be installed in SSD
+3) Partition 2 image: "Disk Image of sda2 (2017-04-15 1501).img"
+4) Partition 1 image: "Disk Image of sda1 (2017-04-15 1500).img"
+5) BFSC_UBUNTU_Fxx.IMG: disk imgae created by Win32DiskImager in windows with
+   5.2) partition 1: ubuntu-16.04.2-desktop-amd64.iso
+   5.1) paetiyion 2: rootfs with "Disk Image of sda2 (2017-04-15 1501).img" and "Disk Image of sda1 (2017-04-15 1500).img"
+6) isotousb_setup.exe, ISO to USB Tools from "www.isotousb.com: use to create bootable usbdisk from ISO
+7) Win32DiskImager-0.9.5-binary.zip, Win32DiskImager: use to create usb disk image
+
+=== You need to have two usb disk === 
+1) one to install burn Ubuntu Server (>2G is OK), to install OS, 
+2) the other one (>32G), to save Ubuntu Live and also the backup dpaartition image
+
+=== Backup ====
+Step 1: Find a 32G usb disk
+Step 2: Insert the USB disk into any Ubuntu, run "sudo gnome-disks &"
+Step 3: delete all partition, and create two partitions: 
+   1) 1.7G ext4 named as "ubuntu", format it, it will be used to save "Ubuntu Live OS" (step 4)
+   2) all remaining ext4 named as "rootfs", format it, it will be used to save the partition image. (step 5 ~ 10)
+Step 4: In windows, use "ISO to USB" to burn "ubuntu-16.04.2-desktop-amd64" into USB disk of "ubuntu" partition
+Step 5: Insert the SSD HD (with Ok system to be backup) into AdvanTech, insert USB disk just burned with "Ubuntu Desktop".
+Step 6: Reboot AdvanTech and in BIOS, change the boot sequence to boot from USB disk with "ubuntu Desktop"
+Step 7: !!!! Select "Try Ubuntu without installing" !!! will boot Ubuntu Live, (NOT to install)
+Step 8: In the Ubuntu Live, click "dish", enter "term", run a terminal
+Step 9: In the command prompt, run "sudo gnome-disks &", (must sudo)
+Step 10: Carefully select for each of following two partition, run "Create Partition Image", save image to "rootfs"
+   1) 537M, FAT
+   2) 27G, ext4
+Step 11: Inter the USB disk back to windows, and create a "32G" usb disk image using "Win32DiskImager"
+
+=== Restore ===
+Step 1: Boot from Ubuntu Server usb disk, and install an Ubuntu server to SSD (choose "entire disk" !!!!)
+Step 2: Try to boot from SSD with ubuntu just installed, see whether it is working
+Setp 3: Insert the usb disk created by above backup procedure into Advantech
+Step 4: reboot the machine and and in BIOS, change the boot sequence to be boot from usb disk with live Ubuntu
+Step 5: In the Ubuntu Live, click "dish", enter "term", run a terminal
+Step 6: In the command prompt, run "sudo gnome-disks &",
+Step 7: Carefully select for each of following two partition, run "Restore Partition Image", get image from "rootfs", and make sure they are been restored one by one, and both needs to be restored
+       1) 537M, FAT
+       2) 27G, ext4
+Step 8: reboot the machine, and entering BIOS and let the system to boot from SSD ubuntu
+Step 9: Backup system should show !!!
+
+
+
+======================
+U17安装步骤
+======================
+1. 下载镜像，安装到VmWare，用户名字hitpony
+2. sudo passwd root, sudo passwd hitpony
+3. apt-get update, apt-get upgrade
+4. 安装桌面，sudo apt-get install ubuntu-destop
+5. 升级到最新版本：sudo apt-get dist-upgrade
+6. reboot, 设置启动无密码，桌面user-account, lock-off
+
+7. ===== lamp =====
+sudo apt-get install mysql-server
+apt-get install mysql-server
+apt-get install mysql-client libmysqlclient-dev
+  =>安装完成后查看服务：输入 sudo netstat -tap | grep mysql 显示监听的端口即表示安装成功
+apt-get install apache2
+  =>检查是否安装成功：打开本机的浏览器 输入 127.0.0.1 出现下图的界面即表示安装成功
+启动Apache配置测试：=> $ sudo apache2ctl configtest
+重启 Apache: => $ sudo systemctl restart apache2
+sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql
+=> 可以使用命令查看可用模块 $ apt-cache search php- | less
+sudo apt-get install phpmyadmin =>为了更方便的管理数据库 同时也建议安装phpmyadmin。命令行输入 ,中间会出现一次输入管理密码的提示，按照提示输入即可
+安装完成后需要将phpmyadmin的文件夹复制到www文件下进行管理：sudo cp /usr/share/phpmyadmin /var/www -a
+首先需要将www目录更改下所有权以便可以新建文档 输入 sudo chmod 777 /var/www
+sudo gedit /var/www/html/info.php
+测试 => http://127.0.0.1/info.php
+
+8 ===== phpmyadmin =====
+apt-get install phpmyadmin
+cd /etc/phpmyadmin
+cp apache.conf /etc/apache2/conf-available/
+cd /etc/apache2/conf-available
+mv apache.conf phpmyadmin.conf
+sudo a2enconf phpmyadmin
+service apache2 reload
+
+9. sudo apt-get install fcitx
+
+10. =======Eclipse============
+- sudo apt-get install eclipse-cdt
+- sudo apt-get install openjdk-8-jdk
+- sudo apt-get install openjdk-8-jre
+- gedit /etc/profile
+add following
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$CLASSPATH
+export PATH=:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$PATH
+安装最新版本的OXYGEN_R, C/C++软件体
+http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/oxygen/R/eclipse-cpp-oxygen-R-linux-gtk-x86_64.tar.gz&mirror_id=1222
+
+=>新版本Eclipse快捷键使用方式
+sudo gedit /usr/share/applications/eclipse.desktop   
+[Desktop Entry]   
+Encoding=UTF-8   
+Name=eclipse    
+Comment=Eclipse IDE    
+Exec=/opt/eclipse/eclipse    
+Icon=/opt/eclipse/icon.xpm    
+Terminal=false    
+StartupNotify=true    
+Type=Application    
+Categories=Application;Development;
+
+=>创建应用快捷键
+进入/usr/share/applications
+
+=>字体和大小设置
+Preference=>General=>Apperance=>Color&Fonts=>C/C++ Editor=>Courier 10 Regular
+
+
+11. =======FFMPEG & CURL=======
+apt-get install ffmpeg
+apt-get install libcurl4-openssl-dev
+apt-get install libcurl4-nss-dev
+apt-get install libcurl4-gnutls-dev
+apt-get install libavformat-dev
+apt-get install libavcodec-dev
+apt-get install libswscale-dev
+apt-get install libavdevice-dev
+apt autoremove
+apt-get install libmysqlclient-dev
+apt-get install libsqlite3-dev
+apt-get install libusb-dev
+apt-get install libxml2-dev
+sudo apt-get install sdl*
+sudo apt-get install libsdl2-2.0
+sudo apt-get install libsdl2-dev
+
+12 ========Install minicom=======
+sudo apt-get install minicom
+Then test with serial port at 115200 baud
+sudo minicom -D /dev/tty0 -b115200
+
+13 ========中文字体=======
+在search your computer中输入language support，然后点击搜索结果打开。
+选择下方的 Install/remove Languages
+在“支持的语言”列表中找到“Chinese（simplified）”，在右端打上勾，点击apply。
+弹出对话框，输入管理员密码
+开始安装……
+安装完成后点击close关闭language support。打开system settings选择user accounts。
+在user accounts将右边的language选为Chinese。
+按Ctrl+alt+t输入reboot重启系统，重启后系统语言就变成中文了。
+
+14 ========下载CHROME========
+下载地址：https://www.chrome64bit.com/index.php/google-chrome-64-bit-for-linux
+sudo dpkg -i xxxxx.deb  
+apt-get -f install
+
+15 ========设置屏幕分辨率========
+方法1）
+	sudo apt-get install vmware-manager
+	安装vmwaretools方法：VMware->虚拟机->重新安装VMwareTools
+方法2）
+如果想试试命令，也可以试试如下方式，不完美：
+	xrandr --output Virtual1 --mode 1600x900
+	#Set display resolution
+	cvt 1600 900 60
+	xrandr --newmode "1600x900_60.00"  118.25  1600 1696 1856 2112  900 903 908 934 -hsync +vsync
+	xrandr --addmode Virtual1 "1600x900_60.00"
+	xrandr -s 1600x900_60.00
+	xrandr --output Virtual1 --mode 1600x900_60.00
+方法3）
+	这里需要用到两个工具： xrandr 和 cvt 
+	1.用cvt增加一个新的分辨率，下面是创建一个1600x900，刷新频率为60hz的分辨率
+	cobbliu@x-serer:~$ cvt 1600 900 60
+	# 1280x1024 59.89 Hz (CVT 1.31M4) hsync: 63.67 kHz; pclk: 109.00 MHz
+	Modeline "1280x1024_60.00"  109.00  1280 1368 1496 1712  1024 1027 1034 1063 -hsync +vsync
+	2.将上面的Modeline用xrandr增加到显示器的分辨率列表中
+	cobbliu@x-serer:~$ xrandr --newmode "1600x900_60.00"  118.25  1600 1696 1856 2112  900 903 908 934 -hsync +vsync
+	3.用xrandr可以看到刚才新添加的模式
+	cobbliu@x-server:~$ xrandr
+	Screen 0: minimum 64 x 64, current 1600 x 900, maximum 16384 x 16384
+	VBOX0 connected 1280x960+0+0 0mm x 0mm
+	   1024x768       60.0 +   60.0  
+	   1600x1200      60.0  
+	   1440x1050      60.0  
+	   1280x960       60.0* 
+	   800x600        60.0  
+	   640x480        60.0  
+	  1280x1024_60.00 (0x14d)  109.0MHz
+	        h: width  1280 start 1368 end 1496 total 1712 skew    0 clock   63.7KHz
+	        v: height 1024 start 1027 end 1034 total 1063           clock   59.9Hz
+	4.用xrandr的–add-mode命令添加模式：
+	cobbliu@x-server:~$ xrandr --addmode Virtual1 "1600x900_60.00"
+	cobbliu@x-server:~$ xrandr
+	Screen 0: minimum 64 x 64, current 1280 x 960, maximum 16384 x 16384
+	VBOX0 connected 1280x960+0+0 0mm x 0mm
+	   1024x768       60.0 +   60.0  
+	   1600x1200      60.0  
+	   1440x1050      60.0  
+	   1280x960       60.0* 
+	   800x600        60.0  
+	   640x480        60.0  
+	   1280x1024_60.00   59.9  
+	可以看到，1600x900的分辨率已经添加到显示器的分辨率列表中了。
+	5.设置分辨率：
+	cobbliu@x-server:~$ xrandr -s 1600x900_60.00
+	OK了。
+	6.持久地记忆这个新添加的分辨率 在~/.xprofile中加入下面语句 xrandr --output Virtual1 --mode 1600x900_60.00
+
+16 ========系统开机自动登录，不需密码========
+打开 系统设置 中的 用户帐户。
+打开用户帐户设置窗口后，点击右上角的"解锁"按钮。
+同样会弹出密码认证窗口。
+输入正确密码，点击"授权"。
+成功授权后，我们发现登录选项相关的设置是可以设置的了。
+之前，是灰色的，不可选的。
+我们注意：目前 自动登录 状态是"关闭"状态。
+我们在自动登录右侧的按钮框上单击，将其设置为"开启"。
+OK。设置成功。
+我们再次点击设置窗口右上角的"锁定"，使其变灰，不可设置。
+现在我们可以重新启动测试下了。
+你会惊奇发现，系统自动进入桌面环境了，不需要我们输入密码啦，是不是很简单。
+
+17 ========科学上网利器（shadowsocks)========
+sudo add-apt-repository ppa:hzwhuang/ss-qt5  
+sudo apt-get update  
+sudo apt-get install shadowsocks-qt5  
+
+18 ========搜狗中文输入法=======
+（1）上网下载Linux版本搜狗输入法，注意32位还是64位，本人电脑64位
+（2）下载后查看所在文件夹路径，一般是/home/我的电脑（注意：自己设置的计算机名称）/下载  
+（3）打开终端。cd /home/我的电脑/下载         enter
+（4）sudo apt-get install -f
+（5）sudo dpkg -i sogoupinyin_2.1.0.0086_amd64.deb(注意：是自己下载的搜狗文件)
+（6）重启计算机
+（7）右上角输入法左键点击-->设置-->高级-->Fcitx设置（打开Fcitx设置）-->添加搜狗、键盘-英语，其他减去-->关掉此对话框，返回原来对话框点击确定
+
+sudo add-apt-repository ppa:fcitx-team/nightly
+sudo apt-get update
+sudo apt-get install fcitx
+sudo apt-get install fcitx-config-gtk
+sudo apt-get install fcitx-table-all
+sudo apt-get install im-switch
+sudo apt-get install gdebi  //特殊安装工具
+
+检查fcitx是否安装完成，win键搜索fcitx
+去搜狗官网下载linux版本的deb包
+sudo dpkg -i  安装包.deb
+在系统设置里面点击语言支持，将输入法从ibus改为fcitx
+注销一次
+找到fcitx的配置，将sougou chinese设为默认即可
+
+19 ========修改系统默认字体========
+打开Ubuntu的软件中心，搜索：tweak，然后安装【Unity Tweak Tool】这款软件
+打开刚刚安装的软件
+选择【字体】选项，进入后如图,进行更改字体
+
+20 ========安装JSON-C========
+apt-get install libtool
+    [root]# git clone https://github.com/json-c/json-c.git
+    或者从网站下载Master/zip: https://github.com/json-c/json-c-0.12.git
+    [root]# cd json-c
+    [root]# ./autogen.sh
+    [root]# ./configure
+    [root]# make
+    [root]# make install
+    
+21 ========安装MQTT========
+sudo apt-get install mosquitto*
+sudo /etc/init.d/mosquitto start
+成功将启动1883端口监听
+
+22 ========安装MQTT-Paho========
+安装Eclipse Paho MQTTClient组件
+    git clone https://github.com/eclipse/paho.mqtt.c.git
+    cd org.eclipse.paho.mqtt.c.git
+    make
+    To install:
+    sudo make install
+    sudo apt-get install openssl
+    sudo apt-get install libssl-dev  
+- 增加编译库　paho-mqtt3c
+apt-get install autoconf
+apt-get install shtool
+apt-get install inotify-tools
+sudo apt-get install libjsoncpp-dev
+
+23 ========安装Git========
+sudo apt-get install git-core
+
+24 ========安装wiringPi========
+sudo apt-get install libi2c-dev
+#获取安装包
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+git pull origin
+#编译并安装
+./build
+	#检查安装
+gpio -v
+gpio readall
+#apt-get install i2c-tools
+
+25 ========MsgQue/CoreDump等配置========
+	= 将MsgQue扩大
+	    1.永久修改
+	    root用户下修改/etc/sysctl.conf 文件。
+	    参数msgmax,msgmni,msgmnb都已经成功修改  
+	更改的方法：  在配置文件/etc/sysctl.conf中加上  kernel.msgmax=value  kernel.msgmni=value  kernel.msgmnb=value  然后运行sysctl -p  即可进行修改  
+	kernel.msgmnb=163840
+	    max queues system wide = // msgmni
+	    max size of message (bytes) = //msgmax
+	    default max size of queue (bytes) = //msgmnb
+	使用ipcs -l或者ipcs -u来查看效果
+	 
+	= 将core dump打开，并且在本地程序下生成coredump文件
+	    1.打开/etc/security/limits.conf，里面有很详细的注释，找到如下设置(如果没有就插入)
+	    * soft nofile 51200
+	    * hard nofile 51200
+	    2.编辑/etc/pam.d/common-session，加入一行
+	    session required pam_limits.so
+	    3.编辑/etc/profile，加入
+	    ulimit -SHn 51200
+	    ulimit -c unlimited
+	完事以后，使用gdb xxx core就可以查看文件错误
+	 
+	= 查阅mysql占用了多少open files
+	mysqladmin -uroot -p123456 processlist
+	mysqladmin -uroot -p123456 status
+	mysqladmin -uroot -p123456 variables | grep max_connections
+	 
+	mysql -h localhost -u root -p123456
+	  show processlist;
+	  show status;
+	 
+	= 打开root权限的文件夹：　nautilus
+	= 递进删除 rm -rf 目录名字
+
+26. =======ssh远程终端登录=======
+sudo apt-get install openssh-server
+ssh的默认端口是22，可以通过下面的配置文件更改，找到Port 22那一行，将22替换成一个自定义的端口
+sudo vim /etc/ssh/sshd_config
+更改端口后，需要使用参数-p指定端口来连接
+ssh -p 端口号 qingsword@192.168.1.100
+卸载ssh: sudo apt-get --purge remove openssh-server
+
+4	#ssh默认情况下不允许使用root用户登陆，如果想使用root用户登陆需要修改配置文件并重启ssh
+5	qing@qingsword.com:~$ sudo vim /etc/ssh/sshd_config
+6	#找到"PermitRootLogin"默认值是"without-password"，修改成
+7	PermitRootLogin yes
+8	#重启ssh服务即可用root用户登陆ssh
+9	qing@qingsword.com:~$ sudo service ssh restart
+连接完成后在服务端使用w命令显示
+
+
+27. =======libhcuvm库=======
+http://blog.csdn.net/weirancg/article/details/54730178
+- 制作好libhcuvm库，或者从百度云4.14.libhcuvm上下载，放入/usr/lib目录中，修改成７７７权限．文件名字为 "libhcuvm.so"
+- 执行ldconfig，一定要成功，不然不起作用
+- 采用Properites->C/C++ Build->Settings->Cross Gcc Linker->Libraries添加动态库
+- 采用Properites->C/C++ Build->Settings->Cross Gcc Linker->Miscellaneous->Other objects添加静态库。
+- 库的名字使用"hcuvm"，不得使用"libhcuvm"，不然也不会成功
+
+28. =======hcu-cron-自动升级替换=======
+	1. 编辑升级脚本
+	sudo vi /var/hcu/hcuupgrade.sh
+	hcuupgrade.sh
+	sudo chmod 777 /var/hcu/hcuupgrade.sh
+
+	2. 增加log文件
+	touch /var/hcu/hcuupgrade.log
+	sudo chmod 666 /var/hcu/hcuupgrade.log
+
+	3. 增加系统定时检查
+	sudo crontab -e
+	*/5 * * * * sudo /var/hcu/hcuupgrade.sh >> /var/hcu/hcuupgrade.log
+
+
+29. =======vncserver=======
+http://www.geekpills.com/operating-system/linux/configure-vnc-server-ubuntu-16-04
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-16-04
+http://blog.csdn.net/wuruiaoxue/article/details/52853003
+
+
+
+
+
+=====遗留问题=======
+1/ 分辨率设置不成功
+2/ Eclipse的图表不完美
+
+
+=====常用命令=====
+top -H -p1234 =>查阅线程运行情况
+htop  => 树形结构
+cp -rf ./* /var/www/html/
+
+
+
+

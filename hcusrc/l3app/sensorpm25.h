@@ -47,7 +47,7 @@ typedef struct gTaskPm25ContextElement
 	UINT8 busyCount;  //被重复访问，但状态一直处于忙的次数
 }gTaskPm25ContextElement_t;
 #define MAX_NUM_OF_SENSOR_PM25_INSTALLED 1
-typedef struct gTaskPm25Context
+typedef struct gTaskPmContext
 {
 	gTaskPm25ContextElement_t pm25[MAX_NUM_OF_SENSOR_PM25_INSTALLED];
 	UINT8 currentSensorId;

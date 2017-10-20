@@ -49,6 +49,7 @@
 #include <libxml/parser.h>
 #include <libxml/xmlstring.h>
 #include <linux/netdevice.h>
+#include <sys/prctl.h>
 #include <netinet/tcp.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -392,6 +393,10 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_RESP,
 	MSG_ID_SYSSWM_CLOUDVELA_SW_PACKAGE_REPORT,
 	MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,
+	MSG_ID_CLOUDVELA_TEST_COMMAND_REQ,
+	MSG_ID_CLOUDVELA_TEST_COMMAND_RESP,
+	MSG_ID_CLOUDVELA_TEST_COMMAND_REPORT,
+	MSG_ID_CLOUDVELA_TEST_COMMAND_CONFIRM,
 
 	//SENSOR-CLOUDVELA
 	MSG_ID_CLOUDVELA_EMC_DATA_REQ,
@@ -488,7 +493,6 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,
 	MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM,
 
-
 	//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
 	MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
 	MSG_ID_L3BFSC_CLOUDVELA_DATA_RESP,
@@ -501,6 +505,28 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_CLOUDVELA_STATISTIC_REPORT,
 	MSG_ID_CLOUDVELA_L3BFSC_STATISTIC_CONFIRM,
 
+	MSG_ID_CLOUDVELA_L3BFDF_DATA_REQ,
+	MSG_ID_L3BFDF_CLOUDVELA_DATA_RESP,
+	MSG_ID_L3BFDF_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_L3BFDF_DATA_CONFIRM,
+	MSG_ID_L3BFDF_CLOUDVELA_EVENT_REPORT,
+	MSG_ID_CLOUDVELA_L3BFDF_EVENT_CONFIRM,
+	MSG_ID_CLOUDVELA_L3BFDF_CTRL_REQ,
+	MSG_ID_L3BFDF_CLOUDVELA_CTRL_RESP,
+	MSG_ID_L3BFDF_CLOUDVELA_STATISTIC_REPORT,
+	MSG_ID_CLOUDVELA_L3BFDF_STATISTIC_CONFIRM,
+
+	MSG_ID_CLOUDVELA_L3BFHS_DATA_REQ,
+	MSG_ID_L3BFHS_CLOUDVELA_DATA_RESP,
+	MSG_ID_L3BFHS_CLOUDVELA_DATA_REPORT,
+	MSG_ID_CLOUDVELA_L3BFHS_DATA_CONFIRM,
+	MSG_ID_L3BFHS_CLOUDVELA_EVENT_REPORT,
+	MSG_ID_CLOUDVELA_L3BFHS_EVENT_CONFIRM,
+	MSG_ID_CLOUDVELA_L3BFHS_CTRL_REQ,
+	MSG_ID_L3BFHS_CLOUDVELA_CTRL_RESP,
+	MSG_ID_L3BFHS_CLOUDVELA_STATISTIC_REPORT,
+	MSG_ID_CLOUDVELA_L3BFHS_STATISTIC_CONFIRM,
+
 	//BFSC项目：L3BFSC SCALE_WEIGHT / CANITFLEO组合秤
 	MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
 	MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,
@@ -508,7 +534,6 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFSC_SYS_START_RESP,
 	MSG_ID_L3BFSC_CAN_SYS_STOP_REQ,
 	MSG_ID_CAN_L3BFSC_SYS_STOP_RESP,
-
 	MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  	//传感器新数据事件
 	MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
 	MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  		//出料确认
@@ -518,6 +543,29 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
 	MSG_ID_USBCAN_L2FRAME_RCV,  			//MYC 2017/05/15
 
+	//BFDF
+	MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
+	MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
+	MSG_ID_L3BFDF_CAN_SYS_SUSPEND_REQ,
+	MSG_ID_CAN_L3BFDF_SYS_SUSPEND_RESP,
+	MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,
+	MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP,
+	MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,
+	MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ,
+	MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,
+	MSG_ID_L3BFDF_CAN_WS_COMB_OUT,
+	MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,
+	MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
+
+	//BFHS
+	MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,
+	MSG_ID_CAN_L3BFHS_SYS_CFG_RESP,
+	MSG_ID_L3BFHS_CAN_SYS_SUSPEND_REQ,
+	MSG_ID_CAN_L3BFHS_SYS_SUSPEND_RESP,
+	MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ,
+	MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP,
+	MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,
+
 	//BFSC项目：BFSCUICOMM
 	MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,    //JSON文件变更通知
 	MSG_ID_UICOMM_L3BFSC_CMD_REQ,       	//命令请求
@@ -526,6 +574,13 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFSC_UICOMM_CFG_RESP,  		//配置结果
 	MSG_ID_UICOMM_CAN_TEST_CMD_REQ,  		//测试命令
 	MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
+
+	//BFDF
+	MSG_ID_UICOMM_L3BFDF_CMD_REQ,
+	MSG_ID_L3BFDF_UICOMM_CMD_RESP,
+	//BFHS
+	MSG_ID_UICOMM_L3BFHS_CMD_REQ,
+	MSG_ID_L3BFHS_UICOMM_CMD_RESP,
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -542,6 +597,14 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_ZHBL3MOD_EXG_CTRL_RESP,
 	MSG_ID_ZHBL3MOD_EXG_DATA_REPORT,
 
+	//L3HATE:测试环境对应的消息
+	MSG_ID_L3HATE_TC_START,
+	MSG_ID_ETH_L3HATE_FRAME_RCV,
+	MSG_ID_SPS_L3HATE_FRAME_RCV,
+	MSG_ID_CAN_L3HATE_FRAME_RCV,
+	MSG_ID_MQTT_L3HATE_FRAME_RCV,
+
+	//END
 	MSG_ID_COM_MAX, //Ending point
 
 }; //end of HCU_INTER_TASK_MSG_ID
@@ -759,7 +822,7 @@ typedef struct  sensor_ycjk_data_element //
 	INT32  winddirValue;
 	INT32  windspdValue;
 	INT32  noiseValue;
-	//INT32  pm1d0Value;
+	INT32  pm1d0Value;
 	INT32  pm2d5Value;
 	INT32  pm10Value;
 	INT32  tspValue;
@@ -924,7 +987,21 @@ typedef struct msgie_struct_bfsc_scale_weight_sta_element
 	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
 	UINT32 errNbr;			//出错次数
 }msgie_struct_bfsc_scale_weight_sta_element_t;
-
+typedef struct msgie_struct_bfdf_scale_weight_sta_element
+{
+	UINT32 combTimes;		//组合总次数
+	UINT32 tttTimes;		//组合出料次数
+	UINT32 tgvTimes;		//组合放弃次数
+	UINT32 combMatNbr;  	//组合的物料数量
+	UINT32 tttMatNbr;		//组合出料的物料数量
+	UINT32 tgvMatNbr;		//组合放弃的物料数量
+	UINT32 combAvgSpeed;	//组合平均速度
+	UINT32 totalWeight;		//总共处理的物料总重量
+	UINT32 totalMatNbr;  	//总共处理的物料总数量
+	UINT32 totalWorkMin;	//连续工作的总分钟数
+	UINT32 timeInUnix;  	//报告生成的unix时间，网络可能报告滞留
+	UINT32 errNbr;			//出错次数
+}msgie_struct_bfdf_scale_weight_sta_element_t;
 
 
 
@@ -1041,14 +1118,25 @@ typedef struct msg_struct_com_pm_report
 }msg_struct_com_pm_report_t;
 
 //MSG_ID_COM_MQTT_SEND,
+#define HCU_SYSMSG_MQTT_DESC_MAX_LEN  200
 typedef struct msg_struct_com_mqtt_send
 {
+	UINT32 destId;
+	UINT32 topicId;
+	UINT32 cmdId;
+	INT32  cmdValue;
+	char   jsonCont[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
 	UINT32 length;
 }msg_struct_com_mqtt_send_t;
 
 //MSG_ID_COM_MQTT_RCV,
 typedef struct msg_struct_com_mqtt_rcv
 {
+	UINT32 srcId;
+	UINT32 topicId;
+	UINT32 cmdId;
+	INT32  cmdValue;
+	char   jsonCont[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
 	UINT32 length;
 }msg_struct_com_mqtt_rcv_t;
 
@@ -2146,6 +2234,62 @@ typedef struct msg_struct_cloudvela_sysswm_sw_package_confirm
 	UINT32 length;
 }msg_struct_cloudvela_sysswm_sw_package_confirm_t;
 
+//MSG_ID_CLOUDVELA_TEST_COMMAND_REQ,
+#define HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN 50
+typedef struct msg_struct_cloudvela_test_command_req
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReq;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   desc[HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN];
+	UINT32 length;
+}msg_struct_cloudvela_test_command_req_t;
+
+//MSG_ID_CLOUDVELA_TEST_COMMAND_RESP,
+typedef struct msg_struct_cloudvela_test_command_resp
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseResp;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   desc[HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN];
+	UINT32 length;
+}msg_struct_cloudvela_test_command_resp_t;
+
+//MSG_ID_CLOUDVELA_TEST_COMMAND_REPORT,
+typedef struct msg_struct_cloudvela_test_command_report
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseReport;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   desc[HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN];
+	UINT32 length;
+}msg_struct_cloudvela_test_command_report_t;
+
+//MSG_ID_CLOUDVELA_TEST_COMMAND_CONFIRM,
+typedef struct msg_struct_cloudvela_test_command_confirm
+{
+	msgie_struct_bh_com_head_t comHead;
+	UINT8  baseConfirm;
+	UINT32 testCmdId;
+	UINT32 testCmdPar1;
+	UINT32 testCmdPar2;
+	UINT32 testCmdPar3;
+	UINT32 testCmdPar4;
+	char   desc[HCU_SYSMSG_SYSPM_TEST_COMMAND_DESC_MAX_LEN];
+	UINT32 length;
+}msg_struct_cloudvela_test_command_confirm_t;
 
 //CANITF
 //MSG_ID_CANITFLEO_DATA_REPORT,
@@ -2346,78 +2490,192 @@ typedef struct msg_struct_cloudvela_l3bfsc_statistic_confirm
 }msg_struct_cloudvela_l3bfsc_statistic_confirm_t;
 
 
+//MSG_ID_CLOUDVELA_L3BFDF_DATA_REQ,
+typedef struct msg_struct_cloudvela_l3bfdf_data_req
+{
+	UINT8  baseReq;
+	UINT8  reqType;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfdf_data_req_t;
+
+//MSG_ID_L3BFDF_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_l3bfdf_cloudvela_data_resp
+{
+	UINT8  baseResp;
+	UINT8  type;			//数据汇报的类型
+	UINT8  dataFormat;
+	msgie_struct_bh_com_head_t comHead;
+	msgie_struct_bfdf_scale_weight_sta_element_t sta;
+	UINT32 length;
+}msg_struct_l3bfdf_cloudvela_data_resp_t;
+
+//MSG_ID_L3BFDF_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_l3bfdf_cloudvela_data_report
+{
+	UINT8  baseReport;
+	UINT8  type;			//数据汇报的类型
+	UINT8  dataFormat;
+	msgie_struct_bh_com_head_t comHead;
+	msgie_struct_bfdf_scale_weight_sta_element_t sta;
+	UINT32 length;
+}msg_struct_l3bfdf_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFDF_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfdf_data_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfdf_data_confirm_t;
+
+//MSG_ID_L3BFDF_CLOUDVELA_EVENT_REPORT,
+typedef struct msg_struct_l3bfdf_cloudvela_event_report
+{
+	UINT8  baseReport;
+	UINT8  eventType;
+	UINT8  sensorId;
+	UINT16 eventValue;
+	UINT16 cause;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfdf_cloudvela_event_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFDF_EVENT_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfdf_event_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfdf_event_confirm_t;
+
+//MSG_ID_CLOUDVELA_L3BFDF_CTRL_REQ,
+typedef struct msg_struct_cloudvela_l3bfdf_ctrl_req
+{
+	UINT8  baseReq;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfdf_ctrl_req_t;
+
+//MSG_ID_L3BFDF_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_l3bfdf_cloudvela_ctrl_resp
+{
+	UINT8  baseResp;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfdf_cloudvela_ctrl_resp_t;
+
+//MSG_ID_L3BFDF_CLOUDVELA_STATISTIC_REPORT,
+typedef struct msg_struct_l3bfdf_cloudvela_statistic_report
+{
+	UINT8  baseReport;
+	UINT8  staRepType;
+	UINT8  dataFormat;
+	msgie_struct_bh_com_head_t comHead;
+	msgie_struct_bfdf_scale_weight_sta_element_t sta;
+	UINT32 length;
+}msg_struct_l3bfdf_cloudvela_statistic_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFDF_STATISTIC_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfdf_statistic_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfdf_statistic_confirm_t;
+
+//MSG_ID_CLOUDVELA_L3BFHS_DATA_REQ,
+typedef struct msg_struct_cloudvela_l3bfhs_data_req
+{
+	UINT8  baseReq;
+	UINT8  reqType;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfhs_data_req_t;
+
+//MSG_ID_L3BFHS_CLOUDVELA_DATA_RESP,
+typedef struct msg_struct_l3bfhs_cloudvela_data_resp
+{
+	UINT8  baseResp;
+	UINT8  type;			//数据汇报的类型
+	UINT8  dataFormat;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfhs_cloudvela_data_resp_t;
+
+//MSG_ID_L3BFHS_CLOUDVELA_DATA_REPORT,
+typedef struct msg_struct_l3bfhs_cloudvela_data_report
+{
+	UINT8  baseReport;
+	UINT8  type;			//数据汇报的类型
+	UINT8  dataFormat;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfhs_cloudvela_data_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFHS_DATA_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfhs_data_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfhs_data_confirm_t;
+
+//MSG_ID_L3BFHS_CLOUDVELA_EVENT_REPORT,
+typedef struct msg_struct_l3bfhs_cloudvela_event_report
+{
+	UINT8  baseReport;
+	UINT8  eventType;
+	UINT8  sensorId;
+	UINT16 eventValue;
+	UINT16 cause;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfhs_cloudvela_event_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFHS_EVENT_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfhs_event_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfhs_event_confirm_t;
+
+//MSG_ID_CLOUDVELA_L3BFHS_CTRL_REQ,
+typedef struct msg_struct_cloudvela_l3bfhs_ctrl_req
+{
+	UINT8  baseReq;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfhs_ctrl_req_t;
+
+//MSG_ID_L3BFHS_CLOUDVELA_CTRL_RESP,
+typedef struct msg_struct_l3bfhs_cloudvela_ctrl_resp
+{
+	UINT8  baseResp;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfhs_cloudvela_ctrl_resp_t;
+
+//MSG_ID_L3BFHS_CLOUDVELA_STATISTIC_REPORT,
+typedef struct msg_struct_l3bfhs_cloudvela_statistic_report
+{
+	UINT8  baseReport;
+	UINT8  staRepType;
+	UINT8  dataFormat;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_l3bfhs_cloudvela_statistic_report_t;
+
+//MSG_ID_CLOUDVELA_L3BFHS_STATISTIC_CONFIRM,
+typedef struct msg_struct_cloudvela_l3bfhs_statistic_confirm
+{
+	UINT8  baseConfirm;
+	msgie_struct_bh_com_head_t comHead;
+	UINT32 length;
+}msg_struct_cloudvela_l3bfhs_statistic_confirm_t;
+
 //BFSC项目：L3BFSC SCALE_WEIGHT组合秤
-//MSG_ID_USBCAN_L2FRAME_RCV,  //MYC 2017/05/15
-#define HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE 256
-typedef struct msg_struct_bfsc_usbcan_l2frame_rcv
-{
-	UINT8  nodeId;
-	UINT8  databuf[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE+1];  //为了防止尾巴重叠
-	UINT32 validDataLen;
-	UINT32 length;
-}msg_struct_bfsc_usbcan_l2frame_rcv_t;
-
-//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
-typedef struct msg_struct_l3bfsc_can_ws_comb_out
-{
-	UINT8  combnbr;
-	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_comb_out_t;
-
-//MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  		//出料确认
-typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
-{
-	UINT8  sensorid;
-	UINT16 errCode;
-	UINT8  validFlag; //是否执行成功
-	UINT32 length;
-}msg_struct_can_l3bfsc_ws_comb_out_fb_t;
-
-//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
-typedef struct msg_struct_l3bfsc_can_ws_give_up
-{
-	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT32 length;
-}msg_struct_l3bfsc_can_ws_give_up_t;
-
-//MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   		//放弃物料确认
-typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
-{
-	UINT8  sensorid;
-	UINT16 errCode;
-	UINT8  validFlag; //是否执行成功
-	UINT32 length;
-}msg_struct_can_l3bfsc_ws_give_up_fb_t;
-
-//MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  	//传感器新数据事件
-typedef struct msg_struct_can_l3bfsc_new_ready_event
-{
-	UINT8  sensorid;
-	UINT32  sensorWsValue;
-	UINT32 length;
-}msg_struct_can_l3bfsc_new_ready_event_t;
-
-//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
-typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
-{
-	UINT8  sensorid;
-	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
-	UINT16 errCode;
-	UINT32 length;
-}msg_struct_l3bfsc_can_error_inq_cmd_req_t;
-
-//MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
-typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
-{
-	UINT8  sensorid;
-	UINT32 sensorWsValue;
-	UINT16 errCode;
-	UINT8  validFlag; //是否执行成功
-	UINT32 length;
-}msg_struct_can_l3bfsc_error_inq_cmd_resp_t;
-
-
 //MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
 #define HCU_SYSMSG_BFSC_ERR_CODE_INVALIID	  	0
 #define HCU_SYSMSG_BFSC_ERR_CODE_UNSPECIFIC  	1
@@ -2471,9 +2729,78 @@ typedef struct msg_struct_can_l3bfsc_sys_stop_resp
 	UINT32 length;
 }msg_struct_can_l3bfsc_sys_stop_resp_t;
 
+//MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT,  	//传感器新数据事件
+typedef struct msg_struct_can_l3bfsc_new_ready_event
+{
+	UINT8  sensorid;
+	UINT32  sensorWsValue;
+	UINT32 length;
+}msg_struct_can_l3bfsc_new_ready_event_t;
+
+//MSG_ID_L3BFSC_CAN_WS_COMB_OUT,  		//出料
+typedef struct msg_struct_l3bfsc_can_ws_comb_out
+{
+	UINT8  combnbr;
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_comb_out_t;
+
+//MSG_ID_CAN_L3BFSC_WS_COMB_OUT_FB,  		//出料确认
+typedef struct msg_struct_can_l3bfsc_ws_comb_out_fb
+{
+	UINT8  sensorid;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_comb_out_fb_t;
+
+//MSG_ID_L3BFSC_CAN_WS_GIVE_UP,   		//放弃物料
+typedef struct msg_struct_l3bfsc_can_ws_give_up
+{
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT32 length;
+}msg_struct_l3bfsc_can_ws_give_up_t;
+
+//MSG_ID_CAN_L3BFSC_WS_GIVE_UP_FB,   		//放弃物料确认
+typedef struct msg_struct_can_l3bfsc_ws_give_up_fb
+{
+	UINT8  sensorid;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
+	UINT32 length;
+}msg_struct_can_l3bfsc_ws_give_up_fb_t;
+
+//MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,  	//差错情况下的查询请求
+typedef struct msg_struct_l3bfsc_can_error_inq_cmd_req
+{
+	UINT8  sensorid;
+	UINT8  sensorBitmap[HCU_SYSMSG_L3BFSC_MAX_SENSOR_NBR];
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_l3bfsc_can_error_inq_cmd_req_t;
+
+//MSG_ID_CAN_L3BFSC_ERROR_INQ_CMD_RESP,   //差错情况下的查询反馈
+typedef struct msg_struct_can_l3bfsc_error_inq_cmd_resp
+{
+	UINT8  sensorid;
+	UINT32 sensorWsValue;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
+	UINT32 length;
+}msg_struct_can_l3bfsc_error_inq_cmd_resp_t;
+
+//MSG_ID_USBCAN_L2FRAME_RCV,
+#define HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE 256
+#define HCU_SYSMSG_USBCAN_MAX_RX_BUF_SIZE 	HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE
+typedef struct msg_struct_usbcan_l2frame_rcv
+{
+	UINT8  nodeId;
+	UINT8  databuf[HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE+1];  //为了防止尾巴重叠
+	UINT32 validDataLen;
+	UINT32 length;
+}msg_struct_usbcan_l2frame_rcv_t;
 
 //BFSCUICOMM
-
 //BFSCUI Json文件修改通知
 //MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND
 typedef struct msg_struct_inotify_uicomm_file_change_ind
@@ -2526,18 +2853,13 @@ typedef struct msg_struct_uicomm_can_test_cmd_req
 	UINT32 	command_flags;
 	UINT32 	cmdvalue;
 	UINT16 	length;
-//	UINT8 led1_command;
-//	UINT8 led2_command;
-//	UINT8 led3_command;
-//	UINT8 led4_command;
-//	UINT32 motor_command;
-//	UINT32 sensor_command;
 }msg_struct_uicomm_can_test_cmd_req_t;
 
 //MSG_ID_CAN_UICOMM_TEST_CMD_RESP,  		//测试结果
 typedef struct msg_struct_can_uicomm_test_cmd_resp
 {
 	UINT8   cmdid;
+	UINT8	streamId;
 	UINT8	sensorid;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
@@ -2545,6 +2867,237 @@ typedef struct msg_struct_can_uicomm_test_cmd_resp
 	UINT32  cmdvalue2;
 	UINT32 	length;
 }msg_struct_can_uicomm_test_cmd_resp_t;
+
+
+//BFDF
+//MSG_ID_UICOMM_L3BFDF_CMD_REQ,
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_INVALL  			0
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START  		1
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP  				2
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND  			3
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_RESUME  			4
+#define HCU_SYSMSG_BFDF_UICOMM_CMDID_NULL  				255
+typedef struct msg_struct_uicomm_l3bfdf_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 length;
+}msg_struct_uicomm_l3bfdf_cmd_req_t;
+
+//MSG_ID_L3BFDF_UICOMM_CMD_RESP,
+typedef struct msg_struct_l3bfdf_uicomm_cmd_resp
+{
+	UINT8   cmdid;
+	UINT8   validFlag;  //是否执行成功
+	UINT16  errCode;
+	UINT8	streamId;
+	UINT8	sensorid;
+	UINT32  length;
+}msg_struct_l3bfdf_uicomm_cmd_resp_t;
+
+//BFHS
+//MSG_ID_UICOMM_L3BFHS_CMD_REQ,
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_INVALL  			0
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START  		1
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP  				2
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND  			3
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME  			4
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_NULL  				255
+typedef struct msg_struct_uicomm_l3bfhs_cmd_req
+{
+	UINT8  cmdid;
+	UINT32 length;
+}msg_struct_uicomm_l3bfhs_cmd_req_t;
+
+//MSG_ID_L3BFHS_UICOMM_CMD_RESP,
+typedef struct msg_struct_l3bfhs_uicomm_cmd_resp
+{
+	UINT8   cmdid;
+	UINT8   validFlag;  //是否执行成功
+	UINT16  errCode;
+	UINT32  length;
+}msg_struct_l3bfhs_uicomm_cmd_resp_t;
+
+
+//BFDF项目
+//MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
+#define HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR		8
+#define HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR		4
+#define HCU_SYSMSG_BFDF_ERR_CODE_INVALIID	  	0
+#define HCU_SYSMSG_BFDF_ERR_CODE_UNSPECIFIC  	1
+#define HCU_SYSMSG_BFDF_ERR_CODE_TIME_OUT  		2
+#define HCU_SYSMSG_BFDF_ERR_CODE_NULL  		0xFFFF
+
+typedef struct msg_struct_l3bfdf_can_sys_cfg_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR][HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
+	UINT32 length;
+}msg_struct_l3bfdf_can_sys_cfg_req_t;
+
+//MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
+typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
+{
+	UINT8  streamId;
+	UINT8  boardId;
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfdf_sys_cfg_resp_t;
+
+//MSG_ID_L3BFDF_CAN_SYS_SUSPEND_REQ,
+typedef struct msg_struct_l3bfdf_can_sys_suspend_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR][HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
+	UINT32 length;
+}msg_struct_l3bfdf_can_sys_suspend_req_t;
+
+//MSG_ID_CAN_L3BFDF_SYS_START_RESP,
+typedef struct msg_struct_can_l3bfdf_sys_suspend_resp
+{
+	UINT8  streamId;
+	UINT8  boardId;
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfdf_sys_suspend_resp_t;
+
+//MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,
+typedef struct msg_struct_l3bfdf_can_sys_resume_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR][HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR];
+	UINT32 length;
+}msg_struct_l3bfdf_can_sys_resume_req_t;
+
+//MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP,
+typedef struct msg_struct_can_l3bfdf_sys_resume_resp
+{
+	UINT8  streamId;
+	UINT8  boardId;
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfdf_sys_resume_resp_t;
+
+//MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,  	//传感器新数据事件
+typedef struct msg_struct_can_l3bfdf_new_ready_event
+{
+	UINT8  streamId;
+	UINT32 sensorWsValue;
+	UINT32 length;
+}msg_struct_can_l3bfdf_new_ready_event_t;
+
+//MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ,
+typedef struct msg_struct_l3bfdf_can_snc_pullin_req
+{
+	UINT8  streamId;
+	UINT16 hopperId;
+	UINT32 length;
+}msg_struct_l3bfdf_can_snc_pullin_req_t;
+
+//MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,
+typedef struct msg_struct_can_l3bfdf_snc_pullin_resp
+{
+	UINT8  streamId;
+	UINT16 hopperId;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
+	UINT32 length;
+}msg_struct_can_l3bfdf_snc_pullin_resp_t;
+
+
+//MSG_ID_L3BFDF_CAN_WS_COMB_OUT,  		//出料
+typedef struct msg_struct_l3bfdf_can_ws_comb_out
+{
+	UINT8  streamId;
+	UINT16 hopperId;
+	UINT32 length;
+}msg_struct_l3bfdf_can_ws_comb_out_t;
+
+//MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,  		//出料确认
+typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
+{
+	UINT8  streamId;
+	UINT16 hopperId;
+	UINT16 errCode;
+	UINT8  validFlag; //是否执行成功
+	UINT32 length;
+}msg_struct_can_l3bfdf_ws_comb_out_fb_t;
+
+//MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
+typedef struct msg_struct_can_l3bfdf_basket_clean_ind
+{
+	UINT8  streamId;
+	UINT8  boardId;
+	UINT16 hopperId;
+	UINT32 length;
+}msg_struct_can_l3bfdf_basket_clean_ind_t;
+
+//BFHS项目
+//MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,
+#define HCU_SYSMSG_L3BFHS_MAX_SNC_BOARD_NBR		8
+#define HCU_SYSMSG_BFHS_ERR_CODE_INVALIID	  	0
+#define HCU_SYSMSG_BFHS_ERR_CODE_UNSPECIFIC  	1
+#define HCU_SYSMSG_BFHS_ERR_CODE_TIME_OUT  		2
+#define HCU_SYSMSG_BFHS_ERR_CODE_NULL  		0xFFFF
+
+typedef struct msg_struct_l3bfhs_can_sys_cfg_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFHS_MAX_SNC_BOARD_NBR];
+	UINT32 length;
+}msg_struct_l3bfhs_can_sys_cfg_req_t;
+
+//MSG_ID_CAN_L3BFHS_SYS_CFG_RESP,
+typedef struct msg_struct_can_l3bfhs_sys_cfg_resp
+{
+	UINT8  streamId;
+	UINT8  boardId;
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfhs_sys_cfg_resp_t;
+
+//MSG_ID_L3BFHS_CAN_SYS_SUSPEND_REQ,
+typedef struct msg_struct_l3bfhs_can_sys_suspend_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFHS_MAX_SNC_BOARD_NBR];
+	UINT32 length;
+}msg_struct_l3bfhs_can_sys_suspend_req_t;
+
+//MSG_ID_CAN_L3BFHS_SYS_START_RESP,
+typedef struct msg_struct_can_l3bfhs_sys_suspend_resp
+{
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfhs_sys_suspend_resp_t;
+
+//MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ,
+typedef struct msg_struct_l3bfhs_can_sys_resume_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFHS_MAX_SNC_BOARD_NBR];
+	UINT32 length;
+}msg_struct_l3bfhs_can_sys_resume_req_t;
+
+//MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP,
+typedef struct msg_struct_can_l3bfhs_sys_resume_resp
+{
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfhs_sys_resume_resp_t;
+
+//MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,  	//传感器新数据事件
+typedef struct msg_struct_can_l3bfhs_new_ready_event
+{
+	UINT32 sensorWsValue;
+	UINT32 length;
+}msg_struct_can_l3bfhs_new_ready_event_t;
+
+
+
+
+
+
+
 
 /*
  *
@@ -2995,7 +3548,6 @@ typedef struct  msg_struct_cloudvela_hsmmp_data_req
 	UINT8  optId;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	UINT32 equId;
-	//sensor_zhb_transport_format_dl_t zhbDl;
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_data_req_t;
 
@@ -3008,7 +3560,10 @@ typedef struct msg_struct_hsmmp_cloudvela_data_resp
 	UINT8  useroptid;
 	UINT8  cmdIdBackType; //指明是瞬时，还是周期性读数
 	sensor_hsmmp_link_element_t link;
-	//sensor_zhb_transport_format_ul_t zhbUl;
+	UINT8  dataFormat;
+	INT32 xPos;
+	INT32 yPos;
+	INT32 zoomPos;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_data_resp_t;
 
@@ -3022,7 +3577,8 @@ typedef struct  msg_struct_cloudvela_hsmmp_ctrl_req
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	//sensor_zhb_transport_format_dl_t zhbDl;
+	UINT8  motive;
+	UINT32 motiveValue;
 	UINT32 length;
 }msg_struct_cloudvela_hsmmp_ctrl_req_t;
 
@@ -3036,7 +3592,8 @@ typedef struct msg_struct_hsmmp_cloudvela_ctrl_resp
 	UINT8  optId;
 	UINT8  backType;
 	sensor_modbus_opertion_general_t opt;
-	//sensor_zhb_transport_format_ul_t zhbUl;
+	UINT8  motive;
+	UINT32 motiveValue;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_ctrl_resp_t;
 
@@ -3046,7 +3603,6 @@ typedef struct msg_struct_hsmmp_cloudvela_data_report
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_hsmmp_link_element_t link;
-	//sensor_zhb_transport_format_ul_t zhbUl;
 	UINT32 length;
 }msg_struct_hsmmp_cloudvela_data_report_t;
 
@@ -3059,12 +3615,15 @@ typedef struct msg_struct_cloudvela_hsmmp_data_confirm
 }msg_struct_cloudvela_hsmmp_data_confirm_t;
 
 //MSG_ID_PICTURE_CLOUDVELA_DATA_REPORT,
+#define HCU_SYSMSG_PICTURE_NAME_MAX_LEN    	 100
 typedef struct msg_struct_picture_cloudvela_data_report
 {
 	msgie_struct_bh_com_head_t comHead;
 	UINT8  baseReport;
 	sensor_hsmmp_link_element_t link;
 	UINT8  flag;
+	UINT32 eventId;
+	char   picName[HCU_SYSMSG_PICTURE_NAME_MAX_LEN];
 	UINT32 length;
 }msg_struct_picture_cloudvela_data_report_t;
 
@@ -3777,6 +4336,45 @@ typedef struct  msg_struct_l3mod_exg_data_report
 	msgie_struct_zhbhjt_element_ul2cloud_t ul2Cloud;
 }msg_struct_l3mod_exg_data_report_t;
 
+//L3HATE:测试环境对应的消息
+//MSG_ID_L3HATE_TC_START,
+typedef struct  msg_struct_l3hate_tc_start
+{
+	UINT32 length;
+}msg_struct_l3hate_tc_start_t;
+
+//MSG_ID_ETH_L3HATE_FRAME_RCV,
+#define HCU_SYSMSG_HATE_BUF_LEN_MAX  	HCU_SYSMSG_COM_MSG_BODY_LEN_MAX - 8
+typedef struct  msg_struct_l3hate_eth_frame_rcv
+{
+	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];
+	UINT32 bufValidLen;
+	UINT32 length;
+}msg_struct_l3hate_eth_frame_rcv_t;
+
+//MSG_ID_SPS_L3HATE_FRAME_RCV,
+typedef struct  msg_struct_l3hate_sps_frame_rcv
+{
+	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];
+	UINT32 bufValidLen;
+	UINT32 length;
+}msg_struct_l3hate_sps_frame_rcv_t;
+
+//MSG_ID_CAN_L3HATE_FRAME_RCV,
+typedef struct  msg_struct_l3hate_can_frame_rcv
+{
+	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];
+	UINT32 bufValidLen;
+	UINT32 length;
+}msg_struct_l3hate_can_frame_rcv_t;
+
+//MSG_ID_MQTT_L3HATE_FRAME_RCV,
+typedef struct  msg_struct_l3hate_mqtt_frame_rcv
+{
+	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];
+	UINT32 bufValidLen;
+	UINT32 length;
+}msg_struct_l3hate_mqtt_frame_rcv_t;
 
 /*
  *
@@ -3802,6 +4400,37 @@ typedef struct HcuSysMsgIeL3bfscContextStaElement
 	float	wsAvgTttMatWgt;			//TTT平均重量
 }HcuSysMsgIeL3bfscContextStaElement_t;
 
+typedef struct HcuSysMsgIeL3bfdfContextStaElement
+{
+	UINT32	wsIncMatCnt;  			//物料数量
+	float	wsIncMatWgt;  			//物料重量
+	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
+	UINT32	wsTttTimes;  			//TTT次数
+	UINT32	wsTgvTimes;  			//TGV次数
+	UINT32	wsTttMatCnt;			//TTT物料数量
+	UINT32	wsTgvMatCnt;			//TGV物料数量
+	float	wsTttMatWgt;			//TTT物料重量
+	float	wsTgvMatWgt;			//TGV物料重量
+	UINT32	wsAvgTttTimes;			//TTT平均次数
+	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
+	float	wsAvgTttMatWgt;			//TTT平均重量
+}HcuSysMsgIeL3bfdfContextStaElement_t;
+
+typedef struct HcuSysMsgIeL3bfhsContextStaElement
+{
+	UINT32	wsIncMatCnt;  			//物料数量
+	float	wsIncMatWgt;  			//物料重量
+	UINT32	wsCombTimes;  			//总共成功素搜到目标的次数
+	UINT32	wsTttTimes;  			//TTT次数
+	UINT32	wsTgvTimes;  			//TGV次数
+	UINT32	wsTttMatCnt;			//TTT物料数量
+	UINT32	wsTgvMatCnt;			//TGV物料数量
+	float	wsTttMatWgt;			//TTT物料重量
+	float	wsTgvMatWgt;			//TGV物料重量
+	UINT32	wsAvgTttTimes;			//TTT平均次数
+	UINT32	wsAvgTttMatCnt;			//TTT平均物料数
+	float	wsAvgTttMatWgt;			//TTT平均重量
+}HcuSysMsgIeL3bfhsContextStaElement_t;
 
 /*
  *

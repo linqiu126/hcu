@@ -463,7 +463,6 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 		    	continue;
 	    	}
 
-
 	    	//STEP2: 搜索数据库表单体
 	    	//搜索文件名字是否出现在数据库中，不是则删掉
 	        sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`dbname` = '%s')", ptr->d_name);
@@ -604,6 +603,15 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
         return FAILURE;
 	}
     sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_HALF_COMP);
+	result = mysql_query(sqlHandler, strsql);
+	if(result){
+    	mysql_close(sqlHandler);
+    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
+        return FAILURE;
+	}
+
+	//STEP3.5: 所有无效的记录
+    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`hwtype` = '0' OR `swtotallen` < '5' OR `swtotallen` > '100000000')");
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

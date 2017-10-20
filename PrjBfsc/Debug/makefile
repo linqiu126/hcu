@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include src/l4bi/subdir.mk
 -include src/l3uiconnect/subdir.mk
+-include src/l3hate/subdir.mk
 -include src/l3appctrl/subdir.mk
 -include src/l3app/subdir.mk
 -include src/l2frame/subdir.mk
@@ -57,7 +58,7 @@ all: PrjBfsc
 PrjBfsc: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	g++ -L/usr/local/lib -L/root/ffmpeg_build/lib -L/usr/local/sqlite3/lib -o "PrjBfsc" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/usr/local/lib -L/usr/lib -L/usr/local/sqlite3/lib -Xlinker -R/usr/lib -o "PrjBfsc" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -67,6 +68,5 @@ clean:
 	-@echo ' '
 
 .PHONY: all clean dependents
-.SECONDARY:
 
 -include ../makefile.targets

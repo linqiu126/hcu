@@ -100,27 +100,59 @@ OPSTAT fsm_mqtt_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 
 }
 
 //MQTT同步模式发送消息
-int hcu_mqtt_msg_send_syn_mode(char *topic, char *input)
+int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
 {
-    MQTTClient client;
+	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	msg_struct_l3hate_mqtt_frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3hate_mqtt_frame_rcv_t));
+	memcpy(snd.dataBuf, in->jsonCont, strlen((char*)in->jsonCont));
+	snd.bufValidLen = strlen((char*)in->jsonCont);
+	snd.length = sizeof(msg_struct_l3hate_mqtt_frame_rcv_t);
+	if (hcu_message_send(MSG_ID_MQTT_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_MQTT, &snd, snd.length) == FAILURE){
+		HcuErrorPrint("ETHERNET: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+	return SUCCESS;
+#else
+
+	MQTTClient client;
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
     MQTTClient_message pubmsg = MQTTClient_message_initializer;
     MQTTClient_deliveryToken token;
     int rc;
+    char input[1000];
+    char topic[100];
 
     MQTTClient_create(&client, MQTT_BROKER_ADDRESS, MQTT_CLIENTID_HCU, MQTTCLIENT_PERSISTENCE_NONE, NULL);
     conn_opts.keepAliveInterval = 20;
     conn_opts.cleansession = 1;
-
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
         HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
         //exit(EXIT_FAILURE);
     }
+
+    //生成json字符串
+    memset(input, 0, sizeof(input));
+    struct json_object *jsonobj = NULL;
+    jsonobj = json_object_new_object();
+    //不能用简单的==NULL来判定
+    //if (is_error(jsonobj))
+    if (jsonobj == NULL)
+    	HcuErrorPrint("MQTT: Failed to create json object!\n");
+    //json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
+    json_object_object_add(jsonobj, "CommandId", json_object_new_int(in->cmdId));
+    json_object_object_add(jsonobj, "CommandValue", json_object_new_int(in->cmdValue));
+    json_object_object_add(jsonobj, "HighLayerContent", json_object_new_string(in->jsonCont));
+    sprintf(input, "%s", json_object_to_json_string(jsonobj));
+    json_object_put(jsonobj);//free
     pubmsg.payload = input;
     pubmsg.payloadlen = strlen(input);
     pubmsg.qos = MQTT_QOS_CONST;
     pubmsg.retained = 0;
+    memset(topic, 0, sizeof(topic));
+    func_mqtt_clientid_translate_to_text(in->topicId, topic);
     MQTTClient_publishMessage(client, topic, &pubmsg, &token);
     HCU_DEBUG_PRINT_NOR("MQTT: Waiting for up to %d seconds for publication of %s\n, on topic %s for client with ClientID: %s\n", (int)(MQTT_TIMEOUT_CONST/1000), input, topic, MQTT_CLIENTID_HCU);
     rc = MQTTClient_waitForCompletion(client, token, MQTT_TIMEOUT_CONST);
@@ -128,6 +160,7 @@ int hcu_mqtt_msg_send_syn_mode(char *topic, char *input)
     MQTTClient_disconnect(client, 10000);
     MQTTClient_destroy(&client);
     return rc;
+#endif
 }
 
 /** @endcode
@@ -148,8 +181,8 @@ int func_mqtt_msg_send_asy_msgarrvd(void *context, char *topicName, int topicLen
   char* payloadptr;
 
   HCU_DEBUG_PRINT_NOR("MQTT: Message arrived\n");
-  HCU_DEBUG_PRINT_NOR("MQTT:      topic: %s\n", topicName);
-  HCU_DEBUG_PRINT_NOR("MQTT:    message: ");
+  HCU_DEBUG_PRINT_NOR("MQTT: topic: %s\n", topicName);
+  HCU_DEBUG_PRINT_NOR("MQTT: message: ");
 
   payloadptr = message->payload;
   for(i=0; i<message->payloadlen; i++)
@@ -169,13 +202,15 @@ void func_mqtt_msg_send_asy_connlost(void *context, char *cause)
 }
 
 //MQTT异步模式发送消息
-int hcu_mqtt_msg_send_asy_mode(char *topic, char *input)
+int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in)
 {
   MQTTClient client;
   MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
   MQTTClient_message pubmsg = MQTTClient_message_initializer;
   MQTTClient_deliveryToken token;
   int rc;
+  char input[1000];
+  char topic[100];
 
   MQTTClient_create(&client, MQTT_BROKER_ADDRESS, MQTT_CLIENTID_HCU, MQTTCLIENT_PERSISTENCE_NONE, NULL);
   conn_opts.keepAliveInterval = 20;
@@ -188,11 +223,29 @@ int hcu_mqtt_msg_send_asy_mode(char *topic, char *input)
 	  HcuErrorPrint("MQTT: Failed to connect, return code %d. So far continue to work!\n", rc);
       //exit(EXIT_FAILURE);
   }
+
+  //生成json字符串
+  memset(input, 0, sizeof(input));
+  struct json_object *jsonobj = NULL;
+  jsonobj = json_object_new_object();
+  //不能用简单的==NULL来判定
+  //if (is_error(jsonobj))
+  if (jsonobj == NULL)
+	  HcuErrorPrint("MQTT: Failed to create json object!\n");
+  //json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
+  json_object_object_add(jsonobj, "CommandId", json_object_new_int(in->cmdId));
+  json_object_object_add(jsonobj, "CommandValue", json_object_new_int(in->cmdValue));
+  json_object_object_add(jsonobj, "HighLayerContent", json_object_new_string(in->jsonCont));
+  sprintf(input, "%s", json_object_to_json_string(jsonobj));
+  json_object_put(jsonobj);//free
   pubmsg.payload = input;
   pubmsg.payloadlen = strlen(input);
   pubmsg.qos = MQTT_QOS_CONST;
   pubmsg.retained = 0;
   deliveredtoken_send = 0;
+
+  memset(topic, 0, sizeof(topic));
+  func_mqtt_clientid_translate_to_text(in->topicId, topic);
   MQTTClient_publishMessage(client, topic, &pubmsg, &token);
   HCU_DEBUG_PRINT_NOR("MQTT: Waiting for publication of %s\n, on topic %s for client with ClientID: %s\n", input, topic, MQTT_CLIENTID_HCU);
   while(deliveredtoken_send != token);
@@ -208,29 +261,82 @@ volatile MQTTClient_deliveryToken deliveredtoken_rcv;
 
 void func_mqtt_msg_rcv_delivered(void *context, MQTTClient_deliveryToken dt)
 {
-	HCU_DEBUG_PRINT_NOR("MQTT: Message with token value %d delivery confirmed\n", dt);
+  HCU_DEBUG_PRINT_NOR("MQTT: Message with token value %d delivery confirmed\n", dt);
   deliveredtoken_rcv = dt;
 }
 
 int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQTTClient_message *message)
 {
-  int i;
-  char* payloadptr;
+  //int i;
+  //char* payloadptr;
+  struct json_object *jsonobj = NULL;
+  //struct json_object *result_jsonobj = NULL;
+  struct json_object *cmdid_jsonobj = NULL;
+  struct json_object *cmdval_jsonobj = NULL;
+  struct json_object *cont_jsonobj = NULL;
 
-  HCU_DEBUG_PRINT_FAT("MQTT: Message arrived\n");
-  HCU_DEBUG_PRINT_FAT("MQTT: topic: %s\n", topicName);
-  HCU_DEBUG_PRINT_FAT("MQTT: message: ");
-
-  payloadptr = message->payload;
-  for(i=0; i<message->payloadlen; i++)
-  {
-      putchar(*payloadptr++);
-  }
-  putchar('\n');
+  //打印输出
+//  payloadptr = message->payload;
+//  for(i=0; i<message->payloadlen; i++)
+//  {
+//      putchar(*payloadptr++);
+//  }
+//  putchar('\n');
+  HCU_DEBUG_PRINT_NOR("MQTT: Message arrived, topic: %s, message: %s\n", topicName, message->payload);
 
   //上面这一段，未来将送到内部程序，并进行处理
   //也可以采取CallBack函数的形式，让内部任务自行处理具体的过程：传递消息内容以及长度
+  msg_struct_com_mqtt_rcv_t snd;
+  memset(&snd, 0, sizeof(msg_struct_com_mqtt_rcv_t));
+  snd.srcId = func_mqtt_clientid_translate_to_id(context);
+  snd.topicId = func_mqtt_topicid_translate_to_id(topicName);
+  jsonobj = json_tokener_parse(message->payload);
+  //不能用简单的==NULL来判定
+  //if (is_error(jsonobj))
+  if (jsonobj == NULL)
+	  HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Failed to create json object!\n");
+  cmdid_jsonobj = json_object_object_get(jsonobj, "CommandId");
+  cmdval_jsonobj = json_object_object_get(jsonobj, "CommandValue");
+  cont_jsonobj = json_object_object_get(jsonobj, "HighLayerContent");
 
+  //解码具体数值
+  if (cmdid_jsonobj != NULL){
+	  snd.cmdId = (UINT32)(json_object_get_int(cmdid_jsonobj));
+	  json_object_put(cmdid_jsonobj);
+  }
+  if (cmdval_jsonobj != NULL){
+	  snd.cmdValue = (UINT32)(json_object_get_int(cmdval_jsonobj));
+	  json_object_put(cmdval_jsonobj);
+  }
+  if (cont_jsonobj != NULL){
+	  UINT32 t = strlen(json_object_get_string(cont_jsonobj));
+	  strncpy(snd.jsonCont, json_object_get_string(cont_jsonobj), t<HCU_SYSMSG_MQTT_DESC_MAX_LEN?t:HCU_SYSMSG_MQTT_DESC_MAX_LEN);
+	  json_object_put(cont_jsonobj);
+  }
+  json_object_put(jsonobj);
+
+  //发送消息
+  snd.length = sizeof(msg_struct_com_mqtt_rcv_t);
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+  //发送命令给BFSCUICOMM
+  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFSCUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
+	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
+  //发送命令给L3AQYCG20
+  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_L3AQYCG20, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
+	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+//  //发送命令给BFSCUICOMM
+//  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFSCUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
+//	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+//  //发送命令给BFSCUICOMM
+//  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFSCUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
+//	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
+#else
+	#error Set project name id error!
+#endif
+  //Free Message
   MQTTClient_freeMessage(&message);
   MQTTClient_free(topicName);
   return 1;
@@ -238,8 +344,7 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 
 void func_mqtt_msg_rcv_connlost(void *context, char *cause)
 {
-	HCU_DEBUG_PRINT_NOR("MQTT: \nConnection lost\n");
-	HCU_DEBUG_PRINT_NOR("MQTT:      cause: %s\n", cause);
+	HCU_DEBUG_PRINT_NOR("MQTT: Connection lost, cause: %s\n", cause);
 }
 
 //MQTT接收消息
@@ -261,13 +366,15 @@ int hcu_mqtt_msg_rcv(void)
       HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
       //exit(EXIT_FAILURE);
   }
-  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_UI_TO_HCU, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
-  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_BH_TRANS, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
-  MQTTClient_subscribe(client, MQTT_TOPIC_UI_TO_HCU, MQTT_QOS_CONST);
-  MQTTClient_subscribe(client, MQTT_TOPIC_BH_TRANS, MQTT_QOS_CONST);
+  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_UI2HCU, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
+  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_BHTRANS, MQTT_CLIENTID_HCU, MQTT_QOS_CONST);
+  MQTTClient_subscribe(client, MQTT_TOPIC_UI2HCU, MQTT_QOS_CONST);
+  MQTTClient_subscribe(client, MQTT_TOPIC_BHTRANS, MQTT_QOS_CONST);
 
+  //退出条件，未来待完善
   do
   {
+	  hcu_usleep(100);
       ch = getchar();
   } while(ch!='Q' && ch != 'q');
 
@@ -275,6 +382,74 @@ int hcu_mqtt_msg_rcv(void)
   MQTTClient_destroy(&client);
   return rc;
 }
+
+//CLIENTID to CONTEXT transfer
+void func_mqtt_clientid_translate_to_text(UINT32 clId, char *output)
+{
+	if (clId <= MQTT_CLID_MIN) strncpy(output, MQTT_CLIENTID_MIN, strlen(MQTT_CLIENTID_MIN));
+	else if (clId == MQTT_CLID_HCU) strncpy(output, MQTT_CLIENTID_HCU, strlen(MQTT_CLIENTID_HCU));
+	else if (clId == MQTT_CLID_CTRLUI) strncpy(output, MQTT_CLIENTID_CTRLUI, strlen(MQTT_CLIENTID_CTRLUI));
+	else if (clId == MQTT_CLID_FINGERUI) strncpy(output, MQTT_CLIENTID_FINGERUI, strlen(MQTT_CLIENTID_FINGERUI));
+	else if (clId == MQTT_CLID_QRPRINTER) strncpy(output, MQTT_CLIENTID_QRPRINTER, strlen(MQTT_CLIENTID_QRPRINTER));
+	else if (clId == MQTT_CLID_DATABASE) strncpy(output, MQTT_CLIENTID_DATABASE, strlen(MQTT_CLIENTID_DATABASE));
+	else if (clId == MQTT_CLID_BHPROTO) strncpy(output, MQTT_CLIENTID_BHPROTO, strlen(MQTT_CLIENTID_BHPROTO));
+	else if (clId == MQTT_CLID_LOGERR) strncpy(output, MQTT_CLIENTID_LOGERR, strlen(MQTT_CLIENTID_LOGERR));
+	else if (clId == MQTT_CLID_LOGTRACE) strncpy(output, MQTT_CLIENTID_LOGTRACE, strlen(MQTT_CLIENTID_LOGTRACE));
+	else strncpy(output, MQTT_CLIENTID_MAX, strlen(MQTT_CLIENTID_MAX));
+}
+
+UINT32 func_mqtt_clientid_translate_to_id(char *input)
+{
+	if (strcmp(input, MQTT_CLIENTID_MIN) == 0) return MQTT_CLID_MIN;
+	else if (strcmp(input, MQTT_CLIENTID_HCU) == 0) return MQTT_CLID_HCU;
+	else if (strcmp(input, MQTT_CLIENTID_CTRLUI) == 0) return MQTT_CLID_CTRLUI;
+	else if (strcmp(input, MQTT_CLIENTID_FINGERUI) == 0) return MQTT_CLID_FINGERUI;
+	else if (strcmp(input, MQTT_CLIENTID_QRPRINTER) == 0) return MQTT_CLID_QRPRINTER;
+	else if (strcmp(input, MQTT_CLIENTID_DATABASE) == 0) return MQTT_CLID_DATABASE;
+	else if (strcmp(input, MQTT_CLIENTID_BHPROTO) == 0) return MQTT_CLID_BHPROTO;
+	else if (strcmp(input, MQTT_CLIENTID_LOGERR) == 0) return MQTT_CLID_LOGERR;
+	else if (strcmp(input, MQTT_CLIENTID_LOGTRACE) == 0) return MQTT_CLID_LOGTRACE;
+	else return MQTT_CLID_MAX;
+}
+
+//TOPICID to CONTEXT transfer
+void func_mqtt_topicid_translate_to_text(UINT32 tpId, char *output)
+{
+	if (tpId <= MQTT_TPID_MIN) strncpy(output, MQTT_TOPIC_MIN, strlen(MQTT_TOPIC_MIN));
+	else if (tpId == MQTT_TPID_UI2HCU) strncpy(output, MQTT_TOPIC_UI2HCU, strlen(MQTT_TOPIC_UI2HCU));
+	else if (tpId == MQTT_TPID_HCU2UI) strncpy(output, MQTT_TOPIC_HCU2UI, strlen(MQTT_TOPIC_HCU2UI));
+	else if (tpId == MQTT_TPID_CTRL2FINGERUI) strncpy(output, MQTT_TOPIC_CTRL2FINGERUI, strlen(MQTT_TOPIC_CTRL2FINGERUI));
+	else if (tpId == MQTT_TPID_QRPRINT) strncpy(output, MQTT_TOPIC_QRPRINT, strlen(MQTT_TOPIC_QRPRINT));
+	else if (tpId == MQTT_TPID_DATABASE) strncpy(output, MQTT_TOPIC_DATABASE, strlen(MQTT_TOPIC_DATABASE));
+	else if (tpId == MQTT_TPID_BHTRANS) strncpy(output, MQTT_TOPIC_BHTRANS, strlen(MQTT_TOPIC_BHTRANS));
+	else if (tpId == MQTT_TPID_LOGERR) strncpy(output, MQTT_TOPIC_LOGERR, strlen(MQTT_TOPIC_LOGERR));
+	else if (tpId == MQTT_TPID_LOGTRACE) strncpy(output, MQTT_TOPIC_LOGTRACE, strlen(MQTT_TOPIC_LOGTRACE));
+	else strncpy(output, MQTT_TOPIC_MAX, strlen(MQTT_TOPIC_MAX));
+}
+
+UINT32 func_mqtt_topicid_translate_to_id(char *input)
+{
+	if (strcmp(input, MQTT_TOPIC_MIN) == 0) return MQTT_TPID_MIN;
+	else if (strcmp(input, MQTT_TOPIC_UI2HCU) == 0) return MQTT_TPID_UI2HCU;
+	else if (strcmp(input, MQTT_TOPIC_HCU2UI) == 0) return MQTT_TPID_HCU2UI;
+	else if (strcmp(input, MQTT_TOPIC_CTRL2FINGERUI) == 0) return MQTT_TPID_CTRL2FINGERUI;
+	else if (strcmp(input, MQTT_TOPIC_QRPRINT) == 0) return MQTT_TPID_QRPRINT;
+	else if (strcmp(input, MQTT_TOPIC_DATABASE) == 0) return MQTT_TPID_DATABASE;
+	else if (strcmp(input, MQTT_TOPIC_BHTRANS) == 0) return MQTT_TPID_BHTRANS;
+	else if (strcmp(input, MQTT_TOPIC_LOGERR) == 0) return MQTT_TPID_LOGERR;
+	else if (strcmp(input, MQTT_TOPIC_LOGTRACE) == 0) return MQTT_TPID_LOGTRACE;
+	else return MQTT_TPID_MAX;
+}
+
+//HATE测试环境
+OPSTAT hcu_mqtt_hate_data_send(void *context, char *topicName, int payloadLen, char *payload)
+{
+	MQTTClient_message message;
+	message.payloadlen = payloadLen;
+	memcpy(message.payload, payload, message.payloadlen);
+	return func_mqtt_msg_rcv_msgarrvd(context, topicName, payloadLen, &message);
+}
+
 
 
 

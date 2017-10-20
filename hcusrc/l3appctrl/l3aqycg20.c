@@ -217,7 +217,7 @@ OPSTAT fsm_l3aqycg20_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 	//周期性聚合表生成
 	else if ((rcv.timeId == TIMER_ID_1S_L3AQYCG20_PERIOD_STA_SCAN) &&(rcv.timeRes == TIMER_RESOLUTION_1S)){
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation process\n\n\n\n\n\n\n\n\n\n\n\n\n");
+		HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation process\n\n\n");
 		//周期性聚合表生成
 		if (func_l3aqyc_time_out_aggregation_process() == FAILURE)
 			HcuErrorPrint("L3AQYCG20: Error process time out message!\n");
@@ -1508,7 +1508,8 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	//分钟统计表发送统计报告
 	if ((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1M_REPORT_CYCLE) == 0)
 	{
-		if((FALSE == gTaskL3aqycq20Context.MinReportFlag) || (TRUE == gTaskL3aqycq20Context.MinReportFlag))//always on for test
+		//if((FALSE == gTaskL3aqycq20Context.MinReportFlag) || (TRUE == gTaskL3aqycq20Context.MinReportFlag))//always on for test
+		if(TRUE == gTaskL3aqycq20Context.MinReportFlag)
 		{
 			msg_struct_l3mod_llczhb_data_report_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_data_report_t));
@@ -1542,7 +1543,8 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	//小时统计表发送统计报告
 	if ((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1H_REPORT_CYCLE) == 0)
 	{
-		if((FALSE == gTaskL3aqycq20Context.HourReportFlag) || (TRUE == gTaskL3aqycq20Context.HourReportFlag))//always on for test
+		//if((FALSE == gTaskL3aqycq20Context.HourReportFlag) || (TRUE == gTaskL3aqycq20Context.HourReportFlag))//always on for test
+		if(TRUE == gTaskL3aqycq20Context.HourReportFlag)
 		{
 			msg_struct_l3mod_llczhb_data_report_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_data_report_t));
@@ -1576,7 +1578,8 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	//天统计表发送统计报告
 	if ((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1D_REPORT_CYCLE) == 0)
 	{
-		if((FALSE == gTaskL3aqycq20Context.DayReportFlag) || (TRUE == gTaskL3aqycq20Context.DayReportFlag))//always on for test
+		//if((FALSE == gTaskL3aqycq20Context.DayReportFlag) || (TRUE == gTaskL3aqycq20Context.DayReportFlag))//always on for test
+		if(TRUE == gTaskL3aqycq20Context.DayReportFlag)
 		{
 			msg_struct_l3mod_llczhb_data_report_t snd;
 			memset(&snd, 0, sizeof(msg_struct_l3mod_llczhb_data_report_t));
@@ -1608,19 +1611,21 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 	}
 
 
-	HCU_DEBUG_PRINT_INF("L3AQYCG20 aggregation report to default cloud\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	//HCU_DEBUG_PRINT_INF("L3AQYCG20 aggregation report to default cloud\n\n\n\n");
 
 	//使用HUITP发送MSG_ID_YCJK_CLOUDVELA_DATA_REPORT报告给后台
 	//
-	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1M_REPORT_CYCLE) == 0) && (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP)){
+	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_3M_REPORT_CYCLE) == 0) && (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP)){
 
-	    HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation report to default cloud\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	    HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation report to default cloud\n\n\n");
 
 		//发送
 		msg_struct_ycjk_cloudvela_data_report_t snd;
 		memset(&snd, 0, sizeof(msg_struct_ycjk_cloudvela_data_report_t));
-		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
-			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		//strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameHome, strlen(zHcuSysEngPar.cloud.svrNameHome)<\
+			//sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameHome):sizeof(snd.comHead.destUser));
+		strncpy(snd.comHead.destUser, zHcuSysEngPar.cloud.svrNameDefault, strlen(zHcuSysEngPar.cloud.svrNameDefault)<\
+			sizeof(snd.comHead.destUser)?strlen(zHcuSysEngPar.cloud.svrNameDefault):sizeof(snd.comHead.destUser));
 		strncpy(snd.comHead.srcUser, zHcuSysEngPar.hwBurnId.equLable, strlen(zHcuSysEngPar.hwBurnId.equLable)<\
 				sizeof(snd.comHead.srcUser)?strlen(zHcuSysEngPar.hwBurnId.equLable):sizeof(snd.comHead.srcUser));
 		snd.comHead.timeStamp = time(0);
@@ -1630,18 +1635,43 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//CONTENT: TBD
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.ycjk.equipid = 1;
+		if(snd.ycjk.tempValue > HCU_L3AQYC_A01001_RANGE_MAX){
+			snd.ycjk.tempValue = HCU_L3AQYC_A01001_RANGE_MAX;
+		}
+		if(snd.ycjk.humidValue > HCU_L3AQYC_A01002_RANGE_MAX){
+			snd.ycjk.humidValue = HCU_L3AQYC_A01002_RANGE_MAX;
+		}
+		if(snd.ycjk.winddirValue > HCU_L3AQYC_A01008_RANGE_MAX){
+			snd.ycjk.winddirValue = HCU_L3AQYC_A01008_RANGE_MAX;
+		}
+		if(snd.ycjk.humidValue > HCU_L3AQYC_A01002_RANGE_MAX){
+			snd.ycjk.humidValue = HCU_L3AQYC_A01002_RANGE_MAX;
+		}
+		if(snd.ycjk.tspValue > HCU_L3AQYC_A34001_RANGE_MAX){
+			snd.ycjk.tspValue = HCU_L3AQYC_A34001_RANGE_MAX;
+			snd.ycjk.pm1d0Value = HCU_L3AQYC_A34001_RANGE_MAX;
+			snd.ycjk.pm2d5Value = HCU_L3AQYC_A34001_RANGE_MAX;
+			snd.ycjk.pm10Value = HCU_L3AQYC_A34001_RANGE_MAX;
+
+
+		}
+		if(snd.ycjk.noiseValue > HCU_L3AQYC_A50001_RANGE_MAX){
+			snd.ycjk.noiseValue = HCU_L3AQYC_A50001_RANGE_MAX;
+		}
+
 		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01001_Avg;
 		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01002_Avg;
 		snd.ycjk.winddirValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01008_Avg;
 		snd.ycjk.windspdValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01007_Avg;
 		snd.ycjk.tspValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;
+		snd.ycjk.pm1d0Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;
 		snd.ycjk.pm2d5Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
 		snd.ycjk.pm10Value = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a34001_Avg;//to be update later
 		snd.ycjk.noiseValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a50001_Avg;
-		snd.ycjk.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF2; //no need, caculate directly for l3aqycg20??
+		snd.ycjk.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3; //no need, caculate directly for l3aqycg20??
 		snd.ycjk.timeStamp = time(0);
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%d, Humid=%d, Windir=%d, Windspd=%d, tspValue=%d, pm2d5Value=%d, pm10Value=%d, noiseValue=%d\n\n\n\n\n\n\n\n",snd.ycjk.tempValue, snd.ycjk.humidValue, snd.ycjk.winddirValue, snd.ycjk.windspdValue, snd.ycjk.tspValue, snd.ycjk.pm2d5Value, snd.ycjk.pm10Value, snd.ycjk.noiseValue);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%d, Humid=%d, Windir=%d, Windspd=%d, tspValue=%d, pm2d5Value=%d, pm10Value=%d, noiseValue=%d\n\n\n",snd.ycjk.tempValue, snd.ycjk.humidValue, snd.ycjk.winddirValue, snd.ycjk.windspdValue, snd.ycjk.tspValue, snd.ycjk.pm2d5Value, snd.ycjk.pm10Value, snd.ycjk.noiseValue);
 
 
 		snd.length = sizeof(msg_struct_ycjk_cloudvela_data_report_t);

@@ -48,6 +48,7 @@ HcuFsmStateItem_t HcuFsmSpsvirgo[] =
 extern SerialPortCom_t gSerialPortMobus;
 UINT32 currentNoiseSensorId;  //当前正在工作的传感器
 SerialSpsMsgBuf_t currentSpsBuf;
+UINT32 Noise_AlarmFlag;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -63,6 +64,7 @@ OPSTAT fsm_spsvirgo_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, 
 OPSTAT fsm_spsvirgo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
+	Noise_AlarmFlag = 0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -189,7 +191,7 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		//对信息进行MODBUS协议的编码，包括CRC16的生成
 		memset(&currentSpsBuf, 0, sizeof(SerialSpsMsgBuf_t));
 
-		snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_INT_ONLY;
+		snd.noise.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF1;
 
 		//对发送数据进行编码
 
@@ -211,28 +213,12 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		{
 			gTaskL3aqycq20Context.eqtStatus.a50001_RS = OFF;
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
-			HcuErrorPrint("SPSVIRGO: Error send command to serials port!\n");
-
-			msg_struct_com_alarm_report_t snd;
-			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
-
-			snd.length = sizeof(msg_struct_com_alarm_report_t);
-			snd.usercmdid = L3CI_alarm;
-			snd.useroptid = L3PO_hcualarm_report;
-			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
-			snd.timeStamp = time(0);
-			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
-
-			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
-				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
-
+			HcuErrorPrint("SPSVIRGO: Error send Noise command to serials port!\n");
 			return FAILURE;
-		}else{
-			HCU_DEBUG_PRINT_INF("SPSVIRGO: Send SPSVIRGO noise req data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
+		}
+		else
+		{
+			HCU_DEBUG_PRINT_INF("SPSVIRGO: Send Noise req data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
 		}
 
 		//等待短时
@@ -244,16 +230,12 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 		//ret = hcu_spsapi_serial_port_get(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentSpsBuf中
 		ret = hcu_spsapi_serial_port_get(&(zHcuVmCtrTab.hwinv.sps232.sp), currentSpsBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentSpsBuf中
 
-		if (ret > 0)
+		if ((ret <= 0) && (Noise_AlarmFlag == OFF))
 		{
-			HcuDebugPrint("SPSVIRGO: Len %d\n", ret);
-			HcuDebugPrint("SPSVIRGO: Received noise resp data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15]);
 
-		}
-		else
-		{
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
-			HcuErrorPrint("SPSVIRGO: Can not read data from serial port, return of read %d \n", ret);
+			HcuErrorPrint("SPSVIRGO: Can not read Noise data from serial port, return of read %d \n", ret);
+			Noise_AlarmFlag = ON;
 
 			msg_struct_com_alarm_report_t snd;
 			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
@@ -262,19 +244,63 @@ OPSTAT fsm_spsvirgo_noise_data_read(UINT32 dest_id, UINT32 src_id, void * param_
 			snd.usercmdid = L3CI_alarm;
 			snd.useroptid = L3PO_hcualarm_report;
 			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-			snd.alarmServerity = ALARM_SEVERITY_HIGH;
-			snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+			snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+			snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_OFF;
 			snd.timeStamp = time(0);
 			snd.equID = rcv.equId;
-			snd.alarmType = ALARM_TYPE_SENSOR;
-			snd.alarmContent = ALARM_CONTENT_NOISE_NO_CONNECT;
+			snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_SENSOR;
+			snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_NO_CONNECT;
 
 			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
-				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SPSVIRGO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message erro//route to L3 or direct to cloudvela, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 
 			return FAILURE;
+
 		}
-//
+
+		else if ((ret <= 0) && (Noise_AlarmFlag == ON))
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
+			HcuErrorPrint("SPSVIRGO: Can not read Noise data from serial port, return of read %d \n", ret);
+			return FAILURE;
+		}
+
+
+		else if ((ret > 0) && (Noise_AlarmFlag == OFF))
+		{
+			//currentModbusBuf.curLen =ret;
+			HcuDebugPrint("SPSVIRGO: Received Noise Len %d\n", ret);
+			HcuDebugPrint("SPSVIRGO: Received Noise resp data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15]);
+
+		}
+
+		else if ((ret > 0) && (Noise_AlarmFlag == ON))
+		{
+
+			Noise_AlarmFlag = OFF;
+			//currentModbusBuf.curLen = ret;
+			HcuDebugPrint("SPSVIRGO: Received Noise Len %d\n", ret);
+			HcuDebugPrint("SPSVIRGO: Received Noise resp data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15]);
+
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
+
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+			snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+			snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_ON;
+			snd.timeStamp = time(0);
+			snd.equID = rcv.equId;
+			snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_SENSOR;
+			snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_NO_CONNECT;
+
+			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_SPSVIRGO, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "SPSVIRGO: Send message erro//route to L3 or direct to cloudvela, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+
+		}
+
 
 /*//
 		//放点假数据进行测试

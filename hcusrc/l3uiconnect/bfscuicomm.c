@@ -207,7 +207,7 @@ OPSTAT fsm_bfscuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, U
 //配置反馈
 OPSTAT fsm_bfscuicomm_l3bfsc_cfg_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret=0;
+	//int ret=0;
 
 	msg_struct_l3bfsc_uicomm_cfg_resp_t rcv;
 	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_uicomm_cfg_resp_t));
@@ -347,7 +347,7 @@ OPSTAT fsm_bfscuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 //具体扫描文件改变的回调函数
 OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	int ret = 0;
+	//int ret = 0;
 	UINT32  fileChangeContent = 0;
 	UINT8  sensorid = 0;
 
@@ -534,10 +534,8 @@ OPSTAT  func_bfscuicomm_cmdfile_json_parse(char *monitorJsonFile, L3BfscuiJsonCm
 			fclose( fileStream );
 
 			file_jsonobj = json_tokener_parse(inotifyReadBuf);
-			if (file_jsonobj == NULL){
-				json_object_put(file_jsonobj);  //释放Json Object指针
+			if (file_jsonobj == NULL)
 				HCU_ERROR_PRINT_BFSCUICOMM("BFSCUICOMM: Command file json_tokener_parse failure, [file=%s]  ! \n", monitorJsonFile);
-			}
 
 			//解析Start/Stop命令
 		   if ( json_object_object_get_ex(file_jsonobj, "start_cmd", &cmd_jsonobj)){

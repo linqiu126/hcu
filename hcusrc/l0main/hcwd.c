@@ -14,6 +14,12 @@
 //Main Entry
 int main(int argc, char* argv[])
 {
+	if(wiringPiSetup()==-1)
+		exit(1);
+
+	//if(wiringPiSetupGpio()==-1)
+		//exit(1);
+
 	//循环工作模式
 	while(1){
 		sleep(3);
@@ -28,10 +34,18 @@ void func_hcwd_feed_ext_watchdog(void)
 {
 #ifdef TARGET_RASPBERRY_PI3B
 	int i = 0;
+	pinMode(RPI_GPIO_PIN_EXT_WATCHDOG_FEED, OUTPUT);
 	for (i=0; i<RPI_GPIO_READ_REPEAT_TIMES; i++){
-		delayMicroseconds(10);
-	    pinMode(RPI_GPIO_PIN_EXT_WATCHDOG_FEED, OUTPUT);
+		delayMicroseconds(100000);
+		//sleep(1);
+	    //pinMode(RPI_GPIO_PIN_EXT_WATCHDOG_FEED, OUTPUT);
 	    digitalWrite(RPI_GPIO_PIN_EXT_WATCHDOG_FEED, 1);
+
+		delayMicroseconds(100000);
+	    //sleep(1);
+	    //printf("test \n");
+	    //pinMode(RPI_GPIO_PIN_EXT_WATCHDOG_FEED, OUTPUT);
+	    digitalWrite(RPI_GPIO_PIN_EXT_WATCHDOG_FEED, 0);
 	}
 #endif
 	return;
@@ -40,7 +54,11 @@ void func_hcwd_feed_ext_watchdog(void)
 void func_hcwd_read_ext_trigger_and_soft_shut_down(void)
 {
 	if (func_hcwd_read_ext_soft_shut_trigger_value() == TRUE){
-		system("shutdown -h now");
+		while(1){
+			system("shutdown -h now");
+			sleep(1);
+		}
+
 	}
 	return;
 }

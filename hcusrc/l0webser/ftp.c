@@ -158,18 +158,48 @@ OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename)
 
 	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
 	strcat(ftp_opt.url, filename);
-	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.url: %s \n", ftp_opt.url);
+	HCU_DEBUG_PRINT_CRT("L0SVRFTP: ftp_opt.url: %s \n", ftp_opt.url);
 
 	//直接使用上层传来的目录结构
 	strcat(ftp_opt.file, zHcuSysEngPar.swm.hcuSwActiveDir);
 	strcat(ftp_opt.file, filename);
-	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.file: %s \n", ftp_opt.file);
+	HCU_DEBUG_PRINT_CRT("L0SVRFTP: ftp_opt.file: %s \n", ftp_opt.file);
 
 	if(HCU_FTP_SVR_DOWNLOAD_SUCCESS == func_ftp_svr_download(ftp_opt)){
 		HCU_DEBUG_PRINT_INF("L0SVRFTP: HCU SW Download success.\n");
 		return SUCCESS;
 	}else{
 		HCU_ERROR_PRINT_TASK(TASK_ID_SVRCON, "L0SVRFTP: HCU SW Download failed.\n");
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT hcu_service_ftp_picture_upload_by_ftp(char *purefilename, char *dirfilename)
+{
+	HcuFtpServiceOptType_t ftp_opt;
+	char usrtmp[3] = ":";
+
+	//初始化
+	memset( (void *)&ftp_opt, 0, sizeof(HcuFtpServiceOptType_t));
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpUser);
+	strcat(ftp_opt.user_key, usrtmp);
+	strcat(ftp_opt.user_key, zHcuSysEngPar.cloud.cloudFtpPwd);
+	HCU_DEBUG_PRINT_INF("L0SVRFTP: ftp_opt.user_key: %s \n", ftp_opt.user_key);
+
+	strcat(ftp_opt.url, zHcuSysEngPar.cloud.cloudFtpAdd);
+	strcat(ftp_opt.url, purefilename);
+	HCU_DEBUG_PRINT_CRT("L0SVRFTP: ftp_opt.url: %s \n", ftp_opt.url);
+
+	//图片的文件名，包括文件路径： /var/www/html/pictures/HCU_G201_AQYC_SH188_hk201707290451.jpg
+	strcat(ftp_opt.file, dirfilename);
+	HCU_DEBUG_PRINT_CRT("L0SVRFTP: ftp_opt.file: %s \n", ftp_opt.file);
+
+	if(HCU_FTP_SVR_UPLOAD_SUCCESS == func_ftp_svr_upload(ftp_opt)){
+		HCU_DEBUG_PRINT_INF("L0SVRFTP: HCU Picture Upload success.\n");
+		return SUCCESS;
+	}else{
+		HCU_ERROR_PRINT_TASK(TASK_ID_SVRCON, "L0SVRFTP: HCU HCU Picture Upload failed.\n");
 	}
 
 	return SUCCESS;

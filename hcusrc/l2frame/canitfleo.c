@@ -43,13 +43,16 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
     {MSG_ID_COM_RESTART,					FSM_STATE_COMMON,            			fsm_canitfleo_restart},
 	{MSG_ID_COM_TIME_OUT,       			FSM_STATE_COMMON,          				fsm_canitfleo_timeout},
 
-    //Normal task status
-  #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)//correct for compiling error for AQYC by Shanchun
+    //Normal task status:任何项目都可能用到的部分
+#if ((HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID) \
+		|| (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)\
+		|| (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID))
 	{MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM, 	FSM_STATE_CANITFLEO_ACTIVED,     fsm_canitfleo_sysswm_inventory_confirm},
 	{MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM, 	FSM_STATE_CANITFLEO_ACTIVED,     fsm_canitfleo_sysswm_sw_package_confirm},
+#endif
 
-    //Normal task status
-//#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+    //Normal task status：BFSC
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	{MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_sys_cfg_req},  	//初始化配置
 	{MSG_ID_L3BFSC_CAN_SYS_START_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_can_sys_start_req},   	//人工命令
 	{MSG_ID_L3BFSC_CAN_SYS_STOP_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_can_sys_stop_req},   		//人工命令
@@ -60,8 +63,28 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 	{MSG_ID_L3BFSC_CAN_ERROR_INQ_CMD_REQ,   FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfsc_error_inq_cmd_req},//差错状态下的发送指令
 
 	{MSG_ID_USBCAN_L2FRAME_RCV,      		FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_usbcan_l2frame_receive},   //收到L2送过来的帧
-
 #endif
+
+	//Normal task status：BFDF
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	{MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_sys_cfg_req},  	//初始化配置
+	{MSG_ID_L3BFDF_CAN_SYS_SUSPEND_REQ,     FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_suspend_req},      //人工命令
+	{MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,      FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_resume_req},   	//人工命令
+	{MSG_ID_UICOMM_CAN_TEST_CMD_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_test_cmd_req},   	//测试性命令
+	{MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ,      FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_snc_pullin_req},  	//拨杆指令
+	{MSG_ID_L3BFDF_CAN_WS_COMB_OUT,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfdf_ws_comb_out},  	//组合指令
+	{MSG_ID_USBCAN_L2FRAME_RCV,      		FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_usbcan_l2frame_receive},  //收到L2送过来的帧
+#endif
+
+	//Normal task status：BFDF
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	{MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfhs_sys_cfg_req},  	//初始化配置
+	{MSG_ID_L3BFHS_CAN_SYS_SUSPEND_REQ,     FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfhs_suspend_req},      //人工命令
+	{MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ,      FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfhs_resume_req},   	//人工命令
+	{MSG_ID_UICOMM_CAN_TEST_CMD_REQ,      	FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_l3bfhs_test_cmd_req},   	//测试性命令
+	{MSG_ID_USBCAN_L2FRAME_RCV,      		FSM_STATE_CANITFLEO_ACTIVED,          		fsm_canitfleo_usbcan_l2frame_receive},  //收到L2送过来的帧
+#endif
+
 	//结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
@@ -71,7 +94,14 @@ HcuFsmStateItem_t HcuFsmCanitfleo[] =
 	#include "../l3appctrl/l3bfsc.h"
 	extern gTaskL3bfscContext_t gTaskL3bfscContext;
 #endif
-
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	#include "../l3appctrl/l3bfdf.h"
+	extern gTaskL3bfdfContext_t gTaskL3bfdfContext;
+#endif
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	#include "../l3appctrl/l3bfhs.h"
+	extern gTaskL3bfhsContext_t gTaskL3bfhsContext;
+#endif
 //Task Global variables
 gTaskCanitfleoContext_t gTaskCanitfleoContext;
 
@@ -125,13 +155,13 @@ OPSTAT fsm_canitfleo_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//启动定时器：放在初始化完成之后再启动，仅仅是为了测试目的
 	//为了简化任务的执行，先禁止该定时器的启动
-//	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_1S);
-//	if (ret == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error start timer!\n");
-
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	ret = hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_1S_CANITFLEO_WORKING_SCAN, zHcuSysEngPar.timer.array[TIMER_ID_1S_CANITFLEO_WORKING_SCAN].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+	if (ret == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error start timer!\n");
+#endif
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error Set FSM State!\n");
-
 	HCU_DEBUG_PRINT_FAT("CANITFLEO: Enter FSM_STATE_CANITFLEO_ACTIVED status, Keeping refresh here!\n");
 
 	return SUCCESS;
@@ -153,6 +183,8 @@ OPSTAT func_canitfleo_int_init(void)
 	INT32 ret;
 	ret = hcu_canitfleo_usbcan_interface_init();
 
+	//这一块的启动与否，关系到程序是否自动退出来
+/*
 	if(SUCCESS == ret){
 		return SUCCESS;
 	}
@@ -160,6 +192,7 @@ OPSTAT func_canitfleo_int_init(void)
 		exit(EXIT_FAILURE);
 		return FAILURE;
 	}
+*/
 #endif
 		return SUCCESS;
 }
@@ -195,21 +228,39 @@ OPSTAT fsm_canitfleo_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UI
 		if (FsmGetState(TASK_ID_CANITFLEO) != FSM_STATE_CANITFLEO_ACTIVED){
 			if (FsmSetState(TASK_ID_CANITFLEO, FSM_STATE_CANITFLEO_ACTIVED) == FAILURE) HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error Set FSM State!\n");
 		}
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 		func_canitfleo_working_scan_process();
 #endif
 	}
 
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	//测试目的，正式程序中可以去掉
 	else if ((rcv.timeId == TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
-		//func_canitfleo_bfsc_simulation_data_process();
+		func_canitfleo_bfdf_simulation_data_process();
 	}
 #endif
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	//测试目的，正式程序中可以去掉
+	else if ((rcv.timeId == TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA) &&(rcv.timeRes == TIMER_RESOLUTION_10MS)){
+		func_canitfleo_bfhs_simulation_data_process();
+	}
+#endif
+
+	//返回
 	return SUCCESS;
 }
 
-//以下均为BFSC项目所特有的
+/*
+ *
+ *
+ * //BFSC项目部分//以下均为BFSC项目所特有的
+ *
+ *
+ *
+ */
+
+
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 //整个传感器系统的初始化
 OPSTAT fsm_canitfleo_l3bfsc_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -512,210 +563,6 @@ OPSTAT fsm_canitfleo_l3bfsc_error_inq_cmd_req(UINT32 dest_id, UINT32 src_id, voi
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
 
 	//返回
-	return SUCCESS;
-}
-
-//收到底层驱动USBCAN送过来的数据帧
-OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	int ret=0;
-
-	msg_struct_bfsc_usbcan_l2frame_rcv_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_bfsc_usbcan_l2frame_rcv_t)))
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
-	if ((rcv.nodeId >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.validDataLen > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE))
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
-
-	//解码MSGID/MSGLEN
-	UINT16 msgId = 0, msgLen = 0;
-	StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *pBfscMsg = (StrMsg_HUITP_MSGID_sui_bfsc_wmc_msg_header_t *)(rcv.databuf);
-	msgId = HUITP_ENDIAN_EXG16(pBfscMsg->msgid);
-	msgLen = HUITP_ENDIAN_EXG16(pBfscMsg->length);
-	if (msgLen != (rcv.validDataLen-4))
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length, decoded msgLen=%d, in buffer len=%d!\n", msgLen, rcv.validDataLen-4);
-
-	//按照消息类型进行分类处理
-	switch(msgId){
-
-	case HUITP_MSGID_sui_bfsc_startup_ind:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_startup_ind \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_set_config_resp:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_set_config_resp \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_start_resp:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_start_resp \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_start_resp_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_stop_resp:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_stop_resp \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_new_ws_event:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_new_ws_event \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_repeat_ws_event:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_repeat_ws_event \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_ws_comb_out_resp:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_ws_comb_out_resp \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_ws_comb_out_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_command_resp:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_command_resp \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_fault_ind:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_fault_ind \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_fault_ind_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_err_inq_cmd_resp:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_err_inq_cmd_resp \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_bfsc_heart_beat_report:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_heart_beat_report \n");
-		StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_bfsc_heart_beat_report_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_inventory_report:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_inventory_report \n");
-		StrMsg_HUITP_MSGID_sui_inventory_report_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_inventory_report_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_inventory_report_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_inventory_report_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	case HUITP_MSGID_sui_sw_package_report:
-	{
-		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_sw_package_report \n");
-		StrMsg_HUITP_MSGID_sui_sw_package_report_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_sw_package_report_t) - 4))
-			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_sui_sw_package_report_t*)(rcv.databuf);
-		ret = func_canitfleo_l2frame_msg_sw_package_report_received_handle(snd, rcv.nodeId);
-	}
-	break;
-
-	default:
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message! Msgid=0x%x, NodeId=%d\n", msgId, rcv.nodeId);
-	break;
-	}
-
-	//返回
-	return ret;
-}
-
-//发送测试数据给L3BFSC
-OPSTAT func_canitfleo_bfsc_simulation_data_process(void)
-{
-//	int ret = 0;
-
-	//这里的定时工作，是为了测试目标。
-	//这里的定时已经启动，是为了定时产生假测试数据，喂给L3BFSC模块，以便测试算法
-	msg_struct_can_l3bfsc_new_ready_event_t snd;
-	memset(&snd, 0, sizeof(msg_struct_can_l3bfsc_new_ready_event_t));
-	snd.length = sizeof(msg_struct_can_l3bfsc_new_ready_event_t);
-	gTaskCanitfleoContext.sensorIdRoundBing++;
-	gTaskCanitfleoContext.sensorIdRoundBing = (gTaskCanitfleoContext.sensorIdRoundBing % HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX);
-	snd.sensorid = gTaskCanitfleoContext.sensorIdRoundBing;
-	snd.sensorid = rand() % HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX;
-	snd.sensorWsValue = 500 + (rand()%50);
-
-	if (hcu_message_send(MSG_ID_CAN_L3BFSC_WS_NEW_READY_EVENT, TASK_ID_L3BFSC, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFSC].taskName);
-
-	return SUCCESS;
-}
-
-
-OPSTAT func_canitfleo_working_scan_process(void)
-{
 	return SUCCESS;
 }
 
@@ -1203,13 +1050,1576 @@ OPSTAT func_canitfleo_l2frame_msg_bfsc_heart_beat_report_received_handle(StrMsg_
 	return SUCCESS;
 }
 
+//通用过程
+OPSTAT fsm_canitfleo_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sysswm_canitfleo_inventory_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//入参检查
+	if (rcv.nodeId >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)  HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error parameter set!\n");
+	UINT32 bitmap = ((UINT32)1<<rcv.nodeId);
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_inventory_confirm_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_inventory_confirm_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_inventory_confirm);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+
+	pMsgProc.swRel = HUITP_ENDIAN_EXG16(rcv.swRel);
+	pMsgProc.swVer = HUITP_ENDIAN_EXG16(rcv.swVer);
+	pMsgProc.upgradeFlag = rcv.upgradeFlag;
+	pMsgProc.swCheckSum = HUITP_ENDIAN_EXG16(rcv.swCheckSum);
+	pMsgProc.swTotalLengthInBytes = HUITP_ENDIAN_EXG32(rcv.swTotalLengthInBytes);
+
+	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
+	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+	HCU_DEBUG_PRINT_INF("CANITFLEO: Send INVERNTORY CONFIRM, REL/VER/UFLAG/CHKSUM/TLEN=[%d/%d/%d/%d/%d]\n", pMsgProc.swRel, pMsgProc.swVer, pMsgProc.upgradeFlag, pMsgProc.upgradeFlag, pMsgProc.swTotalLengthInBytes);
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sysswm_canitfleo_sw_package_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//入参检查
+	if (rcv.nodeId >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)  HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error parameter set!\n");
+	UINT32 bitmap = ((UINT32)1<<rcv.nodeId);
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_sw_package_confirm_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_sw_package_confirm_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_sw_package_confirm);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+
+	pMsgProc.swRelId = HUITP_ENDIAN_EXG16(rcv.swRelId);
+	pMsgProc.swVerId = HUITP_ENDIAN_EXG16(rcv.swVerId);
+	pMsgProc.upgradeFlag = rcv.upgradeFlag;
+	pMsgProc.segIndex = HUITP_ENDIAN_EXG16(rcv.segIndex);
+	pMsgProc.segTotal = HUITP_ENDIAN_EXG16(rcv.segTotal);
+	pMsgProc.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segSplitLen);
+	pMsgProc.segValidLen = HUITP_ENDIAN_EXG16(rcv.segValidLen);
+	pMsgProc.segCheckSum = HUITP_ENDIAN_EXG16(rcv.segCheckSum);
+	memcpy(pMsgProc.swPkgBody, rcv.swPkgBody, rcv.segValidLen);
+
+	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
+	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+	//返回
+	return SUCCESS;
+}
+#endif//BFSC项目部分
+
+
+
+/*
+ *
+ *
+ *  //BFDF项目部分
+ *
+ *
+ *
+ */
+
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+OPSTAT fsm_canitfleo_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfdf_can_sys_cfg_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+
+	//为了测试目的，直接返回
+	msg_struct_can_l3bfdf_sys_cfg_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t));
+	snd.validFlag = TRUE;
+	snd.length = sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t);
+	int i=0, j=0;
+	for (i = 0; i<HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; i++)
+	{
+		for (j = 0; j<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; j++)
+		{
+			snd.streamId = i;
+			snd.boardId = j;
+			hcu_usleep(rand()%10000);
+			if (hcu_message_send(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+		}
+	}
+
+	//启动测试定时器
+	hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA, zHcuSysEngPar.timer.array[TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfdf_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfdf_can_sys_suspend_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_can_sys_suspend_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_can_sys_suspend_req_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfdf_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfdf_can_sys_resume_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_can_sys_resume_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_can_sys_resume_req_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfdf_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_uicomm_can_test_cmd_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_can_test_cmd_req_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfdf_can_ws_comb_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_can_ws_comb_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_can_ws_comb_out_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//测试反馈
+	msg_struct_can_l3bfdf_ws_comb_out_fb_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
+	snd.validFlag = TRUE;
+	snd.streamId = rcv.streamId;
+	snd.hopperId = rcv.hopperId;
+	snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfdf_snc_pullin_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfdf_can_ws_comb_out_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_can_ws_comb_out_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_can_ws_comb_out_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//测试反馈
+	if (rcv.hopperId == 0){
+		//抛弃物料
+		return SUCCESS;
+	}
+
+	msg_struct_can_l3bfdf_snc_pullin_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_snc_pullin_resp_t));
+	snd.validFlag = TRUE;
+	snd.streamId = rcv.streamId;
+	snd.hopperId = rcv.hopperId;
+	snd.length = sizeof(msg_struct_can_l3bfdf_snc_pullin_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
+	//返回
+	return SUCCESS;
+}
+
+
+//收到底层驱动USBCAN送过来的数据帧
+//OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//{
+//	int ret=0;
+//
+//	msg_struct_usbcan_l2frame_rcv_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_usbcan_l2frame_rcv_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_usbcan_l2frame_rcv_t)))
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
+///*
+//	if ((rcv.nodeId >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.validDataLen > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE))
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+//*/
+//
+//	//解码MSGID/MSGLEN
+///*
+//	UINT16 msgId = 0, msgLen = 0;
+//	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);
+//	msgId = HUITP_ENDIAN_EXG16(pComMsg->msgid);
+//	msgLen = HUITP_ENDIAN_EXG16(pComMsg->length);
+//	if (msgLen != (rcv.validDataLen-4))
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length, decoded msgLen=%d, in buffer len=%d!\n", msgLen, rcv.validDataLen-4);
+//
+//
+//	//按照消息类型进行分类处理
+//	switch(msgId){
+//
+//	default:
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message! Msgid=0x%x, NodeId=%d\n", msgId, rcv.nodeId);
+//	break;
+//	}
+//*/
+//	//返回
+//	return ret;
+//}
+
+//通用过程
+OPSTAT fsm_canitfleo_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sysswm_canitfleo_inventory_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sysswm_canitfleo_sw_package_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_working_scan_process(void)
+{
+	gTaskL3bfdfContext.nodeDyn[0][0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][1].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][2].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][3].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[0][4].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][1].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][2].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][3].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	gTaskL3bfdfContext.nodeDyn[1][4].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+
+	return SUCCESS;
+}
+
+//发送测试数据给L3BFDF
+OPSTAT func_canitfleo_bfdf_simulation_data_process(void)
+{
+//	int ret = 0;
+
+	//这里的定时工作，是为了测试目标。
+	//这里的定时已经启动，是为了定时产生假测试数据，喂给L3BFSC模块，以便测试算法
+	msg_struct_can_l3bfdf_new_ready_event_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_new_ready_event_t));
+	snd.length = sizeof(msg_struct_can_l3bfdf_new_ready_event_t);
+	gTaskCanitfleoContext.sensorIdRoundBing++;
+	gTaskCanitfleoContext.sensorIdRoundBing = (gTaskCanitfleoContext.sensorIdRoundBing % HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX);
+	//snd.streamId = gTaskCanitfleoContext.sensorIdRoundBing;
+	snd.streamId = rand() % HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX;
+	snd.sensorWsValue = (rand()%900+100)*100;
+	//HcuDebugPrint("CANITFLEO: Value = %d\n", snd.sensorWsValue);
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+
+	//Firstly Register state
+	//STREAMID待完善
+	gTaskL3bfdfContext.nodeDyn[0][nodeId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	HCU_DEBUG_PRINT_CRT("CANITFLEO: Sensor ID = %d is set to be startup!\n", nodeId);
+
+	//dbi_HcuBfdf_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_STARTUP, 0);
+
+	//系统初始化过程
+	if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_ACTIVED){
+		//Do nothing
+	}
+
+	//系统已经在工作状态：发送CFG给IHU
+	else{
+		//生成bitmap
+		UINT32 bitmap = 0;
+		bitmap = (1<<nodeId);
+
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_sui_bfdf_set_config_req_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfdf_set_config_req_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfdf_set_config_req);
+		pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+//		pMsgProc.weight_sensor_param.WeightSensorLoadDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.WeightSensorLoadThread = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread);
+//		pMsgProc.weight_sensor_param.WeightSensorEmptyThread = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyThread);
+//		pMsgProc.weight_sensor_param.WeightSensorEmptyDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.WeightSensorPickupThread = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupThread);
+//		pMsgProc.weight_sensor_param.WeightSensorPickupDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.StardardReadyTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.StardardReadyTimeMs);
+//		pMsgProc.weight_sensor_param.MaxAllowedWeight = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.MaxAllowedWeight);
+//		pMsgProc.weight_sensor_param.RemainDetectionTimeSec = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.RemainDetectionTimeSec);
+//		pMsgProc.weight_sensor_param.WeightSensorInitOrNot = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorInitOrNot);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcSampleFreq = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcSampleFreq);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcGain = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcGain);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcBitwidth = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcBitwidth);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationZeroAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationZeroAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationFullAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationFullAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationFullWeight = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationFullWeight);
+//		pMsgProc.weight_sensor_param.WeightSensorStaticZeroValue = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorStaticZeroValue);
+//		pMsgProc.weight_sensor_param.WeightSensorTailorValue = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorTailorValue);
+//		pMsgProc.weight_sensor_param.WeightSensorDynamicZeroThreadValue = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue);
+//		pMsgProc.weight_sensor_param.WeightSensorDynamicZeroHysteresisMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[0] = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[0]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[1] = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[1]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[2] = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[2]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[3] = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[3]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[0] = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[0]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[1] = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[1]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[2] = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[2]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[3] = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[3]);
+//		pMsgProc.motor_control_param.MotorSpeed = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.motCtrPar.MotorSpeed);
+//		pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.motCtrPar.MotorDirection);
+//		pMsgProc.motor_control_param.MotorRollingStartMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.motCtrPar.MotorRollingStartMs);
+//		pMsgProc.motor_control_param.MotorRollingStopMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.motCtrPar.MotorRollingStopMs);
+//		pMsgProc.motor_control_param.MotorRollingInveralMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.motCtrPar.MotorRollingInveralMs);
+//		pMsgProc.motor_control_param.MotorFailureDetectionVaration = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.motCtrPar.MotorFailureDetectionVaration);
+//		pMsgProc.motor_control_param.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfdfContext.motCtrPar.MotorFailureDetectionTimeMs);
+
+		//发送消息
+		if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+		//更新传感器状态
+		gTaskL3bfdfContext.nodeDyn[0][nodeId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ;
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+//	if (rcv->validFlag == FALSE) dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_CONFIG_ERR, 0);
+//	else dbi_HcuBfdf_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_CONFIG_RCV, 0);
+
+	//系统初始化过程
+	msg_struct_can_l3bfdf_sys_cfg_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t));
+//		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+//		snd.sensorid = nodeId;
+	snd.length = sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_suspend_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	//dbi_HcuBfdf_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_SUSPEND_RCV, 0);
+
+	//系统初始化过程
+	msg_struct_can_l3bfdf_sys_suspend_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_suspend_resp_t));
+//		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfdf_sys_suspend_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_SYS_SUSPEND_RESP, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
+	//系统已经在工作状态：可以正式工作了
+	else{
+		gTaskL3bfdfContext.nodeDyn[0][nodeId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND;
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_resume_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t *rcv, UINT8 nodeId)
+{
+	//dbi_HcuBfdf_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_RESUME_RCV, 0);
+
+	//系统初始化过程
+	msg_struct_can_l3bfdf_sys_resume_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_resume_resp_t));
+//		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfdf_sys_resume_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+
+	//系统已经在工作状态：可以正式工作了
+	else{
+		gTaskL3bfdfContext.nodeDyn[0][nodeId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_VALID;
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_new_ws_event_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+//	UINT32 comType = 0, wsEvent = 0;
+//	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
+//	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
+
+//	//先更新本地数据库表单
+//	//dbi_HcuBfdf_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_DATA_VALID, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+//
+//	//先检查汇报事件/EMPTY_LOAD事件
+//	if (HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event) == WEIGHT_EVENT_ID_EMPTY){
+//		gTaskL3bfdfContext.sensorWs[0].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALIID_EMPTY;
+//		gTaskL3bfdfContext.sensorWs[0].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//		gTaskL3bfdfContext.sensorWs[0].sensorRepTimes = 0;
+//		return SUCCESS;
+//	}
+//
+//	else if (HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event) != WEIGHT_EVENT_ID_LOAD){
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error, receive Weight Event = %d!\n", rcv->weight_ind.weight_event);
+//		return FAILURE;
+//	}
+//
+//	//真的新事件
+//	if ((comType == HUITP_IEID_SUI_BFDF_COMINETYPE_NULL) && (wsEvent == WEIGHT_EVENT_ID_LOAD)){
+//		if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_ACTIVED){
+//			gTaskL3bfdfContext.sensorWs[0].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_STARTUP;
+//		}
+//		else if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OPR_CFG){
+//			gTaskL3bfdfContext.sensorWs[0].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_CFG_CMPL;
+//			gTaskL3bfdfContext.sensorWs[0].cfgRcvFlag = TRUE;
+//		}
+//		else if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OPR_GO){
+//			gTaskL3bfdfContext.sensorWs[0].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALIID_EMPTY;
+//			gTaskL3bfdfContext.sensorWs[0].startRcvFlag = TRUE;
+//		}
+//		else if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN){
+//			gTaskL3bfdfContext.cur.wsIncMatCnt++;
+//			gTaskL3bfdfContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			//先存再发，是为了防止上层NEW_WS_EVENT重入被拒接，导致数据丢失
+//			gTaskL3bfdfContext.sensorWs[0].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TO_COMB;
+//			gTaskL3bfdfContext.sensorWs[0].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			gTaskL3bfdfContext.sensorWs[0].sensorRepTimes = 0;
+//			msg_struct_can_l3bfdf_new_ready_event_t snd;
+//			memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_new_ready_event_t));
+//			snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			//暂时不处理weight_event等不同类型事件
+//			snd.sensorid = nodeId;
+//			snd.length = sizeof(msg_struct_can_l3bfdf_new_ready_event_t);
+//			if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+//				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+//		}
+//		else{
+//			gTaskL3bfdfContext.cur.wsIncMatCnt++;
+//			gTaskL3bfdfContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			gTaskL3bfdfContext.sensorWs[0].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TO_COMB;
+//			gTaskL3bfdfContext.sensorWs[0].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			gTaskL3bfdfContext.sensorWs[0].sensorRepTimes = 0;
+//		}
+//	}
+//
+//	//差错：也不完全是差错，只是上层不关心
+//	else{
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error!\n");
+//	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_ws_comb_out_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//更新状态
+	//UINT32 comType = 0;
+	//comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
+
+	//先更新本地数据库表单
+	//dbi_HcuBfdf_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_DATA_VALID, 0);	//数据清零
+
+//	if (comType == HUITP_IEID_SUI_BFDF_COMINETYPE_ROOLOUT){
+//		//gTaskL3bfdfContext.sensorWs[nodeId].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TTT_START;
+//		msg_struct_can_l3bfdf_ws_comb_out_fb_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
+//		snd.sensorid = nodeId;
+//		snd.validFlag = TRUE;
+//		snd.errCode = 0;
+//		snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
+//		if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+//	}
+//	else if (comType == HUITP_IEID_SUI_BFDF_COMINETYPE_DROP){
+//		//gTaskL3bfdfContext.sensorWs[nodeId].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TTT_START;
+//		msg_struct_can_l3bfdf_ws_give_up_fb_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_give_up_fb_t));
+//		snd.sensorid = nodeId;
+//		snd.validFlag = TRUE;
+//		snd.errCode = 0;
+//		snd.length = sizeof(msg_struct_can_l3bfdf_ws_give_up_fb_t);
+//		if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_GIVE_UP_FB, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+//	}
+//	else if ((comType == HUITP_IEID_SUI_BFDF_COMINETYPE_ERROR) && (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_TTT)){
+//		//gTaskL3bfdfContext.sensorWs[nodeId].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TTT_START;
+//		msg_struct_can_l3bfdf_ws_comb_out_fb_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
+//		snd.sensorid = nodeId;
+//		snd.validFlag = FALSE;
+//		snd.errCode = 0;  //待完善
+//		snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
+//		if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+//	}
+//	else if ((comType == HUITP_IEID_SUI_BFDF_COMINETYPE_ERROR) && (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_TGU)){
+//		//gTaskL3bfdfContext.sensorWs[nodeId].sensorStatus = HCU_L3BFDF_SENSOR_WS_STATUS_VALID_TTT_START;
+//		msg_struct_can_l3bfdf_ws_give_up_fb_t snd;
+//		memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_give_up_fb_t));
+//		snd.sensorid = nodeId;
+//		snd.validFlag = FALSE;
+//		snd.errCode = 0;  //待完善
+//		snd.length = sizeof(msg_struct_can_l3bfdf_ws_give_up_fb_t);
+//		if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_GIVE_UP_FB, TASK_ID_L3BFDF, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+//			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+//	}
+//
+//	else
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error!");
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_command_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块
+	//dbi_HcuBfdf_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_TEST_CMD_RCV, 0);
+
+	msg_struct_can_uicomm_test_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_uicomm_test_cmd_resp_t));
+//	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//	snd.errCode = HUITP_ENDIAN_EXG16(rcv->result.error_code);
+//	snd.sensorid = nodeId;
+//	snd.cmdid = HUITP_ENDIAN_EXG32(rcv->cmdid);
+//	snd.cmdvalue1 = HUITP_ENDIAN_EXG32(rcv->cmdvalue1);
+//	snd.cmdvalue2 = HUITP_ENDIAN_EXG32(rcv->cmdvalue2);
+	snd.length = sizeof(msg_struct_can_uicomm_test_cmd_resp_t);
+
+	HCU_DEBUG_PRINT_CRT("CANITFLEO: Test Cmd received, NodeID=%d, CmdId=%d, Value1=%d, Value2=%d\n", nodeId, snd.cmdid, snd.cmdvalue1, snd.cmdvalue2);
+	if (hcu_message_send(MSG_ID_CAN_UICOMM_TEST_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_fault_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//只更新传感器的状态，不做其它处理
+
+	//dbi_HcuBfdf_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_FAULT_RCV, 0);
+
+	//STREAMID待完善
+	if (gTaskL3bfdfContext.nodeDyn[0][nodeId].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MAX)
+		gTaskL3bfdfContext.nodeDyn[0][nodeId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_INIT_ERR;
+	else
+		//隔离该传感器
+		gTaskL3bfdfContext.nodeDyn[0][nodeId].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_HW_ERROR;
+
+	//是否要根据ERR_CODE，赋予不同的差错情形，待定
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_heart_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_confirm_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_confirm_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfdf_heart_beat_confirm);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	//pMsgProc.wmc_id.wmc_id = nodeId;
+//	if (gTaskL3bfdfContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFDF_NODE_BOARD_STATUS_OFFLINE_MAX)
+//		pMsgProc.wmcState = HUITP_IEID_SUI_BFDF_HEATT_BEAT_WMC_STATE_OFFLINE;
+//	else if (gTaskL3bfdfContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MAX)
+//		pMsgProc.wmcState = HUITP_IEID_SUI_BFDF_HEATT_BEAT_WMC_STATE_INIT;
+//	else if (gTaskL3bfdfContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MAX)
+//		pMsgProc.wmcState = HUITP_IEID_SUI_BFDF_HEATT_BEAT_WMC_STATE_WORKING;
+//	else
+//		pMsgProc.wmcState = HUITP_IEID_SUI_BFDF_HEATT_BEAT_WMC_STATE_INVALID;
+
+	//生成bitmap
+	UINT32 bitmap = ((UINT32)1<<nodeId);
+
+	//发送消息
+	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_snc_pullin_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t *rcv, UINT8 nodeId)
+{
+	return SUCCESS;
+}
+
+#endif//BFDF项目部分
+
+
+/*
+ *
+ *
+ *  //BFHS项目部分
+ *
+ *
+ *
+ */
+
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+OPSTAT fsm_canitfleo_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfhs_can_sys_cfg_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_can_sys_cfg_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_can_sys_cfg_req_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+
+	//为了测试目的，直接返回
+	msg_struct_can_l3bfhs_sys_cfg_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t));
+	snd.validFlag = TRUE;
+	snd.length = sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_CFG_RESP, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+
+	//启动测试定时器
+	hcu_timer_start(TASK_ID_CANITFLEO, TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA, zHcuSysEngPar.timer.array[TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfhs_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfhs_can_sys_suspend_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_can_sys_suspend_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_can_sys_suspend_req_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfhs_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_l3bfhs_can_sys_resume_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_can_sys_resume_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_can_sys_resume_req_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_l3bfhs_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	//int i=0;
+
+	msg_struct_uicomm_can_test_cmd_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_uicomm_can_test_cmd_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_can_test_cmd_req_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+//收到底层驱动USBCAN送过来的数据帧
+//OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//{
+//	int ret=0;
+//
+//	msg_struct_usbcan_l2frame_rcv_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_usbcan_l2frame_rcv_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_usbcan_l2frame_rcv_t)))
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
+///*
+//	if ((rcv.nodeId >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.validDataLen > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE))
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+//*/
+//
+//	//解码MSGID/MSGLEN
+///*
+//	UINT16 msgId = 0, msgLen = 0;
+//	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);
+//	msgId = HUITP_ENDIAN_EXG16(pComMsg->msgid);
+//	msgLen = HUITP_ENDIAN_EXG16(pComMsg->length);
+//	if (msgLen != (rcv.validDataLen-4))
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length, decoded msgLen=%d, in buffer len=%d!\n", msgLen, rcv.validDataLen-4);
+//
+//
+//	//按照消息类型进行分类处理
+//	switch(msgId){
+//
+//	default:
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message! Msgid=0x%x, NodeId=%d\n", msgId, rcv.nodeId);
+//	break;
+//	}
+//*/
+//	//返回
+//	return ret;
+//}
+
+//通用过程
+OPSTAT fsm_canitfleo_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sysswm_canitfleo_inventory_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sysswm_canitfleo_sw_package_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+
+	//返回
+	return SUCCESS;
+}
+
+//发送测试数据给L3BFHS
+OPSTAT func_canitfleo_bfhs_simulation_data_process(void)
+{
+//	int ret = 0;
+
+	//这里的定时工作，是为了测试目标。
+	//这里的定时已经启动，是为了定时产生假测试数据，喂给L3BFSC模块，以便测试算法
+	msg_struct_can_l3bfhs_new_ready_event_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_new_ready_event_t));
+	snd.length = sizeof(msg_struct_can_l3bfhs_new_ready_event_t);
+	snd.sensorWsValue = (rand()%900+100)*100;
+	if (hcu_message_send(MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+
+	return SUCCESS;
+}
+
+//接收消息处理部分
+OPSTAT func_canitfleo_l2frame_msg_bfhs_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+
+	//Firstly Register state
+	gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
+	HCU_DEBUG_PRINT_CRT("CANITFLEO: Sensor ID = %d is set to be startup!\n", nodeId);
+
+	//dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_STARTUP, 0);
+
+	//系统初始化过程
+	if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_ACTIVED){
+		//Do nothing
+	}
+
+	//系统已经在工作状态：发送CFG给IHU
+	else{
+		//生成bitmap
+		UINT32 bitmap = 0;
+		bitmap = (1<<nodeId);
+
+		//准备组装发送消息
+		StrMsg_HUITP_MSGID_sui_bfhs_set_config_req_t pMsgProc;
+		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfhs_set_config_req_t);
+		memset(&pMsgProc, 0, msgProcLen);
+		pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_set_config_req);
+		pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+//		pMsgProc.weight_sensor_param.WeightSensorLoadDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.WeightSensorLoadThread = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorLoadThread);
+//		pMsgProc.weight_sensor_param.WeightSensorEmptyThread = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorEmptyThread);
+//		pMsgProc.weight_sensor_param.WeightSensorEmptyDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.WeightSensorPickupThread = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorPickupThread);
+//		pMsgProc.weight_sensor_param.WeightSensorPickupDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs);
+//		pMsgProc.weight_sensor_param.StardardReadyTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.StardardReadyTimeMs);
+//		pMsgProc.weight_sensor_param.MaxAllowedWeight = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.MaxAllowedWeight);
+//		pMsgProc.weight_sensor_param.RemainDetectionTimeSec = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.RemainDetectionTimeSec);
+//		pMsgProc.weight_sensor_param.WeightSensorInitOrNot = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorInitOrNot);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcSampleFreq = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcSampleFreq);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcGain = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcGain);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcBitwidth = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcBitwidth);
+//		pMsgProc.weight_sensor_param.WeightSensorAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationZeroAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationZeroAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationFullAdcValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationFullAdcValue);
+//		pMsgProc.weight_sensor_param.WeightSensorCalibrationFullWeight = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.calibration[nodeId].WeightSensorCalibrationFullWeight);
+//		pMsgProc.weight_sensor_param.WeightSensorStaticZeroValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorStaticZeroValue);
+//		pMsgProc.weight_sensor_param.WeightSensorTailorValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorTailorValue);
+//		pMsgProc.weight_sensor_param.WeightSensorDynamicZeroThreadValue = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue);
+//		pMsgProc.weight_sensor_param.WeightSensorDynamicZeroHysteresisMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[0] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[0]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[1] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[1]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[2] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[2]);
+//		pMsgProc.weight_sensor_param.WeightSensorFilterCoeff[3] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[3]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[0] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[0]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[1] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[1]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[2] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[2]);
+//		pMsgProc.weight_sensor_param.WeightSensorOutputValue[3] = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[3]);
+//		pMsgProc.motor_control_param.MotorSpeed = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorSpeed);
+//		pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorDirection);
+//		pMsgProc.motor_control_param.MotorRollingStartMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorRollingStartMs);
+//		pMsgProc.motor_control_param.MotorRollingStopMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorRollingStopMs);
+//		pMsgProc.motor_control_param.MotorRollingInveralMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorRollingInveralMs);
+//		pMsgProc.motor_control_param.MotorFailureDetectionVaration = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorFailureDetectionVaration);
+//		pMsgProc.motor_control_param.MotorFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motCtrPar.MotorFailureDetectionTimeMs);
+
+		//发送消息
+		if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+		//更新传感器状态
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	if (rcv->validFlag == FALSE){
+		//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_ERR, 0);
+	}
+	else{
+		//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_CONFIG_RCV, 0);
+	}
+
+	//进入工作过程
+	msg_struct_can_l3bfhs_sys_cfg_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t));
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	//snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_CFG_RESP, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+
+	//更新状态
+	gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_CMPL;
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_suspend_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_SUSPEND_RCV, 0);
+
+	//系统初始化过程
+	msg_struct_can_l3bfhs_sys_suspend_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_sys_suspend_resp_t));
+//		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfhs_sys_suspend_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_SUSPEND_RESP, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+
+	//系统已经在工作状态：可以正式工作了
+	else{
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_SUSPEND;
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_resume_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t *rcv, UINT8 nodeId)
+{
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_RESUME_RCV, 0);
+
+	//系统初始化过程
+	msg_struct_can_l3bfhs_sys_resume_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_sys_resume_resp_t));
+//		snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//		snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfhs_sys_resume_resp_t);
+	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+
+	//系统已经在工作状态：可以正式工作了
+	else{
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_VALID;
+	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_new_ws_event_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+//	UINT32 comType = 0, wsEvent = 0;
+//	comType = HUITP_ENDIAN_EXG32(rcv->weight_combin_type.WeightCombineType);
+//	wsEvent = HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event);
+
+//	//先更新本地数据库表单
+//	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_DATA_VALID, HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight));
+//
+//	//先检查汇报事件/EMPTY_LOAD事件
+//	if (HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event) == WEIGHT_EVENT_ID_EMPTY){
+//		gTaskL3bfhsContext.sensorWs[0].sensorStatus = HCU_L3BFHS_SENSOR_WS_STATUS_VALIID_EMPTY;
+//		gTaskL3bfhsContext.sensorWs[0].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//		gTaskL3bfhsContext.sensorWs[0].sensorRepTimes = 0;
+//		return SUCCESS;
+//	}
+//
+//	else if (HUITP_ENDIAN_EXG32(rcv->weight_ind.weight_event) != WEIGHT_EVENT_ID_LOAD){
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error, receive Weight Event = %d!\n", rcv->weight_ind.weight_event);
+//		return FAILURE;
+//	}
+//
+//	//真的新事件
+//	if ((comType == HUITP_IEID_SUI_BFHS_COMINETYPE_NULL) && (wsEvent == WEIGHT_EVENT_ID_LOAD)){
+//		if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_ACTIVED){
+//			gTaskL3bfhsContext.sensorWs[0].sensorStatus = HCU_L3BFHS_SENSOR_WS_STATUS_STARTUP;
+//		}
+//		else if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_OPR_CFG){
+//			gTaskL3bfhsContext.sensorWs[0].sensorStatus = HCU_L3BFHS_SENSOR_WS_STATUS_CFG_CMPL;
+//			gTaskL3bfhsContext.sensorWs[0].cfgRcvFlag = TRUE;
+//		}
+//		else if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_OPR_GO){
+//			gTaskL3bfhsContext.sensorWs[0].sensorStatus = HCU_L3BFHS_SENSOR_WS_STATUS_VALIID_EMPTY;
+//			gTaskL3bfhsContext.sensorWs[0].startRcvFlag = TRUE;
+//		}
+//		else if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_OOS_SCAN){
+//			gTaskL3bfhsContext.cur.wsIncMatCnt++;
+//			gTaskL3bfhsContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			//先存再发，是为了防止上层NEW_WS_EVENT重入被拒接，导致数据丢失
+//			gTaskL3bfhsContext.sensorWs[0].sensorStatus = HCU_L3BFHS_SENSOR_WS_STATUS_VALID_TO_COMB;
+//			gTaskL3bfhsContext.sensorWs[0].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			gTaskL3bfhsContext.sensorWs[0].sensorRepTimes = 0;
+//			msg_struct_can_l3bfhs_new_ready_event_t snd;
+//			memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_new_ready_event_t));
+//			snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			//暂时不处理weight_event等不同类型事件
+//			snd.sensorid = nodeId;
+//			snd.length = sizeof(msg_struct_can_l3bfhs_new_ready_event_t);
+//			if (hcu_message_send(MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT, TASK_ID_L3BFHS, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+//				HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+//		}
+//		else{
+//			gTaskL3bfhsContext.cur.wsIncMatCnt++;
+//			gTaskL3bfhsContext.cur.wsIncMatWgt += HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			gTaskL3bfhsContext.sensorWs[0].sensorStatus = HCU_L3BFHS_SENSOR_WS_STATUS_VALID_TO_COMB;
+//			gTaskL3bfhsContext.sensorWs[0].sensorValue = HUITP_ENDIAN_EXG32(rcv->weight_ind.average_weight);
+//			gTaskL3bfhsContext.sensorWs[0].sensorRepTimes = 0;
+//		}
+//	}
+//
+//	//差错：也不完全是差错，只是上层不关心
+//	else{
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive parameters error!\n");
+//	}
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_command_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_TEST_CMD_RCV, 0);
+
+	msg_struct_can_uicomm_test_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_uicomm_test_cmd_resp_t));
+//	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+//	snd.errCode = HUITP_ENDIAN_EXG16(rcv->result.error_code);
+//	snd.sensorid = nodeId;
+//	snd.cmdid = HUITP_ENDIAN_EXG32(rcv->cmdid);
+//	snd.cmdvalue1 = HUITP_ENDIAN_EXG32(rcv->cmdvalue1);
+//	snd.cmdvalue2 = HUITP_ENDIAN_EXG32(rcv->cmdvalue2);
+	snd.length = sizeof(msg_struct_can_uicomm_test_cmd_resp_t);
+
+	HCU_DEBUG_PRINT_CRT("CANITFLEO: Test Cmd received, NodeID=%d, CmdId=%d, Value1=%d, Value2=%d\n", nodeId, snd.cmdid, snd.cmdvalue1, snd.cmdvalue2);
+	if (hcu_message_send(MSG_ID_CAN_UICOMM_TEST_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_fault_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//只更新传感器的状态，不做其它处理
+
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_FAULT_RCV, 0);
+
+	if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_INIT_MAX)
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_INIT_ERR;
+	else
+		//隔离该传感器
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_HW_ERROR;
+
+	//是否要根据ERR_CODE，赋予不同的差错情形，待定
+
+	return SUCCESS;
+}
+
+OPSTAT func_canitfleo_l2frame_msg_bfhs_heart_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_confirm_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_confirm_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_heart_beat_confirm);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	//pMsgProc.wmc_id.wmc_id = nodeId;
+//	if (gTaskL3bfhsContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_OFFLINE_MAX)
+//		pMsgProc.wmcState = HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_OFFLINE;
+//	else if (gTaskL3bfhsContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_INIT_MAX)
+//		pMsgProc.wmcState = HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_INIT;
+//	else if (gTaskL3bfhsContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_WORK_MAX)
+//		pMsgProc.wmcState = HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_WORKING;
+//	else
+//		pMsgProc.wmcState = HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_INVALID;
+
+	//生成bitmap
+	UINT32 bitmap = ((UINT32)1<<nodeId);
+
+	//发送消息
+	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
+
+	return SUCCESS;
+}
+
+#endif//BFHS项目部分
+
+
+/*
+ *
+ *
+ *  //多项目共享部分
+ *
+ *
+ *
+ */
+
+#if ((HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID) || \
+		(HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID) || \
+		(HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID))
+//收到底层驱动USBCAN送过来的数据帧
+OPSTAT fsm_canitfleo_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	int ret=0;
+
+	msg_struct_usbcan_l2frame_rcv_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_usbcan_l2frame_rcv_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_usbcan_l2frame_rcv_t)))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+//	if ((rcv.nodeId >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX) || (rcv.validDataLen > HCU_SYSMSG_BFSC_USBCAN_MAX_RX_BUF_SIZE))
+//		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
+
+	//解码MSGID/MSGLEN
+	UINT16 msgId = 0, msgLen = 0;
+	StrMsg_HUITP_MSGID_sui_common_msg_header_t *pComMsg = (StrMsg_HUITP_MSGID_sui_common_msg_header_t *)(rcv.databuf);
+	msgId = HUITP_ENDIAN_EXG16(pComMsg->msgid);
+	msgLen = HUITP_ENDIAN_EXG16(pComMsg->length);
+	if (msgLen != (rcv.validDataLen-4))
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Decode message error on length, decoded msgLen=%d, in buffer len=%d!\n", msgLen, rcv.validDataLen-4);
+
+	//按照消息类型进行分类处理
+	switch(msgId){
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	case HUITP_MSGID_sui_bfsc_startup_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_startup_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_startup_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_startup_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_set_config_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_set_config_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_set_config_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_set_config_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_start_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_start_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_start_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_start_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_stop_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_stop_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_stop_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_stop_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_new_ws_event:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_new_ws_event \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_new_ws_event_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_new_ws_event_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_repeat_ws_event:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_repeat_ws_event \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_repeat_ws_event_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_repeat_ws_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_ws_comb_out_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_ws_comb_out_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_ws_comb_out_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_ws_comb_out_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_command_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_command_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_command_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_command_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_fault_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_fault_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_fault_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_fault_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_err_inq_cmd_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_err_inq_cmd_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_err_inq_cmd_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_err_ind_cmd_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfsc_heart_beat_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfsc_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfsc_heart_beat_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfsc_heart_beat_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+#endif
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	case HUITP_MSGID_sui_bfdf_startup_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_startup_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_startup_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_set_config_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_set_config_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_set_config_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_suspend_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_start_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_suspend_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_resume_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_stop_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_resume_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_new_ws_event:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_new_ws_event \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_new_ws_event_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_ws_comb_out_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_ws_comb_out_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_ws_comb_out_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_command_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_command_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_command_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_fault_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_fault_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_fault_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_heart_beat_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_heart_beat_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_snc_pullin_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_snc_pullin_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfdf_basket_clean_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfdf_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfdf_basket_clean_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+#endif
+
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	case HUITP_MSGID_sui_bfhs_startup_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_startup_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_startup_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_set_config_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_set_config_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_set_config_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_suspend_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_start_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_suspend_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_resume_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_stop_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_resume_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_new_ws_event:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_new_ws_event \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_new_ws_event_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_command_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_command_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_command_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_fault_ind:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_fault_ind \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_fault_ind_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_bfhs_heart_beat_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_bfhs_heart_beat_report \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_bfhs_heart_beat_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+#endif
+
+	case HUITP_MSGID_sui_inventory_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_inventory_report \n");
+		StrMsg_HUITP_MSGID_sui_inventory_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_inventory_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_inventory_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_inventory_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	case HUITP_MSGID_sui_sw_package_report:
+	{
+		HCU_DEBUG_PRINT_INF("CANITFLEO: Receive L3 MSG = HUITP_MSGID_sui_sw_package_report \n");
+		StrMsg_HUITP_MSGID_sui_sw_package_report_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_sw_package_report_t) - 4))
+			HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_sw_package_report_t*)(rcv.databuf);
+		ret = func_canitfleo_l2frame_msg_sw_package_report_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	default:
+		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive unsupported message! Msgid=0x%x, NodeId=%d\n", msgId, rcv.nodeId);
+	break;
+	}
+
+	//返回
+	return ret;
+}
+
 //本消息将送到SYSSWM模块
 OPSTAT func_canitfleo_l2frame_msg_inventory_report_received_handle(StrMsg_HUITP_MSGID_sui_inventory_report_t *rcv, UINT8 nodeId)
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
 
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_INV_RPT_RCV, 0);
+#endif
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+#endif
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+#endif
 
 	//准备组装发送消息
 	msg_struct_canitfleo_sysswm_inventory_report_t snd;
@@ -1225,6 +2635,20 @@ OPSTAT func_canitfleo_l2frame_msg_inventory_report_received_handle(StrMsg_HUITP_
 	if (hcu_message_send(MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT, TASK_ID_SYSSWM, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
 
+	//刷界面中IHU版本信息：已经移动到SYSSWM模块中进行处理了
+//	char input[50];
+//	memset(input, 0, 50);
+//	if (zHcuSysEngPar.hwBurnId.nodeHwType != 0){
+//		memset(input, 0, 50);
+//		sprintf(input, "IHU-SW-R%d.V%d.", snd.swRel, snd.swVer);
+//		if (snd.upgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO");
+//		else if (snd.upgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE) strcat(input, "STABLE");
+//		else if (snd.upgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL) strcat(input, "TRIAL");
+//		else if (snd.upgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH) strcat(input, "PATCH");
+//		else strcat(input, "UPG_ERROR");
+//		dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+//	}
+
 	//返回
 	return SUCCESS;
 }
@@ -1233,8 +2657,13 @@ OPSTAT func_canitfleo_l2frame_msg_sw_package_report_received_handle(StrMsg_HUITP
 {
 	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
 	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
-
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 	dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFSC_SNESOR_STATUS_SW_PKG_RCV, HUITP_ENDIAN_EXG16(rcv->segIndex));
+#endif
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+#endif
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+#endif
 
 	//准备组装发送消息
 	msg_struct_canitfleo_sysswm_sw_package_report_t snd;
@@ -1255,9 +2684,6 @@ OPSTAT func_canitfleo_l2frame_msg_sw_package_report_received_handle(StrMsg_HUITP
 	//返回
 	return SUCCESS;
 }
-
-
-
 /*
  *  USBCAN BSP函数映射：硬件在两个CAN接口之间跳动，待固定住哪个CAN接口
  *
@@ -1283,7 +2709,22 @@ OPSTAT hcu_canitfleo_usbcan_interface_init(void)
 //发送API
 OPSTAT hcu_canitfleo_usbcan_l2frame_send(UINT8 *buffer, UINT32 length, UINT32 wmc_id_bitmap)
 {
+	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	msg_struct_l3hate_can_frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3hate_can_frame_rcv_t));
+	memcpy(snd.dataBuf, buffer, length);
+	snd.bufValidLen = length;
+	snd.length = sizeof(msg_struct_l3hate_can_frame_rcv_t);
+	if (hcu_message_send(MSG_ID_CAN_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE){
+		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+		return FAILURE;
+	}
+	return SUCCESS;
+#else
+	//业务执行
 	return hcu_bsp_usbcan_l2frame_transmit(&(gTaskCanitfleoContext.can1), buffer, length, wmc_id_bitmap);
+#endif
 }
 
 
@@ -1572,88 +3013,29 @@ int func_canitfleo_socketcan_test_main(int argc, char **argv)
 
 	return EXIT_SUCCESS;
 }
-
-//#endif  //BFSC //correct for compiling error for AQYC by Shanchun
-
+#endif //多项目共享部分
 
 
-
-//通用过程
-OPSTAT fsm_canitfleo_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT hcu_canitfleo_hate_send_data(UINT8 *buf, int len, UINT8 node)
 {
-	//int ret=0;
+	//发送给CANITFLEO模块
+	msg_struct_usbcan_l2frame_rcv_t snd;
+	memset(&snd, 0, sizeof(msg_struct_usbcan_l2frame_rcv_t));
+	snd.nodeId = node;
+	snd.validDataLen = len;
+	memcpy(snd.databuf, buf, len);
 
-	msg_struct_sysswm_canitfleo_inventory_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t)))
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	snd.length = sizeof(msg_struct_usbcan_l2frame_rcv_t);
+	if (hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANITFLEO, TASK_ID_CANITFLEO, &snd, snd.length) == FAILURE){
+		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANITFLEO]++;
+		HcuErrorPrint("CANITFLEO: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+		return FAILURE;
+	}
 
-	//入参检查
-	if (rcv.nodeId >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)  HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error parameter set!\n");
-	UINT32 bitmap = ((UINT32)1<<rcv.nodeId);
-
-	//准备组装发送消息
-	StrMsg_HUITP_MSGID_sui_inventory_confirm_t pMsgProc;
-	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_inventory_confirm_t);
-	memset(&pMsgProc, 0, msgProcLen);
-	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_inventory_confirm);
-	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
-
-	pMsgProc.swRel = HUITP_ENDIAN_EXG16(rcv.swRel);
-	pMsgProc.swVer = HUITP_ENDIAN_EXG16(rcv.swVer);
-	pMsgProc.upgradeFlag = rcv.upgradeFlag;
-	pMsgProc.swCheckSum = HUITP_ENDIAN_EXG16(rcv.swCheckSum);
-	pMsgProc.swTotalLengthInBytes = HUITP_ENDIAN_EXG32(rcv.swTotalLengthInBytes);
-
-	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
-	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
-
-	HCU_DEBUG_PRINT_INF("CANITFLEO: Send INVERNTORY CONFIRM, REL/VER/UFLAG/CHKSUM/TLEN=[%d/%d/%d/%d/%d]\n", pMsgProc.swRel, pMsgProc.swVer, pMsgProc.upgradeFlag, pMsgProc.upgradeFlag, pMsgProc.swTotalLengthInBytes);
-	//返回
 	return SUCCESS;
 }
 
-OPSTAT fsm_canitfleo_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//int ret=0;
 
-	msg_struct_sysswm_canitfleo_sw_package_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t)))
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
 
-	//入参检查
-	if (rcv.nodeId >= HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX)  HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Error parameter set!\n");
-	UINT32 bitmap = ((UINT32)1<<rcv.nodeId);
-
-	//准备组装发送消息
-	StrMsg_HUITP_MSGID_sui_sw_package_confirm_t pMsgProc;
-	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_sw_package_confirm_t);
-	memset(&pMsgProc, 0, msgProcLen);
-	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_sw_package_confirm);
-	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
-
-	pMsgProc.swRelId = HUITP_ENDIAN_EXG16(rcv.swRelId);
-	pMsgProc.swVerId = HUITP_ENDIAN_EXG16(rcv.swVerId);
-	pMsgProc.upgradeFlag = rcv.upgradeFlag;
-	pMsgProc.segIndex = HUITP_ENDIAN_EXG16(rcv.segIndex);
-	pMsgProc.segTotal = HUITP_ENDIAN_EXG16(rcv.segTotal);
-	pMsgProc.segSplitLen = HUITP_ENDIAN_EXG16(rcv.segSplitLen);
-	pMsgProc.segValidLen = HUITP_ENDIAN_EXG16(rcv.segValidLen);
-	pMsgProc.segCheckSum = HUITP_ENDIAN_EXG16(rcv.segCheckSum);
-	memcpy(pMsgProc.swPkgBody, rcv.swPkgBody, rcv.segValidLen);
-
-	//发送消息：配置消息分成多个分别发送，因为校准参数对于每一个下位机不一样
-	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
-		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");
-
-	//返回
-	return SUCCESS;
-}
-
-#endif  //BFSC //correct for compiling error for AQYC by Shanchun
 
 

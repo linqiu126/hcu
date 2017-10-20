@@ -15,7 +15,7 @@ extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 ** Local static variables
 */
 //static unsigned char traceFileName[] = __FILE__;
-
+UINT8 spsapiHateBuffer[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 
 UINT32 spsapi_SerialPortOpen(UINT8 com_port_to_open, UINT16 *fd)
 {
@@ -328,6 +328,11 @@ UINT32 hcu_spsapi_serial_port_get(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Le
 	UINT16 fd = sp->fd;
 	UINT32 ret = SUCCESS;
 
+ 	//HATE测试环境
+#ifdef HATE_TRIGGER_ENABLE
+	memcpy(rcv_buf, spsapiHateBuffer, Len);
+	return ret;
+#else
 	struct timeval tv;
 	tv.tv_sec = SPSAPI_TIMER_FOR_SERIAL_PORT_READ;
 	tv.tv_usec = 0;
@@ -366,8 +371,8 @@ UINT32 hcu_spsapi_serial_port_get(SerialPortCom_t *sp, UINT8 *rcv_buf, UINT32 Le
 	{
 		HcuErrorPrint("SPSAPI: Read Data failure \n");
 		return  FAILURE;
-
 	}
+#endif
 }
 
 UINT32 hcu_spsapi_serial_port_send(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 Len)
@@ -375,6 +380,19 @@ UINT32 hcu_spsapi_serial_port_send(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 
      UINT16  fd = sp->fd;
      UINT32 ret = SUCCESS;
 
+ 	//HATE测试环境
+ #ifdef HATE_TRIGGER_ENABLE
+ 	msg_struct_l3hate_sps_frame_rcv_t snd;
+ 	memset(&snd, 0, sizeof(msg_struct_l3hate_sps_frame_rcv_t));
+ 	memcpy(snd.dataBuf, send_buf, Len);
+ 	snd.bufValidLen = Len;
+ 	snd.length = sizeof(msg_struct_l3hate_sps_frame_rcv_t);
+ 	if (hcu_message_send(MSG_ID_SPS_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_MODBUS, &snd, snd.length) == FAILURE){
+ 		HcuErrorPrint("MODBUS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
+ 		return FAILURE;
+ 	}
+ 	return Len;
+#else
      ret = write(fd, send_buf, Len);
      if (FAILURE == ret)
      {
@@ -382,4 +400,18 @@ UINT32 hcu_spsapi_serial_port_send(SerialPortCom_t *sp, UINT8 *send_buf, UINT32 
          return FAILURE;
      }
      return ret;
+#endif
 }
+
+//HATE测试环境
+OPSTAT hcu_sps_hate_data_send(UINT8 *buf, UINT32 bufLen)
+{
+	memset(spsapiHateBuffer, 0, sizeof(spsapiHateBuffer));
+	memcpy(spsapiHateBuffer, buf, (bufLen<sizeof(spsapiHateBuffer)?bufLen:sizeof(spsapiHateBuffer)));
+
+	//返回
+	return SUCCESS;
+}
+
+
+

@@ -1,12 +1,143 @@
 ====================================================================================================
-==                          修改历史                                                                                                                                                                                     ==
-==                          从共流项目开始，历史将倒叙增加修改记录，以简化每次的更新                                                                             ==
+==                          修改历史                                                               ==
+==                          从共流项目开始，历史将倒叙增加修改记录，以简化每次的更新                        ==
 ====================================================================================================
 ==> 上位机HUITPJASON支持
 ==> 上位机Netdata/Linux性能实时监测工具 => http://www.my-netdata.io
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+
+//= ZJL, 2017 Oct.20 CURRENT_SW_DELIVERY 285=>BFDF项目
+= 将下位机指示软件版本显示，从３个轮寻，改为上下位机必须一致
+
+//= ZJL, 2017 Oct.19 CURRENT_SW_DELIVERY 284=>BFDF项目
+= 将CANITFLEO的消息处理完善
+
+//= ZJL, 2017 Oct.19 CURRENT_SW_DELIVERY 283=>BFHS项目
+= 完成BFHS主任务的状态机工作流程
+= CANITFLEO/BFHSUICOMM/CANITFLEO之间的消息流程转起来了
+
+//= ZJL, 2017 Oct.18 CURRENT_SW_DELIVERY 282=>BFSC项目
+= 更新软件下载的版本显示
+= 将HCU/IHU软件下载的信息更新到按钮区域
+
+//= ZJL, 2017 Oct.17 CURRENT_SW_DELIVERY 281=>BFHS项目
+= 增加BFDF/BFHS的CLOUDVELA编解码函数
+= BFHS中的基础处理函数
+
+//= ZJL, 2017 Oct.16 CURRENT_SW_DELIVERY 280=>BFHS项目
+= 增加HUITP定义中的BFDF和BFHS部分
+= 升级脚步更新为ZIP下载
+
+//= ZJL, 2017 Oct.16 CURRENT_SW_DELIVERY 279=>BFSC项目
+= 修正软件下载的bug
+= 更新数据库表单的下载处理脚本
+
+//= ZSC, 2017 Oct.16 CURRENT_SW_DELIVERY 278=>AQYC项目
+= 增加风向校准（hcudb 更新到199版本：工参配置中增加风险校准值字段）
+= 增加上报传感器异常值的修正
+
+//= ZSC, 2017 Oct.15 CURRENT_SW_DELIVERY 277=>AQYC项目
+= 增加支持朗亿粉尘仪
+
+//= ZJL, 2017 Oct.13 CURRENT_SW_DELIVERY 276=>BFDF项目
+= 完善MQTT的定义
+
+//= ZJL, 2017 Oct.11 CURRENT_SW_DELIVERY 275=>BFSC项目
+= 更新hcu_advance.sh脚本
+
+//= ZJL, 2017 Oct.9 CURRENT_SW_DELIVERY 274=>BFDF项目
+= 为复旦医疗部分增加HUITP格式定义
+
+//= ZSC, 2017 Oct.1 CURRENT_SW_DELIVERY 273=>AQYC项目
+= 告警机制改进
+= 记录系统异常重启log（/var/hcu/reboot.log）
+= 噪声/扬尘门限值告警照片FTP上传后台服务器
+
+//= ZJL, 2017 Sep.27 CURRENT_SW_DELIVERY 272=>BFDF项目
+= 界面显示软件版本
+= [bug fix]升级完成后，不能删掉hcu文件
+= upgrade.sh更新：去掉crontab
+= BFSC的软件版本下载改为无限次
+= 改进VM，暂时不用hcuvm机制，恢复vmlayer程序
+
+//= ZJL, 2017 Sep.25 CURRENT_SW_DELIVERY 271=>BFDF项目
+= 完成基础分选组合算法的测试
+
+//= ZJL, 2017 Sep.22 CURRENT_SW_DELIVERY 270=>BFDF项目
+= 增加每一组的目标范围
+= 搭建分组与组合的核心过程
+
+//= ZJL, 2017 Sep.20 CURRENT_SW_DELIVERY 269=>BFDF项目
+= 写启动部分的代码
+
+//= ZJL, 2017 Sep.20 CURRENT_SW_DELIVERY 268=>BFDF项目
+= 创建消息处理框架函数
+= 对BFSC项目有微调，需要REGRESSION该项目的基本工作内容
+
+//= ZJL, 2017 Sep.19 CURRENT_SW_DELIVERY 267=>BFDF项目
+= 继续搭建BFDF程序框架，创建基础内部消息
+
+//= ZJL, 2017 Sep.18 CURRENT_SW_DELIVERY 266=>BFDF项目
+= 开始编写料斗的双链数据结构操作函数
+= 简化BFDF程序遗传，制作程序框架
+
+//= ZJL, 2017 Sep.16 CURRENT_SW_DELIVERY 265=>BFSC项目
+= 修改HUITP的picture定义
+
+//= ZJL, 2017 Sep.15 CURRENT_SW_DELIVERY 264=>BFSC项目
+= SWM_FTP去掉相应的工参配置
+= hcuengpar表单改变了
+= [RESTRICITON1] SYSSWM清理目录
+= 给SYSSWM增加了一个新的控制机制：超越最大限度就不执行下载了
+= 给DB下载增加保护：一旦软件下载成功，但数据库下载不成功，则将软件的版本恢复回滚到之前的情况
+
+//= ZJL, 2017 Sep.14 CURRENT_SW_DELIVERY 263=>AQYC项目
+= 完善HUITP中有关TEST_COMMAND和HSMMP_DATA_RESP消息的定义
+= 完善MAC地址的读取
+= 在传递Inventory_Report时，将MAC_ADDRESS存入了FuncFlag
+= [RESTRICITON2] 判定目录是否存在，放开了
+
+//= ZJL, 2017 Sep.13 CURRENT_SW_DELIVERY 262=>AQYC项目
+＝　去掉了VMLAYER源代码，增加了新的库libhcuvm
+
+//= ZJL, 2017 Sep.12 CURRENT_SW_DELIVERY 261=>AQYC项目
+= 将所有产品CODE改为了十进制
+
+//= ZJL, 2017 Sep.12 CURRENT_SW_DELIVERY 260=>AQYC项目
+= 更新AQYC对应的HUITP规范，支持TEST_COMMAND过程，并放在PM模块中了
+
+//= ZJL, 2017 Sep.8 CURRENT_SW_DELIVERY 259=>BFDF项目
+= 建立起初始数据表单结构
+
+//= ZJL, 2017 Sep.7 CURRENT_SW_DELIVERY 258=>BFHS项目
+= 增加BFHS高速分选称项目
+= 完善BFDF的测试部分，整个HATE测试环境基本上差不多了
+
+//= ZJL, 2017 Sep.7 CURRENT_SW_DELIVERY 257=>BFDF项目
+= MQTT的初始化改为延时无限循环
+= htop用来查阅线程树形结构
+= top -H -p12345用来查单个线程的运行状态
+= VM中增加了线程名字的信息
+= 将HATE机制增加到所有项目中去
+
+//= ZSC, 2017 Sep.6 CURRENT_SW_DELIVERY 256=>AQYC项目
+= Add Aggregation report instead single sensor report to default server(socket instead of Curl)
+
+//= ZJL, 2017 Sep.6 CURRENT_SW_DELIVERY 255=>BFDF项目
+= 创建测试引擎
+= 创建测试表单库
+= 创建基本的HATE工作逻辑
+
+//= ZJL, 2017 Sep.5 CURRENT_SW_DELIVERY 254=>BFDF项目
+= 增加HATE_TRIGGER_ENENABLE标识，用于将项目转变为测试目的
+
+//= ZJL, 2017 Sep.5 CURRENT_SW_DELIVERY 253=>BFDF项目
+= 创建BFDF双线分选组合称流水线项目
+
+//= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 252=>BFSC项目
+= 先为MQTT的编解码做了一个基础的处理方式
 
 //= ZJL, 2017 Sep.1 CURRENT_SW_DELIVERY 251=>BFSC项目
 = 去掉hcuswdb数据表表单

@@ -33,6 +33,8 @@ enum FSM_STATE_L3BFSC
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfsc[];
 
+#define HCU_L3BFSC_SW_DOWNLOAD_MAX_TIMES	0X7FFFFFFF
+
 //大量编辑性错误，不得不采用这种方式
 #ifndef HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX
 	#define HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX 16  //下位机总共有16个秤盘
@@ -203,6 +205,8 @@ typedef struct gTaskL3bfscContext
 	UINT32  elipseCnt;					//所有的统计结果和数据，均以这个为时间统计尺度，时间颗粒度另外定义，假设是500ms为统计周期
 	UINT32  elipse24HourCnt;			//24小时的日历计数器
 	L3BfscSensorWsInfo_t	sensorWs[HCU_SYSCFG_BFSC_SNR_WS_NBR_MAX];
+	UINT8   wsTttTgvNbrTotal;           //总共要出料的总数量
+	UINT32  wsTttTgvWeightTotal;        //总共要出料的总重量
 	UINT8  	wsValueNbrFree;  			//空闲的0值秤盘数量
 	UINT8   wsValueNbrWeight;			//空闲有值的秤盘数量
 	UINT8 	wsValueNbrTtt;  			//待出料有值秤盘数量
@@ -270,6 +274,7 @@ UINT32 func_l3bfsc_cacluate_sensor_ws_bitmap_valid_number(void);
 float  func_l3bfsc_cacluate_sensor_ws_bitmap_valid_weight(void);
 UINT8  func_l3bfsc_count_numbers_of_startup_ws_sensors(void);
 BOOL   func_l3bfsc_judge_whether_all_valid_sensor_enter_repeat_status(void);
+BOOL   func_l3bfsc_print_qr_code(void);
 
 OPSTAT func_l3bfsc_time_out_sys_cfg_req_process(void);
 OPSTAT func_l3bfsc_time_out_sys_start_req_process(void);

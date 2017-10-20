@@ -120,7 +120,12 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_L3BFSC,
 	TASK_ID_BFSCUICOMM,
 	TASK_ID_JSONINOTIFY,
+	TASK_ID_BFDFUICOMM,
+	TASK_ID_BFHSUICOMM,
 	TASK_ID_L3OPWLOTDR,
+	TASK_ID_L3BFDF,
+	TASK_ID_L3BFHS,
+	TASK_ID_L3HATE,
 	TASK_ID_MAX,
 	TASK_ID_INVALID = 0xFFFFFFFF,
 }; //end of HCU_TASK_NAME_ID
@@ -619,8 +624,13 @@ extern HcuFsmStateItem_t HcuFsmL3nblpm[];                           //状态机
 extern HcuFsmStateItem_t HcuFsmL3nbhpm[];                           //状态机
 extern HcuFsmStateItem_t HcuFsmL3bfsc[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmBfscuicomm[];                        //状态机
-extern HcuFsmStateItem_t HcuFsmJsoninotify[];                        //状态机
+extern HcuFsmStateItem_t HcuFsmJsoninotify[];                       //状态机
+extern HcuFsmStateItem_t HcuFsmBfdfuicomm[];                        //状态机
+extern HcuFsmStateItem_t HcuFsmBfhsuicomm[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmL3opwlotdr[];                        //状态机
+extern HcuFsmStateItem_t HcuFsmL3bfdf[];                            //状态机
+extern HcuFsmStateItem_t HcuFsmL3bfhs[];                            //状态机
+extern HcuFsmStateItem_t HcuFsmL3hate[];                            //状态机
 
 //任务配置的基础配置信息
 typedef struct HcuVmCtrTaskStaticCfg
@@ -712,6 +722,15 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_L3BFSC_TGU_WAIT_FB,
 	TIMER_ID_1S_L3BFSC_ERROR_INQ,
 	TIMER_ID_1S_BFSCUICOMM_PERIOD_READ,
+	TIMER_ID_1S_L3BFDF_CFG_START_WAIT_FB,
+	TIMER_ID_1S_L3BFDF_SUSPEND_WAIT_FB,
+	TIMER_ID_1S_L3BFDF_RESUME_WAIT_FB,
+	TIMER_ID_1S_L3BFDF_TTT_WAIT_FB,
+	TIMER_ID_1S_BFDFUICOMM_PERIOD_READ,
+	TIMER_ID_1S_L3BFHS_CFG_START_WAIT_FB,
+	TIMER_ID_1S_L3BFHS_SUSPEND_WAIT_FB,
+	TIMER_ID_1S_L3BFHS_RESUME_WAIT_FB,
+	TIMER_ID_1S_BFHSUICOMM_PERIOD_READ,
 	TIMER_ID_1S_L3AQYCG10_PERIOD_READ,
 	TIMER_ID_1S_L3AQYCG20_PERIOD_READ,
 	TIMER_ID_1S_L3AQYCG20_PERIOD_STA_SCAN,
@@ -730,11 +749,14 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_L3NBHPM_PERIOD_READ,
 	TIMER_ID_1S_L3NBLPM_PERIOD_READ,
 	TIMER_ID_1S_L3OPWLOTDR_PERIOD_READ,
+	TIMER_ID_1S_L3HATE_WORK_CTRL_FB,
 	TIMER_ID_1S_MAX,
 	TIMER_ID_10MS_MIN,
 	TIMER_ID_10MS_SVRCON_TEST,
 	TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN,
 	TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,
+	TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN,
+	TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN,
 	TIMER_ID_10MS_MAX,
 	TIMER_ID_1MS_MIN,
 	TIMER_ID_1MS_SVRCON_TEST,
@@ -778,6 +800,7 @@ typedef struct HcuSysEngPhyBootCfg
 	const char right[30];
 }HcuSysEngPhyBootCfg_t;
 
+extern HcuSysEngPhyBootCfg_t zHcuSysEngPhyBootCfg[];
 /*
  *
  *   三大表单之三： 系统运行统计性能表HcuSysStaPm_t定义区
@@ -952,7 +975,7 @@ extern OPSTAT hcu_hwinv_engpar_read_mac_address(void);
 extern OPSTAT dbi_HcuTraceModuleCtr_engpar_intelligence_init(void);
 extern OPSTAT dbi_HcuTraceMsgCtr_engpar_intelligence_init(void);
 extern OPSTAT dbi_HcuSysEngTimer_engpar_intelligence_init(void);
-
+int pthread_setname_np(pthread_t thread, const char *name);
 
 /*
  *

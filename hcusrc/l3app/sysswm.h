@@ -31,8 +31,12 @@ typedef struct gTaskSysswmContext
 {
 	HcuSysMsgIeL3SysSwmSwPkgElement_t  	cloudSwPkg;
 	HcuSysMsgIeL3SysSwmSwDlElement_t	cloudSwDl;
-	UINT8	swDlSession;
-	UINT8	reTransTimes;
+	UINT16	swRelSave;			//用于恢复之前数据的临时记录
+	UINT16	swVerSave;			//用于恢复之前数据的临时记录
+	UINT8	swDlSession;		//下载时哪一个下载过程
+	UINT8	reTransTimes;		//重传次数
+	UINT32	swDlMaxTimes;		//下载的最大计数器
+	UINT32	swDlCntTimes;		//下载的当期计数器
 }gTaskSysswmContext_t;
 //将HCU_CLIENT改为１是为了第一个命中，方便测试
 #define HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT 	1
@@ -43,6 +47,10 @@ typedef struct gTaskSysswmContext
 
 #define HCU_SYSSWM_SW_PACKAGE_RETRANS_MAX_TIMES  	4
 #define HCU_SYSSWM_SW_PACKAGE_FTP_DOWNLOAD_FILE_SIZE_THREADHOLD  2000  //200000，正常放200KB的
+
+#define HCU_SYSSWM_SW_DOWNLOAD_MAX_TIMES	0x7FFFFFFF
+
+extern gTaskSysswmContext_t gTaskSysswmContext;
 
 //文件操控的数据结构表单
 typedef struct strTaskSysswmSwpkgLable
@@ -82,7 +90,6 @@ extern OPSTAT fsm_sysswm_cloudvela_sw_package_confirm(UINT32 dest_id, UINT32 src
 extern OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
-
 //Local API
 OPSTAT func_sysswm_int_init(void);
 OPSTAT func_sysswm_time_out_period_working_scan_hcu_client(void);
@@ -90,7 +97,7 @@ OPSTAT func_sysswm_time_out_period_working_scan_ihu_stable(void);
 OPSTAT func_sysswm_time_out_period_working_scan_ihu_trial(void);
 OPSTAT func_sysswm_time_out_period_working_scan_ihu_patch(void);
 OPSTAT func_sysswm_time_out_segment_download_wait_process(void);
-OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, strTaskSysswmSwpkgLable_t* input);
+OPSTAT func_sysswm_analysis_ihu_sw_package(UINT16 hwType, UINT16 hwId, UINT16 swRel, UINT16 swVer, UINT8 upgradeFlag, strTaskSysswmSwpkgLable_t* output);
 OPSTAT func_sysswm_delete_ihu_redundance_sw_package(UINT16 hwType, UINT8 upgradeFlag);
 OPSTAT func_sysswm_read_ihu_sw_package_segment(strTaskSysswmSwpkgSegment_t *input);
 UINT16 func_sysswm_caculate_file_whole_checksum(char *fname);
@@ -105,12 +112,21 @@ OPSTAT func_sysswm_swpkg_last_seg_process_hcu_db(char *stmp);
 OPSTAT func_sysswm_swpkg_last_seg_process_ihu_sw(char *stmp);
 OPSTAT func_sysswm_ftp_file_big_size_process_hcu_sw_and_db(void);
 OPSTAT func_sysswm_ftp_file_big_size_process_ihu_sw(void);
+void func_sysswm_sw_init_info_trigger_ui(void);
+void func_sysswm_hcusw_upgrade_info_trigger_ui(void);
+void func_sysswm_ihusw_upgrade_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver);
+void func_sysswm_sw_inventory_req_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver);
+void func_sysswm_sw_inventory_confirm_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver);
+
 
 //External APIs
 extern OPSTAT hcu_service_ftp_sw_download_by_ftp(char *filename);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_SYSSWM(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_SYSSWM]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
-
+#define HCU_SYSSWM_UPGRADE_FLAG_MATCH(a, b) \
+		(((a==HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE)&&(b==HUITP_IEID_UNI_FW_UPGRADE_YES_STABLE)) ||\
+		((a==HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_TRIAL)&&(b==HUITP_IEID_UNI_FW_UPGRADE_YES_TRIAL)) ||\
+		((a==HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_PATCH)&&(b==HUITP_IEID_UNI_FW_UPGRADE_YES_PATCH)))
 
 #endif /* L3APP_SYSSWM_H_ */

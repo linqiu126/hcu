@@ -118,15 +118,15 @@ OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 pa
 	for (i=0;i<MAX_NUM_OF_SENSOR_NOISE_INSTALLED;i++){
 		gTaskNoiseContext.noise[i].sensorId = i;
 
-		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
 		{
 			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
 		}
-		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
 		{
 			gTaskNoiseContext.noise[i].equId = SPSVIRGO_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
 		}
-		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 		{
 			gTaskNoiseContext.noise[i].equId = MODBUS_NOISE_RTU_EQUIPMENT_ID;  //该字段，除了配置命令之外，不能再修改
 		}
@@ -211,15 +211,15 @@ OPSTAT fsm_noise_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 				return FAILURE;
 			}//FsmSetState
 		}
-		if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002)
 		{
 			func_noise_time_out_read_data_from_spsvirgo();
 		}
-		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2003)
 		{
 			func_noise_time_out_read_data_from_spsvirgo();
 		}
-		else if (zHcuSysEngPar.hwBurnId.hwType == HCU_SYSCFG_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 		{
 			func_noise_time_out_read_data_from_modbus();
 		}
@@ -424,6 +424,7 @@ void func_noise_time_out_read_data_from_spsvirgo(void)
 OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
+    char file[200];
 	//这种申明方法，已经分配了完整的内存空间，不用再MALLOC单独申请内存了
 	HcuDiscDataSampleStorageArray_t record;
 
@@ -473,12 +474,26 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 	if(rcv.noise.noiseValue >= (HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD*10))
 	//if(rcv.noise.noiseValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{
+/*
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
 		if(FAILURE == ret){
+
+			sprintf(file, "sudo rm %s", HKVisionOption.file_photo);
+			system(file);
+
 			HcuErrorPrint("NOISE: Start HK photo capture error!\n\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
-		}
 
+
+		}
+		else
+		{
+			if ( FAILURE == hcu_service_ftp_picture_upload_by_ftp(HKVisionOption.file_photo_pure, HKVisionOption.file_photo))
+				HcuErrorPrint("NOISE: Picture Upload Error! Filename=[%s]\n", HKVisionOption.file_photo);
+			else
+				HCU_DEBUG_PRINT_INF("NOISE: Picture Upload Successfully! Filename=[%s]\n", HKVisionOption.file_photo);
+		}
+*/
 		if(FALSE == gTaskNoiseContext.AlarmFlag)
 		{
 			if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
@@ -497,19 +512,20 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-		snd.alarmServerity = ALARM_SEVERITY_HIGH;
-		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_OFF;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.noise.equipid;
-		snd.alarmType = ALARM_TYPE_NOISE_VALUE;
-		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_NOISE_VALUE;
+		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+/*
 		if(FAILURE == ret){
 			strcpy(snd.alarmDesc, "NOISE: Start HK photo capture error!");
 		}else{
 			strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 		}
-
-		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_ON for noise exceed threshold\n\n\n\n\n\n\n\n");//debug by shanchun
+*/
+		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_ON for noise exceed threshold\n\n\n");//debug by shanchun
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
@@ -537,15 +553,15 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-		snd.alarmServerity = ALARM_SEVERITY_HIGH;
-		snd.alarmClearFlag = ALARM_CLEAR_FLAG_ON;
+		snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_ON;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.noise.equipid;
-		snd.alarmType = ALARM_TYPE_NOISE_VALUE;
-		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
+		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_NOISE_VALUE;
+		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+		//strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 
-		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_OFF for noise exceed threshold\n\n\n\n\n\n\n\n\n");//debug by shanchun
+		HCU_DEBUG_PRINT_NOR("NOISE: Alarm_OFF for noise exceed threshold\n\n\n");//debug by shanchun
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
@@ -663,7 +679,7 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 				snd.length = sizeof(msg_struct_noise_cloudvela_data_resp_t);
 
 				//发送后台
-				if ((HCU_SYSCFG_SENSOR_REPORT_MODE_SET & HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL) == TRUE){
+				if (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_INDIVIDUAL){
 					ret = hcu_message_send(MSG_ID_NOISE_CLOUDVELA_DATA_REPORT, TASK_ID_CLOUDVELA, TASK_ID_NOISE, &snd, snd.length);
 					if (ret == FAILURE){
 						zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
@@ -805,12 +821,13 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 	if(rcv.noise.noiseValue >= (HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD*10))
 	//if(rcv.noise.noiseValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
 	{
+/*
 		ret = hcu_hsmmp_photo_capture_start(HKVisionOption);
 		if(FAILURE == ret){
 			HcuErrorPrint("NOISE: Start HK photo capture error!\n\n");
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_NOISE]++;
 		}
-
+*/
 		if(FALSE == gTaskNoiseContext.AlarmFlag)
 		{
 			if(FAILURE == hcu_hsmmp_video_capture_start(HKVisionOption)){
@@ -829,18 +846,19 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-		snd.alarmServerity = ALARM_SEVERITY_HIGH;
-		snd.alarmClearFlag = ALARM_CLEAR_FLAG_OFF;
+		snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_OFF;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.noise.equipid;
-		snd.alarmType = ALARM_TYPE_NOISE_VALUE;
-		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_NOISE_VALUE;
+		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+/*
 		if(FAILURE == ret){
 			strcpy(snd.alarmDesc, "NOISE: Start HK photo capture error!");
 		}else{
 			strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 		}
-
+*/
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 	}
@@ -866,13 +884,13 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		snd.usercmdid = L3CI_alarm;
 		snd.useroptid = L3PO_hcualarm_report;
 		snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
-		snd.alarmServerity = ALARM_SEVERITY_HIGH;
-		snd.alarmClearFlag = ALARM_CLEAR_FLAG_ON;
+		snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+		snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_ON;
 		snd.timeStamp = time(0);
 		snd.equID = rcv.noise.equipid;
-		snd.alarmType = ALARM_TYPE_NOISE_VALUE;
-		snd.alarmContent = ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
-		strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
+		snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_NOISE_VALUE;
+		snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_VALUE_EXCEED_THRESHLOD;
+		//strcpy(snd.alarmDesc, HKVisionOption.file_photo_pure);
 
 		if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_NOISE, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
