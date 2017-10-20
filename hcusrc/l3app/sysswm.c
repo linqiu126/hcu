@@ -846,7 +846,8 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 	input.fileNameLen = sizeof(input.fPathName);
 
 	//搜索
-	if (func_sysswm_analysis_ihu_sw_package(rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer, rcv.upgradeFlag, &input) == SUCCESS){
+	if ((rcv.upgradeFlag == zHcuSysEngPar.hwBurnId.swUpgradeFlag) &&\
+			(func_sysswm_analysis_ihu_sw_package(rcv.hwType, rcv.hwId, rcv.swRel, rcv.swVer, rcv.upgradeFlag, &input) == SUCCESS)){
 		if (strlen(input.fPathName) != 0){
 			//分析数据
 			snd.swRel = input.swRel;
@@ -1835,7 +1836,8 @@ void func_sysswm_ihusw_upgrade_info_trigger_ui(UINT8 session, UINT16 swrel, UINT
 		else strcat(input, "ERROR!");
 
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-	if (HCU_SYSSWM_UPGRADE_FLAG_MATCH == TRUE) dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+	if (HCU_SYSSWM_UPGRADE_FLAG_MATCH(session, zHcuSysEngPar.hwBurnId.swUpgradeFlag) == TRUE)
+			dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
@@ -1875,7 +1877,8 @@ void func_sysswm_sw_inventory_req_info_trigger_ui(UINT8 session, UINT16 swrel, U
 
 	else{
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-		if (HCU_SYSSWM_UPGRADE_FLAG_MATCH == TRUE) dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+		if (HCU_SYSSWM_UPGRADE_FLAG_MATCH(session, zHcuSysEngPar.hwBurnId.swUpgradeFlag) == TRUE)
+				dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
@@ -1916,7 +1919,8 @@ void func_sysswm_sw_inventory_confirm_info_trigger_ui(UINT8 session, UINT16 swre
 
 	else{
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-		if (HCU_SYSSWM_UPGRADE_FLAG_MATCH == TRUE) dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
+		if (HCU_SYSSWM_UPGRADE_FLAG_MATCH(session, zHcuSysEngPar.hwBurnId.swUpgradeFlag) == TRUE)
+				dbi_HcuBfsc_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	//dbi_HcuBfdf_ihusw_ver_Update(input, strlen(input));
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
