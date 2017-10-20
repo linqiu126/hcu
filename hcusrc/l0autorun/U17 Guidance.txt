@@ -1505,6 +1505,9 @@ apt-get -f install
 	cobbliu@x-server:~$ xrandr -s 1600x900_60.00
 	OK了。
 	6.持久地记忆这个新添加的分辨率 在~/.xprofile中加入下面语句 xrandr --output Virtual1 --mode 1600x900_60.00
+	~/.profile文件其实是在/root或者/home/hitpony/目录下
+	7. 修改/etc/init.d/profile中的数据,可以在root下直接编译
+
 
 16 ========系统开机自动登录，不需密码========
 打开 系统设置 中的 用户帐户。
@@ -1659,6 +1662,7 @@ http://blog.csdn.net/weirancg/article/details/54730178
 - 采用Properites->C/C++ Build->Settings->Cross Gcc Linker->Libraries添加动态库
 - 采用Properites->C/C++ Build->Settings->Cross Gcc Linker->Miscellaneous->Other objects添加静态库。
 - 库的名字使用"hcuvm"，不得使用"libhcuvm"，不然也不会成功
+- fPIC选项
 
 28. =======hcu-cron-自动升级替换=======
 	1. 编辑升级脚本
@@ -1680,6 +1684,9 @@ http://www.geekpills.com/operating-system/linux/configure-vnc-server-ubuntu-16-0
 https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-16-04
 http://blog.csdn.net/wuruiaoxue/article/details/52853003
 
+29. =======VMTools=======
+apt-get install perl
+perl vmwaretools.pl
 
 
 
@@ -1694,6 +1701,9 @@ top -H -p1234 =>查阅线程运行情况
 htop  => 树形结构
 cp -rf ./* /var/www/html/
 
+
+
+NOW: Inventory confirm HCU-SW-R3.V181.DB200.STABLE
 
 
 
