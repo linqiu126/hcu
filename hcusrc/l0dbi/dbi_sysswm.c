@@ -628,14 +628,6 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
         return FAILURE;
 	}
 
-    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`dbname` = '')");
-	result = mysql_query(sqlHandler, strsql);
-	if(result){
-    	mysql_close(sqlHandler);
-    	HcuErrorPrint("DBISYSSWM: Inquery hcusysswm_swpkg error: %s\n", mysql_error(sqlHandler));
-        return FAILURE;
-	}
-
 	//查具体的结果
 	resPtr = mysql_use_result(sqlHandler);
 	if (!resPtr){
