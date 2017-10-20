@@ -552,7 +552,7 @@ OPSTAT dbi_HcuBfsc_hcusw_ver_Update(char *input, int len)
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
     //入参检查
-    if (len > 100){
+    if (len > (DBI_SW_UPGRADE_INFO_MAX_LEN+1)){
     	HcuErrorPrint("DBIBFSC: Input parameter error!\n");
         return FAILURE;
     }
@@ -596,7 +596,7 @@ OPSTAT dbi_HcuBfsc_ihusw_ver_Update(char *input, int len)
     char strsql[DBI_MAX_SQL_INQUERY_STRING_LENGTH];
 
     //入参检查
-    if (len > 100){
+    if (len > (DBI_SW_UPGRADE_INFO_MAX_LEN+1)){
     	HcuErrorPrint("DBIBFSC: Input parameter error!\n");
         return FAILURE;
     }

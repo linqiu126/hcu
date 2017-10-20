@@ -1789,7 +1789,7 @@ OPSTAT func_sysswm_ftp_file_big_size_process_ihu_sw(void)
 void func_sysswm_sw_init_info_trigger_ui(void)
 {
 	//当前HCU版本
-	char input[99];
+	char input[HCU_SYSSWM_SW_UPGRADE_INFO_MAX_LEN];
 	memset(input, 0, sizeof(input));
 	sprintf(input, "NOW: HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
 	if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO!");
@@ -1810,7 +1810,7 @@ void func_sysswm_sw_init_info_trigger_ui(void)
 void func_sysswm_hcusw_upgrade_info_trigger_ui(void)
 {
 	//升级HCU版本
-	char input[99];
+	char input[HCU_SYSSWM_SW_UPGRADE_INFO_MAX_LEN];
 	memset(input, 0, sizeof(input));
 	sprintf(input, "NEW: HCU-SW-R%d.V%d.DB%d.", zHcuSysEngPar.hwBurnId.swRelId, zHcuSysEngPar.hwBurnId.swVerId, zHcuSysEngPar.hwBurnId.dbVerId);
 	if (zHcuSysEngPar.hwBurnId.swUpgradeFlag == HUITP_IEID_UNI_FW_UPGRADE_NO) strcat(input, "UPG_NO!");
@@ -1831,7 +1831,7 @@ void func_sysswm_hcusw_upgrade_info_trigger_ui(void)
 void func_sysswm_ihusw_upgrade_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver)
 {
 	//升级HCU版本
-	char input[99];
+	char input[HCU_SYSSWM_SW_UPGRADE_INFO_MAX_LEN];
 	memset(input, 0, sizeof(input));
 	sprintf(input, "NEW: IHU-SW-R%d.V%d.DB%d.", swrel, swver, dbver);
 	if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_IHU_STABLE) strcat(input, "STABLE!");
@@ -1853,7 +1853,7 @@ void func_sysswm_ihusw_upgrade_info_trigger_ui(UINT8 session, UINT16 swrel, UINT
 void func_sysswm_sw_inventory_req_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver)
 {
 	//当前HCU版本
-	char input[99];
+	char input[HCU_SYSSWM_SW_UPGRADE_INFO_MAX_LEN];
 	memset(input, 0, sizeof(input));
 	if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT)
 	{
@@ -1895,7 +1895,7 @@ void func_sysswm_sw_inventory_req_info_trigger_ui(UINT8 session, UINT16 swrel, U
 void func_sysswm_sw_inventory_confirm_info_trigger_ui(UINT8 session, UINT16 swrel, UINT16 swver, UINT16 dbver)
 {
 	//当前HCU版本
-	char input[99];
+	char input[HCU_SYSSWM_SW_UPGRADE_INFO_MAX_LEN];
 	memset(input, 0, sizeof(input));
 	if (session == HCU_SYSSWM_SW_DOWNLOAD_SESSION_HCU_CLIENT)
 	{

@@ -26,6 +26,9 @@ enum FSM_STATE_SYSSWM
 //Global variables
 extern HcuFsmStateItem_t HcuFsmSysswm[];
 
+//常亮
+#define HCU_SYSSWM_SW_UPGRADE_INFO_MAX_LEN  99  //要跟BFSC数据表单中的保持一致
+
 //软件系在的上下文
 typedef struct gTaskSysswmContext
 {
