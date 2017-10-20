@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
+-- version 4.6.6deb4
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Oct 20, 2017 at 03:59 PM
--- Server version: 5.7.17-0ubuntu0.16.04.1
--- PHP Version: 7.0.22-0ubuntu0.16.04.1
+-- Host: localhost:3306
+-- Generation Time: 2017-10-20 18:26:57
+-- 服务器版本： 5.7.19-0ubuntu0.17.04.1
+-- PHP Version: 7.0.22-0ubuntu0.17.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuairprsaltitudebmp180datainfo`
+-- 表的结构 `hcuairprsaltitudebmp180datainfo`
 --
 
 CREATE TABLE `hcuairprsaltitudebmp180datainfo` (
@@ -37,7 +37,7 @@ CREATE TABLE `hcuairprsaltitudebmp180datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuairprsbmp180datainfo`
+-- 表的结构 `hcuairprsbmp180datainfo`
 --
 
 CREATE TABLE `hcuairprsbmp180datainfo` (
@@ -51,7 +51,7 @@ CREATE TABLE `hcuairprsbmp180datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuairprsdatainfo`
+-- 表的结构 `hcuairprsdatainfo`
 --
 
 CREATE TABLE `hcuairprsdatainfo` (
@@ -71,7 +71,7 @@ CREATE TABLE `hcuairprsdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcualcoholdatainfo`
+-- 表的结构 `hcualcoholdatainfo`
 --
 
 CREATE TABLE `hcualcoholdatainfo` (
@@ -91,7 +91,7 @@ CREATE TABLE `hcualcoholdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcualcoholmq3alcodatainfo`
+-- 表的结构 `hcualcoholmq3alcodatainfo`
 --
 
 CREATE TABLE `hcualcoholmq3alcodatainfo` (
@@ -105,7 +105,7 @@ CREATE TABLE `hcualcoholmq3alcodatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsccalibration`
+-- 表的结构 `hcubfsccalibration`
 --
 
 CREATE TABLE `hcubfsccalibration` (
@@ -161,7 +161,7 @@ CREATE TABLE `hcubfsccalibration` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfsccalibration`
+-- 转存表中的数据 `hcubfsccalibration`
 --
 
 INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
@@ -170,7 +170,7 @@ INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscconfigpara`
+-- 表的结构 `hcubfscconfigpara`
 --
 
 CREATE TABLE `hcubfscconfigpara` (
@@ -209,7 +209,7 @@ CREATE TABLE `hcubfscconfigpara` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfscconfigpara`
+-- 转存表中的数据 `hcubfscconfigpara`
 --
 
 INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `minscalenum`, `maxscalenum`, `minscalenumstart`, `targetweight`, `upperweightlimit`, `proximitmode`, `combinationbias`, `remaindetectind`, `remaindetecttime`, `remainobjtreat`, `prioritymode`, `automode`, `averagenum`, `loaddetecttime`, `loaddetectthread`, `emptydetecttime`, `emptydetectthread`, `standardreadytime`, `motorspeed`, `motordirection`, `rollingstart`, `rollingstop`, `rollinginterval`, `failuredetectvaration`, `failuredetecttime`) VALUES
@@ -224,7 +224,7 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsccurrentinfo`
+-- 表的结构 `hcubfsccurrentinfo`
 --
 
 CREATE TABLE `hcubfsccurrentinfo` (
@@ -264,12 +264,12 @@ CREATE TABLE `hcubfsccurrentinfo` (
   `status_16` int(4) DEFAULT NULL,
   `value_16` int(4) DEFAULT NULL,
   `curcomwgt` int(4) DEFAULT NULL,
-  `hcusw` char(50) DEFAULT NULL,
-  `ihusw` char(50) DEFAULT NULL
+  `hcusw` char(100) DEFAULT NULL,
+  `ihusw` char(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfsccurrentinfo`
+-- 转存表中的数据 `hcubfsccurrentinfo`
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`, `hcusw`, `ihusw`) VALUES
@@ -278,7 +278,7 @@ INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscfb2ui`
+-- 表的结构 `hcubfscfb2ui`
 --
 
 CREATE TABLE `hcubfscfb2ui` (
@@ -289,7 +289,7 @@ CREATE TABLE `hcubfscfb2ui` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfscfb2ui`
+-- 转存表中的数据 `hcubfscfb2ui`
 --
 
 INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
@@ -300,7 +300,7 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscflowsheet`
+-- 表的结构 `hcubfscflowsheet`
 --
 
 CREATE TABLE `hcubfscflowsheet` (
@@ -312,7 +312,7 @@ CREATE TABLE `hcubfscflowsheet` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `hcubfscflowsheet`
+-- 转存表中的数据 `hcubfscflowsheet`
 --
 
 INSERT INTO `hcubfscflowsheet` (`sid`, `configid`, `targetwgt`, `realwgt`, `pkgnum`) VALUES
@@ -325,7 +325,7 @@ INSERT INTO `hcubfscflowsheet` (`sid`, `configid`, `targetwgt`, `realwgt`, `pkgn
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsclanguagedict`
+-- 表的结构 `hcubfsclanguagedict`
 --
 
 CREATE TABLE `hcubfsclanguagedict` (
@@ -340,7 +340,7 @@ CREATE TABLE `hcubfsclanguagedict` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfsclanguagedict`
+-- 转存表中的数据 `hcubfsclanguagedict`
 --
 
 INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japanese`, `german`, `arabic`, `thai`) VALUES
@@ -423,7 +423,7 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfsclanguagelist`
+-- 表的结构 `hcubfsclanguagelist`
 --
 
 CREATE TABLE `hcubfsclanguagelist` (
@@ -434,7 +434,7 @@ CREATE TABLE `hcubfsclanguagelist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfsclanguagelist`
+-- 转存表中的数据 `hcubfsclanguagelist`
 --
 
 INSERT INTO `hcubfsclanguagelist` (`lang_name`, `lang_icon`, `lang_abbr`, `defaultflag`) VALUES
@@ -449,7 +449,7 @@ INSERT INTO `hcubfsclanguagelist` (`lang_name`, `lang_icon`, `lang_abbr`, `defau
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscstadatainfo`
+-- 表的结构 `hcubfscstadatainfo`
 --
 
 CREATE TABLE `hcubfscstadatainfo` (
@@ -472,7 +472,7 @@ CREATE TABLE `hcubfscstadatainfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcubfscstadatainfo`
+-- 转存表中的数据 `hcubfscstadatainfo`
 --
 
 INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `wsincmatcnt`, `wsincmatwgt`, `wscombtimes`, `wsttttimes`, `wstgvtimes`, `wstttmatcnt`, `wstgvmatcnt`, `wstttmatwgt`, `wstgvmatwgt`, `wsavgttttimes`, `wsavgtttmatcnt`, `wsavgtttmatwgt`) VALUES
@@ -488,7 +488,7 @@ INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcubfscstaticpara`
+-- 表的结构 `hcubfscstaticpara`
 --
 
 CREATE TABLE `hcubfscstaticpara` (
@@ -504,7 +504,7 @@ CREATE TABLE `hcubfscstaticpara` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='calibration and sensor configuration table';
 
 --
--- Dumping data for table `hcubfscstaticpara`
+-- 转存表中的数据 `hcubfscstaticpara`
 --
 
 INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `caladcgain`, `caladcwordrate`, `snrstaticzerovalue`, `snrtailorvalue`, `snrdynzerothread`, `snrdynzerohysteresis`) VALUES
@@ -513,7 +513,7 @@ INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `calad
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuco1datainfo`
+-- 表的结构 `hcuco1datainfo`
 --
 
 CREATE TABLE `hcuco1datainfo` (
@@ -533,7 +533,7 @@ CREATE TABLE `hcuco1datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuemcdatainfo`
+-- 表的结构 `hcuemcdatainfo`
 --
 
 CREATE TABLE `hcuemcdatainfo` (
@@ -551,7 +551,7 @@ CREATE TABLE `hcuemcdatainfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcuemcdatainfo`
+-- 转存表中的数据 `hcuemcdatainfo`
 --
 
 INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emcvalue`, `EW`, `gpsx`, `NS`, `gpsy`, `gpsz`, `onofflineflag`) VALUES
@@ -602,7 +602,7 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhchodatainfo`
+-- 表的结构 `hcuhchodatainfo`
 --
 
 CREATE TABLE `hcuhchodatainfo` (
@@ -622,7 +622,7 @@ CREATE TABLE `hcuhchodatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhchoze08ch2odatainfo`
+-- 表的结构 `hcuhchoze08ch2odatainfo`
 --
 
 CREATE TABLE `hcuhchoze08ch2odatainfo` (
@@ -636,7 +636,7 @@ CREATE TABLE `hcuhchoze08ch2odatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhsmmpdatainfo`
+-- 表的结构 `hcuhsmmpdatainfo`
 --
 
 CREATE TABLE `hcuhsmmpdatainfo` (
@@ -657,7 +657,7 @@ CREATE TABLE `hcuhsmmpdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumiddatainfo`
+-- 表的结构 `hcuhumiddatainfo`
 --
 
 CREATE TABLE `hcuhumiddatainfo` (
@@ -677,7 +677,7 @@ CREATE TABLE `hcuhumiddatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumiddht11datainfo`
+-- 表的结构 `hcuhumiddht11datainfo`
 --
 
 CREATE TABLE `hcuhumiddht11datainfo` (
@@ -691,7 +691,7 @@ CREATE TABLE `hcuhumiddht11datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumidmth01datainfo`
+-- 表的结构 `hcuhumidmth01datainfo`
 --
 
 CREATE TABLE `hcuhumidmth01datainfo` (
@@ -703,7 +703,7 @@ CREATE TABLE `hcuhumidmth01datainfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcuhumidmth01datainfo`
+-- 转存表中的数据 `hcuhumidmth01datainfo`
 --
 
 INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `humidvalue`) VALUES
@@ -712,7 +712,7 @@ INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumidrht03datainfo`
+-- 表的结构 `hcuhumidrht03datainfo`
 --
 
 CREATE TABLE `hcuhumidrht03datainfo` (
@@ -726,7 +726,7 @@ CREATE TABLE `hcuhumidrht03datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuhumidsht20datainfo`
+-- 表的结构 `hcuhumidsht20datainfo`
 --
 
 CREATE TABLE `hcuhumidsht20datainfo` (
@@ -740,7 +740,7 @@ CREATE TABLE `hcuhumidsht20datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuigmcj188datainfo`
+-- 表的结构 `hcuigmcj188datainfo`
 --
 
 CREATE TABLE `hcuigmcj188datainfo` (
@@ -780,7 +780,7 @@ CREATE TABLE `hcuigmcj188datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuihmcj188datainfo`
+-- 表的结构 `hcuihmcj188datainfo`
 --
 
 CREATE TABLE `hcuihmcj188datainfo` (
@@ -824,7 +824,7 @@ CREATE TABLE `hcuihmcj188datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuipmcj188datainfo`
+-- 表的结构 `hcuipmcj188datainfo`
 --
 
 CREATE TABLE `hcuipmcj188datainfo` (
@@ -864,7 +864,7 @@ CREATE TABLE `hcuipmcj188datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuiwmcj188datainfo`
+-- 表的结构 `hcuiwmcj188datainfo`
 --
 
 CREATE TABLE `hcuiwmcj188datainfo` (
@@ -904,7 +904,7 @@ CREATE TABLE `hcuiwmcj188datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hculightstrbh1750datainfo`
+-- 表的结构 `hculightstrbh1750datainfo`
 --
 
 CREATE TABLE `hculightstrbh1750datainfo` (
@@ -918,7 +918,7 @@ CREATE TABLE `hculightstrbh1750datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hculightstrdatainfo`
+-- 表的结构 `hculightstrdatainfo`
 --
 
 CREATE TABLE `hculightstrdatainfo` (
@@ -938,7 +938,7 @@ CREATE TABLE `hculightstrdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcunoisedatainfo`
+-- 表的结构 `hcunoisedatainfo`
 --
 
 CREATE TABLE `hcunoisedatainfo` (
@@ -958,7 +958,7 @@ CREATE TABLE `hcunoisedatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcupm25bmpd300datainfo`
+-- 表的结构 `hcupm25bmpd300datainfo`
 --
 
 CREATE TABLE `hcupm25bmpd300datainfo` (
@@ -972,7 +972,7 @@ CREATE TABLE `hcupm25bmpd300datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcupm25datainfo`
+-- 表的结构 `hcupm25datainfo`
 --
 
 CREATE TABLE `hcupm25datainfo` (
@@ -994,7 +994,7 @@ CREATE TABLE `hcupm25datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcupm25sharpdatainfo`
+-- 表的结构 `hcupm25sharpdatainfo`
 --
 
 CREATE TABLE `hcupm25sharpdatainfo` (
@@ -1008,7 +1008,7 @@ CREATE TABLE `hcupm25sharpdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysalarminfo`
+-- 表的结构 `hcusysalarminfo`
 --
 
 CREATE TABLE `hcusysalarminfo` (
@@ -1023,7 +1023,7 @@ CREATE TABLE `hcusysalarminfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusysalarminfo`
+-- 转存表中的数据 `hcusysalarminfo`
 --
 
 INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `alarmseverity`, `alarmclearflag`, `alarmdesc`, `timestamp`) VALUES
@@ -3221,7 +3221,7 @@ INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `ala
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysengpar`
+-- 表的结构 `hcusysengpar`
 --
 
 CREATE TABLE `hcusysengpar` (
@@ -3254,7 +3254,7 @@ CREATE TABLE `hcusysengpar` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusysengpar`
+-- 转存表中的数据 `hcusysengpar`
 --
 
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `seriesportforqrprinter`, `svraddhttplocal`, `svraddsocketipdefault`, `svraddhttpdefault`, `svrnamedefault`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`, `windircalibration`) VALUES
@@ -3276,7 +3276,7 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysengtimer`
+-- 表的结构 `hcusysengtimer`
 --
 
 CREATE TABLE `hcusysengtimer` (
@@ -3287,7 +3287,7 @@ CREATE TABLE `hcusysengtimer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusysengtimer`
+-- 转存表中的数据 `hcusysengtimer`
 --
 
 INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`) VALUES
@@ -3383,7 +3383,7 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusyspmglobaldatainfo`
+-- 表的结构 `hcusyspmglobaldatainfo`
 --
 
 CREATE TABLE `hcusyspmglobaldatainfo` (
@@ -3423,7 +3423,7 @@ CREATE TABLE `hcusyspmglobaldatainfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusyspmglobaldatainfo`
+-- 转存表中的数据 `hcusyspmglobaldatainfo`
 --
 
 INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
@@ -4812,7 +4812,7 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysswm_swdl`
+-- 表的结构 `hcusysswm_swdl`
 --
 
 CREATE TABLE `hcusysswm_swdl` (
@@ -4838,7 +4838,7 @@ CREATE TABLE `hcusysswm_swdl` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcusysswm_swpkg`
+-- 表的结构 `hcusysswm_swpkg`
 --
 
 CREATE TABLE `hcusysswm_swpkg` (
@@ -4861,7 +4861,7 @@ CREATE TABLE `hcusysswm_swpkg` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcusysswm_swpkg`
+-- 转存表中的数据 `hcusysswm_swpkg`
 --
 
 INSERT INTO `hcusysswm_swpkg` (`sid`, `equentry`, `hwtype`, `hwpem`, `swrel`, `swver`, `dbver`, `upgradeflag`, `swtotallen`, `swchecksum`, `dbtotallen`, `dbchecksum`, `filename`, `dbname`, `currentactive`, `updatetime`) VALUES
@@ -4883,7 +4883,7 @@ INSERT INTO `hcusysswm_swpkg` (`sid`, `equentry`, `hwtype`, `hwpem`, `swrel`, `s
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempbmp180datainfo`
+-- 表的结构 `hcutempbmp180datainfo`
 --
 
 CREATE TABLE `hcutempbmp180datainfo` (
@@ -4897,7 +4897,7 @@ CREATE TABLE `hcutempbmp180datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempdatainfo`
+-- 表的结构 `hcutempdatainfo`
 --
 
 CREATE TABLE `hcutempdatainfo` (
@@ -4917,7 +4917,7 @@ CREATE TABLE `hcutempdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempdht11datainfo`
+-- 表的结构 `hcutempdht11datainfo`
 --
 
 CREATE TABLE `hcutempdht11datainfo` (
@@ -4931,7 +4931,7 @@ CREATE TABLE `hcutempdht11datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempmth01datainfo`
+-- 表的结构 `hcutempmth01datainfo`
 --
 
 CREATE TABLE `hcutempmth01datainfo` (
@@ -4945,7 +4945,7 @@ CREATE TABLE `hcutempmth01datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutemprht03datainfo`
+-- 表的结构 `hcutemprht03datainfo`
 --
 
 CREATE TABLE `hcutemprht03datainfo` (
@@ -4959,7 +4959,7 @@ CREATE TABLE `hcutemprht03datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutempsht20datainfo`
+-- 表的结构 `hcutempsht20datainfo`
 --
 
 CREATE TABLE `hcutempsht20datainfo` (
@@ -4973,7 +4973,7 @@ CREATE TABLE `hcutempsht20datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutoxicgasdatainfo`
+-- 表的结构 `hcutoxicgasdatainfo`
 --
 
 CREATE TABLE `hcutoxicgasdatainfo` (
@@ -4993,7 +4993,7 @@ CREATE TABLE `hcutoxicgasdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutoxicgasmq135datainfo`
+-- 表的结构 `hcutoxicgasmq135datainfo`
 --
 
 CREATE TABLE `hcutoxicgasmq135datainfo` (
@@ -5007,7 +5007,7 @@ CREATE TABLE `hcutoxicgasmq135datainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutoxicgaszp01vocdatainfo`
+-- 表的结构 `hcutoxicgaszp01vocdatainfo`
 --
 
 CREATE TABLE `hcutoxicgaszp01vocdatainfo` (
@@ -5021,7 +5021,7 @@ CREATE TABLE `hcutoxicgaszp01vocdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutracemodulectr`
+-- 表的结构 `hcutracemodulectr`
 --
 
 CREATE TABLE `hcutracemodulectr` (
@@ -5035,7 +5035,7 @@ CREATE TABLE `hcutracemodulectr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcutracemodulectr`
+-- 转存表中的数据 `hcutracemodulectr`
 --
 
 INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `moduletoallow`, `moduletorestrict`, `modulefromallow`, `modulefromrestrict`) VALUES
@@ -5126,7 +5126,7 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcutracemsgctr`
+-- 表的结构 `hcutracemsgctr`
 --
 
 CREATE TABLE `hcutracemsgctr` (
@@ -5138,7 +5138,7 @@ CREATE TABLE `hcutracemsgctr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `hcutracemsgctr`
+-- 转存表中的数据 `hcutracemsgctr`
 --
 
 INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msgrestrict`) VALUES
@@ -5436,7 +5436,7 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuwinddirdatainfo`
+-- 表的结构 `hcuwinddirdatainfo`
 --
 
 CREATE TABLE `hcuwinddirdatainfo` (
@@ -5456,7 +5456,7 @@ CREATE TABLE `hcuwinddirdatainfo` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hcuwindspddatainfo`
+-- 表的结构 `hcuwindspddatainfo`
 --
 
 CREATE TABLE `hcuwindspddatainfo` (
@@ -5791,241 +5791,241 @@ ALTER TABLE `hcuwindspddatainfo`
   ADD PRIMARY KEY (`sid`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- 在导出的表使用AUTO_INCREMENT
 --
 
 --
--- AUTO_INCREMENT for table `hcuairprsaltitudebmp180datainfo`
+-- 使用表AUTO_INCREMENT `hcuairprsaltitudebmp180datainfo`
 --
 ALTER TABLE `hcuairprsaltitudebmp180datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuairprsbmp180datainfo`
+-- 使用表AUTO_INCREMENT `hcuairprsbmp180datainfo`
 --
 ALTER TABLE `hcuairprsbmp180datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuairprsdatainfo`
+-- 使用表AUTO_INCREMENT `hcuairprsdatainfo`
 --
 ALTER TABLE `hcuairprsdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcualcoholdatainfo`
+-- 使用表AUTO_INCREMENT `hcualcoholdatainfo`
 --
 ALTER TABLE `hcualcoholdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcualcoholmq3alcodatainfo`
+-- 使用表AUTO_INCREMENT `hcualcoholmq3alcodatainfo`
 --
 ALTER TABLE `hcualcoholmq3alcodatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcubfsccalibration`
+-- 使用表AUTO_INCREMENT `hcubfsccalibration`
 --
 ALTER TABLE `hcubfsccalibration`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `hcubfscconfigpara`
+-- 使用表AUTO_INCREMENT `hcubfscconfigpara`
 --
 ALTER TABLE `hcubfscconfigpara`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
--- AUTO_INCREMENT for table `hcubfscfb2ui`
+-- 使用表AUTO_INCREMENT `hcubfscfb2ui`
 --
 ALTER TABLE `hcubfscfb2ui`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
--- AUTO_INCREMENT for table `hcubfscflowsheet`
+-- 使用表AUTO_INCREMENT `hcubfscflowsheet`
 --
 ALTER TABLE `hcubfscflowsheet`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
--- AUTO_INCREMENT for table `hcubfsclanguagedict`
+-- 使用表AUTO_INCREMENT `hcubfsclanguagedict`
 --
 ALTER TABLE `hcubfsclanguagedict`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 --
--- AUTO_INCREMENT for table `hcubfscstadatainfo`
+-- 使用表AUTO_INCREMENT `hcubfscstadatainfo`
 --
 ALTER TABLE `hcubfscstadatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24856;
 --
--- AUTO_INCREMENT for table `hcubfscstaticpara`
+-- 使用表AUTO_INCREMENT `hcubfscstaticpara`
 --
 ALTER TABLE `hcubfscstaticpara`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `hcuco1datainfo`
+-- 使用表AUTO_INCREMENT `hcuco1datainfo`
 --
 ALTER TABLE `hcuco1datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuemcdatainfo`
+-- 使用表AUTO_INCREMENT `hcuemcdatainfo`
 --
 ALTER TABLE `hcuemcdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12205;
 --
--- AUTO_INCREMENT for table `hcuhchodatainfo`
+-- 使用表AUTO_INCREMENT `hcuhchodatainfo`
 --
 ALTER TABLE `hcuhchodatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuhchoze08ch2odatainfo`
+-- 使用表AUTO_INCREMENT `hcuhchoze08ch2odatainfo`
 --
 ALTER TABLE `hcuhchoze08ch2odatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuhsmmpdatainfo`
+-- 使用表AUTO_INCREMENT `hcuhsmmpdatainfo`
 --
 ALTER TABLE `hcuhsmmpdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuhumiddatainfo`
+-- 使用表AUTO_INCREMENT `hcuhumiddatainfo`
 --
 ALTER TABLE `hcuhumiddatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuhumiddht11datainfo`
+-- 使用表AUTO_INCREMENT `hcuhumiddht11datainfo`
 --
 ALTER TABLE `hcuhumiddht11datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuhumidmth01datainfo`
+-- 使用表AUTO_INCREMENT `hcuhumidmth01datainfo`
 --
 ALTER TABLE `hcuhumidmth01datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `hcuhumidrht03datainfo`
+-- 使用表AUTO_INCREMENT `hcuhumidrht03datainfo`
 --
 ALTER TABLE `hcuhumidrht03datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuhumidsht20datainfo`
+-- 使用表AUTO_INCREMENT `hcuhumidsht20datainfo`
 --
 ALTER TABLE `hcuhumidsht20datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuigmcj188datainfo`
+-- 使用表AUTO_INCREMENT `hcuigmcj188datainfo`
 --
 ALTER TABLE `hcuigmcj188datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuihmcj188datainfo`
+-- 使用表AUTO_INCREMENT `hcuihmcj188datainfo`
 --
 ALTER TABLE `hcuihmcj188datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuipmcj188datainfo`
+-- 使用表AUTO_INCREMENT `hcuipmcj188datainfo`
 --
 ALTER TABLE `hcuipmcj188datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuiwmcj188datainfo`
+-- 使用表AUTO_INCREMENT `hcuiwmcj188datainfo`
 --
 ALTER TABLE `hcuiwmcj188datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hculightstrbh1750datainfo`
+-- 使用表AUTO_INCREMENT `hculightstrbh1750datainfo`
 --
 ALTER TABLE `hculightstrbh1750datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hculightstrdatainfo`
+-- 使用表AUTO_INCREMENT `hculightstrdatainfo`
 --
 ALTER TABLE `hculightstrdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcunoisedatainfo`
+-- 使用表AUTO_INCREMENT `hcunoisedatainfo`
 --
 ALTER TABLE `hcunoisedatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcupm25bmpd300datainfo`
+-- 使用表AUTO_INCREMENT `hcupm25bmpd300datainfo`
 --
 ALTER TABLE `hcupm25bmpd300datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcupm25datainfo`
+-- 使用表AUTO_INCREMENT `hcupm25datainfo`
 --
 ALTER TABLE `hcupm25datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcupm25sharpdatainfo`
+-- 使用表AUTO_INCREMENT `hcupm25sharpdatainfo`
 --
 ALTER TABLE `hcupm25sharpdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcusysalarminfo`
+-- 使用表AUTO_INCREMENT `hcusysalarminfo`
 --
 ALTER TABLE `hcusysalarminfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2195;
 --
--- AUTO_INCREMENT for table `hcusyspmglobaldatainfo`
+-- 使用表AUTO_INCREMENT `hcusyspmglobaldatainfo`
 --
 ALTER TABLE `hcusyspmglobaldatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1521;
 --
--- AUTO_INCREMENT for table `hcusysswm_swdl`
+-- 使用表AUTO_INCREMENT `hcusysswm_swdl`
 --
 ALTER TABLE `hcusysswm_swdl`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcusysswm_swpkg`
+-- 使用表AUTO_INCREMENT `hcusysswm_swpkg`
 --
 ALTER TABLE `hcusysswm_swpkg`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 --
--- AUTO_INCREMENT for table `hcutempbmp180datainfo`
+-- 使用表AUTO_INCREMENT `hcutempbmp180datainfo`
 --
 ALTER TABLE `hcutempbmp180datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcutempdatainfo`
+-- 使用表AUTO_INCREMENT `hcutempdatainfo`
 --
 ALTER TABLE `hcutempdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcutempdht11datainfo`
+-- 使用表AUTO_INCREMENT `hcutempdht11datainfo`
 --
 ALTER TABLE `hcutempdht11datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcutempmth01datainfo`
+-- 使用表AUTO_INCREMENT `hcutempmth01datainfo`
 --
 ALTER TABLE `hcutempmth01datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcutemprht03datainfo`
+-- 使用表AUTO_INCREMENT `hcutemprht03datainfo`
 --
 ALTER TABLE `hcutemprht03datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcutempsht20datainfo`
+-- 使用表AUTO_INCREMENT `hcutempsht20datainfo`
 --
 ALTER TABLE `hcutempsht20datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcutoxicgasdatainfo`
+-- 使用表AUTO_INCREMENT `hcutoxicgasdatainfo`
 --
 ALTER TABLE `hcutoxicgasdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcutoxicgasmq135datainfo`
+-- 使用表AUTO_INCREMENT `hcutoxicgasmq135datainfo`
 --
 ALTER TABLE `hcutoxicgasmq135datainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcutoxicgaszp01vocdatainfo`
+-- 使用表AUTO_INCREMENT `hcutoxicgaszp01vocdatainfo`
 --
 ALTER TABLE `hcutoxicgaszp01vocdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuwinddirdatainfo`
+-- 使用表AUTO_INCREMENT `hcuwinddirdatainfo`
 --
 ALTER TABLE `hcuwinddirdatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `hcuwindspddatainfo`
+-- 使用表AUTO_INCREMENT `hcuwindspddatainfo`
 --
 ALTER TABLE `hcuwindspddatainfo`
   MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;

@@ -12,6 +12,8 @@
 
 #define DBI_BFSC_DATA_SAVE_DAYS_MIN 90  //最短90天，不能再短
 #define DBI_MAX_FBINFO_STRING_LENGTH 500 //String length for field fbinfo in table hcubfscfb2ui
+#define DBI_SW_UPGRADE_INFO_MAX_LEN 99
+
 
 //为了表达传感器状态，需要定义一系列状态
 #define DBI_BFSC_SNESOR_STATUS_INVALID  		0
