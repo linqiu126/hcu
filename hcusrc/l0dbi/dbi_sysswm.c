@@ -610,8 +610,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
         return FAILURE;
 	}
 
-	//STEP4: 所有文件不存在的COMP记录
-    sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE);
+	//STEP3.5: 所有无效的记录
+    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`hwtype` = '0' OR `swtotallen` < '5' OR `swtotallen` > '100000000')");
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);
@@ -619,8 +619,8 @@ OPSTAT dbi_HcuSysSwm_SwPkg_download_incomplete_file_and_table_delete(void)
         return FAILURE;
 	}
 
-	//STEP5: 所有无效的记录
-    sprintf(strsql, "DELETE FROM `hcusysswm_swpkg` WHERE (`hwtype` = '0')");
+	//STEP4: 所有文件不存在的COMP记录
+    sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`currentactive` = '%s')", HCU_SYSMSG_SYSSWM_CUR_ACTIVE_COMPLETE);
 	result = mysql_query(sqlHandler, strsql);
 	if(result){
     	mysql_close(sqlHandler);

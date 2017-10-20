@@ -1396,6 +1396,10 @@ UINT32 func_sysswm_caculate_file_length_in_bytes(char *fname)
 	if (file_len <=0){
 		HcuErrorPrint("SYSSWM: No file content, file len = %d!\n", file_len);
 		fclose(fp);
+		char s[200];
+		memset(s, 0, sizeof(s));
+		sprintf(s, "rm -r %s", fname);
+		system(s);
 		return 0;
 	}
 
