@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.12deb2+deb8u1
+-- version 4.5.4.1deb2ubuntu2
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 16, 2017 at 01:46 PM
--- Server version: 5.5.44-0+deb8u1
--- PHP Version: 5.6.20-0+deb8u1
+-- Generation Time: Oct 20, 2017 at 03:59 PM
+-- Server version: 5.7.17-0ubuntu0.16.04.1
+-- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `hcudb`
@@ -26,8 +26,8 @@ SET time_zone = "+00:00";
 -- Table structure for table `hcuairprsaltitudebmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuairprsaltitudebmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS `hcuairprsaltitudebmp180datainfo` (
 -- Table structure for table `hcuairprsbmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuairprsbmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS `hcuairprsbmp180datainfo` (
 -- Table structure for table `hcuairprsdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuairprsdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS `hcuairprsdatainfo` (
 -- Table structure for table `hcualcoholdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcualcoholdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS `hcualcoholdatainfo` (
 -- Table structure for table `hcualcoholmq3alcodatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcualcoholmq3alcodatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -108,8 +108,8 @@ CREATE TABLE IF NOT EXISTS `hcualcoholmq3alcodatainfo` (
 -- Table structure for table `hcubfsccalibration`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcubfsccalibration` (
+  `sid` int(4) NOT NULL,
   `zeroadc_01` int(4) NOT NULL DEFAULT '0',
   `fulladc_01` int(4) NOT NULL DEFAULT '0',
   `fullwgt_01` int(4) NOT NULL DEFAULT '100000',
@@ -158,14 +158,14 @@ CREATE TABLE IF NOT EXISTS `hcubfsccalibration` (
   `zeroadc_16` int(4) NOT NULL DEFAULT '0',
   `fulladc_16` int(4) NOT NULL DEFAULT '0',
   `fullwgt_16` int(4) NOT NULL DEFAULT '100000'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfsccalibration`
 --
 
 INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01`, `zeroadc_02`, `fulladc_02`, `fullwgt_02`, `zeroadc_03`, `fulladc_03`, `fullwgt_03`, `zeroadc_04`, `fulladc_04`, `fullwgt_04`, `zeroadc_05`, `fulladc_05`, `fullwgt_05`, `zeroadc_06`, `fulladc_06`, `fullwgt_06`, `zeroadc_07`, `fulladc_07`, `fullwgt_07`, `zeroadc_08`, `fulladc_08`, `fullwgt_08`, `zeroadc_09`, `fulladc_09`, `fullwgt_09`, `zeroadc_10`, `fulladc_10`, `fullwgt_10`, `zeroadc_11`, `fulladc_11`, `fullwgt_11`, `zeroadc_12`, `fulladc_12`, `fullwgt_12`, `zeroadc_13`, `fulladc_13`, `fullwgt_13`, `zeroadc_14`, `fulladc_14`, `fullwgt_14`, `zeroadc_15`, `fulladc_15`, `fullwgt_15`, `zeroadc_16`, `fulladc_16`, `fullwgt_16`) VALUES
-(1, 469766, 541706, 100000, 459562, 532218, 100000, 463213, 535540, 100000, 466429, 538960, 100000, 451004, 523020, 100000, 476088, 549336, 100000, 448084, 519687, 100000, 464022, 535865, 100000, 464715, 537256, 100000, 472162, 544166, 100000, 448185, 519955, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000);
+(1, 402121, 475568, 100000, 397526, 469447, 100000, 398223, 471012, 100000, 412981, 487157, 100000, 402460, 475539, 100000, 400936, 473725, 100000, 404690, 477764, 100000, 397114, 469254, 100000, 398982, 471891, 100000, 409975, 482795, 100000, 448185, 519955, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000, 433829, 506237, 100000);
 
 -- --------------------------------------------------------
 
@@ -173,8 +173,8 @@ INSERT INTO `hcubfsccalibration` (`sid`, `zeroadc_01`, `fulladc_01`, `fullwgt_01
 -- Table structure for table `hcubfscconfigpara`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcubfscconfigpara` (
+  `sid` int(4) NOT NULL,
   `confname` varchar(50) NOT NULL,
   `currentconf` char(1) NOT NULL DEFAULT 'N',
   `baseconf` char(1) NOT NULL DEFAULT 'N',
@@ -206,14 +206,14 @@ CREATE TABLE IF NOT EXISTS `hcubfscconfigpara` (
   `rollinginterval` int(4) NOT NULL DEFAULT '500',
   `failuredetectvaration` int(4) NOT NULL DEFAULT '500',
   `failuredetecttime` int(4) NOT NULL DEFAULT '500'
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfscconfigpara`
 --
 
 INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `confowner`, `conficon`, `confdescription`, `minscalenum`, `maxscalenum`, `minscalenumstart`, `targetweight`, `upperweightlimit`, `proximitmode`, `combinationbias`, `remaindetectind`, `remaindetecttime`, `remainobjtreat`, `prioritymode`, `automode`, `averagenum`, `loaddetecttime`, `loaddetectthread`, `emptydetecttime`, `emptydetectthread`, `standardreadytime`, `motorspeed`, `motordirection`, `rollingstart`, `rollingstop`, `rollinginterval`, `failuredetectvaration`, `failuredetecttime`) VALUES
-(4, 'candy 1', 'Y', 'N', 'Bofeng', 'candy.svg', 'candy 200g', 1, 16, 1, 20000, 5000, 0, 1, 0, 2, 0, 0, 0, 1, 400, 100, 400, 500, 0, 150, 0, 5000, 0, 0, 0, 0),
+(4, 'candy 1', 'Y', 'N', 'Bofeng', 'candy.svg', 'candy 200g', 1, 16, 1, 20000, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 400, 100, 400, 500, 0, 400, 0, 1000, 0, 0, 0, 0),
 (7, 'apple 1', 'N', 'N', 'Bofeng', 'apple12.svg', 'Apple 1Kg', 2, 16, 1, 100000, 5000, 0, 1, 0, 2, 0, 0, 0, 1, 400, 100, 400, 500, 0, 150, 0, 5000, 0, 0, 0, 0),
 (8, '-apple', 'N', 'Y', 'System', 'apple54.svg', 'Apple standard config (1Kg) ', 1, 16, 1, 100000, 5000, 0, 1, 0, 2, 0, 0, 0, 1, 400, 100, 400, 500, 0, 150, 0, 5000, 0, 0, 0, 0),
 (9, '-tomato', 'N', 'Y', 'System', 'tomato1.svg', 'Tomato standard config 1Kg', 1, 16, 1, 100000, 5000, 0, 1, 0, 2, 0, 0, 0, 1, 400, 100, 400, 500, 0, 150, 0, 5000, 0, 0, 0, 0),
@@ -227,7 +227,7 @@ INSERT INTO `hcubfscconfigpara` (`sid`, `confname`, `currentconf`, `baseconf`, `
 -- Table structure for table `hcubfsccurrentinfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
+CREATE TABLE `hcubfsccurrentinfo` (
   `timestamp` int(4) NOT NULL,
   `status_00` int(4) DEFAULT NULL,
   `value_00` int(4) DEFAULT NULL,
@@ -273,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsccurrentinfo` (
 --
 
 INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_01`, `value_01`, `status_02`, `value_02`, `status_03`, `value_03`, `status_04`, `value_04`, `status_05`, `value_05`, `status_06`, `value_06`, `status_07`, `value_07`, `status_08`, `value_08`, `status_09`, `value_09`, `status_10`, `value_10`, `status_11`, `value_11`, `status_12`, `value_12`, `status_13`, `value_13`, `status_14`, `value_14`, `status_15`, `value_15`, `status_16`, `value_16`, `curcomwgt`, `hcusw`, `ihusw`) VALUES
-(1506516349, 0, 35483, 0, 36906, 11, 36906, 0, 33144, 0, 36520, 0, 15508, 0, 28983, 0, 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0, 'HCU-SW-R3.V243.DB11.PATCH', 'IHU-SW-R*.V*.*');
+(1508486169, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 6, 0, 0, 111, 0, 121, 0, 131, 0, 141, 0, 151, 0, 161, 0, 'NOW: Inventory confirm HCU-SW-R3.V265.DB200.PATCH!', 'NOW: Inventory confirm IHU-SW-R3.V214.DB0.PATCH!');
 
 -- --------------------------------------------------------
 
@@ -281,12 +281,12 @@ INSERT INTO `hcubfsccurrentinfo` (`timestamp`, `status_00`, `value_00`, `status_
 -- Table structure for table `hcubfscfb2ui`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscfb2ui` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcubfscfb2ui` (
+  `sid` int(4) NOT NULL,
   `cmdtype` int(1) NOT NULL,
   `validflag` int(1) NOT NULL,
   `fbinfo` char(80) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfscfb2ui`
@@ -303,13 +303,24 @@ INSERT INTO `hcubfscfb2ui` (`sid`, `cmdtype`, `validflag`, `fbinfo`) VALUES
 -- Table structure for table `hcubfscflowsheet`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscflowsheet` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcubfscflowsheet` (
+  `sid` int(4) NOT NULL,
   `configid` int(2) NOT NULL,
   `targetwgt` int(4) NOT NULL,
   `realwgt` int(4) NOT NULL,
   `pkgnum` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `hcubfscflowsheet`
+--
+
+INSERT INTO `hcubfscflowsheet` (`sid`, `configid`, `targetwgt`, `realwgt`, `pkgnum`) VALUES
+(1, 4, 20000, 23215, 1),
+(2, 4, 20000, 23302, 1),
+(3, 4, 20000, 22658, 1),
+(4, 4, 20000, 22596, 1),
+(5, 4, 20000, 24155, 4);
 
 -- --------------------------------------------------------
 
@@ -317,8 +328,8 @@ CREATE TABLE IF NOT EXISTS `hcubfscflowsheet` (
 -- Table structure for table `hcubfsclanguagedict`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsclanguagedict` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcubfsclanguagedict` (
+  `sid` int(4) NOT NULL,
   `english` varchar(200) NOT NULL,
   `chinese` varchar(200) DEFAULT NULL,
   `french` varchar(200) DEFAULT NULL,
@@ -326,7 +337,7 @@ CREATE TABLE IF NOT EXISTS `hcubfsclanguagedict` (
   `german` varchar(200) DEFAULT NULL,
   `arabic` varchar(200) DEFAULT NULL,
   `thai` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfsclanguagedict`
@@ -403,7 +414,11 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 (68, 'SW UPGRADE', '软件更新', NULL, NULL, NULL, NULL, NULL),
 (69, 'INVALID', '无效', NULL, NULL, NULL, NULL, NULL),
 (70, 'WARNING:System Suspend;Please click resume;', '告警:系统暂停;请点击继续;', NULL, NULL, NULL, NULL, NULL),
-(71, 'SUSPEND', '暂停', NULL, NULL, NULL, NULL, NULL);
+(71, 'SUSPEND', '暂停', NULL, NULL, NULL, NULL, NULL),
+(72, 'SW Version Info', '软件版本信息', NULL, NULL, NULL, NULL, NULL),
+(73, 'New Version available, please reboot whole system', '有新版本，请重启系统', NULL, NULL, NULL, NULL, NULL),
+(74, 'SW Version Info', '软件版本信息', NULL, NULL, NULL, NULL, NULL),
+(75, 'New Version available, please reboot whole system', '有新版本，请重启系统', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -411,7 +426,7 @@ INSERT INTO `hcubfsclanguagedict` (`sid`, `english`, `chinese`, `french`, `japan
 -- Table structure for table `hcubfsclanguagelist`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfsclanguagelist` (
+CREATE TABLE `hcubfsclanguagelist` (
   `lang_name` varchar(20) NOT NULL,
   `lang_icon` varchar(20) NOT NULL,
   `lang_abbr` varchar(20) NOT NULL,
@@ -437,8 +452,8 @@ INSERT INTO `hcubfsclanguagelist` (`lang_name`, `lang_icon`, `lang_abbr`, `defau
 -- Table structure for table `hcubfscstadatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcubfscstadatainfo` (
+  `sid` int(4) NOT NULL,
   `statype` char(20) DEFAULT NULL,
   `configid` int(4) DEFAULT NULL,
   `timestamp` int(4) DEFAULT NULL,
@@ -454,7 +469,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscstadatainfo` (
   `wsavgttttimes` int(4) DEFAULT NULL,
   `wsavgtttmatcnt` int(4) DEFAULT NULL,
   `wsavgtttmatwgt` double(18,2) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcubfscstadatainfo`
@@ -464,7 +479,11 @@ INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 (1, 'BFSC_STA_24_HOUR', 1, 1501126545, 22, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
 (3, 'BFSC_STA_LOCAL_UI', 1, 1502874213, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
 (4, 'BFSC_STA_UP_2_NOW', 1, 1501641451, 22, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
-(21, 'BFSC_STA_LOCAL_UI', 0, 1503199385, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
+(21, 'BFSC_STA_LOCAL_UI', 0, 1503199385, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(11897, 'BFSC_STA_60_MIN', 4, 1508402309, 1276, 1790622.00, 2, 2, 0, 2, 0, 45254.00, 0.00, 2, 2, 45254.00),
+(24843, 'BFSC_STA_24_HOUR', 4, 1508486339, 8, 11636.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(24854, 'BFSC_STA_LOCAL_UI', 4, 1508486344, 0, 0.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00),
+(24855, 'BFSC_STA_UP_2_NOW', 4, 1508486344, 8, 11636.00, 0, 0, 0, 0, 0, 0.00, 0.00, 0, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -472,8 +491,8 @@ INSERT INTO `hcubfscstadatainfo` (`sid`, `statype`, `configid`, `timestamp`, `ws
 -- Table structure for table `hcubfscstaticpara`
 --
 
-CREATE TABLE IF NOT EXISTS `hcubfscstaticpara` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcubfscstaticpara` (
+  `sid` int(4) NOT NULL,
   `calmaxallowedwgt` int(4) NOT NULL DEFAULT '0',
   `calfullwgt` int(4) NOT NULL DEFAULT '0',
   `caladcgain` int(4) NOT NULL DEFAULT '0',
@@ -482,7 +501,7 @@ CREATE TABLE IF NOT EXISTS `hcubfscstaticpara` (
   `snrtailorvalue` int(4) NOT NULL DEFAULT '0',
   `snrdynzerothread` int(4) NOT NULL DEFAULT '0',
   `snrdynzerohysteresis` int(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='calibration and sensor configuration table';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='calibration and sensor configuration table';
 
 --
 -- Dumping data for table `hcubfscstaticpara`
@@ -497,8 +516,8 @@ INSERT INTO `hcubfscstaticpara` (`sid`, `calmaxallowedwgt`, `calfullwgt`, `calad
 -- Table structure for table `hcuco1datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuco1datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -517,8 +536,8 @@ CREATE TABLE IF NOT EXISTS `hcuco1datainfo` (
 -- Table structure for table `hcuemcdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuemcdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -529,7 +548,7 @@ CREATE TABLE IF NOT EXISTS `hcuemcdatainfo` (
   `gpsy` int(4) NOT NULL,
   `gpsz` int(4) NOT NULL,
   `onofflineflag` int(2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12205 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuemcdatainfo`
@@ -586,8 +605,8 @@ INSERT INTO `hcuemcdatainfo` (`sid`, `deviceid`, `timestamp`, `dataformat`, `emc
 -- Table structure for table `hcuhchodatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuhchodatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -606,8 +625,8 @@ CREATE TABLE IF NOT EXISTS `hcuhchodatainfo` (
 -- Table structure for table `hcuhchoze08ch2odatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuhchoze08ch2odatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -620,8 +639,8 @@ CREATE TABLE IF NOT EXISTS `hcuhchoze08ch2odatainfo` (
 -- Table structure for table `hcuhsmmpdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuhsmmpdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `hsmmpfdir` char(100) NOT NULL,
@@ -641,8 +660,8 @@ CREATE TABLE IF NOT EXISTS `hcuhsmmpdatainfo` (
 -- Table structure for table `hcuhumiddatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuhumiddatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -661,8 +680,8 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddatainfo` (
 -- Table structure for table `hcuhumiddht11datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumiddht11datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuhumiddht11datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -675,13 +694,13 @@ CREATE TABLE IF NOT EXISTS `hcuhumiddht11datainfo` (
 -- Table structure for table `hcuhumidmth01datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidmth01datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuhumidmth01datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
   `humidvalue` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcuhumidmth01datainfo`
@@ -696,8 +715,8 @@ INSERT INTO `hcuhumidmth01datainfo` (`sid`, `deviceid`, `timestamp`, `dataformat
 -- Table structure for table `hcuhumidrht03datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuhumidrht03datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -710,8 +729,8 @@ CREATE TABLE IF NOT EXISTS `hcuhumidrht03datainfo` (
 -- Table structure for table `hcuhumidsht20datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuhumidsht20datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -724,8 +743,8 @@ CREATE TABLE IF NOT EXISTS `hcuhumidsht20datainfo` (
 -- Table structure for table `hcuigmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuigmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -764,8 +783,8 @@ CREATE TABLE IF NOT EXISTS `hcuigmcj188datainfo` (
 -- Table structure for table `hcuihmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuihmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -808,8 +827,8 @@ CREATE TABLE IF NOT EXISTS `hcuihmcj188datainfo` (
 -- Table structure for table `hcuipmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuipmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -848,8 +867,8 @@ CREATE TABLE IF NOT EXISTS `hcuipmcj188datainfo` (
 -- Table structure for table `hcuiwmcj188datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuiwmcj188datainfo` (
+  `sid` int(4) NOT NULL,
   `cj188address` char(14) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `equtype` int(1) NOT NULL,
@@ -888,8 +907,8 @@ CREATE TABLE IF NOT EXISTS `hcuiwmcj188datainfo` (
 -- Table structure for table `hculightstrbh1750datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hculightstrbh1750datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -902,8 +921,8 @@ CREATE TABLE IF NOT EXISTS `hculightstrbh1750datainfo` (
 -- Table structure for table `hculightstrdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hculightstrdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -922,8 +941,8 @@ CREATE TABLE IF NOT EXISTS `hculightstrdatainfo` (
 -- Table structure for table `hcunoisedatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcunoisedatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -942,8 +961,8 @@ CREATE TABLE IF NOT EXISTS `hcunoisedatainfo` (
 -- Table structure for table `hcupm25bmpd300datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcupm25bmpd300datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -956,8 +975,8 @@ CREATE TABLE IF NOT EXISTS `hcupm25bmpd300datainfo` (
 -- Table structure for table `hcupm25datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcupm25datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -978,8 +997,8 @@ CREATE TABLE IF NOT EXISTS `hcupm25datainfo` (
 -- Table structure for table `hcupm25sharpdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcupm25sharpdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -992,8 +1011,8 @@ CREATE TABLE IF NOT EXISTS `hcupm25sharpdatainfo` (
 -- Table structure for table `hcusysalarminfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysalarminfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcusysalarminfo` (
+  `sid` int(4) NOT NULL,
   `eqpid` int(4) NOT NULL,
   `alarmtype` int(4) NOT NULL,
   `alarmcontent` int(4) NOT NULL,
@@ -1001,7 +1020,7 @@ CREATE TABLE IF NOT EXISTS `hcusysalarminfo` (
   `alarmclearflag` int(4) NOT NULL,
   `alarmdesc` char(100) NOT NULL,
   `timestamp` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2195 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcusysalarminfo`
@@ -3205,7 +3224,7 @@ INSERT INTO `hcusysalarminfo` (`sid`, `eqpid`, `alarmtype`, `alarmcontent`, `ala
 -- Table structure for table `hcusysengpar`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysengpar` (
+CREATE TABLE `hcusysengpar` (
   `prjname` char(100) NOT NULL,
   `commbackhawlcon` int(1) NOT NULL,
   `hcudbhost` char(20) NOT NULL,
@@ -3240,10 +3259,8 @@ CREATE TABLE IF NOT EXISTS `hcusysengpar` (
 
 INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuser`, `hcudbpsw`, `hcudbname`, `hcudbport`, `seriesportformodbus`, `seriesportforgps`, `seriesportforpm25sharp`, `seriesportforqrprinter`, `svraddhttplocal`, `svraddsocketipdefault`, `svraddhttpdefault`, `svrnamedefault`, `cloudftppwdvideo`, `cloudftpuservideo`, `hcuvideoserverdir`, `hcuvideoserverhttp`, `debugmode`, `tracemode`, `browselautostartupflag`, `browselprog`, `browselstartupaddress`, `browselworkingoption`, `windircalibration`) VALUES
 ('HCU_PRJ_AQYCG10_335D', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0),
-('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 1, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-kiosk', 0),
+('HCU_PRJ_AQYCG20_RASBERRY', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 1, 1, 'http://127.0.0.1/test.php', '112.64.16.27', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_wechat.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-kiosk', 0),
 ('HCU_PRJ_AQYC_OBSOLETE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0),
-('HCU_PRJ_BFDF_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0),
-('HCU_PRJ_BFHS_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0),
 ('HCU_PRJ_BFSC_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0),
 ('HCU_PRJ_CXGLACM', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0),
 ('HCU_PRJ_CXILC', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0),
@@ -3252,7 +3269,9 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 ('HCU_PRJ_NBIOT_LPM_CJ', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0),
 ('HCU_PRJ_OPWL_OTDR', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0),
 ('HCU_PRJ_TBSWRG30', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0),
-('HCU_PRJ_TEST_MODE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0);
+('HCU_PRJ_TEST_MODE', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 3, 1, 0, 1, 'http://127.0.0.1/test.php', 'http://aaa.bbb/', 'http://121.40.185.177/xhzn/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'AQ_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 31, 4, 0, 'firefox', 'http://localhost/yii2basic/web/index.php', '-', 0),
+('HCU_PRJ_BFDF_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0),
+('HCU_PRJ_BFHS_CBU', 1, 'localhost', 'root', '123456', 'hcudb', 3306, 0, 4, 2, 1, 'http://127.0.0.1/test.php', '121.40.118.33', 'http://www.hkrob.com/mfunhcu/l1mainentry/cloud_callback_hcu.php', 'XHZN_HCU', 'avorion', 'Avorion321', '/usr/local/apache_arm/htdocs/avorion/', 'http://192.168.1.232:8000/avorion/', 28, 4, 0, 'chromium-browser', '--app=http://localhost/bfscui/index.html', '--no-sandbox --kiosk --password-store --start-fullscreen', 0);
 
 -- --------------------------------------------------------
 
@@ -3260,7 +3279,7 @@ INSERT INTO `hcusysengpar` (`prjname`, `commbackhawlcon`, `hcudbhost`, `hcudbuse
 -- Table structure for table `hcusysengtimer`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysengtimer` (
+CREATE TABLE `hcusysengtimer` (
   `timerid` int(2) NOT NULL,
   `timername` char(40) NOT NULL,
   `granularity` int(1) NOT NULL,
@@ -3276,25 +3295,25 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (1, 'TID_1S_MIN', 1, 0),
 (2, 'TID_1S_SVRCON_INIT_FB', 1, 10),
 (3, 'TID_1S_LED_GALOWAG_SCAN', 1, 1),
-(4, 'TID_1S_EMC_PERIOD_READ', 1, 600),
+(4, 'TID_1S_EMC_PERIOD_READ', 1, 100),
 (5, 'TID_1S_EMC_MODBUS_FB', 1, 10),
-(6, 'TID_1S_PM25_PERIOD_READ', 1, 31),
+(6, 'TID_1S_PM25_PERIOD_READ', 1, 600),
 (7, 'TID_1S_PM25_MODBUS_FB', 1, 10),
-(8, 'TID_1S_WINDDIR_PERIOD_READ', 1, 13),
+(8, 'TID_1S_WINDDIR_PERIOD_READ', 1, 600),
 (9, 'TID_1S_WINDDIR_MODBUS_FB', 1, 10),
-(10, 'TID_1S_WINDSPD_PERIOD_READ', 1, 15),
+(10, 'TID_1S_WINDSPD_PERIOD_READ', 1, 600),
 (11, 'TID_1S_WINDSPD_MODBUS_FB', 1, 10),
-(12, 'TID_1S_TEMP_PERIOD_READ', 1, 17),
+(12, 'TID_1S_TEMP_PERIOD_READ', 1, 600),
 (13, 'TID_1S_TEMP_FB', 1, 10),
-(14, 'TID_1S_HUMID_PERIOD_READ', 1, 19),
+(14, 'TID_1S_HUMID_PERIOD_READ', 1, 600),
 (15, 'TID_1S_HUMID_MODBUS_FB', 1, 10),
-(16, 'TID_1S_NOISE_PERIOD_READ', 1, 7),
-(17, 'TID_1S_NOISE_MODBUS_FB', 1, 5),
+(16, 'TID_1S_NOISE_PERIOD_READ', 1, 600),
+(17, 'TID_1S_NOISE_MODBUS_FB', 1, 10),
 (18, 'TID_1S_NOISE_SPSVIRGO_FB', 1, 10),
-(19, 'TID_1S_HSMMP_PERIOD_AVORION_READ', 1, 1120),
+(19, 'TID_1S_HSMMP_PERIOD_AVORION_READ', 1, 600),
 (20, 'TID_1S_HSMMP_AVORION_FB', 1, 10),
 (21, 'TID_ID_1S_HSMMP_PERIOD_CURL_PICTURE', 1, 3600),
-(22, 'TID_1S_CLOUDVELA_PERIOD_LINK_HBT', 1, 600),
+(22, 'TID_1S_CLOUDVELA_PERIOD_LINK_HBT', 1, 10),
 (23, 'TID_1S_NBIOTCJ188_PERIOD_LINK_HBT', 1, 600),
 (24, 'TID_1S_NBIOTCJ188_SEND_DATA_BACK', 1, 10),
 (25, 'TID_1S_NBIOTQG376_PERIOD_LINK_HBT', 1, 600),
@@ -3312,47 +3331,54 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 (37, 'TID_1S_IGM_PERIOD_READ', 1, 600),
 (38, 'TID_1S_IPM_PERIOD_READ', 1, 600),
 (39, 'TID_1S_SYSPM_PERIOD_WORKING', 1, 311),
-(40, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 60),
+(40, 'TID_1S_SYSSWM_PERIOD_WORKING', 1, 900),
 (41, 'TID_1S_SYSSWM_SEG_DL_WAIT', 1, 3),
 (42, 'TID_1S_CANITFLEO_WORKING_SCAN', 1, 10),
 (43, 'TID_1S_L3BFSC_SYS_CFG_WAIT_FB', 1, 15),
 (44, 'TID_1S_L3BFSC_SYS_START_WAIT_FB', 1, 15),
 (45, 'TID_1S_L3BFSC_SYS_STOP_WAIT_FB', 1, 15),
-(46, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 15),
-(47, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 15),
-(48, 'TID_1S_L3BFSC_ERROR_INQ', 1, 60),
-(49, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 600),
+(46, 'TID_1S_L3BFSC_TTT_WAIT_FB', 1, 60),
+(47, 'TID_1S_L3BFSC_TGU_WAIT_FB', 1, 60),
+(48, 'TID_1S_L3BFSC_ERROR_INQ', 1, 15),
+(49, 'TID_1S_BFSCUICOMM_PERIOD_READ', 1, 5),
 (50, 'TID_1S_L3BFDF_CFG_START_WAIT_FB', 1, 15),
-(51, 'TID_1S_L3BFDF_TTT_WAIT_FB', 1, 3),
-(52, 'TID_1S_BFDFUICOMM_PERIOD_READ', 1, 600),
-(53, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
-(54, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
-(55, 'TID_1S_L3AQYCG20_PERIOD_STA_SCAN', 1, 30),
-(56, 'TID_1S_L3AQYCG20_START_MIN_REPORT', 1, 60),
-(57, 'TID_1S_L3AQYCG20_STOP_MIN_REPORT', 1, 60),
-(58, 'TID_1S_L3AQYCG20_START_HOUR_REPORT', 1, 60),
-(59, 'TID_1S_L3AQYCG20_STOP_HOUR_REPORT', 1, 60),
-(60, 'TID_1S_L3AQYCG20_START_DAY_REPORT', 1, 60),
-(61, 'TID_1S_L3AQYCG20_STOP_DAY_REPORT', 1, 60),
-(62, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
-(63, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
-(64, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
-(65, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
-(66, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
-(67, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
-(68, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
-(69, 'TID_1S_L3HATE_WORK_CTRL_FB', 1, 5),
-(70, 'TID_1S_MAX', 1, 0),
-(71, 'TID_10MS_MIN', 2, 0),
-(72, 'TID_10MS_SVRCON_TEST', 2, 10000),
-(73, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
-(74, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 20),
-(75, 'TID_10MS_L3BFDF_PERIOD_STA_SCAN', 2, 50),
-(76, 'TID_10MS_MAX', 2, 0),
-(77, 'TID_1MS_MIN', 3, 0),
-(78, 'TID_1MS_SVRCON_TEST', 3, 100),
-(79, 'TID_1MS_MAX', 3, 0),
-(80, 'TID_MAX', 1, 0);
+(51, 'TID_1S_L3BFDF_SUSPEND_WAIT_FB', 1, 15),
+(52, 'TID_1S_L3BFDF_RESUME_WAIT_FB', 1, 15),
+(53, 'TID_1S_L3BFDF_TTT_WAIT_FB', 1, 3),
+(54, 'TID_1S_BFDFUICOMM_PERIOD_READ', 1, 600),
+(55, 'TID_1S_L3BFHS_CFG_START_WAIT_FB', 1, 5),
+(56, 'TID_1S_L3BFHS_SUSPEND_WAIT_FB', 1, 5),
+(57, 'TID_1S_L3BFHS_RESUME_WAIT_FB', 1, 5),
+(58, 'TID_1S_BFHSUICOMM_PERIOD_READ', 1, 600),
+(59, 'TID_1S_L3AQYCG10_PERIOD_READ', 1, 600),
+(60, 'TID_1S_L3AQYCG20_PERIOD_READ', 1, 600),
+(61, 'TID_1S_L3AQYCG20_PERIOD_STA_SCAN', 1, 30),
+(62, 'TID_1S_L3AQYCG20_START_MIN_REPORT', 1, 60),
+(63, 'TID_1S_L3AQYCG20_STOP_MIN_REPORT', 1, 60),
+(64, 'TID_1S_L3AQYCG20_START_HOUR_REPORT', 1, 60),
+(65, 'TID_1S_L3AQYCG20_STOP_HOUR_REPORT', 1, 60),
+(66, 'TID_1S_L3AQYCG20_START_DAY_REPORT', 1, 60),
+(67, 'TID_1S_L3AQYCG20_STOP_DAY_REPORT', 1, 60),
+(68, 'TID_1S_L3TBSWRG30_PERIOD_READ', 1, 600),
+(69, 'TID_1S_L3GQYBG40_PERIOD_READ', 1, 600),
+(70, 'TID_1S_L3CXGLACM_PERIOD_READ', 1, 600),
+(71, 'TID_1S_L3CXILC_PERIOD_READ', 1, 600),
+(72, 'TID_1S_L3NBHPM_PERIOD_READ', 1, 600),
+(73, 'TID_1S_L3NBLPM_PERIOD_READ', 1, 600),
+(74, 'TID_1S_L3OPWLOTDR_PERIOD_READ', 1, 600),
+(75, 'TID_1S_L3HATE_WORK_CTRL_FB', 1, 5),
+(76, 'TID_1S_MAX', 1, 0),
+(77, 'TID_10MS_MIN', 2, 0),
+(78, 'TID_10MS_SVRCON_TEST', 2, 10000),
+(79, 'TID_10MS_L3BFSC_PERIOD_STA_SCAN', 2, 50),
+(80, 'TID_10MS_CANITFLEO_SIMULATION_DATA', 2, 40),
+(81, 'TID_10MS_L3BFDF_PERIOD_STA_SCAN', 2, 50),
+(82, 'TID_10MS_L3BFHS_PERIOD_STA_SCAN', 2, 50),
+(83, 'TID_10MS_MAX', 2, 0),
+(84, 'TID_1MS_MIN', 3, 0),
+(85, 'TID_1MS_SVRCON_TEST', 3, 100),
+(86, 'TID_1MS_MAX', 3, 0),
+(87, 'TID_MAX', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -3360,8 +3386,8 @@ INSERT INTO `hcusysengtimer` (`timerid`, `timername`, `granularity`, `duration`)
 -- Table structure for table `hcusyspmglobaldatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcusyspmglobaldatainfo` (
+  `sid` int(4) NOT NULL,
   `taskhcuvmec` int(4) NOT NULL,
   `taskhwinvec` int(4) NOT NULL,
   `tasksyspmec` int(4) NOT NULL,
@@ -3394,152 +3420,13 @@ CREATE TABLE IF NOT EXISTS `hcusyspmglobaldatainfo` (
   `diskoccupy` int(11) NOT NULL,
   `cputemp` int(11) NOT NULL,
   `timestamp` int(4) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=702 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `hcusyspmglobaldatainfo`
 --
 
 INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
-(4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1497083649),
-(5, 0, 24, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 29, 35, 0, 1497083964),
-(6, 0, 45, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 29, 35, 0, 1497084075),
-(7, 0, 69, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 29, 35, 0, 1497084186),
-(8, 0, 90, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 29, 35, 0, 1497084297),
-(9, 0, 114, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 13, 28, 35, 0, 1497084408),
-(10, 0, 135, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 31, 28, 35, 0, 1497084519),
-(11, 0, 156, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 31, 28, 35, 0, 1497084630),
-(12, 0, 24, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 29, 35, 0, 1497085367),
-(13, 0, 24, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 28, 35, 0, 1497085814),
-(14, 0, 45, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 28, 35, 0, 1497085925),
-(15, 0, 69, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 3, 28, 35, 0, 1497086036),
-(16, 0, 24, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 35, 0, 1497086910),
-(17, 0, 45, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 8, 35, 0, 1497087021),
-(18, 0, 69, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 64, 8, 35, 0, 1497087132),
-(19, 0, 90, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 58, 9, 35, 0, 1497087243),
-(20, 0, 114, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 61, 9, 35, 0, 1497087354),
-(21, 0, 135, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 9, 35, 0, 1497087465),
-(22, 0, 156, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 4, 9, 35, 0, 1497087577),
-(23, 0, 180, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 95, 10, 35, 0, 1497087687),
-(24, 0, 24, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 17, 11, 35, 0, 1497088027),
-(25, 0, 24, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 10, 34, 0, 1497089409),
-(26, 0, 45, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 10, 34, 0, 1497089519),
-(27, 0, 69, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16, 10, 34, 0, 1497089630),
-(28, 0, 90, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 11, 10, 34, 0, 1497089741),
-(29, 0, 114, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 10, 34, 0, 1497089852),
-(30, 0, 135, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 12, 10, 34, 0, 1497089963),
-(31, 0, 156, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 11, 10, 34, 0, 1497090074),
-(32, 0, 180, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 50, 10, 34, 0, 1497090185),
-(33, 0, 201, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11, 10, 34, 0, 1497090296),
-(34, 0, 225, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12, 10, 34, 0, 1497090407),
-(35, 0, 246, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 25, 10, 34, 0, 1497090518),
-(36, 0, 267, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 17, 10, 34, 0, 1497090629),
-(37, 0, 291, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 10, 34, 0, 1497090741),
-(38, 0, 312, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14, 10, 34, 0, 1497090852),
-(39, 0, 336, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 11, 10, 34, 0, 1497090962),
-(40, 0, 357, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 12, 10, 34, 0, 1497091073),
-(41, 0, 378, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 10, 10, 34, 0, 1497091185),
-(42, 0, 402, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 10, 10, 34, 0, 1497091295),
-(43, 0, 423, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 12, 10, 34, 0, 1497091407),
-(44, 0, 447, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 11, 10, 34, 0, 1497091517),
-(45, 0, 468, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 11, 10, 34, 0, 1497091629),
-(46, 0, 489, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 11, 10, 34, 0, 1497091739),
-(47, 0, 513, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 12, 10, 34, 0, 1497091850),
-(48, 0, 534, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 11, 10, 34, 0, 1497091961),
-(49, 0, 558, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 11, 10, 34, 0, 1497092072),
-(50, 0, 579, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 11, 10, 34, 0, 1497092183),
-(51, 0, 600, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 11, 10, 34, 0, 1497092294),
-(52, 0, 624, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 11, 10, 34, 0, 1497092406),
-(53, 0, 645, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 13, 10, 34, 0, 1497092516),
-(54, 0, 669, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 12, 10, 34, 0, 1497092627),
-(55, 0, 690, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 10, 34, 0, 1497092738),
-(56, 0, 711, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 11, 11, 34, 0, 1497092849),
-(57, 0, 735, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 11, 34, 0, 1497092960),
-(58, 0, 756, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 11, 11, 34, 0, 1497093072),
-(59, 0, 780, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 12, 11, 34, 0, 1497093182),
-(60, 0, 801, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 10, 11, 34, 0, 1497093294),
-(61, 0, 822, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 9, 11, 34, 0, 1497093405),
-(62, 0, 846, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 6, 11, 34, 0, 1497093515),
-(63, 0, 867, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 10, 11, 34, 0, 1497093626),
-(64, 0, 891, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 7, 11, 34, 0, 1497093738),
-(65, 0, 912, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 8, 11, 34, 0, 1497093849),
-(66, 0, 933, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 7, 11, 34, 0, 1497093959),
-(67, 0, 957, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 7, 11, 34, 0, 1497094071),
-(68, 0, 978, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 7, 11, 34, 0, 1497094181),
-(69, 0, 999, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 7, 11, 34, 0, 1497094293),
-(70, 0, 1023, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 54, 11, 34, 0, 1497094403),
-(71, 0, 1044, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 16, 11, 34, 0, 1497094515),
-(72, 0, 1068, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 11, 11, 34, 0, 1497094626),
-(73, 0, 1089, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 5, 11, 34, 0, 1497094737),
-(74, 0, 1110, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 11, 34, 0, 1497094847),
-(75, 0, 1134, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 11, 34, 0, 1497094958),
-(76, 0, 1155, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 16, 11, 34, 0, 1497095070),
-(77, 0, 1179, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 11, 34, 0, 1497095180),
-(78, 0, 1200, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 11, 34, 0, 1497095292),
-(79, 0, 1221, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 12, 12, 34, 0, 1497095403),
-(80, 0, 1245, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 13, 12, 34, 0, 1497095513),
-(81, 0, 1266, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 12, 34, 0, 1497095624),
-(82, 0, 1290, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 4, 12, 34, 0, 1497095736),
-(83, 0, 1311, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 7, 12, 34, 0, 1497095847),
-(84, 0, 1332, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 11, 12, 34, 0, 1497095958),
-(85, 0, 1356, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 5, 12, 34, 0, 1497096069),
-(86, 0, 1377, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 44, 12, 34, 0, 1497096179),
-(87, 0, 24, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 13, 34, 0, 1497096401),
-(88, 0, 45, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 13, 34, 0, 1497096513),
-(89, 0, 69, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 13, 34, 0, 1497096624),
-(90, 0, 90, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 13, 34, 0, 1497096734),
-(91, 0, 114, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 13, 34, 0, 1497096845),
-(92, 0, 135, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 66, 13, 34, 0, 1497096956),
-(93, 0, 156, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 34, 0, 1497097067),
-(94, 0, 180, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 29, 13, 34, 0, 1497097179),
-(95, 0, 201, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 53, 13, 34, 0, 1497097289),
-(96, 0, 225, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 45, 13, 34, 0, 1497097400),
-(97, 0, 246, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 16, 13, 34, 0, 1497097511),
-(98, 0, 267, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 70, 13, 34, 0, 1497097622),
-(99, 0, 291, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 13, 34, 0, 1497097734),
-(100, 0, 312, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 6, 13, 34, 0, 1497097845),
-(101, 0, 336, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 18, 13, 34, 0, 1497097955),
-(102, 0, 357, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 13, 34, 0, 1497098066),
-(103, 0, 378, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 13, 34, 0, 1497098178),
-(104, 0, 402, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 14, 34, 0, 1497098289),
-(105, 0, 423, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 14, 34, 0, 1497098399),
-(106, 0, 447, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 14, 34, 0, 1497098511),
-(107, 0, 468, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3, 14, 34, 0, 1497098621),
-(108, 0, 489, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 14, 34, 0, 1497098732),
-(109, 0, 513, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 14, 34, 0, 1497098844),
-(110, 0, 534, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 14, 34, 0, 1497098954),
-(111, 0, 558, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 14, 34, 0, 1497099065),
-(112, 0, 24, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 14, 34, 0, 1497099264),
-(113, 0, 45, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 14, 34, 0, 1497099376),
-(114, 0, 69, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 14, 34, 0, 1497099487),
-(115, 0, 90, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 14, 34, 0, 1497099597),
-(116, 0, 114, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 14, 34, 0, 1497099708),
-(117, 0, 135, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 14, 34, 0, 1497099820),
-(118, 0, 156, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5, 14, 34, 0, 1497099931),
-(119, 0, 180, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 14, 34, 0, 1497100042),
-(120, 0, 24, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 15, 34, 0, 1497100259),
-(121, 0, 45, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 13, 34, 0, 1497100370),
-(122, 0, 69, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 78, 13, 34, 0, 1497100481),
-(123, 0, 90, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 13, 34, 0, 1497100592),
-(124, 0, 24, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 13, 34, 0, 1497100788),
-(125, 0, 45, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 55, 13, 34, 0, 1497100899),
-(126, 0, 69, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 66, 13, 34, 0, 1497101010),
-(127, 0, 90, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 61, 13, 34, 0, 1497101121),
-(128, 0, 114, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 27, 13, 34, 0, 1497101232),
-(129, 0, 24, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 39, 13, 34, 0, 1497101395),
-(130, 0, 45, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 13, 34, 0, 1497101506),
-(131, 0, 69, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 13, 34, 0, 1497101617),
-(132, 0, 90, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 27, 13, 34, 0, 1497101728),
-(133, 0, 114, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 50, 13, 34, 0, 1497101839),
-(134, 0, 135, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 80, 13, 34, 0, 1497101950),
-(135, 0, 156, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 62, 13, 34, 0, 1497102061),
-(136, 0, 180, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 79, 13, 34, 0, 1497102172),
-(137, 0, 201, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 68, 13, 34, 0, 1497102283),
-(138, 0, 225, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 52, 13, 34, 0, 1497102394),
-(139, 0, 246, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 48, 13, 34, 0, 1497102505),
-(140, 0, 267, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 60, 13, 34, 0, 1497102616),
-(141, 0, 291, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 98, 13, 34, 0, 1497102727),
-(142, 0, 24, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 69, 15, 34, 0, 1497102959),
 (143, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 43, 5, 61, 56, 1500786595),
 (144, 0, 45, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 23, 0, 2, 0, 5, 3, 61, 55, 1500786706),
 (145, 0, 69, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 34, 0, 4, 0, 54, 2, 61, 59, 1500786817),
@@ -3825,8 +3712,7 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (425, 0, 3930, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 4, 0, 196, 1, 18, 35, 0, 1501146768),
 (426, 0, 3951, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 4, 0, 196, 1, 18, 35, 0, 1501146878),
 (427, 0, 3975, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 4, 0, 197, 1, 18, 35, 0, 1501146989),
-(428, 0, 3996, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 4, 0, 197, 2, 18, 35, 0, 1501147100);
-INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
+(428, 0, 3996, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 4, 0, 197, 2, 18, 35, 0, 1501147100),
 (429, 0, 4017, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 4, 0, 197, 3, 18, 35, 0, 1501147211),
 (430, 0, 4041, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 4, 0, 199, 1, 18, 35, 0, 1501147322),
 (431, 0, 4062, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7, 4, 0, 199, 1, 18, 35, 0, 1501147433),
@@ -3964,7 +3850,8 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (563, 0, 5226, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 22, 89, 0, 1502842015),
 (564, 0, 5256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 22, 89, 0, 1502842326),
 (565, 0, 5289, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 22, 89, 0, 1502842638),
-(566, 0, 5319, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 22, 89, 0, 1502842948),
+(566, 0, 5319, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 22, 89, 0, 1502842948);
+INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
 (567, 0, 5349, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 22, 89, 0, 1502843259),
 (568, 0, 5382, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 22, 89, 0, 1502843570),
 (569, 0, 5412, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 22, 89, 0, 1502843881),
@@ -4099,7 +3986,828 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 (698, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 32, 0, 0, 0, 0, 8, 32, 0, 1504704021),
 (699, 0, 135, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 60, 0, 0, 1, 19, 8, 32, 0, 1504704331),
 (700, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 32, 0, 0, 0, 10, 8, 32, 0, 1504704713),
-(701, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 15, 8, 31, 0, 1506516670);
+(701, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 15, 8, 31, 0, 1506516670),
+(702, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 9, 26, 0, 1507696860),
+(703, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9, 11, 26, 0, 1507697171),
+(704, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9, 12, 26, 0, 1507697482),
+(705, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 20, 13, 26, 0, 1507697793),
+(706, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 43, 13, 26, 0, 1507698105),
+(707, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 7, 14, 26, 0, 1507698415),
+(708, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9, 14, 26, 0, 1507698726),
+(709, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9, 15, 26, 0, 1507699037),
+(710, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 90, 5, 26, 0, 1507699349),
+(711, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 12, 12, 26, 0, 1507702464),
+(712, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 7, 16, 26, 0, 1507702867),
+(713, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 22, 16, 26, 0, 1507703178),
+(714, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 6, 18, 26, 0, 1507703488),
+(715, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 14, 8, 26, 0, 1507704281),
+(716, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 6, 10, 26, 0, 1507704592),
+(717, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 6, 13, 26, 0, 1507704903),
+(718, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 7, 14, 26, 0, 1507705214),
+(719, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 15, 26, 0, 1507705525),
+(720, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 7, 16, 26, 0, 1507705836),
+(721, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 8, 17, 26, 0, 1507706147),
+(722, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 10, 26, 0, 1507710809),
+(723, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 7, 13, 26, 0, 1507711119),
+(724, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 7, 15, 26, 0, 1507711430),
+(725, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 7, 16, 26, 0, 1507711741),
+(726, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 8, 17, 26, 0, 1507712052),
+(727, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 7, 18, 26, 0, 1507712363),
+(728, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3, 8, 19, 26, 0, 1507712674),
+(729, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 5, 7, 20, 26, 0, 1507712985),
+(730, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 5, 9, 20, 26, 0, 1507713296),
+(731, 0, 624, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 5, 8, 19, 26, 0, 1507713607),
+(732, 0, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 8, 19, 26, 0, 1507713918),
+(733, 0, 747, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 8, 19, 26, 0, 1507714230),
+(734, 0, 810, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 7, 20, 26, 0, 1507714540),
+(735, 0, 873, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 51, 19, 26, 0, 1507714851),
+(736, 0, 936, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 29, 1, 0, 78, 25, 18, 26, 0, 1507715162),
+(737, 0, 996, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 60, 1, 0, 182, 7, 18, 26, 0, 1507715473),
+(738, 0, 1059, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 91, 1, 0, 286, 7, 18, 26, 0, 1507715784),
+(739, 0, 1122, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 122, 1, 0, 389, 7, 18, 26, 0, 1507716095),
+(740, 0, 1182, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 154, 1, 0, 493, 7, 18, 26, 0, 1507716406),
+(741, 0, 1245, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 185, 1, 0, 597, 7, 18, 26, 0, 1507716717),
+(742, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 63, 8, 26, 0, 1507717683),
+(743, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 12, 26, 0, 1507718047),
+(744, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 15, 26, 0, 1507718666),
+(745, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 21, 16, 26, 0, 1507718976),
+(746, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 8, 26, 0, 1507721876),
+(747, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 47, 12, 26, 0, 1507722439),
+(748, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 13, 26, 0, 1507722959),
+(749, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 14, 26, 0, 1507723269),
+(750, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 14, 26, 0, 1507723580),
+(751, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 15, 26, 0, 1507723892),
+(752, 0, 63, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 32, 0, 0, 0, 10, 7, 26, 0, 1507724573),
+(753, 0, 126, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 93, 0, 63, 0, 0, 0, 9, 8, 26, 0, 1507724884),
+(754, 0, 189, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 139, 0, 94, 0, 0, 0, 9, 10, 26, 0, 1507725195),
+(755, 0, 252, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 186, 0, 125, 0, 0, 0, 10, 11, 26, 0, 1507725506),
+(756, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 8, 26, 0, 1507726407),
+(757, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 6, 26, 0, 1507727073),
+(758, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 12, 26, 0, 1507727788),
+(759, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 14, 26, 0, 1507728099),
+(760, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 35, 17, 26, 0, 1507728411),
+(761, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 12, 12, 26, 0, 1507730426),
+(762, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 14, 26, 0, 1507730737),
+(763, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 15, 26, 0, 1507731048),
+(764, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 27, 7, 26, 0, 1507731694),
+(765, 0, 63, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 32, 0, 0, 0, 12, 10, 24, 0, 1508218079),
+(766, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 50, 13, 24, 0, 1508222122),
+(767, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 16, 24, 0, 1508222432),
+(768, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 17, 25, 0, 1508222743),
+(769, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 8, 24, 0, 1508227265),
+(770, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 10, 24, 0, 1508227576),
+(771, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 12, 24, 0, 1508227887),
+(772, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 14, 24, 0, 1508228198),
+(773, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 15, 24, 0, 1508228509),
+(774, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 7, 15, 24, 0, 1508228821),
+(775, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 15, 24, 0, 1508229131),
+(776, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 16, 24, 0, 1508229442),
+(777, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 17, 24, 0, 1508229753),
+(778, 0, 624, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 17, 24, 0, 1508230064),
+(779, 0, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 17, 24, 0, 1508230375),
+(780, 0, 747, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 18, 24, 0, 1508230686),
+(781, 0, 810, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 18, 24, 0, 1508230997),
+(782, 0, 873, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 18, 24, 0, 1508231308),
+(783, 0, 936, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 18, 24, 0, 1508231619),
+(784, 0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 18, 24, 0, 1508231930),
+(785, 0, 1059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 18, 24, 0, 1508232241),
+(786, 0, 1122, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16, 1, 0, 58, 4, 18, 24, 0, 1508232552),
+(787, 0, 1182, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 48, 1, 0, 162, 4, 18, 24, 0, 1508232863),
+(788, 0, 1245, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 79, 1, 0, 265, 4, 18, 24, 0, 1508233174),
+(789, 0, 1308, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 110, 1, 0, 369, 4, 18, 24, 0, 1508233485),
+(790, 0, 1371, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 141, 1, 0, 473, 4, 18, 24, 0, 1508233796),
+(791, 0, 1431, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 172, 1, 0, 576, 4, 18, 24, 0, 1508234107),
+(792, 0, 1494, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 203, 1, 0, 680, 4, 19, 24, 0, 1508234418),
+(793, 0, 1557, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 234, 1, 0, 783, 5, 19, 24, 0, 1508234729),
+(794, 0, 1617, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 265, 1, 0, 868, 3, 18, 24, 0, 1508235040),
+(795, 0, 1680, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 296, 1, 0, 1075, 4, 18, 24, 0, 1508235351),
+(796, 0, 1743, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 327, 1, 0, 1179, 4, 18, 24, 0, 1508235662),
+(797, 0, 1806, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 359, 1, 0, 1283, 4, 18, 24, 0, 1508235973),
+(798, 0, 1866, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 390, 1, 0, 1386, 4, 18, 24, 0, 1508236284),
+(799, 0, 1929, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 421, 1, 0, 1490, 4, 18, 24, 0, 1508236595),
+(800, 0, 1992, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 452, 1, 0, 1594, 4, 18, 24, 0, 1508236906),
+(801, 0, 2055, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 483, 1, 0, 1697, 4, 18, 24, 0, 1508237217),
+(802, 0, 2115, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 514, 1, 0, 1801, 4, 18, 24, 0, 1508237528),
+(803, 0, 2178, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 545, 1, 0, 1905, 4, 18, 24, 0, 1508237839),
+(804, 0, 2241, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 576, 1, 0, 2008, 4, 18, 24, 0, 1508238150),
+(805, 0, 2301, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 607, 1, 0, 2112, 4, 18, 24, 0, 1508238461),
+(806, 0, 2364, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 638, 1, 0, 2215, 4, 18, 24, 0, 1508238772),
+(807, 0, 2427, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 670, 1, 0, 2319, 4, 18, 24, 0, 1508239083),
+(808, 0, 2490, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 701, 1, 0, 2423, 4, 18, 24, 0, 1508239394),
+(809, 0, 2550, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 732, 1, 0, 2526, 4, 18, 24, 0, 1508239705),
+(810, 0, 2613, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 763, 1, 0, 2630, 4, 18, 24, 0, 1508240016),
+(811, 0, 2676, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 794, 1, 0, 2734, 4, 18, 24, 0, 1508240327),
+(812, 0, 2739, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 825, 1, 0, 2837, 3, 18, 24, 0, 1508240638),
+(813, 0, 2799, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 856, 1, 0, 2941, 4, 18, 24, 0, 1508240949),
+(814, 0, 2862, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 887, 1, 0, 3045, 4, 18, 24, 0, 1508241260),
+(815, 0, 2925, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 918, 1, 0, 3148, 4, 18, 24, 0, 1508241571),
+(816, 0, 2985, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 949, 1, 0, 3252, 4, 18, 24, 0, 1508241882),
+(817, 0, 3048, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 981, 1, 0, 3356, 4, 18, 24, 0, 1508242193),
+(818, 0, 3111, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1012, 1, 0, 3459, 4, 18, 24, 0, 1508242504),
+(819, 0, 3174, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1043, 1, 0, 3563, 4, 18, 24, 0, 1508242815),
+(820, 0, 3234, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1074, 1, 0, 3666, 5, 18, 24, 0, 1508243126),
+(821, 0, 3297, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1105, 1, 0, 3770, 5, 18, 24, 0, 1508243437),
+(822, 0, 3360, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1136, 1, 0, 3874, 4, 18, 24, 0, 1508243748),
+(823, 0, 3420, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1167, 1, 0, 3977, 4, 18, 24, 0, 1508244059),
+(824, 0, 3483, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1198, 1, 0, 4081, 4, 18, 24, 0, 1508244370),
+(825, 0, 3546, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1229, 1, 0, 4185, 4, 18, 24, 0, 1508244681),
+(826, 0, 3609, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1260, 1, 0, 4288, 3, 18, 24, 0, 1508244992),
+(827, 0, 3669, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1292, 1, 0, 4392, 4, 18, 24, 0, 1508245303),
+(828, 0, 3732, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1323, 1, 0, 4496, 3, 18, 24, 0, 1508245614),
+(829, 0, 3795, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1354, 1, 0, 4599, 5, 18, 24, 0, 1508245925),
+(830, 0, 3858, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1385, 1, 0, 4703, 4, 18, 24, 0, 1508246236),
+(831, 0, 3918, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1416, 1, 0, 4807, 4, 18, 24, 0, 1508246547),
+(832, 0, 3981, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1447, 1, 0, 4910, 4, 18, 24, 0, 1508246858),
+(833, 0, 4044, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1478, 1, 0, 5014, 3, 18, 24, 0, 1508247169),
+(834, 0, 4104, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1509, 1, 0, 5118, 4, 18, 24, 0, 1508247480),
+(835, 0, 4167, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1540, 1, 0, 5221, 4, 18, 24, 0, 1508247791),
+(836, 0, 4230, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1571, 1, 0, 5325, 4, 18, 24, 0, 1508248102),
+(837, 0, 4293, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1603, 1, 0, 5428, 4, 18, 24, 0, 1508248413),
+(838, 0, 4353, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1634, 1, 0, 5532, 4, 18, 25, 0, 1508248724),
+(839, 0, 4416, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1665, 1, 0, 5636, 4, 18, 25, 0, 1508249035),
+(840, 0, 4479, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1696, 1, 0, 5739, 5, 18, 25, 0, 1508249346),
+(841, 0, 4542, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1727, 1, 0, 5843, 4, 18, 25, 0, 1508249657),
+(842, 0, 4602, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1758, 1, 0, 5947, 5, 18, 25, 0, 1508249968),
+(843, 0, 4665, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1789, 1, 0, 6050, 4, 18, 25, 0, 1508250279),
+(844, 0, 4728, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1820, 1, 0, 6154, 4, 18, 25, 0, 1508250590),
+(845, 0, 4788, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1851, 1, 0, 6258, 4, 18, 25, 0, 1508250901),
+(846, 0, 4851, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1882, 1, 0, 6361, 4, 18, 25, 0, 1508251212),
+(847, 0, 4914, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1914, 1, 0, 6465, 5, 17, 25, 0, 1508251523),
+(848, 0, 4977, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1945, 1, 0, 6569, 4, 17, 25, 0, 1508251834),
+(849, 0, 5037, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1976, 1, 0, 6672, 4, 17, 25, 0, 1508252145),
+(850, 0, 5100, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2007, 1, 0, 6776, 4, 17, 25, 0, 1508252456),
+(851, 0, 5163, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2038, 1, 0, 6879, 4, 17, 25, 0, 1508252767),
+(852, 0, 5223, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2069, 1, 0, 6983, 4, 17, 25, 0, 1508253078),
+(853, 0, 5286, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2100, 1, 0, 7087, 4, 17, 25, 0, 1508253389),
+(854, 0, 5349, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2131, 1, 0, 7190, 4, 17, 25, 0, 1508253700),
+(855, 0, 5412, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2162, 1, 0, 7294, 4, 17, 25, 0, 1508254011),
+(856, 0, 5472, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2193, 1, 0, 7398, 4, 17, 25, 0, 1508254322),
+(857, 0, 5535, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2225, 1, 0, 7501, 4, 17, 25, 0, 1508254633),
+(858, 0, 5598, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2256, 1, 0, 7605, 4, 17, 25, 0, 1508254944),
+(859, 0, 5661, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2287, 1, 0, 7709, 4, 17, 25, 0, 1508255255),
+(860, 0, 5721, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2318, 1, 0, 7812, 3, 17, 25, 0, 1508255566),
+(861, 0, 5784, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2349, 1, 0, 7916, 4, 17, 25, 0, 1508255877),
+(862, 0, 5847, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2380, 1, 0, 8020, 4, 17, 25, 0, 1508256188),
+(863, 0, 5907, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2411, 1, 0, 8123, 4, 17, 25, 0, 1508256499),
+(864, 0, 5970, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2442, 1, 0, 8227, 4, 17, 25, 0, 1508256810),
+(865, 0, 6033, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2473, 1, 0, 8331, 4, 17, 25, 0, 1508257121),
+(866, 0, 6096, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2504, 1, 0, 8434, 4, 17, 25, 0, 1508257432),
+(867, 0, 6156, 0, 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2536, 1, 0, 8538, 5, 17, 25, 0, 1508257743),
+(868, 0, 6219, 0, 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2567, 1, 0, 8641, 4, 17, 25, 0, 1508258054),
+(869, 0, 6282, 0, 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2598, 1, 0, 8745, 4, 17, 25, 0, 1508258365),
+(870, 0, 6342, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2629, 1, 0, 8849, 4, 17, 25, 0, 1508258676),
+(871, 0, 6405, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2660, 1, 0, 8952, 4, 17, 25, 0, 1508258987),
+(872, 0, 6468, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2691, 1, 0, 9056, 3, 17, 25, 0, 1508259298),
+(873, 0, 6531, 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2722, 1, 0, 9160, 5, 17, 25, 0, 1508259609),
+(874, 0, 6591, 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2753, 1, 0, 9263, 4, 17, 25, 0, 1508259920),
+(875, 0, 6654, 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2784, 1, 0, 9367, 5, 17, 25, 0, 1508260231),
+(876, 0, 6717, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2815, 1, 0, 9471, 4, 17, 25, 0, 1508260542),
+(877, 0, 6780, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2847, 1, 0, 9574, 4, 17, 25, 0, 1508260853),
+(878, 0, 6840, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2878, 1, 0, 9678, 4, 17, 25, 0, 1508261164),
+(879, 0, 6903, 0, 0, 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2909, 1, 0, 9782, 4, 17, 25, 0, 1508261475),
+(880, 0, 6966, 0, 0, 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2940, 1, 0, 9885, 4, 17, 25, 0, 1508261786),
+(881, 0, 7026, 0, 0, 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2971, 1, 0, 9989, 4, 17, 25, 0, 1508262097),
+(882, 0, 7089, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3002, 1, 0, 10092, 4, 17, 25, 0, 1508262408),
+(883, 0, 7152, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3033, 1, 0, 10196, 4, 17, 25, 0, 1508262720),
+(884, 0, 7215, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3064, 1, 0, 10300, 4, 17, 25, 0, 1508263030),
+(885, 0, 7275, 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3095, 1, 0, 10403, 4, 17, 25, 0, 1508263341),
+(886, 0, 7338, 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3126, 1, 0, 10507, 4, 17, 25, 0, 1508263652),
+(887, 0, 7401, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3158, 1, 0, 10611, 4, 17, 25, 0, 1508263963),
+(888, 0, 7464, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3189, 1, 0, 10714, 5, 17, 25, 0, 1508264274),
+(889, 0, 7524, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3220, 1, 0, 10818, 4, 17, 25, 0, 1508264585),
+(890, 0, 7587, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3251, 1, 0, 10922, 4, 17, 25, 0, 1508264896),
+(891, 0, 7650, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3282, 1, 0, 11025, 4, 17, 25, 0, 1508265207),
+(892, 0, 7710, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3313, 1, 0, 11129, 4, 17, 25, 0, 1508265518),
+(893, 0, 7773, 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3344, 1, 0, 11233, 4, 17, 25, 0, 1508265829),
+(894, 0, 7836, 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3375, 1, 0, 11336, 4, 17, 25, 0, 1508266140),
+(895, 0, 7899, 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3406, 1, 0, 11440, 4, 17, 25, 0, 1508266452),
+(896, 0, 7959, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3437, 1, 0, 11543, 4, 17, 25, 0, 1508266762),
+(897, 0, 8022, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3469, 1, 0, 11647, 4, 17, 25, 0, 1508267073),
+(898, 0, 8085, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3500, 1, 0, 11751, 4, 17, 25, 0, 1508267384),
+(899, 0, 8145, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3531, 1, 0, 11854, 4, 17, 25, 0, 1508267695),
+(900, 0, 8208, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3562, 1, 0, 11958, 4, 17, 25, 0, 1508268006),
+(901, 0, 8271, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3593, 1, 0, 12062, 4, 17, 25, 0, 1508268317),
+(902, 0, 8334, 0, 0, 85, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3624, 1, 0, 12165, 4, 17, 25, 0, 1508268628),
+(903, 0, 8394, 0, 0, 85, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3655, 1, 0, 12269, 4, 17, 25, 0, 1508268939),
+(904, 0, 8457, 0, 0, 85, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3686, 1, 0, 12373, 4, 17, 25, 0, 1508269250),
+(905, 0, 8520, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3717, 1, 0, 12476, 4, 17, 25, 0, 1508269561),
+(906, 0, 8583, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3748, 1, 0, 12580, 4, 17, 25, 0, 1508269872),
+(907, 0, 8643, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3780, 1, 0, 12684, 4, 17, 25, 0, 1508270183),
+(908, 0, 8706, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3811, 1, 0, 12787, 4, 17, 25, 0, 1508270494),
+(909, 0, 8769, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3842, 1, 0, 12891, 4, 17, 25, 0, 1508270805),
+(910, 0, 8829, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3873, 1, 0, 12995, 4, 17, 25, 0, 1508271116),
+(911, 0, 8892, 0, 0, 91, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3904, 1, 0, 13098, 4, 16, 25, 0, 1508271427),
+(912, 0, 8955, 0, 0, 91, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3935, 1, 0, 13202, 3, 16, 25, 0, 1508271738),
+(913, 0, 9018, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3966, 1, 0, 13305, 4, 16, 25, 0, 1508272049),
+(914, 0, 9078, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3997, 1, 0, 13409, 4, 16, 25, 0, 1508272360),
+(915, 0, 9141, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4028, 1, 0, 13513, 4, 16, 25, 0, 1508272671),
+(916, 0, 9204, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4059, 1, 0, 13616, 4, 16, 25, 0, 1508272982),
+(917, 0, 9267, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4091, 1, 0, 13720, 3, 16, 25, 0, 1508273293),
+(918, 0, 9327, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4122, 1, 0, 13824, 4, 16, 25, 0, 1508273604),
+(919, 0, 9390, 0, 0, 97, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4153, 1, 0, 13927, 4, 16, 25, 0, 1508273915),
+(920, 0, 9453, 0, 0, 97, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4184, 1, 0, 14031, 3, 16, 25, 0, 1508274226),
+(921, 0, 9513, 0, 0, 97, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4215, 1, 0, 14135, 4, 16, 25, 0, 1508274537),
+(922, 0, 9576, 0, 0, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4246, 1, 0, 14238, 4, 16, 25, 0, 1508274848),
+(923, 0, 9639, 0, 0, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4277, 1, 0, 14342, 4, 16, 25, 0, 1508275159),
+(924, 0, 9702, 0, 0, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4308, 1, 0, 14446, 4, 16, 25, 0, 1508275470),
+(925, 0, 9762, 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4339, 1, 0, 14549, 4, 16, 25, 0, 1508275781),
+(926, 0, 9825, 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4370, 1, 0, 14653, 4, 16, 25, 0, 1508276092),
+(927, 0, 9888, 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4402, 1, 0, 14756, 3, 16, 25, 0, 1508276403),
+(928, 0, 9948, 0, 0, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4433, 1, 0, 14860, 4, 16, 25, 0, 1508276714),
+(929, 0, 10011, 0, 0, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4464, 1, 0, 14964, 3, 16, 25, 0, 1508277025),
+(930, 0, 10074, 0, 0, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4495, 1, 0, 15067, 3, 16, 25, 0, 1508277336),
+(931, 0, 10137, 0, 0, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4526, 1, 0, 15171, 3, 16, 25, 0, 1508277647),
+(932, 0, 10197, 0, 0, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4557, 1, 0, 15275, 3, 16, 25, 0, 1508277958),
+(933, 0, 10260, 0, 0, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4588, 1, 0, 15378, 3, 16, 25, 0, 1508278269),
+(934, 0, 10323, 0, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4619, 1, 0, 15482, 3, 16, 25, 0, 1508278580),
+(935, 0, 10386, 0, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4650, 1, 0, 15586, 3, 16, 25, 0, 1508278891),
+(936, 0, 10446, 0, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4681, 1, 0, 15689, 3, 16, 25, 0, 1508279202),
+(937, 0, 10509, 0, 0, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4713, 1, 0, 15793, 3, 16, 25, 0, 1508279513),
+(938, 0, 10572, 0, 0, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4744, 1, 0, 15896, 3, 16, 25, 0, 1508279824),
+(939, 0, 10632, 0, 0, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4775, 1, 0, 16000, 3, 16, 25, 0, 1508280135),
+(940, 0, 10695, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4806, 1, 0, 16104, 3, 16, 25, 0, 1508280446),
+(941, 0, 10758, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4837, 1, 0, 16207, 3, 16, 25, 0, 1508280757),
+(942, 0, 10821, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4868, 1, 0, 16311, 3, 16, 25, 0, 1508281068),
+(943, 0, 10881, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4899, 1, 0, 16415, 3, 16, 25, 0, 1508281379),
+(944, 0, 10944, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4930, 1, 0, 16518, 3, 16, 25, 0, 1508281690),
+(945, 0, 11007, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4961, 1, 0, 16622, 3, 16, 25, 0, 1508282001),
+(946, 0, 11070, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4992, 1, 0, 16726, 4, 16, 25, 0, 1508282312),
+(947, 0, 11130, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5024, 1, 0, 16829, 3, 16, 25, 0, 1508282623),
+(948, 0, 11193, 0, 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5055, 1, 0, 16933, 4, 16, 25, 0, 1508282934),
+(949, 0, 11256, 0, 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5086, 1, 0, 17037, 3, 16, 25, 0, 1508283245),
+(950, 0, 11316, 0, 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5117, 1, 0, 17140, 3, 20, 24, 0, 1508283556),
+(951, 0, 11379, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5148, 1, 0, 17244, 10, 17, 25, 0, 1508283867),
+(952, 0, 11442, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5179, 1, 0, 17348, 3, 16, 24, 0, 1508284178),
+(953, 0, 11505, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5210, 1, 0, 17451, 3, 16, 24, 0, 1508284489),
+(954, 0, 11565, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5241, 1, 0, 17555, 3, 16, 24, 0, 1508284800),
+(955, 0, 11628, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17588, 4, 16, 24, 0, 1508285111),
+(956, 0, 11691, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17619, 3, 16, 24, 0, 1508285422),
+(957, 0, 11754, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17651, 3, 16, 24, 0, 1508285733),
+(958, 0, 11814, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17682, 3, 16, 24, 0, 1508286044),
+(959, 0, 11877, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17713, 4, 16, 24, 0, 1508286355),
+(960, 0, 11940, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17744, 3, 16, 24, 0, 1508286666),
+(961, 0, 12000, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17775, 3, 16, 24, 0, 1508286977),
+(962, 0, 12063, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17806, 3, 16, 24, 0, 1508287288),
+(963, 0, 12126, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17836, 3, 16, 24, 0, 1508287599),
+(964, 0, 12189, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17868, 3, 16, 24, 0, 1508287910),
+(965, 0, 12249, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17899, 3, 16, 24, 0, 1508288221),
+(966, 0, 12312, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17930, 3, 16, 24, 0, 1508288532),
+(967, 0, 12375, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17961, 4, 16, 24, 0, 1508288843),
+(968, 0, 12435, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 17992, 3, 16, 24, 0, 1508289154),
+(969, 0, 12498, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 18023, 3, 16, 24, 0, 1508289465),
+(970, 0, 12561, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 18054, 3, 16, 24, 0, 1508289776),
+(971, 0, 12624, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 18084, 3, 16, 24, 0, 1508290087),
+(972, 0, 12684, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 18115, 3, 16, 24, 0, 1508290398),
+(973, 0, 12747, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 18146, 9, 16, 24, 0, 1508290709),
+(974, 0, 12810, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5260, 1, 0, 18176, 3, 16, 24, 0, 1508291020),
+(975, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 32, 3, 7, 24, 0, 1508291624),
+(976, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 63, 4, 9, 24, 0, 1508291935),
+(977, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 94, 3, 11, 24, 0, 1508292246),
+(978, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 125, 3, 13, 24, 0, 1508292557),
+(979, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 156, 3, 14, 24, 0, 1508292868),
+(980, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 187, 4, 15, 24, 0, 1508293179),
+(981, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 219, 3, 16, 24, 0, 1508293490),
+(982, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 249, 4, 16, 24, 0, 1508293801),
+(983, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 281, 3, 17, 24, 0, 1508294112),
+(984, 0, 624, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 312, 5, 17, 24, 0, 1508294423);
+INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
+(985, 0, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 344, 6, 17, 24, 0, 1508294734),
+(986, 0, 747, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 376, 5, 17, 24, 0, 1508295045),
+(987, 0, 810, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 407, 6, 17, 24, 0, 1508295356),
+(988, 0, 873, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 438, 6, 18, 24, 0, 1508295667),
+(989, 0, 933, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 469, 6, 18, 24, 0, 1508295978),
+(990, 0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 500, 6, 18, 24, 0, 1508296289),
+(991, 0, 1059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 532, 6, 18, 24, 0, 1508296600),
+(992, 0, 1122, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 563, 5, 18, 24, 0, 1508296911),
+(993, 0, 1182, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 594, 5, 18, 24, 0, 1508297222),
+(994, 0, 1245, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 625, 6, 18, 24, 0, 1508297533),
+(995, 0, 1308, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 657, 6, 18, 24, 0, 1508297844),
+(996, 0, 1371, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 688, 6, 18, 24, 0, 1508298155),
+(997, 0, 1431, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 718, 6, 18, 24, 0, 1508298466),
+(998, 0, 1494, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 749, 6, 18, 24, 0, 1508298777),
+(999, 0, 1557, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 780, 7, 18, 24, 0, 1508299088),
+(1000, 0, 1617, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 811, 6, 18, 24, 0, 1508299399),
+(1001, 0, 1680, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 843, 6, 18, 24, 0, 1508299710),
+(1002, 0, 1743, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 874, 6, 18, 24, 0, 1508300021),
+(1003, 0, 1806, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 905, 6, 18, 24, 0, 1508300332),
+(1004, 0, 1866, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 935, 5, 18, 24, 0, 1508300643),
+(1005, 0, 1929, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 967, 5, 18, 24, 0, 1508300954),
+(1006, 0, 1992, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 998, 6, 14, 25, 0, 1508301265),
+(1007, 0, 2055, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1028, 6, 14, 25, 0, 1508301576),
+(1008, 0, 2115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1059, 6, 14, 25, 0, 1508301887),
+(1009, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 32, 5, 8, 24, 0, 1508303324),
+(1010, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 63, 40, 8, 24, 0, 1508303635),
+(1011, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 32, 8, 11, 24, 0, 1508304072),
+(1012, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 61, 4, 12, 24, 0, 1508304383),
+(1013, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 92, 5, 13, 24, 0, 1508304694),
+(1014, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 123, 4, 14, 24, 0, 1508305005),
+(1015, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 154, 4, 15, 24, 0, 1508305316),
+(1016, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 186, 4, 15, 24, 0, 1508305627),
+(1017, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 216, 4, 16, 24, 0, 1508305938),
+(1018, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 248, 4, 17, 24, 0, 1508306249),
+(1019, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 279, 4, 17, 24, 0, 1508306561),
+(1020, 0, 624, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 310, 4, 17, 24, 0, 1508306871),
+(1021, 0, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 341, 4, 17, 24, 0, 1508307183),
+(1022, 0, 747, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 372, 4, 18, 24, 0, 1508307493),
+(1023, 0, 810, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 403, 4, 18, 24, 0, 1508307804),
+(1024, 0, 873, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 434, 4, 18, 24, 0, 1508308115),
+(1025, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 32, 5, 18, 24, 0, 1508308726),
+(1026, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 63, 5, 18, 24, 0, 1508309037),
+(1027, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 94, 5, 18, 24, 0, 1508309348),
+(1028, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 28, 2, 18, 24, 0, 1508309775),
+(1029, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 58, 1, 18, 24, 0, 1508310087),
+(1030, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 89, 1, 18, 24, 0, 1508310397),
+(1031, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 120, 2, 18, 24, 0, 1508310709),
+(1032, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 145, 2, 18, 24, 0, 1508311019),
+(1033, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 30, 2, 18, 24, 0, 1508311526),
+(1034, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 58, 2, 18, 24, 0, 1508311837),
+(1035, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 89, 1, 18, 24, 0, 1508312148),
+(1036, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 120, 1, 18, 24, 0, 1508312459),
+(1037, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 149, 2, 18, 24, 0, 1508312771),
+(1038, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 179, 2, 18, 24, 0, 1508313081),
+(1039, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 209, 1, 18, 24, 0, 1508313392),
+(1040, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 236, 2, 18, 24, 0, 1508313703),
+(1041, 0, 561, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11, 1, 0, 255, 2, 18, 24, 0, 1508314014),
+(1042, 0, 624, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11, 1, 0, 280, 2, 18, 24, 0, 1508314325),
+(1043, 0, 687, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 2, 0, 304, 1, 18, 24, 0, 1508314636),
+(1044, 0, 747, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 2, 0, 335, 2, 18, 24, 0, 1508314947),
+(1045, 0, 810, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 2, 0, 365, 2, 18, 24, 0, 1508315258),
+(1046, 0, 873, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 2, 0, 395, 1, 18, 24, 0, 1508315569),
+(1047, 0, 933, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 2, 0, 425, 2, 18, 24, 0, 1508315881),
+(1048, 0, 996, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 2, 0, 456, 2, 18, 24, 0, 1508316192),
+(1049, 0, 1059, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 2, 0, 483, 2, 18, 24, 0, 1508316503),
+(1050, 0, 1122, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 2, 0, 514, 1, 18, 24, 0, 1508316813),
+(1051, 0, 1182, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 27, 3, 0, 581, 2, 18, 24, 0, 1508317124),
+(1052, 0, 1245, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 27, 3, 0, 581, 2, 18, 24, 0, 1508317436),
+(1053, 0, 1308, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 27, 3, 0, 581, 3, 17, 24, 0, 1508317746),
+(1054, 0, 1371, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 56, 4, 0, 675, 2, 17, 24, 0, 1508318057),
+(1055, 0, 1431, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 87, 4, 0, 779, 2, 17, 24, 0, 1508318368),
+(1056, 0, 1494, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 118, 4, 0, 882, 1, 17, 24, 0, 1508318680),
+(1057, 0, 1557, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 149, 4, 0, 986, 1, 17, 24, 0, 1508318991),
+(1058, 0, 1617, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 180, 4, 0, 1090, 2, 17, 24, 0, 1508319302),
+(1059, 0, 1680, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 211, 4, 0, 1193, 2, 17, 24, 0, 1508319612),
+(1060, 0, 1743, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 242, 4, 0, 1297, 2, 17, 24, 0, 1508319923),
+(1061, 0, 1806, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 274, 4, 0, 1516, 2, 17, 24, 0, 1508320234),
+(1062, 0, 1866, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 305, 4, 0, 1711, 1, 17, 24, 0, 1508320546),
+(1063, 0, 1929, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 336, 4, 0, 1815, 1, 17, 24, 0, 1508320857),
+(1064, 0, 1992, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 367, 4, 0, 1918, 2, 17, 24, 0, 1508321167),
+(1065, 0, 2052, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 398, 4, 0, 2022, 2, 17, 24, 0, 1508321478),
+(1066, 0, 2115, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 429, 4, 0, 2126, 2, 17, 24, 0, 1508321789),
+(1067, 0, 2178, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 460, 4, 0, 2229, 1, 17, 24, 0, 1508322101),
+(1068, 0, 2241, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 491, 4, 0, 2333, 2, 17, 24, 0, 1508322412),
+(1069, 0, 2301, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 522, 4, 0, 2436, 2, 17, 24, 0, 1508322723),
+(1070, 0, 2364, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 553, 4, 0, 2540, 2, 17, 24, 0, 1508323033),
+(1071, 0, 2427, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 585, 4, 0, 2644, 1, 17, 24, 0, 1508323344),
+(1072, 0, 2490, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 616, 4, 0, 2747, 2, 17, 24, 0, 1508323656),
+(1073, 0, 2550, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 647, 4, 0, 2851, 2, 17, 24, 0, 1508323967),
+(1074, 0, 2613, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 678, 4, 0, 2955, 2, 17, 24, 0, 1508324278),
+(1075, 0, 2676, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 709, 4, 0, 3058, 2, 17, 24, 0, 1508324589),
+(1076, 0, 2736, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 740, 4, 0, 3162, 2, 17, 24, 0, 1508324899),
+(1077, 0, 2799, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 771, 4, 0, 3266, 2, 17, 24, 0, 1508325210),
+(1078, 0, 2862, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 802, 4, 0, 3369, 2, 17, 24, 0, 1508325522),
+(1079, 0, 2925, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 833, 4, 0, 3473, 1, 17, 24, 0, 1508325833),
+(1080, 0, 2985, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 864, 4, 0, 3577, 2, 17, 24, 0, 1508326144),
+(1081, 0, 3048, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 896, 4, 0, 3680, 2, 17, 24, 0, 1508326454),
+(1082, 0, 3111, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 927, 4, 0, 3784, 2, 17, 24, 0, 1508326765),
+(1083, 0, 3171, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 958, 4, 0, 3887, 2, 17, 24, 0, 1508327077),
+(1084, 0, 3234, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 989, 4, 0, 3991, 1, 17, 24, 0, 1508327388),
+(1085, 0, 3297, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1020, 4, 0, 4095, 2, 17, 24, 0, 1508327699),
+(1086, 0, 3360, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1051, 4, 0, 4198, 2, 17, 24, 0, 1508328009),
+(1087, 0, 3420, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1082, 4, 0, 4302, 2, 17, 24, 0, 1508328320),
+(1088, 0, 3483, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1113, 4, 0, 4406, 2, 17, 24, 0, 1508328631),
+(1089, 0, 3546, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1144, 4, 0, 4509, 2, 17, 24, 0, 1508328943),
+(1090, 0, 3606, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1175, 4, 0, 4613, 2, 17, 24, 0, 1508329254),
+(1091, 0, 3669, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1207, 4, 0, 4717, 2, 17, 24, 0, 1508329564),
+(1092, 0, 3732, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1238, 4, 0, 4820, 2, 17, 24, 0, 1508329875),
+(1093, 0, 3795, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1269, 4, 0, 4924, 2, 17, 24, 0, 1508330186),
+(1094, 0, 3855, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1300, 4, 0, 5028, 2, 17, 24, 0, 1508330498),
+(1095, 0, 3918, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1331, 4, 0, 5131, 2, 17, 24, 0, 1508330809),
+(1096, 0, 3981, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1362, 4, 0, 5235, 1, 17, 24, 0, 1508331120),
+(1097, 0, 4044, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1393, 4, 0, 5338, 2, 17, 24, 0, 1508331430),
+(1098, 0, 4104, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1424, 4, 0, 5442, 12, 17, 24, 0, 1508331741),
+(1099, 0, 4167, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1455, 4, 0, 5546, 2, 17, 24, 0, 1508332052),
+(1100, 0, 4230, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1486, 4, 0, 5649, 2, 17, 24, 0, 1508332364),
+(1101, 0, 4290, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1518, 4, 0, 5753, 2, 17, 24, 0, 1508332675),
+(1102, 0, 4353, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1549, 4, 0, 5857, 2, 17, 24, 0, 1508332985),
+(1103, 0, 4416, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1580, 4, 0, 5960, 2, 17, 24, 0, 1508333296),
+(1104, 0, 4479, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1611, 4, 0, 6064, 1, 17, 24, 0, 1508333607),
+(1105, 0, 4539, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1642, 4, 0, 6168, 2, 17, 24, 0, 1508333919),
+(1106, 0, 4602, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1673, 4, 0, 6271, 2, 17, 24, 0, 1508334230),
+(1107, 0, 4665, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1704, 4, 0, 6375, 2, 17, 24, 0, 1508334541),
+(1108, 0, 4725, 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1735, 4, 0, 6478, 2, 17, 24, 0, 1508334851),
+(1109, 0, 4788, 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1766, 4, 0, 6582, 2, 17, 24, 0, 1508335162),
+(1110, 0, 4851, 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1797, 4, 0, 6686, 2, 17, 24, 0, 1508335474),
+(1111, 0, 4914, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1829, 4, 0, 6789, 2, 17, 24, 0, 1508335785),
+(1112, 0, 4974, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1860, 4, 0, 6893, 2, 17, 24, 0, 1508336096),
+(1113, 0, 5037, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1891, 4, 0, 6997, 2, 17, 24, 0, 1508336406),
+(1114, 0, 5100, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1922, 4, 0, 7100, 1, 17, 24, 0, 1508336717),
+(1115, 0, 5163, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1953, 4, 0, 7204, 2, 17, 24, 0, 1508337028),
+(1116, 0, 5223, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1984, 4, 0, 7308, 2, 17, 24, 0, 1508337340),
+(1117, 0, 5286, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2015, 4, 0, 7411, 2, 17, 24, 0, 1508337651),
+(1118, 0, 5349, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2046, 4, 0, 7515, 1, 17, 24, 0, 1508337962),
+(1119, 0, 5409, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2077, 4, 0, 7619, 2, 17, 24, 0, 1508338272),
+(1120, 0, 5472, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2108, 4, 0, 7722, 2, 17, 24, 0, 1508338583),
+(1121, 0, 5535, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2140, 4, 0, 7826, 2, 17, 24, 0, 1508338895),
+(1122, 0, 5598, 0, 0, 62, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2171, 4, 0, 7930, 2, 17, 24, 0, 1508339206),
+(1123, 0, 5658, 0, 0, 62, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2202, 4, 0, 8033, 2, 17, 24, 0, 1508339517),
+(1124, 0, 5721, 0, 0, 62, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2233, 4, 0, 8137, 2, 17, 24, 0, 1508339827),
+(1125, 0, 5784, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2264, 4, 0, 8240, 2, 17, 24, 0, 1508340138),
+(1126, 0, 5844, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2295, 4, 0, 8344, 2, 17, 24, 0, 1508340449),
+(1127, 0, 5907, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2326, 4, 0, 8448, 2, 17, 24, 0, 1508340761),
+(1128, 0, 5970, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2357, 4, 0, 8551, 2, 17, 24, 0, 1508341072),
+(1129, 0, 6033, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2388, 4, 0, 8655, 2, 17, 24, 0, 1508341382),
+(1130, 0, 6093, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2419, 4, 0, 8759, 2, 17, 24, 0, 1508341693),
+(1131, 0, 6156, 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2451, 4, 0, 8862, 2, 17, 24, 0, 1508342004),
+(1132, 0, 6219, 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2482, 4, 0, 8966, 2, 17, 24, 0, 1508342316),
+(1133, 0, 6279, 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2513, 4, 0, 9070, 2, 17, 24, 0, 1508342627),
+(1134, 0, 6342, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2544, 4, 0, 9173, 2, 17, 24, 0, 1508342938),
+(1135, 0, 6405, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2575, 4, 0, 9277, 2, 17, 24, 0, 1508343248),
+(1136, 0, 6468, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2606, 4, 0, 9381, 2, 17, 24, 0, 1508343559),
+(1137, 0, 6528, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2637, 4, 0, 9484, 2, 16, 24, 0, 1508343871),
+(1138, 0, 6591, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2668, 4, 0, 9588, 2, 16, 24, 0, 1508344182),
+(1139, 0, 6654, 0, 0, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2699, 4, 0, 9691, 2, 16, 24, 0, 1508344492),
+(1140, 0, 6717, 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2730, 4, 0, 9795, 2, 16, 24, 0, 1508344803),
+(1141, 0, 6777, 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2762, 4, 0, 9899, 2, 16, 24, 0, 1508345114),
+(1142, 0, 6840, 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2793, 4, 0, 10002, 2, 16, 24, 0, 1508345425),
+(1143, 0, 6903, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2824, 4, 0, 10106, 2, 16, 24, 0, 1508345737),
+(1144, 0, 6963, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2855, 4, 0, 10210, 2, 16, 24, 0, 1508346048),
+(1145, 0, 7026, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2886, 4, 0, 10313, 2, 16, 24, 0, 1508346359),
+(1146, 0, 7089, 0, 0, 78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2917, 4, 0, 10417, 2, 16, 24, 0, 1508346669),
+(1147, 0, 7152, 0, 0, 78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2948, 4, 0, 10521, 2, 16, 24, 0, 1508346980),
+(1148, 0, 7212, 0, 0, 78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2979, 4, 0, 10624, 2, 16, 24, 0, 1508347292),
+(1149, 0, 7275, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3010, 4, 0, 10728, 2, 16, 24, 0, 1508347603),
+(1150, 0, 7338, 0, 0, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3041, 4, 0, 10832, 1, 16, 24, 0, 1508347914),
+(1151, 0, 7398, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3073, 4, 0, 10935, 2, 16, 24, 0, 1508348224),
+(1152, 0, 7461, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3104, 4, 0, 11039, 2, 16, 24, 0, 1508348535),
+(1153, 0, 7524, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3135, 4, 0, 11143, 1, 16, 24, 0, 1508348846),
+(1154, 0, 7587, 0, 0, 84, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3166, 4, 0, 11246, 2, 16, 24, 0, 1508349158),
+(1155, 0, 7647, 0, 0, 84, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3197, 4, 0, 11350, 2, 16, 24, 0, 1508349469),
+(1156, 0, 7710, 0, 0, 84, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3228, 4, 0, 11453, 2, 16, 24, 0, 1508349779),
+(1157, 0, 7773, 0, 0, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3259, 4, 0, 11557, 2, 16, 24, 0, 1508350090),
+(1158, 0, 7833, 0, 0, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3290, 4, 0, 11661, 2, 16, 24, 0, 1508350401),
+(1159, 0, 7896, 0, 0, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3321, 4, 0, 11764, 2, 16, 24, 0, 1508350713),
+(1160, 0, 7959, 0, 0, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3352, 4, 0, 11868, 2, 14, 24, 0, 1508351024),
+(1161, 0, 8022, 0, 0, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3384, 4, 0, 11972, 1, 14, 24, 0, 1508351335),
+(1162, 0, 8082, 0, 0, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3415, 4, 0, 12075, 2, 14, 24, 0, 1508351645),
+(1163, 0, 8145, 0, 0, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3446, 4, 0, 12179, 2, 14, 24, 0, 1508351956),
+(1164, 0, 8208, 0, 0, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3477, 4, 0, 12283, 2, 14, 24, 0, 1508352267),
+(1165, 0, 8271, 0, 0, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3508, 4, 0, 12386, 2, 14, 24, 0, 1508352579),
+(1166, 0, 8331, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3539, 4, 0, 12490, 2, 14, 24, 0, 1508352890),
+(1167, 0, 8394, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3570, 4, 0, 12594, 1, 14, 24, 0, 1508353201),
+(1168, 0, 8457, 0, 0, 92, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3601, 4, 0, 12697, 1, 14, 24, 0, 1508353511),
+(1169, 0, 8517, 0, 0, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3632, 4, 0, 12801, 1, 14, 24, 0, 1508353822),
+(1170, 0, 8580, 0, 0, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3663, 4, 0, 12905, 1, 14, 24, 0, 1508354134),
+(1171, 0, 8643, 0, 0, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3695, 4, 0, 13008, 1, 14, 24, 0, 1508354445),
+(1172, 0, 8706, 0, 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3726, 4, 0, 13112, 1, 14, 24, 0, 1508354756),
+(1173, 0, 8766, 0, 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3757, 4, 0, 13216, 1, 14, 24, 0, 1508355066),
+(1174, 0, 8829, 0, 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3788, 4, 0, 13319, 1, 14, 24, 0, 1508355377),
+(1175, 0, 8892, 0, 0, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3819, 4, 0, 13423, 1, 14, 24, 0, 1508355689),
+(1176, 0, 8952, 0, 0, 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3850, 4, 0, 13526, 1, 14, 24, 0, 1508356000),
+(1177, 0, 9015, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3881, 4, 0, 13630, 1, 14, 24, 0, 1508356311),
+(1178, 0, 9078, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3912, 4, 0, 13734, 1, 14, 24, 0, 1508356622),
+(1179, 0, 9141, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3943, 4, 0, 13837, 1, 14, 24, 0, 1508356932),
+(1180, 0, 9201, 0, 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3974, 4, 0, 13941, 1, 14, 24, 0, 1508357243),
+(1181, 0, 9264, 0, 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4006, 4, 0, 14045, 1, 14, 24, 0, 1508357555),
+(1182, 0, 9327, 0, 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4037, 4, 0, 14148, 1, 14, 24, 0, 1508357866),
+(1183, 0, 9387, 0, 0, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4068, 4, 0, 14252, 1, 14, 24, 0, 1508358177),
+(1184, 0, 9450, 0, 0, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4099, 4, 0, 14356, 1, 14, 24, 0, 1508358487),
+(1185, 0, 9513, 0, 0, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4130, 4, 0, 14459, 2, 14, 24, 0, 1508358798),
+(1186, 0, 9576, 0, 0, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4161, 4, 0, 14563, 1, 14, 24, 0, 1508359110),
+(1187, 0, 9636, 0, 0, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4192, 4, 0, 14666, 1, 14, 24, 0, 1508359421),
+(1188, 0, 9699, 0, 0, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4223, 4, 0, 14770, 1, 14, 24, 0, 1508359732),
+(1189, 0, 9762, 0, 0, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4254, 4, 0, 14874, 1, 14, 24, 0, 1508360042),
+(1190, 0, 9825, 0, 0, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4285, 4, 0, 14977, 1, 14, 24, 0, 1508360353),
+(1191, 0, 9885, 0, 0, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4317, 4, 0, 15081, 1, 14, 24, 0, 1508360664),
+(1192, 0, 9948, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4348, 4, 0, 15185, 1, 14, 24, 0, 1508360975),
+(1193, 0, 10011, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4379, 4, 0, 15288, 1, 14, 24, 0, 1508361287),
+(1194, 0, 10071, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4410, 4, 0, 15392, 1, 14, 24, 0, 1508361597),
+(1195, 0, 10134, 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4441, 4, 0, 15496, 1, 14, 24, 0, 1508361908),
+(1196, 0, 10197, 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4472, 4, 0, 15599, 1, 14, 24, 0, 1508362219),
+(1197, 0, 10260, 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4503, 4, 0, 15703, 1, 14, 24, 0, 1508362531),
+(1198, 0, 10320, 0, 0, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4534, 4, 0, 15807, 1, 14, 24, 0, 1508362842),
+(1199, 0, 10383, 0, 0, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4565, 4, 0, 15910, 1, 14, 24, 0, 1508363153),
+(1200, 0, 10446, 0, 0, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4596, 4, 0, 16014, 1, 14, 24, 0, 1508363463),
+(1201, 0, 10506, 0, 0, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4628, 4, 0, 16118, 1, 14, 24, 0, 1508363774),
+(1202, 0, 10569, 0, 0, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4659, 4, 0, 16221, 1, 14, 24, 0, 1508364086),
+(1203, 0, 10632, 0, 0, 116, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4690, 4, 0, 16325, 1, 14, 24, 0, 1508364397),
+(1204, 0, 10695, 0, 0, 118, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4721, 4, 0, 16428, 1, 14, 24, 0, 1508364708),
+(1205, 0, 10755, 0, 0, 118, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4752, 4, 0, 16532, 1, 14, 24, 0, 1508365018),
+(1206, 0, 10818, 0, 0, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4783, 4, 0, 16636, 1, 14, 24, 0, 1508365329),
+(1207, 0, 10881, 0, 0, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4814, 4, 0, 16739, 1, 14, 24, 0, 1508365640),
+(1208, 0, 10941, 0, 0, 120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4845, 4, 0, 16843, 1, 14, 24, 0, 1508365952),
+(1209, 0, 11004, 0, 0, 122, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4876, 4, 0, 16947, 1, 14, 24, 0, 1508366263),
+(1210, 0, 11067, 0, 0, 122, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4907, 4, 0, 17050, 1, 14, 24, 0, 1508366573),
+(1211, 0, 11130, 0, 0, 122, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4939, 4, 0, 17154, 1, 14, 24, 0, 1508366884),
+(1212, 0, 11190, 0, 0, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4970, 4, 0, 17258, 2, 14, 24, 0, 1508367195),
+(1213, 0, 11253, 0, 0, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5001, 4, 0, 17361, 1, 14, 24, 0, 1508367507),
+(1214, 0, 11316, 0, 0, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5032, 4, 0, 17465, 1, 14, 24, 0, 1508367818),
+(1215, 0, 11379, 0, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5063, 4, 0, 17569, 1, 14, 24, 0, 1508368129),
+(1216, 0, 11439, 0, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5094, 4, 0, 17672, 1, 14, 24, 0, 1508368439),
+(1217, 0, 11502, 0, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5125, 4, 0, 17776, 1, 14, 24, 0, 1508368750),
+(1218, 0, 11565, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5156, 4, 0, 17879, 1, 14, 24, 0, 1508369061),
+(1219, 0, 11625, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5187, 4, 0, 17983, 1, 14, 24, 0, 1508369373),
+(1220, 0, 11688, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5218, 4, 0, 18087, 1, 14, 24, 0, 1508369684),
+(1221, 0, 11751, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5250, 4, 0, 18190, 1, 17, 24, 0, 1508369994),
+(1222, 0, 11814, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5281, 4, 0, 18294, 1, 17, 24, 0, 1508370305),
+(1223, 0, 11874, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5312, 4, 0, 18362, 1, 17, 24, 0, 1508370616),
+(1224, 0, 11937, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508370928),
+(1225, 0, 12000, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508371239),
+(1226, 0, 12060, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508371549),
+(1227, 0, 12123, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508371860),
+(1228, 0, 12186, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508372171),
+(1229, 0, 12249, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508372482),
+(1230, 0, 12309, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508372793),
+(1231, 0, 12372, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508373105),
+(1232, 0, 12435, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508373416),
+(1233, 0, 12495, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508373727),
+(1234, 0, 12558, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508374037),
+(1235, 0, 12621, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508374348),
+(1236, 0, 12684, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508374659),
+(1237, 0, 12744, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508374970),
+(1238, 0, 12807, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508375282),
+(1239, 0, 12870, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 2, 17, 24, 0, 1508375592),
+(1240, 0, 12930, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508375903),
+(1241, 0, 12993, 0, 0, 130, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5314, 4, 0, 18363, 1, 17, 24, 0, 1508376214),
+(1242, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 6, 12, 24, 0, 1508376839),
+(1243, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 7, 24, 0, 1508394543),
+(1244, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 42, 8, 24, 0, 1508394854),
+(1245, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 8, 24, 0, 1508395165),
+(1246, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 7, 24, 0, 1508395688),
+(1247, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 9, 24, 0, 1508395999),
+(1248, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 10, 24, 0, 1508396310),
+(1249, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 7, 24, 0, 1508396947),
+(1250, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 8, 24, 0, 1508397258),
+(1251, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 12, 24, 0, 1508397910),
+(1252, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 63, 7, 24, 0, 1508398535),
+(1253, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 32, 9, 24, 0, 1508398846),
+(1254, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 28, 10, 24, 0, 1508399157),
+(1255, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 12, 24, 0, 1508399468),
+(1256, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 13, 24, 0, 1508399779),
+(1257, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 14, 24, 0, 1508400091),
+(1258, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 15, 24, 0, 1508400401),
+(1259, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 30, 16, 24, 0, 1508400712),
+(1260, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 16, 24, 0, 1508401023),
+(1261, 0, 624, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 29, 17, 24, 0, 1508401334),
+(1262, 0, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 18, 24, 0, 1508401645),
+(1263, 0, 747, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 29, 18, 24, 0, 1508401956),
+(1264, 0, 810, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 29, 18, 24, 0, 1508402267),
+(1265, 0, 873, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 29, 19, 24, 0, 1508402578),
+(1266, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 12, 24, 0, 1508403039),
+(1267, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 14, 24, 0, 1508403350),
+(1268, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 15, 24, 0, 1508403661),
+(1269, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 15, 24, 0, 1508403972),
+(1270, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 1, 0, 3, 4, 16, 24, 0, 1508404283),
+(1271, 0, 375, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 37, 1, 0, 106, 4, 16, 24, 0, 1508404594),
+(1272, 0, 438, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 68, 1, 0, 210, 3, 17, 24, 0, 1508404905),
+(1273, 0, 498, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 99, 1, 0, 314, 4, 17, 24, 0, 1508405216),
+(1274, 0, 561, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 130, 1, 0, 417, 4, 18, 24, 0, 1508405527),
+(1275, 0, 624, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 162, 1, 0, 521, 4, 18, 24, 0, 1508405838),
+(1276, 0, 687, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 193, 1, 0, 625, 3, 19, 24, 0, 1508406149),
+(1277, 0, 747, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 224, 1, 0, 728, 3, 19, 24, 0, 1508406460),
+(1278, 0, 810, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 255, 1, 0, 832, 3, 19, 24, 0, 1508406771),
+(1279, 0, 873, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 286, 1, 0, 936, 3, 19, 24, 0, 1508407082),
+(1280, 0, 933, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 317, 1, 0, 1039, 3, 19, 24, 0, 1508407393),
+(1281, 0, 996, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 348, 1, 0, 1143, 3, 20, 24, 0, 1508407704),
+(1282, 0, 1059, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 379, 1, 0, 1313, 4, 20, 24, 0, 1508408015),
+(1283, 0, 1122, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 410, 1, 0, 1434, 3, 20, 24, 0, 1508408326),
+(1284, 0, 1182, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 441, 1, 0, 1538, 3, 20, 24, 0, 1508408637),
+(1285, 0, 1245, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 473, 1, 0, 1641, 3, 20, 24, 0, 1508408948),
+(1286, 0, 1308, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 504, 1, 0, 1745, 3, 20, 24, 0, 1508409259),
+(1287, 0, 1371, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 535, 1, 0, 1849, 3, 20, 24, 0, 1508409570),
+(1288, 0, 1431, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 566, 1, 0, 1952, 3, 20, 24, 0, 1508409881),
+(1289, 0, 1494, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 597, 1, 0, 2056, 3, 20, 24, 0, 1508410192),
+(1290, 0, 1557, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 628, 1, 0, 2160, 3, 20, 24, 0, 1508410503),
+(1291, 0, 1617, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 659, 1, 0, 2263, 3, 20, 24, 0, 1508410814),
+(1292, 0, 1680, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 690, 1, 0, 2367, 3, 20, 24, 0, 1508411125),
+(1293, 0, 1743, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 721, 1, 0, 2471, 3, 20, 24, 0, 1508411436),
+(1294, 0, 1806, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 752, 1, 0, 2574, 4, 20, 24, 0, 1508411747),
+(1295, 0, 1866, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 784, 1, 0, 2678, 4, 20, 24, 0, 1508412058),
+(1296, 0, 1929, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 815, 1, 0, 2782, 4, 20, 24, 0, 1508412369),
+(1297, 0, 1992, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 846, 1, 0, 2885, 3, 20, 24, 0, 1508412680),
+(1298, 0, 2055, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 877, 1, 0, 2989, 3, 20, 24, 0, 1508412991),
+(1299, 0, 2115, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 908, 1, 0, 3092, 4, 20, 24, 0, 1508413302),
+(1300, 0, 2178, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 939, 1, 0, 3196, 3, 20, 24, 0, 1508413613),
+(1301, 0, 2241, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 970, 1, 0, 3300, 3, 20, 24, 0, 1508413924),
+(1302, 0, 2301, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1001, 1, 0, 3403, 4, 20, 24, 0, 1508414235),
+(1303, 0, 2364, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1032, 1, 0, 3507, 3, 20, 24, 0, 1508414546),
+(1304, 0, 2427, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1063, 1, 0, 3611, 4, 20, 24, 0, 1508414857),
+(1305, 0, 2490, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1095, 1, 0, 3714, 3, 20, 24, 0, 1508415169),
+(1306, 0, 2550, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1126, 1, 0, 3818, 3, 20, 24, 0, 1508415479),
+(1307, 0, 2613, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1157, 1, 0, 3922, 3, 20, 24, 0, 1508415790),
+(1308, 0, 2676, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1188, 1, 0, 4025, 3, 20, 24, 0, 1508416101),
+(1309, 0, 2736, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1219, 1, 0, 4129, 4, 20, 24, 0, 1508416412),
+(1310, 0, 2799, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1250, 1, 0, 4233, 3, 20, 24, 0, 1508416723),
+(1311, 0, 2862, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1281, 1, 0, 4336, 4, 20, 24, 0, 1508417034),
+(1312, 0, 2925, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1312, 1, 0, 4440, 3, 20, 24, 0, 1508417345),
+(1313, 0, 2985, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1343, 1, 0, 4544, 3, 20, 24, 0, 1508417656),
+(1314, 0, 3048, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1374, 1, 0, 4647, 3, 20, 24, 0, 1508417967),
+(1315, 0, 3111, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1406, 1, 0, 4751, 4, 20, 24, 0, 1508418278),
+(1316, 0, 3174, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1437, 1, 0, 4855, 3, 20, 24, 0, 1508418589),
+(1317, 0, 3234, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1468, 1, 0, 4958, 3, 20, 24, 0, 1508418900),
+(1318, 0, 3297, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1499, 1, 0, 5062, 3, 20, 24, 0, 1508419211),
+(1319, 0, 3360, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1530, 1, 0, 5165, 3, 20, 24, 0, 1508419522),
+(1320, 0, 3420, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1561, 1, 0, 5269, 3, 20, 24, 0, 1508419833),
+(1321, 0, 3483, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1592, 1, 0, 5373, 3, 20, 24, 0, 1508420144),
+(1322, 0, 3546, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1623, 1, 0, 5476, 3, 20, 24, 0, 1508420455),
+(1323, 0, 3609, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1654, 1, 0, 5580, 3, 20, 24, 0, 1508420766),
+(1324, 0, 3669, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1685, 1, 0, 5684, 3, 20, 24, 0, 1508421077),
+(1325, 0, 3732, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1717, 1, 0, 5787, 3, 20, 24, 0, 1508421388),
+(1326, 0, 3795, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1748, 1, 0, 5891, 3, 20, 24, 0, 1508421699),
+(1327, 0, 3858, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1779, 1, 0, 5995, 4, 20, 24, 0, 1508422010),
+(1328, 0, 3918, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1810, 1, 0, 6098, 4, 20, 24, 0, 1508422321),
+(1329, 0, 3981, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1841, 1, 0, 6202, 3, 20, 24, 0, 1508422632),
+(1330, 0, 4044, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1872, 1, 0, 6306, 3, 20, 24, 0, 1508422943),
+(1331, 0, 4104, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1903, 1, 0, 6409, 3, 20, 24, 0, 1508423254),
+(1332, 0, 4167, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1934, 1, 0, 6513, 3, 20, 24, 0, 1508423565),
+(1333, 0, 4230, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1965, 1, 0, 6617, 3, 20, 24, 0, 1508423876),
+(1334, 0, 4293, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1996, 1, 0, 6720, 3, 20, 24, 0, 1508424187),
+(1335, 0, 4353, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2028, 1, 0, 6824, 3, 20, 24, 0, 1508424498),
+(1336, 0, 4416, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2059, 1, 0, 6928, 4, 20, 24, 0, 1508424809),
+(1337, 0, 4479, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2090, 1, 0, 7031, 3, 20, 24, 0, 1508425120),
+(1338, 0, 4539, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2121, 1, 0, 7135, 3, 20, 24, 0, 1508425431),
+(1339, 0, 4602, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2152, 1, 0, 7239, 5, 20, 24, 0, 1508425742),
+(1340, 0, 4665, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2183, 1, 0, 7342, 3, 20, 24, 0, 1508426053),
+(1341, 0, 4728, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2214, 1, 0, 7446, 3, 20, 24, 0, 1508426364),
+(1342, 0, 4788, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2245, 1, 0, 7549, 4, 20, 24, 0, 1508426675),
+(1343, 0, 4851, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2276, 1, 0, 7653, 3, 20, 24, 0, 1508426986),
+(1344, 0, 4914, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2307, 1, 0, 7757, 3, 20, 24, 0, 1508427297),
+(1345, 0, 4977, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2339, 1, 0, 7860, 3, 20, 24, 0, 1508427608),
+(1346, 0, 5037, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2370, 1, 0, 7964, 4, 20, 24, 0, 1508427919),
+(1347, 0, 5100, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2401, 1, 0, 8068, 4, 20, 24, 0, 1508428230),
+(1348, 0, 5163, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2432, 1, 0, 8171, 4, 20, 24, 0, 1508428541),
+(1349, 0, 5223, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2463, 1, 0, 8275, 4, 20, 24, 0, 1508428852),
+(1350, 0, 5286, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2494, 1, 0, 8379, 3, 20, 24, 0, 1508429163),
+(1351, 0, 5349, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2525, 1, 0, 8482, 3, 20, 24, 0, 1508429474),
+(1352, 0, 5412, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2556, 1, 0, 8586, 3, 20, 24, 0, 1508429785),
+(1353, 0, 5472, 0, 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2587, 1, 0, 8690, 3, 20, 24, 0, 1508430096),
+(1354, 0, 5535, 0, 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2618, 1, 0, 8793, 3, 20, 24, 0, 1508430407),
+(1355, 0, 5598, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2650, 1, 0, 8897, 4, 20, 24, 0, 1508430718),
+(1356, 0, 5658, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2681, 1, 0, 9001, 4, 20, 24, 0, 1508431029),
+(1357, 0, 5721, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2712, 1, 0, 9104, 3, 20, 24, 0, 1508431340),
+(1358, 0, 5784, 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2743, 1, 0, 9208, 4, 20, 24, 0, 1508431651),
+(1359, 0, 5847, 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2774, 1, 0, 9312, 3, 20, 24, 0, 1508431962),
+(1360, 0, 5907, 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2805, 1, 0, 9415, 4, 20, 24, 0, 1508432273),
+(1361, 0, 5970, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2836, 1, 0, 9519, 4, 20, 24, 0, 1508432584),
+(1362, 0, 6033, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2867, 1, 0, 9623, 4, 20, 24, 0, 1508432895),
+(1363, 0, 6096, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2898, 1, 0, 9726, 3, 20, 24, 0, 1508433206),
+(1364, 0, 6156, 0, 0, 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2929, 1, 0, 9830, 3, 20, 24, 0, 1508433517),
+(1365, 0, 6219, 0, 0, 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2961, 1, 0, 9934, 3, 20, 24, 0, 1508433828),
+(1366, 0, 6282, 0, 0, 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2992, 1, 0, 10037, 3, 19, 24, 0, 1508434139),
+(1367, 0, 6342, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3023, 1, 0, 10141, 3, 19, 24, 0, 1508434450),
+(1368, 0, 6405, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3054, 1, 0, 10244, 4, 19, 24, 0, 1508434761),
+(1369, 0, 6468, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3085, 1, 0, 10348, 3, 19, 24, 0, 1508435072),
+(1370, 0, 6531, 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3116, 1, 0, 10452, 4, 19, 24, 0, 1508435383),
+(1371, 0, 6591, 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3147, 1, 0, 10555, 3, 19, 24, 0, 1508435694),
+(1372, 0, 6654, 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3178, 1, 0, 10659, 3, 19, 24, 0, 1508436005),
+(1373, 0, 6717, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3209, 1, 0, 10763, 4, 19, 24, 0, 1508436316),
+(1374, 0, 6780, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3240, 1, 0, 10866, 3, 19, 24, 0, 1508436627),
+(1375, 0, 6840, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3272, 1, 0, 10970, 3, 19, 24, 0, 1508436938),
+(1376, 0, 6903, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3303, 1, 0, 11074, 3, 19, 24, 0, 1508437249),
+(1377, 0, 6966, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3334, 1, 0, 11177, 3, 19, 24, 0, 1508437560),
+(1378, 0, 7026, 0, 0, 77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3365, 1, 0, 11281, 3, 19, 24, 0, 1508437871),
+(1379, 0, 7089, 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3396, 1, 0, 11385, 3, 19, 24, 0, 1508438182),
+(1380, 0, 7152, 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3427, 1, 0, 11488, 3, 19, 24, 0, 1508438493),
+(1381, 0, 7215, 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3458, 1, 0, 11592, 3, 19, 24, 0, 1508438804),
+(1382, 0, 7275, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3489, 1, 0, 11696, 3, 19, 24, 0, 1508439115),
+(1383, 0, 7338, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3520, 1, 0, 11799, 3, 19, 24, 0, 1508439426),
+(1384, 0, 7401, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3551, 1, 0, 11903, 3, 19, 24, 0, 1508439737),
+(1385, 0, 7461, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3583, 1, 0, 12007, 4, 19, 24, 0, 1508440048),
+(1386, 0, 7524, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3614, 1, 0, 12110, 3, 19, 24, 0, 1508440359),
+(1387, 0, 7587, 0, 0, 85, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3645, 1, 0, 12214, 4, 19, 24, 0, 1508440670),
+(1388, 0, 7650, 0, 0, 85, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3676, 1, 0, 12317, 4, 19, 24, 0, 1508440981),
+(1389, 0, 7710, 0, 0, 85, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3707, 1, 0, 12421, 3, 19, 24, 0, 1508441292);
+INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `tasksyspmec`, `taskmodbusec`, `taskcloudvelaec`, `taskavorionec`, `taskspsvirgoec`, `taskhsmmpec`, `taskemcec`, `taskpm25ec`, `taskwinddirec`, `taskwindspdec`, `tasktempec`, `taskhumidec`, `tasknoiseec`, `taskairprsec`, `taskco1ec`, `tasklightstrec`, `taskalcoholec`, `taskhchoec`, `tasktoxicgasec`, `restartcnt`, `cloudvelaconncnt`, `cloudvelaconnfailcnt`, `cloudveladisccnt`, `clouddatatimeoutcnt`, `socketdisccnt`, `cpuoccupy`, `memoccupy`, `diskoccupy`, `cputemp`, `timestamp`) VALUES
+(1390, 0, 7773, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3738, 1, 0, 12525, 3, 19, 24, 0, 1508441603),
+(1391, 0, 7836, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3769, 1, 0, 12628, 3, 19, 24, 0, 1508441914),
+(1392, 0, 7899, 0, 0, 87, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3800, 1, 0, 12732, 3, 19, 24, 0, 1508442225),
+(1393, 0, 7959, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3831, 1, 0, 12836, 3, 19, 24, 0, 1508442536),
+(1394, 0, 8022, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3862, 1, 0, 12939, 3, 19, 24, 0, 1508442847),
+(1395, 0, 8085, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3894, 1, 0, 13043, 4, 19, 24, 0, 1508443158),
+(1396, 0, 8145, 0, 0, 91, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3925, 1, 0, 13147, 4, 19, 24, 0, 1508443469),
+(1397, 0, 8208, 0, 0, 91, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3956, 1, 0, 13250, 3, 19, 24, 0, 1508443780),
+(1398, 0, 8271, 0, 0, 91, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3987, 1, 0, 13354, 3, 19, 24, 0, 1508444091),
+(1399, 0, 8334, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4018, 1, 0, 13458, 3, 19, 24, 0, 1508444402),
+(1400, 0, 8394, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4049, 1, 0, 13561, 4, 19, 24, 0, 1508444713),
+(1401, 0, 8457, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4080, 1, 0, 13665, 4, 19, 24, 0, 1508445024),
+(1402, 0, 8520, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4111, 1, 0, 13769, 3, 19, 24, 0, 1508445335),
+(1403, 0, 8583, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4142, 1, 0, 13872, 4, 19, 24, 0, 1508445646),
+(1404, 0, 8643, 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4173, 1, 0, 13976, 3, 19, 24, 0, 1508445957),
+(1405, 0, 8706, 0, 0, 97, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4205, 1, 0, 14080, 4, 19, 24, 0, 1508446268),
+(1406, 0, 8769, 0, 0, 97, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4236, 1, 0, 14183, 3, 19, 24, 0, 1508446579),
+(1407, 0, 8829, 0, 0, 97, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4267, 1, 0, 14287, 4, 19, 24, 0, 1508446890),
+(1408, 0, 8892, 0, 0, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4298, 1, 0, 14391, 3, 19, 24, 0, 1508447201),
+(1409, 0, 8955, 0, 0, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4329, 1, 0, 14494, 3, 19, 24, 0, 1508447512),
+(1410, 0, 9018, 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4360, 1, 0, 14598, 4, 19, 24, 0, 1508447823),
+(1411, 0, 9078, 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4391, 1, 0, 14701, 3, 19, 24, 0, 1508448135),
+(1412, 0, 9141, 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4422, 1, 0, 14805, 3, 19, 24, 0, 1508448445),
+(1413, 0, 9204, 0, 0, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4453, 1, 0, 14909, 4, 19, 24, 0, 1508448756),
+(1414, 0, 9267, 0, 0, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4484, 1, 0, 15012, 4, 19, 24, 0, 1508449067),
+(1415, 0, 9327, 0, 0, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4516, 1, 0, 15116, 3, 19, 24, 0, 1508449378),
+(1416, 0, 9390, 0, 0, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4547, 1, 0, 15220, 3, 19, 24, 0, 1508449689),
+(1417, 0, 9453, 0, 0, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4578, 1, 0, 15323, 4, 19, 24, 0, 1508450000),
+(1418, 0, 9513, 0, 0, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4609, 1, 0, 15427, 3, 19, 24, 0, 1508450311),
+(1419, 0, 9576, 0, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4640, 1, 0, 15531, 3, 19, 24, 0, 1508450622),
+(1420, 0, 9639, 0, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4671, 1, 0, 15634, 3, 19, 24, 0, 1508450933),
+(1421, 0, 9702, 0, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4702, 1, 0, 15738, 3, 19, 24, 0, 1508451244),
+(1422, 0, 9762, 0, 0, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4733, 1, 0, 15842, 3, 19, 24, 0, 1508451555),
+(1423, 0, 9825, 0, 0, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4764, 1, 0, 15945, 3, 19, 24, 0, 1508451866),
+(1424, 0, 9888, 0, 0, 109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4795, 1, 0, 16049, 4, 19, 24, 0, 1508452177),
+(1425, 0, 9948, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4827, 1, 0, 16153, 3, 19, 24, 0, 1508452488),
+(1426, 0, 10011, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4858, 1, 0, 16256, 3, 19, 24, 0, 1508452799),
+(1427, 0, 10074, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4889, 1, 0, 16360, 4, 19, 24, 0, 1508453110),
+(1428, 0, 10137, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4920, 1, 0, 16464, 3, 19, 24, 0, 1508453421),
+(1429, 0, 10197, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4951, 1, 0, 16567, 3, 19, 24, 0, 1508453732),
+(1430, 0, 10260, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4982, 1, 0, 16671, 3, 19, 24, 0, 1508454043),
+(1431, 0, 10323, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5013, 1, 0, 16774, 3, 19, 24, 0, 1508454354),
+(1432, 0, 10386, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5044, 1, 0, 16878, 3, 19, 24, 0, 1508454665),
+(1433, 0, 10446, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5075, 1, 0, 16982, 4, 19, 24, 0, 1508454976),
+(1434, 0, 10509, 0, 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5106, 1, 0, 17085, 3, 19, 24, 0, 1508455287),
+(1435, 0, 10572, 0, 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5138, 1, 0, 17189, 3, 19, 24, 0, 1508455598),
+(1436, 0, 10632, 0, 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5169, 1, 0, 17293, 4, 19, 24, 0, 1508455909),
+(1437, 0, 10695, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5200, 1, 0, 17396, 3, 23, 24, 0, 1508456220),
+(1438, 0, 10758, 0, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5231, 1, 0, 17500, 4, 23, 24, 0, 1508456531),
+(1439, 0, 10821, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5262, 1, 0, 17604, 3, 23, 24, 0, 1508456842),
+(1440, 0, 10881, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5293, 1, 0, 17707, 3, 23, 24, 0, 1508457153),
+(1441, 0, 10944, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 3, 23, 24, 0, 1508457464),
+(1442, 0, 11007, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 3, 23, 24, 0, 1508457775),
+(1443, 0, 11070, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 3, 23, 24, 0, 1508458086),
+(1444, 0, 11130, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 3, 23, 24, 0, 1508458397),
+(1445, 0, 11193, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 3, 23, 24, 0, 1508458708),
+(1446, 0, 11256, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 4, 23, 24, 0, 1508459019),
+(1447, 0, 11316, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 3, 23, 24, 0, 1508459330),
+(1448, 0, 11379, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 3, 23, 24, 0, 1508459641),
+(1449, 0, 11442, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 4, 21, 24, 0, 1508459952),
+(1450, 0, 11505, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 4, 21, 24, 0, 1508460263),
+(1451, 0, 11565, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 4, 21, 24, 0, 1508460574),
+(1452, 0, 11628, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5318, 1, 0, 17748, 4, 21, 24, 0, 1508460885),
+(1453, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 59, 6, 24, 0, 1508461504),
+(1454, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 13, 7, 24, 0, 1508461815),
+(1455, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 12, 7, 24, 0, 1508462735),
+(1456, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 12, 8, 24, 0, 1508463047),
+(1457, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 10, 24, 0, 1508463357),
+(1458, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 11, 24, 0, 1508463668),
+(1459, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 26, 12, 24, 0, 1508463979),
+(1460, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 35, 14, 24, 0, 1508464291),
+(1461, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 34, 14, 24, 0, 1508464601),
+(1462, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 35, 15, 24, 0, 1508464913),
+(1463, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 34, 15, 24, 0, 1508465223),
+(1464, 0, 624, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 34, 16, 24, 0, 1508465535),
+(1465, 0, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 35, 17, 24, 0, 1508465845),
+(1466, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 30, 6, 24, 0, 1508466504),
+(1467, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 7, 24, 0, 1508466815),
+(1468, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 48, 8, 24, 0, 1508467127),
+(1469, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 38, 9, 24, 0, 1508467437),
+(1470, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 7, 24, 0, 1508467906),
+(1471, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 9, 24, 0, 1508468217),
+(1472, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 20, 10, 24, 0, 1508468528),
+(1473, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 31, 12, 24, 0, 1508468840),
+(1474, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 33, 14, 24, 0, 1508469150),
+(1475, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 38, 7, 24, 0, 1508469828),
+(1476, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 8, 24, 0, 1508470139),
+(1477, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 9, 24, 0, 1508470450),
+(1478, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 10, 24, 0, 1508470761),
+(1479, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 12, 11, 24, 0, 1508471072),
+(1480, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 13, 24, 0, 1508471383),
+(1481, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 14, 24, 0, 1508471694),
+(1482, 0, 498, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 14, 24, 0, 1508472005),
+(1483, 0, 561, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 15, 24, 0, 1508472316),
+(1484, 0, 624, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 15, 24, 0, 1508472627),
+(1485, 0, 687, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 16, 24, 0, 1508472938),
+(1486, 0, 747, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 16, 24, 0, 1508473249),
+(1487, 0, 810, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 17, 24, 0, 1508473560),
+(1488, 0, 873, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 17, 24, 0, 1508473871),
+(1489, 0, 936, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 18, 24, 0, 1508474182),
+(1490, 0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 18, 24, 0, 1508474493),
+(1491, 0, 1059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 12, 18, 24, 0, 1508474804),
+(1492, 0, 1122, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 18, 24, 0, 1508475115),
+(1493, 0, 1182, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 18, 24, 0, 1508475426),
+(1494, 0, 1245, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 19, 24, 0, 1508475737),
+(1495, 0, 1308, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 19, 24, 0, 1508476048),
+(1496, 0, 1371, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 19, 24, 0, 1508476359),
+(1497, 0, 1431, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 19, 24, 0, 1508476670),
+(1498, 0, 1494, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 19, 24, 0, 1508476981),
+(1499, 0, 1557, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 19, 24, 0, 1508477292),
+(1500, 0, 1617, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 19, 24, 0, 1508477603),
+(1501, 0, 1680, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 10, 19, 24, 0, 1508477914),
+(1502, 0, 1743, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 19, 24, 0, 1508478225),
+(1503, 0, 1806, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 19, 24, 0, 1508478536),
+(1504, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 12, 24, 0, 1508479151),
+(1505, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 18, 13, 24, 0, 1508479461),
+(1506, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 6, 25, 0, 1508480340),
+(1507, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 8, 25, 0, 1508480651),
+(1508, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 6, 24, 0, 1508481378),
+(1509, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 13, 8, 24, 0, 1508481689),
+(1510, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 24, 6, 24, 0, 1508482274),
+(1511, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 30, 8, 24, 0, 1508482672),
+(1512, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 13, 9, 24, 0, 1508482982),
+(1513, 0, 189, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 11, 11, 24, 0, 1508483293),
+(1514, 0, 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 12, 25, 0, 1508483604),
+(1515, 0, 312, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 12, 25, 0, 1508483916),
+(1516, 0, 375, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 13, 25, 0, 1508484226),
+(1517, 0, 438, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 13, 25, 0, 1508484537),
+(1518, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 13, 7, 25, 0, 1508485008),
+(1519, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 8, 25, 0, 1508485402),
+(1520, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 33, 13, 25, 0, 1508486127);
 
 -- --------------------------------------------------------
 
@@ -4107,8 +4815,8 @@ INSERT INTO `hcusyspmglobaldatainfo` (`sid`, `taskhcuvmec`, `taskhwinvec`, `task
 -- Table structure for table `hcusysswm_swdl`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysswm_swdl` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcusysswm_swdl` (
+  `sid` int(4) NOT NULL,
   `equentry` int(1) NOT NULL DEFAULT '1',
   `hwtype` int(2) NOT NULL DEFAULT '0',
   `hwpem` int(2) NOT NULL DEFAULT '0',
@@ -4133,8 +4841,8 @@ CREATE TABLE IF NOT EXISTS `hcusysswm_swdl` (
 -- Table structure for table `hcusysswm_swpkg`
 --
 
-CREATE TABLE IF NOT EXISTS `hcusysswm_swpkg` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcusysswm_swpkg` (
+  `sid` int(4) NOT NULL,
   `equentry` int(1) NOT NULL DEFAULT '1',
   `hwtype` int(2) NOT NULL DEFAULT '0',
   `hwpem` int(2) NOT NULL DEFAULT '0',
@@ -4152,14 +4860,34 @@ CREATE TABLE IF NOT EXISTS `hcusysswm_swpkg` (
   `updatetime` int(4) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `hcusysswm_swpkg`
+--
+
+INSERT INTO `hcusysswm_swpkg` (`sid`, `equentry`, `hwtype`, `hwpem`, `swrel`, `swver`, `dbver`, `upgradeflag`, `swtotallen`, `swchecksum`, `dbtotallen`, `dbchecksum`, `filename`, `dbname`, `currentactive`, `updatetime`) VALUES
+(2, 3, 8001, 3, 3, 180, 0, 3, 123448, 35465, 0, 0, 'IHU_HPT8001_PEM11_REL3_VER180_TRAIL.BIN', '', 'COMPLETE', 1508317570),
+(6, 3, 8001, 3, 3, 210, 0, 4, 130764, 54904, 0, 0, 'IHU_HPT8001_PEM3_REL3_VER210_PATCH.BIN', '', 'COMPLETE', 1508372500),
+(8, 1, 8001, 3, 3, 259, 199, 4, 1120491, 47719, 96, 8472, 'HCU_HPT8001_PEM3_REL3_VER259_PATCH.HEX', 'HCU_HPT8001_PEM3_REL3_VER199_MYSQL.SQL', 'COMPLETE', 1508373405),
+(10, 1, 8001, 3, 3, 260, 199, 4, 1120491, 47719, 96, 8472, 'HCU_HPT8001_PEM3_REL3_VER260_PATCH.HEX', 'HCU_HPT8001_PEM3_REL3_VER199_MYSQL.SQL', 'COMPLETE', 1508396645),
+(12, 3, 8001, 3, 3, 211, 0, 4, 130764, 54904, 0, 0, 'IHU_HPT8001_PEM3_REL3_VER211_PATCH.BIN', '', 'COMPLETE', 1508396687),
+(14, 1, 8001, 3, 3, 261, 199, 4, 1120491, 47719, 96, 8472, 'HCU_HPT8001_PEM3_REL3_VER261_PATCH.HEX', 'HCU_HPT8001_PEM3_REL3_VER199_MYSQL.SQL', 'COMPLETE', 1508399181),
+(16, 3, 8001, 3, 3, 212, 0, 4, 130764, 54904, 0, 0, 'IHU_HPT8001_PEM3_REL3_VER212_PATCH.BIN', '', 'COMPLETE', 1508401878),
+(19, 1, 8001, 3, 3, 262, 200, 4, 4802856, 12098, 363, 36199, 'HCU_HPT8001_PEM3_REL3_VER262_PATCH.HEX', 'HCU_HPT8001_PEM3_REL3_VER200_MYSQL.SQL', 'COMPLETE', 1508457728),
+(22, 3, 8001, 3, 3, 213, 0, 4, 130744, 55423, 0, 0, 'IHU_HPT8001_PEM3_REL3_VER213_PATCH.BIN', '', 'COMPLETE', 1508473170),
+(26, 3, 8001, 3, 3, 180, 0, 2, 57912, 35465, 0, 0, 'IHU_HPT8001_PEM11_REL3_VER180_STABLE.BIN', '', 'COMPLETE', 1508478892),
+(29, 1, 8001, 3, 3, 263, 200, 4, 4793489, 10835, 363, 36199, 'HCU_HPT8001_PEM3_REL3_VER263_PATCH.HEX', 'HCU_HPT8001_PEM3_REL3_VER200_MYSQL.SQL', 'COMPLETE', 1508479697),
+(33, 1, 8001, 3, 3, 264, 200, 4, 1138006, 34797, 363, 36199, 'HCU_HPT8001_PEM3_REL3_VER264_PATCH.HEX', 'HCU_HPT8001_PEM3_REL3_VER200_MYSQL.SQL', 'COMPLETE', 1508481783),
+(37, 1, 8001, 3, 3, 265, 200, 4, 1138284, 23327, 363, 36199, 'HCU_HPT8001_PEM3_REL3_VER265_PATCH.HEX', 'HCU_HPT8001_PEM3_REL3_VER200_MYSQL.SQL', 'COMPLETE', 1508485600),
+(39, 3, 8001, 3, 3, 214, 0, 4, 130760, 56330, 0, 0, 'IHU_HPT8001_PEM3_REL3_VER214_PATCH.BIN', '', 'COMPLETE', 1508485642);
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `hcutempbmp180datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutempbmp180datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4172,8 +4900,8 @@ CREATE TABLE IF NOT EXISTS `hcutempbmp180datainfo` (
 -- Table structure for table `hcutempdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutempdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4192,8 +4920,8 @@ CREATE TABLE IF NOT EXISTS `hcutempdatainfo` (
 -- Table structure for table `hcutempdht11datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempdht11datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutempdht11datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4206,8 +4934,8 @@ CREATE TABLE IF NOT EXISTS `hcutempdht11datainfo` (
 -- Table structure for table `hcutempmth01datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutempmth01datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4220,8 +4948,8 @@ CREATE TABLE IF NOT EXISTS `hcutempmth01datainfo` (
 -- Table structure for table `hcutemprht03datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutemprht03datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4234,8 +4962,8 @@ CREATE TABLE IF NOT EXISTS `hcutemprht03datainfo` (
 -- Table structure for table `hcutempsht20datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutempsht20datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4248,8 +4976,8 @@ CREATE TABLE IF NOT EXISTS `hcutempsht20datainfo` (
 -- Table structure for table `hcutoxicgasdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutoxicgasdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4268,8 +4996,8 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasdatainfo` (
 -- Table structure for table `hcutoxicgasmq135datainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutoxicgasmq135datainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4282,8 +5010,8 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgasmq135datainfo` (
 -- Table structure for table `hcutoxicgaszp01vocdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcutoxicgaszp01vocdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4296,7 +5024,7 @@ CREATE TABLE IF NOT EXISTS `hcutoxicgaszp01vocdatainfo` (
 -- Table structure for table `hcutracemodulectr`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutracemodulectr` (
+CREATE TABLE `hcutracemodulectr` (
   `moduleid` int(2) NOT NULL,
   `modulename` char(15) NOT NULL,
   `modulectrflag` int(1) NOT NULL,
@@ -4401,7 +5129,7 @@ INSERT INTO `hcutracemodulectr` (`moduleid`, `modulename`, `modulectrflag`, `mod
 -- Table structure for table `hcutracemsgctr`
 --
 
-CREATE TABLE IF NOT EXISTS `hcutracemsgctr` (
+CREATE TABLE `hcutracemsgctr` (
   `msgid` int(2) NOT NULL,
   `msgname` char(70) NOT NULL,
   `msgctrflag` int(1) NOT NULL,
@@ -4676,36 +5404,34 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 (259, 'MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ', 1, 1, 1),
 (260, 'MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP', 1, 1, 1),
 (261, 'MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT', 1, 1, 1),
-(262, 'MSG_ID_L3BFHS_CAN_WS_COMB_OUT', 1, 1, 1),
-(263, 'MSG_ID_CAN_L3BFHS_WS_COMB_OUT_FB', 1, 1, 1),
-(264, 'MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND', 1, 1, 1),
-(265, 'MSG_ID_UICOMM_L3BFSC_CMD_REQ', 1, 1, 1),
-(266, 'MSG_ID_L3BFSC_UICOMM_CMD_RESP', 1, 1, 1),
-(267, 'MSG_ID_UICOMM_L3BFSC_CFG_REQ', 1, 1, 1),
-(268, 'MSG_ID_L3BFSC_UICOMM_CFG_RESP', 1, 1, 1),
-(269, 'MSG_ID_UICOMM_CAN_TEST_CMD_REQ', 1, 1, 1),
-(270, 'MSG_ID_CAN_UICOMM_TEST_CMD_RESP', 1, 1, 1),
-(271, 'MSG_ID_UICOMM_L3BFDF_CMD_REQ', 1, 1, 1),
-(272, 'MSG_ID_L3BFDF_UICOMM_CMD_RESP', 1, 1, 1),
-(273, 'MSG_ID_UICOMM_L3BFHS_CMD_REQ', 1, 1, 1),
-(274, 'MSG_ID_L3BFHS_UICOMM_CMD_RESP', 1, 1, 1),
-(275, 'MSG_ID_L3AQYC_EXG_CTRL_REQ', 1, 1, 1),
-(276, 'MSG_ID_L3AQYC_EXG_CTRL_RESP', 1, 1, 1),
-(277, 'MSG_ID_L3AQYC_EXG_DATA_REPORT', 1, 1, 1),
-(278, 'MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ', 1, 1, 1),
-(279, 'MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP', 1, 1, 1),
-(280, 'MSG_ID_LLCZHB_L3MOD_CTRL_REQ', 1, 1, 1),
-(281, 'MSG_ID_L3MOD_LLCZHB_CTRL_RESP', 1, 1, 1),
-(282, 'MSG_ID_L3MOD_LLCZHB_DATA_REPORT', 1, 1, 1),
-(283, 'MSG_ID_ZHBL3MOD_EXG_CTRL_REQ', 1, 1, 1),
-(284, 'MSG_ID_ZHBL3MOD_EXG_CTRL_RESP', 1, 1, 1),
-(285, 'MSG_ID_ZHBL3MOD_EXG_DATA_REPORT', 1, 1, 1),
-(286, 'MSG_ID_L3HATE_TC_START', 1, 1, 1),
-(287, 'MSG_ID_ETH_L3HATE_FRAME_RCV', 1, 1, 1),
-(288, 'MSG_ID_SPS_L3HATE_FRAME_RCV', 1, 1, 1),
-(289, 'MSG_ID_CAN_L3HATE_FRAME_RCV', 1, 1, 1),
-(290, 'MSG_ID_MQTT_L3HATE_FRAME_RCV', 1, 1, 1),
-(291, 'MSG_ID_COM_MAX', 0, 0, 0);
+(262, 'MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND', 1, 1, 1),
+(263, 'MSG_ID_UICOMM_L3BFSC_CMD_REQ', 1, 1, 1),
+(264, 'MSG_ID_L3BFSC_UICOMM_CMD_RESP', 1, 1, 1),
+(265, 'MSG_ID_UICOMM_L3BFSC_CFG_REQ', 1, 1, 1),
+(266, 'MSG_ID_L3BFSC_UICOMM_CFG_RESP', 1, 1, 1),
+(267, 'MSG_ID_UICOMM_CAN_TEST_CMD_REQ', 1, 1, 1),
+(268, 'MSG_ID_CAN_UICOMM_TEST_CMD_RESP', 1, 1, 1),
+(269, 'MSG_ID_UICOMM_L3BFDF_CMD_REQ', 1, 1, 1),
+(270, 'MSG_ID_L3BFDF_UICOMM_CMD_RESP', 1, 1, 1),
+(271, 'MSG_ID_UICOMM_L3BFHS_CMD_REQ', 1, 1, 1),
+(272, 'MSG_ID_L3BFHS_UICOMM_CMD_RESP', 1, 1, 1),
+(273, 'MSG_ID_L3AQYC_EXG_CTRL_REQ', 1, 1, 1),
+(274, 'MSG_ID_L3AQYC_EXG_CTRL_RESP', 1, 1, 1),
+(275, 'MSG_ID_L3AQYC_EXG_DATA_REPORT', 1, 1, 1),
+(276, 'MSG_ID_CLOUDVELA_LLCZHB_FRAME_REQ', 1, 1, 1),
+(277, 'MSG_ID_LLCZHB_CLOUDVELA_FRAME_RESP', 1, 1, 1),
+(278, 'MSG_ID_LLCZHB_L3MOD_CTRL_REQ', 1, 1, 1),
+(279, 'MSG_ID_L3MOD_LLCZHB_CTRL_RESP', 1, 1, 1),
+(280, 'MSG_ID_L3MOD_LLCZHB_DATA_REPORT', 1, 1, 1),
+(281, 'MSG_ID_ZHBL3MOD_EXG_CTRL_REQ', 1, 1, 1),
+(282, 'MSG_ID_ZHBL3MOD_EXG_CTRL_RESP', 1, 1, 1),
+(283, 'MSG_ID_ZHBL3MOD_EXG_DATA_REPORT', 1, 1, 1),
+(284, 'MSG_ID_L3HATE_TC_START', 1, 1, 1),
+(285, 'MSG_ID_ETH_L3HATE_FRAME_RCV', 1, 1, 1),
+(286, 'MSG_ID_SPS_L3HATE_FRAME_RCV', 1, 1, 1),
+(287, 'MSG_ID_CAN_L3HATE_FRAME_RCV', 1, 1, 1),
+(288, 'MSG_ID_MQTT_L3HATE_FRAME_RCV', 1, 1, 1),
+(289, 'MSG_ID_COM_MAX', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -4713,8 +5439,8 @@ INSERT INTO `hcutracemsgctr` (`msgid`, `msgname`, `msgctrflag`, `msgallow`, `msg
 -- Table structure for table `hcuwinddirdatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuwinddirdatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4733,8 +5459,8 @@ CREATE TABLE IF NOT EXISTS `hcuwinddirdatainfo` (
 -- Table structure for table `hcuwindspddatainfo`
 --
 
-CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
-`sid` int(4) NOT NULL,
+CREATE TABLE `hcuwindspddatainfo` (
+  `sid` int(4) NOT NULL,
   `deviceid` int(4) NOT NULL,
   `timestamp` int(4) NOT NULL,
   `dataformat` int(1) NOT NULL,
@@ -4755,319 +5481,314 @@ CREATE TABLE IF NOT EXISTS `hcuwindspddatainfo` (
 -- Indexes for table `hcuairprsaltitudebmp180datainfo`
 --
 ALTER TABLE `hcuairprsaltitudebmp180datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuairprsbmp180datainfo`
 --
 ALTER TABLE `hcuairprsbmp180datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuairprsdatainfo`
 --
 ALTER TABLE `hcuairprsdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcualcoholdatainfo`
 --
 ALTER TABLE `hcualcoholdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcualcoholmq3alcodatainfo`
 --
 ALTER TABLE `hcualcoholmq3alcodatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcubfsccalibration`
 --
 ALTER TABLE `hcubfsccalibration`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcubfscconfigpara`
 --
 ALTER TABLE `hcubfscconfigpara`
- ADD PRIMARY KEY (`sid`), ADD UNIQUE KEY `confname` (`confname`);
+  ADD PRIMARY KEY (`sid`),
+  ADD UNIQUE KEY `confname` (`confname`);
 
 --
 -- Indexes for table `hcubfsccurrentinfo`
 --
 ALTER TABLE `hcubfsccurrentinfo`
- ADD PRIMARY KEY (`timestamp`);
+  ADD PRIMARY KEY (`timestamp`);
 
 --
 -- Indexes for table `hcubfscfb2ui`
 --
 ALTER TABLE `hcubfscfb2ui`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcubfscflowsheet`
 --
 ALTER TABLE `hcubfscflowsheet`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcubfsclanguagedict`
 --
 ALTER TABLE `hcubfsclanguagedict`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcubfsclanguagelist`
 --
 ALTER TABLE `hcubfsclanguagelist`
- ADD PRIMARY KEY (`lang_name`);
+  ADD PRIMARY KEY (`lang_name`);
 
 --
 -- Indexes for table `hcubfscstadatainfo`
 --
 ALTER TABLE `hcubfscstadatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcubfscstaticpara`
 --
 ALTER TABLE `hcubfscstaticpara`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuco1datainfo`
 --
 ALTER TABLE `hcuco1datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuemcdatainfo`
 --
 ALTER TABLE `hcuemcdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuhchodatainfo`
 --
 ALTER TABLE `hcuhchodatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuhchoze08ch2odatainfo`
 --
 ALTER TABLE `hcuhchoze08ch2odatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuhsmmpdatainfo`
 --
 ALTER TABLE `hcuhsmmpdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuhumiddatainfo`
 --
 ALTER TABLE `hcuhumiddatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuhumiddht11datainfo`
 --
 ALTER TABLE `hcuhumiddht11datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuhumidmth01datainfo`
 --
 ALTER TABLE `hcuhumidmth01datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuhumidrht03datainfo`
 --
 ALTER TABLE `hcuhumidrht03datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuhumidsht20datainfo`
 --
 ALTER TABLE `hcuhumidsht20datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuigmcj188datainfo`
 --
 ALTER TABLE `hcuigmcj188datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuihmcj188datainfo`
 --
 ALTER TABLE `hcuihmcj188datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuipmcj188datainfo`
 --
 ALTER TABLE `hcuipmcj188datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuiwmcj188datainfo`
 --
 ALTER TABLE `hcuiwmcj188datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hculightstrbh1750datainfo`
 --
 ALTER TABLE `hculightstrbh1750datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hculightstrdatainfo`
 --
 ALTER TABLE `hculightstrdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcunoisedatainfo`
 --
 ALTER TABLE `hcunoisedatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcupm25bmpd300datainfo`
 --
 ALTER TABLE `hcupm25bmpd300datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcupm25datainfo`
 --
 ALTER TABLE `hcupm25datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcupm25sharpdatainfo`
 --
 ALTER TABLE `hcupm25sharpdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcusysalarminfo`
 --
 ALTER TABLE `hcusysalarminfo`
- ADD PRIMARY KEY (`sid`);
-
---
--- Indexes for table `hcusysengpar`
---
-ALTER TABLE `hcusysengpar`
- ADD UNIQUE KEY `prjname` (`prjname`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcusysengtimer`
 --
 ALTER TABLE `hcusysengtimer`
- ADD PRIMARY KEY (`timerid`);
+  ADD PRIMARY KEY (`timerid`);
 
 --
 -- Indexes for table `hcusyspmglobaldatainfo`
 --
 ALTER TABLE `hcusyspmglobaldatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcusysswm_swdl`
 --
 ALTER TABLE `hcusysswm_swdl`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcusysswm_swpkg`
 --
 ALTER TABLE `hcusysswm_swpkg`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutempbmp180datainfo`
 --
 ALTER TABLE `hcutempbmp180datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutempdatainfo`
 --
 ALTER TABLE `hcutempdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutempdht11datainfo`
 --
 ALTER TABLE `hcutempdht11datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutempmth01datainfo`
 --
 ALTER TABLE `hcutempmth01datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutemprht03datainfo`
 --
 ALTER TABLE `hcutemprht03datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutempsht20datainfo`
 --
 ALTER TABLE `hcutempsht20datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutoxicgasdatainfo`
 --
 ALTER TABLE `hcutoxicgasdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutoxicgasmq135datainfo`
 --
 ALTER TABLE `hcutoxicgasmq135datainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutoxicgaszp01vocdatainfo`
 --
 ALTER TABLE `hcutoxicgaszp01vocdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcutracemodulectr`
 --
 ALTER TABLE `hcutracemodulectr`
- ADD PRIMARY KEY (`moduleid`);
+  ADD PRIMARY KEY (`moduleid`);
 
 --
 -- Indexes for table `hcutracemsgctr`
 --
 ALTER TABLE `hcutracemsgctr`
- ADD PRIMARY KEY (`msgid`);
+  ADD PRIMARY KEY (`msgid`);
 
 --
 -- Indexes for table `hcuwinddirdatainfo`
 --
 ALTER TABLE `hcuwinddirdatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Indexes for table `hcuwindspddatainfo`
 --
 ALTER TABLE `hcuwindspddatainfo`
- ADD PRIMARY KEY (`sid`);
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -5077,237 +5798,237 @@ ALTER TABLE `hcuwindspddatainfo`
 -- AUTO_INCREMENT for table `hcuairprsaltitudebmp180datainfo`
 --
 ALTER TABLE `hcuairprsaltitudebmp180datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuairprsbmp180datainfo`
 --
 ALTER TABLE `hcuairprsbmp180datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuairprsdatainfo`
 --
 ALTER TABLE `hcuairprsdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcualcoholdatainfo`
 --
 ALTER TABLE `hcualcoholdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcualcoholmq3alcodatainfo`
 --
 ALTER TABLE `hcualcoholmq3alcodatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcubfsccalibration`
 --
 ALTER TABLE `hcubfsccalibration`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `hcubfscconfigpara`
 --
 ALTER TABLE `hcubfscconfigpara`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `hcubfscfb2ui`
 --
 ALTER TABLE `hcubfscfb2ui`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `hcubfscflowsheet`
 --
 ALTER TABLE `hcubfscflowsheet`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `hcubfsclanguagedict`
 --
 ALTER TABLE `hcubfsclanguagedict`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=72;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 --
 -- AUTO_INCREMENT for table `hcubfscstadatainfo`
 --
 ALTER TABLE `hcubfscstadatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24856;
 --
 -- AUTO_INCREMENT for table `hcubfscstaticpara`
 --
 ALTER TABLE `hcubfscstaticpara`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `hcuco1datainfo`
 --
 ALTER TABLE `hcuco1datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuemcdatainfo`
 --
 ALTER TABLE `hcuemcdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12205;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12205;
 --
 -- AUTO_INCREMENT for table `hcuhchodatainfo`
 --
 ALTER TABLE `hcuhchodatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuhchoze08ch2odatainfo`
 --
 ALTER TABLE `hcuhchoze08ch2odatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuhsmmpdatainfo`
 --
 ALTER TABLE `hcuhsmmpdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuhumiddatainfo`
 --
 ALTER TABLE `hcuhumiddatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuhumiddht11datainfo`
 --
 ALTER TABLE `hcuhumiddht11datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuhumidmth01datainfo`
 --
 ALTER TABLE `hcuhumidmth01datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `hcuhumidrht03datainfo`
 --
 ALTER TABLE `hcuhumidrht03datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuhumidsht20datainfo`
 --
 ALTER TABLE `hcuhumidsht20datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuigmcj188datainfo`
 --
 ALTER TABLE `hcuigmcj188datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuihmcj188datainfo`
 --
 ALTER TABLE `hcuihmcj188datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuipmcj188datainfo`
 --
 ALTER TABLE `hcuipmcj188datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuiwmcj188datainfo`
 --
 ALTER TABLE `hcuiwmcj188datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hculightstrbh1750datainfo`
 --
 ALTER TABLE `hculightstrbh1750datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hculightstrdatainfo`
 --
 ALTER TABLE `hculightstrdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcunoisedatainfo`
 --
 ALTER TABLE `hcunoisedatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcupm25bmpd300datainfo`
 --
 ALTER TABLE `hcupm25bmpd300datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcupm25datainfo`
 --
 ALTER TABLE `hcupm25datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcupm25sharpdatainfo`
 --
 ALTER TABLE `hcupm25sharpdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcusysalarminfo`
 --
 ALTER TABLE `hcusysalarminfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2195;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2195;
 --
 -- AUTO_INCREMENT for table `hcusyspmglobaldatainfo`
 --
 ALTER TABLE `hcusyspmglobaldatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=702;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1521;
 --
 -- AUTO_INCREMENT for table `hcusysswm_swdl`
 --
 ALTER TABLE `hcusysswm_swdl`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcusysswm_swpkg`
 --
 ALTER TABLE `hcusysswm_swpkg`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT for table `hcutempbmp180datainfo`
 --
 ALTER TABLE `hcutempbmp180datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutempdatainfo`
 --
 ALTER TABLE `hcutempdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutempdht11datainfo`
 --
 ALTER TABLE `hcutempdht11datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutempmth01datainfo`
 --
 ALTER TABLE `hcutempmth01datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutemprht03datainfo`
 --
 ALTER TABLE `hcutemprht03datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutempsht20datainfo`
 --
 ALTER TABLE `hcutempsht20datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutoxicgasdatainfo`
 --
 ALTER TABLE `hcutoxicgasdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutoxicgasmq135datainfo`
 --
 ALTER TABLE `hcutoxicgasmq135datainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcutoxicgaszp01vocdatainfo`
 --
 ALTER TABLE `hcutoxicgaszp01vocdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuwinddirdatainfo`
 --
 ALTER TABLE `hcuwinddirdatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `hcuwindspddatainfo`
 --
 ALTER TABLE `hcuwindspddatainfo`
-MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `sid` int(4) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
