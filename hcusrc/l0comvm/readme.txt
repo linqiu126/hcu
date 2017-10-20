@@ -10,6 +10,7 @@
 
 //= ZJL, 2017 Oct.20 CURRENT_SW_DELIVERY 285=>BFDF项目
 = 将下位机指示软件版本显示，从３个轮寻，改为上下位机必须一致
+= 修正bug数据库ihusw/hcusw字符串的长度
 
 //= ZJL, 2017 Oct.19 CURRENT_SW_DELIVERY 284=>BFDF项目
 = 将CANITFLEO的消息处理完善
