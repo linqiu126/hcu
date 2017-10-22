@@ -8,6 +8,10 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+
+//= ZJL, 2017 Oct.21 CURRENT_SW_DELIVERY 286=>BFHS项目
+= 更新HUITP V3.1复旦消息更新
+
 //= ZJL, 2017 Oct.20 CURRENT_SW_DELIVERY 285=>BFDF项目
 = 将下位机指示软件版本显示，从３个轮寻，改为上下位机必须一致
 = 修正bug数据库ihusw/hcusw字符串的长度
