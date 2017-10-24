@@ -1384,7 +1384,8 @@ typedef enum
     //复旦项目
 	HUITP_IEID_uni_fdwq_min                         = 0x4F00,
 	HUITP_IEID_uni_fdwq_sports_wrist_data           = 0x4F00,
-	HUITP_IEID_uni_fdwq_sports_profile_data         = 0x4F01,
+	HUITP_IEID_uni_fdwq_sports_profile_simple_data  = 0x4F01,
+	HUITP_IEID_uni_fdwq_sports_profile_detail_data  = 0x4F02,
 	HUITP_IEID_uni_fdwq_max,
 
   //串口读取命令/返回结果
@@ -2965,13 +2966,39 @@ typedef struct StrIe_HUITP_IEID_uni_fdwq_sports_wrist_data
 	UINT8  skinAttached;
 }StrIe_HUITP_IEID_uni_fdwq_sports_wrist_data_t;
 
-//HUITP_IEID_uni_fdwq_profile_data         = 0x4F01,
-typedef struct StrIe_HUITP_IEID_uni_fdwq_profile_data
+//HUITP_IEID_uni_fdwq_profile_simple_data         = 0x4F01,
+typedef struct StrIe_HUITP_IEID_uni_fdwq_profile_simple_data
 {
 	UINT16 ieId;
 	UINT16 ieLen;
 	UINT32 rfId;
-}StrIe_HUITP_IEID_uni_fdwq_profile_data_t;
+}StrIe_HUITP_IEID_uni_fdwq_profile_simple_data_t;
+
+//HUITP_IEID_uni_fdwq_profile_detail_data         = 0x4F02,
+typedef struct StrIe_HUITP_IEID_uni_fdwq_profile_detail_data
+{
+	UINT16 ieId;
+	UINT16 ieLen;
+	UINT32 rfId;
+	char   name[20];
+	UINT8  gender;
+	UINT8  dataFormat;
+	UINT32 high;
+	UINT32 weight;
+	UINT8  bloodType;
+}StrIe_HUITP_IEID_uni_fdwq_profile_detail_data_t;
+#define HUITP_IEID_UNI_FDWQ_PROFILE_GENDER_NULL 0
+#define HUITP_IEID_UNI_FDWQ_PROFILE_GENDER_MALE 1
+#define HUITP_IEID_UNI_FDWQ_PROFILE_GENDER_FEMALE 2
+#define HUITP_IEID_UNI_FDWQ_PROFILE_GENDER_BOTH 3
+#define HUITP_IEID_UNI_FDWQ_PROFILE_GENDER_UNDETERMIN 4
+#define HUITP_IEID_UNI_FDWQ_PROFILE_GENDER_INVALID 0xFF
+#define HUITP_IEID_UNI_FDWQ_PROFILE_BLOOD_TYPE_NULL 0
+#define HUITP_IEID_UNI_FDWQ_PROFILE_BLOOD_TYPE_A 1
+#define HUITP_IEID_UNI_FDWQ_PROFILE_BLOOD_TYPE_B 2
+#define HUITP_IEID_UNI_FDWQ_PROFILE_BLOOD_TYPE_AB 3
+#define HUITP_IEID_UNI_FDWQ_PROFILE_BLOOD_TYPE_O 4
+#define HUITP_IEID_UNI_FDWQ_PROFILE_BLOOD_TYPE_INVALID 0xFF
 //HUITP_IEID_uni_fdwq_max,
 
 //串口读取命令/返回结果
@@ -7046,7 +7073,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_fdwq_profile_report
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_report_t baseReport;
-	StrIe_HUITP_IEID_uni_fdwq_profile_data_t wrist;
+	StrIe_HUITP_IEID_uni_fdwq_profile_simple_data_t wrist;
 }StrMsg_HUITP_MSGID_uni_fdwq_profile_report_t;
 
 //HUITP_MSGID_uni_fdwq_profile_confirm             = 0x4F02,
@@ -7055,7 +7082,7 @@ typedef struct StrMsg_HUITP_MSGID_uni_fdwq_profile_confirm
 	StrMsg_HUITP_MSGID_uni_general_head_msgid_t msgId;
 	UINT16 msgLen;
 	StrIe_HUITP_IEID_uni_com_confirm_t baseConfirm;
-	StrIe_HUITP_IEID_uni_fdwq_profile_data_t wrist;
+	StrIe_HUITP_IEID_uni_fdwq_profile_detail_data_t wrist;
 }StrMsg_HUITP_MSGID_uni_fdwq_profile_confirm_t;
 
 //HUITP_MSGID_uni_fdwq_max,
