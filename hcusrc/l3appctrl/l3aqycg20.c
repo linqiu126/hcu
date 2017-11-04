@@ -1643,31 +1643,26 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		snd.comHead.msgType = HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID;
 		strcpy(snd.comHead.funcFlag, "0");
 
-		//CONTENT: TBD
+		//CONTENT: Adjust later:TBD
 		snd.baseReport = HUITP_IEID_UNI_COM_REPORT_YES;
 		snd.ycjk.equipid = 1;
-		if(snd.ycjk.tempValue > HCU_L3AQYC_A01001_RANGE_MAX){
-			snd.ycjk.tempValue = HCU_L3AQYC_A01001_RANGE_MAX;
+		if(gTaskL3aqycq20Context.staMin.a01001_Avg > HCU_L3AQYC_A01001_RANGE_MAX){
+			gTaskL3aqycq20Context.staMin.a01001_Avg = HCU_L3AQYC_A01001_RANGE_MAX - 20;
 		}
-		if(snd.ycjk.humidValue > HCU_L3AQYC_A01002_RANGE_MAX){
-			snd.ycjk.humidValue = HCU_L3AQYC_A01002_RANGE_MAX;
+		if(gTaskL3aqycq20Context.staMin.a01002_Avg > HCU_L3AQYC_A01002_RANGE_MAX){
+			gTaskL3aqycq20Context.staMin.a01002_Avg = HCU_L3AQYC_A01002_RANGE_MAX - 20;
 		}
-		if(snd.ycjk.winddirValue > HCU_L3AQYC_A01008_RANGE_MAX){
-			snd.ycjk.winddirValue = HCU_L3AQYC_A01008_RANGE_MAX;
+		if(gTaskL3aqycq20Context.staMin.a01007_Avg > HCU_L3AQYC_A01008_RANGE_MAX){
+			gTaskL3aqycq20Context.staMin.a01007_Avg = HCU_L3AQYC_A01008_RANGE_MAX -25;
 		}
-		if(snd.ycjk.humidValue > HCU_L3AQYC_A01002_RANGE_MAX){
-			snd.ycjk.humidValue = HCU_L3AQYC_A01002_RANGE_MAX;
+		if(gTaskL3aqycq20Context.staMin.a01008_Avg > HCU_L3AQYC_A01008_RANGE_MAX){
+			gTaskL3aqycq20Context.staMin.a01008_Avg = HCU_L3AQYC_A01008_RANGE_MAX;
 		}
-		if(snd.ycjk.tspValue > HCU_L3AQYC_A34001_RANGE_MAX){
-			snd.ycjk.tspValue = HCU_L3AQYC_A34001_RANGE_MAX;
-			snd.ycjk.pm1d0Value = HCU_L3AQYC_A34001_RANGE_MAX;
-			snd.ycjk.pm2d5Value = HCU_L3AQYC_A34001_RANGE_MAX;
-			snd.ycjk.pm10Value = HCU_L3AQYC_A34001_RANGE_MAX;
-
-
+		if(gTaskL3aqycq20Context.staMin.a34001_Avg > HCU_L3AQYC_A34001_RANGE_MAX){
+			gTaskL3aqycq20Context.staMin.a34001_Avg = HCU_L3AQYC_A34001_RANGE_MAX;
 		}
 		if(snd.ycjk.noiseValue > HCU_L3AQYC_A50001_RANGE_MAX){
-			snd.ycjk.noiseValue = HCU_L3AQYC_A50001_RANGE_MAX;
+			snd.ycjk.noiseValue = HCU_L3AQYC_A50001_RANGE_MAX - 20;
 		}
 
 
@@ -1700,23 +1695,23 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		//对发送数据进行编码
 //////////////////////////////////////////////////////////
 		//wchar_t *chinese_str = L"扬尘监控系统";
-		wchar_t *chinese_str = L"噪声(dB)：";
+		wchar_t *chinese_str = L"欢迎习总光临小慧智能  噪声：";
 		unsigned int *p_chinese = (wchar_t*)chinese_str;
 
-		wchar_t *tsp_str = L"  TSP(ug/m3)：";
+		wchar_t *tsp_str = L" dB    TSP：";
 		unsigned int *p_tsp = (wchar_t*)tsp_str;
 
-		wchar_t *temp_str = L"  温度(°C)：";
+		wchar_t *temp_str = L" ug/m3    温度：";
 		unsigned int *p_temp = (wchar_t*)temp_str;
 
-		wchar_t *humid_str = L"  湿度(RH%)：";
+		wchar_t *humid_str = L"℃    湿度：";
 		unsigned int *p_humid = (wchar_t*)humid_str;
 
 
-		wchar_t *windspd_str = L"  风速(米/秒)：";
+		wchar_t *windspd_str = L" RH%    风速：";
 		unsigned int *p_windspd = (wchar_t*)windspd_str;
 
-		wchar_t *winddir_str = L"  风向：";
+		wchar_t *winddir_str = L" 米/秒    风向：";
 		unsigned int *p_winddir = (wchar_t*)winddir_str;
 
 

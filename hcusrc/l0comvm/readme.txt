@@ -7,7 +7,8 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
-
+//= ZSC, 2017 Nov.04 CURRENT_SW_DELIVERY 287=>AQYC项目
+= 增加支持中航显示屏（待屏确认需进一步调整优化）
 
 //= ZJL, 2017 Oct.21 CURRENT_SW_DELIVERY 286=>FDWQ项目
 = 更新HUITP V3.1复旦消息更新
