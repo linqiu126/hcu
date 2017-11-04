@@ -14,6 +14,11 @@
 #include "../l1com/l1comdef.h"
 #include "../l2frame/cloudvela.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <wchar.h>
+
 /*
 ** FSM of the L3AQYCG20
 */
@@ -66,7 +71,8 @@ HcuFsmStateItem_t HcuFsmL3aqycg20[] =
 };
 
 //Global variables
-
+SerialLedMsgBuf_t currentLedBuf;
+UINT32 LCD_AlarmFlag;
 
 //Task Global variables
 gTaskL3aqycq20Context_t gTaskL3aqycq20Context; //扬尘监测的L3总控表
@@ -86,6 +92,7 @@ OPSTAT fsm_l3aqycg20_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr,
 OPSTAT fsm_l3aqycg20_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
+	LCD_AlarmFlag = 0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -117,6 +124,10 @@ OPSTAT fsm_l3aqycg20_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT3
 
 	//扬尘数据表单控制表初始化
 	memset(&gTaskL3aqycq20Context, 0, sizeof(gTaskL3aqycq20Context_t));
+
+	//SerialLedMsgBuf_t currentLedBuf;
+
+	memset(&currentLedBuf, 0, sizeof(SerialLedMsgBuf_t));
 
 	//监测数据标识符判断表初始化
 	func_l3aqycg20_judge_value_init();
@@ -1615,7 +1626,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 	//使用HUITP发送MSG_ID_YCJK_CLOUDVELA_DATA_REPORT报告给后台
 	//
-	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_3M_REPORT_CYCLE) == 0) && (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP)){
+	if (((gTaskL3aqycq20Context.elipseCnt % HCU_L3AQYC_STA_1M_REPORT_CYCLE) == 0) && (HCU_SYSCFG_SENSOR_REPORT_MODE_SET == HCU_SYSCFG_SENSOR_REPORT_MODE_GROUP)){
 
 	    HCU_DEBUG_PRINT_INF("L3AQYCG20 start aggregation report to default cloud\n\n\n");
 
@@ -1659,6 +1670,19 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 			snd.ycjk.noiseValue = HCU_L3AQYC_A50001_RANGE_MAX;
 		}
 
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////For led test
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2009)
+		{
+			int ret=0;
+
+			//对信息进行ZH系列字符控制卡协议的编码
+			memset(&currentLedBuf, 0, sizeof(SerialLedMsgBuf_t));
+
+
+
+
 		snd.ycjk.tempValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01001_Avg;
 		snd.ycjk.humidValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01002_Avg;
 		snd.ycjk.winddirValue = HCU_SYSMSG_NB_MICROS_IN_ONE_MS*gTaskL3aqycq20Context.staMin.a01008_Avg;
@@ -1673,6 +1697,688 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%d, Humid=%d, Windir=%d, Windspd=%d, tspValue=%d, pm2d5Value=%d, pm10Value=%d, noiseValue=%d\n\n\n",snd.ycjk.tempValue, snd.ycjk.humidValue, snd.ycjk.winddirValue, snd.ycjk.windspdValue, snd.ycjk.tspValue, snd.ycjk.pm2d5Value, snd.ycjk.pm10Value, snd.ycjk.noiseValue);
 
+		//对发送数据进行编码
+//////////////////////////////////////////////////////////
+		//wchar_t *chinese_str = L"扬尘监控系统";
+		wchar_t *chinese_str = L"噪声(dB)：";
+		unsigned int *p_chinese = (wchar_t*)chinese_str;
+
+		wchar_t *tsp_str = L"  TSP(ug/m3)：";
+		unsigned int *p_tsp = (wchar_t*)tsp_str;
+
+		wchar_t *temp_str = L"  温度(°C)：";
+		unsigned int *p_temp = (wchar_t*)temp_str;
+
+		wchar_t *humid_str = L"  湿度(RH%)：";
+		unsigned int *p_humid = (wchar_t*)humid_str;
+
+
+		wchar_t *windspd_str = L"  风速(米/秒)：";
+		unsigned int *p_windspd = (wchar_t*)windspd_str;
+
+		wchar_t *winddir_str = L"  风向：";
+		unsigned int *p_winddir = (wchar_t*)winddir_str;
+
+
+		unsigned int noise = (unsigned int)gTaskL3aqycq20Context.staMin.a50001_Avg;
+		char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+		//itoa(number,string,16);
+		sprintf(CStr,"%d",noise);
+		printf("integer = %d CStr = %s\n", noise,CStr);
+
+	   //把char*转换为wchar_t*
+		size_t len = strlen(CStr) + 1;
+		wchar_t *noise_str;
+		noise_str=(wchar_t*)malloc(len*sizeof(wchar_t));
+		mbstowcs(noise_str,CStr,len);
+
+		unsigned int *p_noise = (wchar_t*)noise_str;
+
+
+		///////////////////////////////////////////////////
+		unsigned int tsp = (unsigned int)gTaskL3aqycq20Context.staMin.a34001_Avg;
+		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+		//itoa(number,string,16);
+		sprintf(CStr,"%d",tsp);
+		printf("integer = %d CStr = %s\n", tsp,CStr);
+
+	   //把char*转换为wchar_t*
+		len = strlen(CStr) + 1;
+		wchar_t *tsp_value_str;
+		tsp_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
+		mbstowcs(tsp_value_str,CStr,len);
+
+		unsigned int *p_tsp_value = (wchar_t*)tsp_value_str;
+		///////////////////////////////////////////////////
+
+		///////////////////////////////////////////////////
+		unsigned int temp = (unsigned int)gTaskL3aqycq20Context.staMin.a01001_Avg;
+		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+		//itoa(number,string,16);
+		sprintf(CStr,"%d",temp);
+		printf("integer = %d CStr = %s\n", temp,CStr);
+
+	   //把char*转换为wchar_t*
+		len = strlen(CStr) + 1;
+		wchar_t *temp_value_str;
+		temp_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
+		mbstowcs(temp_value_str,CStr,len);
+
+		unsigned int *p_temp_value = (wchar_t*)temp_value_str;
+		///////////////////////////////////////////////////
+
+
+		///////////////////////////////////////////////////
+		unsigned int humid = (unsigned int)gTaskL3aqycq20Context.staMin.a01002_Avg;
+		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+		//itoa(number,string,16);
+		sprintf(CStr,"%d",humid);
+		printf("integer = %d CStr = %s\n", humid,CStr);
+
+	   //把char*转换为wchar_t*
+		len = strlen(CStr) + 1;
+		wchar_t *humid_value_str;
+		humid_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
+		mbstowcs(humid_value_str,CStr,len);
+
+		unsigned int *p_humid_value = (wchar_t*)humid_value_str;
+		///////////////////////////////////////////////////
+
+		///////////////////////////////////////////////////
+		unsigned int windspd = (unsigned int)gTaskL3aqycq20Context.staMin.a01007_Avg;
+		//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+		memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+		//itoa(number,string,16);
+		sprintf(CStr,"%d",windspd);
+		printf("integer = %d CStr = %s\n", windspd,CStr);
+
+	   //把char*转换为wchar_t*
+		len = strlen(CStr) + 1;
+		wchar_t *windspd_value_str;
+		windspd_value_str=(wchar_t*)malloc(len*sizeof(wchar_t));
+		mbstowcs(windspd_value_str,CStr,len);
+
+		unsigned int *p_windspd_value = (wchar_t*)windspd_value_str;
+		///////////////////////////////////////////////////
+
+		///////////////////////////////////////////////////
+		unsigned int winddir = (unsigned int)gTaskL3aqycq20Context.staMin.a01008_Avg;
+		wchar_t *winddir_value_str;
+		if(winddir>=0 && winddir<=11){
+			winddir_value_str = L"北";
+		}
+		else if(winddir>349 && winddir<=360){
+			winddir_value_str = L"北";
+		}
+
+		else if(winddir>11 && winddir<=34){
+			winddir_value_str = L"东北偏北";
+		}
+
+		else if(winddir>34 && winddir<=56){
+			winddir_value_str = L"东北";
+		}
+
+		else if(winddir>56 && winddir<=79){
+			winddir_value_str = L"东北偏东";
+		}
+
+		else if(winddir>79 && winddir<=101){
+			winddir_value_str = L"东";
+		}
+
+		else if(winddir>101 && winddir<=124){
+			winddir_value_str = L"东南偏东";
+		}
+
+		else if(winddir>124 && winddir<=146){
+			winddir_value_str = L"东南";
+		}
+
+		else if(winddir>146 && winddir<=169){
+			winddir_value_str = L"东南偏南";
+		}
+
+		else if(winddir>169 && winddir<=191){
+			winddir_value_str = L"南";
+		}
+
+		else if(winddir>191 && winddir<=214){
+			winddir_value_str = L"西南偏南";
+		}
+
+		else if(winddir>214 && winddir<=236){
+			winddir_value_str = L"西南";
+		}
+
+		else if(winddir>236 && winddir<=259){
+			winddir_value_str = L"西南偏西";
+		}
+
+		else if(winddir>259 && winddir<=281){
+			winddir_value_str = L"西";
+		}
+
+		else if(winddir>281 && winddir<=304){
+			winddir_value_str = L"西北偏西";
+		}
+
+		else if(winddir>304 && winddir<=326){
+			winddir_value_str = L"西北";
+		}
+
+		else if(winddir>326 && winddir<=349){
+			winddir_value_str = L"西北偏北";
+		}
+
+		unsigned int *p_winddir_value = (wchar_t*)winddir_value_str;
+
+		///////////////////////////////////////////////////
+
+		printf("Unicode: \n");
+		printf("Chinese str len: %d\n",wcslen(chinese_str));
+
+		int i;
+		for(i=0;i<wcslen(chinese_str);i++)
+		{
+			printf("0x%x  ",p_chinese[i]);
+		}
+		printf("\n");
+
+
+		printf("Noise str len: %d\n",wcslen(noise_str));
+		for(i=0;i<wcslen(noise_str);i++)
+		{
+			printf("0x%x  ",p_noise[i]);
+		}
+		printf("\n");
+
+		printf("tsp value len: %d\n",wcslen(tsp_value_str));
+		for(i=0;i<wcslen(tsp_value_str);i++)
+		{
+			printf("0x%x  ",p_tsp_value[i]);
+		}
+		printf("\n\n\n\n\n");
+
+
+		unsigned int curLen = 228;
+
+		unsigned char sample1[] = {0x7A,0x01,0x00,0x06,0xFA,0x00,0x01,0x01,0x01,0x0C,0x05,0x03,0x01,0x00,0x3C,0x01,0x01,0x00,0x00,0x7F,0x0A,0x00,0x01,0x00,0x00,0x00,
+				0x00,0x00,0x80,0x00,0x10,0x00,0x01,0x04,0x04,0x10,0xF4,0x01,0x00,0x00,0x05,0x64,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x5C,0x5A,0x00,0x5C,0x54,0x01};
+		//"小慧智能科技   噪声： "    0x0f,0x61,0x67,0x66,0x7a,0x80,0xfd,0x79,0xd1,0x62,0x80,0x20,0x20,0x20,0x56,0x6a,0x58,0xf0,0xff,0x1a,0x20
+
+		//unsigned int curLen2 = 26;
+		//unsigned char sample2[] = {0x4E,0x0A,0x6D,0x77,0x5C,0xA9,0x76,0xDB,0x75,0x35,0x5B,0x50,0x5B,0x57,0x7B,0x26,0x53,0x61,0x6F,0x14,0x79,0x3A,0x7A,0x0B,0x5E,0x8F};
+		unsigned char  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+		memset(&curBuf, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
+		memcpy(curBuf, sample1, curLen);
+
+	/*
+		memcpy(&curBuf[curLen], sample2, curLen2);
+
+		curLen = curLen+curLen2;
+
+		printf("\n");
+
+		for(i=0;i<curLen;i++)
+		{
+
+			//curBuf[i] = p[i-curLen1];
+			printf("%02x  ",curBuf[i]);
+
+		}
+
+		printf("\n\n");
+	*/
+
+
+	/////////////////////////////////////////
+		unsigned int k = 0;
+		for(i=0;i<wcslen(chinese_str); i++)
+		{
+
+			curBuf[curLen+k] = p_chinese[i] >> 8;
+			printf("%02x  ",curBuf[curLen+k]);
+			curBuf[curLen+k+1] = p_chinese[i];
+			printf("%02x  ",curBuf[curLen+k+1]);
+			k=k+2;
+		}
+
+		printf("\n");
+		curLen = curLen+2*wcslen(chinese_str);
+
+
+		for(i=0;i<curLen;i++)
+		{
+
+			printf("%02x  ",curBuf[i]);
+		}
+		printf("\n");
+	/////////////////////////////////////////
+
+	/////////////////////////////////////////
+		unsigned int j = 0;
+		for(i=0;i<wcslen(noise_str); i++)
+		{
+
+			curBuf[curLen+j] = p_noise[i] >> 8;
+			printf("%02x  ",curBuf[curLen+j]);
+			curBuf[curLen+j+1] = p_noise[i];
+			printf("%02x  ",curBuf[curLen+j+1]);
+			j=j+2;
+		}
+
+		printf("\n");
+		curLen = curLen+2*wcslen(noise_str);
+
+
+		for(i=0;i<curLen;i++)
+		{
+
+			printf("%02x  ",curBuf[i]);
+		}
+		printf("\n");
+	/////////////////////////////////////////
+
+		/////////////////////////////////////////
+			unsigned int l = 0;
+			for(i=0;i<wcslen(tsp_str); i++)
+			{
+
+				curBuf[curLen+l] = p_tsp[i] >> 8;
+				printf("%02x  ",curBuf[curLen+l]);
+				curBuf[curLen+l+1] = p_tsp[i];
+				printf("%02x  ",curBuf[curLen+l+1]);
+				l=l+2;
+			}
+
+			printf("\n");
+			curLen = curLen+2*wcslen(tsp_str);
+
+
+			for(i=0;i<curLen;i++)
+			{
+
+				printf("%02x  ",curBuf[i]);
+			}
+			printf("\n");
+		/////////////////////////////////////////
+
+		/////////////////////////////////////////
+			unsigned int p = 0;
+			for(i=0;i<wcslen(tsp_value_str); i++)
+			{
+
+				curBuf[curLen+p] = p_tsp_value[i] >> 8;
+				printf("%02x  ",curBuf[curLen+p]);
+				curBuf[curLen+p+1] = p_tsp_value[i];
+				printf("%02x  ",curBuf[curLen+p+1]);
+				p=p+2;
+			}
+
+			printf("\n\n\n\n\n\n\n\n\n");
+			curLen = curLen+2*wcslen(tsp_value_str);
+
+
+			for(i=0;i<curLen;i++)
+			{
+
+				printf("%02x  ",curBuf[i]);
+			}
+			printf("\n");
+		/////////////////////////////////////////
+
+
+
+
+
+			/////////////////////////////////////////
+				unsigned int m = 0;
+				for(i=0;i<wcslen(temp_str); i++)
+				{
+
+					curBuf[curLen+m] = p_temp[i] >> 8;
+					printf("%02x  ",curBuf[curLen+m]);
+					curBuf[curLen+m+1] = p_temp[i];
+					printf("%02x  ",curBuf[curLen+m+1]);
+					m=m+2;
+				}
+
+				printf("\n");
+				curLen = curLen+2*wcslen(temp_str);
+
+
+				for(i=0;i<curLen;i++)
+				{
+
+					printf("%02x  ",curBuf[i]);
+				}
+				printf("\n");
+			/////////////////////////////////////////
+
+				/////////////////////////////////////////
+					unsigned int q = 0;
+					for(i=0;i<wcslen(temp_value_str); i++)
+					{
+
+						curBuf[curLen+q] = p_temp_value[i] >> 8;
+						printf("%02x  ",curBuf[curLen+q]);
+						curBuf[curLen+q+1] = p_temp_value[i];
+						printf("%02x  ",curBuf[curLen+q+1]);
+						q=q+2;
+					}
+
+					printf("\n\n\n\n\n\n\n\n\n");
+					curLen = curLen+2*wcslen(temp_value_str);
+
+
+					for(i=0;i<curLen;i++)
+					{
+
+						printf("%02x  ",curBuf[i]);
+					}
+					printf("\n");
+				/////////////////////////////////////////
+
+
+
+				/////////////////////////////////////////
+					unsigned int n = 0;
+					for(i=0;i<wcslen(humid_str); i++)
+					{
+
+						curBuf[curLen+n] = p_humid[i] >> 8;
+						printf("%02x  ",curBuf[curLen+n]);
+						curBuf[curLen+n+1] = p_humid[i];
+						printf("%02x  ",curBuf[curLen+n+1]);
+						n=n+2;
+					}
+
+					printf("\n");
+					curLen = curLen+2*wcslen(humid_str);
+
+
+					for(i=0;i<curLen;i++)
+					{
+
+						printf("%02x  ",curBuf[i]);
+					}
+					printf("\n");
+				/////////////////////////////////////////
+
+					/////////////////////////////////////////
+						q = 0;
+						for(i=0;i<wcslen(humid_value_str); i++)
+						{
+
+							curBuf[curLen+q] = p_humid_value[i] >> 8;
+							printf("%02x  ",curBuf[curLen+q]);
+							curBuf[curLen+q+1] = p_humid_value[i];
+							printf("%02x  ",curBuf[curLen+q+1]);
+							q=q+2;
+						}
+
+						printf("\n\n\n\n\n\n\n\n\n");
+						curLen = curLen+2*wcslen(humid_value_str);
+
+
+						for(i=0;i<curLen;i++)
+						{
+
+							printf("%02x  ",curBuf[i]);
+						}
+						printf("\n");
+					/////////////////////////////////////////
+
+
+						/////////////////////////////////////////
+							n = 0;
+							for(i=0;i<wcslen(windspd_str); i++)
+							{
+
+								curBuf[curLen+n] = p_windspd[i] >> 8;
+								printf("%02x  ",curBuf[curLen+n]);
+								curBuf[curLen+n+1] = p_windspd[i];
+								printf("%02x  ",curBuf[curLen+n+1]);
+								n=n+2;
+							}
+
+							printf("\n");
+							curLen = curLen+2*wcslen(windspd_str);
+
+
+							for(i=0;i<curLen;i++)
+							{
+
+								printf("%02x  ",curBuf[i]);
+							}
+							printf("\n");
+						/////////////////////////////////////////
+
+						q = 0;
+						for(i=0;i<wcslen(windspd_value_str); i++)
+						{
+
+							curBuf[curLen+q] = p_windspd_value[i] >> 8;
+							printf("%02x  ",curBuf[curLen+q]);
+							curBuf[curLen+q+1] = p_windspd_value[i];
+							printf("%02x  ",curBuf[curLen+q+1]);
+							q=q+2;
+						}
+
+						printf("\n\n\n\n\n\n\n\n\n");
+						curLen = curLen+2*wcslen(windspd_value_str);
+
+
+						for(i=0;i<curLen;i++)
+						{
+
+							printf("%02x  ",curBuf[i]);
+						}
+						printf("\n");
+
+
+								/////////////////////////////////////////
+									n = 0;
+									for(i=0;i<wcslen(winddir_str); i++)
+									{
+
+										curBuf[curLen+n] = p_winddir[i] >> 8;
+										printf("%02x  ",curBuf[curLen+n]);
+										curBuf[curLen+n+1] = p_winddir[i];
+										printf("%02x  ",curBuf[curLen+n+1]);
+										n=n+2;
+									}
+
+									printf("\n");
+									curLen = curLen+2*wcslen(winddir_str);
+
+
+									for(i=0;i<curLen;i++)
+									{
+
+										printf("%02x  ",curBuf[i]);
+									}
+									printf("\n");
+								/////////////////////////////////////////
+
+
+									/////////////////////////////////////////
+										q = 0;
+										for(i=0;i<wcslen(winddir_value_str); i++)
+										{
+
+											curBuf[curLen+q] = p_winddir_value[i] >> 8;
+											printf("%02x  ",curBuf[curLen+q]);
+											curBuf[curLen+q+1] = p_winddir_value[i];
+											printf("%02x  ",curBuf[curLen+q+1]);
+											q=q+2;
+										}
+
+										printf("\n\n\n\n\n\n\n\n\n");
+										curLen = curLen+2*wcslen(winddir_value_str);
+
+
+										for(i=0;i<curLen;i++)
+										{
+
+											printf("%02x  ",curBuf[i]);
+										}
+										printf("\n");
+									/////////////////////////////////////////
+
+
+		unsigned char sample3[] = {0x5C,0x00};
+		memcpy(&curBuf[curLen], sample3, 2);
+
+		unsigned int DataLen = curLen+2-6;
+		printf("Total Length: %d\n",DataLen);
+		printf("Total Length: %02x\n  ",DataLen);
+
+		//第五位需要更新为DataLen的十六进制 unsigned char
+		//memcpy(&curBuf[4], DataLen, 2);
+		//curBuf[4] = DataLen;
+		curBuf[4] = DataLen;
+		curBuf[5] = DataLen >> 8;
+		printf("Total Length: %02x\n  ",curBuf[4]);
+		printf("Total Length: %02x\n  ",curBuf[5]);
+		//
+
+
+		unsigned char checksum = 0;
+		for(i=0;i<(curLen + 2);i++)
+		{
+			//printf("0x%x  ",sample[i]);
+			printf("%02x  ",curBuf[i]);
+			checksum = checksum + curBuf[i];
+
+		}
+
+		printf("\n");
+		printf("checksum: 0x%2x  ", checksum);
+		printf("\n");
+
+		curBuf[curLen+2] = checksum;
+		curBuf[curLen+3] = 0x1A;
+
+
+
+		for(i=0;i<(curLen+4);i++)
+		{
+			printf("%02x  ",curBuf[i]);
+		}
+
+//////////////////////////////////////////////////////////
+
+		//发送串口指令
+		//ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, currentSpsBuf.curLen);
+		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), curBuf, curLen+4);
+
+		if (FAILURE == ret)
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+			HcuErrorPrint("L3AQYCG20: Error send ZH command to serials port!\n");
+			return FAILURE;
+		}
+		else
+		{
+			//HCU_DEBUG_PRINT_INF("L3AQYCG20: Send ZH data succeed %02X %02x %02X %02X \n", currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3]);
+		}
+
+		//等待短时
+		hcu_usleep(5);
+
+		//读取串口数据
+		//从相应的从设备中读取数据
+		memset(&currentLedBuf, 0, sizeof(SerialLedMsgBuf_t));
+		//ret = hcu_spsapi_serial_port_get(&(zHcuVmCtrTab.hwinv.sps485.modbus), currentSpsBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentSpsBuf中
+		ret = hcu_spsapi_serial_port_get(&(zHcuVmCtrTab.hwinv.sps232.sp), currentLedBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentSpsBuf中
+
+		if ((ret <= 0) && (LCD_AlarmFlag == OFF))
+		{
+
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3AQYCG20]++;
+			HcuErrorPrint("L3AQYCG20: Can not read ZH data from serial port, return of read %d \n", ret);
+			LCD_AlarmFlag = ON;
+
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
+
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+			snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+			snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_OFF;
+			snd.timeStamp = time(0);
+			//snd.equID = rcv.equId;
+			//snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_SENSOR;
+			//snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_NO_CONNECT;
+
+			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_L3AQYCG20, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_L3AQYCG20, "L3AQYCG20: Send message erro//route to L3 or direct to cloudvela, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+
+			//return FAILURE;
+
+		}
+
+		else if ((ret <= 0) && (LCD_AlarmFlag == ON))
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_SPSVIRGO]++;
+			HcuErrorPrint("L3AQYCG20: Can not read ZH data from serial port, return of read %d \n", ret);
+			//return FAILURE;
+		}
+
+
+		else if ((ret > 0) && (LCD_AlarmFlag == OFF))
+		{
+			//currentModbusBuf.curLen =ret;
+			HcuDebugPrint("L3AQYCG20: Received ZH Len %d\n", ret);
+			//HcuDebugPrint("L3AQYCG20: Received ZH resp data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15]);
+
+		}
+
+		else if ((ret > 0) && (LCD_AlarmFlag == ON))
+		{
+
+			LCD_AlarmFlag = OFF;
+			//currentModbusBuf.curLen = ret;
+			HcuDebugPrint("L3AQYCG20: Received ZH Len %d\n", ret);
+			//HcuDebugPrint("L3AQYCG20: Received ZH resp data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentSpsBuf.curBuf[0],currentSpsBuf.curBuf[1],currentSpsBuf.curBuf[2],currentSpsBuf.curBuf[3],currentSpsBuf.curBuf[4],currentSpsBuf.curBuf[5],currentSpsBuf.curBuf[6],currentSpsBuf.curBuf[7],currentSpsBuf.curBuf[8],currentSpsBuf.curBuf[9],currentSpsBuf.curBuf[10],currentSpsBuf.curBuf[11],currentSpsBuf.curBuf[12],currentSpsBuf.curBuf[13],currentSpsBuf.curBuf[14],currentSpsBuf.curBuf[15]);
+
+			msg_struct_com_alarm_report_t snd;
+			memset(&snd, 0, sizeof(msg_struct_com_alarm_report_t));
+
+			snd.length = sizeof(msg_struct_com_alarm_report_t);
+			snd.usercmdid = L3CI_alarm;
+			snd.useroptid = L3PO_hcualarm_report;
+			snd.cmdIdBackType = L3CI_cmdid_back_type_instance;
+			snd.alarmServerity = HUITP_IEID_UNI_ALARM_SEVERITY_HIGH;
+			snd.alarmClearFlag = HUITP_IEID_UNI_ALARM_CLEAR_FLAG_ON;
+			snd.timeStamp = time(0);
+			//snd.equID = rcv.equId;
+			//snd.alarmType = HUITP_IEID_UNI_ALARM_TYPE_SENSOR;
+			//snd.alarmContent = HUITP_IEID_UNI_ALARM_CONTENT_NOISE_NO_CONNECT;
+
+			if (hcu_message_send(MSG_ID_COM_ALARM_REPORT, TASK_ID_SYSPM, TASK_ID_L3AQYCG20, &snd, snd.length) == FAILURE)
+				HCU_ERROR_PRINT_TASK(TASK_ID_SPSVIRGO, "L3AQYCG20: Send message erro//route to L3 or direct to cloudvela, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MODBUS].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
+
+		}
+
+	}
+	////////
+
+/////////////////////////////////////////////////////////////////////////////////////////
 
 		snd.length = sizeof(msg_struct_ycjk_cloudvela_data_report_t);
 

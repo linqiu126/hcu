@@ -63,6 +63,7 @@ HcuFsmStateItem_t HcuFsmNoise[] =
 
 //Task Global variables
 gTaskNoiseContext_t gTaskNoiseContext;
+UINT32 LCD_AlarmFlag;
 
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
@@ -82,6 +83,7 @@ OPSTAT fsm_noise_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 OPSTAT fsm_noise_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int i=0, ret=0;
+	LCD_AlarmFlag = 0;
 
 	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
 		//Send back MSG_ID_COM_INIT_FEEDBACK to SVRCON
@@ -447,6 +449,9 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 		return FAILURE;
 	}
 
+
+
+
 	//For HKvision option setting
 	HKVisionOption_t HKVisionOption;
 	memset( (void *)&HKVisionOption, 0, sizeof(HKVisionOption_t));
@@ -531,6 +536,9 @@ OPSTAT fsm_noise_data_report_from_modbus(UINT32 dest_id, UINT32 src_id, void * p
 			HCU_ERROR_PRINT_TASK(TASK_ID_NOISE, "NOISE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_NOISE].taskName, zHcuVmCtrTab.task[TASK_ID_SYSPM].taskName);
 
 	}
+
+
+
 
 	//若没超过阀值，而且alarm flag = TRUE, 则将alarm flag = FALSE，停止拍照和录像，然后需要发告警清除报告
 	if((rcv.noise.noiseValue <= HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD*10) && (gTaskNoiseContext.AlarmFlag == TRUE))
@@ -792,6 +800,9 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 		HcuErrorPrint("NOISE: Error stop timer!\n");
 		return FAILURE;
 	}
+
+
+
 
 
 	//For HKvision option setting

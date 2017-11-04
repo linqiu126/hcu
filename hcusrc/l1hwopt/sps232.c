@@ -142,7 +142,8 @@ OPSTAT func_sps232_int_init(void)
 	//初始化硬件接口
 	zHcuVmCtrTab.hwinv.sps232.sp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
 	if (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].present == HCU_SYSCFG_SENSOR_PRESENT_YES) zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 2400;
-	else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 9600;
+	//else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 9600;//for led test
+	else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 38400;
 	zHcuVmCtrTab.hwinv.sps232.sp.nBits = 8;
 	zHcuVmCtrTab.hwinv.sps232.sp.nEvent = 'N';
 	zHcuVmCtrTab.hwinv.sps232.sp.nStop = 1;

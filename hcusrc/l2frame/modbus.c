@@ -1930,7 +1930,7 @@ OPSTAT func_modbus_pm25_msg_pack(msg_struct_pm25_modbus_data_read_t *inMsg, Seri
 			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_LENGTH_OF_REG_NEW & 0x0FF);
 			outMsg->curLen = outMsg->curLen + 1;
 		}
-		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//测试朗亿LPM1051
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2009)//测试朗亿LPM1051
 		{
 			outMsg->curBuf[outMsg->curLen] = (UINT8)(PM25_REG_DATA_PMTSP_NEW_HIGH & 0x0FF);
 			outMsg->curLen = outMsg->curLen + 1;
@@ -2191,7 +2191,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 			snd->pm25.pmTSPValue = t0 + t1;
 		}
 
-		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//测试朗亿LPM1051
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2009)//测试朗亿LPM1051
 		{
 			if (len != PM25_LENGTH_OF_REG_NEW_LY *2){
 				HcuErrorPrint("MODBUS: Receive Modbus data error with data length!\n");

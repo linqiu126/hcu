@@ -10,6 +10,7 @@
 
 #include "../l0comvm/vmlayer.h"
 #include "../l1com/l1comdef.h"
+#include "../l1hwopt/spsapi.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -213,6 +214,14 @@ typedef struct gTaskL3aqycq20Context
 	HcuSysL3aqycAlarmLimit_t alarmLimit;
 
 }gTaskL3aqycq20Context_t;
+
+
+
+typedef struct SerialLedMsgBuf
+{
+	UINT32 curLen;
+	UINT8  curBuf[HCU_SYSDIM_MSG_BODY_LEN_MAX];
+}SerialLedMsgBuf_t;
 
 //层三Context
 extern gTaskL3aqycq20Context_t		gTaskL3aqycq20Context;
