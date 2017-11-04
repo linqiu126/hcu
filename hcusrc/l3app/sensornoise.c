@@ -833,8 +833,8 @@ OPSTAT fsm_noise_data_report_from_spsvirgo(UINT32 dest_id, UINT32 src_id, void *
 
 	//判断如果Noise超过阀值，若超过，则需要设alarm flag = ON, 启动拍照和录像，并触发告警，告警报告中需要包括告警类型，告警内容，及需要上传照片的文件名（包含设备名字日期时间）和录像的开始日期、时间和停止的日期、时间。
 	HCU_DEBUG_PRINT_INF("NOISE: noise = %d\n\n\n\n", (rcv.noise.noiseValue));
-	gTaskNoiseContext.noiseValue = rcv.noise.noiseValue/10;
-	HCU_DEBUG_PRINT_INF("NOISE: noise = %f\n\n\n\n", gTaskNoiseContext.noiseValue);
+	gTaskNoiseContext.noiseValue = (float)rcv.noise.noiseValue/10;
+	HCU_DEBUG_PRINT_INF("NOISE: noise = %.1f\n\n\n\n", gTaskNoiseContext.noiseValue);
 
 	if(rcv.noise.noiseValue >= (HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD*10))
 	//if(rcv.noise.noiseValue >= zHcuSysEngPar.serialport.SeriesPortForGPS) //for debug
