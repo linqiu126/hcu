@@ -45,6 +45,7 @@ typedef struct gTaskNoiseContext
 	gTaskNoiseContextElement_t noise[MAX_NUM_OF_SENSOR_NOISE_INSTALLED];
 	UINT8 currentSensorId;
 	UINT32 AlarmFlag;
+	float noiseValue;
 }gTaskNoiseContext_t;
 #define SENSOR_NOISE_HW_STATUS_INVALID 0xFF
 #define SENSOR_NOISE_HW_STATUS_ACTIVE 1
@@ -66,6 +67,8 @@ typedef struct gTaskNoiseContext
 //#define NOISE_ACTIVE_CHOICE_FINAL  NOISE_ACTIVE_CHOICE_SPSVIRGO
 #define NOISE_ACTIVE_CHOICE_FINAL  NOISE_ACTIVE_CHOICE_MODBUS
 */
+
+extern gTaskNoiseContext_t		gTaskNoiseContext;
 
 //API
 extern OPSTAT fsm_noise_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
