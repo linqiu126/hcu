@@ -58,7 +58,7 @@ typedef struct L3BfscuiResumeCmd
 typedef struct L3BfscuiTestCmd
 {
 	UINT32  cmdFlag;
-	UINT32 cmdValue;
+	UINT32  cmdValue;
 	UINT8	sensorid;
 	UINT32	testCmd;
 	UINT32	testPara;

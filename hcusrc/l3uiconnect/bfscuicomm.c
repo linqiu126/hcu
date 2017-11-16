@@ -447,7 +447,7 @@ OPSTAT  fsm_bfscuicomm_scan_jason_callback(UINT32 dest_id, UINT32 src_id, void *
 
 		//依赖文件变化的内容，分类发送控制命令：一般性控制命令
 		if (fileChangeContent == HCU_BFSCCOMM_JASON_CMD_TEST){
-			UINT8 testcmd = 0, testpara = 0;
+			UINT32 testcmd = 0, testpara = 0;
 			sensorid = parseResult.cmdTest.sensorid;
 			testcmd = parseResult.cmdTest.testCmd;
 			testpara = parseResult.cmdTest.testPara;
