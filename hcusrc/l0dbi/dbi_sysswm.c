@@ -437,6 +437,28 @@ OPSTAT dbi_HcuSysSwm_SwPkg_orphane_file_delete(void)
 	    if(strcmp(ptr->d_name,".")==0 || strcmp(ptr->d_name,"..")==0)    ///current dir OR parrent dir
 	        continue;
 	    else if ((ptr->d_type == 8) || (ptr->d_type == 10)){    ///File or Link file
+	    	//2017.11.16 增加零长度清理的过程--START
+	    	//STEP0: 清理长度为０的文件
+	    	FILE *fp;
+	    	memset(fopr, 0, sizeof(fopr));
+	    	memset(fopr, 0, sizeof(fopr));
+	    	strcpy(fopr, zHcuSysEngPar.swm.hcuSwActiveDir);
+	    	strcat(fopr, ptr->d_name);
+			if((fp=fopen(fopr, "rb"))== NULL){
+				HcuErrorPrint("DBISYSSWM: Open file %s Error!\n", fopr);
+				continue;
+			}
+			fseek(fp, 0L, SEEK_END);
+			int file_len = 0;
+			file_len = ftell(fp);
+			fclose(fp);
+			if (file_len<=0){
+				memset(fopr, 0, sizeof(fopr));
+				sprintf(fopr, "rm %s%s", zHcuSysEngPar.swm.hcuSwActiveDir, ptr->d_name);
+				system(fopr);
+			}
+			//2017.11.16 增加零长度清理的过程--END
+
 	    	//STEP1: 搜索软件体
 	    	//搜索文件名字是否出现在数据库中，不是则删掉
 	        sprintf(strsql, "SELECT * FROM `hcusysswm_swpkg` WHERE (`filename` = '%s')", ptr->d_name);
