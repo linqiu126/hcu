@@ -1831,7 +1831,7 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 		break;
 
 	case L3PO_emc_set_work_cycle:
-		break;EquId
+		break;
 
 	case L3PO_emc_set_sample_cycle:
 		break;
