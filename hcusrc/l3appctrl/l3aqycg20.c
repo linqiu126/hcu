@@ -1716,21 +1716,21 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 						wchar_t *temp_str = L"温度：";
 						unsigned int *p_temp = (wchar_t*)temp_str;
 
-						wchar_t *temp_unit_str = L"℃";
+						wchar_t *temp_unit_str = L" ℃   ";
 						unsigned int *p_temp_unit = (wchar_t*)temp_unit_str;
 
 
 						wchar_t *humid_str = L"湿度：";
 						unsigned int *p_humid = (wchar_t*)humid_str;
 
-						wchar_t *humid_unit_str = L"RH%                                                                                                                     ";
+						wchar_t *humid_unit_str = L" RH%                                                                                                                     ";
 						unsigned int *p_humid_unit = (wchar_t*)humid_unit_str;
 
 
-						wchar_t *windspd_str = L"    风速：";
+						wchar_t *windspd_str = L"风速：";
 						unsigned int *p_windspd = (wchar_t*)windspd_str;
 
-						wchar_t *windspd_unit_str = L"米/秒";
+						wchar_t *windspd_unit_str = L" 米/秒 ";
 						unsigned int *p_windspd_unit = (wchar_t*)windspd_unit_str;
 
 
@@ -2241,7 +2241,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 					//send the first frame end
 
 
-						hcu_usleep(10000);
+						sleep(10);
 
 
 
@@ -2524,7 +2524,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 					//send the second frame end
 
-						hcu_usleep(10000);
+						sleep(10);
 
 
 					//send the third frame start
@@ -2783,7 +2783,6 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 						}
 						//send the third frame end
-
 
 /*
 			//对发送数据进行编码
