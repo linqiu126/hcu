@@ -1791,7 +1791,7 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 
 	//检查功能码=03
 	if (buf->curBuf[index] != EMC_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -1831,7 +1831,7 @@ OPSTAT func_modbus_emc_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_emc_modb
 		break;
 
 	case L3PO_emc_set_work_cycle:
-		break;
+		break;EquId
 
 	case L3PO_emc_set_sample_cycle:
 		break;
@@ -2021,7 +2021,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -2030,7 +2030,7 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 	//检查功能码=03
 	if (buf->curBuf[index] != PM25_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -2432,7 +2432,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	{
 		//检查功能码=04
 		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
@@ -2442,7 +2442,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	{
 		//检查功能码=04
 		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
@@ -2452,7 +2452,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	{
 		//检查功能码=03
 		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
@@ -2462,7 +2462,7 @@ OPSTAT func_modbus_winddir_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	{
 		//检查功能码=03
 		if (buf->curBuf[index] != WINDDIR_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
@@ -2695,7 +2695,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	{
 		//检查功能码=04
 		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
@@ -2704,7 +2704,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	{
 		//检查功能码=04
 		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
@@ -2713,7 +2713,7 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	{
 		//检查功能码=03
 		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
@@ -2722,7 +2722,9 @@ OPSTAT func_modbus_windspd_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_wind
 	{
 		//检查功能码=03
 		if (buf->curBuf[index] != WINDSPD_MODBUS_GENERIC_FUNC_DATA_INQUERY_YIGU){
-			HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+			HcuErrorPrint("MODBUS: HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002 = %d\n", HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2002);
+			HcuErrorPrint("MODBUS: zHcuSysEngPar.hwBurnId.hwType = %d\n", zHcuSysEngPar.hwBurnId.hwType);
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 			return FAILURE;
 		}
@@ -2894,7 +2896,7 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -2903,7 +2905,7 @@ OPSTAT func_modbus_temp_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_temp_mo
 
 	//检查功能码=03
 	if (buf->curBuf[index] != TEMP_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -3073,7 +3075,7 @@ OPSTAT func_modbus_humid_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_humid_
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -3082,7 +3084,7 @@ OPSTAT func_modbus_humid_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_humid_
 
 	//检查功能码=03
 	if (buf->curBuf[index] != HUMID_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -3253,7 +3255,7 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
@@ -3262,7 +3264,7 @@ OPSTAT func_modbus_noise_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_noise_
 
 	//检查功能码=03
 	if (buf->curBuf[index] != NOISE_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
