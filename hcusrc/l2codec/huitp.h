@@ -5938,7 +5938,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfsc_command_resp
 	UINT16	msgid;
 	UINT16 length;
 	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
-  WmcErrorCode_t result;
+	WmcErrorCode_t result;
 	UINT8  validFlag;  //是否执行成功
 	UINT8  spare1;
 	UINT16 spare2;

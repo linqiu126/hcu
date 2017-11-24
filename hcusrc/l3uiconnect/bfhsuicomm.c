@@ -335,61 +335,61 @@ OPSTAT func_bfhsuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfhsContext.configId = config_index;
 
 	//查询用户动态配置参数
-	gTaskL3bfhsContext.comAlgPar.MinScaleNumberCombination = 1;
-	gTaskL3bfhsContext.comAlgPar.MaxScaleNumberCombination  = 1;
-	gTaskL3bfhsContext.comAlgPar.MinScaleNumberStartCombination = 1;
-	gTaskL3bfhsContext.comAlgPar.TargetCombinationWeight = 1;
-	gTaskL3bfhsContext.comAlgPar.TargetCombinationUpperWeight = 1;
-	gTaskL3bfhsContext.comAlgPar.IsProximitCombinationMode = 1;
-	gTaskL3bfhsContext.comAlgPar.CombinationBias =  1;
-	gTaskL3bfhsContext.comAlgPar.IsRemainDetectionEnable = 1;
-	gTaskL3bfhsContext.comAlgPar.RemainDetectionTimeSec  = 1;
-	gTaskL3bfhsContext.comAlgPar.RemainScaleTreatment =  1;
-	gTaskL3bfhsContext.comAlgPar.IsPriorityScaleEnabled = 1;
-	gTaskL3bfhsContext.comAlgPar.CombinationAutoMode = 1;
-	gTaskL3bfhsContext.comAlgPar.MovingAvrageSpeedCount = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorLoadThread = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorEmptyThread = 1;
-	gTaskL3bfhsContext.wgtSnrPar.StardardReadyTimeMs = 1;
-	gTaskL3bfhsContext.motCtrPar.MotorSpeed = 1;
-	gTaskL3bfhsContext.motCtrPar.MotorDirection = 1;
-	gTaskL3bfhsContext.motCtrPar.MotorRollingStartMs = 1;
-	gTaskL3bfhsContext.motCtrPar.MotorRollingStopMs  = 1;
-	gTaskL3bfhsContext.motCtrPar.MotorRollingInveralMs = 1;
-	gTaskL3bfhsContext.motCtrPar.MotorFailureDetectionVaration = 1;
-	gTaskL3bfhsContext.motCtrPar.MotorFailureDetectionTimeMs = 1;
-
-	gTaskL3bfhsContext.wgtSnrPar.MaxAllowedWeight = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcGain = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcSampleFreq = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorStaticZeroValue = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorTailorValue = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = 1;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = 1;
-
-	gTaskL3bfhsContext.comAlgPar.CombinationSpeedMode = 0;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorPickupThread = 300;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = 500;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorInitOrNot = 0;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcBitwidth = 22;
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorAdcValue = 0;
-
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[0] = 0;				// NOT for GUI
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[1] = 0;				// NOT for GUI
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[2] = 0;				// NOT for GUI
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCoeff[3] = 0;				// NOT for GUI
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[0] = 1;				// NOT for GUI
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[1] = 0;				// NOT for GUI
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[2] = 0;				// NOT for GUI
-	gTaskL3bfhsContext.wgtSnrPar.WeightSensorOutputValue[3] = 0;				// NOT for GUI
+//	gTaskL3bfhsContext.wgtSnrPar.MinScaleNumberCombination = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.MaxScaleNumberCombination  = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.MinScaleNumberStartCombination = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.TargetCombinationWeight = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.TargetCombinationUpperWeight = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.IsProximitCombinationMode = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.CombinationBias =  1;
+//	gTaskL3bfhsContext.wgtSnrPar.IsRemainDetectionEnable = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.RemainDetectionTimeSec  = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.RemainScaleTreatment =  1;
+//	gTaskL3bfhsContext.wgtSnrPar.IsPriorityScaleEnabled = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.CombinationAutoMode = 1;
+//	gTaskL3bfhsContext.wgtSnrPar.MovingAvrageSpeedCount = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorLoadDetectionTimeMs =  1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorLoadThread = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorEmptyDetectionTimeMs = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorEmptyThread = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.StardardReadyTimeMs = 1;
+//	gTaskL3bfhsContext.armCtrlPar.MotorSpeed = 1;
+//	gTaskL3bfhsContext.armCtrlPar.MotorDirection = 1;
+//	gTaskL3bfhsContext.armCtrlPar.MotorRollingStartMs = 1;
+//	gTaskL3bfhsContext.armCtrlPar.MotorRollingStopMs  = 1;
+//	gTaskL3bfhsContext.armCtrlPar.MotorRollingInveralMs = 1;
+//	gTaskL3bfhsContext.armCtrlPar.MotorFailureDetectionVaration = 1;
+//	gTaskL3bfhsContext.armCtrlPar.MotorFailureDetectionTimeMs = 1;
+//
+//	gTaskL3bfhsContext.motoCtrlPar.MaxAllowedWeight = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorAdcGain = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorAdcSampleFreq = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorStaticZeroValue = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorTailorValue = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorDynamicZeroThreadValue = 1;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorDynamicZeroHysteresisMs = 1;
+//
+//	gTaskL3bfhsContext.wgtSnrPar.CombinationSpeedMode = 0;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorPickupThread = 300;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorPickupDetectionTimeMs = 500;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorInitOrNot = 0;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorAdcBitwidth = 22;
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorAdcValue = 0;
+//
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorFilterCoeff[0] = 0;				// NOT for GUI
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorFilterCoeff[1] = 0;				// NOT for GUI
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorFilterCoeff[2] = 0;				// NOT for GUI
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorFilterCoeff[3] = 0;				// NOT for GUI
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorOutputValue[0] = 1;				// NOT for GUI
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorOutputValue[1] = 0;				// NOT for GUI
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorOutputValue[2] = 0;				// NOT for GUI
+//	gTaskL3bfhsContext.motoCtrlPar.WeightSensorOutputValue[3] = 0;				// NOT for GUI
 
 	//查询校准数据
 
 	//批次数据更新
 	//读取数据库，更新批次数据
-	gTaskL3bfhsContext.sessionId = 1;
+	gTaskL3bfhsContext.callCellId = 1;
 
 	return SUCCESS;
 }
