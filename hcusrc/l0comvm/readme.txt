@@ -8,9 +8,16 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+
+
+
+
+//= ZJL, 2017 Nov.24 CURRENT_SW_DELIVERY 289=>BFHS项目
+= 完善MQTT/HUICOBUS接口部分的定义
+
+
 //= ZJL, 2017 Nov.16 CURRENT_SW_DELIVERY 288=>BFSC项目
 = 修正L3BFSCUICOMM   TEST_PARA，从U8改为U32
-
 
 //= ZSC, 2017 Nov.04 CURRENT_SW_DELIVERY 287=>AQYC项目
 = 增加支持中航显示屏（待屏确认需进一步调整优化）
