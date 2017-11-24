@@ -16,6 +16,7 @@
 = 完善MQTT/HUICOBUS接口部分的定义
 = 完善BFHS部分的SUI消息定义，HUITP V3.2 
 = 完善bfhsContext参数表
+= 完善BFHS的CANITFLEO接收处理过程
 
 //= ZJL, 2017 Nov.16 CURRENT_SW_DELIVERY 288=>BFSC项目
 = 修正L3BFSCUICOMM   TEST_PARA，从U8改为U32

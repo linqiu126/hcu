@@ -473,11 +473,11 @@ void func_mqtt_topicid_translate_to_text(UINT32 tpId, char *output)
 	case MQTT_TPID_LOGTRACEFLOW:
 		strncpy(output, MQTT_TOPIC_LOGTRACEFLOW, strlen(MQTT_TOPIC_LOGTRACEFLOW));
 		break;
-	case MQTT_TPID_HCU2ON:
-		strncpy(output, MQTT_TOPIC_HCU2ON, strlen(MQTT_TOPIC_HCU2ON));
+	case MQTT_TPID_HCU2OPN:
+		strncpy(output, MQTT_TOPIC_HCU2OPN, strlen(MQTT_TOPIC_HCU2OPN));
 		break;
-	case MQTT_TPID_ON2HCU:
-		strncpy(output, MQTT_TOPIC_ON2HCU, strlen(MQTT_TOPIC_ON2HCU));
+	case MQTT_TPID_OPN2HCU:
+		strncpy(output, MQTT_TOPIC_OPN2HCU, strlen(MQTT_TOPIC_OPN2HCU));
 		break;
 	default:
 		break;
@@ -498,8 +498,8 @@ UINT32 func_mqtt_topicid_translate_to_id(char *input)
 	else if (strcmp(input, MQTT_TOPIC_BHTRANS) == 0) return MQTT_TPID_BHTRANS;
 	else if (strcmp(input, MQTT_TOPIC_LOGERRFLOW) == 0) return MQTT_TPID_LOGERRFLOW;
 	else if (strcmp(input, MQTT_TOPIC_LOGTRACEFLOW) == 0) return MQTT_TPID_LOGTRACEFLOW;
-	else if (strcmp(input, MQTT_TOPIC_HCU2ON) == 0) return MQTT_TPID_HCU2ON;
-	else if (strcmp(input, MQTT_TOPIC_ON2HCU) == 0) return MQTT_TPID_ON2HCU;
+	else if (strcmp(input, MQTT_TOPIC_HCU2OPN) == 0) return MQTT_TPID_HCU2OPN;
+	else if (strcmp(input, MQTT_TOPIC_OPN2HCU) == 0) return MQTT_TPID_OPN2HCU;
 	else return MQTT_TPID_MAX;
 }
 

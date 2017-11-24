@@ -6200,7 +6200,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_startup_ind
 	HUITP_MSGID_sui_bfhs_calibration_full_resp       = 0x3BC9,
 **	MSG_ID_L3BFHS_WMC_STARTUP_IND,          //       = 0x3BC0,
 */
-typedef struct StrHuiIe_WeightSensorBfhsCalibrationZeroParamaters
+typedef struct StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters
 {
 	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
 	UINT32  WeightSensorAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
@@ -6217,26 +6217,26 @@ typedef struct StrHuiIe_WeightSensorBfhsCalibrationZeroParamaters
 	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
 	UINT8   spare1;
 	UINT8   spare2;
-}StrHuiIe_WeightSensorBfhsCalibrationZeroParamaters_t;
+}StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters_t;
 
-typedef struct StrHuiIe_WeightSensorBfhsCalibrationFullParamaters
+typedef struct StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters
 {
 	UINT32  WeightSensorAdjustingWeightGrams;      //object 0x2080, adjusting weight,first set this value, then combined with command 'C'
 	UINT32  WeightSensorAdjustingTolerancePercent; //object0x2082, Current adjusting factor = 0.500000, adjusting tolerance = 1 %,The new factor must lie in the range 0.495000 ≤ Factornew ≤ 0.505000
-}StrHuiIe_WeightSensorBfhsCalibrationFullParamaters_t;
+}StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters_t;
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_req
 {
 	UINT16 msgid;
 	UINT16 length;
-	StrHuiIe_WeightSensorBfhsCalibrationZeroParamaters_t weight_sensor_calibration_zero;
+	StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters_t weight_sensor_calibration_zero;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_req_t;
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_req
 {
 	UINT16 msgid;
 	UINT16 length;
-	StrHuiIe_WeightSensorBfhsCalibrationFullParamaters_t weight_sensor_calibration_full;
+	StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters_t weight_sensor_calibration_full;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_req_t;
 
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp
@@ -6248,13 +6248,8 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp
 	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp_t;
 
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp
+typedef struct StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters
 {
-	UINT16 msgid;
-	UINT16 length;
-	UINT8  validFlag;  //是否执行成功
-	UINT8  spare1;
-	UINT16  errCode;
 	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
     UINT32  WeightSensorCurrentZeroPointGrams; //object 0x2070, This value is displayed here as a weight. It contains information about how
 																						 //far apart the zero point is from the lower limit of the A/D converter range
@@ -6296,6 +6291,15 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp
 	UINT8   WeightSensorCellAddress; //object 0x2098, node ID = cell address +48
 	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
     UINT8   spare2;
+}StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters_t;
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp
+{
+	UINT16 msgid;
+	UINT16 length;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16  errCode;
+	StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters_t weight_sensor_calibration_full;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp_t;
 /*配置过程
 	HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B41,

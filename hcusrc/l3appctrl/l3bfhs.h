@@ -182,6 +182,8 @@ extern OPSTAT fsm_l3bfhs_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 extern OPSTAT fsm_l3bfhs_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfhs_canitf_cal_zero_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //API组合部分
 extern OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -199,6 +201,8 @@ OPSTAT func_l3bfhs_int_init(void);
 OPSTAT func_l3bfhs_time_out_sys_cfg_start_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_sys_suspend_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_sys_resume_wait_fb_process(void);
+OPSTAT func_l3bfhs_time_out_cal_zero_wait_fb_process(void);
+OPSTAT func_l3bfhs_time_out_cal_full_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_error_inq_process(void);
 OPSTAT func_l3bfhs_time_out_statistic_scan_process(void);
 void func_l3bfhs_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
