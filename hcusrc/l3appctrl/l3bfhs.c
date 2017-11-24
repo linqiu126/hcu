@@ -629,9 +629,6 @@ OPSTAT fsm_l3bfhs_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	}
 	memcpy(&rcv, param_ptr, param_len);
 
-	//根据收到的命令，分别进行控制
-	//state = FsmGetState(TASK_ID_L3BFHS);
-
 	//启动命令
 	if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START){
 		msg_struct_l3bfhs_can_sys_cfg_req_t snd;
@@ -641,6 +638,7 @@ OPSTAT fsm_l3bfhs_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
 		//启动定时器
 		hcu_timer_start(TASK_ID_L3BFHS, TIMER_ID_1S_L3BFHS_CFG_START_WAIT_FB, zHcuSysEngPar.timer.array[TIMER_ID_1S_L3BFHS_CFG_START_WAIT_FB].dur, TIMER_TYPE_ONE_TIME, TIMER_RESOLUTION_1S);
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
 	}
 
 	//SUSPEND

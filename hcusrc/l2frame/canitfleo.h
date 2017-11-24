@@ -175,6 +175,7 @@ OPSTAT func_canitfleo_socketcan_receive(int socket, canid_t *canid, char *canfra
 OPSTAT func_canitfleo_socketcan_send(int socket, char *canid_canframe);
 OPSTAT func_canitfleo_socketcan_init(char *canitfname, int *sock);
 int    func_canitfleo_socketcan_test_main(int argc, char **argv);
+void   func_canitfleo_huicobus_trigger_uir(UINT32 cmdId, UINT32 cmdValue);
 
 //USBCAN BSP function mapping
 OPSTAT hcu_canitfleo_usbcan_interface_init(void);

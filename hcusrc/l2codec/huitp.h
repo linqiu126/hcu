@@ -6112,6 +6112,8 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_command_req
 {
 	UINT16 	msgid;
 	UINT16 	length;
+	UINT32 cmdid;
+	UINT32 cmdvalue;
 }StrMsg_HUITP_MSGID_sui_bfdf_command_req_t;
 
 //HUITP_MSGID_sui_bfdf_command_resp                = 0x3BB5,
@@ -6119,6 +6121,14 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_command_resp
 {
 	UINT16 	msgid;
 	UINT16 	length;
+	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	WmcErrorCode_t result;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16 spare2;
+	UINT32 cmdid;
+	UINT32 cmdvalue1;
+	UINT32 cmdvalue2;
 }StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t;
 
 //差错过程
@@ -6434,34 +6444,13 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
 #define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_OBJECT_WRITE     			(16)
 #define HUITP_IEID_SUI_TEST_CMDID_MOTOR_COMMAND								(20)
 
-typedef struct StrHuiIe_object
-{
-	UINT32 objectID;
-	UINT8  subindx;
-	UINT8  spare1;
-	UINT8  spare2;
-	UINT8  spare3;
-}StrHuiIe_object_t;
-
-typedef union StrHuiIe_command_data_req
-{
-	UINT32  cmdvalue;
-	StrHuiIe_object_t obj;
-}StrHuiIe_command_data_req_t;
-
-typedef struct StrHuiIe_command_data_resp
-{
-	UINT8   result;
-	UINT32  dVal;	
-}StrHuiIe_command_data_resp_t;
-
 //HUITP_MSGID_sui_bfhs_command_req                 = 0x3B45,
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_req
 {
 	UINT16 	msgid;
 	UINT16 	length;
-	UINT32  cmdid;
-	StrHuiIe_command_data_req_t  dReq;
+	UINT32 	cmdid;
+	UINT32 	cmdvalue;
 }StrMsg_HUITP_MSGID_sui_bfhs_command_req_t;
 
 //HUITP_MSGID_sui_bfhs_command_resp                = 0x3BC5,
@@ -6469,7 +6458,14 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_resp
 {
 	UINT16 	msgid;
 	UINT16 	length;
-	StrHuiIe_command_data_resp_t dResp;
+	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	WmcErrorCode_t result;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16 spare2;
+	UINT32 cmdid;
+	UINT32 cmdvalue1;
+	UINT32 cmdvalue2;
 }StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t;
 
 //差错过程
