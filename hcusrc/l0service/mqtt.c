@@ -124,7 +124,7 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     char input[1000];
     char topic[100];
 
-    MQTTClient_create(&client, MQTT_BROKER_ADDRESS, MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+    MQTTClient_create(&client, HUICOBUS_MQTT_BROKER_ADDRESS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
     conn_opts.keepAliveInterval = 20;
     conn_opts.cleansession = 1;
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
@@ -149,13 +149,13 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     json_object_put(jsonobj);//free
     pubmsg.payload = input;
     pubmsg.payloadlen = strlen(input);
-    pubmsg.qos = MQTT_QOS_CONST;
+    pubmsg.qos = HUICOBUS_MQTT_QOS_CONST;
     pubmsg.retained = 0;
     memset(topic, 0, sizeof(topic));
     func_mqtt_clientid_translate_to_text(in->topicId, topic);
     MQTTClient_publishMessage(client, topic, &pubmsg, &token);
-    HCU_DEBUG_PRINT_NOR("MQTT: Waiting for up to %d seconds for publication of %s\n, on topic %s for client with ClientID: %s\n", (int)(MQTT_TIMEOUT_CONST/1000), input, topic, MQTT_CLIENTID_HCUENTRY);
-    rc = MQTTClient_waitForCompletion(client, token, MQTT_TIMEOUT_CONST);
+    HCU_DEBUG_PRINT_NOR("MQTT: Waiting for up to %d seconds for publication of %s\n, on topic %s for client with ClientID: %s\n", (int)(HUICOBUS_MQTT_TIMEOUT_CONST/1000), input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
+    rc = MQTTClient_waitForCompletion(client, token, HUICOBUS_MQTT_TIMEOUT_CONST);
     HCU_DEBUG_PRINT_NOR("MQTT: Message with delivery token %d delivered\n", token);
     MQTTClient_disconnect(client, 10000);
     MQTTClient_destroy(&client);
@@ -212,7 +212,7 @@ int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in)
   char input[1000];
   char topic[100];
 
-  MQTTClient_create(&client, MQTT_BROKER_ADDRESS, MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+  MQTTClient_create(&client, HUICOBUS_MQTT_BROKER_ADDRESS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
   conn_opts.keepAliveInterval = 20;
   conn_opts.cleansession = 1;
 
@@ -240,14 +240,14 @@ int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in)
   json_object_put(jsonobj);//free
   pubmsg.payload = input;
   pubmsg.payloadlen = strlen(input);
-  pubmsg.qos = MQTT_QOS_CONST;
+  pubmsg.qos = HUICOBUS_MQTT_QOS_CONST;
   pubmsg.retained = 0;
   deliveredtoken_send = 0;
 
   memset(topic, 0, sizeof(topic));
   func_mqtt_clientid_translate_to_text(in->topicId, topic);
   MQTTClient_publishMessage(client, topic, &pubmsg, &token);
-  HCU_DEBUG_PRINT_NOR("MQTT: Waiting for publication of %s\n, on topic %s for client with ClientID: %s\n", input, topic, MQTT_CLIENTID_HCUENTRY);
+  HCU_DEBUG_PRINT_NOR("MQTT: Waiting for publication of %s\n, on topic %s for client with ClientID: %s\n", input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
   while(deliveredtoken_send != token);
   MQTTClient_disconnect(client, 10000);
   MQTTClient_destroy(&client);
@@ -355,7 +355,7 @@ int hcu_mqtt_msg_rcv(void)
   int rc;
   int ch;
 
-  MQTTClient_create(&client, MQTT_BROKER_ADDRESS, MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+  MQTTClient_create(&client, HUICOBUS_MQTT_BROKER_ADDRESS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
   conn_opts.keepAliveInterval = 20;
   conn_opts.cleansession = 1;
 
@@ -366,10 +366,10 @@ int hcu_mqtt_msg_rcv(void)
       HcuErrorPrint("MQTT: Failed to connect, return code %d. So far set to continue work!\n", rc);
       //exit(EXIT_FAILURE);
   }
-  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_HCU2UIR, MQTT_CLIENTID_HCUENTRY, MQTT_QOS_CONST);
-  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", MQTT_TOPIC_BHTRANS, MQTT_CLIENTID_HCUENTRY, MQTT_QOS_CONST);
-  MQTTClient_subscribe(client, MQTT_TOPIC_HCU2UIR, MQTT_QOS_CONST);
-  MQTTClient_subscribe(client, MQTT_TOPIC_BHTRANS, MQTT_QOS_CONST);
+  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", HUICOBUS_MQTT_TOPIC_HCU2UIR, HUICOBUS_MQTT_CLIENTID_HCUENTRY, HUICOBUS_MQTT_QOS_CONST);
+  HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", HUICOBUS_MQTT_TOPIC_BHTRANS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, HUICOBUS_MQTT_QOS_CONST);
+  MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_HCU2UIR, HUICOBUS_MQTT_QOS_CONST);
+  MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_BHTRANS, HUICOBUS_MQTT_QOS_CONST);
 
   //退出条件，未来待完善
   do
@@ -386,37 +386,37 @@ int hcu_mqtt_msg_rcv(void)
 //CLIENTID to CONTEXT transfer
 void func_mqtt_clientid_translate_to_text(UINT32 clId, char *output)
 {
-	if (clId <= MQTT_CLID_MIN) strncpy(output, MQTT_CLIENTID_MIN, strlen(MQTT_CLIENTID_MIN));
-	else if (clId >= MQTT_CLID_MAX) strncpy(output, MQTT_CLIENTID_MAX, strlen(MQTT_CLIENTID_MAX));
+	if (clId <= HUICOBUS_MQTT_CLID_MIN) strncpy(output, HUICOBUS_MQTT_CLIENTID_MIN, strlen(HUICOBUS_MQTT_CLIENTID_MIN));
+	else if (clId >= HUICOBUS_MQTT_CLID_MAX) strncpy(output, HUICOBUS_MQTT_CLIENTID_MAX, strlen(HUICOBUS_MQTT_CLIENTID_MAX));
 
 	switch (clId)
 	{
-	case MQTT_CLID_HCUENTRY:
-		strncpy(output, MQTT_CLIENTID_HCUENTRY, strlen(MQTT_CLIENTID_HCUENTRY));
+	case HUICOBUS_MQTT_CLID_HCUENTRY:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_HCUENTRY, strlen(HUICOBUS_MQTT_CLIENTID_HCUENTRY));
 		break;
-	case MQTT_CLID_UIROUTER:
-		strncpy(output, MQTT_CLIENTID_UIROUTER, strlen(MQTT_CLIENTID_UIROUTER));
+	case HUICOBUS_MQTT_CLID_UIROUTER:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_UIROUTER, strlen(HUICOBUS_MQTT_CLIENTID_UIROUTER));
 		break;
-	case MQTT_CLID_UIPRESENT:
-		strncpy(output, MQTT_CLIENTID_UIPRESENT, strlen(MQTT_CLIENTID_UIPRESENT));
+	case HUICOBUS_MQTT_CLID_UIPRESENT:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_UIPRESENT, strlen(HUICOBUS_MQTT_CLIENTID_UIPRESENT));
 		break;
-	case MQTT_CLID_QRPRINTER:
-		strncpy(output, MQTT_CLIENTID_QRPRINTER, strlen(MQTT_CLIENTID_QRPRINTER));
+	case HUICOBUS_MQTT_CLID_QRPRINTER:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_QRPRINTER, strlen(HUICOBUS_MQTT_CLIENTID_QRPRINTER));
 		break;
-	case MQTT_CLID_DBRESTFUL:
-		strncpy(output, MQTT_CLIENTID_DBRESTFUL, strlen(MQTT_CLIENTID_DBRESTFUL));
+	case HUICOBUS_MQTT_CLID_DBRESTFUL:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_DBRESTFUL, strlen(HUICOBUS_MQTT_CLIENTID_DBRESTFUL));
 		break;
-	case MQTT_CLID_BHPROTO:
-		strncpy(output, MQTT_CLIENTID_BHPROTO, strlen(MQTT_CLIENTID_BHPROTO));
+	case HUICOBUS_MQTT_CLID_BHPROTO:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_BHPROTO, strlen(HUICOBUS_MQTT_CLIENTID_BHPROTO));
 		break;
-	case MQTT_CLID_LOGERR:
-		strncpy(output, MQTT_CLIENTID_LOGERR, strlen(MQTT_CLIENTID_LOGERR));
+	case HUICOBUS_MQTT_CLID_LOGERR:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_LOGERR, strlen(HUICOBUS_MQTT_CLIENTID_LOGERR));
 		break;
-	case MQTT_CLID_LOGTRACE:
-		strncpy(output, MQTT_CLIENTID_LOGTRACE, strlen(MQTT_CLIENTID_LOGTRACE));
+	case HUICOBUS_MQTT_CLID_LOGTRACE:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_LOGTRACE, strlen(HUICOBUS_MQTT_CLIENTID_LOGTRACE));
 		break;
-	case MQTT_CLID_OPRNODE:
-		strncpy(output, MQTT_CLIENTID_OPRNODE, strlen(MQTT_CLIENTID_OPRNODE));
+	case HUICOBUS_MQTT_CLID_OPRNODE:
+		strncpy(output, HUICOBUS_MQTT_CLIENTID_OPRNODE, strlen(HUICOBUS_MQTT_CLIENTID_OPRNODE));
 		break;
 	default:
 		break;
@@ -428,56 +428,56 @@ void func_mqtt_clientid_translate_to_text(UINT32 clId, char *output)
 //CONTEXT to CLIENTID transfer
 UINT32 func_mqtt_clientid_translate_to_id(char *input)
 {
-	if (strcmp(input, MQTT_CLIENTID_MIN) == 0) return MQTT_CLID_MIN;
-	else if (strcmp(input, MQTT_CLIENTID_HCUENTRY) == 0) return MQTT_CLID_HCUENTRY;
-	else if (strcmp(input, MQTT_CLIENTID_UIROUTER) == 0) return MQTT_CLID_UIROUTER;
-	else if (strcmp(input, MQTT_CLIENTID_UIPRESENT) == 0) return MQTT_CLID_UIPRESENT;
-	else if (strcmp(input, MQTT_CLIENTID_QRPRINTER) == 0) return MQTT_CLID_QRPRINTER;
-	else if (strcmp(input, MQTT_CLIENTID_DBRESTFUL) == 0) return MQTT_CLID_DBRESTFUL;
-	else if (strcmp(input, MQTT_CLIENTID_BHPROTO) == 0) return MQTT_CLID_BHPROTO;
-	else if (strcmp(input, MQTT_CLIENTID_LOGERR) == 0) return MQTT_CLID_LOGERR;
-	else if (strcmp(input, MQTT_CLIENTID_LOGTRACE) == 0) return MQTT_CLID_LOGTRACE;
-	else if (strcmp(input, MQTT_CLIENTID_OPRNODE) == 0) return MQTT_CLID_OPRNODE;
-	else return MQTT_CLID_MAX;
+	if (strcmp(input, HUICOBUS_MQTT_CLIENTID_MIN) == 0) return HUICOBUS_MQTT_CLID_MIN;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_HCUENTRY) == 0) return HUICOBUS_MQTT_CLID_HCUENTRY;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_UIROUTER) == 0) return HUICOBUS_MQTT_CLID_UIROUTER;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_UIPRESENT) == 0) return HUICOBUS_MQTT_CLID_UIPRESENT;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_QRPRINTER) == 0) return HUICOBUS_MQTT_CLID_QRPRINTER;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_DBRESTFUL) == 0) return HUICOBUS_MQTT_CLID_DBRESTFUL;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_BHPROTO) == 0) return HUICOBUS_MQTT_CLID_BHPROTO;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_LOGERR) == 0) return HUICOBUS_MQTT_CLID_LOGERR;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_LOGTRACE) == 0) return HUICOBUS_MQTT_CLID_LOGTRACE;
+	else if (strcmp(input, HUICOBUS_MQTT_CLIENTID_OPRNODE) == 0) return HUICOBUS_MQTT_CLID_OPRNODE;
+	else return HUICOBUS_MQTT_CLID_MAX;
 }
 
 //TOPICID to CONTEXT transfer
 void func_mqtt_topicid_translate_to_text(UINT32 tpId, char *output)
 {
-	if (tpId <= MQTT_TPID_MIN) strncpy(output, MQTT_TOPIC_MIN, strlen(MQTT_TOPIC_MIN));
-	else if (tpId >= MQTT_TPID_MAX) strncpy(output, MQTT_TOPIC_MAX, strlen(MQTT_TOPIC_MAX));
+	if (tpId <= HUICOBUS_MQTT_TPID_MIN) strncpy(output, HUICOBUS_MQTT_TOPIC_MIN, strlen(HUICOBUS_MQTT_TOPIC_MIN));
+	else if (tpId >= HUICOBUS_MQTT_TPID_MAX) strncpy(output, HUICOBUS_MQTT_TOPIC_MAX, strlen(HUICOBUS_MQTT_TOPIC_MAX));
 
 	switch (tpId)
 	{
-	case MQTT_TPID_HCU2UIR:
-		strncpy(output, MQTT_TOPIC_HCU2UIR, strlen(MQTT_TOPIC_HCU2UIR));
+	case HUICOBUS_MQTT_TPID_HCU2UIR:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_HCU2UIR, strlen(HUICOBUS_MQTT_TOPIC_HCU2UIR));
 		break;
-	case MQTT_TPID_UIR2HCU:
-		strncpy(output, MQTT_TOPIC_UIR2HCU, strlen(MQTT_TOPIC_UIR2HCU));
+	case HUICOBUS_MQTT_TPID_UIR2HCU:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_UIR2HCU, strlen(HUICOBUS_MQTT_TOPIC_UIR2HCU));
 		break;
-	case MQTT_TPID_UIR2UIP:
-		strncpy(output, MQTT_TOPIC_UIR2UIP, strlen(MQTT_TOPIC_UIR2UIP));
+	case HUICOBUS_MQTT_TPID_UIR2UIP:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_UIR2UIP, strlen(HUICOBUS_MQTT_TOPIC_UIR2UIP));
 		break;
-	case MQTT_TPID_PRINTFLOW:
-		strncpy(output, MQTT_TOPIC_PRINTFLOW, strlen(MQTT_TOPIC_PRINTFLOW));
+	case HUICOBUS_MQTT_TPID_PRINTFLOW:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_PRINTFLOW, strlen(HUICOBUS_MQTT_TOPIC_PRINTFLOW));
 		break;
-	case MQTT_TPID_DBACCESS:
-		strncpy(output, MQTT_TOPIC_DBACCESS, strlen(MQTT_TOPIC_DBACCESS));
+	case HUICOBUS_MQTT_TPID_DBACCESS:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_DBACCESS, strlen(HUICOBUS_MQTT_TOPIC_DBACCESS));
 		break;
-	case MQTT_TPID_BHTRANS:
-		strncpy(output, MQTT_TOPIC_BHTRANS, strlen(MQTT_TOPIC_BHTRANS));
+	case HUICOBUS_MQTT_TPID_BHTRANS:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_BHTRANS, strlen(HUICOBUS_MQTT_TOPIC_BHTRANS));
 		break;
-	case MQTT_TPID_LOGERRFLOW:
-		strncpy(output, MQTT_TOPIC_LOGERRFLOW, strlen(MQTT_TOPIC_LOGERRFLOW));
+	case HUICOBUS_MQTT_TPID_LOGERRFLOW:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_LOGERRFLOW, strlen(HUICOBUS_MQTT_TOPIC_LOGERRFLOW));
 		break;
-	case MQTT_TPID_LOGTRACEFLOW:
-		strncpy(output, MQTT_TOPIC_LOGTRACEFLOW, strlen(MQTT_TOPIC_LOGTRACEFLOW));
+	case HUICOBUS_MQTT_TPID_LOGTRACEFLOW:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_LOGTRACEFLOW, strlen(HUICOBUS_MQTT_TOPIC_LOGTRACEFLOW));
 		break;
-	case MQTT_TPID_HCU2OPN:
-		strncpy(output, MQTT_TOPIC_HCU2OPN, strlen(MQTT_TOPIC_HCU2OPN));
+	case HUICOBUS_MQTT_TPID_HCU2OPN:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_HCU2OPN, strlen(HUICOBUS_MQTT_TOPIC_HCU2OPN));
 		break;
-	case MQTT_TPID_OPN2HCU:
-		strncpy(output, MQTT_TOPIC_OPN2HCU, strlen(MQTT_TOPIC_OPN2HCU));
+	case HUICOBUS_MQTT_TPID_OPN2HCU:
+		strncpy(output, HUICOBUS_MQTT_TOPIC_OPN2HCU, strlen(HUICOBUS_MQTT_TOPIC_OPN2HCU));
 		break;
 	default:
 		break;
@@ -489,18 +489,18 @@ void func_mqtt_topicid_translate_to_text(UINT32 tpId, char *output)
 //CONTEXT to TOPICID transfer
 UINT32 func_mqtt_topicid_translate_to_id(char *input)
 {
-	if (strcmp(input, MQTT_TOPIC_MIN) == 0) return MQTT_TPID_MIN;
-	else if (strcmp(input, MQTT_TOPIC_HCU2UIR) == 0) return MQTT_TPID_HCU2UIR;
-	else if (strcmp(input, MQTT_TOPIC_UIR2HCU) == 0) return MQTT_TPID_UIR2HCU;
-	else if (strcmp(input, MQTT_TOPIC_UIR2UIP) == 0) return MQTT_TPID_UIR2UIP;
-	else if (strcmp(input, MQTT_TOPIC_PRINTFLOW) == 0) return MQTT_TPID_PRINTFLOW;
-	else if (strcmp(input, MQTT_TOPIC_DBACCESS) == 0) return MQTT_TPID_DBACCESS;
-	else if (strcmp(input, MQTT_TOPIC_BHTRANS) == 0) return MQTT_TPID_BHTRANS;
-	else if (strcmp(input, MQTT_TOPIC_LOGERRFLOW) == 0) return MQTT_TPID_LOGERRFLOW;
-	else if (strcmp(input, MQTT_TOPIC_LOGTRACEFLOW) == 0) return MQTT_TPID_LOGTRACEFLOW;
-	else if (strcmp(input, MQTT_TOPIC_HCU2OPN) == 0) return MQTT_TPID_HCU2OPN;
-	else if (strcmp(input, MQTT_TOPIC_OPN2HCU) == 0) return MQTT_TPID_OPN2HCU;
-	else return MQTT_TPID_MAX;
+	if (strcmp(input, HUICOBUS_MQTT_TOPIC_MIN) == 0) return HUICOBUS_MQTT_TPID_MIN;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_HCU2UIR) == 0) return HUICOBUS_MQTT_TPID_HCU2UIR;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_UIR2HCU) == 0) return HUICOBUS_MQTT_TPID_UIR2HCU;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_UIR2UIP) == 0) return HUICOBUS_MQTT_TPID_UIR2UIP;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_PRINTFLOW) == 0) return HUICOBUS_MQTT_TPID_PRINTFLOW;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_DBACCESS) == 0) return HUICOBUS_MQTT_TPID_DBACCESS;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_BHTRANS) == 0) return HUICOBUS_MQTT_TPID_BHTRANS;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_LOGERRFLOW) == 0) return HUICOBUS_MQTT_TPID_LOGERRFLOW;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_LOGTRACEFLOW) == 0) return HUICOBUS_MQTT_TPID_LOGTRACEFLOW;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_HCU2OPN) == 0) return HUICOBUS_MQTT_TPID_HCU2OPN;
+	else if (strcmp(input, HUICOBUS_MQTT_TOPIC_OPN2HCU) == 0) return HUICOBUS_MQTT_TPID_OPN2HCU;
+	else return HUICOBUS_MQTT_TPID_MAX;
 }
 
 //HATE测试环境
