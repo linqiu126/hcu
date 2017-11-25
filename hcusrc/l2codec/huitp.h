@@ -48,7 +48,7 @@ typedef void                      VOID;
  * 2017/10/16 V3.0: BFDF/BFHS新建消息
  * 2017/10/16 V3.1: FDWQ消息更新
  * 2017/11/24 V3.2: BFHS消息更新
- * 2017/11/24 V3.3: 合并公共消息
+ * 2017/11/24 V3.3: 合并公共消息, 以及BFDF消息
  *
  *
  */
@@ -626,30 +626,30 @@ typedef enum
 
 	//HCU-IHU BFDF SUI新增内容
 	//配置过程
-	HUITP_MSGID_sui_bfdf_set_config_req              = 0x3B31,
-	HUITP_MSGID_sui_bfdf_set_config_resp             = 0x3BB1,
+	HUITP_MSGID_sui_bfdf_set_config_req              = 0x3B30,
+	HUITP_MSGID_sui_bfdf_set_config_resp             = 0x3BB0,
 	//重量汇报过程
-	HUITP_MSGID_sui_bfdf_new_ws_event                = 0x3BB4,
-	//组合出料过程
-	HUITP_MSGID_sui_bfdf_ws_comb_out_req             = 0x3B38,
-	HUITP_MSGID_sui_bfdf_ws_comb_out_resp            = 0x3BB8,
-	//推杆过程
-	HUITP_MSGID_sui_bfdf_snc_pullin_req             = 0x3B39,
-	HUITP_MSGID_sui_bfdf_snc_pullin_resp            = 0x3BB9,
+	HUITP_MSGID_sui_bfdf_new_ws_event                = 0x3BB1,
+	//推杆及组合出料过程
+	HUITP_MSGID_sui_bfdf_ws_comb_out_req             = 0x3B32,
+	HUITP_MSGID_sui_bfdf_ws_comb_out_resp            = 0x3BB2,
 	//篮筐清零报告
-	HUITP_MSGID_sui_bfdf_basket_clean_ind           = 0x3BBA,
+	HUITP_MSGID_sui_bfdf_basket_clean_ind            = 0x3BB3,
+	
+	// MYC: INFRA IND
+	HUITP_MSGID_sui_bfdf_infra_ind                   = 0x3BB4, 
 
 	//HCU-IHU BFHS SUI新增内容
 	//配置过程
-	HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B41,
-	HUITP_MSGID_sui_bfhs_set_config_resp             = 0x3BC1,
+	HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B40,
+	HUITP_MSGID_sui_bfhs_set_config_resp             = 0x3BC0,
 	//重量汇报过程
-	HUITP_MSGID_sui_bfhs_new_ws_event                = 0x3BC4,
+	HUITP_MSGID_sui_bfhs_new_ws_event                = 0x3BC1,
 	//校准过程
-	HUITP_MSGID_sui_bfhs_calibration_zero_req        = 0x3B48,
-	HUITP_MSGID_sui_bfhs_calibration_zero_resp       = 0x3BC8,
-	HUITP_MSGID_sui_bfhs_calibration_full_req        = 0x3B49,
-	HUITP_MSGID_sui_bfhs_calibration_full_resp       = 0x3BC9,
+	HUITP_MSGID_sui_bfhs_calibration_zero_req        = 0x3B42,
+	HUITP_MSGID_sui_bfhs_calibration_zero_resp       = 0x3BC2,
+	HUITP_MSGID_sui_bfhs_calibration_full_req        = 0x3B43,
+	HUITP_MSGID_sui_bfhs_calibration_full_resp       = 0x3BC3,
 
 	//公共消息过程
 	//传感器测试过程
@@ -6034,67 +6034,7 @@ typedef enum StrHuiIe_sui_com_error_code
 }StrHuiIe_sui_com_error_code_t; //end of IHU_INTER_TASK_MSG_ID
 
 //HCU-IHU BFDF SUI新增内容
-//配置过程
-//HUITP_MSGID_sui_bfdf_set_config_req              = 0x3B31,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_set_config_req_t;
 
-//HUITP_MSGID_sui_bfdf_set_config_resp             = 0x3BB1,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t;
-
-
-//重量汇报过程
-//HUITP_MSGID_sui_bfdf_new_ws_event                = 0x3BB4,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t;
-
-//组合出料过程
-//HUITP_MSGID_sui_bfdf_ws_comb_out_req             = 0x3B38,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_req_t;
-
-//HUITP_MSGID_sui_bfdf_ws_comb_out_resp            = 0x3BB8,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t;
-
-//推杆过程
-//HUITP_MSGID_sui_bfdf_snc_pullin_req             = 0x3B39,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_req_t;
-
-//HUITP_MSGID_sui_bfdf_snc_pullin_resp            = 0x3BB9,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_snc_pullin_resp_t;
-
-//篮筐清零报告
-//HUITP_MSGID_sui_bfdf_basket_clean_ind           = 0x3BBA,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t;
 
 //HCU-IHU BFHS SUI新增内容
 /*
@@ -6288,10 +6228,229 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_UNDERLOAD  			3
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_INVALID  			0xFF
 
+
+//HCU-IHU BFDF SUI新增内容
+#define     HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM				            (32)
+#define     HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM					          (8)
+
+typedef struct StrHuiIe_BfdfErrorCode
+{
+	UINT16 error_code;
+	UINT16 spare1;
+}StrHuiIe_BfdfErrorCode_t;
+
+//配置过程
+//HUITP_MSGID_sui_bfdf_set_config_req              = 0x3B30,
+/* FOR EXTERNAL INTERFACE AND INTERNAL VARIABLES  */
+typedef struct StrHuiIe_BfdfWeightSensorParam
+{
+		UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+		UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+		UINT32	WeightSensorEmptyThread;
+		UINT32	WeightSensorEmptyDetectionTimeMs;
+		UINT32	WeightSensorPickupThread;						// NOT for GUI
+		UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+		UINT32	StardardReadyTimeMs;								//???
+		UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+		UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+		UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+		UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+		UINT32	WeightSensorCalibrationFullWeight;
+		UINT32	WeightSensorStaticZeroValue;
+		UINT32	WeightSensorTailorValue;
+		UINT32	WeightSensorDynamicZeroThreadValue;
+		UINT32	WeightSensorDynamicZeroHysteresisMs;
+	  UINT32  WeightSensorMovingEverageSample;
+}StrHuiIe_BfdfWeightSensorParam_t;
+
+/* FOR EXTERNAL INTERFACE AND INTERNAL VARIABLES  */
+typedef struct StrHuiIe_BfdfMotorCtrlParam
+{
+		UINT32	MotorSpeed;
+		UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+		UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
+		UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+}StrHuiIe_BfdfMotorControlParam_t;
+
+/* FOR EXTERNAL INTERFACE AND INTERNAL VARIABLES  */
+typedef struct StrHuiIe_BfdfActionCtrlParam
+{
+    UINT16  TWeightInd;                     /* After INFRA INT, Wait for how long to send WEIGHT_IND, unit is 10ms Tick */
+	  UINT16  T0bis;                          /* After INFRA INT, INFRA INT sent to Node 2 to 5, unit is 10ms Tick */
+    UINT16  TA0;                            /* After INFRA INT, Deay to AP01 */
+  	UINT16  TActCmd;
+	  UINT16  TArmStart;
+	  UINT16  TArmStop;
+	  UINT16  TDoorCloseLightOn;
+	  UINT16  TApIntervalMin;
+	  UINT16  TApInterval[HUITP_IEID_SUI_BFDF_MAX_GLOBAL_AP_NUM];
+	  UINT16  TLocalAp[HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM];
+	  UINT16  DelayNode1ToX;
+	  UINT16  DelayUpHcuAlgoDl;
+}StrHuiIe_BfdfActionCtrlParam_t;
+
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_req
+{
+	UINT16                  msgid;
+	UINT16                  length;
+	StrHuiIe_BfdfWeightSensorParam_t bfdf_wsp;
+	StrHuiIe_BfdfMotorControlParam_t bfdf_mcp_main;
+	StrHuiIe_BfdfMotorControlParam_t bfdf_mcp_secondary;
+	StrHuiIe_BfdfActionCtrlParam_t   bfdf_acp;
+}StrMsg_HUITP_MSGID_sui_bfdf_set_config_req_t;
+
+//HUITP_MSGID_sui_bfdf_set_config_resp             = 0x3BB0,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp
+{
+	UINT16	msgid;
+	UINT16  length;
+  UINT8   validFlag;  //是否执行成功
+	UINT8   spare1;
+	UINT16  errCode;
+}StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t;
+
+//重量汇报过程
+//HUITP_MSGID_sui_bfdf_new_ws_event                = 0x3BB1,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	INT32   weight;
+}StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t;
+
+//推杆及组合出料过程
+//HUITP_MSGID_sui_bfdf_ws_comb_out_req             = 0x3B32,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   apHopperId;  //1-32 for Line1, 33-64 for line2
+	UINT8   basketFullStatus;    //0-FALSE, 1-TRUE
+	UINT8   bufferFullStatus;	   //0-FALSE, 1-TRUE
+}StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_req_t;
+
+//HUITP_MSGID_sui_bfdf_ws_comb_out_resp            = 0x3BB2,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   apHopperId;  //1-32 for Line1, 33-64 for line2
+}StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t;
+
+//篮筐清零报告
+//HUITP_MSGID_sui_bfdf_basket_clean_ind            = 0x3BB3,
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   apHopperId;  //1-32 for Line1, 33-64 for line2
+}StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t;
+	
+//HUITP_MSGID_sui_bfdf_infra_ind                   = 0x3BB4, 
+typedef struct StrHuiIe_bfdf_infra_ind //
+{
+    UINT32 infra_counters;
+    UINT32 infra_int_last_interval_ms;
+	UINT32 is_infra_int_too_close;
+}StrHuiIe_bfdf_infra_ind_t;
+
+typedef struct StrMsg_HUITP_MSGID_sui_bfdf_infra_ind //
+{
+	  UINT16           msgid;
+	  UINT16           length;
+	  StrHuiIe_bfdf_infra_ind_t bfdf_infra_ind;
+}StrMsg_HUITP_MSGID_sui_bfdf_infra_ind_t;
+
+
+/*
+**	BFDF_ACTION_REQ
+*/
+
+#define     HUITP_IEID_SUI_BFDF_ACTION_ARM_DEFAULT                    (1)   /* Default means, open then close */
+#define     HUITP_IEID_SUI_BFDF_ACTION_ARM_OPEN                       (2)
+#define     HUITP_IEID_SUI_BFDF_ACTION_ARM_CLOSE                      (3)
+#define     HUITP_IEID_SUI_BFDF_ACTION_ARM_OPEN_AUTO_CLOSE            (4)
+#define     HUITP_IEID_SUI_BFDF_ACTION_ARM_CLOSE_AUTO_OPEN            (5)
+
+#define     HUITP_IEID_SUI_BFDF_ACTION_DOOR_DEFAULT                   (2)   /* Default means, = close */
+#define     HUITP_IEID_SUI_BFDF_ACTION_DOOR_OPEN                      (1)
+#define     HUITP_IEID_SUI_BFDF_ACTION_DOOR_CLOSE                     (2)
+#define     HUITP_IEID_SUI_BFDF_ACTION_DOOR_OPEN_AUTO_CLOSE           (3)
+#define     HUITP_IEID_SUI_BFDF_ACTION_DOOR_CLOSE_AUTO_OPEN           (4)
+
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_DEFAULT                  (1)
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_ON                       (1)
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_OFF                      (2)
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_ON_AUTO_OFF              (3)
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_OFF_AUTO_ON              (4)
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_BLINK_HS_ON              (5)
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_BLINK_HS_OFF             (6)
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_BLINK_LS_ON              (7)
+#define     HUITP_IEID_SUI_BFDF_ACTION_LIGHT_BLINK_LS_OFF             (8)
+
+typedef struct StrHuiIe_bfdf_ap_action_single
+{
+	UINT8  ap_id;
+	UINT8  spare;
+	UINT8  arm_action;
+	UINT8  arm_delay_tick;    /* active when xx_AUTO_xx command, uint is 10ms */
+	UINT8  door_action;
+	UINT8  door_delay_tick;   /* active when xx_AUTO_xx command, uint is 10ms */
+	UINT8  light_action;
+	UINT8  light_delay_tick;  /* active when xx_AUTO_xx command, uint is 10ms */
+}StrHuiIe_bfdf_ap_action_single_t;
+
+typedef struct StrHuiIe_BfdfBoardId
+{
+	UINT8 board_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8 spare1;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8 spare2;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8 spare3;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+}StrHuiIe_BfdfBoardId_t;
+
+typedef struct StrHuiIe_bfdf_ap_action_req
+{
+	StrHuiIe_BfdfBoardId_t board_id;
+  StrHuiIe_bfdf_ap_action_single_t ap_action[HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM];
+}StrHuiIe_bfdf_ap_action_req_t;
+
+typedef struct StrMsg_HUITP_COMM_sui_bfdf_ap_action_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	StrHuiIe_bfdf_ap_action_req_t ap_act_cmd; 
+}StrMsg_HUITP_COMM_sui_bfdf_ap_action_req_t;
+
+
+/*
+**	BFDF_COMMAND_REQ
+*/
+typedef struct StrHuiIe_bfdf_sensor_action_req
+{
+	  UINT32  cmdid;
+	  UINT32  cmdvalue;	
+}StrHuiIe_bfdf_sensor_action_req_t;
+
+typedef struct StrHuiIe_bfdf_motor_action_req
+{
+    UINT32	speed;
+    UINT32	direction;
+	  UINT32  delay_tick;
+}StrHuiIe_bfdf_motor_action_req_t;
+
+typedef struct StrMsg_HUITP_COMM_sui_bfdf_command_req
+{
+	UINT16 msgid;
+	UINT16 length;
+	StrHuiIe_bfdf_motor_action_req_t     motor_action;
+	StrHuiIe_bfdf_sensor_action_req_t    sensor_action;
+  StrHuiIe_bfdf_ap_action_single_t     ap_action[HUITP_IEID_SUI_BFDF_MAX_LOCAL_AP_NUM];
+}StrMsg_HUITP_COMM_sui_bfdf_command_req_t;
+
 //公共消息过程
 //传感器测试过程
 //HUITP_MSGID_sui_com_test_command_req             = 0x3B70,
-#define HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX		256
+#define HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX  256
 typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
 {
 	UINT16 	msgid;
@@ -6301,7 +6460,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
 	UINT32 	cmdvalue2;
 	UINT32 	cmdvalue3;
 	UINT32 	cmdvalue4;
-	UINT8   cmdBuf[HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX];
+	UINT8   cmdBuf[];
 }StrMsg_HUITP_MSGID_sui_com_test_command_req_t;
 typedef enum StrHuiIe_sui_com_test_cmdid
 {
@@ -6413,7 +6572,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_suspend_req
 	UINT16 	length;
 }StrMsg_HUITP_MSGID_sui_com_suspend_req_t;
 
-//HUITP_MSGID_sui_com_suspend_resp                = 0x3BF4,
+//HUITP_MSGID_sui_com_suspend_resp                 = 0x3BF4,
 typedef struct StrMsg_HUITP_MSGID_sui_com_suspend_resp
 {
 	UINT16 	msgid;
@@ -6442,13 +6601,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_resume_resp
 
 //统一结束符
 //HUITP_MSGID_uni_bfsc_comb_scale_max,
-/*
-** =============================================================================
-** ============================= MYC END FOR BFSC ==============================
-** =============================================================================
-*/
-
-
 
 //云控锁-锁-兼容旧系统
 //HUITP_MSGID_uni_ccl_lock_old_min                     = 0x4000,  

@@ -546,13 +546,7 @@ enum HCU_INTER_TASK_MSG_ID
 	//BFDF
 	MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
 	MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
-//	MSG_ID_L3BFDF_CAN_SYS_SUSPEND_REQ,
-//	MSG_ID_CAN_L3BFDF_SYS_SUSPEND_RESP,
-//	MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,
-//	MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP,
 	MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,
-	MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ,
-	MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,
 	MSG_ID_L3BFDF_CAN_WS_COMB_OUT,
 	MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,
 	MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
@@ -560,10 +554,6 @@ enum HCU_INTER_TASK_MSG_ID
 	//BFHS
 	MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,
 	MSG_ID_CAN_L3BFHS_SYS_CFG_RESP,
-//	MSG_ID_L3BFHS_CAN_SYS_SUSPEND_REQ,
-//	MSG_ID_CAN_L3BFHS_SYS_SUSPEND_RESP,
-//	MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ,
-//	MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP,
 	MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ,
 	MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP,
 	MSG_ID_L3BFHS_CAN_CAL_FULL_REQ,
@@ -3019,8 +3009,6 @@ typedef struct msg_struct_l3bfhs_uicomm_ctrl_cmd_resp
 
 //BFDF项目
 //MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
-//#define HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR		8
-//#define HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR		4
 #define HCU_SYSMSG_BFDF_ERR_CODE_INVALIID	  	0
 #define HCU_SYSMSG_BFDF_ERR_CODE_UNSPECIFIC  	1
 #define HCU_SYSMSG_BFDF_ERR_CODE_TIME_OUT  		2
@@ -3042,40 +3030,6 @@ typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
 	UINT32 length;
 }msg_struct_can_l3bfdf_sys_cfg_resp_t;
 
-////MSG_ID_L3BFDF_CAN_SYS_SUSPEND_REQ,
-//typedef struct msg_struct_l3bfdf_can_sys_suspend_req
-//{
-//	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-//	UINT32 length;
-//}msg_struct_l3bfdf_can_sys_suspend_req_t;
-//
-////MSG_ID_CAN_L3BFDF_SYS_START_RESP,
-//typedef struct msg_struct_can_l3bfdf_sys_suspend_resp
-//{
-//	UINT8  streamId;
-//	UINT8  boardId;
-//	UINT8  validFlag;  //是否执行成功
-//	UINT16 errCode;
-//	UINT32 length;
-//}msg_struct_can_l3bfdf_sys_suspend_resp_t;
-//
-////MSG_ID_L3BFDF_CAN_SYS_RESUME_REQ,
-//typedef struct msg_struct_l3bfdf_can_sys_resume_req
-//{
-//	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-//	UINT32 length;
-//}msg_struct_l3bfdf_can_sys_resume_req_t;
-//
-////MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP,
-//typedef struct msg_struct_can_l3bfdf_sys_resume_resp
-//{
-//	UINT8  streamId;
-//	UINT8  boardId;
-//	UINT8  validFlag;  //是否执行成功
-//	UINT16 errCode;
-//	UINT32 length;
-//}msg_struct_can_l3bfdf_sys_resume_resp_t;
-
 //MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,  	//传感器新数据事件
 typedef struct msg_struct_can_l3bfdf_new_ready_event
 {
@@ -3083,25 +3037,6 @@ typedef struct msg_struct_can_l3bfdf_new_ready_event
 	UINT32 sensorWsValue;
 	UINT32 length;
 }msg_struct_can_l3bfdf_new_ready_event_t;
-
-//MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ,
-typedef struct msg_struct_l3bfdf_can_snc_pullin_req
-{
-	UINT8  streamId;
-	UINT16 hopperId;
-	UINT32 length;
-}msg_struct_l3bfdf_can_snc_pullin_req_t;
-
-//MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,
-typedef struct msg_struct_can_l3bfdf_snc_pullin_resp
-{
-	UINT8  streamId;
-	UINT16 hopperId;
-	UINT16 errCode;
-	UINT8  validFlag; //是否执行成功
-	UINT32 length;
-}msg_struct_can_l3bfdf_snc_pullin_resp_t;
-
 
 //MSG_ID_L3BFDF_CAN_WS_COMB_OUT,  		//出料
 typedef struct msg_struct_l3bfdf_can_ws_comb_out
@@ -3153,36 +3088,6 @@ typedef struct msg_struct_can_l3bfhs_sys_cfg_resp
 	UINT16 errCode;
 	UINT32 length;
 }msg_struct_can_l3bfhs_sys_cfg_resp_t;
-
-////MSG_ID_L3BFHS_CAN_SYS_SUSPEND_REQ,
-//typedef struct msg_struct_l3bfhs_can_sys_suspend_req
-//{
-//	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-//	UINT32 length;
-//}msg_struct_l3bfhs_can_sys_suspend_req_t;
-//
-////MSG_ID_CAN_L3BFHS_SYS_START_RESP,
-//typedef struct msg_struct_can_l3bfhs_sys_suspend_resp
-//{
-//	UINT8  validFlag;  //是否执行成功
-//	UINT16 errCode;
-//	UINT32 length;
-//}msg_struct_can_l3bfhs_sys_suspend_resp_t;
-//
-////MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ,
-//typedef struct msg_struct_l3bfhs_can_sys_resume_req
-//{
-//	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-//	UINT32 length;
-//}msg_struct_l3bfhs_can_sys_resume_req_t;
-//
-////MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP,
-//typedef struct msg_struct_can_l3bfhs_sys_resume_resp
-//{
-//	UINT8  validFlag;  //是否执行成功
-//	UINT16 errCode;
-//	UINT32 length;
-//}msg_struct_can_l3bfhs_sys_resume_resp_t;
 
 //MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ,
 typedef struct msg_struct_l3bfhs_can_cal_zero_req

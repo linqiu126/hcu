@@ -55,14 +55,12 @@ HcuFsmStateItem_t HcuFsmL3bfdf[] =
 	//进料组合态
 	{MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,      FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_ws_new_ready_event},
 	{MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,       	FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_ws_comb_out_fb},
-	{MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,       	FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_snc_pulliin_resp},
 	{MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,       	FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_basket_clean_ind},
 
 	//出料流程态
 	//如果出现两个重叠出料情况，而且第一个出料的返回消息还未回来，没有影响，继续执行，定时器只是覆盖而已
 	{MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,      FSM_STATE_L3BFDF_OOS_TTT,          	fsm_l3bfdf_canitf_ws_new_ready_event},
 	{MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,       	FSM_STATE_L3BFDF_OOS_TTT,          	fsm_l3bfdf_canitf_ws_comb_out_fb},
-	{MSG_ID_CAN_L3BFDF_SNC_PULLIN_RESP,       	FSM_STATE_L3BFDF_OOS_TTT,           fsm_l3bfdf_canitf_snc_pulliin_resp},
 	{MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,       	FSM_STATE_L3BFDF_OOS_TTT,           fsm_l3bfdf_canitf_basket_clean_ind},
 
 	//休眠状态：只允许收到RESUME指令，不更新界面广告牌以及数据库
@@ -893,50 +891,50 @@ OPSTAT fsm_l3bfdf_canitf_ws_comb_out_fb(UINT32 dest_id, UINT32 src_id, void * pa
 }
 
 //入料反馈消息处理
-OPSTAT fsm_l3bfdf_canitf_snc_pulliin_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//int ret=0;
-	msg_struct_can_l3bfdf_snc_pullin_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_can_l3bfdf_snc_pullin_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfdf_snc_pullin_resp_t))){
-		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
-	}
-	memcpy(&rcv, param_ptr, param_len);
-
-	if ((rcv.streamId>=HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (rcv.hopperId == 0) || (rcv.hopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
-		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
-
-	//如果不太正常，则隔离该料斗
-	if (rcv.validFlag != TRUE){
-		gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
-		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: hopper error!, StreamId/HopperId=[%d/%d]\n", rcv.streamId, rcv.hopperId);
-	}
-
-	//将物料重量加到目标重量上去
-	gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperValue += gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperLastMat;
-
-	//判定是否满
-	if (gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_FULL_PRE){
-		//设置满
-		gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_FULL;
-		//判定篮子状态
-		if (gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].basketStatus != HCU_L3BFDF_HOPPER_BASKET_EMPTY) return SUCCESS;
-		//发送出料
-		if (func_l3bfdf_new_ws_send_out_comb_out_message(rcv.streamId, rcv.hopperId) == FALSE){
-			gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
-			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
-		}
-		//设置状态
-		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_TTT);
-	}
-	else{
-		//设置Hopper状态
-		gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID;
-	}
-
-	//返回
-	return SUCCESS;
-}
+//OPSTAT fsm_l3bfdf_canitf_snc_pulliin_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+//{
+//	//int ret=0;
+//	msg_struct_can_l3bfdf_snc_pullin_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_can_l3bfdf_snc_pullin_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfdf_snc_pullin_resp_t))){
+//		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
+//	}
+//	memcpy(&rcv, param_ptr, param_len);
+//
+//	if ((rcv.streamId>=HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (rcv.hopperId == 0) || (rcv.hopperId >= HCU_SYSCFG_BFDF_HOPPER_NBR_MAX))
+//		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
+//
+//	//如果不太正常，则隔离该料斗
+//	if (rcv.validFlag != TRUE){
+//		gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+//		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: hopper error!, StreamId/HopperId=[%d/%d]\n", rcv.streamId, rcv.hopperId);
+//	}
+//
+//	//将物料重量加到目标重量上去
+//	gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperValue += gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperLastMat;
+//
+//	//判定是否满
+//	if (gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus == HCU_L3BFDF_HOPPER_STATUS_FULL_PRE){
+//		//设置满
+//		gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_FULL;
+//		//判定篮子状态
+//		if (gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].basketStatus != HCU_L3BFDF_HOPPER_BASKET_EMPTY) return SUCCESS;
+//		//发送出料
+//		if (func_l3bfdf_new_ws_send_out_comb_out_message(rcv.streamId, rcv.hopperId) == FALSE){
+//			gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID_ERR;
+//			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send Comb Out message error!\n");
+//		}
+//		//设置状态
+//		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_OOS_TTT);
+//	}
+//	else{
+//		//设置Hopper状态
+//		gTaskL3bfdfContext.hopper[rcv.streamId][rcv.hopperId].hopperStatus = HCU_L3BFDF_HOPPER_STATUS_VALID;
+//	}
+//
+//	//返回
+//	return SUCCESS;
+//}
 
 OPSTAT fsm_l3bfdf_canitf_basket_clean_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
@@ -1985,16 +1983,16 @@ bool func_l3bfdf_new_ws_send_out_pullin_message(UINT8 streamId, UINT16 hopperId)
 	gTaskL3bfdfContext.hopper[streamId][hopperId].hopperLastMat = 0;
 
 	//发送
-	msg_struct_l3bfdf_can_snc_pullin_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_snc_pullin_req_t));
-	snd.streamId = streamId;
-	snd.hopperId = hopperId;
-	snd.length = sizeof(msg_struct_l3bfdf_can_snc_pullin_req_t);
-	if (hcu_message_send(MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF]++;
-		HcuErrorPrint("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
-		return FALSE;
-	}
+//	msg_struct_l3bfdf_can_snc_pullin_req_t snd;
+//	memset(&snd, 0, sizeof(msg_struct_l3bfdf_can_snc_pullin_req_t));
+//	snd.streamId = streamId;
+//	snd.hopperId = hopperId;
+//	snd.length = sizeof(msg_struct_l3bfdf_can_snc_pullin_req_t);
+//	if (hcu_message_send(MSG_ID_L3BFDF_CAN_SNC_PULLIN_REQ, TASK_ID_CANITFLEO, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE){
+//		zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF]++;
+//		HcuErrorPrint("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+//		return FALSE;
+//	}
 
 	//改变状态
 	if (hopperId == 0){
