@@ -46,11 +46,11 @@ HcuFsmStateItem_t HcuFsmL3bfdf[] =
 	{MSG_ID_CLOUDVELA_L3BFDF_STATISTIC_CONFIRM, FSM_STATE_COMMON,                   fsm_l3bfdf_cloudvela_statistic_confirm},
 
 	//任意状态下的命令执行
-	{MSG_ID_UICOMM_L3BFDF_CMD_REQ,       		FSM_STATE_COMMON,          			fsm_l3bfdf_uicomm_cmd_req},
+	{MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ,       	FSM_STATE_COMMON,          			fsm_l3bfdf_uicomm_ctrl_cmd_req},
 
 	//只为出现ACTIVED状态，入口自动被COMMON屏蔽
 	{MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,       		FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_config_resp},
-	{MSG_ID_CAN_L3BFDF_SYS_SUSPEND_RESP,       	FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_suspend_resp},//这个是先转移状态，再发送命令
+	{MSG_ID_SUI_SUSPEND_RESP,       			FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_suspend_resp},//这个是先转移状态，再发送命令
 
 	//进料组合态
 	{MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,      FSM_STATE_L3BFDF_OOS_SCAN,          fsm_l3bfdf_canitf_ws_new_ready_event},
@@ -66,7 +66,7 @@ HcuFsmStateItem_t HcuFsmL3bfdf[] =
 	{MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,       	FSM_STATE_L3BFDF_OOS_TTT,           fsm_l3bfdf_canitf_basket_clean_ind},
 
 	//休眠状态：只允许收到RESUME指令，不更新界面广告牌以及数据库
-	{MSG_ID_CAN_L3BFDF_SYS_RESUME_RESP,       	FSM_STATE_L3BFDF_SUSPEND,          	fsm_l3bfdf_canitf_sys_resume_resp},//这个是先发送命令，收齐后再转移状态
+	{MSG_ID_SUI_RESUME_RESP,       				FSM_STATE_L3BFDF_SUSPEND,          	fsm_l3bfdf_canitf_sys_resume_resp},//这个是先发送命令，收齐后再转移状态
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            					FSM_STATE_END,             			NULL},  //Ending
@@ -129,9 +129,9 @@ OPSTAT fsm_l3bfdf_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	//Global Variables
 	zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF] = 0;
 	//严格检查内部消息设置的大小，是否越界
-	#if ((HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR < HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR < HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX))
-		#error L3BFDF module level configuration number error!
-	#endif
+//	#if ((HCU_SYSMSG_L3BFDF_MAX_STREAM_NBR < HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX) || (HCU_SYSMSG_L3BFDF_MAX_SNC_BOARD_NBR < HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX))
+//		#error L3BFDF module level configuration number error!
+//	#endif
 
 //	//严格防止HUITP消息跟内部消息在关键结构上定义的不一致
 //	if ((sizeof(StrIe_HUITP_IEID_uni_scale_weight_sta_element_t)) != (sizeof(msgie_struct_bfdf_scale_weight_sta_element_t)))
@@ -246,7 +246,7 @@ OPSTAT fsm_l3bfdf_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
  * 　核心状态机处理过程
  *
  ***************************************************************************************************************************/
-OPSTAT fsm_l3bfdf_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
 	int i = 0, j = 0;
@@ -254,9 +254,9 @@ OPSTAT fsm_l3bfdf_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	int total=0;
 	char s[200], tmp[20];
 
-	msg_struct_uicomm_l3bfdf_cmd_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfdf_cmd_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_l3bfdf_cmd_req_t))){
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t))){
 		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receive message error!\n");
 	}
 	memcpy(&rcv, param_ptr, param_len);
@@ -274,12 +274,12 @@ OPSTAT fsm_l3bfdf_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 			for (i = 0; i< HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){
 				//所有的配置过后的传感器
 				if (gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus > HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MIN){
-					snd.boardBitmap[j][i] = TRUE;
+					//snd.boardBitmap[j][i] = TRUE;
 					gTaskL3bfdfContext.nodeDyn[j][i].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_CFG_START_REQ;
 					gTaskL3bfdfContext.nodeDyn[j][i].cfgRcvFlag = FALSE;
 					total++;
 				}
-				else snd.boardBitmap[j][i] = FALSE;
+				//else snd.boardBitmap[j][i] = FALSE;
 			}
 		}
 
@@ -288,7 +288,7 @@ OPSTAT fsm_l3bfdf_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		for (j = 0; j< HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX; j++){
 			for (i=0; i<HCU_SYSCFG_BFDF_NODE_BOARD_NBR_MAX; i++){
 				memset(tmp, 0, sizeof(tmp));
-				sprintf(tmp, "%d/", snd.boardBitmap[j][i]);
+				//sprintf(tmp, "%d/", snd.boardBitmap[j][i]);
 				if ((strlen(s)+strlen(tmp)) < sizeof(s)) strcat(s, tmp);
 			}
 		}
@@ -466,15 +466,15 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
 		//发送反馈给UICOMM
-		msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 		snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
 		snd.validFlag = FALSE;
 		snd.errCode = rcv.errCode;
 		snd.streamId = rcv.streamId;
 		snd.sensorid = rcv.boardId;
-		snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
-		if (hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE)
+		snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
+		if (hcu_message_send(MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
 
 		//停止定时器
@@ -486,14 +486,14 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 	//收到正确以及齐活的反馈
 	if (func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete() == TRUE){
 		//发送反馈给UICOMM
-		msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 		snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
 		snd.streamId = rcv.streamId;
 		snd.sensorid = rcv.boardId;
 		snd.validFlag = TRUE;
-		snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
-		if (hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE)
+		snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
+		if (hcu_message_send(MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE)
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
 
 		//停止定时器
@@ -526,9 +526,9 @@ OPSTAT fsm_l3bfdf_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	msg_struct_can_l3bfdf_sys_suspend_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_can_l3bfdf_sys_suspend_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfdf_sys_suspend_resp_t))){
+	msg_struct_sui_suspend_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sui_suspend_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_suspend_resp_t))){
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
 	}
 	/*	if ((rcv.sensorid < 0) || (rcv.sensorid > HCU_SYSCFG_BFDF_SNR_WS_NBR_MAX))
@@ -542,13 +542,13 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
 		//发送反馈给UICOMM
-		msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 		snd.validFlag = FALSE;
 		snd.errCode = rcv.errCode;
 		snd.sensorid = rcv.sensorid;
 		snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP;
-		snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
+		snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 		ret = hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
@@ -571,11 +571,11 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 	//收到正确以及齐活的反馈
 	if (func_l3bfdf_cacluate_sensor_stop_rcv_complete() == TRUE){
 		//发送反馈给UICOMM
-		msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 		snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_STOP;
 		snd.validFlag = TRUE;
-		snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
+		snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 		ret = hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
@@ -601,9 +601,9 @@ OPSTAT fsm_l3bfdf_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
-	msg_struct_can_l3bfdf_sys_resume_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_can_l3bfdf_sys_resume_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_can_l3bfdf_sys_resume_resp_t))){
+	msg_struct_sui_resume_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sui_resume_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_resume_resp_t))){
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
 	}
 /*
@@ -618,13 +618,13 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
 		//发送反馈给UICOMM
-		msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 		snd.validFlag = FALSE;
 		snd.errCode = rcv.errCode;
 		snd.sensorid = rcv.sensorid;
 		snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_START;
-		snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
+		snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 		ret = hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
@@ -644,11 +644,11 @@ OPSTAT fsm_l3bfdf_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 	//收到正确以及齐活的反馈
 	if (func_l3bfdf_cacluate_sensor_start_rcv_complete() == TRUE){
 		//发送反馈给UICOMM
-		msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
-		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+		msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
+		memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 		snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_START;
 		snd.validFlag = TRUE;
-		snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
+		snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 		ret = hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length);
 		if (ret == FAILURE){
 			HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
@@ -1047,11 +1047,11 @@ OPSTAT func_l3bfdf_time_out_comb_out_req_process(void)
 
 	//延时发送SUSPEND给界面，以防止界面SUSPEND被STOP_RESP覆盖
 	hcu_sleep(2);
-	msg_struct_l3bfdf_uicomm_cmd_resp_t snd;
-	memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
+	msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_SUSPEND;
 	snd.validFlag = TRUE;
-	snd.length = sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t);
+	snd.length = sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t);
 	ret = hcu_message_send(MSG_ID_L3BFDF_UICOMM_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_L3BFDF, &snd, snd.length);
 	if (ret == FAILURE){
 		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
