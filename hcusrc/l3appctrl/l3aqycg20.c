@@ -1679,7 +1679,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		snd.ycjk.dataFormat = CLOUD_SENSOR_DATA_FOMAT_FLOAT_WITH_NF3; //no need, caculate directly for l3aqycg20??
 		snd.ycjk.timeStamp = time(0);
 
-		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%.1f, Humid=%.1f, Windir=%.1f, Windspd=%.1f, tspValue=%.1f, pm2d5Value=%.1f, pm10Value=%.1f, noiseValue=%.1f\n",gTaskL3aqycq20Context.staMin.a01001_Avg, gTaskL3aqycq20Context.staMin.a01002_Avg, gTaskL3aqycq20Context.staMin.a01008_Avg, gTaskL3aqycq20Context.staMin.a01007_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskNoiseContext.noiseValue);
+		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%.1f, Humid=%.1f, Windir=%.1f, Windspd=%.1f, tspValue=%.1f, pm2d5Value=%.1f, pm10Value=%.1f, noiseValue=%.1f\n",gTaskL3aqycq20Context.staMin.a01001_Avg, gTaskL3aqycq20Context.staMin.a01002_Avg, gTaskL3aqycq20Context.staMin.a01008_Avg, gTaskL3aqycq20Context.staMin.a01007_Avg, gTaskL3aqycq20Context.cur.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskNoiseContext.noiseValue);
 
 		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%.1f, Humid=%.1f, Windir=%.1f, Windspd=%.1f, tspValue=%.1f, pm2d5Value=%.1f, pm10Value=%.1f, noiseValue=%.1f\n",gTaskL3aqycq20Context.staMin.a01001_Avg, gTaskL3aqycq20Context.staMin.a01002_Avg, gTaskL3aqycq20Context.staMin.a01008_Avg, gTaskL3aqycq20Context.staMin.a01007_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a34001_Avg, gTaskL3aqycq20Context.staMin.a50001_Avg);
 		HCU_DEBUG_PRINT_INF("L3AQYCG20: Temp=%d, Humid=%d, Windir=%d, Windspd=%d, tspValue=%d, pm2d5Value=%d, pm10Value=%d, noiseValue=%d\n\n\n",snd.ycjk.tempValue, snd.ycjk.humidValue, snd.ycjk.winddirValue, snd.ycjk.windspdValue, snd.ycjk.tspValue, snd.ycjk.pm2d5Value, snd.ycjk.pm10Value, snd.ycjk.noiseValue);
@@ -1699,14 +1699,14 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 				//////////////////////////////////////////////////////////
 						wchar_t *chinese_str = L"扬尘监控系统";
 						//wchar_t *chinese_str = L"欢迎习总光临小慧智能  噪声：";
-						wchar_t *noise_str = L"噪声：";
+						wchar_t *noise_str = L"噪声： ";
 						unsigned int *p_noise = (wchar_t*)noise_str;
 
 						wchar_t *noise_unit_str = L" dB";
 						unsigned int *p_noise_unit = (wchar_t*)noise_unit_str;
 
 
-						wchar_t *tsp_str = L"   PM2.5：";
+						wchar_t *tsp_str = L"  TSP：";
 						unsigned int *p_tsp = (wchar_t*)tsp_str;
 
 						wchar_t *tsp_unit_str = L" ug/m3                                                                                                                     ";
@@ -1758,7 +1758,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 
 						///////////////////////////////////////////////////
-						float tsp = gTaskL3aqycq20Context.staMin.a34001_Avg;
+						float tsp = gTaskL3aqycq20Context.cur.a34001_Avg;
 						//char CStr[HCU_SYSDIM_MSG_BODY_LEN_MAX];
 						memset(&CStr, 0, sizeof(HCU_SYSDIM_MSG_BODY_LEN_MAX));
 						//itoa(number,string,16);
@@ -1830,70 +1830,70 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 						unsigned int winddir = (unsigned int)gTaskL3aqycq20Context.staMin.a01008_Avg;
 						wchar_t *winddir_value_str;
 						if(winddir>=0 && winddir<=11){
-							winddir_value_str = L"北                                                                                                                     ";
+							winddir_value_str = L"北                      ";
 						}
 						else if(winddir>349 && winddir<=360){
-							winddir_value_str = L"北                                                                                                                     ";
+							winddir_value_str = L"北                      ";
 						}
 
 						else if(winddir>11 && winddir<=34){
-							winddir_value_str = L"东北偏北                                                                                                                     ";
+							winddir_value_str = L"东北偏北                  ";
 						}
 
 						else if(winddir>34 && winddir<=56){
-							winddir_value_str = L"东北                                                                                                                     ";
+							winddir_value_str = L"东北                      ";
 						}
 
 						else if(winddir>56 && winddir<=79){
-							winddir_value_str = L"东北偏东                                                                                                                     ";
+							winddir_value_str = L"东北偏东                   ";
 						}
 
 						else if(winddir>79 && winddir<=101){
-							winddir_value_str = L"东                                                                                                                     ";
+							winddir_value_str = L"东                        ";
 						}
 
 						else if(winddir>101 && winddir<=124){
-							winddir_value_str = L"东南偏东                                                                                                                     ";
+							winddir_value_str = L"东南偏东                   ";
 						}
 
 						else if(winddir>124 && winddir<=146){
-							winddir_value_str = L"东南                                                                                                                     ";
+							winddir_value_str = L"东南                       ";
 						}
 
 						else if(winddir>146 && winddir<=169){
-							winddir_value_str = L"东南偏南                                                                                                                     ";
+							winddir_value_str = L"东南偏南                    ";
 						}
 
 						else if(winddir>169 && winddir<=191){
-							winddir_value_str = L"南                                                                                                                     ";
+							winddir_value_str = L"南                          ";
 						}
 
 						else if(winddir>191 && winddir<=214){
-							winddir_value_str = L"西南偏南                                                                                                                     ";
+							winddir_value_str = L"西南偏南                     ";
 						}
 
 						else if(winddir>214 && winddir<=236){
-							winddir_value_str = L"西南                                                                                                                     ";
+							winddir_value_str = L"西南                          ";
 						}
 
 						else if(winddir>236 && winddir<=259){
-							winddir_value_str = L"西南偏西                                                                                                                     ";
+							winddir_value_str = L"西南偏西                       ";
 						}
 
 						else if(winddir>259 && winddir<=281){
-							winddir_value_str = L"西                                                                                                                     ";
+							winddir_value_str = L"西                            ";
 						}
 
 						else if(winddir>281 && winddir<=304){
-							winddir_value_str = L"西北偏西                                                                                                                     ";
+							winddir_value_str = L"西北偏西                       ";
 						}
 
 						else if(winddir>304 && winddir<=326){
-							winddir_value_str = L"西北                                                                                                                     ";
+							winddir_value_str = L"西北                           ";
 						}
 
 						else if(winddir>326 && winddir<=349){
-							winddir_value_str = L"西北偏北                                                                                                                     ";
+							winddir_value_str = L"西北偏北                        ";
 						}
 
 						unsigned int *p_winddir_value = (wchar_t*)winddir_value_str;
@@ -1923,7 +1923,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 						unsigned int curLen = 228;
 
 						unsigned char sample1[] = {0x7A,0x01,0x00,0x06,0xFA,0x00,0x01,0x01,0x01,0x0C,0x05,0x03,0x01,0x00,0x3C,0x01,0x01,0x00,0x00,0x7F,0x0A,0x00,0x01,0x00,0x00,0x00,
-								0x00,0x00,0x80,0x00,0x10,0x00,0x02,0x04,0x02,0x10,0xF4,0x01,0x00,0x00,0x05,0x64,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+								0x00,0x00,0x80,0x00,0x10,0x00,0x02,0x04,0x02,0x09,0xF4,0x01,0x00,0x00,0x05,0x64,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 								0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 								0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 								0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -2240,10 +2240,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 					//send the first frame end
 
-
-						sleep(10);
-
-
+						sleep(11);
 
 					//send the second frame start
 						curLen = 228;
@@ -2524,8 +2521,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 					//send the second frame end
 
-						sleep(10);
-
+						sleep(9);
 
 					//send the third frame start
 						curLen = 228;
