@@ -586,6 +586,12 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_UICOMM_L3BFHS_CMD_REQ,
 	MSG_ID_L3BFHS_UICOMM_CMD_RESP,
 
+	//SUI接口公共消息
+	MSG_ID_SUI_TEST_CMD_REQ,  				//测试命令
+	MSG_ID_SUI_TEST_CMD_RESP,  				//测试结果
+	MSG_ID_SUI_STARTUP_IND,					//启动指示
+	MSG_ID_SUI_FAULT_IND,					//差错指示
+
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
 	MSG_ID_L3AQYC_EXG_CTRL_RESP,
@@ -3213,7 +3219,53 @@ typedef struct msg_struct_can_l3bfhs_new_ready_event
 }msg_struct_can_l3bfhs_new_ready_event_t;
 
 
+//SUI接口公共消息
+//MSG_ID_SUI_TEST_CMD_REQ,  				//测试命令
+#define HCU_SYSMSG_SUI_SENSOR_NBR		64
+typedef struct msg_struct_sui_test_cmd_req
+{
+	UINT32  cmdid;
+	UINT8  	snrBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	UINT32 	cmdvalue1;
+	UINT32 	cmdvalue2;
+	UINT32 	cmdvalue3;
+	UINT32 	cmdvalue4;
+	UINT32 	length;
+}msg_struct_sui_test_cmd_req_t;
 
+//MSG_ID_SUI_TEST_CMD_RESP,  				//测试结果
+typedef struct msg_struct_sui_test_cmd_resp
+{
+	UINT32  cmdid;
+	UINT8	snrId;
+	UINT8   validFlag;  //是否执行成功 0-FALSE, 1-TRUE
+	UINT16  errCode;
+	UINT32  cmdvalue1;
+	UINT32  cmdvalue2;
+	UINT32  cmdvalue3;
+	UINT32  cmdvalue4;
+	UINT32 	length;
+}msg_struct_sui_test_cmd_resp_t;
+
+//MSG_ID_SUI_STARTUP_IND,				//启动指示
+typedef struct msg_struct_sui_startup_ind
+{
+	UINT8  snrId;
+	UINT32 hwId;
+	UINT32 swId;
+	UINT32 cpuId;
+	UINT32 wgtType;
+	UINT32 motoType;
+	UINT32 length;
+}msg_struct_sui_startup_ind_t;
+
+//MSG_ID_SUI_FAULT_IND,					//差错指示
+typedef struct msg_struct_sui_fault_ind
+{
+	UINT8   snrId;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT16	error_code;
+	UINT32  length;
+}msg_struct_sui_fault_ind_t;
 
 
 

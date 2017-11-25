@@ -590,6 +590,12 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_UICOMM_L3BFHS_CMD_REQ,       	      "MSG_ID_UICOMM_L3BFHS_CMD_REQ",      		    1, 1, 1},
 	{MSG_ID_L3BFHS_UICOMM_CMD_RESP,       	      "MSG_ID_L3BFHS_UICOMM_CMD_RESP",      		1, 1, 1},
 
+	//SUI接口公共消息
+	{MSG_ID_SUI_TEST_CMD_REQ,       	      	  "MSG_ID_SUI_TEST_CMD_REQ",      		    	1, 1, 1},
+	{MSG_ID_SUI_TEST_CMD_RESP,       	      	  "MSG_ID_SUI_TEST_CMD_RESP",      		    	1, 1, 1},
+	{MSG_ID_SUI_STARTUP_IND,       	      		  "MSG_ID_SUI_STARTUP_IND",      		    	1, 1, 1},
+	{MSG_ID_SUI_FAULT_IND,       	      		  "MSG_ID_SUI_FAULT_IND",      		    		1, 1, 1},
+
 	//L3AQYCG20
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,                  "MSG_ID_L3AQYC_EXG_CTRL_REQ",                 1, 1, 1},
 	{MSG_ID_L3AQYC_EXG_CTRL_RESP,                 "MSG_ID_L3AQYC_EXG_CTRL_RESP",                1, 1, 1},

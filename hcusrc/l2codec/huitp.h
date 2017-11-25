@@ -48,7 +48,7 @@ typedef void                      VOID;
  * 2017/10/16 V3.0: BFDF/BFHS新建消息
  * 2017/10/16 V3.1: FDWQ消息更新
  * 2017/11/24 V3.2: BFHS消息更新
- *
+ * 2017/11/24 V3.3: 合并公共消息
  *
  *
  */
@@ -680,6 +680,18 @@ typedef enum
 	HUITP_MSGID_sui_bfhs_calibration_zero_resp       = 0x3BC8,
 	HUITP_MSGID_sui_bfhs_calibration_full_req        = 0x3B49,
 	HUITP_MSGID_sui_bfhs_calibration_full_resp       = 0x3BC9,
+
+	//公共消息过程
+	//传感器测试过程
+	HUITP_MSGID_sui_com_test_command_req             = 0x3B70,
+	HUITP_MSGID_sui_com_test_command_resp            = 0x3BF0,
+	//心跳过程
+	HUITP_MSGID_sui_com_heart_beat_report            = 0x3BF1,
+	HUITP_MSGID_sui_com_heart_beat_confirm           = 0x3B71,
+	//上电过程：暂时不启用，未来待探讨
+	HUITP_MSGID_sui_com_startup_ind                  = 0x3BF2,
+	//差错过程：暂时不启动，未来待探讨
+	HUITP_MSGID_sui_com_fault_ind                    = 0x3BF3,
 	
 	//统一结束符
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
@@ -6419,6 +6431,9 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
 	UINT16 	length;
 	INT32   Weight; //format NF2;
 	UINT8   weight_state;  //1: normal; 2: overload; 3:underload;
+	UINT8   spare1;
+	UINT8   spare2;
+	UINT8   spare3;
 }StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t;
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_NULL  				0
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_NORMAL  			1
@@ -6427,6 +6442,14 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_INVALID  			0xFF
 
 //特殊命令过程（测试等过程）
+//HUITP_MSGID_sui_bfhs_command_req                 = 0x3B45,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT32 	cmdid;
+	UINT32 	cmdvalue;
+}StrMsg_HUITP_MSGID_sui_bfhs_command_req_t;
 #define HUITP_IEID_SUI_TEST_CMDID_LED1_COMMNAD_ON							(1)
 #define HUITP_IEID_SUI_TEST_CMDID_LED1_COMMNAD_OFF							(2)
 #define HUITP_IEID_SUI_TEST_CMDID_LED1_COMMNAD_BINKING_HIGHSPEED			(3)
@@ -6443,15 +6466,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
 #define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_OBJECT_READ      			(15)
 #define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_OBJECT_WRITE     			(16)
 #define HUITP_IEID_SUI_TEST_CMDID_MOTOR_COMMAND								(20)
-
-//HUITP_MSGID_sui_bfhs_command_req                 = 0x3B45,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	UINT32 	cmdid;
-	UINT32 	cmdvalue;
-}StrMsg_HUITP_MSGID_sui_bfhs_command_req_t;
 
 //HUITP_MSGID_sui_bfhs_command_resp                = 0x3BC5,
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_resp
@@ -6502,6 +6516,112 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_confirm
 #define HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_INIT 		2
 #define HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_WORKING 	3
 #define HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_INVALID 	0xFF
+
+//公共消息过程
+//传感器测试过程
+//HUITP_MSGID_sui_com_test_command_req             = 0x3B70,
+typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT32 	cmdid;
+	UINT32 	cmdvalue1;
+	UINT32 	cmdvalue2;
+	UINT32 	cmdvalue3;
+	UINT32 	cmdvalue4;
+}StrMsg_HUITP_MSGID_sui_com_test_command_req_t;
+#define HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_ON							(1)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_OFF							(2)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_BINKING_HIGHSPEED			(3)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_BINKING_LOWSPEED				(4)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_ON							(5)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_OFF							(6)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_BINKING_HIGHSPEED			(7)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_BINKING_LOWSPEED				(8)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_IGORE						(10) //MUSR BE 0
+#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_WEITGH_READ				(11)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_CALIBRATION_ZERO			(12)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_CALIBRATION_FULL			(13)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_TARE_WEIGHT      			(14)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_OBJECT_READ      			(15)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_OBJECT_WRITE     			(16)
+#define HUITP_IEID_SUI_COM_TEST_CMDID_MOTOR_COMMAND								(20)
+
+//HUITP_MSGID_sui_com_test_command_resp            = 0x3BF0,
+typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_resp
+{
+	UINT16 msgid;
+	UINT16 length;
+	UINT8  wmc_id;     /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8  validFlag;  /*是否执行成功 0-FALSE, 1-TRUE */
+	UINT16 error_code;
+	UINT32 cmdid;
+	UINT32 cmdvalue1;
+	UINT32 cmdvalue2;
+	UINT32 cmdvalue3;
+	UINT32 cmdvalue4;
+}StrMsg_HUITP_MSGID_sui_com_test_command_resp_t;
+
+//心跳过程
+//HUITP_MSGID_sui_com_heart_beat_report            = 0x3BF1,
+typedef struct StrMsg_HUITP_MSGID_sui_com_heart_beat_report
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8   spare1;
+	UINT16  spare2;
+	UINT32  timeStamp;
+}StrMsg_HUITP_MSGID_sui_com_heart_beat_report_t;
+
+//HUITP_MSGID_sui_com_heart_beat_confirm           = 0x3B71,
+typedef struct StrMsg_HUITP_MSGID_sui_com_heart_beat_confirm
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8   wmcState;
+	UINT16  spare1;
+	UINT32  timeStamp;
+}StrMsg_HUITP_MSGID_sui_com_heart_beat_confirm_t;
+#define HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_NULL 		0
+#define HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_OFFLINE 	1
+#define HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_INIT 		2
+#define HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_WORKING 	3
+#define HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_INVALID 	0xFF
+
+//上电过程
+//HUITP_MSGID_sui_com_startup_ind                  = 0x3BF2,
+typedef struct StrHuiIe_wmc_inventory
+{
+	UINT32 hw_inventory_id;
+	UINT32 sw_inventory_id;
+	UINT32 stm32_cpu_id;
+	UINT32 weight_sensor_type;
+	UINT32 motor_type;
+	UINT8  wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8  spare1;
+	UINT16 spare2;
+	UINT32 spare3;
+	UINT32 spare4;
+}StrHuiIe_wmc_inventory_t;
+typedef struct StrMsg_HUITP_MSGID_sui_com_startup_ind
+{
+	UINT16 msgid;
+	UINT16 length;
+	StrHuiIe_wmc_inventory_t wmc_inventory;
+}StrMsg_HUITP_MSGID_sui_com_startup_ind_t;
+
+//差错过程
+//HUITP_MSGID_sui_com_fault_ind                    = 0x3BF3,
+typedef struct StrMsg_HUITP_MSGID_sui_com_fault_ind
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8   spare1;
+	UINT16	error_code;
+}StrMsg_HUITP_MSGID_sui_com_fault_ind_t;
 
 
 //统一结束符

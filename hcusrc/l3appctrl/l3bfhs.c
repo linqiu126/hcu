@@ -50,6 +50,8 @@ HcuFsmStateItem_t HcuFsmL3bfhs[] =
 	{MSG_ID_UICOMM_L3BFHS_CMD_REQ,       		FSM_STATE_COMMON,          			fsm_l3bfhs_uicomm_cmd_req},
 	{MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP,      		FSM_STATE_COMMON,          			fsm_l3bfhs_canitf_cal_zero_resp},
 	{MSG_ID_CAN_L3BFHS_CAL_FULL_RESP,       	FSM_STATE_COMMON,          			fsm_l3bfhs_canitf_cal_full_resp},
+	{MSG_ID_SUI_STARTUP_IND,       				FSM_STATE_COMMON,          			fsm_l3bfhs_canitf_startup_ind},
+	{MSG_ID_SUI_FAULT_IND,       				FSM_STATE_COMMON,          			fsm_l3bfhs_canitf_fault_ind},
 
 	//只为出现ACTIVED状态，入口自动被COMMON屏蔽
 	{MSG_ID_CAN_L3BFHS_SYS_CFG_RESP,       		FSM_STATE_L3BFHS_ACTIVED,          	fsm_l3bfhs_canitf_sys_config_resp},
@@ -511,6 +513,81 @@ OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 	//返回
 	return SUCCESS;
 }
+
+OPSTAT fsm_l3bfhs_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_sui_startup_ind_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sui_startup_ind_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_startup_ind_t))){
+		HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Receive message error!\n");
+	}
+
+	//Firstly Register state
+	gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
+	HCU_DEBUG_PRINT_CRT("L3BFHS: Sensor ID = %d is set to be startup!\n", rcv.snrId);
+
+	//通知界面
+	func_canitfleo_huicobus_trigger_uir(0, 0);
+	//dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_STARTUP, 0);
+
+	//判定状态
+	if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_ACTIVED)
+	{
+		//Send CFG_REQ到下位机
+
+	}
+	else if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_OOS_SCAN)
+	{
+		//snd CFG_REQ到下位机
+		FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+	}
+	else if (FsmGetState(TASK_ID_L3BFHS) == FSM_STATE_L3BFHS_OOS_SCAN)
+	{
+
+	}
+	//Do nothing
+	else
+	{
+
+	}
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfhs_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_sui_fault_ind_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sui_fault_ind_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_fault_ind_t))){
+		HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Receive message error!\n");
+	}
+
+	//通知界面
+	func_canitfleo_huicobus_trigger_uir(0, 0);
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_FAULT_RCV, 0);
+
+	if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_INIT_MAX)
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_INIT_ERR;
+	else
+		//隔离该传感器
+		gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_HW_ERROR;
+
+	//是否要根据ERR_CODE，赋予不同的差错情形，待定
+
+	//发送SUSPEND命令给下位机，不用启动定时器
+
+	//发送错误指示给UICOMM
+
+	//设置到ACTIVE状态，等待界面进一步反馈
+	FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);
+
+	//返回
+	return SUCCESS;
+}
+
 
 /***************************************************************************************************************************
  *
