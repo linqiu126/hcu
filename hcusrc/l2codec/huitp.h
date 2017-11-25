@@ -625,26 +625,11 @@ typedef enum
 	HUITP_MSGID_sui_bfsc_heart_beat_confirm          = 0x3B20,
 
 	//HCU-IHU BFDF SUI新增内容
-	//上电过程
-	HUITP_MSGID_sui_bfdf_startup_ind                 = 0x3BB0,
 	//配置过程
 	HUITP_MSGID_sui_bfdf_set_config_req              = 0x3B31,
 	HUITP_MSGID_sui_bfdf_set_config_resp             = 0x3BB1,
-	//暂停过程
-	HUITP_MSGID_sui_bfdf_suspend_req                 = 0x3B32,
-	HUITP_MSGID_sui_bfdf_suspend_resp                = 0x3BB2,
-	HUITP_MSGID_sui_bfdf_resume_req                  = 0x3B33,
-	HUITP_MSGID_sui_bfdf_resume_resp                 = 0x3BB3,
 	//重量汇报过程
 	HUITP_MSGID_sui_bfdf_new_ws_event                = 0x3BB4,
-	//特殊命令过程（测试等过程）
-	HUITP_MSGID_sui_bfdf_command_req                 = 0x3B35,
-	HUITP_MSGID_sui_bfdf_command_resp                = 0x3BB5,
-	//差错过程
-	HUITP_MSGID_sui_bfdf_fault_ind                   = 0x3BB6,
-	//心跳过程
-	HUITP_MSGID_sui_bfdf_heart_beat_report           = 0x3BB7,
-	HUITP_MSGID_sui_bfdf_heart_beat_confirm          = 0x3B37,
 	//组合出料过程
 	HUITP_MSGID_sui_bfdf_ws_comb_out_req             = 0x3B38,
 	HUITP_MSGID_sui_bfdf_ws_comb_out_resp            = 0x3BB8,
@@ -655,26 +640,11 @@ typedef enum
 	HUITP_MSGID_sui_bfdf_basket_clean_ind           = 0x3BBA,
 
 	//HCU-IHU BFHS SUI新增内容
-	//上电过程
-	HUITP_MSGID_sui_bfhs_startup_ind                 = 0x3BC0,
 	//配置过程
 	HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B41,
 	HUITP_MSGID_sui_bfhs_set_config_resp             = 0x3BC1,
-	//暂停过程
-	HUITP_MSGID_sui_bfhs_suspend_req                 = 0x3B42,
-	HUITP_MSGID_sui_bfhs_suspend_resp                = 0x3BC2,
-	HUITP_MSGID_sui_bfhs_resume_req                  = 0x3B43,
-	HUITP_MSGID_sui_bfhs_resume_resp                 = 0x3BC3,
 	//重量汇报过程
 	HUITP_MSGID_sui_bfhs_new_ws_event                = 0x3BC4,
-	//特殊命令过程（测试等过程）
-	HUITP_MSGID_sui_bfhs_command_req                 = 0x3B45,
-	HUITP_MSGID_sui_bfhs_command_resp                = 0x3BC5,
-	//差错过程
-	HUITP_MSGID_sui_bfhs_fault_ind                   = 0x3BC6,
-	//心跳过程
-	HUITP_MSGID_sui_bfhs_heart_beat_report           = 0x3BC7,
-	HUITP_MSGID_sui_bfhs_heart_beat_confirm          = 0x3B47,
 	//校准过程
 	HUITP_MSGID_sui_bfhs_calibration_zero_req        = 0x3B48,
 	HUITP_MSGID_sui_bfhs_calibration_zero_resp       = 0x3BC8,
@@ -688,9 +658,9 @@ typedef enum
 	//心跳过程
 	HUITP_MSGID_sui_com_heart_beat_report            = 0x3BF1,
 	HUITP_MSGID_sui_com_heart_beat_confirm           = 0x3B71,
-	//上电过程：暂时不启用，未来待探讨
+	//上电过程
 	HUITP_MSGID_sui_com_startup_ind                  = 0x3BF2,
-	//差错过程：暂时不启动，未来待探讨
+	//差错过程
 	HUITP_MSGID_sui_com_fault_ind                    = 0x3BF3,
 	//暂停过程
 	HUITP_MSGID_sui_com_suspend_req                 = 0x3B74,
@@ -6047,30 +6017,23 @@ typedef struct StrMsg_HUITP_MSGID_sui_common_msg_header
 //#define		MAX_WMC_CONTROL_MSG_BODY_LEN		(MAX_WMC_CONTROL_MSG_LEN - MAX_WMC_CONTROL_MSG_HEADER_LEN)
 
 /* ERROR CODE */
-typedef enum IHU_ERROR_CODE
+typedef enum StrHuiIe_sui_com_error_code
 {
 	//ERROR CODE ID
-	ERROR_CODE_NO_ERROR = 0, //Starting point
+	HUITP_IEID_SUI_COM_ERROR_CODE_STARING = 0, //Starting point
+	ERROR_CODE_NO_ERROR = 0, //Starting point //兼容老旧系统
 	//COMMON ERROR CODE
 	ERROR_CODE_CALLING_ERROR,
 	ERROR_CODE_INPUT_PARAMETER_KO,
 	ERROR_CODE_WRONG_WMC_STATE,
 	ERROR_CODE_UNKNOWN,
-	ERROR_CODE_MAX, //Ending point
+	//SPECIFIC PART
 
-}error_code_t; //end of IHU_INTER_TASK_MSG_ID
-
-
+	ERROR_CODE_MAX, //Ending point  //兼容老旧系统
+	HUITP_IEID_SUI_COM_ERROR_CODE_MAX, //Ending point
+}StrHuiIe_sui_com_error_code_t; //end of IHU_INTER_TASK_MSG_ID
 
 //HCU-IHU BFDF SUI新增内容
-//上电过程
-//HUITP_MSGID_sui_bfdf_startup_ind                 = 0x3BB0,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_startup_ind
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_startup_ind_t;
-
 //配置过程
 //HUITP_MSGID_sui_bfdf_set_config_req              = 0x3B31,
 typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_req
@@ -6086,34 +6049,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp
 	UINT16 	length;
 }StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t;
 
-//暂停过程
-//HUITP_MSGID_sui_bfdf_suspend_req                 = 0x3B32,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_suspend_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_suspend_req_t;
-
-//HUITP_MSGID_sui_bfdf_suspend_resp                = 0x3BB2,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_suspend_resp_t;
-
-//HUITP_MSGID_sui_bfdf_resume_req                  = 0x3B33,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_resume_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_resume_req_t;
-
-//HUITP_MSGID_sui_bfdf_resume_resp                 = 0x3BB3,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_resume_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_resume_resp_t;
 
 //重量汇报过程
 //HUITP_MSGID_sui_bfdf_new_ws_event                = 0x3BB4,
@@ -6122,54 +6057,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event
 	UINT16 	msgid;
 	UINT16 	length;
 }StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t;
-
-//特殊命令过程（测试等过程）
-//HUITP_MSGID_sui_bfdf_command_req                 = 0x3B35,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_command_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	UINT32 cmdid;
-	UINT32 cmdvalue;
-}StrMsg_HUITP_MSGID_sui_bfdf_command_req_t;
-
-//HUITP_MSGID_sui_bfdf_command_resp                = 0x3BB5,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_command_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
-	WmcErrorCode_t result;
-	UINT8  validFlag;  //是否执行成功
-	UINT8  spare1;
-	UINT16 spare2;
-	UINT32 cmdid;
-	UINT32 cmdvalue1;
-	UINT32 cmdvalue2;
-}StrMsg_HUITP_MSGID_sui_bfdf_command_resp_t;
-
-//差错过程
-//HUITP_MSGID_sui_bfdf_fault_ind                   = 0x3BB6,
-typedef struct StrMsg_HUITP_HUITP_MSGID_sui_bfdf_fault_ind
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_fault_ind_t;
-
-//心跳过程
-//HUITP_MSGID_sui_bfdf_heart_beat_report           = 0x3BB7,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_report_t;
-
-//HUITP_MSGID_sui_bfdf_heart_beat_confirm          = 0x3B37,
-typedef struct StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_confirm
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfdf_heart_beat_confirm_t;
 
 //组合出料过程
 //HUITP_MSGID_sui_bfdf_ws_comb_out_req             = 0x3B38,
@@ -6210,15 +6097,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind
 }StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t;
 
 //HCU-IHU BFHS SUI新增内容
-//上电过程
-//HUITP_MSGID_sui_bfhs_startup_ind                 = 0x3BC0,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_startup_ind
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	WmcInventory_t wmc_inventory;
-}StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t;
-
 /*
 	//校准过程
 	HUITP_MSGID_sui_bfhs_calibration_zero_req        = 0x3B48,
@@ -6392,42 +6270,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp
 	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t;
 
-//暂停过程
-//HUITP_MSGID_sui_bfhs_suspend_req                 = 0x3B42,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_suspend_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfhs_suspend_req_t;
-
-//HUITP_MSGID_sui_bfhs_suspend_resp                = 0x3BC2,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	UINT8   validFlag;
-	UINT8   spare1;
-	UINT16  errCode;
-}StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t;
-
-//HUITP_MSGID_sui_bfhs_resume_req                  = 0x3B43,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_resume_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-}StrMsg_HUITP_MSGID_sui_bfhs_resume_req_t;
-
-//HUITP_MSGID_sui_bfhs_resume_resp                 = 0x3BC3,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_resume_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	UINT8   validFlag;
-	UINT8   spare1;
-	UINT8   spare2;
-	UINT8   spare3;
-}StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t;
-
 //重量汇报过程
 //HUITP_MSGID_sui_bfhs_new_ws_event                = 0x3BC4,
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
@@ -6446,82 +6288,6 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_UNDERLOAD  			3
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_INVALID  			0xFF
 
-//特殊命令过程（测试等过程）
-//HUITP_MSGID_sui_bfhs_command_req                 = 0x3B45,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_req
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	UINT32 	cmdid;
-	UINT32 	cmdvalue;
-}StrMsg_HUITP_MSGID_sui_bfhs_command_req_t;
-#define HUITP_IEID_SUI_TEST_CMDID_LED1_COMMNAD_ON							(1)
-#define HUITP_IEID_SUI_TEST_CMDID_LED1_COMMNAD_OFF							(2)
-#define HUITP_IEID_SUI_TEST_CMDID_LED1_COMMNAD_BINKING_HIGHSPEED			(3)
-#define HUITP_IEID_SUI_TEST_CMDID_LED1_COMMNAD_BINKING_LOWSPEED				(4)
-#define HUITP_IEID_SUI_TEST_CMDID_LED2_COMMNAD_ON							(5)
-#define HUITP_IEID_SUI_TEST_CMDID_LED2_COMMNAD_OFF							(6)
-#define HUITP_IEID_SUI_TEST_CMDID_LED2_COMMNAD_BINKING_HIGHSPEED			(7)
-#define HUITP_IEID_SUI_TEST_CMDID_LED2_COMMNAD_BINKING_LOWSPEED				(8)
-#define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_IGORE						(10) //MUSR BE 0
-#define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_WEITGH_READ				(11)
-#define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_CALIBRATION_ZERO			(12)
-#define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_CALIBRATION_FULL			(13)
-#define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_TARE_WEIGHT      			(14)
-#define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_OBJECT_READ      			(15)
-#define HUITP_IEID_SUI_TEST_CMDID_SENSOR_COMMAND_OBJECT_WRITE     			(16)
-#define HUITP_IEID_SUI_TEST_CMDID_MOTOR_COMMAND								(20)
-
-//HUITP_MSGID_sui_bfhs_command_resp                = 0x3BC5,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_command_resp
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	WmcId_t wmc_id;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
-	WmcErrorCode_t result;
-	UINT8  validFlag;  //是否执行成功
-	UINT8  spare1;
-	UINT16 spare2;
-	UINT32 cmdid;
-	UINT32 cmdvalue1;
-	UINT32 cmdvalue2;
-}StrMsg_HUITP_MSGID_sui_bfhs_command_resp_t;
-
-//差错过程
-//HUITP_MSGID_sui_bfhs_fault_ind                   = 0x3BC6,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_fault_ind
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	UINT16	errorCode;
-	UINT16  spare1;
-}StrMsg_HUITP_MSGID_sui_bfhs_fault_ind_t;
-
-//心跳过程
-//HUITP_MSGID_sui_bfhs_heart_beat_report           = 0x3BC7,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	UINT32	timeMs;
-}StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_report_t;
-
-//HUITP_MSGID_sui_bfhs_heart_beat_confirm          = 0x3B47,
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_confirm
-{
-	UINT16 	msgid;
-	UINT16 	length;
-	UINT8   state;
-	UINT8   spare1;
-	UINT8   spare2;
-	UINT8   spare3;
-}StrMsg_HUITP_MSGID_sui_bfhs_heart_beat_confirm_t;
-#define HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_NULL 		0
-#define HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_OFFLINE 	1
-#define HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_INIT 		2
-#define HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_WORKING 	3
-#define HUITP_IEID_SUI_BFHS_HEATT_BEAT_WMC_STATE_INVALID 	0xFF
-
 //公共消息过程
 //传感器测试过程
 //HUITP_MSGID_sui_com_test_command_req             = 0x3B70,
@@ -6535,22 +6301,31 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
 	UINT32 	cmdvalue3;
 	UINT32 	cmdvalue4;
 }StrMsg_HUITP_MSGID_sui_com_test_command_req_t;
-#define HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_ON							(1)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_OFF							(2)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_BINKING_HIGHSPEED			(3)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_BINKING_LOWSPEED				(4)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_ON							(5)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_OFF							(6)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_BINKING_HIGHSPEED			(7)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_BINKING_LOWSPEED				(8)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_IGORE						(10) //MUSR BE 0
-#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_WEITGH_READ				(11)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_CALIBRATION_ZERO			(12)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_CALIBRATION_FULL			(13)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_TARE_WEIGHT      			(14)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_OBJECT_READ      			(15)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_OBJECT_WRITE     			(16)
-#define HUITP_IEID_SUI_COM_TEST_CMDID_MOTOR_COMMAND								(20)
+typedef enum StrHuiIe_sui_com_test_cmdid
+{
+	//COMMON PART
+	HUITP_IEID_SUI_COM_TEST_CMDID_NULL = 0, //Starting
+	HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_ON = 1, //Starting point
+	HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_OFF,
+	HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_BINKING_HIGHSPEED,
+	HUITP_IEID_SUI_COM_TEST_CMDID_LED1_COMMNAD_BINKING_LOWSPEED,
+	HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_ON,
+	HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_OFF,
+	HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_BINKING_HIGHSPEED,
+	HUITP_IEID_SUI_COM_TEST_CMDID_LED2_COMMNAD_BINKING_LOWSPEED,
+	HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_IGORE = 10,
+	HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_WEITGH_READ,
+	HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_CALIBRATION_ZERO,
+	HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_CALIBRATION_FULL,
+	HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_TARE_WEIGHT,
+	HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_OBJECT_READ,
+	HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_OBJECT_WRITE,
+	HUITP_IEID_SUI_COM_TEST_CMDID_MOTOR_COMMAND = 20,
+	//BFDF SPECIFIC PART
+
+	HUITP_IEID_SUI_COM_TEST_CMDID_MAX, //Ending
+	HUITP_IEID_SUI_COM_TEST_CMDID_INVALID = 0xFFFF,
+}StrHuiIe_sui_com_test_cmdid_t;
 
 //HUITP_MSGID_sui_com_test_command_resp            = 0x3BF0,
 typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_resp
