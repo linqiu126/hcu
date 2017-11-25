@@ -8,6 +8,7 @@
 #include "../l1hwopt/sps232.h"
 #include "../l0service/trace.h"
 #include "../l1com/l1comdef.h"
+#include "../l2codec/huitp.h"
 
 /*
 ** FSM of the SPS232
@@ -141,9 +142,16 @@ OPSTAT func_sps232_int_init(void)
 {
 	//初始化硬件接口
 	zHcuVmCtrTab.hwinv.sps232.sp.id = zHcuSysEngPar.serialport.SeriesPortForPm25Sharp;
-	if (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].present == HCU_SYSCFG_SENSOR_PRESENT_YES) zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 2400;
-	//else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 9600;//for led test
-	else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 38400;
+	if (zHcuVmCtrTab.codab.si[SENSOR_ID_SPSPM25SHARP].present == HCU_SYSCFG_SENSOR_PRESENT_YES)
+		zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 2400;
+	else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 9600;
+	//else zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 38400;
+
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2009)//for led test
+	{
+		zHcuVmCtrTab.hwinv.sps232.sp.nSpeed = 38400;
+	}
+
 	zHcuVmCtrTab.hwinv.sps232.sp.nBits = 8;
 	zHcuVmCtrTab.hwinv.sps232.sp.nEvent = 'N';
 	zHcuVmCtrTab.hwinv.sps232.sp.nStop = 1;
@@ -167,7 +175,8 @@ OPSTAT func_sps232_int_init(void)
 		HcuDebugPrint("SPS232: Init Serial Port Success ...\n");
 	}
 
-	hcu_spsapi_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps232.sp, 10, 5);
+	//hcu_spsapi_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps232.sp, 10, 5);
+	hcu_sps485_SerialPortSetVtimeVmin(&zHcuVmCtrTab.hwinv.sps485.modbus, 1, 20);
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_INF_ON) != FALSE){
 		HcuDebugPrint("SPS232: COM port flags: VTIME = 0x%d, TMIN = 0x%d\n",  zHcuVmCtrTab.hwinv.sps232.sp.vTime, zHcuVmCtrTab.hwinv.sps232.sp.vMin);
 	}

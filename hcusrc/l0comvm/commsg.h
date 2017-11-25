@@ -689,6 +689,7 @@ typedef struct  sensor_pm25_data_element //
 	UINT32 equipid;
 	UINT8 dataFormat;
 	UINT32 pmTSPValue;
+	UINT32 pm1d0Value;
 	UINT32 pm2d5Value;
 	UINT32 pm10Value;
 	msgie_struct_com_gps_pos_t gps;
