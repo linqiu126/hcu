@@ -6291,6 +6291,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
 //公共消息过程
 //传感器测试过程
 //HUITP_MSGID_sui_com_test_command_req             = 0x3B70,
+#define HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX		256
 typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
 {
 	UINT16 	msgid;
@@ -6300,6 +6301,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
 	UINT32 	cmdvalue2;
 	UINT32 	cmdvalue3;
 	UINT32 	cmdvalue4;
+	UINT8   cmdBuf[HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX];
 }StrMsg_HUITP_MSGID_sui_com_test_command_req_t;
 typedef enum StrHuiIe_sui_com_test_cmdid
 {

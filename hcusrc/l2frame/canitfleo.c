@@ -2295,7 +2295,10 @@ OPSTAT fsm_canitfleo_sui_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 	pMsgProc.cmdvalue2 = HUITP_ENDIAN_EXG32(rcv.cmdvalue2);
 	pMsgProc.cmdvalue3 = HUITP_ENDIAN_EXG32(rcv.cmdvalue3);
 	pMsgProc.cmdvalue4 = HUITP_ENDIAN_EXG32(rcv.cmdvalue4);
-
+#if (HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX != HCU_SYSMSG_SUI_COM_TEST_CMD_BUF)
+	#error HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX define error!
+#endif
+	memcpy(pMsgProc.cmdBuf, rcv.cmdBuf, HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX);
 	//发送消息
 	if (hcu_canitfleo_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
 		HCU_ERROR_PRINT_CANITFLEO("CANITFLEO: Send CAN frame error!\n");

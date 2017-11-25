@@ -3228,6 +3228,7 @@ typedef struct msg_struct_can_l3bfhs_new_ready_event
 
 //SUI接口公共消息
 //MSG_ID_SUI_TEST_CMD_REQ,  				//测试命令
+#define HCU_SYSMSG_SUI_COM_TEST_CMD_BUF		256
 typedef struct msg_struct_sui_test_cmd_req
 {
 	UINT32  cmdid;
@@ -3236,6 +3237,7 @@ typedef struct msg_struct_sui_test_cmd_req
 	UINT32 	cmdvalue2;
 	UINT32 	cmdvalue3;
 	UINT32 	cmdvalue4;
+	UINT8	cmdBuf[HCU_SYSMSG_SUI_COM_TEST_CMD_BUF];
 	UINT32 	length;
 }msg_struct_sui_test_cmd_req_t;
 
