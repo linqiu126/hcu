@@ -45,8 +45,8 @@ HcuFsmStateItem_t HcuFsmBfhsuicomm[] =
 
     //Normal working status
 
-	{MSG_ID_L3BFHS_UICOMM_CMD_RESP,      	FSM_STATE_BFHSUICOMM_ACTIVED,          		fsm_bfhsuicomm_l3bfhs_cmd_resp},	//人工控制反馈
-	{MSG_ID_CAN_UICOMM_TEST_CMD_RESP,      	FSM_STATE_BFHSUICOMM_ACTIVED,          		fsm_bfhsuicomm_can_test_cmd_resp},  //测试命令反馈
+	{MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,    FSM_STATE_BFHSUICOMM_ACTIVED,          		fsm_bfhsuicomm_l3bfhs_cmd_resp},	//人工控制反馈
+	{MSG_ID_SUI_TEST_CMD_RESP,      		FSM_STATE_BFHSUICOMM_ACTIVED,          		fsm_bfhsuicomm_sui_test_cmd_resp},  //测试命令反馈
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -120,11 +120,11 @@ OPSTAT fsm_bfhsuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//设置configIndex=1
 	func_bfhsuicomm_read_cfg_file_into_ctrl_table(1);
 	//发送启动消息给L3BFHS
-	msg_struct_uicomm_l3bfhs_cmd_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_cmd_req_t));
+	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t));
 	snd.cmdid = HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START;
-	snd.length = sizeof(msg_struct_uicomm_l3bfhs_cmd_req_t);
-	ret = hcu_message_send(MSG_ID_UICOMM_L3BFHS_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM, &snd, snd.length);
+	snd.length = sizeof(msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	ret = hcu_message_send(MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ, TASK_ID_L3BFHS, TASK_ID_BFHSUICOMM, &snd, snd.length);
 	if (ret == FAILURE){
 		HcuErrorPrint("BFHSUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFHSUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
 		return FAILURE;
@@ -236,7 +236,7 @@ OPSTAT fsm_bfhsuicomm_l3bfhs_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 }
 
 //一般性测试命令的反馈
-OPSTAT fsm_bfhsuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfhsuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 //	int ret=0;
 //	UINT32  adcvalue = 0;

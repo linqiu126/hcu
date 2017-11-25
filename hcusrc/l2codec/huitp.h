@@ -692,7 +692,12 @@ typedef enum
 	HUITP_MSGID_sui_com_startup_ind                  = 0x3BF2,
 	//差错过程：暂时不启动，未来待探讨
 	HUITP_MSGID_sui_com_fault_ind                    = 0x3BF3,
-	
+	//暂停过程
+	HUITP_MSGID_sui_com_suspend_req                 = 0x3B74,
+	HUITP_MSGID_sui_com_suspend_resp                = 0x3BF4,
+	HUITP_MSGID_sui_com_resume_req                  = 0x3B75,
+	HUITP_MSGID_sui_com_resume_resp                 = 0x3BF5,
+
 	//统一结束符
 	HUITP_MSGID_uni_bfsc_comb_scale_max,
 
@@ -6623,6 +6628,40 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_fault_ind
 	UINT16	error_code;
 }StrMsg_HUITP_MSGID_sui_com_fault_ind_t;
 
+//暂停过程
+//HUITP_MSGID_sui_com_suspend_req                 = 0x3B74,
+typedef struct StrMsg_HUITP_MSGID_sui_com_suspend_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_com_suspend_req_t;
+
+//HUITP_MSGID_sui_com_suspend_resp                = 0x3BF4,
+typedef struct StrMsg_HUITP_MSGID_sui_com_suspend_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   validFlag;
+	UINT8   spare1;
+	UINT16  errCode;
+}StrMsg_HUITP_MSGID_sui_com_suspend_resp_t;
+
+//HUITP_MSGID_sui_com_resume_req                  = 0x3B75,
+typedef struct StrMsg_HUITP_MSGID_sui_com_resume_req
+{
+	UINT16 	msgid;
+	UINT16 	length;
+}StrMsg_HUITP_MSGID_sui_com_resume_req_t;
+
+//HUITP_MSGID_sui_com_resume_resp                 = 0x3BF5,
+typedef struct StrMsg_HUITP_MSGID_sui_com_resume_resp
+{
+	UINT16 	msgid;
+	UINT16 	length;
+	UINT8   validFlag;
+	UINT8   spare1;
+	UINT16  errCode;
+}StrMsg_HUITP_MSGID_sui_com_resume_resp_t;
 
 //统一结束符
 //HUITP_MSGID_uni_bfsc_comb_scale_max,

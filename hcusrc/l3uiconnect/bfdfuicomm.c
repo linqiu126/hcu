@@ -45,8 +45,8 @@ HcuFsmStateItem_t HcuFsmBfdfuicomm[] =
 
     //Normal working status
     {MSG_ID_COM_INIT_FEEDBACK,				FSM_STATE_BFDFUICOMM_ACTIVED,            	fsm_com_do_nothing},
-	{MSG_ID_L3BFDF_UICOMM_CMD_RESP,      	FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_l3bfdf_cmd_resp},	//人工控制反馈
-	{MSG_ID_CAN_UICOMM_TEST_CMD_RESP,      	FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_can_test_cmd_resp},  //测试命令反馈
+	{MSG_ID_L3BFDF_UICOMM_CTRL_CMD_RESP,    FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_l3bfdf_cmd_resp},	//人工控制反馈
+	{MSG_ID_SUI_TEST_CMD_RESP,      		FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_sui_test_cmd_resp},  //测试命令反馈
 
 /*
     {MSG_ID_INOTIFY_UICOMM_FILE_CHANGE_IND,	FSM_STATE_BFDFUICOMM_ACTIVED,            	fsm_bfdfuicomm_scan_jason_callback},
@@ -125,11 +125,11 @@ OPSTAT fsm_bfdfuicomm_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	//设置configIndex=1
 	func_bfdfuicomm_read_cfg_file_into_ctrl_table(1);
 	//发送启动消息给L3BFDF
-	msg_struct_uicomm_l3bfdf_cmd_req_t snd;
-	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_cmd_req_t));
+	msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t snd;
+	memset(&snd, 0, sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t));
 	snd.cmdid = HCU_SYSMSG_BFDF_UICOMM_CMDID_CFG_START;
-	snd.length = sizeof(msg_struct_uicomm_l3bfdf_cmd_req_t);
-	ret = hcu_message_send(MSG_ID_UICOMM_L3BFDF_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM, &snd, snd.length);
+	snd.length = sizeof(msg_struct_uicomm_l3bfdf_ctrl_cmd_req_t);
+	ret = hcu_message_send(MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ, TASK_ID_L3BFDF, TASK_ID_BFDFUICOMM, &snd, snd.length);
 	if (ret == FAILURE){
 		HcuErrorPrint("BFDFUICOMM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
 		return FAILURE;
@@ -244,9 +244,9 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 	UINT8	validFlag = 0;
 	UINT8	cmdid = 0;
 
-	msg_struct_l3bfdf_uicomm_cmd_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_uicomm_cmd_resp_t)))
+	msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t)))
 		HCU_ERROR_PRINT_BFDFUICOMM("BFDFUICOMM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -284,7 +284,7 @@ OPSTAT fsm_bfdfuicomm_l3bfdf_cmd_resp(UINT32 dest_id, UINT32 src_id, void * para
 }
 
 //一般性测试命令的反馈
-OPSTAT fsm_bfdfuicomm_can_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_bfdfuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 	UINT32  adcvalue = 0;
