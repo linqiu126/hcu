@@ -304,6 +304,64 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 	//对信息进行MODBUS协议的编码，包括CRC16的生成
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+
+//
+
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//for PMS
+	{
+		currentModbusBuf.curLen = 7;
+		UINT8 sample[] = {0x42,0x4D,0xE2,0x00,0x00,0x01,0x71};
+		memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
+
+		HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus TSP req data to PMS = %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), currentModbusBuf.curBuf, currentModbusBuf.curLen);
+
+		if (FAILURE == ret)
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			HcuErrorPrint("MODBUS: Error send TSP command to serials port!\n");
+			gTaskL3aqycq20Context.eqtStatus.a34001_RS = OFF;
+
+			return FAILURE;
+		}
+
+		else
+		{
+			HCU_DEBUG_PRINT_INF("MODBUS: Send TSP data to PMS succeed: %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		}
+	}
+
+	else
+	{
+		ret = func_modbus_pm25_msg_pack(&rcv, &currentModbusBuf);
+		if (ret == FAILURE){
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			HcuErrorPrint("MODBUS: Error pack message!\n");
+			return FAILURE;
+		}
+		HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus TSP req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
+
+		ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
+
+		if (FAILURE == ret)
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			HcuErrorPrint("MODBUS: Error send TSP command to serials port!\n");
+			gTaskL3aqycq20Context.eqtStatus.a34001_RS = OFF;
+
+			return FAILURE;
+		}
+
+		else
+		{
+			HCU_DEBUG_PRINT_INF("MODBUS: Send TSP data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
+		}
+
+	}
+
+//
+
+/*
 	ret = func_modbus_pm25_msg_pack(&rcv, &currentModbusBuf);
 	if (ret == FAILURE){
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
@@ -311,7 +369,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		return FAILURE;
 	}
 	HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus TSP req data = %02X %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
-//
+
 	ret = hcu_sps485_serial_port_send(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 	if (FAILURE == ret)
@@ -327,13 +385,24 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	{
 		HCU_DEBUG_PRINT_INF("MODBUS: Send TSP data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 	}
+*/
 
-	hcu_usleep(MODBUS_TIMER_FOR_SERIAL_PORT_READ); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
+
+
+	//hcu_usleep(MODBUS_TIMER_FOR_SERIAL_PORT_READ); //经典的操作，需要50ms的延迟，确保安全，该休眠不会被打断
 
 	//从相应的从设备中读取数据
 	memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
-	ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//for PMS
+	{
+		ret = hcu_sps485_serial_port_get(&(zHcuVmCtrTab.hwinv.sps232.sp), currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
+	}
+	else
+	{
+		ret = hcu_sps485_serial_port_get(&zHcuVmCtrTab.hwinv.sps485.modbus, currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
+	}
+
 
 	if ((ret <= 0) && (CurrentModusContext.TspHW_AlarmFlag == OFF))
 	{
@@ -374,7 +443,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	else if ((ret > 0) && (CurrentModusContext.TspHW_AlarmFlag == OFF))
 	{
 		currentModbusBuf.curLen =ret;
-		HCU_DEBUG_PRINT_INF("MODBUS: Len %d  \n", ret);
+		HCU_DEBUG_PRINT_INF("MODBUS: Received PSW TSP data length: %d  \n", ret);
 		//UINT16 hwType = 0;
 		//hwType = zHcuSysEngPar.hwBurnId.hwType & 0xFFFF;
 		//HCU_DEBUG_PRINT_INF("MODBUS: zHcuSysEngPar.hwBurnId.hwType in Dec 0X%x  \n", hwType);
@@ -395,6 +464,11 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		{
 			HCU_DEBUG_PRINT_INF("MODBUS: Received 2004 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10]);
 		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)
+		{
+			HCU_DEBUG_PRINT_INF("MODBUS: Received 2008 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16], \
+					currentModbusBuf.curBuf[17],currentModbusBuf.curBuf[18],currentModbusBuf.curBuf[19],currentModbusBuf.curBuf[20],currentModbusBuf.curBuf[21],currentModbusBuf.curBuf[22],currentModbusBuf.curBuf[23],currentModbusBuf.curBuf[24],currentModbusBuf.curBuf[25],currentModbusBuf.curBuf[26],currentModbusBuf.curBuf[27],currentModbusBuf.curBuf[28],currentModbusBuf.curBuf[29],currentModbusBuf.curBuf[30],currentModbusBuf.curBuf[31]);
+		}
 		else  //Default取MODBUS(sps232)
 		{
 			HCU_DEBUG_PRINT_INF("MODBUS: Received other PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10]);
@@ -404,7 +478,7 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 	else if ((ret > 0) && (CurrentModusContext.TspHW_AlarmFlag == ON))
 	{
 		currentModbusBuf.curLen =ret;
-		HCU_DEBUG_PRINT_INF("MODBUS: Len %d  \n", ret);
+		HCU_DEBUG_PRINT_INF("MODBUS: Received PSW TSP data length: %d  \n", ret);
 		CurrentModusContext.TspHW_AlarmFlag == OFF;
 		//UINT16 hwType = 0;
 		//hwType = zHcuSysEngPar.hwBurnId.hwType & 0xFFFF;
@@ -425,6 +499,11 @@ OPSTAT fsm_modbus_pm25_data_read(UINT32 dest_id, UINT32 src_id, void * param_ptr
 		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2004)
 		{
 			HCU_DEBUG_PRINT_INF("MODBUS: Received 2004 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10]);
+		}
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)
+		{
+			HCU_DEBUG_PRINT_INF("MODBUS: Received 2008 PM2.5 data succeed: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7],currentModbusBuf.curBuf[8],currentModbusBuf.curBuf[9],currentModbusBuf.curBuf[10],currentModbusBuf.curBuf[11],currentModbusBuf.curBuf[12],currentModbusBuf.curBuf[13],currentModbusBuf.curBuf[14],currentModbusBuf.curBuf[15],currentModbusBuf.curBuf[16], \
+					currentModbusBuf.curBuf[17],currentModbusBuf.curBuf[18],currentModbusBuf.curBuf[19],currentModbusBuf.curBuf[20],currentModbusBuf.curBuf[21],currentModbusBuf.curBuf[22],currentModbusBuf.curBuf[23],currentModbusBuf.curBuf[24],currentModbusBuf.curBuf[25],currentModbusBuf.curBuf[26],currentModbusBuf.curBuf[27],currentModbusBuf.curBuf[28],currentModbusBuf.curBuf[29],currentModbusBuf.curBuf[30],currentModbusBuf.curBuf[31]);
 		}
 		else  //Default取MODBUS(sps232)
 		{
@@ -2021,30 +2100,47 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 
 	//检查地址码
 	if (buf->curBuf[index] != rcv->equId){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
+		HcuErrorPrint("MODBUS: Receive Modbus data error with EquId = %d\n", buf->curBuf[index]);
 		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
 		return FAILURE;
 	}
 	snd->pm25.equipid = buf->curBuf[index];
 	index++;
 
-	//检查功能码=03
-	if (buf->curBuf[index] != PM25_MODBUS_GENERIC_FUNC_DATA_INQUERY){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-		return FAILURE;
+	if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//for PMS
+	{
+		//检查功能码=4D
+		if (buf->curBuf[index] != PM25_MODBUS_GENERIC_FUNC_DATA_INQUERY_PMS){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n\n\n\n\n\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+		index++;
 	}
+
+	else
+	{
+		//检查功能码=03
+		if (buf->curBuf[index] != PM25_MODBUS_GENERIC_FUNC_DATA_INQUERY){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with FuncCode = %d\n", buf->curBuf[index]);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+
+		//检查CRC16
+		crc16_orin = buf->curBuf[buf->curLen-1];
+		crc16_orin = (crc16_orin <<8)+ buf->curBuf[buf->curLen-2];
+		hcu_vm_calculate_crc_modbus(buf->curBuf, buf->curLen-2, &crc16_gen);
+		if (crc16_orin != crc16_gen){
+			HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			return FAILURE;
+		}
+	}
+
 	index++;
 
-	//检查CRC16
-	crc16_orin = buf->curBuf[buf->curLen-1];
-	crc16_orin = (crc16_orin <<8)+ buf->curBuf[buf->curLen-2];
-	hcu_vm_calculate_crc_modbus(buf->curBuf, buf->curLen-2, &crc16_gen);
-	if (crc16_orin != crc16_gen){
-		HcuErrorPrint("MODBUS: Receive Modbus data error with CRC16 check!\n");
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
-		return FAILURE;
-	}
+
 
 	//根据不同的操作码字OPT，进行解码分支操作
 	switch(rcv->optId){
@@ -2189,6 +2285,40 @@ OPSTAT func_modbus_pm25_msg_unpack(SerialModbusMsgBuf_t *buf, msg_struct_pm25_mo
 			t0 = (t0 <<8) & 0xFF00;
 			t1 = t1 & 0xFF;
 			snd->pm25.pmTSPValue = t0 + t1;
+		}
+
+
+		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2008)//PMS
+		{
+			//len = buf->curBuf[index];
+			index = index + 6;
+			if (len != PM25_LENGTH_OF_REG_NEW_PMS *2){
+				HcuErrorPrint("MODBUS: Receive Modbus data from PMS error with data length: %d!\n", len);
+				zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+				return FAILURE;
+			}
+
+			t0 = buf->curBuf[index++];
+			t1 = buf->curBuf[index++];
+			t0 = (t0 <<8) & 0xFF00;
+			t1 = t1 & 0xFF;
+			snd->pm25.pm1d0Value = t0 + t1;
+
+			t0 = buf->curBuf[index++];
+			t1 = buf->curBuf[index++];
+			t0 = (t0 <<8) & 0xFF00;
+			t1 = t1 & 0xFF;
+			snd->pm25.pm2d5Value = t0 + t1;
+
+			t0 = buf->curBuf[index++];
+			t1 = buf->curBuf[index++];
+			t0 = (t0 <<8) & 0xFF00;
+			t1 = t1 & 0xFF;
+			snd->pm25.pm10Value = t0 + t1;
+
+			snd->pm25.pmTSPValue = snd->pm25.pm1d0Value + snd->pm25.pm2d5Value + snd->pm25.pm10Value;
+			HCU_DEBUG_PRINT_INF("MODBUS: TSP  data PMS = %d\n\n\n\n", snd->pm25.pmTSPValue);
+
 		}
 
 		else if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2009)//测试朗亿LPM1051
