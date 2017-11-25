@@ -564,6 +564,10 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFHS_SYS_SUSPEND_RESP,
 	MSG_ID_L3BFHS_CAN_SYS_RESUME_REQ,
 	MSG_ID_CAN_L3BFHS_SYS_RESUME_RESP,
+	MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ,
+	MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP,
+	MSG_ID_L3BFHS_CAN_CAL_FULL_REQ,
+	MSG_ID_CAN_L3BFHS_CAL_FULL_RESP,
 	MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,
 
 	//BFSC项目：BFSCUICOMM
@@ -581,6 +585,12 @@ enum HCU_INTER_TASK_MSG_ID
 	//BFHS
 	MSG_ID_UICOMM_L3BFHS_CMD_REQ,
 	MSG_ID_L3BFHS_UICOMM_CMD_RESP,
+
+	//SUI接口公共消息
+	MSG_ID_SUI_TEST_CMD_REQ,  				//测试命令
+	MSG_ID_SUI_TEST_CMD_RESP,  				//测试结果
+	MSG_ID_SUI_STARTUP_IND,					//启动指示
+	MSG_ID_SUI_FAULT_IND,					//差错指示
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -1121,22 +1131,28 @@ typedef struct msg_struct_com_pm_report
 #define HCU_SYSMSG_MQTT_DESC_MAX_LEN  200
 typedef struct msg_struct_com_mqtt_send
 {
-	UINT32 destId;
-	UINT32 topicId;
+	UINT16 scrNode;
+	UINT16 destNode;
+	UINT16 srcId;
+	UINT16 destId;
+	UINT16 topicId;
 	UINT32 cmdId;
 	INT32  cmdValue;
-	char   jsonCont[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
+	char   hlContent[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
 	UINT32 length;
 }msg_struct_com_mqtt_send_t;
 
 //MSG_ID_COM_MQTT_RCV,
 typedef struct msg_struct_com_mqtt_rcv
 {
-	UINT32 srcId;
-	UINT32 topicId;
+	UINT16 scrNode;
+	UINT16 destNode;
+	UINT16 srcId;
+	UINT16 destId;
+	UINT16 topicId;
 	UINT32 cmdId;
 	INT32  cmdValue;
-	char   jsonCont[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
+	char   hlContent[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
 	UINT32 length;
 }msg_struct_com_mqtt_rcv_t;
 
@@ -2896,27 +2912,104 @@ typedef struct msg_struct_l3bfdf_uicomm_cmd_resp
 
 //BFHS
 //MSG_ID_UICOMM_L3BFHS_CMD_REQ,
-#define HCU_SYSMSG_BFHS_UICOMM_CMDID_INVALL  			0
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_NULL  				0
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START  		1
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP  				2
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_SUSPEND  			3
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME  			4
-#define HCU_SYSMSG_BFHS_UICOMM_CMDID_NULL  				255
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_ZERO  			5
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_FULL  			6
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_INVALID  			0xFF
+
+typedef struct StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters
+{
+	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
+	UINT32  WeightSensorAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
+	UINT32  WeightSensorStandstillRangeGrams; //object 0x2087, Standstill monitoring facilitates detecting a stable weight value, The standstill range specifies the accuracy of internal standstill
+	UINT16  WeightSensorAutoZeroAutotaringTimeMs; //object 0x2075, should be multiply of 50ms, zero tracking interval = 2*this value;
+    UINT16  WeightSensorPreloadComPensationValuePercent; //object 0x2085, default is 6.25(%), limited range [6.25,50]
+	UINT16  WeightSensorPreloadComPensationPlacesAfterDecimalPoint; //location of decimal point for Preload Compensation, for example,6.25%, this value is 2.
+							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
+	UINT16  WeightSensorStandstillTimeoutMs; //object 0x2088, default value is 10000ms, time wait for large than this value,will generate an error
+	UINT16  WeightSensorStandstillTime; //object 0x2089, only for firmware(FS276/FS911, combined with 0x2087)
+	UINT16  WeightSensorRingBufTimeMs; //object 0x2060, Default is 100ms to moving average
+	//UINT8   WeightSensorFilterCoeff;  //NOT for GUI, object 0x2011, [0...255], default 10th LPF, calc cutoff freq according to this value
+	UINT8   WeightSensorMeasurementRangeNo; //object 0x2040, Default is 0, set measurement range no(totally 3),which is displayed in 0x2041
+	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
+	UINT8   spare1;
+	UINT8   spare2;
+}StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t;
+
+typedef struct StrMsgIe_WeightSensorBfhsCalibrationFullParamaters
+{
+	UINT32  WeightSensorAdjustingWeightGrams;      //object 0x2080, adjusting weight,first set this value, then combined with command 'C'
+	UINT32  WeightSensorAdjustingTolerancePercent; //object0x2082, Current adjusting factor = 0.500000, adjusting tolerance = 1 %,The new factor must lie in the range 0.495000 ≤ Factornew ≤ 0.505000
+}StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t;
+
 typedef struct msg_struct_uicomm_l3bfhs_cmd_req
 {
 	UINT8  cmdid;
+	//这部分待确定，这些参数是否需要从界面上带下来
+	StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t calZeroPar;
+	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t calFullPar;
 	UINT32 length;
 }msg_struct_uicomm_l3bfhs_cmd_req_t;
 
 //MSG_ID_L3BFHS_UICOMM_CMD_RESP,
+typedef struct StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters
+{
+	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
+    UINT32  WeightSensorCurrentZeroPointGrams; //object 0x2070, This value is displayed here as a weight. It contains information about how
+																						 //far apart the zero point is from the lower limit of the A/D converter range
+	UINT32  WeightSensorReferenceZeroPointGrams; /*object 0x2071, Zero setting can be performed for the Weigh Cell with the commands "T" or
+																								"Z", but only if the new zero point lies within the permissible zero setting range.
+																									Condition 1:
+																										new zero point>=reference zero point - neg. zero setting range
+																							  Condition 2:
+																									new zero point <= reference zero point + pos. zero setting range */
+	UINT32  WeightSensorNegativeZeroSettingRangeGrams; //object 0x2072;
+	UINT32  WeightSensorPositiveZeroSettingRangeGrams; //object 0x2073;
+	UINT32  WeightSensorMeasurementRange; //object0x2041
+	UINT32  WeightSensorScaleIntervalValue; //object0x2043
+	UINT32  WeightSensorCalibrationValue; //object0x2044
+	UINT32  WeightSensorAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
+
+	UINT32  WeightSensorAdjustingWeightGrams;      //object 0x2080, adjusting weight,first set this value, then combined with command 'C'
+	UINT32  WeightSensorAdjustingFactor;      //object 0x2081, (Pnts ZeroPnt) AdjustingFactor Weight* 10^decimal point
+	UINT32  WeightSensorAdjustingTolerancePercent; //object0x2082, Current adjusting factor = 0.500000, adjusting tolerance = 1 %,The new factor must lie in the range 0.495000 ≤ Factornew ≤ 0.505000
+	UINT32  WeightSensorStandstillRangeGrams; //object 0x2087, Standstill monitoring facilitates detecting a stable weight value, The standstill range specifies the accuracy of internal standstill
+							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
+	INT16  WeightSensorTemperatureInMagnetSystem; //object 0x2300, sub index1 format NF2
+	//UINT16  TemperatureInMagnetSystemPlacesAfterDecimalPoint;//
+	INT16  WeightSensorTemperatureAtMeasuringShunt; //object 0x2300, sub index2 format NF2
+	//UINT16  TemperatureAtMeasuringShuntPlacesAfterDecimalPoint;//
+	UINT16  WeightSensorSamplingFreqHz; //object 0x2049, sampling freq default is 1000Hz
+	UINT16  WeightSensorRingBufTimeMs; //object 0x2060, Default is 100ms to moving average
+	UINT16  WeightSensorAutoZeroAutotaringTimeMs; //object 0x2075, should be multiply of 50ms, zero tracking interval = 2*this value;
+
+	UINT16  WeightSensorPreloadComPensationValuePercent; //object 0x2085, default is 6.25(%), limited range [6.25,50]
+	UINT16  WeightSensorPreloadComPensationPlacesAfterDecimalPoint; //
+
+	UINT16  WeightSensorStandstillTimeoutMs; //object 0x2088, default value is 10000ms, time wait for large than this value,will generate an error
+	UINT16  WeightSensorStandstillTime; //object 0x2089, only for firmware(FS276/FS911, combined with 0x2087)
+	UINT8   WeightSensorMeasurementRangeNo; //object0x2040
+	UINT8   WeightSensorPlacesAfterDecimalPoint; //object0x2042
+	UINT8   WeightSensorUintString[64]; //object 0x2045, The unit in which weight values are displayed.
+	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
+	UINT8   WeightSensorCellAddress; //object 0x2098, node ID = cell address +48
+	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
+    UINT8   spare2;
+}StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t;
+
 typedef struct msg_struct_l3bfhs_uicomm_cmd_resp
 {
 	UINT8   cmdid;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
+	//这些参数，是否需要都显示到界面上？待完善定义
+	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t calFullRespPar;
 	UINT32  length;
 }msg_struct_l3bfhs_uicomm_cmd_resp_t;
-
 
 //BFDF项目
 //MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,
@@ -3085,6 +3178,39 @@ typedef struct msg_struct_can_l3bfhs_sys_resume_resp
 	UINT32 length;
 }msg_struct_can_l3bfhs_sys_resume_resp_t;
 
+//MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ,
+typedef struct msg_struct_l3bfhs_can_cal_zero_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFHS_MAX_SNC_BOARD_NBR];
+	StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t calZeroPar;
+	UINT32 length;
+}msg_struct_l3bfhs_can_cal_zero_req_t;
+
+//MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP,
+typedef struct msg_struct_can_l3bfhs_cal_zero_resp
+{
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfhs_cal_zero_resp_t;
+
+//MSG_ID_L3BFHS_CAN_CAL_FULL_REQ,
+typedef struct msg_struct_l3bfhs_can_cal_full_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_L3BFHS_MAX_SNC_BOARD_NBR];
+	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t calFullPar;
+	UINT32 length;
+}msg_struct_l3bfhs_can_cal_full_req_t;
+
+//MSG_ID_CAN_L3BFHS_CAL_FULL_RESP,
+typedef struct msg_struct_can_l3bfhs_cal_full_resp
+{
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t calFullRespPar;
+	UINT32 length;
+}msg_struct_can_l3bfhs_cal_full_resp_t;
+
 //MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,  	//传感器新数据事件
 typedef struct msg_struct_can_l3bfhs_new_ready_event
 {
@@ -3093,7 +3219,53 @@ typedef struct msg_struct_can_l3bfhs_new_ready_event
 }msg_struct_can_l3bfhs_new_ready_event_t;
 
 
+//SUI接口公共消息
+//MSG_ID_SUI_TEST_CMD_REQ,  				//测试命令
+#define HCU_SYSMSG_SUI_SENSOR_NBR		64
+typedef struct msg_struct_sui_test_cmd_req
+{
+	UINT32  cmdid;
+	UINT8  	snrBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	UINT32 	cmdvalue1;
+	UINT32 	cmdvalue2;
+	UINT32 	cmdvalue3;
+	UINT32 	cmdvalue4;
+	UINT32 	length;
+}msg_struct_sui_test_cmd_req_t;
 
+//MSG_ID_SUI_TEST_CMD_RESP,  				//测试结果
+typedef struct msg_struct_sui_test_cmd_resp
+{
+	UINT32  cmdid;
+	UINT8	snrId;
+	UINT8   validFlag;  //是否执行成功 0-FALSE, 1-TRUE
+	UINT16  errCode;
+	UINT32  cmdvalue1;
+	UINT32  cmdvalue2;
+	UINT32  cmdvalue3;
+	UINT32  cmdvalue4;
+	UINT32 	length;
+}msg_struct_sui_test_cmd_resp_t;
+
+//MSG_ID_SUI_STARTUP_IND,				//启动指示
+typedef struct msg_struct_sui_startup_ind
+{
+	UINT8  snrId;
+	UINT32 hwId;
+	UINT32 swId;
+	UINT32 cpuId;
+	UINT32 wgtType;
+	UINT32 motoType;
+	UINT32 length;
+}msg_struct_sui_startup_ind_t;
+
+//MSG_ID_SUI_FAULT_IND,					//差错指示
+typedef struct msg_struct_sui_fault_ind
+{
+	UINT8   snrId;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT16	error_code;
+	UINT32  length;
+}msg_struct_sui_fault_ind_t;
 
 
 

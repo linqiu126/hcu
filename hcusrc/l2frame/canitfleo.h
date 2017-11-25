@@ -73,6 +73,10 @@ OPSTAT func_canitfleo_int_init(void);
 OPSTAT func_canitfleo_working_scan_process(void);
 OPSTAT func_canitfleo_l2frame_msg_inventory_report_received_handle(StrMsg_HUITP_MSGID_sui_inventory_report_t *rcv, UINT8 nodeId);
 OPSTAT func_canitfleo_l2frame_msg_sw_package_report_received_handle(StrMsg_HUITP_MSGID_sui_sw_package_report_t *rcv, UINT8 nodeId);
+OPSTAT func_canitfleo_l2frame_msg_com_test_command_resp_received_handle(StrMsg_HUITP_MSGID_sui_com_test_command_resp_t *rcv, UINT8 nodeId);
+OPSTAT func_canitfleo_l2frame_msg_com_heart_beat_report_received_handle(StrMsg_HUITP_MSGID_sui_com_heart_beat_report_t *rcv, UINT8 nodeId);
+OPSTAT func_canitfleo_l2frame_msg_com_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_com_startup_ind_t *rcv, UINT8 nodeId);
+OPSTAT func_canitfleo_l2frame_msg_com_fault_ind_received_handle(StrMsg_HUITP_MSGID_sui_com_fault_ind_t *rcv, UINT8 nodeId);
 
 /*
  *
@@ -145,10 +149,14 @@ OPSTAT func_canitfleo_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_H
 OPSTAT fsm_canitfleo_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT fsm_canitfleo_l3bfhs_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT fsm_canitfleo_l3bfhs_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+OPSTAT fsm_canitfleo_l3bfhs_cal_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+OPSTAT fsm_canitfleo_l3bfhs_cal_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT fsm_canitfleo_l3bfhs_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 //Local API
 OPSTAT func_canitfleo_bfhs_simulation_data_process(void);
 OPSTAT func_canitfleo_l2frame_msg_bfhs_startup_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_startup_ind_t *rcv, UINT8 nodeId);
+OPSTAT func_canitfleo_l2frame_msg_bfhs_calibration_zero_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp_t *rcv, UINT8 nodeId);
+OPSTAT func_canitfleo_l2frame_msg_bfhs_calibration_full_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canitfleo_l2frame_msg_bfhs_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canitfleo_l2frame_msg_bfhs_suspend_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_suspend_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canitfleo_l2frame_msg_bfhs_resume_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_resume_resp_t *rcv, UINT8 nodeId);
@@ -171,6 +179,7 @@ OPSTAT func_canitfleo_socketcan_receive(int socket, canid_t *canid, char *canfra
 OPSTAT func_canitfleo_socketcan_send(int socket, char *canid_canframe);
 OPSTAT func_canitfleo_socketcan_init(char *canitfname, int *sock);
 int    func_canitfleo_socketcan_test_main(int argc, char **argv);
+void   func_canitfleo_huicobus_trigger_uir(UINT32 cmdId, UINT32 cmdValue);
 
 //USBCAN BSP function mapping
 OPSTAT hcu_canitfleo_usbcan_interface_init(void);

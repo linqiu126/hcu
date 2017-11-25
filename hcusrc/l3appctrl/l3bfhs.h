@@ -96,72 +96,41 @@ typedef struct gTaskL3bfhsContextStaEleMid
 }gTaskL3bfhsContextStaEleMid_t;
 
 //配置参数
-typedef struct gTaskL3bfhsContextCombinationAlgorithmParamaters
+typedef struct gTaskL3bfhsContextWgtSnrParamaters
 {
-	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
-	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
-	UINT32	MinScaleNumberStartCombination;			//开始查找的最小个数，就是说大于这个个数就开始搜索
-	UINT32	TargetCombinationWeight;				//组合目标重量
-	UINT32	TargetCombinationUpperWeight;			//组合目标重量上限
-	UINT32	IsPriorityScaleEnabled;					// 1: Enable, 0: Disable
-	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
-	UINT32	CombinationBias;						      //每个Scale要求放几个物品
-	UINT32	IsRemainDetectionEnable;				  //Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
-	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
-	UINT32	RemainScaleTreatment;					    // 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
-	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
-	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
-	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
-}gTaskL3bfhsContextCombinationAlgorithmParamaters_t;
-//Proximity
-#define HCU_L3BFHS_COMB_ALG_PAR_PROXIMITY_DISABLE  				0
-#define HCU_L3BFHS_COMB_ALG_PAR_PROXIMITY_ABOVE_UP_LIMIT  		1
-#define HCU_L3BFHS_COMB_ALG_PAR_PROXIMITY_BELOW_DN_LIMIT  		2
-//Scale Priority
-#define HCU_L3BFHS_COMB_ALG_PAR_PRIORITY_DISABLE  				0
-#define HCU_L3BFHS_COMB_ALG_PAR_PRIORITY_ENABLE  				1
+	UINT32  WeightSensorAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
+    UINT32  WeightSensorStandstillRangeGrams; //object 0x2087, Standstill monitoring facilitates detecting a stable weight value, The standstill range specifies the accuracy of internal standstill
+							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
+	UINT32	MaxAllowedWeight;				//称重物品的范围上限 NF2 format
+	UINT32  MinAllowedWeight;        //称重物品的范围下限 NF2 format
+	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
+	UINT16  WeightSensorRingBufTimeMs; //object 0x2060, Default is 100ms to moving average
+	UINT16  WeightSensorAutoZeroAutotaringTimeMs; //object 0x2075, should be multiply of 50ms, zero tracking interval = 2*this value;
+    UINT16  WeightSensorPreloadComPensationValuePercent; //object 0x2085, default is 6.25(%), limited range [6.25,50]
+	UINT16  WeightSensorPreloadComPensationPlacesAfterDecimalPoint; //location of decimal point for Preload Compensation, for example,6.25%, this value is 2.
+							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
+	UINT16  WeightSensorStandstillTimeoutMs; //object 0x2088, default value is 10000ms, time wait for large than this value,will generate an error
+	UINT16  WeightSensorStandstillTime; //object 0x2089, only for firmware(FS276/FS911, combined with 0x2087)
+	UINT8   WeightSensorMeasurementRangeNo; //object 0x2040, Default is 0, set measurement range no(totally 3),which is displayed in 0x2041
+	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
+	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
+	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
+}gTaskL3bfhsContextWgtSnrParamaters_t;
 
-typedef struct gTaskL3bfhsContextCalibration
-{
-	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullWeight;
-}gTaskL3bfhsContextCalibration_t;
-typedef struct gTaskL3bfhsContextWeightSensorParamaters
-{
-	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
-	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
-	UINT32	WeightSensorEmptyThread;
-	UINT32	WeightSensorEmptyDetectionTimeMs;
-	UINT32	WeightSensorPickupThread;						// NOT for GUI
-	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
-	UINT32	StardardReadyTimeMs;								//???
-	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
-	UINT32  RemainDetectionTimeSec;
-	UINT32	WeightSensorInitOrNot;							// NOT for GUI
-	UINT32	WeightSensorAdcSampleFreq;
-	UINT32	WeightSensorAdcGain;
-	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
-	UINT32  WeightSensorAdcValue;								// NOT for GUI
-	//gTaskL3bfhsContextCalibration_t  calibration[HCU_SYSMSG_L3BFHS_MAX_SENSOR_NBR];
-	UINT32	WeightSensorStaticZeroValue;
-	UINT32	WeightSensorTailorValue;				//皮重，分为每种
-	UINT32	WeightSensorDynamicZeroThreadValue;
-	UINT32	WeightSensorDynamicZeroHysteresisMs;
-	UINT32  WeightSensorFilterCoeff[4];				// NOT for GUI
-	UINT32  WeightSensorOutputValue[4];
-}gTaskL3bfhsContextWeightSensorParamaters_t;
-
-typedef struct gTaskL3bfhsContextMotorControlParamaters
+typedef struct gTaskL3bfhsContextMotoCtrlParamaters
 {
 	UINT32	MotorSpeed;
 	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
-	UINT32	MotorRollingStartMs;						//how long do the motor rolling for start action
-	UINT32	MotorRollingStopMs;							//how long do the motor rolling for stop action
-	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
-	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
-	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
-}gTaskL3bfhsContextMotorControlParamaters_t;
+}gTaskL3bfhsContextMotoCtrlParamaters_t;
+
+typedef struct gTaskL3bfhsContextArmCtrlParamaters
+{
+	UINT32	ArmRollingStartMs;						//how long do the arm rolling for start action
+	UINT32	ArmRollingStopMs;							//how long do the arm rolling for stop action
+	UINT32	ArmRollingInveralMs;					//If the arm is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	ArmFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	ArmFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+}gTaskL3bfhsContextArmCtrlParamaters_t;
 
 //主体上下文
 #define HCU_L3BFHS_CONTEXT_OPERATOR_NAME_LEN_MAX    20
@@ -169,13 +138,13 @@ typedef struct gTaskL3bfhsContextMotorControlParamaters
 typedef struct gTaskL3bfhsContext
 {
 	//静态配置参数部分
-	gTaskL3bfhsContextCombinationAlgorithmParamaters_t 	comAlgPar;
-	gTaskL3bfhsContextWeightSensorParamaters_t			wgtSnrPar;
-	gTaskL3bfhsContextMotorControlParamaters_t			motCtrPar;
+	gTaskL3bfhsContextWgtSnrParamaters_t 			wgtSnrPar;
+	gTaskL3bfhsContextMotoCtrlParamaters_t			motoCtrlPar;
+	gTaskL3bfhsContextArmCtrlParamaters_t			armCtrlPar;
 	UINT32  start24hStaTimeInUnix;		//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分
-	UINT32  sessionId;					//批次数据
+	UINT32  callCellId;					//批次数据
 	char    operatorName[HCU_L3BFHS_CONTEXT_OPERATOR_NAME_LEN_MAX];
 	UINT16	configId;  					//用来标识系统工作在哪一套配置参数中
 	char    configName[HCU_L3BFHS_CONTEXT_CONFIG_NAME_LEN_MAX];
@@ -186,7 +155,7 @@ typedef struct gTaskL3bfhsContext
 
 	//实时统计部分：均以一个统计周期为单位
 	HcuSysMsgIeL3bfhsContextStaElement_t cur;  			//当前统计基础颗粒中的数值
-	gTaskL3bfhsContextStaEleMid_t  		curAge;			//使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
+	gTaskL3bfhsContextStaEleMid_t  		 curAge;	    //使用老化算法，需要该域存下中间结果，不然每一次计算均采用近似会导致数据失真
 	//统计报告部分
 	HcuSysMsgIeL3bfhsContextStaElement_t staLocalUi;  	//滑动平均给本地UI的数据
 	HcuSysMsgIeL3bfhsContextStaElement_t staOneMin;  	//1分钟统计结果
@@ -213,6 +182,10 @@ extern OPSTAT fsm_l3bfhs_uicomm_cmd_req(UINT32 dest_id, UINT32 src_id, void * pa
 extern OPSTAT fsm_l3bfhs_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_l3bfhs_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfhs_canitf_cal_zero_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfhs_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_l3bfhs_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 
 //API组合部分
 extern OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -230,6 +203,8 @@ OPSTAT func_l3bfhs_int_init(void);
 OPSTAT func_l3bfhs_time_out_sys_cfg_start_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_sys_suspend_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_sys_resume_wait_fb_process(void);
+OPSTAT func_l3bfhs_time_out_cal_zero_wait_fb_process(void);
+OPSTAT func_l3bfhs_time_out_cal_full_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_error_inq_process(void);
 OPSTAT func_l3bfhs_time_out_statistic_scan_process(void);
 void func_l3bfhs_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
