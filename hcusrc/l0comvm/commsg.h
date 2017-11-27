@@ -487,11 +487,11 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CLOUDVELA_TOXICGAS_DATA_CONFIRM,
 
 	//CANITF
-	MSG_ID_CANITFLEO_DATA_REPORT,
-	MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,
-	MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM,
-	MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,
-	MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM,
+	MSG_ID_CANITF_DATA_REPORT,
+	MSG_ID_CANITF_SYSSWM_INVENTORY_REPORT,
+	MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM,
+	MSG_ID_CANITF_SYSSWM_SW_PACKAGE_REPORT,
+	MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM,
 
 	//后台通信部分：REQ/RESP, REPORT/CONFIRM严格遵循HUITP的成对消息体系
 	MSG_ID_CLOUDVELA_L3BFSC_DATA_REQ,
@@ -527,7 +527,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_L3BFHS_CLOUDVELA_STATISTIC_REPORT,
 	MSG_ID_CLOUDVELA_L3BFHS_STATISTIC_CONFIRM,
 
-	//BFSC项目：L3BFSC SCALE_WEIGHT / CANITFLEO组合秤
+	//BFSC项目：L3BFSC SCALE_WEIGHT / CANITF组合秤
 	MSG_ID_L3BFSC_CAN_SYS_CFG_REQ,
 	MSG_ID_CAN_L3BFSC_SYS_CFG_RESP,
 	MSG_ID_L3BFSC_CAN_SYS_START_REQ,
@@ -2303,16 +2303,16 @@ typedef struct msg_struct_cloudvela_test_command_confirm
 }msg_struct_cloudvela_test_command_confirm_t;
 
 //CANITF
-//MSG_ID_CANITFLEO_DATA_REPORT,
-typedef struct msg_struct_canitfleo_data_report
+//MSG_ID_CANITF_DATA_REPORT,
+typedef struct msg_struct_canitf_data_report
 {
 	UINT8  usercmdid;
 	UINT32 timeStamp;
 	UINT32 length;
-}msg_struct_canitfleo_data_report_t;
+}msg_struct_canitf_data_report_t;
 
-//MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,
-typedef struct msg_struct_canitfleo_sysswm_inventory_report
+//MSG_ID_CANITF_SYSSWM_INVENTORY_REPORT,
+typedef struct msg_struct_canitf_sysswm_inventory_report
 {
 	UINT16 hwType;
 	UINT16 hwId;
@@ -2322,10 +2322,10 @@ typedef struct msg_struct_canitfleo_sysswm_inventory_report
 	UINT32 timeStamp;
 	UINT8  nodeId;
 	UINT32 length;
-}msg_struct_canitfleo_sysswm_inventory_report_t;
+}msg_struct_canitf_sysswm_inventory_report_t;
 
-//MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM,
-typedef struct msg_struct_sysswm_canitfleo_inventory_confirm
+//MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM,
+typedef struct msg_struct_sysswm_canitf_inventory_confirm
 {
 	UINT16 swRel;
 	UINT16 swVer;
@@ -2335,10 +2335,10 @@ typedef struct msg_struct_sysswm_canitfleo_inventory_confirm
 	UINT32 timeStamp;
 	UINT8  nodeId;
 	UINT32 length;
-}msg_struct_sysswm_canitfleo_inventory_confirm_t;
+}msg_struct_sysswm_canitf_inventory_confirm_t;
 
-//MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,
-typedef struct msg_struct_canitfleo_sysswm_sw_package_report
+//MSG_ID_CANITF_SYSSWM_SW_PACKAGE_REPORT,
+typedef struct msg_struct_canitf_sysswm_sw_package_report
 {
 	UINT16 swRelId;
 	UINT16 swVerId;
@@ -2348,14 +2348,14 @@ typedef struct msg_struct_canitfleo_sysswm_sw_package_report
 	UINT16 segSplitLen;
 	UINT8  nodeId;
 	UINT32 length;
-}msg_struct_canitfleo_sysswm_sw_package_report_t;
+}msg_struct_canitf_sysswm_sw_package_report_t;
 
-//MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM,
-#define HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 500
-#if (HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN)
+//MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM,
+#define HCU_SYSMSG_CANITF_SYSSWM_SW_PACKAGE_BODY_MAX_LEN 500
+#if (HCU_SYSMSG_CANITF_SYSSWM_SW_PACKAGE_BODY_MAX_LEN < HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN)
 	#error Internal SYSMSG parameter setting error!
 #endif
-typedef struct msg_struct_sysswm_canitfleo_sw_package_confirm
+typedef struct msg_struct_sysswm_canitf_sw_package_confirm
 {
 	UINT16 swRelId;
 	UINT16 swVerId;
@@ -2365,10 +2365,10 @@ typedef struct msg_struct_sysswm_canitfleo_sw_package_confirm
 	UINT16 segSplitLen;
 	UINT16 segValidLen;
 	UINT16 segCheckSum;
-	UINT8  swPkgBody[HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
+	UINT8  swPkgBody[HCU_SYSMSG_CANITF_SYSSWM_SW_PACKAGE_BODY_MAX_LEN];
 	UINT8  nodeId;
 	UINT32 length;
-}msg_struct_sysswm_canitfleo_sw_package_confirm_t;
+}msg_struct_sysswm_canitf_sw_package_confirm_t;
 
 /**************************************************************************************
  *

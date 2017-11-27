@@ -830,14 +830,14 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/avorion.h</locationURI>
 		</link>
 		<link>
-			<name>src/l2frame/canitfleo.c</name>
+			<name>src/l2frame/canalpha.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canitfleo.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canalpha.c</locationURI>
 		</link>
 		<link>
-			<name>src/l2frame/canitfleo.h</name>
+			<name>src/l2frame/canalpha.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canitfleo.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2frame/canalpha.h</locationURI>
 		</link>
 		<link>
 			<name>src/l2frame/canlib.c</name>

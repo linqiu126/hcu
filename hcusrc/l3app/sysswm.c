@@ -46,8 +46,8 @@ HcuFsmStateItem_t HcuFsmSysswm[] =
 	{MSG_ID_CLOUDVELA_SYSSWM_SW_PACKAGE_CONFIRM,    FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_cloudvela_sw_package_confirm},
 
 	//Task level functions: IHU CAN handler
-	{MSG_ID_CANITFLEO_SYSSWM_INVENTORY_REPORT,     	FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_canitfleo_inventory_report},
-	{MSG_ID_CANITFLEO_SYSSWM_SW_PACKAGE_REPORT,     FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_canitfleo_sw_package_report},
+	{MSG_ID_CANITF_SYSSWM_INVENTORY_REPORT,     	FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_canitf_inventory_report},
+	{MSG_ID_CANITF_SYSSWM_SW_PACKAGE_REPORT,     	FSM_STATE_SYSSWM_ACTIVED,           fsm_sysswm_canitf_sw_package_report},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -828,15 +828,15 @@ OPSTAT func_sysswm_time_out_segment_download_wait_process(void)
 	return ret;
 }
 
-OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_sysswm_canitf_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
 	strTaskSysswmSwpkgLable_t input;
 
 	//Receive message and copy to local variable
-	msg_struct_canitfleo_sysswm_inventory_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_canitfleo_sysswm_inventory_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_canitfleo_sysswm_inventory_report_t)))
+	msg_struct_canitf_sysswm_inventory_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_canitf_sysswm_inventory_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_canitf_sysswm_inventory_report_t)))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
@@ -846,8 +846,8 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 
 	//返回消息
-	msg_struct_sysswm_canitfleo_inventory_confirm_t snd;
-	memset(&snd, 0, sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t));
+	msg_struct_sysswm_canitf_inventory_confirm_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sysswm_canitf_inventory_confirm_t));
 	memset(&input, 0, sizeof(strTaskSysswmSwpkgLable_t));
 	input.fileNameLen = sizeof(input.fPathName);
 
@@ -893,9 +893,14 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 	snd.upgradeFlag = rcv.upgradeFlag;
 	snd.timeStamp = time(0);
 	snd.nodeId = rcv.nodeId;
-	snd.length = sizeof(msg_struct_sysswm_canitfleo_inventory_confirm_t);
-	if (hcu_message_send(MSG_ID_SYSSWM_CANITFLEO_INVENTORY_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+	snd.length = sizeof(msg_struct_sysswm_canitf_inventory_confirm_t);
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+#else
+	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_INVENTORY_CONFIRM, TASK_ID_CANALPHA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
+#endif
 
 	return SUCCESS;
 }
@@ -905,26 +910,26 @@ OPSTAT fsm_sysswm_canitfleo_inventory_report(UINT32 dest_id, UINT32 src_id, void
 //本地将根据硬件信息，读取文件名字，然后分段下载
 //为了简化，并借助于淘宝文件的技巧，所有下位机软件版本包都存在目录下，版本信息全部使用文件名的方式进行隔离
 //比如，采用IHU_HPT32769_PEM11_REL03_VER218_PATCH.BIN
-OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+OPSTAT fsm_sysswm_canitf_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	//int ret=0;
 	strTaskSysswmSwpkgSegment_t input;
 
 	//Receive message and copy to local variable
-	msg_struct_canitfleo_sysswm_sw_package_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_canitfleo_sysswm_sw_package_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_canitfleo_sysswm_sw_package_report_t)))
+	msg_struct_canitf_sysswm_sw_package_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_canitf_sysswm_sw_package_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_canitf_sysswm_sw_package_report_t)))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 	memcpy(&rcv, param_ptr, param_len);
 
 	//入参检查
-	if ((rcv.segIndex > rcv.segTotal) || (rcv.segIndex == 0) || (rcv.segSplitLen == 0) || (rcv.segSplitLen > HCU_SYSMSG_CANITFLEO_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)\
+	if ((rcv.segIndex > rcv.segTotal) || (rcv.segIndex == 0) || (rcv.segSplitLen == 0) || (rcv.segSplitLen > HCU_SYSMSG_CANITF_SYSSWM_SW_PACKAGE_BODY_MAX_LEN)\
 			|| (rcv.segTotal == 0) || (rcv.segSplitLen > HUITP_IEID_SUI_SW_PACKAGE_BODY_MAX_LEN))
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Receive message error!\n");
 
 	//返回消息
-	msg_struct_sysswm_canitfleo_sw_package_confirm_t snd;
-	memset(&snd, 0, sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t));
+	msg_struct_sysswm_canitf_sw_package_confirm_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sysswm_canitf_sw_package_confirm_t));
 	memset(&input, 0, sizeof(strTaskSysswmSwpkgSegment_t));
 	input.swRel = rcv.swRelId;
 	input.swVer = rcv.swVerId;
@@ -957,9 +962,15 @@ OPSTAT fsm_sysswm_canitfleo_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
 
 	//固定填入的信息
 	snd.nodeId = rcv.nodeId;
-	snd.length = sizeof(msg_struct_sysswm_canitfleo_sw_package_confirm_t);
-	if (hcu_message_send(MSG_ID_SYSSWM_CANITFLEO_SW_PACKAGE_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+	snd.length = sizeof(msg_struct_sysswm_canitf_sw_package_confirm_t);
+#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
+	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM, TASK_ID_CANITFLEO, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANITFLEO].taskName);
+#else
+	if (hcu_message_send(MSG_ID_SYSSWM_CANITF_SW_PACKAGE_CONFIRM, TASK_ID_CANALPHA, TASK_ID_SYSSWM, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_TASK(TASK_ID_SYSSWM, "SYSSWM: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
+#endif
+
 
 	HCU_DEBUG_PRINT_CRT("SYSSWM: Snd pkg REL=%d, VER=%d, FLAG=%d, INDEX=%d, SegTotal=%d, SegSplitLen=%d, SegValidLen=%d, ChkSum=%d, NodeId = %d\n",\
 			snd.swRelId, snd.swVerId, snd.upgradeFlag, snd.segIndex, snd.segTotal, snd.segSplitLen, snd.segValidLen, snd.segCheckSum, snd.nodeId);

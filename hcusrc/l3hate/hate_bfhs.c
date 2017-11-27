@@ -19,7 +19,7 @@ OPSTAT func_l3hate_bfhs_tc_HATE_TCID_BFHS_STARTUP_IND_COMING_snd_s1_startup_ind(
 	data[2] = 0x33;
 	data[4] = 0x44;
 
-	if (hcu_canitfleo_hate_send_data(data, actualLen, 1) == FAILURE) return FAILURE;
+	if (hcu_canalpha_hate_send_data(data, actualLen, 1) == FAILURE) return FAILURE;
 	return SUCCESS;
 }
 

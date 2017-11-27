@@ -109,6 +109,7 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_SYSSWM,  	//软件管理
 	TASK_ID_PM25SHARP,  //for pm25sharp sensor by shanchun
 	TASK_ID_CANITFLEO,
+	TASK_ID_CANALPHA,
 	TASK_ID_L3AQYCG10,
 	TASK_ID_L3AQYCG20,
 	TASK_ID_L3TBSWRG30,
@@ -614,6 +615,7 @@ extern HcuFsmStateItem_t HcuFsmSyspm[];                             //状态机
 extern HcuFsmStateItem_t HcuFsmSysswm[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmPm25sharp[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmCanitfleo[];                         //状态机
+extern HcuFsmStateItem_t HcuFsmCanalpha[];                          //状态机
 extern HcuFsmStateItem_t HcuFsmL3aqycg10[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmL3aqycg20[];                         //状态机
 extern HcuFsmStateItem_t HcuFsmL3tbswrg30[];                        //状态机
@@ -715,6 +717,7 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_1S_SYSSWM_PERIOD_WORKING,
 	TIMER_ID_1S_SYSSWM_SEG_DL_WAIT,
 	TIMER_ID_1S_CANITFLEO_WORKING_SCAN,
+	TIMER_ID_1S_CANALPHA_WORKING_SCAN,
 	TIMER_ID_1S_L3BFSC_SYS_CFG_WAIT_FB,
 	TIMER_ID_1S_L3BFSC_SYS_START_WAIT_FB,
 	TIMER_ID_1S_L3BFSC_SYS_STOP_WAIT_FB,
@@ -757,6 +760,7 @@ enum HCU_TIMER_ID_ALL
 	TIMER_ID_10MS_SVRCON_TEST,
 	TIMER_ID_10MS_L3BFSC_PERIOD_STA_SCAN,
 	TIMER_ID_10MS_CANITFLEO_SIMULATION_DATA,
+	TIMER_ID_10MS_CANALPHA_SIMULATION_DATA,
 	TIMER_ID_10MS_L3BFDF_PERIOD_STA_SCAN,
 	TIMER_ID_10MS_L3BFHS_PERIOD_STA_SCAN,
 	TIMER_ID_10MS_MAX,
