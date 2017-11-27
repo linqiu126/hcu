@@ -49,6 +49,7 @@ HcuFsmStateItem_t HcuFsmCanalpha[] =
 	{MSG_ID_SUI_TEST_CMD_REQ, 						FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_test_cmd_req},
 	{MSG_ID_SUI_SUSPEND_REQ, 						FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_suspend_req},
 	{MSG_ID_SUI_RESUME_REQ, 						FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_resume_req},
+	{MSG_ID_SUI_HEART_BEAT_CONFIRM, 				FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_sui_heart_beat_confirm},
 	{MSG_ID_USBCAN_L2FRAME_RCV,      				FSM_STATE_CANALPHA_ACTIVED,     fsm_canalpha_usbcan_l2frame_receive},   //收到L2送过来的帧
 
 	//Normal task status：BFDF
@@ -57,8 +58,8 @@ HcuFsmStateItem_t HcuFsmCanalpha[] =
 
 	//Normal task status：BFDF
 	{MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_sys_cfg_req},  	//初始化配置
-	{MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_cal_zero_req},   	//人工命令
-	{MSG_ID_L3BFHS_CAN_CAL_FULL_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_cal_full_req},   	//人工命令
+	{MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_cal_zero_req},   //人工命令
+	{MSG_ID_L3BFHS_CAN_CAL_FULL_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_cal_full_req},   //人工命令
 
 	//结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -499,28 +500,28 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_set_config_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 
-//	pMsgProc.weight_sensor_param.WeightSensorAutoZeroCaptureRangeGrams = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAutoZeroCaptureRangeGrams);
-//	pMsgProc.weight_sensor_param.WeightSensorStandstillRangeGrams = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorStandstillRangeGrams);
-//	pMsgProc.weight_sensor_param.MaxAllowedWeight = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.MaxAllowedWeight);
-//	pMsgProc.weight_sensor_param.MinAllowedWeight = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.MinAllowedWeight);
-//	pMsgProc.weight_sensor_param.WeightSensorFilterCutOffFreqHz = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.wgtSnrPar.WeightSensorFilterCutOffFreqHz);
-//	pMsgProc.weight_sensor_param.WeightSensorRingBufTimeMs = HUITP_ENDIAN_EXG16(gTaskL3bfhsContext.wgtSnrPar.WeightSensorRingBufTimeMs);
-//	pMsgProc.weight_sensor_param.WeightSensorAutoZeroAutotaringTimeMs = HUITP_ENDIAN_EXG16(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAutoZeroAutotaringTimeMs);
-//	pMsgProc.weight_sensor_param.WeightSensorPreloadComPensationValuePercent = HUITP_ENDIAN_EXG16(gTaskL3bfhsContext.wgtSnrPar.WeightSensorPreloadComPensationValuePercent);
-//	pMsgProc.weight_sensor_param.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG16(gTaskL3bfhsContext.wgtSnrPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint);
-//	pMsgProc.weight_sensor_param.WeightSensorStandstillTimeoutMs = HUITP_ENDIAN_EXG16(gTaskL3bfhsContext.wgtSnrPar.WeightSensorStandstillTimeoutMs);
-//	pMsgProc.weight_sensor_param.WeightSensorStandstillTime = HUITP_ENDIAN_EXG16(gTaskL3bfhsContext.wgtSnrPar.WeightSensorStandstillTime);
-//	pMsgProc.weight_sensor_param.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(gTaskL3bfhsContext.wgtSnrPar.WeightSensorMeasurementRangeNo);
-//	pMsgProc.weight_sensor_param.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAutoZero);
-//	pMsgProc.weight_sensor_param.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(gTaskL3bfhsContext.wgtSnrPar.WeightSensorTimeGrid);
-//	pMsgProc.weight_sensor_param.WeightSensorAlgoSelect = HUITP_ENDIAN_EXG8(gTaskL3bfhsContext.wgtSnrPar.WeightSensorAlgoSelect);
-//	pMsgProc.motor_control_param.MotorSpeed = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motoCtrlPar.MotorSpeed);
-//	pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.motoCtrlPar.MotorDirection);
-//	pMsgProc.arm_control_param.ArmRollingStartMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.armCtrlPar.ArmRollingStartMs);
-//	pMsgProc.arm_control_param.ArmRollingStopMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.armCtrlPar.ArmRollingStopMs);
-//	pMsgProc.arm_control_param.ArmRollingInveralMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.armCtrlPar.ArmRollingInveralMs);
-//	pMsgProc.arm_control_param.ArmFailureDetectionVaration = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionVaration);
-//	pMsgProc.arm_control_param.ArmFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(gTaskL3bfhsContext.armCtrlPar.ArmFailureDetectionTimeMs);
+	pMsgProc.weight_sensor_param.WeightSensorAutoZeroCaptureRangeGrams = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorAutoZeroCaptureRangeGrams);
+	pMsgProc.weight_sensor_param.WeightSensorStandstillRangeGrams = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorStandstillRangeGrams);
+	pMsgProc.weight_sensor_param.MaxAllowedWeight = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.MaxAllowedWeight);
+	pMsgProc.weight_sensor_param.MinAllowedWeight = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.MinAllowedWeight);
+	pMsgProc.weight_sensor_param.WeightSensorFilterCutOffFreqHz = HUITP_ENDIAN_EXG32(rcv.wgtSnrPar.WeightSensorFilterCutOffFreqHz);
+	pMsgProc.weight_sensor_param.WeightSensorRingBufTimeMs = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorRingBufTimeMs);
+	pMsgProc.weight_sensor_param.WeightSensorAutoZeroAutotaringTimeMs = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorAutoZeroAutotaringTimeMs);
+	pMsgProc.weight_sensor_param.WeightSensorPreloadComPensationValuePercent = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorPreloadComPensationValuePercent);
+	pMsgProc.weight_sensor_param.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint);
+	pMsgProc.weight_sensor_param.WeightSensorStandstillTimeoutMs = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorStandstillTimeoutMs);
+	pMsgProc.weight_sensor_param.WeightSensorStandstillTime = HUITP_ENDIAN_EXG16(rcv.wgtSnrPar.WeightSensorStandstillTime);
+	pMsgProc.weight_sensor_param.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorMeasurementRangeNo);
+	pMsgProc.weight_sensor_param.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAutoZero);
+	pMsgProc.weight_sensor_param.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorTimeGrid);
+	pMsgProc.weight_sensor_param.WeightSensorAlgoSelect = HUITP_ENDIAN_EXG8(rcv.wgtSnrPar.WeightSensorAlgoSelect);
+	pMsgProc.motor_control_param.MotorSpeed = HUITP_ENDIAN_EXG32(rcv.motoCtrlPar.MotorSpeed);
+	pMsgProc.motor_control_param.MotorDirection = HUITP_ENDIAN_EXG32(rcv.motoCtrlPar.MotorDirection);
+	pMsgProc.arm_control_param.ArmRollingStartMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingStartMs);
+	pMsgProc.arm_control_param.ArmRollingStopMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingStopMs);
+	pMsgProc.arm_control_param.ArmRollingInveralMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmRollingInveralMs);
+	pMsgProc.arm_control_param.ArmFailureDetectionVaration = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmFailureDetectionVaration);
+	pMsgProc.arm_control_param.ArmFailureDetectionTimeMs = HUITP_ENDIAN_EXG32(rcv.armCtrlPar.ArmFailureDetectionTimeMs);
 
 	//更新传感器状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_REQ;
@@ -955,6 +956,37 @@ OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	return SUCCESS;
 }
 
+OPSTAT fsm_canalpha_sui_heart_beat_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+
+	msg_struct_sui_heart_beat_confirm_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sui_heart_beat_confirm_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_heart_beat_confirm_t)))
+		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
+	memcpy(&rcv, param_ptr, param_len);
+
+	//生成bitmap
+	UINT32 bitmap = 0;
+	bitmap = ((UINT32)1<<rcv.snrId);
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_com_heart_beat_confirm_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_com_heart_beat_confirm_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_com_heart_beat_confirm);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	pMsgProc.wmc_id = HUITP_ENDIAN_EXG8(rcv.snrId);
+	pMsgProc.wmcState = HUITP_ENDIAN_EXG8(rcv.state);
+	pMsgProc.timeStamp = HUITP_ENDIAN_EXG32(rcv.timeStamp);
+
+	//发送消息
+	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+
+	//返回
+	return SUCCESS;
+}
 
 //收到底层驱动USBCAN送过来的数据帧
 OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -1262,10 +1294,11 @@ OPSTAT func_canalpha_l2frame_msg_com_test_command_resp_received_handle(StrMsg_HU
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_TEST_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
-#endif
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_TEST_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_BFHSUICOMM].taskName);
+#else
+#error PRJ SET ERROR!
 #endif
 
 	//返回
@@ -1278,32 +1311,21 @@ OPSTAT func_canalpha_l2frame_msg_com_heart_beat_report_received_handle(StrMsg_HU
 	//将内容发送给目的模块：暂无。基于目前的情况，等待下位机重启
 
 	//准备组装发送消息
-	StrMsg_HUITP_MSGID_sui_com_heart_beat_confirm_t pMsgProc;
-	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_com_heart_beat_confirm_t);
-	memset(&pMsgProc, 0, msgProcLen);
-	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_com_heart_beat_confirm);
-	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
-	pMsgProc.wmc_id = nodeId;
+	msg_struct_sui_heart_beat_report_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sui_heart_beat_report_t));
+	snd.snrId = nodeId;
+	snd.timeStamp = HUITP_ENDIAN_EXG32(rcv->timeStamp);
+
+	snd.length = sizeof(msg_struct_sui_heart_beat_report_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
+	if (hcu_message_send(MSG_ID_SUI_HEART_BEAT_REPORT, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+	if (hcu_message_send(MSG_ID_SUI_HEART_BEAT_REPORT, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+#else
+#error PRJ SET ERROR!
 #endif
-//#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-//	if (gTaskL3bfhsContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_OFFLINE_MAX)
-//		pMsgProc.wmcState = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_OFFLINE;
-//	else if (gTaskL3bfhsContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_INIT_MAX)
-//		pMsgProc.wmcState = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_INIT;
-//	else if (gTaskL3bfhsContext.sensorWs[nodeId].nodeStatus <= HCU_L3BFHS_NODE_BOARD_STATUS_WORK_MAX)
-//		pMsgProc.wmcState = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_WORKING;
-//	else
-//		pMsgProc.wmcState = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_INVALID;
-//	pMsgProc.timeStamp = HUITP_ENDIAN_EXG32(time(0));
-//#endif
-
-	//生成bitmap
-	UINT32 bitmap = ((UINT32)1<<nodeId);
-
-	//发送消息
-	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
 
 	//返回
 	return SUCCESS;
@@ -1327,10 +1349,11 @@ OPSTAT func_canalpha_l2frame_msg_com_startup_ind_received_handle(StrMsg_HUITP_MS
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_STARTUP_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-#endif
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_STARTUP_IND, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+#else
+#error PRJ SET ERROR!
 #endif
 
 	//返回
@@ -1351,10 +1374,11 @@ OPSTAT func_canalpha_l2frame_msg_com_fault_ind_received_handle(StrMsg_HUITP_MSGI
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_FAULT_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-#endif
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_FAULT_IND, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+#else
+#error PRJ SET ERROR!
 #endif
 
 	//返回
@@ -1376,10 +1400,11 @@ OPSTAT func_canalpha_l2frame_msg_com_suspend_resp_received_handle(StrMsg_HUITP_M
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_SUSPEND_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-#endif
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_SUSPEND_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+#else
+#error PRJ SET ERROR!
 #endif
 
 	//返回
@@ -1401,10 +1426,11 @@ OPSTAT func_canalpha_l2frame_msg_com_resume_resp_received_handle(StrMsg_HUITP_MS
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_RESUME_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-#endif
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
+#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	if (hcu_message_send(MSG_ID_SUI_RESUME_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+#else
+#error PRJ SET ERROR!
 #endif
 
 	//返回

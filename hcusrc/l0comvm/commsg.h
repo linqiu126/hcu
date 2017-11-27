@@ -585,6 +585,8 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_SUI_SUSPEND_RESP,
 	MSG_ID_SUI_RESUME_REQ,
 	MSG_ID_SUI_RESUME_RESP,
+	MSG_ID_SUI_HEART_BEAT_REPORT,
+	MSG_ID_SUI_HEART_BEAT_CONFIRM,
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -3073,9 +3075,47 @@ typedef struct msg_struct_can_l3bfdf_basket_clean_ind
 #define HCU_SYSMSG_BFHS_ERR_CODE_TIME_OUT  		2
 #define HCU_SYSMSG_BFHS_ERR_CODE_NULL  		0xFFFF
 
+typedef struct strMsgIe_bfhs_WgtSnrParamaters
+{
+	UINT32  WeightSensorAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
+    UINT32  WeightSensorStandstillRangeGrams; //object 0x2087, Standstill monitoring facilitates detecting a stable weight value, The standstill range specifies the accuracy of internal standstill
+							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
+	UINT32	MaxAllowedWeight;				//称重物品的范围上限 NF2 format
+	UINT32  MinAllowedWeight;        //称重物品的范围下限 NF2 format
+	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
+	UINT16  WeightSensorRingBufTimeMs; //object 0x2060, Default is 100ms to moving average
+	UINT16  WeightSensorAutoZeroAutotaringTimeMs; //object 0x2075, should be multiply of 50ms, zero tracking interval = 2*this value;
+    UINT16  WeightSensorPreloadComPensationValuePercent; //object 0x2085, default is 6.25(%), limited range [6.25,50]
+	UINT16  WeightSensorPreloadComPensationPlacesAfterDecimalPoint; //location of decimal point for Preload Compensation, for example,6.25%, this value is 2.
+							//detection, If the standstill range that is selected is too small, the result can be that standstill will never be detected
+	UINT16  WeightSensorStandstillTimeoutMs; //object 0x2088, default value is 10000ms, time wait for large than this value,will generate an error
+	UINT16  WeightSensorStandstillTime; //object 0x2089, only for firmware(FS276/FS911, combined with 0x2087)
+	UINT8   WeightSensorMeasurementRangeNo; //object 0x2040, Default is 0, set measurement range no(totally 3),which is displayed in 0x2041
+	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
+	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
+	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
+}strMsgIe_bfhs_WgtSnrParamaters_t;
+
+typedef struct strMsgIe_bfhs_MotoCtrlParamaters
+{
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+}strMsgIe_bfhs_MotoCtrlParamaters_t;
+
+typedef struct strMsgIe_bfhs_ArmCtrlParamaters
+{
+	UINT32	ArmRollingStartMs;						//how long do the arm rolling for start action
+	UINT32	ArmRollingStopMs;							//how long do the arm rolling for stop action
+	UINT32	ArmRollingInveralMs;					//If the arm is rolling, how long the motor will stay in still before roll back (stop action).
+	UINT32	ArmFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	ArmFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+}strMsgIe_bfhs_ArmCtrlParamaters_t;
 typedef struct msg_struct_l3bfhs_can_sys_cfg_req
 {
 	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	strMsgIe_bfhs_WgtSnrParamaters_t  	wgtSnrPar;
+	strMsgIe_bfhs_MotoCtrlParamaters_t  motoCtrlPar;
+	strMsgIe_bfhs_ArmCtrlParamaters_t   armCtrlPar;
 	UINT32 length;
 }msg_struct_l3bfhs_can_sys_cfg_req_t;
 
@@ -3212,6 +3252,22 @@ typedef struct msg_struct_sui_resume_resp
 	UINT32 length;
 }msg_struct_sui_resume_resp_t;
 
+//MSG_ID_SUI_HEART_BEAT_REPORT,
+typedef struct msg_struct_sui_heart_beat_report
+{
+	UINT8  snrId;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_sui_heart_beat_report_t;
+
+//MSG_ID_SUI_HEART_BEAT_CONFIRM,
+typedef struct msg_struct_sui_heart_beat_confirm
+{
+	UINT8  snrId;               /* 0 ~ 15 is the DIP defined, ID 16 is the main rolling */
+	UINT8  state;
+	UINT32 timeStamp;
+	UINT32 length;
+}msg_struct_sui_heart_beat_confirm_t;
 
 /*
  *

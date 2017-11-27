@@ -591,6 +591,8 @@ HcuSysEngTrcMsgCtrStaticCfg_t zHcuSysEngTrcMsgCtrStaticCfg[] ={
 	{MSG_ID_SUI_SUSPEND_RESP,       	      	  "MSG_ID_SUI_SUSPEND_RESP",      		    	1, 1, 1},
 	{MSG_ID_SUI_RESUME_REQ,       	      		  "MSG_ID_SUI_RESUME_REQ",      		    	1, 1, 1},
 	{MSG_ID_SUI_RESUME_RESP,       	      		  "MSG_ID_SUI_RESUME_RESP",      		    	1, 1, 1},
+	{MSG_ID_SUI_HEART_BEAT_REPORT,       	      "MSG_ID_SUI_HEART_BEAT_REPORT",      		    1, 1, 1},
+	{MSG_ID_SUI_HEART_BEAT_CONFIRM,       	      "MSG_ID_SUI_HEART_BEAT_CONFIRM",      		1, 1, 1},
 
 	//L3AQYCG20
 	{MSG_ID_L3AQYC_EXG_CTRL_REQ,                  "MSG_ID_L3AQYC_EXG_CTRL_REQ",                 1, 1, 1},

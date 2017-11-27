@@ -47,6 +47,9 @@ HcuFsmStateItem_t HcuFsmL3bfdf[] =
 
 	//任意状态下的命令执行
 	{MSG_ID_UICOMM_L3BFDF_CTRL_CMD_REQ,       	FSM_STATE_COMMON,          			fsm_l3bfdf_uicomm_ctrl_cmd_req},
+	{MSG_ID_SUI_STARTUP_IND,       				FSM_STATE_COMMON,          			fsm_l3bfdf_canitf_startup_ind},
+	{MSG_ID_SUI_FAULT_IND,       				FSM_STATE_COMMON,          			fsm_l3bfdf_canitf_fault_ind},
+	{MSG_ID_SUI_HEART_BEAT_REPORT,       		FSM_STATE_COMMON,          			fsm_l3bfdf_canitf_heart_beat_report},
 
 	//只为出现ACTIVED状态，入口自动被COMMON屏蔽
 	{MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,       		FSM_STATE_L3BFDF_ACTIVED,          	fsm_l3bfdf_canitf_sys_config_resp},
@@ -355,6 +358,122 @@ OPSTAT fsm_l3bfdf_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * para
 
 	//差错
 	else HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receive message error!\n");
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfdf_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	int line=0, hopperId=0;
+
+	msg_struct_sui_startup_ind_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sui_startup_ind_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_startup_ind_t))){
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
+	}
+
+	//Firstly Register state
+	//1-32, 33-64...
+	line = (rcv.snrId-1) / HCU_SYSCFG_BFDF_LINE_NUM_SPLIT;
+	if ((line <0) || (line > HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX))
+		HCU_ERROR_PRINT_L3BFDF("L3BFDF: Receling STARTUP message error!\n");
+	hopperId = rcv.snrId - line * HCU_SYSCFG_BFDF_LINE_NUM_SPLIT;
+	//这里汇报的是板子，不是hooperId
+	//gTaskL3bfdfContext.sensorWs[0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_STARTUP;
+	HCU_DEBUG_PRINT_CRT("L3BFDF: Sensor ID = %d is set to be startup!\n", rcv.snrId);
+
+	//通知界面
+	func_canalpha_huicobus_trigger_uir(0, 0);
+	//dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_STARTUP, 0);
+
+	//判定状态
+	if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_ACTIVED)
+	{
+		//Send CFG_REQ到下位机
+
+	}
+	else if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN)
+	{
+		//snd CFG_REQ到下位机
+		FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
+	}
+	else if (FsmGetState(TASK_ID_L3BFDF) == FSM_STATE_L3BFDF_OOS_SCAN)
+	{
+
+	}
+	//Do nothing
+	else
+	{
+
+	}
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfdf_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_sui_fault_ind_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sui_fault_ind_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_fault_ind_t))){
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
+	}
+
+	//通知界面
+	func_canalpha_huicobus_trigger_uir(0, 0);
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_FAULT_RCV, 0);
+
+//	if (gTaskL3bfdfContext.sensorWs[0].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_INIT_MAX)
+//		gTaskL3bfdfContext.sensorWs[0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_INIT_ERR;
+//	else
+//		//隔离该传感器
+//		gTaskL3bfdfContext.sensorWs[0].nodeStatus = HCU_L3BFDF_NODE_BOARD_STATUS_HW_ERROR;
+
+	//是否要根据ERR_CODE，赋予不同的差错情形，待定
+
+	//发送SUSPEND命令给下位机，不用启动定时器
+
+	//发送错误指示给UICOMM
+
+	//设置到ACTIVE状态，等待界面进一步反馈
+	FsmSetState(TASK_ID_L3BFDF, FSM_STATE_L3BFDF_ACTIVED);
+
+	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_l3bfdf_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	msg_struct_sui_heart_beat_report_t rcv;
+	memset(&rcv, 0, sizeof(msg_struct_sui_heart_beat_report_t));
+	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_heart_beat_report_t))){
+		HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Receive message error!\n");
+	}
+
+	//通知界面
+	func_canalpha_huicobus_trigger_uir(0, 0);
+	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_FAULT_RCV, 0);
+
+	//回送
+	msg_struct_sui_heart_beat_confirm_t snd;
+	memset(&snd, 0, sizeof(msg_struct_sui_heart_beat_confirm_t));
+	snd.snrId = rcv.snrId;
+//	if (gTaskL3bfdfContext.sensorWs[0].nodeStatus <= HCU_L3BFDF_NODE_BOARD_STATUS_OFFLINE_MAX)
+//		snd.state = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_OFFLINE;
+//	else if (gTaskL3bfdfContext.sensorWs[0].nodeStatus < HCU_L3BFDF_NODE_BOARD_STATUS_VALID)
+//		snd.state = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_INIT;
+//	else if(gTaskL3bfdfContext.sensorWs[0].nodeStatus <= HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MAX)
+//		snd.state = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_WORKING;
+//	else
+//		snd.state = HUITP_IEID_SUI_COM_HEATT_BEAT_WMC_STATE_INVALID;
+	snd.timeStamp = time(0);
+	snd.length = sizeof(msg_struct_sui_heart_beat_confirm_t);
+	if (hcu_message_send(MSG_ID_SUI_HEART_BEAT_CONFIRM, TASK_ID_CANALPHA, TASK_ID_L3BFDF, &snd, snd.length) == FAILURE)
+		HCU_ERROR_PRINT_L3BFDF_MSGSEND;
 
 	//返回
 	return SUCCESS;
