@@ -790,6 +790,21 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l1hwopt/zeegbe.h</locationURI>
 		</link>
 		<link>
+			<name>src/l2codec/huicobus.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huicobus.h</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/huicobuscodec.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huicobuscodec.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/huicobuscodec.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huicobuscodec.h</locationURI>
+		</link>
+		<link>
 			<name>src/l2codec/huitp.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huitp.h</locationURI>

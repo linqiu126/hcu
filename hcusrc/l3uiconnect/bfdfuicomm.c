@@ -737,69 +737,22 @@ OPSTAT func_bfdfuicomm_read_cfg_file_into_ctrl_table (UINT16 config_index)
 	gTaskL3bfdfContext.configId = config_index;
 
 	//查询用户动态配置参数
-	gTaskL3bfdfContext.comAlgPar.MinScaleNumberCombination = 1;
-	gTaskL3bfdfContext.comAlgPar.MaxScaleNumberCombination  = 1;
-	gTaskL3bfdfContext.comAlgPar.MinScaleNumberStartCombination = 1;
-	gTaskL3bfdfContext.comAlgPar.TargetCombinationWeight = 1;
-	gTaskL3bfdfContext.comAlgPar.TargetCombinationUpperWeight = 1;
-	gTaskL3bfdfContext.comAlgPar.IsProximitCombinationMode = 1;
-	gTaskL3bfdfContext.comAlgPar.CombinationBias =  1;
-	gTaskL3bfdfContext.comAlgPar.IsRemainDetectionEnable = 1;
-	gTaskL3bfdfContext.comAlgPar.RemainDetectionTimeSec  = 1;
-	gTaskL3bfdfContext.comAlgPar.RemainScaleTreatment =  1;
-	gTaskL3bfdfContext.comAlgPar.IsPriorityScaleEnabled = 1;
-	gTaskL3bfdfContext.comAlgPar.CombinationAutoMode = 1;
-	gTaskL3bfdfContext.comAlgPar.MovingAvrageSpeedCount = 1;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadDetectionTimeMs =  1;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorLoadThread = 1;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyDetectionTimeMs = 1;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorEmptyThread = 1;
 	gTaskL3bfdfContext.wgtSnrPar.StardardReadyTimeMs = 1;
-	gTaskL3bfdfContext.motCtrPar.MotorSpeed = 1;
-	gTaskL3bfdfContext.motCtrPar.MotorDirection = 1;
-	gTaskL3bfdfContext.motCtrPar.MotorRollingStartMs = 1;
-	gTaskL3bfdfContext.motCtrPar.MotorRollingStopMs  = 1;
-	gTaskL3bfdfContext.motCtrPar.MotorRollingInveralMs = 1;
-	gTaskL3bfdfContext.motCtrPar.MotorFailureDetectionVaration = 1;
-	gTaskL3bfdfContext.motCtrPar.MotorFailureDetectionTimeMs = 1;
 
 	gTaskL3bfdfContext.wgtSnrPar.MaxAllowedWeight = 1;
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcGain = 1;
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcSampleFreq = 1;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorStaticZeroValue = 1;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorTailorValue = 1;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroThreadValue = 1;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorDynamicZeroHysteresisMs = 1;
 
-	gTaskL3bfdfContext.comAlgPar.CombinationSpeedMode = 0;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupThread = 300;
 	gTaskL3bfdfContext.wgtSnrPar.WeightSensorPickupDetectionTimeMs = 500;
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorInitOrNot = 0;
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcBitwidth = 22;
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorAdcValue = 0;
-
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[0] = 0;				// NOT for GUI
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[1] = 0;				// NOT for GUI
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[2] = 0;				// NOT for GUI
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorFilterCoeff[3] = 0;				// NOT for GUI
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[0] = 1;				// NOT for GUI
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[1] = 0;				// NOT for GUI
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[2] = 0;				// NOT for GUI
-	gTaskL3bfdfContext.wgtSnrPar.WeightSensorOutputValue[3] = 0;				// NOT for GUI
 
 	//查询校准数据
-	gTaskL3bfdfContext.wgtSnrPar.calibration[0][0].WeightSensorCalibrationZeroAdcValue = 1;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[0][0].WeightSensorCalibrationFullAdcValue = 1000;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[0][0].WeightSensorCalibrationFullWeight = 100;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[0][1].WeightSensorCalibrationZeroAdcValue = 1;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[0][0].WeightSensorCalibrationFullAdcValue = 1000;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[0][1].WeightSensorCalibrationFullWeight = 100;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationZeroAdcValue = 1;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationFullAdcValue = 1000;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationFullWeight = 100;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[1][1].WeightSensorCalibrationZeroAdcValue = 1;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[1][0].WeightSensorCalibrationFullAdcValue = 1000;
-	gTaskL3bfdfContext.wgtSnrPar.calibration[1][1].WeightSensorCalibrationFullWeight = 100;
 
 	int i =0;
 	//分配Hooper数据：暂时没有考虑相应板子的启动状态

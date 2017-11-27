@@ -3015,10 +3015,57 @@ typedef struct msg_struct_l3bfhs_uicomm_ctrl_cmd_resp
 #define HCU_SYSMSG_BFDF_ERR_CODE_UNSPECIFIC  	1
 #define HCU_SYSMSG_BFDF_ERR_CODE_TIME_OUT  		2
 #define HCU_SYSMSG_BFDF_ERR_CODE_NULL  		0xFFFF
-
+typedef struct strMsgIe_l3bfdf_WeightSensorParamaters
+{
+	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
+	UINT32	WeightSensorLoadThread;							//称台稳定门限，如果在WeightSensorLoadDetectionTime内，重量变化都小于WeightSensorLoadThread
+	UINT32	WeightSensorEmptyThread;
+	UINT32	WeightSensorEmptyDetectionTimeMs;
+	UINT32	WeightSensorPickupThread;						// NOT for GUI
+	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
+	UINT32	StardardReadyTimeMs;								//???
+	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;
+	UINT32	WeightSensorStaticZeroValue;
+	UINT32	WeightSensorTailorValue;
+	UINT32	WeightSensorDynamicZeroThreadValue;
+	UINT32	WeightSensorDynamicZeroHysteresisMs;
+	UINT32  WeightSensorMovingEverageSample;
+}strMsgIe_l3bfdf_WeightSensorParamaters_t;
+typedef struct strMsgIe_l3bfdf_MotorControlParamaters
+{
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
+	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
+}strMsgIe_l3bfdf_MotorControlParamaters_t;
+#define	HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX			32
+#define	HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX	8
+typedef struct strMsgIe_l3bfdf_ActionControlParamaters
+{
+	UINT16  TWeightInd;                     /* After INFRA INT, Wait for how long to send WEIGHT_IND, unit is 10ms Tick */
+	UINT16  T0bis;                          /* After INFRA INT, INFRA INT sent to Node 2 to 5, unit is 10ms Tick */
+	UINT16  TA0;                            /* After INFRA INT, Deay to AP01 */
+	UINT16  TActCmd;
+	UINT16  TArmStart;
+	UINT16  TArmStop;
+	UINT16  TDoorCloseLightOn;
+	UINT16  TApIntervalMin;
+	UINT16  TApInterval[HCU_SYSMSG_BFDF_SET_CFG_HOPPER_MAX];
+	UINT16  TLocalAp[HCU_SYSMSG_BFDF_SET_CFG_HOP_IN_BOARD_MAX];
+	UINT16  DelayNode1ToX;
+	UINT16  DelayUpHcuAlgoDl;
+}strMsgIe_l3bfdf_ActionControlParamaters_t;
 typedef struct msg_struct_l3bfdf_can_sys_cfg_req
 {
 	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	strMsgIe_l3bfdf_WeightSensorParamaters_t			wgtSnrPar;
+	strMsgIe_l3bfdf_MotorControlParamaters_t			motMainPar;
+	strMsgIe_l3bfdf_MotorControlParamaters_t			motSecondPar;
+	strMsgIe_l3bfdf_ActionControlParamaters_t			actionCtrlPar;
 	UINT32 length;
 }msg_struct_l3bfdf_can_sys_cfg_req_t;
 
@@ -3035,7 +3082,7 @@ typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
 //MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,  	//传感器新数据事件
 typedef struct msg_struct_can_l3bfdf_new_ready_event
 {
-	UINT8  streamId;
+	UINT8  boardId;
 	UINT32 sensorWsValue;
 	UINT32 length;
 }msg_struct_can_l3bfdf_new_ready_event_t;
@@ -3043,8 +3090,10 @@ typedef struct msg_struct_can_l3bfdf_new_ready_event
 //MSG_ID_L3BFDF_CAN_WS_COMB_OUT,  		//出料
 typedef struct msg_struct_l3bfdf_can_ws_comb_out
 {
-	UINT8  streamId;
+	UINT8  boardId;
 	UINT16 hopperId;
+	UINT8   basketFullStatus;    //0-FALSE, 1-TRUE
+	UINT8   bufferFullStatus;	   //0-FALSE, 1-TRUE
 	UINT32 length;
 }msg_struct_l3bfdf_can_ws_comb_out_t;
 

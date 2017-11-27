@@ -32,6 +32,29 @@ enum FSM_STATE_L3BFDF
 //Global variables
 extern HcuFsmStateItem_t HcuFsmL3bfdf[];
 
+/*
+ * 全局标签
+   CANID:
+			0 => 第1条流水线固定垃圾桶
+			1 => 第1条流水线WGT板子
+			2-7 => 第1条流水线SNR板子
+			8 => 第2条流水线固定垃圾桶
+			9 => 第2条流水线WGT板子
+			10-15 => 第2条流水线SNR板子
+			16 => 第3条流水线固定垃圾桶
+			17 => 第3条流水线WGT板子
+			18-23 => 第3条流水线SNR板子
+			24 => 第4条流水线固定垃圾桶
+			25 => 第4条流水线WGT板子
+			26-31 => 第4条流水线SNR板子
+	BOARDID:　等同于CANID
+	AP/HOOPERID:
+			0: =>固定垃圾桶
+			1-32: 	=>第1条流水线
+			33-64: 	=>第2条流水线
+			65-96: 	=>第3条流水线
+			97-128: =>第4条流水线
+*/
 //统一下位机板子的控制信息
 typedef struct L3BfdfNodeBoardInfo
 {
@@ -131,30 +154,6 @@ typedef struct L3BfdfHopperInfo
 #endif
 
 //配置参数
-typedef struct gTaskL3bfdfContextCombinationAlgorithmParamaters
-{
-	UINT32	MinScaleNumberCombination;				//组合搜索的最小Scale的个数
-	UINT32	MaxScaleNumberCombination;				//组合搜索的最大Scale的个数
-	UINT32	MinScaleNumberStartCombination;			//开始查找的最小个数，就是说大于这个个数就开始搜索
-	UINT32	TargetCombinationWeight;				//组合目标重量
-	UINT32	TargetCombinationUpperWeight;			//组合目标重量上限
-	UINT32	IsPriorityScaleEnabled;					// 1: Enable, 0: Disable
-	UINT32	IsProximitCombinationMode;				// 1: AboveUpperLimit, 2: BelowLowerLimit, 0: Disable
-	UINT32	CombinationBias;						      //每个Scale要求放几个物品
-	UINT32	IsRemainDetectionEnable;				  //Scale处于LAOD状态超过remainDetectionTimeS, 被认为是Remain状态，提示要将物品拿走: 1:Enable， 0：Disble
-	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
-	UINT32	RemainScaleTreatment;					    // 1: Discharge (提示用户移走），0：Enforce（强制进行组合）
-	UINT32	CombinationSpeedMode;					    // 0：SpeedPriority，1: PrecisePriority
-	UINT32	CombinationAutoMode;					    // 0: Auto, 1: Manual
-	UINT32	MovingAvrageSpeedCount;					  //计算平均速度的时候使用最近多少个组合做统计
-}gTaskL3bfdfContextCombinationAlgorithmParamaters_t;
-typedef struct gTaskL3bfdfContextCalibration
-{
-	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
-	UINT32	WeightSensorCalibrationFullWeight;
-}gTaskL3bfdfContextCalibration_t;
-#define HCU_L3BFDF_CALIBRATION_WGT_BELT_POINT 	240
 typedef struct gTaskL3bfdfContextWeightSensorParamaters
 {
 	UINT32	WeightSensorLoadDetectionTimeMs;		//称台稳定的判断时间
@@ -165,30 +164,38 @@ typedef struct gTaskL3bfdfContextWeightSensorParamaters
 	UINT32	WeightSensorPickupDetectionTimeMs;	// NOT for GUI
 	UINT32	StardardReadyTimeMs;								//???
 	UINT32	MaxAllowedWeight;										//如果发现超过这个最大值，说明Sensor出错
-	UINT32  RemainDetectionTimeSec;
-	UINT32	WeightSensorInitOrNot;							// NOT for GUI
-	UINT32	WeightSensorAdcSampleFreq;
-	UINT32	WeightSensorAdcGain;
-	UINT32	WeightSensorAdcBitwidth;						// NOT for GUI
-	UINT32  WeightSensorAdcValue;								// NOT for GUI
-	gTaskL3bfdfContextCalibration_t  calibration[HCU_SYSCFG_BFDF_SNC_BOARD_NBR_MAX][HCU_L3BFDF_CALIBRATION_WGT_BELT_POINT];
+	UINT32	RemainDetectionTimeSec;					  // RemainDetionTime in Seconds
+	UINT32	WeightSensorCalibrationZeroAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullAdcValue;// NOT for GUI
+	UINT32	WeightSensorCalibrationFullWeight;
 	UINT32	WeightSensorStaticZeroValue;
-	UINT32	WeightSensorTailorValue;				//皮重，分为每种
+	UINT32	WeightSensorTailorValue;
 	UINT32	WeightSensorDynamicZeroThreadValue;
 	UINT32	WeightSensorDynamicZeroHysteresisMs;
-	UINT32  WeightSensorFilterCoeff[4];				// NOT for GUI
-	UINT32  WeightSensorOutputValue[4];
+	UINT32  WeightSensorMovingEverageSample;
 }gTaskL3bfdfContextWeightSensorParamaters_t;
 typedef struct gTaskL3bfdfContextMotorControlParamaters
 {
 	UINT32	MotorSpeed;
 	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
-	UINT32	MotorRollingStartMs;						//how long do the motor rolling for start action
-	UINT32	MotorRollingStopMs;							//how long do the motor rolling for stop action
-	UINT32	MotorRollingInveralMs;					//If the motor is rolling, how long the motor will stay in still before roll back (stop action).
 	UINT32	MotorFailureDetectionVaration;	// % of the MotorSpeed
 	UINT32	MotorFailureDetectionTimeMs;		// within TimeMs, 如果速度都在外面，认为故障
 }gTaskL3bfdfContextMotorControlParamaters_t;
+typedef struct gTaskL3bfdfContextActionControlParamaters
+{
+	UINT16  TWeightInd;                     /* After INFRA INT, Wait for how long to send WEIGHT_IND, unit is 10ms Tick */
+	UINT16  T0bis;                          /* After INFRA INT, INFRA INT sent to Node 2 to 5, unit is 10ms Tick */
+	UINT16  TA0;                            /* After INFRA INT, Deay to AP01 */
+	UINT16  TActCmd;
+	UINT16  TArmStart;
+	UINT16  TArmStop;
+	UINT16  TDoorCloseLightOn;
+	UINT16  TApIntervalMin;
+	UINT16  TApInterval[HCU_SYSCFG_BFDF_HOPPER_NBR_MAX];
+	UINT16  TLocalAp[HCU_SYSCFG_BFDF_HOPPER_IN_ONE_BOARD];
+	UINT16  DelayNode1ToX;
+	UINT16  DelayUpHcuAlgoDl;
+}gTaskL3bfdfContextActionControlParamaters_t;
 
 //统计信息
 typedef struct gTaskL3bfdfContextStaEleMid
@@ -242,10 +249,11 @@ typedef struct gTaskL3bfdfContextStaEleMid
 typedef struct gTaskL3bfdfContext
 {
 	//静态配置参数部分
-	gTaskL3bfdfContextCombinationAlgorithmParamaters_t 	comAlgPar;
 	gTaskL3bfdfContextWeightSensorParamaters_t			wgtSnrPar;
-	gTaskL3bfdfContextMotorControlParamaters_t			motCtrPar;
-	UINT32  start24hStaTimeInUnix;									//系统配置的参数，表示24小时统计的日历起点
+	gTaskL3bfdfContextMotorControlParamaters_t			motMainPar;
+	gTaskL3bfdfContextMotorControlParamaters_t			motSecondPar;
+	gTaskL3bfdfContextActionControlParamaters_t			actionCtrlPar;
+	UINT32  start24hStaTimeInUnix;						//系统配置的参数，表示24小时统计的日历起点
 
 	//动态部分
 	UINT32  sessionId;								//批次数据

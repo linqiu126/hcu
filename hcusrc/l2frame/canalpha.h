@@ -105,7 +105,6 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_new_ws_event_received_handle(StrMsg_HUITP_
 OPSTAT func_canalpha_l2frame_msg_bfdf_ws_comb_out_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canalpha_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t *rcv, UINT8 nodeId);
 
-
 /*
  *
  *  BFHS

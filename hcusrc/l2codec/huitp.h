@@ -6260,7 +6260,7 @@ typedef struct StrHuiIe_BfdfWeightSensorParam
 		UINT32	WeightSensorTailorValue;
 		UINT32	WeightSensorDynamicZeroThreadValue;
 		UINT32	WeightSensorDynamicZeroHysteresisMs;
-	  UINT32  WeightSensorMovingEverageSample;
+		UINT32  WeightSensorMovingEverageSample;
 }StrHuiIe_BfdfWeightSensorParam_t;
 
 /* FOR EXTERNAL INTERFACE AND INTERNAL VARIABLES  */
