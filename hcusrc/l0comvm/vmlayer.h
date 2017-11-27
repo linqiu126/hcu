@@ -86,6 +86,7 @@ enum HCU_TASK_NAME_ID
 	TASK_ID_NBIOTCJ188,
 	TASK_ID_NBIOTQG376,
 	TASK_ID_LLCZHB,
+	TASK_ID_HUICOBUSCODEC,
 	TASK_ID_HSMMP,  //High Speed MultiMedia processing
 	TASK_ID_EMC,
 	TASK_ID_HUMID,
@@ -592,6 +593,7 @@ extern HcuFsmStateItem_t HcuFsmSpibusaries[];                       //状态机
 extern HcuFsmStateItem_t HcuFsmNbiotcj188[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmNbiotqg376[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmLlczhb[];                            //状态机
+extern HcuFsmStateItem_t HcuFsmHuicobuscodec[];                     //状态机
 extern HcuFsmStateItem_t HcuFsmHsmmp[];                             //状态机
 extern HcuFsmStateItem_t HcuFsmEmc[];                               //状态机
 extern HcuFsmStateItem_t HcuFsmHumid[];                             //状态机

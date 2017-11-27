@@ -14,15 +14,86 @@
 #ifndef L2FRAME_HUICOBUSCODEC_H_
 #define L2FRAME_HUICOBUSCODEC_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "MQTTClient.h"
+#include <json-c/json.h>
+#include <json-c/json_object.h>
 #include "../l2codec/huicobus.h"
 #include "../l0comvm/vmlayer.h"
 #include "../l0comvm/sysconfig.h"
 #include "../l1com/l1comdef.h"
+#include "../l0service/mqtt.h"
+#include "../l0comvm/vmlayer.h"
 
+//State definition
+//#define FSM_STATE_ENTRY  0x00
+//#define FSM_STATE_IDLE  0x01
+//#define FSM_STATE_COMMON  	0x02
+enum FSM_STATE_HUICOBUSCODEC
+{
+	FSM_STATE_HUICOBUSCODEC_INITED = FSM_STATE_COMMON + 1,
+	FSM_STATE_HUICOBUSCODEC_ACTIVED,
+	FSM_STATE_HUICOBUSCODEC_MAX,
+};
+//#define FSM_STATE_END   0xFE
+//#define FSM_STATE_INVALID 0xFF
 
+//Global variables
+extern HcuFsmStateItem_t HcuFsmHuicobuscodec[];
 
 //Global APIs
-void ihu_huicobus_codec_trigger_uir(UINT32 cmdId, UINT32 cmdValue);
+void func_huicobus_codec_trigger_uir(UINT32 cmdId, INT32 cmdValue);
+
+//API
+extern OPSTAT fsm_huicobuscodec_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_huicobuscodec_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_huicobuscodec_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
+//发送API函数
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_init_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_zero_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_full_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_start_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_stop_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_version_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_alarm_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_error_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_restart_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_logout_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfsc_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue);
+
+//FIX DEFINATION
+#define HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE() \
+	do{\
+		memset(&pMsgProc, 0, sizeof(msg_struct_com_mqtt_send_t));\
+		pMsgProc.srcNode = HUICOBUS_MQTT_NBID_LOCALHOST;\
+		pMsgProc.destNode = HUICOBUS_MQTT_NBID_LOCALHOST;\
+		pMsgProc.srcId = HUICOBUS_MQTT_CLID_HCUENTRY;\
+		pMsgProc.destId = HUICOBUS_MQTT_CLID_UIROUTER;\
+		pMsgProc.topicId = HUICOBUS_MQTT_TPID_HCU2UIR;\
+		pMsgProc.cmdValue = cmdValue;\
+		pMsgProc.length = sizeof(msg_struct_com_mqtt_send_t);\
+	}while(0)
+
+#define HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE() \
+	do{\
+		if (hcu_mqtt_msg_send_syn_mode(&pMsgProc) > 0)\
+			return SUCCESS;\
+		else\
+			return FAILURE;\
+	}while(0)
 
 
 #endif /* L2FRAME_HUICOBUSCODEC_H_ */

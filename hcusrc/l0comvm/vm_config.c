@@ -99,6 +99,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_NBIOTCJ188,    "NBIOTCJ188",       &HcuFsmNbiotcj188,       HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_NBIOTQG376,    "NBIOTQG376",       &HcuFsmNbiotqg376,       HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_LLCZHB,        "LLCZHB",           &HcuFsmLlczhb,           HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
+	{TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC",    &HcuFsmHuicobuscodec,    HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_HSMMP,         "HSMMP",            &HcuFsmHsmmp,            HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_EMC,           "EMC",              &HcuFsmEmc,              HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_HUMID,         "HUMID",            &HcuFsmHumid,            HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
@@ -217,6 +218,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 	{TASK_ID_NOISE,         "NOISE",            &HcuFsmNoise,            HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_AIRPRS,        "AIRPRS",           &HcuFsmAirprs,           HCU_SYSCFG_TASK_PNP_OFF,    1, 1, 1, 1, 1},
 	{TASK_ID_LLCZHB,        "LLCZHB",           &HcuFsmLlczhb,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC",    &HcuFsmHuicobuscodec,    HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3AQYCG20,     "L3AQYCG20",        &HcuFsmL3aqycg20,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3HATE,        "L3HATE",           &HcuFsmL3hate,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_TBSWRG30_ID)
@@ -245,6 +247,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 	{TASK_ID_MQTT,          "MQTT",             &HcuFsmMqtt,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC",    &HcuFsmHuicobuscodec,    HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CANALPHA,      "CANALPHA",         &HcuFsmCanalpha,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3BFDF,        "L3BFDF",           &HcuFsmL3bfdf,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
@@ -253,6 +256,7 @@ HcuVmCtrTaskStaticCfg_t zHcuVmCtrTaskStaticCfg[] =
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 	{TASK_ID_MQTT,          "MQTT",             &HcuFsmMqtt,             HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_ETHERNET,      "ETHERNET",         &HcuFsmEthernet,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
+	{TASK_ID_HUICOBUSCODEC, "HUICOBUSCODEC",    &HcuFsmHuicobuscodec,    HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CLOUDVELA,     "CLOUDVELA",        &HcuFsmCloudvela,        HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_CANALPHA,      "CANALPHA",         &HcuFsmCanalpha,         HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},
 	{TASK_ID_L3BFHS,        "L3BFHS",           &HcuFsmL3bfhs,           HCU_SYSCFG_TASK_PNP_ON,     1, 1, 1, 1, 1},

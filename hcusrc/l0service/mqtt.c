@@ -37,6 +37,19 @@ HcuFsmStateItem_t HcuFsmMqtt[] =
 //Global variables
 extern HcuSysEngParTab_t zHcuSysEngPar; //全局工程参数控制表
 
+/*
+JSON ==>
+	srcNode: 字符串
+	destNode: 字符串
+	srcId: 字符串
+	destId: 字符串
+	topicId: 字符串
+	cmdId: 数字
+	cmdValie: 数字
+	hlContent: 字符串
+	未来可考虑将srcNode/destNode改造为字符串
+*/
+
 //Main Entry
 //Input parameter would be useless, but just for similar structure purpose
 OPSTAT fsm_mqtt_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
@@ -123,6 +136,7 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     int rc;
     char input[1000];
     char topic[100];
+    char stmp[100];
 
     MQTTClient_create(&client, HUICOBUS_MQTT_BROKER_ADDRESS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
     conn_opts.keepAliveInterval = 20;
@@ -137,14 +151,37 @@ int hcu_mqtt_msg_send_syn_mode(msg_struct_com_mqtt_send_t *in)
     memset(input, 0, sizeof(input));
     struct json_object *jsonobj = NULL;
     jsonobj = json_object_new_object();
+
     //不能用简单的==NULL来判定
     //if (is_error(jsonobj))
     if (jsonobj == NULL)
     	HcuErrorPrint("MQTT: Failed to create json object!\n");
     //json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
-    json_object_object_add(jsonobj, "CommandId", json_object_new_int(in->cmdId));
-    json_object_object_add(jsonobj, "CommandValue", json_object_new_int(in->cmdValue));
-    json_object_object_add(jsonobj, "HighLayerContent", json_object_new_string(in->hlContent));
+    memset(stmp, 0, sizeof(stmp));
+    func_mqtt_clientid_translate_to_text(in->srcNode, stmp);
+    json_object_object_add(jsonobj, "srcNode", json_object_new_string(stmp));
+
+    memset(stmp, 0, sizeof(stmp));
+    func_mqtt_clientid_translate_to_text(in->destNode, stmp);
+    json_object_object_add(jsonobj, "destNode", json_object_new_string(stmp));
+
+    memset(stmp, 0, sizeof(stmp));
+    func_mqtt_clientid_translate_to_text(in->srcId, stmp);
+    json_object_object_add(jsonobj, "srcId", json_object_new_string(stmp));
+
+    memset(stmp, 0, sizeof(stmp));
+    func_mqtt_clientid_translate_to_text(in->destId, stmp);
+    json_object_object_add(jsonobj, "destId", json_object_new_string(stmp));
+
+    memset(stmp, 0, sizeof(stmp));
+    func_mqtt_topicid_translate_to_text(in->topicId, stmp);
+    json_object_object_add(jsonobj, "topicId", json_object_new_string(stmp));
+
+    json_object_object_add(jsonobj, "cmdId", json_object_new_int(in->cmdId));
+    json_object_object_add(jsonobj, "cmdValue", json_object_new_int(in->cmdValue));
+
+    if (in->hlcLen > 0) json_object_object_add(jsonobj, "hlContent", json_object_new_string(in->hlContent));
+
     sprintf(input, "%s", json_object_to_json_string(jsonobj));
     json_object_put(jsonobj);//free
     pubmsg.payload = input;
@@ -204,54 +241,77 @@ void func_mqtt_msg_send_asy_connlost(void *context, char *cause)
 //MQTT异步模式发送消息
 int hcu_mqtt_msg_send_asy_mode(msg_struct_com_mqtt_send_t *in)
 {
-  MQTTClient client;
-  MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
-  MQTTClient_message pubmsg = MQTTClient_message_initializer;
-  MQTTClient_deliveryToken token;
-  int rc;
-  char input[1000];
-  char topic[100];
+	MQTTClient client;
+	MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+	MQTTClient_message pubmsg = MQTTClient_message_initializer;
+	MQTTClient_deliveryToken token;
+	int rc;
+	char input[1000];
+	char topic[100];
+	char stmp[100];
 
-  MQTTClient_create(&client, HUICOBUS_MQTT_BROKER_ADDRESS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
-  conn_opts.keepAliveInterval = 20;
-  conn_opts.cleansession = 1;
+	MQTTClient_create(&client, HUICOBUS_MQTT_BROKER_ADDRESS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+	conn_opts.keepAliveInterval = 20;
+	conn_opts.cleansession = 1;
 
-  MQTTClient_setCallbacks(client, NULL, func_mqtt_msg_send_asy_connlost, func_mqtt_msg_send_asy_msgarrvd, func_mqtt_msg_send_asy_delivered);
+	MQTTClient_setCallbacks(client, NULL, func_mqtt_msg_send_asy_connlost, func_mqtt_msg_send_asy_msgarrvd, func_mqtt_msg_send_asy_delivered);
 
-  if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
-  {
+	if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
+	{
 	  HcuErrorPrint("MQTT: Failed to connect, return code %d. So far continue to work!\n", rc);
-      //exit(EXIT_FAILURE);
-  }
+	  //exit(EXIT_FAILURE);
+	}
 
-  //生成json字符串
-  memset(input, 0, sizeof(input));
-  struct json_object *jsonobj = NULL;
-  jsonobj = json_object_new_object();
-  //不能用简单的==NULL来判定
-  //if (is_error(jsonobj))
-  if (jsonobj == NULL)
+	//生成json字符串
+	memset(input, 0, sizeof(input));
+	struct json_object *jsonobj = NULL;
+	jsonobj = json_object_new_object();
+	//不能用简单的==NULL来判定
+	//if (is_error(jsonobj))
+	if (jsonobj == NULL)
 	  HcuErrorPrint("MQTT: Failed to create json object!\n");
-  //json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
-  json_object_object_add(jsonobj, "CommandId", json_object_new_int(in->cmdId));
-  json_object_object_add(jsonobj, "CommandValue", json_object_new_int(in->cmdValue));
-  json_object_object_add(jsonobj, "HighLayerContent", json_object_new_string(in->hlContent));
-  sprintf(input, "%s", json_object_to_json_string(jsonobj));
-  json_object_put(jsonobj);//free
-  pubmsg.payload = input;
-  pubmsg.payloadlen = strlen(input);
-  pubmsg.qos = HUICOBUS_MQTT_QOS_CONST;
-  pubmsg.retained = 0;
-  deliveredtoken_send = 0;
+	//json_object_object_add(para_object, "MacAddr", json_object_new_string("AA:BB:CC:DD:EE:FF"));
+	memset(stmp, 0, sizeof(stmp));
+	func_mqtt_clientid_translate_to_text(in->srcNode, stmp);
+	json_object_object_add(jsonobj, "srcNode", json_object_new_string(stmp));
 
-  memset(topic, 0, sizeof(topic));
-  func_mqtt_clientid_translate_to_text(in->topicId, topic);
-  MQTTClient_publishMessage(client, topic, &pubmsg, &token);
-  HCU_DEBUG_PRINT_NOR("MQTT: Waiting for publication of %s\n, on topic %s for client with ClientID: %s\n", input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
-  while(deliveredtoken_send != token);
-  MQTTClient_disconnect(client, 10000);
-  MQTTClient_destroy(&client);
-  return rc;
+	memset(stmp, 0, sizeof(stmp));
+	func_mqtt_clientid_translate_to_text(in->destNode, stmp);
+	json_object_object_add(jsonobj, "destNode", json_object_new_string(stmp));
+
+	memset(stmp, 0, sizeof(stmp));
+	func_mqtt_clientid_translate_to_text(in->srcId, stmp);
+	json_object_object_add(jsonobj, "srcId", json_object_new_string(stmp));
+
+	memset(stmp, 0, sizeof(stmp));
+	func_mqtt_clientid_translate_to_text(in->destId, stmp);
+	json_object_object_add(jsonobj, "destId", json_object_new_string(stmp));
+
+	memset(stmp, 0, sizeof(stmp));
+	func_mqtt_topicid_translate_to_text(in->topicId, stmp);
+	json_object_object_add(jsonobj, "topicId", json_object_new_string(stmp));
+
+	json_object_object_add(jsonobj, "cmdId", json_object_new_int(in->cmdId));
+	json_object_object_add(jsonobj, "cmdValue", json_object_new_int(in->cmdValue));
+
+	if (in->hlcLen > 0) json_object_object_add(jsonobj, "hlContent", json_object_new_string(in->hlContent));
+
+	sprintf(input, "%s", json_object_to_json_string(jsonobj));
+	json_object_put(jsonobj);//free
+	pubmsg.payload = input;
+	pubmsg.payloadlen = strlen(input);
+	pubmsg.qos = HUICOBUS_MQTT_QOS_CONST;
+	pubmsg.retained = 0;
+	deliveredtoken_send = 0;
+
+	memset(topic, 0, sizeof(topic));
+	func_mqtt_clientid_translate_to_text(in->topicId, topic);
+	MQTTClient_publishMessage(client, topic, &pubmsg, &token);
+	HCU_DEBUG_PRINT_NOR("MQTT: Waiting for publication of %s\n, on topic %s for client with ClientID: %s\n", input, topic, HUICOBUS_MQTT_CLIENTID_HCUENTRY);
+	while(deliveredtoken_send != token);
+	MQTTClient_disconnect(client, 10000);
+	MQTTClient_destroy(&client);
+	return rc;
 }
 
 /*** @endcode
@@ -269,11 +329,17 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 {
   //int i;
   //char* payloadptr;
+  UINT32 t;
   struct json_object *jsonobj = NULL;
-  //struct json_object *result_jsonobj = NULL;
-  struct json_object *cmdid_jsonobj = NULL;
-  struct json_object *cmdval_jsonobj = NULL;
+  struct json_object *srcNode_jsonobj = NULL;
+  struct json_object *destNode_jsonobj = NULL;
+  struct json_object *srcId_jsonobj = NULL;
+  struct json_object *destId_jsonobj = NULL;
+  struct json_object *topicId_jsonobj = NULL;
+  struct json_object *cmdId_jsonobj = NULL;
+  struct json_object *cmdVal_jsonobj = NULL;
   struct json_object *cont_jsonobj = NULL;
+  char stmp[100];
 
   //打印输出
 //  payloadptr = message->payload;
@@ -295,21 +361,72 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
   //if (is_error(jsonobj))
   if (jsonobj == NULL)
 	  HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Failed to create json object!\n");
-  cmdid_jsonobj = json_object_object_get(jsonobj, "CommandId");
-  cmdval_jsonobj = json_object_object_get(jsonobj, "CommandValue");
-  cont_jsonobj = json_object_object_get(jsonobj, "HighLayerContent");
+  srcNode_jsonobj = json_object_object_get(jsonobj, "srcNode");
+  destNode_jsonobj = json_object_object_get(jsonobj, "destNode");
+  srcId_jsonobj = json_object_object_get(jsonobj, "srcId");
+  destId_jsonobj = json_object_object_get(jsonobj, "destId");
+  topicId_jsonobj = json_object_object_get(jsonobj, "topicId");
+  cmdId_jsonobj = json_object_object_get(jsonobj, "cmdId");
+  cmdVal_jsonobj = json_object_object_get(jsonobj, "cmdValue");
+  cont_jsonobj = json_object_object_get(jsonobj, "hlContent");
 
   //解码具体数值
-  if (cmdid_jsonobj != NULL){
-	  snd.cmdId = (UINT32)(json_object_get_int(cmdid_jsonobj));
-	  json_object_put(cmdid_jsonobj);
+  //SRCNODE
+  if (srcNode_jsonobj != NULL){
+	  t = strlen(json_object_get_string(srcNode_jsonobj));
+	  memset(stmp, 0, sizeof(stmp));
+	  strncpy(stmp, json_object_get_string(srcNode_jsonobj), t<100?t:100);
+	  json_object_put(srcNode_jsonobj);
+	  snd.srcNode = (UINT32)func_mqtt_nodeid_translate_to_id(stmp);
   }
-  if (cmdval_jsonobj != NULL){
-	  snd.cmdValue = (UINT32)(json_object_get_int(cmdval_jsonobj));
-	  json_object_put(cmdval_jsonobj);
+
+  //DESTNODE
+  if (destNode_jsonobj != NULL){
+	  t = strlen(json_object_get_string(destNode_jsonobj));
+	  memset(stmp, 0, sizeof(stmp));
+	  strncpy(stmp, json_object_get_string(destNode_jsonobj), t<100?t:100);
+	  json_object_put(destNode_jsonobj);
+	  snd.destNode = (UINT32)func_mqtt_nodeid_translate_to_id(stmp);
   }
+
+  //SRCID复用了系统功能
+//  if (srcId_jsonobj != NULL){
+//	  snd.srcId = (UINT32)(json_object_get_int(srcId_jsonobj));
+//	  json_object_put(srcId_jsonobj);
+//  }
+  if (srcId_jsonobj != NULL) json_object_put(srcId_jsonobj);
+
+  //DESTID
+  if (destId_jsonobj != NULL){
+	  t = strlen(json_object_get_string(destId_jsonobj));
+	  memset(stmp, 0, sizeof(stmp));
+	  strncpy(stmp, json_object_get_string(destId_jsonobj), t<100?t:100);
+	  json_object_put(destId_jsonobj);
+	  snd.destId = (UINT32)func_mqtt_clientid_translate_to_id(stmp);
+  }
+
+  //TOPIC复用了系统功能
+//  if (topicId_jsonobj != NULL){
+//	  snd.destId = (UINT32)(json_object_get_int(topicId_jsonobj));
+//	  json_object_put(topicId_jsonobj);
+//  }
+  json_object_put(topicId_jsonobj);
+
+  //CMDID
+  if (cmdId_jsonobj != NULL){
+	  snd.cmdId = (UINT32)(json_object_get_int(cmdId_jsonobj));
+	  json_object_put(cmdId_jsonobj);
+  }
+
+  //CMDVAL
+  if (cmdVal_jsonobj != NULL){
+	  snd.cmdValue = (INT32)(json_object_get_int(cmdVal_jsonobj));
+	  json_object_put(cmdVal_jsonobj);
+  }
+
+  //HLC
   if (cont_jsonobj != NULL){
-	  UINT32 t = strlen(json_object_get_string(cont_jsonobj));
+	  t = strlen(json_object_get_string(cont_jsonobj));
 	  strncpy(snd.hlContent, json_object_get_string(cont_jsonobj), t<HCU_SYSMSG_MQTT_DESC_MAX_LEN?t:HCU_SYSMSG_MQTT_DESC_MAX_LEN);
 	  json_object_put(cont_jsonobj);
   }
@@ -317,25 +434,9 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 
   //发送消息
   snd.length = sizeof(msg_struct_com_mqtt_rcv_t);
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
-  //发送命令给BFSCUICOMM
-  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFSCUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
-	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_AQYCG20_RASBERRY_ID)
-  //发送命令给L3AQYCG20
-  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_L3AQYCG20, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
-	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_L3AQYCG20].taskName);
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-//  //发送命令给BFSCUICOMM
-//  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFDFUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
-//	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
   //发送命令给BFHSUICOMM
-  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFHSUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
-	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFHSUICOMM].taskName);
-#else
-	#error Set project name id error!
-#endif
+  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_HUICOBUSCODEC, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
+	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_HUICOBUSCODEC].taskName);
   //Free Message
   MQTTClient_freeMessage(&message);
   MQTTClient_free(topicName);
@@ -381,6 +482,48 @@ int hcu_mqtt_msg_rcv(void)
   MQTTClient_disconnect(client, 10000);
   MQTTClient_destroy(&client);
   return rc;
+}
+
+//NODEID to CONTEXT transfer
+void func_mqtt_nodeid_translate_to_text(UINT32 nodeId, char *output)
+{
+	if (nodeId <= HUICOBUS_MQTT_NBID_MIN) strncpy(output, HUICOBUS_MQTT_NODEID_MIN, strlen(HUICOBUS_MQTT_NODEID_MIN));
+	else if (nodeId >= HUICOBUS_MQTT_NBID_MAX) strncpy(output, HUICOBUS_MQTT_NODEID_MAX, strlen(HUICOBUS_MQTT_NODEID_MAX));
+
+	switch (nodeId)
+	{
+	case HUICOBUS_MQTT_NBID_LOCALHOST:
+		strncpy(output, HUICOBUS_MQTT_NODEID_LOCALHOST, strlen(HUICOBUS_MQTT_NODEID_LOCALHOST));
+		break;
+
+	case HUICOBUS_MQTT_NBID_FACSERVER:
+		strncpy(output, HUICOBUS_MQTT_NODEID_FACSERVER, strlen(HUICOBUS_MQTT_NODEID_FACSERVER));
+		break;
+
+	case HUICOBUS_MQTT_NBID_REMSERVER:
+		strncpy(output, HUICOBUS_MQTT_NODEID_FACSERVER, strlen(HUICOBUS_MQTT_NODEID_FACSERVER));
+		break;
+
+	case HUICOBUS_MQTT_NBID_MATINC:
+		strncpy(output, HUICOBUS_MQTT_NODEID_MATINC, strlen(HUICOBUS_MQTT_NODEID_MATINC));
+		break;
+
+	default:
+		break;
+	}
+
+	return;
+}
+
+//CONTEXT to NODEID transfer
+UINT32 func_mqtt_nodeid_translate_to_id(char *input)
+{
+	if (strcmp(input, HUICOBUS_MQTT_NODEID_MIN) == 0) return HUICOBUS_MQTT_NBID_MIN;
+	else if (strcmp(input, HUICOBUS_MQTT_NODEID_LOCALHOST) == 0) return HUICOBUS_MQTT_NBID_LOCALHOST;
+	else if (strcmp(input, HUICOBUS_MQTT_NODEID_FACSERVER) == 0) return HUICOBUS_MQTT_NBID_FACSERVER;
+	else if (strcmp(input, HUICOBUS_MQTT_NODEID_FACSERVER) == 0) return HUICOBUS_MQTT_NBID_REMSERVER;
+	else if (strcmp(input, HUICOBUS_MQTT_NODEID_MATINC) == 0) return HUICOBUS_MQTT_NBID_MATINC;
+	else return HUICOBUS_MQTT_NBID_MAX;
 }
 
 //CLIENTID to CONTEXT transfer

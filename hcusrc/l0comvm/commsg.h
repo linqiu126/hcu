@@ -1128,13 +1128,14 @@ typedef struct msg_struct_com_pm_report
 #define HCU_SYSMSG_MQTT_DESC_MAX_LEN  200
 typedef struct msg_struct_com_mqtt_send
 {
-	UINT16 scrNode;
+	UINT16 srcNode;
 	UINT16 destNode;
 	UINT16 srcId;
 	UINT16 destId;
 	UINT16 topicId;
 	UINT32 cmdId;
 	INT32  cmdValue;
+	UINT16 hlcLen;
 	char   hlContent[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
 	UINT32 length;
 }msg_struct_com_mqtt_send_t;
@@ -1142,13 +1143,14 @@ typedef struct msg_struct_com_mqtt_send
 //MSG_ID_COM_MQTT_RCV,
 typedef struct msg_struct_com_mqtt_rcv
 {
-	UINT16 scrNode;
+	UINT16 srcNode;
 	UINT16 destNode;
 	UINT16 srcId;
 	UINT16 destId;
 	UINT16 topicId;
 	UINT32 cmdId;
 	INT32  cmdValue;
+	UINT16 hlcLen;
 	char   hlContent[HCU_SYSMSG_MQTT_DESC_MAX_LEN];
 	UINT32 length;
 }msg_struct_com_mqtt_rcv_t;
