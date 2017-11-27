@@ -102,7 +102,7 @@ OPSTAT fsm_canalpha_l3bfdf_snc_pullin_req(UINT32 dest_id, UINT32 src_id, void * 
 OPSTAT func_canalpha_bfdf_simulation_data_process(void);
 OPSTAT func_canalpha_l2frame_msg_bfdf_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_set_config_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canalpha_l2frame_msg_bfdf_new_ws_event_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_new_ws_event_t *rcv, UINT8 nodeId);
-OPSTAT func_canalpha_l2frame_msg_bfdf_ws_comb_out_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t *rcv, UINT8 nodeId);
+OPSTAT func_canalpha_l2frame_msg_bfdf_ws_comb_out_fb_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canalpha_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_HUITP_MSGID_sui_bfdf_basket_clean_ind_t *rcv, UINT8 nodeId);
 
 /*
@@ -137,7 +137,6 @@ OPSTAT func_canalpha_socketcan_receive(int socket, canid_t *canid, char *canfram
 OPSTAT func_canalpha_socketcan_send(int socket, char *canid_canframe);
 OPSTAT func_canalpha_socketcan_init(char *canitfname, int *sock);
 int    func_canalpha_socketcan_test_main(int argc, char **argv);
-void   func_canalpha_huicobus_trigger_uir(UINT32 cmdId, UINT32 cmdValue);
 
 //USBCAN BSP function mapping
 OPSTAT hcu_canalpha_usbcan_interface_init(void);
@@ -145,6 +144,6 @@ OPSTAT hcu_canalpha_usbcan_l2frame_send(UINT8 *buffer, UINT32 length, UINT32 wmc
 
 
 //高级定义，简化程序的可读性
-#define HCU_ERROR_PRINT_CANALPHA(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANALPHA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+#define HCU_ERROR_PRINT_CANALPHA(...)		do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANALPHA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 #endif /* L2FRAME_CANALPHA_H_ */

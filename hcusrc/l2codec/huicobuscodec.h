@@ -21,5 +21,8 @@
 
 
 
+//Global APIs
+void ihu_huicobus_codec_trigger_uir(UINT32 cmdId, UINT32 cmdValue);
+
 
 #endif /* L2FRAME_HUICOBUSCODEC_H_ */

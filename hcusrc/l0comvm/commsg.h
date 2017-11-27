@@ -3072,7 +3072,6 @@ typedef struct msg_struct_l3bfdf_can_sys_cfg_req
 //MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
 typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
 {
-	UINT8  streamId;
 	UINT8  boardId;
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
@@ -3100,7 +3099,7 @@ typedef struct msg_struct_l3bfdf_can_ws_comb_out
 //MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,  		//出料确认
 typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 {
-	UINT8  streamId;
+	UINT8  boardId;
 	UINT16 hopperId;
 	UINT16 errCode;
 	UINT8  validFlag; //是否执行成功
@@ -3110,7 +3109,6 @@ typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 //MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
 typedef struct msg_struct_can_l3bfdf_basket_clean_ind
 {
-	UINT8  streamId;
 	UINT8  boardId;
 	UINT16 hopperId;
 	UINT32 length;

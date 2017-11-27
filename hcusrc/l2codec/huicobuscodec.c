@@ -17,3 +17,10 @@
 //Global variables
 
 //Task Global variables
+
+
+
+//发送给界面的通知消息
+void func_huicobus_codec_trigger_uir(UINT32 cmdId, UINT32 cmdValue)
+{
+}
