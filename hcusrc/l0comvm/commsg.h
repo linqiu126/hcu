@@ -1135,7 +1135,7 @@ typedef struct msg_struct_com_pm_report
 }msg_struct_com_pm_report_t;
 
 //MSG_ID_COM_MQTT_SEND,
-#define HCU_SYSMSG_MQTT_DESC_MAX_LEN  200
+#define HCU_SYSMSG_MQTT_DESC_MAX_LEN  300
 typedef struct msg_struct_com_mqtt_send
 {
 	UINT16 srcNode;
@@ -3383,6 +3383,12 @@ typedef struct msg_struct_huicobus_uir_study_stop_req
 typedef struct msg_struct_huicobus_uir_test_cmd_req
 {
 	INT32  cmdValue;
+	UINT8  	snrBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	UINT32 	cmdvalue1;
+	UINT32 	cmdvalue2;
+	UINT32 	cmdvalue3;
+	UINT32 	cmdvalue4;
+	UINT8  	cmdBuf[HCU_SYSMSG_SUI_COM_TEST_CMD_BUF];
 	UINT32 length;
 }msg_struct_huicobus_uir_test_cmd_req_t;
 

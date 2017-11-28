@@ -60,20 +60,22 @@ extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_zero_resp(INT32 cmdValu
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_full_resp(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_start_resp(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_stop_resp(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_version_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_alarm_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_error_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp(INT32 cmdValue, StrHlcIe_cui_hcu2uir_test_cmd_resp_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_version_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_version_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_status_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_alarm_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_alarm_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_error_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_error_report_t *buf);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_restart_report(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_logout_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfsc_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue);
-extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfsc_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_inswgt_bfsc_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_inswgt_bfdf_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_inswgt_bfhs_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_callcell_bfsc_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t *buf);
 
+//LOCAL APIs
+OPSTAT func_huicobuscodec_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_received_handle(msg_struct_huicobus_uir_test_cmd_req_t *snd, msg_struct_com_mqtt_rcv_t *rcv);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_HUICOBUSCODEC(...)	           	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUICOBUSCODEC]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
