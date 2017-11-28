@@ -129,10 +129,7 @@ OPSTAT fsm_l3bfhs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	memset(&gTaskL3bfhsContext, 0, sizeof(gTaskL3bfhsContext_t));
 
 	//初始化界面交互数据
-	StrHlcIe_cui_hcu2uir_status_report_t status;
-	memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));
-	status.boardStatus = HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_NULL;
-	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
+	HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_NULL);
 
 	//设置状态机到目标状态
 	if (FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED) == FAILURE)
@@ -475,7 +472,7 @@ OPSTAT fsm_l3bfhs_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_STARTUP);
 
 	//判定状态
-	if (FsmGetState(TASK_ID_L3BFHS) >= FSM_STATE_L3BFHS_ACTIVED){
+	if (FsmGetState(TASK_ID_L3BFHS) > FSM_STATE_L3BFHS_ACTIVED){
 		//Send CFG_REQ到下位机
 		if (func_l3bfhs_send_out_sys_cfg_req() == FAILURE)
 			HCU_ERROR_PRINT_L3BFHS("L3BFHS: Send message error!\n");
@@ -509,10 +506,6 @@ OPSTAT fsm_l3bfhs_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);
 
 	//是否要根据ERR_CODE，赋予不同的差错情形，待定
-
-	//发送SUSPEND命令给下位机，不用启动定时器
-
-	//发送错误指示给UICOMM
 
 	//设置到ACTIVE状态，等待界面进一步反馈
 	FsmSetState(TASK_ID_L3BFHS, FSM_STATE_L3BFHS_ACTIVED);

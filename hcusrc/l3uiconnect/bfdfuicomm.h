@@ -10,7 +10,8 @@
 
 #include "../l1com/l1comdef.h"
 #include "../l2codec/huitp.h"
-#include "../l3appctrl/l3bfdf.h"
+#include "../l2codec/huicobus.h"
+#include "../l2codec/huicobuscodec.h"
 
 
 //State definition

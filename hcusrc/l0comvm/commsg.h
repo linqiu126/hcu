@@ -2886,7 +2886,6 @@ typedef struct msg_struct_uicomm_can_test_cmd_req
 typedef struct msg_struct_can_uicomm_test_cmd_resp
 {
 	UINT8   cmdid;
-	UINT8	streamId;
 	UINT8	sensorid;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
@@ -2916,7 +2915,6 @@ typedef struct msg_struct_l3bfdf_uicomm_ctrl_cmd_resp
 	UINT8   cmdid;
 	UINT8   validFlag;  //是否执行成功
 	UINT16  errCode;
-	UINT8	streamId;
 	UINT8	sensorid;
 	UINT32  length;
 }msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t;
@@ -3182,7 +3180,6 @@ typedef struct msg_struct_l3bfhs_can_sys_cfg_req
 //MSG_ID_CAN_L3BFHS_SYS_CFG_RESP,
 typedef struct msg_struct_can_l3bfhs_sys_cfg_resp
 {
-	UINT8  streamId;
 	UINT8  boardId;
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;

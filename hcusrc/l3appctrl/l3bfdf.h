@@ -8,10 +8,13 @@
 #ifndef L3APP_BFDF_H_
 #define L3APP_BFDF_H_
 
-#include "../l0comvm/sysconfig.h"
 #include "../l1com/l1comdef.h"
 #include "../l0service/timer.h"
-
+#include "../l0service/trace.h"
+#include "../l1com/hwinv.h"
+#include "../l2frame/cloudvela.h"
+#include "../l2codec/huicobus.h"
+#include "../l2codec/huicobuscodec.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -324,7 +327,6 @@ OPSTAT func_l3bfdf_time_out_comb_out_req_process(void);
 OPSTAT func_l3bfdf_time_out_statistic_scan_process(void);
 bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
 
-
 //核心双链数据处理
 extern bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);
 extern bool func_l3bfdf_hopper_state_set_init(UINT8 streamId);
@@ -366,5 +368,14 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 #define HCU_ERROR_PRINT_L3BFDF(...)				do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 #define HCU_ERROR_PRINT_L3BFDF_RECOVERY(...) 	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFDF]++; func_l3bfdf_stm_main_recovery_from_fault(); HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 #define HCU_ERROR_PRINT_L3BFDF_MSGSEND 	   	 	do{HCU_ERROR_PRINT_L3BFDF_RECOVERY("L3BFDF: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);}while(0)
+
+//通知刷新界面的复合宏定义
+#define HCU_L3BFDF_TRIGGER_UI_STATUS_REPORT(bid, par) \
+	do{\
+		StrHlcIe_cui_hcu2uir_status_report_t status;\
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));\
+		status.boardStatus = par;\
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(bid, &status);\
+	}while(0)
 
 #endif /* L3APP_BFDF_H_ */
