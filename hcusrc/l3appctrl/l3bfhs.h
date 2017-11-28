@@ -10,7 +10,12 @@
 
 #include "../l1com/l1comdef.h"
 #include "../l0service/timer.h"
-
+#include "../l0service/timer.h"
+#include "../l0service/trace.h"
+#include "../l1com/hwinv.h"
+#include "../l2frame/cloudvela.h"
+#include "../l2codec/huicobus.h"
+#include "../l2codec/huicobuscodec.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -208,6 +213,7 @@ OPSTAT func_l3bfhs_time_out_cal_zero_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_cal_full_wait_fb_process(void);
 OPSTAT func_l3bfhs_time_out_error_inq_process(void);
 OPSTAT func_l3bfhs_time_out_statistic_scan_process(void);
+OPSTAT func_l3bfhs_send_out_sys_cfg_req(void);
 void func_l3bfhs_stm_main_recovery_from_fault(void);  //提供了一种比RESTART更低层次的状态恢复方式
 
 //External APIs
@@ -218,4 +224,12 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 #define HCU_ERROR_PRINT_L3BFHS(...)	           	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFHS]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 #define HCU_ERROR_PRINT_L3BFHS_RECOVERY(...)   	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFHS]++; func_l3bfhs_stm_main_recovery_from_fault(); HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
+//通知刷新界面的复合宏定义
+#define HCU_L3BFHS_TRIGGER_UI_STATUS_REPORT(par) \
+	do{\
+		StrHlcIe_cui_hcu2uir_status_report_t status;\
+		memset(&status, 0, sizeof(StrHlcIe_cui_hcu2uir_status_report_t));\
+		status.boardStatus = par;\
+		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);\
+	}while(0)
 #endif /* L3APP_BFHS_H_ */
