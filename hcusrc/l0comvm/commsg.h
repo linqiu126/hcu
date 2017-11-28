@@ -3083,7 +3083,7 @@ typedef struct msg_struct_l3bfdf_can_sys_cfg_req
 //MSG_ID_CAN_L3BFDF_SYS_CFG_RESP,
 typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
 {
-	UINT8  boardId;
+	UINT8  snrId;
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
 	UINT32 length;
@@ -3092,7 +3092,7 @@ typedef struct msg_struct_can_l3bfdf_sys_cfg_resp
 //MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT,  	//传感器新数据事件
 typedef struct msg_struct_can_l3bfdf_new_ready_event
 {
-	UINT8  boardId;
+	UINT8  snrId;
 	UINT32 sensorWsValue;
 	UINT32 length;
 }msg_struct_can_l3bfdf_new_ready_event_t;
@@ -3100,7 +3100,7 @@ typedef struct msg_struct_can_l3bfdf_new_ready_event
 //MSG_ID_L3BFDF_CAN_WS_COMB_OUT,  		//出料
 typedef struct msg_struct_l3bfdf_can_ws_comb_out
 {
-	UINT8  boardId;
+	UINT8  snrId;
 	UINT16 hopperId;
 	UINT8   basketFullStatus;    //0-FALSE, 1-TRUE
 	UINT8   bufferFullStatus;	   //0-FALSE, 1-TRUE
@@ -3110,7 +3110,7 @@ typedef struct msg_struct_l3bfdf_can_ws_comb_out
 //MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB,  		//出料确认
 typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 {
-	UINT8  boardId;
+	UINT8  snrId;
 	UINT16 hopperId;
 	UINT16 errCode;
 	UINT8  validFlag; //是否执行成功
@@ -3120,7 +3120,7 @@ typedef struct msg_struct_can_l3bfdf_ws_comb_out_fb
 //MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND,
 typedef struct msg_struct_can_l3bfdf_basket_clean_ind
 {
-	UINT8  boardId;
+	UINT8  snrId;
 	UINT16 hopperId;
 	UINT32 length;
 }msg_struct_can_l3bfdf_basket_clean_ind_t;
@@ -3180,7 +3180,7 @@ typedef struct msg_struct_l3bfhs_can_sys_cfg_req
 //MSG_ID_CAN_L3BFHS_SYS_CFG_RESP,
 typedef struct msg_struct_can_l3bfhs_sys_cfg_resp
 {
-	UINT8  boardId;
+	UINT8  snrId;
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
 	UINT32 length;
@@ -3230,11 +3230,11 @@ typedef struct msg_struct_can_l3bfhs_new_ready_event
 
 //SUI接口公共消息
 //MSG_ID_SUI_TEST_CMD_REQ,  				//测试命令
-#define HCU_SYSMSG_SUI_COM_TEST_CMD_BUF		256
+#define HCU_SYSMSG_SUI_COM_TEST_CMD_BUF		200
 typedef struct msg_struct_sui_test_cmd_req
 {
 	UINT32  cmdid;
-	UINT8  	snrBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	UINT8  	boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
 	UINT32 	cmdValue1;
 	UINT32 	cmdValue2;
 	UINT32 	cmdValue3;
@@ -3381,7 +3381,7 @@ typedef struct msg_struct_huicobus_uir_study_stop_req
 typedef struct msg_struct_huicobus_uir_test_cmd_req
 {
 	INT32  cmdValue;
-	UINT8  	snrBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	UINT8  	boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
 	UINT32 	cmdValue1;
 	UINT32 	cmdValue2;
 	UINT32 	cmdValue3;

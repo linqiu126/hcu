@@ -6450,7 +6450,7 @@ typedef struct StrMsg_HUITP_COMM_sui_bfdf_command_req
 //公共消息过程
 //传感器测试过程
 //HUITP_MSGID_sui_com_test_command_req             = 0x3B70,
-#define HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX  256
+#define HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX  200
 typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
 {
 	UINT16 	msgid;

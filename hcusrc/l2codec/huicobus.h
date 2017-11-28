@@ -266,7 +266,7 @@ typedef struct StrHlcIe_uir2hcu_study_stop_req
 
 //HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req       		= 0x0107,
 #define HUICOBUS_CMDID_CUI_HCU2UIR_TEST_CMD_BITMAP		32
-#define HUICOBUS_CMDID_CUI_HCU2UIR_TEST_CMD_BUF_LEN_MAX	256
+#define HUICOBUS_CMDID_CUI_HCU2UIR_TEST_CMD_BUF_LEN_MAX	200
 typedef struct StrHlcIe_uir2hcu_test_cmd_req
 {
 	UINT8  	snrBitmap[HUICOBUS_CMDID_CUI_HCU2UIR_TEST_CMD_BITMAP];

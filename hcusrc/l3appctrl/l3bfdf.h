@@ -25,7 +25,6 @@ enum FSM_STATE_L3BFDF
 	FSM_STATE_L3BFDF_INITED = FSM_STATE_COMMON + 1,
 	FSM_STATE_L3BFDF_ACTIVED,
 	FSM_STATE_L3BFDF_OOS_SCAN,  //进料组合态
-	FSM_STATE_L3BFDF_OOS_TTT,  	//出料流程态
 	FSM_STATE_L3BFDF_SUSPEND,
 	FSM_STATE_L3BFDF_MAX,
 };
@@ -79,7 +78,9 @@ typedef struct L3BfdfNodeBoardInfo
 #define HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MIN 		30
 #define HCU_L3BFDF_NODE_BOARD_STATUS_VALID 			31
 #define HCU_L3BFDF_NODE_BOARD_STATUS_VALID_ERROR 	32
-#define HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND 		33
+#define HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND_REQ	33
+#define HCU_L3BFDF_NODE_BOARD_STATUS_SUSPEND 		34
+#define HCU_L3BFDF_NODE_BOARD_STATUS_RESUME_REQ		35
 #define HCU_L3BFDF_NODE_BOARD_STATUS_WORK_MAX 		49
 #define HCU_L3BFDF_NODE_BOARD_STATUS_INVALID  		0xFF
 
@@ -326,6 +327,8 @@ OPSTAT func_l3bfdf_time_out_sys_cfg_req_process(void);
 OPSTAT func_l3bfdf_time_out_comb_out_req_process(void);
 OPSTAT func_l3bfdf_time_out_statistic_scan_process(void);
 bool   func_l3bfdf_cacluate_sensor_cfg_start_rcv_complete(void);
+bool   func_l3bfdf_cacluate_sensor_suspend_rcv_complete(void);
+bool   func_l3bfdf_cacluate_sensor_resume_rcv_complete(void);
 
 //核心双链数据处理
 extern bool func_l3bfdf_group_allocation(UINT8 streamId, UINT16 nbrGroup);

@@ -334,7 +334,7 @@ OPSTAT fsm_canalpha_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * par
 
 	//生成bitmap
 	UINT32 bitmap = 0;
-	bitmap = ((UINT32)1<<rcv.boardId);
+	bitmap = ((UINT32)1<<rcv.snrId);
 
 	//准备组装发送消息
 	StrMsg_HUITP_MSGID_sui_bfdf_ws_comb_out_req_t pMsgProc;
@@ -459,7 +459,7 @@ OPSTAT fsm_canalpha_sui_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param
 	UINT32 bitmap = 0;
 	UINT32 temp =0;
 	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
-		if (rcv.snrBitmap[i] == TRUE){
+		if (rcv.boardBitmap[i] == TRUE){
 			temp = ((UINT32)1<<i);
 			bitmap |= temp;
 		}
@@ -1019,7 +1019,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_set_config_resp_received_handle(StrMsg_HUI
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t));
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
-	snd.boardId = nodeId;
+	snd.snrId = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
 		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
@@ -1035,7 +1035,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_new_ws_event_received_handle(StrMsg_HUITP_
 	//组装消息并发送到高层
 	msg_struct_can_l3bfdf_new_ready_event_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_new_ready_event_t));
-	snd.boardId = nodeId;
+	snd.snrId = nodeId;
 	snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight);
 	snd.length = sizeof(msg_struct_can_l3bfdf_new_ready_event_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
@@ -1052,7 +1052,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_ws_comb_out_fb_received_handle(StrMsg_HUIT
 	//组装消息并发送到高层
 	msg_struct_can_l3bfdf_ws_comb_out_fb_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t));
-	snd.boardId = nodeId;
+	snd.snrId = nodeId;
 	snd.errCode = 0;
 	snd.hopperId = HUITP_ENDIAN_EXG16(rcv->apHopperId);
 	snd.validFlag = TRUE;
@@ -1071,7 +1071,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_HU
 	//组装消息并发送到高层
 	msg_struct_can_l3bfdf_basket_clean_ind_t snd;
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfdf_basket_clean_ind_t));
-	snd.boardId = nodeId;
+	snd.snrId = nodeId;
 	snd.hopperId = HUITP_ENDIAN_EXG16(rcv->apHopperId);
 	snd.length = sizeof(msg_struct_can_l3bfdf_basket_clean_ind_t);
 	if (hcu_message_send(MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
