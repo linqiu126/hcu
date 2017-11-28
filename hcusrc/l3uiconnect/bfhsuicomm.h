@@ -10,6 +10,8 @@
 
 #include "../l1com/l1comdef.h"
 #include "../l2codec/huitp.h"
+#include "../l2codec/huicobus.h"
+#include "../l2codec/huicobuscodec.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00
@@ -92,6 +94,15 @@ extern OPSTAT fsm_bfhsuicomm_restart(UINT32 dest_id, UINT32 src_id, void * param
 extern OPSTAT fsm_bfhsuicomm_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_l3bfhs_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_bfhsuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_study_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT fsm_bfhsuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+
 
 //Local API
 OPSTAT  func_bfhsuicomm_read_cfg_file_into_ctrl_table(UINT16 config_index);

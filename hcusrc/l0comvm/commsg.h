@@ -588,6 +588,16 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_SUI_HEART_BEAT_REPORT,
 	MSG_ID_SUI_HEART_BEAT_CONFIRM,
 
+	//HUICOBUS业务消息
+	MSG_ID_HUICOBUS_UIR_INIT_REQ,
+	MSG_ID_HUICOBUS_UIR_RESUME_REQ,
+	MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,
+	MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,
+	MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ,
+	MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,
+	MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,
+	MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,
+
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
 	MSG_ID_L3AQYC_EXG_CTRL_RESP,
@@ -3318,6 +3328,64 @@ typedef struct msg_struct_sui_heart_beat_confirm
 	UINT32 length;
 }msg_struct_sui_heart_beat_confirm_t;
 
+
+//HUICOBUS业务消息
+//MSG_ID_HUICOBUS_UIR_INIT_REQ,
+typedef struct msg_struct_huicobus_uir_init_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_init_req_t;
+
+//MSG_ID_HUICOBUS_UIR_RESUME_REQ,
+typedef struct msg_struct_huicobus_uir_resume_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_resume_req_t;
+
+//MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,
+typedef struct msg_struct_huicobus_uir_suspend_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_suspend_req_t;
+
+//MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,
+typedef struct msg_struct_huicobus_uir_cali_zero_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_cali_zero_req_t;
+
+//MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ,
+typedef struct msg_struct_huicobus_uir_cali_full_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_cali_full_req_t;
+
+//MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,
+typedef struct msg_struct_huicobus_uir_study_start_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_study_start_req_t;
+
+//MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,
+typedef struct msg_struct_huicobus_uir_study_stop_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_study_stop_req_t;
+
+//MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,
+typedef struct msg_struct_huicobus_uir_test_cmd_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_test_cmd_req_t;
+
 /*
  *
  *  传感器-CLOUDVELA之间的消息对
@@ -4587,7 +4655,7 @@ typedef struct  msg_struct_l3hate_can_frame_rcv
 	UINT32 length;
 }msg_struct_l3hate_can_frame_rcv_t;
 
-//MSG_ID_MQTT_L3HATE_FRAME_RCV,
+//MSG_ID_HUICOBUS_L3HATE_FRAME_RCV,
 typedef struct  msg_struct_l3hate_mqtt_frame_rcv
 {
 	UINT8  dataBuf[HCU_SYSMSG_HATE_BUF_LEN_MAX];

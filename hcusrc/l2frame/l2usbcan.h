@@ -74,24 +74,37 @@
 #define RX_BUFF_SIZE  1000
 
 //函数调用返回状态值
-#define	STATUS_OK					1
-#define STATUS_ERR					0
-
-#define USHORT unsigned short int
-#define BYTE unsigned char
-//#define CHAR char
-#define UCHAR unsigned char
+#ifndef STATUS_OK
+	#define	STATUS_OK					1
+#endif
+#ifndef STATUS_ERR
+	#define	STATUS_ERR					0
+#endif
+#ifndef USHORT
+	#define USHORT unsigned short int
+#endif
+#ifndef BYTE
+	#define BYTE unsigned char
+#endif
+#ifndef UCHAR
+	#define UCHAR unsigned char
+#endif
 //#define UINT unsigned int
-#define DWORD unsigned int
-#define PVOID void*
-#define ULONG unsigned int
-#define INT int
-//#define UINT32 UINT
-#define LPVOID void*
-#define BOOL BYTE
-#define TRUE 1
-#define FALSE 0
-
+#ifndef DWORD
+	#define DWORD unsigned int
+#endif
+#ifndef PVOID
+	#define PVOID void*
+#endif
+#ifndef INT
+	#define INT int
+#endif
+#ifndef LPVOID
+	#define LPVOID void*
+#endif
+#ifndef BOOL
+	#define BOOL BYTE
+#endif
 
 //1.ZLGCAN系列接口卡信息的数据类型。
 typedef  struct  _VCI_BOARD_INFO{

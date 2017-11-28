@@ -217,6 +217,5 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_L3BFHS(...)	           	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFHS]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 #define HCU_ERROR_PRINT_L3BFHS_RECOVERY(...)   	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFHS]++; func_l3bfhs_stm_main_recovery_from_fault(); HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
-#define HCU_ERROR_PRINT_L3BFHS_MSGSEND 	   		do{HCU_ERROR_PRINT_L3BFHS_RECOVERY("L3BFHS: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);}while(0)
 
 #endif /* L3APP_BFHS_H_ */

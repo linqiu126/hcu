@@ -102,18 +102,91 @@ OPSTAT fsm_huicobuscodec_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr
 
 OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
+	//int ret=0;
+	msg_struct_com_mqtt_rcv_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_HUICOBUSCODEC, msg_struct_com_mqtt_rcv_t);
 
-#if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-//  //发送命令给BFDFUICOMM
-//  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFDFUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
-//	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFSCUICOMM].taskName);
-#elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-//  //发送命令给BFHSUICOMM
-//  if (hcu_message_send(MSG_ID_COM_MQTT_RCV, TASK_ID_BFHSUICOMM, TASK_ID_MQTT, &snd, snd.length) == FAILURE)
-//	HCU_ERROR_PRINT_TASK(TASK_ID_MQTT, "MQTT: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_MQTT].taskName, zHcuVmCtrTab.task[TASK_ID_BFHSUICOMM].taskName);
-#else
-	#error Set project name id error!
-#endif
+	//忽略srcNode/destNode/srcId/destId/topicId
+
+	//针对cmdId进行处理
+	switch(rcv.cmdId)
+	{
+	case HUICOBUS_CMDID_cui_uir2hcu_init_req:
+	{
+		msg_struct_huicobus_uir_init_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_init_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_init_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_INIT_REQ);
+		break;
+	}
+	case HUICOBUS_CMDID_cui_uir2hcu_start_resume_req:
+	{
+		msg_struct_huicobus_uir_resume_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_resume_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_resume_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_RESUME_REQ);
+		break;
+	}
+	case HUICOBUS_CMDID_cui_uir2hcu_stop_suspend_req:
+	{
+		msg_struct_huicobus_uir_suspend_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_suspend_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_suspend_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_RESUME_REQ);
+		break;
+	}
+	case HUICOBUS_CMDID_cui_uir2hcu_cali_zero_req:
+	{
+		msg_struct_huicobus_uir_cali_zero_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_cali_zero_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_cali_zero_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ);
+		break;
+	}
+	case HUICOBUS_CMDID_cui_uir2hcu_cali_full_req:
+	{
+		msg_struct_huicobus_uir_cali_full_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_cali_full_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_cali_full_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ);
+		break;
+	}
+	case HUICOBUS_CMDID_cui_uir2hcu_study_start_req:
+	{
+		msg_struct_huicobus_uir_study_start_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_study_start_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_study_start_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_STUDY_START_REQ);
+		break;
+	}
+	case HUICOBUS_CMDID_cui_uir2hcu_study_stop_req:
+	{
+		msg_struct_huicobus_uir_study_stop_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_study_stop_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_study_stop_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ);
+		break;
+	}
+	case HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req:
+	{
+		msg_struct_huicobus_uir_test_cmd_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_test_cmd_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_test_cmd_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ);
+		break;
+	}
+	default:
+		HCU_ERROR_PRINT_HUICOBUSCODEC("HUICOBUS: Receive unsupported message! cmdId=0x%x, cmdValue=%d\n", rcv.cmdId, rcv.cmdValue);
+		break;
+	}
 
 	return SUCCESS;
 }
@@ -125,6 +198,7 @@ void func_huicobus_codec_trigger_uir(UINT32 cmdId, INT32 cmdValue)
 	//
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_init_resp(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -138,6 +212,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_init_resp(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -151,6 +226,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_start_resume_resp(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -164,6 +240,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_stop_suspend_resp(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_zero_resp(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -177,6 +254,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_zero_resp(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_full_resp(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -190,6 +268,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_cali_full_resp(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_start_resp(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -203,6 +282,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_start_resp(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_stop_resp(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -216,6 +296,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_study_stop_resp(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -229,6 +310,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_test_cmd_resp(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_version_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -242,6 +324,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_version_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -255,6 +338,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_alarm_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -268,6 +352,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_alarm_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_error_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -281,6 +366,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_error_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_restart_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -294,6 +380,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_restart_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_logout_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -307,6 +394,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_logout_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfsc_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -320,6 +408,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfsc_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -333,6 +422,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfdf_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -346,6 +436,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(INT32 cmdValue)
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -359,6 +450,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report(INT32 cmdValue
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;
@@ -372,6 +464,7 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
 OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue)
 {
 	msg_struct_com_mqtt_send_t pMsgProc;

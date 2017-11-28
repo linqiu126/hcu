@@ -431,6 +431,7 @@ int func_mqtt_msg_rcv_msgarrvd(void *context, char *topicName, int topicLen, MQT
 	  json_object_put(cont_jsonobj);
   }
   json_object_put(jsonobj);
+  snd.hlcLen = strlen(snd.hlContent);
 
   //发送消息
   snd.length = sizeof(msg_struct_com_mqtt_rcv_t);

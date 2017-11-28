@@ -74,6 +74,11 @@ extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report(INT32 c
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue);
 
+
+//高级定义，简化程序的可读性
+#define HCU_ERROR_PRINT_HUICOBUSCODEC(...)	           	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUICOBUSCODEC]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+#define HCU_ERROR_PRINT_HUICOBUSCODEC_RECOVERY(...)   	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUICOBUSCODEC]++; func_l3bfhs_stm_main_recovery_from_fault(); HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+
 //FIX DEFINATION
 #define HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE() \
 	do{\
@@ -95,5 +100,15 @@ extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 c
 			return FAILURE;\
 	}while(0)
 
+//处理多个项目的过程
+#define HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(msgid)\
+	do{\
+		if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)\
+			HCU_MSG_SEND_GENERNAL_PROCESS(msgid, TASK_ID_BFDFUICOMM, TASK_ID_HUICOBUSCODEC);\
+		else if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)\
+			HCU_MSG_SEND_GENERNAL_PROCESS(msgid, TASK_ID_BFHSUICOMM, TASK_ID_HUICOBUSCODEC);\
+		else\
+			HCU_ERROR_PRINT_HUICOBUSCODEC("HUICOBUSCODEC: Error set project name!\n");\
+	}while(0)
 
 #endif /* L2FRAME_HUICOBUSCODEC_H_ */

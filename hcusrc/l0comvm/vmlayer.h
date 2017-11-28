@@ -1002,6 +1002,36 @@ int pthread_setname_np(pthread_t thread, const char *name);
 #define HCU_DEBUG_PRINT_CRT		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_CRT_ON) != FALSE) HcuDebugPrint
 #define HCU_DEBUG_PRINT_FAT		if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE) HcuDebugPrint
 
+//简化程序编写的宏定义：接收消息拷贝到本地后的基础处理
+#define HCU_MSG_RCV_CHECK_FOR_LOCALIZE(taskid, par) \
+	do{\
+		memset(&rcv, 0, sizeof(par));\
+		if ((param_ptr == NULL || param_len > sizeof(par)))\
+		{\
+			char s[200];\
+			memset(s, 0, sizeof(s));\
+			sprintf(s, "%s: Receive message error!\n", zHcuVmCtrTab.task[taskid].taskName);\
+			HCU_ERROR_PRINT_TASK(taskid, s);\
+		}\
+		memcpy(&rcv, param_ptr, param_len);\
+	}while(0)
+
+//简化程序编写的宏定义：发送消息的简易处理
+#define HCU_MSG_SEND_GENERNAL_PROCESS(msgId, taskDest, taskOrg) \
+	do{\
+		if (hcu_message_send(msgId, taskDest, taskOrg, &snd, snd.length) == FAILURE)\
+		{\
+			char s[200];\
+			memset(s, 0, sizeof(s));\
+			sprintf(s, "%s: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[taskOrg].taskName, zHcuVmCtrTab.task[taskOrg].taskName, zHcuVmCtrTab.task[taskDest].taskName);\
+			HCU_ERROR_PRINT_TASK(taskOrg, s);\
+		}\
+	}while(0)
+
+//简化程序编写的宏定义：定时器处理
+#define HCU_TIMERID_WITH_DUR(tid)	tid, zHcuSysEngPar.timer.array[tid].dur
+
+
 
 
 #endif /* L0COMVM_VMLAYER_H_ */
