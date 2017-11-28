@@ -597,6 +597,7 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,
 	MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,
 	MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,
+	MSG_ID_HUICOBUS_UIR_ONE_KEY_CLEAN_ZERO_REQ,
 
 	//L3AQYCG20
 	MSG_ID_L3AQYC_EXG_CTRL_REQ,
@@ -3237,10 +3238,10 @@ typedef struct msg_struct_sui_test_cmd_req
 {
 	UINT32  cmdid;
 	UINT8  	snrBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-	UINT32 	cmdvalue1;
-	UINT32 	cmdvalue2;
-	UINT32 	cmdvalue3;
-	UINT32 	cmdvalue4;
+	UINT32 	cmdValue1;
+	UINT32 	cmdValue2;
+	UINT32 	cmdValue3;
+	UINT32 	cmdValue4;
 	UINT8	cmdBuf[HCU_SYSMSG_SUI_COM_TEST_CMD_BUF];
 	UINT32 	length;
 }msg_struct_sui_test_cmd_req_t;
@@ -3252,10 +3253,10 @@ typedef struct msg_struct_sui_test_cmd_resp
 	UINT8	snrId;
 	UINT8   validFlag;  //是否执行成功 0-FALSE, 1-TRUE
 	UINT16  errCode;
-	UINT32  cmdvalue1;
-	UINT32  cmdvalue2;
-	UINT32  cmdvalue3;
-	UINT32  cmdvalue4;
+	UINT32  cmdValue1;
+	UINT32  cmdValue2;
+	UINT32  cmdValue3;
+	UINT32  cmdValue4;
 	UINT32 	length;
 }msg_struct_sui_test_cmd_resp_t;
 
@@ -3384,13 +3385,20 @@ typedef struct msg_struct_huicobus_uir_test_cmd_req
 {
 	INT32  cmdValue;
 	UINT8  	snrBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-	UINT32 	cmdvalue1;
-	UINT32 	cmdvalue2;
-	UINT32 	cmdvalue3;
-	UINT32 	cmdvalue4;
+	UINT32 	cmdValue1;
+	UINT32 	cmdValue2;
+	UINT32 	cmdValue3;
+	UINT32 	cmdValue4;
 	UINT8  	cmdBuf[HCU_SYSMSG_SUI_COM_TEST_CMD_BUF];
 	UINT32 length;
 }msg_struct_huicobus_uir_test_cmd_req_t;
+
+//MSG_ID_HUICOBUS_UIR_ONE_KEY_CLEAN_ZERO_REQ
+typedef struct msg_struct_huicobus_uir_one_key_clean_zero_req
+{
+	INT32  cmdValue;
+	UINT32 length;
+}msg_struct_huicobus_uir_one_key_clean_zero_req_t;
 
 /*
  *

@@ -44,9 +44,6 @@ enum FSM_STATE_HUICOBUSCODEC
 extern HcuFsmStateItem_t HcuFsmHuicobuscodec[];
 
 //Global APIs
-void func_huicobus_codec_trigger_uir(UINT32 cmdId, INT32 cmdValue);
-
-//API
 extern OPSTAT fsm_huicobuscodec_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_huicobuscodec_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 extern OPSTAT fsm_huicobuscodec_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
@@ -73,6 +70,7 @@ extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_inswgt_bfhs_report(INT32 cmd
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_callcell_bfsc_report_t *buf);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_callcell_bfdf_report_t *buf);
 extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue, StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t *buf);
+extern OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_one_key_clean_zero_resp(INT32 cmdValue);
 
 //LOCAL APIs
 OPSTAT func_huicobuscodec_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_received_handle(msg_struct_huicobus_uir_test_cmd_req_t *snd, msg_struct_com_mqtt_rcv_t *rcv);

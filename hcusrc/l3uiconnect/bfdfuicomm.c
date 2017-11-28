@@ -53,6 +53,17 @@ HcuFsmStateItem_t HcuFsmBfdfuicomm[] =
 	{MSG_ID_L3BFDF_UICOMM_CFG_RESP,      	FSM_STATE_BFDFUICOMM_ACTIVED,          		fsm_bfdfuicomm_l3bfdf_cfg_resp},	//配置反馈
 */
 
+	//UIR2HCU MSG RCV
+	{MSG_ID_HUICOBUS_UIR_INIT_REQ,      		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_init_req},
+	{MSG_ID_HUICOBUS_UIR_RESUME_REQ,      		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_resume_req},
+	{MSG_ID_HUICOBUS_UIR_SUSPEND_REQ,      		FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_suspend_req},
+	{MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_cali_zero_req},
+	{MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_cali_full_req},
+	{MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_study_start_req},
+	{MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_study_stop_req},
+	{MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,      	FSM_STATE_BFDFUICOMM_ACTIVED,          	fsm_bfdfuicomm_huicobus_uir_test_cmd_req},
+	{MSG_ID_HUICOBUS_UIR_ONE_KEY_CLEAN_ZERO_REQ, FSM_STATE_BFDFUICOMM_ACTIVED,         	fsm_bfdfuicomm_huicobus_uir_one_key_clean_zero_req},
+
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
 };
@@ -339,6 +350,87 @@ OPSTAT fsm_bfdfuicomm_sui_test_cmd_resp(UINT32 dest_id, UINT32 src_id, void * pa
 	}*/
 
 	//返回
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_init_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_init_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_init_req_t);
+
+	//查询gTaskL3bfdfContext状态，判定下位机状态
+
+	//if (wsState == INIT, DOWNLOAD) return SW LOADING
+
+	//if (wsState == ACTIVE) return COMPL
+
+	//假设状态正常
+	hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_init_resp(HUICOBUS_CMDID_CUI_HCU2UIR_GENERAL_CMDVAL_OFFLINE);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_resume_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_resume_req_t);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_suspend_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_suspend_req_t);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_cali_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_cali_zero_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_cali_zero_req_t);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_cali_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_cali_full_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_cali_full_req_t);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_study_start_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_study_start_req_t);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_study_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_study_stop_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_study_stop_req_t);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_test_cmd_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_test_cmd_req_t);
+
+	return SUCCESS;
+}
+
+OPSTAT fsm_bfdfuicomm_huicobus_uir_one_key_clean_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_one_key_clean_zero_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFDFUICOMM, msg_struct_huicobus_uir_one_key_clean_zero_req_t);
+
 	return SUCCESS;
 }
 

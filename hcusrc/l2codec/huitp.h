@@ -6456,10 +6456,10 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
 	UINT16 	msgid;
 	UINT16 	length;
 	UINT32 	cmdid;
-	UINT32 	cmdvalue1;
-	UINT32 	cmdvalue2;
-	UINT32 	cmdvalue3;
-	UINT32 	cmdvalue4;
+	UINT32 	cmdValue1;
+	UINT32 	cmdValue2;
+	UINT32 	cmdValue3;
+	UINT32 	cmdValue4;
 	UINT8   cmdBuf[HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX];
 }StrMsg_HUITP_MSGID_sui_com_test_command_req_t;
 typedef enum StrHuiIe_sui_com_test_cmdid
@@ -6497,10 +6497,10 @@ typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_resp
 	UINT8  validFlag;  /*是否执行成功 0-FALSE, 1-TRUE */
 	UINT16 error_code;
 	UINT32 cmdid;
-	UINT32 cmdvalue1;
-	UINT32 cmdvalue2;
-	UINT32 cmdvalue3;
-	UINT32 cmdvalue4;
+	UINT32 cmdValue1;
+	UINT32 cmdValue2;
+	UINT32 cmdValue3;
+	UINT32 cmdValue4;
 }StrMsg_HUITP_MSGID_sui_com_test_command_resp_t;
 
 //心跳过程

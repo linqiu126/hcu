@@ -120,6 +120,7 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_INIT_REQ);
 		break;
 	}
+
 	case HUICOBUS_CMDID_cui_uir2hcu_start_resume_req:
 	{
 		msg_struct_huicobus_uir_resume_req_t snd;
@@ -129,6 +130,7 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_RESUME_REQ);
 		break;
 	}
+
 	case HUICOBUS_CMDID_cui_uir2hcu_stop_suspend_req:
 	{
 		msg_struct_huicobus_uir_suspend_req_t snd;
@@ -138,6 +140,7 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_RESUME_REQ);
 		break;
 	}
+
 	case HUICOBUS_CMDID_cui_uir2hcu_cali_zero_req:
 	{
 		msg_struct_huicobus_uir_cali_zero_req_t snd;
@@ -147,6 +150,7 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_CALI_ZERO_REQ);
 		break;
 	}
+
 	case HUICOBUS_CMDID_cui_uir2hcu_cali_full_req:
 	{
 		msg_struct_huicobus_uir_cali_full_req_t snd;
@@ -156,6 +160,7 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_CALI_FULL_REQ);
 		break;
 	}
+
 	case HUICOBUS_CMDID_cui_uir2hcu_study_start_req:
 	{
 		msg_struct_huicobus_uir_study_start_req_t snd;
@@ -165,6 +170,7 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_STUDY_START_REQ);
 		break;
 	}
+
 	case HUICOBUS_CMDID_cui_uir2hcu_study_stop_req:
 	{
 		msg_struct_huicobus_uir_study_stop_req_t snd;
@@ -174,6 +180,7 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ);
 		break;
 	}
+
 	case HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req:
 	{
 		msg_struct_huicobus_uir_test_cmd_req_t snd;
@@ -186,6 +193,17 @@ OPSTAT fsm_huicobuscodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ);
 		break;
 	}
+
+	case HUICOBUS_CMDID_cui_uir2hcu_one_key_clean_zero_req:
+	{
+		msg_struct_huicobus_uir_one_key_clean_zero_req_t snd;
+		memset(&snd, 0, sizeof(msg_struct_huicobus_uir_one_key_clean_zero_req_t));
+		snd.cmdValue = rcv.cmdValue;
+		snd.length = sizeof(msg_struct_huicobus_uir_one_key_clean_zero_req_t);
+		HCU_HUICOBUS_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUICOBUS_UIR_ONE_KEY_CLEAN_ZERO_REQ);
+		break;
+	}
+
 	default:
 		HCU_ERROR_PRINT_HUICOBUSCODEC("HUICOBUS: Receive unsupported message! cmdId=0x%x, cmdValue=%d\n", rcv.cmdId, rcv.cmdValue);
 		break;
@@ -217,27 +235,27 @@ OPSTAT func_huicobuscodec_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_received_handl
 	  json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue1
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdValue1");
+	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue1");
 	if (decode_jsonobj != NULL){
-		snd->cmdvalue1 = json_object_get_int(decode_jsonobj);
+		snd->cmdValue1 = json_object_get_int(decode_jsonobj);
 		json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue2
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdValue2");
+	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue2");
 	if (decode_jsonobj != NULL){
-		snd->cmdvalue2 = json_object_get_int(decode_jsonobj);
+		snd->cmdValue2 = json_object_get_int(decode_jsonobj);
 		json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue3
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdValue3");
+	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue3");
 	if (decode_jsonobj != NULL){
-		snd->cmdvalue3 = json_object_get_int(decode_jsonobj);
+		snd->cmdValue3 = json_object_get_int(decode_jsonobj);
 		json_object_put(decode_jsonobj);
 	}
 	//解码cmdvalue4
-	decode_jsonobj = json_object_object_get(jsonobj, "cmdValue4");
+	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue4");
 	if (decode_jsonobj != NULL){
-		snd->cmdvalue4 = json_object_get_int(decode_jsonobj);
+		snd->cmdValue4 = json_object_get_int(decode_jsonobj);
 		json_object_put(decode_jsonobj);
 	}
 	//解码cmdBuf
@@ -251,12 +269,6 @@ OPSTAT func_huicobuscodec_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_received_handl
 	//全部解完了
 	json_object_put(jsonobj);
 	return SUCCESS;
-}
-
-//发送给界面的通知消息
-void func_huicobus_codec_trigger_uir(UINT32 cmdId, INT32 cmdValue)
-{
-	//
 }
 
 //发送API
@@ -648,7 +660,19 @@ OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report(INT32 cmdValue
 	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
 }
 
+//发送API
+OPSTAT hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_one_key_clean_zero_resp(INT32 cmdValue)
+{
+	msg_struct_com_mqtt_send_t pMsgProc;
+	HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE();
+	pMsgProc.cmdId = HUICOBUS_CMDID_cui_hcu2uir_one_key_clean_zero_resp;
 
+	//HLC part
+	pMsgProc.hlcLen = 0;
+
+	//Call MQTT APIs
+	HCU_HUICOBUS_ENCODE_HCU2UIR_CALL_API_MQTT_SYN_MODE();
+}
 
 
 

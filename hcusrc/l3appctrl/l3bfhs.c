@@ -485,7 +485,7 @@ OPSTAT fsm_l3bfhs_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 	HCU_DEBUG_PRINT_CRT("L3BFHS: Sensor ID = %d is set to be startup!\n", rcv.snrId);
 
 	//通知界面
-	func_huicobus_codec_trigger_uir(0, 0);
+	//func_huicobus_codec_trigger_uir(0, 0);
 	//dbi_HcuBfsc_WmcStatusUpdate(0, nodeId, DBI_BFHS_SNESOR_STATUS_STARTUP, 0);
 
 	//判定状态
@@ -524,7 +524,7 @@ OPSTAT fsm_l3bfhs_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 //	}
 
 	//通知界面
-	func_huicobus_codec_trigger_uir(0, 0);
+	//func_huicobus_codec_trigger_uir(0, 0);
 	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_FAULT_RCV, 0);
 
 	if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_INIT_MAX)
@@ -557,7 +557,7 @@ OPSTAT fsm_l3bfhs_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void *
 //	}
 
 	//通知界面
-	func_huicobus_codec_trigger_uir(0, 0);
+	//func_huicobus_codec_trigger_uir(0, 0);
 	//dbi_HcuBfhs_WmcStatusUpdate(0, nodeId, DBI_BFDF_SNESOR_STATUS_FAULT_RCV, 0);
 
 	//回送

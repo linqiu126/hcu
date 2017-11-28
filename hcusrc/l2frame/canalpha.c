@@ -472,10 +472,10 @@ OPSTAT fsm_canalpha_sui_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param
 	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_com_test_command_req);
 	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
 	pMsgProc.cmdid = HUITP_ENDIAN_EXG32(rcv.cmdid);
-	pMsgProc.cmdvalue1 = HUITP_ENDIAN_EXG32(rcv.cmdvalue1);
-	pMsgProc.cmdvalue2 = HUITP_ENDIAN_EXG32(rcv.cmdvalue2);
-	pMsgProc.cmdvalue3 = HUITP_ENDIAN_EXG32(rcv.cmdvalue3);
-	pMsgProc.cmdvalue4 = HUITP_ENDIAN_EXG32(rcv.cmdvalue4);
+	pMsgProc.cmdValue1 = HUITP_ENDIAN_EXG32(rcv.cmdValue1);
+	pMsgProc.cmdValue2 = HUITP_ENDIAN_EXG32(rcv.cmdValue2);
+	pMsgProc.cmdValue3 = HUITP_ENDIAN_EXG32(rcv.cmdValue3);
+	pMsgProc.cmdValue4 = HUITP_ENDIAN_EXG32(rcv.cmdValue4);
 #if (HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX != HCU_SYSMSG_SUI_COM_TEST_CMD_BUF)
 	#error HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX define error!
 #endif
@@ -1275,10 +1275,10 @@ OPSTAT func_canalpha_l2frame_msg_com_test_command_resp_received_handle(StrMsg_HU
 	snd.cmdid = HUITP_ENDIAN_EXG32(rcv->cmdid);
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->error_code);
-	snd.cmdvalue1 = HUITP_ENDIAN_EXG32(rcv->cmdvalue1);
-	snd.cmdvalue2 = HUITP_ENDIAN_EXG32(rcv->cmdvalue2);
-	snd.cmdvalue3 = HUITP_ENDIAN_EXG32(rcv->cmdvalue3);
-	snd.cmdvalue4 = HUITP_ENDIAN_EXG32(rcv->cmdvalue4);
+	snd.cmdValue1 = HUITP_ENDIAN_EXG32(rcv->cmdValue1);
+	snd.cmdValue2 = HUITP_ENDIAN_EXG32(rcv->cmdValue2);
+	snd.cmdValue3 = HUITP_ENDIAN_EXG32(rcv->cmdValue3);
+	snd.cmdValue4 = HUITP_ENDIAN_EXG32(rcv->cmdValue4);
 
 	snd.length = sizeof(msg_struct_sui_test_cmd_resp_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)

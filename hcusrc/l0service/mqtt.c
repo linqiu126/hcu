@@ -470,7 +470,8 @@ int hcu_mqtt_msg_rcv(void)
 	}
 	HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", HUICOBUS_MQTT_TOPIC_HCU2UIR, HUICOBUS_MQTT_CLIENTID_HCUENTRY, HUICOBUS_MQTT_QOS_CONST);
 	HCU_DEBUG_PRINT_NOR("MQTT: Subscribing to topic %s\n for client %s using QoS%d\n\n, Press Q<Enter> to quit\n\n", HUICOBUS_MQTT_TOPIC_BHTRANS, HUICOBUS_MQTT_CLIENTID_HCUENTRY, HUICOBUS_MQTT_QOS_CONST);
-	MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_HCU2UIR, HUICOBUS_MQTT_QOS_CONST);
+	MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_UIR2HCU, HUICOBUS_MQTT_QOS_CONST);
+	MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_OPN2HCU, HUICOBUS_MQTT_QOS_CONST);
 	MQTTClient_subscribe(client, HUICOBUS_MQTT_TOPIC_BHTRANS, HUICOBUS_MQTT_QOS_CONST);
 
 	//退出条件，未来待完善

@@ -56,6 +56,7 @@ HcuFsmStateItem_t HcuFsmBfhsuicomm[] =
 	{MSG_ID_HUICOBUS_UIR_STUDY_START_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_study_start_req},
 	{MSG_ID_HUICOBUS_UIR_STUDY_STOP_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_study_stop_req},
 	{MSG_ID_HUICOBUS_UIR_TEST_CMD_REQ,      	FSM_STATE_BFHSUICOMM_ACTIVED,          	fsm_bfhsuicomm_huicobus_uir_test_cmd_req},
+	{MSG_ID_HUICOBUS_UIR_ONE_KEY_CLEAN_ZERO_REQ, FSM_STATE_BFHSUICOMM_ACTIVED,         	fsm_bfhsuicomm_huicobus_uir_one_key_clean_zero_req},
 
     //结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -376,6 +377,13 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_test_cmd_req(UINT32 dest_id, UINT32 src_id, v
 	return SUCCESS;
 }
 
+OPSTAT fsm_bfhsuicomm_huicobus_uir_one_key_clean_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	msg_struct_huicobus_uir_one_key_clean_zero_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_BFHSUICOMM, msg_struct_huicobus_uir_one_key_clean_zero_req_t);
+
+	return SUCCESS;
+}
 
 OPSTAT func_bfhsuicomm_time_out_period_read_process(void)
 {

@@ -60,6 +60,7 @@ typedef enum HuicobusCmdidCuiDefination
 	HUICOBUS_CMDID_cui_uir2hcu_study_start_req    		= 0x0105,
 	HUICOBUS_CMDID_cui_uir2hcu_study_stop_req     		= 0x0106,
 	HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req       		= 0x0107,
+	HUICOBUS_CMDID_cui_uir2hcu_one_key_clean_zero_req   = 0x0116,
 	HUICOBUS_CMDID_cui_uir2hcu_max,
 
 	//HCU2UIR频道
@@ -84,6 +85,7 @@ typedef enum HuicobusCmdidCuiDefination
 	HUICOBUS_CMDID_cui_hcu2uir_callcell_bfsc_report     = 0x0193,
 	HUICOBUS_CMDID_cui_hcu2uir_callcell_bfdf_report     = 0x0194,
 	HUICOBUS_CMDID_cui_hcu2uir_callcell_bfhs_report     = 0x0195,
+	HUICOBUS_CMDID_cui_hcu2uir_one_key_clean_zero_resp  = 0x0196,
 	HUICOBUS_CMDID_cui_hcu2uir_max,
 
 	//UIR2UIP频道
@@ -108,6 +110,7 @@ typedef enum HuicobusCmdidCuiDefination
 	HUICOBUS_CMDID_cui_uir2uip_callcell_bfsc_report     = 0x0293,
 	HUICOBUS_CMDID_cui_uir2uip_callcell_bfdf_report     = 0x0294,
 	HUICOBUS_CMDID_cui_uir2uip_callcell_bfhs_report     = 0x0295,
+	HUICOBUS_CMDID_cui_uir2uip_one_key_clean_zero_report= 0x0296,
 	HUICOBUS_CMDID_cui_uir2uip_max,
 
 	//QRPRINT频道
@@ -164,19 +167,25 @@ typedef enum HuicobusCmdidCuiDefination
 //////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 {
-	“srcNode”:1,
-	“destNode”:2,
-	“srcId”:33,
-	“destId”:44,
-	“topicId”:55,
-	“cmdId”:1234,
-	“cmdValue”:5678,
+	“srcNode”:” HUICOBUS_MQTT_NODEID_LOCALHOST”,
+	“destNode”: ” HUICOBUS_MQTT_NODEID_LOCALHOST”,
+	“srcId”:” HUICOBUS_MQTT_CLIENTID_HCUENTRY”,
+	“destId”: "HUICOBUS_MQTT_CLIENTID_ UIROUTER",
+	“topicId”: "HUICOBUS_MQTT_TOPIC_HCU2UIR",
+	“cmdId”:391,
+	“cmdValue”:2,
 	“hlContent”:
 	{
-		“aa”: 12,
-		“bb”: “34”
+		“snrId”: 12,
+		“validFlag”: 1
+		“errCode”: 0,
+		“cmdTestValue1”: 1,
+		“cmdTestValue2”: 0,
+		“cmdTestValue3”: 0,
+		“cmdTestValue4”: 0,
 	}
 }
+
 */
 #define HUICOBUS_CMDID_STRING_SRCNODE		"srcNode"
 #define HUICOBUS_CMDID_STRING_DESTNODE		"destNode"
@@ -269,6 +278,12 @@ typedef struct StrHlcIe_uir2hcu_test_cmd_req
 }StrHlcIe_cui_uir2hcu_test_cmd_req_t;
 //cmdValue = TestCmdId
 //HLC表达
+
+//HUICOBUS_CMDID_cui_uir2hcu_one_key_clean_zero_req   = 0x0116,
+typedef struct StrHlcIe_uir2hcu_one_key_clean_zero_req
+{
+}StrHlcIe_cui_uir2hcu_one_key_clean_zero_req_t;
+//cmdValue = NULL
 
 //HUICOBUS_CMDID_cui_uir2hcu_max,
 
@@ -446,6 +461,12 @@ typedef struct StrHlcIe_cui_hcu2uir_callcell_bfhs_report
 }StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t;
 //cmdValue = configID;
 
+//HUICOBUS_CMDID_cui_hcu2uir_one_key_clean_zero_resp  = 0x0196,
+typedef struct StrHlcIe_cui_hcu2uir_one_key_clean_zero_resp
+{
+}StrHlcIe_cui_hcu2uir_one_key_clean_zero_resp_t;
+//cmdValue = NULL
+
 //HUICOBUS_CMDID_cui_hcu2uir_max,
 
 //UIR2UIP频道
@@ -549,6 +570,11 @@ typedef struct StrHlcIe_cui_uir2uip_callcell_bfdf_report
 typedef struct StrHlcIe_cui_uir2uip_callcell_bfhs_report
 {
 }StrHlcIe_cui_uir2uip_callcell_bfhs_report_t;
+
+//HUICOBUS_CMDID_cui_uir2uip_one_key_clean_zero_report = 0x0296,
+typedef struct StrHlcIe_cui_uir2uip_one_key_clean_zero_report
+{
+}StrHlcIe_cui_uir2uip_one_key_clean_zero_report_t;
 
 //HUICOBUS_CMDID_cui_uir2uip_max,
 
