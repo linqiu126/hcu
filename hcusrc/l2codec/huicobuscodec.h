@@ -77,7 +77,6 @@ OPSTAT func_huicobuscodec_HUICOBUS_CMDID_cui_uir2hcu_test_cmd_req_received_handl
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_HUICOBUSCODEC(...)	           	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUICOBUSCODEC]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
-#define HCU_ERROR_PRINT_HUICOBUSCODEC_RECOVERY(...)   	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUICOBUSCODEC]++; func_l3bfhs_stm_main_recovery_from_fault(); HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
 
 //FIX DEFINATION
 #define HCU_HUICOBUS_ENCODE_HCU2UIR_MSGHEAD_WITH_FIX_VALUE() \

@@ -810,6 +810,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huicobuscodec.h</locationURI>
 		</link>
 		<link>
+			<name>src/l2codec/huijsoncodec.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huijsoncodec.c</locationURI>
+		</link>
+		<link>
+			<name>src/l2codec/huijsoncodec.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huijsoncodec.h</locationURI>
+		</link>
+		<link>
 			<name>src/l2codec/huitp.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/hcusrc/l2codec/huitp.h</locationURI>

@@ -197,7 +197,7 @@ typedef enum HuicobusCmdidCuiDefination
 #define HUICOBUS_CMDID_STRING_HLCONTENT		"hlContent"
 
 //公共消息
-typedef struct StrMsg_HUICOBUS_CMDID_cui_general_msg_head
+typedef struct StrHuiIe_HUICOBUS_CMDID_cui_general_msg_head
 {
 	UINT32 srcNode;
 	UINT32 destNode;
