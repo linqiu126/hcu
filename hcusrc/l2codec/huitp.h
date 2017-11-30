@@ -913,6 +913,8 @@ typedef enum
 	HUITP_JSON_MSGID_uni_earthquake_ctrl_resp        = 0x5C80,
 	HUITP_JSON_MSGID_uni_earthquake_data_report      = 0x5C81,
 	HUITP_JSON_MSGID_uni_earthquake_data_confirm     = 0x5C01,
+	HUITP_JSON_MSGID_uni_heart_beat_report           = 0x5CFF,
+	HUITP_JSON_MSGID_uni_heart_beat_confirm     	 = 0x5C7F,
 	HUITP_JSON_MSGID_uni_earthquake_max,
 
   //软件清单
@@ -8629,6 +8631,18 @@ typedef struct StrIe_HUITP_JSON_MSGID_uni_earthquake_data_confirm
 	UINT8	cmdId;
 	UINT8   result;
 }StrIe_HUITP_JSON_MSGID_uni_earthquake_data_confirm_t;
+
+//HUITP_JSON_MSGID_uni_heart_beat_report           = 0x5CFF,
+typedef struct StrIe_HUITP_JSON_MSGID_uni_heart_beat_report
+{
+	UINT32 rand;
+}StrIe_HUITP_JSON_MSGID_uni_heart_beat_report_t;
+
+//HUITP_JSON_MSGID_uni_heart_beat_confirm     	 = 0x5C7F,
+typedef struct StrIe_HUITP_JSON_MSGID_uni_heart_beat_confirm
+{
+	UINT32 rand;
+}StrIe_HUITP_JSON_MSGID_uni_heart_beat_confirm_t;
 
 //HUITP_JSON_MSGID_uni_earthquake_max,
 

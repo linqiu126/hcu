@@ -14,48 +14,23 @@
 #ifndef L2FRAME_HUIJSONCODEC_H_
 #define L2FRAME_HUIJSONCODEC_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "MQTTClient.h"
 #include <json-c/json.h>
 #include <json-c/json_object.h>
-#include "../l2codec/huitp.h"
-#include "../l0comvm/vmlayer.h"
-#include "../l0comvm/sysconfig.h"
 #include "../l1com/l1comdef.h"
+#include "../l2codec/huitp.h"
 #include "../l0service/mqtt.h"
-#include "../l0comvm/vmlayer.h"
 #include "../l2frame/cloudvela.h"
 
-//State definition
-//#define FSM_STATE_ENTRY  0x00
-//#define FSM_STATE_IDLE  0x01
-//#define FSM_STATE_COMMON  	0x02
-enum FSM_STATE_HUIJSONCODEC
-{
-	FSM_STATE_HUIJSONCODEC_INITED = FSM_STATE_COMMON + 1,
-	FSM_STATE_HUIJSONCODEC_ACTIVED,
-	FSM_STATE_HUIJSONCODEC_MAX,
-};
-//#define FSM_STATE_END   0xFE
-//#define FSM_STATE_INVALID 0xFF
-
-//Global variables
-extern HcuFsmStateItem_t HcuFsmHuijsoncodec[];
+//CONST DEFINATION
+#define HCU_HUIJSONCODEC_CONTENT_MAX_LEN 1000
 
 //Global APIs
-extern OPSTAT fsm_huijsoncodec_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_huijsoncodec_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_huijsoncodec_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
-extern OPSTAT fsm_huijsoncodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+extern OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input);
 
 //发送API函数
 extern OPSTAT hcu_encode_HUITP_JSON_MSGID_uni_earthquake_ctrl_resp(char *toUser, StrIe_HUITP_JSON_MSGID_uni_earthquake_ctrl_resp_t *buf);
 extern OPSTAT hcu_encode_HUITP_JSON_MSGID_uni_earthquake_data_report(char *toUser, StrIe_HUITP_JSON_MSGID_uni_earthquake_data_report_t *buf);
-
-//LOCAL APIs
-//OPSTAT func_huijsoncodec_HUIJSON_CMDID_cui_uir2hcu_test_cmd_req_received_handle(msg_struct_huicobus_uir_test_cmd_req_t *snd, msg_struct_com_mqtt_rcv_t *rcv);
+extern OPSTAT hcu_encode_HUITP_JSON_MSGID_uni_heart_beat_report(char *toUser, StrIe_HUITP_JSON_MSGID_uni_heart_beat_report_t *buf);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_HUIJSONCODEC(...)	           	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)

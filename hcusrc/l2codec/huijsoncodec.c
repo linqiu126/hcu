@@ -14,184 +14,181 @@
 #include "huijsoncodec.h"
 #include "../l0service/trace.h"
 
-/*
-** FSM of the HUIJSONCODEC
-*/
-HcuFsmStateItem_t HcuFsmHuijsoncodec[] =
+OPSTAT ihu_huijsoncodec_decode_HUITP_JSON_message(char *input)
 {
-    //MessageId                 //State                   		 		//Function
-	//启始点，固定定义，不要改动, 使用ENTRY/END，意味者MSGID肯定不可能在某个高位区段中；考虑到所有任务共享MsgId，即使分段，也无法实现
-	//完全是为了给任务一个初始化的机会，按照状态转移机制，该函数不具备启动的机会，因为任务初始化后自动到FSM_STATE_IDLE
-	//如果没有必要进行初始化，可以设置为NULL
-	{MSG_ID_ENTRY,       		FSM_STATE_ENTRY,            			fsm_huijsoncodec_task_entry}, //Starting
+	//int ret=0;
+	UINT32 t=0;
+	UINT32 msgId=0, msgLen=0;
+	struct json_object *jsonobj = NULL;
+	struct json_object *Cont_jsonobj = NULL;
+	char stmp[HCU_HUIJSONCODEC_CONTENT_MAX_LEN];
 
-	//System level initialization, only controlled by HCU-MAIN
-    {MSG_ID_COM_INIT,       	FSM_STATE_IDLE,            				fsm_huijsoncodec_init},
-    {MSG_ID_COM_RESTART,		FSM_STATE_IDLE,            				fsm_huijsoncodec_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_IDLE,            				fsm_com_do_nothing},
+	//分解对象
+	jsonobj = json_tokener_parse(input);
+	if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode json object!\n");
 
-    //Task level initialization
-    {MSG_ID_COM_RESTART,        FSM_STATE_HUIJSONCODEC_ACTIVED,         fsm_huijsoncodec_restart},
-    {MSG_ID_COM_INIT_FEEDBACK,	FSM_STATE_HUIJSONCODEC_ACTIVED,         fsm_com_do_nothing},
-	{MSG_ID_COM_HEART_BEAT,     FSM_STATE_HUIJSONCODEC_ACTIVED,   		fsm_com_heart_beat_rcv},
-	{MSG_ID_COM_HEART_BEAT_FB,  FSM_STATE_HUIJSONCODEC_ACTIVED,   		fsm_com_do_nothing},
-	{MSG_ID_COM_MQTT_RCV,  		FSM_STATE_HUIJSONCODEC_ACTIVED,   		fsm_huijsoncodec_mqtt_rcv},
+	//ToUsr_jsonobj
+	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_TO_USER);
+	if (Cont_jsonobj == NULL)
+	{
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode ToUsr_jsonobj object!\n");
+	}
+	t = strlen(json_object_get_string(Cont_jsonobj));
+	memset(stmp, 0, sizeof(stmp));
+	strncpy(stmp, json_object_get_string(Cont_jsonobj), t<HCU_HUIJSONCODEC_CONTENT_MAX_LEN?t:HCU_HUIJSONCODEC_CONTENT_MAX_LEN);
+	json_object_put(Cont_jsonobj);
+	if (strcmp(stmp, zHcuSysEngPar.hwBurnId.equLable) != 0){
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to match receive deviceId!\n");
+	}
 
-    //结束点，固定定义，不要改动
-    {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
-};
+	//FrUsr_jsonobj
+	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_FROM_USER);;
+	if (Cont_jsonobj == NULL)
+	{
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode FrUsr_jsonobj object!\n");
+	}
+	json_object_put(Cont_jsonobj);
 
-//Global variables
+	//CrTim_jsonobj
+	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_CREATE_TIME);;
+	if (Cont_jsonobj == NULL)
+	{
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode CrTim_jsonobj object!\n");
+	}
+	json_object_put(Cont_jsonobj);
 
-//Main Entry
-//Input parameter would be useless, but just for similar structure purpose
-OPSTAT fsm_huijsoncodec_task_entry(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//除了对全局变量进行操作之外，尽量不要做其它操作，因为该函数将被主任务/线程调用，不是本任务/线程调用
-	//该API就是给本任务一个提早介入的入口，可以帮着做些测试性操作
-	if (FsmSetState(TASK_ID_HUIJSONCODEC, FSM_STATE_IDLE) == FAILURE){
-		HcuErrorPrint("HUIJSONCODEC: Error Set FSM State at fsm_timer_task_entry\n");}
-	return SUCCESS;
-}
+	//MsgTp_jsonobj
+	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_TYPE);
+	if (Cont_jsonobj == NULL)
+	{
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode MsgTp_jsonobj object!\n");
+	}
+	t = strlen(json_object_get_string(Cont_jsonobj));
+	memset(stmp, 0, sizeof(stmp));
+	strncpy(stmp, json_object_get_string(Cont_jsonobj), t<HCU_HUIJSONCODEC_CONTENT_MAX_LEN?t:HCU_HUIJSONCODEC_CONTENT_MAX_LEN);
+	json_object_put(Cont_jsonobj);
+	if (strcmp(stmp, HUITP_MSG_HUIXML_MSGTYPE_HUIJSON_STRING) != 0)
+	{
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to match receive deviceId!\n");
+	}
 
-OPSTAT fsm_huijsoncodec_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	int ret=0;
+	//MsgId_jsonobj
+	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_ID);;
+	if (Cont_jsonobj == NULL)
+	{
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode MsgId_jsonobj object!\n");
+	}
+	msgId=json_object_get_int(Cont_jsonobj);
+	json_object_put(Cont_jsonobj);
 
-	if ((src_id > TASK_ID_MIN) &&(src_id < TASK_ID_MAX)){
-		//Send back MSG_ID_COM_INIT_FEEDBACK to HCU-MAIN
-		msg_struct_com_init_feedback_t snd0;
-		memset(&snd0, 0, sizeof(msg_struct_com_init_feedback_t));
-		snd0.length = sizeof(msg_struct_com_init_feedback_t);
-		ret = hcu_message_send(MSG_ID_COM_INIT_FEEDBACK, src_id, TASK_ID_HUIJSONCODEC, &snd0, snd0.length);
-		if (ret == FAILURE){
-			HcuErrorPrint("HUIJSONCODEC: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_HUIJSONCODEC].taskName, zHcuVmCtrTab.task[src_id].taskName);
-			return FAILURE;
+	//MsgLn_jsonobj
+	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_LEN);;
+	if (Cont_jsonobj == NULL)
+	{
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode MsgLn_jsonobj object!\n");
+	}
+	msgId=json_object_get_int(Cont_jsonobj);
+	json_object_put(Cont_jsonobj);
+
+	//FnFlg_jsonobj
+	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_FUNC_FLAG);;
+	if (Cont_jsonobj == NULL)
+	{
+		json_object_put(jsonobj);
+		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode FnFlg_jsonobj object!\n");
+	}
+	json_object_put(Cont_jsonobj);
+
+	//IeCnt_jsonobj
+	Cont_jsonobj = json_object_object_get(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_IE_CONTENT);
+	json_object_put(jsonobj);
+	if (msgLen==0){
+		if (Cont_jsonobj != NULL){
+			json_object_put(Cont_jsonobj);
+			HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode Cont_jsonobj object!\n");
+		}
+	}
+	else{
+		if (Cont_jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode IeCnt_jsonobj object!\n");
+		else{
+			memset(stmp, 0, sizeof(stmp));
+			strncpy(stmp, json_object_get_string(Cont_jsonobj), t<HCU_HUIJSONCODEC_CONTENT_MAX_LEN?t:HCU_HUIJSONCODEC_CONTENT_MAX_LEN);
+			json_object_put(Cont_jsonobj);
 		}
 	}
 
-	//收到初始化消息后，进入初始化状态
-	if (FsmSetState(TASK_ID_HUIJSONCODEC, FSM_STATE_HUIJSONCODEC_INITED) == FAILURE){
-		HcuErrorPrint("HUIJSONCODEC: Error Set FSM State!\n");
-		return FAILURE;
-	}
-
-	//INIT this task global variables
-	zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUIJSONCODEC] = 0;
-
-	//进入等待反馈状态
-	if (FsmSetState(TASK_ID_HUIJSONCODEC, FSM_STATE_HUIJSONCODEC_ACTIVED) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_HUIJSONCODEC]++;
-		HcuErrorPrint("HUIJSONCODEC: Error Set FSM State!\n");
-		return FAILURE;
-	}
-	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
-		HcuDebugPrint("HUIJSONCODEC: Enter FSM_STATE_HUIJSONCODEC_ACTIVED status, Keeping loop of signal sending here!\n");
-	}
-
-	return SUCCESS;
-}
-
-OPSTAT fsm_huijsoncodec_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	HcuErrorPrint("MQTT: Internal error counter reach DEAD level, SW-RESTART soon!\n");
-	zHcuSysStaPm.statisCnt.restartCnt++;
-	fsm_huijsoncodec_init(0, 0, NULL, 0);
-	return SUCCESS;
-}
-
-OPSTAT fsm_huijsoncodec_mqtt_rcv(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
-{
-	//int ret=0;
-	msg_struct_com_mqtt_rcv_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_HUIJSONCODEC, msg_struct_com_mqtt_rcv_t);
-
-	//忽略srcNode/destNode/srcId/destId/topicId
-
 	//针对cmdId进行处理
-	switch(rcv.cmdId)
+	switch(msgId)
 	{
-	case HUITP_JSON_MSGID_uni_earthquake_ctrl_req:
-	{
-//		msg_struct_huijson_uir_init_req_t snd;
-//		memset(&snd, 0, sizeof(msg_struct_huijson_uir_init_req_t));
-//		snd.cmdValue = rcv.cmdValue;
-//		snd.length = sizeof(msg_struct_huijson_uir_init_req_t);
-//		HCU_HUIJSON_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUIJSON_UIR_INIT_REQ);
-		break;
-	}
+		case HUITP_JSON_MSGID_uni_earthquake_ctrl_req:
+		{
+			jsonobj = json_tokener_parse(stmp);
+			if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode json object!\n");
+			Cont_jsonobj = json_object_object_get(jsonobj, "cmdId");
+			if (Cont_jsonobj != NULL){
+				//a = json_object_get_int(Cont_jsonobj); //赋值
+				json_object_put(Cont_jsonobj);
+			}
+			json_object_put(jsonobj);
+			//发送消息给L3
+	//		msg_struct_huijson_uir_init_req_t snd;
+	//		memset(&snd, 0, sizeof(msg_struct_huijson_uir_init_req_t));
+	//		snd.cmdValue = rcv.cmdValue;
+	//		snd.length = sizeof(msg_struct_huijson_uir_init_req_t);
+	//		HCU_HUIJSON_ENCODE_HCU2UIR_MSG_SND_UICOMM(MSG_ID_HUIJSON_UIR_INIT_REQ);
+			break;
+		}
 
-	case HUITP_JSON_MSGID_uni_earthquake_data_confirm:
-	{
-		break;
-	}
+		case HUITP_JSON_MSGID_uni_earthquake_data_confirm:
+		{
+			jsonobj = json_tokener_parse(stmp);
+			if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode json object!\n");
+			Cont_jsonobj = json_object_object_get(jsonobj, "cmdId");
+			if (Cont_jsonobj != NULL){
+				//a = json_object_get_int(Cont_jsonobj); //赋值
+				json_object_put(Cont_jsonobj);
+			}
+			Cont_jsonobj = json_object_object_get(jsonobj, "result");
+			if (Cont_jsonobj != NULL){
+				//a = json_object_get_int(Cont_jsonobj); //赋值
+				json_object_put(Cont_jsonobj);
+			}
+			json_object_put(jsonobj);
+			//发送消息给L3
+			break;
+		}
 
-	default:
-		HCU_ERROR_PRINT_HUIJSONCODEC("HUIJSON: Receive unsupported message! cmdId=0x%x, cmdValue=%d\n", rcv.cmdId, rcv.cmdValue);
-		break;
+		case HUITP_JSON_MSGID_uni_heart_beat_confirm:
+		{
+			jsonobj = json_tokener_parse(stmp);
+			if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to decode json object!\n");
+			Cont_jsonobj = json_object_object_get(jsonobj, "rand");
+			if (Cont_jsonobj != NULL){
+				//a = json_object_get_int(Cont_jsonobj); //赋值
+				json_object_put(Cont_jsonobj);
+			}
+			json_object_put(jsonobj);
+			//发送消息给L3
+			break;
+		}
+
+		default:
+		{
+			HCU_ERROR_PRINT_HUIJSONCODEC("HUIJSON: Receive unsupported message! msgId=0x%x, msgLen=%d\n", msgId, msgLen);
+			break;
+		}
 	}
 
 	return SUCCESS;
 }
-
-//FUNC
-//OPSTAT func_huijsoncodec_HUIJSON_CMDID_cui_uir2hcu_test_cmd_req_received_handle(msg_struct_huijson_uir_test_cmd_req_t *snd, msg_struct_com_mqtt_rcv_t *rcv)
-//{
-//	#if ((HUIJSON_CMDID_CUI_HCU2UIR_TEST_CMD_BITMAP != HCU_SYSMSG_SUI_SENSOR_NBR) ||\
-//			(HUIJSON_CMDID_CUI_HCU2UIR_TEST_CMD_BUF_LEN_MAX != HUIJSON_CMDID_CUI_HCU2UIR_TEST_CMD_BUF_LEN_MAX))
-//	#error PARAMTER SET ERROR!
-//	#endif
-//	int i=0;
-//	struct json_object *jsonobj = NULL;
-//	struct json_object *decode_jsonobj = NULL;
-//	jsonobj = json_tokener_parse(rcv->hlContent);
-//	if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_HUIJSONCODEC, "HUIJSONCODEC: Failed to create json object!\n");
-//
-//	//解码snrBitmap ARRAY
-//	decode_jsonobj = json_object_object_get(jsonobj, "snrBitmap");
-//	if (decode_jsonobj != NULL){
-//		for (i = 0 ; i < json_object_array_length(decode_jsonobj); i++){
-//			json_object *val = json_object_array_get_idx(decode_jsonobj, i);
-//			if (i<HUIJSON_CMDID_CUI_HCU2UIR_TEST_CMD_BITMAP) snd->boardBitmap[i] = json_object_get_int(val);
-//		}
-//	  json_object_put(decode_jsonobj);
-//	}
-//	//解码cmdvalue1
-//	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue1");
-//	if (decode_jsonobj != NULL){
-//		snd->cmdValue1 = json_object_get_int(decode_jsonobj);
-//		json_object_put(decode_jsonobj);
-//	}
-//	//解码cmdvalue2
-//	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue2");
-//	if (decode_jsonobj != NULL){
-//		snd->cmdValue2 = json_object_get_int(decode_jsonobj);
-//		json_object_put(decode_jsonobj);
-//	}
-//	//解码cmdvalue3
-//	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue3");
-//	if (decode_jsonobj != NULL){
-//		snd->cmdValue3 = json_object_get_int(decode_jsonobj);
-//		json_object_put(decode_jsonobj);
-//	}
-//	//解码cmdvalue4
-//	decode_jsonobj = json_object_object_get(jsonobj, "cmdTestValue4");
-//	if (decode_jsonobj != NULL){
-//		snd->cmdValue4 = json_object_get_int(decode_jsonobj);
-//		json_object_put(decode_jsonobj);
-//	}
-//	//解码cmdBuf
-//	decode_jsonobj = json_object_object_get(jsonobj, "cmdBuf");
-//	if (decode_jsonobj != NULL){
-//		for (i = 0 ; i < json_object_array_length(decode_jsonobj); i++){
-//			json_object *val = json_object_array_get_idx(decode_jsonobj, i);
-//			if (i<HUIJSON_CMDID_CUI_HCU2UIR_TEST_CMD_BUF_LEN_MAX) snd->cmdBuf[i] = json_object_get_int(val);
-//		}
-//	}
-//	//全部解完了
-//	json_object_put(jsonobj);
-//	return SUCCESS;
-//}
 
 //发送API
 OPSTAT hcu_encode_HUITP_JSON_MSGID_uni_earthquake_ctrl_resp(char *toUser, StrIe_HUITP_JSON_MSGID_uni_earthquake_ctrl_resp_t *buf)
@@ -243,6 +240,19 @@ OPSTAT hcu_encode_HUITP_JSON_MSGID_uni_earthquake_data_report(char *toUser, StrI
     json_object_object_add(cont_jsonobj, "xData", json_object_new_int(buf->xData));
     json_object_object_add(cont_jsonobj, "yData", json_object_new_int(buf->yData));
     json_object_object_add(cont_jsonobj, "zData", json_object_new_int(buf->zData));
+
+    HCU_HUIJSON_ENCODE_MSGBUF_SEND_TO_BH();
+	return SUCCESS;
+}
+
+OPSTAT hcu_encode_HUITP_JSON_MSGID_uni_heart_beat_report(char *toUser, StrIe_HUITP_JSON_MSGID_uni_heart_beat_report_t *buf)
+{
+    struct json_object *jsonobj = NULL;
+    struct json_object *cont_jsonobj = NULL;
+    HCU_HUIJSON_ENCODE_MSGHEAD_WITH_FIX_VALUE(HUITP_JSON_MSGID_uni_heart_beat_report);
+
+    //内容体
+    json_object_object_add(cont_jsonobj, "rand", json_object_new_int(buf->rand));
 
     HCU_HUIJSON_ENCODE_MSGBUF_SEND_TO_BH();
 	return SUCCESS;
