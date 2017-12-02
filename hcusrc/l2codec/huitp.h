@@ -49,6 +49,7 @@ typedef void                      VOID;
  * 2017/10/16 V3.1: FDWQ消息更新
  * 2017/11/24 V3.2: BFHS消息更新
  * 2017/11/24 V3.3: 合并公共消息, 以及BFDF消息
+ * 2017/11/29 V3.4: 增加HUITP-JSON结构
  *
  *
  */
@@ -117,9 +118,10 @@ typedef void                      VOID;
 #define HUITP_MSG_HUIXML_MSGTYPE_ALARM_REPORT_STRING 	"huitp_alarm"  //for alarm report
 #define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_ID 			6
 #define HUITP_MSG_HUIXML_MSGTYPE_PM_REPORT_STRING 		"huitp_pm"  //for pm report
-
-#define HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID 			7
-#define HUITP_MSG_HUIXML_MSGTYPE_COMMON_STRING 		"hcu_huitp"  //use common string for the moment
+#define HUITP_MSG_HUIXML_MSGTYPE_COMMON_ID 				7
+#define HUITP_MSG_HUIXML_MSGTYPE_COMMON_STRING 			"hcu_huitp"  //use common string for the moment
+#define HUITP_MSG_HUIXML_MSGTYPE_HUIJSON_ID 			8
+#define HUITP_MSG_HUIXML_MSGTYPE_HUIJSON_STRING 		"huitp_json"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -904,6 +906,16 @@ typedef enum
 	HUITP_MSGID_uni_itf_485_report                   = 0x5B81, 
 	HUITP_MSGID_uni_itf_485_confirm                  = 0x5B01, 
 	HUITP_MSGID_uni_itf_485_max,
+
+	 //地震
+	HUITP_JSON_MSGID_uni_earthquake_min              = 0x5C00,
+	HUITP_JSON_MSGID_uni_earthquake_ctrl_req         = 0x5C00,
+	HUITP_JSON_MSGID_uni_earthquake_ctrl_resp        = 0x5C80,
+	HUITP_JSON_MSGID_uni_earthquake_data_report      = 0x5C81,
+	HUITP_JSON_MSGID_uni_earthquake_data_confirm     = 0x5C01,
+	HUITP_JSON_MSGID_uni_heart_beat_report           = 0x5CFF,
+	HUITP_JSON_MSGID_uni_heart_beat_confirm     	 = 0x5C7F,
+	HUITP_JSON_MSGID_uni_earthquake_max,
 
   //软件清单
 	HUITP_MSGID_uni_inventory_min                    = 0xA000,	
@@ -6483,6 +6495,10 @@ typedef enum StrHuiIe_sui_com_test_cmdid
 	HUITP_IEID_SUI_COM_TEST_CMDID_SENSOR_COMMAND_OBJECT_WRITE,
 	HUITP_IEID_SUI_COM_TEST_CMDID_MOTOR_COMMAND = 20,
 	//BFDF SPECIFIC PART
+	HUITP_IEID_SUI_BFDF_TEST_CMDID_SPEC1 = 0x0100,
+	HUITP_IEID_SUI_BFDF_TEST_CMDID_BLINK_PATTERN1 = 0x0101,
+	//BFHS SPECIFIC PART
+	HUITP_IEID_SUI_BFHS_TEST_CMDID_SPEC1 = 0x0200,
 
 	HUITP_IEID_SUI_COM_TEST_CMDID_MAX, //Ending
 	HUITP_IEID_SUI_COM_TEST_CMDID_INVALID = 0xFFFF,
@@ -8531,4 +8547,105 @@ typedef struct StrMsg_HUITP_MSGID_uni_heart_beat_confirm
 //HUITP_MSGID_uni_null                             = 0xFF,	
 
 #pragma pack () //取消字节对齐
+
+
+
+/////////////////////////////////////////////////////////
+////HUITP-JSON///////////////////////////////////////////
+/////////////////////////////////////////////////////////
+//增加HUITP-JSON结构
+#define HUITP_MSG_HUIJSON_CONSTANT_TO_USER  		"ToUsr"
+#define HUITP_MSG_HUIJSON_CONSTANT_FROM_USER  		"FrUsr"
+#define HUITP_MSG_HUIJSON_CONSTANT_CREATE_TIME  	"CrTim"
+#define HUITP_MSG_HUIJSON_CONSTANT_MSG_TYPE  		"MsgTp"
+#define HUITP_MSG_HUIJSON_CONSTANT_MSG_ID  			"MsgId"
+#define HUITP_MSG_HUIJSON_CONSTANT_MSG_LEN  		"MsgLn"
+#define HUITP_MSG_HUIJSON_CONSTANT_IE_CONTENT  		"IeCnt"
+#define HUITP_MSG_HUIJSON_CONSTANT_FUNC_FLAG  		"FnFlg"
+
+/*
+{
+	“ToUsr”:”XHZN”,
+	“FrUsr”:”HCU_GTJYG5203_RND04”,
+	“CrTim”:4335667,
+	“MsgTp”:"huitp-json",
+	“MsgId”:4345,
+	“MsgLn”:15,
+	“IeCnt”:
+	{
+		“snrId”: 12,
+		“validFlag”: 1
+		“errCode”: 0,
+		“cmdTestValue1”: 1,
+		“cmdTestValue2”: 0,
+		“cmdTestValue3”: 0,
+		“cmdTestValue4”: 0
+	},
+	“FnFlg”:0
+}
+
+*/
+
+//公共消息
+#define HUITP_JSON_IE_BUF_MAX_LEN	300
+typedef struct StrMsg_HUITP_JSON_MSGID_general_message
+{
+	UINT32 ToUsr;
+	UINT32 FrUsr;
+	UINT32 CrTim;
+	UINT32 MsgTp;
+	UINT32 MsgId;
+	UINT32 MsgLn;
+	UINT32 IeCnt;
+	UINT8  ieBuf[HUITP_JSON_IE_BUF_MAX_LEN];
+	UINT32 FnFlg;
+}StrMsg_HUITP_JSON_MSGID_general_message;
+
+//地震
+//HUITP_JSON_MSGID_uni_earthquake_min                   = 0x5C00,
+//HUITP_JSON_MSGID_uni_earthquake_ctrl_req              = 0x5C00,
+typedef struct StrIe_HUITP_JSON_MSGID_uni_earthquake_ctrl_req
+{
+	UINT8	cmdId;
+}StrIe_HUITP_JSON_MSGID_uni_earthquake_ctrl_req_t;
+
+//HUITP_JSON_MSGID_uni_earthquake_ctrl_resp             = 0x5C80,
+typedef struct StrIe_HUITP_JSON_MSGID_uni_earthquake_ctrl_resp
+{
+	UINT8	cmdId;
+	UINT8   result;
+}StrIe_HUITP_JSON_MSGID_uni_earthquake_ctrl_resp_t;
+
+//HUITP_JSON_MSGID_uni_earthquake_data_report           = 0x5C81,
+typedef struct StrIe_HUITP_JSON_MSGID_uni_earthquake_data_report
+{
+	UINT8	cmdId;
+	UINT32  xData;
+	UINT32  yData;
+	UINT32  zData;
+}StrIe_HUITP_JSON_MSGID_uni_earthquake_data_report_t;
+
+//HUITP_JSON_MSGID_uni_earthquake_data_confirm          = 0x5C01,
+typedef struct StrIe_HUITP_JSON_MSGID_uni_earthquake_data_confirm
+{
+	UINT8	cmdId;
+	UINT8   result;
+}StrIe_HUITP_JSON_MSGID_uni_earthquake_data_confirm_t;
+
+//HUITP_JSON_MSGID_uni_heart_beat_report           = 0x5CFF,
+typedef struct StrIe_HUITP_JSON_MSGID_uni_heart_beat_report
+{
+	UINT32 rand;
+}StrIe_HUITP_JSON_MSGID_uni_heart_beat_report_t;
+
+//HUITP_JSON_MSGID_uni_heart_beat_confirm     	 = 0x5C7F,
+typedef struct StrIe_HUITP_JSON_MSGID_uni_heart_beat_confirm
+{
+	UINT32 rand;
+}StrIe_HUITP_JSON_MSGID_uni_heart_beat_confirm_t;
+
+//HUITP_JSON_MSGID_uni_earthquake_max,
+
+
+
 #endif /* _HUITP_H_ */

@@ -594,6 +594,7 @@ extern HcuFsmStateItem_t HcuFsmNbiotcj188[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmNbiotqg376[];                        //状态机
 extern HcuFsmStateItem_t HcuFsmLlczhb[];                            //状态机
 extern HcuFsmStateItem_t HcuFsmHuicobuscodec[];                     //状态机
+extern HcuFsmStateItem_t HcuFsmHuijsoncodec[];                     //状态机
 extern HcuFsmStateItem_t HcuFsmHsmmp[];                             //状态机
 extern HcuFsmStateItem_t HcuFsmEmc[];                               //状态机
 extern HcuFsmStateItem_t HcuFsmHumid[];                             //状态机
