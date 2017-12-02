@@ -189,6 +189,7 @@
 //定义污染值门限值
 #define HCU_SENSOR_PM25_VALUE_ALARM_THRESHOLD 3 //瞬时浓度报警值设为3.0mg/m3,当连续5min颗粒物平均浓度高于3.0mg/m3,在线监测系统应能发布报警提示
 #define HCU_SENSOR_NOISE_VALUE_ALARM_THRESHOLD 80 //瞬时噪声报警值设为80 dB,在线监测系统应能发布报警提示
+#define HCU_SENSOR_HUMID_VALUE_ALARM_THRESHOLD 400 //瞬时噪声报警值设为80 dB,在线监测系统应能发布报警提示
 
 //定义致命错误次数门限值，错误累计次数超过此值，程序退出或重启
 #define HCU_FATAL_ERROR_CURL_THRESHOLD 90

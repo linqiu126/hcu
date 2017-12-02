@@ -1467,6 +1467,107 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		HcuErrorPrint("MODBUS: Re-enter modbus operation by equpId used!\n");
 		return FAILURE;
 	}
+
+//////////////////////////////////////////////////////////////
+//朗亿温控器测试 01 06 00 00 01 F4 89 DD （01F4:500==> 50度）
+	//对信息进行MODBUS协议的编码，包括CRC16的生成
+
+	if (snd.humid.humidValue>=HCU_SENSOR_HUMID_VALUE_ALARM_THRESHOLD)//for 温控测试
+	{
+		memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+
+		currentModbusBuf.curLen = 7;
+		UINT8 sample[] = {0x01,0x06,0x00,0x01,0xF4,0x89,0xDD};
+		memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
+
+		HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Temp setting data to Temprature control = %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), currentModbusBuf.curBuf, currentModbusBuf.curLen);
+
+		if (FAILURE == ret)
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			HcuErrorPrint("MODBUS: Error send Temparature control setting data to serials port!\n");
+			//return FAILURE;
+		}
+
+		else
+		{
+			HCU_DEBUG_PRINT_INF("MODBUS: Send modbus Temp setting data to Temprature control succeed: %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		}
+
+		//从相应的从设备中读取数据
+		memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+
+		ret = hcu_sps485_serial_port_get(&(zHcuVmCtrTab.hwinv.sps232.sp), currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
+
+
+
+		//if ((ret <= 0) && (CurrentModusContext.TspHW_AlarmFlag == OFF))
+		if (ret <= 0)
+		{
+
+			HcuErrorPrint("MODBUS: Can not read Temp setting data from serial port, return of read %d\n", ret);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		}
+
+		else
+		{
+			currentModbusBuf.curLen =ret;
+			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data length: %d  \n", ret);
+			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data succeed: %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		}
+
+	}
+
+	else
+	{
+		memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+
+		currentModbusBuf.curLen = 7;
+		UINT8 sample[] = {0x01,0x06,0x00,0x00,0x00,0x89,0xCA};
+		memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
+
+		HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Temp setting data 0 to Temprature control = %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), currentModbusBuf.curBuf, currentModbusBuf.curLen);
+
+		if (FAILURE == ret)
+		{
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+			HcuErrorPrint("MODBUS: Error send Temparature control setting data to serials port!\n");
+			//return FAILURE;
+		}
+
+		else
+		{
+			HCU_DEBUG_PRINT_INF("MODBUS: Send modbus Temp setting data to Temprature control 0 succeed: %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		}
+
+		//从相应的从设备中读取数据
+		memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
+
+		ret = hcu_sps485_serial_port_get(&(zHcuVmCtrTab.hwinv.sps232.sp), currentModbusBuf.curBuf, HCU_SYSDIM_MSG_BODY_LEN_MAX);//获得的数据存在currentModbusBuf中
+
+
+
+		//if ((ret <= 0) && (CurrentModusContext.TspHW_AlarmFlag == OFF))
+		if (ret <= 0)
+		{
+
+			HcuErrorPrint("MODBUS: Can not read Temp setting data from serial port, return of read %d\n", ret);
+			zHcuSysStaPm.taskRunErrCnt[TASK_ID_MODBUS]++;
+		}
+
+		else
+		{
+			currentModbusBuf.curLen =ret;
+			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data 0 length: %d  \n", ret);
+			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data 0 succeed: %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		}
+
+	}
+/////////////////////////////////////////////////////////////
+
+
 	//将读取的数据回送给传感器控制器
 	snd.length = sizeof(msg_struct_modbus_humid_data_report_t);
 	snd.usercmdid = rcv.cmdId;
