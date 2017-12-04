@@ -652,6 +652,10 @@ typedef enum
 	HUITP_MSGID_sui_bfhs_calibration_zero_resp       = 0x3BC2,
 	HUITP_MSGID_sui_bfhs_calibration_full_req        = 0x3B43,
 	HUITP_MSGID_sui_bfhs_calibration_full_resp       = 0x3BC3,
+	HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req    = 0x3B44,
+	HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp   = 0x3BC4,
+	HUITP_MSGID_sui_bfhs_dyn_calibration_full_req    = 0x3B45,
+	HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp   = 0x3BC5,
 
 	//公共消息过程
 	//传感器测试过程
@@ -6045,18 +6049,10 @@ typedef enum StrHuiIe_sui_com_error_code
 	HUITP_IEID_SUI_COM_ERROR_CODE_MAX, //Ending point
 }StrHuiIe_sui_com_error_code_t; //end of IHU_INTER_TASK_MSG_ID
 
-//HCU-IHU BFDF SUI新增内容
-
 
 //HCU-IHU BFHS SUI新增内容
-/*
-	//校准过程
-	HUITP_MSGID_sui_bfhs_calibration_zero_req        = 0x3B48,
-	HUITP_MSGID_sui_bfhs_calibration_zero_resp       = 0x3BC8,
-	HUITP_MSGID_sui_bfhs_calibration_full_req        = 0x3B49,
-	HUITP_MSGID_sui_bfhs_calibration_full_resp       = 0x3BC9,
-**	MSG_ID_L3BFHS_WMC_STARTUP_IND,          //       = 0x3BC0,
-*/
+//校准过程
+//HUITP_MSGID_sui_bfhs_calibration_zero_req        = 0x3B42,
 typedef struct StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters
 {
 	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
@@ -6089,13 +6085,7 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_req
 	StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters_t weight_sensor_calibration_zero;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_req_t;
 
-typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_req
-{
-	UINT16 msgid;
-	UINT16 length;
-	StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters_t weight_sensor_calibration_full;
-}StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_req_t;
-
+//HUITP_MSGID_sui_bfhs_calibration_zero_resp       = 0x3BC2,
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp
 {
 	UINT16 msgid;
@@ -6105,6 +6095,15 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp
 	UINT16  errCode;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp_t;
 
+//HUITP_MSGID_sui_bfhs_calibration_full_req        = 0x3B43,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_req
+{
+	UINT16 msgid;
+	UINT16 length;
+	StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters_t weight_sensor_calibration_full;
+}StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_req_t;
+
+//HUITP_MSGID_sui_bfhs_calibration_full_resp       = 0x3BC3,
 typedef struct StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters
 {
 	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
@@ -6147,8 +6146,10 @@ typedef struct StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters
 	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
 	UINT8   WeightSensorCellAddress; //object 0x2098, node ID = cell address +48
 	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
+	INT32   Weight; //format NF2;
     UINT8   spare2;
 }StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters_t;
+
 typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp
 {
 	UINT16 msgid;
@@ -6158,10 +6159,9 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp
 	UINT16  errCode;
 	StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters_t weight_sensor_calibration_full;
 }StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp_t;
-/*配置过程
-	HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B41,
-	HUITP_MSGID_sui_bfhs_set_config_resp             = 0x3BC1,
-*/
+
+
+//HUITP_MSGID_sui_bfhs_set_config_req              = 0x3B41,
 typedef struct StrHuiIe_WeightSensorBfhsParamaters
 {
 	UINT32  WeightSensorAutoZeroCaptureRangeGrams; //object 0x2076, act. zero point - capture range <=new zero point<= act. zero point + capture range
@@ -6239,6 +6239,44 @@ typedef struct StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_OVERLOAD  			2
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_UNDERLOAD  			3
 #define HUITP_IEID_SUI_BFHS_NEW_EVENT_STATE_INVALID  			0xFF
+
+//HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req    = 0x3B44,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req
+{
+	UINT16 msgid;
+	UINT16 length;
+	StrHuiIe_WeightSensorBfhsCalibrationZeroReqParamaters_t weight_sensor_calibration_zero;
+	StrHuiIe_MotorControlBfhsParamaters_t motor_control_para;
+}StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req_t;
+
+//HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp   = 0x3BC4,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp
+{
+	UINT16 msgid;
+	UINT16 length;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16  errCode;
+}StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t;
+
+//HUITP_MSGID_sui_bfhs_dyn_calibration_full_req    = 0x3B45,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_req
+{
+	UINT16 msgid;
+	UINT16 length;
+	StrHuiIe_WeightSensorBfhsCalibrationFullReqParamaters_t weight_sensor_calibration_full;
+}StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_req_t;
+
+//HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp   = 0x3BC5,
+typedef struct StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp
+{
+	UINT16 msgid;
+	UINT16 length;
+	UINT8  validFlag;  //是否执行成功
+	UINT8  spare1;
+	UINT16  errCode;
+	StrHuiIe_WeightSensorBfhsCalibrationFullRespParamaters_t weight_sensor_calibration_full;
+}StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t;
 
 
 //HCU-IHU BFDF SUI新增内容
@@ -6462,7 +6500,7 @@ typedef struct StrMsg_HUITP_COMM_sui_bfdf_command_req
 //公共消息过程
 //传感器测试过程
 //HUITP_MSGID_sui_com_test_command_req             = 0x3B70,
-#define HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX  200
+#define HUITP_IEID_SUI_COM_TEST_CMD_BUF_LEN_MAX  200  //MYC Change from 256 to 200, 2017/11/28
 typedef struct StrMsg_HUITP_MSGID_sui_com_test_command_req
 {
 	UINT16 	msgid;

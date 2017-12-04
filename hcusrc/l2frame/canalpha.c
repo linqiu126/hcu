@@ -56,10 +56,12 @@ HcuFsmStateItem_t HcuFsmCanalpha[] =
 	{MSG_ID_L3BFDF_CAN_SYS_CFG_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfdf_sys_cfg_req},  	//初始化配置
 	{MSG_ID_L3BFDF_CAN_WS_COMB_OUT,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfdf_ws_comb_out},  	//组合指令
 
-	//Normal task status：BFDF
+	//Normal task status：BFHS
 	{MSG_ID_L3BFHS_CAN_SYS_CFG_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_sys_cfg_req},  	//初始化配置
 	{MSG_ID_L3BFHS_CAN_CAL_ZERO_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_cal_zero_req},   //人工命令
 	{MSG_ID_L3BFHS_CAN_CAL_FULL_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_cal_full_req},   //人工命令
+	{MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_dyn_zero_req},   //人工命令
+	{MSG_ID_L3BFHS_CAN_DYN_FULL_REQ,      	FSM_STATE_CANALPHA_ACTIVED,          		fsm_canalpha_l3bfhs_dyn_full_req},   //人工命令
 
 	//结束点，固定定义，不要改动
     {MSG_ID_END,            	FSM_STATE_END,             				NULL},  //Ending
@@ -171,10 +173,7 @@ OPSTAT fsm_canalpha_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 
 	//Receive message and copy to local variable
 	msg_struct_com_time_out_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_com_time_out_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_com_time_out_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_com_time_out_t);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_CANALPHA]是否超限
 	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANALPHA] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
@@ -222,10 +221,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	int i=0;
 
 	msg_struct_l3bfdf_can_sys_cfg_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_can_sys_cfg_req_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfdf_can_sys_cfg_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -309,8 +305,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 //			snd.streamId = i;
 //			snd.boardId = j;
 //			hcu_usleep(rand()%10000);
-//			if (hcu_message_send(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-//				HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+//			HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 //		}
 //	}
 //
@@ -327,10 +322,7 @@ OPSTAT fsm_canalpha_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * par
 	//int i=0;
 
 	msg_struct_l3bfdf_can_ws_comb_out_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_can_ws_comb_out_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_can_ws_comb_out_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfdf_can_ws_comb_out_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -362,9 +354,7 @@ OPSTAT fsm_canalpha_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * par
 //	snd.streamId = rcv.streamId;
 //	snd.hopperId = rcv.hopperId;
 //	snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
-//	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-//		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-
+//	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 	//返回
 	return SUCCESS;
 }
@@ -376,10 +366,7 @@ OPSTAT fsm_canalpha_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void
 	//int ret=0;
 
 	msg_struct_sysswm_canitf_inventory_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitf_inventory_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitf_inventory_confirm_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sysswm_canitf_inventory_confirm_t);
 
 	//入参检查
 	UINT32 bitmap = ((UINT32)1<<rcv.nodeId);
@@ -411,10 +398,7 @@ OPSTAT fsm_canalpha_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, voi
 	//int ret=0;
 
 	msg_struct_sysswm_canitf_sw_package_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sysswm_canitf_sw_package_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_canitf_sw_package_confirm_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sysswm_canitf_sw_package_confirm_t);
 
 	//入参检查
 	UINT32 bitmap = ((UINT32)1<<rcv.nodeId);
@@ -450,10 +434,7 @@ OPSTAT fsm_canalpha_sui_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param
 	int i=0;
 
 	msg_struct_sui_test_cmd_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sui_test_cmd_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_test_cmd_req_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sui_test_cmd_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -494,10 +475,7 @@ OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_
 	int i=0;
 
 	msg_struct_sui_suspend_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sui_suspend_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_suspend_req_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sui_suspend_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -528,10 +506,7 @@ OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_p
 	int i=0;
 
 	msg_struct_sui_resume_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sui_resume_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_resume_req_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sui_resume_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -561,10 +536,7 @@ OPSTAT fsm_canalpha_sui_heart_beat_confirm(UINT32 dest_id, UINT32 src_id, void *
 	//int ret=0;
 
 	msg_struct_sui_heart_beat_confirm_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sui_heart_beat_confirm_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sui_heart_beat_confirm_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sui_heart_beat_confirm_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -594,10 +566,7 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 	int i=0;
 
 	msg_struct_l3bfhs_can_sys_cfg_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_can_sys_cfg_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_can_sys_cfg_req_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_sys_cfg_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -649,9 +618,7 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 //	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t));
 //	snd.validFlag = TRUE;
 //	snd.length = sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t);
-//	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_CFG_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-//		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
-//
+//	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_SYS_CFG_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 //	//启动测试定时器：暂时不启动，所以也不测试了
 //	hcu_timer_start(TASK_ID_CANALPHA, TIMER_ID_10MS_CANALPHA_SIMULATION_DATA, zHcuSysEngPar.timer.array[TIMER_ID_10MS_CANALPHA_SIMULATION_DATA].dur, TIMER_TYPE_PERIOD, TIMER_RESOLUTION_10MS);
 
@@ -666,10 +633,7 @@ OPSTAT fsm_canalpha_l3bfhs_cal_zero_req(UINT32 dest_id, UINT32 src_id, void * pa
 	int i=0;
 
 	msg_struct_l3bfhs_can_cal_zero_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_can_cal_zero_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_can_cal_zero_req_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_cal_zero_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -712,10 +676,7 @@ OPSTAT fsm_canalpha_l3bfhs_cal_full_req(UINT32 dest_id, UINT32 src_id, void * pa
 	int i=0;
 
 	msg_struct_l3bfhs_can_cal_full_req_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_can_cal_full_req_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_can_cal_full_req_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_cal_full_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -742,16 +703,92 @@ OPSTAT fsm_canalpha_l3bfhs_cal_full_req(UINT32 dest_id, UINT32 src_id, void * pa
 	return SUCCESS;
 }
 
+//往外发送
+OPSTAT fsm_canalpha_l3bfhs_dyn_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	int i=0;
+
+	msg_struct_l3bfhs_can_dyn_zero_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_dyn_zero_req_t);
+
+	//生成bitmap
+	UINT32 bitmap = 0;
+	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
+		if (rcv.boardBitmap[i] == TRUE){
+			bitmap = ((UINT32)1<<i);
+		}
+	}
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_dyn_calibration_zero_req);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorFilterCutOffFreqHz = HUITP_ENDIAN_EXG32(rcv.dynZeroPar.WeightSensorFilterCutOffFreqHz);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZeroCaptureRangeGrams = HUITP_ENDIAN_EXG32(rcv.dynZeroPar.WeightSensorAutoZeroCaptureRangeGrams);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorStandstillRangeGrams = HUITP_ENDIAN_EXG32(rcv.dynZeroPar.WeightSensorStandstillRangeGrams);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZeroAutotaringTimeMs = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorAutoZeroAutotaringTimeMs);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorPreloadComPensationValuePercent = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorPreloadComPensationValuePercent);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorStandstillTimeoutMs = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorStandstillTimeoutMs);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorStandstillTime = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorStandstillTime);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorRingBufTimeMs = HUITP_ENDIAN_EXG16(rcv.dynZeroPar.WeightSensorRingBufTimeMs);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(rcv.dynZeroPar.WeightSensorMeasurementRangeNo);
+	pMsgProc.weight_sensor_calibration_zero.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv.dynZeroPar.WeightSensorAutoZero);
+	pMsgProc.motor_control_para.MotorDirection = HUITP_ENDIAN_EXG32(rcv.dynMotoPar.MotorDirection);
+	pMsgProc.motor_control_para.MotorSpeed = HUITP_ENDIAN_EXG32(rcv.dynMotoPar.MotorSpeed);
+
+	//发送消息
+	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+
+	//返回
+	return SUCCESS;
+}
+
+//往外发送
+OPSTAT fsm_canalpha_l3bfhs_dyn_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
+{
+	//int ret=0;
+	int i=0;
+
+	msg_struct_l3bfhs_can_dyn_full_req_t rcv;
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_dyn_full_req_t);
+
+	//生成bitmap
+	UINT32 bitmap = 0;
+	for (i=0; i<HCU_SYSMSG_SUI_SENSOR_NBR; i++){
+		if (rcv.boardBitmap[i] == TRUE){
+			bitmap = ((UINT32)1<<i);
+		}
+	}
+
+	//准备组装发送消息
+	StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_req_t pMsgProc;
+	UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_req_t);
+	memset(&pMsgProc, 0, msgProcLen);
+	pMsgProc.msgid = HUITP_ENDIAN_EXG16(HUITP_MSGID_sui_bfhs_dyn_calibration_full_req);
+	pMsgProc.length = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+	pMsgProc.weight_sensor_calibration_full.WeightSensorAdjustingWeightGrams = HUITP_ENDIAN_EXG32(rcv.calFullPar.WeightSensorAdjustingWeightGrams);
+	pMsgProc.weight_sensor_calibration_full.WeightSensorAdjustingTolerancePercent = HUITP_ENDIAN_EXG32(rcv.calFullPar.WeightSensorAdjustingTolerancePercent);
+
+	//发送消息
+	if (hcu_canalpha_usbcan_l2frame_send((UINT8*)&pMsgProc, msgProcLen, bitmap) == FAILURE)
+		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send CAN frame error!\n");
+
+	//返回
+	return SUCCESS;
+}
+
 //收到底层驱动USBCAN送过来的数据帧
 OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
 
 	msg_struct_usbcan_l2frame_rcv_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_usbcan_l2frame_rcv_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_usbcan_l2frame_rcv_t)))
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Receive message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_usbcan_l2frame_rcv_t);
 
 	//解码MSGID/MSGLEN
 	UINT16 msgId = 0, msgLen = 0;
@@ -832,6 +869,30 @@ OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void *
 			HCU_ERROR_PRINT_CANALPHA("CANALPHA: Error unpack message on length!\n");
 		snd = (StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp_t*)(rcv.databuf);
 		ret = func_canalpha_l2frame_msg_bfhs_calibration_full_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	//BFHS消息
+	case HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANALPHA: Receive L3 MSG = HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t) - 4))
+			HCU_ERROR_PRINT_CANALPHA("CANALPHA: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t*)(rcv.databuf);
+		ret = func_canalpha_l2frame_msg_bfhs_dyn_calibration_zero_resp_received_handle(snd, rcv.nodeId);
+	}
+	break;
+
+	//BFHS消息
+	case HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp:
+	{
+		HCU_DEBUG_PRINT_INF("CANALPHA: Receive L3 MSG = HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp \n");
+		StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t *snd;
+		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t) - 4))
+			HCU_ERROR_PRINT_CANALPHA("CANALPHA: Error unpack message on length!\n");
+		snd = (StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t*)(rcv.databuf);
+		ret = func_canalpha_l2frame_msg_bfhs_dyn_calibration_full_resp_received_handle(snd, rcv.nodeId);
 	}
 	break;
 
@@ -1003,9 +1064,7 @@ OPSTAT func_canalpha_bfdf_simulation_data_process(void)
 	//snd.streamId = rand() % HCU_SYSCFG_BFDF_EQU_FLOW_NBR_MAX;
 	snd.sensorWsValue = (rand()%900+100)*100;
 	//HcuDebugPrint("CANALPHA: Value = %d\n", snd.sensorWsValue);
-	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 	return SUCCESS;
 }
 
@@ -1021,9 +1080,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_set_config_resp_received_handle(StrMsg_HUI
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 	snd.snrId = nodeId;
 	snd.length = sizeof(msg_struct_can_l3bfdf_sys_cfg_resp_t);
-	if (hcu_message_send(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
-
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_SYS_CFG_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 	return SUCCESS;
 }
 
@@ -1038,8 +1095,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_new_ws_event_received_handle(StrMsg_HUITP_
 	snd.snrId = nodeId;
 	snd.sensorWsValue = HUITP_ENDIAN_EXG32(rcv->weight);
 	snd.length = sizeof(msg_struct_can_l3bfdf_new_ready_event_t);
-	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_NEW_READY_EVENT, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 
 	return SUCCESS;
 }
@@ -1057,8 +1113,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_ws_comb_out_fb_received_handle(StrMsg_HUIT
 	snd.hopperId = HUITP_ENDIAN_EXG16(rcv->apHopperId);
 	snd.validFlag = TRUE;
 	snd.length = sizeof(msg_struct_can_l3bfdf_ws_comb_out_fb_t);
-	if (hcu_message_send(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_WS_COMB_OUT_FB, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 
 	return SUCCESS;
 }
@@ -1074,8 +1129,7 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_HU
 	snd.snrId = nodeId;
 	snd.hopperId = HUITP_ENDIAN_EXG16(rcv->apHopperId);
 	snd.length = sizeof(msg_struct_can_l3bfdf_basket_clean_ind_t);
-	if (hcu_message_send(MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFDF_BASKET_CLEAN_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 
 	return SUCCESS;
 }
@@ -1091,8 +1145,7 @@ OPSTAT func_canalpha_bfhs_simulation_data_process(void)
 	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_new_ready_event_t));
 	snd.length = sizeof(msg_struct_can_l3bfhs_new_ready_event_t);
 	snd.snrWsValue = (rand()%900+100)*100;
-	if (hcu_message_send(MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 
 	return SUCCESS;
 }
@@ -1109,8 +1162,7 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_calibration_zero_resp_received_handle(StrM
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 	snd.length = sizeof(msg_struct_can_l3bfhs_cal_zero_resp_t);
-	if (hcu_message_send(MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 
 	return SUCCESS;
 }
@@ -1154,14 +1206,80 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_calibration_full_resp_received_handle(StrM
 	snd.calFullRespPar.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorAutoZero);
 	snd.calFullRespPar.WeightSensorCellAddress = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorCellAddress);
 	snd.calFullRespPar.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorTimeGrid);
+	snd.calFullRespPar.Weight = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.Weight);
 	snd.calFullRespPar.spare2 = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.spare2);
 
 	snd.length = sizeof(msg_struct_can_l3bfhs_cal_full_resp_t);
-	if (hcu_message_send(MSG_ID_CAN_L3BFHS_CAL_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_CAL_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 
 	return SUCCESS;
 }
+
+//接收消息处理部分
+OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_zero_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	//发送到L3BFHS
+	msg_struct_can_l3bfhs_dyn_zero_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_dyn_zero_resp_t));
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.length = sizeof(msg_struct_can_l3bfhs_dyn_zero_resp_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_DYN_ZERO_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
+
+	return SUCCESS;
+}
+
+//接收消息处理部分
+OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_full_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t *rcv, UINT8 nodeId)
+{
+	//因为没有标准的IE结构，所以这里不能再验证IEID/IELEN的大小段和长度问题
+	//将内容发送给目的模块，具体内容是否越界／合理，均由L3模块进行处理
+
+	//发送到L3BFHS
+	msg_struct_can_l3bfhs_dyn_full_resp_t snd;
+	memset(&snd, 0, sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t));
+	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
+	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
+	snd.calFullRespPar.WeightSensorFilterCutOffFreqHz = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorFilterCutOffFreqHz);
+	snd.calFullRespPar.WeightSensorCurrentZeroPointGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorCurrentZeroPointGrams);
+	snd.calFullRespPar.WeightSensorReferenceZeroPointGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorReferenceZeroPointGrams);
+	snd.calFullRespPar.WeightSensorNegativeZeroSettingRangeGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorNegativeZeroSettingRangeGrams);
+	snd.calFullRespPar.WeightSensorPositiveZeroSettingRangeGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorPositiveZeroSettingRangeGrams);
+	snd.calFullRespPar.WeightSensorMeasurementRange = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorMeasurementRange);
+	snd.calFullRespPar.WeightSensorScaleIntervalValue = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorScaleIntervalValue);
+	snd.calFullRespPar.WeightSensorCalibrationValue = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorCalibrationValue);
+	snd.calFullRespPar.WeightSensorAutoZeroCaptureRangeGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorAutoZeroCaptureRangeGrams);
+	snd.calFullRespPar.WeightSensorAdjustingWeightGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorAdjustingWeightGrams);
+	snd.calFullRespPar.WeightSensorAdjustingFactor = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorAdjustingFactor);
+	snd.calFullRespPar.WeightSensorAdjustingTolerancePercent = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorAdjustingTolerancePercent);
+	snd.calFullRespPar.WeightSensorStandstillRangeGrams = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.WeightSensorStandstillRangeGrams);
+	snd.calFullRespPar.WeightSensorTemperatureInMagnetSystem = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorTemperatureInMagnetSystem);
+	snd.calFullRespPar.WeightSensorTemperatureAtMeasuringShunt = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorTemperatureAtMeasuringShunt);
+	snd.calFullRespPar.WeightSensorSamplingFreqHz = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorSamplingFreqHz);
+	snd.calFullRespPar.WeightSensorRingBufTimeMs = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorRingBufTimeMs);
+	snd.calFullRespPar.WeightSensorAutoZeroAutotaringTimeMs = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorAutoZeroAutotaringTimeMs);
+	snd.calFullRespPar.WeightSensorPreloadComPensationValuePercent = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorPreloadComPensationValuePercent);
+	snd.calFullRespPar.WeightSensorPreloadComPensationPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorPreloadComPensationPlacesAfterDecimalPoint);
+	snd.calFullRespPar.WeightSensorStandstillTimeoutMs = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorStandstillTimeoutMs);
+	snd.calFullRespPar.WeightSensorStandstillTime = HUITP_ENDIAN_EXG16(rcv->weight_sensor_calibration_full.WeightSensorStandstillTime);
+	snd.calFullRespPar.WeightSensorMeasurementRangeNo = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorMeasurementRangeNo);
+	snd.calFullRespPar.WeightSensorPlacesAfterDecimalPoint = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorPlacesAfterDecimalPoint);
+	memcpy(snd.calFullRespPar.WeightSensorUintString,  rcv->weight_sensor_calibration_full.WeightSensorUintString, 64);
+	snd.calFullRespPar.WeightSensorAutoZero = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorAutoZero);
+	snd.calFullRespPar.WeightSensorCellAddress = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorCellAddress);
+	snd.calFullRespPar.WeightSensorTimeGrid = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.WeightSensorTimeGrid);
+	snd.calFullRespPar.Weight = HUITP_ENDIAN_EXG32(rcv->weight_sensor_calibration_full.Weight);
+	snd.calFullRespPar.spare2 = HUITP_ENDIAN_EXG8(rcv->weight_sensor_calibration_full.spare2);
+
+	snd.length = sizeof(msg_struct_can_l3bfhs_dyn_full_resp_t);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_DYN_FULL_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
+
+	return SUCCESS;
+}
+
 
 OPSTAT func_canalpha_l2frame_msg_bfhs_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *rcv, UINT8 nodeId)
 {
@@ -1174,8 +1292,7 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_set_config_resp_received_handle(StrMsg_HUI
 	snd.validFlag = HUITP_ENDIAN_EXG8(rcv->validFlag);
 	snd.errCode = HUITP_ENDIAN_EXG16(rcv->errCode);
 	snd.length = sizeof(msg_struct_can_l3bfhs_sys_cfg_resp_t);
-	if (hcu_message_send(MSG_ID_CAN_L3BFHS_SYS_CFG_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_SYS_CFG_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 
 	//更新状态
 	//gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_CFG_START_CMPL;
@@ -1194,9 +1311,7 @@ OPSTAT func_canalpha_l2frame_msg_bfhs_new_ws_event_received_handle(StrMsg_HUITP_
 	snd.snrWsValue = HUITP_ENDIAN_EXG32(rcv->Weight);
 	snd.snrState = HUITP_ENDIAN_EXG8(rcv->weight_state);
 	snd.length = sizeof(msg_struct_can_l3bfhs_new_ready_event_t);
-	if (hcu_message_send(MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
-
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 	return SUCCESS;
 }
 
@@ -1217,8 +1332,7 @@ OPSTAT func_canalpha_l2frame_msg_inventory_report_received_handle(StrMsg_HUITP_M
 	snd.upgradeFlag = rcv->upgradeFlag;
 	snd.nodeId = nodeId;
 	snd.length = sizeof(msg_struct_canitf_sysswm_inventory_report_t);
-	if (hcu_message_send(MSG_ID_CANITF_SYSSWM_INVENTORY_REPORT, TASK_ID_SYSSWM, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CANITF_SYSSWM_INVENTORY_REPORT, TASK_ID_SYSSWM, TASK_ID_CANALPHA);
 
 	//刷界面中IHU版本信息：已经移动到SYSSWM模块中进行处理了
 //	char input[50];
@@ -1256,8 +1370,7 @@ OPSTAT func_canalpha_l2frame_msg_sw_package_report_received_handle(StrMsg_HUITP_
 	snd.nodeId = nodeId;
 
 	snd.length = sizeof(msg_struct_canitf_sysswm_sw_package_report_t);
-	if (hcu_message_send(MSG_ID_CANITF_SYSSWM_SW_PACKAGE_REPORT, TASK_ID_SYSSWM, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_SYSSWM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CANITF_SYSSWM_SW_PACKAGE_REPORT, TASK_ID_SYSSWM, TASK_ID_CANALPHA);
 
 	//返回
 	return SUCCESS;
@@ -1282,11 +1395,9 @@ OPSTAT func_canalpha_l2frame_msg_com_test_command_resp_received_handle(StrMsg_HU
 
 	snd.length = sizeof(msg_struct_sui_test_cmd_resp_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_TEST_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_BFDFUICOMM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_TEST_CMD_RESP, TASK_ID_BFDFUICOMM, TASK_ID_CANALPHA);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_TEST_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_BFHSUICOMM].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_TEST_CMD_RESP, TASK_ID_BFHSUICOMM, TASK_ID_CANALPHA);
 #else
 #error PRJ SET ERROR!
 #endif
@@ -1308,11 +1419,9 @@ OPSTAT func_canalpha_l2frame_msg_com_heart_beat_report_received_handle(StrMsg_HU
 
 	snd.length = sizeof(msg_struct_sui_heart_beat_report_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_HEART_BEAT_REPORT, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_HEART_BEAT_REPORT, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_HEART_BEAT_REPORT, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_HEART_BEAT_REPORT, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 #else
 #error PRJ SET ERROR!
 #endif
@@ -1337,11 +1446,9 @@ OPSTAT func_canalpha_l2frame_msg_com_startup_ind_received_handle(StrMsg_HUITP_MS
 	snd.motoType = HUITP_ENDIAN_EXG32(rcv->wmc_inventory.motor_type);
 	snd.length = sizeof(msg_struct_sui_startup_ind_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_STARTUP_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_STARTUP_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_STARTUP_IND, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_STARTUP_IND, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 #else
 #error PRJ SET ERROR!
 #endif
@@ -1362,11 +1469,9 @@ OPSTAT func_canalpha_l2frame_msg_com_fault_ind_received_handle(StrMsg_HUITP_MSGI
 	snd.error_code = HUITP_ENDIAN_EXG16(rcv->error_code);
 	snd.length = sizeof(msg_struct_sui_fault_ind_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_FAULT_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_FAULT_IND, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_FAULT_IND, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_FAULT_IND, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 #else
 #error PRJ SET ERROR!
 #endif
@@ -1388,11 +1493,9 @@ OPSTAT func_canalpha_l2frame_msg_com_suspend_resp_received_handle(StrMsg_HUITP_M
 	snd.snrId = nodeId;
 	snd.length = sizeof(msg_struct_sui_suspend_resp_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_SUSPEND_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_SUSPEND_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_SUSPEND_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 #else
 #error PRJ SET ERROR!
 #endif
@@ -1414,11 +1517,9 @@ OPSTAT func_canalpha_l2frame_msg_com_resume_resp_received_handle(StrMsg_HUITP_MS
 	snd.snrId = nodeId;
 	snd.length = sizeof(msg_struct_sui_resume_resp_t);
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_RESUME_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFDF].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_RESP, TASK_ID_L3BFDF, TASK_ID_CANALPHA);
 #elif (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
-	if (hcu_message_send(MSG_ID_SUI_RESUME_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE)
-		HCU_ERROR_PRINT_CANALPHA("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3BFHS].taskName);
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_SUI_RESUME_RESP, TASK_ID_L3BFHS, TASK_ID_CANALPHA);
 #else
 #error PRJ SET ERROR!
 #endif
@@ -1459,10 +1560,7 @@ OPSTAT hcu_canalpha_usbcan_l2frame_send(UINT8 *buffer, UINT32 length, UINT32 wmc
 	memcpy(snd.dataBuf, buffer, length);
 	snd.bufValidLen = length;
 	snd.length = sizeof(msg_struct_l3hate_can_frame_rcv_t);
-	if (hcu_message_send(MSG_ID_CAN_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE){
-		HcuErrorPrint("L3HATE: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_L3HATE].taskName);
-		return FAILURE;
-	}
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_CAN_L3HATE_FRAME_RCV, TASK_ID_L3HATE, TASK_ID_CANALPHA);
 	return SUCCESS;
 #else
 	//业务执行
@@ -1767,12 +1865,7 @@ OPSTAT hcu_canalpha_hate_send_data(UINT8 *buf, int len, UINT8 node)
 	memcpy(snd.databuf, buf, len);
 
 	snd.length = sizeof(msg_struct_usbcan_l2frame_rcv_t);
-	if (hcu_message_send(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANALPHA, TASK_ID_CANALPHA, &snd, snd.length) == FAILURE){
-		zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANALPHA]++;
-		HcuErrorPrint("CANALPHA: Send message error, TASK [%s] to TASK[%s]!\n", zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName, zHcuVmCtrTab.task[TASK_ID_CANALPHA].taskName);
-		return FAILURE;
-	}
-
+	HCU_MSG_SEND_GENERNAL_PROCESS(MSG_ID_USBCAN_L2FRAME_RCV, TASK_ID_CANALPHA, TASK_ID_CANALPHA);
 	return SUCCESS;
 }
 
