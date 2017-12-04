@@ -2973,7 +2973,7 @@ typedef struct msg_struct_uicomm_l3bfhs_cmd_req
 	//这部分待确定，这些参数是否需要从界面上带下来
 	StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t calZeroPar;
 	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t calFullPar;
-	strMsgIe_bfhs_MotoCtrlParamaters_t   motoDynZeroPar;
+	strMsgIe_bfhs_MotoCtrlParamaters_t   dynMotoPar;
 	UINT32 length;
 }msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t;
 
@@ -3248,7 +3248,7 @@ typedef struct msg_struct_can_l3bfhs_dyn_zero_resp
 typedef struct msg_struct_l3bfhs_can_dyn_full_req
 {
 	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
-	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t calFullPar;
+	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t dynFullPar;
 	UINT32 length;
 }msg_struct_l3bfhs_can_dyn_full_req_t;
 
@@ -3257,7 +3257,7 @@ typedef struct msg_struct_can_l3bfhs_dyn_full_resp
 {
 	UINT8  validFlag;  //是否执行成功
 	UINT16 errCode;
-	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t calFullRespPar;
+	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t dynFullRespPar;
 	UINT32 length;
 }msg_struct_can_l3bfhs_dyn_full_resp_t;
 
