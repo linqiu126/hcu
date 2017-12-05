@@ -9,6 +9,9 @@
 
 
 
+//= ZJL, 2017 Dec.4 CURRENT_SW_DELIVERY 294=>BFHS项目
+= 增加BFHS中动态学习和校准有关的消息
+
 //= ZJL, 2017 Nov.30 CURRENT_SW_DELIVERY 293=>BFHS项目
 = 增加HUITP-JSON编解码
 = 升级HUITP v3.4

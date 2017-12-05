@@ -117,10 +117,14 @@ OPSTAT func_canalpha_l2frame_msg_bfdf_basket_clean_ind_received_handle(StrMsg_HU
 OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT fsm_canalpha_l3bfhs_cal_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 OPSTAT fsm_canalpha_l3bfhs_cal_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+OPSTAT fsm_canalpha_l3bfhs_dyn_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
+OPSTAT fsm_canalpha_l3bfhs_dyn_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len);
 //Local API
 OPSTAT func_canalpha_bfhs_simulation_data_process(void);
 OPSTAT func_canalpha_l2frame_msg_bfhs_calibration_zero_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_calibration_zero_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canalpha_l2frame_msg_bfhs_calibration_full_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_calibration_full_resp_t *rcv, UINT8 nodeId);
+OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_zero_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_zero_resp_t *rcv, UINT8 nodeId);
+OPSTAT func_canalpha_l2frame_msg_bfhs_dyn_calibration_full_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_dyn_calibration_full_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canalpha_l2frame_msg_bfhs_set_config_resp_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_set_config_resp_t *rcv, UINT8 nodeId);
 OPSTAT func_canalpha_l2frame_msg_bfhs_new_ws_event_received_handle(StrMsg_HUITP_MSGID_sui_bfhs_new_ws_event_t *rcv, UINT8 nodeId);
 

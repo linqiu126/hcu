@@ -558,6 +558,10 @@ enum HCU_INTER_TASK_MSG_ID
 	MSG_ID_CAN_L3BFHS_CAL_ZERO_RESP,
 	MSG_ID_L3BFHS_CAN_CAL_FULL_REQ,
 	MSG_ID_CAN_L3BFHS_CAL_FULL_RESP,
+	MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ,
+	MSG_ID_CAN_L3BFHS_DYN_ZERO_RESP,
+	MSG_ID_L3BFHS_CAN_DYN_FULL_REQ,
+	MSG_ID_CAN_L3BFHS_DYN_FULL_RESP,
 	MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,
 
 	//BFSC项目：BFSCUICOMM
@@ -2920,7 +2924,7 @@ typedef struct msg_struct_l3bfdf_uicomm_ctrl_cmd_resp
 }msg_struct_l3bfdf_uicomm_ctrl_cmd_resp_t;
 
 //BFHS
-//MSG_ID_UICOMM_L3BFHS_CMD_REQ,
+//MSG_ID_UICOMM_L3BFHS_CTRL_CMD_REQ,
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_NULL  				0
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START  		1
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_STOP  				2
@@ -2928,6 +2932,8 @@ typedef struct msg_struct_l3bfdf_uicomm_ctrl_cmd_resp
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_RESUME  			4
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_ZERO  			5
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_CAL_FULL  			6
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_ZERO  			7
+#define HCU_SYSMSG_BFHS_UICOMM_CMDID_DYN_FULL  			8
 #define HCU_SYSMSG_BFHS_UICOMM_CMDID_INVALID  			0xFF
 
 typedef struct StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters
@@ -2955,16 +2961,23 @@ typedef struct StrMsgIe_WeightSensorBfhsCalibrationFullParamaters
 	UINT32  WeightSensorAdjustingTolerancePercent; //object0x2082, Current adjusting factor = 0.500000, adjusting tolerance = 1 %,The new factor must lie in the range 0.495000 ≤ Factornew ≤ 0.505000
 }StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t;
 
+typedef struct strMsgIe_bfhs_MotoCtrlParamaters
+{
+	UINT32	MotorSpeed;
+	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
+}strMsgIe_bfhs_MotoCtrlParamaters_t;
+
 typedef struct msg_struct_uicomm_l3bfhs_cmd_req
 {
 	UINT8  cmdid;
 	//这部分待确定，这些参数是否需要从界面上带下来
 	StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t calZeroPar;
 	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t calFullPar;
+	strMsgIe_bfhs_MotoCtrlParamaters_t   motoDynZeroPar;
 	UINT32 length;
 }msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t;
 
-//MSG_ID_L3BFHS_UICOMM_CMD_RESP,
+//MSG_ID_L3BFHS_UICOMM_CTRL_CMD_RESP,
 typedef struct StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters
 {
 	UINT32  WeightSensorFilterCutOffFreqHz; //object 0x2061,the same function as above, LPF cutoff freq, fs=1KHz, 0<= cut <=fs/2
@@ -3007,6 +3020,7 @@ typedef struct StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters
 	UINT8   WeightSensorAutoZero;    //object 0x2074, 0:off 1:On
 	UINT8   WeightSensorCellAddress; //object 0x2098, node ID = cell address +48
 	UINT8   WeightSensorTimeGrid;  //object 0x2222, send weight value in a fixed time grid.
+	INT32   Weight; //format NF2;
     UINT8   spare2;
 }StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t;
 
@@ -3154,12 +3168,6 @@ typedef struct strMsgIe_bfhs_WgtSnrParamaters
 	UINT8   WeightSensorAlgoSelect;  //weight algorithm select
 }strMsgIe_bfhs_WgtSnrParamaters_t;
 
-typedef struct strMsgIe_bfhs_MotoCtrlParamaters
-{
-	UINT32	MotorSpeed;
-	UINT32	MotorDirection;									//0: Clockwise; 1: Counter-Clockwise
-}strMsgIe_bfhs_MotoCtrlParamaters_t;
-
 typedef struct strMsgIe_bfhs_ArmCtrlParamaters
 {
 	UINT32	ArmRollingStartMs;						//how long do the arm rolling for start action
@@ -3218,6 +3226,40 @@ typedef struct msg_struct_can_l3bfhs_cal_full_resp
 	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t calFullRespPar;
 	UINT32 length;
 }msg_struct_can_l3bfhs_cal_full_resp_t;
+
+//MSG_ID_L3BFHS_CAN_DYN_ZERO_REQ,
+typedef struct msg_struct_l3bfhs_can_dyn_zero_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	StrMsgIe_WeightSensorBfhsCalibrationZeroParamaters_t dynZeroPar;
+	strMsgIe_bfhs_MotoCtrlParamaters_t dynMotoPar;
+	UINT32 length;
+}msg_struct_l3bfhs_can_dyn_zero_req_t;
+
+//MSG_ID_CAN_L3BFHS_DYN_ZERO_RESP,
+typedef struct msg_struct_can_l3bfhs_dyn_zero_resp
+{
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	UINT32 length;
+}msg_struct_can_l3bfhs_dyn_zero_resp_t;
+
+//MSG_ID_L3BFHS_CAN_DYN_FULL_REQ,
+typedef struct msg_struct_l3bfhs_can_dyn_full_req
+{
+	UINT8  boardBitmap[HCU_SYSMSG_SUI_SENSOR_NBR];
+	StrMsgIe_WeightSensorBfhsCalibrationFullParamaters_t calFullPar;
+	UINT32 length;
+}msg_struct_l3bfhs_can_dyn_full_req_t;
+
+//MSG_ID_CAN_L3BFHS_DYN_FULL_RESP,
+typedef struct msg_struct_can_l3bfhs_dyn_full_resp
+{
+	UINT8  validFlag;  //是否执行成功
+	UINT16 errCode;
+	StrMsgIe_WeightSensorBfhsCalibrationFullRespParamaters_t calFullRespPar;
+	UINT32 length;
+}msg_struct_can_l3bfhs_dyn_full_resp_t;
 
 //MSG_ID_CAN_L3BFHS_WS_NEW_READY_EVENT,  	//传感器新数据事件
 typedef struct msg_struct_can_l3bfhs_new_ready_event
