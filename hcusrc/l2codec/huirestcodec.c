@@ -14,13 +14,16 @@
 #include "huirestcodec.h"
 #include "../l0service/trace.h"
 
-//发送API
+//发送和接收API
 OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfsc(StrRestMsgIn_HUIREST_ACTIONID_PRINTER_callcell_bfsc_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out)
 {
     struct json_object *jsonobj = NULL;
     struct json_object *cont_jsonobj = NULL;
 	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
 	UINT32 t=0;
+
+	//固定头
+    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING, HUIREST_ACTIONID_PRINTER_callcell_bfsc);
 //    jsonobj = json_object_new_object();
 //    cont_jsonobj = json_object_new_object();
 //    if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to create json object!\n");
@@ -31,7 +34,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfsc(StrRestMsgIn_HUIREST_A
 //    json_object_object_add(jsonobj, HUIREST_ACCESS_CONST_SERVICE_TAG, json_object_new_string(HUIREST_ACCESS_CONST_SVRTAG_PRINTER));
 //    json_object_object_add(jsonobj, HUIREST_ACCESS_CONST_ACTION_ID, json_object_new_int(HUIREST_ACTIONID_PRINTER_callcell_bfsc));
 //    json_object_object_add(jsonobj, HUIREST_ACCESS_CONST_PAR_FLAG, json_object_new_boolean(TRUE));
-    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACTIONID_PRINTER_callcell_bfsc);
+
 
     //内容体
     json_object_object_add(cont_jsonobj, "cfgId", json_object_new_int(in->cfgId));
@@ -59,12 +62,12 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfsc(StrRestMsgIn_HUIREST_A
     HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
 
     //CURL过程
-    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAGID_PRINTER, sendBuf, &receiveBuffer) == FAILURE)
+    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
     	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
 
     //解码反馈
     //HUIREST_ACCESS_CONST_SERVICE_TAG
-    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_PRINTER);
+    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING);
 //	jsonobj = json_tokener_parse(receiveBuffer.buf);
 //	if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode json object!\n");
 //	//HUIREST_ACCESS_CONST_SERVICE_TAG
@@ -119,34 +122,322 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfsc(StrRestMsgIn_HUIREST_A
 //	}
 //	json_object_put(jsonobj);
 
-	//解内容第二层内容-1
-	jsonobj = json_object_object_get(jsonobj, "sucFlag");
-	if (jsonobj == NULL)
-	{
-		json_object_put(cont_jsonobj);
-		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT L2 object!\n");
-	}
-	out->sucFlag = json_object_get_boolean(jsonobj);
-	json_object_put(jsonobj);
-	//解内容第二层内容-2
-	jsonobj = json_object_object_get(jsonobj, "errCode");
-	if (jsonobj == NULL)
-	{
-		json_object_put(cont_jsonobj);
-		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT L2 object!\n");
-	}
-	out->errCode = json_object_get_int(jsonobj);
-	json_object_put(jsonobj);
+	//解内容第二层内容
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB();
+//	jsonobj = json_object_object_get(jsonobj, "sucFlag");
+//	if (jsonobj == NULL)
+//	{
+//		json_object_put(cont_jsonobj);
+//		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT L2 object!\n");
+//	}
+//	out->sucFlag = json_object_get_boolean(jsonobj);
+//	json_object_put(jsonobj);
+//	jsonobj = json_object_object_get(jsonobj, "errCode");
+//	if (jsonobj == NULL)
+//	{
+//		json_object_put(cont_jsonobj);
+//		HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT L2 object!\n");
+//	}
+//	out->errCode = json_object_get_int(jsonobj);
+//	json_object_put(jsonobj);
+//	json_object_put(cont_jsonobj);
 
 	//返回
-	json_object_put(cont_jsonobj);
 	return SUCCESS;
 }
 
+//发送和接收API
+OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfdf(StrRestMsgIn_HUIREST_ACTIONID_PRINTER_callcell_bfdf_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out)
+{
+    struct json_object *jsonobj = NULL;
+    struct json_object *cont_jsonobj = NULL;
+	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
+	UINT32 t=0;
+    char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
 
+	//固定头
+    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING, HUIREST_ACTIONID_PRINTER_callcell_bfdf);
 
+    //内容体
+    json_object_object_add(cont_jsonobj, "cfgId", json_object_new_int(in->cfgId));
+    json_object_object_add(cont_jsonobj, "wgtTarget", json_object_new_double(in->wgtTarget));
+    json_object_object_add(cont_jsonobj, "wgtCurrent", json_object_new_double(in->wgtCurrent));
+    json_object_object_add(cont_jsonobj, "wgtUnit", json_object_new_string(in->wgtUnit));
+    json_object_object_add(cont_jsonobj, "oprName", json_object_new_string(in->oprName));
+    json_object_object_add(cont_jsonobj, "sn", json_object_new_int(in->sn));
+    json_object_object_add(cont_jsonobj, "timeStamp", json_object_new_int(in->timeStamp));
+    json_object_object_add(cont_jsonobj, "barCode", json_object_new_string(in->barCode));
+    json_object_object_add(cont_jsonobj, "qrCode", json_object_new_string(in->qrCode));
+    json_object_object_add(cont_jsonobj, "barCodeFile", json_object_new_string(in->barCodeFile));
+    json_object_object_add(cont_jsonobj, "qrCodeFile", json_object_new_string(in->qrCodeFile));
 
+    //发送
+    HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
 
+    //CURL过程
+    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
+    	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
+
+    //解码反馈
+    //HUIREST_ACCESS_CONST_SERVICE_TAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING);
+
+	//HUIREST_ACCESS_CONST_ACTION_ID
+    HCU_HUIREST_DECODE_ACTION_HEAD_ACTIONID(HUIREST_ACTIONID_PRINTER_callcell_bfdf);
+
+	//HUIREST_ACCESS_CONST_PAR_FLAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FLAG(TRUE);
+
+    //HUIREST_ACCESS_CONST_PAR_CONTENT
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_CONTENT();
+
+	//解内容第二层内容
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB();
+
+	//返回
+	return SUCCESS;
+}
+
+//发送和接收API
+OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfhs(StrRestMsgIn_HUIREST_ACTIONID_PRINTER_callcell_bfhs_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out)
+{
+    struct json_object *jsonobj = NULL;
+    struct json_object *cont_jsonobj = NULL;
+	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
+	UINT32 t=0;
+    char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+
+	//固定头
+    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING, HUIREST_ACTIONID_PRINTER_callcell_bfhs);
+
+    //内容体
+    json_object_object_add(cont_jsonobj, "cfgId", json_object_new_int(in->cfgId));
+    json_object_object_add(cont_jsonobj, "wgtTarget", json_object_new_double(in->wgtTarget));
+    json_object_object_add(cont_jsonobj, "wgtCurrent", json_object_new_double(in->wgtCurrent));
+    json_object_object_add(cont_jsonobj, "wgtUnit", json_object_new_string(in->wgtUnit));
+    json_object_object_add(cont_jsonobj, "oprName", json_object_new_string(in->oprName));
+    json_object_object_add(cont_jsonobj, "sn", json_object_new_int(in->sn));
+    json_object_object_add(cont_jsonobj, "timeStamp", json_object_new_int(in->timeStamp));
+    json_object_object_add(cont_jsonobj, "barCode", json_object_new_string(in->barCode));
+    json_object_object_add(cont_jsonobj, "qrCode", json_object_new_string(in->qrCode));
+    json_object_object_add(cont_jsonobj, "barCodeFile", json_object_new_string(in->barCodeFile));
+    json_object_object_add(cont_jsonobj, "qrCodeFile", json_object_new_string(in->qrCodeFile));
+
+    //发送
+    HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
+
+    //CURL过程
+    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
+    	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
+
+    //解码反馈
+    //HUIREST_ACCESS_CONST_SERVICE_TAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING);
+
+	//HUIREST_ACCESS_CONST_ACTION_ID
+    HCU_HUIREST_DECODE_ACTION_HEAD_ACTIONID(HUIREST_ACTIONID_PRINTER_callcell_bfhs);
+
+	//HUIREST_ACCESS_CONST_PAR_FLAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FLAG(TRUE);
+
+    //HUIREST_ACCESS_CONST_PAR_CONTENT
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_CONTENT();
+
+	//解内容第二层内容
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB();
+
+	//返回
+	return SUCCESS;
+}
+
+//发送和接收API
+OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_fam_sdqx_md1(StrRestMsgIn_HUIREST_ACTIONID_PRINTER_fam_sdqx_md1_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out)
+{
+    struct json_object *jsonobj = NULL;
+    struct json_object *cont_jsonobj = NULL;
+	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
+	UINT32 t=0;
+    char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+
+	//固定头
+    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING, HUIREST_ACTIONID_PRINTER_fam_sdqx_md1);
+
+    //内容体
+    json_object_object_add(cont_jsonobj, "oprName", json_object_new_string(in->oprName));
+    json_object_object_add(cont_jsonobj, "sn", json_object_new_int(in->sn));
+    json_object_object_add(cont_jsonobj, "devId", json_object_new_string(in->devId));
+    json_object_object_add(cont_jsonobj, "timeStamp", json_object_new_int(in->timeStamp));
+    json_object_object_add(cont_jsonobj, "barCode", json_object_new_string(in->barCode));
+    json_object_object_add(cont_jsonobj, "qrCode", json_object_new_string(in->qrCode));
+
+    //发送
+    HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
+
+    //CURL过程
+    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
+    	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
+
+    //解码反馈
+    //HUIREST_ACCESS_CONST_SERVICE_TAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING);
+
+	//HUIREST_ACCESS_CONST_ACTION_ID
+    HCU_HUIREST_DECODE_ACTION_HEAD_ACTIONID(HUIREST_ACTIONID_PRINTER_fam_sdqx_md1);
+
+	//HUIREST_ACCESS_CONST_PAR_FLAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FLAG(TRUE);
+
+    //HUIREST_ACCESS_CONST_PAR_CONTENT
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_CONTENT();
+
+	//解内容第二层内容
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB();
+
+	//返回
+	return SUCCESS;
+}
+
+//发送和接收API
+OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_fam_sdqx_md2(StrRestMsgIn_HUIREST_ACTIONID_PRINTER_fam_sdqx_md2_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out)
+{
+    struct json_object *jsonobj = NULL;
+    struct json_object *cont_jsonobj = NULL;
+	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
+	UINT32 t=0;
+    char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+
+	//固定头
+    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING, HUIREST_ACTIONID_PRINTER_fam_sdqx_md2);
+
+    //内容体
+    json_object_object_add(cont_jsonobj, "oprName", json_object_new_string(in->oprName));
+    json_object_object_add(cont_jsonobj, "sn", json_object_new_int(in->sn));
+    json_object_object_add(cont_jsonobj, "devId", json_object_new_string(in->devId));
+    json_object_object_add(cont_jsonobj, "timeStamp", json_object_new_int(in->timeStamp));
+    json_object_object_add(cont_jsonobj, "barCode", json_object_new_string(in->barCode));
+    json_object_object_add(cont_jsonobj, "qrCode", json_object_new_string(in->qrCode));
+
+    //发送
+    HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
+
+    //CURL过程
+    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
+    	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
+
+    //解码反馈
+    //HUIREST_ACCESS_CONST_SERVICE_TAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_STRING);
+
+	//HUIREST_ACCESS_CONST_ACTION_ID
+    HCU_HUIREST_DECODE_ACTION_HEAD_ACTIONID(HUIREST_ACTIONID_PRINTER_fam_sdqx_md2);
+
+	//HUIREST_ACCESS_CONST_PAR_FLAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FLAG(TRUE);
+
+    //HUIREST_ACCESS_CONST_PAR_CONTENT
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_CONTENT();
+
+	//解内容第二层内容
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB();
+
+	//返回
+	return SUCCESS;
+}
+
+//发送和接收API
+OPSTAT hcu_restful_HUIREST_ACTIONID_DBA_yczx_temp_update(StrRestMsgIn_HUIREST_ACTIONID_DBA_yczx_temp_update_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out)
+{
+    struct json_object *jsonobj = NULL;
+    struct json_object *cont_jsonobj = NULL;
+	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
+	UINT32 t=0;
+    char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+
+	//固定头
+    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACCESS_CONST_SVRTAG_DBA_IN_STRING, HUIREST_ACTIONID_DBA_yczx_temp_update);
+
+    //内容体
+    json_object_object_add(cont_jsonobj, "tempCur", json_object_new_double(in->tempCur));
+    json_object_object_add(cont_jsonobj, "tempMin", json_object_new_double(in->tempMin));
+    json_object_object_add(cont_jsonobj, "tempMax", json_object_new_double(in->tempMax));
+    json_object_object_add(cont_jsonobj, "tempAvg", json_object_new_double(in->tempAvg));
+    json_object_object_add(cont_jsonobj, "uint", json_object_new_string(in->uint));
+    json_object_object_add(cont_jsonobj, "timeStamp", json_object_new_int(in->timeStamp));
+
+    //发送
+    HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
+
+    //CURL过程
+    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_DBA_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
+    	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
+
+    //解码反馈
+    //HUIREST_ACCESS_CONST_SERVICE_TAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_DBA_IN_STRING);
+
+	//HUIREST_ACCESS_CONST_ACTION_ID
+    HCU_HUIREST_DECODE_ACTION_HEAD_ACTIONID(HUIREST_ACTIONID_DBA_yczx_temp_update);
+
+	//HUIREST_ACCESS_CONST_PAR_FLAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FLAG(TRUE);
+
+    //HUIREST_ACCESS_CONST_PAR_CONTENT
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_CONTENT();
+
+	//解内容第二层内容
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB();
+
+	//返回
+	return SUCCESS;
+}
+
+//发送和接收API
+OPSTAT hcu_restful_HUIREST_ACTIONID_VISION_test1(StrRestMsgIn_HUIREST_ACTIONID_VISION_test1_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out)
+{
+    struct json_object *jsonobj = NULL;
+    struct json_object *cont_jsonobj = NULL;
+	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
+	UINT32 t=0;
+    char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+
+	//固定头
+    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_STRING, HUIREST_ACTIONID_VISION_test1);
+
+    //内容体
+    json_object_object_add(cont_jsonobj, "testData", json_object_new_double(in->testData));
+
+    //发送
+    HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
+
+    //CURL过程
+    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
+    	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
+
+    //解码反馈
+    //HUIREST_ACCESS_CONST_SERVICE_TAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_STRING);
+
+	//HUIREST_ACCESS_CONST_ACTION_ID
+    HCU_HUIREST_DECODE_ACTION_HEAD_ACTIONID(HUIREST_ACTIONID_VISION_test1);
+
+	//HUIREST_ACCESS_CONST_PAR_FLAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FLAG(TRUE);
+
+    //HUIREST_ACCESS_CONST_PAR_CONTENT
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_CONTENT();
+
+	//解内容第二层内容
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB();
+
+	//返回
+	return SUCCESS;
+}
 
 //CURL发送给RESTFUL服务器
 OPSTAT func_huirestcodec_curl_data_send(UINT8 serTag, char *buf, msg_struct_ethernet_cloudvela_data_rx_t* receiveBuffer)
@@ -163,11 +454,11 @@ OPSTAT func_huirestcodec_curl_data_send(UINT8 serTag, char *buf, msg_struct_ethe
 	//curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0);
 
 	//设置目标地址：未来再将这个地址改为可配置的，目前先做死
-	if (serTag == HUIREST_ACCESS_CONST_SVRTAGID_PRINTER)
+	if (serTag == HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_NUMBER)
 		curl_easy_setopt(curl, CURLOPT_URL, HCU_SYSCFG_RESTFUL_PRINTER);
-	else if (serTag == HUIREST_ACCESS_CONST_SVRTAGID_DBA)
+	else if (serTag == HUIREST_ACCESS_CONST_SVRTAG_DBA_IN_NUMBER)
 		curl_easy_setopt(curl, CURLOPT_URL, HCU_SYSCFG_RESTFUL_DBA);
-	else if (serTag == HUIREST_ACCESS_CONST_SVRTAGID_VISION)
+	else if (serTag == HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_NUMBER)
 		curl_easy_setopt(curl, CURLOPT_URL, HCU_SYSCFG_RESTFUL_VISION);
 	else
 		HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error set access target!\n");
