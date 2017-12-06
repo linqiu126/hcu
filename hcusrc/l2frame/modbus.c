@@ -1476,11 +1476,11 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	{
 		memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
-		currentModbusBuf.curLen = 7;
-		UINT8 sample[] = {0x01,0x06,0x00,0x01,0xF4,0x89,0xDD};
+		currentModbusBuf.curLen = 8;
+		UINT8 sample[] = {0x01,0x06,0x00,0x00,0x01,0xF5,0x48,0x1D};
 		memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
 
-		HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Temp setting data to Temprature control = %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Temp setting data to Temprature control = %02x %02X %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 		if (FAILURE == ret)
@@ -1492,7 +1492,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		else
 		{
-			HCU_DEBUG_PRINT_INF("MODBUS: Send modbus Temp setting data to Temprature control succeed: %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+			HCU_DEBUG_PRINT_INF("MODBUS: Send modbus Temp setting data to Temprature control succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 		}
 
 		//从相应的从设备中读取数据
@@ -1514,7 +1514,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		{
 			currentModbusBuf.curLen =ret;
 			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data length: %d  \n", ret);
-			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data succeed: %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 		}
 
 	}
@@ -1523,11 +1523,11 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 	{
 		memset(&currentModbusBuf, 0, sizeof(SerialModbusMsgBuf_t));
 
-		currentModbusBuf.curLen = 7;
-		UINT8 sample[] = {0x01,0x06,0x00,0x00,0x00,0x89,0xCA};
+		currentModbusBuf.curLen = 8;
+		UINT8 sample[] = {0x01,0x06,0x00,0x00,0x00,0x00,0x89,0xCA};
 		memcpy(currentModbusBuf.curBuf, sample, currentModbusBuf.curLen);
 
-		HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Temp setting data 0 to Temprature control = %02x %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+		HCU_DEBUG_PRINT_INF("MODBUS: Preparing send modbus Temp setting data 0 to Temprature control = %02x %02X %02X %02X %02X %02X %02X %02X\n", currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 		ret = hcu_spsapi_serial_port_send(&(zHcuVmCtrTab.hwinv.sps232.sp), currentModbusBuf.curBuf, currentModbusBuf.curLen);
 
 		if (FAILURE == ret)
@@ -1539,7 +1539,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 
 		else
 		{
-			HCU_DEBUG_PRINT_INF("MODBUS: Send modbus Temp setting data to Temprature control 0 succeed: %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+			HCU_DEBUG_PRINT_INF("MODBUS: Send modbus Temp setting data to Temprature control 0 succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 		}
 
 		//从相应的从设备中读取数据
@@ -1561,7 +1561,7 @@ OPSTAT fsm_modbus_humid_data_read(UINT32 dest_id, UINT32 src_id, void * param_pt
 		{
 			currentModbusBuf.curLen =ret;
 			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data 0 length: %d  \n", ret);
-			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data 0 succeed: %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6]);
+			HCU_DEBUG_PRINT_INF("MODBUS: Received Temp setting data 0 succeed: %02X %02X %02X %02X %02X %02X %02X %02X\n\n\n\n\n\n\n\n\n",currentModbusBuf.curBuf[0],currentModbusBuf.curBuf[1],currentModbusBuf.curBuf[2],currentModbusBuf.curBuf[3],currentModbusBuf.curBuf[4],currentModbusBuf.curBuf[5],currentModbusBuf.curBuf[6],currentModbusBuf.curBuf[7]);
 		}
 
 	}

@@ -35,6 +35,8 @@ extern HcuFsmStateItem_t HcuFsmGpio[];
 #define RPI_GPIO_PIN_ZP01VOC_DATA_A 27  //Pin#36
 #define RPI_GPIO_PIN_ZP01VOC_DATA_B 28  //Pin#38
 
+#define RPI_GPIO_PIN_PWM_CONTROL 3  //Pin#15 //粉尘仪电机控制测试，暂时只开和关
+
 #define RPI_GPIO_HIGH_TIME 32
 #define RPI_GPIO_SENSOR_READ_GAP 60 //in second
 #define RPI_GPIO_READ_REPEAT_TIMES 10

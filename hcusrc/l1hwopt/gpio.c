@@ -104,7 +104,7 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	if ((zHcuSysEngPar.debugMode & HCU_SYSCFG_TRACE_DEBUG_FAT_ON) != FALSE){
 		HcuDebugPrint("GPIO: Enter FSM_STATE_GPIO_ACTIVED status, Keeping refresh here!\n");
 	}
-
+/*
 	int workingCycle = 4;
 	//进入循环工作模式
 	while(1){
@@ -132,8 +132,31 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 		conCounter = workingCycle-conCounter;
 		hcu_sleep(RPI_GPIO_SENSOR_READ_GAP/workingCycle * conCounter);
 	}
+*/
+////粉尘仪电机控制测试
+#ifdef TARGET_RASPBERRY_PI3B
+	//wPi模式标号引脚
+	//wiringPiSetup();
+	pinMode(RPI_GPIO_PIN_PWM_CONTROL,OUTPUT);
+	//进入循环工作模式
+	while(1){
+		digitalWrite(RPI_GPIO_PIN_PWM_CONTROL,LOW);
+    	HcuDebugPrint("GPIO: low level\n\\n\n\n\n\n\n\n");
 
-	return SUCCESS;
+		//delay(1000);
+    	sleep(10);
+		digitalWrite(RPI_GPIO_PIN_PWM_CONTROL,HIGH);
+    	HcuDebugPrint("GPIO: high level\n\\n\n\n\n\n\n\n");
+		//delay(1000);
+    	sleep(10);
+	}
+
+    return SUCCESS;
+#else
+    //对于其他平台, 暂时啥都不做
+    return SUCCESS;
+#endif
+
 }
 
 OPSTAT fsm_gpio_restart(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
