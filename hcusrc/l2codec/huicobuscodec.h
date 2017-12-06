@@ -21,11 +21,9 @@
 #include <json-c/json.h>
 #include <json-c/json_object.h>
 #include "../l2codec/huicobus.h"
-#include "../l0comvm/vmlayer.h"
-#include "../l0comvm/sysconfig.h"
 #include "../l1com/l1comdef.h"
 #include "../l0service/mqtt.h"
-#include "../l0comvm/vmlayer.h"
+
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00

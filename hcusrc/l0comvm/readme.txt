@@ -7,6 +7,12 @@
 ==> 上位机Layui模块化前端UI框架 => http://www.layui.com/
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
+
+
+//= ZJL, 2017 Dec.6 CURRENT_SW_DELIVERY 296=>BFHS项目
+= 增加HUIREST架构
+
+
 //= ZSC, 2017 Dec.5 CURRENT_SW_DELIVERY 295=>AQYC项目
 = 增加支持颗粒物传感器马达PWM控制测试（GPIO PIN15），暂时只高低电平
 = 增加支持控制温控开关测试（进一步控制继电器），湿度达到门限值，设定温度值
