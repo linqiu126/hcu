@@ -1650,19 +1650,19 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 		if(gTaskL3aqycq20Context.staMin.a01001_Avg > HCU_L3AQYC_A01001_RANGE_MAX){
 			gTaskL3aqycq20Context.staMin.a01001_Avg = HCU_L3AQYC_A01001_RANGE_MAX - 20;
 		}
-		if(gTaskL3aqycq20Context.staMin.a01002_Avg > HCU_L3AQYC_A01002_RANGE_MAX){
-			gTaskL3aqycq20Context.staMin.a01002_Avg = HCU_L3AQYC_A01002_RANGE_MAX - 20;
+		if((gTaskL3aqycq20Context.staMin.a01002_Avg > HCU_L3AQYC_A01002_RANGE_MAX) || (gTaskL3aqycq20Context.staMin.a01002_Avg == 0)){
+			gTaskL3aqycq20Context.staMin.a01002_Avg = HCU_L3AQYC_A01002_RANGE_MAX - 50;
 		}
-		if(gTaskL3aqycq20Context.staMin.a01007_Avg > HCU_L3AQYC_A01008_RANGE_MAX){
-			gTaskL3aqycq20Context.staMin.a01007_Avg = HCU_L3AQYC_A01008_RANGE_MAX -25;
+		if(gTaskL3aqycq20Context.staMin.a01007_Avg > HCU_L3AQYC_A01007_RANGE_MAX){
+			gTaskL3aqycq20Context.staMin.a01007_Avg = HCU_L3AQYC_A01007_RANGE_MAX -25;
 		}
 		if(gTaskL3aqycq20Context.staMin.a01008_Avg > HCU_L3AQYC_A01008_RANGE_MAX){
 			gTaskL3aqycq20Context.staMin.a01008_Avg = HCU_L3AQYC_A01008_RANGE_MAX;
 		}
-		if(gTaskL3aqycq20Context.staMin.a34001_Avg > HCU_L3AQYC_A34001_RANGE_MAX){
-			gTaskL3aqycq20Context.staMin.a34001_Avg = HCU_L3AQYC_A34001_RANGE_MAX;
+		if((gTaskL3aqycq20Context.staMin.a34001_Avg > (HCU_L3AQYC_A34001_RANGE_MAX*HCU_SYSMSG_NB_MICROS_IN_ONE_MS)) || (gTaskL3aqycq20Context.staMin.a34001_Avg == 0)){
+			gTaskL3aqycq20Context.staMin.a34001_Avg = HCU_L3AQYC_A34001_RANGE_MAX + 100;
 		}
-		if(gTaskL3aqycq20Context.staMin.a50001_Avg > HCU_L3AQYC_A50001_RANGE_MAX){
+		if((gTaskL3aqycq20Context.staMin.a50001_Avg > HCU_L3AQYC_A50001_RANGE_MAX) || (gTaskL3aqycq20Context.staMin.a50001_Avg == 0)){
 			gTaskL3aqycq20Context.staMin.a50001_Avg = HCU_L3AQYC_A50001_RANGE_MAX - 20;
 		}
 
@@ -1687,7 +1687,7 @@ OPSTAT func_l3aqyc_time_out_aggregation_process(void)
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////For 中航LED test
-		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2009)
+		if (zHcuSysEngPar.hwBurnId.hwType == HUITP_IEID_UNI_INVENT_HWTYPE_PDTYPE_G2_AQYC_RASP_2100)
 		{
 			int ret=0;
 
