@@ -8,8 +8,14 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
-//= ZSC, 2017 Dec.9 CURRENT_SW_DELIVERY 296=>AQYC项目
+
+//= ZSC, 2017 Dec.9 CURRENT_SW_DELIVERY 297=>AQYC项目
 = 增加支持低成本PMS颗粒物传感器，测试通过
+
+
+//= ZJL, 2017 Dec.6 CURRENT_SW_DELIVERY 296=>BFHS项目
+= 增加HUIREST架构
+
 
 
 //= ZSC, 2017 Dec.5 CURRENT_SW_DELIVERY 295=>AQYC项目

@@ -25,7 +25,6 @@ typedef signed long               SLONG;
 typedef UINT8                     BOOLEAN;
 typedef void                      VOID;
 
-#pragma pack (1) //强制1字节对齐
 /*
  *
  *  顺从并更新到技术规范《慧HUICOSBUS接口规范v0.3, LAST UPDATE@2017/11/25》
@@ -1148,7 +1147,6 @@ typedef struct StrMsg_HUICOBUS_CMDID_cui_hcu2opn_data_report
 
 //HUICOBUS_CMDID_cui_invalid               = 0xFFFF, //无效
 
-#pragma pack () //取消字节对齐
 #endif /* _HUICOBUS_H_ */
 
 

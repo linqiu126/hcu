@@ -41,7 +41,10 @@ extern OPSTAT hcu_encode_HUITP_JSON_MSGID_uni_heart_beat_report(char *toUser, St
 	    jsonobj = json_object_new_object();\
 	    cont_jsonobj = json_object_new_object();\
 	    if (jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to create json object!\n");\
-	    if (cont_jsonobj == NULL) HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to create json object!\n");\
+	    if (cont_jsonobj == NULL){\
+	    		json_object_put(jsonobj);\
+				HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIJSONCODEC: Failed to create json object!\n");\
+			}\
 	    json_object_object_add(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_TO_USER, json_object_new_string(toUser));\
 	    json_object_object_add(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_FROM_USER, json_object_new_string(zHcuSysEngPar.hwBurnId.equLable));\
 	    json_object_object_add(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_CREATE_TIME, json_object_new_string(HUITP_MSG_HUIXML_MSGTYPE_HUIJSON_STRING));\
@@ -50,7 +53,7 @@ extern OPSTAT hcu_encode_HUITP_JSON_MSGID_uni_heart_beat_report(char *toUser, St
 
 #define HCU_HUIJSON_ENCODE_MSGBUF_SEND_TO_BH() \
 	do{\
-	    json_object_object_add(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_IE_CONTENT, json_object_new_string(json_object_to_json_string(cont_jsonobj)));\
+	    json_object_object_add(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_IE_CONTENT, cont_jsonobj);\
 	    json_object_object_add(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_MSG_LEN, json_object_new_int(strlen(json_object_to_json_string(cont_jsonobj))));\
 	    json_object_put(cont_jsonobj);\
 	    json_object_object_add(jsonobj, HUITP_MSG_HUIJSON_CONSTANT_FUNC_FLAG, json_object_new_int(0));\

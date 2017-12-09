@@ -353,6 +353,7 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_cali_full_req(UINT32 dest_id, UINT32 src_id, 
 	return SUCCESS;
 }
 
+//可能跟dynamic_calibiration相关，待确定
 OPSTAT fsm_bfhsuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	msg_struct_huicobus_uir_study_start_req_t rcv;
@@ -361,6 +362,7 @@ OPSTAT fsm_bfhsuicomm_huicobus_uir_study_start_req(UINT32 dest_id, UINT32 src_id
 	return SUCCESS;
 }
 
+//可能跟dynamic_calibiration相关，待确定
 OPSTAT fsm_bfhsuicomm_huicobus_uir_study_stop_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	msg_struct_huicobus_uir_study_stop_req_t rcv;
