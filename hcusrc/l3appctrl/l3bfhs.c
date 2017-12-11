@@ -138,6 +138,15 @@ OPSTAT fsm_l3bfhs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 		HCU_ERROR_PRINT_L3BFHS("L3BFHS: Error Set FSM State!\n");
 	HCU_DEBUG_PRINT_FAT("L3BFHS: Enter FSM_STATE_L3BFHS_ACTIVED status, Keeping refresh here!\n");
 
+	//TEST Purpose
+	HCU_DEBUG_PRINT_FAT("L3BFHS: Start to send HUIREST message to external!\n");
+	hcu_sleep(1);
+	StrRestMsgIn_HUIREST_ACTIONID_VISION_test1_t input;
+	memset(&input, 0, sizeof(StrRestMsgIn_HUIREST_ACTIONID_VISION_test1_t));
+	StrRestMsgOut_HUIREST_ACTIONID_general_t output;
+	memset(&output, 0, sizeof(StrRestMsgOut_HUIREST_ACTIONID_general_t));
+	hcu_restful_HUIREST_ACTIONID_VISION_test1(&input, &output);
+
 	//返回
 	return SUCCESS;
 }

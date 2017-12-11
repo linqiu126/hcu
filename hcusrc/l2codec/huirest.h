@@ -92,17 +92,15 @@ typedef enum HuirestActionidDefination
 }
 
 {
-	“restTag”:”printer”,
-	“actionId”:1,
-	“parFlag”:1,  //FALSE-0, TRUE-1
-	“parConent”:
-	{
-		“sn”: 55,
-		"sucFlag":1,
-		"errCode":0
-	}
+    "restTag": "printer",
+    "actionId": 1,
+    "parFlag": 1,
+    "parConent": {
+        "sn": 55,
+        "sucFlag": 1,
+        "errCode": 0
+    }
 }
-
 
 */
 
@@ -219,6 +217,10 @@ typedef struct StrRestMsgIn_HUIREST_ACTIONID_DBA_yczx_temp_update
 typedef struct StrRestMsgIn_HUIREST_ACTIONID_VISION_test1
 {
 	float 	testData;
+	float 	testData1;
+	float 	testData2;
+	float 	testData3;
+	float 	testData4;
 }StrRestMsgIn_HUIREST_ACTIONID_VISION_test1_t;
 
 //HUIREST_ACTIONID_VISION_max,

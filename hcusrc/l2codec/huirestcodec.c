@@ -411,6 +411,10 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_VISION_test1(StrRestMsgIn_HUIREST_ACTIONID_V
 
     //内容体
     json_object_object_add(cont_jsonobj, "testData", json_object_new_double(in->testData));
+    json_object_object_add(cont_jsonobj, "testData1", json_object_new_double(in->testData1));
+    json_object_object_add(cont_jsonobj, "testData2", json_object_new_double(in->testData2));
+    json_object_object_add(cont_jsonobj, "testData3", json_object_new_double(in->testData3));
+    json_object_object_add(cont_jsonobj, "testData4", json_object_new_double(in->testData4));
 
     //发送
     HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
