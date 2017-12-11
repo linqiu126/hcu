@@ -139,13 +139,19 @@ OPSTAT fsm_l3bfhs_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 p
 	HCU_DEBUG_PRINT_FAT("L3BFHS: Enter FSM_STATE_L3BFHS_ACTIVED status, Keeping refresh here!\n");
 
 	//TEST Purpose
-	HCU_DEBUG_PRINT_FAT("L3BFHS: Start to send HUIREST message to external!\n");
 	hcu_sleep(1);
+	HCU_DEBUG_PRINT_CRT("L3BFHS: Start to send HUIREST message to external!\n");
 	StrRestMsgIn_HUIREST_ACTIONID_VISION_test1_t input;
 	memset(&input, 0, sizeof(StrRestMsgIn_HUIREST_ACTIONID_VISION_test1_t));
 	StrRestMsgOut_HUIREST_ACTIONID_general_t output;
 	memset(&output, 0, sizeof(StrRestMsgOut_HUIREST_ACTIONID_general_t));
+	input.testData = 0.1;
+	input.testData1 = 1.1;
+	input.testData2 = 2.2;
+	input.testData3 = 3.3;
+	input.testData4 = 4.4;
 	hcu_restful_HUIREST_ACTIONID_VISION_test1(&input, &output);
+	HCU_DEBUG_PRINT_CRT("L3BFHS: Get feedback from HTTP server, SucFlag=%d, ErrCode=%d!\n", output.sucFlag, output.errCode);
 
 	//返回
 	return SUCCESS;

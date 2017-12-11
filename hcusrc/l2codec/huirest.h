@@ -66,7 +66,7 @@ typedef enum HuirestActionidDefination
 #define HUIREST_ACCESS_CONST_SERVICE_TAG  		"restTag"
 #define HUIREST_ACCESS_CONST_ACTION_ID  		"actionId"
 #define HUIREST_ACCESS_CONST_PAR_FLAG  			"parFlag"
-#define HUIREST_ACCESS_CONST_PAR_CONTENT  		"parConent"
+#define HUIREST_ACCESS_CONST_PAR_CONTENT  		"parContent"
 #define HUIREST_ACCESS_CONST_SVRTAG_PRINTER_IN_NUMBER  		1
 #define HUIREST_ACCESS_CONST_SVRTAG_DBA_IN_NUMBER  			2
 #define HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_NUMBER  		3
@@ -80,7 +80,7 @@ typedef enum HuirestActionidDefination
 	“restTag”:”printer”,
 	“actionId”:1,
 	“parFlag”:1,  //FALSE-0, TRUE-1
-	“parConent”:
+	“parContent”:
 	{
 		“weight”: 12.33,
 		“unit”: "kg",
@@ -95,7 +95,7 @@ typedef enum HuirestActionidDefination
     "restTag": "printer",
     "actionId": 1,
     "parFlag": 1,
-    "parConent": {
+    "parContent": {
         "sn": 55,
         "sucFlag": 1,
         "errCode": 0
