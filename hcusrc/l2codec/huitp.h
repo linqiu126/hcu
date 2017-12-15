@@ -6032,11 +6032,10 @@ typedef struct StrMsg_HUITP_MSGID_sui_common_msg_header
 //#define		MAX_WMC_CONTROL_MSG_HEADER_LEN		(sizeof(IHU_HUITP_L2FRAME_STD_frame_header_t))
 //#define		MAX_WMC_CONTROL_MSG_BODY_LEN		(MAX_WMC_CONTROL_MSG_LEN - MAX_WMC_CONTROL_MSG_HEADER_LEN)
 
-/* ERROR CODE */
-typedef enum StrHuiIe_sui_com_error_code
+/* After add the new common error code, reserve the old one for BFSC */
+typedef enum error_code
 {
 	//ERROR CODE ID
-	HUITP_IEID_SUI_COM_ERROR_CODE_STARING = 0, //Starting point
 	ERROR_CODE_NO_ERROR = 0, //Starting point //兼容老旧系统
 	//COMMON ERROR CODE
 	ERROR_CODE_CALLING_ERROR,
@@ -6046,7 +6045,23 @@ typedef enum StrHuiIe_sui_com_error_code
 	//SPECIFIC PART
 
 	ERROR_CODE_MAX, //Ending point  //兼容老旧系统
-	HUITP_IEID_SUI_COM_ERROR_CODE_MAX, //Ending point
+}error_code_t; //end of IHU_INTER_TASK_MSG_ID
+
+
+/* COMMON ERROR CODE */
+typedef enum StrHuiIe_sui_com_error_code
+{
+	//ERROR CODE ID
+	HUITP_IEID_SUI_COM_ERROR_CODE_STARING = 0, //Starting point
+	HUITP_IEID_SUI_COM_ERROR_CODE_NO_ERROR = 0, //Starting point //兼容老旧系统
+	//COMMON ERROR CODE
+	HUITP_IEID_SUI_COM_ERROR_CODE_CALLING_ERROR,
+	HUITP_IEID_SUI_COM_ERROR_CODE_INPUT_PARAMETER_KO,
+	HUITP_IEID_SUI_COM_ERROR_CODE_WRONG_WMC_STATE,
+	HUITP_IEID_SUI_COM_ERROR_CODE_UNKNOWN,
+	//SPECIFIC PART
+
+	HUITP_IEID_SUI_COM_ERROR_CODE_MAX, //Ending point  //兼容老旧系统
 }StrHuiIe_sui_com_error_code_t; //end of IHU_INTER_TASK_MSG_ID
 
 
