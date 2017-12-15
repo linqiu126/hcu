@@ -16,6 +16,8 @@
 #include "../l2frame/cloudvela.h"
 #include "../l2codec/huicobus.h"
 #include "../l2codec/huicobuscodec.h"
+#include "../l2codec/huirest.h"
+#include "../l2codec/huirestcodec.h"
 
 //State definition
 //#define FSM_STATE_ENTRY  0x00

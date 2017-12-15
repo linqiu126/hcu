@@ -19,6 +19,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfsc(StrRestMsgIn_HUIREST_A
 {
     struct json_object *jsonobj = NULL;
     struct json_object *cont_jsonobj = NULL;
+    struct json_object *cont2_jsonobj = NULL;
 	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
 	UINT32 t=0;
 
@@ -151,6 +152,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfdf(StrRestMsgIn_HUIREST_A
 {
     struct json_object *jsonobj = NULL;
     struct json_object *cont_jsonobj = NULL;
+    struct json_object *cont2_jsonobj = NULL;
 	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
 	UINT32 t=0;
     char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
@@ -204,6 +206,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfhs(StrRestMsgIn_HUIREST_A
 {
     struct json_object *jsonobj = NULL;
     struct json_object *cont_jsonobj = NULL;
+    struct json_object *cont2_jsonobj = NULL;
 	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
 	UINT32 t=0;
     char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
@@ -257,6 +260,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_fam_sdqx_md1(StrRestMsgIn_HUIREST_AC
 {
     struct json_object *jsonobj = NULL;
     struct json_object *cont_jsonobj = NULL;
+    struct json_object *cont2_jsonobj = NULL;
 	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
 	UINT32 t=0;
     char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
@@ -305,6 +309,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_fam_sdqx_md2(StrRestMsgIn_HUIREST_AC
 {
     struct json_object *jsonobj = NULL;
     struct json_object *cont_jsonobj = NULL;
+    struct json_object *cont2_jsonobj = NULL;
 	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
 	UINT32 t=0;
     char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
@@ -353,6 +358,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_DBA_yczx_temp_update(StrRestMsgIn_HUIREST_AC
 {
     struct json_object *jsonobj = NULL;
     struct json_object *cont_jsonobj = NULL;
+    struct json_object *cont2_jsonobj = NULL;
 	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
 	UINT32 t=0;
     char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
@@ -401,6 +407,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_VISION_test1(StrRestMsgIn_HUIREST_ACTIONID_V
 {
     struct json_object *jsonobj = NULL;
     struct json_object *cont_jsonobj = NULL;
+    struct json_object *cont2_jsonobj = NULL;
 	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
 	UINT32 t=0;
     char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
@@ -411,6 +418,10 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_VISION_test1(StrRestMsgIn_HUIREST_ACTIONID_V
 
     //内容体
     json_object_object_add(cont_jsonobj, "testData", json_object_new_double(in->testData));
+    json_object_object_add(cont_jsonobj, "testData1", json_object_new_double(in->testData1));
+    json_object_object_add(cont_jsonobj, "testData2", json_object_new_double(in->testData2));
+    json_object_object_add(cont_jsonobj, "testData3", json_object_new_double(in->testData3));
+    json_object_object_add(cont_jsonobj, "testData4", json_object_new_double(in->testData4));
 
     //发送
     HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
@@ -418,6 +429,7 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_VISION_test1(StrRestMsgIn_HUIREST_ACTIONID_V
     //CURL过程
     if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
     	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
+    HCU_DEBUG_PRINT_CRT("HUIRESTCODEC: Http Server receive buffer=%s!\n", (char*)receiveBuffer.buf);
 
     //解码反馈
     //HUIREST_ACCESS_CONST_SERVICE_TAG
@@ -477,7 +489,7 @@ OPSTAT func_huirestcodec_curl_data_send(UINT8 serTag, char *buf, msg_struct_ethe
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, func_huirestcodec_curl_write_callback);
 
 	//设置接收buffer
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&receiveBuffer);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)receiveBuffer);
 
 	//实施调用
 	CURLcode curlRes = curl_easy_perform(curl);
@@ -485,6 +497,7 @@ OPSTAT func_huirestcodec_curl_data_send(UINT8 serTag, char *buf, msg_struct_ethe
 	//Clean curl pointer
 	curl_easy_cleanup(curl);
 	curl_global_cleanup();
+
 	if(curlRes != CURLE_OK) HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Curl perform error!\n");
 	if (receiveBuffer->length > 1)
 		return SUCCESS;

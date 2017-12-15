@@ -141,14 +141,14 @@ OPSTAT fsm_gpio_init(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 par
 	//进入循环工作模式
 	while(1){
 		digitalWrite(RPI_GPIO_PIN_PWM_CONTROL,LOW);
-    	HcuDebugPrint("GPIO: low level\n\\n\n\n\n\n\n\n");
+    	HcuDebugPrint("GPIO: change to low level for PIN#11\n\n");
 
 		//delay(1000);
-    	sleep(10);
+    	sleep(20);
 		digitalWrite(RPI_GPIO_PIN_PWM_CONTROL,HIGH);
-    	HcuDebugPrint("GPIO: high level\n\\n\n\n\n\n\n\n");
+    	HcuDebugPrint("GPIO: change to high level for PIN#11\n\n");
 		//delay(1000);
-    	sleep(10);
+    	sleep(40);
 	}
 
     return SUCCESS;

@@ -34,7 +34,7 @@ extern OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_callcell_bfhs(StrRestMsgIn_HU
 extern OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_fam_sdqx_md1(StrRestMsgIn_HUIREST_ACTIONID_PRINTER_fam_sdqx_md1_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out);
 extern OPSTAT hcu_restful_HUIREST_ACTIONID_PRINTER_fam_sdqx_md2(StrRestMsgIn_HUIREST_ACTIONID_PRINTER_fam_sdqx_md2_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out);
 extern OPSTAT hcu_restful_HUIREST_ACTIONID_DBA_yczx_temp_update(StrRestMsgIn_HUIREST_ACTIONID_DBA_yczx_temp_update_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out);
-
+extern OPSTAT hcu_restful_HUIREST_ACTIONID_VISION_test1(StrRestMsgIn_HUIREST_ACTIONID_VISION_test1_t *in, StrRestMsgOut_HUIREST_ACTIONID_general_t *out);
 
 
 //local APIs
@@ -62,10 +62,10 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 #define HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING() \
 	do{\
 	    json_object_object_add(jsonobj, HUIREST_ACCESS_CONST_PAR_CONTENT, cont_jsonobj);\
-	    json_object_put(cont_jsonobj);\
 	    memset(sendBuf, 0, sizeof(sendBuf));\
 	    sprintf(sendBuf, "%s", json_object_to_json_string(jsonobj));\
 	    json_object_put(jsonobj);\
+	    json_object_put(cont_jsonobj);\
 		memset(&receiveBuffer, 0, sizeof(msg_struct_ethernet_cloudvela_data_rx_t));\
 	}while(0)
 
@@ -125,28 +125,30 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 			json_object_put(jsonobj);\
 			HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT object!\n");\
 		}\
-		json_object_put(jsonobj);\
 	}while(0)
 
 #define HCU_HUIREST_DECODE_ACTION_HEAD_PAR_GENERAL_FB() \
 	do{\
-		jsonobj = json_object_object_get(jsonobj, "sucFlag");\
-		if (jsonobj == NULL)\
+		cont2_jsonobj = json_object_object_get(cont_jsonobj, "sucFlag");\
+		if (cont2_jsonobj == NULL)\
 		{\
 			json_object_put(cont_jsonobj);\
-			HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT L2 object!\n");\
+			json_object_put(jsonobj);\
+			HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT sucFlag object!\n");\
 		}\
-		out->sucFlag = json_object_get_boolean(jsonobj);\
-		json_object_put(jsonobj);\
-		jsonobj = json_object_object_get(jsonobj, "errCode");\
-		if (jsonobj == NULL)\
+		out->sucFlag = json_object_get_boolean(cont2_jsonobj);\
+		json_object_put(cont2_jsonobj);\
+		cont2_jsonobj = json_object_object_get(cont_jsonobj, "errCode");\
+		if (cont2_jsonobj == NULL)\
 		{\
 			json_object_put(cont_jsonobj);\
-			HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT L2 object!\n");\
+			json_object_put(jsonobj);\
+			HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT errCode object!\n");\
 		}\
-		out->errCode = json_object_get_int(jsonobj);\
-		json_object_put(jsonobj);\
+		out->errCode = json_object_get_int(cont2_jsonobj);\
+		json_object_put(cont2_jsonobj);\
 		json_object_put(cont_jsonobj);\
+		json_object_put(jsonobj);\
 	}while(0)
 
 
