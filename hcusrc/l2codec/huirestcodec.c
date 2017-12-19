@@ -451,6 +451,66 @@ OPSTAT hcu_restful_HUIREST_ACTIONID_VISION_test1(StrRestMsgIn_HUIREST_ACTIONID_V
 	return SUCCESS;
 }
 
+//发送和接收API
+OPSTAT hcu_restful_HUIREST_ACTIONID_VISION__worm_clasify_single(StrRestMsgIn_HUIREST_ACTIONID_VISION_worm_clasify_single_t *in, StrRestMsgIn_HUIREST_ACTIONID_VISION_worm_clasify_single_fb_t *out)
+{
+    struct json_object *jsonobj = NULL;
+    struct json_object *cont_jsonobj = NULL;
+    struct json_object *cont2_jsonobj = NULL;
+	char stmp[HCU_HUIRESTCODEC_BODY_MAX_LEN];
+	UINT32 t=0;
+    char sendBuf[HCU_HUIRESTCODEC_CONTENT_MAX_LEN];
+	msg_struct_ethernet_cloudvela_data_rx_t receiveBuffer;
+
+	//固定头
+    HCU_HUIREST_ENCODE_ACTIONHEAD_WITH_FIX_VALUE(HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_STRING, HUIREST_ACTIONID_VISION_test1);
+
+    //内容体
+    json_object_object_add(cont_jsonobj, "fileName", json_object_new_string(in->fileName));
+    json_object_object_add(cont_jsonobj, "cfBase", json_object_new_int(in->cfBase));
+    json_object_object_add(cont_jsonobj, "cfSmall2MidIndex", json_object_new_int(in->cfSmall2MidIndex));
+    json_object_object_add(cont_jsonobj, "cfMid2BigIndex", json_object_new_int(in->cfMid2BigIndex));
+    json_object_object_add(cont_jsonobj, "cfBig2TopIndex", json_object_new_int(in->cfBig2TopIndex));
+
+    //发送
+    HCU_HUIREST_ENCODE_ACTIONHEAD_TRANSFER_TO_STRING();
+
+    //CURL过程
+    if (func_huirestcodec_curl_data_send(HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_NUMBER, sendBuf, &receiveBuffer) == FAILURE)
+    	HCU_ERROR_PRINT_HUIRESTCODEC("HUIRESTCODEC: Error perform curl!\n");
+    HCU_DEBUG_PRINT_CRT("HUIRESTCODEC: Http Server receive buffer=%s!\n", (char*)receiveBuffer.buf);
+
+    //解码反馈
+    //HUIREST_ACCESS_CONST_SERVICE_TAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_SERVICE_TAG(HUIREST_ACCESS_CONST_SVRTAG_VISION_IN_STRING);
+
+	//HUIREST_ACCESS_CONST_ACTION_ID
+    HCU_HUIREST_DECODE_ACTION_HEAD_ACTIONID(HUIREST_ACTIONID_VISION_worm_clasify_single);
+
+	//HUIREST_ACCESS_CONST_PAR_FLAG
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FLAG(TRUE);
+
+    //HUIREST_ACCESS_CONST_PAR_CONTENT
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_CONTENT();
+
+	//解内容第二层内容
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(totalNbr, "totalNbr");
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(bigAlive, "bigAlive");
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(bigDead, "bigDead");
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(middleAlive, "middleAlive");
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(middleDead, "middleDead");
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(smallAlive, "smallAlive");
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(smallDead, "smallDead");
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(totalAlive, "totalAlive");
+    HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(totalDead, "totalDead");
+	json_object_put(cont_jsonobj);
+	json_object_put(jsonobj);
+
+	//返回
+	return SUCCESS;
+}
+
+
 //CURL发送给RESTFUL服务器
 OPSTAT func_huirestcodec_curl_data_send(UINT8 serTag, char *buf, msg_struct_ethernet_cloudvela_data_rx_t* receiveBuffer)
 {

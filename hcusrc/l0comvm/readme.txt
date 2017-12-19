@@ -8,6 +8,10 @@
 ==> 上位机frp内网穿透工具 => https://github.com/fatedier/frp
 
 
+//= ZJL, 2017 Dec.19 CURRENT_SW_DELIVERY 299=>BFHS项目
+= 简化CLOUDVELA等函数的编写过程，向Object-C靠近
+
+
 //= ZJL, 2017 Dec.11 CURRENT_SW_DELIVERY 298=>BFHS项目
 = 完善BFHS的HUIREST调用函数
 

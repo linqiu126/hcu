@@ -195,8 +195,7 @@ OPSTAT fsm_l3bfhs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
 	int ret;
 
 	//Receive message and copy to local variable
-	msg_struct_com_time_out_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_com_time_out_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_com_time_out_t);
 
 	//钩子在此处，检查zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFHS]是否超限
 	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_L3BFHS] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
@@ -264,9 +263,7 @@ OPSTAT fsm_l3bfhs_time_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT
  ***************************************************************************************************************************/
 OPSTAT fsm_l3bfhs_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_can_l3bfhs_sys_cfg_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_sys_cfg_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_sys_cfg_resp_t);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -318,9 +315,7 @@ OPSTAT fsm_l3bfhs_canitf_sys_config_resp(UINT32 dest_id, UINT32 src_id, void * p
 
 OPSTAT fsm_l3bfhs_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_sui_suspend_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_sui_suspend_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_sui_suspend_resp_t);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -363,9 +358,7 @@ OPSTAT fsm_l3bfhs_canitf_sys_suspend_resp(UINT32 dest_id, UINT32 src_id, void * 
 
 OPSTAT fsm_l3bfhs_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_sui_resume_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_sui_resume_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_sui_resume_resp_t);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -408,9 +401,7 @@ OPSTAT fsm_l3bfhs_canitf_sys_resume_resp(UINT32 dest_id, UINT32 src_id, void * p
 
 OPSTAT fsm_l3bfhs_canitf_cal_zero_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_can_l3bfhs_cal_zero_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_cal_zero_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_cal_zero_resp_t);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -441,9 +432,7 @@ OPSTAT fsm_l3bfhs_canitf_cal_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_can_l3bfhs_cal_full_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_cal_full_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_cal_full_resp_t);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -477,9 +466,7 @@ OPSTAT fsm_l3bfhs_canitf_cal_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_l3bfhs_canitf_dyn_zero_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_can_l3bfhs_dyn_zero_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_dyn_zero_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_dyn_zero_resp_t);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -510,9 +497,7 @@ OPSTAT fsm_l3bfhs_canitf_dyn_zero_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_l3bfhs_canitf_dyn_full_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_can_l3bfhs_dyn_full_resp_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_dyn_full_resp_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_dyn_full_resp_t);
 
 	//收到错误的反馈，就回复差错给界面
 	if (rcv.validFlag == FALSE){
@@ -546,9 +531,7 @@ OPSTAT fsm_l3bfhs_canitf_dyn_full_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_l3bfhs_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_sui_startup_ind_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_sui_startup_ind_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_sui_startup_ind_t);
 
 	//存储本地
 	gTaskL3bfhsContext.sensorWs[0].nodeStatus = HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP;
@@ -571,9 +554,7 @@ OPSTAT fsm_l3bfhs_canitf_startup_ind(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_l3bfhs_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_sui_fault_ind_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_sui_fault_ind_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_sui_fault_ind_t);
 
 	//本地存储
 	if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_INIT_MAX)
@@ -602,9 +583,7 @@ OPSTAT fsm_l3bfhs_canitf_fault_ind(UINT32 dest_id, UINT32 src_id, void * param_p
 
 OPSTAT fsm_l3bfhs_canitf_heart_beat_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_sui_heart_beat_report_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_sui_heart_beat_report_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_sui_heart_beat_report_t);
 
 	//本地存储：只是为了防止下位机重启
 	if (gTaskL3bfhsContext.sensorWs[0].nodeStatus < HCU_L3BFHS_NODE_BOARD_STATUS_STARTUP){
@@ -714,11 +693,7 @@ OPSTAT fsm_l3bfhs_cloudvela_statistic_confirm(UINT32 dest_id, UINT32 src_id, voi
 //触发组合算法
 OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-
-	//入参检查
-	msg_struct_can_l3bfhs_new_ready_event_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_new_ready_event_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_can_l3bfhs_new_ready_event_t);
 
 	//通知界面
 	StrHlcIe_cui_hcu2uir_callcell_bfhs_report_t status;
@@ -742,10 +717,7 @@ OPSTAT fsm_l3bfhs_canitf_ws_new_ready_event(UINT32 dest_id, UINT32 src_id, void 
  ***************************************************************************************************************************/
 OPSTAT fsm_l3bfhs_uicomm_ctrl_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-
-	msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_L3BFHS, msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_L3BFHS, msg_struct_uicomm_l3bfhs_ctrl_cmd_req_t);
 
 	//启动命令
 	if (rcv.cmdid == HCU_SYSMSG_BFHS_UICOMM_CMDID_CFG_START){

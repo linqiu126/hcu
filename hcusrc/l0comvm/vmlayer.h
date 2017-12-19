@@ -1017,6 +1017,20 @@ int pthread_setname_np(pthread_t thread, const char *name);
 		memcpy(&rcv, param_ptr, param_len);\
 	}while(0)
 
+//更为通用化的消息接收处理过程
+#define HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(taskid, par) \
+	par rcv;\
+	memset(&rcv, 0, sizeof(par));\
+	if ((param_ptr == NULL || param_len > sizeof(par)))\
+	{\
+		char s[200];\
+		memset(s, 0, sizeof(s));\
+		sprintf(s, "%s: Receive message error!\n", zHcuVmCtrTab.task[taskid].taskName);\
+		HCU_ERROR_PRINT_TASK(taskid, s);\
+	}\
+	memcpy(&rcv, param_ptr, param_len);\
+
+
 //简化程序编写的宏定义：发送消息的简易处理
 #define HCU_MSG_SEND_GENERNAL_PROCESS(msgId, taskDest, taskOrg) \
 	do{\

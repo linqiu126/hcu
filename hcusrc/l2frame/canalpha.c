@@ -169,11 +169,7 @@ OPSTAT func_canalpha_int_init(void)
 //已经启动，用于产生假的传感器称重数据，用于参数L3BFSC组合算法
 OPSTAT fsm_canalpha_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret;
-
-	//Receive message and copy to local variable
-	msg_struct_com_time_out_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_com_time_out_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_com_time_out_t);
 
 	//钩子在此处，检查zHcuRunErrCnt[TASK_ID_CANALPHA]是否超限
 	if (zHcuSysStaPm.taskRunErrCnt[TASK_ID_CANALPHA] > HCU_RUN_ERROR_LEVEL_2_MAJOR){
@@ -217,11 +213,8 @@ OPSTAT fsm_canalpha_timeout(UINT32 dest_id, UINT32 src_id, void * param_ptr, UIN
 
 OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_l3bfdf_can_sys_cfg_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfdf_can_sys_cfg_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfdf_can_sys_cfg_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -318,11 +311,7 @@ OPSTAT fsm_canalpha_l3bfdf_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_canalpha_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	//int i=0;
-
-	msg_struct_l3bfdf_can_ws_comb_out_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfdf_can_ws_comb_out_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfdf_can_ws_comb_out_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -363,10 +352,7 @@ OPSTAT fsm_canalpha_l3bfdf_ws_comb_out(UINT32 dest_id, UINT32 src_id, void * par
 //通用过程
 OPSTAT fsm_canalpha_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-
-	msg_struct_sysswm_canitf_inventory_confirm_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sysswm_canitf_inventory_confirm_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sysswm_canitf_inventory_confirm_t);
 
 	//入参检查
 	UINT32 bitmap = ((UINT32)1<<rcv.nodeId);
@@ -395,10 +381,7 @@ OPSTAT fsm_canalpha_sysswm_inventory_confirm(UINT32 dest_id, UINT32 src_id, void
 
 OPSTAT fsm_canalpha_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-
-	msg_struct_sysswm_canitf_sw_package_confirm_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sysswm_canitf_sw_package_confirm_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sysswm_canitf_sw_package_confirm_t);
 
 	//入参检查
 	UINT32 bitmap = ((UINT32)1<<rcv.nodeId);
@@ -430,11 +413,8 @@ OPSTAT fsm_canalpha_sysswm_sw_package_confirm(UINT32 dest_id, UINT32 src_id, voi
 
 OPSTAT fsm_canalpha_sui_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_sui_test_cmd_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sui_test_cmd_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sui_test_cmd_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -471,11 +451,8 @@ OPSTAT fsm_canalpha_sui_test_cmd_req(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_sui_suspend_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sui_suspend_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sui_suspend_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -502,11 +479,8 @@ OPSTAT fsm_canalpha_sui_suspend_req(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_sui_resume_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sui_resume_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sui_resume_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -533,10 +507,7 @@ OPSTAT fsm_canalpha_sui_resume_req(UINT32 dest_id, UINT32 src_id, void * param_p
 
 OPSTAT fsm_canalpha_sui_heart_beat_confirm(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-
-	msg_struct_sui_heart_beat_confirm_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_sui_heart_beat_confirm_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_sui_heart_beat_confirm_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -562,11 +533,8 @@ OPSTAT fsm_canalpha_sui_heart_beat_confirm(UINT32 dest_id, UINT32 src_id, void *
 
 OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_l3bfhs_can_sys_cfg_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_sys_cfg_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_sys_cfg_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -629,11 +597,8 @@ OPSTAT fsm_canalpha_l3bfhs_sys_cfg_req(UINT32 dest_id, UINT32 src_id, void * par
 //往外发送
 OPSTAT fsm_canalpha_l3bfhs_cal_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_l3bfhs_can_cal_zero_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_cal_zero_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_cal_zero_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -672,11 +637,8 @@ OPSTAT fsm_canalpha_l3bfhs_cal_zero_req(UINT32 dest_id, UINT32 src_id, void * pa
 //往外发送
 OPSTAT fsm_canalpha_l3bfhs_cal_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_l3bfhs_can_cal_full_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_cal_full_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_cal_full_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -706,11 +668,8 @@ OPSTAT fsm_canalpha_l3bfhs_cal_full_req(UINT32 dest_id, UINT32 src_id, void * pa
 //往外发送
 OPSTAT fsm_canalpha_l3bfhs_dyn_zero_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_l3bfhs_can_dyn_zero_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_dyn_zero_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_dyn_zero_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -751,11 +710,8 @@ OPSTAT fsm_canalpha_l3bfhs_dyn_zero_req(UINT32 dest_id, UINT32 src_id, void * pa
 //往外发送
 OPSTAT fsm_canalpha_l3bfhs_dyn_full_req(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
 	int i=0;
-
-	msg_struct_l3bfhs_can_dyn_full_req_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_dyn_full_req_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_l3bfhs_can_dyn_full_req_t);
 
 	//生成bitmap
 	UINT32 bitmap = 0;
@@ -786,9 +742,7 @@ OPSTAT fsm_canalpha_l3bfhs_dyn_full_req(UINT32 dest_id, UINT32 src_id, void * pa
 OPSTAT fsm_canalpha_usbcan_l2frame_receive(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
 	int ret=0;
-
-	msg_struct_usbcan_l2frame_rcv_t rcv;
-	HCU_MSG_RCV_CHECK_FOR_LOCALIZE(TASK_ID_CANALPHA, msg_struct_usbcan_l2frame_rcv_t);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CANALPHA, msg_struct_usbcan_l2frame_rcv_t);
 
 	//解码MSGID/MSGLEN
 	UINT16 msgId = 0, msgLen = 0;

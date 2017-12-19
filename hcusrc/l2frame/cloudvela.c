@@ -975,31 +975,34 @@ OPSTAT fsm_cloudvela_hwinv_phy_status_chg(UINT32 dest_id, UINT32 src_id, void * 
 //标准消息处理方式
 OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_spspm_cloudvela_alarm_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_alarm_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_alarm_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_spspm_cloudvela_alarm_resp_t)
+//	msg_struct_spspm_cloudvela_alarm_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_alarm_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_alarm_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
 		memcpy(&(gTaskCloudvelaContext.L2Link), &(rcv.comHead), sizeof(msgie_struct_bh_com_head_t));
 		//准备组装发送消息
-		StrMsg_HUITP_MSGID_uni_alarm_info_resp_t pMsgProc;
-		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_alarm_info_resp_t);
-		memset(&pMsgProc, 0, msgProcLen);
-		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_alarm_info_resp>>8)&0xFF;
-		pMsgProc.msgId.optId = HUITP_MSGID_uni_alarm_info_resp&0xFF;
-		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
-		//StrIe_HUITP_IEID_uni_com_resp_t
-		pMsgProc.baseResp.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_resp);
-		pMsgProc.baseResp.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_resp_t) - 4);
-		pMsgProc.baseResp.comResp = rcv.baseResp;
+		HCU_CLOUDVELA_GEN_NEW_HUITP_MSG_RESP(StrMsg_HUITP_MSGID_uni_alarm_info_resp_t, HUITP_MSGID_uni_alarm_info_resp);
+//		StrMsg_HUITP_MSGID_uni_alarm_info_resp_t pMsgProc;
+//		UINT16 msgProcLen = sizeof(StrMsg_HUITP_MSGID_uni_alarm_info_resp_t);
+//		memset(&pMsgProc, 0, msgProcLen);
+//		pMsgProc.msgId.cmdId = (HUITP_MSGID_uni_alarm_info_resp>>8)&0xFF;
+//		pMsgProc.msgId.optId = HUITP_MSGID_uni_alarm_info_resp&0xFF;
+//		pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);
+//		//StrIe_HUITP_IEID_uni_com_resp_t
+//		pMsgProc.baseResp.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_resp);
+//		pMsgProc.baseResp.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_resp_t) - 4);
+//		pMsgProc.baseResp.comResp = rcv.baseResp;
 		//StrIe_HUITP_IEID_uni_alarm_info_element_t
 		pMsgProc.respValue.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_alarm_info_element);
 		pMsgProc.respValue.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_alarm_info_element_t) - 4);
@@ -1036,16 +1039,18 @@ OPSTAT fsm_cloudvela_syspm_alarm_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_spspm_cloudvela_alarm_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_alarm_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_alarm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3 message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_spspm_cloudvela_alarm_report_t)
+//	msg_struct_spspm_cloudvela_alarm_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_alarm_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_alarm_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3 message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1106,16 +1111,18 @@ OPSTAT fsm_cloudvela_syspm_alarm_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_syspm_perfm_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_spspm_cloudvela_perfm_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_perfm_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_perfm_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_spspm_cloudvela_perfm_resp_t)
+//	msg_struct_spspm_cloudvela_perfm_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_perfm_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_perfm_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1169,16 +1176,18 @@ OPSTAT fsm_cloudvela_syspm_perfm_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_spspm_cloudvela_perfm_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_perfm_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_perfm_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_spspm_cloudvela_perfm_report_t)
+//	msg_struct_spspm_cloudvela_perfm_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_spspm_cloudvela_perfm_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_spspm_cloudvela_perfm_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1236,16 +1245,18 @@ OPSTAT fsm_cloudvela_syspm_perfm_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_syspm_test_command_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_cloudvela_test_command_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_cloudvela_test_command_resp_t)
+//	msg_struct_cloudvela_test_command_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1297,16 +1308,18 @@ OPSTAT fsm_cloudvela_syspm_test_command_resp(UINT32 dest_id, UINT32 src_id, void
 
 OPSTAT fsm_cloudvela_syspm_test_command_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_cloudvela_test_command_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_cloudvela_test_command_report_t)
+//	msg_struct_cloudvela_test_command_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_cloudvela_test_command_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_cloudvela_test_command_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1360,16 +1373,18 @@ OPSTAT fsm_cloudvela_syspm_test_command_report(UINT32 dest_id, UINT32 src_id, vo
 
 OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_sysswm_cloudvela_inventory_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_sysswm_cloudvela_inventory_resp_t)
+//	msg_struct_sysswm_cloudvela_inventory_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_inventory_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1422,16 +1437,18 @@ OPSTAT fsm_cloudvela_sysswm_inventory_resp(UINT32 dest_id, UINT32 src_id, void *
 
 OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_sysswm_cloudvela_inventory_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_inventory_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_inventory_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_sysswm_cloudvela_inventory_report_t)
+//	msg_struct_sysswm_cloudvela_inventory_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_inventory_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_inventory_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1487,16 +1504,18 @@ OPSTAT fsm_cloudvela_sysswm_inventory_report(UINT32 dest_id, UINT32 src_id, void
 
 OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_sysswm_cloudvela_sw_package_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_sw_package_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_sysswm_cloudvela_sw_package_resp_t)
+//	msg_struct_sysswm_cloudvela_sw_package_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_sw_package_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1551,16 +1570,18 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_resp(UINT32 dest_id, UINT32 src_id, void 
 
 OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_sysswm_cloudvela_sw_package_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_sysswm_cloudvela_sw_package_report_t)
+//	msg_struct_sysswm_cloudvela_sw_package_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_sysswm_cloudvela_sw_package_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1621,17 +1642,18 @@ OPSTAT fsm_cloudvela_sysswm_sw_package_report(UINT32 dest_id, UINT32 src_id, voi
  ***************************************************************************************************************************/
 OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_emc_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_emc_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_emc_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive EMC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_emc_cloudvela_data_resp_t)
+//	msg_struct_emc_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_emc_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_emc_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive EMC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1680,17 +1702,18 @@ OPSTAT fsm_cloudvela_emc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 
 OPSTAT fsm_cloudvela_emc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_emc_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_emc_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_emc_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive EMC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_emc_cloudvela_ctrl_resp_t)
+//	msg_struct_emc_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_emc_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_emc_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive EMC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1757,17 +1780,18 @@ OPSTAT fsm_cloudvela_emc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 
 OPSTAT fsm_cloudvela_emc_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_emc_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_emc_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_emc_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive EMC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_emc_cloudvela_data_report_t)
+//	msg_struct_emc_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_emc_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_emc_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive EMC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1827,19 +1851,18 @@ OPSTAT fsm_cloudvela_emc_data_report(UINT32 dest_id, UINT32 src_id, void * param
  ***************************************************************************************************************************/
 OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_pm25_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25 message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_pm25_cloudvela_data_resp_t)
+//	msg_struct_pm25_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25 message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
-
-
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1896,17 +1919,18 @@ OPSTAT fsm_cloudvela_pm25_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_cloudvela_pm25_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_pm25_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25 message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_pm25_cloudvela_ctrl_resp_t)
+//	msg_struct_pm25_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25 message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -1973,17 +1997,18 @@ OPSTAT fsm_cloudvela_pm25_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_cloudvela_pm25_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_pm25_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25 message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_pm25_cloudvela_data_report_t)
+//	msg_struct_pm25_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_pm25_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25 message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2058,17 +2083,18 @@ OPSTAT fsm_cloudvela_pm25_data_report(UINT32 dest_id, UINT32 src_id, void * para
  ***************************************************************************************************************************/
 OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_winddir_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_winddir_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_winddir_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDDIR message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_winddir_cloudvela_data_resp_t)
+//	msg_struct_winddir_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_winddir_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_winddir_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDDIR message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2116,17 +2142,18 @@ OPSTAT fsm_cloudvela_winddir_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_cloudvela_winddir_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_winddir_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_winddir_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_winddir_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDDIR message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_winddir_cloudvela_ctrl_resp_t)
+//	msg_struct_winddir_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_winddir_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_winddir_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDDIR message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2193,17 +2220,18 @@ OPSTAT fsm_cloudvela_winddir_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_cloudvela_winddir_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_winddir_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_winddir_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_winddir_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDDIR message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_winddir_cloudvela_data_report_t)
+//	msg_struct_winddir_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_winddir_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_winddir_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDDIR message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2261,17 +2289,18 @@ OPSTAT fsm_cloudvela_winddir_data_report(UINT32 dest_id, UINT32 src_id, void * p
  ***************************************************************************************************************************/
 OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_windspd_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_windspd_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_windspd_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDSPD message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_windspd_cloudvela_data_resp_t)
+//	msg_struct_windspd_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_windspd_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_windspd_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDSPD message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2318,17 +2347,18 @@ OPSTAT fsm_cloudvela_windspd_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_cloudvela_windspd_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_windspd_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_windspd_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_windspd_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDSPD message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_windspd_cloudvela_ctrl_resp_t)
+//	msg_struct_windspd_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_windspd_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_windspd_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDSPD message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2395,17 +2425,18 @@ OPSTAT fsm_cloudvela_windspd_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_cloudvela_windspd_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_windspd_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_windspd_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_windspd_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDSPD message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_windspd_cloudvela_data_report_t)
+//	msg_struct_windspd_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_windspd_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_windspd_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive WINDSPD message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2462,17 +2493,18 @@ OPSTAT fsm_cloudvela_windspd_data_report(UINT32 dest_id, UINT32 src_id, void * p
  ***************************************************************************************************************************/
 OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_temp_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_temp_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TEMP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_temp_cloudvela_data_resp_t)
+//	msg_struct_temp_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_temp_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TEMP message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2519,17 +2551,18 @@ OPSTAT fsm_cloudvela_temp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_cloudvela_temp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_temp_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_temp_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TEMP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_temp_cloudvela_ctrl_resp_t)
+//	msg_struct_temp_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_temp_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TEMP message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2596,17 +2629,18 @@ OPSTAT fsm_cloudvela_temp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_cloudvela_temp_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_temp_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_temp_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TEMP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_temp_cloudvela_data_report_t)
+//	msg_struct_temp_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_temp_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_temp_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TEMP message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2664,17 +2698,18 @@ OPSTAT fsm_cloudvela_temp_data_report(UINT32 dest_id, UINT32 src_id, void * para
  ***************************************************************************************************************************/
 OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_humid_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_humid_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_humid_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HUMID message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_humid_cloudvela_data_resp_t)
+//	msg_struct_humid_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_humid_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_humid_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HUMID message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2722,17 +2757,18 @@ OPSTAT fsm_cloudvela_humid_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_cloudvela_humid_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_humid_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_humid_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_humid_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HUMID message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_humid_cloudvela_ctrl_resp_t)
+//	msg_struct_humid_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_humid_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_humid_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HUMID message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2799,17 +2835,18 @@ OPSTAT fsm_cloudvela_humid_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_cloudvela_humid_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_humid_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_humid_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_humid_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HUMID message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_humid_cloudvela_data_report_t)
+//	msg_struct_humid_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_humid_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_humid_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HUMID message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2868,17 +2905,18 @@ OPSTAT fsm_cloudvela_humid_data_report(UINT32 dest_id, UINT32 src_id, void * par
 //收到来自HSMMP的数据，处理后发送数据到后台云
 OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_hsmmp_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HSMMP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_hsmmp_cloudvela_data_resp_t)
+//	msg_struct_hsmmp_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HSMMP message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -2935,17 +2973,18 @@ OPSTAT fsm_cloudvela_hsmmp_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 //收到来自HSMMP的数据，处理后发送数据到后台云
 OPSTAT fsm_cloudvela_hsmmp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_hsmmp_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HSMMP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_hsmmp_cloudvela_ctrl_resp_t)
+//	msg_struct_hsmmp_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HSMMP message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3017,17 +3056,18 @@ OPSTAT fsm_cloudvela_hsmmp_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_hsmmp_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HSMMP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_hsmmp_cloudvela_data_report_t)
+//	msg_struct_hsmmp_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_hsmmp_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hsmmp_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HSMMP message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3076,17 +3116,18 @@ OPSTAT fsm_cloudvela_hsmmp_data_report(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_cloudvela_picture_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_picture_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_picture_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_picture_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PICTURE message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_picture_cloudvela_data_report_t)
+//	msg_struct_picture_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_picture_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_picture_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PICTURE message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3140,17 +3181,18 @@ OPSTAT fsm_cloudvela_picture_data_report(UINT32 dest_id, UINT32 src_id, void * p
  ***************************************************************************************************************************/
 OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_noise_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_noise_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NOISE message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_noise_cloudvela_data_resp_t)
+//	msg_struct_noise_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_noise_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NOISE message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3197,17 +3239,18 @@ OPSTAT fsm_cloudvela_noise_data_resp(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_cloudvela_noise_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_noise_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_noise_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NOISE message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_noise_cloudvela_ctrl_resp_t)
+//	msg_struct_noise_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_noise_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NOISE message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3274,17 +3317,18 @@ OPSTAT fsm_cloudvela_noise_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_cloudvela_noise_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_noise_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_noise_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NOISE message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_noise_cloudvela_data_report_t)
+//	msg_struct_noise_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_noise_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_noise_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive NOISE message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3341,17 +3385,18 @@ OPSTAT fsm_cloudvela_noise_data_report(UINT32 dest_id, UINT32 src_id, void * par
  ***************************************************************************************************************************/
 OPSTAT fsm_cloudvela_ycjk_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_ycjk_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_ycjk_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ycjk_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive YCJK message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_ycjk_cloudvela_data_resp_t)
+//	msg_struct_ycjk_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_ycjk_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ycjk_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive YCJK message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3405,17 +3450,18 @@ OPSTAT fsm_cloudvela_ycjk_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_cloudvela_ycjk_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_ycjk_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_ycjk_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ycjk_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive YCJK message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_ycjk_cloudvela_ctrl_resp_t)
+//	msg_struct_ycjk_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_ycjk_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ycjk_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive YCJK message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3488,17 +3534,18 @@ OPSTAT fsm_cloudvela_ycjk_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_ycjk_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_ycjk_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ycjk_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive YCJK message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_ycjk_cloudvela_data_report_t)
+//	msg_struct_ycjk_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_ycjk_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_ycjk_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive YCJK message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3565,16 +3612,18 @@ OPSTAT fsm_cloudvela_ycjk_data_report(UINT32 dest_id, UINT32 src_id, void * para
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFSC_CBU_ID)
 OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfsc_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfsc_cloudvela_data_resp_t)
+//	msg_struct_l3bfsc_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3640,16 +3689,18 @@ OPSTAT fsm_cloudvela_l3bfsc_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfsc_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfsc_cloudvela_data_report_t)
+//	msg_struct_l3bfsc_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3715,16 +3766,18 @@ OPSTAT fsm_cloudvela_l3bfsc_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfsc_cloudvela_event_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_event_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_event_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfsc_cloudvela_event_report_t)
+//	msg_struct_l3bfsc_cloudvela_event_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_event_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_event_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3777,16 +3830,18 @@ OPSTAT fsm_cloudvela_l3bfsc_event_report(UINT32 dest_id, UINT32 src_id, void * p
 
 OPSTAT fsm_cloudvela_l3bfsc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfsc_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfsc_cloudvela_ctrl_resp_t)
+//	msg_struct_l3bfsc_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3839,16 +3894,18 @@ OPSTAT fsm_cloudvela_l3bfsc_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfsc_cloudvela_statistic_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfsc_cloudvela_statistic_report_t)
+//	msg_struct_l3bfsc_cloudvela_statistic_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfsc_cloudvela_statistic_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFSC message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3919,16 +3976,18 @@ OPSTAT fsm_cloudvela_l3bfsc_statistic_report(UINT32 dest_id, UINT32 src_id, void
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFDF_CBU_ID)
 OPSTAT fsm_cloudvela_l3bfdf_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfdf_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfdf_cloudvela_data_resp_t)
+//	msg_struct_l3bfdf_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -3975,16 +4034,18 @@ OPSTAT fsm_cloudvela_l3bfdf_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_l3bfdf_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfdf_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfdf_cloudvela_data_report_t)
+//	msg_struct_l3bfdf_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4031,16 +4092,18 @@ OPSTAT fsm_cloudvela_l3bfdf_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_l3bfdf_event_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfdf_cloudvela_event_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_event_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_event_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfdf_cloudvela_event_report_t)
+//	msg_struct_l3bfdf_cloudvela_event_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_event_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_event_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4089,16 +4152,18 @@ OPSTAT fsm_cloudvela_l3bfdf_event_report(UINT32 dest_id, UINT32 src_id, void * p
 
 OPSTAT fsm_cloudvela_l3bfdf_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfdf_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfdf_cloudvela_ctrl_resp_t)
+//	msg_struct_l3bfdf_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4146,16 +4211,18 @@ OPSTAT fsm_cloudvela_l3bfdf_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_l3bfdf_statistic_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfdf_cloudvela_statistic_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_statistic_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_statistic_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfdf_cloudvela_statistic_report_t)
+//	msg_struct_l3bfdf_cloudvela_statistic_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfdf_cloudvela_statistic_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfdf_cloudvela_statistic_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFDF message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4225,16 +4292,18 @@ OPSTAT fsm_cloudvela_l3bfdf_statistic_report(UINT32 dest_id, UINT32 src_id, void
 #if (HCU_CURRENT_WORKING_PROJECT_ID_UNIQUE == HCU_WORKING_PROJECT_NAME_BFHS_CBU_ID)
 OPSTAT fsm_cloudvela_l3bfhs_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfhs_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfhs_cloudvela_data_resp_t)
+//	msg_struct_l3bfhs_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4281,16 +4350,18 @@ OPSTAT fsm_cloudvela_l3bfhs_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_l3bfhs_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfhs_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfhs_cloudvela_data_report_t)
+//	msg_struct_l3bfhs_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4337,16 +4408,18 @@ OPSTAT fsm_cloudvela_l3bfhs_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_l3bfhs_event_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfhs_cloudvela_event_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_event_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_event_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfhs_cloudvela_event_report_t)
+//	msg_struct_l3bfhs_cloudvela_event_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_event_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_event_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4395,16 +4468,18 @@ OPSTAT fsm_cloudvela_l3bfhs_event_report(UINT32 dest_id, UINT32 src_id, void * p
 
 OPSTAT fsm_cloudvela_l3bfhs_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfhs_cloudvela_ctrl_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_ctrl_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_ctrl_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfhs_cloudvela_ctrl_resp_t)
+//	msg_struct_l3bfhs_cloudvela_ctrl_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_ctrl_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_ctrl_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4451,16 +4526,18 @@ OPSTAT fsm_cloudvela_l3bfhs_ctrl_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_l3bfhs_statistic_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	msg_struct_l3bfhs_cloudvela_statistic_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_statistic_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_statistic_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_l3bfhs_cloudvela_statistic_report_t)
+//	msg_struct_l3bfhs_cloudvela_statistic_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_l3bfhs_cloudvela_statistic_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_l3bfhs_cloudvela_statistic_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive L3BFHS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4648,17 +4725,18 @@ OPSTAT hcu_read_from_storage_disc(UINT32 fId, void *dataBuffer, UINT32 dataLen)
 
 OPSTAT fsm_cloudvela_airprs_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_airprs_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_airprs_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_airprs_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive AIRPRS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_airprs_cloudvela_data_resp_t)
+//	msg_struct_airprs_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_airprs_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_airprs_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive AIRPRS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4705,17 +4783,18 @@ OPSTAT fsm_cloudvela_airprs_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_airprs_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_airprs_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_airprs_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_airprs_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive AIRPRS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_airprs_cloudvela_data_report_t)
+//	msg_struct_airprs_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_airprs_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_airprs_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive AIRPRS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4762,17 +4841,18 @@ OPSTAT fsm_cloudvela_airprs_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_alcohol_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_alcohol_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_alcohol_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_alcohol_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive ALCOHOL message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_alcohol_cloudvela_data_resp_t)
+//	msg_struct_alcohol_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_alcohol_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_alcohol_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive ALCOHOL message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4819,17 +4899,18 @@ OPSTAT fsm_cloudvela_alcohol_data_resp(UINT32 dest_id, UINT32 src_id, void * par
 
 OPSTAT fsm_cloudvela_alcohol_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_alcohol_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_alcohol_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_alcohol_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive ALCOHOL message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_alcohol_cloudvela_data_report_t)
+//	msg_struct_alcohol_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_alcohol_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_alcohol_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive ALCOHOL message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4876,17 +4957,18 @@ OPSTAT fsm_cloudvela_alcohol_data_report(UINT32 dest_id, UINT32 src_id, void * p
 
 OPSTAT fsm_cloudvela_co1_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_co1_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_co1_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_co1_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive CO1 message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_co1_cloudvela_data_resp_t)
+//	msg_struct_co1_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_co1_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_co1_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive CO1 message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4933,17 +5015,18 @@ OPSTAT fsm_cloudvela_co1_data_resp(UINT32 dest_id, UINT32 src_id, void * param_p
 
 OPSTAT fsm_cloudvela_co1_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_co1_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_co1_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_co1_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive CO1 message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_co1_cloudvela_data_report_t)
+//	msg_struct_co1_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_co1_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_co1_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive CO1 message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -4990,17 +5073,18 @@ OPSTAT fsm_cloudvela_co1_data_report(UINT32 dest_id, UINT32 src_id, void * param
 
 OPSTAT fsm_cloudvela_hcho_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_hcho_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_hcho_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hcho_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HCHO message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_hcho_cloudvela_data_resp_t)
+//	msg_struct_hcho_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_hcho_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hcho_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HCHO message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -5047,17 +5131,18 @@ OPSTAT fsm_cloudvela_hcho_data_resp(UINT32 dest_id, UINT32 src_id, void * param_
 
 OPSTAT fsm_cloudvela_hcho_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_hcho_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_hcho_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hcho_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HCHO message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_hcho_cloudvela_data_report_t)
+//	msg_struct_hcho_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_hcho_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_hcho_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive HCHO message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -5104,17 +5189,18 @@ OPSTAT fsm_cloudvela_hcho_data_report(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_lightstr_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_lightstr_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_lightstr_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_lightstr_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LIGHTSTR message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_lightstr_cloudvela_data_resp_t)
+//	msg_struct_lightstr_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_lightstr_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_lightstr_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LIGHTSTR message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -5161,17 +5247,18 @@ OPSTAT fsm_cloudvela_lightstr_data_resp(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_lightstr_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_lightstr_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_lightstr_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_lightstr_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LIGHTSTR message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_lightstr_cloudvela_data_report_t)
+//	msg_struct_lightstr_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_lightstr_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_lightstr_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LIGHTSTR message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -5218,17 +5305,18 @@ OPSTAT fsm_cloudvela_lightstr_data_report(UINT32 dest_id, UINT32 src_id, void * 
 
 OPSTAT fsm_cloudvela_pm25sp_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_pm25sp_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_pm25sp_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25sp_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25SP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_pm25sp_cloudvela_data_resp_t)
+//	msg_struct_pm25sp_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_pm25sp_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25sp_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25SP message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -5285,17 +5373,18 @@ OPSTAT fsm_cloudvela_pm25sp_data_resp(UINT32 dest_id, UINT32 src_id, void * para
 
 OPSTAT fsm_cloudvela_pm25sp_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_pm25sp_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_pm25sp_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25sp_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25SP message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_pm25sp_cloudvela_data_report_t)
+//	msg_struct_pm25sp_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_pm25sp_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_pm25sp_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive PM25SP message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -5352,12 +5441,12 @@ OPSTAT fsm_cloudvela_pm25sp_data_report(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_toxicgas_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_toxicgas_cloudvela_data_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_toxicgas_cloudvela_data_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_toxicgas_cloudvela_data_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TOXICGAS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_toxicgas_cloudvela_data_resp_t)
+//	msg_struct_toxicgas_cloudvela_data_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_toxicgas_cloudvela_data_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_toxicgas_cloudvela_data_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TOXICGAS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
 	CloudDataSendBuf_t pMsgOutput;
@@ -5409,17 +5498,18 @@ OPSTAT fsm_cloudvela_toxicgas_data_resp(UINT32 dest_id, UINT32 src_id, void * pa
 
 OPSTAT fsm_cloudvela_toxicgas_data_report(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_toxicgas_cloudvela_data_report_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_toxicgas_cloudvela_data_report_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_toxicgas_cloudvela_data_report_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TOXICGAS message error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_toxicgas_cloudvela_data_report_t)
+//	msg_struct_toxicgas_cloudvela_data_report_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_toxicgas_cloudvela_data_report_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_toxicgas_cloudvela_data_report_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive TOXICGAS message error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//申明发送消息
-	CloudDataSendBuf_t pMsgOutput;
-	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
-	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
+	HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION();
+//	CloudDataSendBuf_t pMsgOutput;
+//	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));
+//	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));
 
 	//分格式类型组装
 	if ((zHcuSysEngPar.cloud.svrBhItfFrameStdDefault == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML) || (zHcuSysEngPar.cloud.svrBhItfFrameStdHome == HCU_SYSCFG_CLOUD_BH_ITF_STD_HUITP_XML)){
@@ -5467,12 +5557,12 @@ OPSTAT fsm_cloudvela_toxicgas_data_report(UINT32 dest_id, UINT32 src_id, void * 
 //进行目标编码，并发送给socket
 OPSTAT fsm_cloudvela_llczhb_data_resp(UINT32 dest_id, UINT32 src_id, void * param_ptr, UINT32 param_len)
 {
-	//int ret=0;
-	msg_struct_llczhb_cloudvela_frame_resp_t rcv;
-	memset(&rcv, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
-	if ((param_ptr == NULL || param_len > sizeof(msg_struct_llczhb_cloudvela_frame_resp_t)))
-		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LLCZHB frame error!\n");
-	memcpy(&rcv, param_ptr, param_len);
+	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(msg_struct_llczhb_cloudvela_frame_resp_t)
+//	msg_struct_llczhb_cloudvela_frame_resp_t rcv;
+//	memset(&rcv, 0, sizeof(msg_struct_llczhb_cloudvela_frame_resp_t));
+//	if ((param_ptr == NULL || param_len > sizeof(msg_struct_llczhb_cloudvela_frame_resp_t)))
+//		HCU_ERROR_PRINT_CLOUDVELA("CLOUDVELA: Receive LLCZHB frame error!\n");
+//	memcpy(&rcv, param_ptr, param_len);
 
 	//if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault != HCU_SYSCFG_CLOUD_BH_ITF_PORT_ZHB_HJT212)  //bug
 	if (zHcuSysEngPar.cloud.svrBhItfFrameStdDefault != HCU_SYSCFG_CLOUD_BH_ITF_STD_ZHB_HJT212)  //bug

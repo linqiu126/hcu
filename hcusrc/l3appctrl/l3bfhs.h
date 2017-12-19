@@ -236,4 +236,9 @@ extern void   hcu_sps232_send_char_to_ext_printer(char *s, int len);
 		status.boardStatus = par;\
 		hcu_encode_HUICOBUS_CMDID_cui_hcu2uir_status_report(0, &status);\
 	}while(0)
+
+
+
+
+
 #endif /* L3APP_BFHS_H_ */

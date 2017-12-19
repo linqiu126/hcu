@@ -466,764 +466,901 @@ OPSTAT func_cloudvela_huitpxml_msg_unpack(msg_struct_com_cloudvela_data_rx_t *rc
 	switch(msgId){
 
 	//心跳请求
-	case HUITP_MSGID_uni_heart_beat_req:
-	{
-		StrMsg_HUITP_MSGID_uni_heart_beat_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_heart_beat_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_heart_beat_req, StrMsg_HUITP_MSGID_uni_heart_beat_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_heart_beat_req_received_handle);
+//	case HUITP_MSGID_uni_heart_beat_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_heart_beat_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_heart_beat_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_heart_beat_req_received_handle(snd);
+//	}
+//	break;
 
 	//心跳证实
-	case HUITP_MSGID_uni_heart_beat_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_heart_beat_confirm, StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle);
+//	case HUITP_MSGID_uni_heart_beat_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_heart_beat_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_heart_beat_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//AMARM
-	case HUITP_MSGID_uni_alarm_info_req:
-	{
-		StrMsg_HUITP_MSGID_uni_alarm_info_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alarm_info_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_alarm_info_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_alarm_info_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_alarm_info_req, StrMsg_HUITP_MSGID_uni_alarm_info_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_alarm_info_req_received_handle);
+//	case HUITP_MSGID_uni_alarm_info_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_alarm_info_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alarm_info_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_alarm_info_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_alarm_info_req_received_handle(snd);
+//	}
+//	break;
 
 	//AMARM
-	case HUITP_MSGID_uni_alarm_info_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_alarm_info_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alarm_info_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_alarm_info_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_alarm_info_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_alarm_info_confirm, StrMsg_HUITP_MSGID_uni_alarm_info_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_alarm_info_confirm_received_handle);
+//	case HUITP_MSGID_uni_alarm_info_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_alarm_info_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alarm_info_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_alarm_info_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_alarm_info_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//PM
-	case HUITP_MSGID_uni_performance_info_req:
-	{
-		StrMsg_HUITP_MSGID_uni_performance_info_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_performance_info_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_performance_info_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm_info_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_performance_info_req, StrMsg_HUITP_MSGID_uni_performance_info_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm_info_req_received_handle);
+//	case HUITP_MSGID_uni_performance_info_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_performance_info_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_performance_info_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_performance_info_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm_info_req_received_handle(snd);
+//	}
+//	break;
 
 	//PM
-	case HUITP_MSGID_uni_performance_info_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_performance_info_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_performance_info_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_performance_info_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm_info_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_performance_info_confirm, StrMsg_HUITP_MSGID_uni_performance_info_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm_info_confirm_received_handle);
+//	case HUITP_MSGID_uni_performance_info_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_performance_info_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_performance_info_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_performance_info_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm_info_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//PM
-	case HUITP_MSGID_uni_test_command_req:
-	{
-		StrMsg_HUITP_MSGID_uni_test_command_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_test_command_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_test_command_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm_test_command_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_test_command_req, StrMsg_HUITP_MSGID_uni_test_command_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm_test_command_req_received_handle);
+//	case HUITP_MSGID_uni_test_command_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_test_command_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_test_command_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_test_command_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm_test_command_req_received_handle(snd);
+//	}
+//	break;
 
 	//PM
-	case HUITP_MSGID_uni_test_command_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_test_command_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_test_command_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_test_command_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm_test_command_confirm_received_handle(snd);
-	}
-	break;
-
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_test_command_confirm, StrMsg_HUITP_MSGID_uni_test_command_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm_test_command_confirm_received_handle);
+//	case HUITP_MSGID_uni_test_command_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_test_command_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_test_command_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_test_command_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm_test_command_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//清单
-	case HUITP_MSGID_uni_inventory_req:
-	{
-		StrMsg_HUITP_MSGID_uni_inventory_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_inventory_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_inventory_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_inventory_req, StrMsg_HUITP_MSGID_uni_inventory_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_inventory_req_received_handle);
+//	case HUITP_MSGID_uni_inventory_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_inventory_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_inventory_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_inventory_req_received_handle(snd);
+//	}
+//	break;
 
 	//清单
-	case HUITP_MSGID_uni_inventory_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_inventory_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length, receive len = %d, expected len = %d!\n", msgLen, (sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t) - 4));
-		snd = (StrMsg_HUITP_MSGID_uni_inventory_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_inventory_confirm, StrMsg_HUITP_MSGID_uni_inventory_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_inventory_confirm_received_handle);
+//	case HUITP_MSGID_uni_inventory_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_inventory_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length, receive len = %d, expected len = %d!\n", msgLen, (sizeof(StrMsg_HUITP_MSGID_uni_inventory_confirm_t) - 4));
+//		snd = (StrMsg_HUITP_MSGID_uni_inventory_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_inventory_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//软件包
-	case HUITP_MSGID_uni_sw_package_req:
-	{
-		StrMsg_HUITP_MSGID_uni_sw_package_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_sw_package_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_sw_package_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_sw_package_req, StrMsg_HUITP_MSGID_uni_sw_package_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_sw_package_req_received_handle);
+//	case HUITP_MSGID_uni_sw_package_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_sw_package_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_sw_package_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_sw_package_req_received_handle(snd);
+//	}
+//	break;
 
 	//软件包
-	case HUITP_MSGID_uni_sw_package_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length, ReceiveLen=%d, ExptectLen=%d\n", msgLen, (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t) - 4));
-		snd = (StrMsg_HUITP_MSGID_uni_sw_package_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_sw_package_confirm, StrMsg_HUITP_MSGID_uni_sw_package_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle);
+//	case HUITP_MSGID_uni_sw_package_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_sw_package_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length, ReceiveLen=%d, ExptectLen=%d\n", msgLen, (sizeof(StrMsg_HUITP_MSGID_uni_sw_package_confirm_t) - 4));
+//		snd = (StrMsg_HUITP_MSGID_uni_sw_package_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_sw_package_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFSC业务
-	case HUITP_MSGID_uni_bfsc_comb_scale_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfsc_comb_scale_data_req, StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_req_received_handle);
+//	case HUITP_MSGID_uni_bfsc_comb_scale_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//BFSC业务
-	case HUITP_MSGID_uni_bfsc_comb_scale_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfsc_comb_scale_data_confirm, StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfsc_comb_scale_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfsc_comb_scale_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFSC业务
-	case HUITP_MSGID_uni_bfsc_comb_scale_event_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfsc_comb_scale_event_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfsc_comb_scale_event_confirm, StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfsc_comb_scale_event_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfsc_comb_scale_event_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_event_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfsc_comb_scale_event_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFSC业务
-	case HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfsc_comb_scale_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req, StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfsc_comb_scale_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfsc_comb_scale_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfsc_comb_scale_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//BFSC业务
-	case HUITP_MSGID_uni_bfsc_statistic_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfsc_statistic_confirm, StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfsc_statistic_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfsc_statistic_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfsc_statistic_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFDF业务
-	case HUITP_MSGID_uni_bfdf_comb_scale_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfdf_comb_scale_data_req, StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_req_received_handle);
+//	case HUITP_MSGID_uni_bfdf_comb_scale_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//BFDF业务
-	case HUITP_MSGID_uni_bfdf_comb_scale_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfdf_comb_scale_data_confirm, StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfdf_comb_scale_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfdf_comb_scale_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFDF业务
-	case HUITP_MSGID_uni_bfdf_comb_scale_event_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfdf_comb_scale_event_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfdf_comb_scale_event_confirm, StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfdf_comb_scale_event_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfdf_comb_scale_event_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_event_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfdf_comb_scale_event_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFDF业务
-	case HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfdf_comb_scale_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req, StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfdf_comb_scale_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfdf_comb_scale_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfdf_comb_scale_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//BFDF业务
-	case HUITP_MSGID_uni_bfdf_statistic_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfdf_statistic_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfdf_statistic_confirm, StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfdf_statistic_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfdf_statistic_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfdf_statistic_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfdf_statistic_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFHS业务
-	case HUITP_MSGID_uni_bfhs_comb_scale_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfhs_comb_scale_data_req, StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_req_received_handle);
+//	case HUITP_MSGID_uni_bfhs_comb_scale_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//BFHS业务
-	case HUITP_MSGID_uni_bfhs_comb_scale_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfhs_comb_scale_data_confirm, StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfhs_comb_scale_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfhs_comb_scale_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFHS业务
-	case HUITP_MSGID_uni_bfhs_comb_scale_event_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfhs_comb_scale_event_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfhs_comb_scale_event_confirm, StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfhs_comb_scale_event_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfhs_comb_scale_event_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_event_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfhs_comb_scale_event_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//BFHS业务
-	case HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfhs_comb_scale_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req, StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfhs_comb_scale_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfhs_comb_scale_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfhs_comb_scale_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//BFHS业务
-	case HUITP_MSGID_uni_bfhs_statistic_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_bfhs_statistic_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_bfhs_statistic_confirm, StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_bfhs_statistic_confirm_received_handle);
+//	case HUITP_MSGID_uni_bfhs_statistic_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_bfhs_statistic_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_bfhs_statistic_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//EMC
-	case HUITP_MSGID_uni_emc_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_emc_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_emc_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_emc_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_emc_data_req, StrMsg_HUITP_MSGID_uni_emc_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_emc_data_req_received_handle);
+//	case HUITP_MSGID_uni_emc_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_emc_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_emc_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_emc_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//EMC
-	case HUITP_MSGID_uni_emc_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_emc_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_emc_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_emc_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_emc_data_confirm, StrMsg_HUITP_MSGID_uni_emc_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_emc_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_emc_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_emc_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_emc_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_emc_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//EMC
-	case HUITP_MSGID_uni_emc_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_emc_ctrl_req, StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_emc_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_emc_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_emc_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//CO1
-	case HUITP_MSGID_uni_co1_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_co1_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_co1_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_co1_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_co1_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_co1_data_req, StrMsg_HUITP_MSGID_uni_co1_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_co1_data_req_received_handle);
+//	case HUITP_MSGID_uni_co1_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_co1_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_co1_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_co1_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_co1_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//CO1
-	case HUITP_MSGID_uni_co1_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_co1_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_co1_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_co1_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_co1_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_co1_data_confirm, StrMsg_HUITP_MSGID_uni_co1_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_co1_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_co1_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_co1_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_co1_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_co1_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_co1_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//HCHO
-	case HUITP_MSGID_uni_hcho_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_hcho_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hcho_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_hcho_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_hcho_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_hcho_data_req, StrMsg_HUITP_MSGID_uni_hcho_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_hcho_data_req_received_handle);
+//	case HUITP_MSGID_uni_hcho_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_hcho_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hcho_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_hcho_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_hcho_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//HCHO
-	case HUITP_MSGID_uni_hcho_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hcho_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_hcho_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_hcho_data_confirm, StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_hcho_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_hcho_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hcho_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_hcho_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_hcho_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//酒精
-	case HUITP_MSGID_uni_alcohol_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_alcohol_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alcohol_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_alcohol_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_alcohol_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_alcohol_data_req, StrMsg_HUITP_MSGID_uni_alcohol_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_alcohol_data_req_received_handle);
+//	case HUITP_MSGID_uni_alcohol_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_alcohol_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alcohol_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_alcohol_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_alcohol_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//酒精
-	case HUITP_MSGID_uni_alcohol_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_alcohol_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_alcohol_data_confirm, StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_alcohol_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_alcohol_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_alcohol_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_alcohol_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//PM25
-	case HUITP_MSGID_uni_pm25_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_pm25_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_pm25_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm25_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_pm25_data_req, StrMsg_HUITP_MSGID_uni_pm25_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm25_data_req_received_handle);
+//	case HUITP_MSGID_uni_pm25_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_pm25_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_pm25_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm25_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//PM25
-	case HUITP_MSGID_uni_pm25_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm25_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_pm25_data_confirm, StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm25_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_pm25_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_pm25_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm25_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//PM25
-	case HUITP_MSGID_uni_pm25_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_pm25_ctrl_req, StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_pm25_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_pm25_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm25_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//PM25SP
-	case HUITP_MSGID_uni_pm25sp_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm25sp_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_pm25sp_data_req, StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm25sp_data_req_received_handle);
+//	case HUITP_MSGID_uni_pm25sp_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_pm25sp_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm25sp_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//PM25SP
-	case HUITP_MSGID_uni_pm25sp_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_pm25sp_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_pm25sp_data_confirm, StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_pm25sp_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_pm25sp_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_pm25sp_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_pm25sp_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//WINDSPD
-	case HUITP_MSGID_uni_windspd_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_windspd_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_windspd_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_windspd_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_windspd_data_req, StrMsg_HUITP_MSGID_uni_windspd_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_windspd_data_req_received_handle);
+//	case HUITP_MSGID_uni_windspd_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_windspd_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_windspd_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_windspd_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//WINDSPD
-	case HUITP_MSGID_uni_windspd_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_windspd_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_windspd_data_confirm, StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_windspd_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_windspd_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_windspd_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_windspd_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//WINDSPD
-	case HUITP_MSGID_uni_windspd_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_windspd_ctrl_req, StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_windspd_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_windspd_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_windspd_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//WINDDIR
-	case HUITP_MSGID_uni_winddir_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_winddir_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_winddir_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_winddir_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_winddir_data_req, StrMsg_HUITP_MSGID_uni_winddir_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_winddir_data_req_received_handle);
+//	case HUITP_MSGID_uni_winddir_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_winddir_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_winddir_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_winddir_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//WINDDIR
-	case HUITP_MSGID_uni_winddir_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_winddir_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_winddir_data_confirm, StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_winddir_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_winddir_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_winddir_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_winddir_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//WINDDIR
-	case HUITP_MSGID_uni_winddir_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_winddir_ctrl_req, StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_winddir_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_winddir_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_winddir_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//TEMP
-	case HUITP_MSGID_uni_temp_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_temp_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_temp_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_temp_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_temp_data_req, StrMsg_HUITP_MSGID_uni_temp_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_temp_data_req_received_handle);
+//	case HUITP_MSGID_uni_temp_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_temp_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_temp_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_temp_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//TEMP
-	case HUITP_MSGID_uni_temp_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_temp_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_temp_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_temp_data_confirm, StrMsg_HUITP_MSGID_uni_temp_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_temp_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_temp_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_temp_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_temp_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//TEMP
-	case HUITP_MSGID_uni_temp_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_temp_ctrl_req, StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_temp_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_temp_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_temp_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//HUMID
-	case HUITP_MSGID_uni_humid_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_humid_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_humid_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_humid_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_humid_data_req, StrMsg_HUITP_MSGID_uni_humid_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_humid_data_req_received_handle);
+//	case HUITP_MSGID_uni_humid_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_humid_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_humid_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_humid_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//HUMID
-	case HUITP_MSGID_uni_humid_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_humid_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_humid_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_humid_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_humid_data_confirm, StrMsg_HUITP_MSGID_uni_humid_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_humid_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_humid_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_humid_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_humid_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_humid_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//HUMID
-	case HUITP_MSGID_uni_humid_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_humid_ctrl_req, StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_humid_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_humid_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_humid_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//AIRPRS
-	case HUITP_MSGID_uni_airprs_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_airprs_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_airprs_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_airprs_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_airprs_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_airprs_data_req, StrMsg_HUITP_MSGID_uni_airprs_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_airprs_data_req_received_handle);
+//	case HUITP_MSGID_uni_airprs_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_airprs_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_airprs_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_airprs_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_airprs_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//AIRPRS
-	case HUITP_MSGID_uni_airprs_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_airprs_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_airprs_data_confirm, StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_airprs_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_airprs_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_airprs_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_airprs_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//NOISE
-	case HUITP_MSGID_uni_noise_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_noise_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_noise_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_noise_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_noise_data_req, StrMsg_HUITP_MSGID_uni_noise_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_noise_data_req_received_handle);
+//	case HUITP_MSGID_uni_noise_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_noise_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_noise_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_noise_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//NOISE
-	case HUITP_MSGID_uni_noise_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_noise_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_noise_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_noise_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_noise_data_confirm, StrMsg_HUITP_MSGID_uni_noise_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_noise_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_noise_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_noise_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_noise_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_noise_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//NOISE
-	case HUITP_MSGID_uni_noise_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_noise_ctrl_req, StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_noise_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_noise_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_noise_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//YCJK
-	case HUITP_MSGID_uni_ycjk_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_ycjk_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ycjk_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_ycjk_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_ycjk_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_ycjk_data_req, StrMsg_HUITP_MSGID_uni_ycjk_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_ycjk_data_req_received_handle);
+//	case HUITP_MSGID_uni_ycjk_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_ycjk_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ycjk_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_ycjk_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_ycjk_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//YCJK
-	case HUITP_MSGID_uni_ycjk_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_ycjk_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ycjk_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_ycjk_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_ycjk_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_ycjk_data_confirm, StrMsg_HUITP_MSGID_uni_ycjk_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_ycjk_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_ycjk_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_ycjk_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ycjk_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_ycjk_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_ycjk_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//YCJK
-	case HUITP_MSGID_uni_ycjk_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_ycjk_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ycjk_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_ycjk_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_ycjk_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_ycjk_ctrl_req, StrMsg_HUITP_MSGID_uni_ycjk_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_ycjk_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_ycjk_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_ycjk_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_ycjk_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_ycjk_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_ycjk_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//HSMMP
-	case HUITP_MSGID_uni_hsmmp_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_hsmmp_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_hsmmp_data_req, StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_hsmmp_data_req_received_handle);
+//	case HUITP_MSGID_uni_hsmmp_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_hsmmp_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//HSMMP
-	case HUITP_MSGID_uni_hsmmp_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_hsmmp_data_confirm, StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_hsmmp_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_hsmmp_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//HSMMP
-	case HUITP_MSGID_uni_picture_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_picture_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_picture_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_picture_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_picture_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_picture_data_confirm, StrMsg_HUITP_MSGID_uni_picture_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_picture_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_picture_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_picture_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_picture_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_picture_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_picture_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//HSMMP
-	case HUITP_MSGID_uni_hsmmp_ctrl_req:
-	{
-		StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_hsmmp_ctrl_req, StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle);
+//	case HUITP_MSGID_uni_hsmmp_ctrl_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_hsmmp_ctrl_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_hsmmp_ctrl_req_received_handle(snd);
+//	}
+//	break;
 
 	//LIGHTSTR
-	case HUITP_MSGID_uni_lightstr_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_lightstr_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_lightstr_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_lightstr_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_lightstr_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_lightstr_data_req, StrMsg_HUITP_MSGID_uni_lightstr_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_lightstr_data_req_received_handle);
+//	case HUITP_MSGID_uni_lightstr_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_lightstr_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_lightstr_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_lightstr_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_lightstr_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//LIGHTSTR
-	case HUITP_MSGID_uni_lightstr_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_lightstr_data_confirm, StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_lightstr_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_lightstr_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_lightstr_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	//TOXICGAS
-	case HUITP_MSGID_uni_toxicgas_data_req:
-	{
-		StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_toxicgas_data_req_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_toxicgas_data_req, StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_toxicgas_data_req_received_handle);
+//	case HUITP_MSGID_uni_toxicgas_data_req:
+//	{
+//		StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_toxicgas_data_req_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_toxicgas_data_req_received_handle(snd);
+//	}
+//	break;
 
 	//TOXICGAS
-	case HUITP_MSGID_uni_toxicgas_data_confirm:
-	{
-		StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t *snd;
-		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t) - 4))
-			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
-		snd = (StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t*)(&pMsgBuf);
-		ret = func_cloudvela_huitpxml_msg_toxicgas_data_confirm_received_handle(snd);
-	}
-	break;
+	HCU_HUIXMLCODEC_RCVMSG_T2FUNC(HUITP_MSGID_uni_toxicgas_data_confirm, StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t, pMsgBuf, \
+			func_cloudvela_huitpxml_msg_toxicgas_data_confirm_received_handle);
+//	case HUITP_MSGID_uni_toxicgas_data_confirm:
+//	{
+//		StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t *snd;
+//		if (msgLen != (sizeof(StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t) - 4))
+//			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");
+//		snd = (StrMsg_HUITP_MSGID_uni_toxicgas_data_confirm_t*)(&pMsgBuf);
+//		ret = func_cloudvela_huitpxml_msg_toxicgas_data_confirm_received_handle(snd);
+//	}
+//	break;
 
 	default:
 	{

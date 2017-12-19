@@ -182,7 +182,23 @@ extern OPSTAT hcu_ethernet_socket_data_send(CloudDataSendBuf_t *buf);
 
 //高级定义，简化程序的可读性
 #define HCU_ERROR_PRINT_CLOUDVELA(...)	do{zHcuSysStaPm.taskRunErrCnt[TASK_ID_CLOUDVELA]++;  HcuErrorPrint(__VA_ARGS__);  return FAILURE;}while(0)
+#define HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL_CLOUDVELA(par) 	HCU_MSG_RCV_CHECK_FOR_GEN_LOCAL(TASK_ID_CLOUDVELA, par)
 
+#define HCU_CLOUDVELA_OUTPUT_MSG_DECLARITION()\
+	CloudDataSendBuf_t pMsgOutput;\
+	memset(&pMsgOutput, 0, sizeof(CloudDataSendBuf_t));\
+	memset(&(gTaskCloudvelaContext.L2Link), 0, sizeof(msgie_struct_bh_com_head_t));\
+
+#define HCU_CLOUDVELA_GEN_NEW_HUITP_MSG_RESP(strHuiMsg, huiMsgId)\
+	strHuiMsg pMsgProc;\
+	UINT16 msgProcLen = sizeof(strHuiMsg);\
+	memset(&pMsgProc, 0, msgProcLen);\
+	pMsgProc.msgId.cmdId = (huiMsgId>>8)&0xFF;\
+	pMsgProc.msgId.optId = huiMsgId&0xFF;\
+	pMsgProc.msgLen = HUITP_ENDIAN_EXG16(msgProcLen - 4);\
+	pMsgProc.baseResp.ieId = HUITP_ENDIAN_EXG16(HUITP_IEID_uni_com_resp);\
+	pMsgProc.baseResp.ieLen = HUITP_ENDIAN_EXG16(sizeof(StrIe_HUITP_IEID_uni_com_resp_t) - 4);\
+	pMsgProc.baseResp.comResp = rcv.baseResp;\
 
 
 #endif /* L2FRAME_CLOUDVELA_H_ */

@@ -51,7 +51,11 @@ typedef enum HuirestActionidDefination
 	//VISION
 	HUIREST_ACTIONID_VISION_min                			= 0x2000,
 	HUIREST_ACTIONID_VISION_test1           			= 0x2000,
+    HUIREST_ACTIONID_VISION_test2   					= 0x2001,
+    HUIREST_ACTIONID_VISION_worm_clasify_single   		= 0x2002,
+    HUIREST_ACTIONID_VISION_worm_clasify_batch    		= 0x2003,
 	HUIREST_ACTIONID_VISION_max,
+
 
 	HUIREST_ACTIONID_invalid               				= 0xFFFF, //无效
 }HuirestActionidDefination_t;
@@ -222,6 +226,48 @@ typedef struct StrRestMsgIn_HUIREST_ACTIONID_VISION_test1
 	float 	testData3;
 	float 	testData4;
 }StrRestMsgIn_HUIREST_ACTIONID_VISION_test1_t;
+
+//HUIREST_ACTIONID_VISION_test2   = 0x2001
+typedef struct StrRestMsgIn_HUIREST_ACTIONID_VISION_test2
+{
+	float 	testData;
+	float 	testData1;
+	float 	testData2;
+	float 	testData3;
+	float 	testData4;
+}StrRestMsgIn_HUIREST_ACTIONID_VISION_test2_t;
+
+//HUIREST_ACTIONID_VISION_worm_clasify_single   = 0x2002
+typedef struct StrRestMsgIn_HUIREST_ACTIONID_VISION_worm_clasify_single
+{
+	char 		fileName[20];
+	int 		cfBase;
+	int 		cfSmall2MidIndex;
+	int 		cfMid2BigIndex;
+	int 		cfBig2TopIndex;
+}StrRestMsgIn_HUIREST_ACTIONID_VISION_worm_clasify_single_t;
+
+typedef struct StrRestMsgIn_HUIREST_ACTIONID_VISION_worm_clasify_single_fb
+{
+	int 		totalNbr;
+	int 		bigAlive;
+	int 		bigDead;
+	int 		middleAlive;
+	int 		middleDead;
+	int 		smallAlive;
+	int 		smallDead;
+	int 		totalAlive;
+	int 		totalDead;
+}StrRestMsgIn_HUIREST_ACTIONID_VISION_worm_clasify_single_fb_t;
+
+//IN PYTHON or JSON
+//Sun Dec 17 22:00:46 2017 HUIREST: Receiving Post Data Buf =  {'restTag': 'vision', 'actionId': 8194, 'parFlag': 1, 'parContent': {'fileName': '1.jpg', 'cfBase': 500, 'cfSmall2MidIndex': 1500, 'cfMid2BigIndex': 3000, 'cfBig2TopIndex': 5000}}
+//Sun Dec 17 22:01:01 2017 HUIREST: Sending Post Data Buf =  {"restTag": "vision", "actionId": 8194, "parFlag": 1, "parContent": {"totalNbr": 121, "bigAlive": 2, "bigDead": 1, "middleAlive": 10, "middleDead": 27, "smallAlive": 26, "smallDead": 55, "totalAlive": 38, "totalDead": 83}}
+
+
+//HUIREST_ACTIONID_VISION_worm_clasify_batch    = 0x2003
+//TBD
+
 
 //HUIREST_ACTIONID_VISION_max,
 

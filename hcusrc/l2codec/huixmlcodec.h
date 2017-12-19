@@ -158,4 +158,27 @@ extern OPSTAT func_cloudvela_huitpxml_msg_bfhs_statistic_confirm_received_handle
 4E01000A00040001014E03000103]]></Content><FuncFlag>0</FuncFlag></xml>"
 
 
+
+#define HCU_HUIXMLCODEC_RCVMSG_T2FUNC(msgId, pMsgStr, pMsgBuf, pFunc)\
+	case msgId:\
+	{\
+		pMsgStr *snd;\
+		if (msgLen != (sizeof(pMsgStr) - 4))\
+			HCU_ERROR_PRINT_CLOUDVELA("HUITPXML: Error unpack message on length!\n");\
+		snd = (pMsgStr*)(&pMsgBuf);\
+		ret = pFunc(snd);\
+	}\
+	break;\
+
+
+
+
+
+
+
+
+
+
+
+
 #endif /* L2FRAME_HUIXMLCODEC_H_ */

@@ -151,6 +151,19 @@ size_t func_huirestcodec_curl_write_callback(void *buffer, size_t size, size_t n
 		json_object_put(jsonobj);\
 	}while(0)
 
+#define HCU_HUIREST_DECODE_ACTION_HEAD_PAR_FB_ONE_DOMAIN(parInt, parString) \
+	do{\
+		cont2_jsonobj = json_object_object_get(cont_jsonobj, parString);\
+		if (cont2_jsonobj == NULL)\
+		{\
+			json_object_put(cont_jsonobj);\
+			json_object_put(jsonobj);\
+			HCU_ERROR_PRINT_TASK(TASK_ID_CLOUDVELA, "HUIRESTCODEC: Failed to decode HUIREST_ACCESS_CONST_PAR_CONTENT %s object!\n", parString);\
+		}\
+		out->parInt = json_object_get_boolean(cont2_jsonobj);\
+		json_object_put(cont2_jsonobj);\
+	}while(0)
+
 
 
 #endif /* L2FRAME_HUIRESTCODEC_H_ */
